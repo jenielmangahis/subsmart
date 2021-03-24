@@ -214,6 +214,83 @@ $(document).ready( function() {
 });
 </script>
 
+<script>
+;(function($, window, document, undefined){
+    $("#estimate_date_").on("change", function(){
+       var date = new Date($("#estimate_date_").val()),
+           days = 7;
+        
+        if(!isNaN(date.getTime())){
+            date.setDate(date.getDate() + days);
+            
+            $("#expiry_date_").val(date.toInputFormat());
+        } else {
+            alert("Invalid Date");  
+        }
+    });
+    
+    Date.prototype.toInputFormat = function() {
+       var yyyy = this.getFullYear().toString();
+       var mm = (this.getMonth()+1).toString(); // getMonth() is zero-based
+       var dd  = this.getDate().toString();
+       return yyyy + "-" + (mm[1]?mm:"0"+mm[0]) + "-" + (dd[1]?dd:"0"+dd[0]); // padding
+    };
+})(jQuery, this, document);
+</script>
+
+<script>
+$(document).ready( function() {
+//     var now = new Date();
+ 
+//     var day = ("0" + now.getDate()).slice(-2);
+//     var month = ("0" + (now.getMonth() + 1)).slice(-2);
+
+//     var today = now.getFullYear()+"-"+(month)+"-"+(day) ;
+
+
+//    $('#end_date_').val(today);
+    
+
+var days = 7;
+  var date = new Date(document.getElementById("start_date_").value);
+  date.setDate(date.getDate() + parseInt(days));
+  document.getElementById("end_date_").valueAsDate = date;
+});
+</script>
+<script>
+$(document).ready( function() {
+var days = 7;
+  var date = new Date(document.getElementById("estimate_date_").value);
+  date.setDate(date.getDate() + parseInt(days));
+  document.getElementById("expiry_date_").valueAsDate = date;
+});
+</script>
+<script type="text/javascript">
+	window.base_url = <?php echo json_encode(base_url()); ?>;
+</script>
+
+<script>
+jQuery(document).ready(function () {
+$('#reportstable').DataTable();
+$('#items_table_estimate').DataTable();
+$('#items_table_estimate_option2').DataTable();
+var elements = document.getElementsByName("amount[]");
+var element_array = Array.prototype.slice.call(elements);
+
+for(var i=0; i < element_array.length; i++){
+    element_array[i].addEventListener("keyup", sum_values);
+}
+
+function sum_values(){
+    var sum = 0;
+    for(var i=0; i < element_array.length; i++){
+        sum += parseFloat(element_array[i].value, 10);
+    }
+    document.getElementsByName("total_amount")[0].value = 100;
+}
+});
+</script>
+
 
 
 <style>

@@ -1243,6 +1243,43 @@ class Timesheet_model extends MY_Model
         $affected_row = $this->db->affected_rows();
         return  $affected_row;
     }
+
+    public function attendance_logs_update_timesheet_logs($attn_id, $date_created, $action, $user_id)
+    {
+
+        $this->db->where('attendance_id', $attn_id);
+        $this->db->where('action', $action);
+        $qry = $this->db->get('timesheet_logs');
+        if ($qry->num_rows() > 0) {
+            $this->db->query("UPDATE timesheet_logs SET date_created ='" . $date_created . "' WHERE attendance_id = " . $attn_id . " and action='" . $action . "'");
+            $this->db->reset_query();
+        } else {
+            $insert = array(
+                'attendance_id' => $attn_id,
+                'user_id' => $user_id,
+                'action' => $action,
+                'entry_type' => "Manual",
+                'approved_by' => getLoggedUserID(),
+                'company_id' => logged('company_id'),
+                'date_created' => $date_created
+            );
+            $this->db->insert('timesheet_logs', $insert);
+        }
+    }
+    public function attendance_logs_update_footprint_setter($attn_id, $user_id, $action)
+    {
+        $insert = array(
+            'attendance_id' => $attn_id,
+            'user_id' => $user_id,
+            'action' => $action
+        );
+        $this->db->insert('timesheet_logs_editor', $insert);
+    }
+    public function get_attendance_logs_editor_footprint($att_id)
+    {
+        $qry = $this->db->query("SELECT timesheet_logs_editor.date_created, users.FName, users.LName from timesheet_logs_editor JOIN users ON timesheet_logs_editor.user_id = users.id where timesheet_logs_editor.attendance_id = " . $att_id . " order by timesheet_logs_editor.date_created DESC limit 1");
+        return $qry->result();
+    }
 }
 
 

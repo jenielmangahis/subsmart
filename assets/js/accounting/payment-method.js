@@ -106,46 +106,6 @@ $('.dropdown-menu').on('click', function(e) {
     e.stopPropagation();
 });
 
-$('#payment-method-form').on('submit', function(e) {
-    e.preventDefault();
-
-    var data = new FormData(document.getElementById('payment-method-form'));
-    var url = '/accounting/payment-methods/add';
-
-    if(data.has('id')) {
-        url = '/accounting/payment-methods/update'
-    }
-
-    $.ajax({
-        url: url,
-        data: data,
-        type: 'post',
-        processData: false,
-        contentType: false,
-        success: function(result) {
-            var res = JSON.parse(result);
-
-            $.toast({
-                icon: res.success ? 'success' : 'error',
-                heading: res.success ? 'Success' : 'Error',
-                text: res.message,
-                showHideTransition: 'fade',
-                hideAfter: 3000,
-                allowToastClose: true,
-                position: 'top-center',
-                stack: false,
-                loader: false,
-            });
-
-            $('#payment_method_modal').modal('hide');
-
-            $('#name').val('');
-            $('#credit_card').prop('checked', false);
-            $('#payment_methods').DataTable().ajax.reload();
-        }
-    });
-});
-
 $('#search').on('keyup', function() {
     $('#payment_methods').DataTable().ajax.reload();
 });
@@ -159,7 +119,7 @@ $(document).on('click', '#payment_methods .edit-method', function(e) {
 
     var data = e.currentTarget.dataset;
 
-    $('#payment-method-form').prepend(`<input type="hidden" value="${data.id}" name="id">`);
+    $('#payment-method-form').prop(`action`, `/accounting/payment-methods/update/${data.id}`);
 
     if(data.name !== null && data.name !== "null") {
         $('#payment-method-form #name').val(data.name);
@@ -176,10 +136,8 @@ $(document).on('click', '#payment_methods .edit-method', function(e) {
 });
 
 $('a[data-target="#payment_method_modal"]').on('click', function() {
-    $('#payment_method_modal form').attr('id', 'payment-method-form');
-    if($('#payment_method_modal form input[name="id"]').length > 0) {
-        $('#payment_method_modal form input[name="id"]').remove();
-    }
+    $('#payment-method-form').prop('action', '/accounting/payment-methods/add');
+
     $('#payment-method-form #name').val('');
     $('#payment-method-form #credit_card').prop('checked', false);
     $('#payment_method_modal h4.modal-title').html('New Payment Method');
@@ -206,23 +164,7 @@ $(document).on('click', '#inactive_payment_method .modal-footer .btn-success', f
         url: `/accounting/payment-methods/delete/${id}`,
         type:"DELETE",
         success:function (result) {
-            var res = JSON.parse(result);
-
-            $.toast({
-                icon: res.success ? 'success' : 'error',
-                heading: res.success ? 'Success' : 'Error',
-                text: res.message,
-                showHideTransition: 'fade',
-                hideAfter: 3000,
-                allowToastClose: true,
-                position: 'top-center',
-                stack: false,
-                loader: false,
-            });
-
-            $('#inactive_payment_method').modal('hide');
-
-            $('#payment_methods').DataTable().ajax.reload();
+            location.reload();
         }
     });
 });
@@ -248,23 +190,7 @@ $(document).on('click', '#active_payment_method .modal-footer .btn-success', fun
         url: `/accounting/payment-methods/activate/${id}`,
         type:"GET",
         success:function (result) {
-            var res = JSON.parse(result);
-
-            $.toast({
-                icon: res.success ? 'success' : 'error',
-                heading: res.success ? 'Success' : 'Error',
-                text: res.message,
-                showHideTransition: 'fade',
-                hideAfter: 3000,
-                allowToastClose: true,
-                position: 'top-center',
-                stack: false,
-                loader: false,
-            });
-
-            $('#active_payment_method').modal('hide');
-
-            $('#payment_methods').DataTable().ajax.reload();
+            location.reload();
         }
     });
 });

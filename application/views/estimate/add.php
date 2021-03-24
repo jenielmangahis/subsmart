@@ -36,7 +36,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         <div class="float-right d-none d-md-block">
                             <div class="dropdown">
                                 <?php //if (hasPermissions('WORKORDER_MASTER')) : ?>
-                                    <a href="<?php echo base_url('accounting/newEstimateList') ?>" class="btn btn-primary"
+                                    <a href="<?php echo base_url('estimate') ?>" class="btn btn-primary"
                                        aria-expanded="false">
                                         <i class="mdi mdi-settings mr-2"></i> Go Back to Estimate
                                     </a>

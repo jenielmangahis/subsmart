@@ -93,7 +93,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <span><strong>Success!</strong> <?php echo $this->session->flashdata('success'); ?></span>
                         </div>
                         <?php elseif($this->session->flashdata('error')) : ?>
-                        <div class="alert alert-success alert-dismissible my-4" role="alert">
+                        <div class="alert alert-danger alert-dismissible my-4" role="alert">
                             <button type="button" class="close" data-dismiss="alert">&times;</button>
                             <span><strong>Error!</strong> <?php echo $this->session->flashdata('error'); ?></span>
                         </div>
@@ -127,7 +127,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     <h4 class="modal-title">New Term</h4>
                     <button type="button" class="close" data-dismiss="modal"><i class="fa fa-times fa-lg"></i></button>
                 </div>
-                <form id="payment-term-form">
+                <form id="payment-term-form" action="/accounting/terms/add" method="post">
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-xl-12">
@@ -209,7 +209,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 <div class="card-body" style="max-height: 650px;">
                                     <div class="row">
                                         <div class="col-md-12">
-                                            <p>Are you sure you want to make <span class="term-name"></span> inactive?</p>
+                                            <p>Are you sure you want to make <b><span class="term-name"></span></b> inactive?</p>
                                         </div>
                                     </div>
                                 </div>
@@ -240,7 +240,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 <div class="card-body" style="max-height: 650px;">
                                     <div class="row">
                                         <div class="col-md-12">
-                                            <p>Are you sure you want to make <span class="term-name"></span> active?</p>
+                                            <p>Are you sure you want to make <b><span class="term-name"></span></b> active?</p>
                                         </div>
                                     </div>
                                 </div>

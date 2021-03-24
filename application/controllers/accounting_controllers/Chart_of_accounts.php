@@ -154,9 +154,10 @@ class Chart_of_accounts extends MY_Controller {
         ];
 
         $account = $this->chart_of_accounts_model->saverecords($data);
+        $name = $data['name'];
 
         if($account > 0) {
-            $this->session->set_flashdata('success', "Data inserted successfully!");
+            $this->session->set_flashdata('success', "$name created successfully!");
         } else {
             $this->session->set_flashdata('error', "Please try again!");
         }
@@ -168,8 +169,7 @@ class Chart_of_accounts extends MY_Controller {
     {
         $this->page_data['alert'] = 'accounting/alert_promt';
         $this->page_data['chart_of_accounts'] = $this->chart_of_accounts_model->getById($id);
-        echo $this->load->view('accounting/chart_of_accounts/edit', $this->page_data, true);
-        exit;
+        $this->load->view('accounting/chart_of_accounts/edit', $this->page_data);
     }
 
     public function update()
@@ -188,34 +188,38 @@ class Chart_of_accounts extends MY_Controller {
         ];
 
         $accountUpdate = $this->chart_of_accounts_model->updaterecords($data);
+        $name = $data['name'];
 
         if($accountUpdate) {
-            $this->session->set_flashdata('success', "Data updated successfully!");
+            $this->session->set_flashdata('success', "$name updated successfully!");
         } else {
             $this->session->set_flashdata('error', "Please try again!");
         }
         redirect("accounting/chart-of-accounts");
     }
 
-    public function inactive()
+    public function inactive($id)
     {
-        $id = $this->input->post('id');
+        $name = $this->chart_of_accounts_model->getById($id)->name;
         $inactive = $this->chart_of_accounts_model->inactive($id);
 
-        echo json_encode([
-            'success' => $inactive ? true : false,
-            'message' => $inactive ? 'Success' : 'Error'
-        ]);
+        if($inactive) {
+            $this->session->set_flashdata('success', "$name is now inactive!");
+        } else {
+            $this->session->set_flashdata('error', "Please try again!");
+        }
     }
 
     public function make_account_active($id)
     {
+        $name = $this->chart_of_accounts_model->getById($id)->name;
         $active =  $this->chart_of_accounts_model->makeActive($id);
 
-        echo json_encode([
-            'success' => $active ? true : false,
-            'message' => $active ? 'Success' : 'Error'
-        ]);
+        if($active) {
+            $this->session->set_flashdata('success', "$name is now active!");
+        } else {
+            $this->session->set_flashdata('error', "Please try again!");
+        }
     }
 
     public function import()

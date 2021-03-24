@@ -305,6 +305,8 @@ class Estimate extends MY_Controller
         $type = $this->input->get('type');
         $this->page_data['type'] = $type;
         $this->page_data['plans'] = $this->plans_model->getByWhere(['company_id' => $company_id]);
+        $this->page_data['number'] = $this->estimate_model->getlastInsert();
+        $this->page_data['items'] = $this->items_model->getItemlist();
 
         // $this->page_data['file_selection'] = $this->load->view('modals/file_vault_selection', array(), TRUE);
         $this->load->view('estimate/addoptions', $this->page_data);
@@ -349,9 +351,128 @@ class Estimate extends MY_Controller
         $type = $this->input->get('type');
         $this->page_data['type'] = $type;
         $this->page_data['plans'] = $this->plans_model->getByWhere(['company_id' => $company_id]);
+        $this->page_data['number'] = $this->estimate_model->getlastInsert();
+        $this->page_data['items'] = $this->items_model->getItemlist();
 
         // $this->page_data['file_selection'] = $this->load->view('modals/file_vault_selection', array(), TRUE);
         $this->load->view('estimate/addbundle', $this->page_data);
+    }
+
+    public function savenewestimateBundle()
+    {
+        $company_id  = getLoggedCompanyID();
+        $user_id  = getLoggedUserID();
+
+        $new_data = array(
+            'customer_id' => $this->input->post('customer_id'),
+            'job_location' => $this->input->post('job_location'),
+            'job_name' => $this->input->post('job_name'),
+            'estimate_number' => $this->input->post('estimate_number'),
+            // 'email' => $this->input->post('email'),
+            // 'billing_address' => $this->input->post('billing_address'),
+            'estimate_date' => $this->input->post('estimate_date'),
+            'expiry_date' => $this->input->post('expiry_date'),
+            'purchase_order_number' => $this->input->post('purchase_order_number'),
+            'status' => $this->input->post('status'),
+            'estimate_type' => 'Bundle',
+            'attachments' => 'testing',
+            'status' => $this->input->post('status'),
+            'deposit_request' => $this->input->post('deposit_request'),
+            'deposit_amount' => $this->input->post('deposit_amount'),
+            'customer_message' => $this->input->post('customer_message'),
+            'terms_conditions' => $this->input->post('terms_conditions'),
+            'instructions' => $this->input->post('instructions'),
+            
+            'estimate_type' => 'Bundle',
+            'bundle1_message' => $this->input->post('bundle1_message'),
+            'bundle2_message' => $this->input->post('bundle2_message'),
+            'bundle1_total' => $this->input->post('bundle1_total'),
+            'bundle2_total' => $this->input->post('bundle2_total'),
+            'bundle_discount' => $this->input->post('bundle_discount'),
+            
+
+            'user_id' => $user_id,
+            'company_id' => $company_id,
+            // 'created_by' => logged('id'),
+
+            // 'sub_total' => $this->input->post('sub_total'),
+            'deposit_request' => '$',
+            'deposit_amount' => $this->input->post('adjustment_input'),//
+            'grand_total' => $this->input->post('supergrandtotal'),//
+            
+            'adjustment_name' => $this->input->post('adjustment_name'),//
+            'adjustment_value' => $this->input->post('adjustment_input'),//
+
+            'markup_type' => '$',//
+            'markup_amount' => $this->input->post('markup_input_form'),//
+            
+            'created_at' => date("Y-m-d H:i:s"),
+            'updated_at' => date("Y-m-d H:i:s")
+        );
+
+        $addQuery = $this->estimate_model->save_estimate($new_data);
+        if($addQuery > 0){
+            $a = $this->input->post('items');
+            $b = $this->input->post('item_type');
+            $d = $this->input->post('quantity');
+            $f = $this->input->post('price');
+            $g = $this->input->post('discount');
+            $h = $this->input->post('tax');
+            $ii = $this->input->post('total');
+
+            $i = 0;
+            foreach($a as $row){
+                $data['item'] = $a[$i];
+                $data['item_type'] = $b[$i];
+                $data['qty'] = $d[$i];
+                $data['cost'] = $f[$i];
+                $data['discount'] = $g[$i];
+                $data['tax'] = $h[$i];
+                $data['total'] = $ii[$i];
+                $data['type'] = 'Bundle Estimate';
+                $data['type_id'] = $addQuery;
+                $data['status'] = '1';
+                $data['estimate_type'] = 'Bundle';
+                $data['bundle_option_type'] = '1';
+                $data['created_at'] = date("Y-m-d H:i:s");
+                $data['updated_at'] = date("Y-m-d H:i:s");
+                $addQuery2 = $this->accounting_invoices_model->additem_details($data);
+                $i++;
+            }
+
+            $j = $this->input->post('items2');
+            $k = $this->input->post('item_type2');
+            $l = $this->input->post('quantity2');
+            $m = $this->input->post('price2');
+            $n = $this->input->post('discount2');
+            $o = $this->input->post('tax2');
+            $p = $this->input->post('total2');
+
+            $z = 0;
+            foreach($j as $row2){
+                $data2['item'] = $j[$z];
+                $data2['item_type'] = $k[$z];
+                $data2['qty'] = $l[$z];
+                $data2['cost'] = $m[$z];
+                $data2['discount'] = $n[$z];
+                $data2['tax'] = $o[$z];
+                $data2['total'] = $p[$z];
+                $data2['type'] = 'Bundle Estimate';
+                $data2['type_id'] = $addQuery;
+                $data2['status'] = '1';
+                $data2['estimate_type'] = 'Bundle';
+                $data2['bundle_option_type'] = '2';
+                $data2['created_at'] = date("Y-m-d H:i:s");
+                $data2['updated_at'] = date("Y-m-d H:i:s");
+                $addQuery3 = $this->accounting_invoices_model->additem_details($data2);
+                $z++;
+            }
+    
+            redirect('estimate');
+        }
+        else{
+            echo json_encode(0);
+        }
     }
 
 

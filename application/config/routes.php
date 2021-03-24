@@ -258,12 +258,16 @@ $route['accounting/show-pdf'] = "accounting_modals/showPDF";
 $route['accounting/download-pdf'] = "accounting_modals/downloadPDF";
 $route['accounting/send-email-form']['post'] = "accounting_modals/showEmailModal";
 
-$route['accounting/delete-group-tag/(:any)/(:any)']['DELETE'] = "accounting/deleteGroupTag/$1/$2";
-$route['accounting/update-group-tag/(:any)/(:any)']['POST'] = "accounting/updateGroupTag/$1/$2";
+// Accounting tags
+$route['accounting/tags'] = 'accounting_controllers/tags/index';
+$route['accounting/tags/get-group-tags'] = 'accounting_controllers/tags/get_group_tags';
+$route['accounting/tags/load-all-tags']['post'] = "accounting_controllers/tags/load_all_tags";
+$route['accounting/tags/delete/(:any)/(:any)']['DELETE'] = "accounting_controllers/tags/delete/$1/$2";
+$route['accounting/tags/update/(:any)/(:any)']['POST'] = "accounting_controllers/tags/update/$1/$2";
+$route['accounting/tags/add-group-tag']['POST'] = "accounting_controllers/tags/add_group_tag";
+$route['accounting/tags/add-tag']['POST'] = "accounting_controllers/tags/add_tag";
 
 // Modals
-$route['accounting/get-group-tags'] = 'accounting/get_group_tags';
-$route['accounting/load-all-tags']['post'] = "accounting/load_all_tags";
 $route['accounting/get-other-modals/(:any)'] = "accounting_modals/index/$1";
 $route['accounting/apply-for-capital'] = 'accounting/apply_for_capital';
 $route['accounting/submit-modal-form']['post'] = 'accounting_modals/action';
@@ -281,36 +285,42 @@ $route['accounting/get-recurring-form-fields/(:any)'] = 'accounting_modals/get_r
 $route['accounting/get-item-details/(:any)'] = 'accounting_modals/getItemDetails/$1';
 
 $route['accounting/lists'] = 'accounting/lists';
-$route['accounting/attachments'] = 'accounting/attachments';
-$route['accounting/attachments/upload']['post'] = 'accounting/upload_files';
-$route['accounting/attachments/load-attachments']['post'] = 'accounting/load_attachment_files';
-$route['accounting/attachments/download'] = "accounting/download_attachment";
-$route['accounting/attachments/update']['post'] = "accounting/edit_attachment";
-$route['accounting/attachments/delete/(:any)']['DELETE'] = "accounting/delete_attachment/$1";
 
+// Accounting attachments
+$route['accounting/attachments'] = 'accounting_controllers/attachments/index';
+$route['accounting/attachments/upload']['post'] = 'accounting_controllers/attachments/upload';
+$route['accounting/attachments/load-attachments']['post'] = 'accounting_controllers/attachments/load_attachment_files';
+$route['accounting/attachments/download'] = "accounting_controllers/attachments/download";
+$route['accounting/attachments/update']['post'] = "accounting_controllers/attachments/edit";
+$route['accounting/attachments/delete/(:any)']['DELETE'] = "accounting_controllers/attachments/delete/$1";
+
+// Accounting payment methods
 $route['accounting/payment-methods'] = 'accounting_controllers/payment_methods/index';
 $route['accounting/payment-methods/load-payment-methods']['post'] = 'accounting_controllers/payment_methods/load_payment_methods';
 $route['accounting/payment-methods/add']['post'] = 'accounting_controllers/payment_methods/add';
 $route['accounting/payment-methods/delete/(:any)']['DELETE'] = "accounting_controllers/payment_methods/inactive/$1";
 $route['accounting/payment-methods/activate/(:any)'] = "accounting_controllers/payment_methods/activate/$1";
-$route['accounting/payment-methods/update']['post'] = "accounting_controllers/payment_methods/update";
+$route['accounting/payment-methods/update/(:any)']['post'] = "accounting_controllers/payment_methods/update/$1";
 
+// Accounting recurring transactions
 $route['accounting/recurring-transactions'] = "accounting_controllers/recurring_transactions/index";
 $route['accounting/recurring-transactions/load-recurring-transactions']['post'] = "accounting_controllers/recurring_transactions/load_recurring_transactions";
 $route['accounting/recurring-transactions/delete/(:any)']['DELETE'] = "accounting_controllers/recurring_transactions/delete/$1";
 $route['accounting/recurring-transactions/get-details/(:any)'] = "accounting_controllers/recurring_transactions/get/$1";
 $route['accounting/recurring-transactions/update/(:any)/(:any)']['post'] = "accounting_controllers/recurring_transactions/update/$1/$2";
 
+// Accounting payment terms
 $route['accounting/terms'] = "accounting_controllers/payment_terms/index";
 $route['accounting/terms/add'] = "accounting_controllers/payment_terms/add";
 $route['accounting/terms/load-terms']['post'] = 'accounting_controllers/payment_terms/load_terms';
 $route['accounting/terms/delete/(:any)']['DELETE'] = "accounting_controllers/payment_terms/delete/$1";
 $route['accounting/terms/activate/(:any)'] = "accounting_controllers/payment_terms/activate/$1";
-$route['accounting/terms/update']['post'] = "accounting_controllers/payment_terms/update";
+$route['accounting/terms/update/(:any)']['post'] = "accounting_controllers/payment_terms/update/$1";
 
 $route['accounting/sales-overview'] = 'accounting/salesoverview';
 $route['accounting/all-sales'] = 'accounting/allsales';
 
+// Accounting products and services
 $route['accounting/products-and-services'] = 'accounting_controllers/products_and_services/index';
 $route['accounting/products-and-services/load']['post'] = 'accounting_controllers/products_and_services/load';
 $route['accounting/products-and-services/item-form/(:any)'] = 'accounting_controllers/products_and_services/get_item_form/$1';
@@ -324,6 +334,7 @@ $route['accounting/products-and-services/batch-action/(:any)']['post'] = 'accoun
 $route['accounting/adjust-starting-value-form/(:any)'] = 'accounting/adjust_starting_value_form/$1';
 $route['accounting/adjust-starting-value/(:any)']['post'] = 'accounting/adjust_starting_value/$1';
 
+// Accounting product categories
 $route['accounting/product-categories'] = 'accounting_controllers/product_categories/index';
 $route['accounting/product-categories/load']['post'] = 'accounting_controllers/product_categories/load_product_categories';
 $route['accounting/product-categories/get'] = 'accounting_controllers/product_categories/get_categories';
@@ -335,6 +346,7 @@ $route['accounting/product-categories/delete/(:any)']['DELETE'] = "accounting_co
 $route['accounting/payroll-overview'] = 'accounting/payrolloverview';
 $route['accounting/workers-comp'] = 'accounting/workerscomp';
 
+// Accounting chart of accounts
 $route['accounting/chart-of-accounts'] = 'accounting_controllers/chart_of_accounts/index';
 $route['accounting/chart-of-accounts/load']['post'] = 'accounting_controllers/chart_of_accounts/load_chart_of_accounts';
 $route['accounting/chart-of-accounts/create'] = 'accounting_controllers/chart_of_accounts/create';
@@ -342,7 +354,7 @@ $route['accounting/chart-of-accounts/fetch-acc-detail'] = 'accounting_controller
 $route['accounting/chart-of-accounts/add'] = 'accounting_controllers/chart_of_accounts/add';
 $route['accounting/chart-of-accounts/edit/(:any)?'] = 'accounting_controllers/chart_of_accounts/edit/$1';
 $route['accounting/chart-of-accounts/update'] = 'accounting_controllers/chart_of_accounts/update';
-$route['accounting/chart-of-accounts/inactive'] = 'accounting_controllers/chart_of_accounts/inactive';
+$route['accounting/chart-of-accounts/inactive/(:any)'] = 'accounting_controllers/chart_of_accounts/inactive/$1';
 $route['accounting/chart-of-accounts/active/(:any)'] = 'accounting_controllers/chart_of_accounts/make_account_active/$1';
 $route['accounting/chart-of-accounts/import'] = 'accounting_controllers/chart_of_accounts/import';
 

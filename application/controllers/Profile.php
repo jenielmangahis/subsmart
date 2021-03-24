@@ -20,6 +20,18 @@ class Profile extends MY_Controller {
 		$this->page_data['user'] = $this->users_model->getById(logged('id'));
 		$this->page_data['user']->role = $this->roles_model->getById( logged('role') );
 		$this->page_data['activeTab'] = $tab;
+
+		add_css([
+            'assets/css/esign/fill-and-sign/fill-and-sign.css',
+		]);
+
+		add_footer_js([
+			'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js',
+			'https://cdnjs.cloudflare.com/ajax/libs/signature_pad/1.5.3/signature_pad.min.js',
+			'assets/js/esign/fill-and-sign/step2.js',
+            'assets/js/profile/signature.js',
+        ]);
+
 		$this->load->view('account/profile', $this->page_data);
 	}
 
@@ -178,7 +190,43 @@ class Profile extends MY_Controller {
 		}		
 		redirect('profile/index/change_profile_pic');	}
 
+	
+	public function createOrUpdateSignature() {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            echo json_encode(['success' => false]);
+            return;
+        }
 
+        $payload = json_decode(file_get_contents('php://input'), true);
+        $payload['user_id'] = logged('id');
+        $payload['updated_at'] = date('Y-m-d H:i:s');
+        $isCreated = false;
+
+        $this->db->where('user_id', $payload['user_id']);
+        $record = $this->db->get('user_signatures')->row();
+
+        if (is_null($record)) {
+            $isCreated = true;
+            $this->db->insert('user_signatures', $payload);
+        } else {
+            $this->db->where('id', $record->id);
+            $this->db->update('user_signatures', $payload);
+        }
+
+        $id = $isCreated ? $this->db->insert_id() : $record->id;
+        $this->db->where('id', $id);
+        $record = $this->db->get('user_signatures')->row();
+
+        header('content-type: application/json');
+        echo json_encode(['data' => $record, 'is_created' => $isCreated]);
+    }
+
+	public function getUserSignature()
+	{
+		$this->db->where('user_id', logged('id'));
+        $record = $this->db->get('user_signatures')->row();
+        echo json_encode(['data' => $record]);
+	}
 }
 
 /* End of file Profile.php */

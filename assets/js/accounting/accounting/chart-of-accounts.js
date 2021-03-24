@@ -103,21 +103,6 @@ function col_balance()
     }
 }
 
-function make_inactive(id)
-{
-    $.ajax({
-        url:'/accounting/chart-of-accounts/inactive',
-        method: 'post',
-        data: {id: id},
-        dataType: 'json',
-        success: function(res) {
-            toast(res.success, res.message, 'top-center');
-
-            $('#charts_of_account_table').DataTable().ajax.reload();
-        }
-    });
-}
-
 $(function(){
     $('.date_picker input').datepicker({
         uiLibrary: 'bootstrap',
@@ -281,7 +266,7 @@ $(document).ready(function () {
                             </button>
                             <div class="dropdown-menu">
                                 <a class="dropdown-item" href="javascript:void(0);" data-href="/accounting/chart-of-accounts/edit/${rowData.id}" id="editAccount" data-id="${rowData.id}">Edit</a>
-                                <a class="dropdown-item" href="#" onclick="make_inactive(${rowData.id})">Make Inactive (Reduce usage)</a>
+                                <a class="dropdown-item make-inactive" href="#">Make Inactive (Reduce usage)</a>
                                 <a class="dropdown-item" href="#">Run Report</a>
                             </div>
                         </div>
@@ -300,15 +285,23 @@ $(document).ready(function () {
         $.ajax({
             url:`/accounting/chart-of-accounts/active/${rowData.id}`,
             success: function(res) {
-                var result = JSON.parse(res);
-    
-                toast(result.success, result.message, 'top-center');
-    
-                $('#charts_of_account_table').DataTable().ajax.reload();
+                location.reload();
             }
         });
     });
 
+    $(document).on('click', '#charts_of_account_table .make-inactive', function(e) {
+        e.preventDefault();
+        var row = $(this).parent().parent().parent().parent();
+        var rowData = $('#charts_of_account_table').DataTable().row(row).data();
+
+        $.ajax({
+            url: `/accounting/chart-of-accounts/inactive/${rowData.id}`,
+            success: function(res) {
+                location.reload();
+            }
+        });
+    });
 })
 
 $(document).on('click', '#editAccount', function(e){

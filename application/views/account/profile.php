@@ -405,20 +405,23 @@ table.account-info tbody tr td {
                                   <div class="<?php echo $activeTab=='signature'?'active':'' ?> tab-pane" id="editSignature">
                                   <?php echo form_open('/profile/updateUserProfilePic', ['method' => 'POST', 'autocomplete' => 'off', 'class' => 'form-horizontal form-validate', 'enctype' => 'multipart/form-data']); ?>
                                     <h4>Signature</h4>
-                                      <p>This is your signature, update any time.</p>
                                       <div class="row">
                                           <div class="col-md-12">
                                           <div class="signature-holder">
-                                              <div class="signature-body">
-                                                  <?php if ( empty( $user->signature ) ){ ?>
-                                                    <img src="<?=url("");?>uploads/signatures/demo.png" class="img-responsive">
-                                                  <?php }else{ ?>
-                                                    <img src="<?=url("");?>uploads/signatures/{{ $user->signature }}" class="img-responsive">
-                                                  <?php } ?>
+                                              <div class="signature-body mb-3">
+                                                  <p>This is the electronic representation of your signature, update any time.</p>
+
+                                                  <img id="userSignatureImage">
+                                                  <small>Last updated on <span id="userSignatureImageUpdatedAt"></span></small>
                                               </div>
                                           </div>
+
+                                          <div class="alert alert-warning" id="userSignatureWarning" role="alert">
+                                            Register your signature by clicking the button below.
+                                          </div>
+
                                           <div class="signature-btn-holder">
-                                              <a class="btn btn-primary btn-block"  data-toggle="modal" data-target="#updateSignature" data-target="#createFolder" data-backdrop="static" data-keyboard="false"> Update Signature</a>
+                                              <a class="btn btn-primary btn-flat" style="color:#fff" id="createSignatureButton">Register Signature</a>
                                           </div>
                                           </div>
                                       </div>
@@ -441,123 +444,71 @@ table.account-info tbody tr td {
 </div>
 
 <!-- /.row -->
-<div class="modal fade" id="updateSignature" role="dialog">
-        <div class="close-modal" data-dismiss="modal">&times;</div>
-    <div class="modal-dialog">
-      <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title">Update Signature </h4>
-                </div>
-      <ul class="head-links">
-        <li type="capture" class="active"><a data-toggle="tab" href="#text">Text</a></li>
-        <li type="upload"><a data-toggle="tab" href="#upload">Upload</a></li>
-        <li type="draw"><a data-toggle="tab" href="#draw">Draw</a></li>
-      </ul>
-        <div class="modal-body">
-        <div class="tab-content">
-            <div id="text" class="tab-pane fade in active">
-                      <form>
-                          <div class="form-group">
-                            <div class="row">
-                                <div class="col-md-6">
-                                  <label>Type your signature</label>
-                                  <input type="text" class="form-control signature-input" name="" placeholder="Type your signature" maxlength="18" value="Your Name">
-                                </div>
-                                <div class="col-md-6">
-                                  <label>Select font</label>
-                                  <select class="form-control signature-font" name="">
-                                      <option value="Lato">Lato</option>
-                                      <option value="Miss Fajardose">Miss Fajardose</option>
-                                      <option value="Meie Script">Meie Script</option>
-                                      <option value="Petit Formal Script">Petit Formal Script</option>
-                                      <option value="Niconne">Niconne</option>
-                                      <option value="Rochester">Rochester</option>
-                                      <option value="Tangerine">Tangerine</option>
-                                      <option value="Great Vibes">Great Vibes</option>
-                                      <option value="Berkshire Swash">Berkshire Swash</option>
-                                      <option value="Sacramento">Sacramento</option>
-                                      <option value="Dr Sugiyama">Dr Sugiyama</option>
-                                      <option value="League Script">League Script</option>
-                                      <option value="Courgette">Courgette</option>
-                                      <option value="Pacifico">Pacifico</option>
-                                      <option value="Cookie">Cookie</option>
-                                      <option value="Grand Hotel">Grand Hotel</option>
-                                  </select>
-                                </div>
-                            </div>
-                          </div>
-                          <div class="form-group">
-                            <div class="row">
-                                <div class="col-md-4">
-                                  <label>Weight</label>
-                                  <select class="form-control signature-weight" name="">
-                                      <option value="normal">Regular</option>
-                                      <option value="bold">Bold</option>
-                                      <option value="lighter">Lighter</option>
-                                  </select>
-                                </div>
-                                <div class="col-md-4">
-                                  <label>Color</label>
-                                  <input  class="form-control signature-color jscolor { valueElement:null,borderRadius:'1px', borderColor:'#e6eaee',value:'000000',zIndex:'99999', onFineChange:'updateSignatureColor(this)'}" readonly="">
-                                </div>
-                                <div class="col-md-4">
-                                  <label>Style</label>
-                                  <select class="form-control signature-style" name="">
-                                      <option value="normal">Regular</option>
-                                      <option value="italic">Italic</option>
-                                  </select>
-                                </div>
-                            </div>
-                          </div>
-                      </form>
-                      <div class="divider"></div>
-                      <h4 class="text-center">Preview</h4>
-                      <div class="text-signature-preview">
-                          <div class="text-signature" id="text-signature" style="color: #000000">Your Name</div>
-                      </div>
-
+  <div class="modal fade fillAndSign__modal" id="updateSignature" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Register Signature</h5>
+                <button type="button" class="close close-me" aria-label="Close">
+                    <span>×</span>
+                </button>
             </div>
-            <div id="upload" class="tab-pane fade">
-                <p>Upload your signature if you already have it.</p>
-                  <div class="form-group">
-                        <div class="row">
-                          <div class="col-md-12">
-                            <label>Upload your signature</label>
-                                <input type="file" name="signatureupload" class="croppie" crop-width="400" crop-height="150">
-                          </div>
-                      </div>
-                  </div>
-            </div>
-            <div id="draw" class="tab-pane fade text-center">
-                    <p>Draw your signature.</p>
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="draw-signature-holder"><canvas width="400" height="150" id="draw-signature"></canvas></div>
-                            <div class="signature-tools text-center" id="controls">
-                                <div class="signature-tool-item with-picker">
-                                    <div><button class="jscolor { valueElement:null,borderRadius:'1px', borderColor:'#e6eaee',value:'000000',zIndex:'99999', onFineChange:'modules.color(this)'}"></button></div>
-                                </div>
-                                <div class="signature-tool-item" id="signature-stroke" stroke="5">
-                                    <div class="tool-icon tool-stroke"></div>
-                                </div>
-                                <div class="signature-tool-item" id="undo">
-                                    <div class="tool-icon tool-undo"></div>
-                                </div>
-                                <div class="signature-tool-item" id="clear">
-                                    <div class="tool-icon tool-erase"></div>
-                                </div>
-                            </div>
+            <div class="modal-body">
+                <ul class="nav nav-tabs" role="tablist">
+                    <li class="nav-item active">
+                        <a class="nav-link active" id="draw-tab" data-toggle="tab" href="#draw" role="tab" aria-controls="draw" aria-selected="false">
+                            <i class="fa fa-pencil mr-2"></i>Draw
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="type-tab" data-toggle="tab" href="#type" role="tab" aria-controls="type" aria-selected="true">
+                            <i class="fa fa-keyboard-o mr-2"></i>Type
+                        </a>
+                    </li>
+                </ul>
+                <div class="tab-content">
+                    <div class="tab-pane active" data-signature-type="draw" id="draw" role="tabpanel" aria-labelledby="draw-tab">
+                        <div class="fillAndSign__signaturePad">
+                            <canvas width="700" height="200" style="touch-action: none;"></canvas>
+                            <a href="#">Clear</a>
                         </div>
                     </div>
+                    <div class="tab-pane" data-signature-type="type" id="type" role="tabpanel" aria-labelledby="type-tab">
+
+                        <div class="dropdown mt-2 mb-2" id="fontSelect">
+                            <button class="btn btn-secondary dropdown-toggle" type="button" id="fontDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Select Font
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="fontDropdown">
+                                <a class="dropdown-item" href="#" data-font="font-1">Font 1</a>
+                                <a class="dropdown-item" href="#" data-font="font-2">Font 2</a>
+                                <a class="dropdown-item" href="#" data-font="font-3">Font 3</a>
+                                <a class="dropdown-item" href="#" data-font="font-4">Font 4</a>
+                                <a class="dropdown-item" href="#" data-font="font-5">Font 5</a>
+                            </div>
+                        </div>
+
+                        <input class="form-control fillAndSign__signatureInput" spellcheck="false" autocomplete="off" autofocus="" tabindex="0" aria-label="Type your signature here" maxlength="255" placeholder="Type your signature here">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="display: block;">
+                <div>
+                    <p>By clicking <strong>Save Signature</strong>, I agree that the signature will be the electronic representation of my signature for all purposes when
+                        I (or my agent) use them on documents, including legally binding contracts - just the same as pen-and-paper signature.</p>
+                </div>
+
+                <div class="modal-footer__buttonContainer" style="display: flex; justify-content: flex-end;">
+                    <button type="button" class="btn btn-primary d-flex align-items-center mr-2" id="signatureApplyButton">
+                        <div class="spinner-border spinner-border-sm m-0 mr-2 d-none" role="status">
+                            <span class="sr-only">Loading...</span>
+                        </div>
+                        Save Signature
+                    </button>
+                    <button type="button" class="btn btn-secondary close-me" id="signatureModalCloseButton">Close</button>
+                </div>
             </div>
         </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary save-signature">Save Signature</button>
-        </div>
-      </div>
-
     </div>
   </div>
 

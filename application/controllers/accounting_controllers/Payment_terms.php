@@ -80,14 +80,15 @@ class Payment_terms extends MY_Controller {
         ];
 
         $term = $this->accounting_terms_model->create($data);
+        $name = $data['name'];
 
-        $return = [
-            'data' => $term,
-            'success' => $term ? true : false,
-            'message' => $term ? 'Success!' : 'Error!'
-        ];
+        if($term) {
+            $this->session->set_flashdata('success', "$name added successfully!");
+        } else {
+            $this->session->set_flashdata('error', "Please try again!");
+        }
 
-        echo json_encode($return);
+        redirect('/accounting/terms');
     }
 
     public function load_terms()
@@ -153,11 +154,13 @@ class Payment_terms extends MY_Controller {
         $result = [];
 
         $delete = $this->accounting_terms_model->delete($id);
-        $result['success'] = $delete;
-        $result['message'] = $delete ? 'Successfully Deleted' : 'Failed to Delete';
+        $name = $this->accounting_terms_model->getById($id)->name;
 
-        echo json_encode($result);
-        exit;
+        if($delete) {
+            $this->session->set_flashdata('success', "$name is now inactive!");
+        } else {
+            $this->session->set_flashdata('error', "Please try again!");
+        }
     }
 
     public function activate($id)
@@ -165,14 +168,16 @@ class Payment_terms extends MY_Controller {
         $result = [];
 
         $activate = $this->accounting_terms_model->activate($id);
-        $result['success'] = $activate;
-        $result['message'] = $activate ? 'Successfully Activated' : 'Failed to activate';
+        $name = $this->accounting_terms_model->getById($id)->name;
 
-        echo json_encode($result);
-        exit;
+        if($activate) {
+            $this->session->set_flashdata('success', "$name is now active!");
+        } else {
+            $this->session->set_flashdata('error', "Please try again!");
+        }
     }
 
-    public function update()
+    public function update($id)
     {
         $data = [
             'name' => $this->input->post('name'),
@@ -182,12 +187,15 @@ class Payment_terms extends MY_Controller {
             'minimum_days_to_pay' => $this->input->post('type') === "2" ? $this->input->post('minimum_days_to_pay') === "" ? 0 : $this->input->post('minimum_days_to_pay') : null,
         ];
 
-        $update = $this->accounting_terms_model->updateTerm($this->input->post('id'), $data);
+        $update = $this->accounting_terms_model->updateTerm($id, $data);
+        $name = $data['name'];
 
-        echo json_encode([
-            'data' => $update,
-            'success' => $update ? true : false,
-            'message' => $update ? 'Success!' : 'Error!'
-        ]);
+        if($update) {
+            $this->session->set_flashdata('success', "$name updated successfully!");
+        } else {
+            $this->session->set_flashdata('error', "Please try again!");
+        }
+
+        redirect('/accounting/terms');
     }
 }

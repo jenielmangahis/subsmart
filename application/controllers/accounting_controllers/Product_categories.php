@@ -86,9 +86,10 @@ class Product_categories extends MY_Controller {
         $data['company_id'] = getLoggedCompanyID();
 
         $create = $this->items_model->insertCategory($data);
+        $name = $data['name'];
 
         if($create) {
-            $this->session->set_flashdata('success', "Category inserted successfully!");
+            $this->session->set_flashdata('success', "$name added successfully!");
         } else {
             $this->session->set_flashdata('error', "Please try again!");
         }
@@ -111,9 +112,10 @@ class Product_categories extends MY_Controller {
         $data['parent_id'] = isset($data['parent_id']) ? $data['parent_id'] : null;
 
         $update = $this->items_model->updateCategory($id, $data);
+        $name = $data['name'];
 
         if($update) {
-            $this->session->set_flashdata('success', "Category updated successfully!");
+            $this->session->set_flashdata('success', "$name updated successfully!");
         } else {
             $this->session->set_flashdata('error', "Please try again!");
         }
@@ -123,10 +125,11 @@ class Product_categories extends MY_Controller {
 
     public function delete($id)
     {
+        $name = $this->items_model->getCategory($id)->name;
         $delete = $this->items_model->deleteCategory($id);
 
         if($delete) {
-            $this->session->set_flashdata('success', "Category deleted successfully!");
+            $this->session->set_flashdata('success', "$name deleted successfully!");
         } else {
             $this->session->set_flashdata('error', "Please try again!");
         }

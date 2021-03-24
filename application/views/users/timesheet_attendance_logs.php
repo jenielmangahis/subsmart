@@ -98,22 +98,28 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                             </div>
                         </div>
                         <!-- Date Selector -->
-                        <div class="row">
-                            <div class="col-lg-3" style="margin-bottom: 12px">
+                        <form action="<?= base_url() ?>/timesheet/download_attendance_sheet_logs_to_excel" target="_blank" method="POST">
+                            <div class="row">
+                                <div class="col-lg-3" style="margin-bottom: 12px">
 
+                                </div>
+                                <div class="col-lg-2" style="margin-bottom: 12px">
+                                    <label for="from_date_logs" class="week-label">From:</label>
+                                    <?php
+                                    date_default_timezone_set($this->session->userdata('usertimezone'));
+                                    ?>
+                                    <input type="text" name="date_from" id="from_date_logs" class="form-control ts_schedule" value="<?php echo date('m/d/Y', strtotime('monday this week')) ?>">
+                                </div>
+                                <div class="col-lg-2" style="margin-bottom: 12px">
+                                    <label for="to_date_logs" class="week-label">To:</label>
+                                    <input type="text" name="date_to" id="to_date_logs" class="form-control ts_schedule" value="<?php echo date('m/d/Y') ?>">
+                                </div>
+                                <div class="col-lg-2" style="margin-bottom: 12px">
+                                    <div><label for="to_date_logs" class="week-label">&nbsp;</label></div>
+                                    <button type="submit" class="btn btn-success action-btn"><i class="fa fa-download" aria-hidden="true"></i> Export to Excel</button>
+                                </div>
                             </div>
-                            <div class="col-lg-2" style="margin-bottom: 12px">
-                                <label for="from_date_logs" class="week-label">From:</label>
-                                <?php
-                                date_default_timezone_set($this->session->userdata('usertimezone'));
-                                ?>
-                                <input type="text" id="from_date_logs" class="form-control ts_schedule" value="<?php echo date('m/d/Y', strtotime('monday this week')) ?>">
-                            </div>
-                            <div class="col-lg-2" style="margin-bottom: 12px">
-                                <label for="to_date_logs" class="week-label">To:</label>
-                                <input type="text" id="to_date_logs" class="form-control ts_schedule" value="<?php echo date('m/d/Y') ?>">
-                            </div>
-                        </div>
+                        </form>
                         <div class="row">
                             <div class="col-lg-12 table-responsive">
                                 <table id="timeLogTable" class="table table-bordered table-striped" style="display:none;">
@@ -163,7 +169,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h3 class="modal-title" id="edit_attendance_log"><i class="fa fa-pencil-square-o"></i> <span>Edit Attendance Log</span> <label id="edit_attendance_name">Lou Pinton</label></h3>
+                    <h3 class="modal-title" id="edit_attendance_log"><i class="fa fa-pencil-square-o"></i> <span>Edit Attendance Log </span> <label id="edit_attendance_name">Lou Pinton</label><a id="editors_footprint">Edited by Lou Pinton last 03-22-2021 10:00 AM</a></h3>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 </div>
                 <form action="" method="post" id="formNewProject">

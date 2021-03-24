@@ -588,7 +588,7 @@ $(document).ready(function(){
             success: function(response){
                 // alert('success');
                 // console.log(response['customer']);
-            $("#job_location").val(response['customer'].cross_street + ' ' + response['customer'].city + ' ' + response['customer'].state + ' ' + response['customer'].country);
+            $("#job_location").val(response['customer'].mail_add + ' ' + response['customer'].cross_street + ' ' + response['customer'].city + ' ' + response['customer'].state + ' ' + response['customer'].country);
             $("#customer_email").val(response['customer'].email);
             $("#shipping_address").val(response['customer'].mail_add);
             $("#billing_address").val(response['customer'].mail_add);
