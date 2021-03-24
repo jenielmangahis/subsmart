@@ -9,11 +9,6 @@ class Affiliate extends MY_Controller {
         $this->checkLogin();
 		$this->page_data['page']->title = 'Affiliate';
 		$this->page_data['page']->menu = 'affiliate';
-
-		$cid  = logged('id');
-		$profiledata = $this->business_model->getByWhere(array('user_id'=>$cid));
-		$this->page_data['profiledata'] = ($profiledata) ? $profiledata[0] : null;
-
         $this->load->model('Affiliate_model', 'affiliate_model');
 
 		add_css(array(

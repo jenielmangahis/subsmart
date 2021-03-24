@@ -12,10 +12,6 @@ class Booking extends MY_Controller {
 		$this->load->helper(array('form', 'url', 'hashids_helper'));
 		$this->load->library('session');
 
-		$cid  = logged('id');
-		$profiledata = $this->business_model->getByWhere(array('user_id'=>$cid));
-		$this->page_data['profiledata'] = ($profiledata) ? $profiledata[0] : null;
-
 		$this->load->model('BookingCategory_model');
 		$this->load->model('BookingForms_model');
 		$this->load->model('BookingServiceItem_model');

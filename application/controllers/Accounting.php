@@ -91,9 +91,6 @@ class Accounting extends MY_Controller {
                 array("",	array('/accounting/chart-of-accounts','/accounting/reconcile')),
             );
         $this->page_data['menu_icon'] = array("fa-tachometer","fa-university","fa-credit-card","fa-money","fa-dollar","fa-bar-chart","fa-minus-circle","fa-file","fa-calculator");
-        $cid  = logged('id');
-        $profiledata = $this->business_model->getByWhere(array('user_id'=>$cid));
-        $this->page_data['profiledata'] = ($profiledata) ? $profiledata[0] : null;
     }
 
     /*public function index()
