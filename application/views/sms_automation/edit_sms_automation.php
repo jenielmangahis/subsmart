@@ -80,10 +80,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <div class="validation-error" style="display: none;"></div>
                             <div class="tabs-menu">
                                 <ul class="clearfix">
-                                  <li class="active">1. Edit Rules</li>
-                                  <li>2. Build SMS</li>
-                                  <li>3. Preview</li>
-                                  <li>4. Payment</li>
+                                  <li class="active"><a href="<?= base_url("/sms_automation/edit_sms_automation/" . $smsAutomation->id); ?>">1. Edit Rules</a></li>
+                                  <li><a href="<?= base_url("/sms_automation/build_sms"); ?>">2. Build SMS</a></li>
+                                  <li><a href="<?= base_url("/sms_automation/preview_sms_message"); ?>">3. Preview</a></li>
+                                  <li><a href="<?= base_url("/sms_automation/payment"); ?>">4. Payment</a></li>
                                 </ul>
                             </div>
                             <hr />

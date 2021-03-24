@@ -1,8 +1,6 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <?php include viewPath('includes/header'); ?>
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 <style>
 .cell-active{
     background-color: #5bc0de;
@@ -61,6 +59,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 }
 .expired{
   color:red;
+}
+.card-type.discover {
+    background-position: -125px 0;
 }
 </style>
 <div class="wrapper" role="wrapper">
@@ -134,10 +135,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                               $is_checked = 'checked="checked"';
                                             }
                                           ?>
-                                          <label class="custom-control custom-checkbox">
-                                            <input type="checkbox" <?= $is_checked; ?> class="custom-control-input cc-is-primary" data-id="<?= $c->id; ?>">
-                                            <span class="custom-control-indicator"></span>
-                                          </label>
+                                          <input type="checkbox" <?= $is_checked; ?> class="cc-is-primary" data-id="<?= $c->id; ?>">
                                         </td>
                                         <td>
                                           <div class="dropdown dropdown-btn">
@@ -190,15 +188,14 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     </div>
     <!-- page wrapper end -->
 </div>
-<?php include viewPath('includes/footer'); ?>
+
 
 <script type="text/javascript">
 $(function(){
     $(".cc-is-primary").change(function(){
       var url = base_url + 'cards_file/_update_primary_card';
       var id  = $(this).attr("data-id");
-      $(".cc-is-primary").not(this).prop('checked', false);  
-
+      $(".cc-is-primary").not(this).prop('checked', false);
       $.ajax({
          type: "POST",
          url: url,
@@ -206,7 +203,18 @@ $(function(){
          data: {id:id},
          success: function(o)
          {
-            location.reload();
+            if( o.is_success ){ 
+                Swal.fire({
+                  icon: 'success',
+                  title: 'Primary card was updated',
+                  showConfirmButton: false,
+                  timer: 1500
+                })
+                setTimeout(function(){location.reload();},1000);
+                
+            }else{
+                location.reload();
+            }
          }
       });
 
@@ -254,3 +262,4 @@ $(function(){
     });
 });
 </script>
+<?php include viewPath('includes/footer'); ?>

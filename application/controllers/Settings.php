@@ -13,11 +13,7 @@ class Settings extends MY_Controller {
 		$this->page_data['page_title'] = 'Settings';
 		$this->load->helper(array('form', 'url', 'hashids_helper'));
 		$this->load->library('session');
-
-		$cid  = logged('id');
-		$profiledata = $this->business_model->getByWhere(array('user_id'=>$cid));
-		$this->page_data['profiledata'] = ($profiledata) ? $profiledata[0] : null;
-
+        
         //load Model
         $this->load->model('General_model', 'general_model');
 

@@ -18,13 +18,10 @@ class Workcalender extends MY_Controller
         $this->page_data['module']      = 'calendar';
 
         //$this->load->model('Workorder_model', 'workorder_model');
-        $cid  = logged('id');
-        $profiledata = $this->business_model->getByWhere(array('user_id'=>$cid));
         $this->page_data['profiledata'] = ($profiledata) ? $profiledata[0] : null;
         $this->load->model('Workzone_model', 'workzone_model');
         $this->load->model('Users_model');
         $this->load->model('GoogleAccounts_model');
-
         $user_id = getLoggedUserID();
 
         // add css and js file path so that they can be attached on this page dynamically

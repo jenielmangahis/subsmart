@@ -12,10 +12,6 @@ class Event_Types extends MY_Controller {
 		$this->load->helper(array('form', 'url', 'hashids_helper'));
 		$this->load->library('session');
 
-		$cid  = logged('id');
-		$profiledata = $this->business_model->getByWhere(array('user_id'=>$cid));
-		$this->page_data['profiledata'] = ($profiledata) ? $profiledata[0] : null;
-
 		$this->page_data['page']->title = 'Event Types';
 		$this->page_data['page']->menu = 'event_types';
 	}

@@ -9,11 +9,7 @@ class Events extends MY_Controller
     {
         parent::__construct();
         $this->checkLogin();
-
-        $cid  = logged('id');
-        $profiledata = $this->business_model->getByWhere(array('user_id'=>$cid));
-        $this->page_data['profiledata'] = ($profiledata) ? $profiledata[0] : null;
-
+        
         //$this->load->library('paypal_lib');
         $this->load->model('Event_model', 'event_model');
         //$this->load->model('Invoice_model', 'invoice_model');

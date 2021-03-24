@@ -21,10 +21,6 @@ class Invoice extends MY_Controller {
         $this->load->model('Accounting_terms_model','accounting_terms_model');
         $this->load->model('Accounting_invoices_model','accounting_invoices_model');
 
-				$cid  = logged('id');
-				$profiledata = $this->business_model->getByWhere(array('user_id'=>$cid));
-				$this->page_data['profiledata'] = ($profiledata) ? $profiledata[0] : null;
-
         $user_id = getLoggedUserID();
 
         // add css and js file path so that they can be attached on this page dynamically

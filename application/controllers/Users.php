@@ -52,8 +52,9 @@ class Users extends MY_Controller {
 
 	public function businessprofile()
 	{	
-		$user = (object)$this->session->userdata('logged');		
-		$profiledata = $this->business_model->getByWhere(array('id'=>$user->id));
+		$user    = (object)$this->session->userdata('logged');
+		$comp_id = logged('company_id');		
+		$profiledata = $this->business_model->getByWhere(array('company_id'=>$comp_id));
 		$this->page_data['profiledata'] = $profiledata[0];
 		$this->load->view('business_profile/businessprofile', $this->page_data);
 	}

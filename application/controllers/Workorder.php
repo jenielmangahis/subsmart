@@ -21,11 +21,7 @@ class Workorder extends MY_Controller
         $this->page_data['page']->menu = (!empty($this->uri->segment(2))) ? $this->uri->segment(2) : 'workorder';
         $this->load->model('Workorder_model', 'workorder_model');
         $this->load->model('Jobs_model', 'jobs_model');
-
-        $cid  = logged('id');
-        $profiledata = $this->business_model->getByWhere(array('user_id'=>$cid));
-        $this->page_data['profiledata'] = ($profiledata) ? $profiledata[0] : null;
-
+        
         $user_id = getLoggedUserID();
 
         // add css and js file path so that they can be attached on this page dynamically

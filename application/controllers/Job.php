@@ -14,10 +14,7 @@ class Job extends MY_Controller
         //$this->load->model('Invoice_model', 'invoice_model');
         //$this->load->model('Roles_model', 'roles_model');
         $this->load->model('General_model', 'general');
-        $cid  = logged('id');
-        $profiledata = $this->business_model->getByWhere(array('user_id'=>$cid));
-        $this->page_data['profiledata'] = ($profiledata) ? $profiledata[0] : null;
-
+        
     }
 
     public function loadStreetView($address = NULL)

@@ -17,11 +17,7 @@ class Credit_Notes extends MY_Controller
         $this->load->model('Clients_model');
 
         $this->checkLogin();
-
-        $cid  = logged('id');
-        $profiledata = $this->business_model->getByWhere(array('user_id'=>$cid));
-        $this->page_data['profiledata'] = ($profiledata) ? $profiledata[0] : null;
-
+        
         $user_id = getLoggedUserID();
 
         add_css(array(

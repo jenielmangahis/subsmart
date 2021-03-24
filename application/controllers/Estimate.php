@@ -16,11 +16,7 @@ class Estimate extends MY_Controller
         $this->load->model('Jobs_model', 'jobs_model');
         $this->load->model('items_model');
         $this->load->model('accounting_invoices_model');
-
-        $cid  = logged('id');
-        $profiledata = $this->business_model->getByWhere(array('user_id'=>$cid));
-        $this->page_data['profiledata'] = ($profiledata) ? $profiledata[0] : null;
-
+        
         $this->checkLogin();
 
         $user_id = getLoggedUserID();
