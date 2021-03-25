@@ -452,6 +452,17 @@
                                               </div>
                                           </div>
                                         </div>
+                                        <hr style="margin-top: 36px;" />
+                                        <div class="row">
+                                            <div class="col-sm-8">
+                                                <div class="addon_price">
+                                                    Is Active : <?= $is_active; ?>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-4 text-right">
+                                                <a class="btn-converge-form" href="javascript:void(0);" ><span class="fa fa-pencil-square-o icon"></span> Setup</a>
+                                            </div>
+                                        </div>
                                         <div class="addon__switch">
                                         </div>
                                     </div>
@@ -545,6 +556,26 @@
                                     </div>
                                 </div>
                                 <!-- end card -->
+
+                                <div class="modal fade bd-example-modal-sm" id="modalConvergeApi" tabindex="-1" role="dialog" aria-labelledby="modalConvergeApiTitle" aria-hidden="true">
+                                  <div class="modal-dialog modal-md" role="document">
+                                    <div class="modal-content">
+                                      <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLongTitle"><i class="fa fa-form"></i> Setup Converge</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                          <span aria-hidden="true">&times;</span>
+                                        </button>
+                                      </div>
+                                      <?php echo form_open_multipart('', ['class' => 'form-validate', 'id' => 'form-converge-account', 'autocomplete' => 'off' ]); ?>
+                                      <div class="modal-body converge-body"></div>
+                                      <div class="modal-footer close-modal-footer">                                        
+                                        <button type="submit" class="btn btn-primary btn-converge-activate">Activate</button>
+                                      </div>
+                                      <?php echo form_close(); ?>
+                                    </div>
+                                  </div>
+                                </div>
+
                             </div>
                         </div>
 
@@ -560,3 +591,59 @@
 <?php include viewPath('includes/settings_modal'); ?>
 <?php include viewPath('includes/footer'); ?>
 <?php include viewPath('tools/css/style'); ?>
+<script>
+$(function(){
+    $(".btn-converge-form").click(function(){
+        $("#modalConvergeApi").modal('show');
+
+        var url = base_url + 'tools/_get_converge_api_credentials';
+        $(".converge-body").html('<span class="spinner-border spinner-border-sm m-0"></span>');
+        setTimeout(function () {
+        $.ajax({
+           type: "POST",
+           url: url,
+           success: function(o)
+           {
+             $(".converge-body").html(o);
+           }
+        });                    
+        }, 800);
+    });
+
+    $("#form-converge-account").submit(function(e){
+        e.preventDefault();
+
+        var url = base_url + 'tools/_activate_company_converge';
+        $(".btn-converge-activate").html('<span class="spinner-border spinner-border-sm m-0"></span>');
+        setTimeout(function () {
+        $.ajax({
+               type: "POST",
+               url: url,
+               dataType: "json",
+               data: $("#form-converge-account").serialize(),
+               success: function(o)
+               {
+                 if( o.is_success ){
+                    Swal.fire({                      
+                      icon: 'success',
+                      title: 'Your converge account was successfully activated',
+                      showConfirmButton: false,
+                      timer: 1500
+                    });
+
+                    $("#modalConvergeApi").modal('hide');
+                 }else{
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Cannot Activate Converge',
+                        text: o.msg
+                    });
+                 }
+
+                 $(".btn-converge-activate").html('Activate');
+               }
+            });                    
+        }, 800);
+    });
+});
+</script>
