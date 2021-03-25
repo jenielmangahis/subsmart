@@ -143,23 +143,7 @@ $(function(){
             url: `/accounting/attachments/delete/${id}`,
             type:"DELETE",
             success:function (result) {
-                var res = JSON.parse(result);
-
-                $.toast({
-                    icon: res.success ? 'success' : 'error',
-                    heading: res.success ? 'Success' : 'Error',
-                    text: res.message,
-                    showHideTransition: 'fade',
-                    hideAfter: 3000,
-                    allowToastClose: true,
-                    position: 'top-center',
-                    stack: false,
-                    loader: false,
-                });
-
-                $('#delete_attachment').modal('hide');
-
-                $('#attachments_table').DataTable().ajax.reload();
+                location.reload();
             }
         });
     });
@@ -184,42 +168,9 @@ $(function(){
 
         $('#edit_attachment .file-preview').html(preview);
 
-        $('#edit_attachment form').prepend(`<input type="hidden" name="id" value="${data.id}">`);
+        $('#edit_attachment form').prop('action', '/accounting/attachments/update/'+data.id);
 
         $('#edit_attachment').modal('show');
-    });
-
-    $(document).on('submit', '#edit-attachment-form', function(e) {
-        e.preventDefault();
-
-        var data = new FormData(document.getElementById('edit-attachment-form'));
-
-        $.ajax({
-            url: '/accounting/attachments/update',
-            data: data,
-            type: 'post',
-            processData: false,
-            contentType: false,
-            success: function(result) {
-                var res = JSON.parse(result);
-
-                $.toast({
-                    icon: res.success ? 'success' : 'error',
-                    heading: res.success ? 'Success' : 'Error',
-                    text: res.message,
-                    showHideTransition: 'fade',
-                    hideAfter: 3000,
-                    allowToastClose: true,
-                    position: 'top-center',
-                    stack: false,
-                    loader: false,
-                });
-
-                $('#edit_attachment').modal('hide');
-
-                $('#attachments_table').DataTable().ajax.reload();
-            }
-        })
     });
 
     $('#attachments').on('change', function() {
@@ -232,21 +183,7 @@ $(function(){
             processData: false,
             contentType: false,
             success: function(result) {
-                var res = JSON.parse(result);
-
-                $.toast({
-                    icon: res.success ? 'success' : 'error',
-                    heading: res.success ? 'Success' : 'Error',
-                    text: res.message,
-                    showHideTransition: 'fade',
-                    hideAfter: 3000,
-                    allowToastClose: true,
-                    position: 'top-center',
-                    stack: false,
-                    loader: false,
-                });
-
-                $('#attachments_table').DataTable().ajax.reload();
+                location.reload();
             }
         });
     });

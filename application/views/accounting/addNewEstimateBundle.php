@@ -227,7 +227,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         <tr>
                                             <td>Taxes</td>
                                             <td></td>
-                                            <td>$ <span id="total_tax_">0.00<input type="hidden" name="total_tax_" id="total_tax_"></td>
+                                            <td>$ <span id="total_tax_">0.00</span><input type="hidden" name="total_tax_" id="total_tax_input"></td>
                                         </tr>
                                         <tr>
                                             <td style="width:250px;"><input type="text" name="adjustment_name" id="adjustment_name" placeholder="Adjustment Name" class="form-control" style="width:200px; display:inline; border: 1px dashed #d1d1d1"></td>
@@ -318,7 +318,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         <tr>
                                             <td>Taxes</td>
                                             <td></td>
-                                            <td>$ <span id="total_tax2_">0.00<input type="hidden" name="total_tax2_" id="total_tax2_"></td>
+                                            <td>$ <span id="total_tax2_">0.00</span><input type="hidden" name="total_tax2_" id="total_tax2_input"></td>
                                         </tr>
                                         <tr style="display:none;">
                                             <td>Markup $<span id="span_markup"></td>
@@ -361,8 +361,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 </div>
                                 <div class="col-md-3 form-group">
                                     <select name="deposit_request" class="form-control">
-                                        <option value="1" selected="selected">Deposit amount $</option>
-                                        <option value="2">Percentage %</option>
+                                        <option value="$" selected="selected">Deposit amount $</option>
+                                        <option value="%">Percentage %</option>
                                     </select>
                                 </div>
                                 <div class="col-md-3 form-group">
@@ -847,7 +847,8 @@ $(".select_item").click(function () {
   var grand_total_w = grand_total + parseFloat(markup);
 
   $("#total_tax_").text(subtotaltaxx.toFixed(2));
-  $("#total_tax_").val(subtotaltaxx.toFixed(2));
+//   $("#total_tax_").val(subtotaltaxx.toFixed(2));
+$("#total_tax_input").val(subtotaltaxx.toFixed(2));
   
 
   $("#grand_total").text(grand_total_w.toFixed(2));
@@ -1001,7 +1002,8 @@ $(".select_item2").click(function () {
   var grand_total_w = grand_total + parseFloat(markup);
 
   $("#total_tax2_").text(subtotaltaxx.toFixed(2));
-  $("#total_tax2_").val(subtotaltaxx.toFixed(2));
+//   $("#total_tax2_").val(subtotaltaxx.toFixed(2));
+$("#total_tax2_input").val(subtotaltaxx.toFixed(2));
   
 
   $("#grand_total2").text(grand_total_w.toFixed(2));
@@ -1144,7 +1146,8 @@ $(".select_item2").click(function () {
             var grand_total_w = grand_total + parseFloat(markup);
 
             $("#total_tax_").text(subtotaltaxx.toFixed(2));
-            $("#total_tax_").val(subtotaltaxx.toFixed(2));
+            // $("#total_tax_").val(subtotaltaxx.toFixed(2));
+            $("#total_tax_input").val(subtotaltaxx.toFixed(2));
             
 
             $("#grand_total").text(grand_total_w.toFixed(2));
@@ -1274,7 +1277,8 @@ $(".select_item2").click(function () {
             var grand_total_w = grand_total + parseFloat(markup);
 
             $("#total_tax2_").text(subtotaltaxx.toFixed(2));
-            $("#total_tax2_").val(subtotaltaxx.toFixed(2));
+            // $("#total_tax2_").val(subtotaltaxx.toFixed(2));
+            $("#total_tax2_input").val(subtotaltaxx.toFixed(2));
             
 
             $("#grand_total2").text(grand_total_w.toFixed(2));
@@ -1410,7 +1414,8 @@ $(document).on("focusout", ".tax_changeoptions", function () {
   var grand_total_w = grand_total + parseFloat(markup);
 
   $("#total_tax_").text(subtotaltax.toFixed(2));
-  $("#total_tax_").val(subtotaltax.toFixed(2));
+//   $("#total_tax_").val(subtotaltax.toFixed(2));
+  $("#total_tax_input").val(subtotaltax.toFixed(2));
   
 
   $("#grand_total").text(grand_total_w.toFixed(2));
@@ -1522,7 +1527,8 @@ $(document).on("focusout", ".tax_changeoptions2", function () {
   var grand_total_w = grand_total + parseFloat(markup);
 
   $("#total_tax_").text(subtotaltax.toFixed(2));
-  $("#total_tax_").val(subtotaltax.toFixed(2));
+//   $("#total_tax_").val(subtotaltax.toFixed(2));
+$("#total_tax_input").val(subtotaltax.toFixed(2));
   
 
   $("#grand_total").text(grand_total_w.toFixed(2));
@@ -1644,7 +1650,8 @@ $(document).on("focusout", ".tax_changeoptionsb", function () {
   var grand_total_w = grand_total + parseFloat(markup);
 
   $("#total_tax2_").text(subtotaltax.toFixed(2));
-  $("#total_tax2_").val(subtotaltax.toFixed(2));
+//   $("#total_tax2_").val(subtotaltax.toFixed(2));
+$("#total_tax2_input").val(subtotaltax.toFixed(2));
   
 
   $("#grand_total2").text(grand_total_w.toFixed(2));
@@ -1750,7 +1757,8 @@ $(document).on("focusout", ".tax_changeoptions2b", function () {
   var grand_total_w = grand_total + parseFloat(markup);
 
   $("#total_tax2_").text(subtotaltax.toFixed(2));
-  $("#total_tax2_").val(subtotaltax.toFixed(2));
+//   $("#total_tax2_").val(subtotaltax.toFixed(2));
+$("#total_tax2_input").val(subtotaltax.toFixed(2));
   
 
   $("#grand_total2").text(grand_total_w.toFixed(2));

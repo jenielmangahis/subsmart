@@ -68,27 +68,27 @@ class Accounting extends MY_Controller {
 
         $this->page_data['menu_name'] =
             array(
-                array("Dashboard",	array()),
-                array("Banking", 	array('Link Bank','Rules','Receipts','Tags')),
-                array("Expenses", 	array('Expenses','Vendors')),
-                array("Sales", 		array('Overview','All Sales','Estimates','Customers','Deposits','Work Order','Invoice','Jobs')),
-                array("Payroll", 	array('Overview','Employees','Contractors',"Workers' Comp",'Benifits')),
-                array("Reports",	array()),
-                array("Taxes",		array("Sales Tax","Payroll Tax")),
-                array("Mileage",	array()),
-                array("Accounting",	array("Chart of Accounts","Reconcile"))
+                array("Dashboard",  array()),
+                array("Banking",    array('Link Bank','Rules','Receipts','Tags')),
+                array("Expenses",   array('Expenses','Vendors')),
+                array("Sales",      array('Overview','All Sales','Estimates','Customers','Deposits','Work Order','Invoice','Jobs')),
+                array("Payroll",    array('Overview','Employees','Contractors',"Workers' Comp",'Benifits')),
+                array("Reports",    array()),
+                array("Taxes",      array("Sales Tax","Payroll Tax")),
+                array("Mileage",    array()),
+                array("Accounting", array("Chart of Accounts","Reconcile"))
             );
         $this->page_data['menu_link'] =
             array(
                 array('/accounting/banking',array()),
-                array("",	array('/accounting/link_bank','/accounting/rules','/accounting/receipts','/accounting/tags')),
-                array("",	array('/accounting/expenses','/accounting/vendors')),
-                array("",	array('/accounting/sales-overview','/accounting/all-sales','/accounting/newEstimateList','/accounting/customers','/accounting/deposits','/accounting/listworkOrder','/accounting/invoices', 'credit_notes')),
-                array("",	array('/accounting/payroll-overview','/accounting/employees','/accounting/contractors','/accounting/workers-comp','#')),
+                array("",   array('/accounting/link_bank','/accounting/rules','/accounting/receipts','/accounting/tags')),
+                array("",   array('/accounting/expenses','/accounting/vendors')),
+                array("",   array('/accounting/sales-overview','/accounting/all-sales','/accounting/newEstimateList','/accounting/customers','/accounting/deposits','/accounting/listworkOrder','/accounting/invoices', 'credit_notes')),
+                array("",   array('/accounting/payroll-overview','/accounting/employees','/accounting/contractors','/accounting/workers-comp','#')),
                 array('/accounting/reports',array()),
-                array("",	array('/accounting/salesTax','/accounting/payrollTax')),
-                array('#',	array()),
-                array("",	array('/accounting/chart-of-accounts','/accounting/reconcile')),
+                array("",   array('/accounting/salesTax','/accounting/payrollTax')),
+                array('#',  array()),
+                array("",   array('/accounting/chart-of-accounts','/accounting/reconcile')),
             );
         $this->page_data['menu_icon'] = array("fa-tachometer","fa-university","fa-credit-card","fa-money","fa-dollar","fa-bar-chart","fa-minus-circle","fa-file","fa-calculator");
     }
@@ -115,13 +115,13 @@ class Accounting extends MY_Controller {
 
         //additional
             $this->page_data['vendors'] = $this->vendors_model->getVendors();
-        	$this->page_data['checks'] = $this->expenses_model->getCheck();
-        	$this->page_data['transactions'] = $this->expenses_model->getTransaction();
-        	$this->page_data['categories'] = $this->expenses_model->getExpenseCategory();
-        	$this->page_data['bills'] = $this->expenses_model->getBill();
-        	$this->page_data['vendor_credits'] = $this->expenses_model->getVendorCredit();
-        	$this->page_data['expenses'] = $this->expenses_model->getExpense();
-        	$this->page_data['list_categories'] = $this->categories_model->getCategories();
+            $this->page_data['checks'] = $this->expenses_model->getCheck();
+            $this->page_data['transactions'] = $this->expenses_model->getTransaction();
+            $this->page_data['categories'] = $this->expenses_model->getExpenseCategory();
+            $this->page_data['bills'] = $this->expenses_model->getBill();
+            $this->page_data['vendor_credits'] = $this->expenses_model->getVendorCredit();
+            $this->page_data['expenses'] = $this->expenses_model->getExpense();
+            $this->page_data['list_categories'] = $this->categories_model->getCategories();
             $this->page_data['attachments'] = $this->expenses_model->getAttachment();
             $this->page_data['items'] = $this->items_model->getItemlist();
 
@@ -419,7 +419,7 @@ class Accounting extends MY_Controller {
             mkdir($filePath);
         }
 
-		$config['upload_path']  =  $filePath;
+        $config['upload_path']  =  $filePath;
         $config['allowed_types']   = 'gif|jpg|png|jpeg|doc|docx|pdf|xlx|xls|csv';
         $config['max_size']        = '20000';
 
@@ -584,7 +584,7 @@ class Accounting extends MY_Controller {
              mkdir($filePath);
         }
 
-		$config['upload_path']  =  $filePath;
+        $config['upload_path']  =  $filePath;
         $config['allowed_types']   = 'gif|jpg|png|jpeg|doc|docx|pdf|xlx|xls|csv';
         $config['max_size']        = '20000';
         $config['encrypt_name']    = true;
@@ -866,8 +866,8 @@ class Accounting extends MY_Controller {
 
     public function editBillData(){
 
-		$new_data = array(
-			'bill_id' => $this->input->post('id'),
+        $new_data = array(
+            'bill_id' => $this->input->post('id'),
             'mailing_address' => $this->input->post('mailing_address'),
             'terms' => $this->input->post('terms'),
             'bill_date' => $this->input->post('bill_date'),
@@ -1359,7 +1359,7 @@ class Accounting extends MY_Controller {
     //         'category' => $this->input->post('category'),
     //         'description' => $this->input->post('description'),
     //         'amount' => $this->input->post('amount'),
-	// 		'total' => $this->input->post('total'),
+    //      'total' => $this->input->post('total'),
     //         'file_name' => $this->input->post('filename'),
     //         'original_fname' => $this->input->post('original_fname')
     //     );
@@ -2044,7 +2044,7 @@ class Accounting extends MY_Controller {
         $this->load->view('accounting/list', $this->page_data);
     }
 
-	public function addInvoice()
+    public function addInvoice()
     {
         if($this->input->post('custocredit_card_paymentsmer_id') == 1){
             $credit_card = 'Credit Card';
@@ -2191,7 +2191,7 @@ class Accounting extends MY_Controller {
         $this->load->view('accounting/customer_invoice_modal', $this->page_data);
     }
 
-	public function updateInvoice()
+    public function updateInvoice()
     {
         $new_data = array(
             'customer_id' => $this->input->post('customer_id'),
@@ -2226,7 +2226,7 @@ class Accounting extends MY_Controller {
             echo json_encode(0);
         }
     }
-	public function deleteInvoice(){
+    public function deleteInvoice(){
         $id = $this->input->post('id');
         $query = $this->accounting_invoices_model->deleteInvoice($id);
 
@@ -2237,7 +2237,7 @@ class Accounting extends MY_Controller {
             echo json_encode(0);
         }
     }
-	public function addReceivePayment()
+    public function addReceivePayment()
     {
         $company_id  = getLoggedCompanyID();
         $user_id  = getLoggedUserID();
@@ -2293,7 +2293,7 @@ class Accounting extends MY_Controller {
         }
     }
 
-	public function updateReceivePayment()
+    public function updateReceivePayment()
     {
         $new_data = array(
             'customer_id' => $this->input->post('customer_id'),
@@ -2319,7 +2319,7 @@ class Accounting extends MY_Controller {
             echo json_encode(0);
         }
     }
-	public function deleteReceivePayment(){
+    public function deleteReceivePayment(){
         $id = $this->input->post('id');
         $query = $this->accounting_receive_payment_model->deleteReceivePayment($id);
 
@@ -2831,7 +2831,7 @@ class Accounting extends MY_Controller {
         }
     }
 
-	public function updateSalesReceipt()
+    public function updateSalesReceipt()
     {
         $new_data = array(
             'customer_id' => $this->input->post('customer_id'),
@@ -2864,7 +2864,7 @@ class Accounting extends MY_Controller {
         }
     }
 
-	public function deleteSalesReceipt(){
+    public function deleteSalesReceipt(){
         $id = $this->input->post('id');
         $query = $this->accounting_sales_receipt_model->deleteSalesReceipt($id);
 
@@ -3114,7 +3114,7 @@ class Accounting extends MY_Controller {
         }
     }
 
-	public function updateCreditMemo()
+    public function updateCreditMemo()
     {
         $new_data = array(
             'customer_id' => $this->input->post('customer_id'),
@@ -3146,7 +3146,7 @@ class Accounting extends MY_Controller {
         }
     }
 
-	public function deleteCreditMemo(){
+    public function deleteCreditMemo(){
         $id = $this->input->post('id');
         $query = $this->accounting_credit_memo_model->deleteCreditMemo($id);
 
@@ -3158,7 +3158,7 @@ class Accounting extends MY_Controller {
         }
     }
 
-	public function addDelayedCharge()
+    public function addDelayedCharge()
     {
         $company_id  = getLoggedCompanyID();
         $user_id  = getLoggedUserID();
@@ -3232,7 +3232,7 @@ class Accounting extends MY_Controller {
         }
     }
 
-	public function updateDelayedCharge()
+    public function updateDelayedCharge()
     {
         $new_data = array(
             'customer_id' => $this->input->post('customer_id'),
@@ -3261,7 +3261,7 @@ class Accounting extends MY_Controller {
         }
     }
 
-	public function deleteDelayedCharge(){
+    public function deleteDelayedCharge(){
         $id = $this->input->post('id');
         $query = $this->accounting_delayed_charge_model->deleteDelayedCharge($id);
 
@@ -3273,7 +3273,7 @@ class Accounting extends MY_Controller {
         }
     }
 
-	public function addSalesTimeActivity(){
+    public function addSalesTimeActivity(){
         $new_data = array(
             'vendor_id' => $this->input->post('vendor_id'),
             'date' => $this->input->post('date'),
@@ -3296,7 +3296,7 @@ class Accounting extends MY_Controller {
         }
     }
 
-	public function updateSalesTimeActivity()
+    public function updateSalesTimeActivity()
     {
         $new_data = array(
             'vendor_id' => $this->input->post('vendor_id'),
@@ -3320,7 +3320,7 @@ class Accounting extends MY_Controller {
         }
     }
 
-	public function deleteSalesTimeActivity(){
+    public function deleteSalesTimeActivity(){
         $id = $this->input->post('id');
         $query = $this->accounting_sales_time_activity_model->deleteTimeActivity($id);
 
@@ -3332,7 +3332,7 @@ class Accounting extends MY_Controller {
         }
     }
 
-	public function addCustomersAccounting(){
+    public function addCustomersAccounting(){
         $new_data = array(
             'prof_id' => $this->input->post('prof_id'),
             'first_name' => $this->input->post('first_name'),
@@ -3366,7 +3366,7 @@ class Accounting extends MY_Controller {
         }
     }
 
-	public function updateCustomersAccounting(){
+    public function updateCustomersAccounting(){
         $new_data = array(
             'prof_id' => $this->input->post('prof_id'),
             'first_name' => $this->input->post('first_name'),
@@ -3399,7 +3399,7 @@ class Accounting extends MY_Controller {
             echo json_encode(0);
         }
     }
-	public function deleteCustomersAccounting(){
+    public function deleteCustomersAccounting(){
         $id = $this->input->post('id');
         $query = $this->accounting_customer_model->deleteCustomer($id);
 
@@ -3410,7 +3410,7 @@ class Accounting extends MY_Controller {
             echo json_encode(0);
         }
     }
-	public function searchCustomersAccounting(){
+    public function searchCustomersAccounting(){
         $id = $this->input->post('id');
         $searchCustomer = $this->input->post('word');
         $query = $this->accounting_customer_model->searchCustomer($id,$searchCustomer);

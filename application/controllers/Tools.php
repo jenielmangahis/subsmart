@@ -9,10 +9,7 @@ class Tools extends MY_Controller {
         $this->checkLogin();
         $this->load->model('ApiGoogleContact_model', 'api_gc');
         $this->load->model('UserDetails_model', 'user_details');
-        $this->load->config('api_credentials');
-        $cid  = logged('id');
-        $profiledata = $this->business_model->getByWhere(array('user_id'=>$cid));
-        $this->page_data['profiledata'] = ($profiledata) ? $profiledata[0] : null;
+        $this->load->config('api_credentials');        
     }
 
     /* public function index()

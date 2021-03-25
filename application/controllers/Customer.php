@@ -21,10 +21,6 @@ class Customer extends MY_Controller
         $this->load->helper('url');
         $this->load->helper('functions');
 
-        $cid  = logged('id');
-        $profiledata = $this->business_model->getByWhere(array('user_id'=>$cid));
-        $this->page_data['profiledata'] = ($profiledata) ? $profiledata[0] : null;
-
         $user_id = getLoggedUserID();
         // concept
         $uid = $this->session->userdata('uid');
@@ -1017,6 +1013,25 @@ class Customer extends MY_Controller
         //Send email
        $this->email->send();
        show_error($this->email->print_debugger());
+    }
+
+    public function get_customer_import_header(){
+
+            if (is_uploaded_file($_FILES['file']['tmp_name'])) {
+                $this->load->library('CSVReader');
+                $csvData = $this->csvreader->get_header($_FILES['file']['tmp_name']);
+
+                if (!empty($csvData)) {
+                    foreach ($csvData as $row) {
+                        //echo $row['MonitoringID'];
+                    }
+                    //print_r($csvData);
+                    echo json_encode($csvData,true);
+                }else{
+                    echo 'error';
+                }
+            }
+
     }
 
     public function import_customer_data() {

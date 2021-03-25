@@ -205,7 +205,9 @@
                                     $data['class'] = 'col-lg-4 col-md-4 col-sm-12';
                                     $data['rawHeight'] = '250';
                                     $data['height'] = 'height: 250px;';
+                                    $data['isMain'] = True;
                                     $data['id'] = $wids->w_id;
+                                    $data['isGlobal'] = ($wids->wu_company_id=='0'?false:true);
                                     $this->load->view($wids->w_view_link, $data);
                                 endif;
                             endforeach;
@@ -220,7 +222,9 @@
                             $data['class'] = 'col-lg-3 col-md-6 col-sm-12';
                             $data['rawHeight'] = '310';
                             $data['height'] = 'height: 310px;';
+                            $data['isMain'] = False;
                             $data['id'] = $wids->w_id;
+                            $data['isGlobal'] = ($wids->wu_company_id=='0'?false:true);
                             $this->load->view($wids->w_view_link, $data);
                         endif;
                     endforeach;
