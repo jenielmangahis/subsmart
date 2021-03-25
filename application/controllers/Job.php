@@ -14,9 +14,9 @@ class Job extends MY_Controller
         //$this->load->model('Invoice_model', 'invoice_model');
         //$this->load->model('Roles_model', 'roles_model');
         $this->load->model('General_model', 'general');
-
+        
     }
-    
+
     public function loadStreetView($address = NULL)
     {
         $this->load->library('wizardlib');
@@ -619,7 +619,7 @@ class Job extends MY_Controller
         $this->load->view('job/job_settings/job_tags', $this->page_data);
     }
 
-    public function job_types() {        
+    public function job_types() {
         $get_job_types = array(
             'where' => array(
                 'company_id' => logged('company_id'),
@@ -985,13 +985,13 @@ class Job extends MY_Controller
         $returnURL = base_url().'paypal/success';
         $cancelURL = base_url().'paypal/cancel';
         $notifyURL = base_url().'paypal/ipn';
-        
+
         // Get product data from the database
         $product = $this->invoice_model->getRows($id);
-        
+
         // Get current user ID from the session
         $userID = logged('id');
-        
+
         // Add fields to paypal form
         $this->paypal_lib->add_field('return', $returnURL);
         $this->paypal_lib->add_field('cancel_return', $cancelURL);
@@ -1000,7 +1000,7 @@ class Job extends MY_Controller
         $this->paypal_lib->add_field('custom', $userID);
         $this->paypal_lib->add_field('item_number',  $product['invoice_id']);
         $this->paypal_lib->add_field('amount',  $product['total_value']);
-        
+
         // Render paypal form
         $this->paypal_lib->paypal_auto_form();
     }
@@ -1008,7 +1008,7 @@ class Job extends MY_Controller
     public function saveCreditCard() {
         if ($this->input->post('billingExpDate') != '' && $this->input->post('cardNumber') != '') {
             $exp_date = explode("/",$this->input->post('billingExpDate'));
-    
+
             $data = array(
                 'card_number' => $this->input->post('cardNumber'),
                 'exp_day' => $exp_date[1],
@@ -1020,7 +1020,7 @@ class Job extends MY_Controller
                 'payment_method_id' => 0,
                 'added' => date('Y-m-d H:i:s')
             );
-    
+
             $this->db->insert($this->jobs_model->table_credit_cards, $data);
         }
     }
@@ -1039,7 +1039,7 @@ class Job extends MY_Controller
             'smtp_port' => 465,
             'smtp_user' => 'nsmartrac@gmail.com',
             'smtp_pass' => 'nSmarTrac2020',
-            'mailtype'  => 'html', 
+            'mailtype'  => 'html',
             'charset'   => 'utf-8'
         );
         $this->email->initialize($config);
@@ -1103,11 +1103,11 @@ class Job extends MY_Controller
 
         redirect('job/new_job?job_num=' . $get['job_num']);
     }
-    
+
     function deleteMultiple() {
         postAllowed();
         $ids = explode(",",$this->input->post('ids'));
-        
+
         foreach($ids as $id) {
             $this->jobs_model->deleteJob($id);
         }
@@ -1183,7 +1183,7 @@ class Job extends MY_Controller
             $this->load->view('job/details', $this->page_data);
 
         }else{
-           redirect('dashboard'); 
+           redirect('dashboard');
         }
     }
 
@@ -1196,12 +1196,12 @@ class Job extends MY_Controller
         $settings = $this->settings_model->getValueByKey(DB_SETTINGS_TABLE_KEY_SCHEDULE);
         $this->page_data['settings'] = unserialize($settings);
 
-        if( $role == 1 || $role == 2 ){                        
+        if( $role == 1 || $role == 2 ){
             $upcomingJobs = $this->jobs_model->getAllUpcomingJobs();
-        }else{                        
+        }else{
             $upcomingJobs = $this->jobs_model->getAllUpcomingJobsByCompanyId($comp_id);
         }
-        
+
         $this->page_data['upcomingJobs'] = $upcomingJobs;
         $this->load->view('job/ajax_load_upcoming_jobs', $this->page_data);
 
@@ -1211,7 +1211,7 @@ class Job extends MY_Controller
     {
         $this->load->model('Icons_model');
 
-        add_css(array(            
+        add_css(array(
             'assets/css/hover.css'
         ));
 
@@ -1237,7 +1237,7 @@ class Job extends MY_Controller
                 $marker_icon = $icon->image;
                 $data_job_type = [
                     'user_id' => $user_id,
-                    'company_id' => $comp_id,                    
+                    'company_id' => $comp_id,
                     'title' => $post['job_type_name'],
                     'icon_marker' => $marker_icon,
                     'is_marker_icon_default_list' => 1,
@@ -1265,7 +1265,7 @@ class Job extends MY_Controller
                     $marker_icon = $this->moveUploadedFile();
                     $data_job_type = [
                         'user_id' => $user_id,
-                        'company_id' => $comp_id,                    
+                        'company_id' => $comp_id,
                         'title' => $post['job_type_name'],
                         'icon_marker' => $marker_icon,
                         'is_marker_icon_default_list' => 0,
@@ -1305,7 +1305,7 @@ class Job extends MY_Controller
     public function edit_job_type( $job_type_id ){
         $this->load->model('Icons_model');
 
-        add_css(array(            
+        add_css(array(
             'assets/css/hover.css'
         ));
 
@@ -1335,7 +1335,7 @@ class Job extends MY_Controller
                         $icon = $this->Icons_model->getById($post['default_icon_id']);
                         $marker_icon = $icon->image;
                         $is_marker_icon_default_list = 1;
-                    }   
+                    }
                 }else{
                     if( $_FILES['image']['size'] > 0 ){
                         $marker_icon = $this->moveUploadedFile();
@@ -1348,7 +1348,7 @@ class Job extends MY_Controller
                     'icon_marker' => $marker_icon,
                     'is_marker_icon_default_list' => $is_marker_icon_default_list
                 ];
-                
+
                 $this->JobType_model->updateJobTypeById($post['eid'], $data_job_type);
 
                 $this->session->set_flashdata('message', 'Job Type was successful updated');
@@ -1370,7 +1370,7 @@ class Job extends MY_Controller
             redirect('job/edit_job_type/'.$post['eid']);
 
         }
-    } 
+    }
 
     public function moveUploadedFile() {
         if(isset($_FILES['image']) && $_FILES['image']['tmp_name'] != '') {
@@ -1423,7 +1423,7 @@ class Job extends MY_Controller
     public function save_setting($id = null)
     {
         $this->load->model('JobSettings_model');
-        
+
         postAllowed();
         $user = (object)$this->session->userdata('logged');
         $config = array(
@@ -1434,9 +1434,9 @@ class Job extends MY_Controller
             'max_height' => "768",
             'max_width' => "1024"
         );
-        
+
         $this->load->library('upload', $config);
-        
+
         if($this->upload->do_upload()) {
             $draftlogo = array('upload_data' => $this->upload->data());
             $logo = $draftlogo['upload_data']['file_name'];
@@ -1469,7 +1469,7 @@ class Job extends MY_Controller
             'default_msg' => post('message_commercial'),
             'default_terms' => post('terms_commercial'),
         );
-        
+
         $payment_fee = array(
             'percent' => post('payment_fee_percent'),
             'amount' => post('payment_fee_amount'),
@@ -1532,7 +1532,7 @@ class Job extends MY_Controller
                 'autoconvert_work_order' => post('autoconvert_work_order')
             ]);
         }
-            
+
         $this->activity_model->add('Update Invoice Settings $' . $user->id . ' Created by User:' . logged('name'), logged('id'));
         $this->session->set_flashdata('alert-type', 'success');
         $this->session->set_flashdata('alert', 'Invoice Settings Saved Successfully');
@@ -1544,7 +1544,7 @@ class Job extends MY_Controller
     {
         $this->load->model('Icons_model');
 
-        add_css(array(            
+        add_css(array(
             'assets/css/hover.css'
         ));
 
@@ -1559,7 +1559,7 @@ class Job extends MY_Controller
         $this->load->model('JobTags_model');
         $this->load->model('Icons_model');
 
-        add_css(array(            
+        add_css(array(
             'assets/css/hover.css'
         ));
 
@@ -1605,7 +1605,7 @@ class Job extends MY_Controller
                 $this->session->set_flashdata('message', 'Cannot update job tag');
                 $this->session->set_flashdata('alert_class', 'alert-danger');
             }
-            
+
         }
 
         $this->session->set_flashdata('message', 'Add new job tag was successful');
@@ -1630,8 +1630,8 @@ class Job extends MY_Controller
                     $icon = $this->Icons_model->getById($post['default_icon_id']);
                     $marker_icon = $icon->image;
                     $is_marker_icon_default_list = 1;
-                }                
-                
+                }
+
             }else{
                 if( $_FILES['image']['size'] > 0 ){
                     $marker_icon = $this->jobTagMoveUploadedFile();

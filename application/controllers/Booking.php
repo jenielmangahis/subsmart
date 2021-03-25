@@ -57,7 +57,7 @@ class Booking extends MY_Controller {
         }else{
             $args = array('company_id' => logged('company_id'));
         }
-        
+
 		$category = $this->BookingCategory_model->getByWhere($args);
 		$service_items = $this->BookingServiceItem_model->getAllItemsGroupByCategoryArray();
 
@@ -524,7 +524,7 @@ class Booking extends MY_Controller {
         }
 
         redirect('more/addon/inquiries');
-    }    
+    }
 
     public function save_service_item()
     {
@@ -868,7 +868,7 @@ class Booking extends MY_Controller {
     			$work_order_summary[$wod->id]['schedule_time_to'] = $wod->schedule_time_to;
 
     		}
-    	}  	
+    	}
 
     	$this->page_data['inquiry'] = $inquiry;
     	$this->page_data['work_order_summary'] = $work_order_summary;
@@ -888,13 +888,13 @@ class Booking extends MY_Controller {
     public function ajax_inquiry_edit_details()
     {
 		$id = post('iid');
-        $post = $this->input->post();    
+        $post = $this->input->post();
         $inquiry = $this->BookingInquiry_model->findById($id);
 
         $this->page_data['inquiry'] = $inquiry;
         $this->page_data['inquiry_id'] = $id;
-        $this->load->view('online_booking/ajax_inquiry_edit_details', $this->page_data);	
-    }    
+        $this->load->view('online_booking/ajax_inquiry_edit_details', $this->page_data);
+    }
 
     public function front_items($eid)
 	{
@@ -918,7 +918,7 @@ class Booking extends MY_Controller {
 		}
 		foreach( $categories as $c ){
 			$products[$c->id]['products'] = $this->BookingServiceItem_model->getAllUserProductsByCategoryId($user_id, $c->id, $filters);
-			$products[$c->id]['category'] = $c; 
+			$products[$c->id]['category'] = $c;
 		}
 
 		if( $this->input->get('style') != '' ){
@@ -948,11 +948,11 @@ class Booking extends MY_Controller {
 	}
 
 	public function front_schedule($eid)
-	{	
+	{
 		$user_id = hashids_decrypt($eid, '', 15);
 		$user = $this->session->userdata('logged');
 		$userProfile = $this->Users_model->getUser($user_id);
-		$booking_settings = $this->BookingSetting_model->findByUserId($user_id);		
+		$booking_settings = $this->BookingSetting_model->findByUserId($user_id);
 
 		$coupon = $this->session->userdata('coupon');
 		$cart_items = $this->session->userdata('cartItems');
@@ -977,7 +977,7 @@ class Booking extends MY_Controller {
 	}
 
     public function front_booking_form($eid)
-	{	
+	{
 		$user_id = hashids_decrypt($eid, '', 15);
 		$user    = $this->session->userdata('logged');
 		$userProfile = $this->Users_model->getUser($user_id);
@@ -999,7 +999,7 @@ class Booking extends MY_Controller {
 		$this->page_data['eid'] = $eid;
 
 		$this->load->view('online_booking/front_booking_form', $this->page_data);
-	}	
+	}
 
 	public function save_booking_inquiry()
     {
@@ -1102,7 +1102,7 @@ class Booking extends MY_Controller {
     public function generateProductUrl()
     {
     	$cart_items = $this->session->userdata('cartItems');
-    	echo "<pre>";    	
+    	echo "<pre>";
     	print_r($cart_items);
     	exit;
     	$user = $this->session->userdata('logged');
@@ -1130,7 +1130,7 @@ class Booking extends MY_Controller {
     		$cart_items['products'][$key] = $post['qty'];
     	}
 
-    	$this->session->set_userdata('cartItems',$cart_items);    	
+    	$this->session->set_userdata('cartItems',$cart_items);
 
     	$this->session->set_flashdata('message', 'Cart was successfully updated');
         $this->session->set_flashdata('alert_class', 'alert-success');
@@ -1169,7 +1169,7 @@ class Booking extends MY_Controller {
 	    		$cart_items['coupon'] = $coupon_details;
 	    	}
 
-	    	$this->session->set_userdata('coupon',$cart_items);    	
+	    	$this->session->set_userdata('coupon',$cart_items);
 
 	    	$this->session->set_flashdata('message', 'Cart was successfully updated');
 	        $this->session->set_flashdata('alert_class', 'alert-success');
@@ -1186,9 +1186,9 @@ class Booking extends MY_Controller {
     	unset($cart_items[$session_key]);
     	unset($cart_items['products'][$session_key_id]);
 
-    	$this->session->set_userdata('cartItems',$cart_items);    	
+    	$this->session->set_userdata('cartItems',$cart_items);
     }
-    
+
     public function ajax_delete_coupon()
     {
     	//$post = $this->input->post();
@@ -1207,24 +1207,24 @@ class Booking extends MY_Controller {
         $interval   = \DateInterval::createFromDateString('1 day');
         $period     = new \DatePeriod($start, $interval, $end);
 
-		$cart_items = $this->session->userdata('cartItems');  
+		$cart_items = $this->session->userdata('cartItems');
 
         $schedules = $this->BookingTimeSlot_model->findAllByUserId($user_id);
 
         $week_schedules = array();
 
-        foreach ($period as $dt) { 
-            $date = $dt->format("Y-m-d"); 
-            $week_schedules[$date] = array(); 
+        foreach ($period as $dt) {
+            $date = $dt->format("Y-m-d");
+            $week_schedules[$date] = array();
 
             foreach( $schedules as $s ){
             	$day = $dt->format("D");
             	$days = unserialize($s->days);
             	if( in_array($day, $days) ){
-            		$week_schedules[$date][] = ['id' => $s->id, 'time_start' => $s->time_start, 'time_end' => $s->time_end]; 
+            		$week_schedules[$date][] = ['id' => $s->id, 'time_start' => $s->time_start, 'time_end' => $s->time_end];
             	}
             }
-        }     
+        }
 
         $prev_date = date("Y-m-d", strtotime($start_date . " -7 days"));
         $next_date = date("Y-m-d", strtotime($start_date . " +7 days"));
@@ -1248,7 +1248,7 @@ class Booking extends MY_Controller {
     	$cart_items = $this->session->userdata('cartItems');
     	$cart_items['schedule_data'] = $post;
 
-    	$this->session->set_userdata('cartItems',$cart_items);    	
+    	$this->session->set_userdata('cartItems',$cart_items);
     }
 
     public function save_product_booking()
@@ -1270,7 +1270,7 @@ class Booking extends MY_Controller {
     	foreach($post as $p_key => $p) {
 			if (!in_array($p_key, $in_array)) {
 			    $custom_fields[$p_key] = $p;
-			}    		
+			}
     	}
 
     	if(isset($coupon)) {
@@ -1313,11 +1313,11 @@ class Booking extends MY_Controller {
 				}
 
 				$this->session->set_flashdata('message', 'Your product booking has been saved.');
-        		$this->session->set_flashdata('alert_class', 'alert-info');	
+        		$this->session->set_flashdata('alert_class', 'alert-info');
 
 	    	}else{
 	    		$this->session->set_flashdata('message', 'Canot save data. Please try again later.');
-        		$this->session->set_flashdata('alert_class', 'alert-danger');	
+        		$this->session->set_flashdata('alert_class', 'alert-danger');
 	    	}
 
     	}else{

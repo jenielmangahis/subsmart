@@ -89,10 +89,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <div class="form-msg" style="display: none;"></div>
                             <div class="tabs-menu">
                                 <ul class="clearfix">
-                                  <li>1. Edit Rules</li>
-                                  <li>2. Build SMS</li>
-                                  <li>3. Preview</li>
-                                  <li class="active">4. Payment</li>
+                                  <li><a href="<?= base_url("/sms_automation/edit_sms_automation/" . $smsAutomation->id); ?>">1. Edit Rules</a></li>
+                                  <li><a href="<?= base_url("/sms_automation/build_sms"); ?>">2. Build SMS</a></li>
+                                  <li><a href="<?= base_url("/sms_automation/preview_sms_message"); ?>">3. Preview</a></li>
+                                  <li class="active"><a href="<?= base_url("/sms_automation/payment"); ?>">4. Payment</a></li>
                                 </ul>
                             </div>
                             <hr />
@@ -109,7 +109,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <br />
                                     <div class="checkbox checkbox-sm">
                                         <input class="checkbox-select chk-terms" type="checkbox" name="accept_terms" value="1" id="chk-terms">
-                                        <label for="chk-terms">I agree to bill my card</label>
+                                        <label for="chk-terms">I agree to bill my card (<?= $primaryCard->cc_type; ?> <?= maskCreditCardNumber($primaryCard->card_number); ?>)</label>
                                     </div>
                                     <br />
                                     <div class="terms-condition">

@@ -291,7 +291,7 @@ $route['accounting/attachments'] = 'accounting_controllers/attachments/index';
 $route['accounting/attachments/upload']['post'] = 'accounting_controllers/attachments/upload';
 $route['accounting/attachments/load-attachments']['post'] = 'accounting_controllers/attachments/load_attachment_files';
 $route['accounting/attachments/download'] = "accounting_controllers/attachments/download";
-$route['accounting/attachments/update']['post'] = "accounting_controllers/attachments/edit";
+$route['accounting/attachments/update/(:any)']['post'] = "accounting_controllers/attachments/edit/$1";
 $route['accounting/attachments/delete/(:any)']['DELETE'] = "accounting_controllers/attachments/delete/$1";
 
 // Accounting payment methods
@@ -353,10 +353,11 @@ $route['accounting/chart-of-accounts/create'] = 'accounting_controllers/chart_of
 $route['accounting/chart-of-accounts/fetch-acc-detail'] = 'accounting_controllers/chart_of_accounts/fetch_acc_detail';
 $route['accounting/chart-of-accounts/add'] = 'accounting_controllers/chart_of_accounts/add';
 $route['accounting/chart-of-accounts/edit/(:any)?'] = 'accounting_controllers/chart_of_accounts/edit/$1';
-$route['accounting/chart-of-accounts/update'] = 'accounting_controllers/chart_of_accounts/update';
+$route['accounting/chart-of-accounts/update/(:any)'] = 'accounting_controllers/chart_of_accounts/update/$1';
 $route['accounting/chart-of-accounts/inactive/(:any)'] = 'accounting_controllers/chart_of_accounts/inactive/$1';
 $route['accounting/chart-of-accounts/active/(:any)'] = 'accounting_controllers/chart_of_accounts/make_account_active/$1';
 $route['accounting/chart-of-accounts/import'] = 'accounting_controllers/chart_of_accounts/import';
+$route['accounting/chart-of-accounts/get-detail-type/(:any)'] = 'accounting_controllers/chart_of_accounts/get_detail_type/$1';
 
 $route['accounting/reconcile/create'] = 'reconcile/add';
 $route['accounting/reconcile/save'] = 'reconcile/addReconcile';
@@ -718,3 +719,4 @@ $route['cards_file/add_new'] = 'CardsFile/add_new_card';
 $route['cards_file/create_new_card'] = 'CardsFile/create_new_card';
 $route['cards_file/_update_primary_card'] = 'CardsFile/update_primary_card';
 $route['cards_file/delete_card'] = 'CardsFile/delete_card';
+$route['cards_file/test_card'] = 'CardsFile/test_card';

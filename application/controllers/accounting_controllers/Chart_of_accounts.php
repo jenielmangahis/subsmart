@@ -65,6 +65,13 @@ class Chart_of_accounts extends MY_Controller {
         $this->load->view('accounting/chart_of_accounts/index', $this->page_data);
     }
 
+    public function get_detail_type($id)
+    {
+        $detailType = $this->account_detail_model->getById($id);
+
+        echo json_encode($detailType);
+    }
+
     public function load_chart_of_accounts()
     {
         $postData = json_decode(file_get_contents('php://input'), true);
@@ -169,13 +176,14 @@ class Chart_of_accounts extends MY_Controller {
     {
         $this->page_data['alert'] = 'accounting/alert_promt';
         $this->page_data['chart_of_accounts'] = $this->chart_of_accounts_model->getById($id);
+        $this->page_data['detail_type'] = $this->account_detail_model->getById($this->page_data['chart_of_accounts']->acc_detail_id);
         $this->load->view('accounting/chart_of_accounts/edit', $this->page_data);
     }
 
-    public function update()
+    public function update($id)
     {
         $data = [
-            'id' => $this->input->post('id'),
+            'id' => $id,
             'company_id' => logged('company_id'),
             'account_id' => $this->input->post('account_type'),
             'acc_detail_id' => $this->input->post('detail_type'),

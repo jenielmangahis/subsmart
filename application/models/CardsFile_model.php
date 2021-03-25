@@ -58,6 +58,16 @@ class CardsFile_model extends MY_Model
         return $query;
     }
 
+    public function getCompanyPrimaryCard($company_id)
+    {
+        $this->db->select('*');
+        $this->db->from($this->table);
+        $this->db->where('company_id', $company_id);
+
+        $query = $this->db->get()->row();
+        return $query;
+    }
+
     
     public function deleteCard($id){
         $user_id = logged('id');

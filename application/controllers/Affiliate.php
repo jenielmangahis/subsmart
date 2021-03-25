@@ -11,7 +11,7 @@ class Affiliate extends MY_Controller {
 		$this->page_data['page']->menu = 'affiliate';
         $this->load->model('Affiliate_model', 'affiliate_model');
 
-		add_css(array( 
+		add_css(array(
             'https://cdn.datatables.net/select/1.3.1/css/select.dataTables.min.css',
             'https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css',
         ));
@@ -39,9 +39,9 @@ class Affiliate extends MY_Controller {
         if( $role_id == 1 || $role_id == 2 ){
             $arg = array();
         }else{
-            $arg = array('company_id'=>logged('company_id')); 
+            $arg = array('company_id'=>logged('company_id'));
         }
-		
+
 		$this->page_data['affiliates'] = $this->affiliate_model->getByWhere($arg, [
 			'order' => [ 'id', 'desc' ]
 		]);
@@ -75,12 +75,12 @@ class Affiliate extends MY_Controller {
 
 	// }
 
-	public function saveAffiliate() 
+	public function saveAffiliate()
     {
         postAllowed();
 		$comp_id = logged('company_id');
 		$target_dir = "./uploads/affiliate/$comp_id/";
-		
+
 		if(!file_exists($target_dir)) {
 			mkdir($target_dir, 0777, true);
 		}
@@ -122,7 +122,7 @@ class Affiliate extends MY_Controller {
         $this->activity_model->add($message_1 . " item #$permission Created by User: #" . logged('id'));
         $this->session->set_flashdata('alert-type', 'success');
         $this->session->set_flashdata('alert', $message_2);
-        
+
         redirect('affiliate');
     }
 
@@ -144,14 +144,14 @@ class Affiliate extends MY_Controller {
         $get = $this->input->get();
 
 		$this->affiliate_model->delete($get['id']);
-		
+
         $message_2 = "Affiliate deleted Successfully";
 		$this->session->set_flashdata('alert-type', 'success');
 		$this->session->set_flashdata('alert', $message_2);
-		
+
         redirect('affiliate');
 	}
-	
+
 	public function exportAffiliates()
     {
         $affiliates = $this->affiliate_model->getByCompanyId(logged('company_id'));
@@ -159,11 +159,11 @@ class Affiliate extends MY_Controller {
         $filename = "my_affiliates_".date('m-d-Y').".csv";
 
         $f = fopen('php://memory', 'w');
-  
+
         $fields = array('First Name', 'Last Name', 'Company', 'Email', 'Phone', 'PhoneExt', 'Alternate Phone', 'Fax', 'Gender', 'Status', 'Register Date', 'Internal Note', 'Mailing Address', 'Mailing City', 'Mailing State', 'Mailing Zip', 'Mailing Country', 'Website URL');
         fputcsv($f, $fields, $delimiter);
 
-        if (!empty($affiliates)) {       
+        if (!empty($affiliates)) {
             foreach ($affiliates as $affiliate) {
                 $csvData = array($affiliate->first_name, $affiliate->last_name, $affiliate->company, $affiliate->email, $affiliate->phone, $affiliate->phone_ext, $affiliate->alternate_phone, $affiliate->fax, $affiliate->gender, $affiliate->status, $affiliate->date_created, $affiliate->notes, $affiliate->mailing_address, $affiliate->city, $affiliate->state, $affiliate->zipcode, "United States", $affiliate->website_url);
                 fputcsv($f, $csvData, $delimiter);
@@ -185,22 +185,22 @@ class Affiliate extends MY_Controller {
         $data = array();
         $itemData = array();
         $last_id = 0;
-        
+
         // if ($this->input->post('importSubmit')) {
             $this->form_validation->set_rules('file', 'CSV file', 'callback_file_check');
-            
+
             if ($this->form_validation->run() == true) {
                 $insertCount = $updateCount = $rowCount = $notAddCount = 0;
-                
+
                 if (is_uploaded_file($_FILES['file']['tmp_name'])) {
                     $this->load->library('CSVReader');
-                    
+
                     $csvData = $this->csvreader->parse_csv($_FILES['file']['tmp_name']);
-                    
+
                     if (!empty($csvData)) {
-                        foreach ($csvData as $row) { 
+                        foreach ($csvData as $row) {
                             $rowCount++;
-                            
+
                             $itemData = array(
                                 'company_id' => logged('company_id'),
                                 'first_name' => $row['First Name'],
@@ -221,7 +221,7 @@ class Affiliate extends MY_Controller {
                                 'country' => $row['Mailing Country'],
                                 'website_url' => $row['Website URL']
                             );
-                            
+
                             $con = array(
                                 'where' => array(
                                     'first_name' => $row['First Name'],
@@ -231,7 +231,7 @@ class Affiliate extends MY_Controller {
 							);
 
 							$prevCount = $this->affiliate_model->getRows($con);
-                            
+
                             if ($prevCount > 0) {
                                 $condition = array('first_name' => $row['First Name'], 'last_name' => $row['Last Name']);
                                 $update = $this->affiliate_model->update($itemData, $condition);
@@ -243,13 +243,13 @@ class Affiliate extends MY_Controller {
                             } else {
                                 $insert = $this->affiliate_model->insert($itemData);
                                 $last_id = $insert;
-                                
+
                                 if ($insert) {
                                     $insertCount++;
                                 }
                             }
                         }
-                        
+
                         $notAddCount = ($rowCount - ($insertCount + $updateCount));
                         $successMsg = 'affiliates imported successfully. Total Rows ('.$rowCount.') | Inserted ('.$insertCount.') | Updated ('.$updateCount.') | Not Inserted ('.$notAddCount.')';
                         $this->session->set_userdata('success_msg', $successMsg);
@@ -267,7 +267,7 @@ class Affiliate extends MY_Controller {
         // }
         redirect('affiliate');
     }
-    
+
     /*
      * Callback function to check file value and type during validation
      */

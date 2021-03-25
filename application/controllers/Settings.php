@@ -13,7 +13,7 @@ class Settings extends MY_Controller {
 		$this->page_data['page_title'] = 'Settings';
 		$this->load->helper(array('form', 'url', 'hashids_helper'));
 		$this->load->library('session');
-
+        
         //load Model
         $this->load->model('General_model', 'general_model');
 
@@ -52,11 +52,11 @@ class Settings extends MY_Controller {
             'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js',
             'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js',
             'assets/frontend/js/settings/main.js',
-        ));      
+        ));
 
         if(isset($get['calendar_update']) && $get['calendar_update'] == 1) {
             $this->session->set_flashdata('alert-type', 'success');
-            $this->session->set_flashdata('alert', 'Calendar Gmail/Gsuit Account Updated Successfully');  
+            $this->session->set_flashdata('alert', 'Calendar Gmail/Gsuit Account Updated Successfully');
         }
 
         if (!empty($post)) {
@@ -103,9 +103,9 @@ class Settings extends MY_Controller {
             $this->page_data['page']->menu = 'settings';
             $this->load->view('settings/schedule', $this->page_data);
         }
-    }    
+    }
 
-    public function email_templates() 
+    public function email_templates()
     {
         $get_invoice_template = array(
             'where' => array(
@@ -170,7 +170,7 @@ class Settings extends MY_Controller {
         $user = $this->session->userdata('logged');
 
         $settingEmailBranding = $this->SettingEmailBranding_model->findByUserId($user['id']);
-        
+
         if( $settingEmailBranding ){
             $setting_data = [
                 'uid' => $user['id'],
@@ -190,7 +190,7 @@ class Settings extends MY_Controller {
         $this->page_data['page']->menu   = 'email_branding';
         $this->page_data['setting_data'] = $setting_data;
         $this->load->view('settings/email_branding', $this->page_data);
-    }    
+    }
 
 	public function notifications()
 	{
@@ -239,7 +239,7 @@ class Settings extends MY_Controller {
         $this->page_data['setting'] = $setting;
         $this->page_data['page']->menu = 'online_payments';
         $this->load->view('settings/online_payments', $this->page_data);
-    }      	
+    }
 
 	/*public function notifications()
 	{
@@ -294,7 +294,7 @@ class Settings extends MY_Controller {
                 $this->session->set_flashdata('message', 'Cannot find user');
                 $this->session->set_flashdata('alert_class', 'alert-danger');
             }
-            
+
         }else{
             $this->session->set_flashdata('message', 'Post value is empty');
             $this->session->set_flashdata('alert_class', 'alert-danger');
@@ -336,7 +336,7 @@ class Settings extends MY_Controller {
 
             $this->session->set_flashdata('message', 'Update tax rate was successful');
             $this->session->set_flashdata('alert_class', 'alert-success');
-            
+
         }else{
             $this->session->set_flashdata('message', 'Post value is empty');
             $this->session->set_flashdata('alert_class', 'alert-danger');
@@ -400,7 +400,7 @@ class Settings extends MY_Controller {
                 $data = array(
                     'email_from_name' => post('email_from_name'),
                     'email_template_footer_text' => post('email_template_footer_text'),
-                    'logo' => $logo_image,                
+                    'logo' => $logo_image,
                     'updated' => date("Y-m-d H:i:s")
                 );
 
@@ -411,7 +411,7 @@ class Settings extends MY_Controller {
                     'user_id' => $user['id'],
                     'email_from_name' => post('email_from_name'),
                     'email_template_footer_text' => post('email_template_footer_text'),
-                    'logo' => $logo_image,                
+                    'logo' => $logo_image,
                     'created' => date("Y-m-d H:i:s")
                 );
 
@@ -425,7 +425,7 @@ class Settings extends MY_Controller {
         redirect('settings/email_branding');
     }
 
-    public function update_notification_setting() 
+    public function update_notification_setting()
     {
         postAllowed();
         $this->load->model('SettingNotification_model');
@@ -435,7 +435,7 @@ class Settings extends MY_Controller {
         $default_notify_by_sms = "";
         $event_notify_customer_on_add = "";
         $event_notify_customer_on_update = "";
-        $same_as_residential = ""; 
+        $same_as_residential = "";
         $event_notify_customer_on_add_commercial = "";
         $event_notify_customer_on_update_commercial = "";
         $event_notify_at = "";
@@ -454,7 +454,7 @@ class Settings extends MY_Controller {
         //Delete first the old settings data
         $this->SettingNotification_model->deleteByUserId($user['id']);
 
-        $post = $this->input->post();    
+        $post = $this->input->post();
         if($post) {
 
             $data_array = array();
@@ -462,7 +462,7 @@ class Settings extends MY_Controller {
                 $data_array = array(
                     'user_id' => $user['id'],
                     'name' => $post_key,
-                    'value' => $post_data,         
+                    'value' => $post_data,
                     'created_at' => date("Y-m-d H:i:s")
                 );
 
@@ -474,12 +474,12 @@ class Settings extends MY_Controller {
 
             $this->session->set_flashdata('message', 'Your notification setting was updated');
             $this->session->set_flashdata('alert_class', 'alert-success');
-                        
+
         }
 
-        redirect('settings/notifications'); 
+        redirect('settings/notifications');
 
-    } 
+    }
 
     public function update_online_payment_setting()
     {
@@ -502,7 +502,7 @@ class Settings extends MY_Controller {
 
             $settingOnlinePayment = $this->SettingOnlinePayment_model->findByUserId($user['id']);
             if( $settingOnlinePayment ){
-                $data_setting = [                    
+                $data_setting = [
                     'paypal_email_address' => $post['email'],
                     'paypal_is_active' => $is_active,
                     'updated' => date("Y-m-d H:i:s")
@@ -510,8 +510,8 @@ class Settings extends MY_Controller {
 
                 $this->SettingOnlinePayment_model->update($settingOnlinePayment->id,$data_setting);
             }else{
-                $data_setting = [ 
-                    'user_id' => $user['id'],                   
+                $data_setting = [
+                    'user_id' => $user['id'],
                     'paypal_email_address' => $post['email'],
                     'paypal_is_active' => $is_active,
                     'created' => date("Y-m-d H:i:s")
@@ -523,7 +523,7 @@ class Settings extends MY_Controller {
             $this->session->set_flashdata('message', 'Your online payment setting was updated');
             $this->session->set_flashdata('alert_class', 'alert-success');
         }
-        
+
         redirect('settings/online_payments');
 
     }
@@ -599,7 +599,7 @@ class Settings extends MY_Controller {
                     $calendar_id = $c->id;
                 }
             }
-            
+
             if( !$is_exists ){
                 $google_calendar = new Google_Service_Calendar_Calendar($client);
                 $google_calendar->setSummary($calendar_name);
@@ -608,7 +608,7 @@ class Settings extends MY_Controller {
                 $created_calendar = $cal->calendars->insert($google_calendar);
 
                 $calendar_id = $created_calendar->getId();
-                
+
             }
 
             $this->GoogleAccounts_model->update($googleAccount,['auto_sync_calendar_id' => $calendar_id]);
@@ -637,7 +637,7 @@ class Settings extends MY_Controller {
             }
 
             $enabled_calendars = serialize($calendars);
-        }else{ 
+        }else{
             foreach( $calendars as $key => $value ){
                 if( $value == $post['cid'] ){
                     unset($calendars[$key]);
@@ -661,12 +661,12 @@ class Settings extends MY_Controller {
 
         $calendars[] = $post['cid'];
         $enabled_calendars = serialize($calendars);
-        
+
         $this->GoogleAccounts_model->update($googleAccount->id, array(
             'enabled_mini_calendars' => $enabled_calendars
         ));
     }
-	
+
     public function ajax_get_google_enabled_calendars()
     {
         include APPPATH . 'libraries/google-api-php-client/Google/vendor/autoload.php';
@@ -679,7 +679,7 @@ class Settings extends MY_Controller {
         $enabled_calendars = unserialize($googleAccount->enabled_mini_calendars);
 
         $google_user_api = $this->GoogleAccounts_model->getByAuthUser();
-        $google_credentials = google_credentials();        
+        $google_credentials = google_credentials();
 
         $access_token = "";
         $refresh_token = "";
@@ -700,8 +700,8 @@ class Settings extends MY_Controller {
 
         if(isset($google_credentials['client_secret'])) {
             $google_secrect = $google_credentials['client_secret'];
-        }    
-        
+        }
+
         //Set Client
         $client = new Google_Client();
         $client->setClientId($google_client_id);
@@ -720,7 +720,7 @@ class Settings extends MY_Controller {
         $access_token  = $client->getAccessToken();
         $calendar      = new Google_Service_Calendar($client);
         $calendar_data = array();
-        
+
         $c_index = 0;
         foreach( $enabled_calendars as $c ){
             $calendarListEntry = $calendar->calendarList->get($c);
@@ -734,7 +734,7 @@ class Settings extends MY_Controller {
             $events = $calendar->events->listEvents($c,$optParams);
             //$colors = $calendar->colors->get();
 
-            foreach( $events->items as $event ){  
+            foreach( $events->items as $event ){
                 $bgcolor = "#38a4f8";
                 if( $calendarListEntry->backgroundColor != '' ){
                     $bgcolor = $calendarListEntry->backgroundColor;

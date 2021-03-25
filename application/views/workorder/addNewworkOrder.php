@@ -17,6 +17,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
     content:" *";
     color: red;
     }
+    .pointer {cursor: pointer;}
    </style>
     <!-- page wrapper start -->
     <div wrapper__section style="padding-left:1%;padding-top:2.5%;">
@@ -381,7 +382,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                             <div class="row">                        
                                 <div class="form-group col-md-4">
                                     <label for="job_name">Job Name</label>
-                                    <input type="text" class="form-control" name="job_name" id="job_name" required  autofocus />
+                                    <input type="text" class="form-control" name="job_name" id="job_name" required />
                                 </div>
                                 <div class="form-group col-md-4">
                                     <label for="job_desc">Job Description</label>
@@ -389,7 +390,45 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 </div>                                           
                             </div>
 
+                            <h6>PAYMENT DETAIL</h6><br>
+                            <div class="row">                   
+                                <div class="form-group col-md-4">
+                                    <label for="job_type">Method</label>
+                                    <select name="job_type" id="job_type" class="form-control custom-select">
+                                        <option value="">Choose method</option>
+                                        <option value="Cash">Cash</option>
+                                        <option value="Check">Check</option>
+                                        <option value="Credit Card">Credit Card</option>
+                                    </select>
+                                </div>      
+                                <div class="form-group col-md-4">
+                                    <label for="job_type">Amount</label><small class="help help-sm"> ( $ )</small>
+                                    <input type="text" class="form-control" name="pay_amount" id="pay_amount" required />
+                                </div>                                       
+                            </div>
+                            <div class="row">                   
+                                <div class="form-group col-md-4">
+                                    <label for="job_type">Account Holder Name</label>
+                                    <input type="text" class="form-control" name="pay_amount" id="pay_amount" required />
+                                </div>      
+                                <div class="form-group col-md-4">
+                                    <label for="job_type">Account Number</label>
+                                    <input type="text" class="form-control" name="pay_amount" id="pay_amount" placeholder="**** **** **** **** " required />
+                                </div>                                       
+                            </div>
+                            <div class="row">                   
+                                <div class="form-group col-md-4">
+                                    <label for="job_type">Expiry</label>
+                                    <input type="text" class="form-control" name="pay_amount" id="pay_amount" placeholder="MM/YY" required />
+                                </div>      
+                                <div class="form-group col-md-4">
+                                    <label for="job_type">CVC</label>
+                                    <input type="text" class="form-control" name="pay_amount" id="pay_amount" placeholder="CVC" required />
+                                </div>                                       
+                            </div>
+
                             <!-- ====== TERMS AND CONDITIONS ====== -->
+                            <br><br><br>
                             <div class="row">
                                 <div class=" col-md-12">
                                 <label style="font-weight:bold;font-size:18px;">TERMS AND CONDITIONS</label><label style="float:right;color:green;"><a href="#" style="color:green;">Update Terms and Condition</a></label>
@@ -507,14 +546,17 @@ defined('BASEPATH') or exit('No direct script access allowed');
                             </div>
                             <div class="row">
                                 <div class=" col-md-4">
-                                    <h5>Company Representative Approval</h5>
+                                    <h6>Company Representative Approval</h6>
                                     <div class="sigPad" id="smoothed1a" style="width:100%;border:solid gray 1px;">
-                                    <p style="float:right;margin-right:10px;"><i class="fa fa-pencil" aria-hidden="true"></i></p>
+                                    <!-- <a href="#" style="float:right;margin-right:10px;" class="smoothed1a_pencil" id="smoothed1a_pencil"><i class="fa fa-pencil" aria-hidden="true"></i></a> -->
                                         <ul class="sigNav">
                                             <li class="drawIt"><a href="#draw-it">Draw It</a></li>
                                             <li class="clearButton"><a href="#clear">Clear</a></li>
                                         </ul>
-                                        <div class="sig sigWrapper" style="height:auto;">
+                                        <ul class="edit">
+                                            <li class="smoothed1a_pencil pointer"><a onclick="myFunction()" style="float:right;margin-right:10px;" class="smoothed1a_pencil"><i class="fa fa-pencil" aria-hidden="true"></i></a></li>
+                                        </ul>
+                                        <div class="sig sigWrapper" id="smoothed1a_pencil" style="height:auto;">
                                             <div class="typed"></div>
                                             <canvas class="pad" id="company_representative_approval_signature1a"
                                                     width="400" height="250"></canvas>
@@ -532,12 +574,15 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
                                 </div>
                                 <div class=" col-md-4">
-                                    <h5>Primary Account Holder</h5>
+                                    <h6>Primary Account Holder</h6>
                                     <div class="sigPad" id="smoothed2a" style="width:100%;border:solid gray 1px;">
-                                    <p style="float:right;margin-right:10px;"><i class="fa fa-pencil" aria-hidden="true"></i></p>
+                                    <!-- <p style="float:right;margin-right:10px;"><i class="fa fa-pencil" aria-hidden="true"></i></p> -->
                                         <ul class="sigNav">
                                             <li class="drawIt"><a href="#draw-it">Draw It</a></li>
                                             <li class="clearButton"><a href="#clear">Clear</a></li>
+                                        </ul>
+                                        <ul class="edit">
+                                            <li class="smoothed1a_pencil pointer"><a onclick="myFunctiontwo()" style="float:right;margin-right:10px;" class="smoothed1a_pencil"><i class="fa fa-pencil" aria-hidden="true"></i></a></li>
                                         </ul>
                                         <div class="sig sigWrapper" style="height:auto;">
                                             <div class="typed"></div>
@@ -556,12 +601,15 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
                                 </div>
                                 <div class=" col-md-4">
-                                    <h5>Secondary Account Holder</h5>
+                                    <h6>Secondary Account Holder</h6>
                                     <div class="sigPad" id="smoothed3a" style="width:100%;border:solid gray 1px;">
-                                    <p style="float:right;margin-right:10px;"><i class="fa fa-pencil" aria-hidden="true"></i></p>
+                                    <!-- <p style="float:right;margin-right:10px;"><i class="fa fa-pencil" aria-hidden="true"></i></p> -->
                                         <ul class="sigNav">
                                             <li class="drawIt"><a href="#draw-it">Draw It</a></li>
                                             <li class="clearButton"><a href="#clear">Clear</a></li>
+                                        </ul>
+                                        <ul class="edit">
+                                            <li class="smoothed1a_pencil pointer"><a onclick="myFunctionthree()" style="float:right;margin-right:10px;" class="smoothed1a_pencil"><i class="fa fa-pencil" aria-hidden="true"></i></a></li>
                                         </ul>
                                         <div class="sig sigWrapper" style="height:auto;">
                                             <div class="typed"></div>

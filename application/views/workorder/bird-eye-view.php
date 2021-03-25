@@ -83,9 +83,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <?php
   $url =  base_url(uri_string());
   if( $map_type == 'jobs' ) {
-    include viewPath('includes/sidebars/job'); 
+    include viewPath('includes/sidebars/job');
   }else{
-    include viewPath('includes/sidebars/schedule'); 
+    include viewPath('includes/sidebars/schedule');
   }
 ?>
 <style>
@@ -150,7 +150,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     <!-- page wrapper end -->
 <?php include viewPath('includes/footer'); ?>
 <script>
-$(function(){    
+$(function(){
     $('#date-range-picker').daterangepicker({
         "timePicker": false
     }, function(start, end, label) {

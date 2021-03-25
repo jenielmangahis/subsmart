@@ -1488,7 +1488,7 @@
                                                                     </div>
                                                                 </div>
                                                                 <div class=" col-md-4">
-                                                                    <h5>Company Representative Approval</h5>
+                                                                    <h6>Company Representative Approval</h6>
                                                                     <div class="sigPad" id="smoothed" style="width:404px;">
                                                                         <ul class="sigNav">
                                                                             <li class="drawIt"><a href="#draw-it">Draw It</a></li>
@@ -1512,7 +1512,7 @@
 
                                                                 </div>
                                                                 <div class=" col-md-4">
-                                                                    <h5>Primary Account Holder</h5>
+                                                                    <h6>Primary Account Holder</h6>
                                                                     <div class="sigPad" id="smoothed2" style="width:404px;">
                                                                         <ul class="sigNav">
                                                                             <li class="drawIt"><a href="#draw-it">Draw It</a></li>
@@ -1535,7 +1535,7 @@
 
                                                                 </div>
                                                                 <div class=" col-md-4">
-                                                                    <h5>Secondary Account Holder</h5>
+                                                                    <h6>Secondary Account Holder</h6>
                                                                     <div class="sigPad" id="smoothed3" style="width:404px;">
                                                                         <ul class="sigNav">
                                                                             <li class="drawIt"><a href="#draw-it">Draw It</a></li>

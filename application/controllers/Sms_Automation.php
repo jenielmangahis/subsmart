@@ -180,10 +180,15 @@ class Sms_Automation extends MY_Controller {
     }
 
     public function payment(){
+        $this->load->model('CardsFile_model');
+
+        $company_id = logged('company_id');
     	$sms_automation_id = $this->session->userdata('smsAutomationId');
 
         $smsAutomation = $this->SmsAutomation_model->getById($sms_automation_id);
+        $primaryCard   = $this->CardsFile_model->getCompanyPrimaryCard($company_id);
 
+        $this->page_data['primaryCard'] = $primaryCard;
         $this->page_data['smsAutomation'] = $smsAutomation;
         $this->load->view('sms_automation/payment', $this->page_data);
     }

@@ -102,8 +102,10 @@ class CardsFile extends MY_Controller {
 	        "solo" => "((?:6334|6767)\d{12}(?:\d\d)?\d?)",
 	        "mastercard" => "(5[1-5]\d{14})",
 	        "switch" => "(?:(?:(?:4903|4905|4911|4936|6333|6759)\d{12})|(?:(?:564182|633110)\d{10})(\d\d)?\d?)",
+	        "diners" =>  "(^3(?:0[0-5]|[68][0-9])[0-9]{4,}$)",
+	        "discover" => "(^6(?:011|5[0-9]{2})[0-9]{3,}$)"
 	    );
-	    $names = array("Visa", "American Express", "JCB", "Maestro", "Solo", "Mastercard", "Switch");
+	    $names = array("Visa", "American Express", "JCB", "Maestro", "Solo", "Mastercard", "Switch", "Diners", "Discover");
 	    $matches = array();
 	    $pattern = "#^(?:".implode("|", $cards).")$#";
 	    $result = preg_match($pattern, str_replace(" ", "", $cc), $matches);
@@ -113,20 +115,68 @@ class CardsFile extends MY_Controller {
 	    return ($result>0)?$names[sizeof($matches)-2]:false;
 	}
 
+	public function validatecard($cardnumber) {
+	    $cardnumber=preg_replace("/\D|\s/", "", $cardnumber);  # strip any non-digits
+	    $cardlength=strlen($cardnumber);
+	    $parity=$cardlength % 2;
+	    $sum=0;
+	    for ($i=0; $i<$cardlength; $i++) {
+	      $digit=$cardnumber[$i];
+	      if ($i%2==$parity) $digit=$digit*2;
+	      if ($digit>9) $digit=$digit-9;
+	      $sum=$sum+$digit;
+	    }
+	    $valid=($sum%10==0);
+	    return $valid;
+	}
+
+	public function test_card(){
+		$card_number = '6011111111111117';
+		$result= $this->check_cc($card_number, false);
+		var_dump($result);
+		exit;
+	}
+
 	public function update_primary_card(){
+		$is_success = false;
+		$msg = '';
+
 		$company_id = logged('company_id');
 		$post = $this->input->post();
+		$cardFile = $this->CardsFile_model->getById($post['id']);
+		if( $cardFile ){
+			if( $cardFile->company_id == $company_id ){
+				$today = date("y-m-d");  
+                $day   = date("d");                                 
+                $expires = date("y-m-d",strtotime($cardFile->expiration_year . "-" . $cardFile->expiration_month . "-" . $day));
+                $expired = 'expires';
+                if( strtotime($expires) < strtotime($today) ){
+                  $msg = "Cannot set as primary card because this payment method is expired.";
 
-		$this->CardsFile_model->companyResetAllprimaryCard($company_id);
-		$this->CardsFile_model->updateCardsFile($post['id'], ['is_primary' => 1]);
+                  $this->session->set_flashdata('message', 'Cannot set as primary card because this payment method is expired.');
+				  $this->session->set_flashdata('alert_class', 'alert-danger');
+                }else{
+                	$this->CardsFile_model->companyResetAllprimaryCard($company_id);
+					$this->CardsFile_model->updateCardsFile($post['id'], ['is_primary' => 1]);
+					$is_success = true;
+                }
+			}else{
+				$msg = "Invalid action";
+				$this->session->set_flashdata('message', 'Cannot find record.');
+				$this->session->set_flashdata('alert_class', 'alert-danger');
+			}
+		}else{
+			$this->session->set_flashdata('message', 'Cannot find record.');
+			$this->session->set_flashdata('alert_class', 'alert-danger');
+		}
+		
 
 		$json_data = [
-			'is_success' => 1,
-			'msg' => ''
+			'is_success' => $is_success,
+			'msg' => $msg
 		];
 
 		echo json_encode($json_data);
-		//exit;
 	}
 
 	public function edit_card($id){

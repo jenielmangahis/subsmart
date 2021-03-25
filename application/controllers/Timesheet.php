@@ -252,6 +252,14 @@ class Timesheet extends MY_Controller
 
     public function settings()
     {
+        add_css(array(
+            "assets/css/timesheet/timesheet_employee_requests.css"
+        ));
+
+        add_footer_js(array(
+            "assets/js/timesheet/timesheet_employee_requests.js"
+
+        ));
         $this->load->model('timesheet_model');
         $this->load->model('users_model');
         $user_id = logged('id');
@@ -3933,6 +3941,71 @@ class Timesheet extends MY_Controller
         }
         fclose($file);
         exit;
+    }
+    public function show_OT_Requests()
+    {
+        $ot_requests = $this->timesheet_model->getPendingOTs(logged('company_id'));
+        $display = "<thead>";
+        $display .= "<tr>";
+        $display .= "<th>Employee</th>";
+        $display .= "<th>Shift Date</th>";
+        $display .= "<th>Clock in</th>";
+        $display .= "<th>Clock out</th>";
+        $display .= "<th>Shift Duration</th>";
+        $display .= "<th>Overtime</th>";
+        $display .= "<th>Status</th>";
+        $display .= "<th>Approver</th>";
+        $display .= "<th>Action</th>";
+        $display .= "</tr>";
+        $display .= "</thead>";
+        $display .= "<tbody>";
+
+        foreach ($ot_requests as $request) {
+            $shift_date_usertimezone = $this->datetime_zone_converter($request->date_created, "UTC", $this->session->userdata('usertimezone'));
+            $clock_out_usertimezone = $this->datetime_zone_converter($request->clockout_time, "UTC", $this->session->userdata('usertimezone'));
+            $display .= "<tr>";
+            $display .= "<td>" . $request->FName . " " . $request->LName . "</td>";
+
+            $display .= "<td>" . date("m-d-Y", strtotime($shift_date_usertimezone)) . "</td>";
+            $display .= "<td>" . date("m-d-Y h:i A", strtotime($shift_date_usertimezone)) . "</td>";
+            $display .= "<td>" . date("m-d-Y h:i A", strtotime($clock_out_usertimezone)) . "</td>";
+            $display .= "<td style='text-align:center;'>" . ($request->shift_duration + $request->overtime) . "</td>";
+            $display .= "<td style='text-align:center;'>" .  $request->overtime . "</td>";
+            $overtime_status = "Pending";
+            if ($request->overtime_status == 2) {
+                $overtime_status = "Approved";
+            }
+            $display .= "<td style='text-align:center;'>" .  $overtime_status . "</td>";
+
+            $approver = "";
+            $approvers = $this->timesheet_model->get_ot_approver($request->id);
+            foreach ($approvers as $editor) {
+                $approver = $editor->FName . " " . $editor->LName;
+            }
+            $display .= "<td style='text-align:center;'>" .  $approver . "</td>";
+            $display .= '<td style="text-align:center;">';
+
+            if ($request->overtime_status == 1) {
+                $display .= '<a href="#" title="" data-name="' . $request->FName . " " . $request->LName . '" data-user-id="' . $request->user_id . '" data-attn-id="' . $request->id . '" data-toggle="tooltip" class="approve-ot-request btn btn-primary btn-sm" data-original-title="Approve"><i class="fa fa-thumbs-up fa-lg"></i> Approve</a>';
+                $display .= '<a  href="#" title="" data-name="' . $request->FName . " " . $request->LName . '" data-user-id="' . $request->user_id . '" data-attn-id="' . $request->id . '" data-toggle="tooltip" class="deny-ot-request btn btn-warning btn-sm" data-original-title="Deny"><i class="fa fa-thumbs-down fa-lg"></i> Deny</a>';
+            } else {
+                $display .= '<a  href="#" title="" data-name="' . $request->FName . " " . $request->LName . '" data-user-id="' . $request->user_id . '" data-attn-id="' . $request->id . '" data-toggle="tooltip" class="deny-ot-request btn btn-danger btn-sm" data-original-title="Deny"><i class="fa fa-times fa-lg"></i> Deny</a>';
+            }
+
+            $display .= '</td>';
+
+            $display .= "</tr>";
+        }
+        $display .= "</tbody>";
+        echo json_encode($display);
+    }
+    public function approve_deny_ot_request()
+    {
+        $attn_id = $this->input->post("attendance_id");
+        $user_id = $this->input->post("user_id");
+        $action = $this->input->post("action");
+        $this->timesheet_model->approve_deny_ot_request($attn_id, $user_id, $action);
+        echo json_encode(0);
     }
 }
 

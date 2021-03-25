@@ -1280,6 +1280,32 @@ class Timesheet_model extends MY_Model
         $qry = $this->db->query("SELECT timesheet_logs_editor.date_created, users.FName, users.LName from timesheet_logs_editor JOIN users ON timesheet_logs_editor.user_id = users.id where timesheet_logs_editor.attendance_id = " . $att_id . " order by timesheet_logs_editor.date_created DESC limit 1");
         return $qry->result();
     }
+    public function getPendingOTs($company_id)
+    {
+        $qry = $this->db->query("SELECT timesheet_attendance.date_created, timesheet_attendance.overtime_status, timesheet_attendance.user_id, timesheet_attendance.id, timesheet_attendance.shift_duration, timesheet_attendance.break_duration, timesheet_attendance.overtime, users.FName,users.LName, timesheet_logs.date_created as clockout_time FROM timesheet_attendance JOIN users ON timesheet_attendance.user_id = users.id JOIN timesheet_logs ON timesheet_attendance.id=timesheet_logs.attendance_id WHERE users.company_id = " . $company_id . " AND timesheet_logs.action='Check out' AND timesheet_attendance.status = 0 AND timesheet_attendance.overtime_status > 0 order by timesheet_attendance.date_created DESC");
+        return $qry->result();
+    }
+    public function approve_deny_ot_request($attn_id, $user_id, $action)
+    {
+        $status = 0;
+        $editors_action = "ot_request_denied";
+        if ($action == "approved") {
+            $status = 2;
+            $editors_action = "ot_request_approved";
+        }
+        $update = array(
+            "overtime_status" => $status
+        );
+
+        $this->db->where('id', $attn_id);
+        $this->db->update("timesheet_attendance", $update);
+        $this->attendance_logs_update_footprint_setter($attn_id, logged('id'), $editors_action);
+    }
+    public function get_ot_approver($attn_id)
+    {
+        $qry = $this->db->query("SELECT timesheet_logs_editor.*,  users.FName,users.LName FROM timesheet_logs_editor JOIN users ON timesheet_logs_editor.user_id = users.id WHERE  timesheet_logs_editor.attendance_id = " . $attn_id . " AND (timesheet_logs_editor.action ='ot_request_denied' OR timesheet_logs_editor.action ='ot_request_approved') order by timesheet_logs_editor.date_created DESC limit 1");
+        return $qry->result();
+    }
 }
 
 

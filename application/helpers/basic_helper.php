@@ -158,6 +158,24 @@ if (!function_exists('businessProfileImage')) {
     }
 }
 
+if (!function_exists('getCompanyBusinessProfileImage')) {
+
+    function getCompanyBusinessProfileImage()
+    {
+
+        $CI         = &get_instance();
+        $company_id = logged('company_id');
+        $res = $CI->business_model->getByCompanyProfileImage($company_id);
+        if( $res ){
+            $url = urlUpload('users/business_profile/' . $res->id . '/' . $res->business_image . '?' . time());
+        }else{
+            $url = urlUpload('users/business_profile/default.png');
+        }
+
+        return $url;
+    }
+}
+
 if (!function_exists('licenseImage')) {
 
     function licenseImage($id)

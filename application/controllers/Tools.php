@@ -10,6 +10,9 @@ class Tools extends MY_Controller {
         $this->load->model('ApiGoogleContact_model', 'api_gc');
         $this->load->model('UserDetails_model', 'user_details');
         $this->load->config('api_credentials');
+        $cid  = logged('id');
+        $profiledata = $this->business_model->getByWhere(array('user_id'=>$cid));
+        $this->page_data['profiledata'] = ($profiledata) ? $profiledata[0] : null;
     }
 
     /* public function index()
@@ -38,19 +41,19 @@ class Tools extends MY_Controller {
             ];
         }
 
-        $this->page_data['setting'] = $setting;                
+        $this->page_data['setting'] = $setting;
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->load->view('tools/api_connectors', $this->page_data);
     }
-    
+
     public function api_sidebars()
     {
         $this->load->model('api_connectors_model');
         $sidebars = $this->api_connectors_model->getApiSidebars();
-        
+
         return $sidebars;
     }
-    
+
      public function saveGoogleAcount()
     {
         include APPPATH . 'libraries/google-api-php-client/Google/vendor/autoload.php';
@@ -68,17 +71,17 @@ class Tools extends MY_Controller {
             'date_created' => date("Y-m-d H:i:s")
         ];
         $googleAccount = $this->GoogleAccounts_model->create($data);
-        
-        
+
+
     }
-    
+
     public function createGoogleContact()
     {
         session_start();
 //        $temp = json_decode($_SESSION['token'], true);
 //        $access = $temp['access_token'];
-        
-        $access = 
+
+        $access =
 
         $contactXML = '<?xml version="1.0" encoding="utf-8"?>
         <atom:entry xmlns:atom="http://www.w3.org/2005/Atom" xmlns:gd="http://schemas.google.com/g/2005">
@@ -116,10 +119,10 @@ class Tools extends MY_Controller {
         $output = curl_exec($ch);
         $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         curl_close($ch);
-        
+
         echo 'HTTP code: '. $httpcode;
     }
-    
+
     public function zillow()
     {
         $this->page_data['sidebar'] = $this->api_sidebars();
@@ -128,7 +131,7 @@ class Tools extends MY_Controller {
 
     public function business_tools() {
         $is_allowed = $this->isAllowedModuleAccess(48);
-        
+
         $this->page_data['sidebar'] = $this->api_sidebars();
         if (!$is_allowed) {
             $this->page_data['module'] = 'business_tools';
@@ -141,9 +144,9 @@ class Tools extends MY_Controller {
     }
 
     public function google_contacts() {
-        
+
         $this->load->library('GoogleApi');
-        
+
         $this->page_data['sidebar'] = $this->api_sidebars();
         $user_id = getLoggedUserID();
         $this->page_data['google_client_id'] = '30029411767-vjhs0kkitoj3fqun84qrrn7jllohffef.apps.googleusercontent.com';
@@ -198,14 +201,14 @@ class Tools extends MY_Controller {
         $this->load->view('tools/active_campaign', $this->page_data);
     }
 
-    public function api_integration() 
+    public function api_integration()
     {
         $this->page_data['sidebar'] = $this->api_sidebars();
         $this->load->view('tools/api_integration', $this->page_data);
     }
 
     public function zapier_api_connect() {
-        
+
     }
 
     public function google_contact_disable() {
