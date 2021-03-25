@@ -16,11 +16,12 @@
         background: linear-gradient(to bottom, #45a73c 0%,#67ce5e 100%);
     }
     img.company-logo {
-        width: auto;
-        height: auto;
-        object-fit: cover;
-        margin: 0 auto;
-        max-height: 120px;
+      width: 100px;
+      height: 100px;
+      object-fit: cover;
+      margin: 0 auto;
+      max-height: 120px;
+      border-radius: 69px;
     }
     div[role="wrapper"] .navbar-side .nav li > a {
         color: #fff;
@@ -42,6 +43,6 @@
         <?php endif; ?>
         <li class="submenus <?php if( strpos($uri,'timelog') ){ echo 'active';}?>"><a href="<?php echo base_url('users/timelog') ?>" title="Time Log"><span class="fa fa-clock-o"></span>Time Log</a></li>
         <li class="submenus <?php if( strpos($uri,'tracklocation') ){ echo 'active';}?>"><a href="<?php echo base_url('users/tracklocation') ?>" title="Track Location"><span class="fa fa-map-pin"></span>Track Location</a></li>
-        <li class="submenus <?php if( strpos($uri,'pay_scale') ){ echo 'active';}?>"><a href="<?php echo base_url('users/pay_scale') ?>" title="Track Location"><span class="fa fa-money"></span>Pay Scale</a></li>        
+        <li class="submenus <?php if( strpos($uri,'pay_scale') ){ echo 'active';}?>"><a href="<?php echo base_url('users/pay_scale') ?>" title="Track Location"><span class="fa fa-money"></span>Pay Scale</a></li>
     </ul>
 </nav>

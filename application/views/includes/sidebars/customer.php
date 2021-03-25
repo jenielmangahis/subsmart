@@ -20,11 +20,12 @@
         text-align: left;
     }
     img.company-logo {
-        width: auto;
-        height: auto;
-        object-fit: cover;
-        margin: 0 auto;
-        max-height: 120px;
+      width: 100px;
+      height: 100px;
+      object-fit: cover;
+      margin: 0 auto;
+      max-height: 120px;
+      border-radius: 69px;
     }
     svg#svg-sprite-menu-close {
       position: relative;
