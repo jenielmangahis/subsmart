@@ -446,24 +446,14 @@
                                         <div class="row">
                                           <div class="col-sm-12">
                                             <div class="apply-container" role="group" aria-label="...">
-                                                   <a class="btn-md" data-calendar="print" href="<?php echo base_url('customer/merchant'); ?>">
+                                                <a class="btn-md" style="width:152px; display: inline-block;text-align: center;padding: 9px !important;" href="<?php echo base_url('customer/merchant'); ?>">
                                                       <span class="fa fa-check fa-margin-right"></span> Apply Now
-                                                  </a>
+                                                </a>
+                                                <a class="btn-md btn-converge-form" style="width:152px; display: inline-block;text-align: center;padding: 9px !important;" href="javascript:void(0);">
+                                                      <span class="fa fa-gear fa-margin-right"></span> Setup Account
+                                                </a>
                                               </div>
                                           </div>
-                                        </div>
-                                        <hr style="margin-top: 36px;" />
-                                        <div class="row">
-                                            <div class="col-sm-8">
-                                                <div class="addon_price">
-                                                    Is Active : <?= $is_active; ?>
-                                                </div>
-                                            </div>
-                                            <div class="col-sm-4 text-right">
-                                                <a class="btn-converge-form" href="javascript:void(0);" ><span class="fa fa-pencil-square-o icon"></span> Setup</a>
-                                            </div>
-                                        </div>
-                                        <div class="addon__switch">
                                         </div>
                                     </div>
                                 </li>
