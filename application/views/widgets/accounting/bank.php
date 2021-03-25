@@ -2,14 +2,14 @@
     <div  style="width: 300px; border: 1px solid #58c04e; background: #58c04e; color:white;  border-radius: 10px; text-align: center;padding: 5px;position: relative;margin: 0 auto;top: 21px;z-index: 1000;">
         <i class="fa fa-money" aria-hidden="true"></i> Bank Accounts
 
-        <div class="registerLink float-right">
+        <div class="float-right">
             <div class="dropdown" style="position: relative;float: right;display: inline-block;margin-left: 10px;">
                 <span type="button" data-toggle="dropdown" style="border-radius: 0 36px 36px 0;margin-left: -5px;">
                     &nbsp;<span class="fa fa-ellipsis-v"></span></span>
                 <ul class="dropdown-menu dropdown-menu-right">
-                    <li><a href="#" class="dropdown-item">Corporate Account (XXXXXX 5850)</a></li>
-                    <li><a href="#" class="dropdown-item">Cash on hand</a></li>
-                    <li><a href="#" class="dropdown-item">Corporate Account (XXXXXX 5850)Te</a></li>
+                    <li><a href="#" class="dropdown-item" onclick="removeWidget('<?= $id ?>')">Close</a></li>
+                    <li><a href="#" class="dropdown-item" onclick="addToMain('<?= $id ?>',<?php echo ($isMain?'1':'0') ?>,'<?= $isGlobal ?>' )"><?php echo ($isMain?'Remove From Main':'Add to Main') ?></a></li>
+                    <li><a href="#" class="dropdown-item">Move</a></li>
                 </ul>
             </div>
         </div>

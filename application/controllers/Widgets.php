@@ -21,13 +21,32 @@ class Widgets extends MY_Controller {
         $this->load->model('widgets_model');
         $id = post('id');
         $user_id = logged('id');
-        if($this->widgets_model->removeWidget($id, $user_id)):
-            echo json_encode(array('success' => true));
-        else:
-            echo json_encode(array('success' => false));
-        endif;
+        echo $this->widgets_model->removeWidget($id, $user_id);
+        
         
     }
+    
+    public function addToMain()
+    {
+        
+        $this->load->library('wizardlib');
+        $this->load->model('widgets_model');
+        $id = post('id');
+        $user_id = logged('id');
+        
+        if(!$this->wizardlib->isWidgetGlobal($id)):
+            if ($this->widgets_model->addToMain($user_id, $id)):
+                $widget = $this->widgets_model->getWidgetByID($id);
+                $data['id'] = $id;
+                $data['class'] = 'col-lg-3 col-md-6 col-sm-12';
+                $data['height'] = 'height: 310px;';
+                $view = $this->load->view($widget->w_view_link,$data);
+
+                return $view;
+            endif;
+        endif;
+    }
+    
     public function addWidget() {
         
         $this->load->library('wizardlib');
@@ -58,7 +77,7 @@ class Widgets extends MY_Controller {
                     $view = $this->load->view($widget->w_view_link,$data);
 
                     return $view;
-            endif;
+                endif;
             endif;
         endif;
     }

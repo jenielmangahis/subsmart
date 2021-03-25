@@ -70,6 +70,24 @@
     }
 
 
+    function addToMain(id, isMain, isGlobal)
+    {
+        if(!isGlobal){
+            $.ajax({
+                url: '<?php echo base_url(); ?>widgets/addToMain',
+                method: 'POST',
+                data: {id: id},
+                //dataType: 'json',
+                success: function (response) {
+                   alert(isMain?'Successfully Removed':'Successfully Added');
+                   location.reload();
+                }
+            });
+        }else{
+            alert('Sorry you cannot update a widget set by the company as global')
+        }
+    }
+
     function addWidget(id)
     {
         var isGlobal = $('#widgetGlobal_' + id).is(":checked") ? '1' : 0;
@@ -98,6 +116,9 @@
                 if (response.success)
                 {
                     $('#widget_' + dis).remove();
+                   
+                }else{
+                    alert(response.message);
                 }
             }
         });

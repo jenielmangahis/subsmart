@@ -199,7 +199,7 @@ $(document).on("focusout", ".quantity", function () {
   var quantity = $("#quantity_" + counter).val();
   var discount = $("#discount_" + counter).val();
   var rate_val = this.value;
-  alert(rate_val);
+  // alert(rate_val);
   var tax = (parseFloat(price) * parseFloat(rate_val)) / 100;
   var tax1 = (((parseFloat(price) * parseFloat(rate_val)) / 100) * parseFloat(quantity)).toFixed(
     2
@@ -898,10 +898,12 @@ function calculation(counter) {
   eqpt_cost = parseFloat(eqpt_cost).toFixed(2);
   $("#eqpt_cost").val(eqpt_cost);
 
+  // alert('dri');
+
   if($("#grand_total").length && $("#grand_total").val().length)
   {
     // console.log('none');
-    alert('none');
+    // alert('none');
   }else{
     $("#grand_total").text(grand_total_w.toFixed(2));
     $("#grand_total_input").val(grand_total_w.toFixed(2));
@@ -1034,6 +1036,8 @@ function calculation(counter) {
     $('#item_total_'+counter).val(total);
   }
 
+  // alert('dri');
+
   var eqpt_cost = 0;
   var cnt = $("#count").val();
   var total_discount = 0;
@@ -1083,7 +1087,7 @@ function calculation(counter) {
   var grand_total_w = grand_total + parseFloat(markup);
 
   $("#total_tax_").text(subtotaltax.toFixed(2));
-  $("#total_tax_").val(subtotaltax.toFixed(2));
+  $("#total_tax_input").val(subtotaltax.toFixed(2));
   
 
   $("#grand_total").text(grand_total_w.toFixed(2));
@@ -1093,7 +1097,7 @@ function calculation(counter) {
   if($("#grand_total").length && $("#grand_total").val().length)
   {
     // console.log('none');
-    alert('none');
+    // alert('none');
   }else{
     $("#grand_total").text(grand_total_w.toFixed(2));
     $("#grand_total_input").val(grand_total_w.toFixed(2));
@@ -1179,6 +1183,8 @@ function calculation2(counter) {
 
   // alert(subtotaltaxx);
 
+  // alert('dri');
+
   $("#eqpt_cost").val(eqpt_cost);
   $("#total_discount").val(total_discount);
   $("#span_sub_total_0").text(total_discount);
@@ -1192,7 +1198,7 @@ function calculation2(counter) {
   var grand_total_w = grand_total + parseFloat(markup);
 
   $("#total_tax2_").text(subtotaltaxx.toFixed(2));
-  $("#total_tax2_").val(subtotaltaxx.toFixed(2));
+  $("#total_tax2_input").val(subtotaltaxx.toFixed(2));
   
 
   $("#grand_total2").text(grand_total_w.toFixed(2));
@@ -1202,7 +1208,7 @@ function calculation2(counter) {
   if($("#grand_total").length && $("#grand_total").val().length)
   {
     // console.log('none');
-    alert('none');
+    // alert('none');
   }else{
     $("#grand_total").text(grand_total_w.toFixed(2));
     $("#grand_total_input").val(grand_total_w.toFixed(2));
@@ -1714,6 +1720,35 @@ $("#smoothed1a").signaturePad({
   drawBezierCurves: true,
   lineTop: 200,
 });
+
+function myFunction() {
+  var x = document.getElementById("company_representative_approval_signature1a");
+  if (x.style.pointerEvents === "none") {
+    x.style.pointerEvents = "auto";
+  } else {
+    x.style.pointerEvents = "none";
+  }
+}
+
+function myFunctiontwo() {
+  var x = document.getElementById("primary_account_holder_signature2a");
+  if (x.style.pointerEvents === "none") {
+    x.style.pointerEvents = "auto";
+  } else {
+    x.style.pointerEvents = "none";
+  }
+}
+
+function myFunctionthree() {
+  var x = document.getElementById("secondary_account_holder_signature3a");
+  if (x.style.pointerEvents === "none") {
+    x.style.pointerEvents = "auto";
+  } else {
+    x.style.pointerEvents = "none";
+  }
+}
+
+
 $("#company_representative_approval_signature1a").on("click touchstart",
   function () {
     var canvas = document.getElementById(

@@ -2,11 +2,7 @@ function showOptions(s)
 {
     var option_text = s[s.selectedIndex].innerHTML;
 
-    if($(s).attr('id').includes('edit')) {
-        $('#modalEditAccount #edit_name').val(option_text);
-    } else {
-        $('#modalAddAccount #name').val(option_text);
-    }
+    $('#modalAddAccount #name').val(option_text);
 }
 
 function check(el)
@@ -111,7 +107,8 @@ $(function(){
     });
 });
 
-$('#account_type').on('change', function() {
+$(document).on('change', '#account_type, #edit_account_type', function() {
+    var el = $(this);
     var account_id = this.value;
     if(account_id!='')
     {
@@ -121,11 +118,33 @@ $('#account_type').on('change', function() {
             data: {account_id:account_id},
             success:function(data)
             {
-                $("#detail_type").html(data);
-                showOptions(document.getElementById('detail_type'));
+                if(el.attr('id').includes('edit')) {
+                    $("#edit_detail_type").html(data);
+                    showOptions(document.getElementById('edit_detail_type'));
+                    $('#edit_detail_type').trigger('change');
+                }else {
+                    $("#detail_type").html(data);
+                    showOptions(document.getElementById('detail_type'));
+                    $('#detail_type').trigger('change');
+                }
             }
         })
     }
+});
+
+$(document).on('change', '#detail_type, #edit_detail_type', function() {
+    var el = $(this);
+    var id = el.val();
+
+    $.ajax({
+        url: "/accounting/chart-of-accounts/get-detail-type/"+id,
+        success: function(data)
+        {
+            data = JSON.parse(data);
+            
+            el.parent().next().html(data.description);
+        }
+    });
 });
 
 $(document).ready(function () {
@@ -317,6 +336,14 @@ $(document).on('click', '#editAccount', function(e){
                 todayBtn: "linked",
                 language: "de"
             });
+            $('.form-validate').validate();
+
+            //Initialize Select2 Elements
+
+            $('.select2').select2()
+
+            var element = document.querySelector('#edit_check_sub');
+            var switchery = new Switchery(element, {size: 'small'});
             $('#modalEditAccount').modal('show');
         }
     })

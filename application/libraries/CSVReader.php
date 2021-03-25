@@ -54,7 +54,7 @@ class CSVReader {
         
         // Store CSV data in an array
         $csvData = array();
-        $i = 1;
+        $i = 0;
         while(($row = fgetcsv($csvFile, $this->max_row_size, $this->separator, $this->enclosure)) !== FALSE){
             // Skip empty lines
             if($row != NULL){
@@ -76,6 +76,48 @@ class CSVReader {
         // Close opened CSV file
         fclose($csvFile);
         
+        return $csvData;
+    }
+
+    function get_header($filepath){
+
+        // If file doesn't exist, return false
+        if(!file_exists($filepath)){
+            return FALSE;
+        }
+
+        // Open uploaded CSV file with read-only mode
+        $csvFile = fopen($filepath, 'r');
+
+        // Get Fields and values
+        $this->fields = fgetcsv($csvFile, $this->max_row_size, $this->separator, $this->enclosure);
+        $keys_values = explode(',', $this->fields[0]);
+        $keys = $this->escape_string($keys_values);
+
+        // Store CSV data in an array
+        $csvData = array();
+        $i = 0;
+        while(($row = fgetcsv($csvFile, 1, $this->separator, $this->enclosure)) !== FALSE){
+            // Skip empty lines
+            if($row != NULL){
+                $values = explode(',', $row[0]);
+                if(count($keys) == count($values)){
+                    $arr        = array();
+                    $new_values = array();
+                    $new_values = $this->escape_string($values);
+                    for($j = 0; $j < count($keys); $j++){
+                        if($keys[$j] != ""){
+                            $arr[$keys[$j]] = $new_values[$j];
+                        }
+                    }
+                    $csvData[$i] = $arr;
+                    $i++;
+                }
+            }
+        }
+        // Close opened CSV file
+        fclose($csvFile);
+
         return $csvData;
     }
 
