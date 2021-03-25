@@ -29,6 +29,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
   overflow: auto;
   padding: 6px;
 }
+.col-lnc {
+  width: auto;
+}
 .list-icon li{
   display: inline-block;
   /*width: 30%;*/
