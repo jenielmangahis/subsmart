@@ -3,6 +3,41 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Widgets_model extends MY_Model {
     
+    
+    function addToMain($user_id, $id)
+    {
+        $this->db->where('wu_user_id', $user_id);
+        $this->db->where('wu_widget_id', $id);
+        $q = $this->db->get('widgets_users');
+        if($q->num_rows() > 0):
+            $isMain = $q->row()->wu_is_main;
+            if($isMain==0):
+                $details = array('wu_is_main' => 1);
+                
+                $this->db->where('wu_user_id', $user_id);
+                $this->db->where('wu_widget_id', $id);
+                if($this->db->update('widgets_users', $details)):
+                    return true;
+                endif;
+            else:
+                $details = array('wu_is_main' => 0);
+                
+                $this->db->where('wu_user_id', $user_id);
+                $this->db->where('wu_widget_id', $id);
+                if($this->db->update('widgets_users', $details)):
+                    return true;
+                endif;
+            endif;
+        else:
+            $details = array('wu_user_id'=> $user_id, 'wu_widget_id'=> $id, 'wu_is_main' => 1);
+                
+            if($this->db->insert('widgets_users', $details)):
+                return true;
+            endif;
+            
+        endif;
+    }
+    
     function getWidgetByID($id)
     {
         $this->db->where('w_id', $id);
@@ -11,13 +46,45 @@ class Widgets_model extends MY_Model {
     
     function removeWidget($id, $user_id)
     {
+        $this->db->where('wu_company_id !=', 0);
         $this->db->where('wu_widget_id', $id);
-        $this->db->where('wu_user_id', $user_id);
-        if($this->db->delete('widgets_users')):
-            return true;
+        $isCompany = $this->db->get('widgets_users');
+        if($isCompany->num_rows() > 0):
+            
+            $this->db->where('wu_company_id !=', 0);
+            $this->db->where('wu_widget_id', $id);
+            $this->db->where('wu_user_id', $user_id);
+            
+            $isCompany = $this->db->get('widgets_users');
+            if($isCompany->num_rows() > 0):
+                $details = array(
+                    'success' => true,
+                    'message' => 'Successfully removed'
+                );
+            else:
+                $details = array(
+                    'success' => false,
+                    'message' => 'Sorry you cannot remove a widget set by the company'
+                );
+            endif;
+            
         else:
-            return false;
+            $this->db->where('wu_widget_id', $id);
+            $this->db->where('wu_user_id', $user_id);
+            if($this->db->delete('widgets_users')):
+                $details = array(
+                    'success' => true,
+                    'message' => 'Successfully removed'
+                );
+            else:
+                $details = array(
+                    'success' => false,
+                    'message' => 'Something went wrong'
+                );
+            endif;
         endif;
+        
+        return json_encode($details);
     }
 
     function addWidgets($details)

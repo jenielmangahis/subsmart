@@ -1015,6 +1015,25 @@ class Customer extends MY_Controller
        show_error($this->email->print_debugger());
     }
 
+    public function get_customer_import_header(){
+
+            if (is_uploaded_file($_FILES['file']['tmp_name'])) {
+                $this->load->library('CSVReader');
+                $csvData = $this->csvreader->get_header($_FILES['file']['tmp_name']);
+
+                if (!empty($csvData)) {
+                    foreach ($csvData as $row) {
+                        //echo $row['MonitoringID'];
+                    }
+                    //print_r($csvData);
+                    echo json_encode($csvData,true);
+                }else{
+                    echo 'error';
+                }
+            }
+
+    }
+
     public function import_customer_data() {
         $data = array();
         $input_profile = array();

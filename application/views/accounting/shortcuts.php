@@ -27,7 +27,7 @@
 <div class="tile-container" style="height: 445px;">
     <div class="card no-padding" style="margin-top:0;">
         <div class="card-header">
-            <i class="fa fa-dashboard" aria-hidden="true"></i> Shorcuts
+            <i class="fa fa-dashboard" aria-hidden="true"></i> Shortcuts
         </div>
         <div class="card-body pt-3 pb-0">
             <div id="shortcutsSlide" class="carousel slide" style="" data-ride="carousel">

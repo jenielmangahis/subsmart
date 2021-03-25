@@ -68,6 +68,18 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             </div>
                         </div>
 
+                        <?php if($this->session->flashdata('success')) : ?>
+                        <div class="alert alert-success alert-dismissible my-4" role="alert">
+                            <button type="button" class="close" data-dismiss="alert">&times;</button>
+                            <span><strong>Success!</strong> <?php echo $this->session->flashdata('success'); ?></span>
+                        </div>
+                        <?php elseif($this->session->flashdata('error')) : ?>
+                        <div class="alert alert-danger alert-dismissible my-4" role="alert">
+                            <button type="button" class="close" data-dismiss="alert">&times;</button>
+                            <span><strong>Error!</strong> <?php echo $this->session->flashdata('error'); ?></span>
+                        </div>
+                        <?php endif; ?>
+
                         <div class="tab-content" id="myTabContent">
                             <div class="tab-pane fade show active" id="tab1" role="tabpanel" aria-labelledby="tab1">
                                 <div class="row my-3">
@@ -137,7 +149,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     <h4 class="modal-title">Edit Attachment</h4>
                     <button type="button" class="close" data-dismiss="modal"><i class="fa fa-times fa-lg"></i></button>
                 </div>
-                <form id="edit-attachment-form">
+                <form id="edit-attachment-form" method="post">
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-xl-12">
@@ -180,7 +192,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     </div>
 
     <div class="modal fade" id="delete_attachment" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered m-auto w-50" role="document">
+        <div class="modal-dialog modal-dialog-centered m-auto w-25" role="document">
             <div class="modal-content">
                 <div class="modal-body">
                     <div class="row">

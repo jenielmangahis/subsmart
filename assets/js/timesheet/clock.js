@@ -1,5 +1,4 @@
 function app_notification(token, body, device_type, company_id, title) {
-  // console.log("Requesting App notification.....");
   $.ajax({
     url: baseURL + "timesheet/app_notification",
     type: "POST",
@@ -531,7 +530,6 @@ $(document).ready(function () {
         dataType: "json",
         data: { attn_id: attn_id },
         success: function (data) {
-          console.log(data);
           let was_closed = data.autoclockout_timer_closed;
           if (data.difference > 8) {
             was_closed = false;

@@ -71,27 +71,22 @@ class Attachments extends MY_Controller {
         if(count($files['name']) > 0) {
             $insert = $this->uploadFile($files);
 
-            $return = [
-                'data' => $insert,
-                'success' => $insert ? true : false,
-                'message' => $insert ? 'Success!' : 'Error!'
-            ];
+            if($insert) {
+                $this->session->set_flashdata('success', "Upload successful!");
+            } else {
+                $this->session->set_flashdata('error', "Please try again!");
+            }
         } else {
-            $return = [
-                'data' => null,
-                'success' => false,
-                'message' => 'No files uploaded.'
-            ];
+            $this->session->set_flashdata('error', "An unexpected error occured!");
         }
-
-        echo json_encode($return);
     }
 
     private function uploadFile($files)
     {
         $this->load->helper('string');
         $data = [];
-        foreach($files['name'] as $key => $name) {
+        foreach($files['name'] as $key => $name)
+        {
             $extension = end(explode('.', $name));
 
             do {
@@ -176,7 +171,7 @@ class Attachments extends MY_Controller {
         }
     }
 
-    public function edit()
+    public function edit($id)
     {
         $post = $this->input->post();
 
@@ -185,13 +180,16 @@ class Attachments extends MY_Controller {
             'notes' => $post['notes']
         ];
 
-        $update = $this->accounting_attachments_model->updateAttachment($post['id'], $data);
+        $update = $this->accounting_attachments_model->updateAttachment($id, $data);
+        $name = $post['file_name'];
 
-        echo json_encode([
-            'data' => $update,
-            'success' => $update ? true : false,
-            'message' => $update ? 'Success!' : 'Error!'
-        ]);
+        if($update) {
+            $this->session->set_flashdata('success', "$name updated successfully!");
+        } else {
+            $this->session->set_flashdata('error', "Please try again!");
+        }
+
+        redirect('/accounting/attachments');
     }
 
     public function delete($id)
@@ -202,11 +200,13 @@ class Attachments extends MY_Controller {
         if(file_exists("./uploads/accounting/attachments/".$attachment->stored_name)) {
             unlink("./uploads/accounting/attachments/".$attachment->stored_name);
         }
+        $name = $attachment->uploaded_name;
         $delete = $this->accounting_attachments_model->delete($id);
-        $result['success'] = $delete;
-        $result['message'] = $delete ? 'Successfully Deleted' : 'Failed to Delete';
 
-        echo json_encode($result);
-        exit;
+        if($delete) {
+            $this->session->set_flashdata('success', "$name has been successfully deleted!");
+        } else {
+            $this->session->set_flashdata('error', "Please try again!");
+        }
     }
 }
