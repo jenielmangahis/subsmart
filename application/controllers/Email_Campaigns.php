@@ -5,9 +5,6 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 
 class Email_Campaigns extends MY_Controller {
-
-
-
 	public function __construct()
 	{
 		parent::__construct();
@@ -117,10 +114,114 @@ class Email_Campaigns extends MY_Controller {
         $this->page_data['customerGroups'] = $customerGroups;
         $this->load->view('email_campaigns/add_campaign_send_to', $this->page_data);
     }
+
+    public function create_campaign_send_to()
+    {       
+        $json_data = [
+            'is_success' => false,
+            'err_msg' => 'Cannot save data'
+        ];
+
+        $post = $this->input->post(); 
+        $email_blast_id = $this->session->userdata('emailBlastId');
+        
+        $data_setting = [
+            'customer_type' => $post['optionA']['customer_type_service'],
+            'sending_type' => $post['to_type']
+        ];
+
+        $emailBlast = $this->EmailBlast_model->updateEmailBlast($email_blast_id, $data_setting);
+        $this->EmailBlastSendTo_model->deleteAllByEmailBlastId($email_blast_id);
+
+        if( $post['to_type'] == 1 ){
+                //Use optionA data
+                $data_send_to = array();
+                if( !empty($post['optionA']['exclude_customer_group_id']) ){
+                        foreach( $post['optionA']['exclude_customer_group_id'] as $key => $value ){
+                                $data_send_to = [
+                                        'email_blast_id' => $email_blast_id,
+                                        'customer_id' => 0,
+                                        'customer_group_id' => $value,
+                                        'exclude' => 1
+                                ];
+
+                                $emailBlastSendTo = $this->EmailBlastSendTo_model->create($data_send_to);
+                        }       
+                }
+
+                $json_data = [
+                        'is_success' => true,
+                        'err_msg' => ''
+                ];
+
+        }elseif( $post['to_type'] == 3 ){
+                //Use optionB data    
+                $data_send_to = array();
+                if( isset($post['optionB']['customer_id']) ){
+                    foreach( $post['optionB']['customer_id'] as $key => $value ){
+                            $data_send_to = [
+                                    'email_blast_id' => $email_blast_id,
+                                    'customer_id' => $value,
+                                    'customer_group_id' => 0,
+                                    'exclude' => 0
+                            ];
+
+                            $emailBlastSendTo = $this->EmailBlastSendTo_model->create($data_send_to);
+                    }
+
+                    $json_data = [
+                            'is_success' => true,
+                            'err_msg' => ''
+                    ];   
+                }else{
+                    $json_data = [
+                            'is_success' => false,
+                            'err_msg' => 'Please select customer'
+                    ];
+                }
+                
+
+        }elseif( $post['to_type'] == 2 ){
+                //Use optionC data
+                $data_send_to = array();
+                if(isset($post['optionC']['customer_group_id'])){
+                        foreach( $post['optionC']['customer_group_id'] as $key => $value ){
+                                $data_send_to = [
+                                        'email_blast_id' => $email_blast_id,
+                                        'customer_id' => 0,
+                                        'customer_group_id' => $value,
+                                        'exclude' => 0
+                                ];
+
+                                $emailBlastSendTo = $this->EmailBlastSendTo_model->create($data_send_to);
+                        }
+                }
+
+                $json_data = [
+                        'is_success' => true,
+                        'err_msg' => ''
+                ];
+        }
+
+        echo json_encode($json_data);
+    }
+
+    public function build_email(){
+        $user = $this->session->userdata('logged');
+        $cid  = logged('company_id');
+        $email_blast_id = $this->session->userdata('emailBlastId');
+
+        $emailCampaign  = $this->EmailBlast_model->getById($email_blast_id);
+        $company        = $this->Clients_model->getById($cid);
+
+        $this->page_data['company'] = $company;
+        $this->page_data['emailCampaign'] = $emailCampaign;
+        $this->load->view('email_campaigns/build_email', $this->page_data);
+    }
 }
 
 
 
-/* End of file Comapny.php */
+/* End of file Email_Campaigns.php */
 
-/* Location: ./application/controllers/Users.php */
+/* Location: ./application/controllers/Email_Campaigns.php */

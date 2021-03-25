@@ -18,10 +18,6 @@ class Marketing extends MY_Controller
         $this->load->library('session');
         $user_id = getLoggedUserID();
 
-        $cid  = logged('id');
-        $profiledata = $this->business_model->getByWhere(array('user_id'=>$cid));
-        $this->page_data['profiledata'] = ($profiledata) ? $profiledata[0] : null;
-
         // concept
         $uid = $this->session->userdata('uid');
 

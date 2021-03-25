@@ -52,28 +52,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     <!-- page wrapper start -->
     <div wrapper__section>
         <div class="container-fluid p-40">
-          <!--
-            <div class="page-title-box">
-                <div class="row align-items-center">
-                    <div class="col-sm-6">
-                        <h1 class="page-title">Create SMS Campaign</h1>
-                        <ol class="breadcrumb">
-                            <li class="breadcrumb-item active">Start a new SMS campaign to promote your business.</li>
-                        </ol>
-                    </div>
-                    <div class="col-sm-6">
-                        <div class="float-right d-none d-md-block">
-                            <div class="dropdown">
-                                    <a href="<?php echo url('sms_campaigns') ?>" class="btn btn-primary" aria-expanded="false">
-                                        <i class="mdi mdi-settings mr-2"></i> Go Back to SMS Blast list
-                                    </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            -->
-            <!-- end row -->
             <?php echo form_open_multipart('', ['class' => 'form-validate', 'id' => 'create_email_blast', 'autocomplete' => 'off']); ?>
             <div class="row">
                 <div class="col-xl-12">
@@ -106,7 +84,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                   <li>2. Select Customers</li>
                                   <li>3. Build Email</li>
                                   <li>4. Preview</li>
-                                  <!-- <li>5. Purchase</li> -->
+                                  <li>5. Purchase</li>
                                 </ul>
                             </div>
                             <hr />
