@@ -492,6 +492,11 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                     <a href="<?php echo url('/timesheet/list') ?>" class="banking-tab">List</a>
                                     <a href="<?php echo url('/timesheet/settings') ?>" class="banking-tab">Requests</a>
                                 <?php endif; ?>
+                                <?php if ($this->session->userdata('logged')['role'] >= 5) {
+                                ?>
+                                    <a href="<?php echo url('/timesheet/my_schedule') ?>" class="banking-tab">My Schedule</a>
+                                <?php
+                                } ?>
                             </div>
                         </div>
                         <div class="card-body">
@@ -1054,14 +1059,14 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-md-4">
+                                    <div class="col-md-8">
                                         <div class="tile-container user-logs-container">
                                             <div class="inner-container">
                                                 <div class="tileContent">
                                                     <div class="clear">
                                                         <div class="inner-content">
                                                             <div class="card-title user-card-title">
-                                                                <span>Today's Task</span>
+                                                                <span>Remarks</span>
                                                             </div>
                                                             <div class="user-logs">
                                                                 <div class="user-logs-section">
@@ -1078,24 +1083,6 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                                                     <div class="user-lunch-in"><?php echo $end_time ?></div>
                                                                     <div class="user-lunch-out"><?php echo $task_duration ?></div>
                                                                 </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="tile-container user-logs-container">
-                                            <div class="inner-container">
-                                                <div class="tileContent">
-                                                    <div class="clear">
-                                                        <div class="inner-content">
-                                                            <div class="card-title user-card-title">
-                                                                <span>Yesterday worked comment</span>
-                                                            </div>
-                                                            <div class="user-logs">
-
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1132,6 +1119,108 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                                                     <div class="user-lunch-out">-</div>
                                                                     <div class="user-clock-out">-</div>
                                                                     <div class="user-lunch-in">-</div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <div class="tile-container user-logs-container">
+                                            <div class="inner-container">
+                                                <div class="tileContent">
+                                                    <div class="clear">
+                                                        <div class="inner-content">
+                                                            <div class="card-title user-card-title">
+                                                                <span>Correction Requests</span>
+                                                            </div>
+                                                            <div class="user-logs">
+                                                                <div class="user-logs-section">
+                                                                    <div class="user-clock-in-title">Timezone: </div>
+                                                                    <div class="user-clock-in-title">Task: </div>
+                                                                    <div class="user-clock-out-title">Start time: </div>
+                                                                    <div class="user-lunch-in-title">End time: </div>
+                                                                    <div class="user-lunch-out-title">Estimated time duration: </div>
+                                                                </div>
+                                                                <div class="user-logs-section" style="vertical-align: top">
+                                                                    <div class="user-clock-in"><?php echo $timezone; ?></div>
+                                                                    <div class="user-clock-in"><i class="fa fa-info-circle"></i> <?php echo $task_name ?></div>
+                                                                    <div class="user-clock-out"><?php echo $start_time; ?></div>
+                                                                    <div class="user-lunch-in"><?php echo $end_time ?></div>
+                                                                    <div class="user-lunch-out"><?php echo $task_duration ?></div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row" style="margin-top: 20px">
+                                    <div class="col-md-12">
+                                        <div class="tile-container user-logs-container">
+                                            <div class="inner-container">
+                                                <div class="tileContent">
+                                                    <div class="clear">
+                                                        <div class="inner-content">
+                                                            <div class="card-title user-card-title">
+                                                                <span>Attendance Logs</span>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-md-12">
+                                                                    <form action="#" target="_blank" method="POST">
+                                                                        <div class="row">
+                                                                            <div class="col-lg-2" style="margin-bottom: 12px">
+                                                                                <label for="from_date_logs" class="week-label">From:</label>
+                                                                                <input type="text" name="date_from" id="from_date_logs" class="form-control ts_schedule" value="<?= date('m/d/Y', strtotime('monday this week')) ?>">
+                                                                            </div>
+                                                                            <div class="col-lg-2" style="margin-bottom: 12px">
+                                                                                <label for="to_date_logs" class="week-label">To:</label>
+                                                                                <input type="text" name="date_to" id="to_date_logs" class="form-control ts_schedule" value="<?= date("m/d/Y") ?>">
+                                                                            </div>
+                                                                        </div>
+                                                                    </form>
+                                                                    <table id="my-attendance-logs" class="table table-bordered table-striped no-footer dataTable" role="grid" aria-describedby="otrequest-table-list_info" style="display:none;">
+                                                                        <thead>
+                                                                            <tr role="row">
+                                                                                <th class="sorting_disabled" rowspan="1" colspan="1" style="width: 0px;">Shift Date</th>
+                                                                                <th class="sorting_disabled" rowspan="1" colspan="1" style="width: 0px;">Shift Start</th>
+                                                                                <th class="sorting_disabled" rowspan="1" colspan="1" style="width: 0px;">Shift End</th>
+                                                                                <th class="sorting_disabled" rowspan="1" colspan="1" style="width: 0px;">Expected Work Hours</th>
+                                                                                <th class="sorting_disabled" rowspan="1" colspan="1" style="width: 0px;">Clock in</th>
+                                                                                <th class="sorting_disabled" rowspan="1" colspan="1" style="width: 0px;">Clock out</th>
+                                                                                <th class="sorting_disabled" rowspan="1" colspan="1" style="width: 0px;">Worked Hours</th>
+                                                                                <th class="sorting_disabled" rowspan="1" colspan="1" style="width: 0px;">Late in minutes</th>
+                                                                                <th class="sorting_disabled" rowspan="1" colspan="1" style="width: 0px;">Overtime</th>
+                                                                                <th class="sorting_disabled" rowspan="1" colspan="1" style="width: 0px;">OT Status</th>
+                                                                                <th class="sorting_disabled" rowspan="1" colspan="1" style="width: 0px;">Action</th>
+                                                                            </tr>
+                                                                        </thead>
+                                                                        <tbody>
+                                                                            <tr role="row" class="odd">
+                                                                                <td>03-21-2021</td>
+                                                                                <td>03-21-2021 12:20 PM</td>
+                                                                                <td>03-21-2021 09:38 PM</td>
+                                                                                <td style="text-align:center;">9.3</td>
+                                                                                <td style="text-align:center;">1.30</td>
+                                                                                <td style="text-align:center;">Pending</td>
+                                                                                <td style="text-align:center;"></td>
+                                                                                <td style="text-align:center;"></td>
+                                                                                <td style="text-align:center;"></td>
+                                                                                <td style="text-align:center;"></td>
+                                                                                <td style="text-align:center;">
+                                                                                    <a href="#" title="" data-name="Jonah  Pacas-Abanil" data-user-id="14" data-attn-id="143" data-toggle="tooltip" class="approve-ot-request btn btn-primary btn-sm" data-original-title="Approve"><i class="fa fa-adjust fa-lg"></i> Request Adjustment</a>
+                                                                                    <a href="#" title="" data-name="Jonah  Pacas-Abanil" data-user-id="14" data-attn-id="143" data-toggle="tooltip" class="deny-ot-request btn btn-warning btn-sm" data-original-title="Deny"><i class="fa fa-clock-o fa-lg"></i> Request OT Approval</a>
+                                                                                </td>
+                                                                            </tr>
+                                                                        </tbody>
+                                                                    </table>
+                                                                    <div class="table-ts-loader">
+                                                                        <center><img class="ts-loader-img" src="<?= base_url() ?>/assets/css/timesheet/images/ring-loader.svg" alt=""></center>
+                                                                    </div>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -1190,6 +1279,156 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
     </div>
 </div>
 <!--end of modal-->
+
+
+
+<div class="modal-right-side">
+    <div class="modal right fade" id="request_attendance_correct_from" tabindex="" role="dialog" aria-labelledby="edit_attendance_log">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title" id="edit_attendance_log"><i class="fa fa-pencil-square-o"></i> <span>Request Attendance Correcttion</span><label id="edit_attendance_name">Lou Pinton</label></h3>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                </div>
+                <form action="" method="post" id="formNewProject">
+                    <div class="modal-body">
+                        <input type="hidden" name="timesheet_attendance_id" id="form_timesheet_attendance_id">
+                        <input type="hidden" name="user_id" id="form_user_id">
+                        <input type="hidden" name="timesheet_shift_schedule_id" id="form_timesheet_shift_schedule_id">
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label for="">Shift Start</label>
+                                    <input type="text" name="shift_start" id="form_shift_start" class="form-control" disabled>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="form-group hiddenSection">
+                                    <label for="">Shift End</label>
+                                    <input type="text" name="shift_end" id="form_shift_end" class="form-control ts-start-date" value="" disabled>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label for="">Clock In</label>
+                                    <input type="date" name="shift_start" id="form_clockin_date" class="form-control" disabled>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="form-group hiddenSection">
+                                    <label for="">&nbsp;</label>
+                                    <input type="time" name="shift_end" id="form_clockin_time" class="form-control ts-start-date" value="" onchange="edit_attendance_log_form_changed()">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label for="">Clock Out</label>
+                                    <input type="date" name="shift_start" id="form_clockout_date" class="form-control" onchange="edit_attendance_log_form_changed()">
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="form-group hiddenSection">
+                                    <label for="">&nbsp;</label>
+                                    <input type="time" name="shift_end" id="form_clockout_time" class="form-control ts-start-date" value="" onchange="edit_attendance_log_form_changed()">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label for="">Break In</label>
+                                    <input type="date" name="shift_start" id="form_breakin_date" class="form-control" onchange="edit_attendance_log_form_changed()">
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="form-group hiddenSection">
+                                    <label for="">&nbsp;</label>
+                                    <input type="time" name="shift_end" id="form_breakin_time" class="form-control ts-start-date" value="" onchange="edit_attendance_log_form_changed()">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label for="">Break Out</label>
+                                    <input type="date" name="shift_start" id="form_breakout_date" class="form-control" onchange="edit_attendance_log_form_changed()">
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="form-group hiddenSection">
+                                    <label for="">&nbsp;</label>
+                                    <input type="time" name="shift_end" id="form_breakout_time" class="form-control ts-start-date" value="" onchange="edit_attendance_log_form_changed()">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="alert alert-info" role="alert">
+                            Overtime status of this attendance is <span id="form_ot_status" style="font-weight: bold;">Approved</span>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="form-group hiddenSection">
+                                    <table class="table table-bordered table-striped no-footer dataTable" style="width: auto;" role="grid" aria-describedby="timeLogTable_info">
+                                        <thead>
+                                            <tr role="row">
+                                                <td class="sorting" tabindex="0" aria-controls="timeLogTable" rowspan="1" colspan="1" aria-label="Expected Hours: activate to sort column ascending" style="width: 25%;">Expected Shift Duration</td>
+                                                <td class="sorting" tabindex="0" aria-controls="timeLogTable" rowspan="1" colspan="1" aria-label="Expected Hours: activate to sort column ascending" style="width: 25%;">Expected Break Duration</td>
+                                                <td class="sorting" tabindex="0" aria-controls="timeLogTable" rowspan="1" colspan="1" aria-label="Worked Hours: activate to sort column ascending" style="width: 25%;">Expected Work Hours</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="employee-tbody">
+                                            <tr role="row" class="odd">
+                                                <td class="center" id="form_expected_hours"></td>
+                                                <td class="center" id="form_expected_break_duration"></td>
+                                                <td class="center" id="form_expected_work_hours"></td>
+                                            </tr>
+                                        </tbody>
+                                        <thead>
+                                            <tr role="row">
+                                                <td class="sorting" tabindex="0" aria-controls="timeLogTable" rowspan="1" colspan="1" aria-label="Worked Hours: activate to sort column ascending" style="width: 25%;">Late in Minutes</td>
+                                                <td class="sorting" tabindex="0" aria-controls="timeLogTable" rowspan="1" colspan="1" aria-label="Worked Hours: activate to sort column ascending" style="width: 25%;">Worked Hours</td>
+                                                <td class="sorting" tabindex="0" aria-controls="timeLogTable" rowspan="1" colspan="1" aria-label="Break Duration: activate to sort column ascending" style="width: 25%;">Break Duration</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="employee-tbody">
+                                            <tr role="row" class="odd">
+
+                                                <td class="center num_only time-log" id="form_minutes_late"></td>
+                                                <td class="center num_only time-log" id="form_worked_hours">8.28</td>
+                                                <td class="center num_only time-log" id="form_break_duration">0.00</td>
+                                            </tr>
+                                        </tbody>
+                                        <thead>
+                                            <tr role="row">
+                                                <td class="sorting" tabindex="0" aria-controls="timeLogTable" rowspan="1" colspan="1" aria-label="Break Duration: activate to sort column ascending" style="width: 25%;">Overtime</td>
+                                                <td class="sorting" tabindex="0" colspan="2" aria-controls="timeLogTable" rowspan="1" colspan="1" aria-label="Over Time: activate to sort column ascending" style="text-align:center;">Payable Hours</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="employee-tbody">
+                                            <tr role="row" class="odd">
+                                                <td class="center num_only time-log" id="form_over_time">0.00</td>
+                                                <td class="center num_only time-log" colspan="2" id="form_payable_hours"></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-success" id="submit_attendance_correction_request">Submit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Request Adjustment -->
 <?php include viewPath('includes/footer'); ?>
 <script>
     //DataTable Table Attendance

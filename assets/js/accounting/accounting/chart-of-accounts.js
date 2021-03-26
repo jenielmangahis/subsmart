@@ -15,6 +15,28 @@ function check(el)
     else
     {
         $(el).parent().children('select[name="sub_account_type"]').attr('disabled','disabled');
+
+        $.get('/accounting/chart-of-accounts/get-all-account-types', function(result) {
+            var res = JSON.parse(result);
+
+            if($(el).attr('id').includes('edit')) {
+                var selected = $('#edit_account_type').val();
+                $('#edit_account_type').html('');
+                for(i in res) {
+                    $('#edit_account_type').append(`<option value="${res[i].id}">${res[i].account_name}</option>`);
+                }
+                $('#edit_account_type').val(selected);
+                $('#edit_account_type').trigger('change');
+            } else {
+                var selected = $('#account_type').val();
+                $('#account_type').html('');
+                for(i in res) {
+                    $('#account_type').append(`<option value="${res[i].id}">${res[i].account_name}</option>`);
+                }
+                $('#account_type').val(selected);
+                $('#account_type').trigger('change');
+            }
+        });
     }
 }
 
@@ -104,6 +126,20 @@ $(function(){
         uiLibrary: 'bootstrap',
         todayBtn: "linked",
         language: "de"
+    });
+});
+
+$(document).on('change', '#sub_account_type, #edit_sub_account_type', function() {
+    var el = $(this);
+    var id = el.val();
+    $.get('/accounting/chart-of-accounts/get-account-type/'+id, function(result) {
+        var res = JSON.parse(result);
+
+        if(el.attr('id').includes('edit')) {
+            $('#edit_account_type').html(`<option value="${res.id}">${res.account_name}</option>`).trigger('change');
+        } else {
+            $('#account_type').html(`<option value="${res.id}">${res.account_name}</option>`).trigger('change');
+        }
     });
 });
 
@@ -223,6 +259,9 @@ $(document).ready(function () {
                 fnCreatedCell: function(td, cellData, rowData, row, col) {
                     if(rowData.status === 1 || rowData.status === "1") {
                         $(td).html(cellData);
+                        if(rowData.is_sub_acc) {
+                            $(td).html('&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'+cellData);
+                        }
                     } else {
                         $(td).html(cellData+' (deleted)');
                     }

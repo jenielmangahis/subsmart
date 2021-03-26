@@ -1723,28 +1723,28 @@ $("#smoothed1a").signaturePad({
 
 function myFunction() {
   var x = document.getElementById("company_representative_approval_signature1a");
-  if (x.style.pointerEvents === "none") {
-    x.style.pointerEvents = "auto";
-  } else {
+  if (x.style.pointerEvents === "auto") {
     x.style.pointerEvents = "none";
+  } else {
+    x.style.pointerEvents = "auto";
   }
 }
 
 function myFunctiontwo() {
   var x = document.getElementById("primary_account_holder_signature2a");
-  if (x.style.pointerEvents === "none") {
-    x.style.pointerEvents = "auto";
-  } else {
+  if (x.style.pointerEvents === "auto") {
     x.style.pointerEvents = "none";
+  } else {
+    x.style.pointerEvents = "auto";
   }
 }
 
 function myFunctionthree() {
   var x = document.getElementById("secondary_account_holder_signature3a");
-  if (x.style.pointerEvents === "none") {
-    x.style.pointerEvents = "auto";
-  } else {
+  if (x.style.pointerEvents === "auto") {
     x.style.pointerEvents = "none";
+  } else {
+    x.style.pointerEvents = "auto";
   }
 }
 

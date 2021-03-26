@@ -4007,6 +4007,212 @@ class Timesheet extends MY_Controller
         $this->timesheet_model->approve_deny_ot_request($attn_id, $user_id, $action);
         echo json_encode(0);
     }
+    public function show_my_attendance_logs()
+    {
+        $date_from = $this->input->post("date_from");
+        $date_to = $this->input->post("date_to");
+        date_default_timezone_set($this->session->userdata('usertimezone'));
+        $the_date = strtotime($date_from . " 00:00:00");
+        date_default_timezone_set("UTC");
+        $date_from = date("Y-m-d", $the_date);
+
+
+        date_default_timezone_set($this->session->userdata('usertimezone'));
+        $the_date = strtotime($date_to . " 24:59:00");
+        date_default_timezone_set("UTC");
+        $date_to = date("Y-m-d H:i:s", $the_date);
+        $user_id = logged('id');
+        $attendances = $this->timesheet_model->get_my_attendance($date_from, $date_to, $user_id);
+        $display = '';
+
+        $display .= '<thead>';
+        $display .= '<tr>';
+        $display .= '<td>Shift Date</td>';
+        $display .= '<td>Shift Start</td>';
+        $display .= '<td>Shift End</td>';
+        $display .= '<td>Expected Work Hours</td>';
+        $display .= '<td>Clock in</td>';
+        $display .= '<td>Clock out</td>';
+        $display .= '<td>Worked Hours</td>';
+        $display .= '<td>Break Duration (minutes)</td>';
+        $display .= '<td>Late (minutes)</td>';
+        $display .= '<td>Overtime</td>';
+        $display .= '<td>OT Status</td>';
+        $display .= '<td>Action</td>';
+        $display .= '</tr>';
+        $display .= '</thead>';
+        $display .= '<tbody>';
+        foreach ($attendances as $attendance) {
+            $shift_date = $attendance->date_created;
+            date_default_timezone_set("UTC");
+            $the_date = strtotime($shift_date);
+            date_default_timezone_set($this->session->userdata('usertimezone'));
+            $shift_date = date("m/d/Y", $the_date);
+
+            $display .= '<tr role="row" class="odd">';
+            $display .= '<td class="center">' . $shift_date . '</td>';
+
+
+            date_default_timezone_set("UTC");
+            $shift_schedules = $this->timesheet_model->get_schedule_in_shift_date(date("Y-m-d", strtotime($attendance->date_created)), $attendance->user_id);
+            $shift_start = '';
+            $shift_end = '';
+            $expected_hours = '';
+            $expected_break = '';
+            $expected_work_hours = '';
+            foreach ($shift_schedules as $sched) {
+                $olddate_start = $sched->shift_start;
+                $olddate_end = $sched->shift_end;
+                date_default_timezone_set("UTC");
+                $the_date1 = strtotime($olddate_start);
+                $the_date2 = strtotime($olddate_end);
+                date_default_timezone_set($this->session->userdata('usertimezone'));
+                $newdate_start = date("m/d/Y h:i A", $the_date1);
+                $newdate_end = date("m/d/Y h:i A", $the_date2);
+                $shift_start = $newdate_start;
+                $shift_end = $newdate_end;
+                $expected_hours = $sched->duration;
+                $expected_break = 0;
+                if ($expected_hours > 4) {
+                    $expected_break = 30;
+                }
+                if ($expected_hours > 6) {
+                    $expected_break += 15;
+                }
+                if ($expected_hours >= 8) {
+                    $expected_break = 60;
+                }
+                $expected_work_hours = round((($expected_hours * 60) - $expected_break) / 60, 2);
+            }
+
+            $display .= '<td class="center">' . $shift_start . '</td>';
+            $display .= '<td class="center">' . $shift_end . '</td>';
+
+
+
+            $auxes = $this->timesheet_model->get_logs_of_attendance($attendance->id);
+            $checkin = '';
+            $checkout = '';
+            $breakin = '';
+            $breakout = '';
+
+            foreach ($auxes as $aux) {
+                $olddate = $aux->date_created;
+                date_default_timezone_set("UTC");
+                $the_date = strtotime($olddate);
+                date_default_timezone_set($this->session->userdata('usertimezone'));
+                $newdate = date("m/d/Y h:i A", $the_date);
+                if ($aux->action == "Check in") {
+                    $checkin = $newdate;
+                } elseif ($aux->action == "Check out") {
+                    $checkout = $newdate;
+                } elseif ($aux->action == "Break in") {
+                    $breakin = $newdate;
+                } elseif ($aux->action == "Break out") {
+                    $breakout = $newdate;
+                }
+            }
+
+            $display .= '<td class="center">' . $expected_work_hours . '</td>';
+            $display .= '<td class="center">' . $checkin . '</td>';
+            $display .= '<td class="center">' . $checkout . '</td>';
+            $display .= '<td class="center num_only time-log">' . ($attendance->shift_duration + $attendance->overtime) . '</td>';
+            $minutes_late = "";
+            if ($shift_start != '') {
+                $minutes_late = $this->get_differenct_of_dates($shift_start, $checkin) * 60;
+            }
+            $display .= '<td class="center num_only time-log">' . $attendance->break_duration . '</td>';
+            $display .= '<td class="center num_only time-log">' . round($minutes_late, 2) . '</td>';
+            $overtime = 0;
+            if ($expected_hours != '') {
+                if ($expected_work_hours < ($attendance->shift_duration + $attendance->overtime)) {
+                    $overtime = round(($attendance->shift_duration + $attendance->overtime) - $expected_work_hours, 2);
+                } elseif ($attendance->shift_duration == 0) {
+                    $overtime = 0;
+                } else {
+                    $overtime = $expected_work_hours;
+                }
+            } else {
+                $overtime = $attendance->overtime;
+            }
+            $display .= '<td class="center num_only time-log">' . $overtime . '</td>';
+            if ($attendance->overtime_status == 1) {
+                $ot_status = "Pending";
+            } elseif ($attendance->overtime_status == 0) {
+                $ot_status = "Denied";
+            } else {
+                $ot_status = "Approved";
+            }
+            $display .= '<td class="center num_only">' . $ot_status . '</td>';
+            $payable_hours = $attendance->shift_duration;
+            if ($expected_hours != '') {
+                if ($payable_hours > $expected_work_hours) {
+                    $payable_hours = $expected_work_hours;
+                }
+            }
+            if ($ot_status === "Approved") {
+                $payable_hours = $payable_hours + $attendance->overtime;
+            }
+            $display .= '<td class="center num_only time-log"><center>';
+            if ($checkout != "") {
+                $display .= '<a title="" data-shift-date="' . $shift_date . '" data-name="' . $attendance->FName . " " . $attendance->LName . '" data-user-id="' . $attendance->user_id . '" data-att-id="' . $attendance->id . '" data-toggle="tooltip" class="adjust-my-attendance-request btn btn-primary btn-sm" data-original-title="Approve"><i class="fa fa-adjust fa-lg"></i> Request Adjustment</a>';
+                if ($overtime > 0 && $attendance->overtime_status == 0) {
+                    $display .= '<a title="" data-shift-date="' . $shift_date . '" data-user-id="' . $attendance->user_id . '" data-attn-id="' . $attendance->id . '" data-toggle="tooltip" class="request-my-ot btn btn-warning btn-sm" data-original-title="Deny"><i class="fa fa-clock-o fa-lg"></i> Request OT Approval</a>';
+                }
+            }
+            $display .= '</center></td>';
+            $display .= '</tr>';
+        }
+        $display .= '</tbody>';
+        echo json_encode($display);
+    }
+    public function request_my_ot()
+    {
+        $attn_id = $this->input->post("attendance_id");
+        $user_id = $this->input->post("user_id");
+        $this->timesheet_model->attendance_logs_update_footprint_setter($attn_id, $user_id, "employee_ot_requested");
+        $this->timesheet_model->employee_ot_requested($attn_id);
+        echo json_encode(0);
+    }
+    public function submit_attendance_correction_request()
+    {
+        $user_id = $this->input->post('user_id');
+        $att_id = $this->input->post('att_id');
+        $form_clockin_date = $this->input->post('form_clockin_date');
+        $form_clockin_time = $this->input->post('form_clockin_time');
+        $form_clockout_date = $this->input->post('form_clockout_date');
+        $form_clockout_time = $this->input->post('form_clockout_time');
+        $form_breakin_date = $this->input->post('form_breakin_date');
+        $form_breakin_time = $this->input->post('form_breakin_time');
+        $form_breakout_date = $this->input->post('form_breakout_date');
+        $form_breakout_time = $this->input->post('form_breakout_time');
+        if ($this->timesheet_model->check_adjusment_exist($att_id)) {
+            $update = array(
+                'status' => 'pending',
+                'clock_in' => $this->datetime_zone_converter($form_clockin_date . " " . $form_clockin_time, $this->session->userdata('usertimezone'), "UTC"),
+                'clock_out' => $this->datetime_zone_converter($form_clockout_date . " " . $form_clockout_time, $this->session->userdata('usertimezone'), "UTC"),
+                'break_in' => $this->datetime_zone_converter($form_breakin_date . " " . $form_breakin_time, $this->session->userdata('usertimezone'), "UTC"),
+                'break_out' => $this->datetime_zone_converter($form_breakout_date . " " . $form_breakout_time, $this->session->userdata('usertimezone'), "UTC"),
+                'date_status_changed' => date('Y-m-d H:i:s'),
+                'date_created' => date('Y-m-d H:i:s')
+            );
+            $this->timesheet_model->update_attendance_correction($update, $att_id);
+        } else {
+            $insert = array(
+                'user_id' => $user_id,
+                'attendance_id' => $att_id,
+                'status' => 'pending',
+                'clock_in' => $this->datetime_zone_converter($form_clockin_date . " " . $form_clockin_time, $this->session->userdata('usertimezone'), "UTC"),
+                'clock_out' => $this->datetime_zone_converter($form_clockout_date . " " . $form_clockout_time, $this->session->userdata('usertimezone'), "UTC"),
+                'break_in' => $this->datetime_zone_converter($form_breakin_date . " " . $form_breakin_time, $this->session->userdata('usertimezone'), "UTC"),
+                'break_out' => $this->datetime_zone_converter($form_breakout_date . " " . $form_breakout_time, $this->session->userdata('usertimezone'), "UTC"),
+                'date_status_changed' => date('Y-m-d H:i:s'),
+                'date_created' => date('Y-m-d H:i:s')
+            );
+            $this->timesheet_model->submit_attendance_correction($insert);
+        }
+        echo json_encode(0);
+    }
 }
 
 

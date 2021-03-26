@@ -358,6 +358,8 @@ $route['accounting/chart-of-accounts/inactive/(:any)'] = 'accounting_controllers
 $route['accounting/chart-of-accounts/active/(:any)'] = 'accounting_controllers/chart_of_accounts/make_account_active/$1';
 $route['accounting/chart-of-accounts/import'] = 'accounting_controllers/chart_of_accounts/import';
 $route['accounting/chart-of-accounts/get-detail-type/(:any)'] = 'accounting_controllers/chart_of_accounts/get_detail_type/$1';
+$route['accounting/chart-of-accounts/get-account-type/(:any)'] = 'accounting_controllers/chart_of_accounts/get_account_type/$1';
+$route['accounting/chart-of-accounts/get-all-account-types'] = 'accounting_controllers/chart_of_accounts/get_all_account_types';
 
 $route['accounting/reconcile/create'] = 'reconcile/add';
 $route['accounting/reconcile/save'] = 'reconcile/addReconcile';

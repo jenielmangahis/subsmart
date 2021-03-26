@@ -1277,7 +1277,7 @@ class Timesheet_model extends MY_Model
     }
     public function get_attendance_logs_editor_footprint($att_id)
     {
-        $qry = $this->db->query("SELECT timesheet_logs_editor.date_created, users.FName, users.LName from timesheet_logs_editor JOIN users ON timesheet_logs_editor.user_id = users.id where timesheet_logs_editor.attendance_id = " . $att_id . " order by timesheet_logs_editor.date_created DESC limit 1");
+        $qry = $this->db->query("SELECT timesheet_logs_editor.date_created, users.FName, users.LName from timesheet_logs_editor JOIN users ON timesheet_logs_editor.user_id = users.id where timesheet_logs_editor.attendance_id = " . $att_id . " AND timesheet_logs_editor.action = 'attendance_log_update' order by timesheet_logs_editor.date_created DESC limit 1");
         return $qry->result();
     }
     public function getPendingOTs($company_id)
@@ -1305,6 +1305,41 @@ class Timesheet_model extends MY_Model
     {
         $qry = $this->db->query("SELECT timesheet_logs_editor.*,  users.FName,users.LName FROM timesheet_logs_editor JOIN users ON timesheet_logs_editor.user_id = users.id WHERE  timesheet_logs_editor.attendance_id = " . $attn_id . " AND (timesheet_logs_editor.action ='ot_request_denied' OR timesheet_logs_editor.action ='ot_request_approved') order by timesheet_logs_editor.date_created DESC limit 1");
         return $qry->result();
+    }
+    public function get_my_attendance($date_from, $date_to, $user_id)
+    {
+        $qry = $this->db->query("SELECT 
+        timesheet_attendance.id,timesheet_attendance.user_id,timesheet_attendance.date_created,timesheet_attendance.shift_duration, timesheet_attendance.break_duration, timesheet_attendance.overtime, timesheet_attendance.overtime_status,timesheet_attendance.status,
+        users.FName, users.LName, roles.title
+            FROM timesheet_attendance JOIN users ON timesheet_attendance.user_id = users.id JOIN roles ON users.role = roles.id WHERE timesheet_attendance.date_created >='" . $date_from . "' AND timesheet_attendance.date_created <='" . $date_to . "' AND timesheet_attendance.user_id = " . $user_id . " order by timesheet_attendance.date_created DESC");
+        return $qry->result();
+    }
+    public function employee_ot_requested($attn_id)
+    {
+        $update = array(
+            "overtime_status" => 1
+        );
+        $this->db->where('id', $attn_id);
+        $this->db->update("timesheet_attendance", $update);
+    }
+    public function check_adjusment_exist($att_id)
+    {
+        $this->db->where('attendance_id', $att_id);
+        $qry = $this->db->get('timesheet_attendance_correction');
+        if ($qry->num_rows() > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    public function update_attendance_correction($update, $att_id)
+    {
+        $this->db->where('attendance_id', $att_id);
+        $this->db->update("timesheet_attendance_correction", $update);
+    }
+    public function submit_attendance_correction($insert)
+    {
+        $this->db->insert('timesheet_attendance_correction', $insert);
     }
 }
 

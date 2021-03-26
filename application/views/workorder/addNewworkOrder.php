@@ -69,7 +69,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                             </div>
                             <div class="col-md-3 form-group">
                                 <label for="birthdate">Birth Date</label>
-                                <input type="text" class="form-control" name="birthdate" id="birthdate"  placeholder="mm/dd/yy" required/>
+                                <input type="text" class="form-control" name="birthdate" id="date_of_birth" required/>
                             </div>
                         </div>
                         <div class="row">                   
@@ -89,11 +89,12 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         
                         <!-- end row -->
                         <div class="row">                    
-                            <div class="col-md-3 form-group">
-                                <label for="job_location">Job Location</label><label style="float:right;color:green;"><i class="fa fa-plus-square" aria-hidden="true"></i> New Location</label>
+                            <div class="col-md-4 form-group">
+                                <label for="job_location">Job Location</label>
+                                <!-- <label style="float:right;color:green;"><i class="fa fa-plus-square" aria-hidden="true"></i> New Location</label> -->
                                 <input type="text" class="form-control" name="job_location" id="job_location" required/>
                             </div>
-                            <div class="col-md-3 form-group">
+                            <div class="col-md-2 form-group">
                                 <label for="city">
                                     City
                                 </label>
@@ -204,7 +205,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 </div>
                             </div>
                         <br>
-                            <div class="row">
+                            <!-- <div class="row">
                                 <div class="col-md-12">
                                 <table class="table table-hover">
                                     <input type="hidden" name="count" value="0" id="count">
@@ -231,8 +232,67 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                     </table>
                                     <a href="#" id="add_another_workOr" style="color:green;"><i class="fa fa-plus-square" aria-hidden="true"></i> Add Items</a>                                        
                                 </div>
+                            </div> -->
+                            <div class="row" id="plansItemDiv" style="background-color:white;">
+                                <div class="col-md-12 table-responsive">
+                                    <table class="table table-hover">
+                                        <input type="hidden" name="count" value="0" id="count">
+                                        <thead style="background-color:#E9E8EA;">
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Type</th>
+                                            <!-- <th>Description</th> -->
+                                            <th width="150px">Quantity</th>
+                                            <!-- <th>Location</th> -->
+                                            <th width="150px">Price</th>
+                                            <th width="150px">Discount</th>
+                                            <th width="150px">Tax (Change in %)</th>
+                                            <th>Total</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody id="jobs_items_table_body">
+                                        <tr>
+                                            <td>
+                                                <input type="text" class="form-control getItems"
+                                                       onKeyup="getItems(this)" name="items[]">
+                                                <ul class="suggestions"></ul>
+                                            </td>
+                                            <td><select name="item_type[]" class="form-control">
+                                                    <option value="product">Product</option>
+                                                    <option value="material">Material</option>
+                                                    <option value="service">Service</option>
+                                                    <option value="fee">Fee</option>
+                                                </select></td>
+                                            <!-- <td> -->
+                                                <!-- <input type="text" class="form-control getItems"
+                                                       onKeyup="getItems(this)" name="desc[]">
+                                                <ul class="suggestions"></ul> -->
+                                                <!-- <input type="text" class="form-control" name="desc[]"> -->
+                                            <!-- </td> -->
+                                            <td width="150px"><input type="number" class="form-control quantity" name="quantity[]"
+                                                       data-counter="0" id="quantity_0" value="1"></td>
+                                            <!-- <td><input type="text" class="form-control" name="location[]"></td> -->
+                                            <td width="150px"><input type="number" class="form-control price" name="price[]"
+                                                       data-counter="0" id="price_0" min="0" value="0"></td>
+                                            <td width="150px"><input type="number" class="form-control discount" name="discount[]"
+                                                       data-counter="0" id="discount_0" min="0" value="0" ></td>
+                                            <td width="150px"><input type="text" class="form-control tax_change" name="tax[]"
+                                                       data-counter="0" id="tax1_0" min="0" value="0">
+                                                       <!-- <span id="span_tax_0">0.0</span> -->
+                                                       </td>
+                                            <td width="150px"><input type="hidden" class="form-control " name="total[]"
+                                                       data-counter="0" id="item_total_0" min="0" value="0">
+                                                       $<span id="span_total_0">0.00</span></td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                    <!-- <a href="#" id="add_another_estimate" style="color:#02A32C;"><i class="fa fa-plus-square" aria-hidden="true"></i> Add another line</a> &emsp; -->
+                                    <!-- <a href="#" id="add_another" style="color:#02A32C;"><i class="fa fa-plus-square" aria-hidden="true"></i> Add Items in bulk</a> -->
+                                    <a class="link-modal-open" href="#" id="add_another_items" data-toggle="modal" data-target="#item_list"><span class="fa fa-plus-square fa-margin-right"></span>Add Items</a>
+                                    <hr>
+                                </div>
                             </div>
-                            <div class="row" style="background-color:white;font-size:16px;">
+                            <!-- <div class="row" style="background-color:white;font-size:16px;">
                                 <div class="col-md-7">
                                 </div>
                                 <div class="col-md-5">
@@ -261,6 +321,44 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                             <td><b>Grand Total</b></td>
                                             <td></td>
                                             <td><b>0.00</b></td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div> -->
+                            <div class="row" style="background-color:white;font-size:16px;">
+                                <div class="col-md-7">
+                                </div>
+                                <div class="col-md-5">
+                                    <table class="table" style="text-align:left;">
+                                        <tr>
+                                            <td>Subtotal</td>
+                                            <td></td>
+                                            <td>$ <span id="span_sub_total_invoice">0.00</span>
+                                                <input type="hidden" name="sub_total" id="item_total"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Taxes</td>
+                                            <td></td>
+                                            <td>$ <span id="total_tax_">0.00</span><input type="hidden" name="total_tax_" id="total_tax_input"></td>
+                                        </tr>
+                                        <tr>
+                                            <td style="width:250px;"><input type="text" name="adjustment_name" id="adjustment_name" placeholder="Adjustment Name" class="form-control" style="width:200px; display:inline; border: 1px dashed #d1d1d1"></td>
+                                            <td style="width:150px;">
+                                            <input type="number" name="adjustment_input" id="adjustment_input" value="0" class="form-control adjustment_input" style="width:100px; display:inline-block">
+                                                <span class="fa fa-question-circle" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Optional it allows you to adjust the total amount Eg. +10 or -10." data-original-title="" title=""></span>
+                                            </td>
+                                            <td>0.00</td>
+                                        </tr>
+                                        <!-- <tr>
+                                            <td>Markup $<span id="span_markup"></td> -->
+                                            <!-- <td><a href="#" data-toggle="modal" data-target="#modalSetMarkup" style="color:#02A32C;">set markup</a></td> -->
+                                            <input type="hidden" name="markup_input_form" id="markup_input_form" class="markup_input" value="0">
+                                        <!-- </tr> -->
+                                        <tr>
+                                            <td><b>Grand Total ($)</b></td>
+                                            <td></td>
+                                            <td><b><span id="grand_total">0.00</span>
+                                                <input type="hidden" name="grand_total" id="grand_total_input" value='0'></b></td>
                                         </tr>
                                     </table>
                                 </div>
@@ -307,7 +405,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                             
                         <div class="row">
                             <div class="col-md-4 form-group">
-                                <label for="city">Job Tag</label><label style="float:right;color:green;">Manage Tag</label>
+                                <label for="Job Tag">Job Tag</label><label style="float:right;color:green;">Manage Tag</label>
                                 <!-- <input type="text" class="form-control" name="city" id="city" placeholder="Enter City"/> -->
                                 <select class="form-control">
                                             <option>---</option>
@@ -556,7 +654,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         <ul class="edit">
                                             <li class="smoothed1a_pencil pointer"><a onclick="myFunction()" style="float:right;margin-right:10px;" class="smoothed1a_pencil"><i class="fa fa-pencil" aria-hidden="true"></i></a></li>
                                         </ul>
-                                        <div class="sig sigWrapper" id="smoothed1a_pencil" style="height:auto;">
+                                        <div class="sig sigWrapper" id="smoothed1a_pencil" style="height:auto;pointer-events: none;">
                                             <div class="typed"></div>
                                             <canvas class="pad" id="company_representative_approval_signature1a"
                                                     width="400" height="250"></canvas>
@@ -584,7 +682,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         <ul class="edit">
                                             <li class="smoothed1a_pencil pointer"><a onclick="myFunctiontwo()" style="float:right;margin-right:10px;" class="smoothed1a_pencil"><i class="fa fa-pencil" aria-hidden="true"></i></a></li>
                                         </ul>
-                                        <div class="sig sigWrapper" style="height:auto;">
+                                        <div class="sig sigWrapper" style="height:auto;pointer-events: none;">
                                             <div class="typed"></div>
                                             <canvas class="pad" id="primary_account_holder_signature2a" width="400"
                                                     height="250"></canvas>
@@ -611,7 +709,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         <ul class="edit">
                                             <li class="smoothed1a_pencil pointer"><a onclick="myFunctionthree()" style="float:right;margin-right:10px;" class="smoothed1a_pencil"><i class="fa fa-pencil" aria-hidden="true"></i></a></li>
                                         </ul>
-                                        <div class="sig sigWrapper" style="height:auto;">
+                                        <div class="sig sigWrapper" style="height:auto;pointer-events: none;">
                                             <div class="typed"></div>
                                             <canvas class="pad" id="secondary_account_holder_signature3a" width="400"
                                                     height="250"></canvas>
@@ -698,6 +796,54 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 </div>
             </div>
 
+            <!-- Modal -->
+            <div class="modal fade" id="item_list" tabindex="-1" role="dialog" aria-labelledby="newcustomerLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg" role="document" style="width:800px;position: absolute;top: 50%;left: 50%;transform: translate(-50%, -50%);">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="newcustomerLabel">Item Lists</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <table id="items_table_estimate" class="table table-hover" style="width: 100%;">
+                                        <thead>
+                                        <tr>
+                                            <td> Name</td>
+                                            <td> Qty</td>
+                                            <td> Price</td>
+                                            <td> Action</td>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <?php foreach($items as $item){ // print_r($item); ?>
+                                            <tr>
+                                                <td><?php echo $item->title; ?></td>
+                                                <td></td>
+                                                <td><?php echo $item->price; ?></td>
+                                                <td><button id="<?= $item->id; ?>" data-quantity="<?= $item->units; ?>" data-itemname="<?= $item->title; ?>" data-price="<?= $item->price; ?>" type="button" data-dismiss="modal" class="btn btn-sm btn-default select_item">
+                                                <span class="fa fa-plus"></span>
+                                            </button></td>
+                                            </tr>
+                                            
+                                        <?php } ?>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer modal-footer-detail">
+                            <div class="button-modal-list">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal"><span class="fa fa-remove"></span> Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <!-- Modal New Customer -->
             <div class="modal fade" id="modalNewCustomer" tabindex="-1" role="dialog"
                  aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -773,4 +919,52 @@ defined('BASEPATH') or exit('No direct script access allowed');
             return false;
         }
     }
+</script>
+
+<script>
+
+$(document).ready(function(){
+ 
+    $('#sel-customer').change(function(){
+    var id  = $(this).val();
+    // alert(id);
+
+        $.ajax({
+            type: 'POST',
+            url:"<?php echo base_url(); ?>accounting/addLocationajax",
+            data: {id : id },
+            dataType: 'json',
+            success: function(response){
+                // alert('success');
+                // console.log(response['customer']);
+            $("#job_location").val(response['customer'].mail_add + ' ' + response['customer'].cross_street + ' ' + response['customer'].city + ' ' + response['customer'].state + ' ' + response['customer'].country);
+            $("#email").val(response['customer'].email);
+            $("#date_of_birth").val(response['customer'].date_of_birth);
+            $("#phone_no").val(response['customer'].phone_h);
+            $("#mobile_no").val(response['customer'].phone_m);
+            $("#city").val(response['customer'].city);
+            $("#state").val(response['customer'].state);
+            $("#zip").val(response['customer'].zip_code);
+            $("#cross_street").val(response['customer'].cross_street);
+        
+            },
+                error: function(response){
+                alert('Error'+response);
+       
+                }
+        });
+    });
+
+    $(document).on('click','.setmarkup',function(){
+       // alert('yeah');
+        var markup_amount = $('#markup_input').val();
+
+        $("#markup_input_form").val(markup_amount);
+        $("#span_markup_input_form").text(markup_amount);
+        $("#span_markup").text(markup_amount);
+
+        $('#modalSetMarkup').modal('toggle');
+    });
+});
+
 </script>

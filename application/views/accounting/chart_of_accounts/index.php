@@ -211,9 +211,21 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                             <input type="checkbox" name="sub_account" class="js-switch" id="check_sub" onchange="check(this)"/>
                                                             <label for="formClient-Status">Is sub account</label>
                                                             <select name="sub_account_type" id="sub_account_type" class="form-control select2" required disabled="disabled">
-                                                                <?php foreach ($this->account_sub_account_model->get() as $row_sub): ?>
-                                                                    <option value="<?php echo $row_sub->sub_acc_id ?>" ><?php echo $row_sub->sub_acc_name ?></option>
-                                                                <?php endforeach ?>
+                                                                <option disabled selected>Enter parent account</option>
+                                                                <?php foreach($accountsDropdown as $key => $accounts) : ?>
+                                                                    <optgroup label="<?=$key?>">
+                                                                        <?php foreach($accounts as $account) : ?>
+                                                                            <option value="<?=$account['id']?>"><?=$account['name']?></option>
+                                                                            <?php if(!empty($account['child_accounts'])) : ?>
+                                                                                <optgroup label="&nbsp;&nbsp;&nbsp;&nbsp;<?='Sub-account of '.$account['name']?>">
+                                                                                    <?php foreach($account['child_accounts'] as $subAcc) : ?>
+                                                                                        <option value="<?=$subAcc->id?>">&nbsp;&nbsp;&nbsp;&nbsp;<?=$subAcc->name?></option>
+                                                                                    <?php endforeach; ?>
+                                                                                </optgroup>
+                                                                            <?php endif; ?>
+                                                                        <?php endforeach; ?>
+                                                                    </optgroup>
+                                                                <?php endforeach; ?>
                                                             </select>
                                                             <br>
                                                             <label for="choose_time">When do you want to start tracking your finances from this account in nSmarTrac?</label>

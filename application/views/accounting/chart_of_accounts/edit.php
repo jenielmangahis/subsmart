@@ -48,14 +48,26 @@
                                                         placeholder="Enter Description" rows="3"><?php echo $chart_of_accounts->description ?></textarea>
                                             </div>
                                             <div class="form-group">
-                                                <input type="checkbox" name="sub_account" class="js-switch" id="edit_check_sub" onchange="check(this)" <?=$chart_of_accounts->sub_acc_id != 0 ? 'checked' : ''?>/>
+                                                <input type="checkbox" name="sub_account" class="js-switch" id="edit_check_sub" onchange="check(this)" <?=$chart_of_accounts->parent_acc_id != 0 || $chart_of_accounts->parent_acc_id != null ? 'checked' : ''?>/>
                                                 <label for="formClient-Status">Is sub account</label>
-                                                <select name="sub_account_type" id="edit_sub_account_type" class="form-control select2" required <?=$chart_of_accounts->sub_acc_id == 0 ? 'disabled' : ''?>  >
-                                                    <?php foreach ($this->account_sub_account_model->get() as $row_sub): ?>
-                                                        <option value="<?php echo $row_sub->sub_acc_id ?>" <?php if($row_sub->sub_acc_id == $chart_of_accounts->sub_acc_id) { echo "selected";} ?> >
-                                                            <?php echo $row_sub->sub_acc_name ?>
-                                                        </option>
-                                                    <?php endforeach ?>
+                                                <select name="sub_account_type" id="edit_sub_account_type" class="form-control select2" required <?=$chart_of_accounts->parent_acc_id == 0 || $chart_of_accounts->parent_acc_id == null ? 'disabled' : ''?>  >
+                                                    <?php if($chart_of_accounts->parent_acc_id === 0 || $chart_of_accounts->parent_acc_id === null) : ?>
+                                                        <option disabled selected>Enter parent account</option>
+                                                    <?php endif; ?>
+                                                    <?php foreach($accountsDropdown as $key => $accounts) : ?>
+                                                        <optgroup label="<?=$key?>">
+                                                            <?php foreach($accounts as $account) : ?>
+                                                                <option value="<?=$account['id']?>" <?=$chart_of_accounts->parent_acc_id === $account['id'] ? 'selected' : '' ?>><?=$account['name']?></option>
+                                                                <?php if(!empty($account['child_accounts'])) : ?>
+                                                                    <optgroup label="&nbsp;&nbsp;&nbsp;&nbsp;<?='Sub-account of '.$account['name']?>">
+                                                                        <?php foreach($account['child_accounts'] as $subAcc) : ?>
+                                                                            <option value="<?=$subAcc->id?>" <?=$chart_of_accounts->parent_acc_id === $account['id'] ? 'selected' : '' ?>><?=$account['name']?>>&nbsp;&nbsp;&nbsp;&nbsp;<?=$subAcc->name?></option>
+                                                                        <?php endforeach; ?>
+                                                                    </optgroup>
+                                                                <?php endif; ?>
+                                                            <?php endforeach; ?>
+                                                        </optgroup>
+                                                    <?php endforeach; ?>
                                                 </select>
                                                 <br>
                                                 <label for="choose_time">When do you want to start tracking your finances from this account in nSmarTrac?</label>

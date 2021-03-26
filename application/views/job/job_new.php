@@ -157,7 +157,7 @@ add_css(array(
                                     <?php if(isset($color_settings)): ?>
                                         <?php foreach ($color_settings as $color): ?>
                                             <li>
-                                                <a style="background-color: <?= $color->color_code; ?>;" id="<?= $color->id; ?>" type="button" class="btn btn-default color-scheme btn-circle bg-1">
+                                                <a style="background-color: <?= $color->color_code; ?>;" id="<?= $color->id; ?>" type="button" class="btn btn-default color-scheme btn-circle bg-1" title="<?= $color->color_name; ?>">
                                                     <?php if(isset($jobs_data) && $jobs_data->event_color == $color->id) {echo '<i class="fa fa-check calendar_button" aria-hidden="true"></i>'; } ?>
                                                 </a>
                                             </li>

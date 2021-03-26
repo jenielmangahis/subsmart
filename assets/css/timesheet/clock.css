@@ -170,3 +170,75 @@
   width: 120px;
   border-radius: 50%;
 }
+
+#my-attendance-logs a {
+  margin: 5px;
+}
+div#my-attendance-logs_filter {
+  display: none;
+}
+#my-attendance-logs a {
+  color: #ffffff;
+}
+#my-attendance-logs a:hover {
+  cursor: pointer;
+  opacity: 0.8;
+}
+/* Sidebar Modal */
+.modal-right-side .modal.right.fade .modal-dialog {
+  right: 0;
+  -webkit-transition: opacity 0.3s linear, right 0.3s ease-out;
+  -moz-transition: opacity 0.3s linear, right 0.3s ease-out;
+  -o-transition: opacity 0.3s linear, right 0.3s ease-out;
+  transition: opacity 0.3s linear, right 0.3s ease-out;
+}
+
+.modal-right-side .modal.right .modal-dialog {
+  position: fixed;
+  margin: auto;
+  min-width: 520px;
+  height: 100%;
+  -webkit-transform: translate3d(0%, 0, 0);
+  -ms-transform: translate3d(0%, 0, 0);
+  -o-transform: translate3d(0%, 0, 0);
+  transform: translate3d(0%, 0, 0);
+}
+
+.modal-right-side .modal-footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  background-color: #ffffff;
+}
+
+.modal-right-side .modal.right .modal-content {
+  height: 100%;
+  overflow-y: auto;
+}
+
+.modal-right-side .modal-content {
+  border-radius: 0;
+  border: none;
+}
+
+.modal-right-side .modal-body {
+  margin-bottom: 30px;
+}
+#edit_attendance_log span {
+  font-size: 10px;
+  font-weight: normal;
+}
+#edit_attendance_log label {
+  width: 100%;
+  font-size: 25px;
+  font-weight: bold;
+}
+.modal-body {
+  padding-top: 25px;
+}
+.center {
+  text-align: center;
+}
+form#formNewProject td {
+  height: 20px;
+}
