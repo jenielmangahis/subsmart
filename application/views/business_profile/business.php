@@ -75,6 +75,16 @@ div[wrapper__section] [role="white__holder"] .profile-subtitle {
     border-radius: 4px;
     display: inline-block;
 }
+.cat-selected .tag {
+    margin-right: 5px;
+    display: inline-block;
+}
+.label-default {
+    background-color: #aaa;
+    font-size: 13px;
+    line-height: 13px;
+    padding: 3px 10px 4px 10px;
+}
 </style>
 <?php include viewPath('includes/header'); ?>
     <!-- page wrapper start -->
@@ -106,7 +116,10 @@ div[wrapper__section] [role="white__holder"] .profile-subtitle {
 									<a class="a-alert a-edit" href="services"><span class="fa fa-edit"></span> edit</a>
 									<div class="margin-bottom-sec">
 										<div class="profile-service-title">Residential Services Offered</div>
-										<span class="profile-service-category-item"><img class="profile-service-icon" width="36" src="<?= $url->assets . "img/camera_check.png"; ?>"> <span class="profile-service-item"><?php //echo $profiledata->service_loc ?></span></span>
+										<br />
+										<?php foreach($selectedCategories as $s){ ?>
+											<span class="label label-default tag"><?= $s->service_name; ?><!-- <a class="cat-tag-remove" id="cat-tag-remove-93" href="#"><span class="icon fa fa-remove"></span></a> --></span>
+										<?php } ?>
 									</div>
 								</div>
 							</div>
