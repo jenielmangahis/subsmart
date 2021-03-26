@@ -1,5 +1,5 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed'); 
+defined('BASEPATH') OR exit('No direct script access allowed');
 error_reporting(0);
 ?>
 <style>
@@ -53,6 +53,9 @@ error_reporting(0);
     color: #888;
     margin-right: 8px;
 }
+div[wrapper__section] [role="white__holder"] .profile-subtitle {
+		font-size: 24px !important;
+}
 .fa {
     display: inline-block;
     font: normal normal normal 14px/1 FontAwesome;
@@ -62,7 +65,7 @@ error_reporting(0);
     -moz-osx-font-smoothing: grayscale;
 }
 .credential-verification span{
-	display: inline-block !important; 
+	display: inline-block !important;
 }
 .credential .credential-cnt .credential-img {
     width: 37px;
@@ -75,8 +78,8 @@ error_reporting(0);
 </style>
 <?php include viewPath('includes/header'); ?>
     <!-- page wrapper start -->
-     
-	 
+
+
 	<div role="wrapper">
 
         <?php include viewPath('includes/sidebars/business'); ?>
@@ -210,7 +213,7 @@ error_reporting(0);
 										<div class="credential">
 											<div class="credential-badge">
 												<div class="credential-badge-year">
-													<img src="<?= $url->assets . "img/badge_5.png" ?>"> 
+													<img src="<?= $url->assets . "img/badge_5.png" ?>">
 													<div class="credential-badge-year-text"><?= $profiledata->year_est > 0 ? $profiledata->year_est : ''; ?></div>
 												</div>
 												<span class="badge-label">Since</span>
@@ -218,13 +221,13 @@ error_reporting(0);
 											<?php if( $profiledata->year_est > 0 ){ ?>
 												<div class="credential-cnt">
 													<span>Business since:<b> <?= $profiledata->year_est; ?></b></span>
-														<?php 
+														<?php
 															$total_years = date("Y") - $profiledata->year_est;
 														?>
                                                     <span></span>
 												</div>
 											<?php } ?>
-											
+
 										</div>
 									</div>
 								</div>
@@ -300,7 +303,7 @@ error_reporting(0);
 							<?php $schedules = unserialize($profiledata->working_days); ?>
 							<?php if( !empty($schedules) ){ ?>
 								<ul class="list-availability">
-								<?php 
+								<?php
 									$days = array();
 									foreach( $schedules as $s ){
 										$days[] = date("D",strtotime($s['day']));
@@ -317,7 +320,7 @@ error_reporting(0);
 							<?php }else{ ?>
 								<div class="margin-bottom-sec text-ter">Not Specified</div>
 							<?php } ?>
-							
+
 						</div>
 					</div>
 				</div>
@@ -352,7 +355,7 @@ error_reporting(0);
 					<label>Profile Picture</label>
 					<div>
 						<a class="profile-avatar-img" data-fileuploadmodal="open-modal" href="#"><img height="100" data-fileuploadmodal="image-parent" id="img_profile" src="<?php echo (businessProfileImage($profiledata->id)) ? businessProfileImage($profiledata->id) : $url->assets ?>"></a>
-					</div>                           
+					</div>
 					<div class="margin-top margin-bottom ">
 					<input type="file" class="form-control" name="image" id="formClient-Image" placeholder="Upload Image" accept="image/*" onchange="readURL(this);">
 					</div>
@@ -406,7 +409,6 @@ error_reporting(0);
           <span class="mdc-bottom-navigation__list-item__text">Nearby</span>
         </span>
       </nav>
-    </div> 
+    </div>
 </div>
 <?php include viewPath('includes/footer'); ?>
-  

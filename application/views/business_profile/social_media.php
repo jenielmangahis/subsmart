@@ -1,6 +1,68 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed'); ?>
-
+<style>
+.input-group-addon:first-child {
+    border-right: 0;
+}
+.input-group-addon:last-child {
+    border-left: 0;
+}
+.input-group-addon {
+    padding: 14px 12px;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1;
+    color: #555;
+    text-align: center;
+    background-color: #eee;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+.input-group-addon, .input-group-btn {
+    /* width: 1%; */
+    white-space: nowrap;
+    vertical-align: middle;
+}
+.page-title {
+  font-family: Sarabun, sans-serif !important;
+  font-size: 1.75rem !important;
+  font-weight: 600 !important;
+}
+.pr-b10 {
+  position: relative;
+  bottom: 10px;
+}
+.p-40 {
+  padding-top: 40px !important;
+}
+@media only screen and (max-width: 600px) {
+  .p-40 {
+    padding-top: 0px !important;
+  }
+  .pr-b10 {
+    position: relative;
+    bottom: 0px;
+  }
+}
+.list-icon{
+  list-style: none;
+  height: 400px;
+  overflow: auto;
+  padding: 6px;
+}
+.list-icon li{
+  display: inline-block;
+  /*width: 30%;*/
+  height:100px;
+  margin: 3px;
+}
+.mtc-18 {
+  margin-top: 32px;
+}
+.mt-18 {
+  margin-top: 10px;
+}
+</style>
 <?php include viewPath('includes/header'); ?>
 <!-- page wrapper start -->
 <div role="wrapper">
@@ -11,8 +73,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         <form class="form-business-sm" id="form-business-sm" method="post" action="#">
     <div class="validation-error" style="display: none;"></div>
 
-    <div class="card">
-        <h2>Social Media</h2>
+    <div class="card mtc-18 pl-4">
+       <h3 class="page-title mb-0 mt-18">Social Media</h3>
+       <hr/>
         <p>Add your social media links that will appear on your Public Profile page.</p>
         <p class="margin-bottom text-ter">Note: All URLs have to start with http:// or https://</p>
         <div class="row">
@@ -91,4 +154,3 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 </form>
 </div>
 <?php include viewPath('includes/footer'); ?>
-

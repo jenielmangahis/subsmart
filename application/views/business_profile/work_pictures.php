@@ -1,6 +1,68 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed'); ?>
-
+<style>
+.input-group-addon:first-child {
+    border-right: 0;
+}
+.input-group-addon:last-child {
+    border-left: 0;
+}
+.input-group-addon {
+    padding: 14px 12px;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1;
+    color: #555;
+    text-align: center;
+    background-color: #eee;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+.input-group-addon, .input-group-btn {
+    /* width: 1%; */
+    white-space: nowrap;
+    vertical-align: middle;
+}
+.page-title {
+  font-family: Sarabun, sans-serif !important;
+  font-size: 1.75rem !important;
+  font-weight: 600 !important;
+}
+.pr-b10 {
+  position: relative;
+  bottom: 10px;
+}
+.p-40 {
+  padding-top: 40px !important;
+}
+@media only screen and (max-width: 600px) {
+  .p-40 {
+    padding-top: 0px !important;
+  }
+  .pr-b10 {
+    position: relative;
+    bottom: 0px;
+  }
+}
+.list-icon{
+  list-style: none;
+  height: 400px;
+  overflow: auto;
+  padding: 6px;
+}
+.list-icon li{
+  display: inline-block;
+  /*width: 30%;*/
+  height:100px;
+  margin: 3px;
+}
+.mtc-18 {
+  margin-top: 32px;
+}
+.mt-18 {
+  margin-top: 10px;
+}
+</style>
 <?php include viewPath('includes/header'); ?>
 <!-- page wrapper start -->
 <div role="wrapper">
@@ -12,16 +74,15 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             <div class="col-md-12">
                 <form id="form-business-credentials" method="post" action="#">
                 <div class="validation-error" style="display: none;"></div>
-                <div class="card">
-
-<h1>Work Pictures</h1>
-
+                <div>
 <div class="row">
     <div class="col-md-12 col-lg-12">
 <form id="form-business-credentials" method="post" action="#">
     <div class="validation-error hide"></div>
 
-    <div class="card">
+    <div class="card mtc-18 pl-4">
+       <h3 class="page-title mb-0 mt-18">Work Pictures</h3>
+       <hr/>
         <p>Add photos to spotlight features of your business or past projects pictures.  You can upload up to <b>25 images.</b></p>
         <p><b>Tips</b> - Click and drag the images to reorder them, and click on "Set caption" to describe the image.
 
@@ -98,4 +159,3 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
    </div>
 </div>
 <?php include viewPath('includes/footer'); ?>
-
