@@ -11,11 +11,7 @@ class Vault extends MY_Controller {
 		$this->checkLogin();
 		$this->page_data['page']->title = 'Files Management';
 		$this->page_data['page']->menu = 'vault';
-
-		$cid  = logged('id');
-		$profiledata = $this->business_model->getByWhere(array('user_id'=>$cid));
-		$this->page_data['profiledata'] = ($profiledata) ? $profiledata[0] : null;
-
+		
 		$this->company_folder = getCompanyFolder();
 		add_css('assets/css/vault/vault.css');
 	}

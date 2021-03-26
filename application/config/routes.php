@@ -358,6 +358,8 @@ $route['accounting/chart-of-accounts/inactive/(:any)'] = 'accounting_controllers
 $route['accounting/chart-of-accounts/active/(:any)'] = 'accounting_controllers/chart_of_accounts/make_account_active/$1';
 $route['accounting/chart-of-accounts/import'] = 'accounting_controllers/chart_of_accounts/import';
 $route['accounting/chart-of-accounts/get-detail-type/(:any)'] = 'accounting_controllers/chart_of_accounts/get_detail_type/$1';
+$route['accounting/chart-of-accounts/get-account-type/(:any)'] = 'accounting_controllers/chart_of_accounts/get_account_type/$1';
+$route['accounting/chart-of-accounts/get-all-account-types'] = 'accounting_controllers/chart_of_accounts/get_all_account_types';
 
 $route['accounting/reconcile/create'] = 'reconcile/add';
 $route['accounting/reconcile/save'] = 'reconcile/addReconcile';
@@ -562,6 +564,8 @@ $route['sms_automation/_delete_automation'] = 'Sms_Automation/ajax_delete_automa
 $route['email_campaigns/add_email_blast'] = 'Email_Campaigns/add_email_blast';
 $route['email_campaigns/save_draft_campaign'] = 'Email_Campaigns/create_draft_campaign';
 $route['email_campaigns/add_campaign_send_to'] = 'Email_Campaigns/add_campaign_send_to';
+$route['email_campaigns/create_campaign_send_to'] = 'Email_Campaigns/create_campaign_send_to';
+$route['email_campaigns/build_email'] = 'Email_Campaigns/build_email';
 
 //offers
 $route['offers/add_offer'] = 'Offers/add_offer';
@@ -720,3 +724,7 @@ $route['cards_file/create_new_card'] = 'CardsFile/create_new_card';
 $route['cards_file/_update_primary_card'] = 'CardsFile/update_primary_card';
 $route['cards_file/delete_card'] = 'CardsFile/delete_card';
 $route['cards_file/test_card'] = 'CardsFile/test_card';
+
+//Tools
+$route['tools/_get_converge_api_credentials'] = 'Tools/ajax_load_company_converge_form';
+$route['tools/_activate_company_converge'] = 'Tools/ajax_activate_company_converge_account';

@@ -51,10 +51,46 @@ class Chart_of_accounts_model extends MY_Model {
 		return $query->result();
 	}
 
+	public function getByAccountType($accTypeId, $parentAccId = null, $company_id)
+	{
+		$this->db->where('company_id', $company_id);
+		$this->db->where('active', 1);
+		$this->db->where('account_id', $accTypeId);
+		if($parentAccId) {
+			$this->db->where('parent_acc_id', $parentAccId);
+		} else {
+			$this->db->where('parent_acc_id', null);
+			$this->db->or_where('company_id', $company_id);
+			$this->db->where('active', 1);
+			$this->db->where('account_id', $accTypeId);
+			$this->db->where('parent_acc_id', 0);
+		}
+		$query = $this->db->get($this->table);
+		return $query->result();
+	}
+
+	public function getChildAccounts($parentAccId, $exemptedID = null)
+	{
+		$this->db->where('company_id', logged('company_id'));
+		$this->db->where('active', 1);
+		$this->db->where('parent_acc_id', $parentAccId);
+		if($exemptedID) {
+			$this->db->where('id !=', $exemptedID);
+		}
+		$query = $this->db->get($this->table);
+		return $query->result();
+	}
+
 	public function getFilteredAccounts($status, $order, $orderColumn)
 	{
-		$this->db->where('accounting_chart_of_accounts.company_id', logged('company_id'));
+		$company_id = logged('company_id');
+		$this->db->where('accounting_chart_of_accounts.company_id', $company_id);
 		$this->db->where_in('accounting_chart_of_accounts.active', $status);
+		$this->db->where('accounting_chart_of_accounts.parent_acc_id', null);
+
+		$this->db->or_where('accounting_chart_of_accounts.company_id', $company_id);
+		$this->db->where_in('accounting_chart_of_accounts.active', $status);
+		$this->db->where('accounting_chart_of_accounts.parent_acc_id', 0);
 
 		switch($orderColumn) {
 			case 'nsmartrac_balance' :

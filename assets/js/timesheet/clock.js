@@ -661,4 +661,259 @@ $(document).ready(function () {
     });
   }
   // end of Live clock
+  show_my_attendance_logs();
+  $(".ts_schedule").datepicker();
+  $(document).on("change", "#to_date_logs", function () {
+    show_my_attendance_logs();
+  });
+
+  $(document).on("change", "#from_date_logs", function () {
+    // console.log("pasok");
+    show_my_attendance_logs();
+  });
+  function show_my_attendance_logs() {
+    $("#my-attendance-logs").hide();
+    $(".table-ts-loader").show();
+    $("#my-attendance-logs").DataTable().destroy();
+    $.ajax({
+      url: baseURL + "/timesheet/show_my_attendance_logs",
+      type: "POST",
+      dataType: "json",
+      data: {
+        date_from: $("#from_date_logs").val(),
+        date_to: $("#to_date_logs").val(),
+      },
+      success: function (data) {
+        // console.log(data);
+        $(".table-ts-loader").hide();
+        $("#my-attendance-logs").show();
+        $("#my-attendance-logs").html(data);
+        $("#my-attendance-logs").DataTable({
+          ordering: false,
+          paging: false,
+        });
+      },
+    });
+  }
+  $(document).on("click", ".request-my-ot", function () {
+    let selected = this;
+
+    var user_id = $(selected).attr("data-user-id");
+    var attendance_id = $(selected).attr("data-attn-id");
+    var shift_date = $(selected).attr("data-shift-date");
+    Swal.fire({
+      title: "Request Overtime?",
+      html:
+        "Are you sure you want to submit Overtime request for the shift date <strong>" +
+        shift_date +
+        "</strong>?",
+      showCancelButton: true,
+      imageUrl: baseURL + "/assets/img/timesheet/overtime.png",
+      confirmButtonColor: "#1D9E74",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Request now!",
+    }).then((result) => {
+      if (result.value) {
+        $.ajax({
+          url: baseURL + "/timesheet/request_my_ot",
+          type: "POST",
+          dataType: "json",
+          data: {
+            attendance_id: attendance_id,
+            user_id: user_id,
+          },
+          success: function (data) {
+            if (data == 0) {
+              show_my_attendance_logs();
+              Swal.fire({
+                showConfirmButton: false,
+                timer: 2000,
+                title: "Overtime Requested",
+                html:
+                  "Overtime request for <strong>" +
+                  shift_date +
+                  "</strong> has been sent.",
+                icon: "success",
+              });
+            }
+          },
+        });
+      }
+    });
+  });
+  $(document).on("click", ".adjust-my-attendance-request", function () {
+    // console.log("yes");
+    $("#request_attendance_correct_from").modal({
+      backdrop: "static",
+      keyboard: false,
+    });
+    $(".hiddenSection").show();
+
+    // console.log($(this).attr("data-att-id"));
+    let user_name = $(this).attr("data-name");
+    $.ajax({
+      url: baseURL + "/timesheet/get_spicific_attendance_log",
+      type: "POST",
+      dataType: "json",
+      data: {
+        user_id: $(this).attr("data-user-id"),
+        att_id: $(this).attr("data-att-id"),
+        shift_date: $(this).attr("data-shift-date"),
+      },
+      success: function (data) {
+        // console.log(data);
+        $("#form_timesheet_attendance_id").val(data.att_id);
+        $("#form_user_id").val(data.user_id);
+        $("#form_timesheet_shift_schedule_id").val(data.shift_schedule_id);
+        $("#form_shift_start").val(data.shift_start);
+        $("#form_shift_end").val(data.shift_end);
+        $("#form_clockin_date").val(data.checkin_date);
+        $("#form_clockin_time").val(data.checkin_time);
+        $("#form_clockout_date").val(data.checkout_date);
+        $("#form_clockout_time").val(data.checkout_time);
+        $("#form_breakin_date").val(data.breakin_date);
+        $("#form_breakin_time").val(data.breakin_time);
+        $("#form_breakout_date").val(data.breakout_date);
+        $("#form_breakout_time").val(data.breakout_time);
+        $("#form_expected_hours").html(data.expected_hours);
+        $("#form_worked_hours").html(data.shift_durations);
+        $("#form_break_duration").html(data.break_duration);
+        $("#form_over_time").html(data.overtime);
+        $("#form_attendance_notes").html(data.attendance_note);
+        $("#form_minutes_late").html(data.minutes_late);
+        $("#form_payable_hours").html(data.payable_hours);
+        $("#form_ot_status").html(data.ot_status);
+        $("#edit_attendance_name").html(user_name);
+        $("#form_expected_break_duration").html(data.expected_break);
+        $("#form_expected_work_hours").html(data.expected_work_hours);
+        $("#editors_footprint").html(data.footprint_text);
+      },
+    });
+  });
+  $(document).on("click", "#submit_attendance_correction_request", function () {
+    let selected = this;
+    var shift_date = $("#form_clockin_date").val();
+    var user_id = $("#form_user_id").val();
+    var attendance_id = $("#form_timesheet_attendance_id").val();
+    var employee_name = $(selected).attr("data-name");
+    Swal.fire({
+      title: "Send adjustment request?",
+      html:
+        "Are you sure you want to submit attendance correction for shift date <strong>" +
+        shift_date +
+        "</strong>?",
+      showCancelButton: true,
+      imageUrl: baseURL + "/assets/img/timesheet/attendance_correction.png",
+      confirmButtonColor: "#2ca01c",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Submit Adjustment now!",
+    }).then((result) => {
+      if (result.value) {
+        $.ajax({
+          url: baseURL + "/timesheet/submit_attendance_correction_request",
+          type: "POST",
+          dataType: "json",
+          data: {
+            att_id: attendance_id,
+            user_id: user_id,
+            form_clockin_date: $("#form_clockin_date").val(),
+            form_clockin_time: $("#form_clockin_time").val(),
+            form_clockout_date: $("#form_clockout_date").val(),
+            form_clockout_time: $("#form_clockout_time").val(),
+            form_breakin_date: $("#form_breakin_date").val(),
+            form_breakin_time: $("#form_breakin_time").val(),
+            form_breakout_date: $("#form_breakout_date").val(),
+            form_breakout_time: $("#form_breakout_time").val(),
+          },
+          success: function (data) {
+            if (data == 0) {
+              Swal.fire({
+                showConfirmButton: false,
+                timer: 2000,
+                title: "Success",
+                html:
+                  "Attendance correction request for shift date <strong>" +
+                  shift_date +
+                  "</strong> has been sent!",
+                icon: "success",
+              });
+            }
+          },
+        });
+      }
+    });
+  });
 });
+
+function edit_attendance_log_form_changed() {
+  let form_clockin_date = $("#form_clockin_date").val();
+  let form_clockin_time = $("#form_clockin_time").val();
+  let form_clockout_date = $("#form_clockout_date").val();
+  let form_clockout_time = $("#form_clockout_time").val();
+  let form_breakin_date = $("#form_breakin_date").val();
+  let form_breakin_time = $("#form_breakin_time").val();
+  let form_breakout_date = $("#form_breakout_date").val();
+  let form_breakout_time = $("#form_breakout_time").val();
+  let form_expected_hours = $("#form_expected_hours").html();
+  let form_expected_work_hours = $("#form_expected_work_hours").html();
+  let form_ot_status = $("#form_ot_status").html();
+
+  let arrayofdates = [
+    [
+      form_clockin_date + " " + form_clockin_time,
+      form_clockout_date + " " + form_clockout_time,
+    ],
+    [
+      form_breakin_date + " " + form_breakin_time,
+      form_breakout_date + " " + form_breakout_time,
+    ],
+    [$("#form_shift_start").val(), form_clockin_date + " " + form_clockin_time],
+  ];
+  let arrayofdurations = new Array();
+  for (let i = 0; i < arrayofdates.length; i++) {
+    var date1 = new Date(arrayofdates[i][0]);
+    var date2 = new Date(arrayofdates[i][1]);
+    let diff = (date2.getTime() - date1.getTime()) / 1000 / 60 / 60;
+    $rounded_amount = Math.round(diff * 100) / 100;
+    if ($rounded_amount > 0) {
+    } else {
+      $rounded_amount = 0;
+    }
+    arrayofdurations.push($rounded_amount);
+  }
+  var work_hours =
+    Math.round((arrayofdurations[0] - arrayofdurations[1]) * 100) / 100;
+  $("#form_worked_hours").html(work_hours);
+  $("#form_break_duration").html(arrayofdurations[1]);
+
+  let payable_hours = 0;
+  if (form_expected_hours == "") {
+    // console.log(arrayofdurations);
+    if (work_hours > 8) {
+      $("#form_over_time").html(Math.round((work_hours - 8) * 100) / 100);
+    } else {
+      $("#form_over_time").html(0);
+    }
+  } else {
+    if (form_expected_work_hours < work_hours) {
+      $("#form_over_time").html(
+        Math.round((work_hours - form_expected_work_hours) * 100) / 100
+      );
+    } else {
+      $("#form_over_time").html(0);
+    }
+
+    if (form_ot_status == "Approved") {
+      $("#form_payable_hours").html(work_hours);
+    } else {
+      payable_hours = work_hours;
+      if (payable_hours > form_expected_work_hours) {
+        payable_hours = form_expected_work_hours;
+      }
+
+      $("#form_payable_hours").html(payable_hours);
+    }
+  }
+
+  $("#form_minutes_late").html(Math.round(arrayofdurations[2] * 60));
+}

@@ -27,4 +27,11 @@ class Account_model extends MY_Model {
 	    $employee = $this->db->get('acs_profile');
 	    return $employee->result();
 	}
+
+	public function getById($id)
+	{
+		$this->db->where('id', $id);
+		$query = $this->db->get($this->table);
+		return $query->row();
+	}
 }

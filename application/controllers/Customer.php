@@ -21,10 +21,6 @@ class Customer extends MY_Controller
         $this->load->helper('url');
         $this->load->helper('functions');
 
-        $cid  = logged('id');
-        $profiledata = $this->business_model->getByWhere(array('user_id'=>$cid));
-        $this->page_data['profiledata'] = ($profiledata) ? $profiledata[0] : null;
-
         $user_id = getLoggedUserID();
         // concept
         $uid = $this->session->userdata('uid');

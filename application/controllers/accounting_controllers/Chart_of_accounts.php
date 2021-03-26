@@ -60,6 +60,23 @@ class Chart_of_accounts extends MY_Controller {
         add_footer_js(array(
             "assets/js/accounting/accounting/chart-of-accounts.js"
         ));
+
+        $accountTypes = $this->account_model->getAccounts();
+        $accountsDropdown = [];
+        foreach($accountTypes as $type)
+        {
+            foreach($this->chart_of_accounts_model->getByAccountType($type->id, null, logged('company_id')) as $account)
+            {
+                $childAccounts = $this->chart_of_accounts_model->getChildAccounts($account->id);
+                $accountsDropdown[$type->account_name][] = [
+                    'id' => $account->id,
+                    'name' => $account->name,
+                    'child_accounts' => $childAccounts
+                ];
+            }
+        }
+
+        $this->page_data['accountsDropdown'] = $accountsDropdown;
         $this->page_data['alert'] = 'accounting/alert_promt';
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->load->view('accounting/chart_of_accounts/index', $this->page_data);
@@ -94,7 +111,10 @@ class Chart_of_accounts extends MY_Controller {
 
         $data = [];
 
-        foreach($accounts as $account) {
+        foreach($accounts as $account)
+        {
+            $childAccounts = $this->chart_of_accounts_model->getChildAccounts($account->id);
+
             if($search !== "") {
                 if(stripos($account->name, $search) !== false) {
                     $data[] = [
@@ -104,7 +124,8 @@ class Chart_of_accounts extends MY_Controller {
                         'detail_type' => $this->account_detail_model->getName($account->acc_detail_id),
                         'nsmartrac_balance' => $account->balance,
                         'bank_balance' => '',
-                        'status' => $account->active
+                        'status' => $account->active,
+                        'is_sub_acc' => false
                     ];
                 }
             } else {
@@ -115,8 +136,24 @@ class Chart_of_accounts extends MY_Controller {
                     'detail_type' => $this->account_detail_model->getName($account->acc_detail_id),
                     'nsmartrac_balance' => $account->balance,
                     'bank_balance' => '',
-                    'status' => $account->active
+                    'status' => $account->active,
+                    'is_sub_acc' => false
                 ];
+            }
+
+            if(end($data)['id'] == $account->id && !empty($childAccounts)) {
+                foreach($childAccounts as $subAcc) {
+                    $data[] = [
+                        'id' => $subAcc->id,
+                        'name' => $subAcc->name,
+                        'type' => $this->account_model->getName($subAcc->account_id),
+                        'detail_type' => $this->account_detail_model->getName($subAcc->acc_detail_id),
+                        'nsmartrac_balance' => $subAcc->balance,
+                        'bank_balance' => '',
+                        'status' => $subAcc->active,
+                        'is_sub_acc' => true
+                    ];
+                }
             }
         }
 
@@ -174,8 +211,25 @@ class Chart_of_accounts extends MY_Controller {
 
     public function edit($id)
     {
+        $accountTypes = $this->account_model->getAccounts();
+        $accountsDropdown = [];
+        foreach($accountTypes as $type)
+        {
+            foreach($this->chart_of_accounts_model->getByAccountType($type->id, null, logged('company_id')) as $account)
+            {
+                if($account->id !== $id) {
+                    $childAccounts = $this->chart_of_accounts_model->getChildAccounts($account->id, $id);
+                    $accountsDropdown[$type->account_name][] = [
+                        'id' => $account->id,
+                        'name' => $account->name,
+                        'child_accounts' => $childAccounts
+                    ];
+                }
+            }
+        }
         $this->page_data['alert'] = 'accounting/alert_promt';
         $this->page_data['chart_of_accounts'] = $this->chart_of_accounts_model->getById($id);
+        $this->page_data['accountsDropdown'] = $accountsDropdown;
         $this->page_data['detail_type'] = $this->account_detail_model->getById($this->page_data['chart_of_accounts']->acc_detail_id);
         $this->load->view('accounting/chart_of_accounts/edit', $this->page_data);
     }
@@ -266,5 +320,18 @@ class Chart_of_accounts extends MY_Controller {
             $this->chart_of_accounts_model->insert($data);
             echo 'Data Imported successfully';
         }
+    }
+
+    public function get_account_type($id)
+    {
+        $account = $this->chart_of_accounts_model->getById($id);
+        $accountType = $this->account_model->getById($account->account_id);
+
+        echo json_encode($accountType);
+    }
+
+    public function get_all_account_types()
+    {
+        echo json_encode($this->account_model->getAccounts());
     }
 }

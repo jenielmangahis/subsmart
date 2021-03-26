@@ -72,27 +72,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     <!-- page wrapper start -->
     <div wrapper__section>
         <div class="container-fluid p-40">
-            <!--
-            <div class="page-title-box">
-                <div class="row align-items-center">
-                    <div class="col-sm-6">
-                        <h1 class="page-title">SMS Blast</h1>
-                        <ol class="breadcrumb">
-                            <li class="breadcrumb-item active">Send to all your customers or only certain ones.</li>
-                        </ol>
-                    </div>
-                    <div class="col-sm-6">
-                        <div class="float-right d-none d-md-block">
-                            <div class="dropdown">
-                                    <a href="<?php echo url('sms_campaigns') ?>" class="btn btn-primary" aria-expanded="false">
-                                        <i class="mdi mdi-settings mr-2"></i> Go Back to SMS Blast list
-                                    </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div> -->
-            <!-- end row -->
             <?php echo form_open_multipart('sms_campaigns/save_send_to', ['class' => 'form-validate', 'id' => 'create_campaign_send_to', 'autocomplete' => 'off']); ?>
             <div class="row">
                 <div class="col-xl-12">
@@ -123,7 +102,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                   <li class="active">2. Select Customers</li>
                                   <li>3. Build Email</li>
                                   <li>4. Preview</li>
-                                  <!-- <li>5. Purchase</li> -->
+                                  <li>5. Purchase</li>
                                 </ul>
                             </div>
                             <hr />
@@ -362,7 +341,7 @@ $(function(){
 
     $("#create_campaign_send_to").submit(function(e){
         e.preventDefault();
-        var url = base_url + 'sms_campaigns/create_campaign_send_to';
+        var url = base_url + 'email_campaigns/create_campaign_send_to';
         $(".btn-campaign-save-send-settings").html('<span class="spinner-border spinner-border-sm m-0"></span>  Saving');
         setTimeout(function () {
           $.ajax({
@@ -376,7 +355,7 @@ $(function(){
                     $(".validation-error").hide();
                     $(".validation-error").html('');
                     //redirect to step2
-                    location.href = base_url + "sms_campaigns/build_sms";
+                    location.href = base_url + "email_campaigns/build_email";
                 }else{
                     $(".validation-error").show();
                     $(".validation-error").html(o.err_msg);

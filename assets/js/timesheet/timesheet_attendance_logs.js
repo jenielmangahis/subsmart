@@ -159,7 +159,7 @@ $(document).ready(function () {
   });
 
   $(document).on("click", ".edit_attendancelogs_btn", function () {
-    console.log("yes");
+    // console.log("yes");
     $("#edit_attendancelogs").modal({
       backdrop: "static",
       keyboard: false,
@@ -337,7 +337,7 @@ function edit_attendance_log_form_changed() {
 
   let payable_hours = 0;
   if (form_expected_hours == "") {
-    console.log(arrayofdurations);
+    // console.log(arrayofdurations);
     if (work_hours > 8) {
       $("#form_over_time").html(Math.round((work_hours - 8) * 100) / 100);
     } else {

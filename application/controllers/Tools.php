@@ -9,10 +9,7 @@ class Tools extends MY_Controller {
         $this->checkLogin();
         $this->load->model('ApiGoogleContact_model', 'api_gc');
         $this->load->model('UserDetails_model', 'user_details');
-        $this->load->config('api_credentials');
-        $cid  = logged('id');
-        $profiledata = $this->business_model->getByWhere(array('user_id'=>$cid));
-        $this->page_data['profiledata'] = ($profiledata) ? $profiledata[0] : null;
+        $this->load->config('api_credentials');        
     }
 
     /* public function index()
@@ -288,6 +285,48 @@ class Tools extends MY_Controller {
             }
         }
        // redirect(base_url('tools/google_contacts'));
+    }
+
+    public function ajax_load_company_converge_form(){
+        $this->load->model('CompanyConvergeAccount_model');
+        $company_id = logged('company_id');    
+
+        $converge = $this->CompanyConvergeAccount_model->getByCompanyId($company_id);
+
+        $this->page_data['converge'] = $converge;
+        $this->load->view('tools/ajax_company_converge_form', $this->page_data);
+    }
+
+    public function ajax_activate_company_converge_account(){
+        $this->load->model('CompanyConvergeAccount_model');
+
+        $is_success = false;
+        $msg = 'Invalid converge credentials';
+
+        $post = $this->input->post();
+        $company_id = logged('company_id');  
+
+        $post['company_id'] = $company_id;
+        $converge = $this->CompanyConvergeAccount_model->getByCompanyId($company_id);
+
+        if( $converge ){
+            $post['modified'] = date("Y-m-d H:i:s");
+            $convergeAccount  = $this->CompanyConvergeAccount_model->updateCompanyConvergeAccount($company_id,$post);
+        }else{
+            $post['created']  = date("Y-m-d H:i:s");
+            $post['modified'] = date("Y-m-d H:i:s");
+            $convergeAccount = $this->CompanyConvergeAccount_model->create($post);    
+        }
+
+        $is_success = true;
+        $msg = '';
+
+        $json_data = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($json_data);
     }
 
 }

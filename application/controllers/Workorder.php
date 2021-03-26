@@ -21,6 +21,7 @@ class Workorder extends MY_Controller
         $this->page_data['page']->menu = (!empty($this->uri->segment(2))) ? $this->uri->segment(2) : 'workorder';
         $this->load->model('Workorder_model', 'workorder_model');
         $this->load->model('Jobs_model', 'jobs_model');
+        $this->load->model('Estimate_model', 'estimate_model');
         
         $user_id = getLoggedUserID();
 
@@ -1379,6 +1380,38 @@ class Workorder extends MY_Controller
 
     public function NewworkOrder()
     {
+        $this->load->model('AcsProfile_model');
+        $query_autoincrment = $this->db->query("SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE table_name = 'customer_groups'");
+        $result_autoincrement = $query_autoincrment->result_array();
+
+        if(count( $result_autoincrement )) {
+            if($result_autoincrement[0]['AUTO_INCREMENT'])
+            {
+                $this->page_data['auto_increment_estimate_id'] = 1;
+            } else {
+
+                $this->page_data['auto_increment_estimate_id'] = $result_autoincrement[0]['AUTO_INCREMENT'];
+            }
+        } else {
+            $this->page_data['auto_increment_estimate_id'] = 0;
+        }
+
+        $user_id = logged('id');
+
+        $company_id = logged('company_id');
+        $role = logged('role');
+        if( $role == 1 || $role == 2 ){
+            $this->page_data['customers'] = $this->AcsProfile_model->getAllByCompanyId($company_id);
+        }else{
+            $this->page_data['customers'] = $this->AcsProfile_model->getAll();
+        }
+        $type = $this->input->get('type');
+        $this->page_data['type'] = $type;
+        $this->page_data['items'] = $this->items_model->getItemlist();
+        $this->page_data['plans'] = $this->plans_model->getByWhere(['company_id' => $company_id]);
+        $this->page_data['number'] = $this->estimate_model->getlastInsert();
+
+
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->page_data['page_title'] = "Work Order";
         // print_r($this->page_data);
