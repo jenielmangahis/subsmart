@@ -66,8 +66,10 @@ class Users extends MY_Controller {
 		$cid=logged('id');
 		$comp_id = logged('company_id');
 		$profiledata = $this->business_model->getByCompanyId($comp_id);	
+		$selectedCategories = $this->ServiceCategory_model->getAllCategoriesByCompanyID($comp_id);
 		$schedules   = unserialize($profiledata->working_days);
 		
+		$this->page_data['selectedCategories'] = $selectedCategories;
 		$this->page_data['profiledata'] = $profiledata;
 		$this->load->view('business_profile/business', $this->page_data);
 
@@ -162,8 +164,8 @@ class Users extends MY_Controller {
 		//ifPermissions('businessdetail');
 		
 		$user = (object)$this->session->userdata('logged');
-		$cid  = logged('id');
-		$profiledata = $this->business_model->getByUserId($cid);	
+		$comp_id = logged('company_id');		
+		$profiledata = $this->business_model->getByCompanyId($comp_id);
 		$states = statesList();
 
 		$this->page_data['states'] = $states;
@@ -178,7 +180,8 @@ class Users extends MY_Controller {
 		//ifPermissions('businessdetail');
 		$user = (object)$this->session->userdata('logged');	
 		$cid = logged('id');
-		$profiledata = $this->business_model->getByUserId($cid);
+		$comp_id = logged('company_id');	
+		$profiledata = $this->business_model->getByCompanyId($comp_id);
 
 		$workingDays = unserialize($profiledata->working_days);
 		
@@ -293,12 +296,11 @@ class Users extends MY_Controller {
 		$action = $pdata['btn-continue'];
 		unset($pdata['btn-continue']);
 		$bid = $pdata['id'];
-
+		unset($pdata['id']);
 		if($bid!=''){
 			if( $action == 'availability' ){
 
 				$schedules = array();
-
 				foreach( $pdata['weekday'] as $value ){
 					switch ($value) {
 						case 'Monday':
@@ -354,14 +356,12 @@ class Users extends MY_Controller {
 							break;
 					}
 				}
-
 				$schedules = serialize($schedules);
 				$data_availability = [
 					'working_days' => $schedules,
 					'start_time_of_day' => $pdata['timeoff_from'],
 					'end_time_of_day' => $pdata['timeoff_to']					
 				];
-
 				$this->business_model->update($bid,$data_availability);	
 
 			}elseif( $action == 'credentials' ){

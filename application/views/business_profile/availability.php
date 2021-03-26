@@ -38,6 +38,15 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 <div class="col-md-2">
                                     <input type="text" name="monHoursToAvail" value="<?= $data_working_days['Monday']['time_to']; ?>" placeholder="End Time" id="mondayHoursToAvail" class="form-control">
                                 </div>
+
+                                <div class="col-md-6">
+                                  <a class="btn btn-default btn-sm btn-copy-time" data-key="tuesday" href="javascript:void(0);"><i class="fa fa-copy"></i> Tue</a>
+                                  <a class="btn btn-default btn-sm btn-copy-time" data-key="wednesday" href="javascript:void(0);"><i class="fa fa-copy"></i> Wed</a>
+                                  <a class="btn btn-default btn-sm btn-copy-time" data-key="thursday" href="javascript:void(0);"><i class="fa fa-copy"></i> Thu</a>
+                                  <a class="btn btn-default btn-sm btn-copy-time" data-key="friday" href="javascript:void(0);"><i class="fa fa-copy"></i> Fri</a>
+                                  <a class="btn btn-default btn-sm btn-copy-time" data-key="saturday" href="javascript:void(0);"><i class="fa fa-copy"></i> Sat</a>
+                                  <a class="btn btn-default btn-sm btn-copy-time" data-key="sunday" href="javascript:void(0);"><i class="fa fa-copy"></i> Sun</a>
+                                </div>
                             </div>
                             <div class="row pt-2">
                                 <div class="col-md-2 checkbox checkbox-sec">
@@ -149,10 +158,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <div class="col-md-8">
                             <button class="btn btn-default btn-lg" name="btn-continue" value="availability" type="submit">Save</button> <span class="alert-inline-text margin-left hide">Saved</span>
                         </div> 
-                        <div class="col-md-4 text-right">
+                        <!-- <div class="col-md-4 text-right">
                             <a class="btn btn-default btn-lg" href="credentials">« Back</a>
                             <a href="<?php echo base_url('users/portfolio'); ?>" class="btn btn-primary btn-lg margin-left" name="btn-continue">Next »</a>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
             </form>
@@ -190,8 +199,61 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <script>
 $(function(){
     $('.default-datepicker').datepicker({
-        format: 'yyyy-mm-dd',
+        format: 'mm-dd-yyyy',
         autoclose: true
+    });
+
+    $('#mondayHoursFromAvail').timepicker();
+    $('#tuesdayHoursFromAvail').timepicker();
+    $('#wednesdayHoursFromAvail').timepicker();
+    $('#thursdayHoursFromAvail').timepicker();
+    $('#fridayHoursFromAvail').timepicker();
+    $('#saturdayHoursFromAvail').timepicker();
+    $('#sundayHoursFromAvail').timepicker();
+
+    $('#mondayHoursToAvail').timepicker();
+    $('#tuesdayHoursToAvail').timepicker();
+    $('#wednesdayHoursToAvail').timepicker();
+    $('#thursdayHoursToAvail').timepicker();
+    $('#fridayHoursToAvail').timepicker();
+    $('#saturdayHoursToAvail').timepicker();
+    $('#sundayHoursToAvail').timepicker();
+
+    $("#form-business-availability").submit(function(e){
+      e.preventDefault();
+
+      var msg = '<img src="'+base_url+'/assets/img/spinner.gif" style="display:inline-block;" /> Saving...';
+      var url = base_url + 'onboarding/_save_business_availability';
+
+      $(".msg-container").html(msg);
+
+      setTimeout(function () {
+          $.ajax({
+             type: "POST",
+             url: url,
+             dataType: "json",
+             data: $("#form-business-availability").serialize(),
+             success: function(o)
+             {
+                if( o.is_success ){
+                  $(".msg-container").html('');
+                  location.href = base_url + 'onboarding/credentials';
+                }else{
+                  var msg = '<div class="alert alert-danger" role="alert">'+o.msg+'</div>';
+                  $(".msg-container").html(msg);
+                }
+             }
+          });
+      }, 500);
+    });
+
+    $(".btn-copy-time").click(function(){
+      var dayKey = $(this).attr("data-key");
+      var startToCopy = $("#mondayHoursFromAvail").val();
+      var endToCopy   = $("#mondayHoursToAvail").val();
+
+      $("#" + dayKey + "HoursFromAvail").val(startToCopy);
+      $("#" + dayKey + "HoursToAvail").val(endToCopy);
     });
 });
 </script>

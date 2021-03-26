@@ -23,8 +23,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         <div class="margin-bottom">
             Selected services:
             <div class="cat-selected" id="cat-selected">
-            <span class="label label-default tag">Security<a class="cat-tag-remove" id="cat-tag-remove-93" href="#"><span class="icon fa fa-remove"></span></a></span>            <script async="" src="https://www.google-analytics.com/analytics.js"></script><script id="cat-selected-tag" type="text/x-handlebars-template">
-            <span class="label label-default tag">{{name}}<a class="cat-tag-remove" id="cat-tag-remove-{{id}}" href="#"><span class="icon fa fa-remove"></span></a></span>
+            <?php foreach($selectedCategories as $s){ ?>
+                <span class="label label-default tag"><?= $s->service_name; ?><!-- <a class="cat-tag-remove" id="cat-tag-remove-93" href="#"><span class="icon fa fa-remove"></span></a> --></span> 
+            <?php } ?>
+            <script async="" src="https://www.google-analytics.com/analytics.js"></script><script id="cat-selected-tag" type="text/x-handlebars-template">
+            
             </script>
             </div>
         </div>
@@ -81,10 +84,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     	<div class="col-md-8">
     		    		<button class="btn btn-default btn-lg" name="btn-save" type="submit">Save</button> <span class="alert-inline-text margin-left hide">Saved</span>
     		    	</div>
-    	<div class="col-md-4 text-right">
+    	<!-- <div class="col-md-4 text-right">
     		    		<a class="btn btn-default btn-lg" href="businessdetail">« Back</a>
     		    		    		<a href="credentials" class="btn btn-primary btn-lg margin-left" name="btn-continue">Next »</a>
-    		    	</div>
+    		    	</div> -->
     </div>
 </div>
 </form>

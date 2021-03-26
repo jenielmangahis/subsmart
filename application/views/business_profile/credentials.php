@@ -261,10 +261,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     	<div class="col-md-8">
     		    		<button class="btn btn-default btn-lg" name="btn-continue" type="submit" value="credentials">Save</button> <span class="alert-inline-text margin-left hide" style="display:none;">Saved</span>
     		    	</div>
-    	<div class="col-md-4 text-right">
+    	<!-- <div class="col-md-4 text-right">
     		    		<a class="btn btn-default btn-lg" href="services">« Back</a>
     		    		    		<a href="availability" class="btn btn-primary btn-lg margin-left" name="btn-continue">Next »</a>
-    		    	</div>
+    		    	</div> -->
     </div>
 </div>
 </form>    </div>
