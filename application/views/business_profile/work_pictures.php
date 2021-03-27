@@ -1,32 +1,20 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed'); ?>
+<?php include viewPath('includes/header'); ?>
 <style>
-.input-group-addon:first-child {
-    border-right: 0;
-}
-.input-group-addon:last-child {
-    border-left: 0;
-}
-.input-group-addon {
-    padding: 14px 12px;
-    font-size: 14px;
-    font-weight: 400;
-    line-height: 1;
-    color: #555;
-    text-align: center;
-    background-color: #eee;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-}
-.input-group-addon, .input-group-btn {
-    /* width: 1%; */
-    white-space: nowrap;
-    vertical-align: middle;
+.cell-active{
+    background-color: #5bc0de;
 }
 .page-title {
   font-family: Sarabun, sans-serif !important;
   font-size: 1.75rem !important;
   font-weight: 600 !important;
+}
+.cell-inactive{
+    background-color: #d9534f;
+}
+.left {
+  float: left;
 }
 .pr-b10 {
   position: relative;
@@ -34,6 +22,31 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 }
 .p-40 {
   padding-top: 40px !important;
+}
+img.event-marker {
+    display: block;
+    margin: 0 auto;
+}
+tr.odd {
+    background: #f1f1f1 !important;
+}
+table.table tbody tr td {
+    width: 15%;
+    text-align: right;
+}
+table.table tbody tr td:first-child {
+    width: 85%;
+    text-align: left;
+}
+table.dataTable {
+    border-collapse: collapse;
+    margin-top: 5px;
+}
+table.dataTable thead tr th {
+    border: 1px solid black !important;
+}
+table.dataTable tbody tr td {
+    border: 1px solid black !important;
 }
 @media only screen and (max-width: 600px) {
   .p-40 {
@@ -44,118 +57,68 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     bottom: 0px;
   }
 }
-.list-icon{
-  list-style: none;
-  height: 400px;
-  overflow: auto;
-  padding: 6px;
-}
-.list-icon li{
-  display: inline-block;
-  /*width: 30%;*/
-  height:100px;
-  margin: 3px;
-}
-.mtc-18 {
-  margin-top: 32px;
-}
-.mt-18 {
-  margin-top: 10px;
+.event-marker{
+  height: 50px;
+  width: 50px;
+  border: 1px solid #dee2e6;
 }
 </style>
-<?php include viewPath('includes/header'); ?>
-<!-- page wrapper start -->
-<div role="wrapper">
-   <?php include viewPath('includes/sidebars/business'); ?>
-   <div wrapper__section>
-      <div class="col-md-12 col-lg-12">
-        <?php echo form_open_multipart('users/savebusinessdetail', [ 'id'=> 'form-business-details', 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
-        <div class="row">
-            <div class="col-md-12">
-                <form id="form-business-credentials" method="post" action="#">
-                <div class="validation-error" style="display: none;"></div>
-                <div>
-<div class="row">
-    <div class="col-md-12 col-lg-12">
-<form id="form-business-credentials" method="post" action="#">
-    <div class="validation-error hide"></div>
+<div class="wrapper" role="wrapper">
+    <?php include viewPath('includes/sidebars/business'); ?>
+    <!-- page wrapper start -->
+    <div wrapper__section>
+        <div class="container-fluid p-40">
+            <!-- end row -->
+            <div class="row">
+                <div class="col-xl-12">
+                    <div class="card mt-0" style="min-height: 400px !important;">
+                        <div class="row">
+                          <div class="col-sm-6 left">
+                            <h3 class="page-title">Work Pictures</h3>
+                          </div>
+                          <div class="col-sm-6 right dashboard-container-1">
+                              <div class="text-right">
+                                  <a href="<?php echo url('users/add_work_pictures') ?>" class="btn btn-primary btn-md"><i class="fa fa-camera"></i> Upload Image</a><br />
+                              </div>
+                          </div>
+                        </div>
+                        <div class="alert alert-warning mt-2 mb-4" role="alert">
+                            <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">
+                              Add photos to spotlight features of your business or past projects pictures.  You can upload up to <b>25 images.</b> 
+                            </span>
+                        </div>
+                        <?php include viewPath('flash'); ?>
+                        <!-- Main content -->
+                        <section class="content">
+                           <ul class="gallery ui-sortable" id="gallery">
+                              <li id="picture-id-9083">
+                                <div class="picture-container ui-sortable-handle">
+                                  <div class="img">
+                                      <img src="https://markate.blob.core.windows.net/cdn/20200412/buspor_13050_a138193f55_md.jpg">
+                                      <a class="delete" data-fileupload="delete" data-id="9083" href=""><span class="fa fa-remove"></span></a>
+                                  </div>
+                                  <div class="caption editable editable-pre-wrapped editable-click" data-id="9083" data-emptytext="Set caption..." data-placeholder="" data-title="Set Caption">Lorem</div>
+                                </div>
+                              </li>
+                            </ul>
+                        </section>
+                        <!-- /.content -->
+                    </div>
+                    <!-- end card -->
+                </div>
 
-    <div class="card mtc-18 pl-4">
-       <h3 class="page-title mb-0 mt-18">Work Pictures</h3>
-       <hr/>
-        <p>Add photos to spotlight features of your business or past projects pictures.  You can upload up to <b>25 images.</b></p>
-        <p><b>Tips</b> - Click and drag the images to reorder them, and click on "Set caption" to describe the image.
-
-        </p><hr>
-
-        <div class="alert alert-danger gallery-alert" data-fileupload="error" role="alert" style="display: none;"></div>
-
-        <ul class="gallery ui-sortable" id="gallery">
-        <li id="picture-id-9083">
-    <div class="picture-container ui-sortable-handle">
-        <div class="img">
-            <img src="https://markate.blob.core.windows.net/cdn/20200412/buspor_13050_a138193f55_md.jpg">
-            <a class="delete" data-fileupload="delete" data-id="9083" href=""><span class="fa fa-remove"></span></a>
-        </div>
-        <div class="caption editable editable-pre-wrapped editable-click" data-id="9083" data-emptytext="Set caption..." data-placeholder="" data-title="Set Caption">Lorem</div>
-    </div>
-</li>
-        </ul>
-
-        <hr>
-
-        <div class="" data-fileupload="progressbar" style="display: none;">
-            <div class="text">Uploading</div>
-            <div class="progress">
-                <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>
             </div>
+            <!-- end row -->
         </div>
-        <div class="col-md-4">
-            <span class="btn btn-default fileinput-button vertical-top"><span class="fa fa-camera"></span> Upload Image <input data-fileupload="file" name="fileimage" type="file"></span>
-        </div>
+        <!-- end container-fluid -->
     </div>
-
-    <hr class="card-hr">
-<div class="card">
-    <div class="row">
-    	<div class="col-md-8">
-    		    	</div>
-    	<div class="col-md-4 text-right">
-    		    		<a class="btn btn-default btn-lg" href="availability">« Back</a>
-    		    		    		<a href="profilesetting" class="btn btn-primary btn-lg margin-left" name="btn-continue">Next »</a>
-    		    	</div>
-    </div>
-</div>
-</form>
-
-    </div>
-</div>
-    </div>
-            </div>
-         </div>
-      </div>
-   </div>
-</div>
-<div class="mdc-top-app-bar-fixed-adjust demo-container demo-container-1 d-flex d-lg-none">
-   <div class="mdc-bottom-navigation">
-      <nav class="mdc-bottom-navigation__list">
-         <span class="mdc-bottom-navigation__list-item mdc-ripple-surface mdc-ripple-surface--primary" data-mdc-auto-init="MDCRipple" data-mdc-ripple-is-unbounded>
-         <span class="material-icons mdc-bottom-navigation__list-item__icon">history</span>
-         <span class="mdc-bottom-navigation__list-item__text">Recents</span>
-         </span>
-         <span class="mdc-bottom-navigation__list-item mdc-bottom-navigation__list-item--activated mdc-ripple-surface mdc-ripple-surface--primary" data-mdc-auto-init="MDCRipple" data-mdc-ripple-is-unbounded>
-         <span class="material-icons mdc-bottom-navigation__list-item__icon">favorite</span>
-         <span class="mdc-bottom-navigation__list-item__text">Favourites</span>
-         </span>
-         <span class="mdc-bottom-navigation__list-item mdc-ripple-surface mdc-ripple-surface--primary" data-mdc-auto-init="MDCRipple" data-mdc-ripple-is-unbounded>
-            <span class="material-icons mdc-bottom-navigation__list-item__icon">
-               <svg style="width:24px;height:24px" viewBox="0 0 24 24">
-                  <path d="M12,20A8,8 0 0,1 4,12A8,8 0 0,1 12,4A8,8 0 0,1 20,12A8,8 0 0,1 12,20M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,12.5A1.5,1.5 0 0,1 10.5,11A1.5,1.5 0 0,1 12,9.5A1.5,1.5 0 0,1 13.5,11A1.5,1.5 0 0,1 12,12.5M12,7.2C9.9,7.2 8.2,8.9 8.2,11C8.2,14 12,17.5 12,17.5C12,17.5 15.8,14 15.8,11C15.8,8.9 14.1,7.2 12,7.2Z"></path>
-               </svg>
-            </span>
-            <span class="mdc-bottom-navigation__list-item__text">Nearby</span>
-         </span>
-      </nav>
-   </div>
+    <!-- page wrapper end -->
 </div>
 <?php include viewPath('includes/footer'); ?>
+<script>
+$(function(){
+    
+});
+
+</script>
+  

@@ -1553,6 +1553,10 @@ class Users extends MY_Controller {
 
     	echo json_encode($json_data);
 	}
+
+	public function add_work_pictures(){
+		$this->load->view('business_profile/add_work_pictures', $this->page_data);
+	}
 }
 
 
