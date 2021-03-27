@@ -1,6 +1,104 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed'); ?>
-
+<style>
+.input-group-addon:first-child {
+    border-right: 0;
+}
+.input-group-addon:last-child {
+    border-left: 0;
+}
+.input-group-addon {
+    padding: 14px 12px;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1;
+    color: #555;
+    text-align: center;
+    background-color: #eee;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+.input-group-addon, .input-group-btn {
+    /* width: 1%; */
+    white-space: nowrap;
+    vertical-align: middle;
+}
+.page-title {
+  font-family: Sarabun, sans-serif !important;
+  font-size: 1.75rem !important;
+  font-weight: 600 !important;
+}
+.pr-b10 {
+  position: relative;
+  bottom: 10px;
+}
+.p-40 {
+  padding-top: 40px !important;
+}
+@media only screen and (max-width: 600px) {
+  .p-40 {
+    padding-top: 0px !important;
+  }
+  .pr-b10 {
+    position: relative;
+    bottom: 0px;
+  }
+}
+.list-icon{
+  list-style: none;
+  height: 400px;
+  overflow: auto;
+  padding: 6px;
+}
+.list-icon li{
+  display: inline-block;
+  /*width: 30%;*/
+  height:100px;
+  margin: 3px;
+}
+.mtc-18 {
+  margin-top: 36px;
+}
+.mt-18 {
+  margin-top: 10px;
+}
+.page-title {
+  font-family: Sarabun, sans-serif !important;
+  font-size: 1.75rem !important;
+  font-weight: 600 !important;
+}
+.pr-b10 {
+  position: relative;
+  bottom: 10px;
+}
+.p-40 {
+  padding-top: 40px !important;
+}
+@media only screen and (max-width: 600px) {
+  .p-40 {
+    padding-top: 0px !important;
+  }
+  .pr-b10 {
+    position: relative;
+    bottom: 0px;
+  }
+}
+.list-icon{
+  list-style: none;
+  height: 400px;
+  overflow: auto;
+  padding: 6px;
+}
+.list-icon li{
+  display: inline-block;
+  /*width: 30%;*/
+  height:100px;
+  margin: 3px;
+}
+.mt-18 {
+  margin-top: 2px;
+}
+</style>
 <?php include viewPath('includes/header'); ?>
 <!-- page wrapper start -->
 <div role="wrapper">
@@ -13,20 +111,20 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             <div class="col-md-12">
                 <form id="form-business-credentials" method="post" action="#">
                 <div class="validation-error" style="display: none;"></div>
-                <div class="card">
-                    <h1>Availability</h1>
-
+                <div>
                 <div class="row">
                     <div class="col-md-12 col-lg-12">
                     <form id="form-business-availability" method="post" action="#">
                     <div class="validation-error" style="display: none;"></div>
 
-                    <div class="card">
-                        <h3>Working Days</h3>
+                    <div class="card pl-4" style="margin-top:40px;">
+                        <h3 class="page-title mb-0 mt-18">Availability</h3>
+                        <hr class="mt-2"/>
+                        <h4>Working Days</h4>
                         <p>Your working days will appear on your public profile.</p>
                         <div class="row">
                             <div class="col-md-12" style="margin-left: 14px;">
-                            
+
                             <div class="row pt-2">
                                 <div class="col-md-2 checkbox checkbox-sec">
                                     <input type="checkbox" name="weekday[0]" value="Monday" <?= array_key_exists("Monday", $data_working_days) ? 'checked="checked"' : ''; ?> id="weekday_0">
@@ -37,6 +135,15 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 </div>
                                 <div class="col-md-2">
                                     <input type="text" name="monHoursToAvail" value="<?= $data_working_days['Monday']['time_to']; ?>" placeholder="End Time" id="mondayHoursToAvail" class="form-control">
+                                </div>
+
+                                <div class="col-md-6">
+                                  <a class="btn btn-default btn-sm btn-copy-time" data-key="tuesday" href="javascript:void(0);"><i class="fa fa-copy"></i> Tue</a>
+                                  <a class="btn btn-default btn-sm btn-copy-time" data-key="wednesday" href="javascript:void(0);"><i class="fa fa-copy"></i> Wed</a>
+                                  <a class="btn btn-default btn-sm btn-copy-time" data-key="thursday" href="javascript:void(0);"><i class="fa fa-copy"></i> Thu</a>
+                                  <a class="btn btn-default btn-sm btn-copy-time" data-key="friday" href="javascript:void(0);"><i class="fa fa-copy"></i> Fri</a>
+                                  <a class="btn btn-default btn-sm btn-copy-time" data-key="saturday" href="javascript:void(0);"><i class="fa fa-copy"></i> Sat</a>
+                                  <a class="btn btn-default btn-sm btn-copy-time" data-key="sunday" href="javascript:void(0);"><i class="fa fa-copy"></i> Sun</a>
                                 </div>
                             </div>
                             <div class="row pt-2">
@@ -115,7 +222,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         </div>
                     </div>
                     <div class="card">
-                        <h3>Time Off / Unavailability</h3>
+                        <h4>Time Off / Unavailability</h4>
                         <p>Please set your unavailable timings and time-off.</p>
                         <div class="form-group">
                             <div class="row">
@@ -148,11 +255,13 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <div class="row">
                         <div class="col-md-8">
                             <button class="btn btn-default btn-lg" name="btn-continue" value="availability" type="submit">Save</button> <span class="alert-inline-text margin-left hide">Saved</span>
-                        </div> 
+                        </div>
                         <div class="col-md-4 text-right">
+                        </div>
+                        <!-- <div class="col-md-4 text-right">
                             <a class="btn btn-default btn-lg" href="credentials">« Back</a>
                             <a href="<?php echo base_url('users/portfolio'); ?>" class="btn btn-primary btn-lg margin-left" name="btn-continue">Next »</a>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
             </form>
@@ -190,9 +299,61 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <script>
 $(function(){
     $('.default-datepicker').datepicker({
-        format: 'yyyy-mm-dd',
+        format: 'mm-dd-yyyy',
         autoclose: true
+    });
+
+    $('#mondayHoursFromAvail').timepicker();
+    $('#tuesdayHoursFromAvail').timepicker();
+    $('#wednesdayHoursFromAvail').timepicker();
+    $('#thursdayHoursFromAvail').timepicker();
+    $('#fridayHoursFromAvail').timepicker();
+    $('#saturdayHoursFromAvail').timepicker();
+    $('#sundayHoursFromAvail').timepicker();
+
+    $('#mondayHoursToAvail').timepicker();
+    $('#tuesdayHoursToAvail').timepicker();
+    $('#wednesdayHoursToAvail').timepicker();
+    $('#thursdayHoursToAvail').timepicker();
+    $('#fridayHoursToAvail').timepicker();
+    $('#saturdayHoursToAvail').timepicker();
+    $('#sundayHoursToAvail').timepicker();
+
+    $("#form-business-availability").submit(function(e){
+      e.preventDefault();
+
+      var msg = '<img src="'+base_url+'/assets/img/spinner.gif" style="display:inline-block;" /> Saving...';
+      var url = base_url + 'onboarding/_save_business_availability';
+
+      $(".msg-container").html(msg);
+
+      setTimeout(function () {
+          $.ajax({
+             type: "POST",
+             url: url,
+             dataType: "json",
+             data: $("#form-business-availability").serialize(),
+             success: function(o)
+             {
+                if( o.is_success ){
+                  $(".msg-container").html('');
+                  location.href = base_url + 'onboarding/credentials';
+                }else{
+                  var msg = '<div class="alert alert-danger" role="alert">'+o.msg+'</div>';
+                  $(".msg-container").html(msg);
+                }
+             }
+          });
+      }, 500);
+    });
+
+    $(".btn-copy-time").click(function(){
+      var dayKey = $(this).attr("data-key");
+      var startToCopy = $("#mondayHoursFromAvail").val();
+      var endToCopy   = $("#mondayHoursToAvail").val();
+
+      $("#" + dayKey + "HoursFromAvail").val(startToCopy);
+      $("#" + dayKey + "HoursToAvail").val(endToCopy);
     });
 });
 </script>
-

@@ -13,70 +13,70 @@
             placeholder: "Select Pay History"
         });
         $("#mmr").select2({
-            placeholder: "Select Pay History"
+            placeholder: "Select Month Rate"
         });
         $("#bill_freq").select2({
-            placeholder: "Select Pay History"
+            placeholder: "Select Billing Frequency"
         });
         $("#bill_day").select2({
-            placeholder: "Select Pay History"
+            placeholder: "Select Billing Day"
         });
         $("#contract_term").select2({
-            placeholder: "Select Pay History"
+            placeholder: "Select Contract Term"
         });
         $("#bill_method").select2({
-            placeholder: "Select Pay History"
+            placeholder: "Select Bill Method"
         });
         $("#assign_to").select2({
-            placeholder: "Select Pay History"
+            placeholder: "Select Assign To"
         });
         $("#purchase_multiple").select2({
-            placeholder: "Select Pay History"
+            placeholder: "Select Purchase Multiple"
         });
         $("#language").select2({
-            placeholder: "Select Pay History"
+            placeholder: "Select Language"
         });
         $("#fk_sales_rep_office").select2({
-            placeholder: "Select Pay History"
+            placeholder: "Select Sales Rep Office"
         });
         $("#technician").select2({
-            placeholder: "Select Pay History"
+            placeholder: "Select Technician"
         });
         $("#save_by").select2({
             placeholder: "Select Pay History"
         });
         $("#cancel_reason").select2({
-            placeholder: "Select Pay History"
+            placeholder: "Select Saved By"
         });
         $("#pre_install_survey").select2({
-            placeholder: "Select Pay History"
+            placeholder: "Select Pre-Install Survey"
         });
         $("#post_install_survey").select2({
-            placeholder: "Select Pay History"
+            placeholder: "Select Post-Install Survey"
         });
         $("#activation_fee").select2({
-            placeholder: "Select Pay History"
+            placeholder: "Select Activation Fee"
         });
         $("#lead_source").select2({
-            placeholder: "Select Pay History"
+            placeholder: "Select Lead Source"
         });
         $("#verification").select2({
-            placeholder: "Select Pay History"
+            placeholder: "Select Verification"
         });
         $("#warranty_type").select2({
-            placeholder: "Select Pay History"
+            placeholder: "Select Warranty Type"
         });
         $("#acct_type").select2({
-            placeholder: "Select Pay History"
+            placeholder: "Select Account Type"
         });
         $("#panel_type").select2({
-            placeholder: "Select Pay History"
+            placeholder: "Select Panel Type"
         });
         $("#mon_waived").select2({
-            placeholder: "Select Pay History"
+            placeholder: "Select Monitoring Waived"
         });
         $("#status").select2({
-            placeholder: "Select Pay History"
+            placeholder: "Select Status"
         });
     });
     $(function() {

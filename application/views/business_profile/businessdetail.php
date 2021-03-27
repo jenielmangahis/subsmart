@@ -1,17 +1,55 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed'); ?>
-
+<style>
+.page-title {
+  font-family: Sarabun, sans-serif !important;
+  font-size: 1.75rem !important;
+  font-weight: 600 !important;
+}
+.pr-b10 {
+  position: relative;
+  bottom: 10px;
+}
+.p-40 {
+  padding-top: 40px !important;
+}
+@media only screen and (max-width: 600px) {
+  .p-40 {
+    padding-top: 0px !important;
+  }
+  .pr-b10 {
+    position: relative;
+    bottom: 0px;
+  }
+}
+.list-icon{
+  list-style: none;
+  height: 400px;
+  overflow: auto;
+  padding: 6px;
+}
+.list-icon li{
+  display: inline-block;
+  /*width: 30%;*/
+  height:100px;
+  margin: 3px;
+}
+.mt-18 {
+  margin-top: 15px;
+}
+</style>
 <?php include viewPath('includes/header'); ?>
 <!-- page wrapper start -->
 <div role="wrapper">
    <?php include viewPath('includes/sidebars/business'); ?>
-   <div wrapper__section>
+   <div wrapper__section class="p-40">
       <div class="col-md-24 col-lg-24 col-xl-18">
          <?php echo form_open_multipart('users/savebusinessdetail', [ 'id'=> 'form-business-details', 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
 			<input type="hidden" name="id" value="<?php echo $profiledata->id; ?>">
 			<input type="hidden" name="user_id" value="<?php echo $profiledata->user_id; ?>">
-            <div class="card">
-               <h3>Basic Info</h3>
+            <div class="card mt-0">
+               <h3 class="page-title mb-0 mt-18">Basic Info</h3>
+               <hr class="mt-2"/>
                <div class="row">
                   <div class="col-md-6">
                      <div class="form-group">

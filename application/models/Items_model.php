@@ -8,6 +8,7 @@ class Items_model extends MY_Model
     public $table_categories = 'item_categories';
     public $table_invoice = 'invoice_has_items';
     public $table_has_location = 'items_has_storage_loc';
+    public $table_offer_code = 'offer_code';
 
     public function __construct()
     {
@@ -333,6 +334,16 @@ class Items_model extends MY_Model
         }
 
         return $qty;
+    }
+    
+    public function getoffercode($offer_code)
+    {
+        $this->db->select('*');
+        $this->db->from($this->table_offer_code);
+        $this->db->where('offer_code', $offer_code);
+
+        $query = $this->db->get();
+        return $query->row();
     }
     
 }

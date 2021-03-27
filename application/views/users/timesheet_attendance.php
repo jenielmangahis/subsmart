@@ -1099,26 +1099,45 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                                     <div class="clear">
                                                         <div class="inner-content">
                                                             <div class="card-title user-card-title">
-                                                                <span>Leave request</span>
+                                                                <span>Leave requests</span>
                                                             </div>
                                                             <div class="user-logs">
-                                                                <div class="user-logs-section">
-                                                                    <div class="user-clock-in-title" style="height: 35px">Request: </div>
-                                                                    <div class="user-clock-in-title">Requested date: </div>
-                                                                    <div class="user-clock-out-title">Approved by: </div>
-                                                                    <div class="user-lunch-in-title">Status: </div>
-                                                                </div>
-                                                                <div class="user-logs-section" style="vertical-align: top">
-                                                                    <div class="user-clock-in" style="height: 35px">
-                                                                        <a href="javascript:void (0)" class="employeeLeaveBtn" id="btn-leave-emp" style="float: right;margin-top: -12px">
-                                                                            <img src="<?= base_url() ?>assets/css/timesheet/images/calendar-static.svg" alt="sick icon" class="btn-leave-static">
-                                                                            <img src="<?= base_url() ?>assets/css/timesheet/images/calendar-hover.svg" alt="sick icon" class="btn-leave-hover">
-                                                                        </a>
-                                                                        <span class="employeeLeaveTooltip">Request for leave</span>
+                                                                <div class="row">
+                                                                    <div class="col-md-12">
+                                                                        <form action="#" target="_blank" method="POST">
+                                                                            <div class="row">
+                                                                                <div class="col-lg-6" style="margin-bottom: 12px">
+                                                                                    <label for="from_date_correction_requests" class="week-label">From:</label>
+                                                                                    <input type="text" name="date_from" id="from_date_leave_requests" class="form-control ts_schedule" value="<?= date('m/d/Y', strtotime('monday this week')) ?>">
+                                                                                </div>
+                                                                                <div class="col-lg-6" style="margin-bottom: 12px">
+                                                                                    <a href="javascript:void (0)" class="employeeLeaveBtn" id="btn-leave-emp" style="float: right;margin-top: -12px">
+                                                                                        <img src="<?= base_url() ?>assets/css/timesheet/images/calendar-static.svg" alt="sick icon" class="btn-leave-static">
+                                                                                        <img src="<?= base_url() ?>assets/css/timesheet/images/calendar-hover.svg" alt="sick icon" class="btn-leave-hover">
+                                                                                    </a><span class="employeeLeaveTooltip">Request for leave</span>
+                                                                                    <label for="to_date_correction_requests" class="week-label">To:</label>
+                                                                                    <input type="text" name="date_to" id="to_date_leave_requests" class="form-control ts_schedule" value="<?= date("m/d/Y") ?>">
+
+                                                                                </div>
+                                                                            </div>
+                                                                        </form>
+                                                                        <table id="my_leave_requests" class="table table-bordered table-striped no-footer dataTable" role="grid" aria-describedby="otrequest-table-list_info">
+                                                                            <thead>
+                                                                                <tr role="row">
+                                                                                    <th class="sorting_disabled" rowspan="1" colspan="1" style="width: 0px;">Date Filed</th>
+                                                                                    <th class="sorting_disabled" rowspan="1" colspan="1" style="width: 50px;">Leave Date</th>
+                                                                                    <th class="sorting_disabled" rowspan="1" colspan="1" style="width: 0px;">Status</th>
+                                                                                    <th class="sorting_disabled leave_request_action_td" rowspan="1" colspan="1" style="width: 0px;">Action</th>
+                                                                                </tr>
+                                                                            </thead>
+                                                                            <tbody id="my_leave_requests_body">
+
+                                                                            </tbody>
+                                                                        </table>
+                                                                        <div class="table-ts-loader">
+                                                                            <center><img class="my-leave-requests-loader" src="<?= base_url() ?>/assets/css/timesheet/images/ring-loader.svg" alt=""></center>
+                                                                        </div>
                                                                     </div>
-                                                                    <div class="user-lunch-out">-</div>
-                                                                    <div class="user-clock-out">-</div>
-                                                                    <div class="user-lunch-in">-</div>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -1134,22 +1153,63 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                                     <div class="clear">
                                                         <div class="inner-content">
                                                             <div class="card-title user-card-title">
-                                                                <span>Correction Requests</span>
+                                                                <span>Attendance Correction Requests</span>
                                                             </div>
-                                                            <div class="user-logs">
-                                                                <div class="user-logs-section">
-                                                                    <div class="user-clock-in-title">Timezone: </div>
-                                                                    <div class="user-clock-in-title">Task: </div>
-                                                                    <div class="user-clock-out-title">Start time: </div>
-                                                                    <div class="user-lunch-in-title">End time: </div>
-                                                                    <div class="user-lunch-out-title">Estimated time duration: </div>
-                                                                </div>
-                                                                <div class="user-logs-section" style="vertical-align: top">
-                                                                    <div class="user-clock-in"><?php echo $timezone; ?></div>
-                                                                    <div class="user-clock-in"><i class="fa fa-info-circle"></i> <?php echo $task_name ?></div>
-                                                                    <div class="user-clock-out"><?php echo $start_time; ?></div>
-                                                                    <div class="user-lunch-in"><?php echo $end_time ?></div>
-                                                                    <div class="user-lunch-out"><?php echo $task_duration ?></div>
+                                                            <div class="row">
+                                                                <div class="col-md-12">
+                                                                    <form action="#" target="_blank" method="POST">
+                                                                        <div class="row">
+                                                                            <div class="col-lg-2" style="margin-bottom: 12px">
+                                                                                <label for="from_date_correction_requests" class="week-label">From:</label>
+                                                                                <input type="text" name="date_from" id="from_date_correction_requests" class="form-control ts_schedule" value="<?= date('m/d/Y', strtotime('monday this week')) ?>">
+                                                                            </div>
+                                                                            <div class="col-lg-2" style="margin-bottom: 12px">
+                                                                                <label for="to_date_correction_requests" class="week-label">To:</label>
+                                                                                <input type="text" name="date_to" id="to_date_correction_requests" class="form-control ts_schedule" value="<?= date("m/d/Y") ?>">
+                                                                            </div>
+                                                                        </div>
+                                                                    </form>
+                                                                    <table id="my_correction_requests" class="table table-bordered table-striped no-footer dataTable" role="grid" aria-describedby="otrequest-table-list_info" style="display:none;">
+                                                                        <thead>
+                                                                            <tr role="row">
+                                                                                <th class="sorting_disabled" rowspan="1" colspan="1" style="width: 0px;">Shift Date</th>
+                                                                                <th class="sorting_disabled" rowspan="1" colspan="1" style="width: 0px;">Login</th>
+                                                                                <th class="sorting_disabled" rowspan="1" colspan="1" style="width: 0px;">Break</th>
+                                                                                <th class="sorting_disabled" rowspan="1" colspan="1" style="width: 0px;">Worked Hours</th>
+                                                                                <th class="sorting_disabled" rowspan="1" colspan="1" style="width: 0px;">Break Duration</th>
+                                                                                <th class="sorting_disabled" rowspan="1" colspan="1" style="width: 0px;">Overtime</th>
+                                                                                <th class="sorting_disabled" rowspan="1" colspan="1" style="width: 0px;">Request Status</th>
+                                                                                <th class="sorting_disabled" rowspan="1" colspan="1" style="width: 0px;">Action</th>
+                                                                            </tr>
+                                                                        </thead>
+                                                                        <tbody>
+                                                                            <tr role="row" class="odd">
+                                                                                <td><label class="gray">03-21-2021</label></td>
+                                                                                <td>
+                                                                                    <center>
+                                                                                        <label class="gray"><strong>Clock in: &nbsp;</strong> 03-21-2021 12:20 PM</label>
+                                                                                        <label class="gray"><strong>Clock out: &nbsp;</strong> 03-21-2021 12:20 PM</label>
+                                                                                    </center>
+                                                                                </td>
+                                                                                <td>
+                                                                                    <center>
+                                                                                        <label class="gray"><strong>Break in: &nbsp;</strong> 03-21-2021 12:20 PM</label>
+                                                                                        <label class="gray"><strong>Break out:&nbsp;</strong> 03-21-2021 12:20 PM</label>
+                                                                                    </center>
+                                                                                </td>
+                                                                                <td style="text-align:center;">9.3</td>
+                                                                                <td style="text-align:center;">1.30</td>
+                                                                                <td style="text-align:center;">1.30</td>
+                                                                                <td style="text-align:center;">Pending</td>
+                                                                                <td style="text-align:center;">
+                                                                                    <a href="#" title="" data-name="Jonah  Pacas-Abanil" data-user-id="14" data-attn-id="143" data-toggle="tooltip" class="approve-ot-request btn btn-danger btn-sm" data-original-title="Cancel Request"><i class="fa fa-times fa-lg"></i> Cancel</a>
+                                                                                </td>
+                                                                            </tr>
+                                                                        </tbody>
+                                                                    </table>
+                                                                    <div class="table-ts-loader">
+                                                                        <center><img class="my-correction-requests-loader" src="<?= base_url() ?>/assets/css/timesheet/images/ring-loader.svg" alt=""></center>
+                                                                    </div>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -1919,9 +1979,15 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                             array: array
                         },
                         success: function(data) {
-                            // console.log(array);
                             if (data == 1) {
                                 $('#leaveRequestModal').modal('hide');
+                                Swal.fire({
+                                    showConfirmButton: false,
+                                    timer: 2000,
+                                    title: "Success",
+                                    html: "Your leave request has been sent!",
+                                    icon: "success",
+                                });
                             }
                         }
                     });

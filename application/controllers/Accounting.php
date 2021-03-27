@@ -337,13 +337,13 @@ class Accounting extends MY_Controller {
         $this->page_data['page_title'] = "Sales Overview";
         $this->load->view('accounting/payroll_overview', $this->page_data);
     }
-    public function employees()
-    {
-        $this->page_data['users'] = $this->users_model->getUser(logged('id'));
-        $this->page_data['page_title'] = "Sales Overview";
-        $this->page_data['employees'] = $this->users_model->getAll();
-        $this->load->view('accounting/employees', $this->page_data);
-    }
+    // public function employees()
+    // {
+    //     $this->page_data['users'] = $this->users_model->getUser(logged('id'));
+    //     $this->page_data['page_title'] = "Sales Overview";
+    //     $this->page_data['employees'] = $this->users_model->getAll();
+    //     $this->load->view('accounting/employees', $this->page_data);
+    // }
     public function contractors()
     {
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
@@ -4488,6 +4488,28 @@ class Accounting extends MY_Controller {
           //  $client   = $this->Clients_model->getById($company_id);
 
             $this->page_data['customer'] = $customer;
+           // $this->page_data['client'] = $client;
+
+        echo json_encode($this->page_data);
+    }
+
+    public function findoffercode()
+    {
+        $offer_code = $this->input->post('offer_code');
+
+        $company_id = logged('company_id');
+
+            $offer = $this->items_model->getoffercode($offer_code);
+
+            if(empty($offer)){
+
+                echo "empty";
+
+            }else{
+                
+                $this->page_data['offer'] = $offer;
+
+            }
            // $this->page_data['client'] = $client;
 
         echo json_encode($this->page_data);

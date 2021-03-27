@@ -355,6 +355,11 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                             <input type="hidden" name="markup_input_form" id="markup_input_form" class="markup_input" value="0">
                                         <!-- </tr> -->
                                         <tr>
+                                            <td>Voucher</td>
+                                            <td></td>
+                                            <td><span id="offer_cost">0.00</span><input type="hidden" name="offer_cost" id="offer_cost_input"></td>
+                                        </tr>
+                                        <tr>
                                             <td><b>Grand Total ($)</b></td>
                                             <td></td>
                                             <td><b><span id="grand_total">0.00</span>
@@ -394,11 +399,17 @@ defined('BASEPATH') or exit('No direct script access allowed');
                             <div class="row">                        
                                 <div class="form-group col-md-4">
                                     <label for="start_date">Enter an offer code</label>
-                                    <input type="text" class="form-control" name="start_date" id="start_date" />
+                                    <input type="text" class="form-control" name="offer_code" id="offer_code" />
+                                    
+                                    <div class="invalid_code" style="display:none;">
+                                        <b style="color:red;">Invalid Code. Please check your code.</b>
+                                    </div>  
+                                    
                                 </div>    
                                 <div class="form-group col-md-4">
-                                    <br><button class="btn btn-success">VALIDATE</button>
-                                </div>                                     
+                                    <br><a class="btn btn-success validate_offer">VALIDATE</a>
+                                </div>   
+                                                                   
                             </div>
                             
                             <h6>JOB DETAIL</h6><br>
@@ -965,6 +976,54 @@ $(document).ready(function(){
 
         $('#modalSetMarkup').modal('toggle');
     });
+});
+
+</script>
+
+<script>
+
+$(document).ready(function(){
+ 
+    $('.validate_offer').click(function(){
+    var offer_code  = $("#offer_code").val();
+    // alert(offer_code);
+
+        $.ajax({
+            type: 'POST',
+            url:"<?php echo base_url(); ?>accounting/findoffercode",
+            data: {offer_code : offer_code },
+            dataType: 'json',
+            success: function(response){
+                // data = response.trim();
+                // alert('success');
+            // alert(response['offer'].cost);
+            if (response != null){   
+                var cost = response['offer'].cost;
+                $("#offer_cost").text( '- $' + response['offer'].cost);
+                $("#offer_cost").val(response['offer'].cost);
+
+                var grand = $("#grand_total_input").val();
+                var new_grand = grand - parseFloat(cost);
+
+                $("#grand_total").text(new_grand.toFixed(2));
+                $("#grand_total_input").val(new_grand.toFixed(2));
+                // alert('computed');
+                $('.invalid_code').hide();
+            }
+            else{   
+                
+                alert('invalid');
+            }
+        
+            },
+                error: function(response){
+                // alert('Error'+response);
+                $('.invalid_code').show();
+       
+                }
+        });
+    });
+
 });
 
 </script>

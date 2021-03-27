@@ -194,11 +194,22 @@
                 </div>
             </div>
             <!-- end row -->
+            <div class="col-sm-12">
+                <div class="col-sm-12 text-right-sm" style="align:right;">
+                    <span class="text-ter" style="position: absolute; right: 83px !important; top: 8px;">Customize</span>
+                    <div class="onoffswitch grid-onoffswitch" style="position: relative; margin-top: 7px;">
+                        <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" data-customize="open" id="onoff-customize">
+                        <label class="onoffswitch-label" for="onoff-customize">
+                            <span class="onoffswitch-inner"></span> <span class="onoffswitch-switch"></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
             <div class="row-tablet-mobile mb-fix">
                 <div class="row d-none d-lg-flex" style="width:99%">
                     <?php //$this->load->view('widgets/quick_start', $quick_start_data); ?>
                     <div class="col-md-12">
-                        <div class="row cus-dashboard-div">
+                        <div class="row cus-dashboard-div sortable2">
                             <?php
                             foreach ($widgets as $wids):
                                 if ($wids->wu_is_main):
@@ -207,7 +218,7 @@
                                     $data['height'] = 'height: 250px;';
                                     $data['isMain'] = True;
                                     $data['id'] = $wids->w_id;
-                                    $data['isGlobal'] = ($wids->wu_company_id=='0'?false:true);
+                                    $data['isGlobal'] = ($wids->wu_company_id == '0' ? false : true);
                                     $this->load->view($wids->w_view_link, $data);
                                 endif;
                             endforeach;
@@ -215,7 +226,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="row d-none d-lg-flex cus-dashboard-div dynamic-widget" id="widgetWrapper">
+                <div class="row d-none d-lg-flex cus-dashboard-div dynamic-widget sortable2" id="widgetWrapper">
                     <?php
                     foreach ($widgets as $wids):
                         if (!$wids->wu_is_main):
@@ -224,7 +235,7 @@
                             $data['height'] = 'height: 310px;';
                             $data['isMain'] = False;
                             $data['id'] = $wids->w_id;
-                            $data['isGlobal'] = ($wids->wu_company_id=='0'?false:true);
+                            $data['isGlobal'] = ($wids->wu_company_id == '0' ? false : true);
                             $this->load->view($wids->w_view_link, $data);
                         endif;
                     endforeach;
@@ -782,78 +793,100 @@
 
 
 <script type="text/javascript">
-    
+
     function load_checklist(){
-        var url = base_url + 'users/_load_checklist';
-        $("#companyChecklist").modal('show');
-        setTimeout(function () {
-          $.ajax({
-             type: "POST",
-             url: url,
-             dataType: "json",
-             success: function(o)
-             {
-                $("#companyChecklist").modal('show');
-             }
-          });
-        }, 1000);
+    var url = base_url + 'users/_load_checklist';
+    $("#companyChecklist").modal('show');
+    setTimeout(function () {
+    $.ajax({
+    type: "POST",
+            url: url,
+            dataType: "json",
+            success: function(o)
+            {
+            $("#companyChecklist").modal('show');
+            }
+    });
+    }, 1000);
     }
 
     function waitForClockInOut() {
     $.ajax({
-    type: "GET",
-            url: "<?= base_url() ?>/Timesheet/getClockInOutNotification",
-            async: true,
-            cache: false,
-            timeout: 10000,
-            success: function (data) {
+        type: "GET",
+                url: "<?= base_url() ?>/Timesheet/getClockInOutNotification",
+                async: true,
+                cache: false,
+                timeout: 10000,
+                success: function (data) {
 
-            var obj = JSON.parse(data);
-            console.log(obj);
-            $.each(obj, function (currentIndex, currentElem) {
-            $('#in_now').html(currentElem.ClockIn);
-            $('#out_now').html(currentElem.ClockOut);
-            });
-            setTimeout(waitForClockInOut, 2000);
-            },
-            error: function (XMLHttpRequest, textStatus, errorThrown) {
-            addmsg("error", textStatus + " (" + errorThrown + ")");
-            setTimeout(waitForClockInOut, 15000);
-            }
-    });
+                var obj = JSON.parse(data);
+                console.log(obj);
+                $.each(obj, function (currentIndex, currentElem) {
+                $('#in_now').html(currentElem.ClockIn);
+                $('#out_now').html(currentElem.ClockOut);
+                });
+                setTimeout(waitForClockInOut, 2000);
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                addmsg("error", textStatus + " (" + errorThrown + ")");
+                setTimeout(waitForClockInOut, 15000);
+                }
+        });
     };
     $(document).ready(function () {
         var TimeStamp = null;
         waitForClockInOut();
         
-    });
-    $('#onoff-customize').click(function() {
-    if (this.checked) {
-    //var current = 1;
-    // $( ".short_id" ).each(function( index ) {
-    //     $('this').attr('id', 'item_'+current);
-    //     current++;
-    // });
-    $("#sortable").sortable({
-    /*stop: function(event, ui) {
-     alert("New position: " + ui.item.index());
-     }*/
-    start: function(e, div) {
-    // creates a temporary attribute on the element with the old index
-    $(this).attr('data-previndex', div.item.index());
-    },
-            update: function(e, div) {
-            // gets the new and old index then removes the temporary attribute
-            var newIndex = div.item.index();
-            var oldIndex = $(this).attr('data-previndex');
-            var element_id = div.item.attr('id');
-            //alert('id of Item moved = '+element_id+' old position = '+oldIndex+' new position = '+newIndex);
-            $(this).removeAttr('data-previndex');
+        $('#onoff-customize').change(function () {
+            if (this.checked) {
+                $('.widget').mouseover(function(){
+                    if($(this).attr('id')=='addWidget'){
+                        $(".sortable2").sortable("disable");
+                    }else{
+                        $(".sortable2").sortable("enable");
+                    }
+                });
+            } else {
+                $(".sortable2").sortable("disable");
             }
+
+        });
+
+
+
+        $(".sortable2").sortable({
+            start: function (e, ui) {
+                // creates a temporary attribute on the element with the old index
+                $(this).attr('data-previndex', ui.item.index());
+                $(this).attr('style', 'top:0;cursor: grabbing');
+
+            },
+            change(event, ui)
+            {
+                $(this).attr('style', 'top:0;cursor: grabbing ');
+            },
+            update: function (e, ui)
+            {
+                $(this).attr('style', 'top:0;cursor: pointer');
+                var oldOrder = $(this).attr('data-previndex');
+                var idsInOrder = $(".sortable2").sortable("toArray",{ attribute: 'data-id' });
+                var filteredArray = idsInOrder.filter(function(e){return e});
+
+//                $.ajax({
+//                    type: "POST",
+//                    url: "<?= base_url() ?>/customer/ac_module_sort",
+//                    data: {ams_values: filteredArray.toString(), ams_id: <?php echo $module_sort->ams_id; ?>}, // serializes the form's elements.
+//                    success: function (data)
+//                    {
+//                        console.log(data);
+//                    }
+//                });
+
+                console.log(filteredArray.toString());
+            }
+        });
+
+        $(".sortable2").sortable("disable");
     });
-    $("#sortable").disableSelection();
-    } else{
-    $("#sortable").sortable("disable");
-    //$( "#sortable" ).disableSelection();
-    }
-    });</script>
+
+</script>
