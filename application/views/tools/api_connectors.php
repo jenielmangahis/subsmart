@@ -17,6 +17,10 @@
 .addon {
   min-height: 428px;
 }
+svg#svg-sprite-menu-close {
+  position: relative;
+  bottom: 112px !important;
+}
 </style>
 <?php defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <?php include viewPath('includes/header'); ?>
@@ -482,7 +486,7 @@
 
                         <div class="row">
                             <div class="col-xl-12">
-                                <div class="card" style="min-height: 400px !important;">  
+                                <div class="card" style="min-height: 400px !important;">
                                     <?php include viewPath('flash'); ?>
                                     <div class="row margin-bottom">
                                         <div class="col-sm-12">
@@ -568,7 +572,7 @@
                                       </div>
                                       <?php echo form_open_multipart('', ['class' => 'form-validate', 'id' => 'form-converge-account', 'autocomplete' => 'off' ]); ?>
                                       <div class="modal-body converge-body"></div>
-                                      <div class="modal-footer close-modal-footer">                                        
+                                      <div class="modal-footer close-modal-footer">
                                         <button type="submit" class="btn btn-primary btn-converge-activate">Activate</button>
                                       </div>
                                       <?php echo form_close(); ?>
@@ -606,7 +610,7 @@ $(function(){
            {
              $(".converge-body").html(o);
            }
-        });                    
+        });
         }, 800);
     });
 
@@ -624,7 +628,7 @@ $(function(){
                success: function(o)
                {
                  if( o.is_success ){
-                    Swal.fire({                      
+                    Swal.fire({
                       icon: 'success',
                       title: 'Your converge account was successfully activated',
                       showConfirmButton: false,
@@ -642,7 +646,7 @@ $(function(){
 
                  $(".btn-converge-activate").html('Activate');
                }
-            });                    
+            });
         }, 800);
     });
 });

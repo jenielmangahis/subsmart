@@ -33,17 +33,9 @@
    #sidebar{
        z-index: 999;
    }
-   img.company-logo {
-     width: 100px;
-     height: 100px;
-     object-fit: cover;
-     margin: 0 auto;
-     max-height: 120px;
-     border-radius: 69px;
-   }
    svg#svg-sprite-menu-close {
      position: relative;
-     bottom: 64px;
+     bottom: 114px;
    }
 </style>
 <nav id="sidebar" class="navbar-side">

@@ -15,17 +15,13 @@
         background: -webkit-linear-gradient(top, #45a73c 0%,#67ce5e 100%);
         background: linear-gradient(to bottom, #45a73c 0%,#67ce5e 100%);
     }
-    img.company-logo {
-      width: 100px;
-      height: 100px;
-      object-fit: cover;
-      margin: 0 auto;
-      max-height: 120px;
-      /*border-radius: 69px;*/
-    }
     div[role="wrapper"] .navbar-side .nav li > a {
         color: #fff;
         text-align: left;
+    }
+    svg#svg-sprite-menu-close {
+      position: relative;
+      bottom: 131px;
     }
 </style>
 <nav class="navbar-side d-none d-md-block">

@@ -10633,6 +10633,13 @@ select#select-employee {
     float: left;
     width: 100%;
 }
+img.company-logo {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  margin: 0 auto;
+  max-height: 120px;
+}
 .progress-fill-card .top-block {
     justify-content: space-between;
 }

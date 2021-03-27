@@ -59,6 +59,10 @@
         bottom: 0px;
       }
     }
+    svg#svg-sprite-menu-close {
+      position: relative;
+      bottom: 62px !important;
+    }
 </style>
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed'); ?>
