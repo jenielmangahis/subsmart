@@ -242,3 +242,23 @@ div#my-attendance-logs_filter {
 form#formNewProject td {
   height: 20px;
 }
+table td label.gray {
+  background-color: #e9ecef;
+  padding-left: 5px;
+  padding-right: 6px;
+  border-radius: 10px;
+  width: 80px;
+  font-size: 12px;
+  margin-bottom: 10px;
+}
+table.dataTable.no-footer {
+  border-bottom: 1px solid #dee2e6;
+}
+div.dataTables_wrapper div.dataTables_filter {
+  display: none;
+}
+#my_correction_requests td a,
+#my_leave_requests td a {
+  color: #ffffff;
+  cursor: pointer;
+}

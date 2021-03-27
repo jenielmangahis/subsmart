@@ -937,28 +937,32 @@ class Timesheet_model extends MY_Model
     public function employeeRequestLeave($pto, $date)
     {
         $user_id = $this->session->userdata('logged')['id'];
-        $query = $this->db->get_where('timesheet_leave', array('user_id' => $user_id));
-        if ($query->num_rows() == 0) {
-            $insert = array(
-                'pto_id' => $pto,
-                'user_id' => $user_id,
-                'status' => 0
+
+        $insert = array(
+            'pto_id' => $pto,
+            'user_id' => $user_id,
+            'status' => 0
+        );
+        $this->db->insert('timesheet_leave', $insert);
+        $leave_id = $this->db->insert_id();
+        //Inserting the dates
+        for ($x = 0; $x < count($date); $x++) {
+            $data[] = array(
+                'leave_id' => $leave_id,
+                'date' => date('Y-m-d', strtotime($this->datetime_zone_converter(date('Y-m-d', strtotime($date[$x])), $this->session->userdata('usertimezone'), "UTC")))
             );
-            $this->db->insert('timesheet_leave', $insert);
-            $leave_id = $this->db->insert_id();
-            //Inserting the dates
-            for ($x = 0; $x < count($date); $x++) {
-                $data[] = array(
-                    'leave_id' => $leave_id,
-                    'date' => date('Y-m-d', strtotime($date[$x]))
-                );
-            }
-            $this->db->insert_batch('timesheet_leave_date', $data);
-            $return = true;
-        } else {
-            $return = false;
         }
+        $this->db->insert_batch('timesheet_leave_date', $data);
+        $return = true;
         return $return;
+    }
+    public function datetime_zone_converter($olddate, $from_timezone, $to_timezone)
+    {
+        date_default_timezone_set($from_timezone);
+        $the_date = strtotime($olddate);
+        date_default_timezone_set($to_timezone);
+        $newdate = date("Y-m-d H:i:s", $the_date);
+        return $newdate;
     }
 
     //Get leave request
@@ -1341,7 +1345,34 @@ class Timesheet_model extends MY_Model
     {
         $this->db->insert('timesheet_attendance_correction', $insert);
     }
+    public function get_my_correction_requests($date_from, $date_to, $user_id)
+    {
+        $qry = $this->db->query("SELECT * FROM timesheet_attendance_correction WHERE user_id = " . $user_id . " AND date_created >='" . $date_from . "' AND date_created <='" . $date_to . "' order by date_created DESC");
+        return $qry->result();
+    }
+
+    public function update_correction_request($update, $att_id)
+    {
+        $this->db->where('attendance_id', $att_id);
+        $this->db->update("timesheet_attendance_correction", $update);
+    }
+    public function get_my_leave_requests($user_id, $from_date, $to_date)
+    {
+        $qry = $this->db->query("SELECT timesheet_leave.*,timesheet_pto.name FROM timesheet_leave  JOIN timesheet_pto ON timesheet_pto.id=timesheet_leave.pto_id WHERE timesheet_leave.user_id = " . $user_id . " AND timesheet_leave.date_created >= '" . $from_date . "' AND timesheet_leave.date_created <= '" . $to_date . "' ORDER BY timesheet_leave.date_created DESC");
+        return $qry->result();
+    }
+    public function update_my_leave_request($update, $leave_id)
+    {
+        $this->db->where('id', $leave_id);
+        $this->db->update("timesheet_leave", $update);
+    }
+    public function get_leavedates($leave_id)
+    {
+        $qry = $this->db->query("SELECT * FROM timesheet_leave_date where leave_id = " . $leave_id . " order by date asc");
+        return $qry->result();
+    }
 }
+
 
 
 
