@@ -843,6 +843,166 @@ $(document).ready(function () {
       }
     });
   });
+
+  show_my_correction_requests();
+  $(document).on("change", "#from_date_correction_requests", function () {
+    show_my_correction_requests();
+  });
+
+  $(document).on("change", "#to_date_correction_requests", function () {
+    // console.log("pasok");
+    show_my_correction_requests();
+  });
+  function show_my_correction_requests() {
+    $("#my_correction_requests").hide();
+    $(".my-correction-requests-loader").show();
+    $("#my_correction_requests").DataTable().destroy();
+    $.ajax({
+      url: baseURL + "/timesheet/show_my_correction_requests",
+      type: "POST",
+      dataType: "json",
+      data: {
+        date_from: $("#from_date_correction_requests").val(),
+        date_to: $("#to_date_correction_requests").val(),
+      },
+      success: function (data) {
+        // console.log(data);
+        $(".my-correction-requests-loader").hide();
+        $("#my_correction_requests").show();
+        $("#my_correction_requests").html(data);
+        $("#my_correction_requests").DataTable({
+          ordering: false,
+          paging: false,
+        });
+      },
+    });
+  }
+  $(document).on("click", ".cancel_my_correction_reqiest", function () {
+    // console.log("pasok");
+    let shift_date = $(this).attr("data-shift-date");
+    let request_id = $(this).attr("data-timesheet-attendance-correction-id");
+    let att_id = $(this).attr("data-attn-id");
+    let user_id = $(this).attr("data-user-id");
+    Swal.fire({
+      title: "Cancel this request?",
+      html:
+        "Are you sure you want to want to cancel your adjustment request for shift date <strong>" +
+        shift_date +
+        "</strong>?",
+      showCancelButton: true,
+      imageUrl: baseURL + "/assets/img/timesheet/cancel.png",
+      confirmButtonColor: "#2ca01c",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Cancel now",
+    }).then((result) => {
+      if (result.value) {
+        $.ajax({
+          url: baseURL + "/timesheet/cancel_my_correction_request",
+          type: "POST",
+          dataType: "json",
+          data: {
+            request_id: request_id,
+            att_id: att_id,
+            user_id: user_id,
+          },
+          success: function (data) {
+            show_my_correction_requests();
+            Swal.fire({
+              showConfirmButton: false,
+              timer: 2000,
+              title: "Success",
+              html:
+                "Correction request has been canceled for shift date <strong>" +
+                shift_date +
+                "</strong> has been sent!",
+              icon: "success",
+            });
+          },
+        });
+      }
+    });
+  });
+  show_my_leave_requests();
+  $(document).on("change", "#from_date_leave_requests", function () {
+    show_my_leave_requests();
+  });
+
+  $(document).on("change", "#to_date_leave_requests", function () {
+    // console.log("pasok");
+    show_my_leave_requests();
+  });
+  function show_my_leave_requests() {
+    $("#my_leave_requests").hide();
+    $(".my-leave-requests-loader").show();
+    $.ajax({
+      url: baseURL + "/timesheet/show_my_leave_requests",
+      type: "POST",
+      dataType: "json",
+      data: {
+        date_from: $("#from_date_leave_requests").val(),
+        date_to: $("#to_date_leave_requests").val(),
+      },
+      success: function (data) {
+        // console.log(data);
+        $(".my-leave-requests-loader").hide();
+        $("#my_leave_requests").show();
+        $("#my_leave_requests_body").html(data.display);
+        if (!data.hide_action) {
+          $(".leave_request_action_td").hide();
+        } else {
+          $(".leave_request_action_td").show();
+        }
+      },
+    });
+  }
+
+  $(document).on("click", ".cancel_my_leave_request", function () {
+    // console.log("pasok");
+    let date_filed = $(this).attr("data-date-filed");
+    let leave_id = $(this).attr("data-leave-id");
+    let user_id = $(this).attr("data-user-id");
+    let leave_type = $(this).attr("data-leave-type");
+    Swal.fire({
+      title: "Cancel this leave request?",
+      html:
+        "Are you sure you want to want to cancel this leave request that you filed last <strong>" +
+        date_filed +
+        "</strong>?",
+      showCancelButton: true,
+      imageUrl: baseURL + "/assets/img/timesheet/cancel.png",
+      confirmButtonColor: "#2ca01c",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Cancel now",
+    }).then((result) => {
+      if (result.value) {
+        $.ajax({
+          url: baseURL + "/timesheet/cancel_my_leave_request",
+          type: "POST",
+          dataType: "json",
+          data: {
+            date_filed: date_filed,
+            leave_id: leave_id,
+            user_id: user_id,
+          },
+          success: function (data) {
+            show_my_leave_requests();
+            Swal.fire({
+              showConfirmButton: false,
+              timer: 2000,
+              title: "Success",
+              html:
+                "Your  " +
+                leave_type +
+                " request that was filed last <strong>" +
+                date_filed +
+                "</strong> has been canceled!",
+              icon: "success",
+            });
+          },
+        });
+      }
+    });
+  });
 });
 
 function edit_attendance_log_form_changed() {

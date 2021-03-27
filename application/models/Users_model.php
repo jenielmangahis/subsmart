@@ -137,6 +137,37 @@ class Users_model extends MY_Model {
 		return $query->result();
 	}
 
+	public function getCompanyUsersWithFilter($status = [1], $order = 'asc', $orderColumn = 'name')
+	{
+		$this->db->where('company_id', logged('company_id'));
+		$this->db->where_in('status', $status);
+		switch ($orderColumn) {
+			case 'pay_rate' :
+				$this->db->order_by('pay_rate', $order);
+			break;
+			case 'pay_method' :
+				// $this->db->order_by();
+			break;
+			case 'status' :
+				$this->db->order_by('status', $order);
+			break;
+			case 'email_address' : 
+				$this->db->order_by('email', $order);
+			break;
+			case 'phone_number' :
+				$this->db->order_by('phone', $order);
+				$this->db->order_by('mobile', $order);
+			break;
+			default :
+				$this->db->order_by('LName', $order);
+				$this->db->order_by('FName', $order);
+			break;
+		}
+
+		$query = $this->db->get($this->table);
+		return $query->result();
+	}
+
 	public function getTotalUsers(){
         $this->db->where('id', getLoggedUserID());
 	    $this->db->or_where('company_id',logged('company_id'));
