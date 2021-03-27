@@ -21,7 +21,7 @@
       object-fit: cover;
       margin: 0 auto;
       max-height: 120px;
-      border-radius: 69px;
+      /*border-radius: 69px;*/
     }
     div[role="wrapper"] .navbar-side .nav li > a {
         color: #fff;

@@ -25,7 +25,7 @@
       object-fit: cover;
       margin: 0 auto;
       max-height: 120px;
-      border-radius: 69px;
+      /*border-radius: 69px;*/
     }
     svg#svg-sprite-menu-close {
       position: relative;

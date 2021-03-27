@@ -5836,7 +5836,8 @@ div.dataTables_wrapper div.dataTables_filter {
 .navbar-side .nav .nav-close {
     display: inline-block;
     position: absolute;
-    top: 5px;
+    /*top: 5px;*/
+    top: 122px;
     right: 10px;
     cursor: pointer;
     z-index: 1;
