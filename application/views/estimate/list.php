@@ -248,13 +248,13 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                             </a>
                                         </td>
                                         <td>
-                                          <?php 
+                                          <?php
                                             if( $estimate->is_mail_open == 1 ){
                                               echo "<i class='fa fa-eye'></i>  ";
                                             }
-                                            echo $estimate->status;                                              
+                                            echo $estimate->status;
                                           ?>
-                                          
+
                                         </td>
                                         <td>
                                             <?php if (is_serialized($estimate->estimate_eqpt_cost)) { ?>

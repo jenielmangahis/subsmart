@@ -10633,12 +10633,19 @@ select#select-employee {
     float: left;
     width: 100%;
 }
+nav.navbar-side.d-none.d-md-block:not(.closed) ul span svg#svg-sprite-menu-close {
+    position: relative !important;
+    top: 133px !important;
+}
+nav.navbar-side.d-none.d-md-block:not(.closed) ul span{
+    height: 22px !important;
+}
 img.company-logo {
-  width: 100px;
+  width: 200px;
   height: 100px;
-  object-fit: cover;
+  object-fit: contain;
   margin: 0 auto;
-  max-height: 120px;
+  margin-top: 10px;
 }
 .progress-fill-card .top-block {
     justify-content: space-between;
