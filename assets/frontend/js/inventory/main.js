@@ -277,7 +277,9 @@ function populateItem(item) {
   $("#itemName").val(item.title);
   $("#descriptionItem").val(item.description);
   $("#brandField").val(item.brand);
-  $("#costField").val(item.price);
+  $('#rebate_item').prop('checked', item.rebate_item === 1 || item.rebate_item === "1");
+  $("#retailPrice").val(item.price);
+  $("#costField").val(item.cost);
   $("#unitItem").val(item.units);
   $("#productUrlItem").val(item.url);
   $("#cogsItem").val(item.COGS);

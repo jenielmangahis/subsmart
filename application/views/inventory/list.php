@@ -303,6 +303,12 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
                                         </div>
                                         <div class="row col-md-12 pt-2">
+                                            <!-- <label class="col-md-2 pt-2 pl-0 text-left"></label> -->
+                                            <div class="col-md-2 pt-2 pl-0" style="margin-left:17%;">
+                                                <input type="checkbox" id="rebateField" name="cost" value="0">
+                                                <label>Rebate Item</label></div>
+                                        </div>
+                                        <div class="row col-md-12 pt-2">
                                             <label class="col-md-2 pt-2 pl-0 text-left">Brand</label>
                                             <input type="text" id="brandField" name="brand" class="form-control col-md-5" required>
                                             <button type="button" class="btn btn-default col-md-2 ml-3" id="closeAddNewItem">Close</button>
@@ -310,6 +316,10 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         <div class="row col-md-12 pt-2">
                                             <label class="col-md-2 pt-2 pl-0 text-left">Cost</label>
                                             <input type="text" id="costField" name="cost" class="form-control col-md-5" required>
+                                        </div>
+                                        <div class="row col-md-12 pt-2">
+                                            <label class="col-md-2 pt-2 pl-0 text-left">Retail Price</label>
+                                            <input type="text" id="retailField" name="retailField" class="form-control col-md-5" required>
                                         </div>
                                         <div class="row col-md-12 pt-2">
                                             <label class="col-md-2 pt-2 pl-0 text-left">Cost Per</label>

@@ -4,6 +4,13 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     tr.hide-table-padding td {
         padding: 0;
     }
+    svg#svg-sprite-menu-close {
+      position: relative;
+      bottom: 178px !important;
+    }
+    .nav-close {
+        margin-top: 52% !important;
+    }
 </style>
 <?php include viewPath('includes/header'); ?>
 <div class="wrapper" role="wrapper" style="">
@@ -11,7 +18,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     <div wrapper__section>
         <div class="container-fluid">
             <div class="page-title-box">
-                
+
                 <div style="background-color:white;height:80%;padding:2%;margin-top:1.3%;">
                 <!-- <h3 style="font-family: Sarabun, sans-serif">&nbsp;Bank and Credit Cards</h3> -->
                     <div class="col-sm-12">
@@ -20,7 +27,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 <div class="row" style="padding-bottom: 20px;">
                     <div class="col-md-4">
                         <!-- <h2>Bank and Credit Cards</h2> -->
-                        
+
                         <!-- <div class="row"> -->
                             <div class="col-md-12 banking-tab-container" style="padding-top:2%;width:350px;">
                                 <a href="<?php echo url('/accounting/link_bank')?>" class="banking-tab<?php echo ($this->uri->segment(1)=="link_bank")?:'-active';?>" style="text-decoration: none">Banking</a>
@@ -608,6 +615,3 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         });
     });
 </script>
-
-
-

@@ -85,6 +85,10 @@ div[wrapper__section] [role="white__holder"] .profile-subtitle {
     line-height: 13px;
     padding: 3px 10px 4px 10px;
 }
+
+.nav-close{
+        margin-top: 2% !important;
+    }
 </style>
 <?php include viewPath('includes/header'); ?>
     <!-- page wrapper start -->

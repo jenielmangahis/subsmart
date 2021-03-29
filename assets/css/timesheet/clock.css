@@ -262,3 +262,13 @@ div.dataTables_wrapper div.dataTables_filter {
   color: #ffffff;
   cursor: pointer;
 }
+div#show_my_attendance_remarks_info {
+  display: none;
+}
+#show_my_attendance_remarks tbody tr td {
+  height: 20px;
+}
+.navbar-side .nav .nav-close {
+  margin-top: 0px !important;
+  top: 0px;
+}

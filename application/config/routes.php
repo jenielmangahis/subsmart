@@ -386,6 +386,11 @@ $route['accounting/reconcile/view/download/(:any)'] = 'accounting_controllers/re
 
 $route['accounting/employees'] = 'accounting_controllers/employees/index';
 $route['accounting/employees/load']['post'] = 'accounting_controllers/employees/load_employees';
+$route['accounting/employees/add'] = 'accounting_controllers/employees/add';
+$route['accounting/employees/create']['post'] = 'accounting_controllers/employees/create';
+$route['accounting/employees/edit/(:any)'] = 'accounting_controllers/employees/edit/$1';
+$route['accounting/employees/update/(:any)']['post'] = 'accounting_controllers/employees/update/$1';
+$route['accounting/employees/delete/(:any)'] = 'accounting_controllers/employees/delete/$1';
 
 $route['accounting/vendor-details/(:any)'] = 'accounting/vendordetails/$1';
 $route['accounting/taxes/edit-settings'] = 'taxes/edit_settings';

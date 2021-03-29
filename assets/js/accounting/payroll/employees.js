@@ -9,6 +9,91 @@ function showCol(el)
     }
 }
 
+function initElements(method)
+{
+    $(`#${method}-employee-modal #hire_date`).datepicker({
+        uiLibrary: 'bootstrap',
+        todayBtn: "linked",
+        language: "de"
+    });
+
+    $(`#${method}-employee-modal select`).select2();
+
+    $(`#${method}-employee-modal #title`).select2({
+        placeholder: 'Select Title',
+        allowClear: true,
+        width: 'resolve',
+        delay: 250,
+        ajax: {
+            url: '/users/getRoles',
+            type: "GET",
+            dataType: "json",
+            data: function(params) {
+                var query = {
+                    search: params.term
+                };
+                return query;
+            },
+            processResults: function(response) {
+                return {
+                    results: response
+                };
+            },
+            cache: true
+        }
+    });
+
+    var elems = Array.prototype.slice.call(document.querySelectorAll('.js-switch'));
+
+    elems.forEach(function(html) {
+        var switchery = new Switchery(html, {
+            size: 'small'
+        });
+    });
+
+    var fname = [];
+    var selected = [];
+    var profilePhoto = new Dropzone('#employeeProfilePhoto', {
+        url: '/users/profilePhoto',
+        acceptedFiles: "image/*",
+        maxFilesize: 20,
+        maxFiles: 1,
+        addRemoveLinks: true,
+        init: function() {
+            this.on("success", function(file, response) {
+                var file_name = JSON.parse(response)['photo'];
+                fname.push(file_name.replace(/\"/g, ""));
+                selected.push(file);
+                $('#photoIdAdd').val(JSON.parse(response)['id']);
+                $('#photoNameAdd').val(JSON.parse(response)['photo']);
+            });
+        },
+        removedfile: function(file) {
+            var name = fname;
+            var index = selected.map(function(d, index) {
+                if (d == file) return index;
+            }).filter(isFinite)[0];
+            $.ajax({
+                type: "POST",
+                url: base_url + 'users/removeProfilePhoto',
+                dataType: 'json',
+                data: {
+                    name: name,
+                    index: index
+                },
+                success: function(data) {
+                    if (data == 1) {
+                        $('#photoId').val(null);
+                    }
+                }
+            });
+            //remove thumbnail
+            var previewElement;
+            return (previewElement = file.previewElement) != null ? (previewElement.parentNode.removeChild(file.previewElement)) : (void 0);
+        }
+    });
+}
+
 $('#employee-status').select2({
     minimumResultsForSearch: -1
 });
@@ -33,8 +118,54 @@ $('#privacy').on('change', function() {
     }
 });
 
+$('#add-employee-button').on('click', function(e) {
+    e.preventDefault();
+
+    $.get('/accounting/employees/add', function(res) {
+        $('.append-modal').html(res);
+        
+        initElements('add');
+
+        $('#add-employee-modal').modal('show');
+    });
+});
+
+$(document).on('click', '.showPass', function() {
+    $(this).toggleClass('fa-eye-slash');
+    if ($(this).prev('input[type="password"]').length == 1) {
+        $(this).prev('input[type="password"]').attr('type', 'text');
+        $(this).attr('title', 'Hide password').attr('data-original-title', 'Hide password').tooltip('update').tooltip('show');
+    } else {
+        $(this).prev('input[type="text"]').attr('type', 'password');
+        $(this).attr('title', 'Show password').attr('data-original-title', 'Show password').tooltip('update').tooltip('show');
+    }
+});
+
+$(document).on('click', '.showConfirmPass', function() {
+    $(this).toggleClass('fa-eye-slash');
+    if ($(this).prev('input[type="password"]').length == 1) {
+        $(this).prev('input[type="password"]').attr('type', 'text');
+        $(this).attr('title', 'Hide password').attr('data-original-title', 'Hide password').tooltip('update').tooltip('show');
+    } else {
+        $(this).prev('input[type="text"]').attr('type', 'password');
+        $(this).attr('title', 'Show password').attr('data-original-title', 'Show password').tooltip('update').tooltip('show');
+    }
+});
+
 var element = document.querySelector('#privacy');
 var switchery = new Switchery(element, {size: 'small'});
+
+$(document).on('click', '#employees-table tbody tr', function() {
+    var data = table.row($(this)).data();
+
+    $.get('/accounting/employees/edit/'+data.id, function(res) {
+        $('.append-modal').html(res);
+
+        initElements('edit');
+
+        $('#edit-employee-modal').modal('show');
+    });
+});
 
 var table = $('#employees-table').DataTable({
     autoWidth: false,

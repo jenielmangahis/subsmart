@@ -168,6 +168,13 @@ class Users_model extends MY_Model {
 		return $query->result();
 	}
 
+	public function getRoleById($role_id)
+	{
+		$this->db->where('id', $role_id);
+		$query = $this->db->get('roles');
+		return $query->row();
+	}
+
 	public function getTotalUsers(){
         $this->db->where('id', getLoggedUserID());
 	    $this->db->or_where('company_id',logged('company_id'));

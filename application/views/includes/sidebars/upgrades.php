@@ -23,17 +23,9 @@
     div[role="wrapper"] .navbar-side .nav li > a {
         padding: 10px 15px !important;
     }
-    img.company-logo {
-      width: 100px;
-      height: 100px;
-      object-fit: cover;
-      margin: 0 auto;
-      max-height: 120px;
-      border-radius: 69px;
-    }
     svg#svg-sprite-menu-close {
       position: relative;
-      bottom: 64px;
+      bottom: 131px;
     }
 </style>
 <nav class="navbar-side d-none d-md-block">

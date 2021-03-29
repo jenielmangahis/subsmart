@@ -22,6 +22,7 @@ class Workorder extends MY_Controller
         $this->load->model('Workorder_model', 'workorder_model');
         $this->load->model('Jobs_model', 'jobs_model');
         $this->load->model('Estimate_model', 'estimate_model');
+        $this->load->model('accounting_invoices_model');
         
         $user_id = getLoggedUserID();
 
@@ -1416,6 +1417,133 @@ class Workorder extends MY_Controller
         $this->page_data['page_title'] = "Work Order";
         // print_r($this->page_data);
         $this->load->view('workorder/addNewworkOrder', $this->page_data);
+    }
+
+    public function savenewWorkorder(){
+        $company_id  = getLoggedCompanyID();
+        $user_id  = getLoggedUserID();
+
+        $new_data = array(
+            
+            'workorder_number' => $this->input->post('workorder_number'),
+            'customer_id' => $this->input->post('customer_id'),
+            'security_number' => $this->input->post('security_number'),
+            'birthdate' => $this->input->post('birthdate'),
+            'phone_number' => $this->input->post('phone_number'),
+            'mobile_number' => $this->input->post('mobile_number'),
+            'email' => $this->input->post('email'),
+            'job_location' => $this->input->post('job_location'),
+            'city' => $this->input->post('city'),
+            'state' => $this->input->post('state'),
+            'zip_code' => $this->input->post('zip_code'),
+            'cross_street' => $this->input->post('cross_street'),
+            'password' => $this->input->post('password'),
+            'offer_code' => $this->input->post('offer_code'),//
+            'job_tag' => $this->input->post('job_tag'),
+            'schedule_date_given' => $this->input->post('schedule_date_given'),
+            'job_type' => $this->input->post('job_type'),
+            'job_name' => $this->input->post('job_name'),
+            'job_description' => $this->input->post('job_description'),
+            'payment_method' => $this->input->post('payment_method'),
+            'payment_amount' => $this->input->post('payment_amount'),
+            'account_holder_name' => $this->input->post('account_holder_name'),
+            'account_number' => $this->input->post('account_number'),
+            'expiry' => $this->input->post('expiry'),
+            'cvc' => $this->input->post('cvc'),
+            'terms_conditions' => $this->input->post('terms_conditions'),
+            'status' => $this->input->post('status'),
+            'priority' => $this->input->post('priority'),
+            'purchase_order_number' => $this->input->post('purchase_order_number'),
+            'terms_of_use' => $this->input->post('terms_of_use'),
+            'instructions' => $this->input->post('instructions'),
+
+            //signature
+            // 'company_representative_signature' => $this->input->post('company_representative_signature'),
+            // 'company_representative_name' => $this->input->post('company_representative_name'),
+            // 'primary_account_holder_signature' => $this->input->post('primary_account_holder_signature'),
+            // 'primary_account_holder_name' => $this->input->post('primary_account_holder_name'),
+            // 'secondary_account_holder_signature' => $this->input->post('secondary_account_holder_signature'),
+            // 'secondary_account_holder_name' => $this->input->post('secondary_account_holder_name'),
+            'company_representative_signature' => 'company_representative_signature',
+            'company_representative_name' => 'company_representative_name',
+            'primary_account_holder_signature' => 'primary_account_holder_signature',
+            'primary_account_holder_name' => 'primary_account_holder_name',
+            'secondary_account_holder_signature' => 'secondary_account_holder_signature',
+            'secondary_account_holder_name' => 'secondary_account_holder_name',
+            
+
+            //attachment
+            // 'attached_photo' => $this->input->post('attached_photo'),
+            // 'document_links' => $this->input->post('document_links'),
+            'attached_photo' => 'attached_photo',
+            'document_links' => 'document_links',
+
+            'subtotal' => $this->input->post('subtotal'),
+            'taxes' => $this->input->post('taxes'), 
+            'adjustment_name' => $this->input->post('adjustment_name'),
+            'adjustment_value' => $this->input->post('adjustment_value'),
+            'voucher_value' => $this->input->post('voucher_value'),
+            'grand_total' => $this->input->post('grand_total'),
+
+            'user_id' => $user_id,
+            'company_id' => $company_id,
+            'date_created' => date("Y-m-d H:i:s"),
+            'date_updated' => date("Y-m-d H:i:s")
+        );
+
+        $addQuery = $this->workorder_model->save_workorder($new_data);
+
+        
+        $custom_data = array(
+            
+            'custom1_field' => $this->input->post('custom1_field'),
+            'custom1_value' => $this->input->post('custom1_value'),
+            'custom2_field' => $this->input->post('custom2_field'),
+            'custom2_value' => $this->input->post('custom2_value'),
+            'custom3_field' => $this->input->post('custom3_field'),
+            'custom3_value' => $this->input->post('custom3_value'),
+            'custom4_field' => $this->input->post('custom4_field'),
+            'custom4_value' => $this->input->post('custom4_value'),
+            'custom5_field' => $this->input->post('custom5_field'),
+            'custom5_value' => $this->input->post('custom5_value'),
+            'workorder_id' => $addQuery,
+        );
+
+        $custom_dataQuery = $this->workorder_model->save_custom_fields($custom_data);
+
+
+        if($addQuery > 0){
+            $a = $this->input->post('items');
+            $b = $this->input->post('item_type');
+            $d = $this->input->post('quantity');
+            $f = $this->input->post('price');
+            $g = $this->input->post('discount');
+            $h = $this->input->post('tax');
+            $ii = $this->input->post('total');
+
+            $i = 0;
+            foreach($a as $row){
+                $data['item'] = $a[$i];
+                $data['item_type'] = $b[$i];
+                $data['qty'] = $d[$i];
+                $data['cost'] = $f[$i];
+                $data['discount'] = $g[$i];
+                $data['tax'] = $h[$i];
+                $data['total'] = $ii[$i];
+                $data['type'] = 'Work Order';
+                $data['type_id'] = $addQuery;
+                // $data['status'] = '1';
+                $data['created_at'] = date("Y-m-d H:i:s");
+                $data['updated_at'] = date("Y-m-d H:i:s");
+                $addQuery2 = $this->accounting_invoices_model->additem_details($data);
+                $i++;
+            }
+
+           redirect('workorder');
+        }
+        else{
+            echo json_encode(0);
+        }
     }
 }
 

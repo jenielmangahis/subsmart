@@ -33,7 +33,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 </div>
             </div>
             <!-- end row -->
-            <?php echo form_open_multipart('accounting/savenewWorkOrder', [ 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?>  
+            <?php echo form_open_multipart('workorder/savenewWorkorder', [ 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?>  
 
             <div class="row" style="margin-top:-30px;">
                 <div class="col-xl-12">
@@ -52,7 +52,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         <div class="row">                   
                             <div class="col-md-3 form-group">
                                 <label for="contact_name">Work Order #</label>
-                                <input type="text" class="form-control" name="contact_name" id="contact_name" required autofocus />
+                                <input type="text" class="form-control" name="workorder_number" id="contact_name" required autofocus />
                             </div>
                             <div class="col-md-3 form-group">
                                 <label for="contact_email">Select Customer</label><label style="float:right;color:green;"><i class="fa fa-plus-square" aria-hidden="true"></i> New Customer</label>
@@ -75,11 +75,11 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         <div class="row">                   
                             <div class="col-md-3 form-group">
                                 <label for="phone_no">Phone Number</label>
-                                <input type="text" class="form-control" name="phone_no" id="phone_no" required  />
+                                <input type="text" class="form-control" name="phone_number" id="phone_no"  />
                             </div>
                             <div class="col-md-3 form-group">
                                 <label for="mobile_no">Mobile Number</label>
-                                <input type="text" class="form-control" name="mobile_no" id="mobile_no" required  />
+                                <input type="text" class="form-control" name="mobile_number" id="mobile_no"  />
                             </div>
                             <div class="col-md-3 form-group">
                                 <label for="email">Email</label>
@@ -110,7 +110,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <label for="zip">
                                     Zip code
                                 </label>
-                                    <input type="text" class="form-control" name="zip" id="zip" />
+                                    <input type="text" class="form-control" name="zip_code" id="zip" />
                             </div>
                             
                             <div class="col-md-3 form-group">
@@ -136,61 +136,40 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
                         <div class="row">                   
                             <div class="col-md-4 form-group">
-                                <label for="contact_phone">Password</label> <i class="fa fa-pencil" aria-hidden="true" ></i>
-                                <input type="text" class="form-control" name="contact_phone" id="contact_phone" placeholder="Password" />
+                                <label for="contact_phone">Password</label> 
+                                <!-- <i class="fa fa-pencil" aria-hidden="true" ></i> -->
+                                <input type="text" class="form-control" name="password" id="password" placeholder="Password" />
                             </div>
                             <div class="col-md-4 form-group">
-                                <label for="suit">Custom Field</label> <i class="fa fa-pencil" aria-hidden="true"></i>
-                                <input type="text" class="form-control" name="suit" id="suit"/>
+                                <label for="suit" class="mytxt">Custom Field</label> <i class="fa fa-pencil" aria-hidden="true"></i>
+                                <input type="text" class="form-control" name="custom1_value" id="custom1_value"/>
+                                <input type="hidden" class="custom1" name="custom1_field">
                             </div>
                         </div>
                         <div class="row">     
                             <div class="col-md-4 form-group">
-                                <label for="suit">Custom Field</label> <i class="fa fa-pencil" aria-hidden="true"></i>
-                                <input type="text" class="form-control" name="suit" id="suit"/>
+                                <label for="suit" class="mytxt2">Custom Field</label> <i class="fa fa-pencil" aria-hidden="true"></i>
+                                <input type="text" class="form-control" name="custom2_value" id="custom2_value"/>
+                                <input type="hidden" class="custom2" name="custom2_field">
                             </div>
                             <div class="col-md-4 form-group">
-                                <label for="suit">Custom Field</label> <i class="fa fa-pencil" aria-hidden="true"></i>
-                                <input type="text" class="form-control" name="suit" id="suit"/>
+                                <label for="suit" class="mytxt3">Custom Field</label> <i class="fa fa-pencil" aria-hidden="true"></i>
+                                <input type="text" class="form-control" name="custom3_value" id="custom3_value"/>
+                                <input type="hidden" class="custom3" name="custom3_field">
                             </div>
                         </div>
                         <div class="row">     
                             <div class="col-md-4 form-group">
-                                <label for="suit">Custom Field</label> <i class="fa fa-pencil" aria-hidden="true"></i>
-                                <input type="text" class="form-control" name="suit" id="suit"/>
+                                <label for="suit" class="mytxt4">Custom Field</label> <i class="fa fa-pencil" aria-hidden="true"></i>
+                                <input type="text" class="form-control" name="custom4_value" id="custom4_value"/>
+                                <input type="hidden" class="custom4" name="custom4_field">
                             </div>
                             <div class="col-md-4 form-group">
-                                <label for="suit">Custom Field</label> <i class="fa fa-pencil" aria-hidden="true"></i>
-                                <input type="text" class="form-control" name="suit" id="suit"/>
+                                <label for="suit" class="mytxt5">Custom Field</label> <i class="fa fa-pencil" aria-hidden="true"></i>
+                                <input type="text" class="form-control" name="custom5_value" id="custom5_value"/>
+                                <input type="hidden" class="custom5" name="custom5_field">
                             </div>
                         </div>
-                        <!-- <div class="row">
-                            <div class="col-md-4 form-group">
-                                    <label for="state">State/Province</label>
-                                    <select name="state" id="state" class="form-control">
-                                        <option value="">Select</option>
-                                        <?php foreach($states as $key=>$val) { ?>
-
-                                        <option value="<?php echo $key?>"><?php echo $val;?></option>
-                                        <?php }?>
-                                    </select>
-                            </div>                    
-                        </div> -->
-                        <!-- <div class="row">
-                            <div class=" col-md-9">
-                                <div class="work_nore">
-                                    <h6>Work Order Items</h6>
-                                    <p> You can set up the products or services for this work order. </p>
-                                    <p><strong class="red">Note: prices will not be shown to the assigned employees but only to you. </strong></p>
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <label>Show qty as:</label>
-                                <select class="custom-select form-control">
-                                    <option>Quanity</option>
-                                </select>
-                            </div>
-                        </div><br/> -->
                         <div class="row" style="background-color:white;font-size:16px;">
                                 <div class="col-md-3">
                                     <a href="#" style="color:#02A32C;"><b>Items list</b></a> | <b>Items Summary</b>
@@ -263,15 +242,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                     <option value="service">Service</option>
                                                     <option value="fee">Fee</option>
                                                 </select></td>
-                                            <!-- <td> -->
-                                                <!-- <input type="text" class="form-control getItems"
-                                                       onKeyup="getItems(this)" name="desc[]">
-                                                <ul class="suggestions"></ul> -->
-                                                <!-- <input type="text" class="form-control" name="desc[]"> -->
-                                            <!-- </td> -->
                                             <td width="150px"><input type="number" class="form-control quantity" name="quantity[]"
                                                        data-counter="0" id="quantity_0" value="1"></td>
-                                            <!-- <td><input type="text" class="form-control" name="location[]"></td> -->
                                             <td width="150px"><input type="number" class="form-control price" name="price[]"
                                                        data-counter="0" id="price_0" min="0" value="0"></td>
                                             <td width="150px"><input type="number" class="form-control discount" name="discount[]"
@@ -334,17 +306,17 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                             <td>Subtotal</td>
                                             <td></td>
                                             <td>$ <span id="span_sub_total_invoice">0.00</span>
-                                                <input type="hidden" name="sub_total" id="item_total"></td>
+                                                <input type="hidden" name="subtotal" id="item_total"></td>
                                         </tr>
                                         <tr>
                                             <td>Taxes</td>
                                             <td></td>
-                                            <td>$ <span id="total_tax_">0.00</span><input type="hidden" name="total_tax_" id="total_tax_input"></td>
+                                            <td>$ <span id="total_tax_">0.00</span><input type="hidden" name="taxes" id="total_tax_input"></td>
                                         </tr>
                                         <tr>
                                             <td style="width:250px;"><input type="text" name="adjustment_name" id="adjustment_name" placeholder="Adjustment Name" class="form-control" style="width:200px; display:inline; border: 1px dashed #d1d1d1"></td>
                                             <td style="width:150px;">
-                                            <input type="number" name="adjustment_input" id="adjustment_input" value="0" class="form-control adjustment_input" style="width:100px; display:inline-block">
+                                            <input type="number" name="adjustment_value" id="adjustment_input" value="0" class="form-control adjustment_input" style="width:100px; display:inline-block">
                                                 <span class="fa fa-question-circle" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Optional it allows you to adjust the total amount Eg. +10 or -10." data-original-title="" title=""></span>
                                             </td>
                                             <td>0.00</td>
@@ -357,7 +329,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         <tr>
                                             <td>Voucher</td>
                                             <td></td>
-                                            <td><span id="offer_cost">0.00</span><input type="hidden" name="offer_cost" id="offer_cost_input"></td>
+                                            <td><span id="offer_cost">0.00</span><input type="hidden" name="voucher_value" id="offer_cost_input"></td>
                                         </tr>
                                         <tr>
                                             <td><b>Grand Total ($)</b></td>
@@ -417,10 +389,10 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         <div class="row">
                             <div class="col-md-4 form-group">
                                 <label for="Job Tag">Job Tag</label><label style="float:right;color:green;">Manage Tag</label>
-                                <!-- <input type="text" class="form-control" name="city" id="city" placeholder="Enter City"/> -->
-                                <select class="form-control">
+                                <input type="text" class="form-control" name="job_tag" id="job_tag" />
+                                <!-- <select class="form-control">
                                             <option>---</option>
-                                </select>
+                                </select> -->
                             </div>
                         </div>
                             <!-- <div class="row">                        
@@ -475,7 +447,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                             <div class="row">                        
                                 <div class="form-group col-md-4">
                                     <label for="contact_name">Schedule Date Given</label>
-                                    <input type="text" class="form-control" name="date_issued" id="date_issued" required />
+                                    <input type="text" class="form-control" name="schedule_date_given" id="schedule_date_given" />
                                 </div>
                                 <div class="form-group col-md-4">
                                     <label for="job_type">Job Type</label>
@@ -495,7 +467,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 </div>
                                 <div class="form-group col-md-4">
                                     <label for="job_desc">Job Description</label>
-                                    <textarea name="job_desc" id="job_desc" cols="5" rows="2" class="form-control"></textarea> 
+                                    <textarea name="job_description" id="job_desc" cols="5" rows="2" class="form-control"></textarea> 
                                 </div>                                           
                             </div>
 
@@ -503,7 +475,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                             <div class="row">                   
                                 <div class="form-group col-md-4">
                                     <label for="job_type">Method</label>
-                                    <select name="job_type" id="job_type" class="form-control custom-select">
+                                    <select name="payment_method" id="payment_method" class="form-control custom-select">
                                         <option value="">Choose method</option>
                                         <option value="Cash">Cash</option>
                                         <option value="Check">Check</option>
@@ -512,27 +484,27 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 </div>      
                                 <div class="form-group col-md-4">
                                     <label for="job_type">Amount</label><small class="help help-sm"> ( $ )</small>
-                                    <input type="text" class="form-control" name="pay_amount" id="pay_amount" required />
+                                    <input type="text" class="form-control" name="payment_amount" id="payment_amount" required />
                                 </div>                                       
                             </div>
                             <div class="row">                   
                                 <div class="form-group col-md-4">
                                     <label for="job_type">Account Holder Name</label>
-                                    <input type="text" class="form-control" name="pay_amount" id="pay_amount" required />
+                                    <input type="text" class="form-control" name="account_holder_name" id="account_holder_name" required />
                                 </div>      
                                 <div class="form-group col-md-4">
                                     <label for="job_type">Account Number</label>
-                                    <input type="text" class="form-control" name="pay_amount" id="pay_amount" placeholder="**** **** **** **** " required />
+                                    <input type="text" class="form-control" name="account_number" id="account_number" placeholder="**** **** **** **** " required />
                                 </div>                                       
                             </div>
                             <div class="row">                   
                                 <div class="form-group col-md-4">
                                     <label for="job_type">Expiry</label>
-                                    <input type="text" class="form-control" name="pay_amount" id="pay_amount" placeholder="MM/YY" required />
+                                    <input type="text" class="form-control" name="expiry" id="expiry" placeholder="MM/YY" required />
                                 </div>      
                                 <div class="form-group col-md-4">
                                     <label for="job_type">CVC</label>
-                                    <input type="text" class="form-control" name="pay_amount" id="pay_amount" placeholder="CVC" required />
+                                    <input type="text" class="form-control" name="cvc" id="cvc" placeholder="CVC" required />
                                 </div>                                       
                             </div>
 
@@ -581,13 +553,14 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                             agrees that customized order can not be cancelled after three day of this
                                             signed document.</p>
                                     </div>
+                                    <input type="hidden" class="form-control" name="terms_conditions" id="terms_conditions" />
                                 </div>
                             </div>
                             <br><br>
                             <div class="row">                        
                                 <div class="form-group col-md-4">
                                     <label for="workorder_status">Status</label>
-                                    <select name="workorder_status" id="workorder_status" class="form-control custom-select">
+                                    <select name="status" id="workorder_status" class="form-control custom-select">
                                         <option value="New">New</option>
                                         <option value="Scheduled">Scheduled</option>
                                         <option value="Started">Started</option>
@@ -600,7 +573,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 </div>
                                 <div class="form-group col-md-4">
                                     <label for="workorder_priority">Priority</label>
-                                    <select name="workorder_priority" id="workorder_priority" class="form-control custom-select">
+                                    <select name="priority" id="workorder_priority" class="form-control custom-select">
                                         <option value="Emergency">Emergency</option>
                                         <option value="Low">Low</option>
                                         <option value="Standard">Standard</option>
@@ -613,7 +586,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                             <div class="row">                        
                                 <div class="form-group col-md-4">
                                     <label for="purchase_order">Purchase Order# (optional)</label>
-                                    <input type="text" class="form-control" name="purchase_order" id="purchase_order" /> 
+                                    <input type="text" class="form-control" name="purchase_order_number" id="purchase_order" /> 
                                 </div>                                        
                             </div>
 
@@ -633,6 +606,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         notice to ALarm Direct, Inc., 6866 Pine Forest ROad, Suite B, Pensacola, FL
                                         32526. NOT LATER THAN MIDNIGHT OF {Date plus 3 business days}
                                     </div>
+                                    <input type="hidden" class="form-control" name="terms_of_use" id="terms_of_use" />
                                 </div>
                             </div>
                             <br><br>
@@ -1026,4 +1000,75 @@ $(document).ready(function(){
 
 });
 
+</script>
+
+<script>
+$(document).on("click", "label.mytxt", function () {
+        var txt = $(".mytxt").text();
+        $(".mytxt").replaceWith("<input class='mytxt'/>");
+        $(".mytxt").val(txt);
+        $(".custom1").val(txt);
+    });
+
+    $(document).on("blur", "input.mytxt", function () {
+        var txt = $(this).val();
+        $(this).replaceWith("<label class='mytxt'></label>");
+        $(".mytxt").text(txt);
+        $(".custom1").val(txt);
+});
+$(document).on("click", "label.mytxt2", function () {
+        var txt = $(".mytxt2").text();
+        $(".mytxt2").replaceWith("<input class='mytxt2'/>");
+        $(".mytxt2").val(txt);
+        $(".custom2").val(txt);
+    });
+
+    $(document).on("blur", "input.mytxt2", function () {
+        var txt = $(this).val();
+        $(this).replaceWith("<label class='mytxt2'></label>");
+        $(".mytxt2").text(txt);
+        $(".custom2").val(txt);
+});
+
+$(document).on("click", "label.mytxt3", function () {
+        var txt = $(".mytxt3").text();
+        $(".mytxt3").replaceWith("<input class='mytxt3'/>");
+        $(".mytxt3").val(txt);
+        $(".custom3").val(txt);
+    });
+
+    $(document).on("blur", "input.mytxt3", function () {
+        var txt = $(this).val();
+        $(this).replaceWith("<label class='mytxt3'></label>");
+        $(".mytxt3").text(txt);
+        $(".custom3").val(txt);
+});
+
+$(document).on("click", "label.mytxt4", function () {
+        var txt = $(".mytxt4").text();
+        $(".mytxt4").replaceWith("<input class='mytxt4'/>");
+        $(".mytxt4").val(txt);
+        $(".custom4").val(txt);
+    });
+
+    $(document).on("blur", "input.mytxt4", function () {
+        var txt = $(this).val();
+        $(this).replaceWith("<label class='mytxt4'></label>");
+        $(".mytxt4").text(txt);
+        $(".custom4").val(txt);
+});
+
+$(document).on("click", "label.mytxt5", function () {
+        var txt = $(".mytxt5").text();
+        $(".mytxt5").replaceWith("<input class='mytxt5'/>");
+        $(".mytxt5").val(txt);
+        $(".custom5").val(txt);
+    });
+
+    $(document).on("blur", "input.mytxt5", function () {
+        var txt = $(this).val();
+        $(this).replaceWith("<label class='mytxt5'></label>");
+        $(".mytxt5").text(txt);
+        $(".custom5").val(txt);
+});
 </script>

@@ -1069,19 +1069,44 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                                                 <span>Remarks</span>
                                                             </div>
                                                             <div class="user-logs">
-                                                                <div class="user-logs-section">
-                                                                    <div class="user-clock-in-title">Timezone: </div>
-                                                                    <div class="user-clock-in-title">Task: </div>
-                                                                    <div class="user-clock-out-title">Start time: </div>
-                                                                    <div class="user-lunch-in-title">End time: </div>
-                                                                    <div class="user-lunch-out-title">Estimated time duration: </div>
-                                                                </div>
-                                                                <div class="user-logs-section" style="vertical-align: top">
-                                                                    <div class="user-clock-in"><?php echo $timezone; ?></div>
-                                                                    <div class="user-clock-in"><i class="fa fa-info-circle"></i> <?php echo $task_name ?></div>
-                                                                    <div class="user-clock-out"><?php echo $start_time; ?></div>
-                                                                    <div class="user-lunch-in"><?php echo $end_time ?></div>
-                                                                    <div class="user-lunch-out"><?php echo $task_duration ?></div>
+                                                                <div class="row">
+                                                                    <div class="col-md-12">
+                                                                        <form action="#" target="_blank" method="POST">
+                                                                            <div class="row">
+                                                                                <div class="col-lg-6" style="margin-bottom: 12px">
+                                                                                    <label for="from_date_correction_requests" class="week-label">Week Date:</label>
+                                                                                    <input type="text" name="date_from" id="week_attendance_remarks" class="form-control ts_schedule" value="<?= date('m/d/Y', strtotime('monday this week')) ?>">
+                                                                                </div>
+                                                                            </div>
+                                                                        </form>
+                                                                        <table id="show_my_attendance_remarks" class="table table-bordered table-striped no-footer dataTable" role="grid" aria-describedby="otrequest-table-list_info" style="display:none;">
+                                                                            <thead>
+                                                                                <tr role="row">
+                                                                                    <th class="sorting_disabled" rowspan="1" colspan="1" style="width: 0px;">March 21</th>
+                                                                                    <th class="sorting_disabled" rowspan="1" colspan="1" style="width: 0px;">March 22</th>
+                                                                                    <th class="sorting_disabled" rowspan="1" colspan="1" style="width: 0px;">March 23</th>
+                                                                                    <th class="sorting_disabled" rowspan="1" colspan="1" style="width: 0px;">March 24</th>
+                                                                                    <th class="sorting_disabled" rowspan="1" colspan="1" style="width: 0px;">March 25</th>
+                                                                                    <th class="sorting_disabled" rowspan="1" colspan="1" style="width: 0px;">March 26</th>
+                                                                                    <th class="sorting_disabled" rowspan="1" colspan="1" style="width: 0px;">March 27</th>
+                                                                                </tr>
+                                                                            </thead>
+                                                                            <tbody>
+                                                                                <tr>
+                                                                                    <td class="center">A</td>
+                                                                                    <td class="center">A</td>
+                                                                                    <td class="center">A</td>
+                                                                                    <td class="center">A</td>
+                                                                                    <td class="center">A</td>
+                                                                                    <td class="center">A</td>
+                                                                                    <td class="center">A</td>
+                                                                                </tr>
+                                                                            </tbody>
+                                                                        </table>
+                                                                        <div class="table-ts-loader">
+                                                                            <center><img class="my-attendance-remarks-loader" src="<?= base_url() ?>/assets/css/timesheet/images/ring-loader.svg" alt=""></center>
+                                                                        </div>
+                                                                    </div>
                                                                 </div>
                                                             </div>
                                                         </div>

@@ -96,6 +96,10 @@ a.btn-primary.btn-md {
     padding: 10px !important;
   }
 }
+svg#svg-sprite-menu-close {
+  position: relative;
+  bottom: 63px;
+}
 @media only screen and (max-width: 600px) {
   .p-40 {
     padding-top: 0px !important;

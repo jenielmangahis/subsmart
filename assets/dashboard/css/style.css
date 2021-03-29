@@ -5836,7 +5836,8 @@ div.dataTables_wrapper div.dataTables_filter {
 .navbar-side .nav .nav-close {
     display: inline-block;
     position: absolute;
-    top: 5px;
+    /*top: 5px;*/
+    top: 122px;
     right: 10px;
     cursor: pointer;
     z-index: 1;
@@ -10631,6 +10632,13 @@ select#select-employee {
 .MuiCardHeader-action .jss57 {
     float: left;
     width: 100%;
+}
+img.company-logo {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  margin: 0 auto;
+  max-height: 120px;
 }
 .progress-fill-card .top-block {
     justify-content: space-between;

@@ -43,6 +43,10 @@ button#dropdown-edit {
 .subtle-txt {
     color: rgba(42, 49, 66, 0.7);
 }
+svg#svg-sprite-menu-close {
+    position: relative;
+    bottom: 180px !important;
+}
 @media only screen and (max-width: 600px) {
   .p-40 {
     padding-top: 0px !important;
@@ -59,7 +63,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 <!-- page wrapper start -->
 <div class="wrapper" role="wrapper">
     <?php include viewPath('includes/notifications'); ?>
-    <div wrapper__section class="p-40">        
+    <div wrapper__section class="p-40">
         <div class="card p-20">
             <div class="container-fluid" style="font-size:14px;">
                 <div class="row">

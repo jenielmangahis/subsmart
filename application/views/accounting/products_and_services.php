@@ -62,6 +62,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 	.dropdown-item.disabled {
 		color: #6c757d !important
 	}
+	.nav-close{
+        margin-top: 52% !important;
+    }
 </style>
 <?php include viewPath('includes/header'); ?>
 <div class="wrapper" role="wrapper">

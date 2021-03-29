@@ -186,7 +186,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                           <hr>
                           <div class="row margin-top">
                               <div class="col-sm-6">
-                                  <a class="btn btn-default margin-right btn-preview-sms" href="javascript:void(0);">Preview SMS</a>
+                                  <a class="btn btn-default margin-right btn-preview-email" href="javascript:void(0);">Preview Email</a>
                               </div>
                               <div class="col-sm-6 text-right">
                                   <a class="btn btn-default margin-right" href="<?php echo url('sms_campaigns/add_campaign_send_to/'); ?>" style="margin-right: 10px;">&laquo; Back</a>
@@ -250,6 +250,25 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 </div>
             </div>
 
+            <div class="modal fade" id="modalPreviewEmail" tabindex="-1" role="dialog" aria-labelledby="modalPreviewEmailTitle" aria-hidden="true">
+                <div class="modal-dialog" role="document" style="margin-top:5%;">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle">Preview Email</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div class="modal-body" style="padding: 0px 30px;text-align:center;">
+                        <div class="email-blast-msg"></div>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                      </div>
+                    </div>
+                </div>
+            </div>
+
             <!-- end row -->
         </div>
         <!-- end container-fluid -->
@@ -262,6 +281,14 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 $(function(){
     $(".btn-insert-smart-tags").click(function(){
         $("#modalSmartTags").modal('show');
+    });
+
+    $(".btn-stag").click(function(){
+        var sms_message = $("#sms-txt").val();
+        var tag = "{{" + $(this).attr("data-id") + "}}";
+
+        CKEDITOR.instances['mail_body'].insertHtml(tag);
+        $("#modalSmartTags").modal("hide");
     });
 
     $("#create_email_blast").submit(function(e){
@@ -289,6 +316,12 @@ $(function(){
              }
           });
         }, 1000);
+    });
+
+    $(".btn-preview-email").click(function(){
+        var email_body = CKEDITOR.instances['mail_body'].getData();
+        $("#modalPreviewEmail").modal('show');
+        $(".email-blast-msg").html(email_body);
     });
 
     // instance, using default configuration.

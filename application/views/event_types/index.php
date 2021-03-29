@@ -45,6 +45,10 @@ table.dataTable {
 table.dataTable thead tr th {
     border: 1px solid black !important;
 }
+svg#svg-sprite-menu-close {
+    position: relative;
+    bottom: 52px !important;
+}
 table.dataTable tbody tr td {
     border: 1px solid black !important;
 }

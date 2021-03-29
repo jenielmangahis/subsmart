@@ -858,12 +858,12 @@
             start: function (e, ui) {
                 // creates a temporary attribute on the element with the old index
                 $(this).attr('data-previndex', ui.item.index());
-                $(this).attr('style', 'top:0;cursor: grabbing');
+                $(this).attr('style', 'top:0;cursor: grabbing', 'z-index:10000');
 
             },
             change(event, ui)
             {
-                $(this).attr('style', 'top:0;cursor: grabbing ');
+                $(this).attr('style', 'top:0;cursor: grabbing ', 'z-index:10000');
             },
             update: function (e, ui)
             {
