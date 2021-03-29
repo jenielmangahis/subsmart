@@ -211,7 +211,10 @@ class Users extends MY_Controller {
 		//ifPermissions('businessdetail');
 		$user = (object)$this->session->userdata('logged');		
 		//print_r($user);die;
-		$cid=logged('id');
+		$comp_id = logged('company_id');	
+		$profiledata = $this->business_model->getByCompanyId($comp_id);
+
+		$this->page_data['profiledata'] = $profiledata;
 		$this->load->view('business_profile/work_pictures', $this->page_data);
 
 	}
@@ -1556,6 +1559,51 @@ class Users extends MY_Controller {
 
 	public function add_work_pictures(){
 		$this->load->view('business_profile/add_work_pictures', $this->page_data);
+	}
+
+	public function upload_work_pictures(){
+
+		$comp_id = logged('company_id');
+		if (!empty($_FILES['file']['name'])){
+			$target_dir = "./uploads/work_pictures/$comp_id/";
+			
+			if(!file_exists($target_dir)) {
+				mkdir($target_dir, 0777, true);
+			}
+
+			$tmp_name = $_FILES['file']['tmp_name'];
+			$extension = strtolower(end(explode('.',$_FILES['file']['name'])));
+			// basename() may prevent filesystem traversal attacks;
+			// further validation/sanitation of the filename may be appropriate
+			$name = basename($_FILES["file"]["name"]);
+			move_uploaded_file($tmp_name, "./uploads/work_pictures/$comp_id/$name");
+
+			$profiledata = $this->business_model->getByCompanyId($comp_id);	
+			$workImages  = unserialize($profiledata->work_images);
+			$workImages[] = ['file' => $name, 'caption' => ''];
+			$this->business_model->update($profiledata->id, ['work_images' => serialize($workImages)]);
+
+		}
+	}
+
+	public function ajax_delete_company_work_picture(){
+		$post    = $this->input->post();
+		$comp_id = logged('company_id');
+
+		$is_success = true;
+		$msg = '';
+
+		$profiledata = $this->business_model->getByCompanyId($comp_id);
+		$workImages  = unserialize($profiledata->work_images);
+		unset($workImages[$post['image_key']]);
+		$this->business_model->update($profiledata->id, ['work_images' => serialize($workImages)]);
+
+		$json_data = [
+			'is_success' => $is_success,
+			'msg' => $msg
+		];
+
+		echo json_encode($json_data);
 	}
 }
 

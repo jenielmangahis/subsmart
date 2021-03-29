@@ -52,7 +52,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     <!-- page wrapper start -->
     <div wrapper__section>
         <div class="container-fluid p-40">
-            <?php echo form_open_multipart('sms_automation/save', ['class' => 'form-validate', 'id' => 'create_sms_automation', 'autocomplete' => 'off']); ?>
+            <?php //echo form_open_multipart('sms_automation/save', ['class' => 'form-validate', 'id' => 'create_sms_automation', 'autocomplete' => 'off']); ?>
             <div class="row">
                 <div class="col-xl-12">
                     <div class="card mt-0">
@@ -77,96 +77,29 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         </div>
 
                         <div class="card-body">
+                                
+                                <script src="https://rawgit.com/enyo/dropzone/master/dist/dropzone.js"></script>
+                                <link rel="stylesheet" href="https://rawgit.com/enyo/dropzone/master/dist/dropzone.css">
+                                <!-- Change /upload-target to your upload address -->
+                                <form action="<?= url('users/upload_work_pictures'); ?>" class="dropzone"></form>
                             
-                            <div class="row fileupload-buttonbar">
-                              <div class="col-lg-7">
-                                <!-- The fileinput-button span is used to style the file input field as button -->
-                                <span class="btn btn-success fileinput-button">
-                                  <i class="glyphicon glyphicon-plus"></i>
-                                  <span>Add files...</span>
-                                  <input type="file" name="files[]" multiple />
-                                </span>
-                                <button type="submit" class="btn btn-primary start">
-                                  <i class="glyphicon glyphicon-upload"></i>
-                                  <span>Start upload</span>
-                                </button>
-                                <!-- The global file processing state -->
-                                <span class="fileupload-process"></span>
-                              </div>
-                              <!-- The global progress state -->
-                              <div class="col-lg-5 fileupload-progress fade">
-                                <!-- The global progress bar -->
-                                <div
-                                  class="progress progress-striped active"
-                                  role="progressbar"
-                                  aria-valuemin="0"
-                                  aria-valuemax="100"
-                                >
-                                  <div
-                                    class="progress-bar progress-bar-success"
-                                    style="width: 0%;"
-                                  ></div>
-                                </div>
-                                <!-- The extended global progress state -->
-                                <div class="progress-extended">&nbsp;</div>
-                              </div>
-                            </div>
-                            <!-- The table listing the files available for upload/download -->
-                            <table role="presentation" class="table table-striped">
-                              <tbody class="files"></tbody>
-                            </table>
-
                         </div>
                     </div>
                     <!-- end card -->
                 </div>
             </div>
-            <?php echo form_close(); ?>
+            <?php //echo form_close(); ?>
             <!-- end row -->
         </div>
         <!-- end container-fluid -->
     </div>
     <!-- page wrapper end -->
 </div>
-<?php include viewPath('includes/footer'); ?>
+<?php //include viewPath('includes/footer'); ?>
 <script>
-$(function(){
-    $("#create_sms_automation").submit(function(e){
-        e.preventDefault();
-        var url = base_url + 'sms_automation/save_draft_automation';
-        $(".btn-automation-save-draft").html('<span class="spinner-border spinner-border-sm m-0"></span>  Saving');
-        setTimeout(function () {
-          $.ajax({
-             type: "POST",
-             url: url,
-             dataType: "json",
-             data: $("#create_sms_automation").serialize(),
-             success: function(o)
-             {
-                if( o.is_success ){
-                    $(".validation-error").hide();
-                    $(".validation-error").html('');
-                    //redirect to step2
-                    location.href = base_url + "sms_automation/build_sms";
-                }else{
-                    $(".validation-error").show();
-                    $(".validation-error").html(o.err_msg);
-                    $(".btn-automation-save-draft").html('Continue »');
-                }
-             }
-          });
-        }, 1000);
-    });
-
-    $("#rule-event").change(function(){
-      var selected = $(this).val();
-      if( selected == 'estimate_submitted' || selected == 'invoice_due' ){
-        $(".rule-notify-description").html("After event");
-      }else if( selected == 'invoice_paid' ){
-        $(".rule-notify-description").html("After invoice was paid");
-      }else if( selected == 'work_order_completed' ){
-        $(".rule-notify-description").html("After work order was completed");
-      }
-    });
+$(document).ready(function(){
 });
 </script>
+
+
+
