@@ -4261,8 +4261,10 @@ class Timesheet extends MY_Controller
             $display .= '</td>';
             $display .= '<td>';
             $display .= '<center>';
-            $display .= '<label class="gray"><strong>Break in: </strong> ' . date('m-d-Y h:i A', strtotime($this->datetime_zone_converter($request->break_in, "UTC", $this->session->userdata('usertimezone')))) . '</label>';
-            $display .= '<label class="gray"><strong>Break out: </strong>' . date('m-d-Y h:i A', strtotime($this->datetime_zone_converter($request->break_out, "UTC", $this->session->userdata('usertimezone')))) . '</label>';
+            if ($request->break_in  != "0000-00-00 00:00:00") {
+                $display .= '<label class="gray"><strong>Break in: </strong> ' . date('m-d-Y h:i A', strtotime($this->datetime_zone_converter($request->break_in, "UTC", $this->session->userdata('usertimezone')))) . '</label>';
+                $display .= '<label class="gray"><strong>Break out: </strong>' . date('m-d-Y h:i A', strtotime($this->datetime_zone_converter($request->break_out, "UTC", $this->session->userdata('usertimezone')))) . '</label>';
+            }
             $display .= '</center>';
             $display .= '</td>';
             $display .= '<td style="text-align:center;">' . round($this->get_differenct_of_dates($request->clock_in, $request->clock_out) - $this->get_differenct_of_dates($request->break_in, $request->break_out), 2) . '</td>';
@@ -4361,6 +4363,94 @@ class Timesheet extends MY_Controller
         );
         $this->timesheet_model->update_my_leave_request($update, $leave_id);
         echo json_encode(0);
+    }
+    public function show_my_attendance_remarks()
+    {
+        $week = $this->input->post("week");
+        $user_id = logged("id");
+        $week_convert = date('Y-m-d', strtotime($week));
+        $date_this_week = array(
+            "Monday" => date("M d", strtotime('monday this week', strtotime($week_convert))),
+            "Tuesday" => date("M d", strtotime('tuesday this week', strtotime($week_convert))),
+            "Wednesday" => date("M d", strtotime('wednesday this week', strtotime($week_convert))),
+            "Thursday" => date("M d", strtotime('thursday this week', strtotime($week_convert))),
+            "Friday" => date("M d", strtotime('friday this week', strtotime($week_convert))),
+            "Saturday" => date("M d", strtotime('saturday this week', strtotime($week_convert))),
+            "Sunday" => date("M d", strtotime('sunday this week', strtotime($week_convert))),
+        );
+        $week_check = array(
+            0 => date("Y-m-d", strtotime('monday this week', strtotime($week_convert))),
+            1 => date("Y-m-d", strtotime('tuesday this week', strtotime($week_convert))),
+            2 => date("Y-m-d", strtotime('wednesday this week', strtotime($week_convert))),
+            3 => date("Y-m-d", strtotime('thursday this week', strtotime($week_convert))),
+            4 => date("Y-m-d", strtotime('friday this week', strtotime($week_convert))),
+            5 => date("Y-m-d", strtotime('saturday this week', strtotime($week_convert))),
+            6 => date("Y-m-d", strtotime('sunday this week', strtotime($week_convert))),
+            7 => date("Y-m-d", strtotime('monday next week', strtotime($week_convert))),
+        );
+        $week_dates = array(
+            0 => date("Y-m-d", strtotime('monday this week', strtotime($week_convert))),
+            1 => date("Y-m-d", strtotime('tuesday this week', strtotime($week_convert))),
+            2 => date("Y-m-d", strtotime('wednesday this week', strtotime($week_convert))),
+            3 => date("Y-m-d", strtotime('thursday this week', strtotime($week_convert))),
+            4 => date("Y-m-d", strtotime('friday this week', strtotime($week_convert))),
+            5 => date("Y-m-d", strtotime('saturday this week', strtotime($week_convert))),
+            6 => date("Y-m-d", strtotime('sunday this week', strtotime($week_convert))),
+        );
+        $remarks = array();
+        for ($i = 0; $i < 7; $i++) {
+            $shift_date = $this->datetime_zone_converter($week_check[$i], $this->session->userdata('usertimezone'), "UTC");
+            $my_attendances = $this->timesheet_model->get_my_date_attendance($shift_date, $user_id);
+            $my_schedules = $this->timesheet_model->get_my_schedule($shift_date, $user_id);
+            $checkin_time = "";
+            $shift_start = "";
+            foreach ($my_attendances as $attn) {
+                $checkin_time = $attn->checkin_time;
+            }
+            foreach ($my_schedules as $sched) {
+                $shift_start = $sched->shift_start;
+            }
+            $minutes_late = 0;
+            if ($shift_start != '') {
+                $minutes_late = $this->get_differenct_of_dates($shift_start, $checkin_time) * 60;
+            }
+            for ($x = 0; $x < count($week_dates); $x++) {
+                if ($week_dates[$x] == date('Y-m-d', strtotime($shift_date))) {
+                    if (date('Y-m-d', strtotime($shift_date)) < date('Y-m-d')) {
+                        if ($checkin_time == "") {
+                            $remarks[] = '<label style="font-size:12px; color:red;">A</label>';
+                        } elseif ($minutes_late > 0) {
+                            $remarks[] = '<label style="font-size:12px; color:red;">L</label>';
+                        } elseif ($checkin_time != "") {
+                            $remarks[] = 'P';
+                        }
+                    } else {
+                        $remarks[] = '';
+                    }
+                    break;
+                }
+            }
+        }
+        $display = "";
+        $display .= '<thead>';
+        $display .= '<tr role="row">';
+        $display .= '<th class="sorting_disabled" rowspan="1" colspan="1" style="width: 0px;"> Monday<br>' . $date_this_week['Monday'] . '</th>';
+        $display .= '<th class="sorting_disabled" rowspan="1" colspan="1" style="width: 0px;">Tuesday<br>' . $date_this_week['Tuesday'] . '</th>';
+        $display .= '<th class="sorting_disabled" rowspan="1" colspan="1" style="width: 0px;">Wednesday<br>' . $date_this_week['Wednesday'] . '</th>';
+        $display .= '<th class="sorting_disabled" rowspan="1" colspan="1" style="width: 0px;">Thursday<br>' . $date_this_week['Thursday'] . '</th>';
+        $display .= '<th class="sorting_disabled" rowspan="1" colspan="1" style="width: 0px;">Friday<br>' . $date_this_week['Friday'] . '</th>';
+        $display .= '<th class="sorting_disabled" rowspan="1" colspan="1" style="width: 0px;">Saturday<br>' . $date_this_week['Saturday'] . '</th>';
+        $display .= '<th class="sorting_disabled" rowspan="1" colspan="1" style="width: 0px;">Sunday<br>' . $date_this_week['Sunday'] . '</th>';
+        $display .= '</tr>';
+        $display .= '</thead>';
+        $display .= '<tbody>';
+        $display .= '<tr role="row">';
+        for ($i = 0; $i < count($remarks); $i++) {
+            $display .= '<td class="center">' . $remarks[$i] . '</td>';
+        }
+        $display .= '</tr>';
+        $display .= '</tbody>';
+        echo json_encode($display);
     }
 }
 

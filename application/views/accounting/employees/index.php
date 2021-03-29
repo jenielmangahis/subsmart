@@ -24,6 +24,14 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         background: #d4d7dc !important;
         border-color: #6B6C72 !important;
     }
+    .view-password {
+        position: absolute;
+        bottom: 2px;
+        right: 15px;
+        width: 24px;
+        height: 24px;
+        cursor: pointer;
+    }
 </style>
 <?php include viewPath('includes/header'); ?>
 <div class="wrapper" role="wrapper">
@@ -100,7 +108,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <div class="col-md-12">
                                         <div class="form-check float-right mb-3">
                                             <label for="privacy">Privacy </label>
-                                            <input type="checkbox" name="privacy" id="privacy" class="js-switch">
+                                            <input type="checkbox" name="privacy" id="privacy">
                                         </div>
                                     </div>
                                     <div class="col-md-6">
@@ -121,7 +129,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         <div class="action-bar h-100 d-flex align-items-center">
                                             <ul class="ml-auto">
                                                 <li><button class="btn btn-transparent">Invite to Workforce</button></li>
-                                                <li><button class="btn btn-transparent">Add an employee</button></li>
+                                                <li><button class="btn btn-transparent" type="button" id="add-employee-button">Add an employee</button></li>
                                                 <li>
                                                     <a class="hide-toggle dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                         <i class="fa fa-cog"></i>
@@ -140,7 +148,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     </div>
 
                                 </div>
-                                <table id="employees-table" class="table table-striped table-bordered" style="width:100%">
+                                <table id="employees-table" class="table table-bordered table-hover" style="width:100%">
 									<thead>
                                         <tr>
                                             <th>NAME</th>
@@ -151,7 +159,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             <th class="phone-num hide">PHONE NUMBER</th>
                                         </tr>
 									</thead>
-									<tbody></tbody>
+									<tbody class="cursor-pointer"></tbody>
 								</table>
                             </div>
                         </div>
@@ -164,6 +172,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         <!-- end container-fluid -->
     </div>
 </div>
+
+<div class="append-modal"></div>
 
 <!-- page wrapper end -->
 <?php include viewPath('includes/footer_accounting'); ?>

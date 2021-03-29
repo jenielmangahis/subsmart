@@ -1003,6 +1003,33 @@ $(document).ready(function () {
       }
     });
   });
+  show_my_attendance_remarks();
+  $(document).on("change", "#week_attendance_remarks", function () {
+    show_my_attendance_remarks();
+  });
+  function show_my_attendance_remarks() {
+    $("#show_my_attendance_remarks").hide();
+    $(".my-attendance-remarks-loader").show();
+    $("#show_my_attendance_remarks").DataTable().destroy();
+    $.ajax({
+      url: baseURL + "/timesheet/show_my_attendance_remarks",
+      type: "POST",
+      dataType: "json",
+      data: {
+        week: $("#week_attendance_remarks").val(),
+      },
+      success: function (data) {
+        // console.log(data);
+        $(".my-attendance-remarks-loader").hide();
+        $("#show_my_attendance_remarks").show();
+        $("#show_my_attendance_remarks").html(data);
+        $("#show_my_attendance_remarks").DataTable({
+          ordering: false,
+          paging: false,
+        });
+      },
+    });
+  }
 });
 
 function edit_attendance_log_form_changed() {

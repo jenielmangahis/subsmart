@@ -8,6 +8,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
       position: relative;
       bottom: 178px !important;
     }
+    .nav-close {
+        margin-top: 52% !important;
+    }
 </style>
 <?php include viewPath('includes/header'); ?>
 <div class="wrapper" role="wrapper" style="">

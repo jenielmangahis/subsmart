@@ -68,8 +68,8 @@
 defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <?php include viewPath('includes/header'); ?>
 <!-- page wrapper start -->
-<div class="wrapper" role="wrapper">
     <?php include viewPath('includes/notifications'); ?>
+<div class="wrapper" role="wrapper">
     <?php include viewPath('includes/sidebars/workorder'); ?>
     <div wrapper__section>
         <div class="container-fluid p-40">

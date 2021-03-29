@@ -186,6 +186,18 @@ class Workorder_model extends MY_Model
 //        echo $this->db->last_query(); die;
         return $query->result();
     }
+
+    public function save_workorder($data){
+		$vendor = $this->db->insert('workorders', $data);
+	    $insert = $this->db->insert_id();
+		return  $insert;
+	}
+
+    public function save_custom_fields($data){
+        $custom = $this->db->insert('workorder_custom_fields', $data);
+	    $insert = $this->db->insert_id();
+		return  $insert;
+    }
 }
 
 /* End of file Workorder_model.php */

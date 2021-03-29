@@ -7,6 +7,7 @@ class Employees extends MY_Controller {
     {
 		parent::__construct();
         $this->checkLogin();
+        $this->load->model('PayScale_model');
 
         add_css(array(
             "assets/css/accounting/banking.css?v='rand()'",
@@ -159,5 +160,144 @@ class Employees extends MY_Controller {
         ];
 
         echo json_encode($result);
+    }
+
+    public function add()
+    {
+        $role_id = logged('role');
+		if( $role_id == 1 || $role_id == 2 ){
+			$this->page_data['payscale'] = $this->PayScale_model->getAll();
+		}else{
+			$this->page_data['payscale'] = $this->PayScale_model->getAllByCompanyId($cid);
+		}
+
+        $this->load->view('accounting/employees/add_employee', $this->page_data);
+    }
+
+    public function create()
+    {
+        $data = [
+            'FName' => $this->input->post('first_name'),
+            'LName' => $this->input->post('last_name'),
+            'username' => $this->input->post('email'),
+            'email' => $this->input->post('email'),
+            'password' => hash("sha256",$this->input->post('password')),
+            'password_plain' => $this->input->post('password'),
+            'role' => $this->input->post('title'),
+            'user_type' => $this->input->post('user_type'),
+            'status' => $this->input->post('status'),
+            'company_id' => logged('company_id'),
+            'profile_img' => $this->input->post('profile_photo'),
+            'address' => $this->input->post('address'),
+            'state' => $this->input->post('state'),
+            'city' => $this->input->post('city'),
+            'postal_code' => $this->input->post('zip_code'),
+            'payscale_id' => $this->input->post('payscale'),
+            'employee_number' => $this->input->post('employee_number'),
+            'date_hired' => date('Y-m-d', strtotime($this->input->post('hire_date')))
+        ];
+
+        $last_id = $this->users_model->addNewEmployee($data);
+
+        $this->load->model('TimesheetTeamMember_model');
+		$this->TimesheetTeamMember_model->create([
+			'user_id' => $last_id,
+			'name' => $data['FName'] . ' ' . $data['LName'],
+			'email' => $data['username'],
+			'role' => 'Employee',
+			'department_id' => 0,
+			'department_role' => 'Member',
+			'will_track_location' => 1,
+			'status' => 1,
+			'company_id' => $data['company_id']
+		]);
+		//End Timesheet		
+
+		//Create Trac360 record
+		$this->load->model('Trac360_model');
+		$data = [
+			'user_id' => $last_id,
+			'name' => $data['FName'] . ' ' . $data['LName'],
+			'company_id' => $data['company_id']
+		];
+		$this->Trac360_model->add('trac360_people', $data);
+
+        if($last_id) {
+            $this->session->set_flashdata('success', "New Employee Added!");
+        } else {
+            $this->session->set_flashdata('error', "Please try again!");
+        }
+
+        redirect('/accounting/employees');
+    }
+
+    public function edit($id)
+    {
+        $role_id = logged('role');
+		if( $role_id == 1 || $role_id == 2 ){
+			$this->page_data['payscale'] = $this->PayScale_model->getAll();
+		}else{
+			$this->page_data['payscale'] = $this->PayScale_model->getAllByCompanyId($cid);
+		}
+
+        $this->page_data['employee'] = $this->users_model->getUser($id);
+        $this->load->view('accounting/employees/edit_employee', $this->page_data);
+    }
+
+    public function update($id)
+    {
+        $data = [
+            'FName' => $this->input->post('first_name'),
+            'LName' => $this->input->post('last_name'),
+            'username' => $this->input->post('username'),
+            'email' => $this->input->post('email'),
+            'role' => $this->input->post('title'),
+            'user_type' => $this->input->post('user_type'),
+            'status' => $this->input->post('status'),
+            'profile_img' => $this->input->post('profile_photo'),
+            'address' => $this->input->post('address'),
+            'state' => $this->input->post('state'),
+            'city' => $this->input->post('city'),
+            'postal_code' => $this->input->post('zip_code'),
+            'payscale_id' => $this->input->post('payscale'),
+            'employee_number' => $this->input->post('employee_number'),
+            'date_hired' => date('Y-m-d', strtotime($this->input->post('hire_date')))
+        ];
+
+        $user = $this->users_model->update($id,$data);
+
+        if($user) {
+            $this->session->set_flashdata('success', "Employee details updated successfully");
+        } else {
+            $this->session->set_flashdata('error', "Please try again!");
+        }
+
+        redirect('/accounting/employees');
+    }
+
+    public function delete($id)
+    {
+        ifPermissions('users_delete');
+
+		if($id!==1 && $id!=logged($id)){ }else{
+			redirect('/accounting/employees','refresh');
+
+			return;
+		}
+
+		$user = $this->users_model->delete($id);
+
+		//Delete Timesheet 
+		$this->load->model('TimesheetTeamMember_model');
+		$this->TimesheetTeamMember_model->deleteByUserId($id);
+		//Delete Tract360
+		$this->load->model('Trac360_model');
+		$this->Trac360_model->deleteUser('trac360_people', $id);
+
+		$this->activity_model->add("User #$id Deleted by User:".logged('name'));
+
+		$this->session->set_flashdata('success', 'Employee record has been deleted successfully');
+
+		redirect('/accounting/employees');
     }
 }
