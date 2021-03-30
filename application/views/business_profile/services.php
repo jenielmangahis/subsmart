@@ -13,6 +13,18 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 .p-40 {
   padding-top: 40px !important;
 }
+div#cat-selected {
+    padding-top: 4px;
+}
+.label-default {
+		background-color: #6a4a85 !important;
+		font-size: 13px;
+		line-height: 13px;
+		color: white;
+    margin-bottom: 6px;
+		border-radius: 26px;
+		padding: 5px 15px !important;
+}
 @media only screen and (max-width: 600px) {
   .p-40 {
     padding-top: 0px !important;
@@ -64,10 +76,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             Selected services:
             <div class="cat-selected" id="cat-selected">
             <?php foreach($selectedCategories as $s){ ?>
-                <span class="label label-default tag"><?= $s->service_name; ?><!-- <a class="cat-tag-remove" id="cat-tag-remove-93" href="#"><span class="icon fa fa-remove"></span></a> --></span> 
+                <span class="label label-default tag"><?= $s->service_name; ?><!-- <a class="cat-tag-remove" id="cat-tag-remove-93" href="#"><span class="icon fa fa-remove"></span></a> --></span>
             <?php } ?>
             <script async="" src="https://www.google-analytics.com/analytics.js"></script><script id="cat-selected-tag" type="text/x-handlebars-template">
-            
+
             </script>
             </div>
         </div>

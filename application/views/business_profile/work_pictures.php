@@ -16,6 +16,12 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 .left {
   float: left;
 }
+.option-container {
+    position: relative;
+    top: 30px;
+    float: right;
+    right: 10px;
+}
 .pr-b10 {
   position: relative;
   bottom: 10px;
@@ -67,18 +73,20 @@ table.dataTable tbody tr td {
   display: inline-block;
   margin: 10px;
   height: 286px;
+  float: left;
+}
+div.picture-container div.img img {
+    object-fit: cover;
+    height: 286px;
+    width: 100% !important;
 }
 .img-delete{
-    position: relative;
-    bottom: 233px;
-    left: 380px;
     color: #ffffff;
     font-size: 18px;
 }
 .img-caption{
-    position: relative;
-    bottom: 233px;
-    left: 377px;
+    float: left;
+    margin-right: 7px;
     color: #ffffff !important;
     font-size: 18px;
 }
@@ -110,13 +118,13 @@ table.dataTable tbody tr td {
                         </div>
                         <div class="alert alert-warning mt-2 mb-4" role="alert">
                             <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">
-                              Add photos to spotlight features of your business or past projects pictures.  You can upload up to <b>25 images.</b> 
+                              Add photos to spotlight features of your business or past projects pictures.  You can upload up to <b>25 images.</b>
                             </span>
                         </div>
                         <?php include viewPath('flash'); ?>
                         <!-- Main content -->
                         <section class="content">
-                           <?php 
+                           <?php
                             $images = array();
                             if( $profiledata->work_images != '' ){
                               $images = unserialize($profiledata->work_images);
@@ -127,17 +135,19 @@ table.dataTable tbody tr td {
                                 <li class="col-image-<?= $key ?>">
                                   <div class="picture-container ui-sortable-handle">
                                     <div class="img">
+                                        <div class="option-container">
+                                          <a class="img-caption" data-caption="<?= $i['caption']; ?>" data-id="<?= $key; ?>" href="javascript:void(0);"><i class="fa fa-pencil"></i></a>
+                                          <a class="img-delete" data-name="<?= $i['file']; ?>" data-id="<?= $key; ?>" href="javascript:void(0);"><i class="fa fa-trash-o icon"></i></a>
+                                        </div>
                                         <img src="<?= url("uploads/work_pictures/" . $profiledata->company_id . "/" . $i['file']); ?>">
                                         <div class="image-caption image-caption-container-<?= $key; ?>">
-                                          <?= $i['caption']; ?>                                            
+                                          <?= $i['caption']; ?>
                                         </div>
-                                        <a class="img-caption" data-caption="<?= $i['caption']; ?>" data-id="<?= $key; ?>" href="javascript:void(0);"><i class="fa fa-pencil"></i></a>
-                                        <a class="img-delete" data-name="<?= $i['file']; ?>" data-id="<?= $key; ?>" href="javascript:void(0);"><i class="fa fa-trash-o icon"></i></a>
-                                    </div>                                    
+                                    </div>
                                   </div>
                                 </li>
                               <?php } ?>
-                              
+
                             </ul>
                         </section>
                         <!-- /.content -->
@@ -240,10 +250,10 @@ $(function(){
            success: function(o)
            {
              $("#modalAddCaptionImage").modal('hide');
-             var image_key = $("#caption_image_key").val(); 
+             var image_key = $("#caption_image_key").val();
              var image_caption = $("#image_caption").val();
              $(".image-caption-container-" + image_key).html(image_caption);
-             
+
              Swal.fire({
               icon: 'success',
               title: 'Image caption was successfully updated',
@@ -252,7 +262,7 @@ $(function(){
              });
 
            }
-        });                    
+        });
       }, 800);
     });
 
@@ -269,7 +279,7 @@ $(function(){
            success: function(o)
            {
              $("#modalDeleteImage").modal('hide');
-             var image_key = $("#image_key").val(); 
+             var image_key = $("#image_key").val();
              var li_image  = $(".col-image-" + image_key);
              Swal.fire({
               icon: 'success',
@@ -277,15 +287,14 @@ $(function(){
               showConfirmButton: false,
               timer: 1500
              });
-             li_image.fadeOut(300, function(){ 
-               li_image.remove(); 
+             li_image.fadeOut(300, function(){
+               li_image.remove();
             });
 
            }
-        });                    
+        });
       }, 800);
     });
 });
 
 </script>
-  

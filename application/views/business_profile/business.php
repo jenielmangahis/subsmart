@@ -80,10 +80,14 @@ div[wrapper__section] [role="white__holder"] .profile-subtitle {
     display: inline-block;
 }
 .label-default {
-    background-color: #aaa;
-    font-size: 13px;
-    line-height: 13px;
-    padding: 3px 10px 4px 10px;
+		background-color: #6a4a85 !important;
+		font-size: 13px;
+		line-height: 13px;
+		color: white;
+		border-radius: 26px;
+		margin-bottom: 6px;
+		display: inline-block;
+		padding: 5px 15px !important;
 }
 
 .nav-close{
