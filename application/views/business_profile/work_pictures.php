@@ -66,6 +66,7 @@ table.dataTable tbody tr td {
   width: 30%;
   display: inline-block;
   margin: 10px;
+  height: 286px;
 }
 .img-delete{
     position: relative;
@@ -80,6 +81,12 @@ table.dataTable tbody tr td {
     left: 377px;
     color: #ffffff !important;
     font-size: 18px;
+}
+.image-caption{
+  position: relative;
+    top: -25px;
+    left: 16px;
+    color: #ffffff;
 }
 </style>
 <div class="wrapper" role="wrapper">
@@ -121,13 +128,11 @@ table.dataTable tbody tr td {
                                   <div class="picture-container ui-sortable-handle">
                                     <div class="img">
                                         <img src="<?= url("uploads/work_pictures/" . $profiledata->company_id . "/" . $i['file']); ?>">
-                                        <div class="row">
-                                          <div class="col-md-12">
-                                            <?= $i['caption']; ?>                                            
-                                          </div>
+                                        <div class="image-caption image-caption-container-<?= $key; ?>">
+                                          <?= $i['caption']; ?>                                            
                                         </div>
-                                        <a class="img-caption" data-caption="<?= $i['caption']; ?>" data-id="<?= $key; ?>"><i class="fa fa-pencil"></i></a>
-                                        <a class="img-delete" data-name="<?= $i['file']; ?>" data-id="<?= $key; ?>" href="javascript:void(0);""><i class="fa fa-trash-o icon"></i></a>
+                                        <a class="img-caption" data-caption="<?= $i['caption']; ?>" data-id="<?= $key; ?>" href="javascript:void(0);"><i class="fa fa-pencil"></i></a>
+                                        <a class="img-delete" data-name="<?= $i['file']; ?>" data-id="<?= $key; ?>" href="javascript:void(0);"><i class="fa fa-trash-o icon"></i></a>
                                     </div>                                    
                                   </div>
                                 </li>
@@ -168,22 +173,21 @@ table.dataTable tbody tr td {
                       <div class="modal-dialog modal-md" role="document">
                         <div class="modal-content">
                           <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLongTitle"><i class="fa fa-trash"></i> Delete</h5>
+                            <h5 class="modal-title" id="exampleModalLongTitle"><i class="fa fa-pencil"></i> Edit Caption</h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                               <span aria-hidden="true">&times;</span>
                             </button>
                           </div>
-                          <?php echo form_open_multipart('', ['class' => 'form-validate', 'id' => 'form-delete-image', 'autocomplete' => 'off' ]); ?>
-                          <?php echo form_input(array('name' => 'image_key', 'type' => 'hidden', 'value' => '', 'id' => 'image_key'));?>
+                          <?php echo form_open_multipart('', ['class' => 'form-validate', 'id' => 'form-edit-image-caption', 'autocomplete' => 'off' ]); ?>
+                          <?php echo form_input(array('name' => 'image_key', 'type' => 'hidden', 'value' => '', 'id' => 'caption_image_key'));?>
                           <div class="modal-body">
                               <div class="col-md-12 form-group">
-                                  <label for="formClient-Name">Caption</label>
+                                  <label for="image_caption">Caption</label>
                                   <input type="text" class="form-control" name="image_caption" id="image_caption" required placeholder="" autofocus/>
                               </div>
                           </div>
                           <div class="modal-footer close-modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-secondary btn-update-caption">Update</button>
+                            <button type="submit" class="btn btn-primary btn-update-caption">Update</button>
                           </div>
                           <?php echo form_close(); ?>
                         </div>
@@ -208,7 +212,7 @@ $(function(){
       var image_key  = $(this).attr("data-id");
 
       $("#image_caption").val(image_caption);
-      $("#image_key").val(image_key);
+      $("#caption_image_key").val(image_key);
       $(".btn-update-caption").html('Update');
       $("#modalAddCaptionImage").modal('show');
     });
@@ -221,6 +225,35 @@ $(function(){
       $("#image_key").val(image_key);
       $(".btn-delete-image").html('Yes');
       $("#modalDeleteImage").modal('show');
+    });
+
+    $("#form-edit-image-caption").submit(function(e){
+      e.preventDefault();
+      var url = base_url + 'users/_update_work_image_caption';
+      $(".btn-update-caption").html('<span class="spinner-border spinner-border-sm m-0"></span>');
+      setTimeout(function () {
+        $.ajax({
+           type: "POST",
+           url: url,
+           data : $("#form-edit-image-caption").serialize(),
+           dataType:"json",
+           success: function(o)
+           {
+             $("#modalAddCaptionImage").modal('hide');
+             var image_key = $("#caption_image_key").val(); 
+             var image_caption = $("#image_caption").val();
+             $(".image-caption-container-" + image_key).html(image_caption);
+             
+             Swal.fire({
+              icon: 'success',
+              title: 'Image caption was successfully updated',
+              showConfirmButton: false,
+              timer: 1500
+             });
+
+           }
+        });                    
+      }, 800);
     });
 
     $("#form-delete-image").submit(function(e){

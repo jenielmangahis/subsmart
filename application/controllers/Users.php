@@ -222,12 +222,22 @@ class Users extends MY_Controller {
 	public function profilesetting()
 	{	
 		//ifPermissions('businessdetail');
+
+		add_css(array(
+            "assets/css/bootstrap-tagsinput.css"
+        ));
+
+        // JS to add only Job module
+        add_footer_js(array(
+            "assets/js/bootstrap-tagsinput.js"
+        ));
+
 		$user = (object)$this->session->userdata('logged');		
 		//print_r($user);die;
-		$cid=logged('id');
+		$comp_id = logged('company_id');
         $get_business_data = array(
             'where' => array(
-                'user_id' => $user->id,
+                'company_id' => $comp_id,
             )
         );
         $this->page_data['profile_data'] = $this->general_model->get_all_with_keys($get_business_data,'business_profile',FALSE);
@@ -1596,6 +1606,26 @@ class Users extends MY_Controller {
 		$profiledata = $this->business_model->getByCompanyId($comp_id);
 		$workImages  = unserialize($profiledata->work_images);
 		unset($workImages[$post['image_key']]);
+		$this->business_model->update($profiledata->id, ['work_images' => serialize($workImages)]);
+
+		$json_data = [
+			'is_success' => $is_success,
+			'msg' => $msg
+		];
+
+		echo json_encode($json_data);
+	}
+
+	public function ajax_update_company_work_picture_caption(){
+		$post    = $this->input->post();
+		$comp_id = logged('company_id');
+
+		$is_success = true;
+		$msg = '';
+
+		$profiledata = $this->business_model->getByCompanyId($comp_id);
+		$workImages  = unserialize($profiledata->work_images);
+		$workImages[$post['image_key']]['caption'] = $post['image_caption'];		
 		$this->business_model->update($profiledata->id, ['work_images' => serialize($workImages)]);
 
 		$json_data = [
