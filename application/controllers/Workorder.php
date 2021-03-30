@@ -23,6 +23,7 @@ class Workorder extends MY_Controller
         $this->load->model('Jobs_model', 'jobs_model');
         $this->load->model('Estimate_model', 'estimate_model');
         $this->load->model('accounting_invoices_model');
+        $this->load->model('Users_model', 'users_model');
         
         $user_id = getLoggedUserID();
 
@@ -1400,11 +1401,26 @@ class Workorder extends MY_Controller
         $user_id = logged('id');
 
         $company_id = logged('company_id');
+        $this->load->library('session');
+
+        $users_data = $this->session->all_userdata();
+        // foreach($users_data as $usersD){
+        //     $userID = $usersD->id;
+            
+        // }
+
+        // print_r($user_id);
+        // $users = $this->users_model->getUserByID($user_id);
+        // print_r($users);
+        // echo $company_id;
+
         $role = logged('role');
-        if( $role == 1 || $role == 2 ){
-            $this->page_data['customers'] = $this->AcsProfile_model->getAllByCompanyId($company_id);
-        }else{
+        if( $role == 1 || $role == 2){
             $this->page_data['customers'] = $this->AcsProfile_model->getAll();
+            // $this->page_data['customers'] = $this->AcsProfile_model->getAllByCompanyId($company_id);
+        }else{
+            // $this->page_data['customers'] = $this->AcsProfile_model->getAll();
+            $this->page_data['customers'] = $this->AcsProfile_model->getAllByCompanyId($company_id);
         }
         $type = $this->input->get('type');
         $this->page_data['type'] = $type;
@@ -1415,7 +1431,8 @@ class Workorder extends MY_Controller
 
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->page_data['page_title'] = "Work Order";
-        // print_r($this->page_data);
+        // print_r($this->page_data['customers']);
+
         $this->load->view('workorder/addNewworkOrder', $this->page_data);
     }
 

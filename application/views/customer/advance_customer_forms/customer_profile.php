@@ -17,20 +17,10 @@
         </div>
         <div class="row form_line">
             <div class="col-md-4">
-                <label>Name Prefix</label>
+                <label for="">Business Name</label>
             </div>
             <div class="col-md-8">
-                <select id="prefix" name="prefix" data-customer-source="dropdown" class="form-controls input_select searchable-dropdown">
-                    <?php
-                    for ($prefix=0;$prefix<28;$prefix++){
-                        ?>
-                            <option <?php if(isset($profile_info)){ if($profile_info->prefix == prefix_name($prefix)){ echo 'selected'; } } ?> value="<?= prefix_name($prefix); ?>">
-                                <?= prefix_name($prefix); ?>
-                            </option>
-                        <?php
-                    }
-                    ?>
-                </select>
+                <input type="text" class="form-control" name="business_name" id="business_name" value="<?php if(isset($profile_info)){ echo $profile_info->business_name; } ?>"/>
             </div>
         </div>
         <div class="row form_line">
@@ -59,10 +49,20 @@
         </div>
         <div class="row form_line">
             <div class="col-md-4">
-                <label for="">Date Of Birth </label>
+                <label>Name Prefix</label>
             </div>
             <div class="col-md-8">
-                <input type="text" class="form-control" name="date_of_birth" id="date_picker" value="<?php if(isset($profile_info)){ echo $profile_info->date_of_birth; } ?>"/>
+                <select id="prefix" name="prefix" data-customer-source="dropdown" class="form-controls input_select searchable-dropdown">
+                    <?php
+                    for ($prefix=0;$prefix<28;$prefix++){
+                        ?>
+                        <option <?php if(isset($profile_info)){ if($profile_info->prefix == prefix_name($prefix)){ echo 'selected'; } } ?> value="<?= prefix_name($prefix); ?>">
+                            <?= prefix_name($prefix); ?>
+                        </option>
+                        <?php
+                    }
+                    ?>
+                </select>
             </div>
         </div>
         <div class="row form_line">
@@ -83,63 +83,7 @@
         </div>
         <div class="row form_line">
             <div class="col-md-4">
-                <label for="">Business Name</label>
-            </div>
-            <div class="col-md-8">
-                <input type="text" class="form-control" name="business_name" id="business_name" value="<?php if(isset($profile_info)){ echo $profile_info->business_name; } ?>"/>
-            </div>
-        </div>
-        <div class="row form_line">
-            <div class="col-md-4">
-                <label for="">Email <span class="required"> *</span></label>
-            </div>
-            <div class="col-md-8">
-                <input type="email" class="form-control" name="email" id="email" value="<?php if(isset($profile_info)){ echo $profile_info->email; } ?>" required/>
-            </div>
-        </div>
-        <div class="row form_line">
-            <div class="col-md-4">
-                <label for="">Social Security No.</label>
-            </div>
-            <div class="col-md-8">
-                <input type="text" placeholder="xxx-xx-xxxx" maxlength="11" class="form-control" name="ssn" id="ssn" value="<?php if(isset($profile_info)){ echo $profile_info->ssn; } ?>" />
-            </div>
-        </div>
-        <div class="row form_line">
-            <div class="col-md-4">
-                <label for="">Phone (H)</label>
-            </div>
-            <div class="col-md-8">
-                <input type="text" class="form-control phone_number" maxlength="12" placeholder="xxx-xxx-xxxx" name="phone_h" id="phone_h" value="<?php if(isset($profile_info)){ echo $profile_info->phone_h; } ?>" />
-            </div>
-        </div>
-        <div class="row form_line">
-            <div class="col-md-4">
-                <label for="">Phone (W)</label>
-            </div>
-            <div class="col-md-8">
-                <input type="text" class="form-control phone_number" maxlength="12" placeholder="xxx-xxx-xxxx" name="phone_w" id="phone_w" value="<?php if(isset($profile_info)){ echo $profile_info->phone_w; } ?>" />
-            </div>
-        </div>
-        <div class="row form_line">
-            <div class="col-md-4">
-                <label for="">Phone (M) <span class="required"> *</span></label>
-            </div>
-            <div class="col-md-8">
-                <input type="text" class="form-control phone_number" maxlength="12" placeholder="xxx-xxx-xxxx" name="phone_m" id="phone_m" value="<?php if(isset($profile_info->phone_m)){ echo $profile_info->phone_m; } ?>" required />
-            </div>
-        </div>
-        <div class="row form_line">
-            <div class="col-md-4">
-                <label for="">Fax</label>
-            </div>
-            <div class="col-md-8">
-                <input type="text" class="form-control" name="fax" id="fax" value="<?php if(isset($profile_info->fax)){ echo $profile_info->fax; } ?>" />
-            </div>
-        </div>
-        <div class="row form_line">
-            <div class="col-md-4">
-                <label for="">Address</label> <span class="required"> *</span>
+                <label for="">Address <span class="required"> *</span></label>
             </div>
             <div class="col-md-8">
                 <input type="text" class="form-control" name="mail_add" id="mail_add" value="<?php if(isset($profile_info->mail_add)){ echo $profile_info->mail_add; } ?>" required/>
@@ -161,14 +105,7 @@
                 <input type="text" class="form-control" name="state" id="state" value="<?php if(isset($profile_info->state)){ echo $profile_info->state; } ?>" required/>
             </div>
         </div>
-        <div class="row form_line">
-            <div class="col-md-4">
-                <label for="">Country</label>
-            </div>
-            <div class="col-md-8">
-                <input type="text" class="form-control" name="country" id="country" value="<?php if(isset($profile_info->country)){ echo $profile_info->country; } ?> " />
-            </div>
-        </div>
+
         <div class="row form_line">
             <div class="col-md-4">
                 <label for="">Zip Code</label>
@@ -187,6 +124,14 @@
         </div>
         <div class="row form_line">
             <div class="col-md-4">
+                <label for="">County</label>
+            </div>
+            <div class="col-md-8">
+                <input type="text" class="form-control" name="country" id="country" value="<?php if(isset($profile_info->country)){ echo $profile_info->country; } ?> " />
+            </div>
+        </div>
+        <div class="row form_line">
+            <div class="col-md-4">
                 <label for="">Subdivision</label>
             </div>
             <div class="col-md-8">
@@ -195,15 +140,123 @@
         </div>
         <div class="row form_line">
             <div class="col-md-4">
+                <label for="">Social Security No.</label>
+            </div>
+            <div class="col-md-8">
+                <input type="text" placeholder="xxx-xx-xxxx" maxlength="11" class="form-control" name="ssn" id="ssn" value="<?php if(isset($profile_info)){ echo $profile_info->ssn; } ?>" />
+            </div>
+        </div>
+        <div class="row form_line">
+            <div class="col-md-4">
+                <label for="">Date Of Birth </label>
+            </div>
+            <div class="col-md-8">
+                <input type="text" class="form-control" name="date_of_birth" id="date_picker" value="<?php if(isset($profile_info)){ echo $profile_info->date_of_birth; } ?>"/>
+            </div>
+        </div>
+
+        <div class="row form_line">
+            <div class="col-md-4">
+                <label for="">Email <span class="required"> *</span></label>
+            </div>
+            <div class="col-md-8">
+                <input type="email" class="form-control" name="email" id="email" value="<?php if(isset($profile_info)){ echo $profile_info->email; } ?>" required/>
+            </div>
+        </div>
+
+        <div class="row form_line">
+            <div class="col-md-4">
+                <label for="">Phone (H)</label>
+            </div>
+            <div class="col-md-8">
+                <input type="text" class="form-control phone_number" maxlength="12" placeholder="xxx-xxx-xxxx" name="phone_h" id="phone_h" value="<?php if(isset($profile_info)){ echo $profile_info->phone_h; } ?>" />
+            </div>
+        </div>
+        <!--<div class="row form_line">
+            <div class="col-md-4">
+                <label for="">Phone (W)</label>
+            </div>
+            <div class="col-md-8">
+                <input type="text" class="form-control phone_number" maxlength="12" placeholder="xxx-xxx-xxxx" name="phone_w" id="phone_w" value="<?php if(isset($profile_info)){ echo $profile_info->phone_w; } ?>" />
+            </div>
+        </div>-->
+        <div class="row form_line">
+            <div class="col-md-4">
+                <label for="">Phone (M) <span class="required"> *</span></label>
+            </div>
+            <div class="col-md-8">
+                <input type="text" class="form-control phone_number" maxlength="12" placeholder="xxx-xxx-xxxx" name="phone_m" id="phone_m" value="<?php if(isset($profile_info->phone_m)){ echo $profile_info->phone_m; } ?>" required />
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-4">
+                <label for="">Contact Name 1</label>
+            </div>
+            <div class="col-md-8">
+                <input type="text" class="form-control" name="contact_name1" id="contact_name1" value="<?php if(isset($alarm_info)){ echo $alarm_info->contact_name1; } ?>"/>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <label for="">Contact Phone 1</label>
+            </div>
+            <div class="col-md-8">
+                <input type="text" class="form-control" name="contact1" id="contact1" value="<?php if(isset($alarm_info)){ echo $alarm_info->contact1; } ?>"/>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <label for="">Contact Name 2</label>
+            </div>
+            <div class="col-md-8">
+                <input type="text" class="form-control" name="contact_name2" id="contact_name2" value="<?php if(isset($alarm_info)){ echo $alarm_info->contact_name2; } ?>"/>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <label for="">Contact Phone 2</label>
+            </div>
+            <div class="col-md-8">
+                <input type="text" class="form-control" name="contact2" id="contact2" value="<?php if(isset($alarm_info)){ echo $alarm_info->contact2; } ?>"/>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <label for="">Contact Name 3</label>
+            </div>
+            <div class="col-md-8">
+                <input type="text" class="form-control" name="contact_name3" id="contact_name3" value="<?php if(isset($alarm_info)){ echo $alarm_info->contact_name3; } ?>" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <label for="">Contact Phone 3</label>
+            </div>
+            <div class="col-md-8">
+                <input type="text" class="form-control" name="contact3" id="contact3" value="<?php if(isset($alarm_info)){ echo $alarm_info->contact3; } ?>"/>
+            </div>
+        </div>
+
+        <!--<div class="row form_line">
+            <div class="col-md-4">
+                <label for="">Fax</label>
+            </div>
+            <div class="col-md-8">
+                <input type="text" class="form-control" name="fax" id="fax" value="<?php if(isset($profile_info->fax)){ echo $profile_info->fax; } ?>" />
+            </div>
+        </div>-->
+        <div class="row form_line">
+            <div class="col-md-4">
                 <label class="alarm_label"> <span >Pay History </span>
             </div>
             <div class="col-md-8">
                 <select id="pay_history" name="pay_history" class="input_select searchable-dropdown">
-                    <option <?php if(isset($profile_info)){ if($profile_info->pay_history == 1){ echo 'selected'; } } ?> value="1">1</option>
-                    <option <?php if(isset($profile_info)){ if($profile_info->pay_history == 2){ echo 'selected'; } } ?> value="2">2</option>
-                    <option <?php if(isset($profile_info)){ if($profile_info->pay_history == 3){ echo 'selected'; } } ?> value="3">3</option>
-                    <option <?php if(isset($profile_info)){ if($profile_info->pay_history == 4){ echo 'selected'; } } ?> value="4">4</option>
-                    <option <?php if(isset($profile_info)){ if($profile_info->pay_history == 5){ echo 'selected'; } } ?> value="5">5</option>
+                    <option <?php if(isset($profile_info)){ if($profile_info->pay_history == 1){ echo 'selected'; } } ?> value="1">1 - Excellent</option>
+                    <option <?php if(isset($profile_info)){ if($profile_info->pay_history == 2){ echo 'selected'; } } ?> value="2">2 - Good</option>
+                    <option <?php if(isset($profile_info)){ if($profile_info->pay_history == 3){ echo 'selected'; } } ?> value="3">3 - Fair</option>
+                    <option <?php if(isset($profile_info)){ if($profile_info->pay_history == 4){ echo 'selected'; } } ?> value="4">4 - Poor</option>
+                    <option <?php if(isset($profile_info)){ if($profile_info->pay_history == 5){ echo 'selected'; } } ?> value="5">5 - Unsatisfactory</option>
                 </select>
             </div>
         </div>

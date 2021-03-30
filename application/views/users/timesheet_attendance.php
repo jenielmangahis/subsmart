@@ -935,23 +935,6 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                                 <div class="tileContent">
                                                     <div class="clear">
                                                         <div class="inner-content">
-                                                            <div class="card-title user-card-title">
-                                                                <div class="row">
-                                                                    <div class="col-md-7" style="display: flex;">
-                                                                        <span class="user-logs-title" style=" align-self: flex-end;">Today's logs</span>
-                                                                    </div>
-                                                                    <div class="col-md-5">
-                                                                        <span class="user-logs-title right employeeLunchBtn" style="">
-                                                                            <a href="javascript:void(0)" class="employeeLunch" id="<?php echo $lunch_active; ?>" <?php echo $lunch_disabled; ?>>
-                                                                                <img src="<?= base_url() ?>/assets/css/timesheet/images/coffee-<?php echo $lunch_icon; ?>.svg" alt="" class="btn-lunch">
-                                                                                <img src="<?= base_url() ?>/assets/css/timesheet/images/coffee-hover.svg" alt="" class="btn-lunch-hover">
-                                                                            </a>
-                                                                            <span class="employeeLunchTooltip">Lunch in/out</span>
-                                                                        </span>
-                                                                    </div>
-                                                                </div>
-
-                                                            </div>
                                                             <?php
                                                             $clock_in = '-';
                                                             $clock_out = '-';
@@ -970,12 +953,12 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                                                         $datetime_defaultTimeZone = new DateTime($date_created);
                                                                         $datetime_defaultTimeZone->setTimezone($UserTimeZone);
                                                                         $userZone_date_created = $datetime_defaultTimeZone->format('Y-m-d H:i:s');
-                                                                        $date_created = date('h:i A', strtotime($userZone_date_created));
+                                                                        $date_created = date('Y-m-d h:i A', strtotime($userZone_date_created));
                                                                         if ($attn->status == 1) {
                                                                             if ($log->action == 'Check in') {
-                                                                                if (date('Y-m-d', strtotime($date_created)) == date('Y-m-d', strtotime('yesterday'))) {
+                                                                                if (date('Y-m-d', strtotime($date_created)) <= date('Y-m-d', strtotime('yesterday'))) {
                                                                                     $clock_in = date('h:i A', strtotime($userZone_date_created));
-                                                                                    $yesterday_note = '(Yesterday)';
+                                                                                    $yesterday_note = date('Y-m-d', strtotime($date_created));
                                                                                     $shift = '-';
                                                                                 } elseif (date('Y-m-d', strtotime($date_created)) == date('Y-m-d')) {
                                                                                     $clock_in = date('h:i A', strtotime($date_created));
@@ -990,8 +973,8 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                                                         } else {
                                                                             if ($log->action == 'Check in') {
                                                                                 $clock_in = date('h:i A', strtotime($date_created));
-                                                                                if (date('Y-m-d', strtotime($date_created)) == date('Y-m-d', strtotime('yesterday'))) {
-                                                                                    $yesterday_note = '(Yesterday)';
+                                                                                if (date('Y-m-d', strtotime($date_created)) <= date('Y-m-d', strtotime('yesterday'))) {
+                                                                                    $yesterday_note = date('Y-m-d', strtotime($date_created));
                                                                                 } elseif (date('Y-m-d', strtotime($date_created)) == date('Y-m-d')) {
                                                                                     $yesterday_note = null;
                                                                                 }
@@ -1037,6 +1020,26 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                                             }
 
                                                             ?>
+                                                            <div class="card-title user-card-title">
+                                                                <div class="row">
+                                                                    <div class="col-md-7" style="display: flex;">
+                                                                        <span class="user-logs-title" style=" align-self: flex-end;"><?php if ($yesterday_note != null) {
+                                                                                                                                            echo "Most recent logs";
+                                                                                                                                        } else {
+                                                                                                                                            echo "Today's logs";
+                                                                                                                                        } ?></span>
+                                                                    </div>
+                                                                    <div class="col-md-5">
+                                                                        <span class="user-logs-title right employeeLunchBtn" style="">
+                                                                            <a href="javascript:void(0)" class="employeeLunch" id="<?php echo $lunch_active; ?>" <?php echo $lunch_disabled; ?>>
+                                                                                <img src="<?= base_url() ?>/assets/css/timesheet/images/coffee-<?php echo $lunch_icon; ?>.svg" alt="" class="btn-lunch">
+                                                                                <img src="<?= base_url() ?>/assets/css/timesheet/images/coffee-hover.svg" alt="" class="btn-lunch-hover">
+                                                                            </a>
+                                                                            <span class="employeeLunchTooltip">Lunch in/out</span>
+                                                                        </span>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
                                                             <div class="user-logs">
                                                                 <div class="user-logs-section">
                                                                     <div class="user-clock-in-title">Clock-in: </div>

@@ -269,7 +269,8 @@ class Users_model extends MY_Model {
 				'logged' => [
 					'id' => $row->id,
 					'time' => $time,
-                    'role' => $row->role
+                    'role' => $row->role,
+					'company_id' => $row->company_id
 				]
 
 			];
@@ -285,6 +286,7 @@ class Users_model extends MY_Model {
 				'id' => $row->id,
 
 				'time' => time(),
+				'company_id' => $row->company_id,
 
 			];
 
@@ -498,6 +500,14 @@ class Users_model extends MY_Model {
 		$this->db->select('*');
 		$this->db->from($this->table);
 		$this->db->where('username', $user_name);
+		$query = $this->db->get();
+		return $query->row();
+	}
+
+	public function getUserByID($id) {
+		$this->db->select('*');
+		$this->db->from('users');
+		$this->db->where('id', $id);
 		$query = $this->db->get();
 		return $query->row();
 	}

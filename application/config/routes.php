@@ -391,6 +391,8 @@ $route['accounting/employees/create']['post'] = 'accounting_controllers/employee
 $route['accounting/employees/edit/(:any)'] = 'accounting_controllers/employees/edit/$1';
 $route['accounting/employees/update/(:any)']['post'] = 'accounting_controllers/employees/update/$1';
 $route['accounting/employees/delete/(:any)'] = 'accounting_controllers/employees/delete/$1';
+$route['accounting/employees/set-status/(:any)/(:any)'] = 'accounting_controllers/employees/set_status/$1/$2';
+$route['accounting/employees/add-pay-schedule-form'] = 'accounting_controllers/employees/pay_schedule_form';
 
 $route['accounting/vendor-details/(:any)'] = 'accounting/vendordetails/$1';
 $route['accounting/taxes/edit-settings'] = 'taxes/edit_settings';

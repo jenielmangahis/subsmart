@@ -252,9 +252,11 @@ class Estimate extends MY_Controller
         $role = logged('role');
         // $this->page_data['workstatus'] = $this->Workstatus_model->getByWhere(['company_id'=>$company_id]);
         if( $role == 1 || $role == 2 ){
-            $this->page_data['customers'] = $this->AcsProfile_model->getAllByCompanyId($company_id);
-        }else{
+            // $this->page_data['customers'] = $this->AcsProfile_model->getAllByCompanyId($company_id);
             $this->page_data['customers'] = $this->AcsProfile_model->getAll();
+        }else{
+            // $this->page_data['customers'] = $this->AcsProfile_model->getAll();
+            $this->page_data['customers'] = $this->AcsProfile_model->getAllByCompanyId($company_id);
         }
         $type = $this->input->get('type');
         $this->page_data['type'] = $type;
@@ -298,9 +300,11 @@ class Estimate extends MY_Controller
         $role = logged('role');
         // $this->page_data['workstatus'] = $this->Workstatus_model->getByWhere(['company_id'=>$company_id]);
         if( $role == 1 || $role == 2 ){
-            $this->page_data['customers'] = $this->AcsProfile_model->getAllByCompanyId($company_id);
-        }else{
             $this->page_data['customers'] = $this->AcsProfile_model->getAll();
+            // $this->page_data['customers'] = $this->AcsProfile_model->getAllByCompanyId($company_id);
+        }else{
+            // $this->page_data['customers'] = $this->AcsProfile_model->getAll();
+            $this->page_data['customers'] = $this->AcsProfile_model->getAllByCompanyId($company_id);
         }
         $type = $this->input->get('type');
         $this->page_data['type'] = $type;
@@ -344,9 +348,11 @@ class Estimate extends MY_Controller
         $role = logged('role');
         // $this->page_data['workstatus'] = $this->Workstatus_model->getByWhere(['company_id'=>$company_id]);
         if( $role == 1 || $role == 2 ){
-            $this->page_data['customers'] = $this->AcsProfile_model->getAllByCompanyId($company_id);
-        }else{
+            // $this->page_data['customers'] = $this->AcsProfile_model->getAllByCompanyId($company_id);
             $this->page_data['customers'] = $this->AcsProfile_model->getAll();
+        }else{
+            // $this->page_data['customers'] = $this->AcsProfile_model->getAll();
+            $this->page_data['customers'] = $this->AcsProfile_model->getAllByCompanyId($company_id);
         }
         $type = $this->input->get('type');
         $this->page_data['type'] = $type;

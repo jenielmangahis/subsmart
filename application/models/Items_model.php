@@ -38,6 +38,15 @@ class Items_model extends MY_Model
         return $query->result();
     }
 
+    
+	public function getUserByID($id) {
+		$this->db->select('*');
+		$this->db->from('users');
+		$this->db->where('id', $id);
+		$query = $this->db->get();
+		return $query->result();
+	}
+
     public function categoriesWithoutParent()
     {
         $this->db->where('company_id', getLoggedCompanyID());

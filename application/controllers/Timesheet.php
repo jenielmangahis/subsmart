@@ -155,7 +155,7 @@ class Timesheet extends MY_Controller
         // $minutes = $minutes / 60;
         // var_dump($end);
         // echo $minutes / 60;
-        echo getLoggedUserID();
+        echo $this->session->userdata('usertimezone');
     }
 
     public function employee()
@@ -4009,18 +4009,19 @@ class Timesheet extends MY_Controller
     }
     public function show_my_attendance_logs()
     {
-        $date_from = $this->input->post("date_from");
-        $date_to = $this->input->post("date_to");
-        date_default_timezone_set($this->session->userdata('usertimezone'));
-        $the_date = strtotime($date_from . " 00:00:00");
-        date_default_timezone_set("UTC");
-        $date_from = date("Y-m-d", $the_date);
+        // $date_from = $this->input->post("date_from");
+        // $date_to = $this->input->post("date_to");
+        // date_default_timezone_set($this->session->userdata('usertimezone'));
+        // $the_date = strtotime($date_from . " 00:00:00");
+        // date_default_timezone_set("UTC");
+        // $date_from = date("Y-m-d", $the_date);
+        $date_from = $this->datetime_zone_converter($this->input->post("date_from") . " 00:00:00", $this->session->userdata('usertimezone'), "UTC");
 
-
-        date_default_timezone_set($this->session->userdata('usertimezone'));
-        $the_date = strtotime($date_to . " 24:59:00");
-        date_default_timezone_set("UTC");
-        $date_to = date("Y-m-d H:i:s", $the_date);
+        // date_default_timezone_set($this->session->userdata('usertimezone'));
+        // $the_date = strtotime($date_to . " 24:59:00");
+        // date_default_timezone_set("UTC");
+        // $date_to = date("Y-m-d H:i:s", $the_date);
+        $date_to = $this->datetime_zone_converter($this->input->post("date_to") . " 23:59:59", $this->session->userdata('usertimezone'), "UTC");
         $user_id = logged('id');
         $attendances = $this->timesheet_model->get_my_attendance($date_from, $date_to, $user_id);
         $display = '';
@@ -4043,11 +4044,7 @@ class Timesheet extends MY_Controller
         $display .= '</thead>';
         $display .= '<tbody>';
         foreach ($attendances as $attendance) {
-            $shift_date = $attendance->date_created;
-            date_default_timezone_set("UTC");
-            $the_date = strtotime($shift_date);
-            date_default_timezone_set($this->session->userdata('usertimezone'));
-            $shift_date = date("m/d/Y", $the_date);
+            $shift_date = date("m/d/Y", strtotime($this->datetime_zone_converter($attendance->date_created, "UTC", $this->session->userdata('usertimezone'))));
 
             $display .= '<tr role="row" class="odd">';
             $display .= '<td class="center">' . $shift_date . '</td>';
@@ -4173,6 +4170,25 @@ class Timesheet extends MY_Controller
         $this->timesheet_model->attendance_logs_update_footprint_setter($attn_id, $user_id, "employee_ot_requested");
         $this->timesheet_model->employee_ot_requested($attn_id);
         echo json_encode(0);
+    }
+    public function timezonesetter()
+    {
+        $date_before = date('Y-m-d h:i:s A');
+        $usertimezone = $this->input->post("usertimezone");
+        date_default_timezone_set($usertimezone);
+        $date_after = date('Y-m-d h:i:s A');
+        $_SESSION['usertimezone'] = $usertimezone;
+        $_SESSION['offset_zone'] = $this->input->post("offset_zone");;
+        $display = array(
+            "usertimezone" => $usertimezone,
+            "newphptimezone" => date_default_timezone_get(),
+            "date_before" => $date_before,
+            "date_after" => $date_after,
+            "session_timezone" => $this->session->userdata('usertimezone'),
+            "offset_zone" => $this->session->userdata('offset_zone')
+
+        );
+        echo json_encode($display);
     }
     public function submit_attendance_correction_request()
     {
@@ -4398,36 +4414,125 @@ class Timesheet extends MY_Controller
             6 => date("Y-m-d", strtotime('sunday this week', strtotime($week_convert))),
         );
         $remarks = array();
-        for ($i = 0; $i < 7; $i++) {
-            $shift_date = $this->datetime_zone_converter($week_check[$i], $this->session->userdata('usertimezone'), "UTC");
+        $shift_dates = array();
+        $dates_founds = array();
+        $remarks_ctr = 0;
+        for ($i = 0; $i < count($week_check); $i++) {
+            $shift_date = date('Y-m-d', strtotime($this->datetime_zone_converter($week_check[$i], $this->session->userdata('usertimezone'), "UTC")));
+
+            $shift_date_user_time = $this->datetime_zone_converter($shift_date, "UTC", $this->session->userdata('usertimezone'));
+            $shift_dates[] =  $shift_date_user_time . " shift date";
             $my_attendances = $this->timesheet_model->get_my_date_attendance($shift_date, $user_id);
             $my_schedules = $this->timesheet_model->get_my_schedule($shift_date, $user_id);
             $checkin_time = "";
             $shift_start = "";
+            $shift_dates[] = $my_attendances;
             foreach ($my_attendances as $attn) {
                 $checkin_time = $attn->checkin_time;
-            }
-            foreach ($my_schedules as $sched) {
-                $shift_start = $sched->shift_start;
-            }
-            $minutes_late = 0;
-            if ($shift_start != '') {
-                $minutes_late = $this->get_differenct_of_dates($shift_start, $checkin_time) * 60;
-            }
-            for ($x = 0; $x < count($week_dates); $x++) {
-                if ($week_dates[$x] == date('Y-m-d', strtotime($shift_date))) {
-                    if (date('Y-m-d', strtotime($shift_date)) < date('Y-m-d')) {
-                        if ($checkin_time == "") {
-                            $remarks[] = '<label style="font-size:12px; color:red;">A</label>';
-                        } elseif ($minutes_late > 0) {
-                            $remarks[] = '<label style="font-size:12px; color:red;">L</label>';
-                        } elseif ($checkin_time != "") {
-                            $remarks[] = 'P';
-                        }
-                    } else {
-                        $remarks[] = '';
+
+                foreach ($my_schedules as $sched) {
+                    $shift_start = $sched->shift_start;
+                }
+                $minutes_late = 0;
+                if ($shift_start != '') {
+                    $minutes_late = $this->get_differenct_of_dates($shift_start, $checkin_time) * 60;
+                }
+                $date_user = date('Y-m-d', strtotime($this->datetime_zone_converter($checkin_time, "UTC", $this->session->userdata('usertimezone'))));
+                $date_found = false;
+                $ctr_found = 0;
+                for ($x = 0; $x < count($dates_founds); $x++) {
+                    if ($dates_founds[$x] == $date_user) {
+                        $ctr_found = $x;
+                        $date_found = true;
+                        break;
                     }
-                    break;
+                }
+                $found = false;
+                for ($x = 0; $x < count($week_dates); $x++) {
+                    if ($date_user == $week_dates[$x]) {
+                        $found = true;
+                        break;
+                    }
+                }
+                if ($found) {
+                    if (!$date_found) {
+                        $dates_founds[] = $date_user;
+                        if ($minutes_late > 0) {
+                            $remarks[] = '<label style="font-size:12px; color:red;">L</label> ';
+                        } else {
+                            $remarks[] = 'P ';
+                        }
+                        $remarks_ctr++;
+                    } else {
+                        if ($minutes_late > 0) {
+                            $remarks[$ctr_found] = '<label style="font-size:12px; color:red;">L</label> ';
+                        } else {
+                            $remarks[$ctr_found] = 'P ';
+                        }
+                        $remarks_ctr++;
+                    }
+                } else {
+                    $shift_dates[] = $date_user . " date_user_not_found";
+                    for ($x = 0; $x < count($week_dates); $x++) {
+                        if ($shift_date == $week_dates[$x]) {
+                            $found = true;
+                            break;
+                        }
+                    }
+                    if ($found) {
+                        $date_found = false;
+                        $ctr_found = 0;
+                        for ($x = 0; $x < count($dates_founds); $x++) {
+                            if ($dates_founds[$x] == $shift_date) {
+                                $ctr_found = $x;
+                                $date_found = true;
+                                break;
+                            }
+                        }
+                        if (!$date_found) {
+                            $dates_founds[] = $shift_date;
+                            $remarks[] = '<label style="font-size:12px; color:red;">A</label> ';
+                            $remarks_ctr++;
+                        } else {
+                            $remarks[$ctr_found] = '<label style="font-size:12px; color:red;">A</label> ';
+                            $remarks_ctr++;
+                        }
+                    }
+                }
+            }
+            if (count($my_attendances) == 0) {
+                $found = false;
+                $user_shift = date('Y-m-d', strtotime($shift_date_user_time));
+
+                for ($x = 0; $x < count($week_dates); $x++) {
+                    $shift_dates[] = $user_shift . " == " . $week_dates[$x];
+                    if ($user_shift == $week_dates[$x]) {
+                        $found = true;
+                        break;
+                    }
+                }
+                if ($found) {
+                    $found_ctr = 0;
+                    $found_date = false;
+                    for ($x = 0; $x < count($dates_founds); $x++) {
+                        if ($dates_founds[$x] == $user_shift) {
+                            $found_ctr = $x;
+                            $found_date = true;
+                            break;
+                        }
+                    }
+                    if ($found_date) {
+                        $remarks[$found_ctr] = $remarks[$found_ctr];
+                    } else {
+                        if ($shift_date < date('Y-m-d')) {
+                            $dates_founds[] = $user_shift;
+                            $remarks[] = '<label style="font-size:12px; color:red;">A</label> ';
+                            $remarks_ctr++;
+                        } else {
+                            $remarks[] = ' ';
+                            $remarks_ctr++;
+                        }
+                    }
                 }
             }
         }
@@ -4445,12 +4550,19 @@ class Timesheet extends MY_Controller
         $display .= '</thead>';
         $display .= '<tbody>';
         $display .= '<tr role="row">';
-        for ($i = 0; $i < count($remarks); $i++) {
-            $display .= '<td class="center">' . $remarks[$i] . '</td>';
+        if ($remarks_ctr > 0) {
+            for ($i = 0; $i < count($remarks); $i++) {
+                $display .= '<td class="center">' . $remarks[$i] . '</td>';
+            }
+        } else {
+            $display .= '<td class="center" colspan="7"> No data Available</td>';
         }
         $display .= '</tr>';
         $display .= '</tbody>';
-        echo json_encode($display);
+        $data = new stdClass();
+        $data->display = $display;
+        $data->shift_dates = $shift_dates;
+        echo json_encode($data);
     }
 }
 

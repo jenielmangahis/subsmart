@@ -1,5 +1,5 @@
 <div class="card-header">
-    <h6 ><span class="fa fa-user"></span>&nbsp; &nbsp;Business Information</h6>
+    <h6 ><span class="fa fa-user"></span>&nbsp; &nbsp;Billing Information</h6>
 </div>
 <div class="card-body">
     <div class="row form_line">

@@ -32,6 +32,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         height: 24px;
         cursor: pointer;
     }
+    #add-pay-schedule-modal .card.shadow .card-body {
+        padding: 0;
+    }
 </style>
 <?php include viewPath('includes/header'); ?>
 <div class="wrapper" role="wrapper">
@@ -75,7 +78,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <div class="float-right d-none d-md-block">
                                         <div class="dropdown show">
                                             <div class="btn-group float-right">
-                                                <a href="javascript:void(0);" data-toggle="modal" data-target="#modalAddAccount" class="btn btn-success d-flex align-items-center justify-content-center">
+                                                <a href="javascript:void(0);" id="run-payroll-button" class="btn btn-success d-flex align-items-center justify-content-center">
                                                     Run payroll
                                                 </a>
                                                 <button type="button" class="btn btn-success dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -128,7 +131,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <div class="col-md-6">
                                         <div class="action-bar h-100 d-flex align-items-center">
                                             <ul class="ml-auto">
-                                                <li><button class="btn btn-transparent">Invite to Workforce</button></li>
                                                 <li><button class="btn btn-transparent" type="button" id="add-employee-button">Add an employee</button></li>
                                                 <li>
                                                     <a class="hide-toggle dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

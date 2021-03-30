@@ -81,12 +81,20 @@ class Employees extends MY_Controller {
             ];
         } else if($post['status'] === 'inactive') {
             $status = [
-                "0"
+                "0",
+                "2",
+                "3",
+                "4",
+                "5"
             ];
         } else {
             $status = [
                 "0",
-                "1"
+                "1",
+                "2",
+                "3",
+                "4",
+                "5"
             ];
         }
 
@@ -267,7 +275,7 @@ class Employees extends MY_Controller {
         $user = $this->users_model->update($id,$data);
 
         if($user) {
-            $this->session->set_flashdata('success', "Employee details updated successfully");
+            $this->session->set_flashdata('success', "Employee details updated successfully.");
         } else {
             $this->session->set_flashdata('error', "Please try again!");
         }
@@ -296,8 +304,51 @@ class Employees extends MY_Controller {
 
 		$this->activity_model->add("User #$id Deleted by User:".logged('name'));
 
-		$this->session->set_flashdata('success', 'Employee record has been deleted successfully');
+		$this->session->set_flashdata('success', 'Employee record has been deleted successfully.');
 
 		redirect('/accounting/employees');
+    }
+
+    public function set_status($id, $status)
+    {
+        switch ($status) {
+            case 'terminated' :
+                $empStatus = 0;
+            break;
+            case 'paid-leave' : 
+                $empStatus = 2;
+            break;
+            case 'unpaid-leave' : 
+                $empStatus = 3;
+            break;
+            case 'not-on-payroll' : 
+                $empStatus = 4;
+            break;
+            case 'deceased' : 
+                $empStatus = 5;
+            break;
+            default : 
+                $empStatus = 1;
+            break;
+        }
+
+        $data = [
+            'status' => $empStatus
+        ];
+
+        $update = $this->users_model->update($id,$data);
+
+        if($update) {
+            $this->session->set_flashdata('success', "Employee status successfully set to $status.");
+        } else {
+            $this->session->set_flashdata('error', "Please try again!");
+        }
+
+        redirect('/accounting/employees');
+    }
+
+    public function pay_schedule_form()
+    {
+        $this->load->view('accounting/employees/add_pay_schedule');
     }
 }

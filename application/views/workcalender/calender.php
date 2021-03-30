@@ -556,7 +556,10 @@ a.top-1 {
 
 
                               <div class="row cus-dashboard-div">
-                                <div class="col-widget" id="widget_3">
+
+
+                                  </div>
+                                <!--<div class="col-widget" id="widget_3">
                                   <div style="width: 300px; border: 1px solid #58c04e; background: #58c04e; color:white;  border-radius: 10px; text-align: center;padding: 5px;position: relative;margin: 0 auto;top: 21px;z-index: 1000;">
                                      <i class="fa fa-calendar" aria-hidden="true"></i> Upcoming Jobs
                                   </div>
@@ -569,7 +572,7 @@ a.top-1 {
                                             <div class="row d-lg-flex">
                                                 <div class="col-md-12">
                                                     <div class="cus-dashboard-div">
-                                                        <div id="upcoming-jobs-container"></div>
+
                                                     </div>
                                                 </div>
                                             </div>
@@ -581,9 +584,9 @@ a.top-1 {
                                       </div>
                                     </div>
                                 </div>
-                              </div>
+                              </div>-->
 
-                              <div class="col-widget" id="widget_3">
+                             <!-- <div class="col-widget" id="widget_3">
                                 <div style="width: 300px; border: 1px solid #58c04e; background: #58c04e; color:white;  border-radius: 10px; text-align: center;padding: 5px;position: relative;margin: 0 auto;top: 21px;z-index: 1000;">
                                    <i class="fa fa-paper-plane" aria-hidden="true"></i> Upcoming Events
                                 </div>
@@ -608,7 +611,7 @@ a.top-1 {
                                     </div>
                                   </div>
                               </div>
-                            </div>
+                            </div>-->
                             </div>
 
                               <div class="calendar-menu" style="text-align: left;">
@@ -636,6 +639,12 @@ a.top-1 {
                                               </div>
                                           </div>
                                         -->
+                                          <div><h3 class="left-header"><i class="fa fa-calendar"></i> Upcoming Jobs</h3></div>
+                                          <div id="upcoming-jobs-container"></div>
+
+                                          <div><h3 class="left-header"><i class="fa fa-calendar"></i> Upcoming Events</h3></div>
+                                          <div id="upcoming-events-container"></div>
+
 
                                           <div><h3 class="left-header"><i class="fa fa-calendar"></i> Unshceduled Estimates</h3></div>
                                           <div id="scheduled-estimates-container"></div>

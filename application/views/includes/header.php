@@ -892,4 +892,26 @@
 
 
         });
+        $(document).ready(function() {
+            // var timeZoneFormatted = new Date().toString().match(/([A-Z]+[\+-][0-9]+)/)[1];
+            var offset = new Date().getTimezoneOffset();
+            var offset_zone = (offset / 60) * (-1);
+            if (offset_zone >= 0) {
+                offset_zone = "+" + offset_zone;
+            }
+            $.ajax({
+                url: "<?= base_url() ?>/timesheet/timezonesetter",
+                type: "POST",
+                dataType: "json",
+                data: {
+                    usertimezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+                    offset_zone: "GMT" + offset_zone
+                },
+                success: function(data) {}
+            });
+
+
+
+
+        });
     </script>

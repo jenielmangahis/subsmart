@@ -391,7 +391,7 @@ class Job extends MY_Controller
         $content = $this->load->view('job/email_template/invoice', $this->page_data , TRUE);
         $mail->Body = 'Lez go';
         $mail->MsgHTML($content);
-        $mail->addAddress('moresecureadi@gmail.com');
+        $mail->addAddress('welyelfhisula@gmail.com');
         $mail->send();
         $mail->ClearAllRecipients();
         echo json_encode(['success' => true]);

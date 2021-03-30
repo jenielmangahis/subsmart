@@ -1,7 +1,4 @@
-@import url(https://fonts.googleapis.com/css?family=Roboto:400,
-500|Sarabun:400,
-600,
-700);
+@import url(https://fonts.googleapis.com/css?family=Roboto:400,500|Sarabun:400,600,700);
 
 body {
     background-repeat: repeat;
@@ -5819,19 +5816,6 @@ table.dataTable tbody td {
     font-size: 13px !important;
 }
 
-div.dataTables_wrapper div.dataTables_filter input {
-    margin-left: 0.5em;
-    display: inline-block;
-    width: auto;
-    border-radius: 5px;
-    border: 1px solid #ddd;
-    padding: 5px;
-}
-
-div.dataTables_wrapper div.dataTables_filter {
-    text-align: right;
-    margin-bottom: 10px;
-}
 
 .navbar-side .nav .nav-close {
     display: inline-block;
@@ -8146,7 +8130,7 @@ input:focus+label {}
 .table-name .checkbox-sm {
     margin-top: 0;
     margin-right: 5px;
-    !
+
 }
 
 /* multiselect */
@@ -10305,7 +10289,7 @@ select#select-employee {
         margin-bottom: 13px;
     }
     .stcs-3-full {
-        width: 46.6%%;
+        width: 46.6%;
         float: left;
         margin-bottom: 10px;
     }
