@@ -140,6 +140,24 @@ if (!function_exists('companyProfileImage')) {
     }
 }
 
+if (!function_exists('getCompanyCoverPhoto')) {
+
+    function getCompanyCoverPhoto()
+    {
+
+        $CI         = &get_instance();
+        $company_id = logged('company_id');
+        $res = $CI->business_model->getByCompanyCoverPhoto($company_id);
+        if( $res ){
+            $url = urlUpload('company_cover_photo/' . $res->company_id . '/' . $res->business_cover_photo . '?' . time());
+        }else{
+            $url = urlUpload('company_cover_photo/default.png');
+        }
+
+        return $url;
+    }
+}
+
 if (!function_exists('businessProfileImage')) {
 
     function businessProfileImage($id)
@@ -3370,3 +3388,10 @@ function maskCreditCardNumber($cc, $maskFrom = 0, $maskTo = 4, $maskChar = 'X', 
 
     return $newCreditCard;
 }
+
+function createSlug($str, $delimiter = '-'){
+
+    $slug = strtolower(trim(preg_replace('/[\s-]+/', $delimiter, preg_replace('/[^A-Za-z0-9-]+/', $delimiter, preg_replace('/[&]/', 'and', preg_replace('/[\']/', '', iconv('UTF-8', 'ASCII//TRANSLIT', $str))))), $delimiter));
+    return $slug;
+
+} 

@@ -78,55 +78,62 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 </style>
 <?php include viewPath('includes/header'); ?>
 <!-- page wrapper start -->
+<?php echo form_open_multipart('users/update_profile_setting', [ 'id'=> '', 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
 <div role="wrapper">
    <?php include viewPath('includes/sidebars/business'); ?>
    <div wrapper__section>
-      <div class="col-md-24 col-lg-24 col-xl-18">
-        <?php echo form_open_multipart('users/savebusinessdetail', [ 'id'=> 'form-business-details', 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
+      <div class="col-md-24 col-lg-24 col-xl-18">        
         <div class="row">
             <div class="col-md-12">
-                <form id="form-business-credentials" method="post" action="#">
-                <div class="validation-error" style="display: none;"></div>
                 <div class="card">
 <div class="row">
-    <div class="col-md-24 col-lg-24 col-xl-18">
-<form id="form-business-profile" method="post" action="#">
+    <div class="col-md-12 col-lg-12 col-xl-12">
     <div class="validation-error" style="display: none;"></div>
-
+    <div class="row">
+      <div class="col-sm-6 left">
+        <h3 class="page-title">Profile Settings</h3>
+      </div>
+    </div>
+    <div class="alert alert-warning mt-2 mb-4" role="alert">
+        <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">
+          Your settings let you control how the business profile is shown to customers. Take a quick look and make sure all of your settings are correct.
+        </span>
+    </div>
     <div class="card mtc-18 pl-4">
-       <h3 class="page-title mb-0 mt-18">Profile Settings</h3>
-       <hr/>
-        <p class="margin-bottom">
-           Your settings let you control how the business profile is shown to customers. Take a quick look and make sure all of your settings are correct.
-        </p>
         <div class="form-group">
             <div class="row">
                 <div class="col-sm-12">
                     <label>Your Business Profile URL</label> <span class="form-required">*</span>
                     <div class="help help-block help-sm">Customize your profile URL so it can be easy to remember.</div>
                     <div class="profile-url">
-                        <span class="profile-url-prefix">nsmartrac.com/business/</span>
+                        <?php 
+                          $slug = '';
+                          if( isset($profiledata) && $profiledata->profile_slug != ''){
+                            $slug = createSlug($profiledata->profile_slug,'-');
+                          }
+                        ?>
+                        <span class="profile-url-prefix">nsmartrac.com/business/<?= $slug; ?></span>
                         <div class="profile-url-input">
-                            <input type="text" name="profile_slug"  value="<?= isset($profile_data) ? $profile_data->profile_slug : '';  ?>" class="form-control" autocomplete="off" data-profile-url="input">
+                            <input type="text" name="profile_slug"  value="<?= isset($profiledata) ? $profiledata->profile_slug : '';  ?>" class="form-control" autocomplete="off" data-profile-url="input">
                         </div>
                     </div>
                     <span class="validation-error-field" data-formerrors-for-name="profile_slug" data-formerrors-message="true" style="display: none;"></span>
                 </div>
-                <div class="col-sm-12">
+                <!-- <div class="col-sm-12">
                     <label>Preview</label>
                     <div class="help help-block help-sm">Click to preview your profile or copy the URL</div>
                     <div class="form-control-text">
                         <a data-profile-url="preview" href="https://www.nsmatrac.com/users/businessprofile" target="_blank">nsmatrac.com/business/<span data-profile-url="slug"><?= isset($profile_data) ? $profile_data->profile_slug : '';  ?></span></a>
                         <div class="text-ter hide" data-profile-url="change">...click Save below to update</div>
                     </div>
-                </div>
+                </div> -->
             </div>
         </div>
         <div class="form-group">
             <label>Business Tags</label>
             <div class="help help-sm help-block">Enter tags/keywords and get better visibility. This helps customers find you on search. Example: cleaner, plumber</div>
             <div class="tagsinput">
-              <input type="text" value="Security" data-role="tagsinput" />
+              <input type="text" data-role="tagsinput" value="<?= isset($profiledata) ? $profiledata->business_tags : ''; ?>" name="company_tags" />
             </div>            
         </div>
         <div class="form-group">
@@ -136,11 +143,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             </div>
             <div class="row">
                 <div class="col-sm-12">
-                    <div class="margin-bottom">
-                    <div class="img-responsive" id="company-cover-photo" style="background-image: url('https://www.markate.com/assets/images/app/public/pros/wallpaper_0.jpg');"></div>
+                    <div class="margin-bottom">                    
+                    <div class="img-responsive" id="company-cover-photo" style="background-image: url('<?= getCompanyCoverPhoto(); ?>');"></div>
 </div>
 <div>
-    <input type='file' id='coverphoto_image' style="display: none;" />
+    <input type='file' id='coverphoto_image' name="cover_photo" style="display: none;" />
     <span class="fileinput-button vertical-top">
         <a class="profile-cover-upload-link" href="javascript:void(0);">
             <span class="fa fa-camera"></span>
@@ -148,66 +155,16 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         </a>
 	</span>
 </div>
-<div class="modal coveruploadmodal-modal" id="coveruploadmodal-modal" tabindex="-1" role="dialog">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">×</span>
-                </button>
-                <h4 class="modal-title">Upload Cover Picture</h4>
-            </div>
-            <div class="modal-body">
 
-                <div class="clearfix">
-                    <span class="btn btn-primary-flat fileinput-button vertical-top">Upload Image <input id="coveruploadmodal-file" name="filewallpaper" type="file"></span>
-                    <button class="btn btn-danger pull-right" id="coveruploadmodal-btn-delete" type="button" style="display: none;">Delete Image</button>
-                </div>
-
-                <div class="alert alert-danger" id="coveruploadmodal-error" role="alert" style="display: none;"></div>
-
-                <div class="" id="coveruploadmodal-progressbar" style="display: none;">
-                    <div class="text">Uploading</div>
-                    <div class="progress">
-                        <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>
-                    </div>
-                </div>
-
-                <div class="coveruploadmodal-crop-container" id="coveruploadmodal-crop-container" style="display: none;">
-                    <hr>
-                    <div class="help help-sm">To crop this image, move or resize the cropping area then click "Save Image"</div>
-                    <div class="coveruploadmodal-crop-wrapper">
-                        <img class="coveruploadmodal-crop-image" id="coveruploadmodal-image-preview" data-name="" src="">
-                    </div>
-                </div>
-
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-success pull-left" id="coveruploadmodal-crop-btn" type="button" data-label-on-submit="Saving ..." style="display: none;">Save Image</button>
-                <button class="btn btn-default" type="button" data-dismiss="modal">Close</button>
-            </div>
-        </div>
-    </div>
-</div><div class="hide" data-fileupload="progressbar-wallpaper">
-    <div class="text">Uploading</div>
-    <div class="progress">
-        <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>
-    </div>
-</div>
-<div class="alert alert-danger hide" data-fileupload="error-wallpaper" role="alert"></div>                </div>
-            </div>
-        </div>
-
-    </div>
 
     <hr class="card-hr">
 <div class="card">
     <div class="row">
     	<div class="col-md-8">
-    		<button class="btn btn-default btn-lg" name="btn-save" type="button">Save</button> <span class="alert-inline-text margin-left hide">Saved</span>
+    		<button class="btn btn-default btn-lg" name="btn-save" type="submit">Save</button>
     	</div>    	
     </div>
-</div></form>
+</div>
 
     </div>
 </div>
@@ -217,6 +174,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
       </div>
    </div>
 </div>
+</form>
 <?php include viewPath('includes/footer'); ?>
 <script>
 $(function(){
