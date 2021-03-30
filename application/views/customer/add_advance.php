@@ -43,9 +43,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     </div>
                     <div class="col-md-12">
                         <input type="hidden" value="<?php if(isset($profile_info)){ echo $profile_info->prof_id; } ?>" class="form-control" name="prof_id" id="prof_id" />
-
-
-
                     </div>
                  </div>
                 </form>
@@ -89,5 +86,50 @@ defined('BASEPATH') or exit('No direct script access allowed');
 <?php include viewPath('includes/footer'); ?>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-timepicker/0.5.2/js/bootstrap-timepicker.min.js" integrity="sha512-2xXe2z/uA+2SyT/sTSt9Uq4jDKsT0lV4evd3eoE/oxKih8DSAsOF6LUb+ncafMJPAimWAXdu9W+yMXGrCVOzQA==" crossorigin="anonymous"></script>
+<script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=<?= google_credentials()['api_key'] ?>&callback=initMap&libraries=places&v=weekly&sensor=false"></script>
 
-<?php include viewPath('customer/js/add_advance_js'); ?>
+<script >
+    var autocomplete;
+        function initMap() {
+            var input = document.getElementById('mail_add');
+            autocomplete = new google.maps.places.Autocomplete(input);
+            autocomplete.addListener("place_changed", fillInAddress);
+
+        }
+    function fillInAddress(){
+        var place = autocomplete.getPlace();
+        for (const component of place.address_components) {
+            const componentType = component.types[0];
+            switch (componentType) {
+                case "street_number": {
+                    $('#cross_street').val(component.long_name);
+                    break;
+                }
+                case "postal_code": {
+                    $('#zip_code').val(component.long_name);
+                    break;
+                }
+                case "country": {
+                    $('#country').val(component.long_name);
+                    break;
+                }
+                case "route": {
+                    $('#mail_add').val(component.long_name);
+                    break;
+                }
+                case "locality": {
+                    $('#city').val(component.long_name);
+                    break;
+                }
+                case "administrative_area_level_1": {
+                    $('#state').val(component.long_name);
+                    break;
+                }
+            }
+        }
+        console.log(place);
+    }
+</script>
+
+            <?php include viewPath('customer/js/add_advance_js'); ?>

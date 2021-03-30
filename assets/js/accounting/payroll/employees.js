@@ -167,6 +167,43 @@ $(document).on('click', '#employees-table tbody tr', function() {
     });
 });
 
+$('#run-payroll-button').on('click', function(e) {
+    e.preventDefault();
+
+    $('[data-target="#payrollModal"]').trigger('click');
+});
+
+$(document).on('change', '#pay-schedule', function() {
+    if($(this).val() === 'add') {
+        $.get('/accounting/employees/add-pay-schedule-form', function(res) {
+            if($('#add-pay-schedule-modal').length > 0) {
+                $('#add-pay-schedule-modal').remove();
+            }
+            $('.append-modal').append(res);
+
+            $('#add-pay-schedule-modal select').select2();
+
+            var modalElems = Array.prototype.slice.call(document.querySelectorAll('#add-pay-schedule-modal .js-switch'));
+
+            modalElems.forEach(function(html) {
+                var switchery = new Switchery(html, {
+                    size: 'small'
+                });
+            });
+
+            $('#add-pay-schedule-modal .datepicker').each(function() {
+                $(this).datepicker({
+                    uiLibrary: 'bootstrap',
+                    todayBtn: "linked",
+                    language: "de"
+                });
+            });
+
+            $('#add-pay-schedule-modal').modal('show');
+        });
+    }
+});
+
 var table = $('#employees-table').DataTable({
     autoWidth: false,
     searching: false,
@@ -224,12 +261,12 @@ var table = $('#employees-table').DataTable({
                     </button>
 
                     <div class="dropdown-menu" aria-labelledby="statusDropdownButton">
-                        <a class="dropdown-item" href="#">Active</a>
-                        <a class="dropdown-item" href="#">Paid leave of absence</a>
-                        <a class="dropdown-item" href="#">Unpaid leave of absence</a>
-                        <a class="dropdown-item" href="#">Not on payroll</a>
-                        <a class="dropdown-item" href="#">Terminated</a>
-                        <a class="dropdown-item" href="#">Deceased</a>
+                        <a class="dropdown-item" href="/accounting/employees/set-status/${rowData.id}/active">Active</a>
+                        <a class="dropdown-item" href="/accounting/employees/set-status/${rowData.id}/paid-leave">Paid leave of absence</a>
+                        <a class="dropdown-item" href="/accounting/employees/set-status/${rowData.id}/unpaid-leave">Unpaid leave of absence</a>
+                        <a class="dropdown-item" href="/accounting/employees/set-status/${rowData.id}/not-on-payroll">Not on payroll</a>
+                        <a class="dropdown-item" href="/accounting/employees/set-status/${rowData.id}/terminated">Terminated</a>
+                        <a class="dropdown-item" href="/accounting/employees/set-status/${rowData.id}/deceased">Deceased</a>
                     </div>
                 </div>
                 `);

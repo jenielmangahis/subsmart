@@ -1010,7 +1010,6 @@ $(document).ready(function () {
   function show_my_attendance_remarks() {
     $("#show_my_attendance_remarks").hide();
     $(".my-attendance-remarks-loader").show();
-    $("#show_my_attendance_remarks").DataTable().destroy();
     $.ajax({
       url: baseURL + "/timesheet/show_my_attendance_remarks",
       type: "POST",
@@ -1019,14 +1018,17 @@ $(document).ready(function () {
         week: $("#week_attendance_remarks").val(),
       },
       success: function (data) {
-        // console.log(data);
+        console.log(data);
         $(".my-attendance-remarks-loader").hide();
         $("#show_my_attendance_remarks").show();
-        $("#show_my_attendance_remarks").html(data);
-        $("#show_my_attendance_remarks").DataTable({
-          ordering: false,
-          paging: false,
-        });
+
+        // $("#show_my_attendance_remarks").DataTable().destroy();
+        $("#show_my_attendance_remarks").html(data.display);
+        console.log(data.shift_dates);
+        // $("#show_my_attendance_remarks").DataTable({
+        //   ordering: false,
+        //   paging: false,
+        // });
       },
     });
   }

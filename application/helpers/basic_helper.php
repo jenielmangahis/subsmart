@@ -91,7 +91,7 @@ if (!function_exists('userProfile')) {
                 $url = base_url('uploads/users/default.png');
             }else{
                 $url = urlUpload('users/user-profile/' . $CI->users_model->getRowById($id, 'profile_img') . '?' . time());
-            }            
+            }
         // $url = 'http://nsmartrac.com/uploads/users/'.$id.'.'.$CI->users_model->getRowById($id, 'img_type').'?'.time();
 
         return $url;
@@ -190,7 +190,7 @@ if (!function_exists('licenseImage')) {
         if ($id != 'default'){
             $image =  $CI->business_model->getRowByWhere(['id' => $id], 'license_image');
             if( $image != '' ){
-                $url = urlUpload('users/business_profile/' . $id . '/' . $image . '?' . time());    
+                $url = urlUpload('users/business_profile/' . $id . '/' . $image . '?' . time());
             }else{
                 $url = urlUpload('users/business_profile/img_default.png');
             }
@@ -214,7 +214,7 @@ if (!function_exists('bondImage')) {
         if ($id != 'default'){
             $image =  $CI->business_model->getRowByWhere(['id' => $id], 'bond_image');
             if( $image != '' ){
-                $url = urlUpload('users/business_profile/' . $id . '/' . $image . '?' . time());    
+                $url = urlUpload('users/business_profile/' . $id . '/' . $image . '?' . time());
             }else{
                 $url = urlUpload('users/business_profile/img_default.png');
             }
@@ -238,7 +238,7 @@ if (!function_exists('insuranceImage')) {
         if ($id != 'default'){
             $image =  $CI->business_model->getRowByWhere(['id' => $id], 'insurance_image');
             if( $image != '' ){
-                $url = urlUpload('users/business_profile/' . $id . '/' . $image . '?' . time());    
+                $url = urlUpload('users/business_profile/' . $id . '/' . $image . '?' . time());
             }else{
                 $url = urlUpload('users/business_profile/img_default.png');
             }
@@ -906,24 +906,24 @@ if (!function_exists('getCompanyFolder')){
             if(empty($company->folder_name)){
                 $folder_name = generateRandomString();
                 while(file_exists('./uploads/' . $folder_name . '/')){
-                    $folder_name = generateRandomString();  
+                    $folder_name = generateRandomString();
                 }
-    
+
                 $data = array('folder_name' => $folder_name);
-    
+
                 if($CI->business_model->trans_update($data, array('id' => $company->id))){
                     mkdir('./uploads/' . $folder_name . '/');
-    
+
                     $company_folder = $folder_name;
                 }
             } else {
                 if(!file_exists('./uploads/' . $company->folder_name . '/')){
-                    mkdir('./uploads/' . $company->folder_name . '/');    
+                    mkdir('./uploads/' . $company->folder_name . '/');
                 }
-    
+
                 $company_folder = $company->folder_name;
             }
-        } 
+        }
 
         return $company_folder;
     }
@@ -931,10 +931,10 @@ if (!function_exists('getCompanyFolder')){
 
 if (!function_exists('getFolders')) {
 
-    function getFolders($parent_id = -1, 
-                        $getallparent = false, 
-                        $getallchild = false, 
-                        $asArray = false, 
+    function getFolders($parent_id = -1,
+                        $getallparent = false,
+                        $getallchild = false,
+                        $asArray = false,
                         $trashed = false,
                         $ofUser = false,
                         $ofCategorized = false)
@@ -972,7 +972,7 @@ if (!function_exists('getFolders')) {
             $category_filter = 'and (a.category_id is null or a.category_id <= 0) ';
         }
 
-        $sql = 'select ' . 
+        $sql = 'select ' .
 
                'a.*, '.
                'b.FName as FCreatedBy, b.LName as LCreatedBy, '.
@@ -1005,7 +1005,7 @@ if (!function_exists('getFolders')) {
         } else {
             $return = $CI->db->query($sql);
         }
-        
+
         return $return;
     }
 
@@ -1038,7 +1038,7 @@ if (!function_exists('getFiles')) {
             $category_filter = 'and (a.category_id is null or a.category_id <= 0) ';
         }
 
-        $sql = 'select ' . 
+        $sql = 'select ' .
 
                'a.*, '.
                'b.FName as FCreatedBy, b.LName as LCreatedBy, '.
@@ -1051,7 +1051,7 @@ if (!function_exists('getFiles')) {
                'left join business_profile c on c.id = a.company_id '.
                'left join file_folders_categories d on d.category_id = a.category_id '.
 
-               'where a.company_id = ' . $company_id . ' and a.softdelete '. $softdelete . $user_filter . $category_filter . 
+               'where a.company_id = ' . $company_id . ' and a.softdelete '. $softdelete . $user_filter . $category_filter .
 
                'order by created ASC';
 
@@ -1060,7 +1060,7 @@ if (!function_exists('getFiles')) {
         } else {
             $return = $CI->db->query($sql);
         }
-        
+
         return $return;
     }
 
@@ -1072,7 +1072,7 @@ if (!function_exists('searchFilesOrFolders')) {
         $CI = &get_instance();
         $uid = logged('id');
         $company_id = logged('company_id');
-        
+
         $user_filter_folder = '';
         $user_filter_file = '';
 
@@ -1206,7 +1206,7 @@ if (!function_exists('getNewTasks')){
                  'and b.is_assigned = 1 ' .
                  'and a.view_count <= 0';
 
-        return $CI->db->query($sql)->result_array();    
+        return $CI->db->query($sql)->result_array();
     }
 }
 if (!function_exists('getTasks')){
@@ -1284,7 +1284,7 @@ if (!function_exists('getAllCompanyTasks')){
                'left join tasks_status b on b.status_id = a.status_id '.
                'left join tasks_participants c on c.task_id = a.task_id '.
 
-               'where a.company_id = '. $company_id . ' ' .  
+               'where a.company_id = '. $company_id . ' ' .
 
                'group by a.task_id '.
 
@@ -1318,7 +1318,7 @@ if (!function_exists('getUserFileVaultPermissions')){
                 return $user_permissions;
             } else if(!empty($role_permissions)){
                 $role_permissions['user_id'] = $uid;
-                return $role_permissions;    
+                return $role_permissions;
             } else {
                 return array(
                     'create_folder' => 0,
@@ -1329,7 +1329,7 @@ if (!function_exists('getUserFileVaultPermissions')){
                     'remove_folder_file' => 0,
                     'user_id' => $uid,
                     'role_id' => $role_id
-                );    
+                );
             }
         } else if(!empty($role_permissions)){
             $role_permissions['user_id'] = $uid;
@@ -1425,7 +1425,7 @@ function get_customer_by_id($customer_id, $key = '')
  * return customer acs_profile details based on ID
  */
 function acs_prof_get_customer_by_prof_id($customer_id)
-{   
+{
     //Get Customer data
     $CI =& get_instance();
     $CI->load->model('AcsProfile_model');
@@ -2033,7 +2033,7 @@ function get_estimate_status_total($status = 0, $count_only = false)
             return count($CI->estimate_model->getByWhere(array()));
         }else{
             return $CI->estimate_model->getByWhere(array());
-        }  
+        }
     }else{
         if (!empty($status)) {
             if ($count_only) {
@@ -2048,9 +2048,9 @@ function get_estimate_status_total($status = 0, $count_only = false)
             return count($CI->estimate_model->getByWhere(array('company_id' => $company_id)));
         }else{
             return $CI->estimate_model->getByWhere(array('company_id' => $company_id));
-        }  
+        }
     }
-    
+
 }
 
 
@@ -2161,14 +2161,14 @@ function check_upcoming_date($date)
     $tomorrow = date('Y-m-d', strtotime(' +1 day'));
     $new_date = date_format(date_create($date),"Y-m-d");
 
-    $dateTimestamp1 = strtotime($tomorrow); 
-    $dateTimestamp2 = strtotime($new_date); 
+    $dateTimestamp1 = strtotime($tomorrow);
+    $dateTimestamp2 = strtotime($new_date);
 
     // dd($tomorrow . " " . $new_date);
-    if ($dateTimestamp1 == $dateTimestamp2) 
+    if ($dateTimestamp1 == $dateTimestamp2)
         return true;
     else
-        return false; 
+        return false;
 }
 
 /**
@@ -2238,7 +2238,7 @@ function get_invoice_amount($type)
     switch ($type) {
         case "year":
             $result = $CI->invoice_model->getByWhere(array('company_id' => $company_id, 'date_issued >=' => $start_date, 'date_issued <=' => $end_date));
-            return total_invoice_amount($result); 
+            return total_invoice_amount($result);
 
         case "pending":
             $result = $CI->invoice_model->getByWhere(array('company_id' => $company_id, 'date_issued >=' => $start_date, 'date_issued <=' => $end_date, 'status' => 'Draft'));
@@ -2297,7 +2297,7 @@ function get_reports_by_date($start_date, $end_date, $month, $action)
             $result = $CI->estimate_model->getByWhere(array('company_id' => $company_id, 'estimate_date >=' => $start_date, 'estimate_date <=' => $end_date));
             $final_res = report_totals_by_month($result, $month, $action);
             break;
-        
+
         case 'estimate_amount':
             $result = $CI->estimate_model->getByWhere(array('company_id' => $company_id, 'estimate_date >=' => $start_date, 'estimate_date <=' => $end_date));
             $final_res = report_totals_by_month($result, $month, $action);
@@ -2307,7 +2307,7 @@ function get_reports_by_date($start_date, $end_date, $month, $action)
             $result = $CI->invoice_model->getByWhere(array('company_id' => $company_id, 'date_issued >=' => $start_date, 'date_issued <=' => $end_date));
             $final_res = report_totals_by_month($result, $month, 'num_invoice');
             break;
-        
+
         case 'invoice_amount':
             $result = $CI->invoice_model->getByWhere(array('company_id' => $company_id, 'date_issued >=' => $start_date, 'date_issued <=' => $end_date));
             $final_res = report_totals_by_month($result, $month, "invoice_amount");
@@ -2399,7 +2399,7 @@ function report_totals_by_month($results, $month, $action)
  */
 function setPageName($type) {
     $title = '';
-    
+
     switch($type) {
         case "monthly-closeout":
             $title = "Monthly Closeout";
@@ -2488,63 +2488,63 @@ function setPageName($type) {
         case "payment-by-customer":
             $title = "Sales Summary By Customer";
             break;
-        
+
         case "customer-sales":
             $title = "Sales By Customer";
             break;
-                
+
         case "payment-by-customer-group":
             $title = "Sales By Customer Groups";
             break;
-                
+
         case "customer-source":
             $title = "Sales By Customer Source";
             break;
-                        
+
         case "customer-tax-by-month":
             $title = "Tax Paid by Customers";
             break;
-                                    
+
         case "customer-by-city-state":
             $title = "Customer Demographics";
             break;
-                                                
+
         case "customer-by-source":
             $title = "Customer Source";
             break;
-        
+
         case "employee-payroll-summary":
             $title = "Payroll Summary";
             break;
-                    
+
         case "employee-payroll-by-employee":
             $title = "Payroll By Employee";
             break;
-                                
+
         case "employee-payroll-log":
             $title = "Payroll Log Details";
             break;
-                                            
+
         case "employee-payroll-percent-commission":
             $title = "Percent Sales Commission Report";
             break;
-                                                        
+
         case "summary-by-period":
             $title = "Time Log Summary";
             break;
-                                                                    
+
         case "timesheet-entries":
             $title = "Time Log Details";
             break;
-                                                                            
+
         case "work-order-status":
             $title = "Work Order Status";
             break;
-                                                                                        
+
         case "sales-tax":
             $title = "Sales Tax";
             break;
-                                                                                        
+
         case "invoice-items-no-tax":
             $title = "Non Taxable Sales";
             break;
@@ -2608,7 +2608,7 @@ function getPaymentByMethod($start_date, $end_date, $month) {
                 case "cash":
                     $cash += floatval($result->invoice_amount);
                     break;
-                
+
                 case "check":
                     $check += floatval($result->invoice_amount);
                     break;
@@ -2977,7 +2977,7 @@ function getCustomerSource($start_date, $end_date) {
     }
 
     array_push($fn, array("Total", $res_total, dollar_format($res_invoice_total), $com_total, dollar_format($com_invoice_total)));
-    
+
     return $fn;
 }
 
@@ -3015,7 +3015,7 @@ function getCustomerBySource() {
     }
 
     array_push($fn, array("Total", $cus_total, $res_total, $com_total));
-    
+
     return $fn;
 }
 
@@ -3023,10 +3023,10 @@ function getPaymentType($type) {
     switch($type) {
         case "cc":
             return "Credit Card";
-        
+
         case "check":
             return "Check";
-            
+
         case "cash":
             return "Cash";
     }
@@ -3201,31 +3201,31 @@ function google_get_oauth2_token($code, $googleClientId, $googleSecretId) {
 
     $json_response = curl_exec($curl);
     error_log($json_response);
-    curl_close($curl);   
+    curl_close($curl);
     $refreshToken = '';
-    $authObj = json_decode($json_response);  
+    $authObj = json_decode($json_response);
     if (isset($authObj->refresh_token)){
         //refresh token only granted on first authorization for offline access
-        //save to db for future use (db saving not included in example)            
+        //save to db for future use (db saving not included in example)
         $refreshToken = $authObj->refresh_token;
     }
 
-    $accessToken = $authObj->access_token;    
+    $accessToken = $authObj->access_token;
     $accessUserProfile = "https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=" . $accessToken;
     $curl = curl_init($accessUserProfile);
 
 
-    curl_setopt($curl, CURLOPT_POST, false);        
+    curl_setopt($curl, CURLOPT_POST, false);
     curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_ANY);
     curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
     curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
 
     $json_response = curl_exec($curl);
     error_log($json_response);
-    curl_close($curl);   
-    $googleUser = json_decode($json_response);   
+    curl_close($curl);
+    $googleUser = json_decode($json_response);
     $gData['user'] = $googleUser;
-    $gData['access_token'] = $accessToken; 
+    $gData['access_token'] = $accessToken;
     $gData['refreshToken'] = $refreshToken;
     return $gData;
 }
@@ -3247,12 +3247,12 @@ if (!function_exists('getReorderItemsCount')){
         $uid = logged('id');
         $company_id = logged('company_id');
 
-        $sql = 'SELECT * ,(SELECT SUM(qty) AS total FROM `items_has_storage_loc` WHERE `item_id` = items.id ) AS total_count FROM items WHERE items.company_id = ' . $company_id . ' AND items.reorder_point != 0 ORDER BY `items`.`id` ASC'; 
+        $sql = 'SELECT * ,(SELECT SUM(qty) AS total FROM `items_has_storage_loc` WHERE `item_id` = items.id ) AS total_count FROM items WHERE items.company_id = ' . $company_id . ' AND items.reorder_point != 0 ORDER BY `items`.`id` ASC';
 
-        $sql1 =  'select * , (select sum(qty) as total from `items_has_storage_loc` WHERE `item_id` = items.id ) as total_count from items where company_id = ' . $company_id .' order by `id` asc' ; 
+        $sql1 =  'select * , (select sum(qty) as total from `items_has_storage_loc` WHERE `item_id` = items.id ) as total_count from items where company_id = ' . $company_id .' order by `id` asc' ;
 
 
-        return   $CI->db->query($sql1)->result_array();    
+        return   $CI->db->query($sql1)->result_array();
 
     }
 }

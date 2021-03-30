@@ -1358,6 +1358,7 @@ class Timesheet_model extends MY_Model
     }
     public function get_my_leave_requests($user_id, $from_date, $to_date)
     {
+        $this->db->reset_query();
         $qry = $this->db->query("SELECT timesheet_leave.*,timesheet_pto.name FROM timesheet_leave  JOIN timesheet_pto ON timesheet_pto.id=timesheet_leave.pto_id WHERE timesheet_leave.user_id = " . $user_id . " AND timesheet_leave.date_created >= '" . $from_date . "' AND timesheet_leave.date_created <= '" . $to_date . "' ORDER BY timesheet_leave.date_created DESC");
         return $qry->result();
     }
@@ -1368,16 +1369,19 @@ class Timesheet_model extends MY_Model
     }
     public function get_leavedates($leave_id)
     {
+        $this->db->reset_query();
         $qry = $this->db->query("SELECT * FROM timesheet_leave_date where leave_id = " . $leave_id . " order by date asc");
         return $qry->result();
     }
     public function get_my_date_attendance($date, $user_id)
     {
-        $qry = $this->db->query("SELECT timesheet_attendance.*, timesheet_logs.date_created as checkin_time FROM timesheet_attendance JOIN timesheet_logs ON timesheet_attendance.id = timesheet_logs.attendance_id where timesheet_attendance.date_created like '%" . date("Y-m-d", strtotime($date)) . "%' AND timesheet_logs.action='Check in' AND timesheet_attendance.user_id =" . $user_id);
+        $this->db->reset_query();
+        $qry = $this->db->query("SELECT timesheet_attendance.*, timesheet_logs.date_created as checkin_time FROM timesheet_attendance JOIN timesheet_logs ON timesheet_attendance.id = timesheet_logs.attendance_id where timesheet_attendance.date_created like '%" . $date . "%' AND timesheet_logs.action='Check in' AND timesheet_attendance.user_id =" . $user_id);
         return $qry->result();
     }
     public function get_my_schedule($shift_date, $user_id)
     {
+        $this->db->reset_query();
         $qry = $this->db->query("SELECT * FROM timesheet_shift_schedule where shift_date = '" . $shift_date . "' AND user_id =" . $user_id);
         return $qry->result();
     }

@@ -215,6 +215,21 @@
                                                     </div>
                                                 </div>
                                             </div>
+                                            <h4>How often do you pay this employee?</h4>
+                                            <p>Enter a few details and we'll work out your company's payroll calendar.</p>
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="form-group row">
+                                                        <div class="col-sm-8">
+                                                            <select name="pay_schedule" id="pay-schedule" class="form-control">
+                                                                <option disabled selected>&nbsp;</option>
+                                                                <option value="add">&plus; Add new</option>
+                                                            </select>
+                                                        </div>
+                                                        <label for="pay-schedule" class="col-sm-4 col-form-label">starting <span></span></label>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>

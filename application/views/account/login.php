@@ -114,9 +114,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         usertimezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
         offset_zone: "GMT" + offset_zone
       },
-      success: function(data) {
-        console.log(data);
-      }
+      success: function(data) {}
     });
 
 

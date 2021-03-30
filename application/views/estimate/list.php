@@ -248,13 +248,13 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                             </a>
                                         </td>
                                         <td>
-                                          <?php 
+                                          <?php
                                             if( $estimate->is_mail_open == 1 ){
                                               echo "<i class='fa fa-eye'></i>  ";
                                             }
-                                            echo $estimate->status;                                              
+                                            echo $estimate->status;
                                           ?>
-                                          
+
                                         </td>
                                         <td>
                                             <?php if (is_serialized($estimate->estimate_eqpt_cost)) { ?>
@@ -269,7 +269,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                                 <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="dropdown-edit">
                                                     <li role="presentation"><a role="menuitem" tabindex="-1"
                                                                                href="<?php echo base_url('estimate/view/' . $estimate->id) ?>"><span
-                                                                    class="fa fa-file-text-o icon"></span> View</a></li>
+                                                                    class="fa fa-file-text-o icon"></span> View Estimate</a></li>
                                                     <li role="presentation"><a role="menuitem" tabindex="-1"
                                                                                href="<?php echo base_url('estimate/edit/' . $estimate->id) ?>"><span
                                                                     class="fa fa-pencil-square-o icon"></span> Edit</a>
@@ -284,14 +284,14 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                                                                data-name="WO-00433"><span
                                                                     class="fa fa-files-o icon clone-workorder">
 
-                                                        </span> Clone Work Order</a>
+                                                        </span> Clone Estimate</a>
                                                     </li>
                                                     <li role="presentation"><a role="menuitem" tabindex="-1"
                                                                                href="<?php echo base_url('invoice') ?>"
                                                                                data-convert-to-invoice-modal="open"
                                                                                data-id="161983"
                                                                                data-name="WO-00433"><span
-                                                                    class="fa fa-money icon"></span> Create Invoice</a>
+                                                                    class="fa fa-money icon"></span> Convert to Invoice</a>
                                                     </li>
                                                     <li role="presentation">
                                                         <a role="menuitem" href="<?php echo base_url('estimate/view_pdf/' . $estimate->id) ?>" class="">

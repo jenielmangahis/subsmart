@@ -107,7 +107,20 @@ add_css(array(
         justify-content: center;
     }
     .card{
-        box-shadow: 0 0 13px 0 rgb(116 116 117 / 44%) !important;
+        box-shadow: 0 0 13px 0 rgb(116 116 117 / 22%) !important;
+    }
+    .select2-container .select2-selection--single .select2-selection__rendered {
+        padding-top: 2px !important;
+    }
+    .select2-container .select2-selection--single {
+        height: 30px !important;
+    }
+    .select2-container--default .select2-selection--single .select2-selection__arrow {
+        top: -3px !important;
+    }
+    .input_select {
+        font-size: 11px !important;
+        line-height: 150%;
     }
 </style>
 
@@ -156,7 +169,217 @@ add_css(array(
                             </div>
                         </div>
                         <div class="tab-content" id="myTabContent">
+                            <div class="card collapse"  id="advance_search_wizard">
+                                <div class="card-header">
+                                    Advance Search
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <div class="col-md-12">
+                                                <label for="">Monitoring ID</label>
+                                                <input type="text" class="form-control" name="monitoring_id" id="acs_custom_field2"  />
+                                            </div>
+                                            <div class="col-md-12">
+                                                <label for="">First Name</label>
+                                                <input type="text" class="form-control" name="firstname" id="acs_custom_field2"  />
+                                            </div>
+                                            <div class="col-md-12">
+                                                <label for="">Last Name</label>
+                                                <input type="text" class="form-control" name="lastname" id="acs_custom_field2"  />
+                                            </div>
+                                            <div class="col-md-12">
+                                                <label for="">Email</label>
+                                                <input type="text" class="form-control" name="email" id="acs_custom_field2"  />
+                                            </div>
+                                            <div class="col-md-12">
+                                                <label for="">Phone</label>
+                                                <input type="text" class="form-control" name="phone" id="acs_custom_field2"  />
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="col-md-12">
+                                                <label for="">Sales Date</label>
+                                                <input type="text" class="form-control" name="sales_date" id="acs_custom_field2"  />
+                                            </div>
+                                            <div class="col-md-12">
+                                                <label for="">Company Name</label>
+                                                <input type="text" class="form-control" name="company_name" id="acs_custom_field2"  />
+                                            </div>
+                                            <div class="col-md-12">
+                                                <label for="">Panel Type</label>
+                                                <select name="panel_type" id="panel_type" class="input_select">
+                                                    <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == ''){echo "selected";} } ?> value=""></option>
+                                                    <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'DIGI'){echo "selected";} } ?> value="DIGI">Landline</option>
+                                                    <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'DW2W'){echo "selected";} } ?> value="DW2W">Landline W/ 2-Way</option>
+                                                    <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'DWCB'){echo "selected";} } ?> value="DWCB">Landline W/ Cell Backup</option>
+                                                    <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'D2CB'){echo "selected";} } ?> value="D2CB">Landline W/ 2-Way &amp; Cell Backup</option>
+                                                    <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'CPDB'){echo "selected";} } ?> value="CPDB">Cell Primary</option>
+                                                    <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'CP2W'){echo "selected";} } ?> value="CP2W">Cell Primary w/2Way</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <label for="">Account Type</label>
+                                                <select name="acct_type" id="acct_type" class="input_select">
+                                                    <option <?php if(isset($alarm_info)){ if($alarm_info->acct_type == ''){echo "selected";} } ?> value=""></option>
+                                                    <option <?php if(isset($alarm_info)){ if($alarm_info->acct_type == 'In-House'){echo "selected";} } ?> value="In-House">In-House</option>
+                                                    <option <?php if(isset($alarm_info)){ if($alarm_info->acct_type == 'Purchase'){echo "selected";} } ?> value="Purchase">Purchase</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <label for="">Status</label>
+                                                <select id="status" name="status" data-customer-source="dropdown" class="input_select" >
+                                                    <option value=""></option>
+                                                    <option <?php if(isset($profile_info)){ if($profile_info->status == 'Assigned'){ echo 'selected'; } } ?> value="Assigned">Assigned</option>
+                                                    <option <?php if(isset($profile_info)){ if($profile_info->status == 'Not Assign'){ echo 'selected'; } } ?> value="Not Assign">Not Assign</option>
+                                                    <option <?php if(isset($profile_info)){ if($profile_info->status == 'Converted'){ echo 'selected'; } } ?> value="Converted">Converted</option>
+                                                    <option <?php if(isset($profile_info)){ if($profile_info->status == 'Not Converted'){ echo 'selected'; } } ?> value="Not Converted">Not Converted</option>
+                                                    <option <?php if(isset($profile_info)){ if($profile_info->status == 'Scheduled'){ echo 'selected'; } } ?> value="Scheduled">Scheduled</option>
+                                                    <option <?php if(isset($profile_info)){ if($profile_info->status == 'Installed'){ echo 'selected'; } } ?> value="Installed">Installed</option>
+                                                    <option <?php if(isset($profile_info)){ if($profile_info->status == 'Completed '){ echo 'selected'; } } ?> value="Completed">Completed</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="col-md-12">
+                                                <label for="">Address</label>
+                                                <input type="text" class="form-control" name="address" id="acs_custom_field2"/>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <label for="">City</label>
+                                                <input type="text" class="form-control" name="city" id="acs_custom_field2"/>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <label for="">State</label>
+                                                <select id="state" name="state" data-customer-source="dropdown" class="input_select" >
+                                                    <option  value=""></option>
+                                                    <option value="AB">AB</option>
+                                                    <option value="AL">AL</option>
+                                                    <option value="AK">AK</option>
+                                                    <option value="AS">AS</option>
+                                                    <option value="AZ">AZ</option>
+                                                    <option value="AR">AR</option>
+                                                    <option value="BC">BC</option>
+                                                    <option value="CA">CA</option>
+                                                    <option value="CO">CO</option>
+                                                    <option value="CT">CT</option>
+                                                    <option value="DE">DE</option>
+                                                    <option value="DC">DC</option>
+                                                    <option value="FM">FM</option>
+                                                    <option value="FL">FL</option>
+                                                    <option value="GA">GA</option>
+                                                    <option value="GU">GU</option>
+                                                    <option value="HI">HI</option>
+                                                    <option value="ID">ID</option>
+                                                    <option value="IL">IL</option>
+                                                    <option value="IN">IN</option>
+                                                    <option value="IA">IA</option>
+                                                    <option value="KS">KS</option>
+                                                    <option value="KY">KY</option>
+                                                    <option value="LA">LA</option>
+                                                    <option value="ME">ME</option>
+                                                    <option value="MH">MH</option>
+                                                    <option value="MD">MD</option>
+                                                    <option value="MA">MA</option>
+                                                    <option value="MI">MI</option>
+                                                    <option value="MN">MN</option>
+                                                    <option value="MS">MS</option>
+                                                    <option value="MO">MO</option>
+                                                    <option value="MT">MT</option>
+                                                    <option value="NE">NE</option>
+                                                    <option value="NV">NV</option>
+                                                    <option value="NH">NH</option>
+                                                    <option value="NJ">NJ</option>
+                                                    <option value="NM">NM</option>
+                                                    <option value="NY">NY</option>
+                                                    <option value="NC">NC</option>
+                                                    <option value="ND">ND</option>
+                                                    <option value="NL">NL</option>
+                                                    <option value="NS">NS</option>
+                                                    <option value="NT">NT</option>
+                                                    <option value="NU">NU</option>
+                                                    <option value="NB">NB</option>
+                                                    <option value="MP">MP</option>
+                                                    <option value="MB">MB</option>
+                                                    <option value="OH">OH</option>
+                                                    <option value="OK">OK</option>
+                                                    <option value="ON">ON</option>
+                                                    <option value="OR">OR</option>
+                                                    <option value="PE">PE</option>
+                                                    <option value="PW">PW</option>
+                                                    <option value="PA">PA</option>
+                                                    <option value="PR">PR</option>
+                                                    <option value="QC">QC</option>
+                                                    <option value="RI">RI</option>
+                                                    <option value="SC">SC</option>
+                                                    <option value="SD">SD</option>
+                                                    <option value="SK">SK</option>
+                                                    <option value="TN">TN</option>
+                                                    <option value="TX">TX</option>
+                                                    <option value="UT">UT</option>
+                                                    <option value="VT">VT</option>
+                                                    <option value="VI">VI</option>
+                                                    <option value="VA">VA</option>
+                                                    <option value="WA">WA</option>
+                                                    <option value="WV">WV</option>
+                                                    <option value="WI">WI</option>
+                                                    <option value="WY">WY</option>
+                                                    <option value="YT">YT</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <label for="">Zip</label>
+                                                <input type="text" class="form-control" name="zip" id="acs_custom_field2"/>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <label for="">Routing Number</label>
+                                                <input type="text" class="form-control" name="routing_number" id="acs_custom_field2"/>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="col-md-12">
+                                                <label for="">Technician</label>
+                                                <select id="technician" name="technician" data-customer-source="dropdown" class="input_select" >
+                                                    <option  value=""></option>
+                                                  </select>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <label for="">Company</label>
+                                                <input type="text" class="form-control" name="acs_custom_field2" id="acs_custom_field2"/>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <label for="">Monitoring Company</label>
+                                                <input type="text" class="form-control" name="acs_custom_field2" id="acs_custom_field2"/>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <label for="">Credit Score</label>
+                                                <input type="text" class="form-control" name="acs_custom_field2" id="acs_custom_field2"/>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <label for="">Contract Term</label>
+                                                <select id="contract_term" name="contract_term" data-customer-source="dropdown" class="input_select" >
+                                                    <option  value=""></option>
+                                                    <option   value="36">36</option>
+                                                    <option  value="60">60</option>
+                                                    <option  value="12">12</option>
+                                                    <option value="24">24</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <br>
+                                        <a href="#" style="right: 0;position: absolute;padding-right: 20px;">
+                                            <button type="button" class="btn btn-primary btn-md" id="exportCustomers"><span class="fa fa-search-plus"></span> Search</button>
+                                        </a>
+                                    </div>
+                                </div>
+
+                            </div>
                             <div class="tab-pane fade show active" id="tab1" role="tabpanel" aria-labelledby="tab1">
+                                <a id="more_detail_furnisher" href="#advance_search_wizard" role="button" aria-expanded="false" aria-controls="collapseExample"  data-toggle="collapse" style="color:#1E5DA9;right: 0;position: absolute;margin-top: -20px;padding-right: 20px;">
+                                    +Show Advance Search
+                                </a>
                                 <div id="status_sorting"  class=""></div>
                                 <table class="table"  id="customer_list_table">
                                     <thead>
@@ -289,8 +512,9 @@ add_footer_js(array(
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+
 <?php include viewPath('customer/adv_cust/css_list'); ?>
-<?php include viewPath('customer/adv_cust/js_list'); ?>
+<?php include viewPath('customer/js/js_index'); ?>
 <style>
     .btn{
         font-size: 12px !important;
@@ -314,9 +538,24 @@ add_footer_js(array(
         color: #1e5da9 !important;
         margin-top : 2px !important;
     }
+    div.dataTables_wrapper div.dataTables_filter {
+        display: block !important;
+    }
+    label>input {
+        /* HIDE RADIO */
+        visibility: visible !important;
+        /* Makes input not-clickable */
+        position: inherit !important;
+        /* Remove input from document flow */
+    }
 </style>
 
-<script>
+<script type="javascript">
+    function initMap() {
+        var input = document.getElementById('mail_add');
+        var autocomplete = new google.maps.places.Autocomplete(input);
+        console.log(autocomplete.getPlace());
+    }
     $(document).ready(function () {
 
         $(".date_picker").datetimepicker({
@@ -325,59 +564,6 @@ add_footer_js(array(
             //minDate: new Date(),
         });
         $('.date_picker').val(new Date().toLocaleDateString());
-
-        //$(".module").draggable({axis:"y"});
-        ///$( ".sortable2" ).sortable("disable");
-        $('#onoff-customize').change(function () {
-            if (this.checked) {
-                $('.module').mouseover(function(){
-                   if($(this).attr('id')=='addModuleBody'){
-                        $(".sortable2").sortable("disable");
-                   }else{
-                    $(".sortable2").sortable("enable");
-                   }
-                });
-            } else {
-                $(".sortable2").sortable("disable");
-            }
-
-        });
-        
-        
-
-        $(".sortable2").sortable({
-            start: function (e, ui) {
-                // creates a temporary attribute on the element with the old index
-                $(this).attr('data-previndex', ui.item.index());
-                $(this).attr('style', 'top:0;cursor: grabbing');
-
-            },
-            change(event, ui)
-            {
-                $(this).attr('style', 'top:0;cursor: grabbing ');
-            },
-            update: function (e, ui) 
-            {
-                $(this).attr('style', 'top:0;cursor: pointer');
-                var oldOrder = $(this).attr('data-previndex');
-                var idsInOrder = $(".sortable2").sortable("toArray",{ attribute: 'data-id' });
-                var filteredArray = idsInOrder.filter(function(e){return e});
-                
-                $.ajax({
-                    type: "POST",
-                    url: "<?= base_url() ?>/customer/ac_module_sort",
-                    data: {ams_values: filteredArray.toString(), ams_id: <?php echo $module_sort->ams_id; ?>}, // serializes the form's elements.
-                    success: function (data)
-                    {
-                        console.log(data);
-                    }
-                });
-                
-                console.log(filteredArray.toString());
-            }
-        });
-
-        $(".sortable2").sortable("disable");
 
         $(".remove_task").on("click", function (event) {
             var ID = this.id;
@@ -395,13 +581,5 @@ add_footer_js(array(
                 }
             });
         });
-
-
-
-
     });
-
-
-
-
 </script>
