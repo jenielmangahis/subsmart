@@ -73,7 +73,7 @@ class Event_Types extends MY_Controller {
                     $this->session->set_flashdata('message', 'Add new event type was successful');
                     $this->session->set_flashdata('alert_class', 'alert-success');
 
-                    redirect('events/event_types');
+                    redirect('event_types/index');
 
                 }else{
                     $this->session->set_flashdata('message', 'Cannot save data.');
@@ -181,7 +181,7 @@ class Event_Types extends MY_Controller {
                 $this->session->set_flashdata('message', 'Event Type was successful updated');
                 $this->session->set_flashdata('alert_class', 'alert-success');
 
-                redirect('events/event_types');
+                redirect('event_types/index');
 
             }else{
                 $this->session->set_flashdata('message', 'Record not found.');

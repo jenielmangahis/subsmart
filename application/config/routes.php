@@ -743,3 +743,6 @@ $route['tools/_activate_company_converge'] = 'Tools/ajax_activate_company_conver
 //Work Pictures
 $route['users/_delete_work_picture'] = 'Users/ajax_delete_company_work_picture';
 $route['users/_update_work_image_caption'] = 'Users/ajax_update_company_work_picture_caption';
+
+//Profile Setting
+$route['users/update_profile_setting'] = 'Users/update_profile_setting';
