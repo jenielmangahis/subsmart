@@ -14,11 +14,22 @@
             </div>
         </div>
     </div>
+    <?php 
+        if($isMain):
+            $height = 'height:'.+$rawHeight .'px;';
+            $rawHeight = $rawHeight-120;
+            $add = 80;
+        else:
+            $height = 'height:'.$rawHeight .'px;';
+            $rawHeight = $rawHeight-75;
+            $add = 25;
+        endif;
+    ?>
     <div class="card" style="border: 2px solid #30233d; margin-top:0; border-radius: 40px; padding:5px;">
         <div style="border: 5px solid #30233d; margin-top:0; border-radius: 40px; box-shadow: 1px 0px 15px 5px rgb(48, 35, 61);">
-            <div class="card-body mt-2" style="padding:5px 10px; height: 363px; overflow: hidden">
-                <div id="estimateBody" style="<?= $height; ?> overflow-y: scroll">
-                    <canvas id="estimateCanvas" height="<?= $rawHeight - 130 ?>"></canvas>
+            <div class="card-body mt-2" style="padding:5px 10px; <?= $height ?> overflow: hidden">
+                <div id="estimateBody" style=" overflow-y: scroll; height:<?= $rawHeight+$add ?>px">
+                    <canvas id="estimateCanvas" style="<?= $height ?>" height="<?= $rawHeight ?>"></canvas>
                 </div>
                 <div class="text-center">
                     <a class="text-info" href="<?= base_url() ?>estimate">SEE ALL ESTIMATES</a>

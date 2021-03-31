@@ -35,6 +35,12 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     #add-pay-schedule-modal .card.shadow .card-body {
         padding: 0;
     }
+    #add-pay-schedule-modal .form-row {
+        margin-top: 30px;
+    }
+    #add-pay-schedule-modal span.select2-selection.select2-selection--single {
+        min-width: unset !important;
+    }
 </style>
 <?php include viewPath('includes/header'); ?>
 <div class="wrapper" role="wrapper">

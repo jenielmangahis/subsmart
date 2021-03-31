@@ -269,7 +269,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
         background: grey;
     }
 </style>
-<div class="<?= $class ?>" id="widget_<?= $id ?>">
+<div class="<?= $class ?>" data-id="<?= $id ?>"  id="widget_<?= $id ?>">
     <div  style="width: 300px; border: 1px solid #58c04e; background: #58c04e; color:white;  border-radius: 10px; text-align: center;padding: 5px;position: relative;margin: 0 auto;top: 21px;z-index: 1000;">
         <i class="fa fa-book" aria-hidden="true"></i> Timesheet
         
@@ -287,7 +287,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
     </div>
     <div class="card" style="border: 2px solid #30233d; margin-top:0; border-radius: 40px; padding:5px;">
         <div style="border: 5px solid #30233d; margin-top:0; border-radius: 40px; box-shadow: 1px 0px 15px 5px rgb(48, 35, 61);">
-            <div class="card-body mt-2" style="padding:5px 10px; height: 363px; overflow: hidden">
+            <div class="card-body mt-2" style="padding:5px 10px;  height: <?= $rawHeight+10 ?>px; overflow: hidden">
                 <div class="expenses-money-section" style="margin-top:10px;">
                     <div class="inner-news">
                         <table id="ts-attendance" class="table table-bordered table-striped tbl-employee-attendance">

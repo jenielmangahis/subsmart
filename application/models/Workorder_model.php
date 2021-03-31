@@ -198,6 +198,64 @@ class Workorder_model extends MY_Model
 	    $insert = $this->db->insert_id();
 		return  $insert;
     }
+
+    public function getTerms($comp_id){
+
+        $this->db->select('*');
+		$this->db->from('terms_and_conditions');
+		$this->db->where('company_id', $comp_id);
+		$query = $this->db->get();
+		return $query->row();
+    }
+
+    public function getTermsbyID(){
+        $cid = getLoggedCompanyID();
+
+        $this->db->select('*');
+		$this->db->from('terms_and_conditions');
+		$this->db->where('company_id', $cid);
+		$query = $this->db->get();
+		return $query->row();
+    }
+
+    public function getTermsDefault(){
+        $cid = 0;
+
+        $this->db->select('*');
+		$this->db->from('terms_and_conditions');
+		$this->db->where('company_id', $cid);
+		$query = $this->db->get();
+		return $query->row();
+    }
+
+    public function getTermsUse($comp_id){
+
+        $this->db->select('*');
+		$this->db->from('terms_of_use');
+		$this->db->where('company_id', $comp_id);
+		$query = $this->db->get();
+		return $query->row();
+    }
+
+    public function getTermsUsebyID(){
+        $cid = getLoggedCompanyID();
+
+        $this->db->select('*');
+		$this->db->from('terms_of_use');
+		$this->db->where('company_id', $cid);
+		$query = $this->db->get();
+		return $query->row();
+    }
+
+    public function getTermsUseDefault(){
+        $cid = 0;
+
+        $this->db->select('*');
+		$this->db->from('terms_of_use');
+		$this->db->where('company_id', $cid);
+		$query = $this->db->get();
+		return $query->row();
+    }
 }
 
 /* End of file Workorder_model.php */

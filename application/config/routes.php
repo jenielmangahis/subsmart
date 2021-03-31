@@ -393,6 +393,7 @@ $route['accounting/employees/update/(:any)']['post'] = 'accounting_controllers/e
 $route['accounting/employees/delete/(:any)'] = 'accounting_controllers/employees/delete/$1';
 $route['accounting/employees/set-status/(:any)/(:any)'] = 'accounting_controllers/employees/set_status/$1/$2';
 $route['accounting/employees/add-pay-schedule-form'] = 'accounting_controllers/employees/pay_schedule_form';
+$route['accounting/employees/add-pay-schedule']['post'] = 'accounting_controllers/employees/add_pay_schedule';
 
 $route['accounting/vendor-details/(:any)'] = 'accounting/vendordetails/$1';
 $route['accounting/taxes/edit-settings'] = 'taxes/edit_settings';
@@ -742,3 +743,7 @@ $route['tools/_activate_company_converge'] = 'Tools/ajax_activate_company_conver
 
 //Work Pictures
 $route['users/_delete_work_picture'] = 'Users/ajax_delete_company_work_picture';
+$route['users/_update_work_image_caption'] = 'Users/ajax_update_company_work_picture_caption';
+
+//Profile Setting
+$route['users/update_profile_setting'] = 'Users/update_profile_setting';

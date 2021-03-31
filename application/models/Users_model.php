@@ -511,6 +511,12 @@ class Users_model extends MY_Model {
 		$query = $this->db->get();
 		return $query->row();
 	}
+
+	public function addPaySchedule($data)
+	{
+		$this->db->insert('pay_schedule', $data);
+		return $this->db->insert_id();
+	}
 }
 
 

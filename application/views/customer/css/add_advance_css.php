@@ -23,11 +23,11 @@
     label{
         font-size: 14px !important;
         position: absolute;
-        top: 10px;
+        top: 5px;
     }
 
     hr{
-        border: 0.5px solid #32243d !important;
+        border: 1px solid #b7bdba !important;
         width: 100%;
     }
     .form-group {

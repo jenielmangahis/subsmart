@@ -76,6 +76,7 @@ $('#items_table_estimate_sales').DataTable();
 <script src="<?php echo $url->assets ?>js/sign2.js"></script> -->
 <script src="<?php echo $url->assets ?>js/sidebar_badges.js"></script>
 <script src="<?php echo $url->assets ?>js/custom.js"></script>
+<script type="text/javascript" src="<?php echo $url->assets?>ckeditor/ckeditor.js"></script>
 <script>
     jQuery(document).ready(function () {
         jQuery('#smoothed').signaturePad({drawOnly: true, drawBezierCurves: true, lineTop: 200});
@@ -89,6 +90,13 @@ $('#items_table_estimate_sales').DataTable();
     });
 
 </script>
+<script>
+    CKEDITOR.replace( 'editor1' );
+</script>
+<script>
+    CKEDITOR.replace( 'editor2' );
+</script>
+
 
 <script>
 // $(document).ready(function() {

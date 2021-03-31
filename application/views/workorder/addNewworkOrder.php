@@ -42,10 +42,13 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         <h4 class="mt-0 header-title mb-5">Header</h4>
                         <div class="row">
                             <div class="col-md-12">
-                                <ol class="breadcrumb" style="margin-top:-30px;">
-                                    <li class="breadcrumb-item active">This workorder agreement (the "agreement") is made as of 02-13-2021, by and between NSMARTRAC, (the "Company") and the ("Customer") as the address shown below (the "Premise/Service Location)</li>
-                                </ol>
-                            </div>
+                                <!-- <ol class="breadcrumb" style="margin-top:-30px;">
+                                    <li class="breadcrumb-item active"> -->
+                                    <label  class="mytxt6" style="padding:.5%;background-color:#E8E8E9;">This workorder agreement (the "agreement") is made as of 02-13-2021, by and between NSMARTRAC, (the "Company") and the ("Customer") as the address shown below (the "Premise/Service Location) <i class="fa fa-pencil" aria-hidden="true"></i> </label>
+                                    <input type="hidden" class="form-control custom6" name="custom6_field">
+                                    <!-- </li>
+                                </ol> -->
+                            </div> 
                         </div>
                         <br>
 
@@ -326,12 +329,12 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                             <!-- <td><a href="#" data-toggle="modal" data-target="#modalSetMarkup" style="color:#02A32C;">set markup</a></td> -->
                                             <input type="hidden" name="markup_input_form" id="markup_input_form" class="markup_input" value="0">
                                         <!-- </tr> -->
-                                        <tr>
-                                            <td>Voucher</td>
+                                        <tr id="saved" style="color:green;font-weight:bold;display:none;">
+                                            <td>Amount Saved</td>
                                             <td></td>
                                             <td><span id="offer_cost">0.00</span><input type="hidden" name="voucher_value" id="offer_cost_input"></td>
                                         </tr>
-                                        <tr>
+                                        <tr style="color:blue;font-weight:bold;font-size:18px;">
                                             <td><b>Grand Total ($)</b></td>
                                             <td></td>
                                             <td><b><span id="grand_total">0.00</span>
@@ -474,86 +477,219 @@ defined('BASEPATH') or exit('No direct script access allowed');
                             <h6>PAYMENT DETAIL</h6><br>
                             <div class="row">                   
                                 <div class="form-group col-md-4">
-                                    <label for="job_type">Method</label>
+                                    <label for="job_type">Payment Method</label>
                                     <select name="payment_method" id="payment_method" class="form-control custom-select">
                                         <option value="">Choose method</option>
                                         <option value="Cash">Cash</option>
                                         <option value="Check">Check</option>
                                         <option value="Credit Card">Credit Card</option>
+                                        <option value="Debit Card">Debit Card</option>
+                                        <option value="ACH">ACH</option>
+                                        <option value="Venmo">Venmo</option>
+                                        <option value="Paypal">Paypal</option>
+                                        <option value="Square">Square</option>
+                                        <option value="Warranty Work">Warranty Work</option>
+                                        <option value="Home Owner Financing">Home Owner Financing</option>
+                                        <option value="e-Transfer">e-Transfer</option>
+                                        <option value="Other Credit Card Professor">Other Credit Card Professor</option>
+                                        <option value="Other Payment Type">Other Payment Type</option>
                                     </select>
                                 </div>      
                                 <div class="form-group col-md-4">
                                     <label for="job_type">Amount</label><small class="help help-sm"> ( $ )</small>
-                                    <input type="text" class="form-control" name="payment_amount" id="payment_amount" required />
+                                    <input type="text" class="form-control" name="payment_amount" id="payment_amount"  />
                                 </div>                                       
                             </div>
-                            <div class="row">                   
-                                <div class="form-group col-md-4">
-                                    <label for="job_type">Account Holder Name</label>
-                                    <input type="text" class="form-control" name="account_holder_name" id="account_holder_name" required />
-                                </div>      
-                                <div class="form-group col-md-4">
-                                    <label for="job_type">Account Number</label>
-                                    <input type="text" class="form-control" name="account_number" id="account_number" placeholder="**** **** **** **** " required />
-                                </div>                                       
+                            <div id="check_area" style="display:none;">
+                                <div class="row">                   
+                                    <div class="form-group col-md-4">
+                                        <label for="job_type">Check Number</label>
+                                        <input type="text" class="form-control" name="check_number" id="check_number"/>
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <label for="job_type">Routing Number</label>
+                                        <input type="text" class="form-control" name="routing_number" id="routing_number"/>
+                                    </div>                                             
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-md-4">
+                                        <label for="job_type">Account Number</label>
+                                        <input type="text" class="form-control" name="account_number" id="account_number"/>
+                                    </div>                                       
+                                </div>
                             </div>
-                            <div class="row">                   
-                                <div class="form-group col-md-4">
-                                    <label for="job_type">Expiry</label>
-                                    <input type="text" class="form-control" name="expiry" id="expiry" placeholder="MM/YY" required />
-                                </div>      
-                                <div class="form-group col-md-4">
-                                    <label for="job_type">CVC</label>
-                                    <input type="text" class="form-control" name="cvc" id="cvc" placeholder="CVC" required />
-                                </div>                                       
+                            <div id="credit_card" style="display:none;">
+                                <div class="row">                   
+                                    <div class="form-group col-md-4">
+                                        <label for="job_type">Credit Card Number</label>
+                                        <input type="text" class="form-control" name="credit_number" id="credit_number" placeholder="0000 0000 0000 000" />
+                                    </div>
+                                    <div class="form-group col-md-3">
+                                        <label for="job_type">Credit Card Expiration</label>
+                                        <input type="text" class="form-control" name="credit_expiry" id="credit_expiry" placeholder="MM/YYYY"/>
+                                    </div>  
+                                    <div class="form-group col-md-3">
+                                        <label for="job_type">CVC</label>
+                                        <input type="text" class="form-control" name="credit_cvc" id="credit_cvc" placeholder="CVC"/>
+                                    </div>                                             
+                                </div>
+                            </div>
+                            <div id="debit_card" style="display:none;">
+                                <div class="row">                   
+                                    <div class="form-group col-md-4">
+                                        <label for="job_type">Credit Card Number</label>
+                                        <input type="text" class="form-control" name="credit_number" id="credit_number" placeholder="0000 0000 0000 000" />
+                                    </div>
+                                    <div class="form-group col-md-3">
+                                        <label for="job_type">Credit Card Expiration</label>
+                                        <input type="text" class="form-control" name="credit_expiry" id="credit_expiry" placeholder="MM/YYYY"/>
+                                    </div>  
+                                    <div class="form-group col-md-3">
+                                        <label for="job_type">CVC</label>
+                                        <input type="text" class="form-control" name="credit_cvc" id="credit_cvc" placeholder="CVC"/>
+                                    </div>                                            
+                                </div>
+                            </div>
+                            <div id="ach_area" style="display:none;">
+                                <div class="row">                   
+                                    <div class="form-group col-md-4">
+                                        <label for="job_type">Routing Number</label>
+                                        <input type="text" class="form-control" name="ach_routing_number" id="ach_routing_number" />
+                                    </div>
+                                    <div class="form-group col-md-3">
+                                        <label for="job_type">Account Number</label>
+                                        <input type="text" class="form-control" name="ach_account_number" id="ach_account_number" />
+                                    </div>  
+                                </div>
+                            </div>
+                            <div id="venmo_area" style="display:none;">
+                                <div class="row">                   
+                                    <div class="form-group col-md-4">
+                                        <label for="job_type">Account Credential</label>
+                                        <input type="text" class="form-control" name="account_credentials" id="account_credentials"/>
+                                    </div>
+                                    <div class="form-group col-md-3">
+                                        <label for="job_type">Account Note</label>
+                                        <input type="text" class="form-control" name="account_note" id="account_note"/>
+                                    </div>  
+                                    <div class="form-group col-md-3">
+                                        <label for="job_type">Confirmation</label>
+                                        <input type="text" class="form-control" name="confirmation" id="confirmation"/>
+                                    </div>                                            
+                                </div>
+                            </div>
+                            <div id="paypal_area" style="display:none;">
+                                <div class="row">                   
+                                    <div class="form-group col-md-4">
+                                        <label for="job_type">Account Credential</label>
+                                        <input type="text" class="form-control" name="paypal_account_credentials" id="paypal_account_credentials"/>
+                                    </div>
+                                    <div class="form-group col-md-3">
+                                        <label for="job_type">Account Note</label>
+                                        <input type="text" class="form-control" name="paypal_account_note" id="paypal_account_note"/>
+                                    </div>  
+                                    <div class="form-group col-md-3">
+                                        <label for="job_type">Confirmation</label>
+                                        <input type="text" class="form-control" name="paypal_confirmation" id="paypal_confirmation"/>
+                                    </div>                                            
+                                </div>
+                            </div>
+                            <div id="square_area" style="display:none;">
+                                <div class="row">                   
+                                    <div class="form-group col-md-4">
+                                        <label for="job_type">Account Credential</label>
+                                        <input type="text" class="form-control" name="square_account_credentials" id="square_account_credentials"/>
+                                    </div>
+                                    <div class="form-group col-md-3">
+                                        <label for="job_type">Account Note</label>
+                                        <input type="text" class="form-control" name="square_account_note" id="square_account_note"/>
+                                    </div>  
+                                    <div class="form-group col-md-3">
+                                        <label for="job_type">Confirmation</label>
+                                        <input type="text" class="form-control" name="square_confirmation" id="square_confirmation"/>
+                                    </div>                                            
+                                </div>
+                            </div>
+                            <div id="warranty_area" style="display:none;">
+                                <div class="row">                   
+                                    <div class="form-group col-md-4">
+                                        <label for="job_type">Account Credential</label>
+                                        <input type="text" class="form-control" name="warranty_account_credentials" id="warranty_account_credentials"/>
+                                    </div>
+                                    <div class="form-group col-md-3">
+                                        <label for="job_type">Account Note</label>
+                                        <input type="text" class="form-control" name="warranty_account_note" id="warranty_account_note"/>
+                                    </div>                                         
+                                </div>
+                            </div>
+                            <div id="home_area" style="display:none;">
+                                <div class="row">                   
+                                    <div class="form-group col-md-4">
+                                        <label for="job_type">Account Credential</label>
+                                        <input type="text" class="form-control" name="home_account_credentials" id="home_account_credentials"/>
+                                    </div>
+                                    <div class="form-group col-md-3">
+                                        <label for="job_type">Account Note</label>
+                                        <input type="text" class="form-control" name="home_account_note" id="home_account_note"/>
+                                    </div>                                         
+                                </div>
+                            </div>
+                            <div id="e_area" style="display:none;">
+                                <div class="row">                   
+                                    <div class="form-group col-md-4">
+                                        <label for="job_type">Account Credential</label>
+                                        <input type="text" class="form-control" name="e_account_credentials" id="e_account_credentials"/>
+                                    </div>
+                                    <div class="form-group col-md-3">
+                                        <label for="job_type">Account Note</label>
+                                        <input type="text" class="form-control" name="e_account_note" id="e_account_note"/>
+                                    </div>                                         
+                                </div>
+                            </div>
+                            <div id="other_credit_card" style="display:none;">
+                                <div class="row">                   
+                                    <div class="form-group col-md-4">
+                                        <label for="job_type">Credit Card Number</label>
+                                        <input type="text" class="form-control" name="other_credit_number" id="other_credit_number" placeholder="0000 0000 0000 000" />
+                                    </div>
+                                    <div class="form-group col-md-3">
+                                        <label for="job_type">Credit Card Expiration</label>
+                                        <input type="text" class="form-control" name="other_credit_expiry" id="other_credit_expiry" placeholder="MM/YYYY"/>
+                                    </div>  
+                                    <div class="form-group col-md-3">
+                                        <label for="job_type">CVC</label>
+                                        <input type="text" class="form-control" name="other_credit_cvc" id="other_credit_cvc" placeholder="CVC"/>
+                                    </div>                                             
+                                </div>
+                            </div>
+                            <div id="other_payment_area" style="display:none;">
+                                <div class="row">                   
+                                    <div class="form-group col-md-4">
+                                        <label for="job_type">Account Credential</label>
+                                        <input type="text" class="form-control" name="other_payment_account_credentials" id="other_payment_account_credentials"/>
+                                    </div>
+                                    <div class="form-group col-md-3">
+                                        <label for="job_type">Account Note</label>
+                                        <input type="text" class="form-control" name="other_payment_account_note" id="other_payment_account_note"/>
+                                    </div>                                         
+                                </div>
                             </div>
 
                             <!-- ====== TERMS AND CONDITIONS ====== -->
                             <br><br><br>
                             <div class="row">
                                 <div class=" col-md-12">
-                                <label style="font-weight:bold;font-size:18px;">TERMS AND CONDITIONS</label><label style="float:right;color:green;"><a href="#" style="color:green;">Update Terms and Condition</a></label>
+                                <label style="font-weight:bold;font-size:18px;">TERMS AND CONDITIONS</label><label style="float:right;color:green;"><a href="#" style="color:green;" data-toggle="modal" data-target="#terms_conditions_modal">Update Terms and Condition</a></label>
                                     <div style="height:200px; overflow:auto; background:#FFFFFF;"
                                          id="showuploadagreement">
-                                        <p>2. Install of the system. Company agrees to schedule and install an alarm
-                                            system and/or devices in connection with a Monitoring Agreement which
-                                            customer will receive at the time of installation. Customer hereby agrees to
-                                            buy the system/devices described below and incorporated herein for all
-                                            purposes by this reference (the “System /Services”), in accordance with the
-                                            terms and conditions set forth. IF CUSTOMER FAIL TO FULLFILL THE MONITORING
-                                            AGREEMENT, Customer agrees to pay the consultation fee, the cost of the
-                                            system and recovering fees.</p>
-                                        <p>3. Customer agrees to have system maintained for an initial term of 60 months
-                                            at the above monthly rate in exchange for a reduced cost of the system. Upon
-                                            the execution of this agreement shall automatically start the billing
-                                            process. Customer understands that the monthly payments must be paid through
-                                            “Direct Billing” through their banking institution or credit card. Customers
-                                            acknowledge that they authorize Company to obtain a Security System.
-                                            Residential Clients: CUSTOMER HAS THE RIGHT TO CANCEL THIS TRANSACTION at
-                                            any time prior to midnight on the 3rd business day after the above date of
-                                            this work order in writing. Customer agrees that no verbal method is valid,
-                                            and must be submitted only in writing. The date on this agreement is the
-                                            agreed upon date for both the Company and the Customer</p>
-                                        <p>4. Client verifies that they are owners of the property listed above. In the
-                                            event the system has to be removed, Client agrees and understands that there
-                                            will be an additional $299.00 restocking/removal fee and early termination
-                                            fees will apply.</p>
-                                        <p>5. Client understands that this is a new Monitoring Agreement through our
-                                            central station. Alarm.com or .net is not affiliated nor has any bearing on
-                                            the current monitoring services currently or previously initiated by Client
-                                            with other alarm companies. By signing this work order, Client agrees and
-                                            understands that they have read the above requirements and would like to
-                                            take advantage of our services. Client understand that is a binding
-                                            agreement for both party.</p>
-                                        <p>6. Customer agrees that the system is preprogramed for each specific
-                                            location. accordance with the terms and conditions set forth. IF CUSTOMER
-                                            FAIL TO FULLFILL THE MONITORING AGREEMENT, Customer agrees to pay the
-                                            consultation fee, the cost of the system and recovering fees. Customer
-                                            agrees that this is a customized order. By signing this workorder, customer
-                                            agrees that customized order can not be cancelled after three day of this
-                                            signed document.</p>
+                                         <?php //foreach($terms_conditions as $tc){ ?>
+                                            <p><?php echo $terms_conditions->content; 
+                                            // print_r($terms_conditions);
+                                            ?></p>
+                                            <input type="hidden" id="company_id" value="<?php echo getLoggedCompanyID(); ?>">
+                                        <?php// } ?>
                                     </div>
-                                    <input type="hidden" class="form-control" name="terms_conditions" id="terms_conditions" />
+                                    <input type="hidden" class="form-control" name="terms_conditions" id="terms_conditions" value="<?php echo $terms_conditions->content; ?>" />
                                 </div>
                             </div>
                             <br><br>
@@ -593,20 +729,14 @@ defined('BASEPATH') or exit('No direct script access allowed');
                             <!-- ====== TERMS OF USE ====== -->
                             <div class="row">
                                 <div class=" col-md-12">
-                                    <label style="font-weight:bold;font-size:18px;">TERMS OF USE</label><label style="float:right;color:green;"><a href="#" style="color:green;">Update Terms of Use</a></label>
+                                    <label style="font-weight:bold;font-size:18px;">TERMS OF USE</label><label style="float:right;color:green;"><a href="#" style="color:green;" data-toggle="modal" data-target="#terms_use_modal">Update Terms of Use</a></label>
                                     <div style="height:100px; overflow:auto; background:#FFFFFF; padding-left:10px;"
                                          id="showuploadagreement">
-                                         **This isn't everything... just a summary**</strong> You may CANCEL this
-                                        transaction, within THREE BUSINESS DAYS from the above date. If You cancel, You
-                                        must make available to US in substantially as good condition as when received,
-                                        any goods delivered to You under this contract or sale, You may, if You wish,
-                                        comply with Our instructions regarding the return shipment of the goods at Your
-                                        expense and risk. To cancel this transaction, mail deliver a signed and
-                                        postmarket, dated copy of this Notice of Cancellation or any other written
-                                        notice to ALarm Direct, Inc., 6866 Pine Forest ROad, Suite B, Pensacola, FL
-                                        32526. NOT LATER THAN MIDNIGHT OF {Date plus 3 business days}
+                                            <p><?php echo $terms_uses->content; ?></p>
+                                            <input type="hidden" id="company_id" value="<?php echo getLoggedCompanyID(); ?>">
+                                        <?php// } ?>
                                     </div>
-                                    <input type="hidden" class="form-control" name="terms_of_use" id="terms_of_use" />
+                                    <input type="hidden" class="form-control" name="terms_of_use" id="terms_of_use"  value="<?php echo $terms_uses->content; ?>"/>
                                 </div>
                             </div>
                             <br><br>
@@ -782,6 +912,54 @@ defined('BASEPATH') or exit('No direct script access allowed');
             </div>
 
             <!-- Modal -->
+            <div class="modal fade" id="terms_conditions_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle">Update Terms and Condition</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                            <textarea class="form-control ckeditor" id="editor1" cols="40" rows="40">
+                            <?php echo $terms_conditions->content; ?>
+                            </textarea>
+                            <input type="hidden" id="company_id_modal" value="<?php echo getLoggedCompanyID(); ?>">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary save_terms_and_conditions">Save changes</button>
+                    </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal -->
+            <div class="modal fade" id="terms_use_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle">Update Terms of Use</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                            <textarea class="form-control ckeditor" id="editor2" cols="40" rows="40">
+                            <?php echo $terms_uses->content; ?>
+                            </textarea>
+                            <input type="hidden" id="company_id_modal" value="<?php echo getLoggedCompanyID(); ?>">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary save_terms_and_conditions">Save changes</button>
+                    </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal -->
             <div class="modal fade" id="item_list" tabindex="-1" role="dialog" aria-labelledby="newcustomerLabel" aria-hidden="true">
                 <div class="modal-dialog modal-lg" role="document" style="width:800px;position: absolute;top: 50%;left: 50%;transform: translate(-50%, -50%);">
                     <div class="modal-content">
@@ -940,6 +1118,7 @@ $(document).ready(function(){
         });
     });
 
+
     $(document).on('click','.setmarkup',function(){
        // alert('yeah');
         var markup_amount = $('#markup_input').val();
@@ -982,6 +1161,7 @@ $(document).ready(function(){
                 $("#grand_total").text(new_grand.toFixed(2));
                 $("#grand_total_input").val(new_grand.toFixed(2));
                 // alert('computed');
+                $('#saved').show();
                 $('.invalid_code').hide();
             }
             else{   
@@ -993,10 +1173,112 @@ $(document).ready(function(){
                 error: function(response){
                 // alert('Error'+response);
                 $('.invalid_code').show();
+                $("#offer_cost").text('0');
+                $("#offer_cost").val('0');
+
+                var total1 = $("#span_sub_total_invoice").text();
+                var total2 = $("#adjustment_input").val();
+
+                var total3  = parseFloat(total1) - parseFloat(total2);
+                $("#grand_total").text(total3.toFixed(2));
+                $("#grand_total_input").val(total3.toFixed(2));
+                // var counter = $(this).data("counter");
+                // calculation(counter);
        
                 }
         });
     });
+
+    function calculation(counter) {
+  var price = $("#price_" + counter).val();
+  var quantity = $("#quantity_" + counter).val();
+  var discount = $("#discount_" + counter).val()
+    ? $("#discount_" + counter).val()
+    : 0;
+  var tax = (parseFloat(price) * 7.5) / 100;
+  var tax1 = (((parseFloat(price) * 7.5) / 100) * parseFloat(quantity)).toFixed(
+    2
+  );
+  var total = (
+    (parseFloat(price) + parseFloat(tax)) * parseFloat(quantity) -
+    parseFloat(discount)
+  ).toFixed(2);
+
+  $("#span_total_" + counter).text(total);
+  $("#total_" + counter).val(total);
+  $("#span_tax_" + counter).text(tax1);
+  $("#tax1_" + counter).val(tax1);
+  // $("#tax1_" + counter).val(tax1);
+  // $("#tax_" + counter).val(tax1);
+  // alert(tax1);
+
+  if( $('#tax_'+ counter).length ){
+    $('#tax_'+counter).val(tax1);
+  }
+
+  if( $('#item_total_'+ counter).length ){
+    $('#item_total_'+counter).val(total);
+  }
+
+  var eqpt_cost = 0;
+  var subtotal = 0;
+  var adjustment_amount = 0;
+  var cnt = $("#count").val();
+
+  if (
+    $("#adjustment_input").val() &&
+    $("#adjustment_input").val().toString().length > 1
+  ) {
+    adjustment_amount = $("#adjustment_input").val().substr(1);
+  }
+  for (var p = 0; p <= cnt; p++) {
+    var prc = $("#price_" + p).val();
+    var quantity = $("#quantity_" + p).val();
+    // var discount= $('#discount_' + p).val();
+    // eqpt_cost += parseFloat(prc) - parseFloat(discount);
+    subtotal += parseFloat($("#span_total_" + p).text());
+    eqpt_cost += parseFloat(prc) * parseFloat(quantity);
+  }
+
+  $("#adjustment_amount").text(parseFloat(adjustment_amount));
+  $("#adjustment_amount_form_input").val(parseFloat(adjustment_amount));
+  $("#invoice_sub_total").text(subtotal.toFixed(2));
+  $("#sub_total_form_input").val(subtotal.toFixed(2));
+
+  $("#span_sub_total_0").text(subtotal.toFixed(2));
+
+  var grandTotal = eval(
+    $("#invoice_sub_total").text() + $("#adjustment_input").val()
+  );
+  $("#invoice_grand_total").text(parseFloat(grandTotal).toFixed(2));
+  $("#grand_total_form_input").val(parseFloat(grandTotal).toFixed(2));
+
+  eqpt_cost = parseFloat(eqpt_cost).toFixed(2);
+  $("#eqpt_cost").val(eqpt_cost);
+
+  // alert('dri');
+
+  if($("#grand_total").length && $("#grand_total").val().length)
+  {
+    // console.log('none');
+    // alert('none');
+  }else{
+    $("#grand_total").text(grand_total_w.toFixed(2));
+    $("#grand_total_input").val(grand_total_w.toFixed(2));
+
+    var bundle1_total = $("#grand_total").text();
+    var bundle2_total = $("#grand_total2").text();
+    var super_grand = parseFloat(bundle1_total) + parseFloat(bundle2_total);
+    $("#supergrandtotal").text(super_grand.toFixed(2));
+    $("#supergrandtotal_input").val(super_grand.toFixed(2));
+  }
+
+  var sls = (parseFloat(eqpt_cost).toFixed(2) * 7.5) / 100;
+  sls = parseFloat(sls).toFixed(2);
+  $("#sales_tax").val(sls);
+  cal_total_due();
+}
+
 
 });
 
@@ -1071,4 +1353,218 @@ $(document).on("click", "label.mytxt5", function () {
         $(".mytxt5").text(txt);
         $(".custom5").val(txt);
 });
+
+$(document).on("click", "label.mytxt6", function () {
+        var txt = $(".mytxt6").text();
+        $(".mytxt6").replaceWith("<input class='form-control mytxt6' />");
+        $(".mytxt6").val(txt);
+        $(".custom6").val(txt);
+    });
+
+    $(document).on("blur", "input.mytxt6", function () {
+        var txt = $(this).val();
+        $(this).replaceWith("<label class='form-control mytxt6'></label>");
+        $(".mytxt6").text(txt);
+        $(".custom6").val(txt);
+});
+
+document.getElementById("payment_method").onchange = function() {
+    if (this.value == 'Cash') {
+        // alert('cash');
+		// $('#exampleModal').modal('toggle');
+        $('#check_area').hide();
+        $('#credit_card').hide();
+        $('#debit_card').hide();
+        $('#ach_area').hide();
+        $('#venmo_area').hide();
+        $('#paypal_area').hide();
+        $('#square_area').hide();
+        $('#warranty_area').hide();
+        $('#home_area').hide();
+        $('#e_area').hide();
+        $('#other_credit_card').hide();
+        $('#other_payment_area').hide();
+    	}
+	
+    else if(this.value == 'Check'){
+        // alert('Check');
+        $('#check_area').show();
+        $('#credit_card').hide();
+        $('#debit_card').hide();
+        $('#ach_area').hide();
+        $('#venmo_area').hide();
+        $('#paypal_area').hide();
+        $('#square_area').hide();
+        $('#warranty_area').hide();
+        $('#home_area').hide();
+        $('#e_area').hide();
+        $('#other_credit_card').hide();
+        $('#other_payment_area').hide();
+    }
+    else if(this.value == 'Credit Card'){
+        // alert('Credit card');
+        $('#check_area').hide();
+        $('#credit_card').show();
+        $('#debit_card').hide();
+        $('#ach_area').hide();
+        $('#venmo_area').hide();
+        $('#paypal_area').hide();
+        $('#square_area').hide();
+        $('#warranty_area').hide();
+        $('#home_area').hide();
+        $('#e_area').hide();
+        $('#other_credit_card').hide();
+        $('#other_payment_area').hide();
+    }
+    else if(this.value == 'Debit Card'){
+        // alert('Credit card');
+        $('#check_area').hide();
+        $('#credit_card').hide();
+        $('#debit_card').show();
+        $('#ach_area').hide();
+        $('#venmo_area').hide();
+        $('#paypal_area').hide();
+        $('#square_area').hide();
+        $('#warranty_area').hide();
+        $('#home_area').hide();
+        $('#e_area').hide();
+        $('#other_credit_card').hide();
+        $('#other_payment_area').hide();
+    }
+    else if(this.value == 'ACH'){
+        // alert('Credit card');
+        $('#check_area').hide();
+        $('#credit_card').hide();
+        $('#debit_card').hide();
+        $('#ach_area').show();
+        $('#venmo_area').hide();
+        $('#paypal_area').hide();
+        $('#square_area').hide();
+        $('#warranty_area').hide();
+        $('#home_area').hide();
+        $('#e_area').hide();
+        $('#other_credit_card').hide();
+        $('#other_payment_area').hide();
+    }
+    else if(this.value == 'Venmo'){
+        // alert('Credit card');
+        $('#check_area').hide();
+        $('#credit_card').hide();
+        $('#debit_card').hide();
+        $('#ach_area').hide();
+        $('#venmo_area').show();
+        $('#paypal_area').hide();
+        $('#square_area').hide();
+        $('#warranty_area').hide();
+        $('#home_area').hide();
+        $('#e_area').hide();
+        $('#other_credit_card').hide();
+        $('#other_payment_area').hide();
+    }
+    else if(this.value == 'Paypal'){
+        // alert('Credit card');
+        $('#check_area').hide();
+        $('#credit_card').hide();
+        $('#debit_card').hide();
+        $('#ach_area').hide();
+        $('#venmo_area').hide();
+        $('#paypal_area').show();
+        $('#square_area').hide();
+        $('#warranty_area').hide();
+        $('#home_area').hide();
+        $('#e_area').hide();
+        $('#other_credit_card').hide();
+        $('#other_payment_area').hide();
+    }
+    else if(this.value == 'Square'){
+        // alert('Credit card');
+        $('#check_area').hide();
+        $('#credit_card').hide();
+        $('#debit_card').hide();
+        $('#ach_area').hide();
+        $('#venmo_area').hide();
+        $('#paypal_area').hide();
+        $('#square_area').show();
+        $('#warranty_area').hide();
+        $('#home_area').hide();
+        $('#e_area').hide();
+        $('#other_credit_card').hide();
+        $('#other_payment_area').hide();
+    }
+    else if(this.value == 'Warranty Work'){
+        // alert('Credit card');
+        $('#check_area').hide();
+        $('#credit_card').hide();
+        $('#debit_card').hide();
+        $('#ach_area').hide();
+        $('#venmo_area').hide();
+        $('#paypal_area').hide();
+        $('#square_area').hide();
+        $('#warranty_area').show();
+        $('#home_area').hide();
+        $('#e_area').hide();
+        $('#other_credit_card').hide();
+        $('#other_payment_area').hide();
+    }
+    else if(this.value == 'Home Owner Financing'){
+        // alert('Credit card');
+        $('#check_area').hide();
+        $('#credit_card').hide();
+        $('#debit_card').hide();
+        $('#ach_area').hide();
+        $('#venmo_area').hide();
+        $('#paypal_area').hide();
+        $('#square_area').hide();
+        $('#warranty_area').hide();
+        $('#home_area').show();
+        $('#e_area').hide();
+        $('#other_credit_card').hide();
+        $('#other_payment_area').hide();
+    }
+    else if(this.value == 'e-Transfer'){
+        // alert('Credit card');
+        $('#check_area').hide();
+        $('#credit_card').hide();
+        $('#debit_card').hide();
+        $('#ach_area').hide();
+        $('#venmo_area').hide();
+        $('#paypal_area').hide();
+        $('#square_area').hide();
+        $('#warranty_area').hide();
+        $('#home_area').hide();
+        $('#e_area').show();
+        $('#other_credit_card').hide();
+        $('#other_payment_area').hide();
+    }
+    else if(this.value == 'Other Credit Card Professor'){
+        // alert('Credit card');
+        $('#check_area').hide();
+        $('#credit_card').hide();
+        $('#debit_card').hide();
+        $('#ach_area').hide();
+        $('#venmo_area').hide();
+        $('#paypal_area').hide();
+        $('#square_area').hide();
+        $('#warranty_area').hide();
+        $('#home_area').hide();
+        $('#e_area').hide();
+        $('#other_credit_card').show();
+        $('#other_payment_area').hide();
+    }
+    else if(this.value == 'Other Payment Type'){
+        // alert('Credit card');
+        $('#check_area').hide();
+        $('#credit_card').hide();
+        $('#debit_card').hide();
+        $('#ach_area').hide();
+        $('#venmo_area').hide();
+        $('#paypal_area').hide();
+        $('#square_area').hide();
+        $('#warranty_area').hide();
+        $('#home_area').hide();
+        $('#e_area').hide();
+        $('#other_credit_card').hide();
+        $('#other_payment_area').show();
+    }
+}
 </script>

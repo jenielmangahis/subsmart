@@ -155,7 +155,9 @@ class Timesheet extends MY_Controller
         // $minutes = $minutes / 60;
         // var_dump($end);
         // echo $minutes / 60;
-        echo $this->session->userdata('usertimezone');
+        // echo $this->session->userdata('usertimezone');
+        $text = "NOVEMBER 2021";
+        echo date("Y-m", strtotime($text));
     }
 
     public function employee()
@@ -4562,6 +4564,47 @@ class Timesheet extends MY_Controller
         $data = new stdClass();
         $data->display = $display;
         $data->shift_dates = $shift_dates;
+        echo json_encode($data);
+    }
+    public function my_schedule()
+    {
+        add_css(array(
+            "assets/css/timesheet/calendar/main.css",
+            "assets/css/timesheet/timesheet_my_schedule.css"
+        ));
+
+        add_footer_js(array(
+            "assets/js/timesheet/calendar/main.js",
+            "assets/js/timesheet/timesheet_my_schedule.js",
+
+        ));
+        $this->load->view('users/timesheet_my_schedule', $this->page_data);
+    }
+    public function get_my_schedules()
+    {
+        $text_mont_year = $this->input->post("text_mont_year");
+        if ($text_mont_year  == "") {
+            $text_mont_year = date("Y-m-d");
+        }
+        $initial_date = date('Y-m-d', strtotime($text_mont_year));
+        $last_date_prev_month = date("Y-m-d", strtotime('last day of previous month', strtotime($initial_date)));
+        $last_date_2_months = date("Y-m-d", strtotime('last day of previous month', strtotime($last_date_prev_month)));
+        $last_date_3_months = date("Y-m-d", strtotime('last day of previous month', strtotime($last_date_2_months)));
+        $first_date_next_month = date("Y-m-d", strtotime('last day of next month', strtotime($initial_date)));
+        if (date('Y-m', strtotime($initial_date)) == date('Y-m')) {
+            $initial_date = date('Y-m-d', strtotime($this->datetime_zone_converter(date('Y-m-d'), "UTC", $this->session->userdata('usertimezone'))));
+        }
+        $schedules_pst = $this->timesheet_model->get_my_schedules_for_calendar($last_date_3_months, $first_date_next_month, logged('id'));
+        $schedules_calendar =  array();
+        foreach ($schedules_pst as $sched) {
+            $schedules_calendar[] = array("title" => "Shift Start", "start" => $this->datetime_zone_converter($sched->shift_start, "UTC", $this->session->userdata('usertimezone')));
+            $schedules_calendar[] = array("title" => "Shift End", "start" => $this->datetime_zone_converter($sched->shift_end, "UTC", $this->session->userdata('usertimezone')));
+        }
+        $data = new stdClass();
+        $data->initial_date = $initial_date;
+        $data->last_date_prev_month = $last_date_prev_month;
+        $data->first_date_next_month = $first_date_next_month;
+        $data->schedules_calendar = $schedules_calendar;
         echo json_encode($data);
     }
 }

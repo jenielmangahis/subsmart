@@ -222,15 +222,22 @@ class Users extends MY_Controller {
 	public function profilesetting()
 	{	
 		//ifPermissions('businessdetail');
+
+		add_css(array(
+            "assets/css/bootstrap-tagsinput.css"
+        ));
+
+        // JS to add only Job module
+        add_footer_js(array(
+            "assets/js/bootstrap-tagsinput.js"
+        ));
+
 		$user = (object)$this->session->userdata('logged');		
 		//print_r($user);die;
-		$cid=logged('id');
-        $get_business_data = array(
-            'where' => array(
-                'user_id' => $user->id,
-            )
-        );
-        $this->page_data['profile_data'] = $this->general_model->get_all_with_keys($get_business_data,'business_profile',FALSE);
+		$comp_id = logged('company_id');
+        $profiledata = $this->business_model->getByCompanyId($comp_id);
+        
+        $this->page_data['profiledata'] = $profiledata;
         $this->load->view('business_profile/profile_settings', $this->page_data);
 
 	}
@@ -1604,6 +1611,65 @@ class Users extends MY_Controller {
 		];
 
 		echo json_encode($json_data);
+	}
+
+	public function ajax_update_company_work_picture_caption(){
+		$post    = $this->input->post();
+		$comp_id = logged('company_id');
+
+		$is_success = true;
+		$msg = '';
+
+		$profiledata = $this->business_model->getByCompanyId($comp_id);
+		$workImages  = unserialize($profiledata->work_images);
+		$workImages[$post['image_key']]['caption'] = $post['image_caption'];		
+		$this->business_model->update($profiledata->id, ['work_images' => serialize($workImages)]);
+
+		$json_data = [
+			'is_success' => $is_success,
+			'msg' => $msg
+		];
+
+		echo json_encode($json_data);
+	}
+
+	public function update_profile_setting(){
+		$post    = $this->input->post();
+		$comp_id = logged('company_id');
+
+		$profiledata = $this->business_model->getByCompanyId($comp_id);
+		$image_name  = '';
+		if (!empty($_FILES['cover_photo']['name'])){			
+			$target_dir = "./uploads/company_cover_photo/$comp_id/";
+			
+			if(!file_exists($target_dir)) {
+				mkdir($target_dir, 0777, true);
+			}
+
+			$tmp_name = $_FILES['cover_photo']['tmp_name'];
+			$extension = strtolower(end(explode('.',$_FILES['cover_photo']['name'])));
+			// basename() may prevent filesystem traversal attacks;
+			// further validation/sanitation of the filename may be appropriate
+			$name = basename($_FILES["cover_photo"]["name"]);
+			move_uploaded_file($tmp_name, "./uploads/company_cover_photo/$comp_id/$name");
+			$image_name = $name;
+			
+			$this->business_model->update($profiledata->id, ['work_images' => serialize($workImages)]);
+
+		}
+
+		$data = [
+			'profile_slug' => $post['profile_slug'],
+			'business_tags' => $post['company_tags'],
+			'business_cover_photo' => $image_name
+		];
+
+		$this->business_model->update($profiledata->id,$data);
+
+		$this->session->set_flashdata('message', 'Profile setting was successfully updated');
+        $this->session->set_flashdata('alert_class', 'alert-success');
+
+		redirect('users/profilesetting');
 	}
 }
 
