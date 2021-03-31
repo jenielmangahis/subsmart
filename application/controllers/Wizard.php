@@ -483,8 +483,38 @@ class Wizard extends MY_Controller {
         echo $this->wizard_suboptions_model->getSubOptions($id);
     }
 
+    public function add_new_workspace(){
+        $this->load->view('wizard/add_new_workspace', $this->page_data);
+    }
+
+    public function create_workspace(){
+        $user_id    = logged('id');
+        $company_id = logged('company_id');
+
+        $post    = $this->input->post();
+        $data = [
+            'company_id' => $company_id,
+            'name' => $post['name'],
+            'created_at' => date("Y-m-d H:i:s")
+        ];
+
+        $this->db->insert($this->wizard_model->tableWorkspaces, $data);
+
+        $this->session->set_flashdata('alert-type', 'success');
+        $this->session->set_flashdata('alert', 'Workspace was successfully created');
+        redirect('wizard/listing_wizard');
+
+    }
+
+    public function edit_workspace($id){
+        $company_id = logged('company_id');
+
+        $workspace = $this->wizard_model->getCompanyWorkSpaceById($company_id, $id);
+        $this->load->view('wizard/edit_workspace', $this->page_data);
+    }
+
 }
 
-/* End of file Comapny.php */
+/* End of file Wizard.php */
 
-/* Location: ./application/controllers/Users.php */
+/* Location: ./application/controllers/Wizard.php */

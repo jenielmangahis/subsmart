@@ -165,6 +165,17 @@
             echo "Total icons : " . $icon_counter;
             exit;            
         }
+
+        public function googleColor(){
+            $this->load->model('ColorSettings_model');
+            $company_id = logged('company_id');
+            
+            $googleColor = $this->ColorSettings_model->getByCompanyIdAndColorName($company_id, 'Google');
+            $bgcolor = $googleColor->color_name;
+            echo "<pre>";
+            print_r($googleColor);
+            exit;
+        }
     }
 
 

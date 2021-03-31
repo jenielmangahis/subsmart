@@ -59,6 +59,18 @@ class ColorSettings_model extends MY_Model
         return $query;
     }
 
+    public function getByCompanyIdAndColorName($company_id, $color_name)
+    {
+        $this->db->select('*');
+        $this->db->from($this->table);
+
+        $this->db->where('company_id', $company_id);
+        $this->db->like('color_name', $color_name, 'both'); 
+
+        $query = $this->db->get()->row();
+        return $query;
+    }
+
     public function updateColorSettingById($id, $data)
     {
         $this->db->from($this->table);
