@@ -42,7 +42,7 @@
     </div>
     <div class="card" style="border: 2px solid #30233d; margin-top:0; border-radius: 40px; padding:5px;">
         <div style="border: 5px solid #30233d; margin-top:0; border-radius: 40px; box-shadow: 1px 0px 15px 5px rgb(48, 35, 61);">
-            <div class="card-body mt-3" style="padding:5px 10px; height: 360px;">
+            <div class="card-body mt-3" style="padding:5px 10px; height: <?= $rawHeight ?>px;">
                 <div id="shortcutsSlide" class="carousel slide" style="height:<?= $rawHeight+20 ?>px overflow:scroll;" data-ride="carousel">
                     <div class="carousel-inner">
                         <div class="carousel-item active text-center">

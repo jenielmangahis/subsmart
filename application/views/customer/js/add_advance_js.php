@@ -78,6 +78,33 @@
         $("#status").select2({
             placeholder: "Select Status"
         });
+        $("#customer_type").select2({
+            placeholder: "Select Customer Type"
+        });
+        $("#pay_method").select2({
+            placeholder: "Select Payment Type"
+        });
+        $("#credit_score").select2({
+            placeholder: "Select Credit Score"
+        });
+        $("#monitoring_waived").select2({
+            placeholder: "Select Month"
+        });
+        $("#frequency").select2({
+            placeholder: "Select Month"
+        });
+        $("#transaction_category").select2({
+            placeholder: "Select Category"
+        });
+        $("#system_type").select2({
+            placeholder: "Select System Type"
+        });
+        $("#alarm_login").select2({
+            placeholder: "Select Alarm Login"
+        });
+        $("#monitor_comp").select2({
+            placeholder: "Select Company"
+        });
     });
     $(function() {
         $("nav:first").addClass("closed");
@@ -86,6 +113,76 @@
 
 <script>
     $(document).ready(function () {
+        $("#first_name").on("keyup change", function(e) {
+            $('#card_fname').val(this.value);
+        });
+        $("#last_name").on("keyup change", function(e) {
+            $('#card_lname').val(this.value);
+        });
+        // rucurring monthly revenue(RMR)
+
+        $("#businessName").hide("slow");
+        $("#fax_").hide("slow");
+       $("#customer_type").on( 'change', function () {
+            var c_type = this.value;
+            if(c_type === 'Residential'){
+                $("#businessName").hide("slow");
+                $("#fax_").hide("slow");
+            }else{
+                $("#businessName").show('slow');
+                $("#fax_").show('slow');
+            }
+        });
+
+
+        hide_all();
+        card_show();
+        $("#bill_method").on( 'change', function () {
+            var c_type = this.value;
+            if(c_type === 'CC' || c_type === 'DC' || c_type === 'OCCP'){
+                hide_all();
+                card_show();
+            }else if(c_type === 'CASH'){
+                hide_all();
+            }else if(c_type === 'CHECK'){
+                hide_all();
+                $("#checkNumber").show("slow");
+                route_show();
+            }else if(c_type === 'ACH'){
+                hide_all();
+                route_show();
+            }else if(c_type === 'VENMO' || c_type === 'PP' || c_type === 'SQ'){
+                hide_all();
+                $(".account_cred").show('slow');
+            }else if(c_type === 'WW' || c_type === 'HOF' || c_type === 'eT' || c_type === 'OPT'){
+                hide_all();
+                $(".account_cred").show('slow');
+                $("#confirmationPD").hide("slow");
+            }
+        });
+
+        function card_show(){
+            $("#CCN").show('slow');
+            $("#CCE").show('slow');
+            $("#checkNumber").hide("slow");
+            $("#routingNumber").hide("slow");
+            $("#accountNumber").hide("slow");
+        }
+        function route_show(){
+            $("#CCN").hide('slow');
+            $("#CCE").hide('slow');
+            $("#routingNumber").show("slow");
+            $("#accountNumber").show("slow");
+        }
+        function hide_all(){
+            $("#checkNumber").hide("slow");
+            $("#routingNumber").hide("slow");
+            $("#accountNumber").hide("slow");
+            $("#CCN").hide('slow');
+            $("#CCE").hide('slow');
+            $(".account_cred").hide('slow');
+        }
+
         $('#ssn').keydown(function (e) {
             var key = e.charCode || e.keyCode || 0;
             $text = $(this);

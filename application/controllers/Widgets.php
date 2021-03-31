@@ -26,6 +26,22 @@ class Widgets extends MY_Controller {
         
     }
     
+    public function changeOrder()
+    {
+        $this->load->model('widgets_model');
+        $order = explode(',', post('ids'));
+        $isMain = post('isMain');
+        $user_id = logged('id');
+        
+        $orderCount = 0;
+        foreach($order as $wids):
+            $orderCount++;
+            $details = array('wu_order' => $orderCount);
+            //print_r($details);
+            $this->widgets_model->changeOrder($wids, $user_id, $isMain, $details);
+        endforeach;
+    }
+    
     public function addToMain()
     {
         
@@ -54,7 +70,7 @@ class Widgets extends MY_Controller {
 
         $id = post('id');
         $isGlobal = post('isGlobal');
-        $isMain = post(isMain);
+        $isMain = post('isMain');
         $user_id = logged('id');
 
         $idCount = count($this->widgets_model->getWidgetListPerUser($user_id));

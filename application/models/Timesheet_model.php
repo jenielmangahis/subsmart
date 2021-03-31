@@ -1385,6 +1385,12 @@ class Timesheet_model extends MY_Model
         $qry = $this->db->query("SELECT * FROM timesheet_shift_schedule where shift_date = '" . $shift_date . "' AND user_id =" . $user_id);
         return $qry->result();
     }
+    public function get_my_schedules_for_calendar($from, $to, $user_id)
+    {
+        $this->db->reset_query();
+        $qry = $this->db->query("SELECT * FROM timesheet_shift_schedule where shift_date >= '" . $from . "' AND shift_date <= '" . $to . "' AND user_id =" . $user_id);
+        return $qry->result();
+    }
 }
 
 

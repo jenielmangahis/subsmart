@@ -1,0 +1,4 @@
+.fc .fc-scrollgrid-section-body table,
+.fc .fc-scrollgrid-section-footer table {
+  border-bottom: 1px solid var(--fc-border-color, #ddd);
+}

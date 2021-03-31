@@ -21,7 +21,7 @@
     </div>
     <div class="card" style="border: 2px solid #30233d; margin-top:0; border-radius: 40px; padding:5px;">
         <div style="border: 5px solid #30233d; margin-top:0; border-radius: 40px; box-shadow: 1px 0px 15px 5px rgb(48, 35, 61);">
-            <div class="card-body mt-2" style="padding:5px 10px; height: 363px; overflow: hidden">
+            <div class="card-body mt-2" style="padding:5px 10px;  height: <?= $rawHeight ?>px; overflow: hidden">
                 <div id="taskHubBody" style="<?= $height; ?> overflow-y: scroll">
                     <?php
                     //$this->wizardlib->getStreetView('1001 East Madison Drive PENSACOLA, FL 32505');

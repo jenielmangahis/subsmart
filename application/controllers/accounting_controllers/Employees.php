@@ -351,4 +351,52 @@ class Employees extends MY_Controller {
     {
         $this->load->view('accounting/employees/add_pay_schedule');
     }
+
+    public function add_pay_schedule()
+    {
+        if(in_array($this->input->post('pay_frequency'), ['every-week', 'every-other-week'])) {
+            $nextPayDay = date('Y-m-d', strtotime($this->input->post('next_payday')));
+            $nextPayPeriodEnd = date('Y-m-d', strtotime($this->input->post('next_pay_period_end')));
+        } 
+        else {
+            if($this->input->post('custom_schedule') === 'on') {
+                $nextPayDay = null;
+                $nextPayPeriodEnd = null;
+            } else {
+                $nextPayDay = date('Y-m-d', strtotime($this->input->post('next_payday')));
+                $nextPayPeriodEnd = date('Y-m-d', strtotime($this->input->post('next_pay_period_end')));
+            }
+        }
+
+        $data = [
+            'company_id' => logged('company_id'),
+            'pay_frequency' => $this->input->post('pay_frequency'),
+            'next_payday' => $nextPayDay,
+            'next_pay_period_end' => $nextPayPeriodEnd,
+            'name' => $this->input->post('name'),
+            'first_payday' => $this->input->post('custom_schedule') === 'on' ? $this->input->post('first_payday') : null,
+            'end_of_first_pay_period' => $this->input->post('custom_schedule') === 'on' ? $this->input->post('end_of_first_pay_period') : null,
+            'first_pay_month' => $this->input->post('custom_schedule') === 'on' && $this->input->post('end_of_first_pay_period') === 'end-date' ? $this->input->post('end_of_first_pay_period') : null,
+            'first_pay_day' => $this->input->post('custom_schedule') === 'on' && $this->input->post('end_of_first_pay_period') === 'end-date' ? $this->input->post('first_pay_day') : null,
+            // 'first_pay_days_before' => $this->input->post('custom_schedule') === 'on' && $this->input->post('end_of_first_pay_period') !== 'end-date' ? $this->input->post('') :
+            'second_payday' => $this->input->post('custom_schedule') === 'on' && $this->input->post('pay_frequency') === 'twice-month' ? $this->input->post('second_payday') : null,
+            'end_of_second_pay_period' => $this->input->post('custom_schedule') === 'on' && $this->input->post('pay_frequency') === 'twice-month' ?$this->input->post('end_of_second_pay_period') : null,
+            'second_pay_month' => $this->input->post('custom_schedule') === 'on' && $this->input->post('pay_frequency') === 'twice-month' && $this->input->post('end_of_second_pay_period') === 'end-date' ?$this->input->post('second_pay_month') : null,
+            'second_pay_day' => $this->input->post('custom_schedule') === 'on' && $this->input->post('pay_frequency') === 'twice-month' && $this->input->post('end_of_second_pay_period') === 'end-date' ?$this->input->post('second_pay_day') : null,
+            'use_for_new_employees' => $this->input->post('use_for_new_employees'),
+            'status' => 1,
+            'created_at' => date('Y-m-d H:i:s'),
+            'updated_at' => date('Y-m-d H:i:s')
+        ];
+
+        $insert = $this->users_model->addPaySchedule($data);
+
+        $return = [
+            'data' => $insert,
+            'success' => $insert ? true : false,
+            'message' => $insert ? 'Success!' : 'Error!'
+        ];
+
+        echo json_encode($return);
+    }
 }

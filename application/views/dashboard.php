@@ -209,13 +209,13 @@
                 <div class="row d-none d-lg-flex" style="width:99%">
                     <?php //$this->load->view('widgets/quick_start', $quick_start_data); ?>
                     <div class="col-md-12">
-                        <div class="row cus-dashboard-div sortable2">
+                        <div class="row cus-dashboard-div sortable2 isMain">
                             <?php
                             foreach ($widgets as $wids):
                                 if ($wids->wu_is_main):
                                     $data['class'] = 'col-lg-4 col-md-4 col-sm-12';
-                                    $data['rawHeight'] = '250';
-                                    $data['height'] = 'height: 250px;';
+                                    $data['rawHeight'] = '420';
+                                    $data['height'] = 'height: 420px;';
                                     $data['isMain'] = True;
                                     $data['id'] = $wids->w_id;
                                     $data['isGlobal'] = ($wids->wu_company_id == '0' ? false : true);
@@ -226,13 +226,13 @@
                         </div>
                     </div>
                 </div>
-                <div class="row d-none d-lg-flex cus-dashboard-div dynamic-widget sortable2" id="widgetWrapper">
+                <div class="row d-none d-lg-flex cus-dashboard-div dynamic-widget sortableWidget" id="widgetWrapper">
                     <?php
                     foreach ($widgets as $wids):
                         if (!$wids->wu_is_main):
                             $data['class'] = 'col-lg-3 col-md-6 col-sm-12';
-                            $data['rawHeight'] = '310';
-                            $data['height'] = 'height: 310px;';
+                            $data['rawHeight'] = '360';
+                            $data['height'] = 'height: 360px;';
                             $data['isMain'] = False;
                             $data['id'] = $wids->w_id;
                             $data['isGlobal'] = ($wids->wu_company_id == '0' ? false : true);
@@ -842,12 +842,15 @@
                 $('.widget').mouseover(function(){
                     if($(this).attr('id')=='addWidget'){
                         $(".sortable2").sortable("disable");
+                        $(".sortableWidget").sortable("disable");
                     }else{
                         $(".sortable2").sortable("enable");
+                        $(".sortableWidget").sortable("enable");
                     }
                 });
             } else {
                 $(".sortable2").sortable("disable");
+                $(".sortableWidget").sortable("disable");
             }
 
         });
@@ -867,26 +870,63 @@
             },
             update: function (e, ui)
             {
+                var isMain = ($(this).hasClass('isMain')?'1':'0');
                 $(this).attr('style', 'top:0;cursor: pointer');
                 var oldOrder = $(this).attr('data-previndex');
                 var idsInOrder = $(".sortable2").sortable("toArray",{ attribute: 'data-id' });
                 var filteredArray = idsInOrder.filter(function(e){return e});
 
-//                $.ajax({
-//                    type: "POST",
-//                    url: "<?= base_url() ?>/customer/ac_module_sort",
-//                    data: {ams_values: filteredArray.toString(), ams_id: <?php echo $module_sort->ams_id; ?>}, // serializes the form's elements.
-//                    success: function (data)
-//                    {
-//                        console.log(data);
-//                    }
-//                });
+                $.ajax({
+                    type: "POST",
+                    url: "<?= base_url() ?>/widgets/changeOrder",
+                    data: {ids: filteredArray.toString(), isMain: isMain}, // serializes the form's elements.
+                    success: function (data)
+                    {
+                        console.log(data);
+                    }
+                });
 
                 console.log(filteredArray.toString());
             }
         });
 
-        $(".sortable2").sortable("disable");
+        //$(".sortable2").sortable("disable");
+
+
+        $(".sortableWidget").sortable({
+            start: function (e, ui) {
+                // creates a temporary attribute on the element with the old index
+                $(this).attr('data-previndex', ui.item.index());
+                $(this).attr('style', 'top:0;cursor: grabbing', 'z-index:10000');
+
+            },
+            change(event, ui)
+            {
+                $(this).attr('style', 'top:0;cursor: grabbing ', 'z-index:10000');
+            },
+            update: function (e, ui)
+            {
+                var isMain = ($(this).hasClass('isMain')?'1':'0');
+                $(this).attr('style', 'top:0;cursor: pointer');
+                var oldOrder = $(this).attr('data-previndex');
+                var idsInOrder = $(".sortableWidget").sortable("toArray",{ attribute: 'data-id' });
+                var filteredArray = idsInOrder.filter(function(e){return e});
+
+                $.ajax({
+                    type: "POST",
+                    url: "<?= base_url() ?>/widgets/changeOrder",
+                    data: {ids: filteredArray.toString(), isMain: isMain}, // serializes the form's elements.
+                    success: function (data)
+                    {
+                        console.log(data);
+                    }
+                });
+
+                console.log(filteredArray.toString());
+            }
+        });
+
+        //$(".sortableWidget").sortable("disable");
     });
 
 </script>

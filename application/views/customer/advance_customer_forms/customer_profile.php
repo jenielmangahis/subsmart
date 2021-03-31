@@ -1,8 +1,44 @@
 <div class="card">
     <div class="card-header">
+        <span style="position: absolute;right: 0;margin-right: 25px;font-size: 20px;padding-top:10px;" class="fa fa-ellipsis-v"></span>
         <h6 ><span class="fa fa-user"></span>&nbsp; &nbsp;Customer Profle</h6>
     </div>
     <div class="card-body">
+        <div class="row form_line">
+            <div class="col-md-4">
+                <label for="">Status</label>
+            </div>
+            <div class="col-md-8">
+                <select id="status" name="status" data-customer-source="dropdown" class="input_select" >
+                    <option  value=""></option>
+                    <option  value="Draft">Draft</option>
+                    <option <?php if(isset($profile_info)){ if($profile_info->status == 'Scheduled'){ echo 'selected'; } } ?> value="Charge Back">Charge Back</option>
+                    <option <?php if(isset($profile_info)){ if($profile_info->status == 'Scheduled'){ echo 'selected'; } } ?> value="Cancelled">Cancelled</option>
+                    <option <?php if(isset($profile_info)){ if($profile_info->status == 'Scheduled'){ echo 'selected'; } } ?> value="Collection">Collection</option>
+                    <option <?php if(isset($profile_info)){ if($profile_info->status == 'Scheduled'){ echo 'selected'; } } ?> value="Cancel Pending">Cancel Pending</option>
+                    <option <?php if(isset($profile_info)){ if($profile_info->status == 'Installed'){ echo 'selected'; } } ?> value="Installed">Installed</option>
+                    <option <?php if(isset($profile_info)){ if($profile_info->status == 'Scheduled'){ echo 'selected'; } } ?> value="Lead">Lead</option>
+                    <option <?php if(isset($profile_info)){ if($profile_info->status == 'Scheduled'){ echo 'selected'; } } ?> value="No Show">No Show</option>
+                    <option <?php if(isset($profile_info)){ if($profile_info->status == 'Scheduled'){ echo 'selected'; } } ?> value="Pending">Pending</option>
+                    <option <?php if(isset($profile_info)){ if($profile_info->status == 'Scheduled'){ echo 'selected'; } } ?> value="Past Due">Past Due</option>
+                    <option <?php if(isset($profile_info)){ if($profile_info->status == 'Scheduled'){ echo 'selected'; } } ?> value="Re-Scheduled">Re-Scheduled</option>
+                    <option <?php if(isset($profile_info)){ if($profile_info->status == 'Scheduled'){ echo 'selected'; } } ?> value="Scheduled">Scheduled</option>
+                    <option <?php if(isset($profile_info)){ if($profile_info->status == 'Scheduled'){ echo 'selected'; } } ?> value="Service Customer">Service Customer</option>
+                    <option <?php if(isset($profile_info)){ if($profile_info->status == 'Scheduled'){ echo 'selected'; } } ?> value="Other">Other</option>
+                </select>
+            </div>
+        </div>
+        <div class="row form_line">
+            <div class="col-md-4">
+                <label>Customer Type</label>
+            </div>
+            <div class="col-md-8">
+                <select id="customer_type" name="customer_type" data-customer-source="dropdown" class="form-controls input_select">
+                    <option value="Residential">Residential</option>
+                    <option value="Business">Business</option>
+                </select>
+            </div>
+        </div>
         <div class="row form_line">
             <div class="col-md-4">
                 <label>Sales Area <span class="required"> *</span></label>
@@ -13,13 +49,14 @@
                         <option <?php if(isset($profile_info)){ if($profile_info->fk_sa_id == $sa->sa_id){ echo 'selected'; } } ?> value="<?= $sa->sa_id; ?>"><?= $sa->sa_name; ?></option>
                     <?php endforeach ?>
                 </select>
+                <a href="<?= base_url() ?>customer/settings" target="_blank"  style="color:#58bc4f;font-size: 10px;"><span class="fa fa-plus"></span> Manage Sales Area</a>&nbsp;&nbsp;
             </div>
         </div>
-        <div class="row form_line">
-            <div class="col-md-4">
-                <label for="">Business Name</label>
+        <div class="row form_line" id="businessName">
+            <div class="col-md-4" id="businessNameLabel">
+                <label for="" >Business Name</label>
             </div>
-            <div class="col-md-8">
+            <div class="col-md-8" id="businessNameInput">
                 <input type="text" class="form-control" name="business_name" id="business_name" value="<?php if(isset($profile_info)){ echo $profile_info->business_name; } ?>"/>
             </div>
         </div>
@@ -151,7 +188,7 @@
                 <label for="">Date Of Birth </label>
             </div>
             <div class="col-md-8">
-                <input type="text" class="form-control" name="date_of_birth" id="date_picker" value="<?php if(isset($profile_info)){ echo $profile_info->date_of_birth; } ?>"/>
+                <input type="text" class="form-control" placeholder="01/01/2021" name="date_of_birth" id="date_picker" value="<?php if(isset($profile_info)){ echo $profile_info->date_of_birth; } ?>"/>
             </div>
         </div>
 
@@ -188,24 +225,24 @@
                 <input type="text" class="form-control phone_number" maxlength="12" placeholder="xxx-xxx-xxxx" name="phone_m" id="phone_m" value="<?php if(isset($profile_info->phone_m)){ echo $profile_info->phone_m; } ?>" required />
             </div>
         </div>
-
-        <div class="row">
-            <div class="col-md-4">
+        <hr>
+        <div class="row form_line">
+            <div class="col-md-4 ">
                 <label for="">Contact Name 1</label>
             </div>
             <div class="col-md-8">
                 <input type="text" class="form-control" name="contact_name1" id="contact_name1" value="<?php if(isset($alarm_info)){ echo $alarm_info->contact_name1; } ?>"/>
             </div>
         </div>
-        <div class="row">
+        <div class="row form_line">
             <div class="col-md-4">
                 <label for="">Contact Phone 1</label>
             </div>
             <div class="col-md-8">
-                <input type="text" class="form-control" name="contact1" id="contact1" value="<?php if(isset($alarm_info)){ echo $alarm_info->contact1; } ?>"/>
+                <input type="text" class="form-control" placeholder="xxx-xxx-xxxx" name="contact1" id="contact1" value="<?php if(isset($alarm_info)){ echo $alarm_info->contact1; } ?>"/>
             </div>
         </div>
-        <div class="row">
+        <div class="row form_line">
             <div class="col-md-4">
                 <label for="">Contact Name 2</label>
             </div>
@@ -213,15 +250,15 @@
                 <input type="text" class="form-control" name="contact_name2" id="contact_name2" value="<?php if(isset($alarm_info)){ echo $alarm_info->contact_name2; } ?>"/>
             </div>
         </div>
-        <div class="row">
+        <div class="row form_line">
             <div class="col-md-4">
                 <label for="">Contact Phone 2</label>
             </div>
             <div class="col-md-8">
-                <input type="text" class="form-control" name="contact2" id="contact2" value="<?php if(isset($alarm_info)){ echo $alarm_info->contact2; } ?>"/>
+                <input type="text" class="form-control" placeholder="xxx-xxx-xxxx" name="contact2" id="contact2" value="<?php if(isset($alarm_info)){ echo $alarm_info->contact2; } ?>"/>
             </div>
         </div>
-        <div class="row">
+        <div class="row form_line">
             <div class="col-md-4">
                 <label for="">Contact Name 3</label>
             </div>
@@ -229,16 +266,16 @@
                 <input type="text" class="form-control" name="contact_name3" id="contact_name3" value="<?php if(isset($alarm_info)){ echo $alarm_info->contact_name3; } ?>" />
             </div>
         </div>
-        <div class="row">
+        <div class="row form_line">
             <div class="col-md-4">
                 <label for="">Contact Phone 3</label>
             </div>
             <div class="col-md-8">
-                <input type="text" class="form-control" name="contact3" id="contact3" value="<?php if(isset($alarm_info)){ echo $alarm_info->contact3; } ?>"/>
+                <input type="text" class="form-control" placeholder="xxx-xxx-xxxx" name="contact3" id="contact3" value="<?php if(isset($alarm_info)){ echo $alarm_info->contact3; } ?>"/>
             </div>
         </div>
 
-        <!--<div class="row form_line">
+        <!--<div class="row form_line" id="fax_">
             <div class="col-md-4">
                 <label for="">Fax</label>
             </div>
@@ -246,20 +283,7 @@
                 <input type="text" class="form-control" name="fax" id="fax" value="<?php if(isset($profile_info->fax)){ echo $profile_info->fax; } ?>" />
             </div>
         </div>-->
-        <div class="row form_line">
-            <div class="col-md-4">
-                <label class="alarm_label"> <span >Pay History </span>
-            </div>
-            <div class="col-md-8">
-                <select id="pay_history" name="pay_history" class="input_select searchable-dropdown">
-                    <option <?php if(isset($profile_info)){ if($profile_info->pay_history == 1){ echo 'selected'; } } ?> value="1">1 - Excellent</option>
-                    <option <?php if(isset($profile_info)){ if($profile_info->pay_history == 2){ echo 'selected'; } } ?> value="2">2 - Good</option>
-                    <option <?php if(isset($profile_info)){ if($profile_info->pay_history == 3){ echo 'selected'; } } ?> value="3">3 - Fair</option>
-                    <option <?php if(isset($profile_info)){ if($profile_info->pay_history == 4){ echo 'selected'; } } ?> value="4">4 - Poor</option>
-                    <option <?php if(isset($profile_info)){ if($profile_info->pay_history == 5){ echo 'selected'; } } ?> value="5">5 - Unsatisfactory</option>
-                </select>
-            </div>
-        </div>
+
     </div>
 
     <?php include viewPath('customer/advance_customer_forms/customer_billing_info'); ?>

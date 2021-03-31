@@ -94,6 +94,54 @@ function initElements(method)
     });
 }
 
+function upcomingPayPeriods(el)
+{
+    if(el.attr('id') === 'next-payday') {
+        var i = 0;
+        var value = el.val();
+        var date = new Date(value);
+        var setDate = new Date(`${date.getMonth()+1}/${date.getDate()}/${date.getFullYear()}`);
+
+        $('#add-pay-schedule-modal .pay-periods .card.shadow').each(function() {
+            if(i === 0) {
+                $(this).find('p.pay-date').html(value);
+            } else {
+                switch($('#add-pay-schedule-modal #pay-frequency').val()) {
+                    case 'every-week' :
+                        setDate.setDate(setDate.getDate() + 7);
+                    break;
+                    case 'every-other-week' :
+                        setDate.setDate(setDate.getDate() + 14);
+                    break;
+                    case 'twice-month' :
+                        setDate.setDate(setDate.getDate() + 15);
+                    break;
+                    case 'every-month' :
+                        var totalDays = getTotalDaysOfMonth(setDate.getMonth() + 2, setDate.getFullYear());
+                        if(date.getDate() >= totalDays) {
+                            setDate = new Date(`${setDate.getMonth()+2}/${totalDays}/${setDate.getFullYear()}`);
+                        } else {
+                            setDate.setMonth(setDate.getMonth() + 1);
+                        }
+                    break;
+                }
+
+                var newDate = String(setDate.getMonth() + 1).padStart(2, '0')+'/'+String(setDate.getDate()).padStart(2, '0')+'/'+setDate.getFullYear();
+                
+                $(this).find('p.pay-date').html(newDate);
+            }
+            i++;
+        });
+    } else {
+
+    }
+}
+
+function getTotalDaysOfMonth(month, year)
+{
+    return new Date(year, month, 0).getDate();
+}
+
 $('#employee-status').select2({
     minimumResultsForSearch: -1
 });
@@ -197,10 +245,41 @@ $(document).on('change', '#pay-schedule', function() {
                     todayBtn: "linked",
                     language: "de"
                 });
+
+                $(this).on('change', function() {
+                    var selectedDate = new Date($(this).val());
+                    var day = new Intl.DateTimeFormat('en-US', {weekday: 'long'}).format(selectedDate);
+
+                    $(this).parent().next().html(day);
+                    $('#add-pay-schedule-modal #name').val('Every '+day);
+
+                    upcomingPayPeriods($(this));
+                });
             });
 
             $('#add-pay-schedule-modal').modal('show');
         });
+    }
+});
+
+$(document).on('change', '#add-pay-schedule-modal #pay-frequency', function() {
+    if($(this).val() === 'twice-month' || $(this).val() === 'every-month') {
+        $(this).next().next().removeClass('hide');
+    } else {
+        $(this).next().next().addClass('hide');
+    }
+
+    $('#add-pay-schedule-modal #next-payday').trigger('change');
+    $('#add-pay-schedule-modal #next-pay-period-end').trigger('change');
+});
+
+$(document).on('change', '#add-pay-schedule-modal #custom-schedule', function() {
+    if($(this).prop('checked')) {
+        $($('#add-pay-schedule-modal .custom-schedule-fields')[0]).prev().addClass('hide');
+        $('#add-pay-schedule-modal .custom-schedule-fields').removeClass('hide');
+    } else {
+        $($('#add-pay-schedule-modal .custom-schedule-fields')[0]).prev().removeClass('hide');
+        $('#add-pay-schedule-modal .custom-schedule-fields').addClass('hide');
     }
 });
 
@@ -298,4 +377,21 @@ var table = $('#employees-table').DataTable({
             }
         }
     ]
+});
+
+$(document).on('submit', '#pay-schedule-form', function(e) {
+    e.preventDefault();
+
+    var data = new FormData(this);
+
+    $.ajax({
+        url: '/accounting/employees/add-pay-schedule',
+        data: data,
+        type: 'post',
+        processData: false,
+        contentType: false,
+        success: function(result) {
+            $('#add-pay-schedule-modal').modal('hide');
+        }
+    });
 });

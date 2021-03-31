@@ -195,7 +195,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                 </div>
                                             </div>
                                             <div class="addFISection">
-                                                <a href="#">Connect accounts</a>
+                                                <a href="<?= base_url() ?>job">Connect accounts</a>
                                                 <div class="registerLink">
                                                     <div class="dropdown" style="position: relative;float: right;display: inline-block;margin-left: 10px;">
                                                             <span type="button" data-toggle="dropdown" style="border-radius: 0 36px 36px 0;margin-left: -5px;">

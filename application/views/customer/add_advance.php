@@ -1,6 +1,11 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
+add_css(array(
+    'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css',
+    'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css',
+));
 ?>
+
 <?php include viewPath('includes/header'); ?>
 <?php include viewPath('customer/css/add_advance_css'); ?>
     <div class="wrapper" role="wrapper">
@@ -83,6 +88,16 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 </div>
                             </div>
                         </div>
+
+            <?php
+            // JS to add only Customer module
+            add_footer_js(array(
+                'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js',
+                'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js',
+                'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js',
+                'https://code.jquery.com/ui/1.12.1/jquery-ui.js',
+            ));
+            ?>
 <?php include viewPath('includes/footer'); ?>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-timepicker/0.5.2/js/bootstrap-timepicker.min.js" integrity="sha512-2xXe2z/uA+2SyT/sTSt9Uq4jDKsT0lV4evd3eoE/oxKih8DSAsOF6LUb+ncafMJPAimWAXdu9W+yMXGrCVOzQA==" crossorigin="anonymous"></script>
@@ -108,6 +123,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 }
                 case "postal_code": {
                     $('#zip_code').val(component.long_name);
+                    $('#billing_zip').val(component.long_name);
                     break;
                 }
                 case "country": {
@@ -120,10 +136,12 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 }
                 case "locality": {
                     $('#city').val(component.long_name);
+                    $('#billing_city').val(component.long_name);
                     break;
                 }
                 case "administrative_area_level_1": {
                     $('#state').val(component.long_name);
+                    $('#billing_state').val(component.long_name);
                     break;
                 }
             }

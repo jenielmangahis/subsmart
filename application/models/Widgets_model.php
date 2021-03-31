@@ -3,6 +3,14 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Widgets_model extends MY_Model {
     
+    function changeOrder($id, $user_id, $isMain, $details)
+    {
+        $this->db->where('wu_user_id', $user_id);
+        $this->db->where('wu_widget_id', $id);
+        $this->db->where('wu_is_main', $isMain);
+        return $this->db->update('widgets_users', $details);
+        
+    }
     
     function addToMain($user_id, $id)
     {

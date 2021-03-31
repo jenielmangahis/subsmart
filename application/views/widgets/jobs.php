@@ -30,9 +30,9 @@
     </div>
     <div class="card" style="border: 2px solid #30233d; margin-top:0; border-radius: 40px; padding:5px;">
         <div style="border: 5px solid #30233d; margin-top:0; border-radius: 40px; box-shadow: 1px 0px 15px 5px rgb(48, 35, 61);">
-            <div class="card-body mt-3" style="padding:5px 10px; height: 300px;">
+            <div class="card-body mt-3" style="padding:5px 10px; height: <?= $rawHeight ?>px;">
                 <div class="row" id="jobsBody" style="overflow-y: scroll;">
-                    <canvas id="jobCanvas" height="<?= $rawHeight - 130 ?>"></canvas>
+                    <canvas id="jobCanvas" height="<?= $rawHeight-250 ?>"></canvas>
 
                 </div>
             </div>

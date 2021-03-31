@@ -1,4 +1,5 @@
 <div class="card-header">
+    <span style="position: absolute;right: 0;margin-right: 25px;font-size: 20px;padding-top:10px;" class="fa fa-ellipsis-v"></span>
     <h6 ><span class="fa fa-user"></span>&nbsp; &nbsp;Billing Information</h6>
 </div>
 <div class="card-body">
@@ -32,20 +33,16 @@
         </div>
         <div class="col-md-8">
             <div class="row">
-                <div class="col-md-8">
+                <div class="col-md-4">
                     <input type="text" class="form-control" name="billing_city" id="billing_city" value="<?php if(isset($billing_info)){ echo $billing_info->city; } ?>" />
                 </div>
                 <div class="col-md-4">
                     <input type="text" class="form-control" name="billing_state" id="billing_state" value="<?php if(isset($billing_info)){ echo $billing_info->state; } ?>"/>
                 </div>
+                <div class="col-md-4">
+                    <input type="text" class="form-control" name="billing_zip" id="billing_zip" value="<?php if(isset($billing_info)){ echo $billing_info->zip; } ?>"/>
+                </div>
             </div>
-        </div>
-    </div>
-    <div class="row form_line">
-        <div class="col-md-4">
-        </div>
-        <div class="col-md-5">
-            <input type="text" class="form-control" name="billing_zip" id="billing_zip" value="<?php if(isset($billing_info)){ echo $billing_info->zip; } ?>"/>
         </div>
     </div>
     <div class="row form_line">
@@ -53,7 +50,9 @@
             <label for="">Rate Plan $</label>
         </div>
         <div class="col-md-8">
-            <select id="mmr" name="mmr" data-customer-source="dropdown" class="input_select searchable-dropdown" required>
+            <div class="row">
+                <div class="col-md-8">
+                <select id="mmr" name="mmr" data-customer-source="dropdown" class="input_select searchable-dropdown" required>
                 <?php if(isset($billing_info->mmr)){ ?>
                     <option selected value="<?= $billing_info->mmr ?>"><?= $billing_info->mmr ?></option>
                 <?php } ?>
@@ -123,6 +122,11 @@
                 <option value="129.00">129.00</option>
             </select>
         </div>
+                <div class="col-md-4">
+                    <a href="<?= base_url() ?>customer/settings" target="_blank"  style="color:#58bc4f;margin-top:10px;font-size: 10px;position: absolute;"><span class="fa fa-plus"></span>Manage Rate Plan </a>&nbsp;&nbsp;
+                </div>
+            </div>
+        </div>
     </div>
     <div class="row form_line">
         <div class="col-md-4">
@@ -146,7 +150,7 @@
         <div class="col-md-8">
             <select id="bill_day" name="bill_day" data-customer-source="dropdown" class="input_select searchable-dropdown">
                 <?php
-                for ($days=0;$days<14;$days++){
+                for ($days=0;$days<31;$days++){
                     ?>
                     <option <?php if(isset($billing_info)){ if($billing_info->bill_day == days_of_month($prefix)){ echo 'selected'; } } ?> value="<?= days_of_month($days); ?>"><?= days_of_month($days) < 1 ? '' : days_of_month($days) ; ?></option>
                     <?php
@@ -162,24 +166,16 @@
         <div class="col-md-8">
             <select id="contract_term" name="contract_term" data-customer-source="dropdown" class="input_select searchable-dropdown" >
                 <option <?php if(isset($billing_info)){ if($billing_info->contract_term == 0){echo "selected";} } ?> value="0"></option>
-                <option <?php if(isset($billing_info)){ if($billing_info->contract_term == 36){echo "selected";} } ?> value="36">36</option>
-                <option <?php if(isset($billing_info)){ if($billing_info->contract_term == 60){echo "selected";} } ?> value="60">60</option>
+                <option <?php if(isset($billing_info)){ if($billing_info->contract_term == 1){echo "selected";} } ?> value="1">1</option>
+                <option <?php if(isset($billing_info)){ if($billing_info->contract_term == 6){echo "selected";} } ?> value="6">6</option>
                 <option <?php if(isset($billing_info)){ if($billing_info->contract_term == 12){echo "selected";} } ?> value="12">12</option>
+                <option <?php if(isset($billing_info)){ if($billing_info->contract_term == 18){echo "selected";} } ?> value="18">18</option>
                 <option <?php if(isset($billing_info)){ if($billing_info->contract_term == 24){echo "selected";} } ?> value="24">24</option>
-            </select>
-        </div>
-    </div>
-    <div class="row form_line">
-        <div class="col-md-4">
-            <label for="">Billing Method</label>
-        </div>
-        <div class="col-md-8">
-            <select id="bill_method" name="bill_method" data-customer-source="dropdown" class="input_select searchable-dropdown">
-                <option <?php if(isset($billing_info)){ if($billing_info->bill_method == 0){echo "selected";} } ?>  value="0">None</option>
-                <option <?php if(isset($billing_info)){ if($billing_info->bill_method == 1){echo "selected";} } ?> value="1">Credit Card</option>
-                <option <?php if(isset($billing_info)){ if($billing_info->bill_method == 2){echo "selected";} } ?> value="2">Check</option>
-                <option <?php if(isset($billing_info)){ if($billing_info->bill_method == 3){echo "selected";} } ?> value="3">eCheck</option>
-                <option <?php if(isset($billing_info)){ if($billing_info->bill_method == 4){echo "selected";} } ?> value="4">Manual Billing</option>
+                <option <?php if(isset($billing_info)){ if($billing_info->contract_term == 36){echo "selected";} } ?> value="36">36</option>
+                <option <?php if(isset($billing_info)){ if($billing_info->contract_term == 42){echo "selected";} } ?> value="42">42</option>
+                <option <?php if(isset($billing_info)){ if($billing_info->contract_term == 48){echo "selected";} } ?> value="48">48</option>
+                <option <?php if(isset($billing_info)){ if($billing_info->contract_term == 60){echo "selected";} } ?> value="60">60</option>
+                <option <?php if(isset($billing_info)){ if($billing_info->contract_term == 72){echo "selected";} } ?> value="72">72</option>
             </select>
         </div>
     </div>
@@ -199,7 +195,39 @@
             <input type="text" class="form-control " name="bill_end_date" id="bill_end_date" value="<?php if(isset($billing_info)){ echo $billing_info->bill_end_date; } ?>"/>
         </div>
     </div>
+</div>
+
+
+    <div class="card-header">
+        <span style="position: absolute;right: 0;margin-right: 25px;font-size: 20px;padding-top:10px;" class="fa fa-ellipsis-v"></span>
+        <h6 ><span class="fa fa-credit-card"></span>&nbsp; &nbsp;Payment Details</h6>
+    </div>
+<div class="card-body">
+
     <div class="row form_line">
+        <div class="col-md-4">
+            <label for="">Billing Method</label>
+        </div>
+        <div class="col-md-8">
+            <select id="bill_method" name="bill_method" data-customer-source="dropdown" class="input_select searchable-dropdown">
+                <option  value="CC">Credit Card</option>
+                <option  value="DC">Debit Card</option>
+                <option  value="CHECK">Check</option>
+                <option  value="CASH">Cash</option>
+                <option  value="ACH">ACH</option>
+                <option  value="VENMO">Venmo</option>
+                <option  value="PP">Paypal</option>
+                <option  value="SQ">Square</option>
+                <option  value="WW">Warranty Work</option>
+                <option  value="HOF">Home Owner Financing</option>
+                <option  value="eT">e-Transfer</option>
+                <option  value="OCCP">Other Credit Card Processor</option>
+                <option  value="OPT">Other Payment Type</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="row form_line" id="checkNumber">
         <div class="col-md-4">
             <label for="">Check Number</label>
         </div>
@@ -207,7 +235,7 @@
             <input type="number" class="form-control" name="check_num" id="check_num" value="<?php if(isset($billing_info)){ echo $billing_info->check_num; } ?>"/>
         </div>
     </div>
-    <div class="row form_line">
+    <div class="row form_line" id="routingNumber">
         <div class="col-md-4">
             <label for="">Routing Number</label>
         </div>
@@ -215,7 +243,7 @@
             <input type="number" class="form-control" name="routing_num" id="routing_num" value="<?php if(isset($billing_info)){ echo $billing_info->routing_num; } ?>"/>
         </div>
     </div>
-    <div class="row form_line">
+    <div class="row form_line" id="accountNumber">
         <div class="col-md-4">
             <label for="">Account Number</label>
         </div>
@@ -223,27 +251,133 @@
             <input type="number" class="form-control" name="acct_num" id="acct_num" value="<?php if(isset($billing_info)){ echo $billing_info->acct_num; } ?>"/>
         </div>
     </div>
-    <div class="row form_line">
+    <div class="row form_line" id="CCN">
         <div class="col-md-4">
             <label for="">Credit Card Number</label>
         </div>
         <div class="col-md-8">
-            <input type="number" class="form-control" name="credit_card_num" id="credit_card_num" value="<?php if(isset($billing_info)){  $billing_info->credit_card_num == 0 ? '' :  $billing_info->credit_card_num; } ?>"/>
+            <input type="number" placeholder="0000 0000 0000 0000" class="form-control" name="credit_card_num" id="credit_card_num" value="<?php if(isset($billing_info)){  $billing_info->credit_card_num == 0 ? '' :  $billing_info->credit_card_num; } ?>"/>
         </div>
     </div>
-    <div class="row form_line">
+    <div class="row form_line" id="CCE">
         <div class="col-md-4">
             <label for="">Credit Card Expiration</label>
         </div>
         <div class="col-md-8">
             <div class="row">
+                <div class="col-md-8">
+                    <input type="text" placeholder="MM/YYYY" class="form-control" name="credit_card_exp" id="credit_card_exp" value="<?php if(isset($billing_info)){ echo $billing_info->credit_card_exp; } ?>"/>
+                </div>
                 <div class="col-md-4">
-                    <input type="text" class="form-control" name="credit_card_exp" id="credit_card_exp" value="<?php if(isset($billing_info)){ echo $billing_info->credit_card_exp; } ?>"/>
-                </div>/
-                <div class="col-md-4">
-                    <input type="text" class="form-control" name="credit_card_exp_mm_yyyy" id="credit_card_exp_mm_yyyy" value="<?php if(isset($billing_info)){ echo $billing_info->credit_card_exp_mm_yyyy; } ?>"/>
-                </div> <small>(MM/YYYY)</small>
+                    <input type="text" placeholder="CVC" class="form-control" name="credit_card_exp_mm_yyyy" id="credit_card_exp_mm_yyyy" value="<?php if(isset($billing_info)){ echo $billing_info->credit_card_exp_mm_yyyy; } ?>"/>
+                </div> <small></small>
             </div>
         </div>
     </div>
+
+    <div class="row form_line account_cred" >
+        <div class="col-md-4">
+            <label for="">Account Credential</label>
+        </div>
+        <div class="col-md-8">
+            <input type="number" class="form-control" name="account_credential" id="account_credential"/>
+        </div>
+    </div>
+    <div class="row form_line account_cred" >
+        <div class="col-md-4">
+            <label for="">Account Note</label>
+        </div>
+        <div class="col-md-8">
+            <input type="number" class="form-control" name="account_note" id="account_note"/>
+        </div>
+    </div>
+    <div class="row form_line account_cred" id="confirmationPD">
+        <div class="col-md-4">
+            <label for="">Confirmation</label>
+        </div>
+        <div class="col-md-8">
+            <input type="number" class="form-control" name="confirmation" id="confirmation"/>
+        </div>
+    </div>
+
+</div>
+<div class="card-header">
+    <span style="position: absolute;right: 0;margin-right: 25px;font-size: 20px;padding-top:10px;" class="fa fa-ellipsis-v"></span>
+    <h6 ><span class="fa fa-credit-card"></span>&nbsp; &nbsp;Subscription Pay Plan</h6>
+</div>
+<div class="card-body">
+    <div class="row form_line">
+        <div class="col-md-4">
+            <label for="">Finance Amount</label>
+        </div>
+        <div class="col-md-8">
+            <input type="text" placeholder="$" class="form-control datepicker" name="recurring_start_date" id="recurring_start_date" value="<?php if(isset($billing_info)){ echo $billing_info->bill_start_date; } ?>" />
+        </div>
+    </div>
+    <div class="row form_line">
+        <div class="col-md-4">
+            <label for="">Recurring Start Date</label>
+        </div>
+        <div class="col-md-8">
+            <input type="text" class="form-control datepicker" name="recurring_start_date" id="recurring_start_date" value="<?php if(isset($billing_info)){ echo $billing_info->bill_start_date; } ?>" />
+        </div>
+    </div>
+    <div class="row form_line">
+        <div class="col-md-4">
+            <label for="">Recurring End Date</label>
+        </div>
+        <div class="col-md-8">
+            <input type="text" class="form-control datepicker" name="recurring_start_date" id="recurring_start_date" value="<?php if(isset($billing_info)){ echo $billing_info->bill_start_date; } ?>" />
+        </div>
+    </div>
+    <div class="row form_line">
+        <div class="col-md-4">
+            <label for="">Transaction Amount</label>
+        </div>
+        <div class="col-md-8">
+            <input type="text" placeholder="$" class="form-control datepicker" name="recurring_start_date" id="recurring_start_date" value="<?php if(isset($billing_info)){ echo $billing_info->bill_start_date; } ?>" />
+        </div>
+    </div>
+    <div class="row form_line">
+        <div class="col-md-4">
+            <label for="">Transaction Category</label>
+        </div>
+        <div class="col-md-8">
+            <select id="transaction_category" name="transaction_category" data-customer-source="dropdown" class="input_select" >
+                <option  value=""></option>
+                <option  value="E">Equipment</option>
+                <option  value="MMR">MMR</option>
+                <option  value="RMR">RMR</option>
+                <option  value="MS">Monthly Subscription</option>
+                <option  value="AF">Activation Fee</option>
+                <option  value="FM">First Month</option>
+                <option  value="AFM">Activation + First Month</option>
+                <option  value="D">Deposit</option>
+                <option  value="O">Other</option>
+            </select>
+        </div>
+    </div>
+    <div class="row form_line">
+        <div class="col-md-4">
+            <label for="">Frequency</label>
+        </div>
+        <div class="col-md-8">
+            <select id="frequency" name="frequency" data-customer-source="dropdown" class="input_select" >
+                <option  value=""></option>
+                <option  value="1">1 month</option>
+                <option  value="2">2 months</option>
+                <option  value="3">3 months</option>
+                <option  value="4">4 months</option>
+                <option  value="5">5 months</option>
+                <option  value="6">6 months</option>
+                <option  value="7">7 months</option>
+                <option  value="8">8 months</option>
+                <option  value="8">9 months</option>
+                <option  value="10">10 months</option>
+                <option  value="11">11 months</option>
+                <option  value="12">12 months</option>
+            </select>
+        </div>
+    </div>
+
 </div>

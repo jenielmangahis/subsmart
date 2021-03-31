@@ -8,11 +8,17 @@ class Chart_of_accounts extends MY_Controller {
 		parent::__construct();
         $this->checkLogin();
         $this->load->model('chart_of_accounts_model');
+        $this->load->model('accounting_invoices_model');
+        $this->load->model('accounting_receive_payment_model');
+        $this->load->model('vendors_model');
+        $this->load->model('expenses_model');
+        $this->load->model('categories_model');
+        $this->load->model('items_model');
 
         add_css(array(
-            "assets/css/accounting/banking.css?v='rand()'",
+            "assets/css/accounting/banking.css?v=".rand(),
             "assets/css/accounting/accounting.css",
-            "assets/css/accounting/accounting.modal.css",
+            "assets/css/accounting/accounting.modal.css?v=".rand(),
             "assets/css/accounting/sidebar.css",
             "assets/css/accounting/sales.css",
             "assets/plugins/dropzone/dist/dropzone.css",
@@ -75,6 +81,20 @@ class Chart_of_accounts extends MY_Controller {
                 ];
             }
         }
+
+        $this->page_data['customers'] = $this->accounting_invoices_model->getCustomers();
+        $this->page_data['terms'] = $this->accounting_invoices_model->getPayTerms();
+        $this->page_data['paymethods'] = $this->accounting_receive_payment_model->getpaymethod();
+        $this->page_data['vendors'] = $this->vendors_model->getVendors();
+        $this->page_data['checks'] = $this->expenses_model->getCheck();
+        $this->page_data['transactions'] = $this->expenses_model->getTransaction();
+        $this->page_data['categories'] = $this->expenses_model->getExpenseCategory();
+        $this->page_data['bills'] = $this->expenses_model->getBill();
+        $this->page_data['vendor_credits'] = $this->expenses_model->getVendorCredit();
+        $this->page_data['expenses'] = $this->expenses_model->getExpense();
+        $this->page_data['list_categories'] = $this->categories_model->getCategories();
+        $this->page_data['attachments'] = $this->expenses_model->getAttachment();
+        $this->page_data['items'] = $this->items_model->getItemlist();
 
         $this->page_data['accountsDropdown'] = $accountsDropdown;
         $this->page_data['alert'] = 'accounting/alert_promt';
