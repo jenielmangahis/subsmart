@@ -44,7 +44,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                             <div class="col-md-12">
                                 <!-- <ol class="breadcrumb" style="margin-top:-30px;">
                                     <li class="breadcrumb-item active"> -->
-                                    <label  class="mytxt6" style="padding:.5%;background-color:#E8E8E9;">This workorder agreement (the "agreement") is made as of 02-13-2021, by and between NSMARTRAC, (the "Company") and the ("Customer") as the address shown below (the "Premise/Service Location) <i class="fa fa-pencil" aria-hidden="true"></i> </label>
+                                    <label  class="mytxt66" style="padding:.5%;background-color:#E8E8E9;">This workorder agreement (the "agreement") is made as of 02-13-2021, by and between NSMARTRAC, (the "Company") and the ("Customer") as the address shown below (the "Premise/Service Location) <i class="fa fa-pencil" aria-hidden="true"></i> </label>
                                     <input type="hidden" class="form-control custom6" name="custom6_field">
                                     <!-- </li>
                                 </ol> -->
@@ -143,14 +143,21 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <!-- <i class="fa fa-pencil" aria-hidden="true" ></i> -->
                                 <input type="text" class="form-control" name="password" id="password" placeholder="Password" />
                             </div>
-                            <div class="col-md-4 form-group">
+                            <!-- <div class="col-md-4 form-group">
                                 <label for="suit" class="mytxt">Custom Field</label> <i class="fa fa-pencil" aria-hidden="true"></i>
                                 <input type="text" class="form-control" name="custom1_value" id="custom1_value"/>
                                 <input type="hidden" class="custom1" name="custom1_field">
-                            </div>
+                            </div> -->
                         </div>
-                        <div class="row">     
-                            <div class="col-md-4 form-group">
+                        
+                        <div class="row">
+                        <?php foreach($fields as $field){ ?>
+                            <div class="col-md-3 form-group">
+                                <label for="suit" class="mytxt"><?php echo $field->name; ?></label> <i class="fa fa-pencil" aria-hidden="true"></i>
+                                <input type="text" class="form-control" name="custom1_value" id="custom1_value"/>
+                                <input type="hidden" class="custom1" name="custom1_field">
+                            </div>     
+                            <!-- <div class="col-md-4 form-group">
                                 <label for="suit" class="mytxt2">Custom Field</label> <i class="fa fa-pencil" aria-hidden="true"></i>
                                 <input type="text" class="form-control" name="custom2_value" id="custom2_value"/>
                                 <input type="hidden" class="custom2" name="custom2_field">
@@ -171,8 +178,10 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <label for="suit" class="mytxt5">Custom Field</label> <i class="fa fa-pencil" aria-hidden="true"></i>
                                 <input type="text" class="form-control" name="custom5_value" id="custom5_value"/>
                                 <input type="hidden" class="custom5" name="custom5_field">
-                            </div>
+                            </div> -->
+                            <?php } ?>
                         </div>
+                        
                         <div class="row" style="background-color:white;font-size:16px;">
                                 <div class="col-md-3">
                                     <a href="#" style="color:#02A32C;"><b>Items list</b></a> | <b>Items Summary</b>
@@ -682,12 +691,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <label style="font-weight:bold;font-size:18px;">TERMS AND CONDITIONS</label><label style="float:right;color:green;"><a href="#" style="color:green;" data-toggle="modal" data-target="#terms_conditions_modal">Update Terms and Condition</a></label>
                                     <div style="height:200px; overflow:auto; background:#FFFFFF;"
                                          id="showuploadagreement">
-                                         <?php //foreach($terms_conditions as $tc){ ?>
-                                            <p><?php echo $terms_conditions->content; 
-                                            // print_r($terms_conditions);
-                                            ?></p>
+                                            <p><?php echo $terms_conditions->content; ?></p>
                                             <input type="hidden" id="company_id" value="<?php echo getLoggedCompanyID(); ?>">
-                                        <?php// } ?>
                                     </div>
                                     <input type="hidden" class="form-control" name="terms_conditions" id="terms_conditions" value="<?php echo $terms_conditions->content; ?>" />
                                 </div>
@@ -734,7 +739,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                          id="showuploadagreement">
                                             <p><?php echo $terms_uses->content; ?></p>
                                             <input type="hidden" id="company_id" value="<?php echo getLoggedCompanyID(); ?>">
-                                        <?php// } ?>
                                     </div>
                                     <input type="hidden" class="form-control" name="terms_of_use" id="terms_of_use"  value="<?php echo $terms_uses->content; ?>"/>
                                 </div>

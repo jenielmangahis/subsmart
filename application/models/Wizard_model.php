@@ -117,4 +117,16 @@ class Wizard_model extends MY_Model {
 		return $query->result();
 	}
 
+    public function getCompanyWorkSpaceById($company_id, $id)
+    {
+
+        $this->db->select('*');
+        $this->db->from($this->tableWorkspaces);
+        $this->db->where('company_id', $company_id);
+        $this->db->where('id', $id);
+
+        $query = $this->db->get();
+        return $query->row();
+    }
+
 }

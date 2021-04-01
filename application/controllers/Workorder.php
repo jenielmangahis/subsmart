@@ -1014,6 +1014,8 @@ class Workorder extends MY_Controller
         $this->page_data['capture_signature'] = $capture_signature;
         $this->page_data['page']->menu = 'settings';
 
+        $this->page_data['fields'] = $this->workorder_model->getCustomByID();
+
         $this->load->view('workorder/settings', $this->page_data);
     }
 
@@ -1447,12 +1449,38 @@ class Workorder extends MY_Controller
         }
 
         // print_r($this->page_data['terms_conditions']);
+        $this->page_data['fields'] = $this->workorder_model->getCustomByID();
 
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->page_data['page_title'] = "Work Order";
         // print_r($this->page_data['customers']);
 
         $this->load->view('workorder/addNewworkOrder', $this->page_data);
+    }
+
+    public function addcustomeField()
+    {
+        $company_id  = getLoggedCompanyID();
+        $user_id  = getLoggedUserID();
+
+        $custom_data = array(
+            
+            'name' => $this->input->post('custom_name'),
+            'company_id' => $company_id,
+            'date_created' => date("Y-m-d H:i:s")
+        );
+
+        $custom_dataQuery = $this->workorder_model->add_custom_fields($custom_data);
+
+        if($custom_dataQuery > 0){
+
+           redirect('workorder/settings');
+        }
+        else{
+            echo json_encode(0);
+        }
+
+        
     }
 
     public function savenewWorkorder(){

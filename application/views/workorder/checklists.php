@@ -12,6 +12,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     <div class="col">
                         <h1 class="m-0">Checklists</h1>
                     </div>
+                        <div style="background-color:#fdeac3; width:100%;padding:.5%;margin-bottom:5px;margin-top:5px;margin-bottom:10px;">
+                        Create great check list for employees or subcontractor to follow a series of item listings to meet all of your company’s requirements, expectations or reminders.  This can be attached to estimate, workorder, invoices.  A powerful addition to your forms.    
+                        </div>
                     <div class="col-auto">
                         <div class="h1-spacer">
                             <a class="btn btn-primary btn-md" href="<?php echo base_url('/workorder/add_checklist') ?>">

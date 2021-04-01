@@ -856,6 +856,7 @@ class Workcalender extends MY_Controller
         $this->load->model('Event_model', 'event_model');
         $this->load->model('Jobs_model');
         $this->load->model('GoogleAccounts_model');
+        $this->load->model('ColorSettings_model');
 
         $post = $this->input->post();
         $role = logged('role');
@@ -954,6 +955,7 @@ class Workcalender extends MY_Controller
         }
 
         //Google Events
+        $googleColor = $this->ColorSettings_model->getByCompanyIdAndColorName($company_id, 'Google');
         $enabled_calendar = array();
         $calendar_list    = array();
         $google_user_api  = $this->GoogleAccounts_model->getByAuthUser();
@@ -1020,6 +1022,8 @@ class Workcalender extends MY_Controller
                         $bgcolor = $cl->backgroundColor;
                     }
 
+
+
                     foreach( $events->items as $event ){
 
                         $gevent = $this->event_model->getEventByGoogleEventId($event->id);
@@ -1038,28 +1042,32 @@ class Workcalender extends MY_Controller
                                 $date = new DateTime($event->start->dateTime);
                                 $date->setTimezone($tz);
 
-                                $start_date = $date->format('Y-m-d H:i:s');
+                                $start_date = $date->format('Y-m-d');
                             }else{
                                 $date = new DateTime($event->start->date);
                                 $date->setTimezone($tz);
 
-                                $start_date = $date->format('Y-m-d H:i:s');
+                                $start_date = $date->format('Y-m-d');
                             }
 
                             if( $event->end->dateTime != '' ){
                                 $date = new DateTime($event->end->dateTime);
                                 $date->setTimezone($tz);
 
-                                $end_date = $date->format('Y-m-d H:i:s');
+                                $end_date = $date->format('Y-m-d');
                             }else{
                                 $date = new DateTime($event->end->date);
                                 $date->setTimezone($tz);
 
-                                $end_date = $date->format('Y-m-d H:i:s');
+                                $end_date = $date->format('Y-m-d');
+                            }
+
+                            if( $googleColor ){
+                                $bgcolor = $googleColor->color_code;
                             }
 
                             if( $event->summary != '' ){
-                                $custom_html = "<i class='fa fa-calendar'></i> " . $start_date . " - " . $end_date . "<br />" . $event->summary;
+                                $custom_html = "<i class='fa fa-calendar'></i> " . $start_date . " - " . $end_date . "<br /><small>Google Event</small><br /><small>" . $event->summary . "</small>";
                                 $resources_user_events[$inc]['geventID'] = $event->id;
                                 $resources_user_events[$inc]['eventType'] = 'events';
                                 $resources_user_events[$inc]['resourceId'] = "user17";

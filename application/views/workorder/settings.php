@@ -60,6 +60,60 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 
                         <?php echo form_close(); ?>
 
+                        <br><br>
+                        <h5>Custom Fields</h5> 
+                        <div class="row"> 
+                            <div class="col-md-6 form-group">
+                                <label style="float:right;"><a href="#" style="color:green;" data-toggle="modal" data-target="#addcustomfield">Add another field</a></label>
+                            </div>
+                        </div>
+                        <div class="row">                   
+                            <div class="col-md-6 form-group">
+                                <table class="table">
+                                    <thead>
+                                        <th>Custom Field Name</th>
+                                        <th>Date Created</th>
+                                        <th>Action</th>
+                                    </thead>
+                                    <?php 
+                                    //print_r($fields); 
+                                    foreach($fields as $field){  ?>
+                                    <tr>
+                                        <td><?php echo $field->name; ?></td>
+                                        <td><?php echo $field->date_created; ?></td>
+                                        <td><a href="#" class="btn btn-warning">Update</a> <a href="#" class="btn btn-danger">Delete</a></td>
+                                    </tr>
+                                    <?php } ?>
+                                    
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Modal -->
+                        <div class="modal fade" id="addcustomfield" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+                            <div class="modal-dialog modal-lg" role="document">
+                                <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLongTitle">Add Custom Field</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                <?php echo form_open_multipart('workorder/addcustomeField', [ 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
+                                    <label>Name</label>
+                                    <input type="text" class="form-control" name="custom_name" style="width:50%;"><br>
+                                    <input type="submit" value="Add" class="btn btn-success">
+                                <?php echo form_close(); ?>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                </div>
+                                </div>
+                            </div>
+                        </div>
+
+
                     </div>
                 </div>
                 <!-- end row -->

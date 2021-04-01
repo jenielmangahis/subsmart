@@ -143,7 +143,7 @@ div[wrapper__section] [role="white__holder"] .profile-subtitle {
 											</div>
 											<?php if( $profiledata->is_licensed == 1 ){ ?>
 												<div class="credential-cnt">
-													<span>State/Province : <?= $profiledata->license_state; ?>, Expires on: <?= date("Y-m-d",strtotime($profiledata->license_expiry_date)); ?></span>
+													<span>State/Province : <?= $profiledata->license_state; ?>, Expires on: <?= date("m/d/Y",strtotime($profiledata->license_expiry_date)); ?></span>
 													<span>Class : <?= $profiledata->license_class; ?>, Nr:<?= $profiledata->license_number; ?></span>
 													<?php if( $profiledata->license_image != '' ){ ?>
 														<img class="credential-img" src="<?php echo (licenseImage($profiledata->id)) ? licenseImage($profiledata->id) : $url->assets ?>">
@@ -163,7 +163,7 @@ div[wrapper__section] [role="white__holder"] .profile-subtitle {
 											<?php if( $profiledata->is_bonded == 1 ){ ?>
 												<div class="credential-cnt">
 													<span>Insured Amount: $<?= number_format($profiledata->bond_amount,2); ?></span>
-													<span>Expires on: <?= date("Y-m-d",strtotime($profiledata->bond_expiry_date)); ?></span>
+													<span>Expires on: <?= date("m/d/Y",strtotime($profiledata->bond_expiry_date)); ?></span>
 													<?php if( $profiledata->bond_image != '' ){ ?>
 														<img class="credential-img" src="<?php echo (bondImage($profiledata->id)) ? bondImage($profiledata->id) : $url->assets ?>">
 														<a style="color:#888;" href="<?php echo (bondImage($profiledata->id)) ? bondImage($profiledata->id) : $url->assets ?>" target="_blank">View Bonded</a>
@@ -182,7 +182,7 @@ div[wrapper__section] [role="white__holder"] .profile-subtitle {
 											<?php if( $profiledata->is_business_insured == 1 ){ ?>
 												<div class="credential-cnt">
 													<span>Insured amount: $<?= number_format($profiledata->insured_amount,2); ?></span>
-													<span>Expires on: <?= date("Y-m-d",strtotime($profiledata->insurance_expiry_date)); ?></span>
+													<span>Expires on: <?= date("m/d/Y",strtotime($profiledata->insurance_expiry_date)); ?></span>
 												</div>
 											<?php }else{ ?>
 												<div class="credential-cnt">Not Insured</div>
@@ -335,7 +335,12 @@ div[wrapper__section] [role="white__holder"] .profile-subtitle {
 									</li>
 									<li>
 										<span>Time Off</span>
-										<div class="text-ter"><?= date("F j, Y", strtotime($profiledata->start_time_of_day)) . ' to ' . date("F j, Y", strtotime($profiledata->end_time_of_day)); ?></div>
+										<?php 
+											$start_date = str_replace("-", "/", $profiledata->start_time_of_day);
+											$end_date   = str_replace("-", "/", $profiledata->end_time_of_day);
+											$myDateTime = DateTime::createFromFormat('Y-m-d', $profiledata->start_time_of_day);
+										?>
+										<div class="text-ter"><?= date("F j, Y", strtotime($start_date)) . ' to ' . date("F j, Y", strtotime($end_date)); ?></div>
 									</li>
 								</ul>
 							<?php }else{ ?>

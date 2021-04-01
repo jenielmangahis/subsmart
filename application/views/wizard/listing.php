@@ -1,148 +1,128 @@
 <?php
-   defined('BASEPATH') OR exit('No direct script access allowed'); ?>
+defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <?php include viewPath('includes/header'); ?>
-<link rel="stylesheet" href="https://twitter.github.io/typeahead.js/css/examples.css" />
-<link rel="stylesheet" type="text/css" href="<?php echo $url->assets ?>wizard/listing/css/font-awesome.min.css" />
-    <link rel="stylesheet" type="text/css" href="<?php echo $url->assets ?>wizard/listing/css/bootstrap.min.css" />
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/plug-ins/f2c75b7247b/integration/bootstrap/3/dataTables.bootstrap.css">
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/responsive/1.0.4/css/dataTables.responsive.css">
-    <link rel="stylesheet" type="text/css" href="<?php echo $url->assets ?>wizard/listing/css/style.css" />
-    <link rel="stylesheet" type="text/css" href="<?php echo $url->assets ?>wizard/listing/css/responsive.css" />
-<style type="text/css">
-.tt-suggestion
-{
-	margin: 0 !important;
-}
-.wizard-app-block .form-group {
-    margin: 0 250px 30px !important;
-}
-.wizard-app-block .form-group {
-    margin: 0 250px 30px !important;
-}
-.app-img {
-    margin: 0 -14px !important;
-}
-.app-listing-box ul li {
-    width: 17% !important;
-}
-</style>
-<div class="row">
-	<div class="col-md-2">
-		<div class="wrapper" role="wrapper">
-			<?php include viewPath('includes/sidebars/upgrades'); ?>
-		</div>
-	</div>
-	<div class="col-md-10">
-		<!-- Wizard -->
-		<section class="form-wraper " style="margin-top:105px">
-        <div class="container-fluid">
-            <div class="form-titlebar">
-                <h1>Work Space</h1>
-                <a href="#" data-toggle="modal" data-target="#updateSignature_add"  data-backdrop="static" class="btn-add"><i class="fa fa-plus"></i> Create New Wizard</a>
-            </div>
-
-            <div class="table-block">
-                <table class="table table-bordered table-hover dt-responsive">
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th style="width:5%">Modified</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php foreach($wizards_workspace as $key => $value)  { ?>
-                            <tr>
-                                <td><?php echo $value->name ; ?>
-                                    <div class="quick-act">
-                                        <ul>
-                                            <li><a href="#" onClick='clickOnEdit("<?php echo $value->id ; ?>","<?php echo $value->name ; ?>")'><i class="fa fa-pencil"></i> Edit</a></li>
-                                            <li><a href="#"><i class="fa fa-cog"></i> Settings</a></li>
-                                            <li><a href="<?php echo base_url('wizard/delete_listing_wizard/'.$value->id); ?>"><i class="fa fa-trash-o"></i> Delete</a></li>
-                                        </ul>
-                                    </div>
-                                </td>
-                                <td style="width:5%"><?php echo date("m/d/Y", strtotime($value->created_at)) ; ?></td>
-                            </tr>
-                        <?php } ?>
-                    </tbody>
-                </table>
-                <center>
-                    <a href="<?php echo base_url('wizard'); ?>">Click to show Wizard</a>
-                </center>
-            </div>
-        </div>
-    </section>
-		<!-- End Wizard -->
-	</div>
-</div>
-
-<div id="updateSignature_add" class="modal fade" role="dialog">
-    <div class="modal-dialog modal-lg">
-
-        <?php echo form_open_multipart('wizard/save_listing_wizard', [ 'id' => 'filevaultform', 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title">Add Workspace</h4>
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                </div>
-                <div class="modal-body">
-                    <div class="col-md-12 form-group">
-						<label for="name">Name</label>
-                        <input type="hidden" class="form-control" name="id" id="id" required/>
-						<!-- <input type="text" class="form-control" name="name" id="name" required placeholder="Enter Name" autofocus value="" /> -->
-                        <input class="form-control" type="text" name="name" list="exampleList">
-                        <datalist id="exampleList">
-                            <option value="Credit Repair Industry Template">  
-                            <option value="Real Estate Industry Flow Templates">
-
-                            <option value="Construction Industry Flow Templates">
-                            <option value="Universal Flow Templates">
-                            <option value="Financial Industry Flow Templates">
-                            <option value="Security Alarm Industry Flow Templates">
-                            <option value="Residential Flow Templates">
-                            <option value="Commercial Flow Templates">
-                        </datalist>
-					</div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Submit</button>
-                </div>
-                <!--  <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Submit</button>
-                </div> -->
-            </div>
-        <?php echo form_close(); ?>
-    </div>
-</div>
-<?php include viewPath('includes/footer_wizard'); ?>
- <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-3-typeahead/4.0.2/bootstrap3-typeahead.min.js"></script>
- <script src="https://twitter.github.io/typeahead.js/js/handlebars.js"></script>
- <script src="https://twitter.github.io/typeahead.js/releases/latest/typeahead.bundle.js"></script>
- 
-<script>
-
-</script>
-
-<!-- <script type="text/javascript" src="<?php echo $url->assets ?>wizard/listing/js/jquery.min.js"></script>  -->
-<script type="text/javascript" src="<?php echo $url->assets ?>wizard/listing/js/bootstrap.min.js"></script>
-<script type="text/javascript" src="https://cdn.datatables.net/1.10.5/js/jquery.dataTables.min.js"></script>
-<script type="text/javascript" src="https://cdn.datatables.net/plug-ins/f2c75b7247b/integration/bootstrap/3/dataTables.bootstrap.js"></script>
-<script type="text/javascript" src="https://cdn.datatables.net/responsive/1.0.4/js/dataTables.responsive.js"></script>
-<script type="text/javascript">
-$('table').DataTable();
-
-
-    function clickOnEdit(id,name) {
-        $('#updateSignature_add input[name="id"]').val(id);
-        $('#updateSignature_add input[name="name"]').val(name);
-        $('#updateSignature_add').modal('show');
-    }
-</script>
 <style>
-    #DataTables_Table_0_wrapper .row {
-        width:100%;
-    }
-
+.cell-active{
+    background-color: #5bc0de;
+}
+.page-title {
+  font-family: Sarabun, sans-serif !important;
+  font-size: 1.75rem !important;
+  font-weight: 600 !important;
+}
+.cell-inactive{
+    background-color: #d9534f;
+}
+.pr-b10 {
+  position: relative;
+  bottom: 10px;
+}
+.p-40 {
+  padding-top: 40px !important;
+}
+.p-20 {
+  padding-top: 30px !important;
+  padding-bottom: 25px !important;
+  padding-right: 20px !important;
+  padding-left: 20px !important;
+}
+@media only screen and (max-width: 600px) {
+  .p-40 {
+    padding-top: 0px !important;
+  }
+  .pr-b10 {
+    position: relative;
+    bottom: 0px;
+  }
+}
 </style>
+<div class="wrapper" role="wrapper">
+    <?php include viewPath('includes/sidebars/upgrades'); ?>
+    <!-- page wrapper start -->
+    <div wrapper__section>
+        <div class="container-fluid p-40">
+            <!-- end row -->
+            <div class="row">
+                <div class="col-xl-12">
+                    <div class="card p-20" style="min-height: 400px !important;">
+                      <div class="row">
+                        <div class="col-sm-6 left">
+                          <h3 class="page-title mt-0">Work Space</h3>
+                        </div>
+                        <div class="col-sm-6 right dashboard-container-1">
+                            <div class="text-right">
+                                <a class="btn btn-info" href="<?php echo base_url('wizard/add_new_workspace'); ?>"><i class="fa fa-file"></i> Add New</a>
+                            </div>
+                        </div>
+                      </div>
+                      <div class="alert alert-warning mt-1 mb-4" role="alert">
+                          <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                          </span>
+                      </div>
+                        <?php include viewPath('flash'); ?>
+                        <table class="table table-hover" data-id="coupons">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th style="width: 10%;"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php foreach($wizards_workspace as $key => $value)  { ?>
+                                    <tr>
+                                        <td><?= $value->name; ?></td>
+                                        <td>
+                                            <a class="btn btn-info btn-sm" href="<?php echo base_url('color_settings/edit_color_setting/'.$value->id); ?>"><i class="fa fa-pencil"></i> Edit</a>
+                                            <a class="btn btn-sm btn-danger btn-delete-color" href="javascript:void(0);" data-id="<?= $value->id; ?>"><i class="fa fa-trash"></i> Delete</a>
+                                        </td>
+                                    </tr>
+                                <?php } ?>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- end card -->
+                </div>
+            </div>
+            <!-- end row -->
+        </div>
+        <!-- end container-fluid -->
+
+        <!-- Modal Delete Addon  -->
+        <div class="modal fade bd-example-modal-sm" id="modalDeleteColor" tabindex="-1" role="dialog" aria-labelledby="modalDeleteColorTitle" aria-hidden="true">
+          <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle"><i class="fa fa-trash"></i> Delete</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <?php echo form_open_multipart('color_settings/delete_color', ['class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
+              <?php echo form_input(array('name' => 'cid', 'type' => 'hidden', 'value' => '', 'id' => 'cid'));?>
+              <div class="modal-body">
+                  <p>Delete selected color?</p>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                <button type="submit" class="btn btn-danger">Yes</button>
+              </div>
+              <?php echo form_close(); ?>
+            </div>
+          </div>
+        </div>
+
+    </div>
+    <!-- page wrapper end -->
+</div>
+<?php include viewPath('includes/footer'); ?>
+
+<script type="text/javascript">
+$(function(){
+    $(".btn-delete-color").click(function(){
+        var addon_id = $(this).attr("data-id");
+        $("#cid").val(addon_id);
+
+        $("#modalDeleteColor").modal("show");
+    });
+});
+</script>
