@@ -311,7 +311,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                         
                         <div class="card">
-                            <h3 class="margin-bottom">Work Order</h3>
+                            <h3 class="margin-bottom">Job</h3>
                             <div class="margin-bottom-sec">
                                 <div class="checkbox checkbox-sec margin-right">
                                     <?php 

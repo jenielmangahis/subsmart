@@ -298,4 +298,98 @@ class Pages extends MY_Controller {
         $this->load->view('pages/credit_note_customer_view', $this->page_data);
     }
 
+    public function job_customer_invoice_view( $eid )
+    {
+    	$this->load->model('Jobs_model');
+    	$this->load->model('AcsProfile_model');
+    	$this->load->model('Clients_model');
+
+    	$this->load->helper(array('hashids_helper'));
+
+    	$job_id   = hashids_decrypt($eid, '', 15);
+    	$job      = $this->Jobs_model->get_specific_job($job_id);
+    	if( $job ){
+    		$customer = $this->AcsProfile_model->getByProfId($job->customer_id);
+    		$client   = $this->Clients_model->getById($job->company_id);
+
+    		$this->page_data['client'] = $client;
+    		$this->page_data['customer'] = $customer;
+    	}
+
+    	$this->page_data['page']->title = 'nSmartTrac - Customer Job Invoice';	
+    	$this->page_data['job'] = $job;
+		$this->page_data['eid'] = $eid;
+		$this->page_data['is_job_valid'] = $is_job_valid;
+		$this->load->view('pages/job_customer_invoice_view', $this->page_data);
+    }
+
+    public function converge_token_request(){
+    	$this->load->model('Jobs_model');
+    	$this->load->model('AcsProfile_model');
+    	$this->load->model('Clients_model');
+
+    	$this->load->helper(array('hashids_helper'));
+
+    	// Set variables
+		$merchantID = "2179135"; //Converge 6 or 7-Digit Account ID *Not the 10-Digit Elavon Merchant ID*
+		$merchantUserID = "adiAPI"; //Converge User ID *MUST FLAG AS HOSTED API USER IN CONVERGE UI*
+		$merchantPinCode = "U3L0MSDPDQ254QBJSGTZSN4DQS00FBW5ELIFSR0FZQ3VGBE7PXP07RMKVL024AVR"; //Converge PIN (64 CHAR A/N)
+
+		$url = "https://api.demo.convergepay.com/hosted-payments/transaction_token"; // URL to Converge demo session token server
+		//$url = "https://api.convergepay.com/hosted-payments/transaction_token"; // URL to Converge production session token server
+
+		$post = $this->input->post();
+		$job_id   = hashids_decrypt($post['job_id'], '', 15);
+    	$job      = $this->Jobs_model->get_specific_job($job_id);
+
+    	$job      = $this->Jobs_model->get_specific_job($job_id);
+    	$customer = $this->AcsProfile_model->getByProfId($job->customer_id);
+    	$client   = $this->Clients_model->getById($job->company_id);
+		/*Payment Field Variables*/
+
+		// In this section, we set variables to be captured by the PHP file and passed to Converge in the curl request.
+		$firstname = $customer->first_name; //Post first name
+		$lastname  = $customer->last_name; //Post first name
+		$amount    = $post['total_amount']; //Post Tran Amount
+		//$merchanttxnid = $_POST['ssl_merchant_txn_id']; //Capture user-defined ssl_merchant_txn_id as POST data
+		//$invoicenumber = $_POST['ssl_invoice_number']; //Capture user-defined ssl_invoice_number as POST data
+
+		//Follow the above pattern to add additional fields to be sent in curl request below.
+
+		$ch = curl_init();    // initialize curl handle
+		curl_setopt($ch, CURLOPT_URL,$url); // set url to post to
+		curl_setopt($ch,CURLOPT_POST, true); // set POST method
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+
+		// Set up the post fields. If you want to add custom fields, you would add them in Converge, and add the field name in the curlopt_postfields string.
+		curl_setopt($ch,CURLOPT_POSTFIELDS,
+		"ssl_merchant_id=$merchantID".
+		"&ssl_user_id=$merchantUserID".
+		"&ssl_pin=$merchantPinCode".
+		"&ssl_transaction_type=CCSALE".
+		"&ssl_first_name=$firstname".
+		"&ssl_last_name=$lastname".
+		"&ssl_get_token=Y".
+		"&ssl_add_token=Y".
+		"&ssl_amount=$amount"
+		);
+
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($ch, CURLOPT_VERBOSE, true);
+
+		$result = curl_exec($ch); // run the curl procss
+		curl_close($ch); // Close cURL
+
+		//session tokens need to be URL encoded
+		$token = urlencode($result);
+		$is_success = true;
+
+		$json_data = ['is_success' => $is_success, 'token' => $token];
+
+		echo json_encode($json_data);
+		//echo $sessiontoken;  //shows the session token.
+    }
+
 }
