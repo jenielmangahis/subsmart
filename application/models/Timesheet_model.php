@@ -1391,6 +1391,56 @@ class Timesheet_model extends MY_Model
         $qry = $this->db->query("SELECT * FROM timesheet_shift_schedule where shift_date >= '" . $from . "' AND shift_date <= '" . $to . "' AND user_id =" . $user_id);
         return $qry->result();
     }
+
+    public function get_all_correction_requests($date_from, $date_to, $company_id)
+    {
+        $this->db->reset_query();
+        $qry = $this->db->query("SELECT timesheet_attendance_correction.*, users.FName, users.LName FROM timesheet_attendance_correction JOIN users ON timesheet_attendance_correction.user_id = users.id WHERE users.company_id = " . $company_id . " AND timesheet_attendance_correction.date_created >='" . $date_from . "' AND timesheet_attendance_correction.date_created <='" . $date_to . "' AND timesheet_attendance_correction.status != 'canceled' order by timesheet_attendance_correction.date_created DESC");
+        return $qry->result();
+    }
+    public function get_correction_reqiest($request_id)
+    {
+        $this->db->reset_query();
+        $this->db->where('id', $request_id);
+        $qry = $this->db->get('timesheet_attendance_correction');
+        return $qry->result();
+    }
+    public function correction_reqiest_approved($clock_in, $clock_out, $break_in, $break_out, $att_id, $shift_duration, $break_duration, $overtime)
+    {
+        $this->db->reset_query();
+        $this->db->where('attendance_id', $att_id);
+        $this->db->where('action', "Check in");
+        $this->db->update("timesheet_logs", array("date_created" => $clock_in));
+
+        $this->db->reset_query();
+        $this->db->where('attendance_id', $att_id);
+        $this->db->where('action', "Check out");
+        $this->db->update("timesheet_logs", array("date_created" => $clock_out));
+
+        $this->db->reset_query();
+        $this->db->where('attendance_id', $att_id);
+        $this->db->where('action', "Break in");
+        $this->db->update("timesheet_logs", array("date_created" => $break_in));
+
+        $this->db->reset_query();
+        $this->db->where('attendance_id', $att_id);
+        $this->db->where('action', "Break out");
+        $this->db->update("timesheet_logs", array("date_created" => $break_out));
+
+
+
+        $this->db->reset_query();
+        $this->db->where('id', $att_id);
+        $this->db->update(
+            "timesheet_attendance",
+            array(
+                "date_created" => $clock_in,
+                "shift_duration" => $shift_duration,
+                "break_duration" => $break_duration,
+                "overtime" => $overtime
+            )
+        );
+    }
 }
 
 

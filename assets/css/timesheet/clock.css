@@ -254,9 +254,7 @@ table td label.gray {
 table.dataTable.no-footer {
   border-bottom: 1px solid #dee2e6;
 }
-div.dataTables_wrapper div.dataTables_filter {
-  display: none;
-}
+
 #my_correction_requests td a,
 #my_leave_requests td a {
   color: #ffffff;

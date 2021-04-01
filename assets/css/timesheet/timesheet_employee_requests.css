@@ -872,3 +872,13 @@ i {
   position: relative;
   margin-left: 10px;
 }
+#attendance_correction_requests_table a.btn-sm {
+  margin-bottom: 10px;
+  color: #ffffff;
+  cursor: pointer;
+  width: 100px;
+}
+#attendance_correction_requests_table_filter input {
+  visibility: visible;
+  position: static;
+}

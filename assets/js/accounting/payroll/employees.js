@@ -133,7 +133,56 @@ function upcomingPayPeriods(el)
             i++;
         });
     } else {
+        var value = el.val();
+        var endPeriod = new Date(value);
 
+        var date = endPeriod.getDate() - 6;
+
+        if($('#add-pay-schedule-modal #pay-frequency').val() === 'every-other-week') {
+            date = endPeriod.getDate() - 13;
+        } else if($('#add-pay-schedule-modal #pay-frequency').val() === 'twice-month') {
+            date = endPeriod.getDate() - 15;
+        } else if($('#add-pay-schedule-modal #pay-frequency').val() === 'every-month') {
+            date = endPeriod.getDate();
+        }
+        var startPeriod = new Date(endPeriod.getFullYear(), endPeriod.getMonth(), date);
+
+        if($('#add-pay-schedule-modal #pay-frequency').val() === 'every-month') {
+            startPeriod.setDate(startPeriod.getDate() - 30);
+        }
+
+        $('#add-pay-schedule-modal .pay-periods .card.shadow').each(function() {
+            $($(this).find('p.pay-period').children('span')[0]).html(String(startPeriod.getMonth() + 1).padStart(2, '0')+'/'+String(startPeriod.getDate()).padStart(2, '0')+'/'+startPeriod.getFullYear());
+            $($(this).find('p.pay-period').children('span')[1]).html(String(endPeriod.getMonth() + 1).padStart(2, '0')+'/'+String(endPeriod.getDate()).padStart(2, '0')+'/'+endPeriod.getFullYear());
+
+            switch($('#add-pay-schedule-modal #pay-frequency').val()) {
+                case 'every-week' :
+                    endPeriod.setDate(endPeriod.getDate() + 7);
+                    startPeriod.setDate(startPeriod.getDate() + 7);
+                break;
+                case 'every-other-week' :
+                    endPeriod.setDate(endPeriod.getDate() + 14);
+                    startPeriod.setDate(startPeriod.getDate() + 14);
+                break;
+                case 'twice-month' :
+                    startPeriod = new Date(endPeriod.getFullYear(), endPeriod.getMonth(), endPeriod.getDate());
+                    startPeriod.setDate(startPeriod.getDate() + 1);
+                    endPeriod = new Date(startPeriod.getFullYear(), startPeriod.getMonth(), startPeriod.getDate());
+                    endPeriod.setDate(endPeriod.getDate() + 14);
+                break;
+                case 'every-month' :
+                    startPeriod = new Date(endPeriod.getFullYear(), endPeriod.getMonth(), endPeriod.getDate());
+                    startPeriod.setDate(startPeriod.getDate() + 1);
+
+                    if(startPeriod.getDate() === 1) {
+                        endPeriod.setMonth(startPeriod.getMonth() + 1);
+                        endPeriod.setDate(0);
+                    } else {
+                        endPeriod.setMonth(startPeriod.getMonth() + 1);
+                    }
+                break;
+            }
+        });
     }
 }
 
@@ -141,6 +190,77 @@ function getTotalDaysOfMonth(month, year)
 {
     return new Date(year, month, 0).getDate();
 }
+
+function customSchedulePayDates() 
+{
+    var firstPayday = parseInt($('#first_payday').val());
+    var endOfPayPeriod = $('[name="end_of_first_pay_period"]').val();
+    var startPeriod = new Date();
+    var endPeriod = new Date();
+    var currentDate = new Date();
+    var payDate = new Date();
+    payDate.setDate(firstPayday);
+    payDate.setMonth(currentDate.getMonth() + 1);
+
+    if(endOfPayPeriod === 'end-date') {
+        var periodMonth = $('#first_pay_month').val();
+        var periodDay = parseInt($('#first_pay_day').val());
+        endPeriod.setDate(periodDay);
+
+        switch(periodMonth) {
+            case 'same' :
+                endPeriod.setMonth(payDate.getMonth());
+            break;
+            case 'previous' :
+                endPeriod.setMonth(payDate.getMonth() - 1);
+            break;
+            case 'next' :
+                endPeriod.setMonth(payDate.getMonth() + 1);
+            break;
+        }
+
+        startPeriod = new Date(endPeriod.getFullYear(), endPeriod.getMonth(), endPeriod.getDate());
+        startPeriod.setDate(startPeriod.getDate() - 30);
+    } else {
+        
+    }
+
+    $('#add-pay-schedule-modal .pay-periods .card.shadow').each(function() {
+        if($('#add-pay-schedule-modal #pay-frequency').val() === 'every-month') {
+            var newDate = String(payDate.getMonth() + 1).padStart(2, '0')+'/'+String(payDate.getDate()).padStart(2, '0')+'/'+payDate.getFullYear();
+
+            $(this).find('p.pay-date').html(newDate);
+
+            if(currentDate.getDate() > firstPayday) {
+                payDate.setMonth(payDate.getMonth() + 1);
+            }
+
+            var startPeriodStr = String(startPeriod.getMonth() + 1).padStart(2, '0')+'/'+String(startPeriod.getDate()).padStart(2, '0')+'/'+startPeriod.getFullYear();
+            var endPeriodStr = String(endPeriod.getMonth() + 1).padStart(2, '0')+'/'+String(endPeriod.getDate()).padStart(2, '0')+'/'+endPeriod.getFullYear();
+
+            $($(this).find('p.pay-period').children('span')[0]).html(startPeriodStr);
+            $($(this).find('p.pay-period').children('span')[1]).html(endPeriodStr);
+
+            if(endOfPayPeriod === 'end-date') {
+                startPeriod = new Date(endPeriod.getFullYear(), endPeriod.getMonth(), endPeriod.getDate());
+                startPeriod.setDate(startPeriod.getDate() + 1);
+
+                if(startPeriod.getDate() === 1) {
+                    endPeriod.setMonth(startPeriod.getMonth() + 1);
+                    endPeriod.setDate(0);
+                } else {
+                    endPeriod.setMonth(startPeriod.getMonth() + 1);
+                }
+            } else {
+                
+            }
+        }
+    });
+}
+
+$(document).on('change', '#first_payday, [name="end_of_first_pay_period"], #first_pay_month, #first_pay_day', function() {
+    customSchedulePayDates();
+});
 
 $('#employee-status').select2({
     minimumResultsForSearch: -1
@@ -250,11 +370,24 @@ $(document).on('change', '#pay-schedule', function() {
                     var selectedDate = new Date($(this).val());
                     var day = new Intl.DateTimeFormat('en-US', {weekday: 'long'}).format(selectedDate);
 
-                    $(this).parent().next().html(day);
-                    $('#add-pay-schedule-modal #name').val('Every '+day);
+                    if($(this).attr('id') === 'next-payday') {
+                        $(this).parent().next().html(day);
+
+                        switch($('#pay-frequency').val()) {
+                            case 'every-week' :
+                                $('#add-pay-schedule-modal #name').val('Every '+day);
+                            break;
+                            case 'every-other-week' :
+                                $('#add-pay-schedule-modal #name').val('Every other '+day);
+                            break;
+                            default :
+                                $('#add-pay-schedule-modal #name').val($('#pay-frequency option:selected').html());
+                            break;
+                        }
+                    }
 
                     upcomingPayPeriods($(this));
-                });
+                }).trigger('change');
             });
 
             $('#add-pay-schedule-modal').modal('show');
@@ -265,6 +398,7 @@ $(document).on('change', '#pay-schedule', function() {
 $(document).on('change', '#add-pay-schedule-modal #pay-frequency', function() {
     if($(this).val() === 'twice-month' || $(this).val() === 'every-month') {
         $(this).next().next().removeClass('hide');
+        $('#add-pay-schedule-modal #custom-schedule').trigger('change');
     } else {
         $(this).next().next().addClass('hide');
     }
@@ -274,12 +408,40 @@ $(document).on('change', '#add-pay-schedule-modal #pay-frequency', function() {
 });
 
 $(document).on('change', '#add-pay-schedule-modal #custom-schedule', function() {
-    if($(this).prop('checked')) {
+    var payFreq = ["twice-month", "every-month"];
+    if($(this).prop('checked') &&  payFreq.includes($('#pay-frequency').val())) {
         $($('#add-pay-schedule-modal .custom-schedule-fields')[0]).prev().addClass('hide');
-        $('#add-pay-schedule-modal .custom-schedule-fields').removeClass('hide');
+
+        if($('#pay-frequency').val() === 'twice-month') {
+            $($('#add-pay-schedule-modal .custom-schedule-fields h5')[0]).removeClass('hide');
+            $('#add-pay-schedule-modal .custom-schedule-fields label[for="first_payday"]').html('First payday of the month');
+            $('#add-pay-schedule-modal .custom-schedule-fields #end_date_first_pay').parent().prev().html('End of first pay period');
+            $('#add-pay-schedule-modal .custom-schedule-fields').removeClass('hide');
+        } else {
+            $($('#add-pay-schedule-modal .custom-schedule-fields h5')[0]).addClass('hide');
+            $('#add-pay-schedule-modal .custom-schedule-fields label[for="first_payday"]').html('Payday of the month');
+            $('#add-pay-schedule-modal .custom-schedule-fields #end_date_first_pay').parent().prev().html('End of each pay period');
+            $($('#add-pay-schedule-modal .custom-schedule-fields')[0]).removeClass('hide');
+            $($('#add-pay-schedule-modal .custom-schedule-fields')[1]).addClass('hide');
+        }
+
+        customSchedulePayDates();
     } else {
         $($('#add-pay-schedule-modal .custom-schedule-fields')[0]).prev().removeClass('hide');
         $('#add-pay-schedule-modal .custom-schedule-fields').addClass('hide');
+
+        $('#next-payday').trigger('change');
+        $('#next-pay-period-end').trigger('change');
+    }
+});
+
+$(document).on('change', '[name="end_of_first_pay_period"], [name="end_of_second_pay_period"]', function() {
+    if($(this).val() !== 'end-date') {
+        $(this).parent().parent().next().find('.form-group.col-md-12').removeClass('hide');
+        $(this).parent().parent().next().find('.form-group.col-md-6').addClass('hide');
+    } else {
+        $(this).parent().parent().next().find('.form-group.col-md-12').addClass('hide');
+        $(this).parent().parent().next().find('.form-group.col-md-6').removeClass('hide');
     }
 });
 

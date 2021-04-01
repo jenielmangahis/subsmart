@@ -199,6 +199,12 @@ class Workorder_model extends MY_Model
 		return  $insert;
     }
 
+    public function add_custom_fields($data){
+        $custom = $this->db->insert('custom_fields', $data);
+	    $insert = $this->db->insert_id();
+		return  $insert;
+    }
+
     public function getTerms($comp_id){
 
         $this->db->select('*');
@@ -255,6 +261,18 @@ class Workorder_model extends MY_Model
 		$this->db->where('company_id', $cid);
 		$query = $this->db->get();
 		return $query->row();
+    }
+
+    public function getCustomByID(){
+        $cid = getLoggedCompanyID();
+
+        $this->db->select('*');
+		$this->db->from('custom_fields');
+		$this->db->where('company_id', $cid);
+		// $query = $this->db->get();
+		// return $query->row();
+        $query = $this->db->get();
+        return $query->result();
     }
 }
 

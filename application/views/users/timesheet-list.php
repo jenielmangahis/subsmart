@@ -235,12 +235,12 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                             <div class="row" style="padding-bottom: 20px;">
                                 <div class="col-md-12 banking-tab-container">
                                     <a href="<?php echo url('/timesheet/attendance') ?>" class="banking-tab">Attendance</a>
-                                    <a href="<?php echo url('/timesheet/attendance_logs') ?>" class="banking-tab">Logs</a>
+                                    <a href="<?php echo url('/timesheet/attendance_logs') ?>" class="banking-tab">Time Logs</a>
                                     <a href="<?php echo url('/timesheet/notification') ?>" class="banking-tab">Notification</a>
                                     <a href="<?php echo url('/timesheet/employee') ?>" class="banking-tab">Employee</a>
                                     <a href="<?php echo url('/timesheet/schedule') ?>" class="banking-tab">Schedule</a>
                                     <a href="<?php echo url('/timesheet/list') ?>" class="banking-tab<?php echo ($this->uri->segment(1) == "list") ?: '-active'; ?>" style="text-decoration: none">List</a>
-                                    <a href="<?php echo url('/timesheet/settings') ?>" class="banking-tab">Requests</a>
+                                    <a href="<?php echo url('/timesheet/requests') ?>" class="banking-tab">Requests</a>
                                 </div>
                             </div>
 

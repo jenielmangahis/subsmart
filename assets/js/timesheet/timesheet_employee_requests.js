@@ -37,6 +37,9 @@ $(document).ready(function () {
     $("#page_title").html("Employee Overtime Requests");
   });
 
+  $(document).on("click", ".attendance_correction_tab ", function () {
+    $("#page_title").html("Attendance Correction Requests");
+  });
   $(document).on("click", ".leave_request_tab", function () {
     $("#page_title").html("Employee Leave Requests");
   });

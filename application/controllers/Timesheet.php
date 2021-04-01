@@ -252,14 +252,15 @@ class Timesheet extends MY_Controller
         $this->load->view('users/timesheet-list', $this->page_data);
     }
 
-    public function settings()
+    public function requests()
     {
         add_css(array(
             "assets/css/timesheet/timesheet_employee_requests.css"
         ));
 
         add_footer_js(array(
-            "assets/js/timesheet/timesheet_employee_requests.js"
+            "assets/js/timesheet/timesheet_employee_requests.js",
+            "assets/js/timesheet/timesheet_requests.js"
 
         ));
         $this->load->model('timesheet_model');
@@ -295,7 +296,7 @@ class Timesheet extends MY_Controller
         );
         $this->page_data['date_this_week'] = $date_this_week;
 
-        $this->load->view('users/timesheet-settings', $this->page_data);
+        $this->load->view('users/timesheet-requests', $this->page_data);
     }
 
     // added for tracking Time Log of employees
@@ -2241,10 +2242,6 @@ class Timesheet extends MY_Controller
             $last_log = $row->action;
         }
         return $last_log;
-    }
-    public function get_overtime_sample()
-    {
-        var_dump($this->timesheet_model->calculateShiftDuration_and_overtime(518));
     }
     public function clockOutEmployee()
     {
@@ -4261,7 +4258,7 @@ class Timesheet extends MY_Controller
         $display .= '<th class="sorting_disabled" rowspan="1" colspan="1" style="width: 0px;">Login</th>';
         $display .= '<th class="sorting_disabled" rowspan="1" colspan="1" style="width: 0px;">Break</th>';
         $display .= '<th class="sorting_disabled" rowspan="1" colspan="1" style="width: 0px;">Worked Hours</th>';
-        $display .= '<th class="sorting_disabled" rowspan="1" colspan="1" style="width: 0px;">Late in minutes</th>';
+        $display .= '<th class="sorting_disabled" rowspan="1" colspan="1" style="width: 0px;">Break</th>';
         $display .= '<th class="sorting_disabled" rowspan="1" colspan="1" style="width: 0px;">Request <br>Status</th>';
         $display .= '<th class="sorting_disabled" rowspan="1" colspan="1" style="width: 100px;">Action</th>';
         $display .= '</tr>';
@@ -4288,7 +4285,7 @@ class Timesheet extends MY_Controller
             $display .= '<td style="text-align:center;">' . round($this->get_differenct_of_dates($request->clock_in, $request->clock_out) - $this->get_differenct_of_dates($request->break_in, $request->break_out), 2) . '</td>';
             $display .= '<td style="text-align:center;">' . round($this->get_differenct_of_dates($request->break_in, $request->break_out), 2) . '</td>';
 
-            $display .= '<td style="text-align:center;">' . $request->status;
+            $display .= '<td style="text-align:center;"><strong>' . $request->status . '</strong><br>';
             $display .= '<label class="gray">' . date('m-d-Y', strtotime($this->datetime_zone_converter($request->date_status_changed, "UTC", $this->session->userdata('usertimezone')))) . '</label>';
             $display .= '</td>';
 
@@ -4606,6 +4603,128 @@ class Timesheet extends MY_Controller
         $data->first_date_next_month = $first_date_next_month;
         $data->schedules_calendar = $schedules_calendar;
         echo json_encode($data);
+    }
+    public function show_all_correction_requests()
+    {
+        $date_from = $this->input->post("date_from");
+        $date_to = $this->input->post("date_to");
+        date_default_timezone_set($this->session->userdata('usertimezone'));
+        $the_date = strtotime($date_from . " 00:00:00");
+        date_default_timezone_set("UTC");
+        $date_from = date("Y-m-d", $the_date);
+
+
+        date_default_timezone_set($this->session->userdata('usertimezone'));
+        $the_date = strtotime($date_to . " 24:59:00");
+        date_default_timezone_set("UTC");
+        $date_to = date("Y-m-d H:i:s", $the_date);
+        $company_id = logged('company_id');
+        $requests = $this->timesheet_model->get_all_correction_requests($date_from, $date_to, $company_id);
+        $display = '<thead>';
+        $display .= '<tr role="row">';
+        $display .= '<th class="sorting_disabled" rowspan="1" colspan="1" style="width: 0px;">Employee Name</th>';
+        $display .= '<th class="sorting_disabled" rowspan="1" colspan="1" style="width: 0px;">Shift Date</th>';
+        $display .= '<th class="sorting_disabled" rowspan="1" colspan="1" style="width: 0px;">Shift Schedule</th>';
+        $display .= '<th class="sorting_disabled" rowspan="1" colspan="1" style="width: 0px;">Login</th>';
+        $display .= '<th class="sorting_disabled" rowspan="1" colspan="1" style="width: 0px;">Break</th>';
+        $display .= '<th class="sorting_disabled" rowspan="1" colspan="1" style="width: 0px;">Worked Hours</th>';
+        $display .= '<th class="sorting_disabled" rowspan="1" colspan="1" style="width: 0px;">Break Duration</th>';
+        $display .= '<th class="sorting_disabled" rowspan="1" colspan="1" style="width: 0px;">Request <br>Status</th>';
+        $display .= '<th class="sorting_disabled" rowspan="1" colspan="1" style="width: 100px;">Action</th>';
+        $display .= '</tr>';
+        $display .= '</thead>';
+        $display .= '<tbody>';
+        foreach ($requests as $request) {
+            $shift_date = date('Y-m-d', strtotime($request->clock_in));
+            $display .= '<tr role="row" class="odd">';
+            $display .= '<td class="center">' . $request->FName . ' ' . $request->LName . '</td>';
+            $display .= '<td><label class="gray">' . date('m-d-Y', strtotime($this->datetime_zone_converter($request->clock_in, "UTC", $this->session->userdata('usertimezone')))) . '</label></td>';
+
+            $shift_schedule = $this->timesheet_model->get_my_schedule($shift_date, $request->user_id);
+            $display .= '<td>';
+            $display .= '<center>';
+            foreach ($shift_schedule as $sched) {
+                $display .= '<label class="gray"><strong>Shift Start: </strong> ' . date('m-d-Y h:i A', strtotime($this->datetime_zone_converter($sched->shift_start, "UTC", $this->session->userdata('usertimezone')))) . '</label>';
+                $display .= '<label class="gray"><strong>Shift End: </strong> ' . date('m-d-Y h:i A', strtotime($this->datetime_zone_converter($sched->shift_end, "UTC", $this->session->userdata('usertimezone')))) . '</label>';
+                break;
+            }
+            $display .= '</center>';
+            $display .= '</td>';
+            $display .= '<td>';
+            $display .= '<center>';
+            $display .= '<label class="gray"><strong>Clock in: </strong> ' . date('m-d-Y h:i A', strtotime($this->datetime_zone_converter($request->clock_in, "UTC", $this->session->userdata('usertimezone')))) . '</label>';
+            $display .= '<label class="gray"><strong>Clock out: </strong> ' . date('m-d-Y h:i A', strtotime($this->datetime_zone_converter($request->clock_out, "UTC", $this->session->userdata('usertimezone')))) . '</label>';
+            $display .= '</center>';
+            $display .= '</td>';
+            $display .= '<td>';
+            $display .= '<center>';
+            if ($request->break_in  != "0000-00-00 00:00:00") {
+                $display .= '<label class="gray"><strong>Break in: </strong> ' . date('m-d-Y h:i A', strtotime($this->datetime_zone_converter($request->break_in, "UTC", $this->session->userdata('usertimezone')))) . '</label>';
+                $display .= '<label class="gray"><strong>Break out: </strong>' . date('m-d-Y h:i A', strtotime($this->datetime_zone_converter($request->break_out, "UTC", $this->session->userdata('usertimezone')))) . '</label>';
+            }
+            $display .= '</center>';
+            $display .= '</td>';
+            $display .= '<td style="text-align:center;">' . round($this->get_differenct_of_dates($request->clock_in, $request->clock_out) - $this->get_differenct_of_dates($request->break_in, $request->break_out), 2) . '</td>';
+            $display .= '<td style="text-align:center;">' . round($this->get_differenct_of_dates($request->break_in, $request->break_out), 2) . '</td>';
+
+            $display .= '<td style="text-align:center;"><strong>' . $request->status . '</strong>';
+            $display .= '<label class="gray">' . date('m-d-Y', strtotime($this->datetime_zone_converter($request->date_status_changed, "UTC", $this->session->userdata('usertimezone')))) . '</label>';
+            $display .= '</td>';
+
+            $display .= '<td style="text-align:center;">';
+            if ($request->status == "pending") {
+                $display .= '<a title="" data-employee-name="'  . $request->FName . ' ' . $request->LName . '" data-timesheet-attendance-correction-id="' . $request->id . '" data-user-id="' . $request->user_id . '"  data-attn-id="' . $request->attendance_id . '" data-toggle="tooltip" class="approve_correction_reqiest btn btn-success btn-sm" data-original-title="Approve Request"><i class="fa fa-thumbs-up fa-lg"></i> Approve</a>';
+                $display .= '<a title="" data-employee-name="'  . $request->FName . ' ' . $request->LName . '" data-timesheet-attendance-correction-id="' . $request->id . '" data-user-id="' . $request->user_id . '"  data-attn-id="' . $request->attendance_id . '" data-toggle="tooltip" class="deny_correction_reqiest btn btn-danger btn-sm" data-original-title="Deny Request"><i class="fa fa-thumbs-down fa-lg"></i> Deny</a>';
+            }
+            $display .= '</td>';
+            $display .= '</tr>';
+        }
+
+        $display .= '</tbody>';
+        echo json_encode($display);
+    }
+    public function deny_correction_request()
+    {
+        $request_id = $this->input->post('request_id');
+        $att_id = $this->input->post('att_id');
+        $user_id = $this->input->post('user_id');
+        $update = array(
+            'status' => 'denied',
+            'date_status_changed' => date('Y-m-d H:i:s'),
+        );
+        $this->timesheet_model->update_correction_request($update, $att_id);
+
+        echo json_encode(0);
+    }
+    public function approve_correction_reqiest()
+    {
+        $request_id = $this->input->post('request_id');
+        $att_id = $this->input->post('att_id');
+        $user_id = $this->input->post('user_id');
+        $update = array(
+            'status' => 'approved',
+            'date_status_changed' => date('Y-m-d H:i:s'),
+        );
+        $this->timesheet_model->update_correction_request($update, $att_id);
+
+        $request_selected = $this->timesheet_model->get_correction_reqiest($request_id);
+        foreach ($request_selected as $request) {
+            $clock_in = $request->clock_in;
+            $clock_out = $request->clock_out;
+            $break_in = $request->break_in;
+            $break_out = $request->break_out;
+        }
+        $total_shift_duration = $this->get_differenct_of_dates($clock_in, $clock_out);
+
+        $break_duration = $this->get_differenct_of_dates($break_in, $break_out);
+        $shift_duration = $total_shift_duration - $break_duration;
+        $overtime = 0;
+        if ($shift_duration > 8) {
+            $overtime = $shift_duration - 8;
+        }
+
+        $this->timesheet_model->correction_reqiest_approved($clock_in, $clock_out, $break_in, $break_out, $att_id, $shift_duration, $break_duration, $overtime);
+        echo json_encode(0);
     }
 }
 

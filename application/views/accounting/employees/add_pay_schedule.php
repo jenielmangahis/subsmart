@@ -89,7 +89,7 @@
                                                                 <option value="28">28th</option>
                                                                 <option value="20">20th</option>
                                                                 <option value="30">30th</option>
-                                                                <option value="end">End of month</option>
+                                                                <option value="0">End of month</option>
                                                             </select>
                                                         </div>
                                                         <div class="form-group col-md-12">
@@ -145,7 +145,52 @@
                                                                         <option value="28">28th</option>
                                                                         <option value="20">20th</option>
                                                                         <option value="30">30th</option>
-                                                                        <option value="end">End of month</option>
+                                                                        <option value="0">End of month</option>
+                                                                    </select>
+                                                                </div>
+
+                                                                <div class="form-group col-md-12 hide">
+                                                                    <label for="first_pay_days_before">Days before payday</label>
+                                                                    <select name="first_pay_days_before" id="first_pay_days_before" class="form-control">
+                                                                        <option value="1">1</option>
+                                                                        <option value="2">2</option>
+                                                                        <option value="3">3</option>
+                                                                        <option value="4">4</option>
+                                                                        <option value="5">5</option>
+                                                                        <option value="6">6</option>
+                                                                        <option value="7">7</option>
+                                                                        <option value="8">8</option>
+                                                                        <option value="9">9</option>
+                                                                        <option value="10">10</option>
+                                                                        <option value="11">11</option>
+                                                                        <option value="12">12</option>
+                                                                        <option value="13">13</option>
+                                                                        <option value="14">14</option>
+                                                                        <option value="15">15</option>
+                                                                        <option value="16">16</option>
+                                                                        <option value="17">17</option>
+                                                                        <option value="18">18</option>
+                                                                        <option value="19">19</option>
+                                                                        <option value="20">20</option>
+                                                                        <option value="21">21</option>
+                                                                        <option value="22">22</option>
+                                                                        <option value="23">23</option>
+                                                                        <option value="24">24</option>
+                                                                        <option value="25">25</option>
+                                                                        <option value="26">26</option>
+                                                                        <option value="27">27</option>
+                                                                        <option value="28">28</option>
+                                                                        <option value="20">20</option>
+                                                                        <option value="30">30</option>
+                                                                        <option value="-9">-9</option>
+                                                                        <option value="-8">-8</option>
+                                                                        <option value="-7">-7</option>
+                                                                        <option value="-6">-6</option>
+                                                                        <option value="-5">-5</option>
+                                                                        <option value="-4">-4</option>
+                                                                        <option value="-3">-3</option>
+                                                                        <option value="-2">-2</option>
+                                                                        <option value="-1">-1</option>
                                                                     </select>
                                                                 </div>
                                                             </div>
@@ -186,7 +231,7 @@
                                                                 <option value="28">28th</option>
                                                                 <option value="20">20th</option>
                                                                 <option value="30">30th</option>
-                                                                <option value="end">End of month</option>
+                                                                <option value="0">End of month</option>
                                                             </select>
                                                         </div>
                                                         <div class="form-group col-md-12">
@@ -242,7 +287,52 @@
                                                                         <option value="28">28th</option>
                                                                         <option value="20">20th</option>
                                                                         <option value="30">30th</option>
-                                                                        <option value="end">End of month</option>
+                                                                        <option value="0">End of month</option>
+                                                                    </select>
+                                                                </div>
+
+                                                                <div class="form-group col-md-12 hide">
+                                                                    <label for="second_pay_days_before">Days before payday</label>
+                                                                    <select name="second_pay_days_before" id="second_pay_days_before" class="form-control">
+                                                                        <option value="1">1</option>
+                                                                        <option value="2">2</option>
+                                                                        <option value="3">3</option>
+                                                                        <option value="4">4</option>
+                                                                        <option value="5">5</option>
+                                                                        <option value="6">6</option>
+                                                                        <option value="7">7</option>
+                                                                        <option value="8">8</option>
+                                                                        <option value="9">9</option>
+                                                                        <option value="10">10</option>
+                                                                        <option value="11">11</option>
+                                                                        <option value="12">12</option>
+                                                                        <option value="13">13</option>
+                                                                        <option value="14">14</option>
+                                                                        <option value="15">15</option>
+                                                                        <option value="16">16</option>
+                                                                        <option value="17">17</option>
+                                                                        <option value="18">18</option>
+                                                                        <option value="19">19</option>
+                                                                        <option value="20">20</option>
+                                                                        <option value="21">21</option>
+                                                                        <option value="22">22</option>
+                                                                        <option value="23">23</option>
+                                                                        <option value="24">24</option>
+                                                                        <option value="25">25</option>
+                                                                        <option value="26">26</option>
+                                                                        <option value="27">27</option>
+                                                                        <option value="28">28</option>
+                                                                        <option value="20">20</option>
+                                                                        <option value="30">30</option>
+                                                                        <option value="-9">-9</option>
+                                                                        <option value="-8">-8</option>
+                                                                        <option value="-7">-7</option>
+                                                                        <option value="-6">-6</option>
+                                                                        <option value="-5">-5</option>
+                                                                        <option value="-4">-4</option>
+                                                                        <option value="-3">-3</option>
+                                                                        <option value="-2">-2</option>
+                                                                        <option value="-1">-1</option>
                                                                     </select>
                                                                 </div>
                                                             </div>
@@ -268,11 +358,11 @@
                                                                     <div class="row">
                                                                         <div class="col-md-8">
                                                                             <p>Pay period</p>
-                                                                            <p class="m-0 pay-period"><span>03/25/2021</span> - </span>03/31/2021</span></p>
+                                                                            <p class="m-0 pay-period"><span></span> - <span></span></p>
                                                                         </div>
                                                                         <div class="col-md-4">
                                                                             <p>Pay date</p>
-                                                                            <p class="m-0 pay-date">04/02/2021</p>
+                                                                            <p class="m-0 pay-date"></p>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -282,11 +372,11 @@
                                                                     <div class="row">
                                                                         <div class="col-md-8">
                                                                             <p>Pay period</p>
-                                                                            <p class="m-0 pay-period"><span>04/01/2021</span> - <span>04/07/2021</span></p>
+                                                                            <p class="m-0 pay-period"><span></span> - <span></span></p>
                                                                         </div>
                                                                         <div class="col-md-4">
                                                                             <p>Pay date</p>
-                                                                            <p class="m-0 pay-date">04/09/2021</p>
+                                                                            <p class="m-0 pay-date"></p>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -296,11 +386,11 @@
                                                                     <div class="row">
                                                                         <div class="col-md-8">
                                                                             <p>Pay period</p>
-                                                                            <p class="m-0 pay-period"><span>04/08/2021</span> - <span>04/14/2021</span></p>
+                                                                            <p class="m-0 pay-period"><span></span> - <span></span></p>
                                                                         </div>
                                                                         <div class="col-md-4">
                                                                             <p>Pay date</p>
-                                                                            <p class="m-0 pay-date">04/16/2021</p>
+                                                                            <p class="m-0 pay-date"></p>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -310,11 +400,11 @@
                                                                     <div class="row">
                                                                         <div class="col-md-8">
                                                                             <p>Pay period</p>
-                                                                            <p class="m-0 pay-period"><span>04/15/2021</span> - <span>04/21/2021</span></p>
+                                                                            <p class="m-0 pay-period"><span></span> - <span></span></p>
                                                                         </div>
                                                                         <div class="col-md-4">
                                                                             <p>Pay date</p>
-                                                                            <p class="m-0 pay-date">04/23/2021</p>
+                                                                            <p class="m-0 pay-date"></p>
                                                                         </div>
                                                                     </div>
                                                                 </div>
