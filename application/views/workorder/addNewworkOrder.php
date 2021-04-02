@@ -33,6 +33,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 </div>
             </div>
             <!-- end row -->
+
             <?php echo form_open_multipart('workorder/savenewWorkorder', [ 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?>  
 
             <div class="row" style="margin-top:-30px;">
@@ -42,12 +43,11 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         <h4 class="mt-0 header-title mb-5">Header</h4>
                         <div class="row">
                             <div class="col-md-12">
-                                <!-- <ol class="breadcrumb" style="margin-top:-30px;">
-                                    <li class="breadcrumb-item active"> -->
-                                    <label  class="mytxt66" style="padding:.5%;background-color:#E8E8E9;">This workorder agreement (the "agreement") is made as of 02-13-2021, by and between NSMARTRAC, (the "Company") and the ("Customer") as the address shown below (the "Premise/Service Location) <i class="fa fa-pencil" aria-hidden="true"></i> </label>
-                                    <input type="hidden" class="form-control custom6" name="custom6_field">
-                                    <!-- </li>
-                                </ol> -->
+                                <ol class="breadcrumb" style="margin-top:-30px;">
+                                    <li class="breadcrumb-item active">
+                                        <label style="background-color:#E8E8E9;"><?php echo $headers->content; ?></label>
+                                    </li>
+                                </ol>
                             </div> 
                         </div>
                         <br>
@@ -153,9 +153,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         <div class="row">
                         <?php foreach($fields as $field){ ?>
                             <div class="col-md-3 form-group">
-                                <label for="suit" class="mytxt"><?php echo $field->name; ?></label> <i class="fa fa-pencil" aria-hidden="true"></i>
+                                <label for="suit" class="mytxtc" label-id="<?php echo $field->id; ?>"><?php echo $field->name; ?></label> <i class="fa fa-pencil" aria-hidden="true"></i>
                                 <input type="text" class="form-control" name="custom1_value" id="custom1_value"/>
-                                <input type="hidden" class="custom1" name="custom1_field">
+                                <input type="hidden" class="custom_<?php echo $field->id; ?>" value="<?php echo $field->name; ?>" name="custom_field">
                             </div>     
                             <!-- <div class="col-md-4 form-group">
                                 <label for="suit" class="mytxt2">Custom Field</label> <i class="fa fa-pencil" aria-hidden="true"></i>
@@ -395,10 +395,29 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 </div>   
                                                                    
                             </div>
+
+                            <h5>Checklist</h5>
+                            <small class="help help-sm">You can set up a checklist for employees.</small><br>
+                            <br><br>
+                            <div id="checklist_added"> </div>
+                            <br><br>
+                            <button class="btn btn-success" style="color:white;" data-toggle="modal" data-target="#checklist_modal"><i class="fa fa-plus-square" aria-hidden="true"></i> Select Checklist</button>
+
                             
+                        <br><br><br><br>
                             <h6>JOB DETAIL</h6><br>
                             
                         <div class="row">
+                                <div class="form-group col-md-4">
+                                    <label for="job_type">Job Type</label>
+                                    <select name="job_type" id="job_type" class="form-control custom-select">
+                                        <option value="Service">Service</option>
+                                        <option value="Design">Design</option>
+                                        <option value="Maintenance">Maintenance</option>
+                                        <option value="Repair">Repair</option>
+                                        <option value="Replace">Replace</option>
+                                    </select>
+                                </div>  
                             <div class="col-md-4 form-group">
                                 <label for="Job Tag">Job Tag</label><label style="float:right;color:green;">Manage Tag</label>
                                 <input type="text" class="form-control" name="job_tag" id="job_tag" />
@@ -460,17 +479,16 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <div class="form-group col-md-4">
                                     <label for="contact_name">Schedule Date Given</label>
                                     <input type="text" class="form-control" name="schedule_date_given" id="schedule_date_given" />
-                                </div>
+                                </div>      
                                 <div class="form-group col-md-4">
-                                    <label for="job_type">Job Type</label>
-                                    <select name="job_type" id="job_type" class="form-control custom-select">
-                                        <option value="Service">Service</option>
-                                        <option value="Design">Design</option>
-                                        <option value="Maintenance">Maintenance</option>
-                                        <option value="Repair">Repair</option>
-                                        <option value="Replace">Replace</option>
+                                    <label for="workorder_priority">Priority</label>
+                                    <select name="priority" id="workorder_priority" class="form-control custom-select">
+                                        <option value="Emergency">Emergency</option>
+                                        <option value="Low">Low</option>
+                                        <option value="Standard">Standard</option>
+                                        <option value="Urgent">Urgent</option>                
                                     </select>
-                                </div>                                           
+                                </div>                                      
                             </div>
                             <div class="row">                        
                                 <div class="form-group col-md-4">
@@ -483,6 +501,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 </div>                                           
                             </div>
 
+                            
                             <h6>PAYMENT DETAIL</h6><br>
                             <div class="row">                   
                                 <div class="form-group col-md-4">
@@ -939,6 +958,29 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 </div>
             </div>
 
+            <!-- Modal checklist -->
+            <div class="modal fade" id="checklist_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle">Select Checklists</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                            <?php foreach($checklists as $checklist){ ?>
+                            <input type="checkbox" id="checkist_checkbox" item-id="<?php echo $checklist->check_id; ?>" value="<?php echo $checklist->check_id; ?>"> <?php echo $checklist->checklist_name; ?><br>
+                            <?php } ?>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary add_checklist_items">Add Selected</button>
+                    </div>
+                    </div>
+                </div>
+            </div>
+
             <!-- Modal -->
             <div class="modal fade" id="terms_use_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
                 <div class="modal-dialog modal-lg" role="document">
@@ -1138,6 +1180,91 @@ $(document).ready(function(){
 </script>
 
 <script>
+    $(document).ready(function(){
+
+        $('.add_checklist_items').click(function(){
+            // alert('test');
+            $('input[id="checkist_checkbox"]:checked').each(function() {
+            //alert(this.value);
+            var id = this.value;
+            // $("#checklist_added").html(this.value);
+            // $("#checklist_modal").modal('hide')
+
+            $.ajax({
+                type: "POST",
+                url: "<?php echo base_url(); ?>workorder/getchecklistdetailsajax",
+                dataType:"json",
+                data : { id : id },
+                success: function(response){
+
+                  console.log('yeahhhhhhhhhhhhhhh'+response['checklists']); 
+
+                  $("#checklist_modal").modal('hide')
+                  $("#checklist_added").html(response['checklists'].checklist_name);
+                //   $(".business_name").html(response['client'].business_name);
+
+                },
+                    error: function(response){
+                    alert('Error'+response);
+       
+                }
+
+              });
+            });
+        });
+
+    });
+</script>
+
+
+<script>
+$(document).ready(function(){
+
+// $('.mytxtc').each(function(){
+//     alert($(this).attr('label-id'););
+    
+// });
+// $(".mytxtc").each(function () {
+
+// var label = $(this).text(); // It will get current label text
+// alert($(this).text());
+// // roomOcc.push(label);
+
+// });
+
+$('.mytxtc').each(function(e){
+        $.ajaxSetup({
+            headers: {
+              'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+          });
+        // e.preventDefault();
+        $(this).on('click', function(){
+            var id = $(this).attr('label-id');
+            // alert(id);
+            // $(document).on("click", "label.mytxt", function () {
+                var txt = $(this).text();
+                $(this).replaceWith("<input class='mytxt'/>");
+                $(this).val(txt);
+                $('.custom_'+id).val(txt);
+            // });
+
+            
+        });
+
+        $(this).on("click", function () {
+                var txt = $(this).val();
+                $(this).replaceWith("<label class='mytxt'></label>");
+                $(this).text(txt);
+                $('.custom_'+id).val(txt);
+            });
+    });
+
+
+});
+</script>
+
+<script>
 
 $(document).ready(function(){
  
@@ -1287,6 +1414,7 @@ $(document).ready(function(){
 });
 
 </script>
+
 
 <script>
 $(document).on("click", "label.mytxt", function () {

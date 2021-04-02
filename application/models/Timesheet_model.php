@@ -947,9 +947,11 @@ class Timesheet_model extends MY_Model
         $leave_id = $this->db->insert_id();
         //Inserting the dates
         for ($x = 0; $x < count($date); $x++) {
+            $leave = $this->datetime_zone_converter(date('Y-m-d', strtotime($date[$x])) . " 00:00:00", $this->session->userdata('usertimezone'), "UTC");
             $data[] = array(
                 'leave_id' => $leave_id,
-                'date' => date('Y-m-d', strtotime($this->datetime_zone_converter(date('Y-m-d', strtotime($date[$x])), $this->session->userdata('usertimezone'), "UTC")))
+                'date' => date('Y-m-d', strtotime($leave)),
+                'date_time' => date('Y-m-d H:i:s', strtotime($leave))
             );
         }
         $this->db->insert_batch('timesheet_leave_date', $data);
@@ -1440,6 +1442,17 @@ class Timesheet_model extends MY_Model
                 "overtime" => $overtime
             )
         );
+    }
+    public function get_all_leave_requests($company_id, $from_date, $to_date)
+    {
+        $this->db->reset_query();
+        $qry = $this->db->query("SELECT timesheet_leave.*,timesheet_pto.name, users.FName, users.LName FROM timesheet_leave  JOIN timesheet_pto ON timesheet_pto.id=timesheet_leave.pto_id JOIN users ON users.id=timesheet_leave.user_id WHERE users.company_id = " . $company_id . " AND timesheet_leave.date_created >= '" . $from_date . "' AND timesheet_leave.date_created <= '" . $to_date . "' ORDER BY timesheet_leave.date_created DESC");
+        return $qry->result();
+    }
+    public function get_leave_approver($leave_id,$action){
+        $this->db->reset_query();
+        $qry = $this->db->query("SELECT timesheet_leave_approver.*, users.FName, users.LName FROM timesheet_leave_approver  JOIN users ON timesheet_leave_approver.approver_user_id= users.id WHERE timesheet_leave_approver.leave_id = " . $leave_id . " AND timesheet_leave_approver.action = '".$action."' order by timesheet_leave_approver.date_created DESC limit 1");
+        return $qry->row();
     }
 }
 

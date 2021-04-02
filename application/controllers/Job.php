@@ -1705,6 +1705,67 @@ class Job extends MY_Controller
         header('content-type: application/json');
         echo json_encode(['jobs_approval' => $record, 'is_created' => $isCreated]);
     }
+
+    public function send_customer_invoice_email($id){
+        include APPPATH . 'libraries/PHPMailer/PHPMailerAutoload.php';
+        $this->load->helper(array('url', 'hashids_helper'));
+
+        $this->load->model('AcsProfile_model');
+
+        $job = $this->jobs_model->get_specific_job($id);
+        if( $job ){
+            $eid = hashids_encrypt($job->job_unique_id, '', 15);
+            $url = base_url('/job_invoice_view/' . $eid);
+            $customer = $this->AcsProfile_model->getByProfId($job->customer_id);
+
+            $subject = "NsmarTrac : Job Invoice";
+            $msg = "<p>Hi " . $customer->first_name . ",</p>";
+            $msg .= "<p>Please see url below for invoice job number <b>".$job->job_number."</b>.</p>";
+            $msg .= "<p>Click <a href='".$url."'>Your Estimate</a> to view job invoice.</p><br />";
+            $msg .= "<p>Thank you <br /><br /> NsmarTrac Team</p>";
+            
+            //Email Sending
+            $server    = MAIL_SERVER;
+            $port      = MAIL_PORT ;
+            $username  = MAIL_USERNAME;
+            $password  = MAIL_PASSWORD;
+            $from      = MAIL_FROM;
+            $recipient = $customer->email;
+            $recipient = 'bryann.revina03@gmail.com';
+
+            $mail = new PHPMailer;
+            //$mail->SMTPDebug = 4;
+            $mail->isSMTP();
+            $mail->Host = $server;
+            $mail->SMTPAuth = true;
+            $mail->Username   = $username;
+            $mail->Password   = $password;
+            $mail->getSMTPInstance()->Timelimit = 5;
+            $mail->SMTPSecure = 'ssl';
+            $mail->Timeout    =   10; // set the timeout (seconds)
+            $mail->Port = $port;
+            $mail->From = $from;
+            $mail->FromName = 'NsmarTrac';
+            $mail->addAddress($recipient, $recipient);
+            $mail->isHTML(true);
+            $mail->Subject = $subject;
+            $mail->Body    = $msg;
+
+            if(!$mail->Send()) {
+                $this->session->set_flashdata('alert-type', 'danger');
+                $this->session->set_flashdata('alert', 'Cannot send email.');
+            }else{
+                $this->session->set_flashdata('alert-type', 'success');
+                $this->session->set_flashdata('alert', 'Your invoice was successfully sent');
+            }
+
+        }else{
+            $this->session->set_flashdata('message', 'Cannot find data.');
+            $this->session->set_flashdata('alert_class', 'alert-danger');
+        }
+
+        redirect('job');
+    }
 }
 
 /* End of file Job.php */

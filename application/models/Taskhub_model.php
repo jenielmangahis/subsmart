@@ -7,4 +7,12 @@ class Taskhub_model extends MY_Model {
 
 		$this->table_key = 'task_id';
 	}
+        
+        public function getTask($company_id)
+        {
+            $this->db->where('company_id', $company_id);
+            $this->db->order_by('priority','DESC');
+            return $this->db->get('tasks')->result();
+        }
+        
 }

@@ -1,41 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <?php include viewPath('includes/header'); ?>
-<style>
-.cell-active{
-    background-color: #5bc0de;
-}
-.page-title {
-  font-family: Sarabun, sans-serif !important;
-  font-size: 1.75rem !important;
-  font-weight: 600 !important;
-}
-.cell-inactive{
-    background-color: #d9534f;
-}
-.pr-b10 {
-  position: relative;
-  bottom: 10px;
-}
-.p-40 {
-  padding-top: 40px !important;
-}
-.p-20 {
-  padding-top: 30px !important;
-  padding-bottom: 25px !important;
-  padding-right: 20px !important;
-  padding-left: 20px !important;
-}
-@media only screen and (max-width: 600px) {
-  .p-40 {
-    padding-top: 0px !important;
-  }
-  .pr-b10 {
-    position: relative;
-    bottom: 0px;
-  }
-}
-</style>
+
 <div class="wrapper" role="wrapper">
     <?php include viewPath('includes/sidebars/upgrades'); ?>
     <!-- page wrapper start -->
@@ -51,7 +17,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         </div>
                         <div class="col-sm-6 right dashboard-container-1">
                             <div class="text-right">
-                                <a class="btn btn-info" href="<?php echo base_url('wizard/add_new_workspace'); ?>"><i class="fa fa-file"></i> Add New</a>
+                                <a class="btn btn-primary" href="<?php echo base_url('wizard/add_new_workspace'); ?>"><i class="fa fa-plus"></i> Add New</a>
                             </div>
                         </div>
                       </div>
@@ -72,8 +38,18 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <tr>
                                         <td><?= $value->name; ?></td>
                                         <td>
-                                            <a class="btn btn-info btn-sm" href="<?php echo base_url('color_settings/edit_color_setting/'.$value->id); ?>"><i class="fa fa-pencil"></i> Edit</a>
-                                            <a class="btn btn-sm btn-danger btn-delete-color" href="javascript:void(0);" data-id="<?= $value->id; ?>"><i class="fa fa-trash"></i> Delete</a>
+                                            <div class="dropdown dropdown-btn">
+                                                <button class="btn btn-default dropdown-toggle" type="button" id="dropdown-edit" data-toggle="dropdown" aria-expanded="true">
+                                                    <span class="btn-label">Manage</span><span class="caret-holder"><span class="caret"></span></span>
+                                                </button>
+                                                <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="dropdown-edit">
+                                                    
+                                                    <li role="presentation"><a role="menuitem" tabindex="-1" href="<?php echo base_url('wizard/edit_workspace/'.$value->id); ?>"><span class="fa fa-pencil-square-o icon"></span> Edit</a>
+                                                    </li>
+                                                    <li role="presentation">
+                                                        <a role="menuitem" class="btn-delete-workspace" href="javascript:void(0);" data-id="<?= $value->id; ?>"><span class="fa fa-trash-o icon"></span> Delete</a>
+                                                </ul>
+                                            </div>
                                         </td>
                                     </tr>
                                 <?php } ?>
@@ -87,9 +63,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         </div>
         <!-- end container-fluid -->
 
-        <!-- Modal Delete Addon  -->
-        <div class="modal fade bd-example-modal-sm" id="modalDeleteColor" tabindex="-1" role="dialog" aria-labelledby="modalDeleteColorTitle" aria-hidden="true">
-          <div class="modal-dialog modal-sm" role="document">
+        <!-- Modal Delete Workspace  -->
+        <div class="modal fade bd-example-modal-md" id="modalDeleteWorkspace" tabindex="-1" role="dialog" aria-labelledby="modalDeleteWorkspaceTitle" aria-hidden="true">
+          <div class="modal-dialog modal-md" role="document">
             <div class="modal-content">
               <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLongTitle"><i class="fa fa-trash"></i> Delete</h5>
@@ -97,10 +73,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                   <span aria-hidden="true">&times;</span>
                 </button>
               </div>
-              <?php echo form_open_multipart('color_settings/delete_color', ['class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
-              <?php echo form_input(array('name' => 'cid', 'type' => 'hidden', 'value' => '', 'id' => 'cid'));?>
+              <?php echo form_open_multipart('wizard/delete_workspace', ['class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
+              <?php echo form_input(array('name' => 'wsid', 'type' => 'hidden', 'value' => '', 'id' => 'wsid'));?>
               <div class="modal-body">
-                  <p>Delete selected color?</p>
+                  <p>Delete selected work space?</p>
               </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
@@ -118,11 +94,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
 <script type="text/javascript">
 $(function(){
-    $(".btn-delete-color").click(function(){
-        var addon_id = $(this).attr("data-id");
-        $("#cid").val(addon_id);
+    $(".btn-delete-workspace").click(function(){
+        var wsid = $(this).attr("data-id");
+        $("#wsid").val(wsid);
 
-        $("#modalDeleteColor").modal("show");
+        $("#modalDeleteWorkspace").modal("show");
     });
 });
 </script>

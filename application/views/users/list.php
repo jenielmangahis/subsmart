@@ -299,7 +299,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                                     <td class="center pw-row-<?= $row->id; ?>"><?php echo $row->password_plain ?></td>
                                                     <td class="center"><?php echo ($row->role) ? ucfirst($this->roles_model->getById($row->role)->title) : '' ?></td>
                                                     <td class="center"><?php echo getUserType($row->user_type); ?></td>
-                                                    <td class="center"><?php echo date('M d,Y') ?></td>
+                                                    <td class="center"><?php echo date('M d,Y', strtotime($row->last_login)); ?></td>
                                                     <td class="center">
                                                         <?php //if (logged('id') !== $row->id): 
                                                         ?>

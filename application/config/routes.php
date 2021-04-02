@@ -518,6 +518,7 @@ $route['before-after/delete/(:num)'] = 'before_after/delete/$1';
 //wizard
 $route['wizard/show_app'] = 'wizard/show_app';
 $route['wizard/del_app'] = 'wizard/del_app';
+$route['wizard/edit_workspace/(:num)'] = 'wizard/edit_workspace/$1';
 //$route['wizard/getSubOptions'] = 'wizard/getSubOptions';
 
 //Settings
@@ -747,3 +748,7 @@ $route['users/_update_work_image_caption'] = 'Users/ajax_update_company_work_pic
 
 //Profile Setting
 $route['users/update_profile_setting'] = 'Users/update_profile_setting';
+
+//Job Front View
+$route['job_invoice_view/(:any)'] = 'Pages/job_customer_invoice_view/$1';
+$route['_converge_request_token'] = 'Pages/converge_token_request';

@@ -64,7 +64,7 @@ class Chart_of_accounts extends MY_Controller {
     public function index()
     {
         add_footer_js(array(
-            "assets/js/accounting/accounting/chart-of-accounts.js"
+            "assets/js/accounting/accounting/chart-of-accounts.js?v=".rand()
         ));
 
         $accountTypes = $this->account_model->getAccounts();

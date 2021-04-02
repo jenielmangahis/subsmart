@@ -191,21 +191,33 @@ function getTotalDaysOfMonth(month, year)
     return new Date(year, month, 0).getDate();
 }
 
-function customSchedulePayDates() 
+function customScheduleMonthly() 
 {
     var firstPayday = parseInt($('#first_payday').val());
-    var endOfPayPeriod = $('[name="end_of_first_pay_period"]').val();
+    var endOfPayPeriod = $('[name="end_of_first_pay_period"]:checked').val();
     var startPeriod = new Date();
     var endPeriod = new Date();
     var currentDate = new Date();
     var payDate = new Date();
-    payDate.setDate(firstPayday);
-    payDate.setMonth(currentDate.getMonth() + 1);
+    
+    if(firstPayday === 0) {
+        if(currentDate.getDate() === getTotalDaysOfMonth(currentDate.getMonth() + 1, currentDate.getFullYear())) {
+            payDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + 2, 0);
+        } else {
+            payDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
+        }
+    } else {
+        if(currentDate.getDate() >= firstPayday) {
+            payDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, firstPayday);
+        } else {
+            payDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), firstPayday);
+        }
+    }
 
     if(endOfPayPeriod === 'end-date') {
         var periodMonth = $('#first_pay_month').val();
         var periodDay = parseInt($('#first_pay_day').val());
-        endPeriod.setDate(periodDay);
+        var date = periodDay === 0 ? getTotalDaysOfMonth(payDate.getMonth() + 1, payDate.getFullYear()) : periodDay ;
 
         switch(periodMonth) {
             case 'same' :
@@ -219,47 +231,206 @@ function customSchedulePayDates()
             break;
         }
 
+        endPeriod.setDate(date);
+
         startPeriod = new Date(endPeriod.getFullYear(), endPeriod.getMonth(), endPeriod.getDate());
-        startPeriod.setDate(startPeriod.getDate() - 30);
+        if(periodDay === 0) {
+            startPeriod.setDate(1);
+        } else {
+            startPeriod.setDate(startPeriod.getDate() + 1);
+            startPeriod.setMonth(startPeriod.getMonth() - 1);
+        }
     } else {
-        
+        var daysBefore = parseInt($('#first_pay_days_before').val());
+
+        endPeriod = new Date(payDate.getFullYear(), payDate.getMonth(), payDate.getDate());
+        endPeriod.setDate(endPeriod.getDate() - daysBefore);
+
+        startPeriod = new Date(endPeriod.getFullYear(), endPeriod.getMonth(), endPeriod.getDate());
+        startPeriod.setDate(startPeriod.getDate() - 29);
     }
 
     $('#add-pay-schedule-modal .pay-periods .card.shadow').each(function() {
-        if($('#add-pay-schedule-modal #pay-frequency').val() === 'every-month') {
-            var newDate = String(payDate.getMonth() + 1).padStart(2, '0')+'/'+String(payDate.getDate()).padStart(2, '0')+'/'+payDate.getFullYear();
+        var newDate = String(payDate.getMonth() + 1).padStart(2, '0')+'/'+String(payDate.getDate()).padStart(2, '0')+'/'+payDate.getFullYear();
 
-            $(this).find('p.pay-date').html(newDate);
+        $(this).find('p.pay-date').html(newDate);
 
-            if(currentDate.getDate() > firstPayday) {
-                payDate.setMonth(payDate.getMonth() + 1);
+        if(firstPayday !== 0) {
+            payDate.setMonth(payDate.getMonth() + 1);
+        } else {
+            payDate = new Date(payDate.getFullYear(), payDate.getMonth() + 2, 0);
+        }
+
+        var startPeriodStr = String(startPeriod.getMonth() + 1).padStart(2, '0')+'/'+String(startPeriod.getDate()).padStart(2, '0')+'/'+startPeriod.getFullYear();
+        var endPeriodStr = String(endPeriod.getMonth() + 1).padStart(2, '0')+'/'+String(endPeriod.getDate()).padStart(2, '0')+'/'+endPeriod.getFullYear();
+
+        $($(this).find('p.pay-period').children('span')[0]).html(startPeriodStr);
+        $($(this).find('p.pay-period').children('span')[1]).html(endPeriodStr);
+
+        startPeriod = new Date(endPeriod.getFullYear(), endPeriod.getMonth(), endPeriod.getDate());
+        startPeriod.setDate(startPeriod.getDate() + 1);
+
+        if(endOfPayPeriod === 'end-date') {
+            if(periodDay === 0) {
+                var monthEndDate = getTotalDaysOfMonth(startPeriod.getMonth() + 1, startPeriod.getFullYear());
+                endPeriod = new Date(startPeriod.getFullYear(), startPeriod.getMonth(), monthEndDate);
+            } else {
+                endPeriod.setMonth(endPeriod.getMonth() + 1);
+            }
+        } else {
+            endPeriod = new Date(payDate.getFullYear(), payDate.getMonth(), payDate.getDate());
+            endPeriod.setDate(endPeriod.getDate() - daysBefore);
+        }
+    });
+}
+
+function customScheduleTwiceMonth()
+{
+    var firstPayday = parseInt($('#first_payday').val());
+    var endOfFirstPayPeriod = $('[name="end_of_first_pay_period"]:checked').val();
+    var secondPayday = parseInt($('#second_payday').val());
+    var endOfSecondPayPeriod = $('[name="end_of_second_pay_period"]:checked').val();
+    var startPeriod = new Date();
+    var endPeriod = new Date();
+    var currentDate = new Date();
+    var payDate = new Date();
+    var firstPeriodMonth = $('#first_pay_month').val();
+    var firstPeriodDay = parseInt($('#first_pay_day').val());
+    var secondPeriodMonth = $('#second_pay_month').val();
+    var secondPeriodDay = parseInt($('#second_pay_day').val());
+
+    firstPayday = firstPayday === 0 ? getTotalDaysOfMonth(payDate.getMonth() + 1, payDate.getFullYear()) : firstPayday ;
+    secondPayday = secondPayday === 0 ? getTotalDaysOfMonth(payDate.getMonth() + 1, payDate.getFullYear()) : secondPayday ;
+
+
+    if(currentDate.getDate() >= firstPayday) {
+        payDate.setDate(secondPayday);
+    } else {
+        payDate.setDate(firstPayday);
+    }
+
+    if(payDate.getDate() === firstPayday) {
+        if(endOfFirstPayPeriod === 'end-date') {
+            switch(firstPeriodMonth) {
+                case 'same' :
+                    endPeriod = new Date(payDate.getFullYear(), payDate.getMonth(), firstPeriodDay);
+                break;
+                case 'previous' :
+                    endPeriod = new Date(payDate.getFullYear(), payDate.getMonth() - 1, firstPeriodDay);
+                break;
+                case 'next' :
+                    endPeriod = new Date(payDate.getFullYear(), payDate.getMonth() + 1, firstPeriodDay);
+                break;
             }
 
-            var startPeriodStr = String(startPeriod.getMonth() + 1).padStart(2, '0')+'/'+String(startPeriod.getDate()).padStart(2, '0')+'/'+startPeriod.getFullYear();
-            var endPeriodStr = String(endPeriod.getMonth() + 1).padStart(2, '0')+'/'+String(endPeriod.getDate()).padStart(2, '0')+'/'+endPeriod.getFullYear();
+            startPeriod = new Date(endPeriod.getFullYear(), endPeriod.getMonth() - 1, secondPeriodDay + 1);
 
-            $($(this).find('p.pay-period').children('span')[0]).html(startPeriodStr);
-            $($(this).find('p.pay-period').children('span')[1]).html(endPeriodStr);
+        } else {
+            var firstDaysBefore = parseInt($('#first_pay_days_before').val());
+            endPeriod = new Date(payDate.getFullYear(), payDate.getMonth(), payDate.getDate() - firstDaysBefore);
+            startPeriod = new Date(endPeriod.getFullYear(), endPeriod.getMonth(), endPeriod.getDate());
 
-            if(endOfPayPeriod === 'end-date') {
-                startPeriod = new Date(endPeriod.getFullYear(), endPeriod.getMonth(), endPeriod.getDate());
-                startPeriod.setDate(startPeriod.getDate() + 1);
+            startPeriod.setMonth(startPeriod.getMonth() - 1);
+            startPeriod.setDate(secondPayDay - parseInt($('#second_pay_days_before').val()));
+        }
+    } else {
+        if(endOfSecondPayPeriod === 'end-date') {
+            switch(secondPeriodMonth) {
+                case 'same' :
+                    endPeriod = new Date(payDate.getFullYear(), payDate.getMonth(), secondPeriodDay);
+                break;
+                case 'previous' :
+                    endPeriod = new Date(payDate.getFullYear(), payDate.getMonth() - 1, secondPeriodDay);
+                break;
+                case 'next' :
+                    endPeriod = new Date(payDate.getFullYear(), payDate.getMonth() + 1, secondPeriodDay);
+                break;
+            }
 
-                if(startPeriod.getDate() === 1) {
-                    endPeriod.setMonth(startPeriod.getMonth() + 1);
-                    endPeriod.setDate(0);
-                } else {
-                    endPeriod.setMonth(startPeriod.getMonth() + 1);
+            startPeriod = new Date(endPeriod.getFullYear(), endPeriod.getMonth(), firstPeriodDay + 1);
+        } else {
+            var secondDaysBefore = parseInt($('#second_pay_days_before').val());
+            endPeriod = new Date(payDate.getFullYear(), payDate.getMonth(), payDate.getDate() - secondDaysBefore);
+            startPeriod = new Date(endPeriod.getFullYear(), endPeriod.getMonth(), endPeriod.getDate());
+
+            startPeriod.setDate(firstPayday - parseInt($('#second_pay_days_before').val()));
+        }
+    }
+
+    $('#add-pay-schedule-modal .pay-periods .card.shadow').each(function() {
+        var newDate = String(payDate.getMonth() + 1).padStart(2, '0')+'/'+String(payDate.getDate()).padStart(2, '0')+'/'+payDate.getFullYear();
+
+        $(this).find('p.pay-date').html(newDate);
+
+        if(payDate.getDate() === firstPayday) {
+            payDate.setDate(secondPayday);
+        } else {
+            payDate.setMonth(payDate.getMonth() + 1);
+            payDate.setDate(firstPayday);
+        }
+
+        var startPeriodStr = String(startPeriod.getMonth() + 1).padStart(2, '0')+'/'+String(startPeriod.getDate()).padStart(2, '0')+'/'+startPeriod.getFullYear();
+        var endPeriodStr = String(endPeriod.getMonth() + 1).padStart(2, '0')+'/'+String(endPeriod.getDate()).padStart(2, '0')+'/'+endPeriod.getFullYear();
+
+        $($(this).find('p.pay-period').children('span')[0]).html(startPeriodStr);
+        $($(this).find('p.pay-period').children('span')[1]).html(endPeriodStr);
+
+        startPeriod = new Date(endPeriod.getFullYear(), endPeriod.getMonth(), endPeriod.getDate());
+        startPeriod.setDate(startPeriod.getDate() + 1);
+
+        if(payDate.getDate() === firstPeriodDay) {
+            if(endOfFirstPayPeriod === 'end-date') {
+                switch(firstPeriodMonth) {
+                    case 'same' :
+                        endPeriod = new Date(payDate.getFullYear(), payDate.getMonth(), firstPeriodDay);
+                    break;
+                    case 'previous' :
+                        endPeriod = new Date(payDate.getFullYear(), payDate.getMonth() - 1, firstPeriodDay);
+                    break;
+                    case 'next' :
+                        endPeriod = new Date(payDate.getFullYear(), payDate.getMonth() + 1, firstPeriodDay);
+                    break;
                 }
             } else {
-                
+                var firstDaysBefore = parseInt($('#first_pay_days_before').val());
+                endPeriod = new Date(payDate.getFullYear(), payDate.getMonth(), payDate.getDate() - firstDaysBefore);
+            }
+        } else {
+            if(endOfSecondPayPeriod === 'end-date') {
+                switch(secondPeriodMonth) {
+                    case 'same' :
+                        endPeriod = new Date(payDate.getFullYear(), payDate.getMonth(), secondPeriodDay);
+                    break;
+                    case 'previous' :
+                        endPeriod = new Date(payDate.getFullYear(), payDate.getMonth() - 1, secondPeriodDay);
+                    break;
+                    case 'next' :
+                        endPeriod = new Date(payDate.getFullYear(), payDate.getMonth() + 1, secondPeriodDay);
+                    break;
+                }
+            } else {
+                var secondDaysBefore = parseInt($('#second_pay_days_before').val());
+                endPeriod = new Date(payDate.getFullYear(), payDate.getMonth(), payDate.getDate() - secondDaysBefore);
             }
         }
     });
 }
 
-$(document).on('change', '#first_payday, [name="end_of_first_pay_period"], #first_pay_month, #first_pay_day', function() {
-    customSchedulePayDates();
+$(document).on('change', '#first_payday, [name="end_of_first_pay_period"], #first_pay_month, #first_pay_day, #first_pay_days_before', function() {
+    switch($('#pay-frequency').val()) {
+        case 'every-month' :
+            customScheduleMonthly();
+        break;
+        case 'twice-month' :
+            customScheduleTwiceMonth();
+        break;
+    }
+});
+
+$(document).on('change', '#second_payday, [name="end_of_second_pay_period"], #second_pay_month, #second_pay_day, #second_pay_days_before', function() {
+    if($('#pay-frequency').val() === 'twice-month') {
+        customScheduleTwiceMonth();
+    }
 });
 
 $('#employee-status').select2({
@@ -398,13 +569,16 @@ $(document).on('change', '#pay-schedule', function() {
 $(document).on('change', '#add-pay-schedule-modal #pay-frequency', function() {
     if($(this).val() === 'twice-month' || $(this).val() === 'every-month') {
         $(this).next().next().removeClass('hide');
+
+        $('#add-pay-schedule-modal #next-payday').trigger('change');
+        $('#add-pay-schedule-modal #next-pay-period-end').trigger('change');
         $('#add-pay-schedule-modal #custom-schedule').trigger('change');
     } else {
         $(this).next().next().addClass('hide');
-    }
 
-    $('#add-pay-schedule-modal #next-payday').trigger('change');
-    $('#add-pay-schedule-modal #next-pay-period-end').trigger('change');
+        $('#add-pay-schedule-modal #next-payday').trigger('change');
+        $('#add-pay-schedule-modal #next-pay-period-end').trigger('change');
+    }
 });
 
 $(document).on('change', '#add-pay-schedule-modal #custom-schedule', function() {
@@ -425,7 +599,11 @@ $(document).on('change', '#add-pay-schedule-modal #custom-schedule', function() 
             $($('#add-pay-schedule-modal .custom-schedule-fields')[1]).addClass('hide');
         }
 
-        customSchedulePayDates();
+        if($('#pay-frequency').val() === 'every-month') {
+            customScheduleMonthly();
+        } else {
+            customScheduleTwiceMonth();
+        }
     } else {
         $($('#add-pay-schedule-modal .custom-schedule-fields')[0]).prev().removeClass('hide');
         $('#add-pay-schedule-modal .custom-schedule-fields').addClass('hide');

@@ -274,6 +274,64 @@ class Workorder_model extends MY_Model
         $query = $this->db->get();
         return $query->result();
     }
+
+    public function getheaderByID()
+    {
+        $cid = getLoggedCompanyID();
+
+        $this->db->select('*');
+		$this->db->from('work_order_headers');
+		$this->db->where('company_id', $cid);
+		$query = $this->db->get();
+		return $query->row();
+        // $query = $this->db->get();
+        // return $query->result();
+    }
+
+    public function save_header($data){
+        $vendor = $this->db->insert('work_order_headers', $data);
+	    $insert = $this->db->insert_id();
+		return  $insert;
+    }
+
+    public function update_header($data){
+        $vendor = $this->db->update('work_order_headers', $data);
+	    $insert = $this->db->insert_id();
+		return  $insert;
+    }
+
+    public function getchecklistByUser($id)
+    {
+        $this->db->select('checklists.*,checklists.id as check_id,checklist_items.checklist_id,checklist_items.item_name,');
+		$this->db->from('checklists');
+        $this->db->join('checklist_items', 'checklist_items.checklist_id = checklists.id');
+		$this->db->where('user_id', $id);
+        $query = $this->db->get();
+        return $query->result();
+    }
+
+    public function update_custom_field($data)
+    {
+        extract($data);
+        // $vendor = $this->db->update('custom_fields', $data);
+        //           $this->db->where('id', $data['id']);
+	    // $insert = $this->db->insert_id();
+		// return  $insert;
+        $this->db->where('id', $id);
+        $this->db->update('custom_fields', array('name' => $name));
+        return true;
+    }
+
+    public function getchecklistdetailsajax($data)
+    {
+
+        $this->db->select('*');
+        $this->db->from('checklists');
+        $this->db->where('id', $data);
+
+        $query = $this->db->get();
+        return $query->row();
+    }
 }
 
 /* End of file Workorder_model.php */

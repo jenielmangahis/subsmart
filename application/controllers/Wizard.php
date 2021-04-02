@@ -10,13 +10,23 @@ class Wizard extends MY_Controller {
         $this->load->model('wizard_apps_model');
         $user_id = getLoggedUserID();
 
-        add_css(array(
-            'assets/wizard/css/style.css',
-            'assets/wizard/css/responsive.css',
-            'assets/wizard/css/slick-theme.min.css',
-            'assets/wizard/css/slick.min.css',
-        ));
+        $method = $this->uri->segment(2);
 
+        if( $method == 'listing_wizard' ){
+            add_css(array(
+                //'assets/wizard/css/style.css',
+                'assets/wizard/css/responsive.css',
+                'assets/wizard/css/slick-theme.min.css',
+                'assets/wizard/css/slick.min.css',
+            ));
+        }else{
+            add_css(array(
+                'assets/wizard/css/style.css',
+                'assets/wizard/css/responsive.css',
+                'assets/wizard/css/slick-theme.min.css',
+                'assets/wizard/css/slick.min.css',
+            ));
+        }
 
         // JS to add only Customer module
         add_footer_js(array(
@@ -29,7 +39,8 @@ class Wizard extends MY_Controller {
     }
 
     public function index() {
-        $this->page_data['wizards_workspace'] = $this->wizard_model->getAllIndustries();
+        $company_id = logged('company_id');
+        $this->page_data['wizards_workspace'] = $this->wizard_model->getCompanyAllIndustries($company_id);
         //$this->page_data['wizards'] = $this->wizard_model->getAllCompanies();
         //$this->load->view('wizard/list', $this->page_data);
         $this->load->view('wizard/index', $this->page_data);
@@ -430,7 +441,8 @@ class Wizard extends MY_Controller {
     }
 
     public function listing_wizard() {
-        $this->page_data['wizards_workspace'] = $this->wizard_model->getAllIndustries();
+        $company_id = logged('company_id');
+        $this->page_data['wizards_workspace'] = $this->wizard_model->getCompanyAllIndustries($company_id);
         $this->load->view('wizard/listing', $this->page_data);
     }
 
@@ -510,7 +522,48 @@ class Wizard extends MY_Controller {
         $company_id = logged('company_id');
 
         $workspace = $this->wizard_model->getCompanyWorkSpaceById($company_id, $id);
+
+        $this->page_data['workspace'] = $workspace;
         $this->load->view('wizard/edit_workspace', $this->page_data);
+    }
+
+    public function update_workspace(){
+        $user_id    = logged('id');
+        $company_id = logged('company_id');
+
+        $post      = $this->input->post();
+        $workspace = $this->wizard_model->getCompanyWorkSpaceById($company_id, $post['wsid']);
+
+        if( $workspace ){
+            $data = ['name' => $post['name']];
+            $this->wizard_model->updateWorkspace($workspace->id, $data);
+            $this->session->set_flashdata('alert-type', 'success');
+            $this->session->set_flashdata('alert', 'Workspace was successfully created');
+        }else{
+            $this->session->set_flashdata('alert-type', 'danger');
+            $this->session->set_flashdata('alert', 'Cannot find data');
+        }
+
+        redirect('wizard/listing_wizard');
+    }
+
+    public function delete_workspace(){
+        $post       = $this->input->post();
+        $company_id = logged('company_id');
+        $workspace  = $this->wizard_model->getCompanyWorkSpaceById($company_id, $post['wsid']);
+
+        if( $workspace->company_id == $company_id ){
+            $this->wizard_model->deleteWorkspace($post['wsid']);
+
+            $this->session->set_flashdata('alert-type', 'success');
+            $this->session->set_flashdata('alert', 'Workspace was successfully deleted');
+        }else{
+            $this->session->set_flashdata('alert-type', 'danger');
+            $this->session->set_flashdata('alert', 'Cannot find data');
+        }
+
+        redirect('wizard/listing_wizard');
+
     }
 
 }
