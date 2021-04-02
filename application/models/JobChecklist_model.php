@@ -88,6 +88,10 @@ class JobChecklist_model extends MY_Model
         $this->db->insert($this->items_table,$data);
         return $this->db->insert_id(); 
     }
+
+    public function deleteItemById($id){
+        $this->db->delete($this->items_table, array('id' => $id));
+    }
 }
 
 /* End of file Checklist_model.php */

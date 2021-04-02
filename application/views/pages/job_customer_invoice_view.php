@@ -2,7 +2,7 @@
 defined('BASEPATH') or exit('No direct script access allowed');
 ?>
 <?php include viewPath('includes/header_front'); ?>
-<script src="https://demo.convergepay.com/hosted-payments/PayWithConverge.js"></script>
+<script src="https://api.convergepay.com/hosted-payments/PayWithConverge.js"></script>
 <div>
     <!-- page wrapper start -->
     <div>

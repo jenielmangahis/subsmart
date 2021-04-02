@@ -103,4 +103,18 @@ class Job_Checklists extends MY_Controller
 
         exit;
     }
+
+    public function ajax_delete_checklist_items(){
+        $this->load->helper(array('hashids_helper'));
+
+        $post = $this->input->post();
+        $id   = hashids_decrypt($post['eid'], '', 15);
+        $this->JobChecklist_model->deleteItemById($id);
+
+        $json_data = ['is_success' => true];
+
+        echo json_encode($json_data);
+
+        exit;
+    }
 }

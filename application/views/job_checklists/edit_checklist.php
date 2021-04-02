@@ -225,9 +225,23 @@ $(function(){
           });
       }, 500);
   }
-
-  $(document("click", ".btn-delete-checklist-item", function(){
-    alert(3);
-  }));
+  
+  $(document).on('click', '.btn-delete-checklist-item', function(){
+    var url = base_url + 'job_checklists/_delete_checklist_items';
+      var eid = $(this).attr("data-id");
+      
+      setTimeout(function () {
+          $.ajax({
+             type: "POST",
+             url: url,
+             data: {eid:eid},
+             success: function(o)
+             {
+                load_checklist_items();
+             }
+          });
+      }, 1000);
+  });
+  
 });
 </script>
