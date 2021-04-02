@@ -22,7 +22,7 @@ $(document).ready(function () {
     }).then((result) => {
       if (result.value) {
         $.ajax({
-          url: "<?= base_url() ?>/timesheet/approveRequest",
+          url: baseURL + "/timesheet/approveRequest",
           type: "POST",
           dataType: "json",
           data: {
@@ -31,6 +31,7 @@ $(document).ready(function () {
           success: function (data) {
             if (data == 1) {
               selected.parent("td").prev("td").text("Approved");
+              show_all_leave_requests();
               Swal.fire({
                 showConfirmButton: false,
                 timer: 2000,
@@ -60,7 +61,7 @@ $(document).ready(function () {
     }).then((result) => {
       if (result.value) {
         $.ajax({
-          url: "<?= base_url() ?>/timesheet/denyRequest",
+          url: baseURL + "/timesheet/denyRequest",
           type: "POST",
           dataType: "json",
           data: {
@@ -68,6 +69,7 @@ $(document).ready(function () {
           },
           success: function (data) {
             if (data == 1) {
+              show_all_leave_requests();
               selected.parent("td").prev("td").text("Denied");
               Swal.fire({
                 showConfirmButton: false,
@@ -201,7 +203,7 @@ $(document).ready(function () {
       }).then((result) => {
         if (result.value) {
           $.ajax({
-            url: "<?= base_url() ?>/timesheet/removePTO",
+            url: baseURL + "/timesheet/removePTO",
             type: "POST",
             dataType: "json",
             data: {
@@ -257,7 +259,7 @@ $(document).ready(function () {
     let id = getArrayID($(".leave-id"));
 
     $.ajax({
-      url: "<?= base_url() ?>/timesheet/savedPTO",
+      url: baseURL + "/timesheet/savedPTO",
       type: "POST",
       dataType: "json",
       data: {
@@ -349,7 +351,7 @@ $(document).ready(function () {
         .addClass("fa-pulse");
       button.children("span").text("SENDING");
       $.ajax({
-        url: "<?= base_url() ?>/timesheet/inviteLinkEntry",
+        url: baseURL + "/timesheet/inviteLinkEntry",
         type: "POST",
         dataType: "json",
         data: {
@@ -400,7 +402,7 @@ $(document).ready(function () {
   $(document).on("click", "#savedDepartment", function () {
     let dept = getDepartment($(".deptArray"));
     $.ajax({
-      url: "<?= base_url() ?>/timesheet/addDepartment",
+      url: baseURL + "/timesheet/addDepartment",
       type: "POST",
       dataType: "json",
       data: {
@@ -462,7 +464,7 @@ $(document).ready(function () {
     }).then((result) => {
       if (result.value) {
         $.ajax({
-          url: "<?= base_url() ?>/timesheet/removeDepartment",
+          url: baseURL + "/timesheet/removeDepartment",
           type: "POST",
           dataType: "json",
           data: {
@@ -501,7 +503,7 @@ $(document).ready(function () {
       refresh
     );
     $.ajax({
-      url: "<?= base_url() ?>/timesheet/showDeptUpdate",
+      url: baseURL + "/timesheet/showDeptUpdate",
       type: "GET",
       dataType: "json",
       data: {
@@ -571,7 +573,7 @@ $(document).ready(function () {
       values[field.name] = field.value;
     });
     $.ajax({
-      url: "<?= base_url() ?>/timesheet/workweekOvertimeSettings",
+      url: baseURL + "/timesheet/workweekOvertimeSettings",
       type: "POST",
       dataType: "json",
       data: {
@@ -632,7 +634,7 @@ $(document).ready(function () {
       values[field.name] = field.value;
     });
     $.ajax({
-      url: "<?= base_url() ?>/timesheet/breakPreference",
+      url: baseURL + "/timesheet/breakPreference",
       method: "POST",
       dataType: "json",
       data: {
@@ -690,7 +692,7 @@ $(document).ready(function () {
     placeholder: "Select employee",
     width: "resolve",
     ajax: {
-      url: "<?= base_url() ?>/timesheet/getEmployees",
+      url: baseURL + "/timesheet/getEmployees",
       type: "GET",
       dataType: "json",
       delay: 250,
@@ -729,7 +731,7 @@ $(document).ready(function () {
     placeholder: "Select employee",
     width: "resolve",
     ajax: {
-      url: "<?= base_url() ?>/timesheet/getEmployees",
+      url: baseURL + "/timesheet/getEmployees",
       type: "GET",
       dataType: "json",
       delay: 250,
@@ -767,7 +769,7 @@ $(document).ready(function () {
   //Load dataTable
   let selected_week = $("#ts-sorting-week").val();
   let user_id = $("#tsUsersList").val();
-  $("#timesheet_settings").ready(showWeekList(selected_week, user_id));
+  // $("#timesheet_settings").ready(showWeekList(selected_week, user_id));
 
   //Country selector
   // $('#tsLocation').countrySelect();
@@ -801,7 +803,7 @@ $(document).ready(function () {
     });
     if (week != null) {
       $.ajax({
-        url: "<?= base_url() ?>/timesheet/showTimesheetSettings",
+        url: baseURL + "/timesheet/showTimesheetSettings",
         type: "GET",
         dataType: "json",
         data: {
@@ -907,7 +909,7 @@ $(document).ready(function () {
     let duration = $(".total-duration").text();
     let timezone = values["timezone"].replace(/\s*\(.*?\)\s*/g, "");
     $.ajax({
-      url: "<?= base_url() ?>/timesheet/addingProjects",
+      url: baseURL + "/timesheet/addingProjects",
       type: "POST",
       dataType: "json",
       data: {
@@ -919,7 +921,7 @@ $(document).ready(function () {
       success: function (data) {
         $("#createProject").modal("hide");
         $("#timesheet_settings").DataTable().destroy();
-        showWeekList(week, user_id);
+        // showWeekList(week, user_id);
         if (data == 1) {
           Swal.fire({
             showConfirmButton: false,
@@ -953,13 +955,13 @@ $(document).ready(function () {
     let user = $(this).val();
     let week = $("#ts-sorting-week").val();
     $("#timesheet_settings").DataTable().destroy();
-    showWeekList(week, user);
+    // showWeekList(week, user);
   });
   $(document).on("change", "#ts-sorting-week", function () {
     var week = $(this).val();
     var user = $("#tsUsersList").val();
     $("#timesheet_settings").DataTable().destroy();
-    showWeekList(week, user);
+    // showWeekList(week, user);
   });
   $.date = function (dateObject, text) {
     var d = new Date(dateObject);
@@ -1005,7 +1007,7 @@ $(document).ready(function () {
     let duration = $(".total-duration").text();
     let date = $("#tsStartDate").val();
     $.ajax({
-      url: "<?= base_url() ?>/timesheet/updateSchedule",
+      url: baseURL + "/timesheet/updateSchedule",
       type: "POST",
       dataType: "json",
       data: {
@@ -1015,7 +1017,7 @@ $(document).ready(function () {
       },
       success: function (data) {
         $("#timesheet_settings").DataTable().destroy();
-        showWeekList(week, user_id);
+        // showWeekList(week, user_id);
         if (data === 1) {
           $("#createProject").modal("hide");
           Swal.fire({
@@ -1059,7 +1061,7 @@ $(document).ready(function () {
     $(".hiddenSection").show();
 
     $.ajax({
-      url: "<?= base_url() ?>/timesheet/getTimesheetData",
+      url: baseURL + "/timesheet/getTimesheetData",
       type: "GET",
       data: {
         timesheet_id: timesheet_id,
@@ -1315,7 +1317,7 @@ $(document).ready(function () {
     });
     $(".hiddenSection").hide();
     $.ajax({
-      url: "<?= base_url() ?>/timesheet/getProjectData",
+      url: baseURL + "/timesheet/getProjectData",
       type: "GET",
       dataType: "json",
       data: {
@@ -1361,7 +1363,7 @@ $(document).ready(function () {
       timezone = null;
     }
     $.ajax({
-      url: "<?= base_url() ?>/timesheet/updateTSProject",
+      url: baseURL + "/timesheet/updateTSProject",
       type: "POST",
       dataType: "json",
       data: {
@@ -1372,7 +1374,7 @@ $(document).ready(function () {
       success: function (data) {
         if (data == 1) {
           $("#timesheet_settings").DataTable().destroy();
-          showWeekList(week, user);
+          // showWeekList(week, user);
           $("#createProject").modal("hide");
           Swal.fire({
             showConfirmButton: false,
@@ -1408,14 +1410,14 @@ $(document).ready(function () {
     }).then((result) => {
       if (result.value) {
         $.ajax({
-          url: "<?= base_url() ?>/timesheet/deleteProjectData",
+          url: baseURL + "/timesheet/deleteProjectData",
           method: "POST",
           data: {
             id: id,
           },
           success: function () {
             $("#timesheet_settings").DataTable().destroy();
-            showWeekList(week, user);
+            // showWeekList(week, user);
             Swal.fire({
               showConfirmButton: false,
               timer: 2000,
@@ -1554,4 +1556,33 @@ $(document).ready(function () {
       }
     });
   });
+
+  show_all_leave_requests();
+  $(document).on("change", "#from_date_leave_requests", function () {
+    show_all_leave_requests();
+  });
+
+  $(document).on("change", "#to_date_leave_requests", function () {
+    // console.log("pasok");
+    show_all_leave_requests();
+  });
+  function show_all_leave_requests() {
+    $("#pto-table-list").hide();
+    $(".all-leave-requests-loader").show();
+    $.ajax({
+      url: baseURL + "/timesheet/show_all_leave_requests",
+      type: "POST",
+      dataType: "json",
+      data: {
+        date_from: $("#from_date_leave_requests").val(),
+        date_to: $("#to_date_leave_requests").val(),
+      },
+      success: function (data) {
+        // console.log(data);
+        $("#pto-table-list").show();
+        $("#pto-table-list").html(data.display);
+        $(".all-leave-requests-loader").hide();
+      },
+    });
+  }
 });

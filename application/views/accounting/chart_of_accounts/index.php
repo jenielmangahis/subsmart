@@ -8,10 +8,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         background-color: #32243D;
         border: 1px solid #32243D;
     }
-    #charts_of_account_table .btn-group .btn:hover, #charts_of_account_table .btn-group .btn:focus {
+    #chart-of-accounts-table .btn-group .btn:hover, #chart-of-accounts-table .btn-group .btn:focus {
         color: unset;
     }
-    #charts_of_account_table .btn-group .btn {
+    #chart-of-accounts-table .btn-group .btn {
         padding: 10px;
     }
 </style>
@@ -86,7 +86,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <?php endif; ?>
                         <div class="tab-content" id="myTabContent">
                             <div class="tab-pane fade show active" id="tab1" role="tabpanel" aria-labelledby="tab1">
-                                <?php echo form_open_multipart('accounting/chart_of_accounts', ['class' => 'form-validate', 'autocomplete' => 'off']); ?>
                                 <div class="row my-3">
                                     <div class="col-md-6">
                                         <div class="form-row">
@@ -135,7 +134,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     </div>
 
                                 </div>
-                                <table id="charts_of_account_table" class="table table-striped table-bordered" style="width:100%">
+                                <table id="chart-of-accounts-table" class="table table-striped table-bordered">
 									<thead>
                                         <tr>
                                             <th>NAME</th>
@@ -146,10 +145,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             <th class="text-right" width="10%">ACTION</th>
                                         </tr>
 									</thead>
-									<tbody id="customer_data">
-									</tbody>
+									<tbody></tbody>
 								</table>
-                                <?php echo form_close(); ?>
                             </div>
                         </div>
                     </div>
@@ -162,7 +159,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             <div class="modal fade" id="modalAddAccount" tabindex="-1" role="dialog" aria-labelledby="addLocationLabel" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered modal-lg w-50 m-auto" role="document">
                     <div class="modal-content">
-                        <?php echo form_open_multipart('accounting/chart-of-accounts/add', ['class' => 'form-validate', 'autocomplete' => 'off']); ?>
+                        <form action="/accounting/chart-of-accounts/add" method="post" class="form-validate" novalidate="novalidate">
                             <div class="modal-header">
                                 <h5 class="modal-title" id="addLocationLabel">Accounts</h5>
                                 <button type="button" class="close" id="closeModalInvoice" data-dismiss="modal" aria-label="Close"><i class="fa fa-times fa-lg"></i></button>
@@ -267,7 +264,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <div class="col-md-6"><button type="submit" name="save" class="btn btn-success float-right">Save</button></div>
                                 </div>
                             </div>
-                        <?php echo form_close(); ?>
+                        </form>
                     </div>
                 </div>
             </div>

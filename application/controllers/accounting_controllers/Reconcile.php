@@ -9,18 +9,21 @@ class Reconcile extends MY_Controller {
 		$this->checkLogin();
         add_css(array(
             "assets/css/accounting/banking.css?v=".rand(),
+            "assets/css/accounting/accounting.css",
             "assets/css/accounting/accounting.modal.css?v=".rand(),
             "assets/css/accounting/sidebar.css",
-			"assets/css/accounting/sales.css",
+            "assets/css/accounting/sales.css",
             "assets/plugins/dropzone/dist/dropzone.css",
-            "assets/css/accounting/accounting.css",
-            "assets/css/accounting/accounting-modal-forms.css"
+            "assets/css/accounting/accounting-modal-forms.css",
+            "assets/plugins/jquery-toast-plugin-master/dist/jquery.toast.min.css"
         ));
 
         add_footer_js(array(
-            "assets/js/accounting/main.js",
             "assets/plugins/dropzone/dist/dropzone.js",
-            "assets/js/accounting/modal-forms.js"
+            "assets/js/accounting/sweetalert2@9.js",
+            "assets/js/accounting/accounting.js",
+            "assets/js/accounting/modal-forms.js",
+            "assets/plugins/jquery-toast-plugin-master/dist/jquery.toast.min.js"
         ));
 
 		$this->page_data['menu_name'] =

@@ -270,3 +270,7 @@ div#show_my_attendance_remarks_info {
   margin-top: 0px !important;
   top: 0px;
 }
+#my_correction_requests_filter,
+#pto-table-list_filter {
+  display: none;
+}

@@ -561,7 +561,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         // e.preventDefault();
         $(this).on('click', function(){
             var id = $(this).attr('est-id');
-            alert(id);
+            // alert(id);
 
             $.ajax({
                 type: "POST",

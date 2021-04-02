@@ -10,9 +10,17 @@ class Taskhub extends MY_Controller {
 		$this->page_data['page']->menu = 'taskhub';
 		$this->page_data['module'] = 'calendar';		
 	}
+        
+        function loadWidgetContents()
+        {
+            $company_id = logged('company_id');
+            $data['tasks'] = $this->taskhub_model->getTask($company_id);
+            $this->load->view('widgets/task_hub_details', $data);
+                    
+        }
 
 	public function index(){
-		$is_allowed = true;//$this->isAllowedModuleAccess(6);
+	$is_allowed = true;//$this->isAllowedModuleAccess(6);
         if( !$is_allowed ){
             $this->page_data['module'] = 'taskhub';
             echo $this->load->view('no_access_module', $this->page_data, true);

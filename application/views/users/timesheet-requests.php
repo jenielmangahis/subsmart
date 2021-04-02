@@ -145,11 +145,25 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                                 </div>
                                             </div>
                                             <div class="row">
+                                                <div class="col-md-6">
+                                                    <form id="leave_request_date_form_filter" action="#" target="_blank" method="POST">
+                                                        <div class="row">
+                                                            <div class="col-lg-6" style="margin-bottom: 12px">
+                                                                <label for="from_date_correction_requests" class="week-label">From date filed:</label>
+                                                                <input type="text" name="date_from" id="from_date_leave_requests" class="form-control ts_schedule" value="<?= date('m/d/Y', strtotime('monday this week')) ?>">
+                                                            </div>
+                                                            <div class="col-lg-6" style="margin-bottom: 12px">
+                                                                <label for="to_date_correction_requests" class="week-label">To date filed:</label>
+                                                                <input type="text" name="date_to" id="to_date_leave_requests" class="form-control ts_schedule" value="<?= date("m/d/Y") ?>">
+
+                                                            </div>
+                                                        </div>
+                                                    </form>
+                                                </div>
                                                 <div class="col-md-12">
-                                                    <table id="pto-table-list" class="ptoTable cell-border hover">
+                                                    <table id="pto-table-list" class="ptoTable cell-border hover" style="display: none;">
                                                         <thead>
                                                             <tr>
-                                                                <th>ID</th>
                                                                 <th>Employee</th>
                                                                 <th>Type</th>
                                                                 <th>Date requested</th>
@@ -158,7 +172,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                                                 <th>Action</th>
                                                             </tr>
                                                         </thead>
-                                                        <tbody>
+                                                        <tbody id="pto-table-list-body">
                                                             <?php foreach ($leave_request as $cnt => $request) : ?>
                                                                 <?php
                                                                 //PTO TYPE
@@ -183,7 +197,6 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                                                 }
                                                                 ?>
                                                                 <tr>
-                                                                    <td class="center" style="border-left: 0;"><?php echo $cnt + 1 ?></td>
                                                                     <td><?php echo $name; ?></td>
                                                                     <td class="center"><?php echo $pto_type ?></td>
                                                                     <td class="center"><?php echo date('M d,Y', strtotime($request->date_created)); ?></td>
@@ -191,7 +204,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                                                         <?php foreach ($leave_date as $date) :
                                                                             if ($date->leave_id == $request->id) {
                                                                         ?>
-                                                                                <span style="display: block"><?php echo date('M d,Y', strtotime($date->date)); ?></span>
+                                                                                <span style="display: block"><?php echo date('M d,Y', strtotime($date->date_time)); ?></span>
                                                                             <?php } ?>
                                                                         <?php endforeach; ?>
                                                                     </td>
@@ -208,6 +221,9 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                                             <?php endforeach; ?>
                                                         </tbody>
                                                     </table>
+                                                    <div class="">
+                                                        <center><img class="all-leave-requests-loader" src="<?= base_url() ?>/assets/css/timesheet/images/ring-loader.svg" alt=""></center>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
