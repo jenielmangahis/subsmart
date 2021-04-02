@@ -1015,8 +1015,88 @@ class Workorder extends MY_Controller
         $this->page_data['page']->menu = 'settings';
 
         $this->page_data['fields'] = $this->workorder_model->getCustomByID();
+        $this->page_data['headers'] = $this->workorder_model->getheaderByID();
 
         $this->load->view('workorder/settings', $this->page_data);
+    }
+
+    public function addheader()
+    {
+        $company_id  = getLoggedCompanyID();
+        $user_id  = getLoggedUserID();
+
+        $header_data = array(
+            
+            'content' => $this->input->post('add_header'),
+            'company_id' => $company_id,
+            'date_created' => date("Y-m-d H:i:s"),
+            'date_updated' => date("Y-m-d H:i:s")
+        );
+
+        $custom_dataQuery = $this->workorder_model->save_header($header_data);
+
+
+        if($custom_dataQuery > 0){
+
+           redirect('workorder/settings');
+        }
+        else{
+            echo json_encode(0);
+        }
+    }
+
+    public function updateheader()
+    {
+        $company_id  = getLoggedCompanyID();
+        $user_id  = getLoggedUserID();
+
+        $header_data = array(
+            
+            'content' => $this->input->post('update_header'),
+            // 'company_id' => $company_id,
+            // 'date_created' => date("Y-m-d H:i:s"),
+            'date_updated' => date("Y-m-d H:i:s")
+        );
+
+        $custom_dataQuery = $this->workorder_model->update_header($header_data);
+
+
+        // if($custom_dataQuery > 0){
+
+           redirect('workorder/settings');
+        // }
+        // else{
+        //     echo json_encode(0);
+        // }
+    }
+
+    public function updatecustomField()
+    {
+        $company_id  = getLoggedCompanyID();
+        $user_id  = getLoggedUserID();
+        $custom_id  =  $this->input->post('custom_id');
+
+        $header_data = array(
+            'id' => $this->input->post('custom_id'),
+            'name' => $this->input->post('custom_name'),
+            'date_updated' => date("Y-m-d H:i:s")
+        );
+
+        $custom_dataQuery = $this->workorder_model->update_custom_field($header_data);
+
+           redirect('workorder/settings');
+    }
+
+    public function getchecklistdetailsajax()
+    {
+        $id = $this->input->post('id');
+        $company_id = logged('company_id');
+
+            $checklist = $this->workorder_model->getchecklistdetailsajax($id);
+
+            $this->page_data['checklists'] = $checklist;
+
+        echo json_encode($this->page_data);
     }
 
 
@@ -1450,6 +1530,9 @@ class Workorder extends MY_Controller
 
         // print_r($this->page_data['terms_conditions']);
         $this->page_data['fields'] = $this->workorder_model->getCustomByID();
+        $this->page_data['headers'] = $this->workorder_model->getheaderByID();
+        $this->page_data['checklists'] = $this->workorder_model->getchecklistByUser($user_id);
+
 
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->page_data['page_title'] = "Work Order";

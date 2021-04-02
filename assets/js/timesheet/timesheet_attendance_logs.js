@@ -20,10 +20,9 @@ $(document).ready(function () {
       },
       success: function (data) {
         // alert(data);
-        $(".table-ts-loader").hide();
-        $("#timeLogTable").show();
+        //
         $("#timeLogTable").html(data);
-
+        $("#timeLogTable").show();
         $("#timeLogTable").DataTable({
           initComplete: function (settings, json) {
             $("body").find(".dataTables_scrollBody").addClass("scrollbar");
@@ -146,6 +145,7 @@ $(document).ready(function () {
           scrollX: true,
           ordering: false,
         });
+        $(".table-ts-loader").hide();
       },
     });
   }

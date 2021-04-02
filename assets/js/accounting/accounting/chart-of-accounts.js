@@ -219,18 +219,18 @@ $(document).ready(function () {
     });
 
     $('#search').on('keyup', function() {
-        $('#charts_of_account_table').DataTable().ajax.reload();
+        $('#chart-of-accounts-table').DataTable().ajax.reload();
     });
 
     $('#table_rows, #inc_inactive').on('change', function() {
-        $('#charts_of_account_table').DataTable().ajax.reload();
+        $('#chart-of-accounts-table').DataTable().ajax.reload();
     });
 
     $('.dropdown-menu').on('click', function(e) {
         e.stopPropagation();
     });
 
-    $('#charts_of_account_table').DataTable({
+    $('#chart-of-accounts-table').DataTable({
         autoWidth: false,
         searching: false,
         processing: true,
@@ -335,10 +335,10 @@ $(document).ready(function () {
         ]
     });
 
-    $(document).on('click', '#charts_of_account_table .make-active', function(e) {
+    $(document).on('click', '#chart-of-accounts-table .make-active', function(e) {
         e.preventDefault();
         var row = $(this).parent().parent().parent();
-        var rowData = $('#charts_of_account_table').DataTable().row(row).data();
+        var rowData = $('#chart-of-accounts-table').DataTable().row(row).data();
     
         $.ajax({
             url:`/accounting/chart-of-accounts/active/${rowData.id}`,
@@ -348,10 +348,10 @@ $(document).ready(function () {
         });
     });
 
-    $(document).on('click', '#charts_of_account_table .make-inactive', function(e) {
+    $(document).on('click', '#chart-of-accounts-table .make-inactive', function(e) {
         e.preventDefault();
         var row = $(this).parent().parent().parent().parent();
-        var rowData = $('#charts_of_account_table').DataTable().row(row).data();
+        var rowData = $('#chart-of-accounts-table').DataTable().row(row).data();
 
         $.ajax({
             url: `/accounting/chart-of-accounts/inactive/${rowData.id}`,

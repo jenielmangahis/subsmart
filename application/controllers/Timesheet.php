@@ -1821,7 +1821,13 @@ class Timesheet extends MY_Controller
             $update = array('status' => 1);
             $this->db->where('id', $id);
             $this->db->update('timesheet_leave', $update);
-            echo json_encode($id);
+            $insert = array(
+                "approver_user_id" => logged('id'),
+                "leave_id" => $id,
+                "action" => "approved"
+            );
+            $this->db->insert('timesheet_leave_approver', $insert);
+            echo json_encode(1);
         } else {
             echo json_encode(0);
         }
@@ -1835,6 +1841,12 @@ class Timesheet extends MY_Controller
             $update = array('status' => 2);
             $this->db->where('id', $id);
             $this->db->update('timesheet_leave', $update);
+            $insert = array(
+                "approver_user_id" => logged('id'),
+                "leave_id" => $id,
+                "action" => "denied"
+            );
+            $this->db->insert('timesheet_leave_approver', $insert);
             echo json_encode(1);
         } else {
             echo json_encode(0);
@@ -4317,8 +4329,8 @@ class Timesheet extends MY_Controller
     public function show_my_leave_requests()
     {
         $date_from = $this->datetime_zone_converter($this->input->post("date_from"), $this->session->userdata('usertimezone'), "UTC");
-        $date_to = $this->datetime_zone_converter($this->input->post("date_to"), $this->session->userdata('usertimezone'), "UTC");
-        $leave_requests = $this->timesheet_model->get_my_leave_requests(logged('id'), $date_from, date("Y-m-d", strtotime($date_to)) . " 23:59:59");
+        $date_to = $this->datetime_zone_converter($this->input->post("date_to") . " 23:59:59", $this->session->userdata('usertimezone'), "UTC");
+        $leave_requests = $this->timesheet_model->get_my_leave_requests(logged('id'), $date_from, $date_to);
 
         $display = "";
         $hide_action = false;
@@ -4332,7 +4344,7 @@ class Timesheet extends MY_Controller
                 <label class="gray center"><strong>' . $request->name . '' . '</strong></label>';
             $leave_dates = $this->timesheet_model->get_leavedates($request->id);
             foreach ($leave_dates as $leave_date) {
-                $display .= '<label class="gray center">' . date('m-d-Y', strtotime($this->datetime_zone_converter($leave_date->date, "UTC", $this->session->userdata('usertimezone')))) . '</label>';
+                $display .= '<label class="gray center">' . date('m-d-Y', strtotime($this->datetime_zone_converter($leave_date->date_time, "UTC", $this->session->userdata('usertimezone')))) . '</label>';
             }
 
             $display .= '</td>';
@@ -4725,6 +4737,81 @@ class Timesheet extends MY_Controller
 
         $this->timesheet_model->correction_reqiest_approved($clock_in, $clock_out, $break_in, $break_out, $att_id, $shift_duration, $break_duration, $overtime);
         echo json_encode(0);
+    }
+    public function show_all_leave_requests()
+    {
+        $date_from = $this->datetime_zone_converter($this->input->post("date_from"), $this->session->userdata('usertimezone'), "UTC");
+        $date_to = $this->datetime_zone_converter($this->input->post("date_to") . " 23:59:59", $this->session->userdata('usertimezone'), "UTC");
+        $leave_requests = $this->timesheet_model->get_all_leave_requests(logged('company_id'), $date_from, $date_to);
+
+        $display = "";
+        $display .= '<thead>';
+        $display .= '<tr>';
+        $display .= '<th>Employee</th>';
+        $display .= '<th>Type</th>';
+        $display .= '<th>Date filed</th>';
+        $display .= '<th>Leave date</th>';
+        $display .= '<th>Status</th>';
+        $display .= '<th>Action</th>';
+        $display .= '</tr>';
+        $display .= '</thead>';
+        $display .= '<tbody id="pto-table-list-body">';
+        $hide_action = false;
+        foreach ($leave_requests as $request) {
+            $date_requested = date('m-d-Y', strtotime($this->datetime_zone_converter($request->date_created, "UTC", $this->session->userdata('usertimezone'))));
+            $display .= '<tr role="row" class="odd">';
+            $display .= '<td class="center">' . $request->FName . ' ' . $request->LName . '</td>';
+            $display .= '<td class="center">
+            <strong>' . $request->name . '</strong>
+            </td>';
+            $display .= '<td><center>
+            <label class="gray">' . date('m-d-Y', strtotime($this->datetime_zone_converter($request->date_created, "UTC", $this->session->userdata('usertimezone'))))  . '</label>
+            </center></td>';
+            $display .= '<td><center>';
+            $leave_dates = $this->timesheet_model->get_leavedates($request->id);
+            foreach ($leave_dates as $leave_date) {
+                $display .= '<label class="gray center">' . date('m-d-Y', strtotime($this->datetime_zone_converter($leave_date->date_time, "UTC", $this->session->userdata('usertimezone')))) . '</label><br>';
+            }
+
+            $display .= '</center></td>';
+            $display .= '<td style="text-align:center;">';
+            $action = true;
+            if ($request->status == 0) {
+                $display .= '<label class="gray">Pending</label>';
+            } elseif ($request->status == 1) {
+                $display .= '<label class="gray">Approved</label>';
+                $approver = $this->timesheet_model->get_leave_approver($request->id,"approved");
+                $display .= '<br>by: '.$approver->FName.' '.$approver->LName;
+                $action = false;
+            } elseif ($request->status == 3) {
+                $display .= '<label class="gray">Canceled</label>';
+                $action = false;
+            } else {
+                $display .= '<label class="gray">Denied</label>';
+                $approver = $this->timesheet_model->get_leave_approver($request->id,"denied");
+                $display .= '<br>by: '.$approver->FName.' '.$approver->LName;
+                $action = false;
+            }
+
+            $display .= '</td>';
+            $display .= '<td style="text-align:center;">';
+            if ($action) {
+                $display .= '<a href="javascript:void (0)" data-id="' . $request->id . '>" title="Approve" data-toggle="tooltip" id="approveRequest" style="display: inline;"><i class="fa fa-thumbs-up fa-lg"></i></a>';
+            }
+            $display .= '<a href="javascript:void (0)" data-id="' . $request->id . '" title="Deny" data-toggle="tooltip" id="denyRequest" style="margin-left: 12px"><i class="fa fa-times fa-lg"></i></a>';
+
+            $display .= '</td>';
+            $display .= '</tr>';
+        }
+        if (count($leave_requests) ==0) {
+            $display .= '<tr role="row" class="odd">';
+            $display .= '<td colspan="6" class="center">No request submitted.</td>';
+            $display .= '</tr>';
+        }
+        $display .= '</tbody>';
+        $data = new stdClass();
+        $data->display = $display;
+        echo json_encode($data);
     }
 }
 
