@@ -752,3 +752,11 @@ $route['users/update_profile_setting'] = 'Users/update_profile_setting';
 //Job Front View
 $route['job_invoice_view/(:any)'] = 'Pages/job_customer_invoice_view/$1';
 $route['_converge_request_token'] = 'Pages/converge_token_request';
+
+//Job Checklists
+$route['job_checklists/list'] = 'Job_Checklists/index';
+$route['job_checklists/add_new'] = 'Job_Checklists/add_new';
+$route['job_checklists/create_checklist'] = 'Job_Checklists/create_checklist';
+$route['job_checklists/edit_checklist/(:num)'] = 'Job_Checklists/edit_checklist/$1';
+$route['job_checklists/_load_checklist_items'] = 'Job_Checklists/ajax_load_checklist_items';
+$route['job_checklists/_create_checklist_item'] = 'Job_Checklists/ajax_create_checklist_item';

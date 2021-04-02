@@ -1731,7 +1731,7 @@ class Job extends MY_Controller
             $password  = MAIL_PASSWORD;
             $from      = MAIL_FROM;
             $recipient = $customer->email;
-            $recipient = 'bryann.revina03@gmail.com';
+            //$recipient = 'bryann.revina03@gmail.com';
 
             $mail = new PHPMailer;
             //$mail->SMTPDebug = 4;
