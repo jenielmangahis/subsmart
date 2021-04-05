@@ -112,6 +112,7 @@ form#formNewProject td {
 }
 #edit_attendance_log {
   position: relative;
+  width: 100%;
 }
 #edit_attendance_log a {
   color: #028b81;

@@ -3653,7 +3653,7 @@ class Timesheet extends MY_Controller
             $minutes_late = round($this->get_differenct_of_dates($shift_start, $checkin_date . " " . $checkin_time) * 60, 2);
         }
 
-        $footprints = $this->timesheet_model->get_attendance_logs_editor_footprint($att_id);
+        $footprints = $this->timesheet_model->get_attendance_logs_editor_footprint($att_id, 'attendance_log_update');
         $footprint_text = "";
         if (count($footprints) > 0) {
             foreach ($footprints as $editor) {
@@ -3769,9 +3769,30 @@ class Timesheet extends MY_Controller
     {
         $att_id = $this->input->post("attn_id");
         $shifts = $this->timesheet_model->calculateShiftDuration_and_overtime($att_id);
+
+        $lunch_auxes = $this->timesheet_model->get_lunch_auxes($att_id);
+        $lunch_in = "";
+        $lunch_out = date('Y-m-d H:i:s');
+
+        foreach ($lunch_auxes as $aux) {
+            if ($aux->action == "Break in") {
+                $lunch_in = $aux->date_created;
+            }
+            if ($aux->action == "Break out") {
+                $lunch_out = $aux->date_created;
+            }
+        }
+        $lunch_duration = $this->get_differenct_of_dates($lunch_in, $lunch_out);
         $data = new stdClass();
         $data->difference = $shifts[0] + $shifts[1];
         $data->autoclockout_timer_closed = $this->session->userdata('autoclockout_timer_closed');
+        $data->over_lunch = false;
+        if ($lunch_duration > 4 && $lunch_in != "") {
+            $data->over_lunch = true;
+        }
+        $data->lunch_duration = $lunch_duration;
+        $data->lunch_in = $lunch_in;
+        $data->lunch_out = $lunch_out;
         echo json_encode($data);
     }
 
@@ -4679,9 +4700,14 @@ class Timesheet extends MY_Controller
             $display .= '<td style="text-align:center;">' . round($this->get_differenct_of_dates($request->clock_in, $request->clock_out) - $this->get_differenct_of_dates($request->break_in, $request->break_out), 2) . '</td>';
             $display .= '<td style="text-align:center;">' . round($this->get_differenct_of_dates($request->break_in, $request->break_out), 2) . '</td>';
 
+            $approvers = $this->timesheet_model->get_attendance_logs_editor_footprint($request->attendance_id, 'attendance_correction_' . $request->status);
+            $approved_by = "";
+            foreach ($approvers as $approver) {
+                $approved_by = '<br>by: ' . $approver->FName . ' ' . $approver->LName;
+            }
             $display .= '<td style="text-align:center;"><strong>' . $request->status . '</strong>';
-            $display .= '<label class="gray">' . date('m-d-Y', strtotime($this->datetime_zone_converter($request->date_status_changed, "UTC", $this->session->userdata('usertimezone')))) . '</label>';
-            $display .= '</td>';
+            $display .= '<br><label class="gray">' . date('m-d-Y', strtotime($this->datetime_zone_converter($request->date_status_changed, "UTC", $this->session->userdata('usertimezone')))) . '</label>';
+            $display .= $approved_by . '</td>';
 
             $display .= '<td style="text-align:center;">';
             if ($request->status == "pending") {
@@ -4705,7 +4731,8 @@ class Timesheet extends MY_Controller
             'date_status_changed' => date('Y-m-d H:i:s'),
         );
         $this->timesheet_model->update_correction_request($update, $att_id);
-
+        $insert = array("user_id" => logged('id'), "attendance_id" => $att_id, 'action' => 'attendance_correction_denied');
+        $this->db->insert("timesheet_logs_editor", $insert);
         echo json_encode(0);
     }
     public function approve_correction_reqiest()
@@ -4736,6 +4763,8 @@ class Timesheet extends MY_Controller
         }
 
         $this->timesheet_model->correction_reqiest_approved($clock_in, $clock_out, $break_in, $break_out, $att_id, $shift_duration, $break_duration, $overtime);
+        $insert = array("user_id" => logged('id'), "attendance_id" => $att_id, 'action' => 'attendance_correction_approved');
+        $this->db->insert("timesheet_logs_editor", $insert);
         echo json_encode(0);
     }
     public function show_all_leave_requests()
@@ -4780,16 +4809,16 @@ class Timesheet extends MY_Controller
                 $display .= '<label class="gray">Pending</label>';
             } elseif ($request->status == 1) {
                 $display .= '<label class="gray">Approved</label>';
-                $approver = $this->timesheet_model->get_leave_approver($request->id,"approved");
-                $display .= '<br>by: '.$approver->FName.' '.$approver->LName;
+                $approver = $this->timesheet_model->get_leave_approver($request->id, "approved");
+                $display .= '<br>by: ' . $approver->FName . ' ' . $approver->LName;
                 $action = false;
             } elseif ($request->status == 3) {
                 $display .= '<label class="gray">Canceled</label>';
                 $action = false;
             } else {
                 $display .= '<label class="gray">Denied</label>';
-                $approver = $this->timesheet_model->get_leave_approver($request->id,"denied");
-                $display .= '<br>by: '.$approver->FName.' '.$approver->LName;
+                $approver = $this->timesheet_model->get_leave_approver($request->id, "denied");
+                $display .= '<br>by: ' . $approver->FName . ' ' . $approver->LName;
                 $action = false;
             }
 
@@ -4803,7 +4832,7 @@ class Timesheet extends MY_Controller
             $display .= '</td>';
             $display .= '</tr>';
         }
-        if (count($leave_requests) ==0) {
+        if (count($leave_requests) == 0) {
             $display .= '<tr role="row" class="odd">';
             $display .= '<td colspan="6" class="center">No request submitted.</td>';
             $display .= '</tr>';

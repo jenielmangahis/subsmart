@@ -394,6 +394,8 @@ $route['accounting/employees/delete/(:any)'] = 'accounting_controllers/employees
 $route['accounting/employees/set-status/(:any)/(:any)'] = 'accounting_controllers/employees/set_status/$1/$2';
 $route['accounting/employees/add-pay-schedule-form'] = 'accounting_controllers/employees/pay_schedule_form';
 $route['accounting/employees/add-pay-schedule']['post'] = 'accounting_controllers/employees/add_pay_schedule';
+$route['accounting/employees/edit-pay-schedule/(:any)'] = 'accounting_controllers/employees/edit_pay_schedule/$1';
+$route['accounting/employees/update-pay-schedule/(:any)']['post'] = 'accounting_controllers/employees/update_pay_schedule/$1';
 
 $route['accounting/vendor-details/(:any)'] = 'accounting/vendordetails/$1';
 $route['accounting/taxes/edit-settings'] = 'taxes/edit_settings';
@@ -752,3 +754,12 @@ $route['users/update_profile_setting'] = 'Users/update_profile_setting';
 //Job Front View
 $route['job_invoice_view/(:any)'] = 'Pages/job_customer_invoice_view/$1';
 $route['_converge_request_token'] = 'Pages/converge_token_request';
+
+//Job Checklists
+$route['job_checklists/list'] = 'Job_Checklists/index';
+$route['job_checklists/add_new'] = 'Job_Checklists/add_new';
+$route['job_checklists/create_checklist'] = 'Job_Checklists/create_checklist';
+$route['job_checklists/edit_checklist/(:num)'] = 'Job_Checklists/edit_checklist/$1';
+$route['job_checklists/_load_checklist_items'] = 'Job_Checklists/ajax_load_checklist_items';
+$route['job_checklists/_create_checklist_item'] = 'Job_Checklists/ajax_create_checklist_item';
+$route['job_checklists/_delete_checklist_items'] = 'Job_Checklists/ajax_delete_checklist_items';

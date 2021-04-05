@@ -16,7 +16,7 @@
             <div class="page-title-box">
                 <div class="row align-items-center">
                     <div class="col-sm-6">
-                        <h1 class="page-title"><i class="fa fa-plus"></i> Add Checklist</h1>
+                        <h3><i class="fa fa-plus"></i> Add Checklist</h3>
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item">Checklists</li>
                             <li class="breadcrumb-item active">Add</li>
@@ -48,7 +48,7 @@
                           </div>                      
                           <div class="col-md-5" style="padding: 0px;">
                             <a class="btn btn-default" href="<?php echo base_url('workorder/checklists'); ?>">Cancel</a>
-                            <button type="submit" class="btn btn-primary">Submit</button>
+                            <button type="submit" class="btn btn-primary">Continue</button>
                           </div>
                       </div>
                       <?php echo form_close(); ?>

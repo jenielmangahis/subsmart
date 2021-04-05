@@ -1721,7 +1721,7 @@ class Job extends MY_Controller
             $subject = "NsmarTrac : Job Invoice";
             $msg = "<p>Hi " . $customer->first_name . ",</p>";
             $msg .= "<p>Please see url below for invoice job number <b>".$job->job_number."</b>.</p>";
-            $msg .= "<p>Click <a href='".$url."'>Your Estimate</a> to view job invoice.</p><br />";
+            $msg .= "<p>Click <a href='".$url."'>here</a> to view your job invoice.</p><br />";
             $msg .= "<p>Thank you <br /><br /> NsmarTrac Team</p>";
             
             //Email Sending
@@ -1731,7 +1731,7 @@ class Job extends MY_Controller
             $password  = MAIL_PASSWORD;
             $from      = MAIL_FROM;
             $recipient = $customer->email;
-            $recipient = 'bryann.revina03@gmail.com';
+            //$recipient = 'bryann.revina03@gmail.com';
 
             $mail = new PHPMailer;
             //$mail->SMTPDebug = 4;

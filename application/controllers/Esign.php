@@ -757,7 +757,8 @@ class Esign extends MY_Controller {
 
 				$id = $this->User_docflies_model->create([
 					'user_id' => logged('id'),
-					'name' => $name
+					'name' => $name,
+					'company_id' => logged('company_id'),
 				]);
 			}
 

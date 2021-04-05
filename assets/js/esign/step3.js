@@ -136,7 +136,8 @@ function Step3() {
     $noteInput.val("");
     $optionInputs.remove();
 
-    let fieldType = "options";
+    const fieldTypeWithOptions = ["Checkbox", "Dropdown", "Radio"];
+    let fieldType = "field";
 
     if (field_name === "Formula") {
       fieldType = "formula";
@@ -144,7 +145,8 @@ function Step3() {
     } else if (field_name === "Note") {
       fieldType = "note";
       $noteInput.val(specs.note || "");
-    } else {
+    } else if (fieldTypeWithOptions.includes(field_name)) {
+      fieldType = "options";
       const { options = [] } = specs;
       if (options.length) {
         const $inputs = options.map((value) => createDropdownInput({ value })); // prettier-ignore
@@ -202,7 +204,8 @@ function Step3() {
       "Formula",
       "Note",
     ];
-    const hasOption = fieldsWithOption.includes(fieldName);
+    // const hasOption = fieldsWithOption.includes(fieldName);
+    const hasOption = true;
 
     $close.on("click", async (event) => {
       const $parent = $(event.target).closest(".ui-draggable");
@@ -360,6 +363,7 @@ function Step3() {
       const data = await response.json();
       $loader.addClass("d-none");
       $button.removeAttr("disabled");
+      window.location = `${prefixURL}/DocuSign/manage?view=sent`;
     });
 
     const $addOption = $optionsSidebar.find("#addOption");
@@ -398,7 +402,8 @@ function Step3() {
 
         specs = {
           options: values,
-          selected: values[0],
+          selected: null,
+          // selected: values[0],
         };
       }
 
@@ -426,6 +431,33 @@ function Step3() {
 
     const $closeOption = $optionsSidebar.find("#closeOption");
     $closeOption.on("click", hideFieldSidebar);
+
+    const $deleteOption = $optionsSidebar.find("#deleteOption");
+    $deleteOption.on("click", async function () {
+      const $active = $(".esignBuilder__field--active");
+
+      const $parent = $active.closest(".ui-draggable");
+      const uniqueKey = $active.data("key");
+
+      const $button = $(this);
+      const $loader = $button.find(".spinner-border");
+
+      $loader.removeClass("d-none");
+      $button.attr("disabled", true);
+
+      const endpoint = `${prefixURL}/esign/apiDeleteDocfileField/${uniqueKey}`;
+      await fetch(endpoint, { method: "DELETE" });
+
+      $loader.addClass("d-none");
+      $button.removeAttr("disabled");
+
+      $parent.remove();
+      hideFieldSidebar();
+    });
+
+    $form.on("submit", function (event) {
+      event.preventDefault();
+    });
   }
 
   async function init() {

@@ -327,8 +327,78 @@ class Workorder_model extends MY_Model
 
         $this->db->select('*');
         $this->db->from('checklists');
+        // $this->db->join('checklist_items', 'checklist_items.checklist_id = checklists.id');
         $this->db->where('id', $data);
 
+        $query = $this->db->get();
+        return $query->result();
+    }
+
+    public function checklistsitems($id)
+    {
+        // $test  = '4';
+        $this->db->select('*');
+        $this->db->from('checklist_items');
+        $this->db->where('checklist_id', $id);
+
+        $query = $this->db->get();
+        return $query->result();
+    }
+
+    public function additem_details($data){
+	    $vendor = $this->db->insert('custom_fields_lists', $data);
+	    $insert_id = $this->db->insert_id();
+		return  $insert_id;
+    }
+
+    public function getjob_types()
+    {
+        // $test  = '4';
+        $cid = getLoggedCompanyID();
+
+        $this->db->select('*');
+		$this->db->from('job_types');
+		$this->db->where('company_id', $cid);
+		$query = $this->db->get();
+        return $query->result();
+    }
+
+    public function getlastInsert(){
+
+        $this->db->select('*');
+        $this->db->from('workorders');
+        // $this->db->where('company_id', $company_id);
+        $this->db->order_by('id', 'DESC');
+        $this->db->limit(1);
+
+        // $query = $this->db->query("SELECT * FROM date_data ORDER BY id DESC LIMIT 1");
+        $result = $this->db->get();
+        return $result->result();
+    }
+
+    public function getjob_tagsById()
+    {
+        $cid = getLoggedCompanyID();
+
+        $this->db->select('*');
+		$this->db->from('job_tags');
+		$this->db->where('company_id', $cid);
+        $this->db->order_by('name', 'ASC');
+		// $query = $this->db->get();
+		// return $query->row();
+        $query = $this->db->get();
+        return $query->result();
+    }
+
+    public function getclientsById()
+    {
+        $cid = getLoggedCompanyID();
+
+        $this->db->select('*');
+		$this->db->from('clients');
+		$this->db->where('id', $cid);
+		// $query = $this->db->get();
+		// return $query->row();
         $query = $this->db->get();
         return $query->row();
     }

@@ -1,0 +1,70 @@
+.text-secondary {
+  font-size: 13px;
+  color: #666;
+}
+
+.popover-body {
+  min-width: 200px;
+}
+
+.docusignSent {
+  display: grid;
+  grid-template-columns: 260px auto;
+  padding-top: 95px !important;
+
+  .navbar-side {
+    position: relative !important;
+    top: 0 !important;
+  }
+
+  .title {
+    font-family: Sarabun, sans-serif;
+    font-size: 1.75rem;
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+    margin-bottom: 20px;
+    color: #484848;
+  }
+
+  .card {
+    box-shadow: 0 0 13px 0 rgb(116 116 117 / 44%);
+  }
+
+  .text-title {
+    font-weight: 600;
+  }
+
+  .text-link {
+    font-size: 13px;
+    color: rgb(36, 99, 209);
+
+    &:hover {
+      text-decoration: underline !important;
+    }
+  }
+
+  .progress {
+    width: 100%;
+    height: 5px;
+    margin-right: 5px;
+  }
+}
+
+#historyModal {
+  .ellipsis {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 195px;
+  }
+
+  .row {
+    strong {
+      font-size: 13px;
+    }
+
+    &:not(:last-child) {
+      margin-bottom: 16px;
+    }
+  }
+}

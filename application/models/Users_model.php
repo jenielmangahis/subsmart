@@ -517,6 +517,49 @@ class Users_model extends MY_Model {
 		$this->db->insert('pay_schedule', $data);
 		return $this->db->insert_id();
 	}
+
+	public function getPaySchedules()
+	{
+		$this->db->where('company_id', logged('company_id'));
+		$this->db->where('status', 1);
+		$query = $this->db->get('pay_schedule');
+		return $query->result();
+	}
+	
+	public function getPaySchedule($id)
+	{
+		$this->db->where('company_id', logged('company_id'));
+		$this->db->where('id', $id);
+		$this->db->where('status', 1);
+		$query = $this->db->get('pay_schedule');
+		return $query->row();
+	}
+
+	public function getPayScheduleUsed()
+	{
+		$this->db->where('company_id', logged('company_id'));
+		$this->db->where('use_for_new_employees', 1);
+		$this->db->where('status', 1);
+		$query = $this->db->get('pay_schedule');
+		return $query->row();
+	}
+
+	public function updateUsedForNewEmp($id, $use)
+	{
+		$this->db->where('company_id', logged('company_id'));
+		$this->db->where('id', $id);
+		$update = $this->db->update('pay_schedule', ['use_for_new_employees' => $use]);
+		return $update;
+	}
+
+	public function updatePaySchedule($id, $data)
+	{
+		$this->db->where('company_id', logged('company_id'));
+		$this->db->where('id', $id);
+		$this->db->where('status', 1);
+		$update = $this->db->update('pay_schedule', $data);
+		return $update;
+	}
 }
 
 

@@ -386,7 +386,6 @@
 </style>
 <div class="col-lg-12 mt-2 task-list">
     <?php
-    //print_r($tasks);
         foreach($tasks as $task):
             
             switch($task->priority):
@@ -401,19 +400,21 @@
                 break;    
                     
             endswitch;
+            if($task->is_assigned == 1):
     ?>
     
     <div class="priority <?= $class ?>"><span><?= strtoupper($task->priority.' priority') ?></span></div>
     <div onclick="document.location='<?= base_url("taskhub/view/".$task->task_id) ?>'" class="task <?= $class ?>">
         <div class="desc">
-            <div class="title"><?= strtoupper($task->subject) ?></div>
+            <div class="title"><?php echo strtoupper($task->subject).($task->FName==""?' [ UNASSIGNED ] ' :' [ '.strtoupper($task->FName).' ]') ?> <br /><span style="color:red"><?php echo ' [ '.strtoupper($task->status_text).' ]' ?></span></div>
             <div><?= ucfirst(strtolower($task->description)) ?></div>
         </div>
         <div class="time">
             <div class="date"><?= date('M d, Y', strtotime($task->estimated_date_complete)) ?></div>
         </div>
     </div>
-    <?php 
+    <?php   
+            endif;
         endforeach;
     ?>
 </div>

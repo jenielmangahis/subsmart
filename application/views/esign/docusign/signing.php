@@ -9,13 +9,43 @@
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
   <link rel="stylesheet" href="<?=base_url('assets/css/esign/docusign/docusign.css');?>">
   <script src="https://use.fontawesome.com/f61f458313.js"></script>
+
+  <style>
+    .fillAndSign__signatureDraw {
+        max-height: 40px;
+    }
+  </style>
 </head>
 <body>
   <div class="container signing">
+    <div class="signing__header">
+        <span class="signing__readonly">This document is now complete.</span>
+
+        <div>
+            <button class="btn btn-primary d-flex align-items-center mt-3" data-action="finish">
+                <div class="spinner-border spinner-border-sm m-0 mr-2 d-none" role="status">
+                    <span class="sr-only">Loading...</span>
+                </div>
+                Finish
+            </button>
+        </div>
+    </div>
+
     <div class="signing__documentContainer"></div>
 
     <div class="d-flex justify-content-center">
-      <button class="btn btn-primary mt-3">Finish</button>
+      <button class="btn btn-primary d-flex align-items-center mt-3" data-action="finish">
+        <div class="spinner-border spinner-border-sm m-0 mr-2 d-none" role="status">
+            <span class="sr-only">Loading...</span>
+        </div>
+        Finish
+    </button>
+    </div>
+  </div>
+
+  <div class="loader">
+    <div class="spinner-border" role="status">
+        <span class="sr-only">Loading...</span>
     </div>
   </div>
 
@@ -87,7 +117,7 @@
     </div>
   </div>
 
-  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js" integrity="sha512-qTXRIMyZIFb8iQcfjXWCO8+M5Tbc38Qi5WzdPOYZHIlZpzBHG3L3by84BBBOiRGiEb7KKtAOAs5qYdUiZiQNNQ==" crossorigin="anonymous"></script>
@@ -98,6 +128,7 @@
 
   <script src="<?=base_url('assets/js/esign/libs/pdf.js');?>"></script>
   <script src="<?=base_url('assets/js/esign/libs/pdf.worker.js');?>"></script>
+  <script src="<?=base_url('assets/js/esign/docusign/input.autoresize.js');?>"></script>
   <script src="<?=base_url('assets/js/esign/docusign/signing.js');?>"></script>
 </body>
 </html>

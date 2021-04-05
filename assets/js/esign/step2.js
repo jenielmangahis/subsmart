@@ -85,10 +85,10 @@ function Recipient({ data: dataParam, onRemove: onRemoveParam }) {
         icon: "fa-pencil",
         value: "Needs to Sign",
       },
-      {
-        icon: "fa-pencil",
-        value: "Signs in Person",
-      },
+      // {
+      //   icon: "fa-pencil",
+      //   value: "Signs in Person",
+      // },
       {
         icon: "fa-clone",
         value: "Receives a copy",
@@ -147,7 +147,7 @@ function Recipient({ data: dataParam, onRemove: onRemoveParam }) {
                                   .join("")}
                             </ul>
                         </li>
-                        <li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">More</a>
+                        <li class="dropdown"><a href="#" class="dropdown-toggle d-none" data-toggle="dropdown">More</a>
                             <ul class="dropdown-menu">
                                 <li><a href="#"><i class="fa fa-key"></i>Add access authentication</a></li>
                                 <li><a href="#"><i class="fa fa-comment"></i>Add private message</a></li>

@@ -358,6 +358,49 @@ $(document).ready(function () {
 </script>
 
 <script>
+jQuery(document).ready(function () {
+$('#items_table_estimate_sales').DataTable();
+});
+</script>
+
+<?php //echo put_footer_assets(); ?>
+
+
+<!-- <script src="<?php //echo $url->assets ?>jSignature-master/libs/jquery.js"></script>
+<script src="<?php //echo $url->assets ?>jSignature-master/libs/jSignature.min.js"></script>
+<script src="<?php //echo $url->assets ?>jSignature-master/libs/modernizr.js"></script> -->
+<script src="<?php echo $url->assets ?>signature_pad-master/js/signature_pad.js"></script>
+<script src="<?php echo $url->assets ?>js/jquery.signaturepad.js"></script>
+<!-- <script src="<?php echo $url->assets ?>js/sign_new.js"></script>
+<script src="<?php echo $url->assets ?>js/sign2.js"></script> -->
+<script src="<?php echo $url->assets ?>js/sidebar_badges.js"></script>
+<script src="<?php echo $url->assets ?>js/custom.js"></script>
+<script type="text/javascript" src="<?php echo $url->assets?>ckeditor/ckeditor.js"></script>
+<script>
+    jQuery(document).ready(function () {
+        jQuery('#smoothed').signaturePad({drawOnly: true, drawBezierCurves: true, lineTop: 200});
+        jQuery("#CustomerSign").on("click touchstart", function () {
+            var canvas = document.getElementById("CustomerSign");
+            var dataURL = canvas.toDataURL("image/png");
+            jQuery("#saveSignatureDB").val(dataURL);
+        });
+
+
+    });
+
+</script>
+
+<script>
+    CKEDITOR.replace( 'editor1' );
+</script>
+<script>
+    CKEDITOR.replace( 'editor2' );
+</script>
+<script>
+    CKEDITOR.replace( 'updateheader' );
+</script>
+
+<script>
 window.onload = function () {
 
 //Better to construct options first and then pass it as a parameter

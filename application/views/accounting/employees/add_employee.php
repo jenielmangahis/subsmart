@@ -14,7 +14,7 @@
                     <div class="row">
                         <div class="col-xl-12">
                             <div class="card p-0 m-0">
-                                <div class="card-body" style="padding-bottom: 1.25rem">
+                                <div class="card-body">
                                     <div class="row">
                                         <div class="col-md-6">
                                             <h4>Personal info</h4>
@@ -224,9 +224,12 @@
                                                             <select name="pay_schedule" id="pay-schedule" class="form-control">
                                                                 <option disabled selected>&nbsp;</option>
                                                                 <option value="add">&plus; Add new</option>
+                                                                <?php foreach($pay_schedules as $pay_schedule) : ?>
+                                                                    <option value="<?=$pay_schedule->id?>" <?=$pay_schedule->use_for_new_employees === "1" ? 'selected' : ''?>><?=$pay_schedule->name?></option>
+                                                                <?php endforeach; ?>
                                                             </select>
                                                         </div>
-                                                        <label for="pay-schedule" class="col-sm-4 col-form-label">starting <span></span></label>
+                                                        <label for="pay-schedule" class="col-form-label">starting <span><?=$nextPayDate?></span> <a href="#"><i class="fa fa-pencil"></i></a></label>
                                                     </div>
                                                 </div>
                                             </div>

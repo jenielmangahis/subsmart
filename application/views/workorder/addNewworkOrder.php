@@ -45,17 +45,32 @@ defined('BASEPATH') or exit('No direct script access allowed');
                             <div class="col-md-12">
                                 <ol class="breadcrumb" style="margin-top:-30px;">
                                     <li class="breadcrumb-item active">
-                                        <label style="background-color:#E8E8E9;"><?php echo $headers->content; ?></label>
+                                        <label style="background-color:#E8E8E9;" id="headerContent"><?php echo $headers->content; ?></label>
                                     </li>
                                 </ol>
                             </div> 
                         </div>
                         <br>
 
+                        <input type="hidden" id="company_name" value="<?php echo $clients->business_name; ?>">
+                        <input type="hidden" id="current_date" value="<?php echo @date('m-d-Y'); ?>">
+
+                        <input type="hidden" id="content_input" class="form-control" name="header" value="<?php echo $headers->content; ?>">
+
                         <div class="row">                   
                             <div class="col-md-3 form-group">
                                 <label for="contact_name">Work Order #</label>
-                                <input type="text" class="form-control" name="workorder_number" id="contact_name" required autofocus />
+                                <input type="text" class="form-control" name="workorder_number" id="contact_name" value="<?php echo "WO-"; 
+                                           foreach ($number as $num):
+                                                $next = $num->workorder_number;
+                                                $arr = explode("-", $next);
+                                                $date_start = $arr[0];
+                                                $nextNum = $arr[1];
+                                            //    echo $number;
+                                           endforeach;
+                                           $val = $nextNum + 1;
+                                           echo str_pad($val,9,"0",STR_PAD_LEFT);
+                                           ?>" required />
                             </div>
                             <div class="col-md-3 form-group">
                                 <label for="contact_email">Select Customer</label><label style="float:right;color:green;"><i class="fa fa-plus-square" aria-hidden="true"></i> New Customer</label>
@@ -150,12 +165,12 @@ defined('BASEPATH') or exit('No direct script access allowed');
                             </div> -->
                         </div>
                         
-                        <div class="row">
+                        <div class="row" id="thisdiv">
                         <?php foreach($fields as $field){ ?>
                             <div class="col-md-3 form-group">
-                                <label for="suit" class="mytxtc" label-id="<?php echo $field->id; ?>"><?php echo $field->name; ?></label> <i class="fa fa-pencil" aria-hidden="true"></i>
-                                <input type="text" class="form-control" name="custom1_value" id="custom1_value"/>
-                                <input type="hidden" class="custom_<?php echo $field->id; ?>" value="<?php echo $field->name; ?>" name="custom_field">
+                                <label for="suit" data-toggle="modal" data-target="#modalupdateCustom" class="mytxtc" label-id="<?php echo $field->id; ?>"  label-name="<?php echo $field->name; ?>"><?php echo $field->name; ?></label> <i class="fa fa-pencil" aria-hidden="true"></i>
+                                <input type="text" class="form-control" name="custom_value[]" id="custom1_value"/>
+                                <input type="hidden" class="custom_<?php echo $field->id; ?>" value="<?php echo $field->name; ?>" name="custom_field[]">
                             </div>     
                             <!-- <div class="col-md-4 form-group">
                                 <label for="suit" class="mytxt2">Custom Field</label> <i class="fa fa-pencil" aria-hidden="true"></i>
@@ -399,7 +414,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
                             <h5>Checklist</h5>
                             <small class="help help-sm">You can set up a checklist for employees.</small><br>
                             <br><br>
-                            <div id="checklist_added"> </div>
+                            <div id="checklist_added"></div>
+                            <!-- <div id="citems"> -->
+                            <!-- </div> -->
                             <br><br>
                             <button class="btn btn-success" style="color:white;" data-toggle="modal" data-target="#checklist_modal"><i class="fa fa-plus-square" aria-hidden="true"></i> Select Checklist</button>
 
@@ -411,19 +428,27 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <div class="form-group col-md-4">
                                     <label for="job_type">Job Type</label>
                                     <select name="job_type" id="job_type" class="form-control custom-select">
-                                        <option value="Service">Service</option>
+                                    <?php foreach($job_types as $jt){ ?>
+                                        <option value="<?php echo $jt->title ?>"><?php echo $jt->title ?></option>
+
+                                    <?php } ?>
+                                        <!-- <option value="Service">Service</option>
                                         <option value="Design">Design</option>
                                         <option value="Maintenance">Maintenance</option>
                                         <option value="Repair">Repair</option>
-                                        <option value="Replace">Replace</option>
+                                        <option value="Replace">Replace</option> -->
                                     </select>
                                 </div>  
                             <div class="col-md-4 form-group">
-                                <label for="Job Tag">Job Tag</label><label style="float:right;color:green;">Manage Tag</label>
-                                <input type="text" class="form-control" name="job_tag" id="job_tag" />
-                                <!-- <select class="form-control">
-                                            <option>---</option>
-                                </select> -->
+                                <label for="Job Tag">Job Tag</label>
+                                <!-- <label style="float:right;color:green;">Manage Tag</label> -->
+                                <!-- <input type="text" class="form-control" name="job_tag" id="job_tag" /> -->
+                                <select class="form-control" name="job_tag" id="job_tag">
+                                            <!-- <option>---</option> -->
+                                            <?php foreach($job_tags as $tags){ ?>
+                                                <option value="<?php echo $tags->name; ?>"><?php echo $tags->name; ?><option>
+                                            <?php } ?>
+                                </select>
                             </div>
                         </div>
                             <!-- <div class="row">                        
@@ -731,7 +756,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         <option value="Closed">Closed</option>
                                     </select>
                                 </div>
-                                <div class="form-group col-md-4">
+                                <!-- <div class="form-group col-md-4">
                                     <label for="workorder_priority">Priority</label>
                                     <select name="priority" id="workorder_priority" class="form-control custom-select">
                                         <option value="Emergency">Emergency</option>
@@ -739,7 +764,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         <option value="Standard">Standard</option>
                                         <option value="Urgent">Urgent</option>                
                                     </select>
-                                </div>                                           
+                                </div>                                            -->
                             </div>
                             
 
@@ -1053,6 +1078,30 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 </div>
             </div>
 
+            <!-- Modal update custom -->
+            <div class="modal fade" id="modalupdateCustom" tabindex="-1" role="dialog"
+                 aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <!-- <h5 class="modal-title" id="exampleModalLabel">New Customer</h5> -->
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <input type="hidden" class="form-control" name="update_custom_id" id="update_custom_id">
+                            <input type="text" class="form-control" name="update_custom_name" id="update_custom_name"><br>
+                        </div>
+                        <div class="modal-body pt-0 pl-3 pb-3"></div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary saveUpdateCustomField">Save changes</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <!-- Modal New Customer -->
             <div class="modal fade" id="modalNewCustomer" tabindex="-1" role="dialog"
                  aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -1128,6 +1177,106 @@ defined('BASEPATH') or exit('No direct script access allowed');
             return false;
         }
     }
+    
+</script>
+
+<script>
+// var value = $("#headerContent").text();
+// if(value.indexOf("agreement") != -1)
+// //   alert("true");
+// return $(this).text().replace("agreement", "yeahhhhh"); 
+// else
+//   alert("false");
+// $(".headerContent").text(function () {
+//     return $(this).text().replace("agreement", "yeahhhhh"); 
+// });​​​​​
+
+jQuery(function($){
+
+// Replace 'td' with your html tag
+$("#headerContent").html(function() { 
+
+// Replace 'ok' with string you want to change, you can delete 'hello everyone' to remove the text
+ var currentDate = $('#current_date').val();
+      return $(this).html().replace("today", currentDate);  
+
+});
+});
+
+jQuery(function($){
+
+// Replace 'td' with your html tag
+$("#headerContent").html(function() { 
+
+    var companyName = $('#company_name').val();
+// Replace 'ok' with string you want to change, you can delete 'hello everyone' to remove the text
+      return $(this).html().replace("NSMARTRAC", companyName);  
+
+});
+});
+</script>
+
+<script>
+// var value = $("#headerContent").text();
+// if(value.indexOf("agreement") != -1)
+// //   alert("true");
+// return $(this).text().replace("agreement", "yeahhhhh"); 
+// else
+//   alert("false");
+// $(".headerContent").text(function () {
+//     return $(this).text().replace("agreement", "yeahhhhh"); 
+// });​​​​​
+
+jQuery(function($){
+
+// Replace 'td' with your html tag
+$("#content_input").val(function() { 
+
+// Replace 'ok' with string you want to change, you can delete 'hello everyone' to remove the text
+ var currentDate = $('#current_date').val();
+      return $(this).val().replace("day", currentDate);  
+
+});
+});
+
+jQuery(function($){
+
+// Replace 'td' with your html tag
+$("#content_input").val(function() { 
+
+    var companyName = $('#company_name').val();
+// Replace 'ok' with string you want to change, you can delete 'hello everyone' to remove the text
+      return $(this).val().replace("ADI", companyName);  
+
+});
+});
+</script>
+
+<script>
+    function validatecard() {
+        var inputtxt = $('.card-number').val();
+
+        if (inputtxt == 4242424242424242) {
+            $('.require-validation').submit();
+        } else {
+            alert("Not a valid card number!");
+            return false;
+        }
+    }
+
+
+    $(document).ready(function () {
+        $('#sel-customer').select2();
+        var customer_id = "<?php echo isset($_GET['customer_id']) ? $_GET['customer_id'] : '' ?>";
+
+        /*$('#customers')
+            .empty() //empty select
+            .append($("<option/>") //add option tag in select
+                .val(customer_id) //set value for option to post it
+                .text("<?php echo get_customer_by_id($_GET['customer_id'])->contact_name ?>")) //set a text for show in select
+            .val(customer_id) //select option of select2
+            .trigger("change"); //apply to select2*/
+    });
 </script>
 
 <script>
@@ -1146,7 +1295,8 @@ $(document).ready(function(){
             success: function(response){
                 // alert('success');
                 // console.log(response['customer']);
-            $("#job_location").val(response['customer'].mail_add + ' ' + response['customer'].cross_street + ' ' + response['customer'].city + ' ' + response['customer'].state + ' ' + response['customer'].country);
+            // $("#job_location").val(response['customer'].mail_add + ' ' + response['customer'].cross_street + ' ' + response['customer'].city + ' ' + response['customer'].state + ' ' + response['customer'].country);
+            $("#job_location").val(response['customer'].mail_add);
             $("#email").val(response['customer'].email);
             $("#date_of_birth").val(response['customer'].date_of_birth);
             $("#phone_no").val(response['customer'].phone_h);
@@ -1185,7 +1335,7 @@ $(document).ready(function(){
         $('.add_checklist_items').click(function(){
             // alert('test');
             $('input[id="checkist_checkbox"]:checked').each(function() {
-            //alert(this.value);
+            // alert(this.value);
             var id = this.value;
             // $("#checklist_added").html(this.value);
             // $("#checklist_modal").modal('hide')
@@ -1197,11 +1347,73 @@ $(document).ready(function(){
                 data : { id : id },
                 success: function(response){
 
-                  console.log('yeahhhhhhhhhhhhhhh'+response['checklists']); 
+                  console.log('yeahhhhhhhhhhhhhhh'+response['checklists'][0].checklist_name); 
+                  console.log(response); 
 
                   $("#checklist_modal").modal('hide')
-                  $("#checklist_added").html(response['checklists'].checklist_name);
+                //   $("#checklist_added").html(response['checklists'].checklist_name);
                 //   $(".business_name").html(response['client'].business_name);
+                // var objJSON = JSON.parse(response['checklists'].checklist_name);
+                // var inputs = "";
+                // $.each(objJSON, function (i, v) {
+                //     inputs += response['checklists'].checklist_name;
+                // });
+
+                
+                var check = '<ul> <li id="view_details" c_id="'+ response['checklists'][0].id +'"><h6>'+ response['checklists'][0].checklist_name +'</h6> </li> </ul>';
+
+                $("#checklist_added").append(check);
+                
+                var cID = response['checklists'][0].id;
+                // alert(cID);
+
+                
+                // initialize tooltip
+                $('#view_details').each(function(e){
+                // $("#view_details").mouseover(function(){
+                // track:true,
+                // open: function( event, ui ) {
+                    $(this).on('mouseover', function(){
+                    var id = this.id;
+                    var userid = $(this).attr('c_id');
+                    // alert(userid);
+                    
+                        // $.ajax({
+                        //     url:'fetch_details.php',
+                        //     type:'post',
+                        //     data:{userid:userid},
+                        //     success: function(response){
+                        //         alert(userid);
+                        
+                        //     // Setting content option
+                        //     //$("#"+id).tooltip('option','content',response);
+                        
+                        //     }
+                        });
+
+                });
+
+                $.ajax({
+                    type: "POST",
+                    url: "<?php echo base_url(); ?>workorder/getchecklistitemsajax",
+                    dataType:"json",
+                    data : { cID : cID },
+                    success: function(result){
+                        // console.log('aaaaa'+result['citems'][0].item_name); 
+                        // $("#citems").append(result['citems'][0].item_name);
+                    },
+                        error: function(result){
+                        alert('Error'+result);
+        
+                    }
+
+                });
+
+                // $.each(response, function () {
+                //     $("#checklist_added").html( this.checklist_name);
+                //     // $("#pics_Id").append("<div>" + this.id + "</div>");
+                // });
+
 
                 },
                     error: function(response){
@@ -1212,6 +1424,7 @@ $(document).ready(function(){
               });
             });
         });
+
 
     });
 </script>
@@ -1241,24 +1454,45 @@ $('.mytxtc').each(function(e){
         // e.preventDefault();
         $(this).on('click', function(){
             var id = $(this).attr('label-id');
+            var name = $(this).attr('label-name');
+            $('#update_custom_id').val(id);
+            $('#update_custom_name').val(name);
             // alert(id);
             // $(document).on("click", "label.mytxt", function () {
-                var txt = $(this).text();
-                $(this).replaceWith("<input class='mytxt'/>");
-                $(this).val(txt);
-                $('.custom_'+id).val(txt);
+                // var txt = $(this).text();
+                // $(this).replaceWith("<input class='mytxt'/>");
+                // $(this).val(txt);
+                // $('.custom_'+id).val(id);
             // });
 
             
         });
 
-        $(this).on("click", function () {
-                var txt = $(this).val();
-                $(this).replaceWith("<label class='mytxt'></label>");
-                $(this).text(txt);
-                $('.custom_'+id).val(txt);
-            });
+        // $(this).on("click", function () {
+        //         var txt = $(this).val();
+        //         $(this).replaceWith("<label class='mytxt'></label>");
+        //         $(this).text(txt);
+        //         $('.custom_'+id).val(txt);
+        //     });
     });
+
+$('.saveUpdateCustomField').on('click', function(){
+    //   alert('yeah');
+      var id = $('#update_custom_id').val();
+      var name = $('#update_custom_name').val();
+
+      $.ajax({
+            url:"<?php echo base_url(); ?>workorder/save_update_custom_name",
+            type: "POST",
+            data: {id : id, name : name },
+            success: function(dataResult){
+                // $('#table').html(dataResult); 
+                // alert('success')
+                $("#modalupdateCustom").modal('hide')
+                $('#thisdiv').load(window.location.href +  ' #thisdiv');
+            }
+	    });
+  });
 
 
 });
