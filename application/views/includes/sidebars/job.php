@@ -68,7 +68,7 @@
         <li class="submenus <?= ($this->uri->uri_string() == 'job/bird_eye_view') ? "active" : "";  ?>">
             <a href="<?= base_url('job/bird_eye_view') ?>" title="Bird Eye View"><span class="fa fa-users"></span>Bird Eye View</a>
         </li>
-        <!-- <li class="submenus <?php echo (!empty($page->menu) && ($page->menu === 'job_checklists' ))  ? "active" : ""; ?>"><a href="<?php echo base_url('job_checklists/list') ?>" title="Checklists"><span class="fa fa-list"></span>Checklist</a></li> -->
+        <li class="submenus <?php echo (!empty($page->menu) && ($page->menu === 'job_checklists' ))  ? "active" : ""; ?>"><a href="<?php echo base_url('job_checklists/list') ?>" title="Checklists"><span class="fa fa-list"></span>Checklist</a></li>
         <li class="submenus <?php if($this->uri->uri_string() == 'job/settings') { echo 'active'; }?>">
             <a href="<?php echo base_url('job/settings') ?>" title="Settings"><span class="fa fa-gear"></span>Settings</a>
         </li>

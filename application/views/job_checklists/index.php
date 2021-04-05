@@ -95,7 +95,30 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <th style="width: 10%;"></th>
                                 </tr>
                             </thead>
-                            <tbody></tbody>
+                            <tbody>
+                              <?php foreach($jobChecklists as $j){ ?>
+                                <tr>
+                                    <td><?= $j->checklist_name; ?></td>
+                                    <td class="text-right">
+                                      <div class="dropdown dropdown-btn">
+                                          <button class="btn btn-default dropdown-toggle" type="button" id="dropdown-edit" data-toggle="dropdown" aria-expanded="true">
+                                              <span class="btn-label">Manage</span><span class="caret-holder"><span class="caret"></span></span>
+                                          </button>
+                                          <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="dropdown-edit">
+                                              <li role="presentation">
+                                                <a role="menuitem" tabindex="-1" href="<?php echo base_url('job_checklists/edit_checklist/' . $j->id) ?>">
+                                                  <span class="fa fa-pencil-square-o icon"></span> Edit
+                                                </a>
+                                              </li>
+                                              <li role="presentation">
+                                                  <a role="menuitem" class="delete-job-checklist" href="javascript:void(0);" data-id="<?= $j->id; ?>"><span class="fa fa-trash-o icon"></span> Delete</a>
+                                              </li>
+                                          </ul>
+                                      </div>
+                                  </td>
+                                </tr>
+                              <?php } ?>
+                            </tbody>
                         </table>
                     </div>
                     <!-- end card -->
@@ -106,7 +129,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         <!-- end container-fluid -->
 
         <!-- Modal Delete Addon  -->
-        <div class="modal fade bd-example-modal-sm" id="modalDeleteCard" tabindex="-1" role="dialog" aria-labelledby="modalDeleteCardTitle" aria-hidden="true">
+        <div class="modal fade bd-example-modal-sm" id="modalDeleteChecklist" tabindex="-1" role="dialog" aria-labelledby="modalDeleteChecklistTitle" aria-hidden="true">
           <div class="modal-dialog modal-sm" role="document">
             <div class="modal-content">
               <div class="modal-header">
@@ -115,10 +138,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                   <span aria-hidden="true">&times;</span>
                 </button>
               </div>
-              <?php echo form_open_multipart('cards_file/delete_card', ['id' => 'delete-card', 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
+              <?php echo form_open_multipart('job_checklists/delete_checklist', ['id' => 'delete-card', 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
               <?php echo form_input(array('name' => 'cid', 'type' => 'hidden', 'value' => '', 'id' => 'cid'));?>
               <div class="modal-body">
-                  <p>Delete selected card?</p>
+                  <p>Delete selected item?</p>
               </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
@@ -136,7 +159,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
 <script type="text/javascript">
 $(function(){
-    
+    $(".delete-job-checklist").click(function(){
+      var cid = $(this).attr('data-id');
+      $("#cid").val(cid);
+      $("#modalDeleteChecklist").modal('show');
+    });
 });
 </script>
 <?php include viewPath('includes/footer'); ?>

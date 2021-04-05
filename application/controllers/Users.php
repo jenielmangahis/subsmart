@@ -780,6 +780,7 @@ class Users extends MY_Controller {
         $profile_img = $this->input->post('values[profile_photo]');
         $payscale_id = $this->input->post('values[empPayscale]');
         $emp_number  = $this->input->post('values[emp_number]');
+        $user_type   = $this->input->post('values[user_type]');
         $cid=logged('company_id');
         $add = array(
             'FName' => $fname,
@@ -798,6 +799,7 @@ class Users extends MY_Controller {
             'city' => $city,
             'postal_code' => $postal_code,
             'payscale_id' => $payscale_id,
+            'user_type' => $user_type,
             'employee_number' => $emp_number
         );
         $last_id = $this->users_model->addNewEmployee($add);
@@ -1403,7 +1405,6 @@ class Users extends MY_Controller {
     }
 
 	public function ajaxUpdateEmployee(){
-
     	$user_id = $this->input->post('values[user_id]');
         $fname = $this->input->post('values[firstname]');
         $lname = $this->input->post('values[lastname]');
@@ -1423,6 +1424,7 @@ class Users extends MY_Controller {
         $profile_img = $this->input->post('values[profile_photo]');
         $payscale_id = $this->input->post('values[empPayscale]');
         $emp_number  = $this->input->post('values[emp_number]');
+        $user_type   = $this->input->post('values[user_type]');
         $user = $this->Users_model->getUser($user_id);
 
         if( $profile_img == '' ){
@@ -1442,6 +1444,7 @@ class Users extends MY_Controller {
             'city' => $city,
             'postal_code' => $postal_code,
             'payscale_id' => $payscale_id,
+            'user_type' => $user_type,
             'employee_number' => $emp_number
         );
 

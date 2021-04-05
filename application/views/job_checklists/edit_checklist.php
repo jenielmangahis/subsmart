@@ -28,7 +28,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 <div class="col-xl-12">
                     <div class="card" style="min-height: 400px !important;">
                         <?php include viewPath('flash'); ?>
-                        <?php echo form_open_multipart('workorder/update_checklist', [ 'class' => 'form-validate checklist-form', 'autocomplete' => 'off' ]); ?>
+                        <?php echo form_open_multipart('job_checklists/update_checklist', [ 'class' => 'form-validate checklist-form', 'autocomplete' => 'off' ]); ?>
                             <input type="hidden" value="<?= $checklist->id; ?>" name="cid" id="checklist-cid" />
                             <div class="form-group">
                                 <label>Checklist Name</label> <span class="form-required">*</span>
@@ -38,9 +38,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <div class="form-group">
                                 <label>Attach this checklist to all Work Orders for</label> <span class="form-required">*</span><br />
                                 <small>Optional, select from the options below if this checklist will be automatically attached when you create a new Work Order.</small><br /><br />
-                                <select class="form-control" id="attach-to-work-order" name="attach_to_work_order" required="">
+                                <select class="form-control" id="attach-to-work-order" name="attach_to_job_id" required="">
                                   <?php foreach($checklistAttachType as $key => $value){ ?>
-                                      <option <?= $checklist->attach_to_work_order == $key ? 'selected="selected"' : ''; ?> value="<?= $key; ?>"><?= $value; ?></option>
+                                      <option <?= $checklist->attach_to_job_id == $key ? 'selected="selected"' : ''; ?> value="<?= $key; ?>"><?= $value; ?></option>
                                   <?php } ?>
                                 </select>
                             </div>

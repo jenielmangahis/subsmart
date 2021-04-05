@@ -337,10 +337,14 @@ div[wrapper__section] [role="white__holder"] .profile-subtitle {
 										<span>Time Off</span>
 										<?php 
 											$start_date = str_replace("-", "/", $profiledata->start_time_of_day);
-											$end_date   = str_replace("-", "/", $profiledata->end_time_of_day);
-											$myDateTime = DateTime::createFromFormat('Y-m-d', $profiledata->start_time_of_day);
+											$end_date   = str_replace("-", "/", $profiledata->end_time_of_day);											
 										?>
-										<div class="text-ter"><?= date("F j, Y", strtotime($start_date)) . ' to ' . date("F j, Y", strtotime($end_date)); ?></div>
+										<?php if( strtotime($start_date) > 0 && strtotime($end_date) > 0 ){ ?>
+											<div class="text-ter"><?= date("F j, Y", strtotime($start_date)) . ' to ' . date("F j, Y", strtotime($end_date)); ?></div>
+										<?php }else{ ?>
+											<div class="text-ter">---</div>
+										<?php } ?>
+										
 									</li>
 								</ul>
 							<?php }else{ ?>
