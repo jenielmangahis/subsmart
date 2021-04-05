@@ -87,8 +87,8 @@
     </div>
     <div class="card" style="border: 2px solid #30233d; margin-top:0; border-radius: 40px; padding:5px;">
         <div style="border: 5px solid #30233d; margin-top:0; border-radius: 40px; box-shadow: 1px 0px 15px 5px rgb(48, 35, 61);">
-            <div class="card-body mt-3" style="padding:5px 10px; height: 300px;">
-                <div class="col-lg-12" id="overdueBody" style="<?= $height; ?> overflow-y: scroll;">
+            <div class="card-body mt-3" style="padding:5px 10px;  height: <?= $rawHeight ?>px;"">
+                <div class="col-lg-12" id="overdueBody" style="height: <?= $rawHeight - 30 ?>px; overflow-y: scroll;">
                     <table class="table table-bordered table-striped tbl-employee-attendance table-responsive" style="height: 223px;overflow:scroll;">
                         <thead>
                             <tr>

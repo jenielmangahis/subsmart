@@ -1013,6 +1013,7 @@ class Workorder extends MY_Controller
         $this->page_data['order_num_next'] = $order_num_next;
         $this->page_data['capture_signature'] = $capture_signature;
         $this->page_data['page']->menu = 'settings';
+        $this->page_data['clients'] = $this->workorder_model->getclientsById();
 
         $this->page_data['fields'] = $this->workorder_model->getCustomByID();
         $this->page_data['headers'] = $this->workorder_model->getheaderByID();
@@ -1095,8 +1096,41 @@ class Workorder extends MY_Controller
             $checklist = $this->workorder_model->getchecklistdetailsajax($id);
 
             $this->page_data['checklists'] = $checklist;
+            // $this->page_data['checklists_items'] = $checklist;
 
         echo json_encode($this->page_data);
+    }
+
+    public function save_update_custom_name(){
+        $company_id  = getLoggedCompanyID();
+        $user_id  = getLoggedUserID();
+        $custom_id  =  $this->input->post('custom_id');
+
+        $header_data = array(
+            'id' => $this->input->post('id'),
+            'name' => $this->input->post('name'),
+            'date_updated' => date("Y-m-d H:i:s")
+        );
+
+        $custom_dataQuery = $this->workorder_model->update_custom_field($header_data);
+
+        echo json_encode($custom_dataQuery);
+    }
+
+    public function getchecklistitemsajax()
+    {
+        $company_id  = getLoggedCompanyID();
+        $user_id  = getLoggedUserID();
+        $id  =  $this->input->post('cID');
+
+        $checklistsItem = $this->workorder_model->checklistsitems($id);
+        $this->page_data['citems'] = $checklistsItem;
+
+        echo json_encode($this->page_data);
+    }
+
+    public function hoverDetails(){
+
     }
 
 
@@ -1338,8 +1372,10 @@ class Workorder extends MY_Controller
             'user_id' => $user_id,
             'checklist_name' => $post['checklist_name'],
             'attach_to_work_order' => $post['attach_to_work_order'],
-            'date_created' => date("Y-m-d H:i:s"),
-            'date_modified' => date("Y-m-d H:i:s")
+            // 'date_created' => date("Y-m-d H:i:s"),
+            // 'date_modified' => date("Y-m-d H:i:s")
+            'date_created' => date("m-d-Y H:i:s"),
+            'date_modified' => date("m-d-Y H:i:s")
         ];
 
         $cid = $this->Checklist_model->create($data);
@@ -1508,7 +1544,8 @@ class Workorder extends MY_Controller
         $this->page_data['type'] = $type;
         $this->page_data['items'] = $this->items_model->getItemlist();
         $this->page_data['plans'] = $this->plans_model->getByWhere(['company_id' => $company_id]);
-        $this->page_data['number'] = $this->estimate_model->getlastInsert();
+        // $this->page_data['number'] = $this->estimate_model->getlastInsert();
+        $this->page_data['number'] = $this->workorder_model->getlastInsert();
 
         $termsCondi = $this->workorder_model->getTerms($company_id);
         if($termsCondi){
@@ -1532,6 +1569,11 @@ class Workorder extends MY_Controller
         $this->page_data['fields'] = $this->workorder_model->getCustomByID();
         $this->page_data['headers'] = $this->workorder_model->getheaderByID();
         $this->page_data['checklists'] = $this->workorder_model->getchecklistByUser($user_id);
+        $this->page_data['job_types'] = $this->workorder_model->getjob_types();
+
+        $this->page_data['job_tags'] = $this->workorder_model->getjob_tagsById();
+        $this->page_data['clients'] = $this->workorder_model->getclientsById();
+        
 
 
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
@@ -1564,7 +1606,7 @@ class Workorder extends MY_Controller
         }
 
         
-    }
+    } 
 
     public function savenewWorkorder(){
         $company_id  = getLoggedCompanyID();
@@ -1641,22 +1683,36 @@ class Workorder extends MY_Controller
         $addQuery = $this->workorder_model->save_workorder($new_data);
 
         
-        $custom_data = array(
+        // $custom_data = array(
             
-            'custom1_field' => $this->input->post('custom1_field'),
-            'custom1_value' => $this->input->post('custom1_value'),
-            'custom2_field' => $this->input->post('custom2_field'),
-            'custom2_value' => $this->input->post('custom2_value'),
-            'custom3_field' => $this->input->post('custom3_field'),
-            'custom3_value' => $this->input->post('custom3_value'),
-            'custom4_field' => $this->input->post('custom4_field'),
-            'custom4_value' => $this->input->post('custom4_value'),
-            'custom5_field' => $this->input->post('custom5_field'),
-            'custom5_value' => $this->input->post('custom5_value'),
-            'workorder_id' => $addQuery,
-        );
+        //     'custom1_field' => $this->input->post('custom1_field'),
+        //     'custom1_value' => $this->input->post('custom1_value'),
+        //     'custom2_field' => $this->input->post('custom2_field'),
+        //     'custom2_value' => $this->input->post('custom2_value'),
+        //     'custom3_field' => $this->input->post('custom3_field'),
+        //     'custom3_value' => $this->input->post('custom3_value'),
+        //     'custom4_field' => $this->input->post('custom4_field'),
+        //     'custom4_value' => $this->input->post('custom4_value'),
+        //     'custom5_field' => $this->input->post('custom5_field'),
+        //     'custom5_value' => $this->input->post('custom5_value'),
+        //     'workorder_id' => $addQuery,
+        // );
 
-        $custom_dataQuery = $this->workorder_model->save_custom_fields($custom_data);
+        // $custom_dataQuery = $this->workorder_model->save_custom_fields($custom_data);
+
+        $name = $this->input->post('custom_field');
+        $value = $this->input->post('custom_value');
+
+        $c = 0;
+            foreach($name as $row2){
+                $dataa['name'] = $name[$c];
+                $dataa['value'] = $value[$c];
+                $dataa['form_id'] = $addQuery;
+                $dataa['company_id'] = $company_id;
+                $dataa['date_added'] = date("Y-m-d H:i:s");
+                $addQuery2a = $this->workorder_model->additem_details($dataa);
+                $c++;
+            }
 
 
         if($addQuery > 0){

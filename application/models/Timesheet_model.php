@@ -1281,9 +1281,9 @@ class Timesheet_model extends MY_Model
         );
         $this->db->insert('timesheet_logs_editor', $insert);
     }
-    public function get_attendance_logs_editor_footprint($att_id)
+    public function get_attendance_logs_editor_footprint($att_id, $action)
     {
-        $qry = $this->db->query("SELECT timesheet_logs_editor.date_created, users.FName, users.LName from timesheet_logs_editor JOIN users ON timesheet_logs_editor.user_id = users.id where timesheet_logs_editor.attendance_id = " . $att_id . " AND timesheet_logs_editor.action = 'attendance_log_update' order by timesheet_logs_editor.date_created DESC limit 1");
+        $qry = $this->db->query("SELECT timesheet_logs_editor.date_created, users.FName, users.LName from timesheet_logs_editor JOIN users ON timesheet_logs_editor.user_id = users.id where timesheet_logs_editor.attendance_id = " . $att_id . " AND timesheet_logs_editor.action = '$action' order by timesheet_logs_editor.date_created DESC limit 1");
         return $qry->result();
     }
     public function getPendingOTs($company_id)
@@ -1429,8 +1429,6 @@ class Timesheet_model extends MY_Model
         $this->db->where('action', "Break out");
         $this->db->update("timesheet_logs", array("date_created" => $break_out));
 
-
-
         $this->db->reset_query();
         $this->db->where('id', $att_id);
         $this->db->update(
@@ -1449,10 +1447,17 @@ class Timesheet_model extends MY_Model
         $qry = $this->db->query("SELECT timesheet_leave.*,timesheet_pto.name, users.FName, users.LName FROM timesheet_leave  JOIN timesheet_pto ON timesheet_pto.id=timesheet_leave.pto_id JOIN users ON users.id=timesheet_leave.user_id WHERE users.company_id = " . $company_id . " AND timesheet_leave.date_created >= '" . $from_date . "' AND timesheet_leave.date_created <= '" . $to_date . "' ORDER BY timesheet_leave.date_created DESC");
         return $qry->result();
     }
-    public function get_leave_approver($leave_id,$action){
+    public function get_leave_approver($leave_id, $action)
+    {
         $this->db->reset_query();
-        $qry = $this->db->query("SELECT timesheet_leave_approver.*, users.FName, users.LName FROM timesheet_leave_approver  JOIN users ON timesheet_leave_approver.approver_user_id= users.id WHERE timesheet_leave_approver.leave_id = " . $leave_id . " AND timesheet_leave_approver.action = '".$action."' order by timesheet_leave_approver.date_created DESC limit 1");
+        $qry = $this->db->query("SELECT timesheet_leave_approver.*, users.FName, users.LName FROM timesheet_leave_approver  JOIN users ON timesheet_leave_approver.approver_user_id= users.id WHERE timesheet_leave_approver.leave_id = " . $leave_id . " AND timesheet_leave_approver.action = '" . $action . "' order by timesheet_leave_approver.date_created DESC limit 1");
         return $qry->row();
+    }
+    public function get_lunch_auxes($att_id)
+    {
+        $this->db->reset_query();
+        $qry = $this->db->query("SELECT * FROM timesheet_logs WHERE attendance_id=" . $att_id);
+        return $qry->result();
     }
 }
 

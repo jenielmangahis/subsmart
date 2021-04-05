@@ -23,9 +23,148 @@
   src: url(../fill-and-sign/fonts/ShorelinesScriptBold.otf);
 }
 
+body {
+  background-color: #949494;
+}
+
+.loader {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #fff;
+  z-index: 2;
+}
+
+.form-check {
+  position: relative;
+
+  &-input {
+    position: initial;
+  }
+
+  &-label {
+    position: absolute;
+  }
+
+  &-indicator {
+    --size: 14px;
+
+    display: none;
+    width: var(--size);
+    height: var(--size);
+    justify-content: center;
+    align-items: center;
+    cursor: default;
+
+    // font should be similar to field inputs
+    font-size: 12px;
+    font-family: monospace;
+  }
+}
+
+.docusignField--focused {
+  --border-style: dotted;
+}
+
 .signing {
-  margin-top: 50px;
+  --border-style: solid;
+
+  margin-top: 80px;
   margin-bottom: 50px;
+
+  input,
+  select {
+    font-size: 12px;
+    font-family: monospace;
+    border: 2px var(--border-style) #bf1e2e;
+    outline: 0;
+  }
+
+  input[type="checkbox"],
+  input[type="radio"] {
+    outline: 2px var(--border-style) #bf1e2e;
+  }
+
+  &--finished {
+    user-select: none;
+    pointer-events: none;
+
+    input,
+    select,
+    .signing__fieldSignature,
+    .signing__fieldAttachment {
+      border: 0;
+      cursor: initial;
+    }
+
+    input[type="checkbox"],
+    input[type="radio"] {
+      outline: 0;
+
+      &:not(:checked) {
+        display: none;
+      }
+    }
+
+    select {
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+    }
+
+    .signing__fieldAttachment,
+    button[data-action="finish"] {
+      display: none !important;
+    }
+
+    .signing__readonly {
+      display: block;
+    }
+
+    .signing__header {
+      justify-content: center;
+    }
+
+    .form-check {
+      padding: 0;
+
+      &-input {
+        display: none;
+      }
+
+      &-indicator {
+        display: inline-flex;
+      }
+    }
+  }
+
+  &__readonly {
+    display: none;
+  }
+
+  &__header {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+    justify-content: flex-end;
+    border-bottom: 1px solid #d9d9d9;
+    background-color: #fff;
+    z-index: 1;
+
+    .btn {
+      margin: 0 !important;
+    }
+  }
 
   &__documentContainer {
     display: flex;
@@ -53,7 +192,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    border: 1px solid #d6d6d6;
+    border: 2px solid #bf1e2e;
     cursor: pointer;
 
     svg {

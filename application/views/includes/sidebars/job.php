@@ -59,11 +59,11 @@
         <li class="submenus <?= $this->uri->segment(2) == 'new_job1' || $this->uri->segment(2) == '' || $this->uri->segment(2) == 'job_preview' ? "active" : "";  ?>">
             <a href="<?= base_url('job') ?>" title="Jobs"><span class="fa fa-briefcase"></span>Jobs</a>
         </li>
-        <li class="submenus <?= ($this->uri->uri_string() == 'job/job_tags') ? "active" : "";  ?>">
-            <a href="<?= base_url('job/job_tags') ?>" title="Job Tags"><span class="fa fa-tags"></span>Job Tags</a>
-        </li>
         <li class="submenus <?= ($this->uri->uri_string() == 'job/job_types') ? "active" : "";  ?>">
             <a href="<?= base_url('job/job_types') ?>" title="Job Types"><span class="fa fa-book"></span>Job Types</a>
+        </li>
+        <li class="submenus <?= ($this->uri->uri_string() == 'job/job_tags') ? "active" : "";  ?>">
+            <a href="<?= base_url('job/job_tags') ?>" title="Job Tags"><span class="fa fa-tags"></span>Job Tags</a>
         </li>
         <li class="submenus <?= ($this->uri->uri_string() == 'job/bird_eye_view') ? "active" : "";  ?>">
             <a href="<?= base_url('job/bird_eye_view') ?>" title="Bird Eye View"><span class="fa fa-users"></span>Bird Eye View</a>

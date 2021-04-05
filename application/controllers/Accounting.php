@@ -44,6 +44,7 @@ class Accounting extends MY_Controller {
         $this->load->model('Invoice_settings_model', 'invoice_settings_model');
         $this->load->model('AcsProfile_model', 'AcsProfile_model');
         $this->load->model('TaxRates_model');
+        $this->load->model('Workorder_model', 'workorder_model');
         $this->load->model('General_model', 'general');
         $this->load->model('item_starting_value_adj_model', 'starting_value_model');
         $this->load->library('excel');
@@ -4096,6 +4097,79 @@ class Accounting extends MY_Controller {
     public function NewworkOrder(){
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->page_data['page_title'] = "Work Order";
+
+        $this->load->model('AcsProfile_model');
+        $query_autoincrment = $this->db->query("SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE table_name = 'customer_groups'");
+        $result_autoincrement = $query_autoincrment->result_array();
+
+        if(count( $result_autoincrement )) {
+            if($result_autoincrement[0]['AUTO_INCREMENT'])
+            {
+                $this->page_data['auto_increment_estimate_id'] = 1;
+            } else {
+
+                $this->page_data['auto_increment_estimate_id'] = $result_autoincrement[0]['AUTO_INCREMENT'];
+            }
+        } else {
+            $this->page_data['auto_increment_estimate_id'] = 0;
+        }
+
+        $user_id = logged('id');
+
+        $company_id = logged('company_id');
+        $this->load->library('session');
+
+        $users_data = $this->session->all_userdata();
+        // foreach($users_data as $usersD){
+        //     $userID = $usersD->id;
+            
+        // }
+
+        // print_r($user_id);
+        // $users = $this->users_model->getUserByID($user_id);
+        // print_r($users);
+        // echo $company_id;
+
+        $role = logged('role');
+        if( $role == 1 || $role == 2){
+            $this->page_data['customers'] = $this->AcsProfile_model->getAll();
+            // $this->page_data['customers'] = $this->AcsProfile_model->getAllByCompanyId($company_id);
+        }else{
+            // $this->page_data['customers'] = $this->AcsProfile_model->getAll();
+            $this->page_data['customers'] = $this->AcsProfile_model->getAllByCompanyId($company_id);
+        }
+
+        $type = $this->input->get('type');
+        $this->page_data['type'] = $type;
+        $this->page_data['items'] = $this->items_model->getItemlist();
+        $this->page_data['plans'] = $this->plans_model->getByWhere(['company_id' => $company_id]);
+        $this->page_data['number'] = $this->estimate_model->getlastInsert();
+
+        $this->page_data['fields'] = $this->workorder_model->getCustomByID();
+        $this->page_data['headers'] = $this->workorder_model->getheaderByID();
+        $this->page_data['checklists'] = $this->workorder_model->getchecklistByUser($user_id);
+        $this->page_data['job_types'] = $this->workorder_model->getjob_types();
+
+        $termsCondi = $this->workorder_model->getTerms($company_id);
+        if($termsCondi){
+            // $this->page_data['terms_conditions'] = $this->workorder_model->getTermsDefault();
+            $this->page_data['terms_conditions'] = $this->workorder_model->getTermsbyID();
+        }else{
+            // $this->page_data['terms_conditions'] = $this->workorder_model->getTermsbyID();
+            $this->page_data['terms_conditions'] = $this->workorder_model->getTermsDefault();
+        }
+
+        $termsUse = $this->workorder_model->getTermsUse($company_id);
+        if($termsUse){
+            // $this->page_data['terms_conditions'] = $this->workorder_model->getTermsDefault();
+            $this->page_data['terms_uses'] = $this->workorder_model->getTermsUsebyID();
+        }else{
+            // $this->page_data['terms_conditions'] = $this->workorder_model->getTermsbyID();
+            $this->page_data['terms_uses'] = $this->workorder_model->getTermsUseDefault();
+        }
+
+
+        $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         // print_r($this->page_data);
         $this->load->view('accounting/NewworkOrder', $this->page_data);
     }
@@ -4370,7 +4444,149 @@ class Accounting extends MY_Controller {
             $this->session->set_flashdata('alert-type', 'success');
             $this->session->set_flashdata('alert', 'New Workorder Created Successfully');
 
-            redirect('workorder');
+            // redirect('workorder');
+        }
+    }
+
+    public function savenewWorkordertwo(){
+        $company_id  = getLoggedCompanyID();
+        $user_id  = getLoggedUserID();
+
+        $new_data = array(
+            
+            'workorder_number' => $this->input->post('workorder_number'),
+            'customer_id' => $this->input->post('customer_id'),
+            'security_number' => $this->input->post('security_number'),
+            'birthdate' => $this->input->post('birthdate'),
+            'phone_number' => $this->input->post('phone_number'),
+            'mobile_number' => $this->input->post('mobile_number'),
+            'email' => $this->input->post('email'),
+            'job_location' => $this->input->post('job_location'),
+            'city' => $this->input->post('city'),
+            'state' => $this->input->post('state'),
+            'zip_code' => $this->input->post('zip_code'),
+            'cross_street' => $this->input->post('cross_street'),
+            'password' => $this->input->post('password'),
+            'offer_code' => $this->input->post('offer_code'),//
+            'job_tag' => $this->input->post('job_tag'),
+            'schedule_date_given' => $this->input->post('schedule_date_given'),
+            'job_type' => $this->input->post('job_type'),
+            'job_name' => $this->input->post('job_name'),
+            'job_description' => $this->input->post('job_description'),
+            'payment_method' => $this->input->post('payment_method'),
+            'payment_amount' => $this->input->post('payment_amount'),
+            'account_holder_name' => $this->input->post('account_holder_name'),
+            'account_number' => $this->input->post('account_number'),
+            'expiry' => $this->input->post('expiry'),
+            'cvc' => $this->input->post('cvc'),
+            'terms_conditions' => $this->input->post('terms_conditions'),
+            'status' => $this->input->post('status'),
+            'priority' => $this->input->post('priority'),
+            'purchase_order_number' => $this->input->post('purchase_order_number'),
+            'terms_of_use' => $this->input->post('terms_of_use'),
+            'instructions' => $this->input->post('instructions'),
+
+            //signature
+            // 'company_representative_signature' => $this->input->post('company_representative_signature'),
+            // 'company_representative_name' => $this->input->post('company_representative_name'),
+            // 'primary_account_holder_signature' => $this->input->post('primary_account_holder_signature'),
+            // 'primary_account_holder_name' => $this->input->post('primary_account_holder_name'),
+            // 'secondary_account_holder_signature' => $this->input->post('secondary_account_holder_signature'),
+            // 'secondary_account_holder_name' => $this->input->post('secondary_account_holder_name'),
+            'company_representative_signature' => 'company_representative_signature',
+            'company_representative_name' => 'company_representative_name',
+            'primary_account_holder_signature' => 'primary_account_holder_signature',
+            'primary_account_holder_name' => 'primary_account_holder_name',
+            'secondary_account_holder_signature' => 'secondary_account_holder_signature',
+            'secondary_account_holder_name' => 'secondary_account_holder_name',
+            
+
+            //attachment
+            // 'attached_photo' => $this->input->post('attached_photo'),
+            // 'document_links' => $this->input->post('document_links'),
+            'attached_photo' => 'attached_photo',
+            'document_links' => 'document_links',
+
+            'subtotal' => $this->input->post('subtotal'),
+            'taxes' => $this->input->post('taxes'), 
+            'adjustment_name' => $this->input->post('adjustment_name'),
+            'adjustment_value' => $this->input->post('adjustment_value'),
+            'voucher_value' => $this->input->post('voucher_value'),
+            'grand_total' => $this->input->post('grand_total'),
+
+            'user_id' => $user_id,
+            'company_id' => $company_id,
+            'date_created' => date("Y-m-d H:i:s"),
+            'date_updated' => date("Y-m-d H:i:s")
+        );
+
+        $addQuery = $this->workorder_model->save_workorder($new_data);
+
+        
+        // $custom_data = array(
+            
+        //     'custom1_field' => $this->input->post('custom1_field'),
+        //     'custom1_value' => $this->input->post('custom1_value'),
+        //     'custom2_field' => $this->input->post('custom2_field'),
+        //     'custom2_value' => $this->input->post('custom2_value'),
+        //     'custom3_field' => $this->input->post('custom3_field'),
+        //     'custom3_value' => $this->input->post('custom3_value'),
+        //     'custom4_field' => $this->input->post('custom4_field'),
+        //     'custom4_value' => $this->input->post('custom4_value'),
+        //     'custom5_field' => $this->input->post('custom5_field'),
+        //     'custom5_value' => $this->input->post('custom5_value'),
+        //     'workorder_id' => $addQuery,
+        // );
+
+        // $custom_dataQuery = $this->workorder_model->save_custom_fields($custom_data);
+
+        $name = $this->input->post('custom_field');
+        $value = $this->input->post('custom_value');
+
+        $c = 0;
+            foreach($name as $row2){
+                $dataa['name'] = $name[$c];
+                $dataa['value'] = $value[$c];
+                $dataa['form_id'] = $addQuery;
+                $dataa['company_id'] = $company_id;
+                $dataa['date_added'] = date("Y-m-d H:i:s");
+                $addQuery2a = $this->workorder_model->additem_details($dataa);
+                $c++;
+            }
+
+
+        if($addQuery > 0){
+            $a = $this->input->post('items');
+            $b = $this->input->post('item_type');
+            $d = $this->input->post('quantity');
+            $f = $this->input->post('price');
+            $g = $this->input->post('discount');
+            $h = $this->input->post('tax');
+            $ii = $this->input->post('total');
+
+            $i = 0;
+            foreach($a as $row){
+                $data['item'] = $a[$i];
+                $data['item_type'] = $b[$i];
+                $data['qty'] = $d[$i];
+                $data['cost'] = $f[$i];
+                $data['discount'] = $g[$i];
+                $data['tax'] = $h[$i];
+                $data['total'] = $ii[$i];
+                $data['type'] = 'Work Order';
+                $data['type_id'] = $addQuery;
+                // $data['status'] = '1';
+                $data['created_at'] = date("Y-m-d H:i:s");
+                $data['updated_at'] = date("Y-m-d H:i:s");
+                $addQuery2 = $this->accounting_invoices_model->additem_details($data);
+                $i++;
+            }
+
+           //redirect('workorder');
+           redirect('accounting/listworkOrder');
+        }
+        else{
+            echo json_encode(0);
         }
     }
 

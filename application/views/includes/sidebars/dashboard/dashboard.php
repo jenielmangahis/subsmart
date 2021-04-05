@@ -3,7 +3,7 @@
         height: 100%;
         width: 45px;
         position: fixed;
-        z-index: 100;
+        z-index: 1200;
         top: 90px;
         left: 0;
         background-color: #32243d;
@@ -110,7 +110,7 @@
                     $('.sidebar a.links').attr('style','text-align:left;');
                     sidebar.addClass('open');
                     document.getElementById("mySidebar").style.width = "200px";
-                    $('#dashOverlay').attr('style','margin-left:180px; position:fixed; z-index:1000;')
+                    $('#dashOverlay').attr('style','margin-left:180px; position:fixed; z-index:2000;')
                     $('#dashOverlay').show();
                     $('.a-title').show();
                 }

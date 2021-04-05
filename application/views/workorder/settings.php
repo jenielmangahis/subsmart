@@ -13,6 +13,9 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                     <div class="col-md-12 col-lg-12 col-xl-12">
                         <h1>Settings</h1>
 
+                        <input type="hidden" id="company_name" value="<?php echo $clients->business_name; ?>">
+                        <input type="hidden" id="current_date" value="<?php echo @date('m-d-Y'); ?>">
+
                         <?php echo form_open('workorder/settings', ['class' => 'form-validate require-validation', 'id' => 'workorder-settings', 'autocomplete' => 'off']); ?>
                         <div class="p-3">
                             <div class="err-msg hide" style="display: none;"></div>
@@ -245,5 +248,40 @@ $('.field').each(function(e){
     });
 
 
+});
+</script>
+<script>
+// var value = $("#headerContent").text();
+// if(value.indexOf("agreement") != -1)
+// //   alert("true");
+// return $(this).text().replace("agreement", "yeahhhhh"); 
+// else
+//   alert("false");
+// $(".headerContent").text(function () {
+//     return $(this).text().replace("agreement", "yeahhhhh"); 
+// });​​​​​
+
+jQuery(function($){
+
+// Replace 'td' with your html tag
+$("#updateheader").html(function() { 
+
+// Replace 'ok' with string you want to change, you can delete 'hello everyone' to remove the text
+ var currentDate = $('#current_date').val();
+      return $(this).html().replace("day", currentDate);  
+
+});
+});
+
+jQuery(function($){
+
+// Replace 'td' with your html tag
+$("#updateheader").html(function() { 
+
+    var companyName = $('#company_name').val();
+// Replace 'ok' with string you want to change, you can delete 'hello everyone' to remove the text
+      return $(this).html().replace("ADI", companyName);  
+
+});
 });
 </script>

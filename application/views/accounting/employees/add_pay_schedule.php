@@ -39,7 +39,7 @@
                                                             <div class="form-row mt-0">
                                                                 <div class="form-group col-md-6">
                                                                     <label for="next-payday">Next payday</label>
-                                                                    <input type="text" name="next_payday" id="next-payday" class="form-control datepicker" value="<?=date('m/d/Y', strtotime("friday"))?>">
+                                                                    <input type="text" name="next_payday" id="next-payday" class="form-control datepicker" value="<?=$nextPayday?>">
                                                                     <p class="m-0">Friday</p>
                                                                 </div>
                                                             </div>
@@ -48,7 +48,7 @@
                                                             <div class="form-row mt-0">
                                                                 <div class="form-group col-md-6">
                                                                     <label for="next-pay-period-end">End of next pay period</label>
-                                                                    <input type="text" name="next_pay_period_end" id="next-pay-period-end" class="form-control datepicker" value="<?=date('m/d/Y', strtotime("wednesday"))?>">
+                                                                    <input type="text" name="next_pay_period_end" id="next-pay-period-end" class="form-control datepicker" value="<?=$nextPayPeriodEnd?>">
                                                                     <p class="m-0">Wednesday</p>
                                                                 </div>
                                                             </div>

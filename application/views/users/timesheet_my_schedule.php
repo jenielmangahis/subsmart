@@ -19,7 +19,6 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                             <a href="<?php echo url('/timesheet/notification') ?>" class="banking-tab">Notification</a>
                             <a href="<?php echo url('/timesheet/employee') ?>" class="banking-tab">Employee</a>
                             <a href="<?php echo url('/timesheet/schedule') ?>" class="banking-tab">Schedule</a>
-                            <a href="<?php echo url('/timesheet/list') ?>" class="banking-tab">List</a>
                             <a href="<?php echo url('/timesheet/requests') ?>" class="banking-tab">Requests</a>
                         <?php endif; ?>
                         <a href="<?php echo url('/timesheet/my_schedule') ?>" class="banking-tab-active">My Schedule</a>

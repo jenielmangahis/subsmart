@@ -192,7 +192,7 @@
         <?php echo form_open_multipart('esign/fileSave', ['id' => 'upload_file', 'class' => 'form-validate esignBuilder', 'autocomplete' => 'off', 'data-form-step' => '1']); ?>
         <input type="hidden" value="1" name="next_step" />
         <input type="hidden" value="<?php echo isset($file_id) && $file_id > 0 ? $file_id : 0 ?>" name="file_id" />
-        <header style="margin-top: 81px;">
+        <header style="margin-top: 81px;" class="d-none">
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-md-6 col-sm-6">
@@ -273,7 +273,7 @@
             <div class="container-fluid">
                 <ul>
                     <li>
-                        <button type="submit" class="btn esignBuilder__submit" disabled>
+                        <button type="submit" class="btn esignBuilder__submit btn-success" disabled>
                             Next
                         </button>
                     </li>
@@ -302,7 +302,7 @@
         <?php echo form_open_multipart('esign/recipients', ['id' => 'upload_file', 'class' => 'form-validate esignBuilder', 'autocomplete' => 'off', 'data-form-step' => '2']); ?>
         <input type="hidden" value="3" name="next_step" />
         <input type="hidden" value="<?php echo isset($file_id) && $file_id > 0 ? $file_id : 0 ?>" name="file_id" />
-        <header style="margin-top: 81px; z-index : 1">
+        <header style="margin-top: 81px; z-index : 1" class="d-none">
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-md-6 col-sm-6">
@@ -350,7 +350,7 @@
                                 <p>As the sender, you automatically receive a copy of the completed envelope.</p>
                             </div>
                         </div>
-                        <div class="col-md-6 col-sm-6">
+                        <div class="col-md-6 col-sm-6 d-none">
                             <div class="quick-act">
                                 <ul>
                                     <li><a href="#"><i class="fa fa-address-book"></i> Add from contacts</a></li>
@@ -364,7 +364,7 @@
                         <div class="row">
                             <div class="col-md-8 col-sm-8">
                                 <div class="left-wnvofrm">
-                                    <div class="cust-check">
+                                    <div class="cust-check d-none">
                                         <input type="checkbox" id="html">
                                         <label for="html">Set signing order</label>
                                     </div>
@@ -387,8 +387,8 @@
         <footer>
             <div class="container-fluid">
                 <ul class="d-flex align-items-center justify-content-end">
-                    <li><a onClick='onbackclick("<?php echo url('esign/Files?id=' . $file_id . '&next_step=0') ?>")'>Back</a></li>
-                    <li><button class="esignBuilder__submit" type="submit">Next</button></li>
+                    <li class="d-none"><a onClick='onbackclick("<?php echo url('esign/Files?id=' . $file_id . '&next_step=0') ?>")'>Back</a></li>
+                    <li><button class="esignBuilder__submit btn-success" type="submit">Next</button></li>
                 </ul>
             </div>
         </footer>
@@ -440,7 +440,7 @@
                                 <div class="sidebar-fields">
                                     <div class="sidebar_group l-flex-between">
                                         <h5>
-                                            <span tabindex="-1" class="ng-binding">Standard Fields</span>
+                                            <span tabindex="-1" class="ng-binding">Fields</span>
                                         </h5>
                                     </div>
                                     <div class="sidebar_item">
@@ -453,7 +453,7 @@
                                                     </div>
                                                 </li>
 
-                                                <li class="menu_listItem">
+                                                <!-- <li class="menu_listItem">
                                                     <div class="fields menu_item">
                                                         <span class="swatch swatch-recipient swatch-lg swatch-ext-0"><i class="icon icon-color-tagger icon-palette-field-initial"></i></span>
                                                         <span class="u-ellipsis ng-binding">Initial</span>
@@ -465,7 +465,7 @@
                                                         <span class="swatch swatch-recipient swatch-lg swatch-ext-0"><i class="icon icon-color-tagger icon-palette-field-stamp"></i></span>
                                                         <span class="u-ellipsis ng-binding">Stamp</span>
                                                     </div>
-                                                </li>
+                                                </li> -->
 
                                                 <li class="menu_listItem">
                                                     <div class="fields menu_item">
@@ -549,12 +549,12 @@
                                     <div class="sidebar_item">
                                         <div class="menu-fields">
                                             <ul class="menu_list">
-                                                <li class="menu_listItem">
+                                                <!-- <li class="menu_listItem">
                                                     <div class="fields menu_item">
                                                         <span class="swatch swatch-recipient swatch-lg swatch-ext-0"><i class="icon icon-color-tagger icon-palette-field-formula"></i></span>
                                                         <span class="u-ellipsis ng-binding">Formula</span>
                                                     </div>
-                                                </li>
+                                                </li> -->
 
                                                 <li class="menu_listItem">
                                                     <div class="fields menu_item">
@@ -563,12 +563,12 @@
                                                     </div>
                                                 </li>
 
-                                                <li class="menu_listItem">
+                                                <!-- <li class="menu_listItem">
                                                     <div class="fields menu_item">
                                                         <span class="swatch swatch-recipient swatch-lg swatch-ext-0"><i class="icon icon-color-tagger icon-palette-field-note"></i></span>
                                                         <span class="u-ellipsis ng-binding">Note</span>
                                                     </div>
-                                                </li>
+                                                </li> -->
 
                                                 <li class="menu_listItem">
                                                     <div class="fields menu_item">
@@ -608,8 +608,8 @@
         </div>
 
         <div class="esignBuilder__footer">
-            <button type="button" class="btn btn-secondary mr-3">Back</button>
-            <button type="button" class="btn btn-success" id="submitBUtton">
+            <button type="button" class="btn btn-secondary mr-3 d-none">Back</button>
+            <button type="button" class="btn esignBuilder__submit btn-success" id="submitBUtton">
                 <div class="spinner-border spinner-border-sm mt-0 mr-1 d-none" role="status">
                     <span class="sr-only">Loading...</span>
                 </div>
@@ -650,6 +650,13 @@
                         <span class="sr-only">Loading...</span>
                     </div>
                     Save
+                </button>
+
+                <button type="button" class="btn btn-danger btn-block" id="deleteOption">
+                    <div class="spinner-border spinner-border-sm mt-0 mr-1 d-none" role="status">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                    Delete
                 </button>
 
                 <button type="button" class="btn btn-secondary btn-block" id="closeOption">

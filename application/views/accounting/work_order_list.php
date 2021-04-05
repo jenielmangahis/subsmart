@@ -24,7 +24,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     </div>
                     <div class="col-auto">
                         <div class="h1-spacer">
-                             <a class="btn btn-primary btn-md" href="<?php echo base_url('/builder?form_id=27') ?>">
+                            <a href="<?php echo base_url('workorder/settings') ?>" style="padding-right:20px;"><i class="fa fa-cog" style="font-size:24px;"></i> Settings </a>
+                             <a class=" btn-primary btn-md" href="<?php echo base_url('/builder?form_id=27') ?>">
                                 <span class="fa fa-pencil"></span> &nbsp; Customize Form
                             </a>
                             <!-- <a class="btn btn-primary btn-md" href="#" data-toggle="modal" data-target="#workordermodal">

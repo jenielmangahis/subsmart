@@ -10,7 +10,7 @@ class Employees extends MY_Controller {
         $this->load->model('PayScale_model');
 
         add_css(array(
-            "assets/css/accounting/banking.css?v='rand()'",
+            "assets/css/accounting/banking.css?v=".rand(),
             "assets/css/accounting/accounting.css",
             "assets/css/accounting/accounting.modal.css",
             "assets/css/accounting/sidebar.css",
@@ -179,7 +179,40 @@ class Employees extends MY_Controller {
 			$this->page_data['payscale'] = $this->PayScale_model->getAllByCompanyId($cid);
 		}
 
+        $usedPaySched = $this->users_model->getPayScheduleUsed();
+        $nextPayDate = $this->get_next_pay_date($usedPaySched);
+
+        $this->page_data['nextPayDate'] = $nextPayDate;
+        $this->page_data['pay_schedules'] = $this->users_model->getPaySchedules();
         $this->load->view('accounting/employees/add_employee', $this->page_data);
+    }
+
+    private function get_next_pay_date($paySched)
+    {
+        $dateCreated = date('m/d/Y', strtotime($paySched->created_at));
+
+        switch($paySched->pay_frequency) {
+            case 'every-week' :
+                $day = date('l', strtotime($paySched->next_payday));
+                $nextPayday = date('m/d/Y', strtotime(strtolower($day)));
+            break;
+            case 'every-other-week' :
+                // $date = date('m/d/Y', strtotime($paySched->next_payday));
+                // $day = date('l', strtotime($paySched->next_payday));
+
+                // do {
+                //     $payDate = strtotime($paySched->next_payday." +14 days");
+                // } while($payDate >= strotime());
+            break;
+            case 'twice-month' :
+
+            break;
+            case 'every-month' :
+
+            break;
+        }
+
+        return $nextPayday;
     }
 
     public function create()
@@ -349,50 +382,157 @@ class Employees extends MY_Controller {
 
     public function pay_schedule_form()
     {
-        $this->load->view('accounting/employees/add_pay_schedule');
+        $currentDate = intval(date('d'));
+        if($currentDate < 8) {
+            $previousMonth = intval(date('m', strtotime(date('m/d/Y').' -1 month')));
+            $previousMonthYear = intval(date('Y', strtotime(date('m/d/Y').' -1 month')));
+            $totalDays = cal_days_in_month(CAL_GREGORIAN, $previousMonth, $previousMonthYear);
+
+            $nextPayPeriodEnd = date('m/d/Y', strtotime("$previousMonth/$totalDays/$previousMonthYear"));
+        } else if($currentDate >= 8 && $currentDate <= 15) {
+            $currentMonth = date('m');
+            $currentYear = date('Y');
+            $nextPayPeriodEnd = date('m/d/Y', strtotime("$currentMonth/15/$currentYear"));
+        } else if($currentDate > 15){
+            $currentMonth = intval(date('m'));
+            $currentYear = intval(date('Y'));
+            $totalDays = cal_days_in_month(CAL_GREGORIAN, $currentMonth, $currentYear);
+
+            $nextPayPeriodEnd = date('m/d/Y', strtotime("$currentMonth/$totalDays/$currentYear"));
+        }
+
+        
+        $this->page_data['nextPayPeriodEnd'] = $nextPayPeriodEnd;
+        $this->page_data['nextPayday'] = date('m/d/Y', strtotime("friday"));
+        $this->load->view('accounting/employees/add_pay_schedule', $this->page_data);
     }
 
     public function add_pay_schedule()
     {
-        if(in_array($this->input->post('pay_frequency'), ['every-week', 'every-other-week'])) {
-            $nextPayDay = date('Y-m-d', strtotime($this->input->post('next_payday')));
-            $nextPayPeriodEnd = date('Y-m-d', strtotime($this->input->post('next_pay_period_end')));
+        $post = $this->input->post();
+
+        if(in_array($post['pay_frequency'], ['every-week', 'every-other-week'])) {
+            $nextPayDay = date('Y-m-d', strtotime($post['next_payday']));
+            $nextPayPeriodEnd = date('Y-m-d', strtotime($post['next_pay_period_end']));
         } 
         else {
-            if($this->input->post('custom_schedule') === 'on') {
+            if($post['custom_schedule'] === 'on') {
                 $nextPayDay = null;
                 $nextPayPeriodEnd = null;
             } else {
-                $nextPayDay = date('Y-m-d', strtotime($this->input->post('next_payday')));
-                $nextPayPeriodEnd = date('Y-m-d', strtotime($this->input->post('next_pay_period_end')));
+                $nextPayDay = date('Y-m-d', strtotime($post['next_payday']));
+                $nextPayPeriodEnd = date('Y-m-d', strtotime($post['next_pay_period_end']));
             }
+        }
+
+        if($post['pay_frequency'] !== 'twice-month') {
+            $post['second_payday'] = null;
+            $post['end_of_second_pay_period'] = null;
+            $post['second_pay_month'] = null;
+            $post['second_pay_day'] = null;
+            $post['second_pay_days_before'] = null;
         }
 
         $data = [
             'company_id' => logged('company_id'),
-            'pay_frequency' => $this->input->post('pay_frequency'),
+            'pay_frequency' => $post['pay_frequency'],
             'next_payday' => $nextPayDay,
             'next_pay_period_end' => $nextPayPeriodEnd,
-            'name' => $this->input->post('name'),
-            'first_payday' => $this->input->post('custom_schedule') === 'on' ? $this->input->post('first_payday') : null,
-            'end_of_first_pay_period' => $this->input->post('custom_schedule') === 'on' ? $this->input->post('end_of_first_pay_period') : null,
-            'first_pay_month' => $this->input->post('custom_schedule') === 'on' && $this->input->post('end_of_first_pay_period') === 'end-date' ? $this->input->post('end_of_first_pay_period') : null,
-            'first_pay_day' => $this->input->post('custom_schedule') === 'on' && $this->input->post('end_of_first_pay_period') === 'end-date' ? $this->input->post('first_pay_day') : null,
-            // 'first_pay_days_before' => $this->input->post('custom_schedule') === 'on' && $this->input->post('end_of_first_pay_period') !== 'end-date' ? $this->input->post('') :
-            'second_payday' => $this->input->post('custom_schedule') === 'on' && $this->input->post('pay_frequency') === 'twice-month' ? $this->input->post('second_payday') : null,
-            'end_of_second_pay_period' => $this->input->post('custom_schedule') === 'on' && $this->input->post('pay_frequency') === 'twice-month' ?$this->input->post('end_of_second_pay_period') : null,
-            'second_pay_month' => $this->input->post('custom_schedule') === 'on' && $this->input->post('pay_frequency') === 'twice-month' && $this->input->post('end_of_second_pay_period') === 'end-date' ?$this->input->post('second_pay_month') : null,
-            'second_pay_day' => $this->input->post('custom_schedule') === 'on' && $this->input->post('pay_frequency') === 'twice-month' && $this->input->post('end_of_second_pay_period') === 'end-date' ?$this->input->post('second_pay_day') : null,
-            'use_for_new_employees' => $this->input->post('use_for_new_employees'),
+            'name' => $post['name'],
+            'first_payday' => $post['custom_schedule'] === 'on' ? $post['first_payday'] : null,
+            'end_of_first_pay_period' => $post['custom_schedule'] === 'on' ? $post['end_of_first_pay_period'] : null,
+            'first_pay_month' => $post['custom_schedule'] === 'on' && $post['end_of_first_pay_period'] === 'end-date' ? $post['end_of_first_pay_period'] : null,
+            'first_pay_day' => $post['custom_schedule'] === 'on' && $post['end_of_first_pay_period'] === 'end-date' ? $post['first_pay_day'] : null,
+            'first_pay_days_before' => $post['custom_schedule'] === 'on' && $post['end_of_first_pay_period'] !== 'end-date' ? $post['first_pay_days_before'] : null,
+            'second_payday' => $post['second_payday'],
+            'end_of_second_pay_period' => $post['end_of_second_pay_period'],
+            'second_pay_month' => $post['second_pay_month'],
+            'second_pay_day' => $post['second_pay_day'],
+            'second_pay_days_before' => $post['second_pay_days_before'],
+            'use_for_new_employees' => $post['use_for_new_employees'],
             'status' => 1,
             'created_at' => date('Y-m-d H:i:s'),
             'updated_at' => date('Y-m-d H:i:s')
         ];
 
+        if($data['use_for_new_employees'] === "1") {
+            $usedPaySched = $this->users_model->getPayScheduleUsed();
+            $this->users_model->updateUsedForNewEmp($usedPaySched->id, 0);
+        }
+
         $insert = $this->users_model->addPaySchedule($data);
 
         $return = [
-            'data' => $insert,
+            'id' => $insert,
+            'name' => $data['name'],
+            'success' => $insert ? true : false,
+            'message' => $insert ? 'Success!' : 'Error!'
+        ];
+
+        echo json_encode($return);
+    }
+
+    public function edit_pay_schedule($id)
+    {
+        $this->page_data['paySchedule'] = $this->users_model->getPaySchedule($id);
+        $this->load->view('accounting/employees/edit_pay_schedule', $this->page_data);
+    }
+
+    public function update_pay_schedule($id)
+    {
+        $post = $this->input->post();
+
+        if(in_array($post['pay_frequency'], ['every-week', 'every-other-week'])) {
+            $nextPayDay = date('Y-m-d', strtotime($post['next_payday']));
+            $nextPayPeriodEnd = date('Y-m-d', strtotime($post['next_pay_period_end']));
+        } 
+        else {
+            if($post['custom_schedule'] === 'on') {
+                $nextPayDay = null;
+                $nextPayPeriodEnd = null;
+            } else {
+                $nextPayDay = date('Y-m-d', strtotime($post['next_payday']));
+                $nextPayPeriodEnd = date('Y-m-d', strtotime($post['next_pay_period_end']));
+            }
+        }
+
+        if($post['pay_frequency'] !== 'twice-month') {
+            $post['second_payday'] = null;
+            $post['end_of_second_pay_period'] = null;
+            $post['second_pay_month'] = null;
+            $post['second_pay_day'] = null;
+            $post['second_pay_days_before'] = null;
+        }
+
+        $data = [
+            'pay_frequency' => $post['pay_frequency'],
+            'next_payday' => $nextPayDay,
+            'next_pay_period_end' => $nextPayPeriodEnd,
+            'name' => $post['name'],
+            'first_payday' => $post['custom_schedule'] === 'on' ? $post['first_payday'] : null,
+            'end_of_first_pay_period' => $post['custom_schedule'] === 'on' ? $post['end_of_first_pay_period'] : null,
+            'first_pay_month' => $post['custom_schedule'] === 'on' && $post['end_of_first_pay_period'] === 'end-date' ? $post['end_of_first_pay_period'] : null,
+            'first_pay_day' => $post['custom_schedule'] === 'on' && $post['end_of_first_pay_period'] === 'end-date' ? $post['first_pay_day'] : null,
+            'first_pay_days_before' => $post['custom_schedule'] === 'on' && $post['end_of_first_pay_period'] !== 'end-date' ? $post['first_pay_days_before'] : null,
+            'second_payday' => $post['second_payday'],
+            'end_of_second_pay_period' => $post['end_of_second_pay_period'],
+            'second_pay_month' => $post['second_pay_month'],
+            'second_pay_day' => $post['second_pay_day'],
+            'second_pay_days_before' => $post['second_pay_days_before'],
+            'use_for_new_employees' => $post['use_for_new_employees'],
+            'updated_at' => date('Y-m-d H:i:s')
+        ];
+
+        if($data['use_for_new_employees'] === "1") {
+            $usedPaySched = $this->users_model->getPayScheduleUsed();
+            $this->users_model->updateUsedForNewEmp($usedPaySched->id, 0);
+        }
+
+        $insert = $this->users_model->updatePaySchedule($id, $data);
+
+        $return = [
+            'id' => $id,
+            'name' => $data['name'],
             'success' => $insert ? true : false,
             'message' => $insert ? 'Success!' : 'Error!'
         ];
