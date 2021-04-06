@@ -742,7 +742,10 @@ $route['cards_file/test_card'] = 'CardsFile/test_card';
 
 //Tools
 $route['tools/_get_converge_api_credentials'] = 'Tools/ajax_load_company_converge_form';
-$route['tools/_activate_company_converge'] = 'Tools/ajax_activate_company_converge_account';
+$route['tools/_activate_company_converge'] = 'Tools/ajax_activate_company_online_payment_account';
+$route['tools/_activate_company_stripe'] = 'Tools/ajax_activate_company_online_payment_account';
+$route['tools/_get_stripe_api_credentials'] = 'Tools/ajax_load_company_stripe_form';
+$route['tools/activate_stripe'] = 'Debug/activateStripe';
 
 //Work Pictures
 $route['users/_delete_work_picture'] = 'Users/ajax_delete_company_work_picture';

@@ -176,6 +176,57 @@
             print_r($googleColor);
             exit;
         }
+
+        public function stripeOnboarding(){
+            // Stripe SDK
+            include APPPATH . 'libraries/stripe/init.php'; 
+            \Stripe\Stripe::setApiKey("sk_test_51IcoTsKPiost1m5gz29sxuGcntYe2NsiBInRphNPMvRQiNN9FQeNmOfG72Lpky3NU5XD0gXCCNZabc2xdsjfZQcM00GzFDajwW");
+
+            $stripe = new \Stripe\StripeClient(
+              'sk_test_51IcoTsKPiost1m5gz29sxuGcntYe2NsiBInRphNPMvRQiNN9FQeNmOfG72Lpky3NU5XD0gXCCNZabc2xdsjfZQcM00GzFDajwW'
+            );
+
+            $account = \Stripe\Account::create([
+              'type' => 'standard',
+            ]);
+
+            $result = $stripe->accountLinks->create([
+              'account' => $account->id,
+              'refresh_url' => 'https://localhost/nguyen/nsmart_v2/debug/activateStripe',
+              'return_url' => 'https://localhost/nguyen/nsmart_v2/debug/activateStripe',
+              'type' => 'account_onboarding',
+            ]);
+
+            echo "<pre>";
+            print_r($account);
+            print_r($result);
+            exit;
+        }
+
+        public function activateStripe(){
+            echo "<pre>";
+            print_r($_POST);
+            print_r($_GET);
+            exit;
+        }
+
+        public function stripeRetrieveAccount(){
+            // Stripe SDK
+            include APPPATH . 'libraries/stripe/init.php'; 
+            
+            $account = 'acct_1Id8zGFoVrhiZ0yk';
+            $stripe = new \Stripe\StripeClient(
+              'sk_test_51IcoTsKPiost1m5gz29sxuGcntYe2NsiBInRphNPMvRQiNN9FQeNmOfG72Lpky3NU5XD0gXCCNZabc2xdsjfZQcM00GzFDajwW'
+            );
+            $result = $stripe->accounts->retrieve(
+              $account,
+              []
+            );
+
+            echo "<pre>";
+            print_r($result);
+            exit;
+        }
     }
 
 

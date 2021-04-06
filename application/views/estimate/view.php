@@ -387,20 +387,23 @@ span.sc-item {
                         </thead>
                         <tbody>
                         <?php $estimateItems = unserialize($estimate->estimate_items); ?>
-                        <?php $total_amount = 0; $row = 1; foreach($estimateItems as $item){ ?>
-                          <tr class="table-items__tr">
-                            <td valign="top" style="width:30px; text-align:center;"><?= $row; ?></td>
-                            <td valign="top" style="width:45%;"><?= $item['item']; ?></td>
-                            <td valign="top" style="width:20%;"><?= ucwords($item['item_type']); ?></td>
-                            <td valign="top" style="width: 50px; text-align: right;"><?= $item['quantity']; ?></td>
-                            <td valign="top" style="width: 80px; text-align: right;"><?= number_format($item['discount'],2); ?></td>
-                            <td valign="top" style="width: 80px; text-align: right;"><?= number_format($item['price'],2); ?></td>
-                          </tr>
-                        <?php 
-                          $total_amount += $item['price'];
-                          $row++;
-                        ?>
+                        <?php if( $estimateItems ){ ?>
+                          <?php $total_amount = 0; $row = 1; foreach($estimateItems as $item){ ?>
+                            <tr class="table-items__tr">
+                              <td valign="top" style="width:30px; text-align:center;"><?= $row; ?></td>
+                              <td valign="top" style="width:45%;"><?= $item['item']; ?></td>
+                              <td valign="top" style="width:20%;"><?= ucwords($item['item_type']); ?></td>
+                              <td valign="top" style="width: 50px; text-align: right;"><?= $item['quantity']; ?></td>
+                              <td valign="top" style="width: 80px; text-align: right;"><?= number_format($item['discount'],2); ?></td>
+                              <td valign="top" style="width: 80px; text-align: right;"><?= number_format($item['price'],2); ?></td>
+                            </tr>
+                          <?php 
+                            $total_amount += $item['price'];
+                            $row++;
+                          ?>
+                          <?php } ?>
                         <?php } ?>
+                        
                         <tr><td colspan="6"><hr/></td></tr>
                         <tr>
                           <td colspan="5" style="text-align: right;"><b>TOTAL AMOUNT</b></td>
