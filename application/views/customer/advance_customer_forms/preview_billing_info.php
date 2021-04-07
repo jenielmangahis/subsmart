@@ -7,7 +7,7 @@
             <label for="">Card Holder First Name</label>
         </div>
         <div class="col-md-6">
-        Data
+            <?= isset($billing_info) && !empty($billing_info->card_fname) ? $billing_info->card_fname : '---' ?>
         </div>
     </div>
     <div class="row form_line">
@@ -15,7 +15,7 @@
             <label for="">Card Holder Last Name</label>
         </div>
         <div class="col-md-6">
-            Data
+            <?= isset($billing_info) && !empty($billing_info->card_lname) ? $billing_info->card_lname : '---' ?>
         </div>
     </div>
     <div class="row form_line">
@@ -23,7 +23,7 @@
             <label for="">Card Holder Address </label>
         </div>
         <div class="col-md-6">
-            Data
+            <?= isset($billing_info) && !empty($billing_info->card_address) ? $billing_info->card_address : '---' ?>
         </div>
     </div>
     <div class="row form_line">
@@ -31,15 +31,17 @@
             <label for="">City State ZIP</label>
         </div>
         <div class="col-md-6">
-            Data
+            <?= isset($billing_info) && !empty($billing_info->city) ? $billing_info->city : '---' ?>
+            <?= isset($billing_info) && !empty($billing_info->state) ? $billing_info->state : '---' ?>
+            <?= isset($billing_info) && !empty($billing_info->zip) ? $billing_info->zip : '---' ?>
         </div>
     </div>
     <div class="row form_line">
         <div class="col-md-6">
-            <label for="">Rate Plan $</label>
+            <label for="">Rate Plan </label>
         </div>
         <div class="col-md-6">
-           20.00
+            <?= isset($billing_info) && !empty($billing_info->mmr) ? '$'. $billing_info->mmr : '---' ?>
         </div>
     </div>
     <div class="row form_line">
@@ -47,7 +49,7 @@
             <label for="">Billing Frequency</label>
         </div>
         <div class="col-md-6">
-            Data
+            <?= isset($billing_info) && !empty($billing_info->bill_freq) ? $billing_info->bill_freq : '---' ?>
         </div>
     </div>
     <div class="row form_line">
@@ -55,7 +57,7 @@
             <label for="">Billing Day of Month</label>
         </div>
         <div class="col-md-6">
-            28
+            <?= isset($billing_info) && !empty($billing_info->bill_day) ? $billing_info->bill_day : '---' ?>
         </div>
     </div>
     <div class="row form_line">
@@ -63,7 +65,7 @@
             <label for="">Contract Term* (months)</label>
         </div>
         <div class="col-md-6">
-            12
+            <?= isset($billing_info) && !empty($billing_info->contract_term) ? $billing_info->contract_term : '---' ?>
         </div>
     </div>
     <div class="row form_line">
@@ -71,7 +73,7 @@
             <label for="">Billing Start Date</label>
         </div>
         <div class="col-md-6">
-            Data
+            <?= isset($billing_info) && !empty($billing_info->bill_start_date) ? $billing_info->bill_start_date : '---' ?>
         </div>
     </div>
     <div class="row form_line">
@@ -79,7 +81,7 @@
             <label for="">Billing End Date</label>
         </div>
         <div class="col-md-6">
-            Data
+            <?= isset($billing_info) && !empty($billing_info->bill_end_date) ? $billing_info->bill_end_date : '---' ?>
         </div>
     </div>
 </div>
@@ -104,7 +106,7 @@
             <label for="">Check Number</label>
         </div>
         <div class="col-md-6">
-            Data
+            ---
         </div>
     </div>
     <div class="row form_line" id="routingNumber">
@@ -112,7 +114,7 @@
             <label for="">Routing Number</label>
         </div>
         <div class="col-md-6">
-            Data
+            ---
         </div>
     </div>
     <div class="row form_line" id="accountNumber">
@@ -120,7 +122,7 @@
             <label for="">Account Number</label>
         </div>
         <div class="col-md-6">
-            Data
+            ---
         </div>
     </div>
     <div class="row form_line" id="CCN">
@@ -128,7 +130,7 @@
             <label for="">Credit Card Number</label>
         </div>
         <div class="col-md-6">
-            Data
+            ---
         </div>
     </div>
     <div class="row form_line" id="CCE">
@@ -136,7 +138,7 @@
             <label for="">Credit Card Expiration</label>
         </div>
         <div class="col-md-6">
-            Data
+            ---
         </div>
     </div>
 
@@ -145,7 +147,7 @@
             <label for="">Account Credential</label>
         </div>
         <div class="col-md-6">
-            Data
+            ---
         </div>
     </div>
     <div class="row form_line account_cred" >
@@ -153,7 +155,7 @@
             <label for="">Account Note</label>
         </div>
         <div class="col-md-6">
-            Data
+            ---
         </div>
     </div>
     <div class="row form_line account_cred" id="confirmationPD">
@@ -161,7 +163,7 @@
             <label for="">Confirmation</label>
         </div>
         <div class="col-md-6">
-            Data
+            ---
         </div>
     </div>
 

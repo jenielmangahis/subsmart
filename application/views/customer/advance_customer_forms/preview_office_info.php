@@ -9,7 +9,7 @@
                 <label for="">Entered By</label>
             </div>
             <div class="col-md-6">
-                <span>Data</span>
+                <?= $logged_in_user->FName.' '. $logged_in_user->LName; ?>
             </div>
         </div>
         <div class="row form_line">
@@ -17,7 +17,7 @@
                 <label for="">Time Entered</label>
             </div>
             <div class="col-md-6">
-                <span>Data</span>
+                <?= isset($office_info) && !empty($office_info->time_entered) ?  $office_info->time_entered : '---' ?>
             </div>
         </div>
         <div class="row form_line">
@@ -25,7 +25,7 @@
                 <label for="">Sales Date</label>
             </div>
             <div class="col-md-6">
-                <span>Data</span>
+                <?= isset($office_info) && !empty($office_info->time_entered) ?  $office_info->time_entered : '---' ?>
             </div>
         </div>
         <div class="row form_line">
@@ -33,7 +33,7 @@
                 <label for="">Credit Score </label>
             </div>
             <div class="col-md-6">
-                A
+                <?= isset($office_info) && !empty($office_info->time_entered) ?  $office_info->time_entered : '---' ?>
             </div>
         </div>
 
@@ -42,7 +42,7 @@
                 <label class="alarm_label"> <span >Pay History </span>
             </div>
             <div class="col-md-6">
-                1
+                <?= isset($office_info) && !empty($office_info->time_entered) ?  $office_info->time_entered : '---' ?>
             </div>
         </div>
 
@@ -51,7 +51,7 @@
                 <label for="">Sales Rep</label>
             </div>
             <div class="col-md-6">
-                <span>Data</span>
+                <?= isset($office_info) && !empty($office_info->time_entered) ?  $office_info->time_entered : '---' ?> <span style="position: absolute;right: 0;margin-right: 25px;font-size: 20px;padding-top:10px;" class="fa fa-envelope"></span>
             </div>
         </div>
         <div class="row form_line">
@@ -59,7 +59,7 @@
                 <label for="">Technician</label>
             </div>
             <div class="col-md-6">
-                <span>Data</span>
+                <?= isset($office_info) && !empty($office_info->time_entered) ?  $office_info->time_entered : '---' ?><span style="position: absolute;right: 0;margin-right: 25px;font-size: 20px;padding-top:10px;" class="fa fa-envelope"></span>
             </div>
         </div>
         <div class="row form_line">
@@ -67,7 +67,7 @@
                 <label for="">Install Date</label>
             </div>
             <div class="col-md-6">
-                <span>Data</span>
+                <?= isset($office_info) && !empty($office_info->time_entered) ?  $office_info->time_entered : '---' ?>
             </div>
         </div>
         <div class="row form_line">
@@ -75,7 +75,7 @@
                 <label for="">Tech Arrival Time</label>
             </div>
             <div class="col-md-6">
-               <span>Data</span>
+                <?= isset($office_info) && !empty($office_info->time_entered) ?  $office_info->time_entered : '---' ?>
             </div>
         </div>
         <div class="row form_line">
@@ -83,7 +83,7 @@
                 <label for="">Tech Departure Time</label>
             </div>
             <div class="col-md-6">
-                <span>Data</span>
+                <?= isset($office_info) && !empty($office_info->time_entered) ?  $office_info->time_entered : '---' ?>
             </div>
         </div>
         <div class="row form_line">
@@ -91,7 +91,7 @@
                 <label for="">Lead Source</label>
             </div>
             <div class="col-md-6">
-                Phone
+                <?= isset($office_info) && !empty($office_info->time_entered) ?  $office_info->time_entered : '---' ?>
             </div>
         </div>
         <div class="row form_line">
@@ -99,7 +99,7 @@
                 <label for="">Verification:</label>
             </div>
             <div class="col-md-6">
-                TransUnion
+                <?= isset($office_info) && !empty($office_info->time_entered) ?  $office_info->time_entered : '---' ?>
             </div>
         </div>
 
@@ -108,7 +108,7 @@
                 <label for="">Cancellation Date</label>
             </div>
             <div class="col-md-6">
-                <span>Data</span>
+                <?= isset($office_info) && !empty($office_info->time_entered) ?  $office_info->time_entered : '---' ?>
             </div>
         </div>
         <div class="row form_line">
@@ -116,7 +116,7 @@
                 <label for="">Cancellation Reason</label>
             </div>
             <div class="col-md-6">
-                <span>Data</span>
+                <?= isset($office_info) && !empty($office_info->time_entered) ?  $office_info->time_entered : '---' ?>
             </div>
         </div>
         <div class="row form_line">
@@ -124,7 +124,7 @@
                 <label for="">Collection Date</label>
             </div>
             <div class="col-md-6">
-                <span>Data</span>
+                <?= isset($office_info) && !empty($office_info->time_entered) ?  $office_info->time_entered : '---' ?>
             </div>
         </div>
         <div class="row form_line">
@@ -132,7 +132,7 @@
                 <label for="">Collection Amount</label>
             </div>
             <div class="col-md-6">
-                <span>Data</span>
+                <?= isset($office_info) && !empty($office_info->time_entered) ?  $office_info->time_entered : '---' ?>
             </div>
         </div>
         <div class="row form_line">
@@ -154,7 +154,7 @@
                 <label for="">Portal Status (on/off)</label>
             </div>
             <div class="col-md-6">
-                Off
+                <?= isset($office_info) && !empty($office_info->time_entered) ?  $office_info->time_entered : '---' ?>
             </div>
         </div>
 
@@ -163,7 +163,7 @@
                 <label for="">Login</label>
             </div>
             <div class="col-md-6">
-                Data
+                <?= isset($office_info) && !empty($office_info->time_entered) ?  $office_info->time_entered : '---' ?>
             </div>
         </div>
         <div class="row form_line">
@@ -171,7 +171,7 @@
                 <label for="">Password</label>
             </div>
             <div class="col-md-6">
-                Data
+                <?= isset($office_info) && !empty($office_info->time_entered) ?  $office_info->time_entered : '---' ?>
             </div>
         </div>
 
@@ -186,7 +186,7 @@
                 <label for="">Custom Field 1</label>
             </div>
             <div class="col-md-6">
-                Data
+                ---
             </div>
         </div>
         <div class="row form_line">
@@ -194,7 +194,7 @@
                 <label for="">Custom Field 2</label>
             </div>
             <div class="col-md-6">
-                Data
+                ---
             </div>
         </div>
         <div class="row form_line">
@@ -202,7 +202,7 @@
                 <label for="">Custom Field 3</label>
             </div>
             <div class="col-md-6">
-                Data
+                ---
             </div>
         </div>
         <div class="row form_line">
@@ -210,7 +210,7 @@
                 <label for="">Custom Field 4</label>
             </div>
             <div class="col-md-6">
-                Data
+                ---
             </div>
         </div>
     </div>
@@ -225,7 +225,7 @@
                 <label for="">Finance Amount</label>
             </div>
             <div class="col-md-6">
-                Data
+                <?= isset($office_info) && !empty($office_info->time_entered) ?  $office_info->time_entered : '---' ?>
             </div>
         </div>
         <div class="row form_line">
@@ -233,7 +233,7 @@
                 <label for="">Recurring Start Date</label>
             </div>
             <div class="col-md-6">
-                Data
+                <?= isset($office_info) && !empty($office_info->time_entered) ?  $office_info->time_entered : '---' ?>
             </div>
         </div>
         <div class="row form_line">
@@ -241,7 +241,7 @@
                 <label for="">Recurring End Date</label>
             </div>
             <div class="col-md-6">
-                Data
+                <?= isset($office_info) && !empty($office_info->time_entered) ?  $office_info->time_entered : '---' ?>
             </div>
         </div>
         <div class="row form_line">
@@ -249,7 +249,7 @@
                 <label for="">Transaction Amount</label>
             </div>
             <div class="col-md-6">
-                Data
+                <?= isset($office_info) && !empty($office_info->time_entered) ?  $office_info->time_entered : '---' ?>
             </div>
         </div>
         <div class="row form_line">
@@ -257,7 +257,7 @@
                 <label for="">Transaction Category</label>
             </div>
             <div class="col-md-6">
-                RMR
+                <?= isset($office_info) && !empty($office_info->time_entered) ?  $office_info->time_entered : '---' ?>
             </div>
         </div>
         <div class="row form_line">
@@ -265,7 +265,7 @@
                 <label for="">Frequency</label>
             </div>
             <div class="col-md-6">
-                1 month
+                <?= isset($office_info) && !empty($office_info->time_entered) ?  $office_info->time_entered : '---' ?>
             </div>
         </div>
 

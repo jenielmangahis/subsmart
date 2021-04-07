@@ -16,13 +16,30 @@ class Widgets extends MY_Controller {
 
     //put your code here
 
+    public function getLeadSource()
+    {
+        $this->load->model('widgets_model');
+        $comp_id = logged('company_id');
+        
+        $leadSource = $this->widgets_model->getLeadSource($comp_id);
+       
+        
+        
+        foreach($leadSource as $ld):
+            $leadNames[] = $ld->lead_name;
+            $leadSrc[] = $ld->leadSource;
+        endforeach;
+        
+        
+        echo json_encode(array('leadNames' => $leadNames,'leadSource' => $leadSrc));
+    }
+    
     public function removeWidget()
     {
         $this->load->model('widgets_model');
         $id = post('id');
         $user_id = logged('id');
         echo $this->widgets_model->removeWidget($id, $user_id);
-        
         
     }
     

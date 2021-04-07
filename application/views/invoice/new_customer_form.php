@@ -32,10 +32,19 @@
                     <div class="checkbox checkbox-sec margin-right my-0">
                         <input type="radio" name="customer_type" value="Advance" id="advance"
                                 onchange="toggle_advance_options()">
-                        <label for="advance"><span>Advance</span></label>
+                        <label for="advance"><span>Other</span></label>
                     </div>
                 </div>
+                
+            <div class="col-md-6 pr-0 form-group" style="display:none;" id="business_name_area">
+                <label for="business_name">Business Name</label>
+                <input type="text" class="form-control" name="business_name" id="business_name"
+                        required placeholder="Enter Name"
+                        onChange="jQuery('#business_name').text(jQuery(this).val());"/>
             </div>
+
+            </div>
+            
             <div class="col-md-6 pl-0 pr-0 form-group">
                 <label for="contact_name">Contact Name</label>
                 <input type="text" class="form-control" name="contact_name" id="contact_name"

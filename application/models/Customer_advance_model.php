@@ -61,7 +61,7 @@ class Customer_advance_model extends MY_Model {
         return $query->result();
     }
 
-    public function get_customer_data(){
+    public function get_customer_data($search=array()){
         $cid=logged('company_id');
         $this->db->from("acs_profile");
         //$this->db->where("fk_user_id", $user_id);
@@ -71,8 +71,68 @@ class Customer_advance_model extends MY_Model {
         $this->db->join('acs_alarm', 'acs_alarm.fk_prof_id = acs_profile.prof_id','left');
         $this->db->join('acs_office', 'acs_office.fk_prof_id = acs_profile.prof_id','left');
         $this->db->join('acs_office as ao', 'ao.fk_prof_id = users.id','left');
+
+        if(!empty($search)){
+            if($search['monitoring_id'] != ""){
+                $this->db->where('acs_alarm.monitor_id LIKE', '%' . $search['monitoring_id'] . '%');
+            }
+            if($search['firstname'] != ""){
+                $this->db->or_where('acs_profile.first_name LIKE', '%' . $search['firstname'] . '%');
+            }
+            if($search['lastname'] != ""){
+                $this->db->or_where('acs_profile.last_name LIKE', '%' . $search['lastname'] . '%');
+            }
+            if($search['email'] !=  ""){
+                $this->db->or_where('acs_profile.email LIKE', '%' . $search['email'] . '%');
+            }
+            if($search['phone'] != ""){
+                $this->db->or_where('acs_profile.phone_h LIKE', '%' . $search['phone'] . '%');
+            }
+            if($search['sales_date'] != ""){
+                $this->db->or_where('acs_office.sales_date LIKE', '%' . $search['sales_date'] . '%');
+            }
+            if($search['company_name'] != ""){
+                $this->db->or_where('acs_alarm.monitor_comp LIKE', '%' . $search['company_name'] . '%');
+            }
+            if($search['panel_type'] != ""){
+                $this->db->or_where('acs_alarm.panel_type LIKE', '%' . $search['panel_type'] . '%');
+            }
+            if($search['acct_type'] != ""){
+                $this->db->or_where('acs_alarm.acct_type LIKE', '%' . $search['acct_type'] . '%');
+            }
+            if($search['status'] != ""){
+                $this->db->or_where('acs_profile.status LIKE', '%' . $search['status'] . '%');
+            }
+            if($search['address'] != ""){
+                $this->db->or_where('acs_profile.mail_add LIKE', '%' . $search['address'] . '%');
+            }
+            if($search['city'] != ""){
+                $this->db->or_where('acs_profile.city LIKE', '%' . $search['city'] . '%');
+            }
+            if($search['state'] != ""){
+                $this->db->or_where('acs_profile.state LIKE', '%' . $search['state'] . '%');
+            }
+            if($search['zip'] != ""){
+                $this->db->or_where('acs_profile.zip_code LIKE', '%' . $search['zip'] . '%');
+            }
+            if($search['routing_number'] != ""){
+                $this->db->or_where('acs_b.routing_num LIKE', '%' . $search['routing_number'] . '%');
+            }
+            if($search['company'] != ""){
+                $this->db->or_where('acs_alarm.monitor_comp LIKE', '%' . $search['company'] . '%');
+            }
+            if($search['monitor_company'] != ""){
+                $this->db->or_where('acs_alarm.monitor_comp LIKE', '%' . $search['monitor_company'] . '%');
+            }
+            if($search['credit_score'] != ""){
+                $this->db->or_where('acs_office.credit_score LIKE', '%' . $search['credit_score'] . '%');
+            }
+            if($search['contract_term'] != ""){
+                $this->db->or_where('acs_b.contract_term LIKE', '%' . $search['contract_term'] . '%');
+            }
+        }
         $this->db->where("acs_profile.company_id", $cid);
-        $this->db->limit(20);
+        //$this->db->limit(20);
         $query = $this->db->get();
         return $query->result();
     }

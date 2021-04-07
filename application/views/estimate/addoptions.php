@@ -553,7 +553,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
             </div>
 
              <!-- Modal New Customer -->
-             <div class="modal fade" id="modalNewCustomer" tabindex="-1" role="dialog"
+            <div class="modal fade" id="modalNewCustomer" tabindex="-1" role="dialog"
                  aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-lg" role="document">
                     <div class="modal-content">
@@ -656,6 +656,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 <?php echo $file_selection; ?>
 <?php include viewPath('includes/footer'); ?>
+<script src="<?php echo $url->assets ?>js/add.js"></script>
 
 <script>
     function validatecard() {
@@ -1744,4 +1745,18 @@ $(document).on("focusout", ".tax_changeoptions2b", function () {
   cal_total_due();
 });
 
+</script>
+
+<script>
+jQuery(document).ready(function () {
+    $(document).on('click','#Commercial',function(){
+        $('#business_name_area').show();
+    });
+    $(document).on('click','#customer_type',function(){
+        $('#business_name_area').hide();
+    });
+    $(document).on('click','#advance',function(){
+        $('#business_name_area').hide();
+    });
+});
 </script>

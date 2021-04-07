@@ -3,6 +3,16 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Widgets_model extends MY_Model {
     
+    
+    function getLeadSource($comp_id)
+    {
+         $this->db->select('fk_lead_id, COUNT(fk_lead_id) as leadSource, lead_name');
+         $this->db->where('company_id', $comp_id);
+         $this->db->join('ac_leadtypes', 'ac_leads.fk_lead_id = ac_leadtypes.lead_id','right');
+         $this->db->group_by('fk_lead_id');
+         return $this->db->get('ac_leads')->result();
+    }
+    
     function changeOrder($id, $user_id, $isMain, $details)
     {
         $this->db->where('wu_user_id', $user_id);

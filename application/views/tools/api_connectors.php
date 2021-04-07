@@ -422,16 +422,13 @@ svg#svg-sprite-menu-close {
                                           <a class="a-sec" data-toggle="popover" title="Stripe" data-content="Millions of companies of all sizes—from startups to Fortune 500s—use Stripe’s software and APIs to accept payments, send payouts, and manage their businesses online.  Here you can use this connector to set up with Stripe to start processing your payments from your customers and grow your business." href="javascript:void(0)">more...</a>
                                         </div>
                                         <div class="row">
-                                            <div class="col-sm-8">
-                                                <div class="addon_price">
-                                                    Free
-                                                </div>
-                                            </div>
-                                            <div class="col-sm-4 text-right">
-                                                <a href="<?php echo base_url('tools/quickbooks'); ?>"><span class="fa fa-pencil-square-o icon"></span> Manage</a>
-                                            </div>
-                                        </div>
-                                        <div class="addon__switch">
+                                          <div class="col-sm-6">
+                                            <div class="apply-container" role="group" aria-label="...">
+                                                  <a class="btn-md btn-stripe-form" href="javascript:void(0);">
+                                                      <span class="fa fa-gear fa-margin-right"></span> Setup
+                                                  </a>
+                                              </div>
+                                          </div>
                                         </div>
                                     </div>
                                 </li>
@@ -448,26 +445,20 @@ svg#svg-sprite-menu-close {
                                             <a class="a-sec" data-toggle="popover" title="Converge" data-content="Converge is a payment platform that enables you to grow your business the way you want. Over the phone, by mail, by invoice, online, or on-the-go." href="javascript:void(0)">more...</a>
                                         </div>
                                         <div class="row">
-                                          <div class="col-sm-12">
+                                          <div class="col-sm-6">
                                             <div class="apply-container" role="group" aria-label="...">
-                                                   <a class="btn-md" data-calendar="print" href="<?php echo base_url('customer/merchant'); ?>">
+                                                   <a class="btn-md" href="<?php echo base_url('customer/merchant'); ?>">
                                                       <span class="fa fa-check fa-margin-right"></span> Apply Now
                                                   </a>
                                               </div>
                                           </div>
-                                        </div>
-                                        <hr style="margin-top: 36px;" />
-                                        <div class="row">
-                                            <div class="col-sm-8">
-                                                <div class="addon_price">
-                                                    Is Active : <?= $is_active; ?>
-                                                </div>
-                                            </div>
-                                            <div class="col-sm-4 text-right">
-                                                <a class="btn-converge-form" href="javascript:void(0);" ><span class="fa fa-pencil-square-o icon"></span> Setup</a>
-                                            </div>
-                                        </div>
-                                        <div class="addon__switch">
+                                          <div class="col-sm-6">
+                                            <div class="apply-container" role="group" aria-label="...">
+                                                  <a class="btn-md btn-converge-form" href="javascript:void(0);">
+                                                      <span class="fa fa-gear fa-margin-right"></span> Setup
+                                                  </a>
+                                              </div>
+                                          </div>
                                         </div>
                                     </div>
                                 </li>
@@ -573,7 +564,26 @@ svg#svg-sprite-menu-close {
                                       <?php echo form_open_multipart('', ['class' => 'form-validate', 'id' => 'form-converge-account', 'autocomplete' => 'off' ]); ?>
                                       <div class="modal-body converge-body"></div>
                                       <div class="modal-footer close-modal-footer">
-                                        <button type="submit" class="btn btn-primary btn-converge-activate">Activate</button>
+                                        <button type="submit" class="btn btn-primary btn-converge-activate">Save</button>
+                                      </div>
+                                      <?php echo form_close(); ?>
+                                    </div>
+                                  </div>
+                                </div>
+
+                                <div class="modal fade bd-example-modal-sm" id="modalStripeApi" tabindex="-1" role="dialog" aria-labelledby="modalStripeApiTitle" aria-hidden="true">
+                                  <div class="modal-dialog modal-md" role="document">
+                                    <div class="modal-content">
+                                      <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLongTitle"><i class="fa fa-form"></i> Setup Stripe</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                          <span aria-hidden="true">&times;</span>
+                                        </button>
+                                      </div>
+                                      <?php echo form_open_multipart('', ['class' => 'form-validate', 'id' => 'form-stripe-account', 'autocomplete' => 'off' ]); ?>
+                                      <div class="modal-body stripe-api-body"></div>
+                                      <div class="modal-footer close-modal-footer">
+                                        <button type="submit" class="btn btn-primary btn-stripe-activate">Save</button>
                                       </div>
                                       <?php echo form_close(); ?>
                                     </div>
@@ -597,6 +607,23 @@ svg#svg-sprite-menu-close {
 <?php include viewPath('tools/css/style'); ?>
 <script>
 $(function(){
+    $(".btn-stripe-form").click(function(){
+        $("#modalStripeApi").modal('show');
+
+        var url = base_url + 'tools/_get_stripe_api_credentials';
+        $(".stripe-api-body").html('<span class="spinner-border spinner-border-sm m-0"></span>');
+        setTimeout(function () {
+        $.ajax({
+           type: "POST",
+           url: url,
+           success: function(o)
+           {
+             $(".stripe-api-body").html(o);
+           }
+        });
+        }, 800);
+    });
+
     $(".btn-converge-form").click(function(){
         $("#modalConvergeApi").modal('show');
 
@@ -630,7 +657,7 @@ $(function(){
                  if( o.is_success ){
                     Swal.fire({
                       icon: 'success',
-                      title: 'Your converge account was successfully activated',
+                      title: 'Your converge account was successfully saved',
                       showConfirmButton: false,
                       timer: 1500
                     });
@@ -639,12 +666,48 @@ $(function(){
                  }else{
                     Swal.fire({
                         icon: 'error',
-                        title: 'Cannot Activate Converge',
+                        title: 'Cannot save data',
                         text: o.msg
                     });
                  }
 
-                 $(".btn-converge-activate").html('Activate');
+                 $(".btn-converge-activate").html('Save');
+               }
+            });
+        }, 800);
+    });
+
+    $("#form-stripe-account").submit(function(e){
+        e.preventDefault();
+
+        var url = base_url + 'tools/_activate_company_stripe';
+        $(".btn-stripe-activate").html('<span class="spinner-border spinner-border-sm m-0"></span>');
+        setTimeout(function () {
+        $.ajax({
+               type: "POST",
+               url: url,
+               dataType: "json",
+               data: $("#form-stripe-account").serialize(),
+               success: function(o)
+               {
+                 if( o.is_success ){
+                    Swal.fire({
+                      icon: 'success',
+                      title: 'Your stripe account was successfully saved',
+                      showConfirmButton: false,
+                      timer: 1500
+                    });
+
+                    $("#modalStripeApi").modal('hide');
+                 }else{
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Cannot save data',
+                        text: o.msg
+                    });
+                 }
+
+                 $(".btn-stripe-activate").html('Save');
                }
             });
         }, 800);

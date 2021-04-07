@@ -347,7 +347,7 @@ $(function(){
     });
 
     // Create a Stripe client.
-    var stripe = Stripe('pk_test_51Hzgs3IDqnMOqOtpSskepkfFhP2rFNJ0wTtuKB6Ye6wJA75uHL5rMOi7JwWajcag33ScyPywLTKMGNbgdsPxVJiG00kZxZnPNu');
+    var stripe = Stripe('<?= STRIPE_PUBLISH_KEY; ?>');
 
     // Create an instance of Elements.
     var elements = stripe.elements();

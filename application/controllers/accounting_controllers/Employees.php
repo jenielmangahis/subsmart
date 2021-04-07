@@ -428,28 +428,8 @@ class Employees extends MY_Controller {
     }
 
     public function pay_schedule_form()
-    {
-        $currentDate = intval(date('d'));
-        if($currentDate < 8) {
-            $previousMonth = intval(date('m', strtotime(date('m/d/Y').' -1 month')));
-            $previousMonthYear = intval(date('Y', strtotime(date('m/d/Y').' -1 month')));
-            $totalDays = cal_days_in_month(CAL_GREGORIAN, $previousMonth, $previousMonthYear);
-
-            $nextPayPeriodEnd = date('m/d/Y', strtotime("$previousMonth/$totalDays/$previousMonthYear"));
-        } else if($currentDate >= 8 && $currentDate <= 15) {
-            $currentMonth = date('m');
-            $currentYear = date('Y');
-            $nextPayPeriodEnd = date('m/d/Y', strtotime("$currentMonth/15/$currentYear"));
-        } else if($currentDate > 15){
-            $currentMonth = intval(date('m'));
-            $currentYear = intval(date('Y'));
-            $totalDays = cal_days_in_month(CAL_GREGORIAN, $currentMonth, $currentYear);
-
-            $nextPayPeriodEnd = date('m/d/Y', strtotime("$currentMonth/$totalDays/$currentYear"));
-        }
-
-        
-        $this->page_data['nextPayPeriodEnd'] = $nextPayPeriodEnd;
+    { 
+        $this->page_data['nextPayPeriodEnd'] = date('m/d/Y', strtotime("wednesday"));
         $this->page_data['nextPayday'] = date('m/d/Y', strtotime("friday"));
         $this->load->view('accounting/employees/add_pay_schedule', $this->page_data);
     }
@@ -585,5 +565,13 @@ class Employees extends MY_Controller {
         ];
 
         echo json_encode($return);
+    }
+
+    public function get_pay_date($id)
+    {
+        $paySched = $this->users_model->getPaySchedule($id);
+        $payDate = $this->get_next_pay_date($paySched);
+
+        echo json_encode(['date' => $payDate]);
     }
 }

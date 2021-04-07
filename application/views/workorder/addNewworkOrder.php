@@ -913,6 +913,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <button type="submit" class="btn btn-flat btn-success">Submit</button>
                                 <button type="submit" class="btn btn-flat btn-success">Preview</button>
                                 <button type="submit" class="btn btn-flat btn-success" style="background-color: #32243d !important"><b>Save Template</b></button>
+                                <button type="submit" class="btn btn-flat btn-success">eSign</button>
                                 <a href="<?php echo url('workorder') ?>" class="btn ">Cancel this</a>
                             </div>
                         </div>
@@ -1205,7 +1206,7 @@ $("#headerContent").html(function() {
 
 // Replace 'ok' with string you want to change, you can delete 'hello everyone' to remove the text
  var currentDate = $('#current_date').val();
-      return $(this).html().replace("today", currentDate);  
+      return $(this).html().replace("{curr_date}", currentDate);  
 
 });
 });
@@ -1217,7 +1218,7 @@ $("#headerContent").html(function() {
 
     var companyName = $('#company_name').val();
 // Replace 'ok' with string you want to change, you can delete 'hello everyone' to remove the text
-      return $(this).html().replace("NSMARTRAC", companyName);  
+      return $(this).html().replace("{comp_name}", companyName);  
 
 });
 });

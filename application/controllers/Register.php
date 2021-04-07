@@ -376,7 +376,7 @@ class Register extends MY_Controller {
             if( isset($post['stripeToken']) ){
                 //Stripe
 
-                \Stripe\Stripe::setApiKey("sk_test_51Hzgs3IDqnMOqOtppC8BX169Po3GOnczNSNqhneK3rjKzpyGbgzoeSD7ns1qEVkAoPvc3dtyBMh0MRbls0PSvBkq00Dm8c28GY");      
+                \Stripe\Stripe::setApiKey(STRIPE_SECRET_KEY);      
                 $plan      = $this->NsmartPlan_model->getById($subscription_id);
                 $plan_name = strtolower($plan->plan_name);
                 $plan_name = str_replace(" ", "_", $plan_name);
@@ -426,7 +426,7 @@ class Register extends MY_Controller {
                     ));
                 }
 
-                $stripe = new \Stripe\StripeClient('sk_test_51Hzgs3IDqnMOqOtppC8BX169Po3GOnczNSNqhneK3rjKzpyGbgzoeSD7ns1qEVkAoPvc3dtyBMh0MRbls0PSvBkq00Dm8c28GY');
+                $stripe = new \Stripe\StripeClient(STRIPE_SECRET_KEY);
                 $customer = $stripe->customers->create([
                     'description' => $post['firstname'] . " " . $post['lastname'],
                     'email' => $post['email'],

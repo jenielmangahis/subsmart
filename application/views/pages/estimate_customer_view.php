@@ -343,8 +343,11 @@ span.sc-item {
                               }elseif( $estimate->status == 'Declined By Customer' ){
                                 $status = 'DECLINED';
                                 $badge  = 'badge-danger';
-                              }else{
+                              }else{                                
                                 $status = strtoupper($estimate->status);
+                                if( $estimate->status == 'Accepted' ){
+                                  $status = 'APPROVED'; 
+                                }
                                 $badge  = 'badge-primary';
                               }
                             ?>                            

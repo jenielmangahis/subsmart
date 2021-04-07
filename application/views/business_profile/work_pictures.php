@@ -130,6 +130,7 @@ div.picture-container div.img img {
                               $images = unserialize($profiledata->work_images);
                             }
                            ?>
+                           <?php if($images){ ?>
                            <ul class="gallery ui-sortable" id="gallery">
                               <?php foreach($images as $key => $i){ ?>
                                 <li class="col-image-<?= $key ?>">
@@ -147,8 +148,8 @@ div.picture-container div.img img {
                                   </div>
                                 </li>
                               <?php } ?>
-
                             </ul>
+                          <?php } ?>
                         </section>
                         <!-- /.content -->
                     </div>

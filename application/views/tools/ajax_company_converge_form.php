@@ -4,18 +4,18 @@
 <div class="row">
   <div class="col-md-12 form-group">
       <label for=""><b>Merchant ID</b></label><br />
-      <input type="text" class="form-control" name="merchant_id" value="<?= $converge ? $converge->merchant_id : ''; ?>" id="" required placeholder="" autofocus/>
+      <input type="text" class="form-control" name="converge_merchant_id" value="<?= $converge ? $converge->converge_merchant_id : ''; ?>" id="" required placeholder="" autofocus/>
   </div>
 </div>
 <div class="row">
   <div class="col-md-12 form-group">
       <label for=""><b>Merchant User ID</b></label><br />
-      <input type="text" class="form-control" name="merchant_user_id" value="<?= $converge ? $converge->merchant_user_id : ''; ?>" id="" required placeholder="" autofocus/>
+      <input type="text" class="form-control" name="converge_merchant_user_id" value="<?= $converge ? $converge->converge_merchant_user_id : ''; ?>" id="" required placeholder="" autofocus/>
   </div>
 </div>
 <div class="row">
   <div class="col-md-12 form-group">
       <label for=""><b>Merchant PIN</b></label><br />
-      <input type="text" class="form-control" name="merchant_pin" value="<?= $converge ? $converge->merchant_pin : ''; ?>" id="" required placeholder="" autofocus/>
+      <input type="text" class="form-control" name="converge_merchant_pin" value="<?= $converge ? $converge->converge_merchant_pin : ''; ?>" id="" required placeholder="" autofocus/>
   </div>
 </div>

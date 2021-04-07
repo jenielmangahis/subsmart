@@ -288,17 +288,17 @@ class Tools extends MY_Controller {
     }
 
     public function ajax_load_company_converge_form(){
-        $this->load->model('CompanyConvergeAccount_model');
+        $this->load->model('CompanyOnlinePaymentAccount_model');
         $company_id = logged('company_id');    
 
-        $converge = $this->CompanyConvergeAccount_model->getByCompanyId($company_id);
+        $converge = $this->CompanyOnlinePaymentAccount_model->getByCompanyId($company_id);
 
         $this->page_data['converge'] = $converge;
         $this->load->view('tools/ajax_company_converge_form', $this->page_data);
     }
 
     public function ajax_activate_company_converge_account(){
-        $this->load->model('CompanyConvergeAccount_model');
+        $this->load->model('CompanyOnlinePaymentAccount_model');
 
         $is_success = false;
         $msg = 'Invalid converge credentials';
@@ -307,15 +307,15 @@ class Tools extends MY_Controller {
         $company_id = logged('company_id');  
 
         $post['company_id'] = $company_id;
-        $converge = $this->CompanyConvergeAccount_model->getByCompanyId($company_id);
+        $converge = $this->CompanyOnlinePaymentAccount_model->getByCompanyId($company_id);
 
         if( $converge ){
             $post['modified'] = date("Y-m-d H:i:s");
-            $convergeAccount  = $this->CompanyConvergeAccount_model->updateCompanyConvergeAccount($company_id,$post);
+            $convergeAccount  = $this->CompanyOnlinePaymentAccount_model->updateCompanyAccount($company_id,$post);
         }else{
             $post['created']  = date("Y-m-d H:i:s");
             $post['modified'] = date("Y-m-d H:i:s");
-            $convergeAccount = $this->CompanyConvergeAccount_model->create($post);    
+            $convergeAccount = $this->CompanyOnlinePaymentAccount_model->create($post);    
         }
 
         $is_success = true;
@@ -327,6 +327,48 @@ class Tools extends MY_Controller {
         ];
 
         echo json_encode($json_data);
+    }
+
+    public function ajax_activate_company_online_payment_account(){
+        $this->load->model('CompanyOnlinePaymentAccount_model');
+
+        $is_success = false;
+        $msg = 'Invalid credentials';
+
+        $post = $this->input->post();
+        $company_id = logged('company_id');  
+
+        $post['company_id'] = $company_id;
+        $paymentAccount = $this->CompanyOnlinePaymentAccount_model->getByCompanyId($company_id);
+
+        if( $paymentAccount ){
+            $post['modified'] = date("Y-m-d H:i:s");
+            $paymentAccount  = $this->CompanyOnlinePaymentAccount_model->updateCompanyAccount($company_id,$post);
+        }else{
+            $post['created']  = date("Y-m-d H:i:s");
+            $post['modified'] = date("Y-m-d H:i:s");
+            $paymentAccount = $this->CompanyOnlinePaymentAccount_model->create($post);    
+        }
+
+        $is_success = true;
+        $msg = '';
+
+        $json_data = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($json_data);
+    }
+
+    public function ajax_load_company_stripe_form(){
+        $this->load->model('CompanyOnlinePaymentAccount_model');
+        $company_id = logged('company_id');    
+
+        $stripe = $this->CompanyOnlinePaymentAccount_model->getByCompanyId($company_id);
+
+        $this->page_data['stripe'] = $stripe;
+        $this->load->view('tools/ajax_company_stripe_form', $this->page_data);
     }
 
 }
