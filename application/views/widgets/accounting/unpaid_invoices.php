@@ -17,7 +17,7 @@
     <div class="card" style="border: 2px solid #30233d; margin-top:0; border-radius: 40px; padding:5px;">
         <div style="border: 5px solid #30233d; margin-top:0; border-radius: 40px; box-shadow: 1px 0px 15px 5px rgb(48, 35, 61);">
             <div class="card-body mt-2" style="padding:5px 10px; height: 363px; overflow: hidden">
-                <div class="row" id="unpaidInvoicesBody" style="height:<?= $rawHeight; ?>px; overflow-y: scroll;">
+                <div class="row" id="unpaidInvoicesBody" style="height:<?= $rawHeight; ?>px; overflow-y: scroll; padding:20px;">
                     <table class="table table-bordered table-stripped">
                         <tr>
                             <th style="font-weight: bold; color:gray;" class="col-lg-6 text-left">Customer</th>
@@ -25,27 +25,27 @@
                             <th style="font-weight: bold; color:gray;">Overdue</th>
                         </tr>
                         <tr>
-                            <td>Juan Dela Cruz</td>
+                            <td><strong>INV-0001</strong><br /><small class="text-success">Juan Dela Cruz</small></td>
                             <td class="text-right">$ 400.00</td>
                             <td>2 days</td>
                         </tr>
                         <tr>
-                            <td>Maria Clara</td>
+                            <td><strong>INV-0002</strong><br /><small class="text-success">Maria Clara</small></td>
                             <td class="text-right">$ 800.00</td>
                             <td>3 days</td>
                         </tr>
                         <tr>
-                            <td>Chrisostomo Ibarra</td>
+                            <td><strong>INV-0003</strong><br /><small class="text-success">Chrisostomo Ibarra</small></td>
                             <td class="text-right">$ 1000.00</td>
                             <td>5 days</td>
                         </tr>
                         <tr>
-                            <td>Micheal Victor</td>
+                            <td><strong>INV-0004</strong><br /><small class="text-success">Micheal Victor</small></td>
                             <td class="text-right">$ 1000.00</td>
                             <td>6 days</td>
                         </tr>
                         <tr>
-                            <td>Robert Fox</td>
+                            <td><strong>INV-0005</strong><br /><small class="text-success">Robert Fox</small></td>
                             <td class="text-right">$ 1200.00</td>
                             <td>7 days</td>
                         </tr>

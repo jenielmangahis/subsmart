@@ -171,6 +171,7 @@ class Invoice extends MY_Controller {
 
         $setting = $this->invoice_settings_model->getAllByCompany(logged('company_id'));
         $terms = $this->accounting_terms_model->getCompanyTerms_a($company_id);
+        $this->page_data['number'] = $this->invoice_model->getlastInsert();
 
         if (!empty($setting)) {
             foreach ($setting as $key => $value) {

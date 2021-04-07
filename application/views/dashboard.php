@@ -384,6 +384,12 @@
     <!-- page wrapper end -->
 </div>
 
+<!-- floating action button -->
+
+<div class="col-12 d-md-none d-block p-0">
+    <?php $this->load->view('dashboard/ringCentralActionButton'); ?>
+</div>
+
 <div style="display: none;" class="floating-btn-div div9">
     <label class="label"><a href="#">Schedule</a></label>
     <a href="#" class="float9">
