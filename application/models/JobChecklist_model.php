@@ -72,6 +72,19 @@ class JobChecklist_model extends MY_Model
         return $query;
     }
 
+    public function getByIdAndCompanyId($id, $company_id)
+    {
+        $user_id = logged('id');
+
+        $this->db->select('*');
+        $this->db->from($this->table);
+        $this->db->where('id', $id);
+        $this->db->where('company_id', $company_id);
+
+        $query = $this->db->get()->row();
+        return $query;
+    }
+
     public function getAttachType()
     {
         $types = [
@@ -92,7 +105,25 @@ class JobChecklist_model extends MY_Model
     public function deleteItemById($id){
         $this->db->delete($this->items_table, array('id' => $id));
     }
+
+    public function deleteChecklist($id){
+        $this->db->delete($this->table, array('id' => $id));
+    }
+
+    public function deleteAllItemsByJobCheklistId($job_checklist_id){
+        $this->db->delete($this->items_table, array('job_checklist_id' => $job_checklist_id));
+    }
+
+    public function updateChecklistItemById($id, $data) {
+        $this->db->where('id', $id);
+        $this->db->update($this->items_table, $data);
+    }
+
+    public function updateChecklistById($id, $data) {
+        $this->db->where('id', $id);
+        $this->db->update($this->table, $data);
+    }
 }
 
-/* End of file Checklist_model.php */
-/* Location: ./application/models/Checklist_model.php */
+/* End of file JobChecklist_model.php */
+/* Location: ./application/models/JobChecklist_modelO.php */

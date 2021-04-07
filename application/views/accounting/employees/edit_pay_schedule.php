@@ -95,7 +95,7 @@
                                                         <div class="form-group col-md-12">
                                                             <label for="" class="w-100"><?=$paySchedule->pay_frequency === 'every-month' ? 'End of each pay period' : 'End of first pay period'?>End of first pay period</label>
                                                             <div class="form-check form-check-inline">
-                                                                <input type="radio" name="end_of_first_pay_period" id="end_date_first_pay" class="form-check-input" value="end-date" <?=$paySchedule->end_of_first_pay_period === 'end-date' ? 'checked' : ''?>>
+                                                                <input type="radio" name="end_of_first_pay_period" id="end_date_first_pay" class="form-check-input" value="end-date" <?=$paySchedule->end_of_first_pay_period === 'end-date' ? 'checked' : $paySchedule->end_of_first_pay_period === null ? 'checked' : ''?>>
                                                                 <label for="end_date_first_pay">End date</label>
                                                                 <input type="radio" name="end_of_first_pay_period" id="number_of_days_first_pay" class="form-check-input ml-2" value="number-of-days-before" <?=$paySchedule->end_of_first_pay_period === 'number-of-days-before' ? 'checked' : ''?>>
                                                                 <label for="number_of_days_first_pay">Number of days before payday</label>
@@ -216,7 +216,7 @@
                                                                 <option value="13" <?=$paySchedule->second_payday === '13' ? 'selected' : '' ?>>13th</option>
                                                                 <option value="14" <?=$paySchedule->second_payday === '14' ? 'selected' : '' ?>>14th</option>
                                                                 <option value="15" <?=$paySchedule->second_payday === '15' ? 'selected' : '' ?>>15th</option>
-                                                                <option value="16" <?=$paySchedule->second_payday === '16' ? 'selected' : '' ?>>16th</option>
+                                                                <option value="16" <?=$paySchedule->second_payday === '16' ? 'selected' : $paySchedule->second_payday === null ? 'selected' : '' ?>>16th</option>
                                                                 <option value="17" <?=$paySchedule->second_payday === '17' ? 'selected' : '' ?>>17th</option>
                                                                 <option value="18" <?=$paySchedule->second_payday === '18' ? 'selected' : '' ?>>18th</option>
                                                                 <option value="19" <?=$paySchedule->second_payday === '19' ? 'selected' : '' ?>>19th</option>
@@ -237,7 +237,7 @@
                                                         <div class="form-group col-md-12">
                                                             <label for="" class="w-100">End of second pay period</label>
                                                             <div class="form-check form-check-inline">
-                                                                <input type="radio" name="end_of_second_pay_period" id="end_date_second_pay" class="form-check-input" value="end-date" <?=$paySchedule->end_of_second_pay_period === 'end-date' ? 'checked' : ''?>>
+                                                                <input type="radio" name="end_of_second_pay_period" id="end_date_second_pay" class="form-check-input" value="end-date" <?=$paySchedule->end_of_second_pay_period === 'end-date' ? 'checked' : $paySchedule->end_of_second_pay_period === null ? 'checked' : ''?>>
                                                                 <label for="end_date_second_pay">End date</label>
                                                                 <input type="radio" name="end_of_second_pay_period" id="number_of_days_second_pay" class="form-check-input ml-2" value="number-of-days-before" <?=$paySchedule->end_of_second_pay_period === 'number-of-days-before' ? 'checked' : ''?>>
                                                                 <label for="number_of_days_second_pay">Number of days before payday</label>
@@ -272,7 +272,7 @@
                                                                         <option value="13" <?=$paySchedule->second_pay_day === '13' ? 'selected' : ''?>>13th</option>
                                                                         <option value="14" <?=$paySchedule->second_pay_day === '14' ? 'selected' : ''?>>14th</option>
                                                                         <option value="15" <?=$paySchedule->second_pay_day === '15' ? 'selected' : ''?>>15th</option>
-                                                                        <option value="16" <?=$paySchedule->second_pay_day === '16' ? 'selected' : ''?>>16th</option>
+                                                                        <option value="16" <?=$paySchedule->second_pay_day === '16' ? 'selected' : $paySchedule->second_pay_day === null ? 'selected' : ''?>>16th</option>
                                                                         <option value="17" <?=$paySchedule->second_pay_day === '17' ? 'selected' : ''?>>17th</option>
                                                                         <option value="18" <?=$paySchedule->second_pay_day === '18' ? 'selected' : ''?>>18th</option>
                                                                         <option value="19" <?=$paySchedule->second_pay_day === '19' ? 'selected' : ''?>>19th</option>

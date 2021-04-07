@@ -42,14 +42,15 @@
     #sidebar ul li > ul li:last-child a:hover {
         border-radius: 0 0 0 0 !important;
     }
-    svg#svg-sprite-menu-close {
+    /* svg#svg-sprite-menu-close {
       position: relative;
       bottom: 151px;
-    }
+    } */
 </style>
-<nav id="sidebar" class="navbar-side">
-    <ul class="nav sidebar-accounting">
-        <span class="nav-close" style="padding-top: 0px;margin-top: 52%;">
+<!-- <nav id="sidebar" class="navbar-side"> -->
+<nav class="navbar-side d-none d-md-block">
+    <ul class="nav">
+        <span class="nav-close" style="padding-top: 0px;">
             <svg viewBox="0 0 16 14" id="svg-sprite-menu-close" xmlns="http://www.w3.org/2000/svg" transform="scale(1, -1)" width="20px" height="100%">
                 <path d="M3.3 4H15c.6 0 1 .4 1 1s-.4 1-1 1H3.3l2.2 2.2c.4.4.4 1.1 0 1.5-.4.4-1.1.4-1.5 0L.3 6c-.2-.3-.3-.6-.3-.9V5v-.1c0-.3.1-.6.3-.9L4 .3c.4-.4 1.1-.4 1.5 0 .4.4.4 1.1 0 1.5L3.3 4zM8 8h7c.6 0 1 .4 1 1s-.4 1-1 1H8c-.6 0-1-.4-1-1s.4-1 1-1zm0 4h7c.6 0 1 .4 1 1s-.4 1-1 1H8c-.6 0-1-.4-1-1s.4-1 1-1z"></path>
             </svg>
@@ -68,7 +69,7 @@
         <li class="submenus <?= ($this->uri->uri_string() == 'job/bird_eye_view') ? "active" : "";  ?>">
             <a href="<?= base_url('job/bird_eye_view') ?>" title="Bird Eye View"><span class="fa fa-users"></span>Bird Eye View</a>
         </li>
-        <!-- <li class="submenus <?php echo (!empty($page->menu) && ($page->menu === 'job_checklists' ))  ? "active" : ""; ?>"><a href="<?php echo base_url('job_checklists/list') ?>" title="Checklists"><span class="fa fa-list"></span>Checklist</a></li> -->
+        <li class="submenus <?php echo (!empty($page->menu) && ($page->menu === 'job_checklists' ))  ? "active" : ""; ?>"><a href="<?php echo base_url('job_checklists/list') ?>" title="Checklists"><span class="fa fa-list"></span>Checklist</a></li>
         <li class="submenus <?php if($this->uri->uri_string() == 'job/settings') { echo 'active'; }?>">
             <a href="<?php echo base_url('job/settings') ?>" title="Settings"><span class="fa fa-gear"></span>Settings</a>
         </li>

@@ -182,15 +182,15 @@ $(function(){
         $("#modalDeleteEventType").modal("show");
     });*/
 
-    $(".btn-delete-event-type").on( "click", function( event ) {
-        var eid = $(this).attr("data-id");
+    $(document).on('click', '.btn-delete-event-type', function(){
+      var eid = $(this).attr("data-id");
         Swal.fire({
             title: 'Delete selected Event Type?',
             text: "",
             icon: 'warning',
             showCancelButton: true,
-            confirmButtonColor: '#32243d',
-            cancelButtonColor: '#d33',
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#32243d',
             confirmButtonText: 'Yes',
             cancelButtonText: 'No',
         }).then((result) => {

@@ -444,6 +444,19 @@ class Invoice_model extends MY_Model
         $query = $this->db->get();
         return $query->row();
     }
+
+    public function getlastInsert(){
+
+        $this->db->select('*');
+        $this->db->from('invoices');
+        // $this->db->where('company_id', $company_id);
+        $this->db->order_by('id', 'DESC');
+        $this->db->limit(1);
+
+        // $query = $this->db->query("SELECT * FROM date_data ORDER BY id DESC LIMIT 1");
+        $result = $this->db->get();
+        return $result->result();
+    }
 }
 
 /* End of file Invoice_model.php */

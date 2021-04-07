@@ -17,6 +17,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
     content:" *";
     color: red;
     }
+    .navbar-side.closed{
+        padding-top:100px !important;
+    }
     .pointer {cursor: pointer;}
    </style>
     <!-- page wrapper start -->
@@ -734,7 +737,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <div class=" col-md-12">
                                 <label style="font-weight:bold;font-size:18px;">TERMS AND CONDITIONS</label><label style="float:right;color:green;"><a href="#" style="color:green;" data-toggle="modal" data-target="#terms_conditions_modal">Update Terms and Condition</a></label>
                                     <div style="height:200px; overflow:auto; background:#FFFFFF;"
-                                         id="showuploadagreement">
+                                         id="thisdiv2">
                                             <p><?php echo $terms_conditions->content; ?></p>
                                             <input type="hidden" id="company_id" value="<?php echo getLoggedCompanyID(); ?>">
                                     </div>
@@ -780,7 +783,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <div class=" col-md-12">
                                     <label style="font-weight:bold;font-size:18px;">TERMS OF USE</label><label style="float:right;color:green;"><a href="#" style="color:green;" data-toggle="modal" data-target="#terms_use_modal">Update Terms of Use</a></label>
                                     <div style="height:100px; overflow:auto; background:#FFFFFF; padding-left:10px;"
-                                         id="showuploadagreement">
+                                         id="thisdiv3">
                                             <p><?php echo $terms_uses->content; ?></p>
                                             <input type="hidden" id="company_id" value="<?php echo getLoggedCompanyID(); ?>">
                                     </div>
@@ -964,16 +967,17 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 <div class="modal-dialog modal-lg" role="document">
                     <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLongTitle">Update Terms and Condition</h5>
+                        <h5 class="modal-title" id="exampleModalLongTitle">Update Terms and Conditions</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
                     <div class="modal-body">
-                            <textarea class="form-control ckeditor" id="editor1" cols="40" rows="40">
+                            <textarea class="form-control ckeditor editor1_tc" name="editor1" id="editor1" cols="40" rows="40">
                             <?php echo $terms_conditions->content; ?>
                             </textarea>
                             <input type="hidden" id="company_id_modal" value="<?php echo getLoggedCompanyID(); ?>">
+                            <input type="hidden" id="update_tc_id" value="<?php echo $terms_conditions->id; ?>">
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -1017,14 +1021,15 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         </button>
                     </div>
                     <div class="modal-body">
-                            <textarea class="form-control ckeditor" id="editor2" cols="40" rows="40">
+                            <textarea class="form-control ckeditor" name="update_tu" id="editor2" cols="40" rows="40">
                             <?php echo $terms_uses->content; ?>
                             </textarea>
                             <input type="hidden" id="company_id_modal" value="<?php echo getLoggedCompanyID(); ?>">
+                            <input type="hidden" id="update_tu_id" value="<?php echo $terms_uses->id; ?>">
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary save_terms_and_conditions">Save changes</button>
+                        <button type="button" class="btn btn-primary save_terms_of_use">Save changes</button>
                     </div>
                     </div>
                 </div>
@@ -1047,6 +1052,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         <thead>
                                         <tr>
                                             <td> Name</td>
+                                            <td> Rebatable</td>
                                             <td> Qty</td>
                                             <td> Price</td>
                                             <td> Action</td>
@@ -1056,6 +1062,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         <?php foreach($items as $item){ // print_r($item); ?>
                                             <tr>
                                                 <td><?php echo $item->title; ?></td>
+                                                <td><?php echo $item->rebate; ?></td>
                                                 <td></td>
                                                 <td><?php echo $item->price; ?></td>
                                                 <td><button id="<?= $item->id; ?>" data-quantity="<?= $item->units; ?>" data-itemname="<?= $item->title; ?>" data-price="<?= $item->price; ?>" type="button" data-dismiss="modal" class="btn btn-sm btn-default select_item">
@@ -1250,6 +1257,62 @@ $("#content_input").val(function() {
 
 });
 });
+</script>
+
+<script>
+$(document).on('click','.save_terms_and_conditions',function(){
+    //    alert('yeah');
+    var id = $('#update_tc_id').val();
+    // var content = $('.editor1_tc').val();
+    var content = CKEDITOR.instances['editor1'].getData();
+    // alert(content);
+      $.ajax({
+            url:"<?php echo base_url(); ?>workorder/save_update_tc",
+            type: "POST",
+            data: {id : id, content : content },
+            success: function(dataResult){
+                // $('#table').html(dataResult); 
+                // alert('success')
+                console.log(dataResult);
+                $("#terms_conditions_modal").modal('hide')
+                $('#thisdiv2').load(window.location.href +  ' #thisdiv2');
+            },
+                error: function(response){
+                alert('Error'+response);
+       
+                }
+	    });
+        
+    });
+
+</script>
+
+<script>
+$(document).on('click','.save_terms_of_use',function(){
+    //    alert('yeah');
+    var id = $('#update_tu_id').val();
+    // var content = $('.editor1_tc').val();
+    var content = CKEDITOR.instances['editor2'].getData();
+    // alert(content);
+      $.ajax({
+            url:"<?php echo base_url(); ?>workorder/save_update_tu",
+            type: "POST",
+            data: {id : id, content : content },
+            success: function(dataResult){
+                // $('#table').html(dataResult); 
+                // alert('success')
+                console.log(dataResult);
+                $("#terms_use_modal").modal('hide')
+                $('#thisdiv3').load(window.location.href +  ' #thisdiv3');
+            },
+                error: function(response){
+                alert('Error'+response);
+       
+                }
+	    });
+        
+    });
+
 </script>
 
 <script>

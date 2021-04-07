@@ -264,7 +264,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                                 <th>User</th>
                                                 <th>Email</th>
                                                 <th>Password</th>
-                                                <th>Role</th>
+                                                <th>Title</th>
                                                 <th>Rights</th>
                                                 <th>Last Login</th>
                                                 <th>Status</th>
@@ -624,8 +624,17 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                 <div class="profile-container">
                                     <img src="/uploads/users/default.png" alt="Profile photo">
                                 </div>
-                                <label>Role and Access</label>
+                                <label>Rights and Permissions</label>
                                 <div class="help help-sm help-block">Select employee role</div>
+                                <div>
+                                    <div class="checkbox checkbox-sec margin-right">
+                                        <input type="radio" name="user_type" value="7" id="role_7">
+                                        <label for="role_7"><span>Admin</span></label>
+                                    </div>
+                                    <div class="help help-sm help-block">
+                                        ALL Access<br>
+                                    </div>
+                                </div>
                                 <div>
                                     <div class="checkbox checkbox-sec margin-right">
                                         <input type="radio" name="user_type" value="1" id="role_1">

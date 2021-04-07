@@ -114,7 +114,16 @@ function upcomingPayPeriods(el)
                         setDate.setDate(setDate.getDate() + 14);
                     break;
                     case 'twice-month' :
-                        setDate.setDate(setDate.getDate() + 15);
+                        if(i === 2) {
+                            setDate = new Date(`${date.getMonth()+1}/${date.getDate()}/${date.getFullYear()}`);
+                            setDate.setMonth(date.getMonth() + 1);
+                        } else if(i === 3) {
+                            setDate = new Date(`${date.getMonth()+1}/${date.getDate()}/${date.getFullYear()}`);
+                            setDate.setDate(setDate.getDate() + 15);
+                            setDate.setMonth(setDate.getMonth() + 1);
+                        } else {
+                            setDate.setDate(setDate.getDate() + 15);
+                        }
                     break;
                     case 'every-month' :
                         var totalDays = getTotalDaysOfMonth(setDate.getMonth() + 2, setDate.getFullYear());
@@ -135,20 +144,26 @@ function upcomingPayPeriods(el)
     } else {
         var value = el.val();
         var endPeriod = new Date(value);
+        var i = 0;
 
         var date = endPeriod.getDate() - 6;
 
         if($('#pay-frequency').val() === 'every-other-week') {
             date = endPeriod.getDate() - 13;
         } else if($('#pay-frequency').val() === 'twice-month') {
-            date = endPeriod.getDate() - 15;
+            date = new Date(endPeriod.getFullYear(), endPeriod.getMonth(), endPeriod.getDate() + 16);
+            date.setMonth(date.getMonth() - 1);
+            date = date.getDate();
         } else if($('#pay-frequency').val() === 'every-month') {
             date = endPeriod.getDate();
         }
         var startPeriod = new Date(endPeriod.getFullYear(), endPeriod.getMonth(), date);
 
         if($('#pay-frequency').val() === 'every-month') {
-            startPeriod.setDate(startPeriod.getDate() - 30);
+            startPeriod.setDate(startPeriod.getDate() + 1);
+            startPeriod.setMonth(startPeriod.getMonth() - 1);
+        } else if($('#pay-frequency').val() === 'twice-month') {
+            startPeriod.setMonth(startPeriod.getMonth() - 1);
         }
 
         $('.pay-periods .card.shadow').each(function() {
@@ -167,8 +182,19 @@ function upcomingPayPeriods(el)
                 case 'twice-month' :
                     startPeriod = new Date(endPeriod.getFullYear(), endPeriod.getMonth(), endPeriod.getDate());
                     startPeriod.setDate(startPeriod.getDate() + 1);
-                    endPeriod = new Date(startPeriod.getFullYear(), startPeriod.getMonth(), startPeriod.getDate());
-                    endPeriod.setDate(endPeriod.getDate() + 14);
+                    if(i === 1) {
+                        endPeriod = new Date(value);
+                        endPeriod.setMonth(endPeriod.getMonth() + 1);
+                    } else if(i === 2) {
+                        endPeriod = new Date(value);
+                        endPeriod.setDate(endPeriod.getDate() + 15);
+                        endPeriod.setMonth(endPeriod.getMonth() + 1);
+                    } else {
+                        if(i === 0) {
+                            endPeriod.setDate(endPeriod.getDate() + 15);
+                        }
+                    }
+                    
                 break;
                 case 'every-month' :
                     startPeriod = new Date(endPeriod.getFullYear(), endPeriod.getMonth(), endPeriod.getDate());
@@ -182,6 +208,7 @@ function upcomingPayPeriods(el)
                     }
                 break;
             }
+            i++;
         });
     }
 }
@@ -323,7 +350,8 @@ function customScheduleTwiceMonth()
                 break;
             }
 
-            startPeriod = new Date(endPeriod.getFullYear(), endPeriod.getMonth() - 1, secondPeriodDay + 1);
+            startPeriod = new Date(endPeriod.getFullYear(), endPeriod.getMonth(), endPeriod.getDate());
+            startPeriod.setDate(startPeriod.getDate() - 14);
 
         } else {
             var firstDaysBefore = parseInt($('#first_pay_days_before').val());
@@ -399,13 +427,13 @@ function customScheduleTwiceMonth()
             if(endOfSecondPayPeriod === 'end-date') {
                 switch(secondPeriodMonth) {
                     case 'same' :
-                        endPeriod = new Date(payDate.getFullYear(), payDate.getMonth(), secondPeriodDay);
+                        endPeriod = new Date(payDate.getFullYear(), payDate.getMonth() + 1, secondPeriodDay);
                     break;
                     case 'previous' :
                         endPeriod = new Date(payDate.getFullYear(), payDate.getMonth() - 1, secondPeriodDay);
                     break;
                     case 'next' :
-                        endPeriod = new Date(payDate.getFullYear(), payDate.getMonth() + 1, secondPeriodDay);
+                        endPeriod = new Date(payDate.getFullYear(), payDate.getMonth() + 2, secondPeriodDay);
                     break;
                 }
             } else {

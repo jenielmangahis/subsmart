@@ -113,11 +113,20 @@
             <div class="profile-container">
                 <img src="/uploads/users/default.png" alt="Profile photo">
             </div>
-            <label>Role and Access</label>
+            <label>Rights and Permissions</label>
             <div class="help help-sm help-block">Select employee role</div>
             <div>
                 <div class="checkbox checkbox-sec margin-right">
-                    <input type="radio" name="role" value="1" id="role_1">
+                    <input type="radio" <?= $user->user_type == 7 ? 'checked="checked"' : ''; ?> name="user_type" value="7" id="role_7">
+                    <label for="role_7"><span>Admin</span></label>
+                </div>
+                <div class="help help-sm help-block">
+                    ALL Access<br>
+                </div>
+            </div>
+            <div>
+                <div class="checkbox checkbox-sec margin-right">
+                    <input type="radio" <?= $user->user_type == 1 ? 'checked="checked"' : ''; ?> name="user_type" value="1" id="role_1">
                     <label for="role_1"><span>Office Manager</span></label>
                 </div>
                 <div class="help help-sm help-block">
@@ -126,7 +135,7 @@
             </div>
             <div>
                 <div class="checkbox checkbox-sec margin-right">
-                    <input type="radio" name="role" value="2" id="role_2">
+                    <input type="radio" <?= $user->user_type == 2 ? 'checked="checked"' : ''; ?> name="user_type" value="2" id="role_2">
                     <label for="role_2"><span>Partner</span></label>
                 </div>
                 <div class="help help-sm help-block">
@@ -135,7 +144,7 @@
             </div>
             <div>
                 <div class="checkbox checkbox-sec margin-right">
-                    <input type="radio" name="role" value="3" id="role_3">
+                    <input type="radio" <?= $user->user_type == 3 ? 'checked="checked"' : ''; ?> name="user_type" value="3" id="role_3">
                     <label for="role_3"><span>Team Leader</span></label>
                 </div>
                 <div class="help help-sm help-block">
@@ -144,7 +153,7 @@
             </div>
             <div>
                 <div class="checkbox checkbox-sec margin-right">
-                    <input type="radio" name="role" value="4" id="role_4">
+                    <input type="radio" <?= $user->user_type == 4 ? 'checked="checked"' : ''; ?> name="user_type" value="4" id="role_4">
                     <label for="role_4"><span>Standard User</span></label>
                 </div>
                 <div class="help help-sm help-block">
@@ -153,7 +162,7 @@
             </div>
             <div>
                 <div class="checkbox checkbox-sec margin-right">
-                    <input type="radio" name="role" value="5" id="role_5">
+                    <input type="radio" <?= $user->user_type == 5 ? 'checked="checked"' : ''; ?> name="user_type" value="5" id="role_5">
                     <label for="role_5"><span>Field Sales</span></label>
                 </div>
                 <div class="help help-sm help-block">
@@ -162,7 +171,7 @@
             </div>
             <div>
                 <div class="checkbox checkbox-sec margin-right">
-                    <input type="radio" name="role" value="6" id="role_6">
+                    <input type="radio" <?= $user->user_type == 6 ? 'checked="checked"' : ''; ?> name="user_type" value="6" id="role_6">
                     <label for="role_6"><span>Field Tech</span></label>
                 </div>
                 <div class="help help-sm help-block">

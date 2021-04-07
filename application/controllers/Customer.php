@@ -15,13 +15,12 @@ class Customer extends MY_Controller
         $this->load->model('Customer_advance_model', 'customer_ad_model');
         $this->load->model('Esign_model', 'Esign_model');
         $this->load->model('Activity_model','activity');
+
+        $this->load->model('General_model', 'general');
+
         $this->checkLogin();
         $this->load->library('session');
-        $this->load->library('form_validation');
-        $this->load->helper('url');
         $this->load->helper('functions');
-
-        $user_id = getLoggedUserID();
         // concept
         $uid = $this->session->userdata('uid');
         if (empty($uid)) {
@@ -55,9 +54,6 @@ class Customer extends MY_Controller
             echo $this->load->view('no_access_module', $this->page_data, true);
             die();
         }
-
-
-
 //        $this->page_data['library_templates'] = $this->Esign_model->get_library_template_by_category($user_id);
 //        $this->page_data['library_categories'] = $this->Esign_model->get_library_categories();
         $this->page_data['cust_tab'] = $this->uri->segment(3);
@@ -67,11 +63,59 @@ class Customer extends MY_Controller
 //        $this->page_data['lead_types'] = $this->customer_ad_model->get_all(FALSE,"","","ac_leadtypes","lead_id");
 //        $this->page_data['sales_area'] = $this->customer_ad_model->get_all(FALSE,"","","ac_salesarea","sa_id");
         //$this->page_data['users'] = $this->users_model->getUsers();
-        //$this->page_data['profiles'] = $this->customer_ad_model->get_customer_data($user_id);
+        $this->page_data['profiles'] = $this->customer_ad_model->get_customer_data();
         // $this->load->model('Activity_model','activity');
         //$this->page_data['activity_list'] = $this->activity->getActivity($user_id, [], 0);
         //$this->page_data['history_activity_list'] = $this->activity->getActivity($user_id, [6,0], 1);
         $this->load->view('customer/list', $this->page_data);
+    }
+
+    public function preview($id=null){
+
+        // check if customer is allowed to view this page
+        $is_allowed = $this->isAllowedModuleAccess(9);
+        if( !$is_allowed ){
+            $this->page_data['module'] = 'customer';
+            echo $this->load->view('no_access_module', $this->page_data, true);
+            die();
+        }
+
+        $get_company_info = array(
+            'where' => array(
+                'id' => logged('company_id'),
+            ),
+            'table' => 'business_profile',
+            'select' => 'business_phone,business_name,business_logo,business_email,street,city,postal_code,state',
+        );
+        $this->page_data['company_info'] = $this->general->get_data_with_param($get_company_info,FALSE);
+
+        //$this->page_data['customer_details'] = $this->customer_ad_model->get_customer_data($id);
+        $this->load->view('customer/preview', $this->page_data);
+
+    }
+
+    public function preview2($id=null){
+
+        // check if customer is allowed to view this page
+        $is_allowed = $this->isAllowedModuleAccess(9);
+        if( !$is_allowed ){
+            $this->page_data['module'] = 'customer';
+            echo $this->load->view('no_access_module', $this->page_data, true);
+            die();
+        }
+
+        $get_company_info = array(
+            'where' => array(
+                'id' => logged('company_id'),
+            ),
+            'table' => 'business_profile',
+            'select' => 'business_phone,business_name,business_logo,business_email,street,city,postal_code,state',
+        );
+        $this->page_data['company_info'] = $this->general->get_data_with_param($get_company_info,FALSE);
+
+        //$this->page_data['customer_details'] = $this->customer_ad_model->get_customer_data($id);
+        $this->load->view('customer/preview2', $this->page_data);
+
     }
 
     public function index2()
@@ -138,7 +182,7 @@ class Customer extends MY_Controller
 //        $this->page_data['lead_types'] = $this->customer_ad_model->get_all(FALSE,"","","ac_leadtypes","lead_id");
 //        $this->page_data['sales_area'] = $this->customer_ad_model->get_all(FALSE,"","","ac_salesarea","sa_id");
         //$this->page_data['users'] = $this->users_model->getUsers();
-        //$this->page_data['profiles'] = $this->customer_ad_model->get_customer_data($user_id);
+        $this->page_data['profiles'] = $this->customer_ad_model->get_customer_data($user_id);
        // $this->load->model('Activity_model','activity');
         //$this->page_data['activity_list'] = $this->activity->getActivity($user_id, [], 0);
         //$this->page_data['history_activity_list'] = $this->activity->getActivity($user_id, [6,0], 1);

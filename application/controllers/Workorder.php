@@ -1117,6 +1117,39 @@ class Workorder extends MY_Controller
         echo json_encode($custom_dataQuery);
     }
 
+    public function save_update_tc(){
+        $company_id  = getLoggedCompanyID();
+        $user_id  = getLoggedUserID();
+        $id  =  $this->input->post('id');
+
+        $data = array(
+            'id' => $this->input->post('id'),
+            'content' => $this->input->post('content'),
+            'date_updated' => date("Y-m-d H:i:s")
+        );
+
+        $dataQuery = $this->workorder_model->update_tc($data);
+
+        echo json_encode($dataQuery);
+    }
+
+    public function save_update_tu()
+    {
+        $company_id  = getLoggedCompanyID();
+        $user_id  = getLoggedUserID();
+        $id  =  $this->input->post('id');
+
+        $data = array(
+            'id' => $this->input->post('id'),
+            'content' => $this->input->post('content'),
+            'date_updated' => date("Y-m-d H:i:s")
+        );
+
+        $dataQuery = $this->workorder_model->update_tu($data);
+
+        echo json_encode($dataQuery);
+    }
+
     public function getchecklistitemsajax()
     {
         $company_id  = getLoggedCompanyID();

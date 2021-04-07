@@ -197,18 +197,65 @@ class Employees extends MY_Controller {
                 $nextPayday = date('m/d/Y', strtotime(strtolower($day)));
             break;
             case 'every-other-week' :
-                // $date = date('m/d/Y', strtotime($paySched->next_payday));
-                // $day = date('l', strtotime($paySched->next_payday));
+                $date = date('m/d/Y', strtotime($paySched->next_payday));
 
-                // do {
-                //     $payDate = strtotime($paySched->next_payday." +14 days");
-                // } while($payDate >= strotime());
+                if(strtotime($date) <= strtotime(date("m/d/Y"))) {
+                    do {
+                        $payDate = strtotime($date." +14 days");
+                        $date = date('m/d/Y', $payDate);
+                    } while($payDate <= strtotime(date("m/d/Y")));
+                }
+
+                $nextPayday = $date;
             break;
             case 'twice-month' :
+                if($paySched->next_payday !== null) {
+                    $date = date('m/d/Y', strtotime($paySched->next_payday));
 
+                    if(strtotime($date) <= strtotime(date("m/d/Y"))) {
+                        do {
+                            $payDate = strtotime($date." +15 days");
+                            $date = date('m/d/Y', $payDate);
+                        } while($payDate <= strtotime(date("m/d/Y")));
+                    }
+    
+                    $nextPayday = $date;
+                } else {
+                    $currentMonth = date("m");
+                    $currentYear = date("Y");
+                    $firstPayday = $paySched->first_payday;
+                    $secondPayday = $paySched->second_payday;
+
+                    if(strtotime(date("m/$firstPayday/Y")) < strtotime(date("m/d/Y"))) {
+                        $nextPayday = date("m/$secondPayday/Y");
+                    } else {
+                        $nextPayday = date("m/$firstPayday/Y");
+                    }
+                }
             break;
             case 'every-month' :
+                if($paySched->next_payday !== null) {
+                    $date = date('m/d/Y', strtotime($paySched->next_payday));
 
+                    if(strtotime($date) <= strtotime(date("m/d/Y"))) {
+                        do {
+                            $payDate = strtotime($date." +1 month");
+                            $date = date('m/d/Y', $payDate);
+                        } while($payDate <= strtotime(date("m/d/Y")));
+                    }
+    
+                    $nextPayday = $date;
+                } else {
+                    $currentMonth = date("m");
+                    $currentYear = date("Y");
+                    $firstPayday = $paySched->first_payday;
+
+                    if(strtotime(date("m/$firstPayday/Y")) < strtotime(date("m/d/Y"))) {
+                        $nextPayday = date("m/d/Y", strtotime(date("m/$firstPayday/Y")." +1 month"));
+                    } else {
+                        $nextPayday = date("m/$firstPayday/Y");
+                    }
+                }
             break;
         }
 
@@ -511,7 +558,7 @@ class Employees extends MY_Controller {
             'name' => $post['name'],
             'first_payday' => $post['custom_schedule'] === 'on' ? $post['first_payday'] : null,
             'end_of_first_pay_period' => $post['custom_schedule'] === 'on' ? $post['end_of_first_pay_period'] : null,
-            'first_pay_month' => $post['custom_schedule'] === 'on' && $post['end_of_first_pay_period'] === 'end-date' ? $post['end_of_first_pay_period'] : null,
+            'first_pay_month' => $post['custom_schedule'] === 'on' && $post['end_of_first_pay_period'] === 'end-date' ? $post['first_pay_month'] : null,
             'first_pay_day' => $post['custom_schedule'] === 'on' && $post['end_of_first_pay_period'] === 'end-date' ? $post['first_pay_day'] : null,
             'first_pay_days_before' => $post['custom_schedule'] === 'on' && $post['end_of_first_pay_period'] !== 'end-date' ? $post['first_pay_days_before'] : null,
             'second_payday' => $post['second_payday'],

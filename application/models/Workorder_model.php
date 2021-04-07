@@ -402,6 +402,30 @@ class Workorder_model extends MY_Model
         $query = $this->db->get();
         return $query->row();
     }
+
+    public function update_tc($data)
+    {
+        extract($data);
+        // $vendor = $this->db->update('custom_fields', $data);
+        //           $this->db->where('id', $data['id']);
+	    // $insert = $this->db->insert_id();
+		// return  $insert;
+        $this->db->where('id', $id);
+        $this->db->update('terms_and_conditions', array('content' => $content));
+        return $data;
+    }
+    
+    public function update_tu($data)
+    {
+        extract($data);
+        // $vendor = $this->db->update('custom_fields', $data);
+        //           $this->db->where('id', $data['id']);
+	    // $insert = $this->db->insert_id();
+		// return  $insert;
+        $this->db->where('id', $id);
+        $this->db->update('terms_of_use', array('content' => $content));
+        return $data;
+    }
 }
 
 /* End of file Workorder_model.php */

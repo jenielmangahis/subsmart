@@ -763,3 +763,6 @@ $route['job_checklists/edit_checklist/(:num)'] = 'Job_Checklists/edit_checklist/
 $route['job_checklists/_load_checklist_items'] = 'Job_Checklists/ajax_load_checklist_items';
 $route['job_checklists/_create_checklist_item'] = 'Job_Checklists/ajax_create_checklist_item';
 $route['job_checklists/_delete_checklist_items'] = 'Job_Checklists/ajax_delete_checklist_items';
+$route['job_checklists/_update_checklist_item'] = 'Job_Checklists/ajax_update_checklist_item';
+$route['job_checklists/update_checklist'] = 'Job_Checklists/update_checklist';
+$route['job_checklists/delete_checklist'] = 'Job_Checklists/delete_checklist';
