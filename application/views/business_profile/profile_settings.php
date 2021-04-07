@@ -112,7 +112,12 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             $slug = createSlug($profiledata->profile_slug,'-');
                           }
                         ?>
-                        <span class="profile-url-prefix">nsmartrac.com/business/<?= $slug; ?></span>
+                        <?php if( $slug != '' ){ ?>
+                          <span class="profile-url-prefix"><a href="<?= base_url('business/' . $slug); ?>" style="color:#45a73c;" target="_new"><?= base_url('business/' . $slug); ?></a></span>
+                        <?php }else{ ?>
+                          <span class="profile-url-prefix"><?= base_url('business/'); ?></span>
+                        <?php } ?>
+                        
                         <div class="profile-url-input">
                             <input type="text" name="profile_slug"  value="<?= isset($profiledata) ? $profiledata->profile_slug : '';  ?>" class="form-control" autocomplete="off" data-profile-url="input">
                         </div>
@@ -143,8 +148,15 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             </div>
             <div class="row">
                 <div class="col-sm-12">
-                    <div class="margin-bottom">                    
-                    <div class="img-responsive" id="company-cover-photo" style="background-image: url('<?= getCompanyCoverPhoto(); ?>');"></div>
+                    <div class="margin-bottom">            
+                    <?php
+                      $company_id = 0; 
+                      if($profiledata){
+                        $company_id = $profiledata->company_id;
+                      }  
+                    ?>
+
+                    <div class="img-responsive" id="company-cover-photo" style="background-image: url('<?= getCompanyCoverPhoto($company_id); ?>');"></div>
 </div>
 <div>
     <input type='file' id='coverphoto_image' name="cover_photo" style="display: none;" />

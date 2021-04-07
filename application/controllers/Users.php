@@ -1661,8 +1661,10 @@ class Users extends MY_Controller {
 
 		}
 
+		$slug = createSlug($post['profile_slug'],'-');
+		
 		$data = [
-			'profile_slug' => $post['profile_slug'],
+			'profile_slug' => $slug,
 			'business_tags' => $post['company_tags'],
 			'business_cover_photo' => $image_name
 		];

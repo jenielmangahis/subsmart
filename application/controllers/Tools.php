@@ -371,4 +371,14 @@ class Tools extends MY_Controller {
         $this->load->view('tools/ajax_company_stripe_form', $this->page_data);
     }
 
+    public function ajax_load_company_paypal_form(){
+        $this->load->model('CompanyOnlinePaymentAccount_model');
+        $company_id = logged('company_id');    
+
+        $paypal = $this->CompanyOnlinePaymentAccount_model->getByCompanyId($company_id);
+
+        $this->page_data['paypal'] = $paypal;
+        $this->load->view('tools/ajax_company_paypal_form', $this->page_data);
+    }
+
 }
