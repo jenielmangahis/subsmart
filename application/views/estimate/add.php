@@ -623,3 +623,17 @@ $(document).ready(function(){
 });
 
 </script>
+
+<script>
+jQuery(document).ready(function () {
+    $(document).on('click','#Commercial',function(){
+        $('#business_name_area').show();
+    });
+    $(document).on('click','#customer_type',function(){
+        $('#business_name_area').hide();
+    });
+    $(document).on('click','#advance',function(){
+        $('#business_name_area').hide();
+    });
+});
+</script>

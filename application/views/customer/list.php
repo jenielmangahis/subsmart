@@ -169,11 +169,12 @@ add_css(array(
                             </div>
                         </div>
                         <div class="tab-content" id="myTabContent">
-                            <div class="card collapse"  id="advance_search_wizard">
+                            <div class="card <?=  isset($profiles) && !empty($profiles) ? 'collapse' : '' ?>"  id="advance_search_wizard">
                                 <div class="card-header">
                                     Advance Search
                                 </div>
                                 <div class="card-body">
+                                    <form method="post">
                                     <div class="row">
                                         <div class="col-md-3">
                                             <div class="col-md-12">
@@ -345,15 +346,15 @@ add_css(array(
                                             </div>
                                             <div class="col-md-12">
                                                 <label for="">Company</label>
-                                                <input type="text" class="form-control" name="acs_custom_field2" id="acs_custom_field2"/>
+                                                <input type="text" class="form-control" name="company" id="company"/>
                                             </div>
                                             <div class="col-md-12">
                                                 <label for="">Monitoring Company</label>
-                                                <input type="text" class="form-control" name="acs_custom_field2" id="acs_custom_field2"/>
+                                                <input type="text" class="form-control" name="monitor_company" id="monitor_company"/>
                                             </div>
                                             <div class="col-md-12">
                                                 <label for="">Credit Score</label>
-                                                <input type="text" class="form-control" name="acs_custom_field2" id="acs_custom_field2"/>
+                                                <input type="text" class="form-control" name="credit_score" id="credit_score"/>
                                             </div>
                                             <div class="col-md-12">
                                                 <label for="">Contract Term</label>
@@ -370,16 +371,19 @@ add_css(array(
                                     <div class="col-md-12">
                                         <br>
                                         <a href="#" style="right: 0;position: absolute;padding-right: 20px;">
-                                            <button type="button" class="btn btn-primary btn-md" id="exportCustomers"><span class="fa fa-search-plus"></span> Search</button>
+                                            <button type="submit" class="btn btn-primary btn-md"><span class="fa fa-search-plus"></span> Search</button>
                                         </a>
                                     </div>
+                                    </form>
                                 </div>
 
                             </div>
                             <div class="tab-pane fade show active" id="tab1" role="tabpanel" aria-labelledby="tab1">
+                                <?php if (isset($profiles) && !empty($profiles)) : ?>
                                 <a id="more_detail_furnisher" href="#advance_search_wizard" role="button" aria-expanded="false" aria-controls="collapseExample"  data-toggle="collapse" style="color:#1E5DA9;right: 0;position: absolute;margin-top: -20px;padding-right: 20px;">
                                     +Show Advance Search
                                 </a>
+
                                 <div id="status_sorting"  class=""></div>
                                 <table class="table"  id="customer_list_table">
                                     <thead>
@@ -400,7 +404,7 @@ add_css(array(
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <?php if (isset($profiles) && !empty($profiles)) : ?>
+
                                         <?php foreach ($profiles as $customer) : ?>
                                             <tr>
                                                 <td>
@@ -420,6 +424,20 @@ add_css(array(
                                                 <td><?php echo $customer->phone_h; ?></td>
                                                 <td><?php echo $customer->status; ?></td>
                                                 <td>
+                                                    <div class="dropdown dropdown-btn text-center">
+                                                        <button class="btn btn-default" type="button" id="dropdown-edit" data-toggle="dropdown" aria-expanded="true">
+                                                            <span class="btn-label">Manage <i class="fa fa-caret-down fa-sm" style="margin-left:10px;"></i></span></span>
+                                                        </button>
+                                                        <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="dropdown-edit">
+                                                            <li role="presentation">
+                                                                <a role="menuitem" tabindex="-1" href="<?php echo base_url('customer/preview/'.$customer->prof_id); ?>" class="editItemBtn">
+                                                                    <span class="fa fa-search-plus icon"></span>
+                                                                    Preview
+                                                                </a>
+                                                            </li>
+                                                            <li role="separator" class="divider"></li>
+                                                        </ul>
+                                                    </div>
                                                     <a href="<?php echo url('/customer/add_advance/' . $customer->prof_id); ?>" style="text-decoration:none;display:inline-block;" title="Edit Customer">
                                                         <img src="/assets/img/customer/actions/ac_edit.png" width="16px" height="16px" border="0" title="Edit Customer">
                                                     </a>
@@ -453,9 +471,10 @@ add_css(array(
                                                 </td>
                                             </tr>
                                         <?php endforeach; ?>
-                                    <?php endif; ?>
+
                                     </tbody>
                                 </table>
+                                <?php endif; ?>
                             </div>
                         </div>
                     </div>

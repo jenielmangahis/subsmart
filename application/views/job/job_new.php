@@ -147,7 +147,7 @@ add_css(array(
                                 <option value="">Select Employee</option>
                                 <?php if(!empty($employees)): ?>
                                     <?php foreach ($employees as $employee): ?>
-                                        <option <?= isset($jobs_data) && $jobs_data->employee_id == $employee->id ? 'selected' : '';  ?> value="<?= $employee->id; ?>"><?= $employee->LName.','.$employee->FName; ?></option>
+                                        <option <?= isset($jobs_data) && $jobs_data->employee_id == $employee->id ? 'selected' : '';  ?> value="<?= $employee->id; ?>"><?= $employee->FName.','.$employee->LName; ?></option>
                                     <?php endforeach; ?>
                                 <?php endif; ?>
                             </select>
@@ -1733,7 +1733,7 @@ include viewPath('includes/footer');
             placeholder: "Select Customer"
         });
         $("#employee_id").select2({
-            placeholder: "Select Customer"
+            placeholder: "Select Employee"
         });
     });
 </script>

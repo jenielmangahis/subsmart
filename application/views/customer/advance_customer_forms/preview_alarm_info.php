@@ -138,7 +138,7 @@
             <div class="col-md-6">
                 <label for="">Pre-Install Survey</label>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-6" style="color: darkgreen;">
                 Pass
             </div>
         </div>
@@ -146,8 +146,8 @@
             <div class="col-md-6">
                 <label for="">Post-Install Survey</label>
             </div>
-            <div class="col-md-6">
-                Pass
+            <div class="col-md-6" style="color: darkred;">
+                Fail
             </div>
         </div>
         <hr>

@@ -396,6 +396,7 @@ $route['accounting/employees/add-pay-schedule-form'] = 'accounting_controllers/e
 $route['accounting/employees/add-pay-schedule']['post'] = 'accounting_controllers/employees/add_pay_schedule';
 $route['accounting/employees/edit-pay-schedule/(:any)'] = 'accounting_controllers/employees/edit_pay_schedule/$1';
 $route['accounting/employees/update-pay-schedule/(:any)']['post'] = 'accounting_controllers/employees/update_pay_schedule/$1';
+$route['accounting/employees/get-pay-date/(:any)'] = 'accounting_controllers/employees/get_pay_date/$1';
 
 $route['accounting/vendor-details/(:any)'] = 'accounting/vendordetails/$1';
 $route['accounting/taxes/edit-settings'] = 'taxes/edit_settings';
