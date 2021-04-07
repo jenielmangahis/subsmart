@@ -3,7 +3,7 @@
 #company-cover-photo {
     background-size: cover;
     background-position: center;
-    height: 50vh;
+    height: 420px;
     width: 100%;
 }
 .profile-headline .profile-cnt h1 {
@@ -47,8 +47,11 @@
     width: 100px;
     text-align: center;
 }
+.profile-cnt-h h1 {
+    font-size: 25px !important;
+}
 .credential .credential-cnt {
-    padding-left: 140px;
+    padding-left: 110px;
     position: relative;
     margin: 0px !important;
     width: 100%;
@@ -66,6 +69,9 @@
 .credential-cnt span{
   margin: 10px 0px;
   display: block;
+}
+.left {
+  float: left;
 }
 .credential-badge-year-text {
     position: absolute;
@@ -123,26 +129,77 @@ div[wrapper__section] [role="white__holder"] .profile-subtitle {
     display: inline-block;
     padding: 5px 15px !important;
 }
+h3 {
+    font-size: 22px;
+    margin-bottom: 0px;
+}
 .image-caption{
   position: relative;
     top: -25px;
     left: 16px;
     color: #ffffff;
 }
-.gallery li{
-  width: 30%;
-  display: inline-block;
-  margin: 10px;
-  height: 286px;
-  float: left;
+.gallery li {
+    width: 30%;
+    display: inline-block;
+    margin-right: 10px;
+    margin-bottom: 10px;
+    height: 286px;
+    float: left;
 }
 div.picture-container div.img img {
     object-fit: cover;
     height: 286px;
     width: 100% !important;
 }
+.border-menu {
+  border-bottom: 1px solid #eaeaea;
+  display: inline-block;
+  padding-top:14px;
+}
+ul.profile-nav li a {
+    font-weight: 300;
+    font-size: 15px;
+}
+.floating-box {
+    position: absolute;
+    box-shadow: rgb(0 0 0 / 30%) 0px 0px 5px;
+    width: 360px;
+    background: white;
+    padding: 25px 22px;
+    top: -61px;
+}
+p.gray {
+    color: #888888;
+}
+p {
+    font-size: 16px;
+    margin-bottom: 0px;
+}
+section.mr-23 {
+    margin-left: 7px;
+}
+.social-share a {
+    font-size: 25px;
+    margin-right: 20px;
+}
+.facebook-color {
+    color: #6279ae;
+}
+.twitter-color {
+    color: #2ba2dc;
+}
+.gmail-color {
+    color: #f3392a;
+}
+.pinterest-color {
+    color: #ce232b;
+}
+.email-color {
+    color: #ee710e;
+}
 </style>
-<div role="wrapper" style="padding-top: 0px;">
+<div role="wrapper" style="padding-top: 0px;background:white;">
     <div class="profile__top">
       <?php
         $company_id = 0; 
@@ -174,21 +231,64 @@ div.picture-container div.img img {
         </div>
       </div>
     </div>
-    <div class="profile-nav-section" data-profile-nav="nav">
+
+    <div class="col-md-12 border-menu">
       <div class="container">
-        <ul class="profile-nav clearfix">
-          <li><a class="a-default active" href="#profile-nav-overview">Overview</a></li>
-          <li><a class="a-default" href="#profile-nav-credentials">Credentials</a></li>
-          <li><a class="a-default" href="#profile-nav-deals">Deals</a></li>
-          <li><a class="a-default" href="#profile-nav-portfolio">Portfolio</a></li>
-          <li><a class="a-default" href="#profile-nav-reviews">Reviews</a></li>
-        </ul>
-      </div> 
+        <div class="col-8 pl-0 left">
+          <ul class="profile-nav clearfix">
+            <li><a class="a-default active" href="#profile-nav-overview">Overview</a></li>
+            <li><a class="a-default" href="#profile-nav-credentials">Credentials</a></li>
+            <li><a class="a-default" href="#profile-nav-deals">Deals</a></li>
+            <li><a class="a-default" href="#profile-nav-portfolio">Portfolio</a></li>
+            <li><a class="a-default" href="#profile-nav-reviews">Reviews</a></li>
+          </ul>
+        </div>
+        <div class="col-4 left">
+          <div class="floating-box">
+            <div class="text-center">
+              <p>Business Phone</p>
+              <p>(850) 478-0530</p>
+            </div>
+            <hr/>
+            <p class="bold">Contact Name</p>
+            <p>Alarm Direct</p>
+            <br/>
+            <p class="bold">ADi</p>
+            <p>6866 Pine Forest Road</p>
+            <p>Pensacola, FL 32526</p>
+            <p>United Statest</p>
+            <br/>
+            <p class="bold">Website</p>
+            <p><a href="https://nsmartrac.com/">https://nsmartrac.com</a></p>
+            <br/>
+            <p class="bold">Quick Facts</p>
+            <ul>
+              <li>Business since 2014</li>
+              <li>12 employees</li>
+              <li>Works with other businesses or sub-contractors</li>
+            </ul>
+            <br/>
+            <p class="bold">Availability</p>
+            <p>Working Days</p>
+            <p class="gray">Tue - Wed Fri - Sun</p>
+            <hr/>
+            <p class="bold mb-2">Share</p>
+            <div class="social-share">
+                <a class="share-circle share-facebook facebook-color" href="#" target="_blank"><span class="fa fa-facebook"></span></a>
+                <a class="share-circle share-twitter twitter-color" href="#" target="_blank"><span class="fa fa-twitter"></span></a>
+                <a class="share-circle share-google gmail-color" href="#" target="_blank"><span class="fa fa-google"></span></a>
+                <a class="share-circle share-pinterest pinterest-color" href="#" target="_blank"><span class="fa fa-pinterest"></span></a>
+                <a class="share-circle share-mail email-color" href="#" target="_blank"><span class="fa fa-envelope"></span></a>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
+
 
     <div class="container">
       <div class="row">
-        <div class="col-md-12">
+        <div class="col-8">
             
             <!-- Services Offered -->
             <div role="white__holder_section_holder">
@@ -207,7 +307,7 @@ div.picture-container div.img img {
 
         </div>
 
-        <div class="col-md-12">
+        <div class="col-md-8">
             <!-- Business Credentials -->
             <div role="white__holder_section_holder">
               <div class="profile-content-section" id="profile-nav-credentials">
@@ -230,6 +330,7 @@ div.picture-container div.img img {
                       <?php }else{ ?>
                         <div class="credential-cnt">Not Licensed</div>
                       <?php } ?>
+                      <br style="clear:both;">
                     </div>
                   </div>
                   <div class="col-md-6">
@@ -265,6 +366,7 @@ div.picture-container div.img img {
                         <div class="credential-cnt">Not Insured</div>
                       <?php } ?>
                     </div>
+                    <br style="clear:both;"><br/>
                   </div>
                   <div class="col-md-6">
                     <div class="credential">
@@ -306,6 +408,7 @@ div.picture-container div.img img {
                         </div>
                       </div>
                     </div>
+                    <br style="clear:both;"><br/>
                   </div>
                   <div class="col-md-6">
                     <div class="credential">
@@ -333,12 +436,12 @@ div.picture-container div.img img {
             </div>
         </div>
 
-        <div class="col-md-12">
-          <div class="col-sm-6 left">
-              <h3 class="page-title">Portfolio</h3>
+        <div class="col-md-12" style="padding-left: 6px !important;">
+          <div class="col-sm-6 pl-0 left">
+              <h3 class="page-title pl-0 mb-2">Portfolio</h3>
             </div>
           </div>
-          <section class="content">
+          <section class="content mr-23 mb-5">
              <?php
               $images = array();
               if( $profiledata->work_images != '' ){
