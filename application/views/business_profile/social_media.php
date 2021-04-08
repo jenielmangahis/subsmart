@@ -69,8 +69,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
    <?php include viewPath('includes/sidebars/business'); ?>
    <div wrapper__section>
       <div class="col-md-12">
-        <?php echo form_open_multipart('users/savebusinessdetail', [ 'id'=> 'form-business-details', 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
-        <form class="form-business-sm" id="form-business-sm" method="post" action="#">
+        <?php echo form_open_multipart('users/update_social_media', [ 'id'=> 'form-business-details', 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
     <div class="validation-error" style="display: none;"></div>
 
     <div class="card mtc-18 pl-4">
@@ -84,7 +83,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     <label>Facebook</label>
                     <div class="input-group">
                         <div class="input-group-addon socal_media" style="background: #345191;"><span class="fa fa-facebook"></span></div>
-                        <input type="url" name="sm_facebook" value="<?= isset($profile_data) ? $profile_data->sm_facebook : '';  ?>" class="form-control" autocomplete="off">
+                        <input type="url" name="sm_facebook" value="<?= isset($profiledata) ? $profiledata->sm_facebook : '';  ?>" class="form-control" autocomplete="off">
                     </div>
                     <span class="validation-error-field" data-formerrors-for-name="sm_facebook" data-formerrors-message="true" style="display: none;"></span>
                 </div>
@@ -92,7 +91,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     <label>Twitter</label>
                     <div class="input-group">
                         <div class="input-group-addon socal_media" style="background: #2797d7;"><span class="fa fa-twitter"></span></div>
-                        <input type="url" name="sm_twitter" value="<?= isset($profile_data) ? $profile_data->sm_twitter : '';  ?>" class="form-control" autocomplete="off">
+                        <input type="url" name="sm_twitter" value="<?= isset($profiledata) ? $profiledata->sm_twitter : '';  ?>" class="form-control" autocomplete="off">
                     </div>
                     <span class="validation-error-field" data-formerrors-for-name="sm_twitter" data-formerrors-message="true" style="display: none;"></span>
                 </div>
@@ -100,7 +99,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     <label>Google Review Page</label>
                     <div class="input-group">
                         <div class="input-group-addon socal_media" style="background: #f13126;"><span class="fa fa-google"></span></div>
-                        <input type="url" name="sm_google" value="<?= isset($profile_data) ? $profile_data->sm_google : '';  ?>" class="form-control" autocomplete="off">
+                        <input type="url" name="sm_google" value="<?= isset($profiledata) ? $profiledata->sm_google : '';  ?>" class="form-control" autocomplete="off">
                     </div>
                     <span class="validation-error-field" data-formerrors-for-name="sm_google" data-formerrors-message="true" style="display: none;"></span>
                 </div>
@@ -108,7 +107,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     <label>Youtube</label>
                     <div class="input-group">
                         <div class="input-group-addon socal_media" style="background: #ff0000;"><span class="fa fa-youtube"></span></div>
-                        <input type="url" name="sm_youtube" value="<?= isset($profile_data) ? $profile_data->sm_youtube : '';  ?>" class="form-control" autocomplete="off">
+                        <input type="url" name="sm_youtube" value="<?= isset($profiledata) ? $profiledata->sm_youtube : '';  ?>" class="form-control" autocomplete="off">
                     </div>
                     <span class="validation-error-field" data-formerrors-for-name="sm_youtube" data-formerrors-message="true" style="display: none;"></span>
                 </div>
@@ -116,7 +115,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     <label>Instagram</label>
                     <div class="input-group">
                         <div class="input-group-addon socal_media" style="background: #bf249e;"><span class="fa fa-instagram"></span></div>
-                        <input type="url" name="sm_instagram" value="<?= isset($profile_data) ? $profile_data->sm_instagram : '';  ?>" class="form-control" autocomplete="off">
+                        <input type="url" name="sm_instagram" value="<?= isset($profiledata) ? $profiledata->sm_instagram : '';  ?>" class="form-control" autocomplete="off">
                     </div>
                     <span class="validation-error-field" data-formerrors-for-name="sm_instagram" data-formerrors-message="true" style="display: none;"></span>
                 </div>
@@ -124,7 +123,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     <label>Pinterest</label>
                     <div class="input-group">
                         <div class="input-group-addon socal_media" style="background: #c71f26;"><span class="fa fa-pinterest"></span></div>
-                        <input type="url" name="sm_pinterest" value="<?= isset($profile_data) ? $profile_data->sm_pinterest : '';  ?>" class="form-control" autocomplete="off">
+                        <input type="url" name="sm_pinterest" value="<?= isset($profiledata) ? $profiledata->sm_pinterest : '';  ?>" class="form-control" autocomplete="off">
                     </div>
                     <span class="validation-error-field" data-formerrors-for-name="sm_pinterest" data-formerrors-message="true" style="display: none;"></span>
                 </div>
@@ -132,7 +131,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     <label>LinkedIn</label>
                     <div class="input-group">
                         <div class="input-group-addon socal_media" style="background: #0070ad;"><span class="fa fa-linkedin"></span></div>
-                        <input type="url" name="sm_linkedin" value="<?= isset($profile_data) ? $profile_data->sm_linkedin : '';  ?>" class="form-control" autocomplete="off">
+                        <input type="url" name="sm_linkedin" value="<?= isset($profiledata) ? $profiledata->sm_linkedin : '';  ?>" class="form-control" autocomplete="off">
                     </div>
                     <span class="validation-error-field" data-formerrors-for-name="sm_linkedin" data-formerrors-message="true" style="display: none;"></span>
                 </div>
@@ -141,16 +140,13 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     </div>
 
     <hr class="card-hr">
-<div class="card">
-    <div class="row">
-    	<div class="col-md-8">
-            <button class="btn btn-default btn-lg" type="submit">Save</button> <span class="alert-inline-text margin-left hide" style="display:none;">Saved</span>
-            </div>
-    	<div class="col-xs-16 text-right">
-            <a class="btn btn-default btn-lg" href="business/profile">« Back</a>
-    	</div>
+    <div class="card">
+        <div class="row">
+        	<div class="col-md-8">
+            <button class="btn btn-primary btn-lg" type="submit">Save</button>
+          </div>        	
+        </div>
     </div>
-</div>
 </form>
 </div>
 <?php include viewPath('includes/footer'); ?>

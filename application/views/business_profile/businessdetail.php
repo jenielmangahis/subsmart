@@ -276,7 +276,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             <div class="card">
                <div class="row">
                   <div class="col-xs-16 text-right">
-                     <button class="btn btn-primary btn-lg margin-left" name="btn-continue" type="submit">Submit</button>
+                     <button class="btn btn-primary btn-lg margin-left" name="btn-continue" type="submit">Save</button>
                   </div>
                </div>
             </div>

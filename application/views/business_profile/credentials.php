@@ -78,10 +78,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
     <div class="card mtc-18">
        <h3 class="page-title mb-0 mt-18">Credentials</h3>
-        <h5>Showcase Your Business Credentials</h5>
+        <h5 style="font-size: 18px;">Showcase Your Business Credentials</h5>
 
         <p>
-            Pick from the sections below if your business is Licensed/Bonded/Insured/BBB.<br> Adding your professional Credentials will help you attract more customers.
+            Pick from the sections below if your business is Licensed/Bonded/Insured/BBB. Adding your professional Credentials will help you attract more customers.
         </p>
         <hr>
         <?php
@@ -297,13 +297,13 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     <hr class="card-hr">
 <div class="card">
     <div class="row">
-    	<div class="col-md-8">
-    		    		<button class="btn btn-default btn-lg" name="btn-continue" type="submit" value="credentials">Save</button> <span class="alert-inline-text margin-left hide" style="display:none;">Saved</span>
-    		    	</div>
-    	<!-- <div class="col-md-4 text-right">
-    		    		<a class="btn btn-default btn-lg" href="services">« Back</a>
-    		    		    		<a href="availability" class="btn btn-primary btn-lg margin-left" name="btn-continue">Next »</a>
-    		    	</div> -->
+      <div class="col-md-8">
+                <button class="btn btn-primary btn-lg" name="btn-continue" type="submit" value="credentials">Save</button> <span class="alert-inline-text margin-left hide" style="display:none;">Saved</span>
+              </div>
+      <!-- <div class="col-md-4 text-right">
+                <a class="btn btn-default btn-lg" href="services">« Back</a>
+                        <a href="availability" class="btn btn-primary btn-lg margin-left" name="btn-continue">Next »</a>
+              </div> -->
     </div>
 </div>
 </form>    </div>

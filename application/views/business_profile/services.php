@@ -134,7 +134,7 @@ div#cat-selected {
 <div class="card">
     <div class="row">
     	<div class="col-md-8">
-    		    		<button class="btn btn-default btn-lg" name="btn-save" type="submit">Save</button> <span class="alert-inline-text margin-left hide">Saved</span>
+    		    		<button class="btn btn-primary btn-lg" name="btn-save" type="submit">Save</button> <span class="alert-inline-text margin-left hide">Saved</span>
     		    	</div>
     	<!-- <div class="col-md-4 text-right">
     		    		<a class="btn btn-default btn-lg" href="businessdetail">« Back</a>

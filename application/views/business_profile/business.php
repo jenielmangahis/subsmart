@@ -93,6 +93,19 @@ div[wrapper__section] [role="white__holder"] .profile-subtitle {
 .nav-close{
         margin-top: 2% !important;
     }
+
+.gallery li {
+    width: 30%;
+    display: inline-block;
+    margin-right: 10px;
+    margin-bottom: 10px;
+    height: 286px;
+}
+div.picture-container div.img img {
+    object-fit: cover;
+    height: 286px;
+    width: 100% !important;
+}
 </style>
 <?php include viewPath('includes/header'); ?>
     <!-- page wrapper start -->
@@ -263,7 +276,31 @@ div[wrapper__section] [role="white__holder"] .profile-subtitle {
 						<div role="white__holder_section_holder" class="no_border">
 							<div class="profile-content-section">
 								<h3 class="profile-subtitle">Portfolio <a class="a-alert a-edit" href="<?php echo base_url('users/portfolio'); ?>"><span class="fa fa-edit"></span> edit</a></h3>
-								<p class="profile-content-margin">No photos have been added yet.</p>
+								<?php
+				                  $images = array();
+				                  if( $profiledata->work_images != '' ){
+				                    $images = unserialize($profiledata->work_images);
+				                  }
+				                ?>
+				                <?php if($images){ ?>
+				                	<ul class="gallery ui-sortable" id="gallery">
+					                    <?php foreach($images as $key => $i){ ?>
+					                      <li class="col-image-<?= $key ?>">
+					                        <div class="picture-container ui-sortable-handle">
+					                          <div class="img">
+					                              <img src="<?= url("uploads/work_pictures/" . $profiledata->company_id . "/" . $i['file']); ?>">
+					                              <div class="image-caption image-caption-container-<?= $key; ?>">
+					                                <?= $i['caption']; ?>
+					                              </div>
+					                          </div>
+					                        </div>
+					                      </li>
+					                    <?php } ?>
+					                 </ul>
+				                <?php }else{ ?>
+				                	<p class="profile-content-margin">No photos have been added yet.</p>
+				                <?php } ?>
+								
 							</div>
 						</div>
 						<div role="white__holder_section_holder" class="no_border">
@@ -275,7 +312,13 @@ div[wrapper__section] [role="white__holder"] .profile-subtitle {
 						<div role="white__holder_section_holder" class="no_border">
 							<div class="profile-content-section">
 								<h3 class="profile-subtitle">Business Tags <a class="a-alert a-edit" href="<?php echo base_url('users/profilesetting'); ?>"><span class="fa fa-edit"></span> edit</a></h3>
-								<p class="profile-content-margin"></p>
+								<?php if( $profiledata->business_tags != '' ){ ?>
+									<?php $tags = explode(",", $profiledata->business_tags); ?>
+									<?php foreach($tags as $t){ ?>
+										<span class="label label-default tag"><?= $t; ?><!-- <a class="cat-tag-remove" id="cat-tag-remove-93" href="#"><span class="icon fa fa-remove"></span></a> --></span>
+									<?php } ?>
+								<?php } ?>
+								
 							</div>
 						</div>
 					</div>
