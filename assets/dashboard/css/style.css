@@ -10619,7 +10619,7 @@ select#select-employee {
 }
 nav.navbar-side.d-none.d-md-block:not(.closed) ul span svg#svg-sprite-menu-close {
     position: relative !important;
-    top: 133px !important;
+    top: 152px !important;
 }
 nav.navbar-side.d-none.d-md-block:not(.closed) ul span{
     height: 22px !important;

@@ -38,7 +38,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     #add-pay-schedule-modal .form-row, #edit-pay-schedule-modal .form-row {
         margin-top: 30px;
     }
-    #add-pay-schedule-modal span.select2-selection.select2-selection--single, #edit-pay-schedule-modal span.select2-selection.select2-selection--single {
+    .modal span.select2-selection.select2-selection--single, #edit-pay-schedule-modal span.select2-selection.select2-selection--single {
         min-width: unset !important;
     }
 </style>

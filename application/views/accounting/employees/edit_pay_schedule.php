@@ -30,7 +30,7 @@
                                                             </select>
                                                             <div class="form-check form-check-inline mt-2 <?=$paySchedule->first_payday === null && !in_array($paySchedule->pay_frequency, ['twice-month', 'every-month']) ? 'hide' : ''?>">
                                                                 <label for="custom-schedule" class="form-check-label mr-2">Custom schedule</label><br>
-                                                                <input type="checkbox" name="custom_schedule" id="custom-schedule" class="js-switch" <?=$paySchedule->first_payday !== null ? 'selected' : ''?>/>
+                                                                <input type="checkbox" name="custom_schedule" id="custom-schedule" class="js-switch" <?=$paySchedule->first_payday !== null ? 'checked' : ''?>/>
                                                             </div>
                                                         </div>
                                                     </div>

@@ -287,30 +287,45 @@ class Employees extends MY_Controller {
 
         $last_id = $this->users_model->addNewEmployee($data);
 
-        $this->load->model('TimesheetTeamMember_model');
-		$this->TimesheetTeamMember_model->create([
-			'user_id' => $last_id,
-			'name' => $data['FName'] . ' ' . $data['LName'],
-			'email' => $data['username'],
-			'role' => 'Employee',
-			'department_id' => 0,
-			'department_role' => 'Member',
-			'will_track_location' => 1,
-			'status' => 1,
-			'company_id' => $data['company_id']
-		]);
-		//End Timesheet		
-
-		//Create Trac360 record
-		$this->load->model('Trac360_model');
-		$data = [
-			'user_id' => $last_id,
-			'name' => $data['FName'] . ' ' . $data['LName'],
-			'company_id' => $data['company_id']
-		];
-		$this->Trac360_model->add('trac360_people', $data);
-
         if($last_id) {
+            $payDetails = [
+                'user_id' => $last_id,
+                'pay_schedule_id' => $this->input->post('pay_schedule'),
+                'pay_type' => $this->input->post('pay_type'),
+                'pay_rate' => $this->input->post('pay_type') !== 'commission' ? $this->input->post('pay_rate') : null,
+                'hours_per_day' => $this->input->post('pay_type') !== 'commission' ? $this->input->post('default_hours') : null,
+                'days_per_week' => $this->input->post('pay_type') !== 'commission' ? $this->input->post('days_per_week') : null,
+                'salary_frequency' => $this->input->post('pay_type') === 'salary' ? $this->input->post('salary_frequency') : null,
+                'pay_method' => $this->input->post('pay_method'),
+                'status' => 1,
+                'created_at' => date("Y-m-d H:i:s"),
+                'updated_at' => date("Y-m-d H:i:s")
+            ];
+            $this->users_model->insertEmployeePayDetails($payDetails);
+    
+            $this->load->model('TimesheetTeamMember_model');
+            $this->TimesheetTeamMember_model->create([
+                'user_id' => $last_id,
+                'name' => $data['FName'] . ' ' . $data['LName'],
+                'email' => $data['username'],
+                'role' => 'Employee',
+                'department_id' => 0,
+                'department_role' => 'Member',
+                'will_track_location' => 1,
+                'status' => 1,
+                'company_id' => $data['company_id']
+            ]);
+            //End Timesheet		
+    
+            //Create Trac360 record
+            $this->load->model('Trac360_model');
+            $data = [
+                'user_id' => $last_id,
+                'name' => $data['FName'] . ' ' . $data['LName'],
+                'company_id' => $data['company_id']
+            ];
+            $this->Trac360_model->add('trac360_people', $data);
+
             $this->session->set_flashdata('success', "New Employee Added!");
         } else {
             $this->session->set_flashdata('error', "Please try again!");
@@ -328,7 +343,15 @@ class Employees extends MY_Controller {
 			$this->page_data['payscale'] = $this->PayScale_model->getAllByCompanyId($cid);
 		}
 
-        $this->page_data['employee'] = $this->users_model->getUser($id);
+        $employee = $this->users_model->getUser($id);
+        $payDetails = $this->users_model->getEmployeePayDetails($employee->id);
+        $userPaySched = $this->users_model->getPaySchedule($payDetails->pay_schedule_id);
+        $nextPayDate = $this->get_next_pay_date($userPaySched);
+
+        $this->page_data['nextPayDate'] = $nextPayDate;
+        $this->page_data['pay_schedules'] = $this->users_model->getPaySchedules();
+        $this->page_data['employee'] = $employee;
+        $this->page_data['payDetails'] = $payDetails;
         $this->load->view('accounting/employees/edit_employee', $this->page_data);
     }
 
@@ -355,6 +378,18 @@ class Employees extends MY_Controller {
         $user = $this->users_model->update($id,$data);
 
         if($user) {
+            $payDetails = [
+                'pay_schedule_id' => $this->input->post('pay_schedule'),
+                'pay_type' => $this->input->post('pay_type'),
+                'pay_rate' => $this->input->post('pay_type') !== 'commission' ? $this->input->post('pay_rate') : null,
+                'hours_per_day' => $this->input->post('pay_type') !== 'commission' ? $this->input->post('default_hours') : null,
+                'days_per_week' => $this->input->post('pay_type') !== 'commission' ? $this->input->post('days_per_week') : null,
+                'salary_frequency' => $this->input->post('pay_type') === 'salary' ? $this->input->post('salary_frequency') : null,
+                'pay_method' => $this->input->post('pay_method'),
+                'updated_at' => date("Y-m-d H:i:s")
+            ];
+            $this->users_model->updateEmployeePayDetails($id, $payDetails);
+
             $this->session->set_flashdata('success', "Employee details updated successfully.");
         } else {
             $this->session->set_flashdata('error', "Please try again!");
@@ -374,6 +409,7 @@ class Employees extends MY_Controller {
 		}
 
 		$user = $this->users_model->delete($id);
+        $this->users_model->deleteEmployeePayDetails($id);
 
 		//Delete Timesheet 
 		$this->load->model('TimesheetTeamMember_model');

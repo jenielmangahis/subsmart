@@ -114,11 +114,13 @@ add_css(array(
         }
     function fillInAddress(){
         var place = autocomplete.getPlace();
+        var street="";
         for (const component of place.address_components) {
             const componentType = component.types[0];
             switch (componentType) {
                 case "street_number": {
-                    $('#cross_street').val(component.long_name);
+                    //$('#cross_street').val(component.long_name);
+                    street = component.long_name;
                     break;
                 }
                 case "postal_code": {
@@ -131,7 +133,8 @@ add_css(array(
                     break;
                 }
                 case "route": {
-                    $('#mail_add').val(component.long_name);
+                    $('#mail_add').val(street +' '+ component.long_name);
+                    $('#card_address').val(street +' '+ component.long_name);
                     break;
                 }
                 case "locality": {
@@ -140,8 +143,8 @@ add_css(array(
                     break;
                 }
                 case "administrative_area_level_1": {
-                    $('#state').val(component.long_name);
-                    $('#billing_state').val(component.long_name);
+                    $('#state').val(component.short_name);
+                    $('#billing_state').val(component.short_name);
                     break;
                 }
             }

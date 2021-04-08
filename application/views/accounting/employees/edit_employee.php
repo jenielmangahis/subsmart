@@ -212,9 +212,81 @@
                                                             <select name="pay_schedule" id="pay-schedule" class="form-control">
                                                                 <option disabled selected>&nbsp;</option>
                                                                 <option value="add">&plus; Add new</option>
+                                                                <?php foreach($pay_schedules as $pay_schedule) : ?>
+                                                                    <option value="<?=$pay_schedule->id?>" <?=$pay_schedule->id === $payDetails->pay_schedule_id ? 'selected' : ''?>><?=$pay_schedule->name?></option>
+                                                                <?php endforeach; ?>
                                                             </select>
                                                         </div>
-                                                        <label for="pay-schedule" class="col-sm-4 col-form-label">starting <span></span></label>
+                                                        <label for="pay-schedule" class="col-form-label">starting <span><?=$nextPayDate?></span> <a href="#"><i class="fa fa-pencil"></i></a></label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <h4>How much do you pay this employee?</h4>
+                                            <p>If your company offers additional pay types, add them here. These pay types show up when you run payroll.</p>
+                                            <div class="form-group row">
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <div class="row">
+                                                            <div class="col-sm-5">
+                                                                <select name="pay_type" id="pay-type" class="form-control">
+                                                                    <option value="hourly" <?=$payDetails->pay_type === "hourly" ? 'selected' : ''?>>Hourly</option>
+                                                                    <option value="salary" <?=$payDetails->pay_type === "salary" ? 'selected' : ''?>>Salary</option>
+                                                                    <option value="commission" <?=$payDetails->pay_type === "commission" ? 'selected' : ''?>>Commission only</option>
+                                                                </select>
+                                                            </div>
+                                                            <div class="col-sm-7">
+                                                                <div class="form-row m-0 pay-fields <?=$payDetails->pay_type === "commission" ? 'hide' : ''?>">
+                                                                    <div class="col-sm-1 d-flex align-items-center">
+                                                                        <span>$</span>
+                                                                    </div>
+                                                                    <div class="col-sm-6">
+                                                                        <input type="number" name="pay_rate" id="pay-rate" value="<?=$payDetails->pay_type !== "commission" ? number_format(floatval($payDetails->pay_rate), 2, '.', ',') : ''?>" class="form-control" step=".01" onchange="convertToDecimal(this)">
+                                                                    </div>
+                                                                    <div class="col-sm-4 align-items-center hourly-pay-fields <?=$payDetails->pay_type === "hourly" ? 'd-flex' : 'hide'?>">
+                                                                       <span>/hour</span>
+                                                                    </div>
+                                                                    <div class="col-sm-5 salary-pay-fields <?=$payDetails->pay_type !== "salary" ? 'hide' : ''?>">
+                                                                        <select name="salary_frequency" id="salary-frequency" class="form-control">
+                                                                            <option value="year" <?=$payDetails->salary_frequency === "year" ? 'selected' : ''?>>per year</option>
+                                                                            <option value="month" <?=$payDetails->salary_frequency === "month" ? 'selected' : ''?>>per month</option>
+                                                                            <option value="week" <?=$payDetails->salary_frequency === "week" ? 'selected' : ''?>>per week</option>
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-8">
+                                                    <div class="form-row pay-fields <?=$payDetails->pay_type === "commission" ? 'hide' : ''?>">
+                                                        <div class="col-sm-2 d-flex align-items-center">
+                                                            <?=$payDetails->pay_type === "salary" ? "$employee->FName works" : 'Default hours:'?>
+                                                        </div>
+                                                        <div class="col-sm-2">
+                                                            <input type="number" name="default_hours" id="default-hours" value="<?=$payDetails->pay_type !== "commission" ? number_format(floatval($payDetails->hours_per_day), 2, '.', ',') : ''?>" class="form-control" step=".01" onchange="convertToDecimal(this)">
+                                                        </div>
+                                                        <div class="d-flex align-items-center">
+                                                            hours per day and
+                                                        </div>
+                                                        <div class="col-sm-2">
+                                                            <input type="number" name="days_per_week" id="days-per-week" value="<?=$payDetails->pay_type !== "commission" ? number_format(floatval($payDetails->days_per_week), 2, '.', ',') : ''?>" class="form-control" step=".01" onchange="convertToDecimal(this)">
+                                                        </div>
+                                                        <div class="d-flex align-items-center">
+                                                            days per week.
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <h4>How do you want to pay this employee?</h4>
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="form-group row">
+                                                        <div class="col-sm-5">
+                                                            <select name="pay_method" id="pay-method" class="form-control">
+                                                                <option value="direct-deposit" <?=$payDetails->pay_method === 'direct-deposit' ? 'selected' : ''?>>Direct deposit</option>
+                                                                <option value="paper-check" <?=$payDetails->pay_method === 'paper-check' ? 'selected' : ''?>>Paper check</option>
+                                                            </select>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>

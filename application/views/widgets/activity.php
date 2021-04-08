@@ -16,29 +16,15 @@
     </div>
     <div class="card" style="border: 2px solid #30233d; margin-top:0; border-radius: 40px; padding:5px;">
         <div style="border: 5px solid #30233d; margin-top:0; border-radius: 40px; box-shadow: 1px 0px 15px 5px rgb(48, 35, 61);">
-            <div class="card-body mt-2" style="padding:5px 10px; height: 363px; overflow: hidden">
-                <div class="row" style="<?= $height ?> overflow-y: scroll">
-                    <div class="col-lg-12 text-center">
-                        <h5 class="mt-5">Activity Here</h5>
+            <div class="card-body mt-2" style="padding:5px 10px;  height: <?= $rawHeight ?>px; overflow: hidden">
+                <div class="row" style="height: <?= $rawHeight-30 ?>px; overflow-y: scroll; padding:5px 20px;">
+                    <div id="activityLogs" class="col-lg-12 text-center">
+                        <div class="progress-bar progress-bar-striped bg-warning active" role="progressbar" style="width: 100%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">System is fetching data</div>
                     </div>
 
-                    <!--                <ul class="timeline" id="activityBody">
-                    <?php
-                    if (!empty($activity_list)) {
-                        foreach ($activity_list as $al) {
-                            ?>
-                                <li class="timeline-item">
-                                    <p class="timeline-content"><?= $al['activity'] ?></p>
-                                    <p class="event-time"><?= $al['createdAt'] ?></p>
-                                </li>
-                            <?php
-                        }
-                    }
-                    ?>
-                                    </ul>-->
                 </div>
                 <div class="text-center">
-                    <a class="text-info" href="#">Load More</a>
+                    <a class="text-info" href="<?php echo base_url('activity_logs') ?>">Load More</a>
                 </div>
             </div>
 
@@ -46,3 +32,29 @@
 
     </div>
 </div>
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        loadActivityLogs();
+        //alert('hey');
+
+    });
+    function loadActivityLogs() {
+
+        $.ajax({
+            url: '<?php echo base_url(); ?>activity_logs/getActivityLogs',
+            method: 'get',
+            data: {},
+            beforeSend: function () {
+                // $('#timesheetBody').html('')
+            },
+            success: function (response) {
+                $('#activityLogs').html(response);
+            }
+
+        });
+
+    }
+    ;
+</script>

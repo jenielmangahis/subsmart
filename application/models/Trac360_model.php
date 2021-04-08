@@ -29,4 +29,9 @@ class Trac360_model extends MY_Model
         $this->db->order_by('date_created', 'DESC')->limit(1);
         return $this->db->get_where('timesheet_logs', array('user_id' => $user_id))->row();
     }
+    public function get_places($company_id)
+    {
+        $query = $this->db->query("SELECT *FROM trac360_places WHERE company_id = " . $company_id);
+        return $query->result();
+    }
 }
