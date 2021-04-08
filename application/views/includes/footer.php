@@ -97,6 +97,9 @@ $('#items_table_estimate_sales').DataTable();
     CKEDITOR.replace( 'editor2' );
 </script>
 <script>
+    CKEDITOR.replace( 'editor3' );
+</script>
+<script>
     CKEDITOR.replace( 'updateheader' );
 </script>
 

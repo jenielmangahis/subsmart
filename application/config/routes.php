@@ -396,7 +396,6 @@ $route['accounting/employees/add-pay-schedule-form'] = 'accounting_controllers/e
 $route['accounting/employees/add-pay-schedule']['post'] = 'accounting_controllers/employees/add_pay_schedule';
 $route['accounting/employees/edit-pay-schedule/(:any)'] = 'accounting_controllers/employees/edit_pay_schedule/$1';
 $route['accounting/employees/update-pay-schedule/(:any)']['post'] = 'accounting_controllers/employees/update_pay_schedule/$1';
-$route['accounting/employees/get-pay-date/(:any)'] = 'accounting_controllers/employees/get_pay_date/$1';
 
 $route['accounting/vendor-details/(:any)'] = 'accounting/vendordetails/$1';
 $route['accounting/taxes/edit-settings'] = 'taxes/edit_settings';
@@ -745,7 +744,9 @@ $route['cards_file/test_card'] = 'CardsFile/test_card';
 $route['tools/_get_converge_api_credentials'] = 'Tools/ajax_load_company_converge_form';
 $route['tools/_activate_company_converge'] = 'Tools/ajax_activate_company_online_payment_account';
 $route['tools/_activate_company_stripe'] = 'Tools/ajax_activate_company_online_payment_account';
+$route['tools/_activate_company_paypal'] = 'Tools/ajax_activate_company_online_payment_account';
 $route['tools/_get_stripe_api_credentials'] = 'Tools/ajax_load_company_stripe_form';
+$route['tools/_get_paypal_api_credentials'] = 'Tools/ajax_load_company_paypal_form';
 $route['tools/activate_stripe'] = 'Debug/activateStripe';
 
 //Work Pictures
@@ -770,3 +771,6 @@ $route['job_checklists/_delete_checklist_items'] = 'Job_Checklists/ajax_delete_c
 $route['job_checklists/_update_checklist_item'] = 'Job_Checklists/ajax_update_checklist_item';
 $route['job_checklists/update_checklist'] = 'Job_Checklists/update_checklist';
 $route['job_checklists/delete_checklist'] = 'Job_Checklists/delete_checklist';
+
+//Business Profile front
+$route['business/(:any)'] = 'Pages/front_company_business_profile/$1';

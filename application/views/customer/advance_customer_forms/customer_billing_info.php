@@ -33,10 +33,10 @@
         </div>
         <div class="col-md-8">
             <div class="row">
-                <div class="col-md-4">
+                <div class="col-md-5">
                     <input type="text" class="form-control" name="billing_city" id="billing_city" value="<?php if(isset($billing_info)){ echo $billing_info->city; } ?>" />
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <input type="text" class="form-control" name="billing_state" id="billing_state" value="<?php if(isset($billing_info)){ echo $billing_info->state; } ?>"/>
                 </div>
                 <div class="col-md-4">
@@ -150,7 +150,7 @@
         <div class="col-md-8">
             <select id="bill_day" name="bill_day" data-customer-source="dropdown" class="input_select searchable-dropdown">
                 <?php
-                for ($days=0;$days<31;$days++){
+                for ($days=0;$days<32;$days++){
                     ?>
                     <option <?php if(isset($billing_info)){ if($billing_info->bill_day == days_of_month($prefix)){ echo 'selected'; } } ?> value="<?= days_of_month($days); ?>"><?= days_of_month($days) < 1 ? '' : days_of_month($days) ; ?></option>
                     <?php

@@ -38,6 +38,17 @@ class Business_model extends MY_Model {
         return $query;
     }
 
+    public function getBySlug($slug)
+    {
+        $this->db->select('*');
+        $this->db->from($this->table);
+
+        $this->db->where('profile_slug', $slug);
+
+        $query = $this->db->get()->row();
+        return $query;
+    }
+
     public function getByCompanyProfileImage($company_id)
     {
         $this->db->select('id,business_image');

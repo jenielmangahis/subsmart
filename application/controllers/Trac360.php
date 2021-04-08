@@ -84,6 +84,9 @@ class Trac360 extends MY_Controller
                     $locations[$found_ctr][1] = $names;
                 }
                 $current_user_location = $user->last_tracked_location;
+                if ($user->user_id == $user_id) {
+                    $current_user_location = $user->user_location;
+                }
             } else {
                 $last_loc = $this->trac360_model->get_last_location_from_timesheet_logs($user->user_id);
                 for ($i = 0; $i < count($locations); $i++) {
@@ -94,15 +97,15 @@ class Trac360 extends MY_Controller
                     }
                 }
                 if (!$found) {
-                    $locations[] = array($last_loc->user_location, array($user->name), $user->profile_img);
+                    $locations[] = array($last_loc->user_location, array($user->name), $user->profile_img,);
                 } else {
                     $names = $locations[$found_ctr][1];
                     $names[] =  $user->name;
                     $locations[$found_ctr][1] = $names;
                 }
-                $current_user_location = $last_loc->user_location;
-            }
-            if ($user->user_id == $user_id) {
+                if ($user->user_id == $user_id) {
+                    $current_user_location = $last_loc->user_location;
+                }
             }
         }
 
@@ -124,18 +127,30 @@ class Trac360 extends MY_Controller
                 }
             }
 
-            $marker['infowindow_content'] = $name;
-
             $marker['position'] = $locations[$i][0];
 
-            $marker['animation'] =  'DROP';
+            if ($current_user_location == $locations[$i][0]) {
+                $marker['animation'] =  'BOUNCE';
+            } else {
+                $marker['animation'] =  'DROP';
+            }
 
-            $marker['icon'] = base_url() . "uploads/users/default.png";
-            $marker['icon_scaledSize'] = '30,30';
+            $image = base_url('uploads/users/user-profile/' . $locations[$i][2]);
+            if (!@getimagesize($image)) {
+                $image = base_url('assets/img/trac360/default.png');
+            }
+
+            $marker['infowindow_content'] = $name;
+            if (count($names) > 1) {
+                $marker['icon'] = base_url() . "assets/img/trac360/group.png";
+                $marker['icon_scaledSize'] = '50,50';
+            } else {
+                // $image = base_url('uploads/users/user-profile/' . $locations[$i][2]);
+                $marker['icon'] = $image;
+                $marker['icon_scaledSize'] = '30,30';
+            }
             $this->googlemaps->add_marker($marker);
         }
-
-
 
         $data = $this->googlemaps->create_map();
 
@@ -337,5 +352,32 @@ class Trac360 extends MY_Controller
         }
 
         echo json_encode($return);
+    }
+
+    public function places()
+    {
+        $company_id = logged('company_id');
+        $config['zoom'] = "auto";
+        $config['apiKey'] = 'AIzaSyCL77vydXglokkXuSZV8cF8aJ3ZxueBhrU';
+
+        $this->googlemaps->initialize($config);
+
+        $place_locations = $this->trac360_model->get_places($company_id);
+        foreach ($place_locations as $place) {
+            $marker = array();
+            $marker['position'] = $place->coordinates;
+            $marker['animation'] =  'DROP';
+            $image = $image = base_url('assets/img/trac360/mansion.png');
+            $marker['infowindow_content'] = $place->address;
+            $marker['icon'] = $image;
+            $marker['icon_scaledSize'] = '50,50';
+
+            $this->googlemaps->add_marker($marker);
+        }
+        $data = $this->googlemaps->create_map();
+
+        $this->page_data['map'] = $data['html'];
+        $this->page_data['map_js'] = $data['js'];
+        $this->load->view('trac360/places', $this->page_data);
     }
 }

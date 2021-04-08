@@ -343,17 +343,13 @@ svg#svg-sprite-menu-close {
                                             Online Transaction Fees: as set by PayPal.
                                         </div>
                                         <div class="row">
-                                            <div class="col-sm-8">
-                                                <div class="addon_price">
-                                                    Is Setup : <?= $is_setup; ?><br />
-                                                    Is Active : <?= $is_active; ?>
-                                                </div>
-                                            </div>
-                                            <div class="col-sm-4 text-right">
-                                                <a class="" href="#setupPaypalModal" data-toggle="modal" data-target="#setupPaypalModal"><span class="fa fa-pencil-square-o icon"></span> Setup</a>
-                                            </div>
-                                        </div>
-                                        <div class="addon__switch">
+                                          <div class="col-sm-6">
+                                            <div class="apply-container" role="group" aria-label="...">
+                                                  <a class="btn-md btn-paypal-form" href="javascript:void(0);">
+                                                      <span class="fa fa-gear fa-margin-right"></span> Setup
+                                                  </a>
+                                              </div>
+                                          </div>
                                         </div>
                                     </div>
                                 </li>
@@ -590,6 +586,25 @@ svg#svg-sprite-menu-close {
                                   </div>
                                 </div>
 
+                                <div class="modal fade bd-example-modal-sm" id="modalPaypalApi" tabindex="-1" role="dialog" aria-labelledby="modalPaypalApiTitle" aria-hidden="true">
+                                  <div class="modal-dialog modal-md" role="document">
+                                    <div class="modal-content">
+                                      <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLongTitle"><i class="fa fa-form"></i> Setup Paypal</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                          <span aria-hidden="true">&times;</span>
+                                        </button>
+                                      </div>
+                                      <?php echo form_open_multipart('', ['class' => 'form-validate', 'id' => 'form-paypal-account', 'autocomplete' => 'off' ]); ?>
+                                      <div class="modal-body paypal-api-body"></div>
+                                      <div class="modal-footer close-modal-footer">
+                                        <button type="submit" class="btn btn-primary btn-paypal-activate">Save</button>
+                                      </div>
+                                      <?php echo form_close(); ?>
+                                    </div>
+                                  </div>
+                                </div>
+
                             </div>
                         </div>
 
@@ -607,6 +622,23 @@ svg#svg-sprite-menu-close {
 <?php include viewPath('tools/css/style'); ?>
 <script>
 $(function(){
+    $(".btn-paypal-form").click(function(){
+        $("#modalPaypalApi").modal('show');
+
+        var url = base_url + 'tools/_get_paypal_api_credentials';
+        $(".paypal-api-body").html('<span class="spinner-border spinner-border-sm m-0"></span>');
+        setTimeout(function () {
+        $.ajax({
+           type: "POST",
+           url: url,
+           success: function(o)
+           {
+             $(".paypal-api-body").html(o);
+           }
+        });
+        }, 800);
+    });
+
     $(".btn-stripe-form").click(function(){
         $("#modalStripeApi").modal('show');
 
@@ -708,6 +740,42 @@ $(function(){
                  }
 
                  $(".btn-stripe-activate").html('Save');
+               }
+            });
+        }, 800);
+    });
+
+    $("#form-paypal-account").submit(function(e){
+        e.preventDefault();
+
+        var url = base_url + 'tools/_activate_company_paypal';
+        $(".btn-paypal-activate").html('<span class="spinner-border spinner-border-sm m-0"></span>');
+        setTimeout(function () {
+        $.ajax({
+               type: "POST",
+               url: url,
+               dataType: "json",
+               data: $("#form-paypal-account").serialize(),
+               success: function(o)
+               {
+                 if( o.is_success ){
+                    Swal.fire({
+                      icon: 'success',
+                      title: 'Your paypal account was successfully saved',
+                      showConfirmButton: false,
+                      timer: 1500
+                    });
+
+                    $("#modalStripeApi").modal('hide');
+                 }else{
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Cannot save data',
+                        text: o.msg
+                    });
+                 }
+
+                 $(".btn-paypal-activate").html('Save');
                }
             });
         }, 800);

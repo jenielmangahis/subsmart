@@ -10,6 +10,16 @@ class Activity_logs extends MY_Controller {
 		$this->page_data['page']->title = 'Activity Logs';
 		$this->page_data['page']->menu = 'activity_logs';
 	}
+        
+        public function getActivityLogs()
+        {
+            $user_id = logged('id');
+            
+            $this->page_data['activity_logs'] = $this->activity_model->getActivityLogs($user_id);
+            
+            $this->load->view('widgets/activity_details', $this->page_data);
+            
+        }
 
 	public function index()
 	{

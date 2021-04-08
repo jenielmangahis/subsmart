@@ -81,7 +81,6 @@ class Customer extends MY_Controller
             echo $this->load->view('no_access_module', $this->page_data, true);
             die();
         }
-
         $userid = $id;
         $user_id = logged('id');
         if(isset($userid) || !empty($userid)){

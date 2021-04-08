@@ -560,6 +560,31 @@ class Users_model extends MY_Model {
 		$update = $this->db->update('pay_schedule', $data);
 		return $update;
 	}
+
+	public function insertEmployeePayDetails($data)
+	{
+		$this->db->insert('employee_pay_details', $data);
+		return $this->db->insert_id();
+	}
+
+	public function getEmployeePayDetails($user_id)
+	{
+		$this->db->where('user_id', $user_id);
+		$query = $this->db->get('employee_pay_details');
+		return $query->row();
+	}
+
+	public function updateEmployeePayDetails($user_id, $data)
+	{
+		$this->db->where('user_id', $user_id);
+		$update = $this->db->update('employee_pay_details', $data);
+		return $update;
+	}
+
+	public function deleteEmployeePayDetails($user_id)
+	{
+		$this->db->delete('employee_pay_details', array('user_id' => $user_id));
+	}
 }
 
 

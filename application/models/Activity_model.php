@@ -10,6 +10,14 @@ class Activity_model extends MY_Model {
 	{
 		parent::__construct();
 	}
+        
+        public function getActivityLogs($user_id)
+        {
+            $this->db->where('user_id', $user_id);
+            $this->db->limit(10);
+            $this->db->order_by('createdAt', 'DESC');
+            return $this->db->get('esign_activity')->result();
+        }
 
 	public function add($message, $user_id = 0, $ip_address = false)
 	{

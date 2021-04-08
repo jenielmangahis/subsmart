@@ -142,11 +142,10 @@ if (!function_exists('companyProfileImage')) {
 
 if (!function_exists('getCompanyCoverPhoto')) {
 
-    function getCompanyCoverPhoto()
+    function getCompanyCoverPhoto($company_id)
     {
 
         $CI         = &get_instance();
-        $company_id = logged('company_id');
         $res = $CI->business_model->getByCompanyCoverPhoto($company_id);
         if( $res ){
             $url = urlUpload('company_cover_photo/' . $res->company_id . '/' . $res->business_cover_photo . '?' . time());

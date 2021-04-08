@@ -59,7 +59,7 @@
         </div>
         <div class="row form_line">
             <div class="col-md-4">
-                <label for="">Abort/Password Code</label>
+                <label for="">Abort Code</label>
             </div>
             <div class="col-md-8">
                 <input type="text" class="form-control" name="passcode" id="passcode" value="<?php if(isset($alarm_info)){ echo $alarm_info->passcode; } ?>"/>
@@ -75,7 +75,7 @@
         </div>
         <div class="row form_line">
             <div class="col-md-4">
-                <label for="">Monitoring Confirm #</label>
+                <label for="">Monitoring Confirm#</label>
             </div>
             <div class="col-md-8">
                 <input type="text" class="form-control" name="mcn" id="mcn" value="<?php if(isset($alarm_info)){ echo $alarm_info->mcn !=0 ? $alarm_info->mcn : ''; } ?>"/>
@@ -83,7 +83,7 @@
         </div>
         <div class="row form_line">
             <div class="col-md-4">
-                <label for="">Signal Confirm #</label>
+                <label for="">Signal Confirm#</label>
             </div>
             <div class="col-md-8">
                 <input type="text" class="form-control" name="scn" id="scn" value="<?php if(isset($alarm_info)){ echo $alarm_info->scn !=0 ? $alarm_info->scn : ''; } ?>"/>
@@ -129,7 +129,7 @@
         </div>
         <div class="row form_line">
             <div class="col-md-4">
-                <label for="">System Package Type<span class="required"> *</span></label>
+                <label for="">System Package Type</label>
             </div>
             <div class="col-md-8">
                 <select name="system_type" id="system_type" class="input_select">
@@ -166,7 +166,7 @@
             <div class="col-md-8">
                 <select id="warranty_type" name="warranty_type" data-customer-source="dropdown" class="input_select" >
                     <option <?php if(isset($office_info)){ if($office_info->warranty_type == ""){ echo 'selected'; } } ?> value="">Select</option>
-                    <option <?php if(isset($office_info)){ if($office_info->warranty_type == "Limited. 90 Days"){ echo 'selected'; } } ?> value="Limited. 90 Days">Limited. 90 Days</option>
+                    <option <?php if(isset($office_info)){ if($office_info->warranty_type == "Limited. 90 Days"){ echo 'selected'; } } ?> value="Limited. 90 Days">Limited 90 Days</option>
                     <option <?php if(isset($office_info)){ if($office_info->warranty_type == "1 Year"){ echo 'selected'; } } ?>  value="1 Year">1 Year</option>
                     <option <?php if(isset($office_info)){ if($office_info->warranty_type == "$25 Trip"){ echo 'selected'; } } ?>  value="$25 Trip">$25 Trip</option>
                     <option <?php if(isset($office_info)){ if($office_info->warranty_type == "$50 Trip and $65 Deductible"){ echo 'selected'; } } ?>  value="$50 Trip and $65 Deductible">$50 Trip and $65 Deductible</option>

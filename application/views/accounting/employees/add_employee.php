@@ -233,6 +233,75 @@
                                                     </div>
                                                 </div>
                                             </div>
+                                            <h4>How much do you pay this employee?</h4>
+                                            <p>If your company offers additional pay types, add them here. These pay types show up when you run payroll.</p>
+                                            <div class="form-group row">
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <div class="row">
+                                                            <div class="col-sm-5">
+                                                                <select name="pay_type" id="pay-type" class="form-control">
+                                                                    <option value="hourly">Hourly</option>
+                                                                    <option value="salary">Salary</option>
+                                                                    <option value="commission">Commission only</option>
+                                                                </select>
+                                                            </div>
+                                                            <div class="col-sm-7">
+                                                                <div class="form-row m-0 pay-fields">
+                                                                    <div class="col-sm-1 d-flex align-items-center">
+                                                                        <span>$</span>
+                                                                    </div>
+                                                                    <div class="col-sm-6">
+                                                                        <input type="number" name="pay_rate" id="pay-rate" class="form-control" step=".01" onchange="convertToDecimal(this)">
+                                                                    </div>
+                                                                    <div class="col-sm-4 d-flex align-items-center hourly-pay-fields">
+                                                                       <span>/hour</span>
+                                                                    </div>
+                                                                    <div class="col-sm-5 salary-pay-fields hide">
+                                                                        <select name="salary_frequency" id="salary-frequency" class="form-control">
+                                                                            <option value="year">per year</option>
+                                                                            <option value="month">per month</option>
+                                                                            <option value="week">per week</option>
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-8">
+                                                    <div class="form-row pay-fields">
+                                                        <div class="col-sm-2 d-flex align-items-center">
+                                                            Default hours:
+                                                        </div>
+                                                        <div class="col-sm-2">
+                                                            <input type="number" name="default_hours" id="default-hours" class="form-control" step=".01" onchange="convertToDecimal(this)">
+                                                        </div>
+                                                        <div class="d-flex align-items-center">
+                                                            hours per day and
+                                                        </div>
+                                                        <div class="col-sm-2">
+                                                            <input type="number" name="days_per_week" id="days-per-week" class="form-control" step=".01" onchange="convertToDecimal(this)">
+                                                        </div>
+                                                        <div class="d-flex align-items-center">
+                                                            days per week.
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <h4>How do you want to pay this employee?</h4>
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="form-group row">
+                                                        <div class="col-sm-5">
+                                                            <select name="pay_method" id="pay-method" class="form-control">
+                                                                <option value="direct-deposit">Direct deposit</option>
+                                                                <option value="paper-check">Paper check</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>

@@ -392,4 +392,17 @@ class Pages extends MY_Controller {
 		//echo $sessiontoken;  //shows the session token.
     }
 
+    public function front_company_business_profile( $slug ){
+    	$this->load->model('Business_model');
+    	$this->load->model('ServiceCategory_model');
+
+    	$comp_id = logged('company_id');
+        $profiledata = $this->Business_model->getBySlug($slug);
+        $selectedCategories = $this->ServiceCategory_model->getAllCategoriesByCompanyID($comp_id);
+
+        $this->page_data['profiledata'] = $profiledata;
+        $this->page_data['selectedCategories'] = $selectedCategories;
+        $this->load->view('pages/company_business_profile', $this->page_data);        
+    }
+
 }
