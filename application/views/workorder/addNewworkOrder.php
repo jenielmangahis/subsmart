@@ -43,10 +43,11 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 <div class="col-xl-12">
                     <div class="card">
                     <div class="card-body">
+                    <div id="header_area">
                         <h4 class="mt-0 header-title mb-5">Header</h4>
                         <div class="row">
                             <div class="col-md-12">
-                                <ol class="breadcrumb" style="margin-top:-30px;">
+                                <ol class="breadcrumb" style="margin-top:-30px;"> <i class="fa fa-pencil" aria-hidden="true"></i>
                                     <li class="breadcrumb-item active">
                                         <label style="background-color:#E8E8E9;" id="headerContent"><?php echo $headers->content; ?></label>
                                     </li>
@@ -59,7 +60,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         <input type="hidden" id="current_date" value="<?php echo @date('m-d-Y'); ?>">
 
                         <input type="hidden" id="content_input" class="form-control" name="header" value="<?php echo $headers->content; ?>">
-
+                    </div>
                         <div class="row">                   
                             <div class="col-md-3 form-group">
                                 <label for="contact_name">Work Order #</label>
@@ -1037,6 +1038,31 @@ defined('BASEPATH') or exit('No direct script access allowed');
             </div>
 
             <!-- Modal -->
+            <div class="modal fade" id="update_header_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle">Update Header</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                            <textarea class="form-control ckeditor" name="update_header_content" id="editor3" cols="40" rows="40">
+                            <?php echo $headers->content; ?>
+                            </textarea>
+                            <input type="hidden" id="company_id_header" value="<?php echo getLoggedCompanyID(); ?>">
+                            <input type="hidden" id="update_h_id" value="<?php echo $headers->id; ?>">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary save_update_header">Save changes</button>
+                    </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal -->
             <div class="modal fade" id="item_list" tabindex="-1" role="dialog" aria-labelledby="newcustomerLabel" aria-hidden="true">
                 <div class="modal-dialog modal-lg" role="document" style="width:800px;position: absolute;top: 50%;left: 50%;transform: translate(-50%, -50%);">
                     <div class="modal-content">
@@ -1258,6 +1284,38 @@ $("#content_input").val(function() {
 
 });
 });
+</script>
+
+<script>
+$(document).on('click','#headerContent',function(){
+    //    alert('yeah');
+    $('#update_header_modal').modal('show');
+});
+
+$(document).on('click','.save_update_header',function(){
+    //    alert('yeah');
+    var id = $('#update_h_id').val();
+    // var content = $('.editor1_tc').val();
+    var content = CKEDITOR.instances['editor3'].getData();
+    // alert(content);
+      $.ajax({
+            url:"<?php echo base_url(); ?>workorder/save_update_header",
+            type: "POST",
+            data: {id : id, content : content },
+            success: function(dataResult){
+                // $('#table').html(dataResult); 
+                // alert('success')
+                console.log(dataResult);
+                $("#update_header_modal").modal('hide')
+                $('#header_area').load(window.location.href +  ' #header_area');
+            },
+                error: function(response){
+                alert('Error'+response);
+       
+                }
+	    });
+});
+
 </script>
 
 <script>

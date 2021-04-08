@@ -414,6 +414,18 @@ class Workorder_model extends MY_Model
         $this->db->update('terms_and_conditions', array('content' => $content));
         return $data;
     }
+
+    public function update_header_f($data)
+    {
+        extract($data);
+        // $vendor = $this->db->update('custom_fields', $data);
+        //           $this->db->where('id', $data['id']);
+	    // $insert = $this->db->insert_id();
+		// return  $insert;
+        $this->db->where('id', $id);
+        $this->db->update('work_order_headers', array('content' => $content));
+        return $data;
+    }
     
     public function update_tu($data)
     {

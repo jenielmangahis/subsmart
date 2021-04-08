@@ -36,7 +36,7 @@
                     </div>
                 </div>
                 
-            <div class="col-md-6 pr-0 form-group" style="display:none;" id="business_name_area">
+            <div class="col-md-6 pr-0 form-group" style="display:none;margin-left:-15px;" id="business_name_area">
                 <label for="business_name">Business Name</label>
                 <input type="text" class="form-control" name="business_name" id="business_name"
                         required placeholder="Enter Name"

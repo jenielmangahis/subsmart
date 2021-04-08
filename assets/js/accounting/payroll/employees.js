@@ -492,27 +492,29 @@ function initPayScheduleElements(modalId)
             language: "de"
         });
 
-        $(this).on('change', function() {
-            var selectedDate = new Date($(this).val());
-            var day = new Intl.DateTimeFormat('en-US', {weekday: 'long'}).format(selectedDate);
-            $(this).parent().next().html(day);
+        if($(this).val() !== "") {
+            $(this).on('change', function() {
+                var selectedDate = new Date($(this).val());
+                var day = new Intl.DateTimeFormat('en-US', {weekday: 'long'}).format(selectedDate);
+                $(this).parent().next().html(day);
 
-            if($(this).attr('id') === 'next-payday') {
-                switch($('#pay-frequency').val()) {
-                    case 'every-week' :
-                        $(`#${modalId} #name`).val('Every '+day);
-                    break;
-                    case 'every-other-week' :
-                        $(`#${modalId} #name`).val('Every other '+day);
-                    break;
-                    default :
-                        $(`#${modalId} #name`).val($('#pay-frequency option:selected').html());
-                    break;
+                if($(this).attr('id') === 'next-payday') {
+                    switch($('#pay-frequency').val()) {
+                        case 'every-week' :
+                            $(`#${modalId} #name`).val('Every '+day);
+                        break;
+                        case 'every-other-week' :
+                            $(`#${modalId} #name`).val('Every other '+day);
+                        break;
+                        default :
+                            $(`#${modalId} #name`).val($('#pay-frequency option:selected').html());
+                        break;
+                    }
                 }
-            }
 
-            upcomingPayPeriods($(this));
-        }).trigger('change');
+                    upcomingPayPeriods($(this));
+            }).trigger('change');
+        }
     });
 }
 
@@ -811,9 +813,9 @@ $(document).on('submit', '#pay-schedule-form', function(e) {
     });
 });
 
-$(document).on('click', '#add-employee-modal label[for="pay-schedule"] a', function(e) {
+$(document).on('click', 'label[for="pay-schedule"] a', function(e) {
     e.preventDefault();
-    var pay_sched_id = $('#add-employee-modal #pay-schedule').val();
+    var pay_sched_id = $('#pay-schedule').val();
     
     if(pay_sched_id !== 'add' || pay_sched_id !== '') {
         $.get('/accounting/employees/edit-pay-schedule/'+pay_sched_id, function(res) {
@@ -825,6 +827,9 @@ $(document).on('click', '#add-employee-modal label[for="pay-schedule"] a', funct
             $('.append-modal').append(res);
 
             initPayScheduleElements('edit-pay-schedule-modal');
+            if($('#edit-pay-schedule-modal #custom-schedule').prop('checked')) {
+                $('#edit-pay-schedule-modal #custom-schedule').trigger('change');
+            }
 
             $('#edit-pay-schedule-modal').modal('show');
         });
@@ -853,4 +858,32 @@ $(document).on('submit', '#edit-pay-schedule-form', function(e) {
             $('#edit-pay-schedule-modal').modal('hide');
         }
     });
+});
+
+$(document).on('change', '#pay-type', function() {
+    switch($(this).val()) {
+        case 'hourly' :
+            $('.pay-fields').removeClass('hide');
+            $('.salary-pay-fields').addClass('hide');
+            $('.hourly-pay-fields').addClass('d-flex');
+            $('.hourly-pay-fields').removeClass('hide');
+            $($('.pay-fields div:first-child')[1]).addClass('col-sm-2');
+            $($('.pay-fields div:first-child')[1]).html('Default hours:');
+            $('#default-hours').val('');
+            $('#days-per-week').val('');
+        break;
+        case 'salary' :
+            $('.pay-fields').removeClass('hide');
+            $('.hourly-pay-fields').addClass('hide');
+            $('.hourly-pay-fields').removeClass('d-flex');
+            $('.salary-pay-fields').removeClass('hide');
+            $($('.pay-fields div:first-child')[1]).removeClass('col-sm-2');
+            $($('.pay-fields div:first-child')[1]).html('This employee works');
+            $('#default-hours').val('8.00');
+            $('#days-per-week').val('5.00');
+        break;
+        case 'commission' :
+            $('.pay-fields').addClass('hide');
+        break;
+    }
 });
