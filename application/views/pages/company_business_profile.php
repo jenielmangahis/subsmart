@@ -1,4 +1,4 @@
-<?php include viewPath('includes/header_front'); ?>
+<?php include viewPath('includes/header_business_view'); ?>
 <style>
 #company-cover-photo {
     background-size: cover;
@@ -207,7 +207,7 @@ section.mr-23 {
           $company_id = $profiledata->company_id;
         } 
       ?>
-      <div class="img-responsive" id="company-cover-photo" style="background-image: url('<?= getCompanyCoverPhoto($company_id); ?>');"></div>
+      <div class="img-responsive" id="company-cover-photo" style="background-color: #dddddd;background-image: url('<?= getCompanyCoverPhoto($company_id); ?>');"></div>
       <!-- <img src="<?= getCompanyCoverPhoto($company_id); ?>" /> -->
     </div>
     <div class="headline">
