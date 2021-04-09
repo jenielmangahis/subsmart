@@ -330,8 +330,13 @@ const actions = {
   },
   history: function (row) {
     const formatDate = (date) => {
+      if (!moment(date).isValid()) {
+        return "-";
+      }
+
       const dateFormat = moment(date).format("MM/DD/YYYY");
       const timeFormat = moment(date).format("HH:mm:ss A");
+
       return `${dateFormat} | ${timeFormat}`;
     };
 
@@ -339,7 +344,9 @@ const actions = {
     $historyModal.modal("show");
 
     const { name, status, created_at, updated_at, recipients, id } = row;
-    const recipientNames = recipients.map((r) => r.name).join(", ");
+
+    let recipientNames = recipients.map((r) => r.name).join(", ");
+    recipientNames = recipients.length ? recipientNames : "-";
 
     $("[data-property-name=name]").text(name);
     $("[data-property-name=status]").text(status);

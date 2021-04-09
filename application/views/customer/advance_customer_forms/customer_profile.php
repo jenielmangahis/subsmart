@@ -194,10 +194,10 @@
 
         <div class="row form_line">
             <div class="col-md-4">
-                <label for="">Email <span class="required"> *</span></label>
+                <label for="">Email </label>
             </div>
             <div class="col-md-8">
-                <input type="email" class="form-control" name="email" id="email" value="<?php if(isset($profile_info)){ echo $profile_info->email; } ?>" required/>
+                <input type="email" class="form-control" name="email" id="email" value="<?php if(isset($profile_info)){ echo $profile_info->email; } ?>" />
             </div>
         </div>
 

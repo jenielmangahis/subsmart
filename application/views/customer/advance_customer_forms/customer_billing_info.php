@@ -5,7 +5,7 @@
 <div class="card-body">
     <div class="row form_line">
         <div class="col-md-4">
-            <label for="">Card Holder First Name</label>
+            <label for="">Card First Name</label>
         </div>
         <div class="col-md-8">
             <input type="text" class="form-control" name="card_fname" id="card_fname" value="<?php if(isset($billing_info)){ echo $billing_info->card_fname; } ?>" />
@@ -13,7 +13,7 @@
     </div>
     <div class="row form_line">
         <div class="col-md-4">
-            <label for="">Card Holder Last Name</label>
+            <label for="">Card Last Name</label>
         </div>
         <div class="col-md-8">
             <input type="text" class="form-control" name="card_lname" id="card_lname" value="<?php if(isset($billing_info)){ echo $billing_info->card_lname; } ?>"/>
@@ -21,7 +21,7 @@
     </div>
     <div class="row form_line">
         <div class="col-md-4">
-            <label for="">Card Holder Address </label>
+            <label for="">Card Address </label>
         </div>
         <div class="col-md-8">
             <input type="text" class="form-control" name="card_address" id="card_address" value="<?php if(isset($billing_info)){ echo $billing_info->card_address; } ?>"/>
@@ -311,8 +311,13 @@
             <label for="">Finance Amount</label>
         </div>
         <div class="col-md-8">
-            <input type="text" placeholder="$" class="form-control datepicker" name="recurring_start_date" id="recurring_start_date" value="<?php if(isset($billing_info)){ echo $billing_info->bill_start_date; } ?>" />
-        </div>
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="basic-addon1">$</span>
+                </div>
+                <input type="text" class="form-control input_select" name="finance_amount"  aria-label="Username" aria-describedby="basic-addon1">
+            </div>
+         </div>
     </div>
     <div class="row form_line">
         <div class="col-md-4">
@@ -327,7 +332,7 @@
             <label for="">Recurring End Date</label>
         </div>
         <div class="col-md-8">
-            <input type="text" class="form-control datepicker" name="recurring_start_date" id="recurring_start_date" value="<?php if(isset($billing_info)){ echo $billing_info->bill_start_date; } ?>" />
+            <input type="text" class="form-control datepicker" name="recurring_end_date" id="recurring_end_date" value="<?php if(isset($billing_info)){ echo $billing_info->bill_start_date; } ?>" />
         </div>
     </div>
     <div class="row form_line">
@@ -335,7 +340,12 @@
             <label for="">Transaction Amount</label>
         </div>
         <div class="col-md-8">
-            <input type="text" placeholder="$" class="form-control datepicker" name="recurring_start_date" id="recurring_start_date" value="<?php if(isset($billing_info)){ echo $billing_info->bill_start_date; } ?>" />
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="basic-addon1">$</span>
+                </div>
+                <input type="text" class="form-control input_select" name="transaction_amount" aria-label="Username" aria-describedby="basic-addon1">
+            </div>
         </div>
     </div>
     <div class="row form_line">

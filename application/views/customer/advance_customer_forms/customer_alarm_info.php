@@ -309,99 +309,20 @@
             <div class="row form-line">
                 <textarea type="text" class="form-controls" name="notes" id="notes" cols="100%" rows="5"> </textarea>
             </div>
-
         </div>
 
         <div class="card-header">
             <span style="position: absolute;right: 0;margin-right: 25px;font-size: 20px;padding-top:10px;" class="fa fa-ellipsis-v"></span>
 
-            <h6 ><span class="fa fa-user"></span>&nbsp; &nbsp;Devices</h6>
+            <h6 ><span class="fa fa-user"></span>&nbsp; Existing&nbsp;Notes</h6>
         </div>
         <div class="card-body">
-            <div class="row">
-                <!--<div style="margin-right:15px; padding-top:1px;font-size: 10px !important;" align="left" class="normaltext1">
-                    <a href="javascript:void(0);" id="moreFields" class="more_fields" style="color:#58bc4f;"><span class="fa fa-plus"></span> Add Device </a>&nbsp;&nbsp;
-                </div>-->
-                <table cellpadding="0" cellspacing="3" style="width: 100%; border-color: #525759; border-style: solid; border-collapse: collapse; border-width: 1px;font-size: 10px !important;">
-                    <thead>
-                    <tr>
-                        <td style="border-color: #525759; border-style: solid; border-collapse: collapse; border-width: 1px">
-                            <b>Name</b>
-                        </td>
-                        <td style="border-color: #525759; border-style: solid; border-collapse: collapse; border-width: 1px">
-                            <b>Sold By</b></td>
-                        <td style="border-color: #525759; border-style: solid; border-collapse: collapse; border-width: 1px">
-                            <b>Points</b></td>
-                        <td style="border-color: #525759; border-style: solid; border-collapse: collapse; border-width: 1px">
-                            <b>Retail Cost</b></td>
-                        <td style="border-color: #525759; border-style: solid; border-collapse: collapse; border-width: 1px">
-                            <b>Purchase Price</b></td>
-                        <td style="border-color: #525759; border-style: solid; border-collapse: collapse; border-width: 1px">
-                            <b>Qty</b></td>
-                        <td style="border-color: #525759; border-style: solid; border-collapse: collapse; border-width: 1px">
-                            <b>Tot Points</b></td>
-                        <td style="border-color: #525759; border-style: solid; border-collapse: collapse; border-width: 1px">
-                            <b>Tot Cost</b></td>
-                        <td style="border-color: #525759; border-style: solid; border-collapse: collapse; border-width: 1px">
-                            <b>Tot Purchase Price</b></td>
-                        <td style="border-color: #525759; border-style: solid; border-collapse: collapse; border-width: 1px">
-                            <b>Net</b></td>
-                        <td style="border-color: #525759; border-style: solid; border-collapse: collapse; border-width: 1px">
 
-                        </td>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <?php if (isset($device_info)) : ?>
-                        <?php foreach ($device_info as $device) { ?>
-                            <tr>
-                                <td style="text-align: left; border-color: #525759; border-style: solid; border-collapse: collapse; border-width: 1px">
-                                    <?= $device->device_name; ?>
-                                </td>
-                                <td style="text-align: left; border-color: #525759; border-style: solid; border-collapse: collapse; border-width: 1px">
-                                    <?= $device->sold_by; ?>
-                                </td>
-                                <td style="border-color: #525759; border-style: solid; border-collapse: collapse; border-width: 1px">
-                                    <?= $device->device_points; ?>
-                                </td>
-                                <td style="border-color: #525759; border-style: solid; border-collapse: collapse; border-width: 1px; color: #336699; text-align: right">
-                                    <?= '$'.$device->retail_cost; ?>
-                                </td>
-                                <td style="border-color: #525759; border-style: solid; border-collapse: collapse; border-width: 1px; color: #CC3300; text-align: right">
-                                    <?= '$'.$device->purch_price; ?>
-                                </td>
-                                <td style="border-color: #525759; border-style: solid; border-collapse: collapse; border-width: 1px">
-                                    <?= $device->device_qty; ?>
-                                </td>
-                                <td style="border-color: #525759; border-style: solid; border-collapse: collapse; border-width: 1px">
-                                    <?= $device->total_points; ?>
-                                </td>
-                                <td style="border-color: #525759; border-style: solid; border-collapse: collapse; border-width: 1px; color: #336699; text-align: right">
-                                    <?= '$'.$device->total_cost; ?>
-                                </td>
-                                <td style="border-color: #525759; border-style: solid; border-collapse: collapse; border-width: 1px; color: #CC3300; text-align: right">
-                                    <?= '$'.$device->total_purch_price; ?>
-                                </td>
-                                <td style="border-color: #525759; border-style: solid; border-collapse: collapse; border-width: 1px; color: Green; text-align: right">
-                                    <?= '$'.$device->device_net; ?>
-                                </td>
-                                <td style="border-color: #525759; border-style: solid; border-collapse: collapse; border-width: 1px; color: Green; text-align: right">
-                                    <a id="<?= $device->dev_id; ?>" href="javascript:void(0);" class="remove_device" style="color:#58bc4f;"><span class="fa fa-trash-o"></span> </a>&nbsp;&nbsp;
-                                </td>
-                            </tr>
-                        <?php } ?>
-                    <?php endif ?>
-                    </tbody>
-                </table>
-                <span id="writeroot"></span>
-            </div>
-            <br>
-            <div class="row">
-                <a href="<?php echo base_url('customer') ?>">
-                    <button type="button" class="btn btn-primary btn-md "><span class="fa fa-remove"></span> Cancel </button> &nbsp;
-                </a>
-                <button type="submit" class="btn btn-primary btn-md" name="" id="" ><span class="fa fa-paper-plane-o"></span> Save </button>
-            </div>
+        </div>
+        <div class="row">
+            <a href="<?php echo base_url('customer') ?>">
+                <button type="button" class="btn btn-primary btn-md "><span class="fa fa-remove"></span> Cancel </button> &nbsp;
+            </a>
+            <button type="submit" class="btn btn-primary btn-md" name="" id="" ><span class="fa fa-paper-plane-o"></span> Save </button>
         </div>
     </div>
-</div>

@@ -15,6 +15,14 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Widgets extends MY_Controller {
 
     //put your code here
+    
+    public function getJobTags()
+    {
+        $this->load->model('widgets_model');
+        $data['tags'] = $this->widgets_model->getTags();
+        $this->load->view('widgets/tags_details', $data);
+        
+    }
 
     public function getLeadSource()
     {

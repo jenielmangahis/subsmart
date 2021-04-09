@@ -92,7 +92,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                 </button>
                                                 <div class="dropdown-menu">
                                                     <a class="dropdown-item" href="#">Bonus only</a>
-                                                    <a class="dropdown-item" href="#">Commision only</a>
+                                                    <?php if($commission_pays !== null && count($commission_pays) > 0) : ?>
+                                                    <a class="dropdown-item" href="#" id="commission-only">Commision only</a>
+                                                    <?php endif; ?>
                                                 </div>
                                             </div>
                                         </div>

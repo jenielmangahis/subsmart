@@ -1208,14 +1208,14 @@ const payrollRowTotal = (el) => {
     convertToDecimal(el);
     var totalPay = 0.00;
     var rowIndex = $(el).parent().parent().index();
-    var payRate = $(`table#payroll-table tbody tr:nth-child(${rowIndex+1}) td:nth-child(2) p span.pay-rate`).html();
+    var payRate = $(`div#payrollModal table#payroll-table tbody tr:nth-child(${rowIndex+1}) td:nth-child(2) p span.pay-rate`).html();
     var regPayHours = "0.00";
     var commission = "0.00";
 
     if(el.hasClass('employee-commission')) {
         commission = parseFloat(el.val());
 
-        regPayHours = $(`table#payroll-table tbody tr:nth-child(${rowIndex+1}) td:nth-child(4) input`).val();
+        regPayHours = $(`div#payrollModal table#payroll-table tbody tr:nth-child(${rowIndex+1}) td:nth-child(4) input`).val();
         if(regPayHours === "") {
             regPayHours = 0.00;
         } else {
@@ -1224,7 +1224,7 @@ const payrollRowTotal = (el) => {
     } else {
         regPayHours = parseFloat(el.val()).toFixed(2);
 
-        commission = $(`table#payroll-table tbody tr:nth-child(${rowIndex+1}) td:nth-child(5) input`).val();
+        commission = $(`div#payrollModal table#payroll-table tbody tr:nth-child(${rowIndex+1}) td:nth-child(5) input`).val();
         if(commission === "") {
             commission = 0.00;
         } else {
@@ -1244,7 +1244,7 @@ const payrollTotal = () => {
     var totalPay = 0.00;
     var commission = 0.00;
 
-    $('table#payroll-table tbody tr').each(function() {
+    $('div#payrollModal table#payroll-table tbody tr').each(function() {
         var empTotalHours = $(this).children('td:nth-child(4)').children('input[name="reg_pay_hours[]"]').val();
         if(empTotalHours !== "" && empTotalHours !== undefined) {
             empTotalHours = parseFloat(empTotalHours);
@@ -1274,8 +1274,8 @@ const payrollTotal = () => {
         totalPay = parseFloat(parseFloat(totalPay) + empTotalPay).toFixed(2);
     });
 
-    $('table#payroll-table tfoot tr td:nth-child(4)').html(hours);
-    $('table#payroll-table tfoot tr td:nth-child(7)').html(hours);
+    $('div#payrollModal table#payroll-table tfoot tr td:nth-child(4)').html(hours);
+    $('div#payrollModal table#payroll-table tfoot tr td:nth-child(7)').html(hours);
 
     $('table#payroll-table tfoot tr td:nth-child(5)').html('$'+commission);
 

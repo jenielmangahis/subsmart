@@ -229,7 +229,7 @@
                                                                 <?php endforeach; ?>
                                                             </select>
                                                         </div>
-                                                        <label for="pay-schedule" class="col-form-label">starting <span><?=$nextPayDate?></span> <a href="#"><i class="fa fa-pencil"></i></a></label>
+                                                        <label for="pay-schedule" class="col-form-label <?=count($pay_schedules) > 0 || count(array_filter($pay_schedules, function($v) { return $v->use_for_new_employees === "1"; })) > 0 ? '' : 'hide'?>">starting <span><?=$nextPayDate?></span> <a href="#"><i class="fa fa-pencil"></i></a></label>
                                                     </div>
                                                 </div>
                                             </div>

@@ -9,7 +9,7 @@
                 <label for="">Entered By</label>
             </div>
             <div class="col-md-8">
-                <input type="text" class="form-control" name="entered_by" id="entered_by" value="<?php if(isset($office_info)){ echo  $office_info->entered_by; } ?>"/>
+                <input type="text" class="form-control" name="entered_by" id="entered_by" value="<?php if(isset($office_info) && $office_info->entered_by){ echo  $office_info->entered_by.'as'; } else { echo $logged_in_user->FName.' '. $logged_in_user->LName;} ?>"/>
             </div>
         </div>
         <div class="row form_line">
@@ -105,7 +105,7 @@
         </div>
         <div class="row form_line">
             <div class="col-md-4">
-                <label for="">Tech Departure Time</label>
+                <label for="">Tech Depart Time</label>
             </div>
             <div class="col-md-8">
                 <div class="input-group bootstrap-timepicker timepicker">
@@ -189,7 +189,12 @@
                 <label for="">Collection Amount</label>
             </div>
             <div class="col-md-8">
-                <input type="number" class="form-control" name="collect_amount" id="collect_amount" value="<?php if(isset($access_info)){ echo $access_info->collect_amount; } ?>" />
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="basic-addon1">$</span>
+                    </div>
+                    <input type="text" class="form-control input_select" name="collect_amount" value="<?php if(isset($access_info)){ echo $access_info->collect_amount; } ?>">
+                </div>
             </div>
         </div>
 
@@ -309,38 +314,38 @@
 
 
         <div class="row form_line">
-            <div class="col-md-4">
+            <div class="col-md-7">
                 <label for="">Rebate Check # 1</label>
             </div>
-            <div class="col-md-2">
+            <div class="col-md-5">
                 <input type="text" class="form-control" name="rebate_check1" id="rebate_check1" value="<?php if(isset($office_info)){ echo  $office_info->rebate_check1; } ?>"/>
             </div>
-            <div class="col-md-2">
+            <div class="col-md-7">
                 <label for="">Amount $</label>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-5">
                 <input type="number" class="form-control" name="rebate_check1_amt" id="rebate_check1_amt" value="<?php if(isset($office_info)){ echo  $office_info->rebate_check1_amt; } ?>"/>
             </div>
         </div>
         <div class="row form_line">
-            <div class="col-md-4">
+            <div class="col-md-7">
                 <label for="">Rebate Check # 2</label>
             </div>
-            <div class="col-md-2">
+            <div class="col-md-5">
                 <input type="text" class="form-control" name="rebate_check2" id="rebate_check2" value="<?php if(isset($office_info)){ echo  $office_info->rebate_check2; } ?>"/>
             </div>
-            <div class="col-md-2">
+            <div class="col-md-7">
                 <label for="">Amount $</label>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-5">
                 <input type="number" class="form-control" name="rebate_check2_amt" id="rebate_check2_amt" value="<?php if(isset($office_info)){ echo  $office_info->rebate_check2_amt; } ?>" />
             </div>
         </div>
         <div class="row form_line">
-            <div class="col-md-3">
+            <div class="col-md-7">
                 <label for="">Activation Fee</label>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-5">
                 <select id="activation_fee" name="activation_fee" data-customer-source="dropdown" class="input_select">
                     <option value="0.0000">0.00</option>
                     <option value="49.0000">49.00</option>
@@ -379,7 +384,7 @@
                 </select>
                 <a href="<?= base_url() ?>customer/settings" target="_blank"  style="color:#58bc4f;font-size: 10px;"><span class="fa fa-plus"></span> Manage Fee</a>&nbsp;&nbsp;
             </div>
-            <div class="col-md-6">
+            <div class="col-md-12">
                 <input type="radio" class="form-controls" name="way_of_pay" value="None" <?php if(isset($office_info)){ echo $office_info->way_of_pay == 'None' || $office_info->way_of_pay == '' || $office_info->way_of_pay == 'Email' ? 'checked': ''; }else {echo 'checked'; } ?>  id="way_of_pay_none">
                 <span>None</span>
 
@@ -410,7 +415,12 @@
                 <label for="">Rep Commission </label>
             </div>
             <div class="col-md-5">
-                <input type="number" placeholder="$" class="form-control" name="rep_comm" id="rep_comm" value="<?php if(isset($office_info)){ echo $office_info->rep_comm; } ?>" />
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="basic-addon1">$</span>
+                    </div>
+                    <input type="text" class="form-control input_select" name="rep_comm" value="<?php if(isset($office_info)){ echo $office_info->rep_comm; } ?>">
+                </div>
             </div>
         </div>
         <div class="row form_line">
@@ -418,7 +428,12 @@
                 <label for="">Rep Upfront Pay</label>
             </div>
             <div class="col-md-5">
-                <input type="number" placeholder="$" class="form-control" name="rep_upfront_pay" id="rep_upfront_pay" value="<?php if(isset($office_info)){ echo $office_info->rep_upfront_pay; } ?>" />
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="basic-addon1">$</span>
+                    </div>
+                    <input type="text" class="form-control input_select" name="rep_upfront_pay" value="<?php if(isset($office_info)){ echo $office_info->rep_upfront_pay; } ?>">
+                </div>
             </div>
         </div>
         <div class="row form_line">
@@ -426,7 +441,12 @@
                 <label for="">Rep Tiered Upront Bonus</label>
             </div>
             <div class="col-md-5">
-                <input type="number" placeholder="$" class="form-control" name="rep_tiered_bonus" id="rep_tiered_bonus"  />
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="basic-addon1">$</span>
+                    </div>
+                    <input type="text" class="form-control input_select" name="rep_tiered_bonus" value="<?php if(isset($office_info)){ echo $office_info->rep_tiered_bonus; } ?>">
+                </div>
             </div>
         </div>
         <div class="row form_line">
@@ -434,7 +454,12 @@
                 <label for="">Rep Tiered Holdfund Bonus</label>
             </div>
             <div class="col-md-5">
-                <input type="number" placeholder="$" class="form-control" name="rep_holdfund_bonus" id="rep_holdfund_bonus"  />
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="basic-addon1">$</span>
+                    </div>
+                    <input type="text" class="form-control input_select" name="rep_holdfund_bonus" value="<?php if(isset($office_info)){ echo $office_info->rep_holdfund_bonus; } ?>">
+                </div>
             </div>
         </div>
 
@@ -443,7 +468,12 @@
                 <label for="">Rep Deduction Total</label>
             </div>
             <div class="col-md-5">
-                <input type="number" placeholder="$" class="form-control" name="rep_deduction" id="rep_deduction"  />
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="basic-addon1">$</span>
+                    </div>
+                    <input type="text" class="form-control input_select" name="rep_deduction" value="<?php if(isset($office_info)){ echo $office_info->rep_deduction; } ?>">
+                </div>
             </div>
         </div>
 
@@ -452,7 +482,12 @@
                 <label for="">Tech Commission </label>
             </div>
             <div class="col-md-5">
-                <input type="number" placeholder="$" class="form-control" name="tech_comm" id="tech_comm" value="<?php if(isset($office_info)){ echo $office_info->tech_comm; } ?>" />
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="basic-addon1">$</span>
+                    </div>
+                    <input type="text" class="form-control input_select" name="tech_comm" value="<?php if(isset($office_info)){ echo $office_info->tech_comm; } ?>">
+                </div>
             </div>
         </div>
         <div class="row form_line">
@@ -460,7 +495,12 @@
                 <label for="tech_upfront_pay">Tech Upfront Pay </label>
             </div>
             <div class="col-md-5">
-                <input type="number" class="form-control" placeholder="$" name="tech_upfront_pay" id="tech_upfront_pay" value="<?php if(isset($office_info)){ echo $office_info->tech_upfront_pay; } ?>" />
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="basic-addon1">$</span>
+                    </div>
+                    <input type="text" class="form-control input_select" name="tech_upfront_pay" value="<?php if(isset($office_info)){ echo $office_info->tech_upfront_pay; } ?>">
+                </div>
             </div>
         </div>
 
@@ -469,7 +509,12 @@
                 <label for="">Tech Deduction Total</label>
             </div>
             <div class="col-md-5">
-                <input type="number" class="form-control" placeholder="$" name="tech_deduction" id="tech_deduction"  />
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="basic-addon1">$</span>
+                    </div>
+                    <input type="text" class="form-control input_select" name="tech_deduction" value="<?php if(isset($office_info)){ echo $office_info->tech_deduction; } ?>">
+                </div>
             </div>
         </div>
 
@@ -480,7 +525,12 @@
                 <label for="">Rep Hold Fund Charge Back </label>
             </div>
             <div class="col-md-5">
-                <input type="number" class="form-control" placeholder="$" name="rep_charge_back" id="rep_charge_back" value="<?php if(isset($office_info)){ echo $office_info->rep_charge_back; } ?>"   />
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="basic-addon1">$</span>
+                    </div>
+                    <input type="text" class="form-control input_select" name="rep_charge_back" value="<?php if(isset($office_info)){ echo $office_info->rep_charge_back; } ?>">
+                </div>
             </div>
         </div>
         <div class="row form_line">
@@ -488,7 +538,12 @@
                 <label for="">Rep Payroll Charge Back </label>
             </div>
             <div class="col-md-5">
-                <input type="number" class="form-control" placeholder="$" name="rep_payroll_charge_back" id="rep_payroll_charge_back" value="<?php if(isset($office_info)){ echo $office_info->rep_payroll_charge_back; } ?>" />
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="basic-addon1">$</span>
+                    </div>
+                    <input type="text" class="form-control input_select" name="rep_payroll_charge_back" value="<?php if(isset($office_info)){ echo $office_info->rep_payroll_charge_back; } ?>">
+                </div>
             </div>
         </div>
         <hr>
@@ -518,7 +573,12 @@
                 <label for="">Price Per Point </label>
             </div>
             <div class="col-md-5">
-                <input type="number" class="form-control" placeholder="$" name="price_per_point" id="price_per_point" value="<?php if(isset($office_info)){ echo $office_info->price_per_point !=0 ? $office_info->price_per_point : ''; } ?>" />
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="basic-addon1">$</span>
+                    </div>
+                    <input type="text" class="form-control input_select" name="price_per_point" value="<?php if(isset($office_info)){ echo $office_info->price_per_point; } ?>">
+                </div>
             </div>
         </div>
         <hr>
@@ -527,7 +587,12 @@
                 <label for="">Purchase Price </label>
             </div>
             <div class="col-md-5">
-                <input type="number" class="form-control" placeholder="$" name="purchase_price" id="purchase_price" />
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="basic-addon1">$</span>
+                    </div>
+                    <input type="text" class="form-control input_select" name="purchase_price" value="<?php if(isset($office_info)){ echo $office_info->purchase_price; } ?>">
+                </div>
             </div>
         </div>
         <div class="row form_line">
@@ -552,7 +617,12 @@
                 <label for="">Purchase Discount </label>
             </div>
             <div class="col-md-5">
-                <input type="number" class="form-control" placeholder="$" name="purchase_discount" id="purchase_discount" value="<?php if(isset($office_info)){ echo  $office_info->purchase_discount; } ?>"/>
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="basic-addon1">$</span>
+                    </div>
+                    <input type="text" class="form-control input_select" name="purchase_discount" value="<?php if(isset($office_info)){ echo $office_info->purchase_discount; } ?>">
+                </div>
             </div>
         </div>
         <hr>
@@ -561,7 +631,12 @@
                 <label for="">Equipment Cost</label>
             </div>
             <div class="col-md-5">
-                <input type="number" class="form-control"  placeholder="$" name="purchase_discount" id="purchase_discount" />
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="basic-addon1">$</span>
+                    </div>
+                    <input type="text" class="form-control input_select" name="equipment_cost" value="<?php if(isset($office_info)){ echo $office_info->equipment_cost; } ?>">
+                </div>
             </div>
         </div>
         <div class="row form_line">
@@ -569,7 +644,12 @@
                 <label for="">Labor Cost</label>
             </div>
             <div class="col-md-5">
-                <input type="number" class="form-control"  placeholder="$" name="purchase_discount" id="purchase_discount" />
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="basic-addon1">$</span>
+                    </div>
+                    <input type="text" class="form-control input_select" name="labor_cost" value="<?php if(isset($office_info)){ echo $office_info->labor_cost; } ?>">
+                </div>
             </div>
         </div>
         <div class="row form_line">
@@ -577,7 +657,12 @@
                 <label for="">Job Profit</label>
             </div>
             <div class="col-md-5">
-                <input type="number" class="form-control"  placeholder="$" name="purchase_discount" id="purchase_discount" />
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="basic-addon1">$</span>
+                    </div>
+                    <input type="text" class="form-control input_select" name="job_profit" value="<?php if(isset($office_info)){ echo $office_info->job_profit; } ?>">
+                </div>
             </div>
         </div>
         <br>

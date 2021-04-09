@@ -8,6 +8,11 @@ add_css(array(
 
 <?php include viewPath('includes/header'); ?>
 <?php include viewPath('customer/css/add_advance_css'); ?>
+<style>
+    .input-group-prepend {
+        height: 30px !important;
+    }
+</style>
     <div class="wrapper" role="wrapper">
         <?php include viewPath('includes/sidebars/customer'); ?>
         <!-- page wrapper start -->

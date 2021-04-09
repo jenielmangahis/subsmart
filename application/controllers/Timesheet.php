@@ -80,84 +80,24 @@ class Timesheet extends MY_Controller
 
     public function tester()
     {
-        // $date_before = date('Y-m-d h:i:s A');
-        // $usertimezone = $this->input->post("usertimezone");
-        // date_default_timezone_set($usertimezone);
-        // $date_after = date('Y-m-d h:i:s A');
-        // $_SESSION['usertimezone'] = $usertimezone;
-        // $display =array(
-        //     "usertimezone" => $usertimezone,
-        //     "newphptimezone" => date_default_timezone_get(),
-        //     "date_before" => $date_before,
-        //     "date_after" => $date_after,
-        //     "session_timezone" => $this->session->userdata('usertimezone')
-        // );
-        // echo json_encode($display);
-        // date_default_timezone_set("UTC");
-        // echo date_default_timezone_get();
-        // new DateTimeZone("Asia/Taipei");
-        // $at = new DateTime("now", new DateTimeZone("Asia/Taipei"));
-        //     echo $at;
-        // $stack = array();
-        // array_push($stack, "Lou");
-        // array_push($stack, "Pinton");
-        // $start = new DateTime("2021-03-05 00:00:00");
-        // $end = new DateTime("2021-03-06 01:51:57");
-        // $interval = $start->diff($end);
-        // $total_hours = $total_hours + $interval->format("%H");
-        // $total_minutes = $total_minutes + $interval->format("%i");
-        // echo $total_hours."<br>";
-        // echo $total_minutes."<br>";
-        // echo $start-$end."<br>";
-        // $start_date = new DateTime('2021-03-05 23:00:00');
-        // $since_start = $start_date->diff(new DateTime('2021-03-06 01:51:57'));
-        // $minutes = $since_start->days * 24 * 60;
-        // $minutes += $since_start->h * 60;
-        // $minutes += $since_start->i;
-        // echo ($minutes / 60) . ' minutes';
-        // $army_time_str = "01:00 PM";
-        // $regular_time_str = date('H:i:s', strtotime($army_time_str));
-        // echo ;
-        // $ay = array();
-        // $ay[] = "Lou";
-        // $ay[] = "pinton";
-        // $ipaddress = $this->gtMyIpGlobal();
-        // $get_location = json_decode(file_get_contents('http://ip-api.com/json/' . $ipaddress));
-        // $lat = $get_location->lat;
-        // $lng = $get_location->lon;
-        // $g_map = file_get_contents('https://maps.googleapis.com/maps/api/geocode/json?latlng=' . trim($lat) . ',' . trim($lng) . '&sensor=true&key=AIzaSyBK803I2sEIkUtnUPJqmyClYQy5OVV7-E4');
-        // $output = json_decode($g_map);
-        // $status = $output->status;
-        // $address = ($status == "OK") ? $output->results[1] : 'Address not found';
-        // $longname = "";
-        // foreach ($address as $row) {
-        //     $longname = $row->long_name;
-        //     break;
-        // }
-        // var_dump($ipaddress);
-        // $user_id = $this->session->userdata('logged')['id'];
-        // $company_id = logged('company_id');
-        // echo ("SELECT user_notification.id, user_notification.user_id, user_notification.title, user_notification.content, user_notification.date_created , users.FName, users.LName FROM user_notification JOIN users on users.id=user_notification.user_id JOIN user_seen_notif on user_notification.id=user_seen_notif.notif_id where user_seen_notif.user_id=" . $user_id . " and user_seen_notif.seen_status != 2 and user_notification.company_id = $company_id order by user_notification.date_created DESC");
-        // date_default_timezone_set($this->session->userdata('usertimezone'));
-        // date_default_timezone_set($this->session->userdata('usertimezone'));
-        // $the_date = strtotime("2021-03-15" . " 00:00:00");
-        // date_default_timezone_set("UTC");
-        // $shift_date = date('Y-m-d', $the_date);
-        // echo  $shift_date;
-        // $start = new DateTime("2021-03-16 03:00:00");
-        // $end =  new DateTime(date('Y-m-d H:i:s'));
-        // $interval = $start->diff($end);
+        $file = fopen(APPPATH . '../timesheet/timelogs/' . 'tesaasasat.csv', 'wb');
 
-        // $minutes = ($interval->days * 24 * 60) * 60;
-        // $minutes += ($interval->h * 60) * 60;
-        // $minutes += ($interval->i) * 60;
-        // $minutes += $interval->s;
-        // $minutes = $minutes / 60;
-        // var_dump($end);
-        // echo $minutes / 60;
-        // echo $this->session->userdata('usertimezone');
-        $text = "NOVEMBER 2021";
-        echo date("Y-m", strtotime($text));
+        // set the column headers
+        fputcsv($file, array('Column 1', 'Column 2', 'Column 3', 'Column 4', 'Column 5'));
+
+        // Sample data. This can be fetched from mysql too
+        $data = array(
+            array('Data 11', 'Data 12', 'Data 13', 'Data 14', 'Data 15'),
+            array('Data 21', 'Data 22', 'Data 23', 'Data 24', 'Data 25'),
+            array('Data 31', 'Data 32', 'Data 33', 'Data 34', 'Data 35'),
+            array('Data 41', 'Data 42', 'Data 43', 'Data 44', 'Data 45'),
+            array('Data 51', 'Data 52', 'Data 53', 'Data 54', 'Data 55')
+        );
+
+        // output each row of the data
+        foreach ($data as $row) {
+            fputcsv($file, $row);
+        }
     }
 
     public function employee()

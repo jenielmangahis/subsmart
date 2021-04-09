@@ -198,7 +198,7 @@
                                                     <div class="form-group row">
                                                         <label for="hire_date" class="col-sm-4 col-form-label">Hire date</label>
                                                         <div class="col-sm-8">
-                                                            <input type="text" name="hire_date" id="hire_date" class="form-control" value="<?=date('m/d/Y', strtotime($employee->date_hired))?>">
+                                                            <input type="text" name="hire_date" id="hire_date" class="form-control" value="<?=!in_array($employee->date_hired, ["0000-00-00", null, '']) ? date('m/d/Y', strtotime($employee->date_hired)) : ''?>">
                                                         </div>
                                                     </div>
                                                 </div>
@@ -217,7 +217,7 @@
                                                                 <?php endforeach; ?>
                                                             </select>
                                                         </div>
-                                                        <label for="pay-schedule" class="col-form-label">starting <span><?=$nextPayDate?></span> <a href="#"><i class="fa fa-pencil"></i></a></label>
+                                                        <label for="pay-schedule" class="col-form-label <?=count($pay_schedules) > 0 && $payDetails !== null && $payDetails->pay_schedule_id !== null ? '' : 'hide'?>">starting <span><?=$nextPayDate?></span> <a href="#"><i class="fa fa-pencil"></i></a></label>
                                                     </div>
                                                 </div>
                                             </div>
@@ -240,7 +240,7 @@
                                                                         <span>$</span>
                                                                     </div>
                                                                     <div class="col-sm-6">
-                                                                        <input type="number" name="pay_rate" id="pay-rate" value="<?=$payDetails->pay_type !== "commission" ? number_format(floatval($payDetails->pay_rate), 2, '.', ',') : ''?>" class="form-control" step=".01" onchange="convertToDecimal(this)">
+                                                                        <input type="number" name="pay_rate" id="pay-rate" value="<?=$payDetails->pay_type !== "commission" && $payDetails !== null ? number_format(floatval($payDetails->pay_rate), 2, '.', ',') : ''?>" class="form-control" step=".01" onchange="convertToDecimal(this)">
                                                                     </div>
                                                                     <div class="col-sm-4 align-items-center hourly-pay-fields <?=$payDetails->pay_type === "hourly" ? 'd-flex' : 'hide'?>">
                                                                        <span>/hour</span>
@@ -263,13 +263,13 @@
                                                             <?=$payDetails->pay_type === "salary" ? "$employee->FName works" : 'Default hours:'?>
                                                         </div>
                                                         <div class="col-sm-2">
-                                                            <input type="number" name="default_hours" id="default-hours" value="<?=$payDetails->pay_type !== "commission" ? number_format(floatval($payDetails->hours_per_day), 2, '.', ',') : ''?>" class="form-control" step=".01" onchange="convertToDecimal(this)">
+                                                            <input type="number" name="default_hours" id="default-hours" value="<?=$payDetails->pay_type !== "commission" && $payDetails !== null ? number_format(floatval($payDetails->hours_per_day), 2, '.', ',') : ''?>" class="form-control" step=".01" onchange="convertToDecimal(this)">
                                                         </div>
                                                         <div class="d-flex align-items-center">
                                                             hours per day and
                                                         </div>
                                                         <div class="col-sm-2">
-                                                            <input type="number" name="days_per_week" id="days-per-week" value="<?=$payDetails->pay_type !== "commission" ? number_format(floatval($payDetails->days_per_week), 2, '.', ',') : ''?>" class="form-control" step=".01" onchange="convertToDecimal(this)">
+                                                            <input type="number" name="days_per_week" id="days-per-week" value="<?=$payDetails->pay_type !== "commission" && $payDetails !== null ? number_format(floatval($payDetails->days_per_week), 2, '.', ',') : ''?>" class="form-control" step=".01" onchange="convertToDecimal(this)">
                                                         </div>
                                                         <div class="d-flex align-items-center">
                                                             days per week.

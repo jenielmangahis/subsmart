@@ -569,6 +569,7 @@ class Users_model extends MY_Model {
 
 	public function getEmployeePayDetails($user_id)
 	{
+		$this->db->where('company_id', logged('company_id'));
 		$this->db->where('user_id', $user_id);
 		$query = $this->db->get('employee_pay_details');
 		return $query->row();
@@ -576,6 +577,7 @@ class Users_model extends MY_Model {
 
 	public function updateEmployeePayDetails($user_id, $data)
 	{
+		$this->db->where('company_id', logged('company_id'));
 		$this->db->where('user_id', $user_id);
 		$update = $this->db->update('employee_pay_details', $data);
 		return $update;
@@ -583,7 +585,16 @@ class Users_model extends MY_Model {
 
 	public function deleteEmployeePayDetails($user_id)
 	{
-		$this->db->delete('employee_pay_details', array('user_id' => $user_id));
+		$this->db->delete('employee_pay_details', array('company_id' => logged('company_id'), 'user_id' => $user_id));
+	}
+
+	public function getPayDetailsByPayType($payType)
+	{
+		$this->db->where('company_id', logged('company_id'));
+		$this->db->where('pay_type', $payType);
+		$this->db->where('status', 1);
+		$query = $this->db->get('employee_pay_details');
+		return $query->result();
 	}
 }
 

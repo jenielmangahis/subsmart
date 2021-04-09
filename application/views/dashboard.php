@@ -843,6 +843,8 @@
         var TimeStamp = null;
         waitForClockInOut();
         
+       // alert("Your screen resolution is: " + screen.width + "x" + screen.height);
+        
         $('#onoff-customize').change(function () {
             if (this.checked) {
                 $('.widget').mouseover(function(){

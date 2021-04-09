@@ -1629,6 +1629,7 @@ class Workorder extends MY_Controller
         $this->page_data['page_title'] = "Work Order";
         // print_r($this->page_data['customers']);
 
+        add_footer_js('assets/js/esign/docusign/workorder.js');
         $this->load->view('workorder/addNewworkOrder', $this->page_data);
     }
 

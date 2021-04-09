@@ -60,10 +60,10 @@ class Employees extends MY_Controller {
         add_footer_js(array(
             "assets/js/accounting/payroll/employees.js"
         ));
-        // $this->page_data['employees'] = $this->users_model->getAll();
+
+        $this->page_data['commission_pays'] = $this->users_model->getPayDetailsByPayType('commission');
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->load->view('accounting/employees/index', $this->page_data);
-        // $this->load->view('accounting/employees', $this->page_data);
     }
 
     public function load_employees()
@@ -126,13 +126,29 @@ class Employees extends MY_Controller {
                     break;
                 }
 
+                $empPayDetails = $this->users_model->getEmployeePayDetails($employee->id);
+                if($empPayDetails) {
+                    $payMethod = $empPayDetails->pay_method === 'direct-deposit' ? 'Direct deposit' : 'Check';
+
+                    if($empPayDetails->pay_type === 'hourly') {
+                        $payRate = '$'.number_format(floatval($empPayDetails->pay_rate), 2, '.', ',').'/hour';
+                    } else if($empPayDetails->pay_type === 'salary') {
+                        $payRate = '$'.number_format(floatval($empPayDetails->pay_rate), 2, '.', ',').'/'.$empPayDetails->salary_frequency;
+                    } else {
+                        $payRate = 'Commission only';
+                    }
+                } else {
+                    $payMethod = 'Missing';
+                    $payRate = 'Missing';
+                }
+
                 if($search !== "") {
                     if(stripos($employee->LName, $search) !== false || stripos($employee->FName, $search) !== false) {
                         $data[] = [
                             'id' => $employee->id,
                             'name' => "$employee->LName, $employee->FName",
-                            'pay_rate' => $employee->pay_rate,
-                            'pay_method' => '',
+                            'pay_rate' => $payRate,
+                            'pay_method' => $payMethod,
                             'status' => $empStatus,
                             'email_address' => $employee->email,
                             'phone_number' => $employee->phone
@@ -142,8 +158,8 @@ class Employees extends MY_Controller {
                     $data[] = [
                         'id' => $employee->id,
                         'name' => "$employee->LName, $employee->FName",
-                        'pay_rate' => $employee->pay_rate,
-                        'pay_method' => '',
+                        'pay_rate' => $payRate,
+                        'pay_method' => $payMethod,
                         'status' => $empStatus,
                         'email_address' => $employee->email,
                         'phone_number' => $employee->phone
@@ -290,6 +306,7 @@ class Employees extends MY_Controller {
         if($last_id) {
             $payDetails = [
                 'user_id' => $last_id,
+                'company_id' => logged('company_id'),
                 'pay_schedule_id' => $this->input->post('pay_schedule'),
                 'pay_type' => $this->input->post('pay_type'),
                 'pay_rate' => $this->input->post('pay_type') !== 'commission' ? $this->input->post('pay_rate') : null,
@@ -388,7 +405,17 @@ class Employees extends MY_Controller {
                 'pay_method' => $this->input->post('pay_method'),
                 'updated_at' => date("Y-m-d H:i:s")
             ];
-            $this->users_model->updateEmployeePayDetails($id, $payDetails);
+
+            if($this->users_model->getEmployeePayDetails($id)) {
+                $this->users_model->updateEmployeePayDetails($id, $payDetails);
+            } else {
+                $payDetails['company_id'] = logged('company_id');
+                $payDetails['user_id'] = $id;
+                $payDetails['status'] = 1;
+                $payDetails['created_at'] = $payDetails['updated_at'];
+
+                $this->users_model->insertEmployeePayDetails($payDetails);
+            }
 
             $this->session->set_flashdata('success', "Employee details updated successfully.");
         } else {
@@ -609,5 +636,16 @@ class Employees extends MY_Controller {
         $payDate = $this->get_next_pay_date($paySched);
 
         echo json_encode(['date' => $payDate]);
+    }
+
+    public function commission_only_modal()
+    {
+        $accounts = $this->chart_of_accounts_model->select();
+        $accounts = array_filter($accounts, function($v, $k) {
+            return $v->account_id === 3 || $v->account_id === "3";
+        }, ARRAY_FILTER_USE_BOTH);
+        $this->page_data['accounts'] = $accounts;
+        $this->page_data['payDetails'] = $this->users_model->getPayDetailsByPayType('commission');;
+        $this->load->view('accounting/employees/commission_only_payroll', $this->page_data);
     }
 }

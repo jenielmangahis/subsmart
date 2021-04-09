@@ -81,9 +81,9 @@
                     <hr>
                     <div class="row">
                         <div class="col-md-12">
-                            <table class="table table-bordered" id="reportstable">
+                        <table class="table table-bordered" id="reportstable">
                                 <thead>
-                                    <th></th>
+                                    <!-- <th></th>
                                     <th>#</th>
                                     <th>PRODUCT/SERVICE</th>
                                     <th>DESCRIPTION</th>
@@ -91,42 +91,46 @@
                                     <th>RATE</th>
                                     <th>AMOUNT</th>
                                     <th>TAX</th>
-                                    <th></th>
+                                    <th></th> -->
+                                    <th>Name</th>
+                                            <th>Type</th>
+                                            <!-- <th>Description</th> -->
+                                            <th width="150px">Quantity</th>
+                                            <!-- <th>Location</th> -->
+                                            <th width="150px">Price</th>
+                                            <th width="150px">Discount</th>
+                                            <th width="150px">Tax (Change in %)</th>
+                                            <th>Total</th>
                                 </thead>
+                                <tbody id="items_table_body3a">
                                 <tr>
-                                    <td></td>
-                                    <td>1</td>
-                                    <!-- <td><input type="text" class="form-control" name="prod[]"></td> -->
-                                    <td><select id="s" name="items[]"  class="form-control">
-                                                    <option value="0"></option>
-                                                    <?php foreach($items as $c){ ?>
-                                                        <option value="<?= $c->id; ?>"><?= $c->title; ?></option>
-                                                    <?php } ?>
+                                            <td>
+                                                <input type="text" class="form-control getItems"
+                                                       onKeyup="getItems(this)" name="items[]">
+                                                <ul class="suggestions"></ul>
+                                            </td>
+                                            <td><select name="item_type[]" class="form-control">
+                                                    <option value="product">Product</option>
+                                                    <option value="material">Material</option>
+                                                    <option value="service">Service</option>
+                                                    <option value="fee">Fee</option>
                                                 </select></td>
-                                    <td><input type="text" class="form-control" name="desc[]"></td>
-                                    <td><input type="text" class="form-control" name="qty[]"></td>
-                                    <td><input type="text" class="form-control" name="rate[]"></td>
-                                    <td><input type="text" class="form-control" name="amount[]"></td>
-                                    <td><input type="text" class="form-control" name="tax[]"></td>
-                                    <td></td>
+                                            <td width="150px"><input type="number" class="form-control quantity" name="quantity[]"
+                                                       data-counter="0" id="quantity_0" value="1"></td>
+                                            <td width="150px"><input type="number" class="form-control price" name="price[]"
+                                                       data-counter="0" id="price_0" min="0" value="0"></td>
+                                            <td width="150px"><input type="number" class="form-control discount" name="discount[]"
+                                                       data-counter="0" id="discount_0" min="0" value="0" ></td>
+                                            <td width="150px"><input type="text" class="form-control tax_change" name="tax[]"
+                                                       data-counter="0" id="tax1_0" min="0" value="0">
+                                                       <!-- <span id="span_tax_0">0.0</span> -->
+                                                       </td>
+                                            <td width="150px"><input type="hidden" class="form-control " name="total[]"
+                                                       data-counter="0" id="item_total_0" min="0" value="0">
+                                                       $<span id="span_total_0">0.00</span></td>
+                                        </tr>
                                 </tr>
-                                <tr>
-                                    <td></td>
-                                    <td>2</td>
-                                    <!-- <td><input type="text" class="form-control" name="prod[]"></td> -->
-                                    <td><select id="s" name="items[]"  class="form-control">
-                                                    <option value="0"></option>
-                                                    <?php foreach($items as $c){ ?>
-                                                        <option value="<?= $c->id; ?>"><?= $c->title; ?></option>
-                                                    <?php } ?>
-                                                </select></td>
-                                    <td><input type="text" class="form-control" name="desc[]"></td>
-                                    <td><input type="text" class="form-control" name="qty[]"></td>
-                                    <td><input type="text" class="form-control" name="rate[]"></td>
-                                    <td><input type="text" class="form-control" name="amount[]"></td>
-                                    <td><input type="text" class="form-control" name="tax[]"></td>
-                                    <td></td>
-                                </tr>
+                                </tbody>
                             </table>
                         <div>
                     </div>
@@ -134,13 +138,13 @@
                 
                     <div class="row">
                         <div class="col-md-1">
-                           <button class="btn1">Add lines</button>
+                           <!-- <button class="btn1">Add lines</button> -->
+                           <a class="link-modal-open" href="#" id="add_another_items" data-toggle="modal" data-target="#item_list3"><span class="fa fa-plus-square fa-margin-right"></span>Add Items</a>
                         </div>
-                        <div class="col-md-1">
+                        <!-- <div class="col-md-1">
                            <button class="btn1">Clear all lines</button>
                         </div>
                         <div class="col-md-1">
-                           <!-- <button class="btn1">Add subtotal</button> -->
                         </div>
                         <div class="col-md-7">
                         </div>
@@ -149,7 +153,7 @@
                         </div>
                         <div class="col-md-1">
                             <b>$0.00</b>
-                        </div>
+                        </div> -->
                     </div>
                     <hr>
 
@@ -163,7 +167,7 @@
                         <div class="col-md-7">
                         </div>
                         <div class="col-md-3">
-                            Taxable subtotal <b>$0.00</b><br>
+                            <!-- Taxable subtotal <b>$0.00</b><br>
                             <table class="table table-borderless" style="text-align:right;">
                                 <tr>
                                     <td colspan="2">
@@ -194,6 +198,43 @@
                                     <td>Balance due</td>
                                     <td>$0.00</td>
                                 </tr>
+                            </table> -->
+                            <table class="table" style="text-align:left;">
+                                        <tr>
+                                            <td>Subtotal</td>
+                                            <td></td>
+                                            <td>$ <span id="span_sub_total_invoice">0.00</span>
+                                                <input type="hidden" name="subtotal" id="item_total"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Taxes</td>
+                                            <td></td>
+                                            <td>$ <span id="total_tax_">0.00</span><input type="hidden" name="taxes" id="total_tax_input"></td>
+                                        </tr>
+                                        <tr>
+                                            <td style="width:250px;"><input type="text" name="adjustment_name" id="adjustment_name" placeholder="Adjustment Name" class="form-control" style="width:200px; display:inline; border: 1px dashed #d1d1d1"></td>
+                                            <td style="width:150px;">
+                                            <input type="number" name="adjustment_value" id="adjustment_input" value="0" class="form-control adjustment_input" style="width:100px; display:inline-block">
+                                                <span class="fa fa-question-circle" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Optional it allows you to adjust the total amount Eg. +10 or -10." data-original-title="" title=""></span>
+                                            </td>
+                                            <td>0.00</td>
+                                        </tr>
+                                        <!-- <tr>
+                                            <td>Markup $<span id="span_markup"></td> -->
+                                            <!-- <td><a href="#" data-toggle="modal" data-target="#modalSetMarkup" style="color:#02A32C;">set markup</a></td> -->
+                                            <input type="hidden" name="markup_input_form" id="markup_input_form" class="markup_input" value="0">
+                                        <!-- </tr> -->
+                                        <tr id="saved" style="color:green;font-weight:bold;display:none;">
+                                            <td>Amount Saved</td>
+                                            <td></td>
+                                            <td><span id="offer_cost">0.00</span><input type="hidden" name="voucher_value" id="offer_cost_input"></td>
+                                        </tr>
+                                        <tr style="color:blue;font-weight:bold;font-size:18px;">
+                                            <td><b>Grand Total ($)</b></td>
+                                            <td></td>
+                                            <td><b><span id="grand_total">0.00</span>
+                                                <input type="hidden" name="grand_total" id="grand_total_input" value='0'></b></td>
+                                        </tr>
                             </table>
                         </div>
                     </div>
@@ -266,6 +307,54 @@
     </div>
     <!--end of modal-->
 </div>
+
+<!-- Modal -->
+<div class="modal fade" id="item_list3" tabindex="-1" role="dialog" aria-labelledby="newcustomerLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg" role="document" style="width:800px;position: absolute;top: 50%;left: 50%;transform: translate(-50%, -50%);">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="newcustomerLabel">Item Lists</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <table id="items_table_estimate" class="table table-hover" style="width: 100%;">
+                                        <thead>
+                                        <tr>
+                                            <td> Name</td>
+                                            <td> Qty</td>
+                                            <td> Price</td>
+                                            <td> Action</td>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <?php foreach($items as $item){ // print_r($item); ?>
+                                            <tr>
+                                                <td><?php echo $item->title; ?></td>
+                                                <td></td>
+                                                <td><?php echo $item->price; ?></td>
+                                                <td><button id="<?= $item->id; ?>" data-quantity="<?= $item->units; ?>" data-itemname="<?= $item->title; ?>" data-price="<?= $item->price; ?>" type="button" data-dismiss="modal" class="btn btn-sm btn-default select_item3">
+                                                <span class="fa fa-plus"></span>
+                                            </button></td>
+                                            </tr>
+                                            
+                                        <?php } ?>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer modal-footer-detail">
+                            <div class="button-modal-list">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal"><span class="fa fa-remove"></span> Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 <script>
   function totalfunc(){
     var inputs = document.getElementsByName('amount[]');

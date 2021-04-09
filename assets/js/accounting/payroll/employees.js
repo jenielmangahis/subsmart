@@ -628,12 +628,14 @@ $(document).on('change', '#pay-schedule', function() {
             initPayScheduleElements('add-pay-schedule-modal');
 
             $('#add-pay-schedule-modal').modal('show');
+            el.parent().next().addClass('hide');
         });
     } else {
         $.get('/accounting/employees/get-pay-date/'+el.val(), function(res) {
             var result = JSON.parse(res);
 
             el.parent().next().children('span').html(result.date);
+            el.parent().next().removeClass('hide');
         });
     }
 });
@@ -817,7 +819,7 @@ $(document).on('click', 'label[for="pay-schedule"] a', function(e) {
     e.preventDefault();
     var pay_sched_id = $('#pay-schedule').val();
     
-    if(pay_sched_id !== 'add' || pay_sched_id !== '') {
+    if(pay_sched_id !== 'add' && pay_sched_id !== '' && pay_sched_id !== null) {
         $.get('/accounting/employees/edit-pay-schedule/'+pay_sched_id, function(res) {
             if($('#add-pay-schedule-modal').length > 0) {
                 $('#add-pay-schedule-modal').parent().parent().remove();
@@ -887,3 +889,57 @@ $(document).on('change', '#pay-type', function() {
         break;
     }
 });
+
+$(document).on('click', '#commission-only', function(e) {
+    e.preventDefault();
+
+    $.get('/accounting/employees/commission-only-payroll', function(res) {
+        $('.append-modal').html(res);
+        
+        $('#commission-payroll-modal #payDate').datepicker({
+            uiLibrary: 'bootstrap',
+            todayBtn: "linked",
+            language: "de"
+        });
+        $('#commission-payroll-modal #payFrom').select2();
+        $('#commission-payroll-modal').modal('show');
+    });
+});
+
+$(document).on('change', '#commission-payroll-modal #payroll-table input[name="commission[]"]', function() {
+    convertToDecimal(this);
+
+    $(this).parent().parent().find('span.total-pay').html($(this).val());
+    commissionTotal();
+});
+
+function commissionTotal()
+{
+    var commission = 0.00;
+    var totalPay = 0.00;
+    $('#commission-payroll-modal #payroll-table tbody tr').each(function() {
+        var empCommission = $(this).find('input[name="commission[]"]').val();
+
+        if(empCommission !== "" && empCommission !== undefined) {
+            empCommission = parseFloat(empCommission);
+        } else {
+            empCommission = 0.00;
+        }
+
+        commission = parseFloat(parseFloat(commission) + empCommission).toFixed(2);
+
+        var empTotalPay = $(this).find('span.total-pay').html();
+
+        if(empTotalPay !== "" && empTotalPay !== undefined) {
+            empTotalPay = parseFloat(empTotalPay);
+        } else {
+            empTotalPay = 0.00;
+        }
+
+        totalPay = parseFloat(parseFloat(totalPay) + empTotalPay).toFixed(2);
+    });
+
+    $('#commission-payroll-modal #payroll-table tfoot tr td:nth-child(4)').html('$'+commission);
+    $('#commission-payroll-modal #payroll-table tfoot tr td:last-child p').html('$'+totalPay);
+    $('#commission-payroll-modal h2.total-pay').html('$'+totalPay);
+}

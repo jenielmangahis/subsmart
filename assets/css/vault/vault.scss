@@ -241,4 +241,16 @@ $colorPreviewFooter: #fff;
       background-color: #fdeac3;
     }
   }
+
+  &__docusignTemplate {
+    &:hover {
+      .btn-action {
+        display: block;
+      }
+    }
+
+    .btn-action {
+      display: none;
+    }
+  }
 }

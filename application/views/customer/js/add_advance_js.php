@@ -211,7 +211,17 @@
             return (key == 8 || key == 9 || key == 46 || (key >= 48 && key <= 57) || (key >= 96 && key <= 105));
         });
 
+
+
         $("#date_picker").datetimepicker({
+            format: "l",
+            //minDate: new Date(),
+        });
+        $("#recurring_start_date").datetimepicker({
+            format: "l",
+            //minDate: new Date(),
+        });
+        $("#recurring_end_date").datetimepicker({
             format: "l",
             //minDate: new Date(),
         });

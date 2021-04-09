@@ -493,10 +493,4 @@ $(".select_item2").click(function () {
   cal_total_due();
         });
 </script>
-<script>
-$('#addcreditmemoModal').modal({
-    backdrop: 'static',
-    keyboard: false
-})
-</script>
 </div>
