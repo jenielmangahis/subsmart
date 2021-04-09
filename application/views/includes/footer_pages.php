@@ -15,6 +15,7 @@
 <script src="<?php echo $url->assets ?>dashboard/js/bootstrap.bundle.min.js"></script>
 <script src="<?php echo $url->assets ?>dashboard/js/jquery.slimscroll.js"></script>
 <script src="<?php echo $url->assets ?>dashboard/js/waves.min.js"></script>
+<?php echo put_footer_assets(); ?>
 </body>
 
 </html>

@@ -250,6 +250,8 @@ section.mr-23 {
               <p><?= $profiledata->business_phone; ?></p>
             </div>
             <hr/>
+            <div id="streetViewBody" class="col-md-6 float-left no-padding"></div>
+            <div id="map" style="height: 196px;margin-bottom: 36px;"></div>
             <p class="bold">Contact Name</p>
             <p><?= $profiledata->contact_name; ?></p>
             <br/>
@@ -466,10 +468,12 @@ section.mr-23 {
                       <li class="col-image-<?= $key ?>">
                         <div class="picture-container ui-sortable-handle">
                           <div class="img">
+                            <a href="<?= url("uploads/work_pictures/" . $profiledata->company_id . "/" . $i['file']); ?>" data-fancybox="gallery" data-caption="<?= $i['caption']; ?>">
                               <img src="<?= url("uploads/work_pictures/" . $profiledata->company_id . "/" . $i['file']); ?>">
                               <div class="image-caption image-caption-container-<?= $key; ?>">
                                 <?= $i['caption']; ?>
                               </div>
+                            </a>
                           </div>
                         </div>
                       </li>
@@ -483,8 +487,46 @@ section.mr-23 {
 
       </div>
     </div>
-    
-
-
   </div>
 <?php include viewPath('includes/footer_pages'); ?>
+<script
+      src="https://maps.googleapis.com/maps/api/js?key=<?= google_credentials()['api_key'] ?>&callback=initMap&libraries=&v=weekly"
+      async
+    ></script>
+<script src="https://momentjs.com/downloads/moment-with-locales.js"></script>
+<script>
+    var geocoder;
+    function initMap(address=null) {
+        if(address == null){
+            address = '<?= $profiledata->street . ' ' . $profiledata->city . ' ' . $profiledata->postal_code; ?>';
+        }
+        const myLatLng = { lat: -25.363, lng: 131.044 };
+        const map = new google.maps.Map(document.getElementById("map"), {
+            zoom: 12,
+            height:220,
+            center: myLatLng,
+        });
+        new google.maps.Marker({
+            position: myLatLng,
+            map,
+            title: "Hello World!",
+        });
+        geocoder = new google.maps.Geocoder();
+        codeAddress(geocoder, map,address);
+    }
+
+    function codeAddress(geocoder, map,address) {
+        geocoder.geocode({'address': address}, function(results, status) {
+            if (status === 'OK') {
+                map.setCenter(results[0].geometry.location);
+                var marker = new google.maps.Marker({
+                    map: map,
+                    position: results[0].geometry.location
+                });
+            } else {
+                console.log(status);
+                console.log('Geocode was not successful for the following reason: ' + status);
+            }
+        });
+    }
+</script>
