@@ -52,11 +52,17 @@ class Users extends MY_Controller {
 
 	public function businessprofile()
 	{	
+		$this->load->model('Business_model');
+    	$this->load->model('ServiceCategory_model');
+
 		$user    = (object)$this->session->userdata('logged');
-		$comp_id = logged('company_id');		
-		$profiledata = $this->business_model->getByWhere(array('company_id'=>$comp_id));
-		$this->page_data['profiledata'] = $profiledata[0];
-		$this->load->view('business_profile/businessprofile', $this->page_data);
+		$comp_id = logged('company_id');	
+		$profiledata = $this->business_model->getByCompanyId($comp_id);	
+		$selectedCategories = $this->ServiceCategory_model->getAllCategoriesByCompanyID($comp_id);
+
+		$this->page_data['profiledata'] = $profiledata;
+		$this->page_data['selectedCategories'] = $selectedCategories;
+		$this->load->view('pages/company_business_profile', $this->page_data);        
 	}
 	
 	public function businessview()
@@ -246,19 +252,11 @@ class Users extends MY_Controller {
 		//ifPermissions('businessdetail');
 		
 		$user = (object)$this->session->userdata('logged');
-		$cid=logged('id');
-		$profiledata = $this->business_model->getByWhere(array('id'=>$cid));	
-		//dd($profiledata);die;
-		$this->page_data['userid'] = $user->id;
-		$this->page_data['profiledata'] = ($profiledata) ? $profiledata[0] : '';
+		$comp_id = logged('company_id');	
+		$profiledata = $this->business_model->getByCompanyId($comp_id);	
 		
-		/* echo "<pre>"; print_r($this->page_data); die;  */
-        $get_business_data = array(
-            'where' => array(
-                'user_id' => $user->id,
-            )
-        );
-        $this->page_data['profile_data'] = $this->general_model->get_all_with_keys($get_business_data,'business_profile',FALSE);
+		$this->page_data['userid'] = $user->id;
+		$this->page_data['profiledata'] = $profiledata;
 		$this->load->view('business_profile/social_media', $this->page_data);
 	}
 
@@ -308,6 +306,7 @@ class Users extends MY_Controller {
 		$bid = $pdata['id'];
 		unset($pdata['id']);
 		if($bid!=''){
+			echo 5;exit;
 			if( $action == 'availability' ){
 
 				$schedules = array();
@@ -1675,6 +1674,18 @@ class Users extends MY_Controller {
         $this->session->set_flashdata('alert_class', 'alert-success');
 
 		redirect('users/profilesetting');
+	}
+
+	public function update_social_media(){		
+		$comp_id = logged('company_id');	
+		$post = $this->input->post();
+		$profiledata = $this->business_model->getByCompanyId($comp_id);	
+		$this->business_model->update($profiledata->id,$post);
+
+		$this->session->set_flashdata('message', 'Profile setting was successfully updated');
+        $this->session->set_flashdata('alert_class', 'alert-success');
+
+		redirect('users/socialMedia');
 	}
 }
 

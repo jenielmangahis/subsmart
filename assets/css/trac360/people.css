@@ -1,0 +1,28 @@
+/* Set the size of the div element that contains the map */
+#map_canvas,
+.ToFit {
+  height: 100% !important;
+  width: 100%;
+}
+
+.trac360_main_sections {
+  height: 65vh;
+  /* The height is 400 pixels */
+  width: 100%;
+  /* The width is the width of the web page */
+}
+
+.trac360_side_transparent,
+button.trac360_side_controls:hover,
+button.trac360_side_controls:active:hover {
+  background-color: transparent !important;
+}
+
+.trac360_side_controls:focus,
+.trac360_side_controls:hover,
+.trac360_side_controls:hover {
+  outline-style: none !important;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+}

@@ -1,4 +1,4 @@
-<?php include viewPath('includes/header_front'); ?>
+<?php include viewPath('includes/header_business_view'); ?>
 <style>
 #company-cover-photo {
     background-size: cover;
@@ -207,7 +207,7 @@ section.mr-23 {
           $company_id = $profiledata->company_id;
         } 
       ?>
-      <div class="img-responsive" id="company-cover-photo" style="background-image: url('<?= getCompanyCoverPhoto($company_id); ?>');"></div>
+      <div class="img-responsive" id="company-cover-photo" style="background-color: #dddddd;background-image: url('<?= getCompanyCoverPhoto($company_id); ?>');"></div>
       <!-- <img src="<?= getCompanyCoverPhoto($company_id); ?>" /> -->
     </div>
     <div class="headline">
@@ -247,25 +247,25 @@ section.mr-23 {
           <div class="floating-box">
             <div class="text-center">
               <p>Business Phone</p>
-              <p>(850) 478-0530</p>
+              <p><?= $profiledata->business_phone; ?></p>
             </div>
             <hr/>
             <p class="bold">Contact Name</p>
-            <p>Alarm Direct</p>
+            <p><?= $profiledata->contact_name; ?></p>
             <br/>
-            <p class="bold">ADi</p>
-            <p>6866 Pine Forest Road</p>
-            <p>Pensacola, FL 32526</p>
-            <p>United Statest</p>
+            <p class="bold"><?= $profiledata->business_name; ?></p>
+            <p><?= $profiledata->street; ?></p>
+            <p><?= $profiledata->city . ' ' . $profiledata->postal_code . ' ' . $profiledata->state; ?></p>
             <br/>
+            <?php if( $profiledata->website != '' ){ ?>
             <p class="bold">Website</p>
-            <p><a href="https://nsmartrac.com/">https://nsmartrac.com</a></p>
+            <p style="font-size: 12px;"><a href="<?= $profiledata->website; ?>"><?= $profiledata->website; ?></a></p>
             <br/>
+            <?php } ?>
             <p class="bold">Quick Facts</p>
             <ul>
-              <li>Business since 2014</li>
-              <li>12 employees</li>
-              <li>Works with other businesses or sub-contractors</li>
+              <li>Business since <?= $profiledata->year_est; ?></li>
+              <li><?= $profiledata->employee_count; ?> employees</li>
             </ul>
             <br/>
             <p class="bold">Availability</p>
@@ -274,10 +274,22 @@ section.mr-23 {
             <hr/>
             <p class="bold mb-2">Share</p>
             <div class="social-share">
-                <a class="share-circle share-facebook facebook-color" href="#" target="_blank"><span class="fa fa-facebook"></span></a>
-                <a class="share-circle share-twitter twitter-color" href="#" target="_blank"><span class="fa fa-twitter"></span></a>
-                <a class="share-circle share-google gmail-color" href="#" target="_blank"><span class="fa fa-google"></span></a>
-                <a class="share-circle share-pinterest pinterest-color" href="#" target="_blank"><span class="fa fa-pinterest"></span></a>
+                <?php if( $profiledata->sm_facebook != '' ){ ?>
+                  <a class="share-circle share-facebook facebook-color" href="<?= $profiledata->sm_facebook; ?>" target="_blank"><span class="fa fa-facebook"></span></a>
+                <?php } ?>
+                
+                <?php if( $profiledata->sm_twitter != '' ){ ?>
+                  <a class="share-circle share-twitter twitter-color" href="<?= $profiledata->sm_twitter; ?>" target="_blank"><span class="fa fa-twitter"></span></a>
+                <?php } ?>
+
+                <?php if( $profiledata->sm_google != '' ){ ?>
+                  <a class="share-circle share-google gmail-color" href="<?= $profiledata->sm_google; ?>" target="_blank"><span class="fa fa-google"></span></a>
+                <?php } ?>
+
+                <?php if( $profiledata->sm_pinterest != '' ){ ?>
+                  <a class="share-circle share-pinterest pinterest-color" href="<?= $profiledata->sm_pinterest; ?>" target="_blank"><span class="fa fa-pinterest"></span></a>
+                <?php } ?>
+
                 <a class="share-circle share-mail email-color" href="#" target="_blank"><span class="fa fa-envelope"></span></a>
             </div>
           </div>
@@ -288,7 +300,7 @@ section.mr-23 {
 
     <div class="container">
       <div class="row">
-        <div class="col-8">
+        <div class="col-8" style="margin-bottom: 52px; margin-top: 46px;">
             
             <!-- Services Offered -->
             <div role="white__holder_section_holder">
@@ -297,8 +309,10 @@ section.mr-23 {
                   <div class="margin-bottom-sec">
                     <div class="profile-service-title"><h3 class="profile-subtitle">Residential Services Offered</h3></div>
                     <br />
+                    <?php if($selectedCategories){ ?>
                     <?php foreach($selectedCategories as $s){ ?>
                       <span class="label label-default tag"><?= $s->service_name; ?><!-- <a class="cat-tag-remove" id="cat-tag-remove-93" href="#"><span class="icon fa fa-remove"></span></a> --></span>
+                    <?php } ?>
                     <?php } ?>
                   </div>
                 </div>
@@ -307,7 +321,7 @@ section.mr-23 {
 
         </div>
 
-        <div class="col-md-8">
+        <div class="col-md-8" style="margin-bottom: 52px;">
             <!-- Business Credentials -->
             <div role="white__holder_section_holder">
               <div class="profile-content-section" id="profile-nav-credentials">
@@ -436,35 +450,35 @@ section.mr-23 {
             </div>
         </div>
 
-        <div class="col-md-12" style="padding-left: 6px !important;">
-          <div class="col-sm-6 pl-0 left">
+        <div class="col-md-8" style="padding-left: 6px !important;">
+          <div class="col-sm-12 pl-0 left">
               <h3 class="page-title pl-0 mb-2">Portfolio</h3>
-            </div>
-          </div>
-          <section class="content mr-23 mb-5">
-             <?php
-              $images = array();
-              if( $profiledata->work_images != '' ){
-                $images = unserialize($profiledata->work_images);
-              }
-             ?>
-             <?php if($images){ ?>
-             <ul class="gallery ui-sortable" id="gallery">
-                <?php foreach($images as $key => $i){ ?>
-                  <li class="col-image-<?= $key ?>">
-                    <div class="picture-container ui-sortable-handle">
-                      <div class="img">
-                          <img src="<?= url("uploads/work_pictures/" . $profiledata->company_id . "/" . $i['file']); ?>">
-                          <div class="image-caption image-caption-container-<?= $key; ?>">
-                            <?= $i['caption']; ?>
+              <section class="content mr-23 mb-5">
+                 <?php
+                  $images = array();
+                  if( $profiledata->work_images != '' ){
+                    $images = unserialize($profiledata->work_images);
+                  }
+                 ?>
+                 <?php if($images){ ?>
+                 <ul class="gallery ui-sortable" id="gallery">
+                    <?php foreach($images as $key => $i){ ?>
+                      <li class="col-image-<?= $key ?>">
+                        <div class="picture-container ui-sortable-handle">
+                          <div class="img">
+                              <img src="<?= url("uploads/work_pictures/" . $profiledata->company_id . "/" . $i['file']); ?>">
+                              <div class="image-caption image-caption-container-<?= $key; ?>">
+                                <?= $i['caption']; ?>
+                              </div>
                           </div>
-                      </div>
-                    </div>
-                  </li>
+                        </div>
+                      </li>
+                    <?php } ?>
+                  </ul>
                 <?php } ?>
-              </ul>
-            <?php } ?>
-          </section>
+              </section>
+            
+          </div>          
         </div>
 
       </div>

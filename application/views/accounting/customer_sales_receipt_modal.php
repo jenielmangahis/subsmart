@@ -118,7 +118,7 @@
                                             <th width="150px">Tax (Change in %)</th>
                                             <th>Total</th>
                                 </thead>
-                                <tbody id="items_table_body">
+                                <tbody id="items_table_body2a">
                                 <tr>
                                             <td>
                                                 <input type="text" class="form-control getItems"
@@ -155,7 +155,7 @@
                     <div class="row">
                         <div class="col-md-1">
                            <!-- <button class="btn1">Add lines</button> -->
-                           <a class="link-modal-open" href="#" id="add_another_items" data-toggle="modal" data-target="#item_list"><span class="fa fa-plus-square fa-margin-right"></span>Add Items</a>
+                           <a class="link-modal-open" href="#" id="add_another_items" data-toggle="modal" data-target="#item_list2"><span class="fa fa-plus-square fa-margin-right"></span>Add Items</a>
                         </div>
                         <!-- <div class="col-md-1">
                            <button class="btn1">Clear all lines</button>
@@ -246,7 +246,8 @@
                                             <td><b><span id="grand_total">0.00</span>
                                                 <input type="hidden" name="grand_total" id="grand_total_input" value='0'></b></td>
                                         </tr>
-                                    </table>
+                            </table>
+
                         </div>
                     </div>
                     <hr>
@@ -315,8 +316,14 @@
                 </div>
             </div>
 
+        </div>
+    </div>
+    <!--end of modal-->
+</div>
+
+
             <!-- Modal -->
-            <div class="modal fade" id="item_list" tabindex="-1" role="dialog" aria-labelledby="newcustomerLabel" aria-hidden="true">
+            <div class="modal fade" id="item_list2" tabindex="-1" role="dialog" aria-labelledby="newcustomerLabel" aria-hidden="true">
                 <div class="modal-dialog modal-lg" role="document" style="width:800px;position: absolute;top: 50%;left: 50%;transform: translate(-50%, -50%);">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -362,12 +369,6 @@
                     </div>
                 </div>
             </div>
-
-        </div>
-    </div>
-    <!--end of modal-->
-</div>
-
 <script>
   function totalfunc(){
     var inputs = document.getElementsByName('amount[]');
@@ -379,169 +380,4 @@
     document.getElementById('total_amount').value = sum;
 
   }
-</script>
-
-
-<script>
-
-$(".select_item2").click(function () {
-            $("#addcreditmemoModal").modal('show')
-            var idd = this.id;
-            console.log(idd);
-            console.log($(this).data('itemname'));
-            var title = $(this).data('itemname');
-            var price = $(this).data('price');
-            
-            $("#item_list").modal('hide')
-
-            if(!$(this).data('quantity')){
-              // alert($(this).data('quantity'));
-              var qty = 0;
-            }else{
-              // alert('0');
-              var qty = $(this).data('quantity');
-            }
-
-            var count = parseInt($("#count").val()) + 1;
-            $("#count").val(count);
-            var total_ = price * qty;
-            var total = parseFloat(total_).toFixed(2);
-            var withCommas = Number(total).toLocaleString('en');
-            total = '$' + withCommas + '.00';
-            // console.log(total);
-            // alert(total);
-            markup = "<tr id=\"ss\">" +
-                "<td width=\"35%\"><input value='"+title+"' type=\"text\" name=\"items[]\" class=\"form-control\" ><input type=\"hidden\" value='"+idd+"' name=\"item_id[]\"></td>\n" +
-                "<td width=\"20%\"><select name=\"item_type[]\" class=\"form-control\"><option value=\"product\">Product</option><option value=\"material\">Material</option><option value=\"service\">Service</option><option value=\"fee\">Fee</option></select></td>\n" +
-                "<td width=\"10%\"><input data-itemid='"+idd+"' id='quantity_"+idd+"' value='"+qty+"' type=\"number\" name=\"quantity[]\" data-counter=\"0\"  min=\"0\" class=\"form-control qtyest\"></td>\n" +
-                // "<td>\n" + '<input type="number" class="form-control qtyest" name="quantity[]" data-counter="' + count + '" id="quantity_' + count + '" min="1" value="1">\n' + "</td>\n" +
-                "<td width=\"10%\"><input id='price_"+idd+"' value='"+price+"'  type=\"number\" name=\"price[]\" class=\"form-control\" placeholder=\"Unit Price\"></td>\n" +
-                // "<td width=\"10%\"><input type=\"number\" class=\"form-control discount\" name=\"discount[]\" data-counter="0" id=\"discount_0\" min="0" value="0" ></td>\n" +
-                // "<td width=\"10%\"><small>Unit Cost</small><input type=\"text\" name=\"item_cost[]\" class=\"form-control\"></td>\n" +
-                "<td width=\"10%\"><input type=\"number\" name=\"discount[]\" class=\"form-control discount\" id='discount_"+idd+"' readonly></td>\n" +
-                // "<td width=\"25%\"><small>Inventory Location</small><input type=\"text\" name=\"item_loc[]\" class=\"form-control\"></td>\n" +
-                "<td width=\"20%\"><input type=\"text\" data-itemid='"+idd+"' class=\"form-control tax_change2\" name=\"tax[]\" data-counter=\"0\" id='tax1_"+idd+"' min=\"0\" value=\"0\"></td>\n" +
-                "<td style=\"text-align: center\" class=\"d-flex\" width=\"15%\"><span data-subtotal='"+total_+"' id='span_total_"+idd+"' class=\"total_per_item\">"+total+
-                // "</span><a href=\"javascript:void(0)\" class=\"remove_item_row\"><i class=\"fa fa-times-circle\" aria-hidden=\"true\"></i></a>"+
-                "<input type=\"hidden\" name=\"total[]\" id='sub_total_text"+idd+"' value='"+total+"'></td>" +
-                "</tr>";
-            tableBody = $("#items_table_body");
-            tableBody.append(markup);
-            markup2 = "<tr id=\"sss\">" +
-                "<td >"+title+"</td>\n" +
-                "<td ></td>\n" +
-                "<td ></td>\n" +
-                "<td >"+price+"</td>\n" +
-                "<td ></td>\n" +
-                "<td >"+qty+"</td>\n" +
-                "<td ></td>\n" +
-                "<td ></td>\n" +
-                "<td >0</td>\n" +
-                "<td ></td>\n" +
-                "<td ><a href=\"#\" data-name='"+title+"' data-price='"+price+"' data-quantity='"+qty+"' id='"+idd+"' class=\"edit_item_list\"><span class=\"fa fa-edit\"></span></i></a> <a href=\"javascript:void(0)\" class=\"remove_audit_item_row\"><span class=\"fa fa-trash\"></span></i></a></td>\n" +
-                "</tr>";
-            tableBody2 = $("#device_audit_datas");
-            tableBody2.append(markup2);
-            // calculate_subtotal();
-            // var counter = $(this).data("counter");
-            // calculation(idd);
-
-  var in_id = idd;
-  var price = $("#price_" + in_id).val();
-  var quantity = $("#quantity_" + in_id).val();
-  var discount = $("#discount_" + in_id).val();
-  var tax = (parseFloat(price) * 7.5) / 100;
-  var tax1 = (((parseFloat(price) * 7.5) / 100) * parseFloat(quantity)).toFixed(
-    2
-  );
-  if( discount == '' ){
-    discount = 0;
-  }
-  
-  var total = (
-    (parseFloat(price) + parseFloat(tax)) * parseFloat(quantity) -
-    parseFloat(discount)
-  ).toFixed(2);
-
-  // alert( 'yeah' + total);
-
-  $("#span_total_" + in_id).text(total);
-  $("#tax_1_" + in_id).text(tax1);
-  $("#tax1_" + in_id).val(tax1);
-  $("#discount_" + in_id).val(discount);
-
-  if( $('#tax_1_'+ in_id).length ){
-    $('#tax_1_'+in_id).val(tax1);
-  }
-
-  if( $('#item_total_'+ in_id).length ){
-    $('#item_total_'+in_id).val(total);
-  }
-
-  var eqpt_cost = 0;
-  var cnt = $("#count").val();
-  var total_discount = 0;
-  for (var p = 0; p <= cnt; p++) {
-    var prc = $("#price_" + p).val();
-    var quantity = $("#quantity_" + p).val();
-    var discount = $("#discount_" + p).val();
-    // var discount= $('#discount_' + p).val();
-    // eqpt_cost += parseFloat(prc) - parseFloat(discount);
-    eqpt_cost += parseFloat(prc) * parseFloat(quantity);
-    total_discount += parseFloat(discount);
-  }
-//   var subtotal = 0;
-// $( total ).each( function(){
-//   subtotal += parseFloat( $( this ).val() ) || 0;
-// });
-
-  eqpt_cost = parseFloat(eqpt_cost).toFixed(2);
-  total_discount = parseFloat(total_discount).toFixed(2);
-  // var test = 5;
-
-  var subtotal = 0;
-  // $("#span_total_0").each(function(){
-    $('*[id^="span_total_"]').each(function(){
-    subtotal += parseFloat($(this).text());
-  });
-  // $('#sum').text(subtotal);
-
-  var subtotaltax = 0;
-  // $("#span_total_0").each(function(){
-    $('*[id^="tax_1_"]').each(function(){
-      subtotaltax += parseFloat($(this).text());
-  });
-
-  // alert(subtotaltax);
-
-  $("#eqpt_cost").val(eqpt_cost);
-  $("#total_discount").val(total_discount);
-  $("#span_sub_total_0").text(total_discount);
-  $("#span_sub_total_invoice").text(subtotal.toFixed(2));
-  $("#item_total").val(subtotal.toFixed(2));
-  
-  var s_total = subtotal.toFixed(2);
-  var adjustment = $("#adjustment_input").val();
-  var grand_total = s_total - parseFloat(adjustment);
-  var markup = $("#markup_input_form").val();
-  var grand_total_w = grand_total + parseFloat(markup);
-
-  $("#total_tax_").text(subtotaltax.toFixed(2));
-  $("#total_tax_").val(subtotaltax.toFixed(2));
-  
-
-  $("#grand_total").text(grand_total_w.toFixed(2));
-  $("#grand_total_input").val(grand_total_w.toFixed(2));
-
-  var sls = (parseFloat(eqpt_cost).toFixed(2) * 7.5) / 100;
-  sls = parseFloat(sls).toFixed(2);
-  $("#sales_tax").val(sls);
-  cal_total_due();
-        });
-</script>
-<script>
-$('#addcreditmemoModal').modal({
-    backdrop: 'static',
-    keyboard: false
-})
 </script>

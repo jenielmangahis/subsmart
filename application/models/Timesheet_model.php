@@ -1459,6 +1459,16 @@ class Timesheet_model extends MY_Model
         $qry = $this->db->query("SELECT * FROM timesheet_logs WHERE attendance_id=" . $att_id);
         return $qry->result();
     }
+    public function get_all_businesses()
+    {
+        $qry = $this->db->query("SELECT id,company_id,business_name,business_email FROM business_profile");
+        return $qry->result();
+    }
+    public function get_all_business_admins($company_id)
+    {
+        $qry = $this->db->query("SELECT users.id,users.company_id,users.email,users.FName,users.LName FROM business_profile JOIN users ON business_profile.company_id = users.company_id WHERE business_profile.company_id=$company_id and users.role < 5");
+        return $qry->result();
+    }
 }
 
 

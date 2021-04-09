@@ -16,9 +16,9 @@
     </div>
     <div class="card" style="border: 2px solid #30233d; margin-top:0; border-radius: 40px; padding:5px;">
         <div style="border: 5px solid #30233d; margin-top:0; border-radius: 40px; box-shadow: 1px 0px 15px 5px rgb(48, 35, 61);">
-            <div class="card-body mt-2" style="padding:5px 10px; height: 363px; overflow: hidden">
-                <div class="row" id="openInvoicesBody" style="<?= $height; ?> overflow-y: scroll;">
-                    <canvas id="canvas" height="<?= $rawHeight - 120 ?>"></canvas>
+            <div class="card-body mt-2" style="padding:25px 10px; height: 363px; overflow: hidden">
+                <div class="row" id="openInvoicesBody" style="<?= $height; ?> overflow-y: scroll; padding:5px 20px;">
+                    <canvas id="canvas" height="<?= $rawHeight - 150 ?>"></canvas>
 
                 </div>
             </div>

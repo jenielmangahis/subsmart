@@ -254,7 +254,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     <div class="card">
                         <div class="row">
                         <div class="col-md-8">
-                            <button class="btn btn-default btn-lg" name="btn-continue" value="availability" type="submit">Save</button> <span class="alert-inline-text margin-left hide">Saved</span>
+                            <button class="btn btn-primary btn-lg" name="btn-continue" value="availability" type="submit">Save</button> <span class="alert-inline-text margin-left hide">Saved</span>
                         </div>
                         <div class="col-md-4 text-right">
                         </div>

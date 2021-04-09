@@ -456,6 +456,135 @@ class DocuSign extends MY_Controller
         header('content-type: application/json');
         echo json_encode(['data' => $record, 'is_created' => $isCreated]);
     }
+
+    public function home()
+    {
+        $this->checkLogin();
+        add_css('assets/css/esign/docusign/home/home.css');
+        $this->load->view('esign/docusign/home', $this->page_data);
+    }
+
+    public function templateCreate()
+    {
+        $this->checkLogin();
+
+        add_css([
+            'assets/css/esign/esign-builder/esign-builder.css',
+            'assets/css/esign/docusign/template-create/template-create.css',
+        ]);
+
+        add_footer_js([
+            'assets/js/esign/libs/pdf.js',
+            'assets/js/esign/libs/pdf.worker.js',
+            'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js',
+            'assets/js/esign/docusign/template-create.js',
+        ]);
+
+        $this->load->view('esign/docusign/template-create', $this->page_data);
+    }
+
+    public function templateList()
+    {
+        $this->checkLogin();
+        add_css('assets/css/esign/docusign/template-list/template-list.css');
+        $this->load->view('esign/docusign/template-list', $this->page_data);
+    }
+
+    public function apiStoreTemplate()
+    {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            echo json_encode(['success' => false]);
+            return;
+        }
+
+        $file = $_FILES['file'];
+
+        if ($file['size'] > self::ONE_MB * 8) {
+            echo json_encode([
+                'success' => false,
+                'reason' => 'Maximum file size is less than 8MB',
+            ]);
+            return;
+        }
+
+        $filepath = FCPATH . 'uploads/docusigntemplates/';
+        if (!file_exists($filepath)) {
+            mkdir($filepath, 0777, true);
+        }
+
+        $tempName = $file['tmp_name'];
+        $filename = $file['name'];
+        $filename = time() . "_" . rand(1, 9999999) . "_" . basename($filename);
+
+        [
+            'name' => $name,
+            'description' => $description,
+            'subject' => $subject,
+            'message' => $message,
+            'recipients' => $recipients,
+        ] = $this->input->post();
+
+        $id = $this->input->post('id');
+        $recipients = json_decode($recipients, true);
+
+        $payload = [
+            'name' => $name,
+            'description' => $description,
+            'subject' => $subject,
+            'message' => $message,
+            'user_id' => logged('id'),
+            'company_id' => logged('company_id'),
+        ];
+
+        if (is_null($id)) { // not created yet
+            $this->db->insert('user_docfile_templates', $payload);
+            $insertedId = $this->db->insert_id();
+
+            $payload = [
+                'name' => $filename,
+                'path' => str_replace(FCPATH, '/', $filepath . $filename),
+                'template_id' => $insertedId,
+            ];
+
+            $this->db->insert('user_docfile_templates_documents', $payload);
+            move_uploaded_file($tempName, $filepath . $filename);
+
+            if (!empty($recipients)) {
+                foreach ($recipients as $recipient) {
+                    $payload = [
+                        'user_id' => logged('id'),
+                        'template_id' => $insertedId,
+                        'name' => $recipient['name'],
+                        'email' => $recipient['email'],
+                        'role' => $recipient['role'],
+                        'color' => $recipient['color'],
+                    ];
+
+                    $this->db->insert('user_docfile_templates_recipients', $payload);
+                }
+            }
+
+            $this->db->where('id', $insertedId);
+            $record = $this->db->get('user_docfile_templates')->row();
+
+            header('content-type: application/json');
+            echo json_encode(['data' => $record, 'is_created' => true]);
+            return;
+        }
+
+        header('content-type: application/json');
+        echo json_encode(['data' => null]);
+    }
+
+    public function apiTemplates()
+    {
+        $this->db->where('company_id', logged('company_id'));
+        $this->db->where('user_id', logged('id'));
+        $records = $this->db->get('user_docfile_templates')->result();
+
+        header('content-type: application/json');
+        echo json_encode(['data' => $records]);
+    }
 }
 
 // https://stackoverflow.com/a/50373095/8062659

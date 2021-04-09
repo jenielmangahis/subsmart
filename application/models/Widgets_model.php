@@ -3,6 +3,12 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Widgets_model extends MY_Model {
     
+    function getTags()
+    {
+        $this->db->where('company_id' , getLoggedCompanyID());
+        return $this->db->get('job_tags')->result();
+        
+    }
     
     function getLeadSource($comp_id)
     {

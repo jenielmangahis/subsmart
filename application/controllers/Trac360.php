@@ -59,6 +59,9 @@ class Trac360 extends MY_Controller
 
     public function index()
     {
+        add_css(array(
+            "assets/css/trac360/people.css"
+        ));
         $company_id = logged('company_id');
         $user_id = logged('id');
 
@@ -162,7 +165,7 @@ class Trac360 extends MY_Controller
 
         $this->page_data['trac360_manager'] = $this->load->view('modals/trac360_manager', array(), true);
         $this->page_data['current_user_location'] = $current_user_location;
-        $this->load->view('trac360/main', $this->page_data);
+        $this->load->view('trac360/people', $this->page_data);
         // var_dump($data);
     }
 

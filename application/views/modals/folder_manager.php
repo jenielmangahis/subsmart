@@ -142,6 +142,7 @@
             </div>
           </div>
           <div class="card-body" style="<?php if(!$isMain){ echo 'height: 64vh !important; overflow: auto'; } ?>">
+            <div id="docusign_templates"></div>
             <div id="quick_access"></div>
             <div id="folders_and_files"></div>
             <?php if(((!$isMyLibrary) && (!$isBusinessFormTemplates)) || ((!$isMyLibrary) && (!$isBusinessFormTemplates) && ($isMain))){ ?>

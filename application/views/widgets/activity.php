@@ -8,7 +8,7 @@
                     &nbsp;<span class="fa fa-ellipsis-v"></span></span>
                 <ul class="dropdown-menu dropdown-menu-right">
                     <li><a href="#" class="dropdown-item" onclick="removeWidget('<?= $id ?>')">Close</a></li>
-                    <li><a href="#" class="dropdown-item">Add to Main</a></li>
+                    <li><a href="#" class="dropdown-item" onclick="addToMain('<?= $id ?>',<?php echo ($isMain ? '1' : '0') ?>, '<?= $isGlobal ?>')"><?php echo ($isMain ? 'Remove From Main' : 'Add to Main') ?></a></li>
                     <li><a href="#" class="dropdown-item">Move</a></li>
                 </ul>
             </div>
