@@ -81,7 +81,7 @@
         </div>
         <div class="row form_line">
             <div class="col-md-6">
-                <label for="">System Package Type<span class="required"> *</span></label>
+                <label for="">System Package Type</label>
             </div>
             <div class="col-md-6">
                 Landline

@@ -52,6 +52,25 @@ class Job extends MY_Controller
         );
         $this->page_data['logged_in_user'] = $this->general->get_data_with_param($get_login_user,FALSE);
 
+        // check if settings has been set
+        $get_job_settings = array(
+            'where' => array(
+                'company_id' => $comp_id
+            ),
+            'table' => 'job_settings',
+            'select' => 'id',
+        );
+        $event_settings = $this->general->get_data_with_param($get_job_settings);
+        // add default event settings if not set
+        if(empty($event_settings)){
+            $event_settings_data = array(
+                'event_prefix' => 'JOB',
+                'event_next_num' => 1,
+                'company_id' => $comp_id,
+            );
+            $this->general->add_($event_settings_data, 'job_settings');
+        }
+
 
         $get_employee = array(
             'where' => array(
@@ -784,10 +803,6 @@ class Job extends MY_Controller
             ),
             'table' => 'job_settings',
             'select' => '*',
-            'limit' => 1,
-            'order' => array(
-                'order_by' => 'id'
-            ),
         );
         $job_settings = $this->general->get_data_with_param($get_job_settings);
         $job_number = $job_settings[0]->job_num_prefix.'-000'.$job_settings[0]->job_num_next;
@@ -818,6 +833,7 @@ class Job extends MY_Controller
             'attachment' => $input['attachment'],
             'tax_rate' => $input['tax_rate'],
             'job_type' => $input['job_type'],
+            'date_issued' => $input['start_date'],
         );
         $jobs_id = $this->general->add_return_id($jobs_data, 'jobs');
 
@@ -880,32 +896,10 @@ class Job extends MY_Controller
 
         }
         $this->general->add_($jobs_payments_data, 'jobs_pay_details');
-
         $jobs_settings_data = array(
-            'job_num_prefix' => 'JOB',
-            'job_num_next' => $job_settings[0]->job_num_next + 1,
-            'company_id' => $comp_id
+            'job_num_next' => $job_settings[0]->job_num_next + 1
         );
-        $this->general->add_($jobs_settings_data, 'job_settings');
-
-        // add to cslendar of the new job
-//        $events_data = array(
-//            'customer_id' => $input['customer_id'],
-//            'event_description' => $input['job_description'],
-//            'employee_id' => $input['employee_id'],
-//            'start_date' => $input['start_date'],
-//            'start_time' => $input['start_time'],
-//            'end_date' => $input['end_date'],
-//            'end_time' => $input['end_time'],
-//            'event_color' => $jobs_id,
-//            'customer_reminder_notification' => $input['customer_reminder_notification'],
-//            'company_id' => $comp_id,
-//            //'description' => $jobs_id,
-//            //'tags' => $jobs_id,
-//            'notify_at' => $input['customer_reminder_notification'],
-//        );
-//        $this->general->add_($events_data, 'events');
-
+        $this->general->update_with_key($jobs_settings_data,$job_settings[0]->id, 'job_settings');
         echo $jobs_id;
     }
 

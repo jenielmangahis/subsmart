@@ -47,7 +47,7 @@ class Events extends MY_Controller
             'where' => array(
                 'company_id' => $comp_id
             ),
-            'table' => 'event_setting',
+            'table' => 'event_settings',
             'select' => 'id',
         );
         $event_settings = $this->general->get_data_with_param($get_event_settings);
@@ -58,7 +58,7 @@ class Events extends MY_Controller
                 'event_next_num' => 1,
                 'company_id' => $comp_id,
             );
-            $this->general->add_($event_settings_data, 'event_setting');
+            $this->general->add_($event_settings_data, 'event_settings');
         }
 
         // get all job tags
@@ -501,12 +501,8 @@ class Events extends MY_Controller
             'where' => array(
                 'company_id' => $comp_id
             ),
-            'table' => 'event_setting',
+            'table' => 'event_settings',
             'select' => '*',
-            'limit' => 1,
-            'order' => array(
-                'order_by' => 'id'
-            ),
         );
         $event_settings = $this->general->get_data_with_param($get_event_settings);
         $event_number = $event_settings[0]->event_prefix.'-000'.$event_settings[0]->event_next_num;
@@ -526,11 +522,12 @@ class Events extends MY_Controller
             'customer_reminder_notification' => $input['customer_reminder_notification'],
             'url_link' => $input['link'],
             'event_address' => $input['event_address'],
+
             'status' => 1,//$this->input->post('job_status'),
             'description' => $input['message'],
             'created_by' => $input['created_by'],
             'company_id' => $comp_id,
-            //'date_created' => date('Y-m-d H:i:s'),
+            //'date_issued' => date('Y-m-d'),
             'notes' => $input['notes'],
             //'tax_rate' => $input['tax_rate'],
         );
@@ -547,13 +544,10 @@ class Events extends MY_Controller
                 unset($events_items_data);
             }
         }
-
         $event_settings_data = array(
-            'event_prefix' => 'EVENT',
             'event_next_num' => $event_settings[0]->event_next_num + 1,
-            'company_id' => $comp_id,
         );
-        $this->general->add_($event_settings_data, 'event_setting');
+        $this->general->update_with_key($event_settings_data,$event_settings[0]->id, 'event_settings');
 
         echo $event_id;
     }

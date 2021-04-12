@@ -104,7 +104,7 @@ class Customer extends MY_Controller
         $this->page_data['employees'] = $this->customer_ad_model->get_all(FALSE,"","ASC","users","id");
         $this->page_data['users'] = $this->users_model->getUsers();
 
-        $this->load->view('customer/preview2', $this->page_data);
+        $this->load->view('customer/preview', $this->page_data);
     }
 
     public function preview2($id=null){

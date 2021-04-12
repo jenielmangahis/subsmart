@@ -339,25 +339,19 @@ add_css(array(
                                 </td>
                             </tr>
                             </thead>
-                            <tbody id="jobs_items_table_body">
+                            <tbody id="events_items">
                             <tr>
                                 <td>
                                     <small>Event Type</small>
                                     <input type="text" id="job_type" name="event_type" value="<?= isset($jobs_data) ? $jobs_data->job_type : ''; ?>" class="form-control" readonly >
                                 </td>
-                                <td>
-                                </td>
+                                <td></td>
                                 <td>
                                     <small>Event Tags</small>
                                     <input type="text" name="event_tag" class="form-control" value="<?= isset($jobs_data) ? $jobs_data->name : ''; ?>" id="job_tags_right" readonly>
                                 </td>
-                                <td>
-                                </td>
-                                <td>
-
-                                </td>
-                                <td>
-                                </td>
+                                <td></td>
+                                <td></td>
                             </tr>
                             </tbody>
                         </table>
@@ -420,10 +414,10 @@ add_css(array(
                                         </a>
                                     </div>-->
                                     <div class="col-sm-6">
-                                        <label style="padding: 0 .75rem;">Total</label>
+                                        <label style="padding: 0 .75rem;font-size: 20px;font-weight: 800;">Total</label>
                                     </div>
-                                    <div class="col-sm-6 text-right pr-3">
-                                        <label id="invoice_overall_total">$<?= isset($jobs_data) ? number_format((float)$subtotal,2,'.',',') : '0.00'; ?></label>
+                                    <div class="col-sm-6 text-right">
+                                        <span id="invoice_overall_total" style="font-size: 20px;font-weight: 800;right: 0;text-align: right;position: absolute;">$<?= isset($jobs_data) ? number_format((float)$subtotal,2,'.',',') : '0.00'; ?></span>
                                         <input type="hidden" name="sub_total" id="sub_total_form_input" value='0'>
                                     </div>
                                 </div>
@@ -956,7 +950,7 @@ include viewPath('includes/footer');
 <script src="https://momentjs.com/downloads/moment-with-locales.js"></script>
 
 
-<?php include viewPath('events/js/job_new_js'); ?>
+<?php include viewPath('events/js/new_event_js'); ?>
 
 <script>
     var geocoder;

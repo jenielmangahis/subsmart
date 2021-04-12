@@ -161,7 +161,7 @@ div#tags-modal button.btn-outline-secondary {
     border-left: 1px solid #dee2e6 !important;
 }
 
-div#payrollModal .graph-color {
+div#payrollModal .graph-color, div#commission-payroll-modal .graph-color, div#bonus-payroll-modal .graph-color {
     height: 45px;
     width: 1px;
     border: 2px solid black;

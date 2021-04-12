@@ -3,6 +3,14 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Widgets_model extends MY_Model {
     
+    function getOverdueInvoices($comp_id)
+    {
+        $this->db->join('acs_profile', 'invoices.customer_id = acs_profile.prof_id','right');
+        $this->db->where('invoices.company_id', $comp_id);
+        $this->db->where('due_date <', date('Y-m-d'));
+        return $this->db->get('invoices')->result();
+    }
+    
     function getTags()
     {
         $this->db->where('company_id' , getLoggedCompanyID());

@@ -20,6 +20,31 @@
 
   .card {
     box-shadow: 0 0 13px 0 rgb(116 116 117 / 44%);
+
+    position: relative;
+
+    &.card--loading {
+      max-height: 100vh;
+      min-height: 100vh;
+      overflow: hidden;
+
+      .loader {
+        display: grid;
+      }
+    }
+
+    .loader {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 4;
+
+      display: none;
+      place-content: center;
+      background-color: #fff;
+    }
   }
 
   &__spacer {

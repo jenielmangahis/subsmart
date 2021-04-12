@@ -673,7 +673,7 @@ add_css(array(
                                 </td>
                             </tr>
                             </thead>
-                            <tbody id="jobs_items_table_body">
+                            <tbody id="jobs_items">
                             <tr>
                                 <td>
                                     <small>Job Type</small>
@@ -686,10 +686,10 @@ add_css(array(
                                 <td>
                                 </td>
                                 <td>
-                                    <button type="button" class="btn btn-sm btn-primary"><span class="fa fa-paper-plane-o"  style=""></span></button>
+                                    <!--<button type="button" class="btn btn-sm btn-primary"><span class="fa fa-paper-plane-o"  style=""></span></button>
                                     <button type="button" class="btn btn-sm btn-primary"><span class="fa fa-file"  style="color:"></span></button>
                                     <button type="button" class="btn btn-sm btn-primary"><span class="fa fa-print" style="color:"></span></button>
-                                    <button type="button" class="btn btn-sm btn-primary"><span class="fa fa-plus"  style="color:"></span></button>
+                                    <button type="button" class="btn btn-sm btn-primary"><span class="fa fa-plus"  style="color:"></span></button>-->
                                 </td>
                                 <td>
                                 </td>
@@ -1065,95 +1065,8 @@ add_css(array(
 <!-- end container-fluid -->
 </div>
 
-<!-- New Customer Modal -->
-<div class="modal fade" id="new_customer" tabindex="-1" role="dialog" aria-labelledby="newcustomerLabel" aria-hidden="true">
-    <div class="modal-dialog modal-md" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="newcustomerLabel">Add new customer</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <form id="new_customer_form">
-                <div class="modal-body">
-                    <div class="contact-info">
-                        <div class="row">
-
-                            <div class="col-md-12">
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label>First Name</label>
-                                            <input type="text" name="first_name" class="form-control" required>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label>Last Name</label>
-                                            <input type="text" name="last_name" class="form-control" required>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-5">
-                                        <div class="form-group">
-                                            <label>Middle Initial</label>
-                                            <input type="text" name="middle_name" class="form-control" placeholder="optional" >
-                                        </div>
-                                    </div>
-                                    <div class="col-md-7">
-                                        <div class="form-group">
-                                            <label>Email</label>
-                                            <input type="email" name="email" class="form-control" required>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-12">
-                                        <div class="form-group">
-                                            <label>Phone</label>
-                                            <input type="text" name="phone_h" class="form-control" required>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-12">
-                                        <div class="form-group">
-                                            <label>Address</label>
-                                            <input type="text" name="mail_add" class="form-control" required>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            <label>City</label>
-                                            <input type="text" name="city" class="form-control" required>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            <label>State</label>
-                                            <input type="text" name="state" class="form-control" required>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            <label>Zip Code</label>
-                                            <input type="text" name="zip_code" class="form-control" required>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <hr>
-                        </div>
-                    </div>
-
-                </div>
-                <div class="modal-footer modal-footer-detail">
-                    <div class="button-modal-list">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal"><span class="fa fa-remove"></span> Close</button>
-                        <button type="submit" class="btn btn-primary"><span class="fa fa-paper-plane-o"></span> Save</button>
-                    </div>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-
+<!-- Modals -->
+<?php include viewPath('job/modals/new_customer'); ?>
 <?php include viewPath('job/modals/inventory_location'); ?>
 <?php include viewPath('job/modals/new_inventory'); ?>
 
@@ -1370,11 +1283,8 @@ add_css(array(
                 </select>
             </div>
             <div class="modal-footer">
-                <button type="button" id="" class="btn btn-primary">
-                    <span class="fa fa-paper-plane-o"></span> Save
-                </button>
-                <button type="button" id="" class="btn btn-default" data-dismiss="modal">
-                    <span class="fa fa-remove"></span> Close
+                <button type="button" id="" class="btn btn-primary" data-dismiss="modal">
+                    <span class="fa fa-paper-plane-o"></span> Save / Close
                 </button>
             </div>
         </div>

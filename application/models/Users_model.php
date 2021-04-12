@@ -596,6 +596,18 @@ class Users_model extends MY_Model {
 		$query = $this->db->get('employee_pay_details');
 		return $query->result();
 	}
+
+	public function getActiveEmployeePayDetails()
+	{
+		$company_id = logged('company_id');
+		$this->db->select('*');
+		$this->db->from('employee_pay_details');
+		$this->db->join('users', 'users.id = employee_pay_details.user_id');
+		$this->db->where('users.company_id', $company_id);
+		$this->db->where('users.status', 1);
+		$query = $this->db->get();
+		return $query->result();
+	}
 }
 
 

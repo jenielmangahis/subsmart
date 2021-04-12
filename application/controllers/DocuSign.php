@@ -480,7 +480,7 @@ class DocuSign extends MY_Controller
             'assets/js/esign/docusign/template-create.js',
         ]);
 
-        $this->load->view('esign/docusign/template-create', $this->page_data);
+        $this->load->view('esign/docusign/template-create/index', $this->page_data);
     }
 
     public function templateList()
@@ -580,10 +580,124 @@ class DocuSign extends MY_Controller
     {
         $this->db->where('company_id', logged('company_id'));
         $this->db->where('user_id', logged('id'));
+        $this->db->order_by('created_at', 'DESC');
         $records = $this->db->get('user_docfile_templates')->result();
 
         header('content-type: application/json');
         echo json_encode(['data' => $records]);
+    }
+
+    public function apiGetTemplateFields($templateId)
+    {
+        $query = <<<SQL
+        SELECT `user_docfile_templates_fields`.*, `user_docfile_templates_recipients`.`color` FROM `user_docfile_templates_fields`
+        LEFT JOIN `user_docfile_templates_recipients` ON `user_docfile_templates_recipients`.`id` = `user_docfile_templates_fields`.`recipients_id`
+        WHERE `user_docfile_templates_fields`.`template_id` = ? AND `user_docfile_templates_fields`.`user_id` = ?
+        SQL;
+
+        $records = $this->db->query($query, [$templateId, logged('id')])->result_array();
+        header('content-type: application/json');
+        echo json_encode(['fields' => $records]);
+    }
+
+    public function apiTemplateFile($templateId) {
+        $this->db->where('template_id', $templateId);
+        $records = $this->db->get('user_docfile_templates_documents')->row();
+
+        header('content-type: application/json');
+        echo json_encode(['data' => $records]);
+    }
+
+    public function apiTemplate($templateId) {
+        $this->db->where('id', $templateId);
+        $records = $this->db->get('user_docfile_templates')->row();
+
+        header('content-type: application/json');
+        echo json_encode(['data' => $records]);
+    }
+
+    public function apiTemplateRecipients($templateId) {
+        $this->db->where('template_id', $templateId);
+        $records = $this->db->get('user_docfile_templates_recipients')->result();
+
+        header('content-type: application/json');
+        echo json_encode(['data' => $records]);
+    }
+
+    public function apiCreateTemplateFields()
+	{
+    	header('content-type: application/json');
+
+		if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+			echo json_encode(['success' => false]);
+			return;
+		}
+
+		$payload = json_decode(file_get_contents('php://input'), true);
+
+		$coordinates = json_encode($payload['coordinates']);
+		$specs = $payload['specs'] ? json_encode($payload['specs']) : null;
+		$docPage = $payload['doc_page'];
+		$field = $payload['field'];
+		$recipientId = $payload['recipient_id'];
+		$userId = logged('id');
+		$templateId = $payload['template_id'];
+		$uniqueKey = $payload['unique_key'];
+
+		$this->db->where('template_id', $templateId);
+		$this->db->where('user_id', $userId);
+		$this->db->where('unique_key', $uniqueKey);
+		$record = $this->db->get('user_docfile_templates_fields')->row();
+		$isCreated = false;
+
+		if (is_null($record)) {
+			$isCreated = true;
+			$this->db->insert('user_docfile_templates_fields', [
+				'coordinates' => $coordinates,
+				'doc_page' => $docPage,
+				'template_id' => $templateId,
+				'field_name' => $field,
+				'unique_key' => $uniqueKey,
+				'user_id' => $userId,
+                'recipients_id' => $recipientId,
+				'specs' => $specs,
+			]);
+		} else {
+			$this->db->where('id', $record->id);
+			$this->db->update('user_docfile_templates_fields', [
+				'coordinates' => $coordinates,
+				'doc_page' => $docPage,
+				'template_id' => $templateId,
+				'field_name' => $field,
+				'unique_key' => $uniqueKey,
+				'user_id' => $userId,
+				'specs' => is_null($specs) ? $record->specs : $specs,
+			]);
+		}
+
+		$recordId = $isCreated ? $this->db->insert_id() : $record->id;
+		$this->db->where('id', $recordId);
+		$record = $this->db->get('user_docfile_templates_fields')->row();
+
+		echo json_encode(['record' => $record, 'is_created' => $isCreated]);
+	}
+
+    public function apiDeleteTemplateField($uniqueKey) {
+        if ($_SERVER['REQUEST_METHOD'] !== 'DELETE') {
+            echo json_encode(['success' => false]);
+            return;
+        }
+
+        $this->db->where('user_id', logged('id'));
+        $this->db->where('unique_key', $uniqueKey);
+        $this->db->delete('user_docfile_templates_fields');
+
+        header('content-type: application/json');
+        echo json_encode(['success' => true]);
+    }
+
+    public function templatePrepare() {
+        return $this->templateCreate();
     }
 }
 

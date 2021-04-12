@@ -6,7 +6,7 @@
     </div>
     <div class="card-body">
         <div class="row form-line">
-            <i>Hey, Im a note.</i>
+            <i></i>
         </div>
     </div>
 

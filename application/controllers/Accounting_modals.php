@@ -31,6 +31,7 @@ class Accounting_modals extends MY_Controller {
         $this->load->model('accounting_payroll_model');
         $this->load->model('accounting_invoices_model');
         $this->load->model('accounting_statements_model');
+        $this->load->model('chart_of_accounts_model');
         $this->load->model('AcsProfile_model');
         $this->load->model('tags_model');
         $this->load->model('job_tags_model');
@@ -541,7 +542,8 @@ class Accounting_modals extends MY_Controller {
         $socialSecurity = 6.2;
         $medicare = 1.45;
         $futa = 0.006;
-        $sui = 2.7;
+        $sui = 0.00;
+        // $sui = 2.7;
 
         $this->page_data['payPeriod'] = str_replace('-', ' to ', $postData['pay_period']);
         $this->page_data['payDate'] = date('l, M d', strtotime($postData['pay_date']));
@@ -599,7 +601,7 @@ class Accounting_modals extends MY_Controller {
             'total_pay' => $totalPay,
             'total_taxes' => $totalTaxes,
             'total_net_pay' => $totalNetPay,
-            'total_employer_tax' => $totalEmployerTax,
+            'total_employer_tax' => number_format($totalEmployerTax, 2, '.', ','),
             'total_payroll_cost' => number_format($totalPayrollCost, 2, '.', ',')
         ];
 
@@ -718,6 +720,12 @@ class Accounting_modals extends MY_Controller {
                 break;
                 case 'statementModal':
                     $this->result = $this->statement($data);
+                break;
+                case 'commission-payroll-modal' :
+                    $this->result = $this->payroll($data, 'commission-only');
+                break;
+                case 'bonus-payroll-modal' :
+                    $this->result = $this->payroll($data, 'bonus');
                 break;
             }
         } catch (\Exception $e) {
@@ -1399,9 +1407,11 @@ class Accounting_modals extends MY_Controller {
         return $return;
     }
 
-    private function payroll($data) {
+    private function payroll($data, $payType = 'all') {
         $this->form_validation->set_rules('pay_from', 'Pay from account', 'required');
-        $this->form_validation->set_rules('pay_period', 'Pay Period', 'required');
+        if($payType === 'all') {
+            $this->form_validation->set_rules('pay_period', 'Pay Period', 'required');
+        }
         $this->form_validation->set_rules('pay_date', 'Pay Date', 'required');
 
         $return = [];
@@ -1418,8 +1428,9 @@ class Accounting_modals extends MY_Controller {
 
             $insertData = [
                 'payroll_no' => is_null($payrollNo) ? 1 : $payrollNo+1,
-                'pay_period_start' => date('Y-m-d', strtotime($payPeriod[0])),
-                'pay_period_end' => date('Y-m-d', strtotime($payPeriod[1])),
+                'pay_from_account' => $data['pay_from'],
+                'pay_period_start' => $data['pay_period'] !== null ? date('Y-m-d', strtotime($payPeriod[0])) : date('Y-m-d', strtotime($data['pay_date'])),
+                'pay_period_end' => $data['pay_period'] !== null ? date('Y-m-d', strtotime($payPeriod[1])) : date('Y-m-d', strtotime($data['pay_date'])),
                 'pay_date' => date('Y-m-d', strtotime($data['pay_date'])),
                 'company_id' => $company_id,
                 'created_by' => logged('id'),
@@ -1435,7 +1446,8 @@ class Accounting_modals extends MY_Controller {
             if($payrollId > 0) {
                 foreach($data['select'] as $key => $value) {
                     $emp = $this->users_model->getUser($value);
-                    $empTotalPay = ($emp->pay_rate * (float)$data['reg_pay_hours'][$key]) + (float)$data['commission'][$key];
+                    $empPayDetails = $this->users_model->getEmployeePayDetails($emp->id);
+                    $empTotalPay = ($empPayDetails->pay_rate * (float)$data['reg_pay_hours'][$key]) + (float)$data['commission'][$key] + (float)$data['bonus'][$key];
                     $empTotalPay = number_format($empTotalPay, 2, '.', ',');
     
                     $empSocial = ($empTotalPay / 100) * 6.2;
@@ -1449,6 +1461,7 @@ class Accounting_modals extends MY_Controller {
                         'employee_id' => $value,
                         'employee_hours' => $data['reg_pay_hours'][$key],
                         'employee_commission' => $data['commission'][$key],
+                        'employee_bonus' => $data['bonus'][$key],
                         'employee_total_pay' => $empTotalPay,
                         'employee_taxes' => $empTax,
                         'employee_net_pay' => $empTotalPay - $empTax,
@@ -1459,6 +1472,12 @@ class Accounting_modals extends MY_Controller {
 
             if(count($employees) > 0) {
                 $payrollEmpId = $this->accounting_payroll_model->insertPayrollEmployees($employees);
+
+                $totalNetPay = array_sum(array_column($employees, 'employee_net_pay'));
+                $account = $this->chart_of_accounts_model->getById($data['pay_from']);
+                $balance = floatval($account->balance) - floatval($totalNetPay);
+
+                $update = $this->chart_of_accounts_model->updateBalance(['id' => $data['pay_from'], 'company_id' => $company_id, 'balance' => $balance]);
 
                 $return['data'] = $payrollId;
                 $return['success'] = $payrollId && $payrollEmpId ? true : false;

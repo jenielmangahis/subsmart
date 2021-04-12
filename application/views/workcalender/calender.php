@@ -556,7 +556,7 @@ a.top-1 {
 
 
                               <div class="row cus-dashboard-div">
-                                <div class="col-widget" id="widget_3">
+                                  <!--<div class="col-widget" id="widget_3">
                                   <div style="width: 300px; border: 1px solid #58c04e; background: #58c04e; color:white;  border-radius: 10px; text-align: center;padding: 5px;position: relative;margin: 0 auto;top: 21px;z-index: 1000;">
                                      <i class="fa fa-calendar" aria-hidden="true"></i> Upcoming Jobs
                                   </div>
@@ -569,7 +569,7 @@ a.top-1 {
                                             <div class="row d-lg-flex">
                                                 <div class="col-md-12">
                                                     <div class="cus-dashboard-div">
-                                                        <div id="upcoming-jobs-container"></div>
+
                                                     </div>
                                                 </div>
                                             </div>
@@ -581,35 +581,57 @@ a.top-1 {
                                       </div>
                                     </div>
                                 </div>
-                              </div>
-
-                              <div class="col-widget" id="widget_3">
-                                <div style="width: 300px; border: 1px solid #58c04e; background: #58c04e; color:white;  border-radius: 10px; text-align: center;padding: 5px;position: relative;margin: 0 auto;top: 21px;z-index: 1000;">
-                                   <i class="fa fa-paper-plane" aria-hidden="true"></i> Upcoming Events
-                                </div>
-
-                                <div class="card" style="border: 2px solid #30233d; margin-top:0; border-radius: 40px; padding:5px;">
-                                  <div style="border: 5px solid #30233d; margin-top:0; border-radius: 40px; box-shadow: 1px 0px 15px 5px rgb(48, 35, 61);">
-                                    <div class="card-body mt-3" style="padding:5px 10px; height: 300px;">
-                                      <div style="height: 280px;">
-                                        <div class="mb-2 col-lg-12 float-left jobsRow" style="padding-bottom: 5px; cursor: pointer;height:250px;">
-                                          <div class="row d-lg-flex">
-                                              <div class="col-md-12">
-                                                  <div class="cus-dashboard-div">
-                                                      <div id="upcoming-events-container"></div>
+                              </div>-->
+                                  <!--<div class="col-widget" id="widget_3">
+                                    <div style="width: 300px; border: 1px solid #58c04e; background: #58c04e; color:white;  border-radius: 10px; text-align: center;padding: 5px;position: relative;margin: 0 auto;top: 21px;z-index: 1000;">
+                                       <i class="fa fa-paper-plane" aria-hidden="true"></i> Upcoming Events
+                                    </div>
+                                    <div class="card" style="border: 2px solid #30233d; margin-top:0; border-radius: 40px; padding:5px;">
+                                      <div style="border: 5px solid #30233d; margin-top:0; border-radius: 40px; box-shadow: 1px 0px 15px 5px rgb(48, 35, 61);">
+                                        <div class="card-body mt-3" style="padding:5px 10px; height: 300px;">
+                                          <div style="height: 280px;">
+                                            <div class="mb-2 col-lg-12 float-left jobsRow" style="padding-bottom: 5px; cursor: pointer;height:250px;">
+                                              <div class="row d-lg-flex">
+                                                  <div class="col-md-12">
+                                                      <div class="cus-dashboard-div">
+                                                      </div>
                                                   </div>
                                               </div>
+                                            </div>
                                           </div>
                                         </div>
-                                        <div class="text-center">
-                                            <a class="text-info" href="<?= base_url()?>events">SEE ALL EVENTS</a>
-                                        </div>
                                       </div>
-                                    </div>
                                   </div>
-                              </div>
+                                </div>-->
                             </div>
-                            </div>
+                                <div class="calendar-menu" style="text-align: left;">
+                                    <div style="background: #f2f2f2; padding: 20px;">
+                                        <div class="margin-bottom">
+                                            <div>
+                                                <a class="text-right" style="position: absolute;text-align: right;right: 50px;color: #ffffff;margin-top: 5px;" href="<?= base_url()?>job">SEE ALL JOBS</a>
+                                                <h3 class="left-header">
+                                                    <i class="fa fa-calendar"></i> Upcoming Jobs
+                                                </h3>
+
+                                            </div>
+                                            <div id="upcoming-jobs-container"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="calendar-menu" style="text-align: left;">
+                                    <div style="background: #f2f2f2; padding: 20px;">
+                                        <div class="margin-bottom">
+                                            <div>
+                                                <a class="text-right" style="position: absolute;text-align: right;right: 50px;color: #ffffff;margin-top: 5px;" href="<?= base_url()?>events">SEE ALL EVENTS</a>
+                                                <h3 class="left-header">
+                                                    <i class="fa fa-calendar"></i> Upcoming Events
+                                                </h3>
+
+                                            </div>
+                                            <div id="upcoming-events-container"></div>
+                                        </div>
+                                    </div>
+                                </div>
 
                               <div class="calendar-menu" style="text-align: left;">
                                   <div style="background: #f2f2f2; padding: 20px;">
