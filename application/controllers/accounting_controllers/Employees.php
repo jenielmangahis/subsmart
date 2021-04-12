@@ -648,4 +648,168 @@ class Employees extends MY_Controller {
         $this->page_data['payDetails'] = $this->users_model->getPayDetailsByPayType('commission');;
         $this->load->view('accounting/employees/commission_only_payroll', $this->page_data);
     }
+
+    public function generate_commission_payroll()
+    {
+        $postData = $this->input->post();
+        $socialSecurity = 6.2;
+        $medicare = 1.45;
+        $futa = 0.006;
+        $sui = 0.00;
+
+        $this->page_data['payPeriod'] = $postData['pay_date'].' to '.$postData['pay_date'];
+        $this->page_data['payDate'] = date('m/d/Y', strtotime($postData['pay_date']));
+
+        $employees = [];
+        foreach($postData['select'] as $key => $empId) {
+            $emp = $this->users_model->getUser($empId);
+            $empPayDetails = $this->users_model->getEmployeePayDetails($emp->id);
+
+            $empTotalPay = (float)$postData['commission'][$key];
+            $empTotalPay = number_format($empTotalPay, 2, '.', ',');
+
+            $empSocial = ($empTotalPay / 100) * $socialSecurity;
+            $empSocial = number_format($empSocial, 2, '.', ',');
+            $empMedicare = ($empTotalPay / 100) * $medicare;
+            $empMedicare = number_format($empMedicare, 2, '.', ',');
+            $empTax = number_format($empSocial + $empMedicare, 2, '.', ',');
+            $employeeSUI = ($empTotalPay / 100) * $sui;
+            $employeeSUI = number_format($employeeSUI, 2, '.', ',');
+
+            $netPay = $empTotalPay - $empTax;
+
+            $employees[] = [
+                'id' => $emp->id,
+                'name' => $emp->LName . ', ' . $emp->FName,
+                'pay_method' => $empPayDetails->pay_method === 'direct-deposit' ? 'Direct deposit' : 'Paper check',
+                'total_pay' => $empTotalPay,
+                'employee_tax' => $empTax,
+                'net_pay' => number_format($netPay, 2, '.', ','),
+                'employee_futa' => number_format($empTotalPay * $futa, 2, '.', ','),
+                'employee_sui' => $employeeSUI
+            ];
+        }
+
+        $totalPay = array_sum(array_column($employees, 'total_pay'));
+        $totalPay = number_format($totalPay, 2, '.', ',');
+        $totalTaxes = array_sum(array_column($employees, 'employee_tax'));
+        $totalTaxes = number_format($totalTaxes, 2, '.', ',');
+        $totalNetPay = array_sum(array_column($employees, 'net_pay'));
+        $totalNetPay = number_format($totalNetPay, 2, '.', ',');
+        $totalFuta = array_sum(array_column($employees, 'employee_futa'));
+        $totalFuta = number_format($totalFuta, 2, '.', ',');
+        $totalSUI = array_sum(array_column($employees, 'employee_sui'));
+        $totalSUI = number_format($totalSUI, 2, '.', ',');
+
+        $totalEmployerTax = $totalTaxes + $totalFuta + $totalSUI;
+
+        $totalPayrollCost = $totalNetPay + $totalTaxes + $totalEmployerTax;
+
+        $this->page_data['employees'] = $employees;
+        $this->page_data['total'] = [
+            'total_pay' => $totalPay,
+            'total_taxes' => $totalTaxes,
+            'total_net_pay' => $totalNetPay,
+            'total_employer_tax' => number_format($totalEmployerTax, 2, '.', ','),
+            'total_payroll_cost' => number_format($totalPayrollCost, 2, '.', ',')
+        ];
+
+        $this->load->view('accounting/employees/commission_payroll_summary', $this->page_data);
+    }
+
+    public function get_employee_pay_details($user_id)
+    {
+        $empPayDetails = $this->users_model->getEmployeePayDetails($user_id);
+
+        echo json_encode($empPayDetails);
+    }
+
+    public function bonus_only_modal()
+    {
+        $this->load->view('accounting/employees/bonus_only_payroll');
+    }
+
+    public function bonus_only_form($bonusPayType)
+    {
+        $accounts = $this->chart_of_accounts_model->select();
+        $accounts = array_filter($accounts, function($v, $k) {
+            return $v->account_id === 3 || $v->account_id === "3";
+        }, ARRAY_FILTER_USE_BOTH);
+        $this->page_data['bonusPayType'] = $bonusPayType;
+        $this->page_data['accounts'] = $accounts;
+        $this->page_data['payDetails'] = $this->users_model->getActiveEmployeePayDetails();
+        $this->load->view('accounting/employees/bonus_only_payroll_form', $this->page_data);
+    }
+
+    public function generate_bonus_payroll($bonusPayType)
+    {
+        $postData = $this->input->post();
+        $socialSecurity = $bonusPayType === 'gross-pay' ? 6.200000000000001 : 6.7333333333333325;
+        $medicare = $bonusPayType === 'gross-pay' ? 1.4000000000000001 : 1.5333333333333334;
+        $futa = 0.006;
+        $sui = 0.00;
+
+        $this->page_data['payPeriod'] = $postData['pay_date'].' to '.$postData['pay_date'];
+        $this->page_data['payDate'] = date('m/d/Y', strtotime($postData['pay_date']));
+
+        $employees = [];
+        foreach($postData['select'] as $key => $empId) {
+            $emp = $this->users_model->getUser($empId);
+            $empPayDetails = $this->users_model->getEmployeePayDetails($emp->id);
+
+            $empTotalPay = (float)$postData['bonus'][$key];
+            $empTotalPay = number_format($empTotalPay, 2, '.', ',');
+
+            $empSocial = ($empTotalPay / 100) * $socialSecurity;
+            $empSocial = number_format($empSocial, 2, '.', ',');
+            $empMedicare = ($empTotalPay / 100) * $medicare;
+            $empMedicare = number_format($empMedicare, 2, '.', ',');
+            $empTax = number_format($empSocial + $empMedicare, 2, '.', ',');
+            $employeeSUI = ($empTotalPay / 100) * $sui;
+            $employeeSUI = number_format($employeeSUI, 2, '.', ',');
+
+            if($bonusPayType === 'net-pay') {
+                $empTotalPay = $empTotalPay + $empTax;
+            }
+
+            $netPay = $empTotalPay - $empTax;
+
+            $employees[] = [
+                'id' => $emp->id,
+                'name' => $emp->LName . ', ' . $emp->FName,
+                'pay_method' => $empPayDetails->pay_method === 'direct-deposit' ? 'Direct deposit' : 'Paper check',
+                'total_pay' => $empTotalPay,
+                'employee_tax' => $empTax,
+                'net_pay' => number_format($netPay, 2, '.', ','),
+                'employee_futa' => number_format($empTotalPay * $futa, 2, '.', ','),
+                'employee_sui' => $employeeSUI
+            ];
+        }
+
+        $totalPay = array_sum(array_column($employees, 'total_pay'));
+        $totalPay = number_format($totalPay, 2, '.', ',');
+        $totalTaxes = array_sum(array_column($employees, 'employee_tax'));
+        $totalTaxes = number_format($totalTaxes, 2, '.', ',');
+        $totalNetPay = array_sum(array_column($employees, 'net_pay'));
+        $totalNetPay = number_format($totalNetPay, 2, '.', ',');
+        $totalFuta = array_sum(array_column($employees, 'employee_futa'));
+        $totalFuta = number_format($totalFuta, 2, '.', ',');
+        $totalSUI = array_sum(array_column($employees, 'employee_sui'));
+        $totalSUI = number_format($totalSUI, 2, '.', ',');
+
+        $totalEmployerTax = $totalTaxes + $totalFuta + $totalSUI;
+
+        $totalPayrollCost = $totalNetPay + $totalTaxes + $totalEmployerTax;
+
+        $this->page_data['employees'] = $employees;
+        $this->page_data['total'] = [
+            'total_pay' => $totalPay,
+            'total_taxes' => $totalTaxes,
+            'total_net_pay' => $totalNetPay,
+            'total_employer_tax' => number_format($totalEmployerTax, 2, '.', ','),
+            'total_payroll_cost' => number_format($totalPayrollCost, 2, '.', ',')
+        ];
+
+        $this->load->view('accounting/employees/bonus_payroll_summary', $this->page_data);
+    }
 }

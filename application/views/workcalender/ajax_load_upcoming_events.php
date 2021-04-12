@@ -31,22 +31,27 @@
                   <input type="hidden" id="<?= $e['event_id']; ?>-event-start-date" value="<?= $e['start_date']; ?>" />
                   <input type="hidden" id="<?= $e['event_id']; ?>-event-end-date" value="<?= $e['end_date']; ?>" />
                   <?php if($e['type'] == 'events'){ ?>
-                    <h6 style="color:black;font-weight:700; margin:0;font-size: 13px;"><?php echo $e['event_number'] . ' : ' . $e['event_type']; ?></h6>
+                    <h6 style="color:black;font-weight:700; margin:0;font-size: 14px;text-transform: uppercase;"><?php echo $e['event_number'] . ' : ' . $e['event_type']; ?></h6>
                   <?php }else{ ?>
-                    <h6 style="color:black;font-weight:700; margin:0;font-size: 13px;"><?php echo $e['event_type']; ?></h6>
+                    <h6 style="color:black;font-weight:700; margin:0;font-size: 14px;text-transform: uppercase;"><?php echo $e['event_type']; ?></h6>
                   <?php } ?>
+
+                      <?php if(!empty($settings['work_order_show_customer']) && $settings['work_order_show_customer'] == 1): ?>
+                          <b  style="color:#45a73c;">
+                              <?= $e['first_name']. ' '. $e['last_name']; ?>
+                          </b><br>
+                      <?php endif; ?>
 
                   <p style="color: #9d9e9d;font-weight: 700; margin-bottom: 0; "><?php echo strtoupper($e['event_title']); ?></p>
                   <?php if( trim($e['address']) != '' ){ ?>
                       <?php if(!empty($settings['work_order_show_details']) && $settings['work_order_show_details'] == 1): ?>
                     <small style="color: #9d9e9d; "><?php echo ucwords(strtolower($e['address'])); ?></small><br>
-                      <i> <small class="text-muted" ><?= $e['event_description']; ?></small></i>
+                      <i> <small class="text-muted" ><?= $e['event_description']; ?></small></i><br>
                       <?php endif; ?>
                       <?php if(!empty($settings['work_order_show_link']) && $settings['work_order_show_link'] == 1): ?>
                       <a href="<?=$e['url_link']; ?>" target=""><small style="color: darkred;"><?=$e['url_link']; ?></small></a>
                       <?php endif; ?>
                   <?php } ?>
-
                 </a>
               </div>
               <div class="col-lg-1 float-right" style="margin-top:40px !important; ">

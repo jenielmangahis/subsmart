@@ -179,9 +179,10 @@ if(isset($jobs_data)){
                 "<td width=\"20%\"><small>Unit Price</small><input id='price"+idd+"' value='"+price+"'  type=\"number\" name=\"item_price[]\" class=\"form-control\" placeholder=\"Unit Price\"></td>\n" +
                 //"<td width=\"10%\"><small>Unit Cost</small><input type=\"text\" name=\"item_cost[]\" class=\"form-control\"></td>\n" +
                 //"<td width=\"25%\"><small>Inventory Location</small><input type=\"text\" name=\"item_loc[]\" class=\"form-control\"></td>\n" +
-                "<td style=\"text-align: center\" class=\"d-flex\" width=\"15%\"><b data-subtotal='"+total_+"' id='sub_total"+idd+"' class=\"total_per_item\">$"+formatNumber(total)+"</b><a href=\"javascript:void(0)\" class=\"remove_item_row\"><i class=\"fa fa-times-circle\" aria-hidden=\"true\"></i></a></td>" +
+                "<td  style=\"text-align: center;margin-top: 20px;\" class=\"d-flex\" width=\"15%\"><b style=\"font-size: 16px;\" data-subtotal='"+total_+"' id='sub_total"+idd+"' class=\"total_per_item\">"+total+"</b></td>" +
+                "<td width=\"20%\"><button style=\"margin-top: 20px;\" type=\"button\" class=\"btn btn-primary btn-sm items_remove_btn remove_item_row\"><span class=\"fa fa-trash-o\"></span></button></td>\n" +
                 "</tr>";
-            tableBody = $("#jobs_items_table_body");
+            tableBody = $("#jobs_items");
             tableBody.append(markup);
             markup2 = "<tr id=\"sss\">" +
                 "<td >"+title+"</td>\n" +
@@ -245,10 +246,12 @@ if(isset($jobs_data)){
 
         $("body").delegate(".remove_item_row", "click", function(){
             $(this).parent().parent().remove();
+            calculate_subtotal();
         });
 
         $("body").delegate(".remove_audit_item_row", "click", function(){
             $(this).parent().parent().remove();
+            calculate_subtotal();
         });
 
         $("body").delegate(".color-scheme", "click", function(){
@@ -750,11 +753,11 @@ if(isset($jobs_data)){
                 success: function(data){
                     var emp_data = JSON.parse(data);
                     if($this.id === 'employee2' ){
-                        $('#emp2_id').val(emp_data.FName + emp_data.LName);
+                        $('#emp2_id').val(emp_data.FName);
                     }else if($this.id === 'employee3' ){
-                        $('#emp3_id').val(emp_data.FName + emp_data.LName);
+                        $('#emp3_id').val(emp_data.FName);
                     }else if($this.id === 'employee4' ){
-                        $('#emp4_id').val(emp_data.FName + emp_data.LName);
+                        $('#emp4_id').val(emp_data.FName);
                     }
                     console.log(emp_data);
                 }

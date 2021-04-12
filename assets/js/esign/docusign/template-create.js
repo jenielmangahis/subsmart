@@ -4,6 +4,8 @@ function TemplateCreate() {
 
   const maxRecipients = 10;
   let recipients = [];
+  let templateId = undefined;
+  let template = {};
 
   const $form = $("#templateForm");
   const $docModal = $("#documentModal");
@@ -130,18 +132,18 @@ function TemplateCreate() {
       $(this).attr("disabled", true);
       $(this).find(".spinner-border").removeClass("d-none");
 
-      const response = await fetch(`${prefixURL}/Docusign/apiStoreTemplate`, {
+      const response = await fetch(`${prefixURL}/DocuSign/apiStoreTemplate`, {
         method: "POST",
         body: formData,
       });
 
-      const data = response.json();
-      console.log(data);
+      const { data } = await response.json();
+      const { id: templateId } = data;
 
       $(this).attr("disabled", false);
       $(this).find(".spinner-border").addClass("d-none");
 
-      window.location = `${prefixURL}/vault/mylibrary`;
+      window.location = `${prefixURL}/esign/Files?template_id=${templateId}&next_step=3&`;
     });
 
     $form.find("#docFile").on("change", onChangeFile);
@@ -212,10 +214,74 @@ function TemplateCreate() {
     $formList.append($recipientForms);
   }
 
-  function init() {
+  async function fetchTemplate() {
+    const endpoint = `${prefixURL}/DocuSign/apiTemplate/${templateId}`;
+    const response = await fetch(endpoint);
+    const { data } = await response.json();
+    template = data;
+  }
+
+  async function fetchTemplateFile() {
+    const endpoint = `${prefixURL}/DocuSign/apiTemplateFile/${templateId}`;
+    const response = await fetch(endpoint);
+    const { data } = await response.json();
+    template.file = data;
+  }
+
+  async function fetchTemplateRecipients() {
+    const endpoint = `${prefixURL}/DocuSign/apiTemplateRecipients/${templateId}`;
+    const response = await fetch(endpoint);
+    const { data } = await response.json();
+    template.recipients = data;
+  }
+
+  async function setFormValues() {
+    await Promise.all([
+      fetchTemplate(),
+      fetchTemplateFile(),
+      fetchTemplateRecipients(),
+    ]);
+
+    const { name, description, subject, message, file, recipients } = template;
+    const { path: filePath, name: fileName } = file;
+
+    const fileResponse = await fetch(`${prefixURL}${filePath}`);
+    const blob = await fileResponse.blob();
+    const templateFile = new File([blob], fileName);
+
+    const $name = $form.find("#name");
+    const $description = $form.find("#description");
+    const $file = $form.find("#docFile");
+    const $subject = $form.find("#subject");
+    const $message = $form.find("#message");
+
+    $name.val(name);
+    $description.val(description);
+    $subject.val(subject);
+    $message.val(message);
+    $file.removeAttr("required");
+
+    const fakeEvent = { target: { files: [templateFile] } };
+    await onChangeFile(fakeEvent);
+
+    recipients.forEach(addRecipient);
+
+    $form.find("[type=submit] .text").text("Send");
+  }
+
+  async function init() {
+    const urlParams = new URLSearchParams(window.location.search);
+    templateId = urlParams.get("id");
+
+    if (templateId) {
+      await setFormValues();
+    } else {
+      addRecipient();
+    }
+
     prepareForm();
     attachEventHandlers();
-    addRecipient();
+    $(".card--loading").removeClass("card--loading");
   }
 
   return { init };

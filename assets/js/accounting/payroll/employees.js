@@ -1,3 +1,6 @@
+var bonusPayAsFields = '';
+var bonusPayType = '';
+
 function showCol(el)
 {
     var col = $(el).attr('id').replace('chk-', '');
@@ -943,3 +946,420 @@ function commissionTotal()
     $('#commission-payroll-modal #payroll-table tfoot tr td:last-child p').html('$'+totalPay);
     $('#commission-payroll-modal h2.total-pay').html('$'+totalPay);
 }
+
+$(document).on('click', 'div#commission-payroll-modal div.modal-footer button#preview-payroll', function() {
+    payrollForm = $('div#commission-payroll-modal div.modal-body').html();
+    payrollFormData = new FormData(document.getElementById($('div#commission-payroll-modal').parent('form').attr('id')));
+
+    $.ajax({
+        url: '/accounting/employees/generate-commission-payroll',
+        data: payrollFormData,
+        type: 'post',
+        processData: false,
+        contentType: false,
+        success: function(res) {
+            $('div#commission-payroll-modal div.modal-body').html(res);
+
+            var chartHeight = $('div#commission-payroll-modal div.modal-body div#commissionPayrollChart').parent().prev().height();
+            var chartWidth = $('div#commission-payroll-modal div.modal-body div#commissionPayrollChart').parent().width();
+
+            $('div#commission-payroll-modal div#commissionPayrollChart').height(chartHeight);
+            $('div#commission-payroll-modal div#commissionPayrollChart').width(chartWidth);
+
+            var payrollCost = $('div#commission-payroll-modal div.modal-body h1 span#total-payroll-cost').html();
+            var totalNetPay = $('div#commission-payroll-modal div.modal-body h4 span#total-net-pay').html();
+            var employeeTax = $('div#commission-payroll-modal div.modal-body h4 span#total-employee-tax').html();
+            var employerTax = $('div#commission-payroll-modal div.modal-body h4 span#total-employer-tax').html();
+
+            var netPayPercent = parseFloat((parseFloat(totalNetPay) / parseFloat(payrollCost)) * 100).toFixed(2);
+            var employeeTaxPercent = parseFloat((parseFloat(employeeTax) / parseFloat(payrollCost)) * 100).toFixed(2);
+            var employerTaxPercent = parseFloat((parseFloat(employerTax) / parseFloat(payrollCost)) * 100).toFixed(2);
+
+            var Data = [
+                {label:"Net Pay",value:netPayPercent},
+                {label:"Employee",value:employeeTaxPercent},
+                {label:"Employer",value:employerTaxPercent}
+            ];
+            var total = 100;
+            var donut_chart = Morris.Donut({
+                element: 'commissionPayrollChart',
+                data:Data,
+                resize:true,
+                formatter: function (value, data) {
+                return Math.floor(value/total*100) + '%';
+                }
+            });
+        }
+    });
+
+    $(this).parent().prepend('<button type="submit" class="btn btn-success">Submit Payroll</button>');
+    $(this).remove();
+    $('div#commission-payroll-modal div.modal-footer button#close-payroll-modal').parent().html('<button type="button" class="btn btn-secondary btn-rounded border" id="back-payroll-form">Back</button>');
+});
+
+$(document).on('click', 'div#commission-payroll-modal div.modal-footer button#back-payroll-form', function() {
+    $('div#commission-payroll-modal div.modal-body').html(payrollForm);
+
+    $('div#commission-payroll-modal div.modal-body select#payFrom').val(payrollFormData.get('pay_from'));
+    $('div#commission-payroll-modal div.modal-body input#payDate').val(payrollFormData.get('pay_date'));
+
+    $('div#commission-payroll-modal div.modal-body table tbody tr').each(function() {
+        if($(this).children('td:nth-child(4)').children('input').length === 0) {
+            $(this).children('td:first-child()').children('div').children('input').prop('checked', false)
+        }
+    });
+
+    $('div#commission-payroll-modal div.modal-body table tbody tr td:nth-child(4) input[name="commission[]"]').each(function(index,value) {
+        $(this).val(payrollFormData.getAll('commission[]')[index]);
+    });
+
+    $('div#commission-payroll-modal div.modal-body table tbody tr td:nth-child(5) input[name="memo[]"]').each(function(index,value) {
+        $(this).val(payrollFormData.getAll('memo[]')[index]);
+    });
+
+    $(this).parent().html('<button type="button" class="btn btn-secondary btn-rounded border" data-dismiss="modal" id="close-payroll-modal">Close</button>');
+    $('div#commission-payroll-modal div.modal-footer button[type="submit"]').html('Preview Payroll');
+    $('div#commission-payroll-modal div.modal-footer button[type="submit"]').attr('id', 'preview-payroll');
+    $('div#commission-payroll-modal div.modal-footer button[type="submit"]').prop('type', 'button');
+});
+
+$(document).on('change', 'div#commission-payroll-modal table thead th input[name="select_all"]', function() {
+    var table = $('div#commission-payroll-modal table');
+    var rows = table.children('tbody').children('tr');
+
+    if($(this).prop('checked')) {
+        rows.each(function(){
+            $(this).find('input[name="select[]"]').prop('checked', true);
+            var id = $(this).find('input[name="select[]"]').val();
+
+            $(this).children('td').each(function(index, value) {
+                if(index === 2) {
+                    var el = this;
+                    $.get('/accounting/employees/get-employee-pay-details/'+id, function(res) {
+                        var result = JSON.parse(res);
+                        var payMethod = result.pay_method === 'direct-deposit' ? 'Direct deposit' : 'Paper check';
+                        $(el).html(payMethod);
+                    });
+                } else if(index === 3) {
+                    $(this).html('<input type="number" name="commission[]" step="0.01" class="form-control w-75 float-right text-right">');
+                } else if(index === 4) {
+                    $(this).html('<input type="text" name="memo[]" class="form-control">');
+                } else if(index === 5) {
+                    $(this).html('<p class="text-right m-0">$<span class="total-pay">0.00</span></p>');
+                }
+            });
+        });
+    } else {
+        rows.each(function(){
+            $(this).children('td:first-child()').children('div').children('input').prop('checked', false);
+
+            $(this).children('td').each(function(index, value) {
+                if(index > 1) {
+                    $(this).html('');
+                }
+            });
+        });
+    }
+});
+
+$(document).on('change', 'div#commission-payroll-modal table tbody tr td:first-child() input', function() {
+    var table = $('div#commission-payroll-modal table');
+    var checkbox = table.children('thead').children('tr').children('th:first-child()').children('div').children('input');
+    var rows = table.children('tbody').children('tr');
+    var flag = true;
+
+    if($(this).prop('checked') === false) {
+        $(this).parent().parent().parent().children('td').each(function(index, value) {
+            if(index > 1) {
+                $(this).html('');
+            }
+        });
+    } else {
+        var id = $(this).val();
+        $(this).parent().parent().parent().children('td').each(function(index, value) {
+            if(index === 2) {
+                var el = this;
+                $.get('/accounting/employees/get-employee-pay-details/'+id, function(res) {
+                    var result = JSON.parse(res);
+                    var payMethod = result.pay_method === 'direct-deposit' ? 'Direct deposit' : 'Paper check';
+                    $(el).html(payMethod);
+                });
+            } else if(index === 3) {
+                $(this).html('<input type="number" name="commission[]" step="0.01" class="form-control w-75 float-right text-right employee-commission">');
+            } else if(index === 4) {
+                $(this).html('<input type="text" name="memo[]" class="form-control">');
+            } else if(index === 5) {
+                $(this).html('<p class="text-right m-0">$<span class="total-pay">0.00</span></p>');
+            }
+        });
+    }
+
+    rows.each(function() {
+        if($(this).children('td:first-child()').children('div').children('input').prop('checked') === false) {
+            flag = false;
+        }
+    });
+
+    checkbox.prop('checked', flag);
+
+    commissionTotal();
+});
+
+$(document).on('click', '#bonus-only', function(e) {
+    e.preventDefault();
+
+    $.get('/accounting/employees/bonus-only-payroll', function(res) {
+        $('.append-modal').html(res);
+
+        $('#bonus-payroll-modal').modal('show');
+    });
+});
+
+$(document).on('change', '#bonus-payroll-modal [name="bonus_as"]', function() {
+    $(this).parent().find('p').removeClass('hide');
+    $('#bonus-payroll-modal [name="bonus_as"]:not(:checked)').parent().find('p').addClass('hide');
+});
+
+$(document).on('click', '#bonus-payroll-modal #continue-bonus-payroll',function(e) {
+    e.preventDefault();
+
+    bonusPayType = $('#bonus-payroll-modal [name="bonus_as"]:checked').val();
+    bonusPayAsFields = $('#bonus-payroll-modal .modal-content').html();
+
+    $.get('/accounting/employees/bonus-only-payroll-form/'+bonusPayType, function(res) {
+        $('#bonus-payroll-modal .modal-content').html(res);
+        $('#bonus-payroll-modal select').select2();
+        $('#bonus-payroll-modal #payDate').datepicker({
+            uiLibrary: 'bootstrap',
+            todayBtn: "linked",
+            language: "de"
+        });
+    });
+});
+
+$(document).on('click', '#bonus-payroll-modal #bonus-pay-select', function(e) {
+    e.preventDefault();
+
+    $('#bonus-payroll-modal .modal-content').html(bonusPayAsFields);
+    $(`#bonus-payroll-modal [name="bonus_as"][value="${bonusPayType}"]`).prop('checked', true);
+});
+
+$(document).on('click', 'div#bonus-payroll-modal div.modal-footer button#preview-payroll', function() {
+    payrollForm = $('div#bonus-payroll-modal div.modal-body').html();
+    payrollFormData = new FormData(document.getElementById($('div#bonus-payroll-modal').parent('form').attr('id')));
+
+    $.ajax({
+        url: '/accounting/employees/generate-bonus-payroll/'+bonusPayType,
+        data: payrollFormData,
+        type: 'post',
+        processData: false,
+        contentType: false,
+        success: function(res) {
+            $('div#bonus-payroll-modal div.modal-body').html(res);
+
+            var chartHeight = $('div#bonus-payroll-modal div.modal-body div#bonusPayrollChart').parent().prev().height();
+            var chartWidth = $('div#bonus-payroll-modal div.modal-body div#bonusPayrollChart').parent().width();
+
+            $('div#bonus-payroll-modal div#bonusPayrollChart').height(chartHeight);
+            $('div#bonus-payroll-modal div#bonusPayrollChart').width(chartWidth);
+
+            var payrollCost = $('div#bonus-payroll-modal div.modal-body h1 span#total-payroll-cost').html();
+            var totalNetPay = $('div#bonus-payroll-modal div.modal-body h4 span#total-net-pay').html();
+            var employeeTax = $('div#bonus-payroll-modal div.modal-body h4 span#total-employee-tax').html();
+            var employerTax = $('div#bonus-payroll-modal div.modal-body h4 span#total-employer-tax').html();
+
+            var netPayPercent = parseFloat((parseFloat(totalNetPay) / parseFloat(payrollCost)) * 100).toFixed(2);
+            var employeeTaxPercent = parseFloat((parseFloat(employeeTax) / parseFloat(payrollCost)) * 100).toFixed(2);
+            var employerTaxPercent = parseFloat((parseFloat(employerTax) / parseFloat(payrollCost)) * 100).toFixed(2);
+
+            var Data = [
+                {label:"Net Pay",value:netPayPercent},
+                {label:"Employee",value:employeeTaxPercent},
+                {label:"Employer",value:employerTaxPercent}
+            ];
+            var total = 100;
+            var donut_chart = Morris.Donut({
+                element: 'bonusPayrollChart',
+                data:Data,
+                resize:true,
+                formatter: function (value, data) {
+                return Math.floor(value/total*100) + '%';
+                }
+            });
+        }
+    });
+
+    $(this).parent().prepend('<button type="submit" class="btn btn-success">Submit Payroll</button>');
+    $(this).remove();
+    $('div#bonus-payroll-modal div.modal-footer button#bonus-pay-select').parent().html('<button type="button" class="btn btn-secondary btn-rounded border" id="back-payroll-form">Back</button>');
+});
+
+$(document).on('change', '#bonus-payroll-modal #payroll-table input[name="bonus[]"]', function() {
+    convertToDecimal(this);
+
+    if(bonusPayType !== 'gross-pay') {
+        computeGrossPay(this);
+    } else {
+        $(this).parent().parent().find('span.total-pay').html($(this).val());
+    }
+
+    bonusTotal();
+});
+
+function computeGrossPay(el)
+{
+    var bonus = parseFloat($(el).val()).toFixed(2);
+    var socialSecurity = 6.7333333333333325;
+    var medicare = 1.5333333333333334;
+
+    var socialSecPay = parseFloat((bonus / 100) * socialSecurity);
+    var medicarePay = parseFloat((bonus / 100) * medicare);
+
+    socialSecPay = Math.round(socialSecPay * Math.pow(10, 2)) / Math.pow(10, 2);
+    medicarePay = Math.round(medicarePay * Math.pow(10, 2)) / Math.pow(10, 2);
+
+    var totalTax = parseFloat(socialSecPay + medicarePay).toFixed(2);
+
+    var totalPay = parseFloat(bonus) + parseFloat(totalTax);
+
+    $(el).parent().parent().find('.total-pay').html(totalPay);
+}
+
+function bonusTotal()
+{
+    var bonus = 0.00;
+    var totalPay = 0.00;
+    $('#bonus-payroll-modal #payroll-table tbody tr').each(function() {
+        var empBonus = $(this).find('input[name="bonus[]"]').val();
+
+        if(empBonus !== "" && empBonus !== undefined) {
+            empBonus = parseFloat(empBonus);
+        } else {
+            empBonus = 0.00;
+        }
+
+        bonus = parseFloat(parseFloat(bonus) + empBonus).toFixed(2);
+
+        var empTotalPay = $(this).find('span.total-pay').html();
+
+        if(empTotalPay !== "" && empTotalPay !== undefined) {
+            empTotalPay = parseFloat(empTotalPay);
+        } else {
+            empTotalPay = 0.00;
+        }
+
+        totalPay = parseFloat(parseFloat(totalPay) + empTotalPay).toFixed(2);
+    });
+
+    $('#bonus-payroll-modal #payroll-table tfoot tr td:nth-child(4)').html('$'+bonus);
+    $('#bonus-payroll-modal #payroll-table tfoot tr td:last-child p').html('$'+totalPay);
+    $('#bonus-payroll-modal h2.total-pay').html('$'+totalPay);
+}
+
+$(document).on('click', 'div#bonus-payroll-modal div.modal-footer button#back-payroll-form', function() {
+    $('div#bonus-payroll-modal div.modal-body').html(payrollForm);
+
+    $('div#bonus-payroll-modal div.modal-body select#payFrom').val(payrollFormData.get('pay_from'));
+    $('div#bonus-payroll-modal div.modal-body input#payDate').val(payrollFormData.get('pay_date'));
+
+    $('div#bonus-payroll-modal div.modal-body table tbody tr').each(function() {
+        if($(this).children('td:nth-child(4)').children('input').length === 0) {
+            $(this).children('td:first-child()').children('div').children('input').prop('checked', false)
+        }
+    });
+
+    $('div#bonus-payroll-modal div.modal-body table tbody tr td:nth-child(4) input[name="bonus[]"]').each(function(index,value) {
+        $(this).val(payrollFormData.getAll('bonus[]')[index]);
+    });
+
+    $('div#bonus-payroll-modal div.modal-body table tbody tr td:nth-child(5) input[name="memo[]"]').each(function(index,value) {
+        $(this).val(payrollFormData.getAll('memo[]')[index]);
+    });
+
+    $(this).parent().html('<button type="button" class="btn btn-secondary btn-rounded border" id="bonus-pay-select">Back</button>');
+    $('div#bonus-payroll-modal div.modal-footer button[type="submit"]').html('Preview Payroll');
+    $('div#bonus-payroll-modal div.modal-footer button[type="submit"]').attr('id', 'preview-payroll');
+    $('div#bonus-payroll-modal div.modal-footer button[type="submit"]').prop('type', 'button');
+});
+
+$(document).on('change', 'div#bonus-payroll-modal table thead th input[name="select_all"]', function() {
+    var table = $('div#bonus-payroll-modal table');
+    var rows = table.children('tbody').children('tr');
+
+    if($(this).prop('checked')) {
+        rows.each(function(){
+            $(this).find('input[name="select[]"]').prop('checked', true);
+            var id = $(this).find('input[name="select[]"]').val();
+
+            $(this).children('td').each(function(index, value) {
+                if(index === 2) {
+                    var el = this;
+                    $.get('/accounting/employees/get-employee-pay-details/'+id, function(res) {
+                        var result = JSON.parse(res);
+                        var payMethod = result.pay_method === 'direct-deposit' ? 'Direct deposit' : 'Paper check';
+                        $(el).html(payMethod);
+                    });
+                } else if(index === 3) {
+                    $(this).html('<input type="number" name="bonus[]" step="0.01" class="form-control w-75 float-right text-right">');
+                } else if(index === 4) {
+                    $(this).html('<input type="text" name="memo[]" class="form-control">');
+                } else if(index === 5) {
+                    $(this).html('<p class="text-right m-0">$<span class="total-pay">0.00</span></p>');
+                }
+            });
+        });
+    } else {
+        rows.each(function(){
+            $(this).children('td:first-child()').children('div').children('input').prop('checked', false);
+
+            $(this).children('td').each(function(index, value) {
+                if(index > 1) {
+                    $(this).html('');
+                }
+            });
+        });
+    }
+});
+
+$(document).on('change', 'div#bonus-payroll-modal table tbody tr td:first-child() input', function() {
+    var table = $('div#bonus-payroll-modal table');
+    var checkbox = table.children('thead').children('tr').children('th:first-child()').children('div').children('input');
+    var rows = table.children('tbody').children('tr');
+    var flag = true;
+
+    if($(this).prop('checked') === false) {
+        $(this).parent().parent().parent().children('td').each(function(index, value) {
+            if(index > 1) {
+                $(this).html('');
+            }
+        });
+    } else {
+        var id = $(this).val();
+        $(this).parent().parent().parent().children('td').each(function(index, value) {
+            if(index === 2) {
+                var el = this;
+                $.get('/accounting/employees/get-employee-pay-details/'+id, function(res) {
+                    var result = JSON.parse(res);
+                    var payMethod = result.pay_method === 'direct-deposit' ? 'Direct deposit' : 'Paper check';
+                    $(el).html(payMethod);
+                });
+            } else if(index === 3) {
+                $(this).html('<input type="number" name="bonus[]" step="0.01" class="form-control w-75 float-right text-right">');
+            } else if(index === 4) {
+                $(this).html('<input type="text" name="memo[]" class="form-control">');
+            } else if(index === 5) {
+                $(this).html('<p class="text-right m-0">$<span class="total-pay">0.00</span></p>');
+            }
+        });
+    }
+
+    rows.each(function() {
+        if($(this).children('td:first-child()').children('div').children('input').prop('checked') === false) {
+            flag = false;
+        }
+    });
+
+    checkbox.prop('checked', flag);
+
+    bonusTotal();
+});

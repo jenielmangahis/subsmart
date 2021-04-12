@@ -194,6 +194,14 @@ jQuery(document).ready(function () {
 $('#reportstable').DataTable();
 $('#items_table_estimate').DataTable();
 $('#items_table_estimate_option2').DataTable();
+$('#items_table_credit_memo').DataTable();
+$('#items_table_sales_receipt').DataTable();
+$('#items_table_refund_receipt').DataTable();
+$('#items_table_delayed_credit').DataTable();
+$('#items_table_delayed_charge').DataTable();
+
+
+
 var elements = document.getElementsByName("amount[]");
 var element_array = Array.prototype.slice.call(elements);
 

@@ -209,8 +209,28 @@ class Esign extends MY_Controller {
 			$this->page_data['file_url'] = $query->row()->name;
 		}
 		$this->page_data['next_step'] = ($this->input->get('next_step') == '')?0:$this->input->get('next_step');
-		$queryRecipients = $this->db->from('user_docfile_recipients')->where('docfile_id',$this->page_data['file_id'])->get();
-		$this->page_data['recipients'] = $queryRecipients->result_array();
+
+		$queries = array();
+		parse_str($_SERVER['QUERY_STRING'], $queries);
+		$isTemplate = array_key_exists('template_id', $queries);
+	
+		if ($isTemplate) { // :( this shouldn't be here
+			$this->db->where('template_id', $queries['template_id']);
+			$recipients = $this->db->get('user_docfile_templates_recipients')->result_array();
+		} else {
+			$queryRecipients = $this->db->from('user_docfile_recipients')->where('docfile_id',$this->page_data['file_id'])->get();
+			$recipients = $queryRecipients->result_array();
+		}
+
+		$recipients = array_map(function ($recipient, $index) {
+			$index += 1;
+			if (empty($recipient['name'])) { // doesnt have name
+				$recipient['name'] = "Recipient $index";
+			}
+
+			return $recipient;
+		}, $recipients, array_keys($recipients));
+		$this->page_data['recipients'] = $recipients;
 
 		add_css('assets/css/esign/esign-builder/esign-builder.css');
 		add_footer_js([

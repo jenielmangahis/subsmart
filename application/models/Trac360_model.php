@@ -21,7 +21,7 @@ class Trac360_model extends MY_Model
     }
     public function get_current_user_location($company_id)
     {
-        $query = $this->db->query("SELECT trac360_people.*, users.profile_img FROM trac360_people JOIN users ON trac360_people.user_id = users.id WHERE trac360_people.company_id = " . $company_id);
+        $query = $this->db->query("SELECT trac360_people.*,users.FName,users.LName, users.profile_img FROM trac360_people JOIN users ON trac360_people.user_id = users.id WHERE trac360_people.company_id = " . $company_id);
         return $query->result();
     }
     public function get_last_location_from_timesheet_logs($user_id)
@@ -33,5 +33,21 @@ class Trac360_model extends MY_Model
     {
         $query = $this->db->query("SELECT *FROM trac360_places WHERE company_id = " . $company_id);
         return $query->result();
+    }
+    public function current_user_update_last_tracked_location($user_id, $company_id, $lat, $lng, $formatted_address)
+    {
+        $update = array(
+            "last_tracked_location" => $lat . "," . $lng,
+            "last_tracked_location_address" => $formatted_address,
+            "last_tracked_location_date" => date('Y-m-d H:i:s')
+        );
+        $this->db->reset_query();
+        $this->db->where('user_id', $user_id);
+        $this->db->where('company_id', $company_id);
+        $this->db->update("trac360_people", $update);
+
+        $this->db->reset_query();
+        $query = $this->db->query("SELECT trac360_people.*,users.FName,users.LName, users.profile_img FROM trac360_people JOIN users ON trac360_people.user_id = users.id WHERE trac360_people.company_id = " . $company_id . " AND trac360_people.user_id=" . $user_id);
+        return $query->row();
     }
 }

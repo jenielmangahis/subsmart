@@ -16,6 +16,15 @@ class Widgets extends MY_Controller {
 
     //put your code here
     
+    public function getOverdueInvoices()
+    {
+        $this->load->model('widgets_model');
+        $comp_id = getLoggedCompanyID();
+        
+        $data['invoices'] = $this->widgets_model->getOverdueInvoices($comp_id);
+        $this->load->view('widgets/accounting/overdue_invoices_details', $data);
+    }
+    
     public function getJobTags()
     {
         $this->load->model('widgets_model');

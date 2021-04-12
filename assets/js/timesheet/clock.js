@@ -38,7 +38,7 @@ $(document).ready(function () {
       url: baseURL + "/timesheet/readNotification",
       type: "POST",
       data: { id: id },
-      success: function (data) { },
+      success: function (data) {},
     });
   });
   $(document).on("click", "#clockIn", function () {
@@ -127,10 +127,10 @@ $(document).ready(function () {
 
     $("#break-duration").text(
       remainTwoDigit(hours, 2) +
-      ":" +
-      remainTwoDigit(minutes, 2) +
-      ":" +
-      remainTwoDigit(seconds, 2)
+        ":" +
+        remainTwoDigit(minutes, 2) +
+        ":" +
+        remainTwoDigit(seconds, 2)
     );
 
     if (latest_lunch > 0) {
@@ -539,8 +539,8 @@ $(document).ready(function () {
               dataType: "json",
               data: { attn_id: attn_id, pause_time: pause_time },
               success: function (data) {
-                  clearTimeout(counter);
-                },
+                clearTimeout(counter);
+              },
             });
             autoClockOut();
           }
@@ -642,7 +642,7 @@ $(document).ready(function () {
                           type: "POST",
                           dataType: "json",
                           data: { attn_id: attn_id },
-                          success: function (data) { },
+                          success: function (data) {},
                         });
                       }
                     },

@@ -288,10 +288,12 @@ div.picture-container div.img img {
 					                      <li class="col-image-<?= $key ?>">
 					                        <div class="picture-container ui-sortable-handle">
 					                          <div class="img">
-					                              <img src="<?= url("uploads/work_pictures/" . $profiledata->company_id . "/" . $i['file']); ?>">
-					                              <div class="image-caption image-caption-container-<?= $key; ?>">
-					                                <?= $i['caption']; ?>
-					                              </div>
+					                          	<a href="<?= url("uploads/work_pictures/" . $profiledata->company_id . "/" . $i['file']); ?>" data-fancybox="gallery" data-caption="<?= $i['caption']; ?>">
+					                            	<img src="<?= url("uploads/work_pictures/" . $profiledata->company_id . "/" . $i['file']); ?>">
+					                                <div class="image-caption image-caption-container-<?= $key; ?>">
+					                                 <?= $i['caption']; ?>
+					                                </div>
+					                            </a>
 					                          </div>
 					                        </div>
 					                      </li>

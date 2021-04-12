@@ -67,6 +67,14 @@ class Users extends MY_Controller {
 	
 	public function businessview()
 	{	
+		add_css(array(
+            "assets/css/jquery.fancybox.css"
+        ));
+
+        add_footer_js(array(
+            "assets/js/jquery.fancybox.min.js"
+        ));
+
 		//ifPermissions('businessdetail');
 		$user = (object)$this->session->userdata('logged');		
 		$cid=logged('id');
@@ -214,6 +222,13 @@ class Users extends MY_Controller {
 
 	public function portfolio()
 	{	
+		add_css(array(
+            "assets/css/jquery.fancybox.css"
+        ));
+
+        add_footer_js(array(
+            "assets/js/jquery.fancybox.min.js"
+        ));
 		//ifPermissions('businessdetail');
 		$user = (object)$this->session->userdata('logged');		
 		//print_r($user);die;

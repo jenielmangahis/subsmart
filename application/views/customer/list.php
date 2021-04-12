@@ -376,7 +376,6 @@ add_css(array(
                                     </div>
                                     </form>
                                 </div>
-
                             </div>
                             <div class="tab-pane fade show active" id="tab1" role="tabpanel" aria-labelledby="tab1">
                                 <?php if (isset($profiles) && !empty($profiles)) : ?>
@@ -430,20 +429,62 @@ add_css(array(
                                                         </button>
                                                         <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="dropdown-edit">
                                                             <li role="presentation">
-                                                                <a role="menuitem" tabindex="-1" href="<?php echo base_url('customer/preview/'.$customer->prof_id); ?>" class="editItemBtn">
+                                                                <a href="<?php echo base_url('customer/preview/'.$customer->prof_id); ?>" class="editItemBtn">
                                                                     <span class="fa fa-search-plus icon"></span>
                                                                     Preview
+                                                                </a>
+                                                            </li>
+                                                            <li>
+                                                                <a href="<?php echo base_url('customer/add_advance/'.$customer->prof_id); ?>" class="editItemBtn">
+                                                                    <span class="fa fa-edit icon"></span>
+                                                                    Edit
+                                                                </a>
+                                                            </li>
+                                                            <li>
+                                                                <a href="#" class="editItemBtn">
+                                                                    <span class="fa fa-envelope icon"></span>
+                                                                    Email
+                                                                </a>
+                                                            </li>
+                                                            <li>
+                                                                <a href="#" class="editItemBtn">
+                                                                    <span class="fa fa-phone icon"></span>
+                                                                    Call
+                                                                </a>
+                                                            </li>
+                                                            <li>
+                                                                <a href="#" class="editItemBtn">
+                                                                    <span class="fa fa-file icon"></span>
+                                                                    Invoice
+                                                                </a>
+                                                            </li>
+                                                            <li>
+                                                                <a href="#" class="editItemBtn">
+                                                                    <span class="fa fa-wrench icon"></span>
+                                                                    Work Order
+                                                                </a>
+                                                            </li>
+                                                            <li>
+                                                                <a href="#" class="editItemBtn">
+                                                                    <span class="fa fa-calendar-check-o icon"></span>
+                                                                    Schedule
+                                                                </a>
+                                                            </li>
+                                                            <li>
+                                                                <a href="#" class="editItemBtn">
+                                                                    <span class="fa fa-file-text icon"></span>
+                                                                    Message
                                                                 </a>
                                                             </li>
                                                             <li role="separator" class="divider"></li>
                                                         </ul>
                                                     </div>
-                                                    <a href="<?php echo url('/customer/add_advance/' . $customer->prof_id); ?>" style="text-decoration:none;display:inline-block;" title="Edit Customer">
+                                                    <!--<a href="<?php echo url('/customer/add_advance/' . $customer->prof_id); ?>" style="text-decoration:none;display:inline-block;" title="Edit Customer">
                                                         <img src="/assets/img/customer/actions/ac_edit.png" width="16px" height="16px" border="0" title="Edit Customer">
                                                     </a>
-                                                    <!--<a href="#"  style="text-decoration:none;display:inline-block;" id="<?php echo $customer->prof_id; ?>" title="Delete Customer" class="delete_cust">
+                                                    <a href="#"  style="text-decoration:none;display:inline-block;" id="<?php echo $customer->prof_id; ?>" title="Delete Customer" class="delete_cust">
                                                                                                     <img src="https://app.creditrepaircloud.com/application/images/cross.png" width="16px" height="16px" border="0">
-                                                                                                </a>-->
+                                                                                                </a>
                                                     <a href="mailto:<?= $customer->email; ?>" style="text-decoration:none; display:inline-block;" >
                                                         <img src="/assets/img/customer/actions/ac_email.png" width="16px" height="16px" border="0" title="Email Customer">
                                                     </a>
@@ -464,14 +505,13 @@ add_css(array(
                                                     </a>
                                                     <a href="#" style="text-decoration:none; display:inline-block;" >
                                                         <img src="/assets/img/customer/actions/ac_sms.png" width="16px" height="16px" border="0" title="Message Customer">
-                                                    </a>
+                                                    </a>-->
                                                     <!--<a href="<?php echo url('/customer/index/tab2/' . $customer->prof_id); ?>"  style="text-decoration:none; display:inline-block;">
                                                                                                     <img src="https://app.creditrepaircloud.com/application/images/assign-contact.png" border="0" title="View Profile">
                                                                                                 </a>-->
                                                 </td>
                                             </tr>
                                         <?php endforeach; ?>
-
                                     </tbody>
                                 </table>
                                 <?php endif; ?>

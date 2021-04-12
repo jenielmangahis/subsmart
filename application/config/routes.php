@@ -398,6 +398,11 @@ $route['accounting/employees/edit-pay-schedule/(:any)'] = 'accounting_controller
 $route['accounting/employees/update-pay-schedule/(:any)']['post'] = 'accounting_controllers/employees/update_pay_schedule/$1';
 $route['accounting/employees/get-pay-date/(:any)'] = 'accounting_controllers/employees/get_pay_date/$1';
 $route['accounting/employees/commission-only-payroll'] = 'accounting_controllers/employees/commission_only_modal';
+$route['accounting/employees/generate-commission-payroll']['post'] = 'accounting_controllers/employees/generate_commission_payroll';
+$route['accounting/employees/get-employee-pay-details/(:any)'] = 'accounting_controllers/employees/get_employee_pay_details/$1'; 
+$route['accounting/employees/bonus-only-payroll'] = 'accounting_controllers/employees/bonus_only_modal';
+$route['accounting/employees/bonus-only-payroll-form/(:any)'] = 'accounting_controllers/employees/bonus_only_form/$1';
+$route['accounting/employees/generate-bonus-payroll/(:any)']['post'] = 'accounting_controllers/employees/generate_bonus_payroll/$1';
 
 $route['accounting/vendor-details/(:any)'] = 'accounting/vendordetails/$1';
 $route['accounting/taxes/edit-settings'] = 'taxes/edit_settings';

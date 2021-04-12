@@ -1,6 +1,32 @@
 .esignBuilder {
   margin-top: 96px;
   text-align: left !important;
+  position: relative;
+
+  &--step3 {
+    &.esignBuilder--loading {
+      max-height: 100vh;
+      min-height: 100vh;
+      overflow: hidden;
+
+      .loader {
+        display: grid;
+      }
+    }
+
+    .loader {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 4;
+
+      display: none;
+      place-content: center;
+      background-color: #fff;
+    }
+  }
 
   header {
     position: relative !important;

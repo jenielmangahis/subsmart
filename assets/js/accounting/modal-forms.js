@@ -1620,7 +1620,7 @@ const submitModalForm = (event, el) => {
     event.preventDefault();
 
     var data = new FormData(document.getElementById($(el).attr('id')));
-    if($(el).children().attr('id') === 'payrollModal') {
+    if($(el).children().attr('id') === 'payrollModal' || $(el).children().attr('id') === 'commission-payroll-modal' || $(el).children().attr('id') === 'bonus-payroll-modal') {
         data = payrollFormData;
     }
     data.append('modal_name', $(el).children().attr('id'));
@@ -1635,7 +1635,7 @@ const submitModalForm = (event, el) => {
             var res = JSON.parse(result);
 
             if(res.success === true) {
-                $('div#modal-container div.full-screen-modal .modal').modal('hide');
+                $(el).children().modal('hide');
             }
 
             toast(res.success, res.message);

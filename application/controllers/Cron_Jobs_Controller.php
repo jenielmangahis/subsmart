@@ -7,7 +7,6 @@ class Cron_Jobs_Controller extends MY_Controller
     public function __construct()
     {
         parent::__construct();
-        $this->checkLogin();
         $this->load->model('timesheet_model');
     }
 

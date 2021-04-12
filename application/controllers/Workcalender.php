@@ -1648,6 +1648,8 @@ class Workcalender extends MY_Controller
                 'address' => $u->event_address . ' ' . $u->event_state,
                 'url_link' => $u->url_link,
                 'profile_img' => $u->profile_img,
+                'first_name' => $u->FName,
+                'last_name' => $u->LName,
             ];
         }
 

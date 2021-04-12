@@ -19,9 +19,9 @@
             </div>
             <div class="col-lg-7 float-left mt-2" style="padding-right: 0;text-align: left;">
                 <a style="color: #000!important;" href="<?php echo base_url('job/job_preview/' . $jb->id); ?>">
-                    <h6 style="font-weight:600; margin:0;font-size: 13px;"><?php echo $jb->job_number . ' : ' . $jb->job_type. ' - ' . $jb->tags_name; ?></h6>
+                    <h6 style="font-weight:600; margin:0;font-size: 14px;text-transform: uppercase;"><?php echo $jb->job_number . ' : ' . $jb->job_type. ' - ' . $jb->tags_name; ?></h6>
             <?php if(!empty($settings['work_order_show_customer']) && $settings['work_order_show_customer'] == 1): ?>
-                    <b class="text-muted">
+                    <b  style="color:#45a73c;">
                         <?= $jb->first_name. ' '. $jb->last_name; ?>
                     </b><br>
             <?php endif; ?>
@@ -30,7 +30,7 @@
                         <i> <small class="text-muted" ><?= $jb->job_description; ?></small></i><br>
                     <?php endif; ?>
                     <?php if(!empty($settings['work_order_show_price']) && $settings['work_order_show_price'] == 1): ?>
-                         Amount : <small>$<?= $jb->amount; ?></small>
+                        <small>Amount : $<?= $jb->amount; ?></small> <br>
                     <?php endif; ?>
                     <?php if(!empty($settings['work_order_show_link']) && $settings['work_order_show_link'] == 1): ?>
                         <a href="<?=$jb->link; ?>" target=""><small style="color: darkred;"><?=$jb->link; ?></small></a>

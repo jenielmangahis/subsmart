@@ -15,7 +15,7 @@
   function initTable() {
     return $table.DataTable({
       searching: false,
-      ajax: `${urlPrefix}/Docusign/apiTemplates`,
+      ajax: `${urlPrefix}/DocuSign/apiTemplates`,
       columns: [
         {
           sortable: false,

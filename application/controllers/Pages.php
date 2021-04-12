@@ -395,6 +395,14 @@ class Pages extends MY_Controller {
     public function front_company_business_profile( $slug ){
     	$this->load->model('Business_model');
     	$this->load->model('ServiceCategory_model');
+    	
+    	add_css(array(
+            "assets/css/jquery.fancybox.css"
+        ));
+
+        add_footer_js(array(
+            "assets/js/jquery.fancybox.min.js"
+        ));
 
     	$comp_id = logged('company_id');
         $profiledata = $this->Business_model->getBySlug($slug);
