@@ -145,6 +145,7 @@ add_css(array(
                             </div>
                             <select id="employee_id" name="employee_id" class="form-control" required>
                                 <option value="">Select Employee</option>
+                                <option value="10001">Select All Employees</option>
                                 <?php if(!empty($employees)): ?>
                                     <?php foreach ($employees as $employee): ?>
                                         <option <?= isset($jobs_data) && $jobs_data->employee_id == $employee->id ? 'selected' : '';  ?> value="<?= $employee->id; ?>"><?= $employee->FName.','.$employee->LName; ?></option>
@@ -642,7 +643,10 @@ add_css(array(
                                             <td><a href="<?= base_url('customer'); ?>"><span class="fa fa-user customer_right_icon"></span></a></td>
                                         </tr>
                                         <tr>
-                                            <td id="cust_address">-------------</td>
+                                            <td >
+                                                <div id="cust_address">-------------</div>
+                                                <div id="cust_address2">-------------</div>
+                                            </td>
                                             <td><a href=""><span class="fa fa-map-marker customer_right_icon"></span></a></td>
                                         </tr>
                                         <tr>

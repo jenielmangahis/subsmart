@@ -608,6 +608,15 @@ class Users_model extends MY_Model {
 		$query = $this->db->get();
 		return $query->result();
 	}
+
+	public function getPayDetailsByPaySched($paySchedId)
+	{
+		$this->db->where('company_id', logged('company_id'));
+		$this->db->where('pay_schedule_id', $paySchedId);
+		$this->db->where('status', 1);
+		$query = $this->db->get('employee_pay_details');
+		return $query->result();
+	}
 }
 
 

@@ -5,6 +5,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
 <html lang="en">
 
 <head>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
     <style>
         article,
         aside,
@@ -213,6 +215,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
             border-color: #0062cc;
         }
     </style>
+
 </head>
 
 <body>
@@ -220,14 +223,15 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
         <section class="jumbotron text-center">
             <div class="container">
+                <img width="200" src="<?= base_url() ?>assets/dashboard/images/logo.png" alt="">
                 <h1><?= $company_name ?> Timesheet Logs</h1>
-                <p class="lead text-muted">Click button below to download your employees attendance logs for week <?= $from ?>.</p>
+                <p class="lead text-muted" style="text-align: left;"><label style="padding-bottom: 10px;">Hi <?= $FName ?>,</label><br>Below you'll find the timesheet report you requested for your team at <?= $business_name ?> for the period <?= date("M d", strtotime($date_from)) ?> - <?= date("d") ?>.</p>
                 <p>
-                    <a href="<?= $file_link ?>" class="btn btn-primary my-2">Download Timesheet logs</a>
+                    <a href="<?= $file_link ?>" class="btn btn-primary my-2">Download .CSV</a>
+                    <a href="<?= $file_link ?>" class="btn btn-primary my-2">Download .PDF</a>
                 </p>
             </div>
         </section>
-
     </main>
 </body>
 

@@ -85,26 +85,27 @@ add_css(array(
                                         <div class="col-md-6">
                                             <table class="right-text">
                                                 <tbody>
+                                                <tr>
+                                                    <td align="right" >Type :</td>
+                                                    <td align="right"><?= $jobs_data->job_type;  ?></td>
+                                                </tr>
                                                     <tr>
                                                         <td align="right" width="35%">Job Tags:</td>
-                                                        <td align="right" width="65%"><?= $jobs_data->name;  ?></td>
+                                                        <td align="right" width="85%"><?= $jobs_data->name;  ?></td>
                                                     </tr>
                                                     <tr>
                                                         <td align="right" >Date :</td>
                                                         <td align="right"><?= isset($jobs_data) ?  date('m/d/Y', strtotime($jobs_data->start_date)) : '';  ?></td>
 
                                                     </tr>
-                                                    <tr>
-                                                        <td align="right" >Type :</td>
-                                                        <td align="right"><?= $jobs_data->job_type;  ?></td>
-                                                    </tr>
+
                                                     <tr>
                                                         <td align="right" >Priority :</td>
-                                                        <td align="right"><?=  $jobs_data->priority;  ?></td>
+                                                        <td align="right" style="color: darkred;"><?=  $jobs_data->priority;  ?></td>
                                                     </tr>
                                                     <tr>
                                                         <td align="right" >Status :</td>
-                                                        <td align="right"><?=  $jobs_data->status;  ?></td>
+                                                        <td align="right" style="font-weight: 600;"><?=  $jobs_data->status;  ?></td>
                                                     </tr>
                                                 </tbody>
                                             </table>
@@ -113,7 +114,7 @@ add_css(array(
                                             <h6 class="title-border">FROM :</h6>
                                             <b><?= $company_info->business_name; ?></b><br>
                                             <span><?= $company_info->street; ?></span><br>
-                                            <span><?= $company_info->city.' '.$company_info->state.' '.$company_info->postal_code ; ?></span><br>
+                                            <span><?= $company_info->city.', '.$company_info->state.' '.$company_info->postal_code ; ?></span><br>
                                             <span> Phone: <?= $company_info->business_phone ; ?></span>
                                         </div>
                                         <div class="col-md-12">
@@ -125,15 +126,14 @@ add_css(array(
                                                     <span><?= $jobs_data->mail_add; ?></span><br>
                                                     <span><?= $jobs_data->cust_city.' '.$jobs_data->cust_state.' '.$jobs_data->cust_zip_code ; ?></span> <span class="fa fa-copy icon_preview"></span><br>
                                                     <span>Email: <?= $jobs_data->cust_email ; ?></span> <span class="fa fa-envelope icon_preview"></span><br>
-                                                    <span>Phone: <?= $jobs_data->phone_h ; ?> 090909090909</span>
+                                                    <span>Phone: <?= $jobs_data->phone_h!="" ? $jobs_data->phone_h : '';  ?> </span>
                                                     <span class="fa fa-phone icon_preview"></span>
                                                     <span class="fa fa-envelope-open-text icon_preview"></span>
                                                     <br>
-                                                    <span>Mobile: <?= $jobs_data->phone_m ; ?>090909090909</span>
+                                                    <span>Mobile: <?= $jobs_data->phone_m!=""? $jobs_data->phone_m : '';  ?></span>
                                                     <span class="fa fa-phone icon_preview"></span>
                                                     <span class="fa fa-envelope-open-text icon_preview"></span>
                                                     <br>
-
                                                 </div>
                                                 <div id="map" class="col-md-3"></div>
                                                 <div id="streetViewBody" class="col-md-4"></div>
@@ -199,9 +199,21 @@ add_css(array(
                                             <br>
                                             <h6 class="title-border">ASSIGNED TO :</h6>
                                             <?php
-                                                $employee_date = get_employee_name($jobs_data->employee_id)
+                                                $employee_date = get_employee_name($jobs_data->employee_id);
+                                                $shared1 = get_employee_name($jobs_data->employee2_id);
+                                                $shared2 = get_employee_name($jobs_data->employee3_id);
+                                                $shared3 = get_employee_name($jobs_data->employee4_id);
                                             ?>
-                                            <span><?= $employee_date->FName. ' '. $employee_date->LName; ?></span> <span class="fa fa-envelope-open-text icon_preview"></span>
+                                            <span><?= $employee_date->FName; ?></span> <span class="fa fa-envelope-open-text icon_preview"></span><br>
+                                            <?php if(isset($shared1) && !empty($shared1) && $shared1!=NULL ): ?>
+                                                <span><?= $shared1->FName; ?></span> <span class="fa fa-envelope-open-text icon_preview"></span><br>
+                                            <?php endif; ?>
+                                            <?php if(isset($shared2) && !empty($shared2) && $shared2!=NULL ): ?>
+                                                <span><?= $shared2->FName; ?></span> <span class="fa fa-envelope-open-text icon_preview"></span><br>
+                                            <?php endif; ?>
+                                            <?php if(isset($shared3) && !empty($shared3) && $shared3!=NULL ): ?>
+                                                <span><?= $shared3->FName; ?></span> <span class="fa fa-envelope-open-text icon_preview"></span><br>
+                                            <?php endif; ?>
                                         </div>
 
                                         <div class="col-md-12">
@@ -230,14 +242,13 @@ add_css(array(
                                         </div>
                                         <div class="col-sm-12">
                                             <center>
-                                                <strong><?= $jobs_data->FName. ' '.$jobs_data->LName;  ?> will arrive between <?= $jobs_data->start_time. ' and '.$jobs_data->end_time;  ?></strong><br>
+                                                <strong>Our Team will arrive between <?= $jobs_data->start_time. ' and '.$jobs_data->end_time;  ?></strong><br>
                                             <small style="text-align: center;">Thank you for your business, Please call <?= $company_info->business_name; ?> at <?= $company_info->business_phone; ?> for quality customer service.</small>
                                             </center>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-
                         </div>
                         <div class="col-md-3"></div>
                     </div>

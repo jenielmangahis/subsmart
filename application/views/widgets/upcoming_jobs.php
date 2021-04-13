@@ -48,7 +48,7 @@
                                 <div class="col-lg-7 float-left mt-2" style="padding-right: 0;">
                                     <a href="<?php echo base_url('job/job_preview/' . $jb->id); ?>">
                                         <h6 style="font-weight:600; margin:0;font-size: 13px;"><?php echo $jb->job_number . ' : ' . $jb->job_type. ' - ' . $jb->tags_name; ?></h6>
-                                        <b class="text-muted">
+                                        <b style="color:#45a73c;">
                                             <?= $jb->first_name. ' '. $jb->last_name; ?>
                                         </b><br>
                                        <small class="text-muted" ><?= $jb->mail_add .' '. $jb->cust_city.' '.$jb->cust_state.' '.$jb->cust_zip_code; ?></small><br>

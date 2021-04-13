@@ -15,6 +15,17 @@ add_css(array(
     .card-header {
         padding: 0 !important;
     }
+    .table_head_customer{
+        border-color: #999999;
+        border-style: Solid;
+        border-width: 1px;
+    }
+    .table_body_customer{
+        border-color: #999999;
+        border-style: Solid;
+        border-width: 1px;
+        background-color: #E5EBF2;
+    }
 </style>
 <div class="wrapper" role="wrapper">
     <?php include viewPath('includes/sidebars/customer'); ?>
@@ -41,53 +52,65 @@ add_css(array(
                     <div class="card">
                         <div class="row ">
                             <div class="col-md-12">
-                                <table cellpadding="0" cellspacing="0" width="880" style="border: 0px; border-color: #525759; border-style: solid; border-collapse: collapse">
-                                    <tbody><tr><td style="border-color: #999999; border-style: Solid; border-width: 1px" background="/Images/bg_GreyGradient.gif">
-                                            <b>Rep Paper</b></td>
-                                        <td style="border-color: #999999; border-style: Solid; border-width: 1px" background="/Images/bg_GreyGradient.gif">
-                                            <b>Tech Paper</b></td>
-                                        <td style="border-color: #999999; border-style: Solid; border-width: 1px" background="/Images/bg_GreyGradient.gif">
-                                            <b>Scanned</b></td>
-                                        <td style="border-color: #999999; border-style: Solid; border-width: 1px" background="/Images/bg_GreyGradient.gif">
-                                            <b>Paperwork</b></td>
-                                        <td style="border-color: #999999; border-style: Solid; border-width: 1px" background="/Images/bg_GreyGradient.gif">
-                                            <b>Submitted</b></td>
-                                        <td style="border-color: #999999; border-style: Solid; border-width: 1px" background="/Images/bg_GreyGradient.gif">
-                                            <b>Rep Paid</b></td>
-                                        <td style="border-color: #999999; border-style: Solid; border-width: 1px" background="/Images/bg_GreyGradient.gif">
-                                            <b>Tech Paid</b></td>
-                                        <td style="border-color: #999999; border-style: Solid; border-width: 1px" background="/Images/bg_GreyGradient.gif">
-                                            <b>Funded</b></td>
-                                        <td style="border-color: #999999; border-style: Solid; border-width: 1px" background="/Images/bg_GreyGradient.gif">
-                                            <b>Charged Back</b></td>
+                                <table cellpadding="0" cellspacing="0">
+                                    <tbody>
+                                    <tr>
+                                        <td  class="table_head_customer">
+                                            <b>Rep Paper</b>
+                                        </td>
+                                        <td class="table_head_customer">
+                                            <b>Tech Paper</b>
+                                        </td>
+                                        <td class="table_head_customer" >
+                                            <b>Scanned</b>
+                                        </td>
+                                        <td class="table_head_customer">
+                                            <b>Paperwork</b>
+                                        </td>
+                                        <td class="table_head_customer" >
+                                            <b>Submitted</b>
+                                        </td>
+                                        <td class="table_head_customer" >
+                                            <b>Rep Paid</b>
+                                        </td>
+                                        <td class="table_head_customer">
+                                            <b>Tech Paid</b>
+                                        </td>
+                                        <td class="table_head_customer" >
+                                            <b>Funded</b>
+                                        </td>
+                                        <td class="table_head_customer" >
+                                            <b>Charged Back</b>
+                                        </td>
                                     </tr>
-                                    <tr><td align="center" style="border-color: #999999; border-style: Solid; border-width: 1px; background-color: #E5EBF2">
-                                            <img src="/Images/Clear.gif" style="width: 95px; height: 1px" alt=""><br>
-                                            <span class="contractstatusdate"></span>&nbsp;</td>
-                                        <td align="center" style="border-color: #999999; border-style: Solid; border-width: 1px; background-color: #E5EBF2">
-                                            <img src="/Images/Clear.gif" style="width: 95px; height: 1px" alt=""><br>
-                                            <span class="contractstatusdate"></span>&nbsp;</td>
-                                        <td align="center" style="border-color: #999999; border-style: Solid; border-width: 1px; background-color: #E5EBF2">
-                                            <img src="/Images/Clear.gif" style="width: 95px; height: 1px" alt=""><br>
-                                            <span class="contractstatusdate"></span>&nbsp;</td>
-                                        <td align="center" style="border-color: #999999; border-style: Solid; border-width: 1px; background-color: #E5EBF2">
-                                            <img src="/Images/Clear.gif" style="width: 95px; height: 1px" alt=""><br>
-                                            <span class="contractstatusdate"></span>&nbsp;</td>
-                                        <td align="center" style="border-color: #999999; border-style: Solid; border-width: 1px; background-color: #E5EBF2">
-                                            <img src="/Images/Clear.gif" style="width: 95px; height: 1px" alt=""><br>
-                                            <span class="contractstatusdate"></span></td>
-                                        <td align="center" style="border-color: #999999; border-style: Solid; border-width: 1px; background-color: #E5EBF2">
-                                            <img src="/Images/Clear.gif" style="width: 95px; height: 1px" alt=""><br>
-                                            <span class="contractstatusdate"></span></td>
-                                        <td align="center" style="border-color: #999999; border-style: Solid; border-width: 1px; background-color: #E5EBF2">
-                                            <img src="/Images/Clear.gif" style="width: 95px; height: 1px" alt=""><br>
-                                            <span class="contractstatusdate"></span>&nbsp;</td>
-                                        <td align="center" style="border-color: #999999; border-style: Solid; border-width: 1px; background-color: #E5EBF2">
-                                            <img src="/Images/Clear.gif" style="width: 95px; height: 1px" alt=""><br>
-                                            <span class="contractstatusdate"></span></td>
-                                        <td align="center" style="border-color: #999999; border-style: Solid; border-width: 1px; background-color: #E5EBF2">
-                                            <img src="/Images/Clear.gif" style="width: 95px; height: 1px" alt=""><br>
-                                            <span class="contractstatusdate"></span></td>
+                                    <tr>
+                                        <td align="center" class="table_body_customer">
+
+                                        </td>
+                                        <td align="center" class="table_body_customer">
+
+                                        </td>
+                                        <td align="center" class="table_body_customer">
+
+                                        </td>
+                                        <td align="center" class="table_body_customer">
+
+                                        </td>
+                                        <td align="center" class="table_body_customer">
+
+                                        </td>
+                                        <td align="center" class="table_body_customer">
+
+                                        </td>
+                                        <td align="center" class="table_body_customer">
+
+                                        </td>
+                                        <td align="center" class="table_body_customer">
+
+                                        </td>
+                                        <td align="center" class="table_body_customer">
+
+                                        </td>
                                     </tr>
                                     </tbody></table>
                             </div>
@@ -96,7 +119,7 @@ add_css(array(
                     </div>
                     <div class="row ">
                         <a href="#" id="" class="header_link">Print</a> |
-                        <a href="#" id="more_detail_furnisher" class="header_link">Bill Customer</a> |
+                        <a href="<?= base_url('customer/billing/'.$this->uri->segment(3)); ?>" id="more_detail_furnisher" class="header_link">Bill Customer</a> |
                         <a href="#" id="more_detail_furnisher" class="header_link">Inventory Details</a> |
                         <a href="#" id="more_detail_furnisher" class="header_link">Scanned Documents</a> |
                         <a href="#" id="more_detail_furnisher" class="header_link">Credit Report</a> |

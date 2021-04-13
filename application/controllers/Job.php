@@ -64,8 +64,8 @@ class Job extends MY_Controller
         // add default event settings if not set
         if(empty($event_settings)){
             $event_settings_data = array(
-                'event_prefix' => 'JOB',
-                'event_next_num' => 1,
+                'job_num_prefix' => 'JOB',
+                'job_num_next' => 1,
                 'company_id' => $comp_id,
             );
             $this->general->add_($event_settings_data, 'job_settings');
@@ -264,7 +264,7 @@ class Job extends MY_Controller
 
         $get_company_info = array(
             'where' => array(
-                'id' => logged('company_id'),
+                'company_id' => logged('company_id'),
             ),
             'table' => 'business_profile',
             'select' => 'business_phone,business_name,business_logo,business_email,street,city,postal_code,state',
@@ -805,7 +805,7 @@ class Job extends MY_Controller
             'select' => '*',
         );
         $job_settings = $this->general->get_data_with_param($get_job_settings);
-        $job_number = $job_settings[0]->job_num_prefix.'-000'.$job_settings[0]->job_num_next;
+        $job_number = $job_settings[0]->job_num_prefix.'-000000'.$job_settings[0]->job_num_next;
 
         $jobs_data = array(
             'job_number' => $job_number,

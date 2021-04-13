@@ -107,7 +107,7 @@ class Customer extends MY_Controller
         $this->load->view('customer/preview', $this->page_data);
     }
 
-    public function preview2($id=null){
+    public function billing($id=null){
 
         // check if customer is allowed to view this page
         $is_allowed = $this->isAllowedModuleAccess(9);
@@ -121,11 +121,7 @@ class Customer extends MY_Controller
         $user_id = logged('id');
         if(isset($userid) || !empty($userid)){
             $this->page_data['profile_info'] = $this->customer_ad_model->get_data_by_id('prof_id',$userid,"acs_profile");
-            $this->page_data['access_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_access");
-            $this->page_data['office_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_office");
-            $this->page_data['billing_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_billing");
-            $this->page_data['alarm_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_alarm");
-            $this->page_data['device_info'] = $this->customer_ad_model->get_all_by_id('fk_prof_id',$userid,"acs_devices");
+             $this->page_data['billing_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_billing");
 
             $get_login_user = array(
                 'where' => array(
@@ -136,11 +132,8 @@ class Customer extends MY_Controller
             );
             $this->page_data['logged_in_user'] = $this->general->get_data_with_param($get_login_user,FALSE);
         }
-        $this->page_data['sales_area'] = $this->customer_ad_model->get_all(FALSE,"","ASC","ac_salesarea","sa_id");
-        $this->page_data['employees'] = $this->customer_ad_model->get_all(FALSE,"","ASC","users","id");
-        $this->page_data['users'] = $this->users_model->getUsers();
 
-        $this->load->view('customer/preview2', $this->page_data);
+        $this->load->view('customer/billing', $this->page_data);
 
     }
 
