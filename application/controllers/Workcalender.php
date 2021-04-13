@@ -1030,12 +1030,12 @@ class Workcalender extends MY_Controller
 
                         if( empty($gevent) ){
 
+                            $is_with_time = false;
+
                             if( $event->start->timeZone != '' ){
                                 $tz = new DateTimeZone($event->start->timeZone);
-                                $timezone = $event->start->timeZone;
                             }else{
                                 $tz = new DateTimeZone($user_timezone);
-                                $timezone = $user_timezone;
                             }
 
                             if( $event->start->dateTime != '' ){
@@ -1043,23 +1043,28 @@ class Workcalender extends MY_Controller
                                 $date->setTimezone($tz);
 
                                 $start_date = $date->format('Y-m-d');
+                                $custom_html_start_date = $date->format('g:i a');
+                                $is_with_time = true;
                             }else{
                                 $date = new DateTime($event->start->date);
                                 $date->setTimezone($tz);
 
                                 $start_date = $date->format('Y-m-d');
+                                $custom_html_start_date = $date->format('Y-m-d');
                             }
 
                             if( $event->end->dateTime != '' ){
                                 $date = new DateTime($event->end->dateTime);
-                                $date->setTimezone($tz);
+                                $end_date = $event->end->dateTime;
 
-                                $end_date = $date->format('Y-m-d');
+                                $custom_html_end_date = $date->format('g:i a');
+                                $is_with_time = true;
                             }else{
                                 $date = new DateTime($event->end->date);
                                 $date->setTimezone($tz);
 
                                 $end_date = $date->format('Y-m-d');
+                                $custom_html_end_date = $date->format('Y-m-d');
                             }
 
                             if( $googleColor ){
@@ -1067,7 +1072,16 @@ class Workcalender extends MY_Controller
                             }
 
                             if( $event->summary != '' ){
-                                $custom_html = "<i class='fa fa-calendar'></i> " . $start_date . " - " . $end_date . "<br /><small>Google Event</small><br /><small>" . $event->summary . "</small>";
+
+
+                                if( $is_with_time ){
+                                    $custom_html = "<i class='fa fa-calendar'></i> " . $custom_html_start_date . " - " . $custom_html_end_date . "<br /><small>Google Event</small><br /><small>" . $event->summary . "</small>";
+                                }else{
+                                    $custom_html = "<i class='fa fa-calendar'></i> " . $event->summary . "<br /><small>Google Event</small><br />";
+                                }
+                                
+
+                                $resources_user_events[$inc]['googleCalendarLink'] = $event->htmlLink;
                                 $resources_user_events[$inc]['geventID'] = $event->id;
                                 $resources_user_events[$inc]['eventType'] = 'events';
                                 $resources_user_events[$inc]['resourceId'] = "user17";

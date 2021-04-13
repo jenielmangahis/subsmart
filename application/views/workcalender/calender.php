@@ -949,7 +949,7 @@ a.top-1 {
 
 <!-- MODAL EVENT DETAILS -->
 <div id="modalEventDetails" class="modal fade" role="dialog" style="">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-md">
 
         <!-- Modal content-->
         <div class="modal-content">
@@ -957,12 +957,12 @@ a.top-1 {
                 <h4 style="" class="modal-title">Schedule</h4>
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
-            <div class="modal-body">
+            <div class="modal-body" style="padding-top: 0px; padding-bottom: 2px;">
                 <p>loading...</p>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-danger btn-event-delete" id="delete_schedule">Delete</button>
+                <button type="button" class="btn btn-danger btn-event-delete" id="delete_schedule" style="display: none">Delete</button>
                 <button type="button" class="btn btn-primary btn-event-edit" id="edit_schedule" style="display: none">Edit Schedule
                 </button>
                 <!-- <button type="button" class="btn btn-primary btn-event-edit-workorder" id="edit_workorder" style="display: none">Edit Wordorder
@@ -1258,18 +1258,22 @@ a.top-1 {
 
                     $("#edit_schedule").attr('data-event-id', arg.event._def.extendedProps.eventId);*/
                 }else if( typeof arg.event._def.extendedProps.geventID != 'undefined' ){
-                  $("#modalEventDetails").modal('show');
+                  window.open(
+                    arg.event._def.extendedProps.googleCalendarLink,
+                    '_blank' // <- This is what makes it open in a new window.
+                  );
+                 /* $("#modalEventDetails").modal('show');
                   $('#modalEventDetails .modal-body').html("loading...");
 
                     apiUrl = base_url + 'workcalender/modal_gevent_details';
                     isGet = 0;
                     var gData = {
                       'gevent_id' : arg.event._def.extendedProps.geventID,
-                      'title' : arg.event._def.extendedProps.description,
+                      'title' : arg.event._def.extendedProps.customHtml,
                       'start_date' : arg.event._def.extendedProps.start,
                       'end_date' : arg.event._def.extendedProps.end,
-                    };
-                } else {
+                    };*/
+                } /*else {
 
                     apiUrl = base_url + 'workcalender/short_details/' + arg.event._def.extendedProps.wordOrderId;
 
@@ -1277,9 +1281,9 @@ a.top-1 {
                     //$("#edit_workorder").show();
 
                     //$("#edit_workorder").attr('data-workorder-id', arg.event._def.extendedProps.wordOrderId);
-                }
+                }*/
 
-                if( isGet == 1 ){
+                /*if( isGet == 1 ){
                   jQuery.ajax({
                       url: apiUrl,
                       // dataType: 'json',
@@ -1313,7 +1317,7 @@ a.top-1 {
                           $("#modalEventDetails").find('.modal-body').html(response);
                       }
                   });
-                }
+                }*/
 
             },
             loading: function (isLoading) {

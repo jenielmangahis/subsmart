@@ -128,8 +128,8 @@ class EmailBlast_model extends MY_Model
         return 5;
     }
 
-    public function getPricePerSms(){
-        return 0.05;
+    public function getPricePerEmail(){
+        return 5;
     }
 
     public function sendToOptions(){

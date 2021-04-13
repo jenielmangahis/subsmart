@@ -300,6 +300,9 @@ class Sms_Campaigns extends MY_Controller {
             $send_time = date("H:i:s");
         }
 
+        $smsRecipients = $this->SmsBlastSendTo_model->getAllBySmsBlastId($sms_blast_id);
+        $total_recipients = count($smsRecipients); 
+        
         $service_price = $this->SmsBlast_model->getServicePrice();
         $price_per_sms = $this->SmsBlast_model->getPricePerSms();
         $total_sms_price = $total_recipients * $price_per_sms;
