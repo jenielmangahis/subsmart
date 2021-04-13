@@ -10,7 +10,8 @@ var payrollFormData = [];
 const noRecordMessage = '<div class="no-results text-center p-4">No customers found for the applied filters.</div>'
 var recurrInterval = '';
 var recurringDays = '';
-var monthlyRecurrFields = ''
+var monthlyRecurrFields = '';
+var payroll =  {};
 
 $(function() {
     $(document).on('change', '#adjust-starting-value-modal #location', function() {
@@ -94,6 +95,47 @@ $(function() {
     $(document).on('change', 'table#payroll-table tbody tr td:nth-child(4) input[name="reg_pay_hours[]"], table#payroll-table tbody tr td:nth-child(5) input', function(){
         payrollRowTotal($(this));
         payrollTotal();
+    });
+
+    $(document).on('click', 'div#payrollModal div.modal-footer button#continue-payroll', function() {
+        payroll.paySchedule = $('#payrollModal [name="pay_schedule"]:checked').val();
+        payroll.paySchedForm = $('div#payrollModal div.modal-body .card-body').html();
+        var paySchedName = $('#payrollModal [name="pay_schedule"]:checked').next().find('.pay_sched_name').html();
+        if(payroll.paySchedule !== "" && payroll.paySchedule !== undefined) {
+            $.get('/accounting/get-payroll-form/'+payroll.paySchedule, function(res) {
+                $('div#payrollModal .modal-body .card-body').html(res);
+
+                $('div#payrollModal .modal-header .modal-title').html('Run Payroll: '+paySchedName);
+                $('div#payrollModal .modal-body .card-body select').select2();
+                $('div#payrollModal .modal-body .card-body #payDate').datepicker({
+                    uiLibrary: 'bootstrap'
+                });
+            });
+            $(this).parent().prepend(`
+            <div class="btn-group dropup float-right">
+                <button type="button" class="btn btn-success" id="preview-payroll">
+                    Preview payroll
+                </button>
+                <button type="button" class="btn btn-success dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <span class="sr-only">Toggle Dropdown</span>
+                </button>
+                <div class="dropdown-menu">
+                    <a class="dropdown-item" href="#">Save for later</a>
+                </div>
+            </div>`);
+            $(this).remove();
+            $('div#payrollModal div.modal-footer button#close-payroll-modal').parent().html('<button type="button" class="btn btn-secondary btn-rounded border" id="back-paysched-select">Back</button>');
+        }
+    });
+
+    $(document).on('click', 'div#payrollModal div.modal-footer button#back-paysched-select', function() {
+        $('div#payrollModal div.modal-body .card-body').html(payroll.paySchedForm);
+        $(`div#payrollModal div.modal-body .card-body input[name="pay_schedule"][value="${payroll.paySchedule}"]`).prop('checked', true);
+        $(this).parent().html(`<button type="button" class="btn btn-secondary btn-rounded border" data-dismiss="modal" id="close-payroll-modal">Close</button>`);
+        $('div#payrollModal div.modal-footer div.col-md-4:last-child').html(`
+        <button class="btn btn-success float-right" type="button" id="continue-payroll">
+            Continue
+        </button>`);
     });
 
     $(document).on('click', 'div#payrollModal div.modal-footer button#preview-payroll', function() {
@@ -1215,11 +1257,13 @@ const payrollRowTotal = (el) => {
     if(el.hasClass('employee-commission')) {
         commission = parseFloat(el.val());
 
-        regPayHours = $(`div#payrollModal table#payroll-table tbody tr:nth-child(${rowIndex+1}) td:nth-child(4) input`).val();
-        if(regPayHours === "") {
-            regPayHours = 0.00;
-        } else {
-            regPayHours = parseFloat(regPayHours);
+        if(payRate !== undefined) {
+            regPayHours = $(`div#payrollModal table#payroll-table tbody tr:nth-child(${rowIndex+1}) td:nth-child(4) input`).val();
+            if(regPayHours === "") {
+                regPayHours = 0.00;
+            } else {
+                regPayHours = parseFloat(regPayHours);
+            }
         }
     } else {
         regPayHours = parseFloat(el.val()).toFixed(2);
@@ -1234,7 +1278,11 @@ const payrollRowTotal = (el) => {
         $(el).parent().parent().children('td:nth-child(7)').children().html(regPayHours);
     }
 
-    totalPay = parseFloat(parseFloat(regPayHours * parseFloat(payRate)) + commission).toFixed(2);
+    if(payRate !== undefined) {
+        totalPay = parseFloat(parseFloat(regPayHours * parseFloat(payRate)) + commission).toFixed(2);
+    } else {
+        totalPay = parseFloat(commission).toFixed(2);
+    }
 
     $(el).parent().parent().children('td:last-child()').children('p').children('span.total-pay').html(totalPay);
 }

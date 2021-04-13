@@ -69,9 +69,13 @@ if(isset($jobs_data)){
             success: function(data)
             {
                 var customer_data = JSON.parse(data);
-                //console.log(customer_data);
+                console.log(customer_data);
                 $('#cust_fullname').text(customer_data.first_name + ' ' + customer_data.last_name);
-                $('#cust_address').text(customer_data.mail_add + ' ' + customer_data.city + ',' + ' ' + customer_data.state + ' ' + customer_data.zip_code);
+                if(customer_data.mail_add !== null){
+                    $('#cust_address').text(customer_data.mail_add + ' ');
+                }
+
+                $('#cust_address2').text(customer_data.city + ',' + ' ' + customer_data.state + ' ' + customer_data.zip_code);
                 $('#cust_number').text(customer_data.phone_h);
                 $('#cust_email').text(customer_data.email);
                 $('#mail_to').attr("href","mailto:"+customer_data.email);

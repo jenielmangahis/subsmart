@@ -197,47 +197,7 @@ class Accounting_modals extends MY_Controller {
                     $this->page_data['items'] = $this->items_model->getItemsWithFilter(['type' => 'inventory', 'status' => [1]]);
                 break;
                 case 'payroll_modal':
-                    $this->page_data['employees'] = $this->users_model->getActiveCompanyUsers(logged('company_id'));
-                    $accounts = $this->chart_of_accounts_model->select();
-                    $accounts = array_filter($accounts, function($v, $k) {
-                        return $v->account_id === 3 || $v->account_id === "3";
-                    }, ARRAY_FILTER_USE_BOTH); 
-
-                    $currentDay = date('m/d/Y');
-                    $startDay = date('m/d/Y', strtotime($date . ' -6 months'));
-
-                    $startDateTime = new DateTime($startDay);
-                    $startWeekNo = $startDateTime->format('W');
-                    $newDateTime = new DateTime();
-                    $firstDate = $newDateTime->setISODate($startDateTime->format("Y"), $startWeekNo, 1);
-                    $firstDateString = $firstDate->format('m/d/Y');
-                    $lastDate = $newDateTime->setISODate($startDateTime->format("Y"), $startWeekNo, 7);
-                    $lastDateString = $lastDate->format('m/d/Y');
-
-                    $payPeriod = [
-                        [
-                            'first_day' => $firstDateString,
-                            'last_day' => $lastDateString,
-                            'selected' => (strtotime($currentDay) >= strtotime($firstDateString) && strtotime($currentDay) <= strtotime($lastDateString)) ? true : false
-                        ]
-                    ];
-
-                    for($i = 0; count($payPeriod) < 30; $i++ ) {
-                        $firstDate = $lastDate->add(new DateInterval('P1D'));
-                        $firstDateString = $firstDate->format('m/d/Y');
-                        $lastDate = $firstDate->add(new DateInterval('P6D'));
-                        $lastDateString = $lastDate->format('m/d/Y');
-
-                        $payPeriod[] = [
-                            'first_day' => $firstDateString,
-                            'last_day' => $lastDateString,
-                            'selected' => (strtotime($currentDay) >= strtotime($firstDateString) && strtotime($currentDay) <= strtotime($lastDateString)) ? true : false
-                        ];
-                    }
-
-                    krsort($payPeriod);
-                    $this->page_data['payPeriods'] = $payPeriod;
-                    $this->page_data['accounts'] = $accounts;
+                    $this->page_data['pay_schedules'] = $this->users_model->getPaySchedules();
                 break;
                 case 'weekly_timesheet_modal':
                     $this->page_data['dropdown']['employees'] = $this->users_model->getCompanyUsers(logged('company_id'));
@@ -535,6 +495,81 @@ class Accounting_modals extends MY_Controller {
         }
 
         echo json_encode($return);
+    }
+
+    public function get_payroll_form($paySchedule)
+    {
+        $this->page_data['payDetails'] = $this->users_model->getPayDetailsByPaySched($paySchedule);
+        $accounts = $this->chart_of_accounts_model->select();
+        $accounts = array_filter($accounts, function($v, $k) {
+            return $v->account_id === 3 || $v->account_id === "3";
+        }, ARRAY_FILTER_USE_BOTH);
+
+        $currentDay = date('m/d/Y');
+        $startDay = date('m/d/Y', strtotime($date . ' +1 months'));
+
+        $paySchedule = $this->users_model->getPaySchedule($paySchedule);
+
+        switch($paySchedule->pay_frequency) {
+            case 'every-week' :
+                $startDateTime = new DateTime($startDay);
+                $startWeekNo = $startDateTime->format('W');
+                $endDay = new DateTime($paySchedule->next_pay_period_end);
+                $endDay = $endDay->format('w');
+                $endDay = $endDay === "0" ? "7" : $endDay;
+                $newDateTime = new DateTime();
+                $lastDate = $newDateTime->setISODate($startDateTime->format("Y"), $startWeekNo, $endDay === 0 ? 7 : $endDay);
+                $lastDateString = $newDateTime->format('m/d/Y');
+                $firstDateString = date('m/d/Y', strtotime($lastDateString.' -6 days'));
+            break;
+            case 'every-other-week' :
+
+            break;
+            case 'twice-month' :
+                
+            break;
+            case 'every-month' :
+
+            break;
+        }
+
+        $payPeriod = [
+            [
+                'first_day' => $firstDateString,
+                'last_day' => $lastDateString,
+                'selected' => (strtotime($currentDay) >= strtotime($firstDateString) && strtotime($currentDay) <= strtotime($lastDateString)) ? true : false
+            ]
+        ];
+
+        for($i = 0; count($payPeriod) < 30; $i++ ) {
+            switch($paySchedule->pay_frequency) {
+                case 'every-week' :
+                    $lastDateString = date('m/d/Y', strtotime($firstDateString.' -1 day'));
+                    $firstDateString = date('m/d/Y', strtotime($lastDateString.' -6 days'));
+                break;
+                case 'every-other-week' :
+
+                break;
+                case 'twice-month' :
+
+                break;
+                case 'every-month' :
+    
+                break;
+            }
+
+            $payPeriod[] = [
+                'first_day' => $firstDateString,
+                'last_day' => $lastDateString,
+                'selected' => (strtotime($currentDay) >= strtotime($firstDateString) && strtotime($currentDay) <= strtotime($lastDateString)) ? true : false
+            ];
+        }
+
+        // krsort($payPeriod);
+        $this->page_data['payPeriods'] = $payPeriod;
+        $this->page_data['accounts'] = $accounts;
+
+        $this->load->view('accounting/modals/payroll_form', $this->page_data);
     }
 
     public function generate_payroll() {
@@ -1433,6 +1468,8 @@ class Accounting_modals extends MY_Controller {
                 'pay_period_end' => $data['pay_period'] !== null ? date('Y-m-d', strtotime($payPeriod[1])) : date('Y-m-d', strtotime($data['pay_date'])),
                 'pay_date' => date('Y-m-d', strtotime($data['pay_date'])),
                 'company_id' => $company_id,
+                'pay_schedule_id' => $data['pay_schedule'],
+                'payroll_type' => $payType,
                 'created_by' => logged('id'),
                 'status' => 1,
                 'created_at' => date('Y-m-d h:i:s'),

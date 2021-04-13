@@ -16,8 +16,8 @@ class Cron_Jobs_Controller extends MY_Controller
         $date_from = date("Y-m-d", strtotime('monday this week', strtotime(date('Y-m-d'))));
         $date_to = date('Y-m-d');
         $filename = $date_from . " to " . $date_to . ' ' . $company_id . '.csv';
-        $this->generate_timelogs_csv($date_from, $date_to, $filename, $company_id);
-        return array($filename, $date_from);
+        $time_sheet_storage = $this->generate_timelogs_csv($date_from, $date_to, $filename, $company_id);
+        return array($filename, $date_from, $time_sheet_storage);
     }
     public function timelogs_csv_email_sender($receiver, $company_name, $filename, $date_from)
     {
@@ -85,8 +85,11 @@ class Cron_Jobs_Controller extends MY_Controller
     {
         $busnesses = $this->timesheet_model->get_all_businesses();
         $email_sent_to = array();
+        // $file_info = $this->timelogs_csv_file_setter(1);
+
+        // var_dump($file_info);
         foreach ($busnesses as $business) {
-            $file_info = $this->timelogs_csv_file_setter($business->company_id);
+            // $file_info = $this->timelogs_csv_file_setter($business->company_id);
             // $this->timelogs_csv_email_sender($business->business_email, $business->business_name, $file_info[0], $file_info[1]);
 
             $email_sent_to[] = array($business->business_email, $business->business_name);
@@ -101,13 +104,66 @@ class Cron_Jobs_Controller extends MY_Controller
                 }
                 if (!$received) {
                     if ($admin->email == "pintonlou@gmail.com") {
-                        $this->timelogs_csv_email_sender($admin->email, $business->business_name . " This is a Tester", $file_info[0], $file_info[1]);
+                        // $file_info = $this->timelogs_csv_email_sender($admin->email, $business->business_name . " This is a Tester", $file_info[0], $file_info[1]);
+                        $this->page_data['business_name'] = $business->business_name;
+                        $this->page_data['FName'] = $admin->FName;
                     }
                     // $this->timelogs_csv_email_sender($admin->email, $business->business_name, $file_info[0], $file_info[1]);
                     $email_sent_to[] = array($admin->email, $business->business_name);
                 }
             }
         }
+        $date_from = date("Y-m-d", strtotime('monday this week', strtotime(date('Y-m-d'))));
+        // $this->page_data['file_info'] = $file_info;
+        $this->page_data['date_from'] = $date_from;
+        $content = $this->load->view('users/timesheet/emails/weekly_timelogs_report', $this->page_data);
+    }
+    public function cronjob_pdf_tester()
+    {
+        $busnesses = $this->timesheet_model->get_all_businesses();
+        $email_sent_to = array();
+        $file_info = $this->timelogs_csv_file_setter(1);
+
+        // var_dump($file_info);
+        foreach ($busnesses as $business) {
+            // $file_info = $this->timelogs_csv_file_setter($business->company_id);
+            // $this->timelogs_csv_email_sender($business->business_email, $business->business_name, $file_info[0], $file_info[1]);
+
+            $email_sent_to[] = array($business->business_email, $business->business_name);
+            $busness_admins = $this->timesheet_model->get_all_business_admins($business->company_id);
+            foreach ($busness_admins as $admin) {
+                $received = false;
+                for ($i = 0; $i < count($email_sent_to); $i++) {
+                    if ($email_sent_to[$i][0] == $admin->email) {
+                        $received = true;
+                        break;
+                    }
+                }
+                if (!$received) {
+                    if ($admin->email == "pintonlou@gmail.com") {
+                        // $file_info = $this->timelogs_csv_email_sender($admin->email, $business->business_name . " This is a Tester", $file_info[0], $file_info[1]);
+                        $this->page_data['business_name'] = $business->business_name;
+                        $this->page_data['FName'] = $admin->FName;
+                    }
+                    // $this->timelogs_csv_email_sender($admin->email, $business->business_name, $file_info[0], $file_info[1]);
+                    $email_sent_to[] = array($admin->email, $business->business_name);
+                }
+            }
+        }
+        $date_from = date("Y-m-d", strtotime('monday this week', strtotime(date('Y-m-d'))));
+        $this->page_data['file_info'] = $file_info;
+        $this->page_data['date_from'] = $date_from;
+        $content = $this->load->view('users/timesheet/emails/html_to_pdf_weekly_report', $this->page_data);
+    }
+    function pdf()
+    {
+        $this->load->helper('pdf_helper');
+        /*
+        ---- ---- ---- ----
+        your code here
+        ---- ---- ---- ----
+    */
+        $this->load->view('users/timesheet/emails/pdfreport');
     }
     public function generate_timelogs_csv($date_from, $date_to, $filename, $company_id)
     {
@@ -144,6 +200,7 @@ class Cron_Jobs_Controller extends MY_Controller
             "Notes"
         );
         fputcsv($file, $header);
+        $time_sheet_storage = array();
         foreach ($attendances as $attendance) {
             $data = array();
             $shift_date = $attendance->date_created;
@@ -151,10 +208,10 @@ class Cron_Jobs_Controller extends MY_Controller
             $the_date = strtotime($shift_date);
             date_default_timezone_set($this->session->userdata('usertimezone'));
             $shift_date = date("m/d/Y", $the_date);
-
-            $data[] = $attendance->FName . ' ' .   $attendance->LName;
-            $data[] = $attendance->title;
-            $data[] = $shift_date;
+            $data[] = $attendance->user_id; //0
+            $data[] = $attendance->FName . ' ' .   $attendance->LName; //1
+            $data[] = $attendance->title; //2
+            $data[] = $shift_date; //3
 
             date_default_timezone_set("UTC");
             $shift_schedules = $this->timesheet_model->get_schedule_in_shift_date(date("Y-m-d", strtotime($attendance->date_created)), $attendance->user_id);
@@ -188,8 +245,8 @@ class Cron_Jobs_Controller extends MY_Controller
                 $expected_work_hours = round((($expected_hours * 60) - $expected_break) / 60, 2);
             }
 
-            $data[] = $shift_start;
-            $data[] = $shift_end;
+            $data[] = $shift_start; //4
+            $data[] = $shift_end; //5
 
 
 
@@ -215,22 +272,22 @@ class Cron_Jobs_Controller extends MY_Controller
                     $breakout = $newdate;
                 }
             }
-            $data[] = $checkin;
-            $data[] = $checkout;
-            $data[] = $breakin;
-            $data[] = $breakout;
-            $data[] = $expected_hours;
-            $data[] = $expected_break;
-            $data[] = $expected_work_hours;
-            $data[] =  ($attendance->shift_duration + $attendance->overtime);
+            $data[] = $checkin; //6
+            $data[] = $checkout; //7
+            $data[] = $breakin; //8
+            $data[] = $breakout; //9
+            $data[] = $expected_hours; //10
+            $data[] = $expected_break; //11
+            $data[] = $expected_work_hours; //12
+            $data[] =  ($attendance->shift_duration + $attendance->overtime); //13
 
-            $data[] = $attendance->break_duration;
+            $data[] = $attendance->break_duration; //14
 
             $minutes_late = "";
             if ($shift_start != '') {
                 $minutes_late = $this->get_differenct_of_dates($shift_start, $checkin) * 60;
             }
-            $data[] = round($minutes_late, 2);
+            $data[] = round($minutes_late, 2); //15
             $overtime = 0;
             if ($expected_hours != '') {
                 if ($expected_work_hours < ($attendance->shift_duration + $attendance->overtime)) {
@@ -243,7 +300,7 @@ class Cron_Jobs_Controller extends MY_Controller
             } else {
                 $overtime = $attendance->overtime;
             }
-            $data[] = $overtime;
+            $data[] = $overtime; //16
             if ($attendance->overtime_status == 1) {
                 $ot_status = "Pending";
             } elseif ($attendance->overtime_status == 0) {
@@ -251,21 +308,23 @@ class Cron_Jobs_Controller extends MY_Controller
             } else {
                 $ot_status = "Approved";
             }
-            $data[] = $ot_status;
+            $data[] = $ot_status; //17
             $payable_hours = $attendance->shift_duration;
             if ($expected_hours != '') {
                 if ($payable_hours > $expected_work_hours) {
                     $payable_hours = $expected_work_hours;
                 }
             }
-            if ($ot_status === "Approved") {
+            if ($ot_status == "Approved") {
                 $payable_hours = $payable_hours + $attendance->overtime;
             }
 
-            $data[] = $payable_hours;
-            $data[] = $attendance->notes;
+            $data[] = $payable_hours; //18
+            $data[] = $attendance->notes; //19
             fputcsv($file, $data);
+            $time_sheet_storage[] = $data;
         }
+        return $time_sheet_storage;
     }
     public function get_differenct_of_dates($date_start, $date_end)
     {

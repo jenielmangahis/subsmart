@@ -505,7 +505,7 @@ class Events extends MY_Controller
             'select' => '*',
         );
         $event_settings = $this->general->get_data_with_param($get_event_settings);
-        $event_number = $event_settings[0]->event_prefix.'-000'.$event_settings[0]->event_next_num;
+        $event_number = $event_settings[0]->event_prefix.'-000000'.$event_settings[0]->event_next_num;
 
         $events_data = array(
             'event_number' => $event_number,
@@ -522,13 +522,12 @@ class Events extends MY_Controller
             'customer_reminder_notification' => $input['customer_reminder_notification'],
             'url_link' => $input['link'],
             'event_address' => $input['event_address'],
-
             'status' => 1,//$this->input->post('job_status'),
             'description' => $input['message'],
             'created_by' => $input['created_by'],
             'company_id' => $comp_id,
             //'date_issued' => date('Y-m-d'),
-            'notes' => $input['notes'],
+            'notes' => $input['message'],
             //'tax_rate' => $input['tax_rate'],
         );
         $event_id = $this->general->add_return_id($events_data, 'events');

@@ -46,7 +46,7 @@
                             
                         </div>
                         <div class="col-md-6" align="right">
-                            AMOUNT<h2>$0.00</h2><br>
+                            AMOUNT<h2><span id="grand_total_cm_t">0.00</span></h2><br>
                             Location of sale<br>
                             <input type="text" class="form-control" style="width:200px;" name="location_scale">
                         </div>
@@ -202,7 +202,7 @@
                                         <tr style="color:blue;font-weight:bold;font-size:18px;">
                                             <td><b>Grand Total ($)</b></td>
                                             <td></td>
-                                            <td><b><span id="grand_total">0.00</span>
+                                            <td><b><span id="grand_total_cm">0.00</span>
                                                 <input type="hidden" name="grand_total" id="grand_total_input" value='0'></b></td>
                                         </tr>
                                     </table>
@@ -375,7 +375,7 @@ $(".select_item2").click(function () {
             var title = $(this).data('itemname');
             var price = $(this).data('price');
             
-            $("#item_list").modal('hide')
+            // $("#item_list").modal('hide')
 
             if(!$(this).data('quantity')){
               // alert($(this).data('quantity'));
@@ -513,7 +513,8 @@ $(".select_item2").click(function () {
   $("#total_tax_").val(subtotaltax.toFixed(2));
   
 
-  $("#grand_total").text(grand_total_w.toFixed(2));
+  $("#grand_total_cm").text(grand_total_w.toFixed(2));
+  $("#grand_total_cm_t").text(grand_total_w.toFixed(2));
   $("#grand_total_input").val(grand_total_w.toFixed(2));
 
   var sls = (parseFloat(eqpt_cost).toFixed(2) * 7.5) / 100;
@@ -676,17 +677,17 @@ $(document).on("focusout", ".pricecm", function () {
   calculationcm(counter);
 });
 
-$(document).on("focusout", ".quantitycm", function () {
-  var counter = $(this).data("counter");
-  calculationcm(counter);
-});
+// $(document).on("focusout", ".quantitycm", function () {
+//   var counter = $(this).data("counter");
+//   calculationcm(counter);
+// });
 $(document).on("focusout", ".discountcm", function () {
   var counter = $(this).data("counter");
   calculationcm(counter);
 });
 
 $(document).on("focusout", ".quantitycm2", function () {
-  var counter = $(this).data("counter");
+  // var counter = $(this).data("counter");
 //   calculationcm(counter);
 // var idd = this.id;
 var idd = $(this).attr('data-itemid');
@@ -743,10 +744,10 @@ var in_id = idd;
   total_discount = parseFloat(total_discount).toFixed(2);
   // var test = 5;
 
-  var subtotal = 0;
+  var subtotalcm = 0;
   // $("#span_total_0").each(function(){
     $('*[id^="span_total_"]').each(function(){
-    subtotal += parseFloat($(this).text());
+    subtotalcm += parseFloat($(this).text());
   });
   // $('#sum').text(subtotal);
 
@@ -756,7 +757,7 @@ var in_id = idd;
       subtotaltax += parseFloat($(this).text());
   });
 
-//   alert(subtotal);
+  // alert(subtotalcm);
 
   $("#eqpt_cost").val(eqpt_cost);
   $("#total_discount").val(total_discount);
@@ -774,7 +775,8 @@ var in_id = idd;
   $("#total_tax_").val(subtotaltax.toFixed(2));
   
 
-  $("#grand_total").text(grand_total_w.toFixed(2));
+  $("#grand_total_cm").text(grand_total_w.toFixed(2));
+  $("#grand_total_cm_t").text(grand_total_w.toFixed(2));
   $("#grand_total_input").val(grand_total_w.toFixed(2));
 
   var sls = (parseFloat(eqpt_cost).toFixed(2) * 7.5) / 100;
@@ -874,7 +876,8 @@ function calculationcm(counter) {
   $("#total_tax_input").val(subtotaltax.toFixed(2));
   
 
-  $("#grand_total").text(grand_total_w.toFixed(2));
+  $("#grand_total_cm").text(grand_total_w.toFixed(2));
+  $("#grand_total_cm_t").text(grand_total_w.toFixed(2));
   $("#grand_total_input").val(grand_total_w.toFixed(2));
   $("#grandtotal_input").val(grand_total_w.toFixed(2));
 
@@ -883,7 +886,7 @@ function calculationcm(counter) {
     // console.log('none');
     // alert('none');
   }else{
-    $("#grand_total").text(grand_total_w.toFixed(2));
+    $("#grand_total_cm").text(grand_total_w.toFixed(2));
     $("#grand_total_input").val(grand_total_w.toFixed(2));
 
     var bundle1_total = $("#grand_total").text();

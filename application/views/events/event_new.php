@@ -165,6 +165,16 @@ add_css(array(
                                 <option selected="">Central Time (UTC -5)</option>
                             </select>
 
+                            <h6>Select Event Type</h6>
+                            <select id="job_type_option" name="jobtypes" class="form-control" required>
+                                <option value="">Select Event Type</option>
+                                <?php if(!empty($job_types)): ?>
+                                    <?php foreach ($job_types as $type): ?>
+                                        <option <?php if(isset($jobs_data) && $jobs_data->event_type == $type->title) {echo 'selected'; } ?> value="<?= $type->title; ?>"><?= $type->title; ?></option>
+                                    <?php endforeach; ?>
+                                <?php endif; ?>
+                            </select>
+
                             <h6>Select Event Tag</h6>
                             <select id="job_tags" name="tags" class="form-control">
                                 <option value="">Select Event Tag</option>
@@ -175,15 +185,7 @@ add_css(array(
                                 <?php endif; ?>
                             </select>
 
-                            <h6>Select Event Type</h6>
-                            <select id="job_type_option" name="jobtypes" class="form-control" required>
-                                <option value="">Select Event Type</option>
-                                <?php if(!empty($job_types)): ?>
-                                    <?php foreach ($job_types as $type): ?>
-                                        <option <?php if(isset($jobs_data) && $jobs_data->event_type == $type->title) {echo 'selected'; } ?> value="<?= $type->title; ?>"><?= $type->title; ?></option>
-                                    <?php endforeach; ?>
-                                <?php endif; ?>
-                            </select>
+
                             <p></p>
                             <div id="pac-container">
                                 <input id="event_address" value="<?= isset($jobs_data) ?  $jobs_data->event_address : '';  ?>" name="event_address" class="form-control" type="text" placeholder="Enter a location" />
