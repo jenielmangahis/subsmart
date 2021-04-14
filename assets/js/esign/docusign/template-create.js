@@ -79,6 +79,13 @@ function TemplateCreate() {
     const timeNow = moment().format("hh:mm:ss A");
 
     $form.find("#name").attr("placeholder", `Untitled ${dateNow} | ${timeNow}`);
+
+    if (templateId) {
+      $("#pageTitle").text(template.name);
+      $("#templateInfo").hide();
+      $("#templateDocument").hide();
+      $addRecipientButton.hide();
+    }
   }
 
   async function showDocument() {
@@ -104,7 +111,7 @@ function TemplateCreate() {
     $docModal.modal("show");
   }
 
-  function attachEventHandlers() {
+  function attachEventHandlers({ templateId: templateIdParam = null }) {
     $form.on("submit", async function (event) {
       event.preventDefault();
 
@@ -114,6 +121,31 @@ function TemplateCreate() {
       const $file = $this.find("#docFile");
       const $subject = $this.find("#subject");
       const $message = $this.find("#message");
+
+      if (templateIdParam) {
+        $(this).attr("disabled", true);
+        $(this).find(".spinner-border").removeClass("d-none");
+
+        const payload = {
+          recipients: recipients.map((r) => r.getData()),
+          subject: $subject.val(),
+          message: $message.val(),
+        };
+
+        const endpoint = `${prefixURL}/DocuSign/apiSendTemplate/${templateIdParam}`;
+        const response = await fetch(endpoint, {
+          method: "POST",
+          body: JSON.stringify(payload),
+          headers: {
+            accepts: "application/json",
+            "content-type": "application/json",
+          },
+        });
+
+        const data = await response.json();
+        window.location = `${prefixURL}/DocuSign/manage?view=sent`;
+        return;
+      }
 
       const payload = {
         name: $name.val() || $name.prop("placeholder"),
@@ -196,7 +228,13 @@ function TemplateCreate() {
       }
     }
 
-    const newRecipient = new Recipient({ data, onRemove: removeRecipient });
+    const { isPreparingTemplate = false } = data;
+    const newRecipient = new Recipient({
+      data,
+      onRemove: removeRecipient,
+      isPreparingTemplate,
+    });
+
     recipients = [...recipients, newRecipient];
     renderRecipientsForm();
 
@@ -235,7 +273,7 @@ function TemplateCreate() {
     template.recipients = data;
   }
 
-  async function setFormValues() {
+  async function setFormValues({ isPreparingTemplate = false }) {
     await Promise.all([
       fetchTemplate(),
       fetchTemplateFile(),
@@ -264,7 +302,12 @@ function TemplateCreate() {
     const fakeEvent = { target: { files: [templateFile] } };
     await onChangeFile(fakeEvent);
 
-    recipients.forEach(addRecipient);
+    recipients.forEach((recipient) =>
+      addRecipient({
+        ...recipient,
+        isPreparingTemplate,
+      })
+    );
 
     $form.find("[type=submit] .text").text("Send");
   }
@@ -272,22 +315,27 @@ function TemplateCreate() {
   async function init() {
     const urlParams = new URLSearchParams(window.location.search);
     templateId = urlParams.get("id");
+    const isPreparingTemplate = Boolean(templateId);
 
     if (templateId) {
-      await setFormValues();
+      await setFormValues({ isPreparingTemplate });
     } else {
       addRecipient();
     }
 
     prepareForm();
-    attachEventHandlers();
+    attachEventHandlers({ templateId });
     $(".card--loading").removeClass("card--loading");
   }
 
   return { init };
 }
 
-function Recipient({ data: dataParam, onRemove: onRemoveParam }) {
+function Recipient({
+  data: dataParam,
+  onRemove: onRemoveParam,
+  isPreparingTemplate = false,
+}) {
   let data = dataParam;
 
   function onChange(event) {
@@ -365,6 +413,7 @@ function Recipient({ data: dataParam, onRemove: onRemoveParam }) {
 
     const { name, email } = data;
     const role = roles.find(({ value }) => value === data.role);
+    const requireFields = isPreparingTemplate;
 
     const html = `
       <div class="recipientForm__container">
@@ -373,19 +422,41 @@ function Recipient({ data: dataParam, onRemove: onRemoveParam }) {
             <div class="col-md-8">
               <div class="form-group">
                 <label>Name *</label>
-                <input type="text" data-key="name" name="name" value="${name}" class="form-control">
+                <input
+                  type="text"
+                  data-key="name"
+                  name="name"
+                  value="${name}"
+                  class="form-control"
+                  ${requireFields ? "required" : ""}
+                >
               </div>
 
               <div class="form-group">
                 <label>Email *</label>
-                <input type="email" data-key="email" name="email" value="${email}" class="form-control">
+                <input
+                  type="email"
+                  data-key="email"
+                  name="email"
+                  value="${email}"
+                  class="form-control"
+                  ${requireFields ? "required" : ""}
+                >
               </div>
             </div>
 
             <div>
               <div class="col-6 col-md-4">
                   <div class="dropdown" style="position: relative; top: 29px;" data-key="role">
-                    <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <button
+                      class="btn btn-outline-secondary dropdown-toggle"
+                      type="button"
+                      id="dropdownMenuButton"
+                      data-toggle="dropdown"
+                      aria-haspopup="true"
+                      aria-expanded="false"
+                      tabindex="-1"
+                    >
                       <i class="fa ${role.icon}"></i>
                       ${role.value}
                     </button>

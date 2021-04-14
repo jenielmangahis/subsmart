@@ -497,18 +497,17 @@ class Accounting_modals extends MY_Controller {
         echo json_encode($return);
     }
 
-    public function get_payroll_form($paySchedule)
+    public function get_payroll_form($paySchedId)
     {
-        $this->page_data['payDetails'] = $this->users_model->getPayDetailsByPaySched($paySchedule);
+        $paySchedule = $this->users_model->getPaySchedule($paySchedId);
+        $this->page_data['paySchedule'] = $paySchedule;
+        $this->page_data['payDetails'] = $this->users_model->getPayDetailsByPaySched($paySchedule->id);
         $accounts = $this->chart_of_accounts_model->select();
         $accounts = array_filter($accounts, function($v, $k) {
             return $v->account_id === 3 || $v->account_id === "3";
         }, ARRAY_FILTER_USE_BOTH);
 
         $currentDay = date('m/d/Y');
-        $startDay = date('m/d/Y', strtotime($date . ' +1 months'));
-
-        $paySchedule = $this->users_model->getPaySchedule($paySchedule);
 
         switch($paySchedule->pay_frequency) {
             case 'every-week' :
@@ -521,15 +520,115 @@ class Accounting_modals extends MY_Controller {
                 $lastDate = $newDateTime->setISODate($startDateTime->format("Y"), $startWeekNo, $endDay === 0 ? 7 : $endDay);
                 $lastDateString = $newDateTime->format('m/d/Y');
                 $firstDateString = date('m/d/Y', strtotime($lastDateString.' -6 days'));
+                $dropdownLimit = 30;
+
+                $payDate = strtotime($paySchedule->next_payday);
+
+                if($payDate < strtotime(date('m/d/Y'))) {
+                    do {
+                        $payDate = strtotime(date('m/d/Y', $payDate).' +7 days');
+                    } while($payDate < strtotime(date('m/d/Y')));
+                }
+                $payDate = date('m/d/Y', $payDate);
             break;
             case 'every-other-week' :
+                $endDay = strtotime($paySchedule->next_pay_period_end);
 
+                do {
+                    $endDay = strtotime(date('m/d/Y', $endDay).' +2 weeks');
+                } while($endDay <= strtotime(date('m/d/Y')));
+                $endDay = date('m/d/Y', $endDay);
+                $lastDateString = date('m/d/Y', strtotime($endDay.' +8 weeks'));
+                $firstDateString = date('m/d/Y', strtotime($lastDateString.' -13 days'));
+                $dropdownLimit = 18;
+
+                $payDate = strtotime($paySchedule->next_payday);
+
+                if($payDate < strtotime(date('m/d/Y'))) {
+                    do {
+                        $payDate = strtotime(date('m/d/Y', $payDate).' +2 weeks');
+                    } while($payDate <= strtotime(date('m/d/Y')));
+                }
+                $payDate = date('m/d/Y', $payDate);
             break;
             case 'twice-month' :
-                
+                if($paySchedule->next_pay_period_end !== null) {
+                    $endDay = strtotime($paySchedule->next_pay_period_end);
+
+                    if($endDay <= strtotime(date('m/d/Y'))) {
+                        do {
+                            if(intval(date('d', $endDay)) === 15) {
+                                $month = intval(date('m', $endDay));
+                                $year = intval(date('Y', $endDay));
+                                $date = cal_days_in_month(CAL_GREGORIAN,$month,$year);
+                                $endDay = strtotime(date("$month/$date/$year"));
+                            } else {
+                                $endDay = strtotime(date('m/d/Y', $endDay).' +15 days');
+                            }
+                        } while($endDay <= strtotime(date('m/d/Y')));
+                    }
+                    $endDay = date('m/d/Y', $endDay);
+                    $lastDateString = date('m/d/Y', strtotime($endDay.' +2 months'));
+                    $firstDateString = date('m/d/Y', strtotime($lastDateString.' -14 days'));
+                }
+
+                $dropdownLimit = 17;
+
+                $payDate = strtotime($paySchedule->next_payday);
+
+                if($payDate < strtotime(date('m/d/Y'))) {
+                    do {
+                        $payDate = strtotime(date('m/d/Y', $payDate).' +15 days');
+                    } while($payDate <= strtotime(date('m/d/Y')));
+                }
+                $payDate = date('m/d/Y', $payDate);
             break;
             case 'every-month' :
+                if($paySchedule->next_pay_period_end !== null) {
+                    $endDay = strtotime($paySchedule->next_pay_period_end);
 
+                    if($endDay <= strtotime(date('m/d/Y'))) {
+                        do {
+                            $month = intval(date('m', $endDay));
+                            $year = intval(date('Y', $endDay));
+                            $date = intval(date('d', $endDay));
+                            if($date === cal_days_in_month(CAL_GREGORIAN, $month, $year)) {
+                                $endDay = strtotime(date('m/d/Y', $endDay).' +1 day');
+                                $month = intval(date('m', $endDay));
+                                $year = intval(date('Y', $endDay));
+                                $totalDays = cal_days_in_month(CAL_GREGORIAN, $month, $year);
+                                $endDay = strtotime(date("m/$totalDays/Y"));
+                            } else {
+                                $endDay = strtotime(date('m/d/Y', $endDay).' +1 month');
+                            }
+                        } while($endDay <= strtotime(date('m/d/Y')));
+                    }
+                    $endDay = date('m/d/Y', $endDay);
+                    $month = intval(date('m', $endDay));
+                    $year = intval(date('Y', $endDay));
+                    $totalDays = cal_days_in_month(CAL_GREGORIAN, $month, $year);
+                    if(intval(date('d', strtotime($endDay))) === cal_days_in_month(CAL_GREGORIAN, $month, $year)) {
+                        $lastDateString = date('m/01/Y', strtotime($endDay.' +4 months'));
+                        $lastDateMonth = intval(date('m', strtotime($lastDateString)));
+                        $lastDateYear = intval(date('Y', strtotime($lastDateString)));
+                        $totalDays = cal_days_in_month(CAL_GREGORIAN, $lastDateMonth, $lastDateYear);
+                        $lastDateString = date("m/d/Y", strtotime("$lastDateMonth/$totalDays/$lastDateYear"));
+                    } else {
+                        $lastDateString = date('m/d/Y', strtotime($endDay.' +4 months'));
+                    }
+                    $firstDateString = date('m/d/Y', strtotime($lastDateString.' -1 month'));
+                    $firstDateString = date('m/d/Y', strtotime($firstDateString.' +1 day'));
+                    $dropdownLimit = 11;
+
+                    $payDate = strtotime($paySchedule->next_payday);
+
+                    if($payDate <= strtotime(date('m/d/Y'))) {
+                        do {
+                            $payDate = strtotime(date('m/d/Y', $payDate).' +1 month');
+                        } while($payDate <= strtotime(date('m/d/Y')));
+                    }
+                    $payDate = date('m/d/Y', $payDate);
+                }
             break;
         }
 
@@ -541,20 +640,33 @@ class Accounting_modals extends MY_Controller {
             ]
         ];
 
-        for($i = 0; count($payPeriod) < 30; $i++ ) {
+        for($i = 0; count($payPeriod) < $dropdownLimit; $i++ ) {
+            $lastDateString = date('m/d/Y', strtotime($firstDateString.' -1 day'));
             switch($paySchedule->pay_frequency) {
                 case 'every-week' :
-                    $lastDateString = date('m/d/Y', strtotime($firstDateString.' -1 day'));
                     $firstDateString = date('m/d/Y', strtotime($lastDateString.' -6 days'));
                 break;
                 case 'every-other-week' :
-
+                    $firstDateString = date('m/d/Y', strtotime($lastDateString.' -13 days'));
                 break;
                 case 'twice-month' :
-
+                    $month = intval(date('m', strtotime($lastDateString)));
+                    $year = intval(date('Y', strtotime($lastDateString)));
+                    if(intval(date('d', strtotime($lastDateString))) === cal_days_in_month(CAL_GREGORIAN, $month, $year)) {
+                        $firstDateString = date("m/d/Y", strtotime("$month/16/$year"));
+                    } else {
+                        $firstDateString = date('m/d/Y', strtotime($lastDateString.' -14 days'));
+                    }
                 break;
                 case 'every-month' :
-    
+                    $month = intval(date('m', strtotime($lastDateString)));
+                    $year = intval(date('Y', strtotime($lastDateString)));
+                    if(intval(date('d', strtotime($lastDateString))) === cal_days_in_month(CAL_GREGORIAN, $month, $year)) {
+                        $firstDateString = date("m/d/Y", strtotime("$month/01/$year"));
+                    } else {
+                        $firstDateString = date('m/d/Y', strtotime($lastDateString.' -1 month'));
+                        $firstDateString = date('m/d/Y', strtotime($firstDateString.' +1 day'));
+                    }
                 break;
             }
 
@@ -568,6 +680,7 @@ class Accounting_modals extends MY_Controller {
         // krsort($payPeriod);
         $this->page_data['payPeriods'] = $payPeriod;
         $this->page_data['accounts'] = $accounts;
+        $this->page_data['payDate'] = $payDate;
 
         $this->load->view('accounting/modals/payroll_form', $this->page_data);
     }

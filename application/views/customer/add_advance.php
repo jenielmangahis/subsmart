@@ -22,6 +22,7 @@ add_css(array(
         border-style: Solid;
         border-width: 1px;
         background-color: #E5EBF2;
+        height: 20px;
     }
 </style>
     <div class="wrapper" role="wrapper">
@@ -42,13 +43,41 @@ add_css(array(
                                   </span>
                               </div>
                             </div>
-                            <button class="btn btn-primary btn-md" onclick="print_data_sheet()">
-                                <span class="fa fa-print "></span> Print</button>
                         </div>
-
                     </div>
                   </div>
               </div>
+                <div class="card">
+                    <div class="row ">
+                        <div class="col-md-12">
+                            <div style="margin-top: 5px;">
+                                <b>Account: </b><span> 6436456</span>&nbsp;&nbsp;&nbsp;<b>Online: </b><span> Yes</span>&nbsp;&nbsp;&nbsp;<b>In Service: </b><span> Yes</span> &nbsp;&nbsp;
+                                <b>Status: </b>
+                                <span>
+                                    <select id="statuss" name="status" data-customer-source="dropdown" class="input_selects" >
+                                        <option  value=""></option>
+                                        <option  value="Draft">Draft</option>
+                                        <option <?php if(isset($profile_info)){ if($profile_info->status == 'Charge Back'){ echo 'selected'; } } ?> value="Charge Back">Charge Back</option>
+                                        <option <?php if(isset($profile_info)){ if($profile_info->status == 'Cancelled'){ echo 'selected'; } } ?> value="Cancelled">Cancelled</option>
+                                        <option <?php if(isset($profile_info)){ if($profile_info->status == 'Collection'){ echo 'selected'; } } ?> value="Collection">Collection</option>
+                                        <option <?php if(isset($profile_info)){ if($profile_info->status == 'Cancel Pending'){ echo 'selected'; } } ?> value="Cancel Pending">Cancel Pending</option>
+                                        <option <?php if(isset($profile_info)){ if($profile_info->status == 'Installed'){ echo 'selected'; } } ?> value="Installed">Installed</option>
+                                        <option <?php if(isset($profile_info)){ if($profile_info->status == 'Lead'){ echo 'selected'; } } ?> value="Lead">Lead</option>
+                                        <option <?php if(isset($profile_info)){ if($profile_info->status == 'No Show'){ echo 'selected'; } } ?> value="No Show">No Show</option>
+                                        <option <?php if(isset($profile_info)){ if($profile_info->status == 'Pending'){ echo 'selected'; } } ?> value="Pending">Pending</option>
+                                        <option <?php if(isset($profile_info)){ if($profile_info->status == 'Past Due'){ echo 'selected'; } } ?> value="Past Due">Past Due</option>
+                                        <option <?php if(isset($profile_info)){ if($profile_info->status == 'Re-Scheduled'){ echo 'selected'; } } ?> value="Re-Scheduled">Re-Scheduled</option>
+                                        <option <?php if(isset($profile_info)){ if($profile_info->status == 'Scheduled'){ echo 'selected'; } } ?> value="Scheduled">Scheduled</option>
+                                        <option <?php if(isset($profile_info)){ if($profile_info->status == 'Service Customer'){ echo 'selected'; } } ?> value="Service Customer">Service Customer</option>
+                                        <option <?php if(isset($profile_info)){ if($profile_info->status == 'Other'){ echo 'selected'; } } ?> value="Other">Other</option>
+                                    </select>
+                                </span>
+                                &nbsp;&nbsp;&nbsp;
+                                <b>Equipment: </b><span> Installed </span>&nbsp;&nbsp;&nbsp;<b>Collections: </b><span>Collected </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <div class="card">
                     <div class="row ">
                         <div class="col-md-12">

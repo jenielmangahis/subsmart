@@ -1469,6 +1469,11 @@ class Timesheet_model extends MY_Model
         $qry = $this->db->query("SELECT users.id,users.company_id,users.email,users.FName,users.LName FROM business_profile JOIN users ON business_profile.company_id = users.company_id WHERE business_profile.company_id=$company_id and users.role < 5");
         return $qry->result();
     }
+    public function get_employee_pay_details($user_id)
+    {
+        $qry = $this->db->query("SELECT * fROM employee_pay_details WHERE user_id = " . $user_id);
+        return $qry->result();
+    }
 }
 
 

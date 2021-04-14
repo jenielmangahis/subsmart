@@ -9,14 +9,14 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     <div wrapper__section>
         <?php include viewPath('includes/notifications'); ?>
 				<div class="order-heading">
-					<h1>Work Order #WO-00396</h1>
+					<h3>Work Order # <?php echo $workorder->workorder_number ?></h3>
 				</div>
 
 				<div class="order-menu">
 					<div class="row">
 						<div class="col-md-4">
 										<div class="user-return">
-											<a href=""><i class="fa fa-angle-left" aria-hidden="true"></i> Return to Work Orders</a>
+											<a href="<?php echo base_url('workorder'); ?>"><i class="fa fa-angle-left" aria-hidden="true"></i> Return to Work Orders</a>
 										</div>
 						</div>
 						<div class="col-md-8">
@@ -62,7 +62,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 										
 														<div class="workorder-text" style="margin-top: 10px; margin-bottom: 20px;">
 											                <span class="presenter-title">WORK ORDER</span><br>
-											                <span># WO-00396</span>
+											                <span># <?php echo $workorder->workorder_number ?></span>
 											            </div>	
 											            <div class="workord-table">
 															<table class="presenter-info margin-bottom">

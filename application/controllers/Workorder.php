@@ -111,6 +111,8 @@ class Workorder extends MY_Controller
             // $this->page_data['workorderStatusFilters'] = $this->workorder_model->getStatusWithCount();
         }
 
+        $this->page_data['workorders'] = $this->workorder_model->getworkorderList();
+
         // unserialized the value
 
         $statusFilter = array();
@@ -538,15 +540,15 @@ class Workorder extends MY_Controller
 
 
     public function view($id)
-
     {
 
-        $this->page_data['Workorder'] = $this->workorder_model->getById($id);
+        $this->page_data['workorder'] = $this->workorder_model->getById($id);
 
-        $this->page_data['Workorder']->role = $this->roles_model->getByWhere(['id' => $this->page_data['Workorder']->role])[0];
+        // $this->page_data['Workorder']->role = $this->roles_model->getByWhere(['id' => $this->page_data['Workorder']->role])[0];
 
-        $this->page_data['Workorder']->activity = $this->activity_model->getByWhere(['user' => $id], ['order' => ['id', 'desc']]);
+        // $this->page_data['Workorder']->activity = $this->activity_model->getByWhere(['user' => $id], ['order' => ['id', 'desc']]);
 
+        // print_r($this->page_data['workorder']);
         $this->load->view('workorder/view', $this->page_data);
     }
 
@@ -1125,6 +1127,8 @@ class Workorder extends MY_Controller
         $data = array(
             'id' => $this->input->post('id'),
             'content' => $this->input->post('content'),
+            'company_id' => $company_id,
+            'date_created' => date("Y-m-d H:i:s"),
             'date_updated' => date("Y-m-d H:i:s")
         );
 
@@ -1158,6 +1162,8 @@ class Workorder extends MY_Controller
         $data = array(
             'id' => $this->input->post('id'),
             'content' => $this->input->post('content'),
+            'company_id' => $company_id,
+            'date_created' => date("Y-m-d H:i:s"),
             'date_updated' => date("Y-m-d H:i:s")
         );
 

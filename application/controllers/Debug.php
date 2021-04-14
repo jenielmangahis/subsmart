@@ -227,6 +227,14 @@
             print_r($result);
             exit;
         }
+
+        public function googleEventTime(){
+            $date_time = '2021-04-13T14:30:00+08:00';
+            $date = new DateTime($date_time);
+            $formatted = $date->format('g:i A');
+            echo $formatted;
+            exit;
+        }
     }
 
 

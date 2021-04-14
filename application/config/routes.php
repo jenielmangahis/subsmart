@@ -589,6 +589,11 @@ $route['email_campaigns/save_draft_campaign'] = 'Email_Campaigns/create_draft_ca
 $route['email_campaigns/add_campaign_send_to'] = 'Email_Campaigns/add_campaign_send_to';
 $route['email_campaigns/create_campaign_send_to'] = 'Email_Campaigns/create_campaign_send_to';
 $route['email_campaigns/build_email'] = 'Email_Campaigns/build_email';
+$route['email_campaigns/create_email_message'] = 'Email_Campaigns/create_email_message';
+$route['email_campaigns/preview_email_message'] = 'Email_Campaigns/preview_email_message';
+$route['email_campaigns/create_send_schedule'] = 'Email_Campaigns/create_send_schedule';
+$route['email_campaigns/payment'] = 'Email_Campaigns/payment';
+
 
 //offers
 $route['offers/add_offer'] = 'Offers/add_offer';

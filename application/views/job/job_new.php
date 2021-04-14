@@ -66,7 +66,7 @@ add_css(array(
                                         <div class="stepwizard-step col-xs-3">
                                             <a href="#" <?php if(isset($jobs_data) && $jobs_data->status == 'Scheduled'): ?>data-toggle="modal" data-target="#omw_modal" data-backdrop="static" data-keyboard="false" <?php endif; ?> type="button" class="btn btn-circle <?= isset($jobs_data) && $jobs_data->status == 'On My Way'  ? 'btn-success' : 'btn-default' ; ?>">
                                                 <span style="font-size: 24px;" class="fa fa-ship"></span></a>
-                                            <p><small>OMW</small></p>
+                                            <p><small>Arrival</small></p>
                                         </div> &nbsp;&nbsp;
                                         <div class="stepwizard-step col-xs-3">
                                             <a href="#" <?php if(isset($jobs_data) && $jobs_data->status == 'On My Way'): ?>data-toggle="modal" data-target="#start_modal" data-backdrop="static" data-keyboard="false" <?php endif; ?>  type="button" class="btn btn-circle <?= isset($jobs_data) && $jobs_data->status == 'Started'  ? 'btn-success' : 'btn-default' ; ?>" disabled="disabled">
@@ -640,7 +640,7 @@ add_css(array(
                                         <tbody>
                                         <tr>
                                             <td id="cust_fullname">xxxxx xxxxx</td>
-                                            <td><a href="<?= base_url('customer'); ?>"><span class="fa fa-user customer_right_icon"></span></a></td>
+                                            <td><a target="_blank" href="#" id="customer_preview"><span class="fa fa-user customer_right_icon"></span></a></td>
                                         </tr>
                                         <tr>
                                             <td >
@@ -908,7 +908,7 @@ add_css(array(
                                     </div>
                                 </div>-->
                                 <div class="col-sm-12">
-                                    <input class="form-control" value="Thank you for your business, Please call <?= $company_info->business_name; ?> at <?= $company_info->business_phone; ?> for quality customer service.">
+                                    <input class="form-control" value="Thank you for your business, Please call <?= $company_info->business_name; ?> at (<?= $company_info->business_phone; ?>) for quality customer service.">
                                 </div>
                                 <div class="col-sm-12">
                                     <hr>

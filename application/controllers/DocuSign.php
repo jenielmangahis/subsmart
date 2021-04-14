@@ -39,11 +39,15 @@ class DocuSign extends MY_Controller
         $this->db->where('id', $documentId);
         $document = $this->db->get('user_docfile')->row();
 
+        $this->db->where('docfile_id', $documentId);
+        $documentFile = $this->db->get('user_docfile_documents')->row();
+
         header('content-type: application/json');
         echo json_encode([
             'document' => $document,
             'recipient' => $recipient,
             'fields' => $fields,
+            'file' => $documentFile,
         ]);
     }
 
@@ -71,29 +75,7 @@ class DocuSign extends MY_Controller
         $this->db->where('completed_at is NULL', null, false);
         $recipients = $this->db->get('user_docfile_recipients')->result();
 
-        $server = MAIL_SERVER;
-        $port = MAIL_PORT;
-        $username = MAIL_USERNAME;
-        $password = MAIL_PASSWORD;
-        $from = MAIL_FROM;
-        $subject = 'nSmarTrac: DocuSign';
-
-        include APPPATH . 'libraries/PHPMailer/PHPMailerAutoload.php';
-        $mail = new PHPMailer;
-        $mail->isSMTP();
-        $mail->getSMTPInstance()->Timelimit = 5;
-        $mail->Host = $server;
-        $mail->SMTPAuth = true;
-        $mail->Username = $username;
-        $mail->Password = $password;
-        $mail->SMTPSecure = 'ssl';
-        $mail->Timeout = 10; // seconds
-        $mail->Port = $port;
-        $mail->From = $from;
-        $mail->FromName = 'nSmarTrac';
-        $mail->Subject = $subject;
-        $mail->IsHTML(true);
-
+        $mail = getMailInstance();
         $templatePath = VIEWPATH . 'esign/docusign/email/invitation.html';
         $template = file_get_contents($templatePath);
 
@@ -248,6 +230,10 @@ class DocuSign extends MY_Controller
         $this->db->where('docfile_id', $documentId);
         $this->db->where('role', 'Needs to Sign');
         $recipients = $this->db->get('user_docfile_recipients')->result();
+
+        $mail = getMailInstance();
+        $templatePath = VIEWPATH . 'esign/docusign/email/void.html';
+        $template = file_get_contents($templatePath);
 
         foreach ($recipients as $recipient) {
             if (!is_null($recipient->signed_at)) {
@@ -593,14 +579,15 @@ class DocuSign extends MY_Controller
         SELECT `user_docfile_templates_fields`.*, `user_docfile_templates_recipients`.`color` FROM `user_docfile_templates_fields`
         LEFT JOIN `user_docfile_templates_recipients` ON `user_docfile_templates_recipients`.`id` = `user_docfile_templates_fields`.`recipients_id`
         WHERE `user_docfile_templates_fields`.`template_id` = ? AND `user_docfile_templates_fields`.`user_id` = ?
-        SQL;
+SQL;
 
         $records = $this->db->query($query, [$templateId, logged('id')])->result_array();
         header('content-type: application/json');
         echo json_encode(['fields' => $records]);
     }
 
-    public function apiTemplateFile($templateId) {
+    public function apiTemplateFile($templateId)
+    {
         $this->db->where('template_id', $templateId);
         $records = $this->db->get('user_docfile_templates_documents')->row();
 
@@ -608,7 +595,8 @@ class DocuSign extends MY_Controller
         echo json_encode(['data' => $records]);
     }
 
-    public function apiTemplate($templateId) {
+    public function apiTemplate($templateId)
+    {
         $this->db->where('id', $templateId);
         $records = $this->db->get('user_docfile_templates')->row();
 
@@ -616,7 +604,8 @@ class DocuSign extends MY_Controller
         echo json_encode(['data' => $records]);
     }
 
-    public function apiTemplateRecipients($templateId) {
+    public function apiTemplateRecipients($templateId)
+    {
         $this->db->where('template_id', $templateId);
         $records = $this->db->get('user_docfile_templates_recipients')->result();
 
@@ -625,64 +614,65 @@ class DocuSign extends MY_Controller
     }
 
     public function apiCreateTemplateFields()
-	{
-    	header('content-type: application/json');
+    {
+        header('content-type: application/json');
 
-		if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-			echo json_encode(['success' => false]);
-			return;
-		}
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            echo json_encode(['success' => false]);
+            return;
+        }
 
-		$payload = json_decode(file_get_contents('php://input'), true);
+        $payload = json_decode(file_get_contents('php://input'), true);
 
-		$coordinates = json_encode($payload['coordinates']);
-		$specs = $payload['specs'] ? json_encode($payload['specs']) : null;
-		$docPage = $payload['doc_page'];
-		$field = $payload['field'];
-		$recipientId = $payload['recipient_id'];
-		$userId = logged('id');
-		$templateId = $payload['template_id'];
-		$uniqueKey = $payload['unique_key'];
+        $coordinates = json_encode($payload['coordinates']);
+        $specs = $payload['specs'] ? json_encode($payload['specs']) : null;
+        $docPage = $payload['doc_page'];
+        $field = $payload['field'];
+        $recipientId = $payload['recipient_id'];
+        $userId = logged('id');
+        $templateId = $payload['template_id'];
+        $uniqueKey = $payload['unique_key'];
 
-		$this->db->where('template_id', $templateId);
-		$this->db->where('user_id', $userId);
-		$this->db->where('unique_key', $uniqueKey);
-		$record = $this->db->get('user_docfile_templates_fields')->row();
-		$isCreated = false;
+        $this->db->where('template_id', $templateId);
+        $this->db->where('user_id', $userId);
+        $this->db->where('unique_key', $uniqueKey);
+        $record = $this->db->get('user_docfile_templates_fields')->row();
+        $isCreated = false;
 
-		if (is_null($record)) {
-			$isCreated = true;
-			$this->db->insert('user_docfile_templates_fields', [
-				'coordinates' => $coordinates,
-				'doc_page' => $docPage,
-				'template_id' => $templateId,
-				'field_name' => $field,
-				'unique_key' => $uniqueKey,
-				'user_id' => $userId,
+        if (is_null($record)) {
+            $isCreated = true;
+            $this->db->insert('user_docfile_templates_fields', [
+                'coordinates' => $coordinates,
+                'doc_page' => $docPage,
+                'template_id' => $templateId,
+                'field_name' => $field,
+                'unique_key' => $uniqueKey,
+                'user_id' => $userId,
                 'recipients_id' => $recipientId,
-				'specs' => $specs,
-			]);
-		} else {
-			$this->db->where('id', $record->id);
-			$this->db->update('user_docfile_templates_fields', [
-				'coordinates' => $coordinates,
-				'doc_page' => $docPage,
-				'template_id' => $templateId,
-				'field_name' => $field,
-				'unique_key' => $uniqueKey,
-				'user_id' => $userId,
-				'specs' => is_null($specs) ? $record->specs : $specs,
-			]);
-		}
+                'specs' => $specs,
+            ]);
+        } else {
+            $this->db->where('id', $record->id);
+            $this->db->update('user_docfile_templates_fields', [
+                'coordinates' => $coordinates,
+                'doc_page' => $docPage,
+                'template_id' => $templateId,
+                'field_name' => $field,
+                'unique_key' => $uniqueKey,
+                'user_id' => $userId,
+                'specs' => is_null($specs) ? $record->specs : $specs,
+            ]);
+        }
 
-		$recordId = $isCreated ? $this->db->insert_id() : $record->id;
-		$this->db->where('id', $recordId);
-		$record = $this->db->get('user_docfile_templates_fields')->row();
+        $recordId = $isCreated ? $this->db->insert_id() : $record->id;
+        $this->db->where('id', $recordId);
+        $record = $this->db->get('user_docfile_templates_fields')->row();
 
-		echo json_encode(['record' => $record, 'is_created' => $isCreated]);
-	}
+        echo json_encode(['record' => $record, 'is_created' => $isCreated]);
+    }
 
-    public function apiDeleteTemplateField($uniqueKey) {
+    public function apiDeleteTemplateField($uniqueKey)
+    {
         if ($_SERVER['REQUEST_METHOD'] !== 'DELETE') {
             echo json_encode(['success' => false]);
             return;
@@ -696,8 +686,140 @@ class DocuSign extends MY_Controller
         echo json_encode(['success' => true]);
     }
 
-    public function templatePrepare() {
+    public function templatePrepare()
+    {
         return $this->templateCreate();
+    }
+
+    public function apiSendTemplate($templateId)
+    {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            echo json_encode(['success' => false]);
+            return;
+        }
+
+        $filepath = FCPATH . 'uploads/docusign/';
+        if (!file_exists($filepath)) {
+            mkdir($filepath, 0777, true);
+        }
+
+        $payload = json_decode(file_get_contents('php://input'), true);
+        $recipients = $payload['recipients'];
+
+        // copy template to user_docfile
+
+        $this->db->where('id', $templateId);
+        $template = $this->db->get('user_docfile_templates')->row();
+
+        $this->db->insert('user_docfile', [
+            'user_id' => logged('id'),
+            'name' => $template->name,
+            'type' => count($recipients) > 1 ? 'Multiple' : 'Single',
+            'status' => 'Draft',
+            'message' => $template->message,
+            'company_id' => logged('company_id'),
+        ]);
+        $docfileId = $this->db->insert_id();
+
+        // copy template document to user_docfile_documents
+
+        $this->db->where('template_id', $template->id);
+        $templateDocument = $this->db->get('user_docfile_templates_documents')->row();
+
+        $documentPath = $filepath . $templateDocument->name;
+        copy(FCPATH . $templateDocument->path, $documentPath);
+        $this->db->insert('user_docfile_documents', [
+            'name' => $templateDocument->name,
+            'path' => str_replace(FCPATH, '/', $documentPath),
+            'docfile_id' => $docfileId,
+        ]);
+
+        // copy template recipients to user_docfile_recipients and
+        // template recipient fields to user_docfile_fields
+
+        $this->db->where('template_id', $template->id);
+        $templateRecipients = $this->db->get('user_docfile_templates_recipients')->result_array();
+
+        foreach ($recipients as $recipient) {
+            $matchedRecipient = null;
+            foreach ($templateRecipients as $templateRecipient) {
+                if ($templateRecipient['id'] == $recipient['id']) {
+                    $matchedRecipient = $templateRecipient;
+                    break;
+                }
+            }
+
+            if (is_null($matchedRecipient)) {
+                continue;
+            }
+
+            $this->db->insert('user_docfile_recipients', [
+                'user_id' => logged('id'),
+                'docfile_id' => $docfileId,
+                'name' => $recipient['name'],
+                'email' => $recipient['email'],
+                'role' => $recipient['role'],
+                'color' => $recipient['color'],
+            ]);
+            $recipientId = $this->db->insert_id();
+
+            $this->db->where('recipients_id', $matchedRecipient['id']);
+            $recipientFields = $this->db->get('user_docfile_templates_fields')->result_array();
+
+            foreach ($recipientFields as $field) {
+                $this->db->insert('user_docfile_fields', [
+                    'coordinates' => $field['coordinates'],
+                    'docfile_id' => $docfileId,
+                    'field_name' => $field['field_name'],
+                    'doc_page' => $field['doc_page'],
+                    'unique_key ' => uniqid(),
+                    'user_id' => logged('id'),
+                    'user_docfile_recipients_id' => $recipientId,
+                ]);
+            }
+        }
+
+        $mail = getMailInstance();
+        $templatePath = VIEWPATH . 'esign/docusign/email/invitation.html';
+        $template = file_get_contents($templatePath);
+
+        $baseUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+        $baseUrl = str_replace("/apiSendTemplate/$templateId", '', $baseUrl);
+
+        $this->db->where('id', logged('id'));
+        $inviter = $this->db->get('users')->row();
+        $inviterName = implode(' ', [$inviter->FName, $inviter->LName]);
+
+        $this->db->where('docfile_id', $docfileId);
+        $this->db->where('role', 'Needs to Sign');
+        $this->db->where('completed_at is NULL', null, false);
+        $recipients = $this->db->get('user_docfile_recipients')->result();
+
+        foreach ($recipients as $recipient) {
+            $message = json_encode(['recipient_id' => $recipient->id, 'document_id' => $docfileId]);
+            $hash = encrypt($message, $this->password);
+
+            $data = [
+                '%link%' => $baseUrl . '/signing?hash=' . $hash,
+                '%inviter%' => $inviterName,
+            ];
+
+            $message = strtr($template, $data);
+
+            $mail->MsgHTML($message);
+            $mail->addAddress($recipient->email);
+            $mail->send();
+            $mail->ClearAllRecipients();
+
+            $this->db->where('id', $recipient->id);
+            $this->db->update('user_docfile_recipients', ['sent_at' => date('Y-m-d H:i:s')]);
+        }
+
+        $this->db->where('id', $docfileId);
+        $this->db->update('user_docfile', ['status' => 'Waiting for Others']);
+
+        header('content-type: application/json');
+        echo json_encode(['success' => true]);
     }
 }
 
@@ -738,4 +860,37 @@ function decrypt($hash, $password)
         return null;
     }
     return openssl_decrypt(mb_substr($data, 64, null, '8bit'), 'aes-256-ctr', $key, OPENSSL_RAW_DATA, $iv);
+}
+
+function getMailInstance($config = [])
+{
+    $config = array_replace([
+        'isHTML' => true,
+        'subject' => 'nSmarTrac: DocuSign',
+    ], $config);
+
+    $server = MAIL_SERVER;
+    $port = MAIL_PORT;
+    $username = MAIL_USERNAME;
+    $password = MAIL_PASSWORD;
+    $from = MAIL_FROM;
+    $subject = $config['subject'];
+
+    include APPPATH . 'libraries/PHPMailer/PHPMailerAutoload.php';
+    $mail = new PHPMailer;
+    $mail->isSMTP();
+    $mail->getSMTPInstance()->Timelimit = 5;
+    $mail->Host = $server;
+    $mail->SMTPAuth = true;
+    $mail->Username = $username;
+    $mail->Password = $password;
+    $mail->SMTPSecure = 'ssl';
+    $mail->Timeout = 10; // seconds
+    $mail->Port = $port;
+    $mail->From = $from;
+    $mail->FromName = 'nSmarTrac';
+    $mail->Subject = $subject;
+    $mail->IsHTML($config['isHTML']);
+
+    return $mail;
 }

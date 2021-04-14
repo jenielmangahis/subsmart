@@ -53,6 +53,12 @@
                                                 </ul>
                                             </div>
                                         </div>
+                                        <div class="col-sm-12">
+                                            <div class="form-group form-check" style="margin-bottom: 0 !important">
+                                                <input type="checkbox" name="rebate_item" id="rebate-item" class="form-check-input" value="1">
+                                                <label for="rebate-item" class="form-check-lable">Rebate Item</label>
+                                            </div>
+                                        </div>
                                     </div>
                                 </td>
                             </tr>

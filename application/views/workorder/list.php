@@ -16,7 +16,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 </div>
                 
                     <div style="background-color:#fdeac3; width:100%;padding:.5%;margin-bottom:5px;margin-top:5px;margin-bottom:10px;">
-                        Work order are are crucial to an organization’s maintenance operation. They help everyone from maintenance managers to technicians organize, assign, prioritize, track, and complete key tasks. When done well, work orders allow you to capture information, share it, and use it to get the work done as efficiently as possible.  Our work order has legal headers and two (2) places where you can outline specific terms.  This form will empower you team to move forward with each project without looking backward. Signature place holders and specific term(s) statements will help make this work order into a binding agreement.  
+                        Work order are are crucial to an organization’s maintenance operation. They help everyone from maintenance managers to technicians organize, assign, prioritize, track, and complete key tasks. When done well, work orders allow you to capture information, share it, and use it to get the work done as efficiently as possible.  Our work order has legal headers and two (2) places where you can outline specific terms.  This form will empower you team to move forward with each project without looking backward. Signature place holders and specific term(s) statements will help make this work order into a binding agreement.
                     </div>
                 <div class="row" style="margin-bottom:20px;">
                     <div class="col">
@@ -224,7 +224,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                     <label for="work_order_id_<?php echo $workorder->id ?>"></label>
                                                 </div>
                                                 <div><a class="a-default table-nowrap" href="">
-                                                        WO-00<?php echo $workorder->id ?>
+                                                        <?php echo $workorder->workorder_number ?>
                                                     </a>
                                                 </div>
                                             </div>
@@ -237,12 +237,14 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         </td>
                                         <td>
                                             <div class="table-nowrap">
-                                                <?php echo date('M d, Y', strtotime($workorder->date_issued)) ?>
+                                                <?php echo date('M d, Y', strtotime($workorder->date_created)) ?>
                                             </div>
                                         </td>
                                         <td>
                                             <a href="<?php echo base_url('customer/view/' . $workorder->customer_id) ?>">
-                                                <?php echo get_customer_by_id($workorder->customer_id)->contact_name ?>
+                                                <?php //echo get_customer_by_id($workorder->customer_id)->contact_name 
+                                                echo $workorder->first_name . ' ' .  $workorder->middle_name . ' ' . $workorder->last_name;
+                                                ?>
                                             </a>
                                             <div>Scheduled on: 30 Mar 2020, 2:00 pm to 4:00 pm</div>
                                         </td>
