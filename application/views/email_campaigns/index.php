@@ -128,7 +128,7 @@ table.dataTable tbody tr td {
                     </button>
                   </div>
                   <?php echo form_open_multipart('', ['class' => 'form-validate', 'id' => 'form-close-campaign', 'autocomplete' => 'off' ]); ?>
-                  <?php echo form_input(array('name' => 'emailid', 'type' => 'hidden', 'value' => '', 'id' => 'emailid'));?>
+                  <?php echo form_input(array('name' => 'emailid', 'type' => 'hidden', 'value' => '', 'id' => 'close-emailid'));?>
                   <div class="modal-body close-body-container">
                       <p>Are you sure you want close the campaign <b><span class="close-campaign-name"></span></b>?</p>
                   </div>
@@ -141,7 +141,7 @@ table.dataTable tbody tr td {
               </div>
             </div>
 
-            <!-- Modal Clone SMS  -->
+            <!-- Modal Clone Campaign  -->
             <div class="modal fade bd-example-modal-sm" id="modalCloneCampaign" tabindex="-1" role="dialog" aria-labelledby="modalCloneCampaignTitle" aria-hidden="true">
               <div class="modal-dialog modal-md" role="document">
                 <div class="modal-content">
@@ -174,6 +174,196 @@ table.dataTable tbody tr td {
 <script>
 $(function(){
     var active_tab = 'all';
+
+    $("#c-all-tab").click(function(){
+        active_tab = 'all';
+        $(".nav-item").removeClass('active');
+        $(".nav-all").addClass('active');
+        load_all_campaigns();
+    });
+
+    $("#c-active-tab").click(function(){
+        active_tab = 'active';
+        $(".nav-item").removeClass('active');
+        $(".nav-active").addClass('active');
+        load_active_campaigns();
+    });
+
+    $("#c-scheduled-tab").click(function(){
+        active_tab = 'scheduled';
+        $(".nav-item").removeClass('active');
+        $(".nav-scheduled").addClass('active');
+        load_scheduled_campaigns();
+    });
+
+    $("#c-closed-tab").click(function(){
+        active_tab = 'closed';
+        $(".nav-item").removeClass('active');
+        $(".nav-closed").addClass('active');
+        load_closed_campaigns();
+    });
+
+    $("#c-draft-tab").click(function(){
+        active_tab = 'draft';
+        $(".nav-item").removeClass('active');
+        $(".nav-draft").addClass('active');
+        load_draft_campaigns();
+    });
+
+    load_all_campaigns();
+    load_campaign_tab_counter();
+
+    function load_all_campaigns(){
+        load_campaigns('all', 'all-campaigns');
+    }
+
+    function load_active_campaigns(){
+        load_campaigns('<?= $status_active; ?>');
+    }
+
+    function load_scheduled_campaigns(){
+        load_campaigns('<?= $status_scheduled; ?>');
+    }
+
+    function load_closed_campaigns(){
+        load_campaigns('<?= $status_closed; ?>');
+    }
+
+    function load_draft_campaigns(){
+        load_campaigns('<?= $status_draft; ?>');
+    }
+
+    function load_campaigns(status){
+        var url = base_url + 'email_campaigns/_load_campaigns/'+status;
+        $(".campaign-list-container").html('<span class="spinner-border spinner-border-sm m-0"></span>');
+        setTimeout(function () {
+          $.ajax({
+             type: "POST",
+             url: url,
+             //data: ,
+             success: function(o)
+             {
+                $(".campaign-list-container").html(o);
+                //table.destroy();
+                var table = $('#dataTableCampaign').DataTable({
+                    "searching" : false,
+                    "pageLength": 10,
+                    "order": [],
+                     "aoColumnDefs": [
+                      { "sWidth": "40%", "aTargets": [ 0 ] },
+                      { "sWidth": "20%", "aTargets": [ 1 ] },
+                      { "sWidth": "20%", "aTargets": [ 2 ] },
+                      { "sWidth": "20%", "aTargets": [ 3 ] },
+                      { "sWidth": "10%", "aTargets": [ 4 ] }
+                    ]
+                });                
+             }
+          });
+        }, 1000);
+
+        $(document).on('click', '.clone-email-campaign', function(){
+          var campaign_name = $(this).attr("data-name");
+          var campaign_id = $(this).attr("data-id");
+
+          $("#clone-emailid").val(campaign_id);
+          $(".clone-modal-footer").show();
+          $(".clone-body-container").html('<p>Are you sure you want clone the campaign <b><span class="clone-campaign-name"></span></b>?</p>');
+          $(".clone-campaign-name").html(campaign_name);
+          $("#modalCloneCampaign").modal('show');
+        });
+
+        $(document).on('click', '.close-email-campaign', function(){
+          var campaign_name = $(this).attr("data-name");
+          var campaign_id = $(this).attr("data-id");
+          $("#close-emailid").val(campaign_id);
+          $(".close-modal-footer").show();
+          $(".close-body-container").html('<p>Are you sure you want close the campaign <b><span class="close-campaign-name"></span></b>?</p>');
+          $(".close-campaign-name").html(campaign_name);
+          $("#modalCloseCampaign").modal('show');
+        });
+    }
+
+    function load_campaign_tab_counter(){
+        var url = base_url + 'email_campaigns/_load_email_campaign_counter';
+        $(".sms-tab-counter").html('<span class="spinner-border spinner-border-sm m-0"></span>');
+        setTimeout(function () {
+          $.ajax({
+             type: "POST",
+             url: url,
+             dataType:"json",
+             success: function(o)
+             {
+               $(".email-total-all").html("("+o.total_email+")");
+               $(".email-total-scheduled").html("("+o.total_scheduled+")");
+               $(".email-total-active").html("("+o.total_active+")");
+               $(".email-total-closed").html("("+o.total_closed+")");
+               $(".email-total-draft").html("("+o.total_draft+")");
+             }
+          });
+        }, 800);
+    }
+
+    $("#form-clone-campaign").submit(function(e){
+      e.preventDefault();
+      var url = base_url + 'email_campaigns/_clone_campaign';
+      $(".btn-clone-campaign").html('<span class="spinner-border spinner-border-sm m-0"></span>');
+      setTimeout(function () {
+        $.ajax({
+           type: "POST",
+           url: url,
+           data : $("#form-clone-campaign").serialize(),
+           dataType:"json",
+           success: function(o)
+           {
+             $(".btn-clone-campaign").html('Yes');
+             $(".clone-modal-footer").hide();
+             if( o.email_id > 1 ){
+              location.href = base_url + "email_campaigns/edit_campaign/" + o.email_id;
+             }else{
+              $(".clone-body-container").html("<div class='alert alert-danger'>"+o.msg+"</div>");
+             }
+
+           }
+        });                    
+      }, 800);
+    });
+
+    $("#form-close-campaign").submit(function(e){
+      e.preventDefault();
+      var url = base_url + 'email_campaigns/_close_campaign';
+      $(".btn-close-campaign").html('<span class="spinner-border spinner-border-sm m-0"></span>');
+      setTimeout(function () {
+        $.ajax({
+           type: "POST",
+           url: url,
+           data : $("#form-close-campaign").serialize(),
+           dataType:"json",
+           success: function(o)
+           {
+             $(".btn-close-campaign").html('Yes');
+             $(".close-modal-footer").hide();
+             if( o.is_success == 1 ){
+              $(".close-body-container").html("<div class='alert alert-info'>"+o.msg+"</div>");
+              if( active_tab == 'all' ){
+                load_all_campaigns();
+              }else if( active_tab == 'closed' ){
+                load_closed_campaigns();
+              }else if( active_tab == 'active' ){
+                load_active_campaigns();
+              }else if( active_tab == 'draft' ){
+                load_draft_campaigns();
+              }else if( active_tab == 'scheduled' ){
+                load_scheduled_campaigns();
+              }
+              load_campaign_tab_counter();
+             }else{
+              $(".close-body-container").html("<div class='alert alert-danger'>"+o.msg+"</div>");
+             }
+
+           }
+        });                    
+      }, 800);
+    });
 });
 
 </script>

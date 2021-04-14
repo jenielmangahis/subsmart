@@ -91,11 +91,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     </div>
                     <div class="tabs-menu">
                         <ul class="clearfix">
-                          <li>1. Create Campaign</li>
-                          <li>2. Select Customers</li>
-                          <li>3. Build Email</li>
-                          <li class="active">4. Preview</li>
-                          <li>5. Purchase</li>
+                          <li><a href="<?= base_url('email_campaigns/edit_campaign/' . $emailCampaign->id); ?>">1. Create Campaign</a></li>
+                          <li><a href="<?= base_url('email_campaigns/add_campaign_send_to'); ?>">2. Select Customers</a></li>
+                          <li><a href="<?= base_url('email_campaigns/build_email'); ?>">3. Build Email</a></li>
+                          <li class="active"><a href="<?= base_url('email_campaigns/preview_email_message'); ?>">4. Preview</a></li>
+                          <li><a href="<?= base_url('email_campaigns/payment'); ?>">5. Purchase</a></li>
                         </ul>
                         <hr />
                     </div>
@@ -104,7 +104,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <div class="box">
                           <div class="form-group">
                               <label><b>Campaign Name</b></label>
-                              <div><?= $emailBlast->campaign_name; ?></div>
+                              <div><?= $emailCampaign->campaign_name; ?></div>
                           </div>
                           <div class="form-group">
                               <label><b>Send To</b></label>
@@ -112,7 +112,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                           </div>
                           <div class="form-group">
                               <label><b>Subject</b></label>
-                              <div><?= $emailBlast->email_subject; ?></div>
+                              <div><?= $emailCampaign->email_subject; ?></div>
                           </div>
                         </div>
                       </div>
@@ -133,9 +133,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                       <div class="">
                                           <?php 
 
-                                            if($emaillast->price_variables != ''){ 
+                                            if($emailCampaign->price_variables != ''){ 
                                               $is_scheduled = 'checked="checked"';
-                                              $send_date = date("m/d/Y",strtotime($emaillast->send_date));
+                                              $send_date = date("m/d/Y",strtotime($emailCampaign->send_date));
                                             }else{
                                               $is_scheduled = "";
                                               $send_date = date("m/d/Y");

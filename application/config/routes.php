@@ -593,6 +593,13 @@ $route['email_campaigns/create_email_message'] = 'Email_Campaigns/create_email_m
 $route['email_campaigns/preview_email_message'] = 'Email_Campaigns/preview_email_message';
 $route['email_campaigns/create_send_schedule'] = 'Email_Campaigns/create_send_schedule';
 $route['email_campaigns/payment'] = 'Email_Campaigns/payment';
+$route['email_campaigns/_generate_preview'] = 'Email_Campaigns/generate_preview';
+$route['email_campaigns/activate_automation'] = 'Email_Campaigns/activate_automation';
+$route['email_campaigns/_load_campaigns/(:any)'] = 'Email_Campaigns/ajax_load_campaigns/$1';
+$route['email_campaigns/_load_email_campaign_counter'] = 'Email_Campaigns/ajax_load_email_campaign_counter';
+$route['email_campaigns/edit_campaign/(:num)'] = 'Email_Campaigns/edit_email_campaign/$1';
+$route['email_campaigns/_clone_campaign'] = 'Email_Campaigns/ajax_clone_campaign';
+$route['email_campaigns/_close_campaign'] = 'Email_Campaigns/ajax_close_campaign';
 
 
 //offers

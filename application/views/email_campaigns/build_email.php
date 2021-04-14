@@ -137,11 +137,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <div class="validation-error" style="display: none;"></div>
                             <div class="tabs-menu">
                                 <ul class="clearfix">
-                                  <li>1. Create Campaign</li>
-                                  <li>2. Select Customers</li>
-                                  <li class="active">3. Build Email</li>
-                                  <li>4. Preview</li>
-                                  <li>5. Purchase</li>
+                                  <li><a href="<?= base_url('email_campaigns/edit_campaign/' . $emailCampaign->id); ?>">1. Create Campaign</a></li>
+                                  <li><a href="<?= base_url('email_campaigns/add_campaign_send_to'); ?>">2. Select Customers</a></li>
+                                  <li class="active"><a href="<?= base_url('email_campaigns/build_email'); ?>">3. Build Email</a></li>
+                                  <li><a href="<?= base_url('email_campaigns/preview_email_message'); ?>">4. Preview</a></li>
+                                  <li><a href="<?= base_url('email_campaigns/payment'); ?>">5. Purchase</a></li>
                                 </ul>
                             </div>
                             <hr />
@@ -189,7 +189,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                   <a class="btn btn-default margin-right btn-preview-email" href="javascript:void(0);">Preview Email</a>
                               </div>
                               <div class="col-sm-6 text-right">
-                                  <a class="btn btn-default margin-right" href="<?php echo url('sms_campaigns/add_campaign_send_to/'); ?>" style="margin-right: 10px;">&laquo; Back</a>
+                                  <a class="btn btn-default margin-right" href="<?php echo url('email_campaigns/add_campaign_send_to/'); ?>" style="margin-right: 10px;">&laquo; Back</a>
                                   <button class="btn btn-primary btn-create-email-msg" type="submit">Continue &raquo;</button>
                               </div>
                           </div>

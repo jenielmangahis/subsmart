@@ -25,6 +25,10 @@ class Email_Campaigns extends MY_Controller {
 
 	public function index(){	
 
+        $this->page_data['status_active'] = $this->EmailBlast_model->statusActive();                
+        $this->page_data['status_scheduled'] = $this->EmailBlast_model->statusScheduled();
+        $this->page_data['status_closed']    = $this->EmailBlast_model->statusClosed();
+        $this->page_data['status_draft']     = $this->EmailBlast_model->statusDraft();
 		$this->load->view('email_campaigns/index', $this->page_data);
 
 	}
@@ -51,6 +55,7 @@ class Email_Campaigns extends MY_Controller {
 
                 $email_blast_data = [
                         'user_id' => $user['id'],
+                        'cards_file_id' => 0,
                         'campaign_name' => $post['email_camapaign_name'],
                         'email_body' => '',
                         'email_subject' => '',
@@ -274,19 +279,26 @@ class Email_Campaigns extends MY_Controller {
     public function preview_email_message()
     {
         $this->load->helper('functions');
+
+        $cid  = logged('company_id');
         $email_blast_id = $this->session->userdata('emailBlastId');
 
         $emailBlast = $this->EmailBlast_model->getById($email_blast_id);
-
-        $emailRecipients = $this->EmailBlastSendTo_model->getAllByEmailBlastId($email_blast_id);
-        $total_recipients = count($emailRecipients); 
+        if( $emailBlast->sending_type == $this->EmailBlast_model->sendingTypeAll() ){
+            $customers   = $this->Customer_model->getAllByCompany($cid);  
+            $total_recipients = count($customers);
+        }else{
+            $emailRecipients = $this->EmailBlastSendTo_model->getAllByEmailBlastId($email_blast_id);            
+            $total_recipients = count($emailRecipients);     
+        }
+        
 
         $price_per_email = $this->EmailBlast_model->getPricePerEmail();
         $total_email_price = $total_recipients * $price_per_sms;
         $sendToOptions = $this->EmailBlast_model->sendToOptions();
 
         $this->page_data['send_to'] = $sendToOptions[$emailBlast->sending_type];
-        $this->page_data['emailBlast'] = $emailBlast;
+        $this->page_data['emailCampaign'] = $emailBlast;
         $this->page_data['total_email_price'] = $total_sms_price;
         $this->page_data['total_recipients'] = $total_recipients;
         $this->page_data['price_per_email'] = $price_per_email;
@@ -320,7 +332,7 @@ class Email_Campaigns extends MY_Controller {
         $data = [
             'price_variables' => serialize($price_variables),
             'send_date' => $send_date,
-            'total_price' => $total_email_price,
+            'total_cost' => $total_email_price,
             'status' => $this->EmailBlast_model->statusScheduled(),
             'is_paid' => 0,
             'is_sent' => 0
@@ -340,7 +352,10 @@ class Email_Campaigns extends MY_Controller {
     }
 
     public function payment(){
-        $this->load->helper('functions');
+        $this->load->model('CardsFile_model');
+        $this->load->helper('functions');     
+
+        $cid  = logged('company_id');   
         $email_blast_id = $this->session->userdata('emailBlastId');
 
         $emailBlast = $this->EmailBlast_model->getById($email_blast_id);
@@ -351,10 +366,175 @@ class Email_Campaigns extends MY_Controller {
         $price_per_email = $this->EmailBlast_model->getPricePerEmail();
         $total_email_price = $total_recipients * $price_per_email;
 
+        $creditCards = $this->CardsFile_model->getAllByCompanyId($cid);
+
+        $this->page_data['creditCards'] = $creditCards;
         $this->page_data['emailBlast'] = $emailBlast;
-        $this->page_data['price_per_email'] = $price_per_email;
         $this->page_data['total_recipients'] = $total_recipients;
+        $this->page_data['total_price'] = $price_per_email;
         $this->load->view('email_campaigns/payment', $this->page_data);
+    }
+
+    public function activate_automation(){
+        $is_success = false;
+        $msg = '';
+
+        $post = $this->input->post();
+
+        if( isset($post['payment_method_token']) ){
+            $email_blast_id = $this->session->userdata('emailBlastId');
+
+            $emailBlast = $this->EmailBlast_model->getById($email_blast_id);
+            if( $emailBlast ){
+                $price_per_email = $this->EmailBlast_model->getPricePerEmail();
+
+                $data = ['status' => $this->EmailBlast_model->statusActive(), 'total_cost' => $price_per_email, 'is_paid' => 1, 'cards_file_id' => $post['payment_method_token']];
+                $this->EmailBlast_model->updateEmailBlast($email_blast_id,$data);
+
+                $is_success = true;
+                $msg = 'Email automation was successfully updated.';
+            }else{
+                $msg = 'Cannot find data';
+            }  
+        }else{
+            $msg = 'Please select credit card';
+        }
+
+        $json_data = ['is_success' => $is_success, 'msg' => $msg];
+        echo json_encode($json_data);
+        
+    }
+
+    public function ajax_load_campaigns($status){
+        $company_id = logged('company_id');
+        if( $status == 'all' ){
+            $conditions = array();
+        }else{
+            $conditions[] = ['field' => 'email_blast.status','value' => $status];    
+        }        
+        
+        $emailBlast      = $this->EmailBlast_model->getAllByCompanyId($company_id, array(), $conditions);
+        $sendToOptions = $this->EmailBlast_model->sendToOptions();
+        $statusOptions = $this->EmailBlast_model->statusOptions();
+        
+        $this->page_data['statusOptions'] = $statusOptions;
+        $this->page_data['sendToOptions'] = $sendToOptions;
+        $this->page_data['emailBlast']    = $emailBlast;
+        $this->load->view('email_campaigns/ajax_load_campaigns', $this->page_data);
+    }
+
+    public function ajax_load_email_campaign_counter(){
+        $company_id = logged('company_id');
+
+        $emailAll = $this->EmailBlast_model->getAllByCompanyId($company_id, array(), array());
+
+        $conditions[0] = ['field' => 'email_blast.status','value' => $this->EmailBlast_model->statusScheduled()];
+        $smsScheduled = $this->EmailBlast_model->getAllByCompanyId($company_id, array(), $conditions);
+
+        $conditions[0] = ['field' => 'email_blast.status','value' => $this->EmailBlast_model->statusActive()];
+        $smsActive = $this->EmailBlast_model->getAllByCompanyId($company_id, array(), $conditions);
+
+        $conditions[0] = ['field' => 'email_blast.status','value' => $this->EmailBlast_model->statusClosed()];
+        $smsClosed = $this->EmailBlast_model->getAllByCompanyId($company_id, array(), $conditions);
+
+        $conditions[0] = ['field' => 'email_blast.status','value' => $this->EmailBlast_model->statusDraft()];
+        $smsDraft = $this->EmailBlast_model->getAllByCompanyId($company_id, array(), $conditions);
+
+        $json_data = [
+            'total_email' => count($emailAll),
+            'total_scheduled' => count($smsScheduled),
+            'total_active' => count($smsActive),
+            'total_closed' => count($smsClosed),
+            'total_draft' => count($smsDraft)
+        ];
+
+        echo json_encode($json_data);
+    }
+
+    public function edit_email_campaign($id){
+        $company_id = logged('company_id');
+        $emailCampaign = $this->EmailBlast_model->getById($id);
+        $this->session->unset_userdata('emailBlastId');
+        if( $emailCampaign ){
+            if( $emailCampaign->company_id == $company_id ){
+
+                $this->session->set_userdata('emailBlastId', $emailCampaign->id);
+                $this->page_data['emailCampaign'] = $emailCampaign;
+                $this->load->view('email_campaigns/edit_email_blast', $this->page_data);
+            }else{
+                $this->session->set_flashdata('message', 'Record not found.');
+                $this->session->set_flashdata('alert_class', 'alert-danger');
+                redirect('email_campaigns');
+            }
+        }else{
+            $this->session->set_flashdata('message', 'Record not found.');
+            $this->session->set_flashdata('alert_class', 'alert-danger');
+            redirect('email_campaigns');
+        }
+    }
+
+    public function ajax_clone_campaign(){
+        $is_success = 0;
+        $msg    = '';
+        $email_id = 0;
+
+        $post     = $this->input->post(); 
+        $emailBlast = $this->EmailBlast_model->getById($post['emailid']);
+        if( $emailBlast ){
+            $data = (array)$emailBlast;
+            unset($data['id']);
+            unset($data['uid']);
+            unset($data['company_id']);
+            $email_id     = $this->EmailBlast_model->create($data);
+            if( $email_id > 0 ){
+                $emailSendTo = $this->EmailBlastSendTo_model->getAllByEmailBlastId($post['emailid']);
+                foreach($emailSendTo as $st){
+                    $data_send_to = (array)$st;
+                    unset($data_send_to['id']);
+                    $data_send_to['email_blast_id'] = $email_id;
+
+                    $smsBlastSendTo = $this->EmailBlastSendTo_model->create($data_send_to);
+                }
+                
+                $is_success = 1;
+                $msg = 'Email Campaign was successfully updated';
+            }else{
+                $msg = 'Record not found';
+            }
+            
+        }else{
+            $msg = 'Record not found';
+        }
+        $json_data = [
+            'email_id' => $email_id,
+            'is_success' => $is_success,
+            'msg' => $msg
+        ]; 
+
+        echo json_encode($json_data);
+    }
+
+    public function ajax_close_campaign(){
+        $is_success = 0;
+        $msg = '';
+
+        $post     = $this->input->post(); 
+        $emailBlast = $this->EmailBlast_model->getById($post['emailid']);
+        if( $emailBlast ){
+            $data = ['status' => $this->EmailBlast_model->statusClosed()];
+            $this->EmailBlast_model->updateEmailBlast($post['smsid'], $data);
+
+            $is_success = 1;
+            $msg = 'Email Campaign was successfully updated';
+        }else{
+            $msg = 'Record not found';
+        }
+        $json_data = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ]; 
+
+        echo json_encode($json_data);
     }
 }
 
