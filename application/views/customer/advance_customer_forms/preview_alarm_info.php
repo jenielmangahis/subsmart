@@ -10,7 +10,7 @@
                 <label for="">Monitoring Company</label>
             </div>
             <div class="col-md-6">
-                ADT
+                -
             </div>
         </div>
         <div class="row form_line">
@@ -18,7 +18,7 @@
                 <label for="">Monitoring ID</label>
             </div>
             <div class="col-md-6">
-                Data
+                -
             </div>
         </div>
 
@@ -35,7 +35,7 @@
                 <label for="">Account Number</label>
             </div>
             <div class="col-md-6">
-                Data
+                -
             </div>
         </div>
         <div class="row form_line">
@@ -43,7 +43,7 @@
                 <label for="">Abort/Password Code</label>
             </div>
             <div class="col-md-6">
-                Data
+                -
             </div>
         </div>
         <div class="row form_line">
@@ -51,7 +51,7 @@
                 <label for="">Installer Code</label>
             </div>
             <div class="col-md-6">
-                Data
+                -
             </div>
         </div>
         <div class="row form_line">
@@ -59,7 +59,7 @@
                 <label for="">Monitoring Confirm #</label>
             </div>
             <div class="col-md-6">
-                Data
+                -
             </div>
         </div>
         <div class="row form_line">
@@ -67,7 +67,7 @@
                 <label for="">Signal Confirm #</label>
             </div>
             <div class="col-md-6">
-                Data
+                -
             </div>
         </div>
 
@@ -76,7 +76,7 @@
                 <label for="">Panel Type</label>
             </div>
             <div class="col-md-6">
-                AlarmNet
+                -
             </div>
         </div>
         <div class="row form_line">
@@ -92,7 +92,7 @@
                 <label for="">Warranty Type</label>
             </div>
             <div class="col-md-6">
-                Non
+                None
             </div>
         </div>
         <hr>
@@ -101,7 +101,7 @@
                 <label for="">Dealer</label>
             </div>
             <div class="col-md-6">
-                Data
+                -
             </div>
         </div>
         <div class="row form_line">
@@ -109,7 +109,7 @@
                 <label for=""> Login </label>
             </div>
             <div class="col-md-6">
-                Data
+                -
             </div>
         </div>
         <div class="row form_line">
@@ -117,7 +117,7 @@
                 <label for="">Customer ID </label>
             </div>
             <div class="col-md-6">
-                Data
+                -
             </div>
         </div>
         <div class="row form_line">
@@ -125,7 +125,7 @@
                 <label for="">CS Account</label>
             </div>
             <div class="col-md-6">
-                Data
+                -
             </div>
         </div>
     </div>
@@ -175,7 +175,7 @@
                 <label for="">Rebate Check # 1</label>
             </div>
             <div class="col-md-6">
-                <span>Data</span>
+                -
             </div>
         </div>
         <div class="row form_line">
@@ -183,7 +183,7 @@
                 <label for="">Amount $</label>
             </div>
             <div class="col-md-6">
-                <span>Data</span>
+                -
             </div>
         </div>
         <div class="row form_line">
@@ -191,7 +191,7 @@
                 <label for="">Rebate Check # 2</label>
             </div>
             <div class="col-md-6">
-                <span>Data</span>
+                -
             </div>
         </div>
         <div class="row form_line">
@@ -199,7 +199,7 @@
                 <label for="">Amount $</label>
             </div>
             <div class="col-md-6">
-                <span>Data</span>
+                -
             </div>
         </div>
         <div class="row form_line">
@@ -207,7 +207,7 @@
                 <label for="">Activation Fee</label>
             </div>
             <div class="col-md-6">
-                <span>Data</span>
+                -
                 <span>Check</span>
             </div>
         </div>
@@ -225,7 +225,7 @@
                 <label for="">Rep Commission </label>
             </div>
             <div class="col-md-6">
-                Data
+                -
             </div>
         </div>
         <div class="row form_line">
@@ -233,7 +233,7 @@
                 <label for="">Rep Upfront Pay</label>
             </div>
             <div class="col-md-6">
-                Data
+                -
             </div>
         </div>
         <div class="row form_line">
@@ -241,7 +241,7 @@
                 <label for="">Rep Tiered Upront Bonus</label>
             </div>
             <div class="col-md-6">
-                Data
+                -
             </div>
         </div>
         <div class="row form_line">
@@ -249,7 +249,7 @@
                 <label for="">Rep Tiered Holdfund</label>
             </div>
             <div class="col-md-6">
-                Data
+                -
             </div>
         </div>
 
@@ -258,7 +258,7 @@
                 <label for="">Rep Deduction Total</label>
             </div>
             <div class="col-md-6">
-                Data
+                -
             </div>
         </div>
 
@@ -267,7 +267,7 @@
                 <label for="">Tech Commission </label>
             </div>
             <div class="col-md-6">
-                Data
+                -
             </div>
         </div>
         <div class="row form_line">
@@ -275,7 +275,7 @@
                 <label for="tech_upfront_pay">Tech Upfront Pay </label>
             </div>
             <div class="col-md-6">
-                Data
+                -
             </div>
         </div>
 
@@ -284,7 +284,7 @@
                 <label for="">Tech Deduction Total</label>
             </div>
             <div class="col-md-6">
-                Data
+                -
             </div>
         </div>
 
@@ -295,7 +295,7 @@
                 <label for="">Rep Hold Fund Charge Back </label>
             </div>
             <div class="col-md-4">
-                Data
+                -
             </div>
         </div>
         <div class="row form_line">
@@ -303,7 +303,7 @@
                 <label for="">Rep Payroll Charge Back </label>
             </div>
             <div class="col-md-4">
-                Data
+                -
             </div>
         </div>
         <hr>
@@ -321,7 +321,7 @@
                 <label for="">Points Included</label>
             </div>
             <div class="col-md-6">
-                10
+               -
             </div>
         </div>
         <div class="row form_line">
@@ -329,7 +329,7 @@
                 <label for="">Price Per Point </label>
             </div>
             <div class="col-md-6">
-                20
+               -
             </div>
         </div>
         <hr>
@@ -338,7 +338,7 @@
                 <label for="">Purchase Price </label>
             </div>
             <div class="col-md-6">
-                Data
+                -
             </div>
         </div>
         <div class="row form_line">
@@ -346,7 +346,7 @@
                 <label for="">Purchase Multiple</label>
             </div>
             <div class="col-md-6">
-                Data
+                -
             </div>
         </div>
         <div class="row form_line">
@@ -354,7 +354,7 @@
                 <label for="">Purchase Discount </label>
             </div>
             <div class="col-md-6">
-                Data
+                -
             </div>
         </div>
         <hr>
@@ -363,7 +363,7 @@
                 <label for="">Equipment Cost</label>
             </div>
             <div class="col-md-6">
-                20
+                -
             </div>
         </div>
         <div class="row form_line">
@@ -371,7 +371,7 @@
                 <label for="">Labor Cost</label>
             </div>
             <div class="col-md-6">
-                Data
+                -
             </div>
         </div>
         <div class="row form_line">
@@ -379,7 +379,7 @@
                 <label for="">Job Profit</label>
             </div>
             <div class="col-md-6">
-                20%
+                -
             </div>
         </div>
         <br>
@@ -388,9 +388,9 @@
                 <label for="">Shareable Url Link</label>
             </div>
             <div class="col-md-6">
-                Data
+                -
                 <br>
-                <a  id="exportCustomers"><span class="fa fa-share"></span> Share</a>
+                <a href="<?= base_url('customer/preview/').$this->uri->segment(3) ?>"  id="exportCustomers"><span class="fa fa-share"></span> Share</a>
             </div>
         </div>
     </div>

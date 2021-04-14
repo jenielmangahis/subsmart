@@ -1651,6 +1651,7 @@ class Workcalender extends MY_Controller
                 'type' => 'events',
                 'event_title' => get_customer_by_id($u->customer_id)->contact_name,
                 'event_type' => $u->event_type,
+                'event_tag' => $u->event_tag,
                 'event_number' => $u->event_number,
                 'event_description' => $u->event_description,
                 'start_date' => date('F j, Y', strtotime($u->start_date)),

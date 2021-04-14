@@ -16,12 +16,12 @@ class Cron_Jobs_Controller extends MY_Controller
         $date_from = date("Y-m-d", strtotime('monday this week', strtotime(date('Y-m-d'))));
         $date_to = date('Y-m-d');
         $filename = $date_from . " to " . $date_to . ' ' . $company_id . '.csv';
-        $time_sheet_storage = $this->generate_timelogs_csv($date_from, $date_to, $filename, $company_id);
+        $time_sheet_storage = $this->generate_timelogs($date_from, $date_to, $filename, $company_id);
+        $this->generate_timelogs_csv($time_sheet_storage, $filename);
         return array($filename, $date_from, $time_sheet_storage);
     }
-    public function timelogs_csv_email_sender($receiver, $company_name, $filename, $date_from)
+    public function timelogs_csv_email_sender($receiver, $company_name, $filename, $date_from, $FName, $business_name, $file_info)
     {
-        $date_from = date('m-d-Y', strtotime($date_from));
         $server = MAIL_SERVER;
         $port = MAIL_PORT;
         $username = MAIL_USERNAME;
@@ -47,12 +47,16 @@ class Cron_Jobs_Controller extends MY_Controller
         //get job data
 
         $this->page_data['company_name'] = $company_name;
-        $this->page_data['from'] = $date_from;
+        $this->page_data['date_from'] = $date_from;
+        $this->page_data['business_name'] = $business_name;
+        $this->page_data['FName'] = $FName;
+        $this->page_data['file_info'] = $file_info;
         $this->page_data['file_link'] = base_url() . '/timesheet/timelogs/' . $filename;
+        $mail->IsHTML(true);
         $content = $this->load->view('users/timesheet/emails/weekly_timelogs_report', $this->page_data, TRUE);
-        $mail->Body = 'Lez go';
-        $mail->MsgHTML($content);
-        $mail->AddAttachment(base_url() . '/timesheet/timelogs/' . $filename);
+        $mail->AddEmbeddedImage(base_url('assets/dashboard/images/logo.png'), 'logo_2u', 'logo.png');
+        $mail->Body =  $content;
+        // $mail->MsgHTML($content);
         $mail->addAddress($receiver);
         $mail->Send();
     }
@@ -62,7 +66,7 @@ class Cron_Jobs_Controller extends MY_Controller
         $email_sent_to = array();
         foreach ($busnesses as $business) {
             $file_info = $this->timelogs_csv_file_setter($business->company_id);
-            $this->timelogs_csv_email_sender($business->business_email, $business->business_name, $file_info[0], $file_info[1]);
+            // $this->timelogs_csv_email_sender($business->business_email, $business->business_name, $file_info[0], $file_info[1]);
 
             $email_sent_to[] = array($business->business_email, $business->business_name);
             $busness_admins = $this->timesheet_model->get_all_business_admins($business->company_id);
@@ -75,7 +79,7 @@ class Cron_Jobs_Controller extends MY_Controller
                     }
                 }
                 if (!$received) {
-                    $this->timelogs_csv_email_sender($admin->email, $business->business_name, $file_info[0], $file_info[1]);
+                    // $this->timelogs_csv_email_sender($admin->email, $business->business_name, $file_info[0], $file_info[1]);
                     $email_sent_to[] = array($admin->email, $business->business_name);
                 }
             }
@@ -83,13 +87,14 @@ class Cron_Jobs_Controller extends MY_Controller
     }
     public function cronjob_tester()
     {
+        // echo base_url('assets/dashboard/images/logo.png');
         $busnesses = $this->timesheet_model->get_all_businesses();
         $email_sent_to = array();
         // $file_info = $this->timelogs_csv_file_setter(1);
 
         // var_dump($file_info);
         foreach ($busnesses as $business) {
-            // $file_info = $this->timelogs_csv_file_setter($business->company_id);
+            $file_info = $this->timelogs_csv_file_setter($business->company_id);
             // $this->timelogs_csv_email_sender($business->business_email, $business->business_name, $file_info[0], $file_info[1]);
 
             $email_sent_to[] = array($business->business_email, $business->business_name);
@@ -104,19 +109,20 @@ class Cron_Jobs_Controller extends MY_Controller
                 }
                 if (!$received) {
                     if ($admin->email == "pintonlou@gmail.com") {
-                        // $file_info = $this->timelogs_csv_email_sender($admin->email, $business->business_name . " This is a Tester", $file_info[0], $file_info[1]);
-                        $this->page_data['business_name'] = $business->business_name;
-                        $this->page_data['FName'] = $admin->FName;
+                        $date_from = date("M d", strtotime('monday this week', strtotime(date('Y-m-d'))));
+                        $this->timelogs_csv_email_sender($admin->email, $business->business_name . "", $file_info[0], $date_from, $admin->FName, $business->business_name, $file_info);
+                        // $this->page_data['business_name'] = $business->business_name;
+                        // $this->page_data['FName'] = $admin->FName;
                     }
                     // $this->timelogs_csv_email_sender($admin->email, $business->business_name, $file_info[0], $file_info[1]);
                     $email_sent_to[] = array($admin->email, $business->business_name);
                 }
             }
         }
-        $date_from = date("Y-m-d", strtotime('monday this week', strtotime(date('Y-m-d'))));
+        // $date_from = date("Y-m-d", strtotime('monday this week', strtotime(date('Y-m-d'))));
         // $this->page_data['file_info'] = $file_info;
-        $this->page_data['date_from'] = $date_from;
-        $content = $this->load->view('users/timesheet/emails/weekly_timelogs_report', $this->page_data);
+        // $this->page_data['date_from'] = $date_from;
+        // $content = $this->load->view('users/timesheet/emails/weekly_timelogs_report', $this->page_data);
     }
     public function cronjob_pdf_tester()
     {
@@ -165,41 +171,161 @@ class Cron_Jobs_Controller extends MY_Controller
     */
         $this->load->view('users/timesheet/emails/pdfreport');
     }
-    public function generate_timelogs_csv($date_from, $date_to, $filename, $company_id)
-    {
 
-
-        // file name 
+    public function generate_timelogs_csv($timehseet_storage, $filename)
+    { // file name 
         $file = fopen(APPPATH . '../timesheet/timelogs/' . $filename, 'wb');
+        $header = array(
+            "Employee",
+            "Date (UTC)",
+            "Role",
+            "Wage",
+            "Time Card (UTC)",
+            "Act.& Sched Diff.",
+            "Total Paid",
+            "Regular",
+            "Unpaid Breaks",
+            "Overtime",
+            "Est. Wages",
+            "Notes",
+        );
+        // $file = fopen('php://output', 'w');
+        fputcsv($file, $header);
 
+        $id_running = -1;
+        $started = false;
+        $table = '';
+        $time_card_ctr = 0;
+        $act_dif_total = 0;
+        $total_paid = 0;
+        $total_regular = 0;
+        $total_overtime = 0;
+        $total_wage = 0;
+        $total_est_wage = 0;
+        $overall_act_dif_total = 0;
+        $overall_total_paid = 0;
+        $overall_total_regular = 0;
+        $overall_total_overtime = 0;
+        $overall_total_wage = 0;
+        $overall_total_est_wage = 0;
+        $overall_time_card_ctr = 0;
+        $name = '';
+        for ($i = 0; $i < count($timehseet_storage); $i++) {
+            $data = array();
+            if ($id_running != $timehseet_storage[$i][0]) {
+                if (!$started) {
+                    $started = true;
+                    $name =  $timehseet_storage[$i][1];
+                } else {
+                    $data[] = 'Total for ' . $timehseet_storage[$i - 1][1];
+                    $data[] = '';
+                    $data[] = '';
+                    $data[] = $total_wage;
+                    $data[] = $time_card_ctr . ($time_card_ctr > 1 ? ' Time cards' : ' Time card');
+                    $data[] = $act_dif_total;
+                    $data[] = $total_paid;
+                    $data[] = $total_regular;
+                    $data[] = 0.00;
+                    $data[] = $total_overtime;
+                    $data[] = $total_est_wage;
+                    $data[] = '';
+                    fputcsv($file, $data);
+                    $data = array();
+                }
+                $time_card_ctr = 0;
+                $act_dif_total = 0;
+                $total_paid = 0;
+                $total_regular = 0;
+                $total_overtime = 0;
+                $total_wage = 0;
+                $total_est_wage = 0;
+                $id_running = $timehseet_storage[$i][0];
+            }
+            $clockout = ($timehseet_storage[$i][7] == '' ? '' : date("M d h:i A", strtotime($timehseet_storage[$i][7])));
+            if ($timehseet_storage[$i][7] == '') {
+                $actual_vs_expected = '-';
+                $expected = 8;
+            } else {
+                $actual_vs_expected = $timehseet_storage[$i][10] == '' ?  8 - round($timehseet_storage[$i][18], 2) . "" : "0.00";
+            }
+            $regular_hours = ($timehseet_storage[$i][12] == '' ? 8 : $timehseet_storage[$i][12]);
+            $paid_hours = ($timehseet_storage[$i][17] == 'Approved' ? $timehseet_storage[$i][18] : round($regular_hours, 2));
+
+            $est_wage = 0;
+            if ($timehseet_storage[$i][21] == "hourly") {
+                $est_wage = round($paid_hours * $timehseet_storage[$i][20], 2);
+            } else {
+                $est_wage = round(($timehseet_storage[$i][20] / $regular_hours) * $paid_hours, 2);
+            }
+            $data[] = $timehseet_storage[$i][1];
+            $data[] = date("D M d", strtotime($timehseet_storage[$i][3]));
+            $data[] = $timehseet_storage[$i][2];
+            $data[] = $timehseet_storage[$i][20];
+            $data[] = date("h:i A", strtotime($timehseet_storage[$i][6])) . ' - ' . ($timehseet_storage[$i][7] == '' ? 'No clockout' : date("h:i A", strtotime($timehseet_storage[$i][7])));
+            $data[] = $actual_vs_expected;
+            $data[] = $paid_hours;
+            $data[] = $regular_hours;
+            $data[] = 0.00;
+            $data[] = ($timehseet_storage[$i][17] == 'Approved' ? $timehseet_storage[$i][16] : 0.00);
+            $data[] = $est_wage;
+            $data[] = $timehseet_storage[$i][19];
+            fputcsv($file, $data);
+            $data = array();
+            $time_card_ctr++;
+            $act_dif_total += $timehseet_storage[$i][7] == '' ? 0 : $actual_vs_expected;
+            $total_regular += ($timehseet_storage[$i][12] == '' ? 8 : $timehseet_storage[$i][12]);
+            $total_paid += $paid_hours;
+            $total_overtime += ($timehseet_storage[$i][17] == 'Approved' ? $timehseet_storage[$i][16] : 0.00);
+            $total_wage += $timehseet_storage[$i][20];
+            $total_est_wage += $est_wage;
+            $overall_act_dif_total += $timehseet_storage[$i][7] == '' ? 0 : $actual_vs_expected;
+            $overall_total_regular += ($timehseet_storage[$i][12] == '' ? 8 : $timehseet_storage[$i][12]);
+            $overall_total_paid += $paid_hours;
+            $overall_total_overtime += ($timehseet_storage[$i][17] == 'Approved' ? $timehseet_storage[$i][16] : 0.00);
+            $overall_total_wage += $timehseet_storage[$i][20];
+            $overall_total_est_wage += $est_wage;
+            $overall_time_card_ctr += $time_card_ctr;
+            if ($i == count($timehseet_storage) - 1) {
+                $data[] = 'Total for ' . $timehseet_storage[$i][1];
+                $data[] = '';
+                $data[] = '';
+                $data[] = $total_wage;
+                $data[] = $time_card_ctr . ($time_card_ctr > 1 ? ' Time cards' : ' Time card');
+                $data[] = $act_dif_total;
+                $data[] = $total_paid;
+                $data[] = $total_regular;
+                $data[] = 0.00;
+                $data[] = $total_overtime;
+                $data[] = $total_est_wage;
+                $data[] = '';
+                fputcsv($file, $data);
+                $data = array();
+            }
+        }
+        $data = array();
+        $data[] = 'Total for this Pay Period';
+        $data[] = '';
+        $data[] = '';
+        $data[] =  $overall_total_wage;
+        $data[] = $overall_time_card_ctr . ($overall_time_card_ctr > 1 ? ' Time cards' : ' Time card');
+        $data[] = $overall_act_dif_total;
+        $data[] = $overall_total_paid;
+        $data[] = $overall_total_regular;
+        $data[] = 0.00;
+        $data[] = $overall_total_overtime;
+        $data[] = $overall_total_est_wage;
+        $data[] = '';
+        fputcsv($file, $data);
+    }
+    public function generate_timelogs($date_from, $date_to, $filename, $company_id)
+    {
         $date_from = $this->datetime_zone_converter($date_from . " 00:00:00", "UTC", "UTC");
         $date_to = $this->datetime_zone_converter($date_to . " 24:59:00", "UTC", "UTC");
 
         $attendances = $this->timesheet_model->get_all_attendance($date_from, $date_to, $company_id);
 
-        // $file = fopen('php://output', 'w');
-        $header = array(
-            "Employee",
-            "Title",
-            "Shift Date in UTC",
-            "Shift Start in UTC",
-            "Shift End in UTC",
-            "Clock In in UTC",
-            "Clock Out in UTC",
-            "Break in in UTC",
-            "Break out in UTC",
-            "Expected Shift Duration",
-            "Expected Break Duration",
-            "Expected Work Hours",
-            "Worked Hours",
-            "Break Duration",
-            "Late in minutes",
-            "Overtime",
-            "OT Status",
-            "Payable Hours",
-            "Notes"
-        );
-        fputcsv($file, $header);
+
+
         $time_sheet_storage = array();
         foreach ($attendances as $attendance) {
             $data = array();
@@ -272,6 +398,16 @@ class Cron_Jobs_Controller extends MY_Controller
                     $breakout = $newdate;
                 }
             }
+            $pay_rate = 0;
+            $pay_type = '';
+            $employee_pay_details = $this->timesheet_model->get_employee_pay_details($attendance->user_id);
+            foreach ($employee_pay_details as $pay_detail) {
+                if ($expected_work_hours == '') {
+                    $expected_work_hours = $pay_detail->hours_per_day;
+                }
+                $pay_rate = $pay_detail->pay_rate;
+                $pay_type = $pay_detail->pay_type;
+            }
             $data[] = $checkin; //6
             $data[] = $checkout; //7
             $data[] = $breakin; //8
@@ -321,11 +457,13 @@ class Cron_Jobs_Controller extends MY_Controller
 
             $data[] = $payable_hours; //18
             $data[] = $attendance->notes; //19
-            fputcsv($file, $data);
+            $data[] = $pay_rate; //20
+            $data[] = $pay_type; //21
             $time_sheet_storage[] = $data;
         }
         return $time_sheet_storage;
     }
+
     public function get_differenct_of_dates($date_start, $date_end)
     {
         $start = new DateTime($date_start);

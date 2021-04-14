@@ -21,6 +21,12 @@ defined('BASEPATH') or exit('No direct script access allowed');
         padding-top:100px !important;
     }
     .pointer {cursor: pointer;}
+
+    .highlight{
+    background-color:#CAA1FC;
+    color:red;
+    padding:12px;
+}
    </style>
     <!-- page wrapper start -->
     <div wrapper__section style="padding-left:1%;padding-top:2.5%;">
@@ -555,7 +561,11 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <div class="form-group col-md-4">
                                     <label for="job_type">Amount</label><small class="help help-sm"> ( $ )</small>
                                     <input type="text" class="form-control" name="payment_amount" id="payment_amount"  />
-                                </div>                                       
+                                </div>
+                                <div class="form-group col-md-4" id="cash_area" style="display:none;">
+                                                <br><br>
+                                      <input type="checkbox" id="collected_checkbox"> <b style="font-size:14px;" id="collected_checkbox_label"> Cash collected already </b>          
+                                </div>                                      
                             </div>
                             <div id="check_area" style="display:none;">
                                 <div class="row">                   
@@ -1593,6 +1603,13 @@ $(document).ready(function(){
 // // roomOcc.push(label);
 
 // });
+$(function () {
+    $('#collected_checkbox').click(function() {
+        // alert('yes');
+        var actualTime = "";
+        $('#collected_checkbox_label').toggleClass("highlight");
+    });
+});
 
 $('.mytxtc').each(function(e){
         $.ajaxSetup({
@@ -1887,6 +1904,7 @@ document.getElementById("payment_method").onchange = function() {
     if (this.value == 'Cash') {
         // alert('cash');
 		// $('#exampleModal').modal('toggle');
+        $('#cash_area').show();
         $('#check_area').hide();
         $('#credit_card').hide();
         $('#debit_card').hide();
@@ -1903,6 +1921,7 @@ document.getElementById("payment_method").onchange = function() {
 	
     else if(this.value == 'Check'){
         // alert('Check');
+        $('#cash_area').hide();
         $('#check_area').show();
         $('#credit_card').hide();
         $('#debit_card').hide();
@@ -1918,6 +1937,7 @@ document.getElementById("payment_method").onchange = function() {
     }
     else if(this.value == 'Credit Card'){
         // alert('Credit card');
+        $('#cash_area').hide();
         $('#check_area').hide();
         $('#credit_card').show();
         $('#debit_card').hide();
@@ -1933,6 +1953,7 @@ document.getElementById("payment_method").onchange = function() {
     }
     else if(this.value == 'Debit Card'){
         // alert('Credit card');
+        $('#cash_area').hide();
         $('#check_area').hide();
         $('#credit_card').hide();
         $('#debit_card').show();
@@ -1948,6 +1969,7 @@ document.getElementById("payment_method").onchange = function() {
     }
     else if(this.value == 'ACH'){
         // alert('Credit card');
+        $('#cash_area').hide();
         $('#check_area').hide();
         $('#credit_card').hide();
         $('#debit_card').hide();
@@ -1963,6 +1985,7 @@ document.getElementById("payment_method").onchange = function() {
     }
     else if(this.value == 'Venmo'){
         // alert('Credit card');
+        $('#cash_area').hide();
         $('#check_area').hide();
         $('#credit_card').hide();
         $('#debit_card').hide();
@@ -1978,6 +2001,7 @@ document.getElementById("payment_method").onchange = function() {
     }
     else if(this.value == 'Paypal'){
         // alert('Credit card');
+        $('#cash_area').hide();
         $('#check_area').hide();
         $('#credit_card').hide();
         $('#debit_card').hide();
@@ -1993,6 +2017,7 @@ document.getElementById("payment_method").onchange = function() {
     }
     else if(this.value == 'Square'){
         // alert('Credit card');
+        $('#cash_area').hide();
         $('#check_area').hide();
         $('#credit_card').hide();
         $('#debit_card').hide();
@@ -2008,6 +2033,7 @@ document.getElementById("payment_method").onchange = function() {
     }
     else if(this.value == 'Warranty Work'){
         // alert('Credit card');
+        $('#cash_area').hide();
         $('#check_area').hide();
         $('#credit_card').hide();
         $('#debit_card').hide();
@@ -2023,6 +2049,7 @@ document.getElementById("payment_method").onchange = function() {
     }
     else if(this.value == 'Home Owner Financing'){
         // alert('Credit card');
+        $('#cash_area').hide();
         $('#check_area').hide();
         $('#credit_card').hide();
         $('#debit_card').hide();
@@ -2038,6 +2065,7 @@ document.getElementById("payment_method").onchange = function() {
     }
     else if(this.value == 'e-Transfer'){
         // alert('Credit card');
+        $('#cash_area').hide();
         $('#check_area').hide();
         $('#credit_card').hide();
         $('#debit_card').hide();
@@ -2053,6 +2081,7 @@ document.getElementById("payment_method").onchange = function() {
     }
     else if(this.value == 'Other Credit Card Professor'){
         // alert('Credit card');
+        $('#cash_area').hide();
         $('#check_area').hide();
         $('#credit_card').hide();
         $('#debit_card').hide();
@@ -2068,6 +2097,7 @@ document.getElementById("payment_method").onchange = function() {
     }
     else if(this.value == 'Other Payment Type'){
         // alert('Credit card');
+        $('#cash_area').hide();
         $('#check_area').hide();
         $('#credit_card').hide();
         $('#debit_card').hide();

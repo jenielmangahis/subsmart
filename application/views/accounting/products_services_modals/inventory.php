@@ -56,7 +56,7 @@
                                     </div>
                                     <div class="row">
                                         <div class="col-sm-12">
-                                            <div class="form-group" style="margin-bottom: 0 !important">
+                                            <div class="form-group" style="margin-bottom: 12px !important">
                                                 <label for="category">Category</label>
                                                 <select name="category" id="category" class="form-control">
                                                     <option value="">&nbsp;</option>
@@ -64,6 +64,12 @@
                                                         <option value="<?=$category->item_categories_id?>"><?=$category->name?></option>
                                                     <?php endforeach; ?>
                                                 </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-12">
+                                            <div class="form-group form-check" style="margin-bottom: 0 !important">
+                                                <input type="checkbox" name="rebate_item" id="rebate-item" class="form-check-input" value="1">
+                                                <label for="rebate-item" class="form-check-lable">Rebate Item</label>
                                             </div>
                                         </div>
                                     </div>

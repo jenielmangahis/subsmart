@@ -406,6 +406,12 @@ class Workorder_model extends MY_Model
     public function update_tc($data)
     {
         extract($data);
+
+        if($id == NULL){
+            $vendor = $this->db->insert('terms_and_conditions', $data);
+            $insert_id = $this->db->insert_id();
+            return  $insert_id;
+        }else{
         // $vendor = $this->db->update('custom_fields', $data);
         //           $this->db->where('id', $data['id']);
 	    // $insert = $this->db->insert_id();
@@ -413,6 +419,7 @@ class Workorder_model extends MY_Model
         $this->db->where('id', $id);
         $this->db->update('terms_and_conditions', array('content' => $content));
         return $data;
+        }
     }
 
     public function update_header_f($data)
@@ -430,6 +437,11 @@ class Workorder_model extends MY_Model
     public function update_tu($data)
     {
         extract($data);
+        if($id == NULL){
+            $vendor = $this->db->insert('terms_of_use', $data);
+            $insert_id = $this->db->insert_id();
+            return  $insert_id;
+        }else{
         // $vendor = $this->db->update('custom_fields', $data);
         //           $this->db->where('id', $data['id']);
 	    // $insert = $this->db->insert_id();
@@ -437,6 +449,30 @@ class Workorder_model extends MY_Model
         $this->db->where('id', $id);
         $this->db->update('terms_of_use', array('content' => $content));
         return $data;
+        }
+    }
+
+    public function getworkorderList()
+    {
+        $company_id = logged('company_id');
+
+        $this->db->select('workorders.* , acs_profile.first_name,  acs_profile.last_name, acs_profile.middle_name, acs_profile.prof_id');
+		// $this->db->from('workorders.* , acs_profile.first_name,  acs_profile.last_name, acs_profile.middle_name, acs_profile.prof_id');
+        $this->db->from('workorders');
+        $this->db->join('acs_profile', 'workorders.customer_id  = acs_profile.prof_id');
+		$this->db->where('workorders.company_id', $company_id);
+        $this->db->order_by('id', 'ASC');
+        $query = $this->db->get();
+        return $query->result();
+    }
+
+    public function getById($id)
+    {
+        $this->db->select('*');
+		$this->db->from('workorders');
+		$this->db->where('id', $id);
+        $query = $this->db->get();
+        return $query->row();
     }
 }
 

@@ -83,11 +83,26 @@ class Job extends MY_Controller
 
         // get all job tags
         $get_job_tags = array(
+            'where' => array(
+                'company_id' => logged('company_id')
+            ),
             'table' => 'job_tags',
             'select' => 'id,name',
         );
         $this->page_data['tags'] = $this->general->get_data_with_param($get_job_tags);
-        //echo logged('company_id');
+
+        $get_job_types = array(
+            'where' => array(
+                'company_id' => logged('company_id')
+            ),
+            'table' => 'job_types',
+            'select' => 'id,title',
+            'order' => array(
+                'order_by' => 'id',
+                'ordering' => 'DESC',
+            ),
+        );
+        $this->page_data['job_types'] = $this->general->get_data_with_param($get_job_types);
 
         // get color settings
         $get_color_settings = array(
@@ -99,19 +114,10 @@ class Job extends MY_Controller
         );
         $this->page_data['color_settings'] = $this->general->get_data_with_param($get_color_settings);
 
-        $get_job_types = array(
-            'table' => 'job_types',
-            'select' => 'id,title',
-            'order' => array(
-                'order_by' => 'id',
-                'ordering' => 'DESC',
-            ),
-        );
-        $this->page_data['job_types'] = $this->general->get_data_with_param($get_job_types);
 
         $get_company_info = array(
             'where' => array(
-                'id' => logged('company_id'),
+                'company_id' => logged('company_id'),
             ),
             'table' => 'business_profile',
             'select' => 'business_phone,business_name',
@@ -267,7 +273,7 @@ class Job extends MY_Controller
                 'company_id' => logged('company_id'),
             ),
             'table' => 'business_profile',
-            'select' => 'business_phone,business_name,business_logo,business_email,street,city,postal_code,state',
+            'select' => 'id,business_phone,business_name,business_logo,business_email,street,city,postal_code,state,business_image',
         );
         $this->page_data['company_info'] = $this->general->get_data_with_param($get_company_info,FALSE);
 
@@ -805,7 +811,7 @@ class Job extends MY_Controller
             'select' => '*',
         );
         $job_settings = $this->general->get_data_with_param($get_job_settings);
-        $job_number = $job_settings[0]->job_num_prefix.'-000000'.$job_settings[0]->job_num_next;
+        $job_number = $job_settings[0]->job_num_prefix.' - #000000'.$job_settings[0]->job_num_next;
 
         $jobs_data = array(
             'job_number' => $job_number,

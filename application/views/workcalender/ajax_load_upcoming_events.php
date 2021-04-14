@@ -31,7 +31,7 @@
                   <input type="hidden" id="<?= $e['event_id']; ?>-event-start-date" value="<?= $e['start_date']; ?>" />
                   <input type="hidden" id="<?= $e['event_id']; ?>-event-end-date" value="<?= $e['end_date']; ?>" />
                   <?php if($e['type'] == 'events'){ ?>
-                    <h6 style="color:black;font-weight:700; margin:0;font-size: 14px;text-transform: uppercase;"><?php echo $e['event_number'] . ' : ' . $e['event_type']; ?></h6>
+                    <h6 style="color:black;font-weight:700; margin:0;font-size: 14px;text-transform: uppercase;"><?php echo $e['event_number'] . ' : ' . $e['event_type']. ' - ' . $e['event_tag']; ?></h6>
                   <?php }else{ ?>
                     <h6 style="color:black;font-weight:700; margin:0;font-size: 14px;text-transform: uppercase;"><?php echo $e['event_type']; ?></h6>
                   <?php } ?>

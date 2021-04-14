@@ -53,10 +53,10 @@ function Signing(hash) {
   }
 
   async function renderPDF() {
-    const { document: documentData, fields, recipient } = data;
-    const { name: filename } = documentData;
+    const { fields, recipient, file } = data;
+    const filepath = file.path.replace(/^\/|\/$/g, "");
 
-    const documentUrl = `${prefixURL}/uploads/DocFiles/${filename}`;
+    const documentUrl = `${prefixURL}/${filepath}`;
     const document = await PDFJS.getDocument({ url: documentUrl });
 
     for (let index = 1; index <= document.numPages; index++) {

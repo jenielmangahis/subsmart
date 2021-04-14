@@ -1,6 +1,6 @@
-<h1 class="title text-capitalize">New Template</h1>
+<h1 class="title text-capitalize" id="pageTitle">New Template</h1>
 <form class="form" id="templateForm" style="min-width: 800px;">
-    <div>
+    <div id="templateInfo">
         <h2 class="form__title">Template Name and Description</h2>
 
         <div class="form-group">
@@ -12,11 +12,12 @@
             <label for="description">Description</label>
             <textarea class="form-control" id="description" rows="3" placeholder="Template Description (optional)"></textarea>
         </div>
+
+        <div class="docusignTemplateCreate__spacer"></div>
     </div>
 
-    <div class="docusignTemplateCreate__spacer"></div>
 
-    <div>
+    <div id="templateDocument">
         <h2 class="form__title">Add Document</h2>
         <div class="form-group">
             <div class="d-flex fileupload">
@@ -52,9 +53,9 @@
                 </div>
             </div>
         </div>
-    </div>
 
-    <div class="docusignTemplateCreate__spacer"></div>
+        <div class="docusignTemplateCreate__spacer"></div>
+    </div>
 
     <div>
         <h2 class="form__title">Add Recipients</h2>
@@ -65,9 +66,9 @@
         <button type="button" class="btn btn-sm btn-secondary" id="add-recipient-button">
             <i class="fa fa-user-plus mr-1"></i>Add Recipient
         </button>
-    </div>
 
-    <div class="docusignTemplateCreate__spacer"></div>
+        <div class="docusignTemplateCreate__spacer"></div>
+    </div>
 
     <div>
         <h2 class="form__title">Message to All Recipients</h2>

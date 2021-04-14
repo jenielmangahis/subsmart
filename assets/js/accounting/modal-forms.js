@@ -110,6 +110,12 @@ $(function() {
                 $('div#payrollModal .modal-body .card-body #payDate').datepicker({
                     uiLibrary: 'bootstrap'
                 });
+
+                $('div#payrollModal [name="reg_pay_hours[]"]').each(function() {
+                    $(this).trigger('change');
+                });
+
+                payrollTotal();
             });
             $(this).parent().prepend(`
             <div class="btn-group dropup float-right">
@@ -1254,34 +1260,17 @@ const payrollRowTotal = (el) => {
     var regPayHours = "0.00";
     var commission = "0.00";
 
+
     if(el.hasClass('employee-commission')) {
         commission = parseFloat(el.val());
 
-        if(payRate !== undefined) {
-            regPayHours = $(`div#payrollModal table#payroll-table tbody tr:nth-child(${rowIndex+1}) td:nth-child(4) input`).val();
-            if(regPayHours === "") {
-                regPayHours = 0.00;
-            } else {
-                regPayHours = parseFloat(regPayHours);
-            }
-        }
+        totalPay = parseFloat(commission).toFixed(2);
     } else {
         regPayHours = parseFloat(el.val()).toFixed(2);
 
-        commission = $(`div#payrollModal table#payroll-table tbody tr:nth-child(${rowIndex+1}) td:nth-child(5) input`).val();
-        if(commission === "") {
-            commission = 0.00;
-        } else {
-            commission = parseFloat(commission);
-        }
-
         $(el).parent().parent().children('td:nth-child(7)').children().html(regPayHours);
-    }
 
-    if(payRate !== undefined) {
-        totalPay = parseFloat(parseFloat(regPayHours * parseFloat(payRate)) + commission).toFixed(2);
-    } else {
-        totalPay = parseFloat(commission).toFixed(2);
+        totalPay = parseFloat(parseFloat(regPayHours * parseFloat(payRate))).toFixed(2);
     }
 
     $(el).parent().parent().children('td:last-child()').children('p').children('span.total-pay').html(totalPay);

@@ -32,7 +32,7 @@
     <div class="col-md-2">
         <div class="form-group">
             <label for="payDate">Pay date</label>
-            <input type="text" class="form-control date" name="pay_date" id="payDate" value="<?php echo date('m/d/Y') ?>"/>
+            <input type="text" class="form-control date" name="pay_date" id="payDate" value="<?=$payDate?>"/>
         </div>
     </div>
     <div class="col text-right">
@@ -76,7 +76,7 @@
                                             if($payDetail->pay_type === 'hourly') {
                                                 $payRate = '$<span class="pay-rate">'.number_format(floatval($payDetail->pay_rate), 2, '.', ',').'</span>/hour';
                                             } else if($payDetail->pay_type === 'salary') {
-                                                $payRate = '$<span class="pay-rate">'.number_format(floatval($payDetail->pay_rate), 2, '.', ',').'</span>/'.$empPayDetails->salary_frequency;
+                                                $payRate = '$<span class="pay-rate">'.number_format(floatval($payDetail->pay_rate), 2, '.', ',').'</span>/'.$payDetail->salary_frequency;
                                             } else {
                                                 $payRate = 'Commission only';
                                             }
@@ -86,11 +86,16 @@
                                     <td><?=$payDetail->pay_method === 'direct-deposit' ? 'Direct deposit' : 'Paper check'?></td>
                                     <td>
                                         <?php if($payDetail->pay_type !== 'commission') : ?>
-                                        <input type="number" name="reg_pay_hours[]" step="0.01" class="form-control w-75 float-right text-right regular-pay-hours">
+                                        <?php if($paySchedule->pay_frequency === 'every-week' && $payDetail->pay_type === 'hourly') {
+                                            $regPayHours = 40.00;
+                                        } ?>
+                                        <input type="number" name="reg_pay_hours[]" step="0.01" class="form-control w-75 float-right text-right regular-pay-hours" value="<?=number_format($regPayHours, 2, '.', ',')?>">
                                         <?php endif; ?>
                                     </td>
                                     <td>
+                                        <?php if($payDetail->pay_type === 'commission') : ?>
                                         <input type="number" name="commission[]" step="0.01" class="form-control w-75 float-right text-right employee-commission">
+                                        <?php endif; ?>
                                     </td>
                                     <td>
                                         <input type="text" name="memo[]" class="form-control">

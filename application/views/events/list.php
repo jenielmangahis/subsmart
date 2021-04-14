@@ -76,7 +76,7 @@ add_css(array(
                                             <!--<th class="text-center"><input type="checkbox" class="form-control" id="jobCheckbox" value=""></th>-->
                                             <th scope="col"><strong>Job Number</strong></th>
                                             <th scope="col"><strong>Date</strong></th>
-                                            <th scope="col"><strong>Customer</strong></th>
+                                            <!-- <th scope="col"><strong>Customer</strong></th>-->
                                             <th scope="col"><strong>Employee</strong></th>
                                             <th scope="col"><strong>Amount</strong></th>
                                             <th scope="col"><strong>Event Type</strong></th>
@@ -89,9 +89,9 @@ add_css(array(
                                             <tr>
                                                 <td class="pl-3"><?= $event->event_number; ?></td>
                                                 <td class="pl-3"><?php echo date_format(date_create($event->date_created),"m/d/Y"); ?></td>
-                                                <td class="pl-3"><?= $event->first_name.' '.$event->last_name ; ?></td>
+                                                <!--<td class="pl-3"><?= $event->first_name.' '.$event->last_name ; ?></td>-->
                                                 <td class="pl-3"><?= $event->FName.' '.$event->LName ; ?></td>
-                                                <td class="pl-3">$0.00<?= $event->amount; ?></td>
+                                                <td class="pl-3">$<?= number_format((float)$event->amount,2,'.',',') ; ?></td>
                                                 <td class="pl-3"><?= $event->event_type; ?></td>
                                                 <td class="pl-3"><?= $event->event_tag; ?></td>
                                                 <td class="pl-3">

@@ -225,6 +225,8 @@ if(isset($jobs_data)){
                 $('#invoice_sub_total').html('$' + formatNumber(total));
             }
             $('#invoice_overall_total').html('$' + formatNumber(total));
+            $('#total_event_amount').val('');
+            $('#total_event_amount').val(total);
             $('#pay_amount').val(withCommas);
         }
         //$(".color-scheme").on( 'click', function () {});
@@ -308,7 +310,7 @@ if(isset($jobs_data)){
         });
 
 
-        $("#job_tags").on( 'change', function () {
+        $("#event_tags_option").on( 'change', function () {
             var tag_id = this.value;
             $.ajax({
                 type: "POST",
@@ -318,28 +320,28 @@ if(isset($jobs_data)){
                 {
                     var template_data = JSON.parse(data);
                     $('#job_tags_right').val(template_data.name);
-                    //console.log(data);
+                    console.log(data);
                 }
             });
         });
 
-        $("#job_type_option").on( 'change', function () {
+        $("#event_type_option").on( 'change', function () {
             var type = this.value;
             console.log(type);
             if(type === 'Estimate'){
                 document.getElementById('convert_to_job').style.display = "block";
                 document.getElementById('customer_select').style.display = "block";
                 document.getElementById('customer_maps').style.display = "block";
-                document.getElementById('btn_omw_status').style.display = "block";
+                //document.getElementById('btn_omw_status').style.display = "block";
                 document.getElementById('add_another_invoice').style.display = "block";
             }else{
                 document.getElementById('convert_to_job').style.display = "none";
                 document.getElementById('customer_select').style.display = "none";
                 document.getElementById('customer_maps').style.display = "none";
-                document.getElementById('btn_omw_status').style.display = "none";
+                //document.getElementById('btn_omw_status').style.display = "none";
                 document.getElementById('add_another_invoice').style.display = "none";
             }
-            $('#job_type').val(type);
+            $('#event_type').val(type);
         });
 
         //$('#summernote').summernote('code', '');

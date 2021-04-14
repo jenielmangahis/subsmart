@@ -19,12 +19,14 @@ add_css(array(
         border-color: #999999;
         border-style: Solid;
         border-width: 1px;
+        width: 200px;
     }
     .table_body_customer{
         border-color: #999999;
         border-style: Solid;
         border-width: 1px;
         background-color: #E5EBF2;
+        height: 20px;
     }
 </style>
 <div class="wrapper" role="wrapper">
@@ -37,14 +39,10 @@ add_css(array(
                 <div class="col-md-10">
                     <div class="card">
                         <div class="row ">
-                            <div class="col-md-6">
+                            <div class="col-md-12">
                                 <div style="margin-top: 5px;">
-                                    <b>Account: </b><span> 6436456</span>&nbsp;&nbsp;&nbsp;<b>Online: </b><span> Yes</span>&nbsp;&nbsp;&nbsp;<b>In Service: </b><span> Yes</span>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div style="margin-top: 5px;" class="pull-right">
-                                    <b>Status: </b><span> Installed </span>&nbsp;&nbsp;&nbsp;<b>Equipment: </b><span> Installed </span>&nbsp;&nbsp;&nbsp;<b>Collections: </b><span> </span>
+                                    <b>Account: </b><span> 6436456</span>&nbsp;&nbsp;&nbsp;<b>Online: </b><span> Yes</span>&nbsp;&nbsp;&nbsp;<b>In Service: </b><span> Yes</span> &nbsp;&nbsp;
+                                    <b>Status: </b><span> Installed </span>&nbsp;&nbsp;&nbsp;<b>Equipment: </b><span> Installed </span>&nbsp;&nbsp;&nbsp;<b>Collections: </b><span>Collected </span>
                                 </div>
                             </div>
                         </div>
@@ -112,19 +110,19 @@ add_css(array(
 
                                         </td>
                                     </tr>
-                                    </tbody></table>
+                                    </tbody>
+                                </table>
                             </div>
-
                         </div>
                     </div>
-                    <div class="row ">
+                    <div class="row" style="margin: 0 0 10px 5px;">
                         <a href="#" id="" class="header_link">Print</a> |
                         <a href="<?= base_url('customer/billing/'.$this->uri->segment(3)); ?>" id="more_detail_furnisher" class="header_link">Bill Customer</a> |
                         <a href="#" id="more_detail_furnisher" class="header_link">Inventory Details</a> |
                         <a href="#" id="more_detail_furnisher" class="header_link">Scanned Documents</a> |
                         <a href="#" id="more_detail_furnisher" class="header_link">Credit Report</a> |
-                        <a href="#" id="more_detail_furnisher" class="header_link">Edit Customer</a> |
-                        <a href="#" id="more_detail_furnisher" class="header_link">Customer Dashboard</a>
+                        <a href="<?php echo base_url('customer/add_advance/'.$this->uri->segment(3)); ?>" id="more_detail_furnisher" class="header_link">Edit Customer</a> |
+                        <a href="<?php echo base_url('customer/module'); ?>" id="more_detail_furnisher" class="header_link">Customer Dashboard</a>
                     </div>
                 </div>
             </div>

@@ -74,7 +74,7 @@ if(isset($jobs_data)){
                 if(customer_data.mail_add !== null){
                     $('#cust_address').text(customer_data.mail_add + ' ');
                 }
-
+                $("#customer_preview").attr("href", "/customer/preview/"+customer_data.prof_id);
                 $('#cust_address2').text(customer_data.city + ',' + ' ' + customer_data.state + ' ' + customer_data.zip_code);
                 $('#cust_number').text(customer_data.phone_h);
                 $('#cust_email').text(customer_data.email);
@@ -126,7 +126,8 @@ if(isset($jobs_data)){
                 confirmButtonText: 'Ok'
             }).then((result) => {
                 if (result.value) {
-                    window.location.href='<?= base_url(); ?>job/new_job1/'+$id;
+                    //window.location.href='<?= base_url(); ?>job/new_job1/'+$id;
+                    window.location.href='<?= base_url(); ?>job/';
                 }
             });
         }
