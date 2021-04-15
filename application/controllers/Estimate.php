@@ -266,6 +266,7 @@ class Estimate extends MY_Controller
 
         // $this->page_data['file_selection'] = $this->load->view('modals/file_vault_selection', array(), TRUE);
         $this->load->view('estimate/add', $this->page_data);
+        // print_r($this->page_data['customers']);
     }
 
     public function addoptions()

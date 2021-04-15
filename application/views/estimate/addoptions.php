@@ -66,12 +66,14 @@ defined('BASEPATH') or exit('No direct script access allowed');
                             <div class="row" style="background-color:white;margin-top:-2%;">
                                 <div class="col-md-6">
                                     <label for="customers" class="required"><b>Customer</b></label>
-                                    <select id="customer_id" name="customer_id" data-customer-source="dropdown" class="form-control searchable-dropdown" placeholder="Select">
+                                    <div id="sel-customerdiv">
+                                    <select id="sel-customer" name="customer_id" data-customer-source="dropdown" class="form-control searchable-dropdown" placeholder="Select">
                                         <option value="0">- none -</option>
                                         <?php foreach($customers as $c){ ?>
-                                            <option value="<?= $c->prof_id; ?>"><?= $c->first_name . ' ' . $c->last_name; ?></option>
+                                            <option value="<?= $c->prof_id; ?>"><?= $c->contact_name . '' . $c->first_name . ' ' . $c->last_name; ?></option>
                                         <?php } ?>
                                     </select>
+                                    </div>
                                 </div>
                                 <div class="col-md-3">
                                     <br><br><a class="link-modal-open" href="javascript:void(0)" data-toggle="modal"
@@ -671,18 +673,18 @@ defined('BASEPATH') or exit('No direct script access allowed');
     }
 
 
-    // $(document).ready(function () {
-    //     $('#sel-customer').select2();
-    //     var customer_id = "<?php echo isset($_GET['customer_id']) ? $_GET['customer_id'] : '' ?>";
+    $(document).ready(function () {
+        $('#sel-customer').select2();
+        var customer_id = "<?php echo isset($_GET['customer_id']) ? $_GET['customer_id'] : '' ?>";
 
-    //     /*$('#customers')
-    //         .empty() //empty select
-    //         .append($("<option/>") //add option tag in select
-    //             .val(customer_id) //set value for option to post it
-    //             .text("<?php echo get_customer_by_id($_GET['customer_id'])->contact_name ?>")) //set a text for show in select
-    //         .val(customer_id) //select option of select2
-    //         .trigger("change"); //apply to select2*/
-    // });
+        /*$('#customers')
+            .empty() //empty select
+            .append($("<option/>") //add option tag in select
+                .val(customer_id) //set value for option to post it
+                .text("<?php echo get_customer_by_id($_GET['customer_id'])->contact_name ?>")) //set a text for show in select
+            .val(customer_id) //select option of select2
+            .trigger("change"); //apply to select2*/
+    });
 </script>
 
 <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAlMWhWMHlxQzuolWb2RrfUeb0JyhhPO9c&libraries=places"></script>
@@ -704,7 +706,7 @@ function initialize() {
 
 $(document).ready(function(){
  
-    $('#customer_id').change(function(){
+    $('#sel-customer').change(function(){
     var id  = $(this).val();
     // alert(id);
 
@@ -1745,6 +1747,17 @@ $(document).on("focusout", ".tax_changeoptions2b", function () {
   cal_total_due();
 });
 
+</script>
+
+<script type="text/javascript">
+$(window).on('beforeunload', function(){
+    var c = confirm();
+    if(c){
+        return true;
+    }
+    else
+        return false;
+});
 </script>
 
 <script>

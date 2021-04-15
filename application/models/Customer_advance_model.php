@@ -60,6 +60,13 @@ class Customer_advance_model extends MY_Model {
         $query = $this->db->get();
         return $query->result();
     }
+    public function check_customer($search){
+        $this->db->from("acs_profile");
+        $this->db->select('prof_id');
+        $this->db->where('phone_m LIKE', '%' . $search['phone_m'] . '%');
+        $query = $this->db->get();
+        return $query->row();
+    }
 
     public function get_customer_data($search=array()){
         $cid=logged('company_id');

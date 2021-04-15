@@ -707,6 +707,54 @@ class Invoice extends MY_Controller {
         redirect('invoice/settings');
     }
 
+    public function save_new_customer()
+    {
+        $company_id  = getLoggedCompanyID();
+        $user_id  = getLoggedUserID();
+
+        if($this->input->post('notify_by_email') == 1){
+            $notify_by_email = '1';
+        }else{
+            $notify_by_email = '0';
+        }
+
+        if($this->input->post('notify_by_sms') == 1){
+            $notify_by_sms = '1';
+        }else{
+            $notify_by_sms = '0';
+        }
+
+        $new_data = array(
+            'fk_user_id' => $user_id,
+            'contact_name' => $this->input->post('contact_name'),
+            'email' => $this->input->post('contact_email'),
+            'phone_m' => $this->input->post('contact_mobile'),
+            'phone_h' => $this->input->post('contact_phone'),
+            'business_name' => $this->input->post('business_name'),
+            'customer_type' => $this->input->post('customer_type'),
+
+            'cross_street' => $this->input->post('street_address'),
+            'subdivision' => $this->input->post('suite_unit'),
+            'city' => $this->input->post('city'),
+            'zip_code' => $this->input->post('zip'),
+            'state' => $this->input->post('state'),
+
+            'notify_email' => $notify_by_email,
+            'notify_sms' => $notify_by_sms,
+            'company_id' => $company_id,
+        );
+
+        $addQuery = $this->invoice_model->savenewCustomer($new_data);
+
+        if($addQuery > 0){
+            echo json_encode($addQuery);
+            //$this->session->set_flashdata('Method added');
+        }
+        else{
+            echo json_encode(0);
+        }
+    }
+
 
     public function edit($id)
     {

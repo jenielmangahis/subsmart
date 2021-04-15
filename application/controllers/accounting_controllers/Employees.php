@@ -205,8 +205,6 @@ class Employees extends MY_Controller {
 
     private function get_next_pay_date($paySched)
     {
-        $dateCreated = date('m/d/Y', strtotime($paySched->created_at));
-
         switch($paySched->pay_frequency) {
             case 'every-week' :
                 $day = date('l', strtotime($paySched->next_payday));
@@ -225,52 +223,26 @@ class Employees extends MY_Controller {
                 $nextPayday = $date;
             break;
             case 'twice-month' :
-                if($paySched->next_payday !== null) {
-                    $date = date('m/d/Y', strtotime($paySched->next_payday));
+                $currentMonth = date("m");
+                $currentYear = date("Y");
+                $firstPayday = $paySched->first_payday === '0' ? cal_days_in_month(CAL_GREGORIAN, $currentMonth, $currentYear) : $paySched->first_payday;
+                $secondPayday = $paySched->second_payday === '0' ? cal_days_in_month(CAL_GREGORIAN, $currentMonth, $currentYear) : $paySched->second_payday;
 
-                    if(strtotime($date) <= strtotime(date("m/d/Y"))) {
-                        do {
-                            $payDate = strtotime($date." +15 days");
-                            $date = date('m/d/Y', $payDate);
-                        } while($payDate <= strtotime(date("m/d/Y")));
-                    }
-    
-                    $nextPayday = $date;
+                if(strtotime(date("$currentMonth/$firstPayday/$currentYear")) < strtotime(date("m/d/Y"))) {
+                    $nextPayday = date("m/$secondPayday/Y");
                 } else {
-                    $currentMonth = date("m");
-                    $currentYear = date("Y");
-                    $firstPayday = $paySched->first_payday;
-                    $secondPayday = $paySched->second_payday;
-
-                    if(strtotime(date("m/$firstPayday/Y")) < strtotime(date("m/d/Y"))) {
-                        $nextPayday = date("m/$secondPayday/Y");
-                    } else {
-                        $nextPayday = date("m/$firstPayday/Y");
-                    }
+                    $nextPayday = date("m/$firstPayday/Y");
                 }
             break;
             case 'every-month' :
-                if($paySched->next_payday !== null) {
-                    $date = date('m/d/Y', strtotime($paySched->next_payday));
+                $currentMonth = date("m");
+                $currentYear = date("Y");
+                $firstPayday = $paySched->first_payday === '0' ? cal_days_in_month(CAL_GREGORIAN, $currentMonth, $currentYear) : $paySched->first_payday;
 
-                    if(strtotime($date) <= strtotime(date("m/d/Y"))) {
-                        do {
-                            $payDate = strtotime($date." +1 month");
-                            $date = date('m/d/Y', $payDate);
-                        } while($payDate <= strtotime(date("m/d/Y")));
-                    }
-    
-                    $nextPayday = $date;
+                if(strtotime(date("$currentMonth/$firstPayday/$currentYear")) < strtotime(date("m/d/Y"))) {
+                    $nextPayday = date("m/d/Y", strtotime(date("m/$firstPayday/Y")." +1 month"));
                 } else {
-                    $currentMonth = date("m");
-                    $currentYear = date("Y");
-                    $firstPayday = $paySched->first_payday;
-
-                    if(strtotime(date("m/$firstPayday/Y")) < strtotime(date("m/d/Y"))) {
-                        $nextPayday = date("m/d/Y", strtotime(date("m/$firstPayday/Y")." +1 month"));
-                    } else {
-                        $nextPayday = date("m/$firstPayday/Y");
-                    }
+                    $nextPayday = date("m/$firstPayday/Y");
                 }
             break;
         }
@@ -502,50 +474,30 @@ class Employees extends MY_Controller {
         $post = $this->input->post();
 
         if(in_array($post['pay_frequency'], ['every-week', 'every-other-week'])) {
-            $nextPayDay = date('Y-m-d', strtotime($post['next_payday']));
-            $nextPayPeriodEnd = date('Y-m-d', strtotime($post['next_pay_period_end']));
-        } 
-        else {
+            $data = $this->set_weekly_pay_data($post);
+        } else {
             if($post['custom_schedule'] === 'on') {
-                $nextPayDay = null;
-                $nextPayPeriodEnd = null;
+                if($post['pay_frequency'] === 'every-month') {
+                    $data = $this->set_custom_monthly_schedule($post);
+                } else {
+                    $data = $this->set_custom_twice_month_schedule($post);
+                }
             } else {
-                $nextPayDay = date('Y-m-d', strtotime($post['next_payday']));
-                $nextPayPeriodEnd = date('Y-m-d', strtotime($post['next_pay_period_end']));
+                if($post['pay_frequency'] === 'every-month') {
+                    $data = $this->set_monthly_schedule($post);
+                } else {
+                    $data = $this->set_twice_month_schedule($post);
+                }
             }
         }
 
-        if($post['pay_frequency'] !== 'twice-month') {
-            $post['second_payday'] = null;
-            $post['end_of_second_pay_period'] = null;
-            $post['second_pay_month'] = null;
-            $post['second_pay_day'] = null;
-            $post['second_pay_days_before'] = null;
-        }
+        $data['company_id'] = logged('company_id');
+        $data['use_for_new_employees'] = !isset($post['use_for_new_employees']) ? 0 : 1;
+        $data['status'] = 1;
+        $data['created_at'] = date('Y-m-d H:i:s');
+        $data['updated_at'] = date('Y-m-d H:i:s');
 
-        $data = [
-            'company_id' => logged('company_id'),
-            'pay_frequency' => $post['pay_frequency'],
-            'next_payday' => $nextPayDay,
-            'next_pay_period_end' => $nextPayPeriodEnd,
-            'name' => $post['name'],
-            'first_payday' => $post['custom_schedule'] === 'on' ? $post['first_payday'] : null,
-            'end_of_first_pay_period' => $post['custom_schedule'] === 'on' ? $post['end_of_first_pay_period'] : null,
-            'first_pay_month' => $post['custom_schedule'] === 'on' && $post['end_of_first_pay_period'] === 'end-date' ? $post['first_pay_month'] : null,
-            'first_pay_day' => $post['custom_schedule'] === 'on' && $post['end_of_first_pay_period'] === 'end-date' ? $post['first_pay_day'] : null,
-            'first_pay_days_before' => $post['custom_schedule'] === 'on' && $post['end_of_first_pay_period'] !== 'end-date' ? $post['first_pay_days_before'] : null,
-            'second_payday' => $post['second_payday'],
-            'end_of_second_pay_period' => $post['end_of_second_pay_period'],
-            'second_pay_month' => $post['second_pay_month'],
-            'second_pay_day' => $post['second_pay_day'],
-            'second_pay_days_before' => $post['second_pay_days_before'],
-            'use_for_new_employees' => $post['use_for_new_employees'],
-            'status' => 1,
-            'created_at' => date('Y-m-d H:i:s'),
-            'updated_at' => date('Y-m-d H:i:s')
-        ];
-
-        if($data['use_for_new_employees'] === "1") {
+        if($data['use_for_new_employees'] === 1) {
             $usedPaySched = $this->users_model->getPayScheduleUsed();
             $this->users_model->updateUsedForNewEmp($usedPaySched->id, 0);
         }
@@ -560,6 +512,218 @@ class Employees extends MY_Controller {
         ];
 
         echo json_encode($return);
+    }
+
+    private function set_weekly_pay_data($post)
+    {
+        $nextPayDay = date('Y-m-d', strtotime($post['next_payday']));
+        $nextPayPeriodEnd = date('Y-m-d', strtotime($post['next_pay_period_end']));
+
+        $data = [
+            'pay_frequency' => $post['pay_frequency'],
+            'next_payday' => $nextPayDay,
+            'next_pay_period_end' => $nextPayPeriodEnd,
+            'name' => $post['name'],
+        ];
+
+        return $data;
+    }
+
+    private function set_custom_monthly_schedule($post)
+    {
+        $data = [
+            'pay_frequency' => $post['pay_frequency'],
+            'name' => $post['name'],
+            'first_payday' => $post['first_payday'],
+            'end_of_first_pay_period' => $post['end_of_first_pay_period'],
+            'first_pay_month' => $post['first_pay_month'],
+            'first_pay_day' => $post['first_pay_day'],
+            'first_pay_days_before' => $post['end_of_first_pay_period'] !== 'end-date' ? $post['first_pay_days_before'] : null,
+        ];
+
+        return $data;
+    }
+
+    private function set_custom_twice_month_schedule($post)
+    {
+        $data = [
+            'pay_frequency' => $post['pay_frequency'],
+            'name' => $post['name'],
+            'first_payday' => $post['first_payday'],
+            'end_of_first_pay_period' => $post['end_of_first_pay_period'],
+            'first_pay_month' => $post['end_of_first_pay_period'] === 'end-date' ? $post['first_pay_month'] : null,
+            'first_pay_day' => $post['end_of_first_pay_period'] === 'end-date' ? $post['first_pay_day'] : null,
+            'first_pay_days_before' => $post['end_of_first_pay_period'] !== 'end-date' ? $post['first_pay_days_before'] : null,
+            'second_payday' => $post['second_payday'],
+            'end_of_second_pay_period' => $post['end_of_second_pay_period'],
+            'second_pay_month' => $post['end_of_second_pay_period'] === 'end-date' ? $post['second_pay_month'] : null,
+            'second_pay_day' => $post['end_of_second_pay_period'] === 'end-date' ? $post['second_pay_day'] : null,
+            'second_pay_days_before' => $post['end_of_second_pay_period'] !== 'end-date' ? $post['second_pay_days_before'] : null,
+        ];
+
+        return $data;
+    }
+
+    public function set_monthly_schedule($post)
+    {
+        $nextPayDay = date('Y-m-d', strtotime($post['next_payday']));
+        $nextPayDayMonth = intval(date('m', strtotime($nextPayDay)));
+        $nextPayDayYear = intval(date('Y', strtotime($nextPayDay)));
+        $nextPayDayDate = intval(date('d', strtotime($nextPayDay)));
+
+        $nextPayPeriodEnd = date('Y-m-d', strtotime($post['next_pay_period_end']));
+        $nextPayPeriodEndMonth = intval(date('m', strtotime($nextPayPeriodEnd)));
+        $nextPayPeriodEndYear = intval(date('Y', strtotime($nextPayDay)));
+        $nextPayPeriodEndDate = intval(date('d', strtotime($nextPayDay)));
+
+        if($nextPayDayDate === cal_days_in_month(CAL_GREGORIAN, $nextPayDayMonth, $nextPayDayYear)) {
+            $firstPayDay = 0;
+        } else {
+            $firstPayDay = $nextPayDayDate;
+        }
+
+        if($nextPayPeriodEndDate === cal_days_in_month(CAL_GREGORIAN, $nextPayPeriodEndMonth, $nextPayPeriodEndYear)) {
+            $firstPayDate = 0;
+        } else {
+            $firstPayDate = $nextPayPeriodEndDate;
+        }
+
+        if($nextPayDayMonth === $nextPayPeriodEndMonth) {
+            $firstPayMonth = 'same';
+        } else if($nextPayDayMonth > $nextPayPeriodEndMonth) {
+            $firstPayMonth = 'previous';
+        } else if($nextPayDayMonth < $nextPayPeriodEndMonth) {
+            $firstPayMonth = 'next';
+        }
+
+        $firstPayDaysBefore = null;
+
+        $data = [
+            'pay_frequency' => $post['pay_frequency'],
+            'name' => $post['name'],
+            'first_payday' => $firstPayDay,
+            'end_of_first_pay_period' => 'end-date',
+            'first_pay_month' => $firstPayMonth,
+            'first_pay_day' => $firstPayDate,
+            'first_pay_days_before' => $post['end_of_first_pay_period'] !== 'end-date' ? $post['first_pay_days_before'] : null,
+        ];
+
+        return $data;
+    }
+
+    public function set_twice_month_schedule($post)
+    {
+        $nextPayDay = date('Y-m-d', strtotime($post['next_payday']));
+        $nextPayDayMonth = intval(date('m', strtotime($nextPayDay)));
+        $nextPayDayYear = intval(date('Y', strtotime($nextPayDay)));
+        $nextPayDayDate = intval(date('d', strtotime($nextPayDay)));
+
+        $nextPayPeriodEnd = date('Y-m-d', strtotime($post['next_pay_period_end']));
+        $nextPayPeriodEndMonth = intval(date('m', strtotime($nextPayPeriodEnd)));
+        $nextPayPeriodEndYear = intval(date('Y', strtotime($nextPayDay)));
+        $nextPayPeriodEndDate = intval(date('d', strtotime($nextPayDay)));
+
+        if(intval(date('m', strtotime($nextPayDay.' -15 days'))) < $nextPayDayMonth) {
+            $firstPayDay = $nextPayDayDate;
+            if($nextPayDayMonth === $nextPayPeriodEndMonth) {
+                $firstPayMonth = 'same';
+            } else if($nextPayDayMonth > $nextPayPeriodEndMonth) {
+                $firstPayMonth = 'previous';
+            } else if($nextPayDayMonth < $nextPayPeriodEndMonth) {
+                $firstPayMonth = 'next';
+            }
+
+            if($nextPayPeriodEndDate === cal_days_in_month(CAL_GREGORIAN, $nextPayPeriodEndMonth, $nextPayPeriodEndYear)) {
+                $firstPayDate = 0;
+            } else {
+                $firstPayDate = $nextPayPeriodEndDate;
+            }
+
+            $secondPayDay = date('Y-m-d', strtotime($nextPayDay.' +15 days'));
+            $secondPayDayMonth = intval(date('m', strtotime($secondPayDay)));
+            $secondPayDayYear = intval(date('Y', strtotime($secondPayDay)));
+            $secondPayDayDate = intval(date('d', strtotime($secondPayDay)));
+
+            $secondPayPeriodEnd = date('Y-m-d', strtotime($nextPayPeriodEnd.' +15 days'));
+            $secondPayPeriodEndMonth = intval(date('m', strtotime($secondPayPeriodEnd)));
+            $secondPayPeriodEndYear = intval(date('Y', strtotime($secondPayPeriodEnd)));
+            $secondPayPeriodEndDate = intval(date('d', strtotime($secondPayPeriodEnd)));
+
+            if($secondPayDayMonth === $secondPayPeriodEndMonth) {
+                $secondPayMonth = 'same';
+            } else if($secondPayDayMonth > $secondPayPeriodEndMonth) {
+                $secondPayMonth = 'previous';
+            } else if($secondPayDayMonth < $secondPayPeriodEndMonth) {
+                $secondPayMonth = 'next';
+            }
+
+            $secondPayDate = $secondPayPeriodEndDate;
+        } else {
+            if($nextPayDayDate === cal_days_in_month(CAL_GREGORIAN, $nextPayDayMonth, $nextPayDayYear)) {
+                $firstPayDate = date('Y-m-d', strtotime("$nextPayDayMonth/15/$nextPayDayYear"));
+
+                $secondPayDayDate = 0;
+            } else {
+                $firstPayDay = $nextPayDayDate - 15;
+                $firstPayDate = date('Y-m-d', strtotime("$nextPayDayMonth/$firstPayDay/$nextPayDayYear"));
+
+                $secondPayDayDate = $nextPayDayDate;
+            }
+
+            $firstPayDateMonth = intval(date('m', strtotime($firstPayDate)));
+            $firstPayDateYear = intval(date('Y', strtotime($firstPayDate)));
+            $firstPayDay = intval(date('d', strtotime($firstPayDate)));
+
+            $firstPayPeriodEnd = date('Y-m-d', strtotime($nextPayPeriodEnd.' -15 days'));
+            $firstPayPeriodEndMonth = intval(date('m', strtotime($firstPayPeriodEnd)));
+            $firstPayPeriodEndYear = intval(date('Y', strtotime($firstPayPeriodEnd)));
+            $firstPayPeriodEndDate = intval(date('d', strtotime($firstPayPeriodEnd)));
+
+            if($firstPayDateMonth === $firstPayPeriodEndMonth) {
+                $firstPayMonth = 'same';
+            } else if($firstPayDateMonth > $firstPayPeriodEndMonth) {
+                $firstPayMonth = 'previous';
+            } else if($firstPayDateMonth < $firstPayPeriodEndMonth) {
+                $firstPayMonth = 'next';
+            }
+
+            if($firstPayPeriodEndDate === cal_days_in_month(CAL_GREGORIAN, $firstPayPeriodEndMonth, $firstPayPeriodEndYear)) {
+                $firstPayDate = 0;
+            } else {
+                $firstPayDate = $firstPayPeriodEndDate;
+            }
+
+            if($nextPayDayMonth === $nextPayPeriodEndMonth) {
+                $secondPayMonth = 'same';
+            } else if($nextPayDayMonth > $nextPayPeriodEndMonth) {
+                $secondPayMonth = 'previous';
+            } else if($nextPayDayMonth < $nextPayPeriodEndMonth) {
+                $secondPayMonth = 'next';
+            }
+
+            if($nextPayPeriodEndDate === cal_days_in_month(CAL_GREGORIAN, $nextPayPeriodEndMonth, $nextPayPeriodEndYear)) {
+                $secondPayDate = 0;
+            } else {
+                $secondPayDate = $nextPayPeriodEndDate;
+            }
+        }
+
+        $data = [
+            'pay_frequency' => $post['pay_frequency'],
+            'name' => $post['name'],
+            'first_payday' => $firstPayDay,
+            'end_of_first_pay_period' => 'end-date',
+            'first_pay_month' => $firstPayMonth,
+            'first_pay_day' => $firstPayDate,
+            'first_pay_days_before' => null,
+            'second_payday' => $secondPayDayDate,
+            'end_of_second_pay_period' => 'end-date',
+            'second_pay_month' => $secondPayMonth,
+            'second_pay_day' => $secondPayDate,
+            'second_pay_days_before' => null,
+        ];
+
+        return $data;
     }
 
     public function edit_pay_schedule($id)

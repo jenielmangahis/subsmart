@@ -223,12 +223,13 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
         <section class="jumbotron text-center">
             <div class="container">
-                <img width="200" src="cid:logo_2u" alt="">
-                <h1><?= $company_name ?> <br>Timesheet Report</h1>
-                <p class="lead text-muted" style="text-align: left;"><label style="padding-bottom: 10px;">Hi <?= $FName ?>,</label><br>Below you'll find the timesheet report you requested for your team at <?= $business_name ?> for the period <?= $date_from ?> - <?= date("d") ?>.</p>
+                <img width="400" src="cid:logo_2u" alt="">
+                <h1><?= $company_name ?></h1>
+                <h2>Timesheet Report</h2>
+                <p class="lead text-muted" style="text-align: left;"><label style="padding-bottom: 10px;">Hi <?= $FName ?>,</label><br>Below you'll find the timesheet report you requested for your team at <?= $business_name ?> for the pay period <?= $date_from ?> - <?= date("d") ?>.</p>
                 <p>
                     <a href="<?= base_url('/timesheet/timelogs/') . $file_info[0] ?>" class="btn btn-primary my-2">Download .CSV</a>
-                    <a href="<?= $file_link ?>" class="btn btn-primary my-2">Download .PDF</a>
+                    <a href="<?= base_url('/timesheet/timelogs/') . $file_info[3] ?>" class="btn btn-primary my-2">Download .PDF</a>
                 </p>
             </div>
         </section>

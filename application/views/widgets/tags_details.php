@@ -28,7 +28,7 @@
 
 <ul class="jobTags">
     <?php foreach ($tags as $t): ?>
-        <li><a class="tagsData" href="#"><?= $t->name; ?></a></li>
+        <li><a class="tagsData" href="#"><?= $t->name; ?> (0) </a></li>
     <?php endforeach; ?>
 </ul>
 

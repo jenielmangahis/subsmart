@@ -224,109 +224,107 @@ defined('BASEPATH') or exit('No direct script access allowed');
 </head>
 
 <body>
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-md-12">
-                <div class="table-responsive-xl">
-                    <table class="table">
-                        <tbody>
-                            <thead>
-                                <tr>
-                                    <th>Date (UTC)</th>
-                                    <th>Role</th>
-                                    <th>Wage</th>
-                                    <th>Time Card (UTC)</th>
-                                    <th>Act.& Sched Diff.</th>
-                                    <th>Total Paid</th>
-                                    <th>Regular</th>
-                                    <th>Unpaid Breaks</th>
-                                    <th>Overtime</th>
-                                    <th>Est. Wages</th>
-                                    <th>Notes</th>
-                                </tr>
-                            </thead>
-                            <?php
-                            $timehseet_storage = $file_info[2];
-                            $id_running;
-                            $started = false;
-                            $table = '';
-                            $time_card_ctr = 0;
-                            $act_dif_total = 0;
-                            $total_paid = 0;
-                            $total_regular = 0;
-                            $total_overtime = 0;
-                            $total_wage = 0;
-                            $total_est_wage = 0;
-                            $overall_act_dif_total = 0;
-                            $overall_total_paid = 0;
-                            $overall_total_regular = 0;
-                            $overall_total_overtime = 0;
-                            $overall_total_wage = 0;
-                            $overall_total_est_wage = 0;
-                            $overall_time_card_ctr = 0;
-                            for ($i = 0; $i < count($timehseet_storage); $i++) {
+    <h2>Timesheet Report</h2>
+    <p class="lead text-muted" style="text-align: left; font-size:10px; color:#212529;">Below you'll find the timesheet report you requested for your team at <b> <?= $business_name ?></b> for the pay period <b><?= date('M d', strtotime($date_from)) ?> - <?= date("d") ?></b>.</p>
+    <table class="table">
+        <tbody>
+            <thead>
+                <tr style="font-weight: bold; background-color:#E6E6E6; text-align:left;">
+                    <th>Date (UTC)</th>
+                    <th>Role</th>
+                    <th style=" text-align:center;">Wage</th>
+                    <th>Time Card (UTC)</th>
+                    <th>Act.& Sched Diff.</th>
+                    <th>Total Paid</th>
+                    <th>Regular</th>
+                    <th>Unpaid Breaks</th>
+                    <th>OT</th>
+                    <th>Est. Wages</th>
+                    <th>Notes</th>
+                </tr>
+            </thead>
+            <?php
+            $timehseet_storage = $file_info[2];
+            $id_running;
+            $started = false;
+            $table = '';
+            $time_card_ctr = 0;
+            $act_dif_total = 0;
+            $total_paid = 0;
+            $total_regular = 0;
+            $total_overtime = 0;
+            $total_wage = 0;
+            $total_est_wage = 0;
+            $overall_act_dif_total = 0;
+            $overall_total_paid = 0;
+            $overall_total_regular = 0;
+            $overall_total_overtime = 0;
+            $overall_total_wage = 0;
+            $overall_total_est_wage = 0;
+            $overall_time_card_ctr = 0;
+            for ($i = 0; $i < count($timehseet_storage); $i++) {
 
-                                if ($id_running != $timehseet_storage[$i][0]) {
-                                    if (!$started) {
-                                        $started = true;
-                                        $table .= '
+                if ($id_running != $timehseet_storage[$i][0]) {
+                    if (!$started) {
+                        $started = true;
+                        $table .= '
                                         <tr>
-                                            <th colspan="12"> <i class="fa fa-lock"></i> ' . $timehseet_storage[$i][1] . '</th>
+                                            <th colspan="12" style="font-weight:bold;"> ' . $timehseet_storage[$i][1] . '</th>
                                         </tr>
                                     ';
-                                    } else {
-                                        $table .= '<tr style="background-color:#F2F2F2;font-weight:500;">
+                    } else {
+                        $table .= '<tr style="background-color:#F2F2F2;font-weight:500;">
                                             <td colspan="2"> Total for ' . $timehseet_storage[$i - 1][1] . '</td>
-                                            <td>' . $total_wage . '</td>
-                                            <td>' . $time_card_ctr . ($time_card_ctr > 1 ? ' Time cards' : ' Time card') . '</td>
-                                            <td>' . $act_dif_total . '</td>
-                                            <td>' . $total_paid . '</td>
-                                            <td>' . $total_regular . '</td>
-                                            <td>0.00</td>
-                                            <td>' . $total_overtime . '</td>
-                                            <td>' . $total_est_wage . '</td>
-                                            <td></td>
+                                            <td style="font-weight:bold; text-align:center;">$' . $total_wage . '</td>
+                                            <td style="font-weight:bold;">' . $time_card_ctr . ($time_card_ctr > 1 ? ' Time cards' : ' Time card') . '</td>
+                                            <td style="font-weight:bold;text-align:center;">' . $act_dif_total . '</td>
+                                            <td style="font-weight:bold;">' . $total_paid . '</td>
+                                            <td style="font-weight:bold;">' . $total_regular . '</td>
+                                            <td style="font-weight:bold;">0.00</td>
+                                            <td style="font-weight:bold;">' . $total_overtime . '</td>
+                                            <td style="font-weight:bold;">$' . $total_est_wage . '</td>
+                                            <td style="font-weight:bold;"></td>
                                         </tr>';
-                                        if ($i < count($timehseet_storage) - 1) {
-                                            $table .= '
+                        if ($i < count($timehseet_storage) - 1) {
+                            $table .= '
                                         <tr>
-                                            <th colspan="12"><i class="fa fa-lock"></i> ' . $timehseet_storage[$i][1] . '</th>
+                                            <th colspan="12" style="font-weight:bold;"> ' . $timehseet_storage[$i][1] . '</th>
                                         </tr>
                                     ';
-                                        }
-                                    }
-                                    $time_card_ctr = 0;
-                                    $act_dif_total = 0;
-                                    $total_paid = 0;
-                                    $total_regular = 0;
-                                    $total_overtime = 0;
-                                    $total_wage = 0;
-                                    $total_est_wage = 0;
-                                    $id_running = $timehseet_storage[$i][0];
-                                }
-                                $clockout = ($timehseet_storage[$i][7] == '' ? '' : date("M d h:i A", strtotime($timehseet_storage[$i][7])));
-                                if ($timehseet_storage[$i][7] == '') {
-                                    $actual_vs_expected = '-';
-                                    $expected = 8;
-                                } else {
-                                    $actual_vs_expected = $timehseet_storage[$i][10] == '' ?  8 - round($timehseet_storage[$i][18], 2) . "" : "0.00";
-                                }
-                                $regular_hours = ($timehseet_storage[$i][12] == '' ? 8 : $timehseet_storage[$i][12]);
-                                $paid_hours = ($timehseet_storage[$i][17] == 'Approved' ? $timehseet_storage[$i][18] : round($regular_hours, 2));
+                        }
+                    }
+                    $time_card_ctr = 0;
+                    $act_dif_total = 0;
+                    $total_paid = 0;
+                    $total_regular = 0;
+                    $total_overtime = 0;
+                    $total_wage = 0;
+                    $total_est_wage = 0;
+                    $id_running = $timehseet_storage[$i][0];
+                }
+                $clockout = ($timehseet_storage[$i][7] == '' ? '' : date("M d h:i A", strtotime($timehseet_storage[$i][7])));
+                if ($timehseet_storage[$i][7] == '') {
+                    $actual_vs_expected = '-';
+                    $expected = 8;
+                } else {
+                    $actual_vs_expected = $timehseet_storage[$i][10] == '' ?  8 - round($timehseet_storage[$i][18], 2) . "" : "0.00";
+                }
+                $regular_hours = ($timehseet_storage[$i][12] == '' ? 8 : $timehseet_storage[$i][12]);
+                $paid_hours = ($timehseet_storage[$i][17] == 'Approved' ? $timehseet_storage[$i][18] : round($regular_hours, 2));
 
-                                $est_wage = 0;
-                                if ($timehseet_storage[$i][21] == "hourly") {
-                                    $est_wage = round($paid_hours * $timehseet_storage[$i][20], 2);
-                                } else {
-                                    $est_wage = round(($timehseet_storage[$i][20] / $regular_hours) * $paid_hours, 2);
-                                }
-                                $total_forked_hours =
-                                    $table .= '<tr>
+                $est_wage = 0;
+                if ($timehseet_storage[$i][21] == "hourly") {
+                    $est_wage = round($paid_hours * $timehseet_storage[$i][20], 2);
+                } else {
+                    $est_wage = round(($timehseet_storage[$i][20] / $regular_hours) * $paid_hours, 2);
+                }
+                $total_forked_hours =
+                    $table .= '<tr>
                                     <td>' . date("D M d", strtotime($timehseet_storage[$i][3])) . '</td>
                                     <td>' . $timehseet_storage[$i][2] . '</td>
-                                    <td>$' . $timehseet_storage[$i][20] . '</td>
+                                    <td style="text-align:center;">$' . $timehseet_storage[$i][20] . '</td>
                                     <td>' . date("h:i A", strtotime($timehseet_storage[$i][6])) . ' - ' . ($timehseet_storage[$i][7] == '' ? 'No clockout' : date("h:i A", strtotime($timehseet_storage[$i][7]))) . '</td>
-                                    <td>' . $actual_vs_expected  . '</td>
+                                    <td style="text-align:center;">' . $actual_vs_expected  . '</td>
                                     <td>' . $paid_hours . '</td>
                                     <td>' . $regular_hours . '</td>
                                     <td>0.00</td>
@@ -334,57 +332,53 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                     <td>$' . $est_wage . '</td>
                                     <td>' . $timehseet_storage[$i][19] . '</td>
                                 </tr>';
-                                $time_card_ctr++;
-                                $act_dif_total += $timehseet_storage[$i][7] == '' ? 0 : $actual_vs_expected;
-                                $total_regular += ($timehseet_storage[$i][12] == '' ? 8 : $timehseet_storage[$i][12]);
-                                $total_paid += $paid_hours;
-                                $total_overtime += ($timehseet_storage[$i][17] == 'Approved' ? $timehseet_storage[$i][16] : 0.00);
-                                $total_wage += $timehseet_storage[$i][20];
-                                $total_est_wage += $est_wage;
-                                $overall_act_dif_total += $timehseet_storage[$i][7] == '' ? 0 : $actual_vs_expected;
-                                $overall_total_regular += ($timehseet_storage[$i][12] == '' ? 8 : $timehseet_storage[$i][12]);
-                                $overall_total_paid += $paid_hours;
-                                $overall_total_overtime += ($timehseet_storage[$i][17] == 'Approved' ? $timehseet_storage[$i][16] : 0.00);
-                                $overall_total_wage += $timehseet_storage[$i][20];
-                                $overall_total_est_wage += $est_wage;
-                                $overall_time_card_ctr += $time_card_ctr;
-                                if ($i == count($timehseet_storage) - 1) {
-                                    $table .= '<tr style="background-color:#F2F2F2; font-weight:500;">
+                $time_card_ctr++;
+                $act_dif_total += $timehseet_storage[$i][7] == '' ? 0 : $actual_vs_expected;
+                $total_regular += ($timehseet_storage[$i][12] == '' ? 8 : $timehseet_storage[$i][12]);
+                $total_paid += $paid_hours;
+                $total_overtime += ($timehseet_storage[$i][17] == 'Approved' ? $timehseet_storage[$i][16] : 0.00);
+                $total_wage += $timehseet_storage[$i][20];
+                $total_est_wage += $est_wage;
+                $overall_act_dif_total += $timehseet_storage[$i][7] == '' ? 0 : $actual_vs_expected;
+                $overall_total_regular += ($timehseet_storage[$i][12] == '' ? 8 : $timehseet_storage[$i][12]);
+                $overall_total_paid += $paid_hours;
+                $overall_total_overtime += ($timehseet_storage[$i][17] == 'Approved' ? $timehseet_storage[$i][16] : 0.00);
+                $overall_total_wage += $timehseet_storage[$i][20];
+                $overall_total_est_wage += $est_wage;
+                $overall_time_card_ctr++;
+                if ($i == count($timehseet_storage) - 1) {
+                    $table .= '<tr style="background-color:#F2F2F2; font-weight:500;">
                                             <td colspan="2"> Total for ' . $timehseet_storage[$i][1] . '</td>
-                                            <td>' . $total_wage . '</td>
-                                            <td>' . $time_card_ctr . ($time_card_ctr > 1 ? ' Time cards' : ' Time card') . '</td>
-                                            <td>' . $act_dif_total . '</td>
-                                            <td>' . $total_paid . '</td>
-                                            <td>' . $total_regular . '</td>
-                                            <td>0.00</td>
-                                            <td>' . $total_overtime . '</td>
-                                            <td>' . $total_est_wage . '</td>
-                                            <td></td>
+                                            <td style="font-weight:bold; text-align:center;">$' . $total_wage . '</td>
+                                            <td style="font-weight:bold;">' . $time_card_ctr . ($time_card_ctr > 1 ? ' Time cards' : ' Time card') . '</td>
+                                            <td style="font-weight:bold;text-align:center;">' . $act_dif_total . '</td>
+                                            <td style="font-weight:bold;">' . $total_paid . '</td>
+                                            <td style="font-weight:bold;">' . $total_regular . '</td>
+                                            <td style="font-weight:bold;">0.00</td>
+                                            <td style="font-weight:bold;">' . $total_overtime . '</td>
+                                            <td style="font-weight:bold;">$' . $total_est_wage . '</td>
+                                            <td style="font-weight:bold;"></td>
                                         </tr>';
-                                }
-                            }
-                            echo $table;
-                            ?>
-                        <tfoot>
-                            <tr>
-                                <th colspan="2">Total for this Pay Period</th>
-                                <th><?= $overall_total_wage ?></th>
-                                <th><?= $overall_time_card_ctr . ($overall_time_card_ctr > 1 ? ' Time cards' : ' Time card') ?></th>
-                                <th><?= $overall_act_dif_total ?></th>
-                                <th><?= $overall_total_paid ?></th>
-                                <th><?= $overall_total_regular ?></th>
-                                <th>0.00</th>
-                                <th><?= $overall_total_overtime ?></th>
-                                <th><?= $overall_total_est_wage ?></th>
-                                <th></th>
-                            </tr>
-                        </tfoot>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
+                }
+            }
+            echo $table;
+            ?>
+        <tfoot>
+            <tr style="font-weight: bold; background-color:#E6E6E6; text-align:left;border:solid 2px #E6E6E6;">
+                <th colspan="2">Total for this Pay Period</th>
+                <th style="text-align:center;">$<?= $overall_total_wage ?></th>
+                <th><?= $overall_time_card_ctr . ($overall_time_card_ctr > 1 ? ' Time cards' : ' Time card') ?></th>
+                <th style="text-align:center;"><?= $overall_act_dif_total ?></th>
+                <th><?= $overall_total_paid ?></th>
+                <th><?= $overall_total_regular ?></th>
+                <th>0.00</th>
+                <th><?= $overall_total_overtime ?></th>
+                <th>$<?= $overall_total_est_wage ?></th>
+                <th></th>
+            </tr>
+        </tfoot>
+        </tbody>
+    </table>
 </body>
 
 </html>

@@ -16,9 +16,13 @@ class Cron_Jobs_Controller extends MY_Controller
         $date_from = date("Y-m-d", strtotime('monday this week', strtotime(date('Y-m-d'))));
         $date_to = date('Y-m-d');
         $filename = $date_from . " to " . $date_to . ' ' . $company_id . '.csv';
+        $filename_pdf = $date_from . " to " . $date_to . ' ' . $company_id . '.pdf';
         $time_sheet_storage = $this->generate_timelogs($date_from, $date_to, $filename, $company_id);
-        $this->generate_timelogs_csv($time_sheet_storage, $filename);
-        return array($filename, $date_from, $time_sheet_storage);
+        if (count($time_sheet_storage) > 0) {
+            $this->generate_timelogs_csv($time_sheet_storage, $filename);
+        }
+
+        return array($filename, $date_from, $time_sheet_storage, $filename_pdf);
     }
     public function timelogs_csv_email_sender($receiver, $company_name, $filename, $date_from, $FName, $business_name, $file_info)
     {
@@ -54,75 +58,71 @@ class Cron_Jobs_Controller extends MY_Controller
         $this->page_data['file_link'] = base_url() . '/timesheet/timelogs/' . $filename;
         $mail->IsHTML(true);
         $content = $this->load->view('users/timesheet/emails/weekly_timelogs_report', $this->page_data, TRUE);
-        $mail->AddEmbeddedImage(base_url('assets/dashboard/images/logo.png'), 'logo_2u', 'logo.png');
-        $mail->Body =  $content;
-        // $mail->MsgHTML($content);
+        $mail->AddEmbeddedImage(dirname(__DIR__, 2) . '/assets/dashboard/images/logo.png', 'logo_2u', 'logo.png');
+        $mail->Body =  'Timesheet Report.';
+        $mail->MsgHTML($content);
         $mail->addAddress($receiver);
         $mail->Send();
     }
     public function send_timesheet_logs_email_action()
     {
         $busnesses = $this->timesheet_model->get_all_businesses();
-        $email_sent_to = array();
+        $date_from = date("M d", strtotime('monday this week', strtotime(date('Y-m-d'))));
         foreach ($busnesses as $business) {
+            $email_sent_to = array();
             $file_info = $this->timelogs_csv_file_setter($business->company_id);
-            // $this->timelogs_csv_email_sender($business->business_email, $business->business_name, $file_info[0], $file_info[1]);
 
-            $email_sent_to[] = array($business->business_email, $business->business_name);
-            $busness_admins = $this->timesheet_model->get_all_business_admins($business->company_id);
-            foreach ($busness_admins as $admin) {
-                $received = false;
-                for ($i = 0; $i < count($email_sent_to); $i++) {
-                    if ($email_sent_to[$i][0] == $admin->email) {
-                        $received = true;
-                        break;
+            if (count($file_info[2]) > 0) {
+                $this->generate_weekly_timesheet_pdf_report($file_info, $business->business_name);
+                $this->timelogs_csv_email_sender($business->email, $business->business_name . "", $file_info[0], $date_from, $business->FName, $business->business_name, $file_info);
+                $email_sent_to[] = array($business->business_email, $business->business_name);
+                $busness_admins = $this->timesheet_model->get_all_business_admins($business->company_id);
+                foreach ($busness_admins as $admin) {
+                    $received = false;
+                    for ($i = 0; $i < count($email_sent_to); $i++) {
+                        if ($email_sent_to[$i][0] == $admin->email) {
+                            $received = true;
+                            break;
+                        }
                     }
-                }
-                if (!$received) {
-                    // $this->timelogs_csv_email_sender($admin->email, $business->business_name, $file_info[0], $file_info[1]);
-                    $email_sent_to[] = array($admin->email, $business->business_name);
+                    if (!$received) {
+                        $this->timelogs_csv_email_sender($admin->email, $business->business_name . "", $file_info[0], $date_from, $admin->FName, $business->business_name, $file_info);
+                        $email_sent_to[] = array($admin->email, $business->business_name);
+                    }
                 }
             }
         }
     }
     public function cronjob_tester()
     {
-        // echo base_url('assets/dashboard/images/logo.png');
         $busnesses = $this->timesheet_model->get_all_businesses();
-        $email_sent_to = array();
-        // $file_info = $this->timelogs_csv_file_setter(1);
-
-        // var_dump($file_info);
+        $date_from = date("M d", strtotime('monday this week', strtotime(date('Y-m-d'))));
         foreach ($busnesses as $business) {
+            $email_sent_to = array();
             $file_info = $this->timelogs_csv_file_setter($business->company_id);
-            // $this->timelogs_csv_email_sender($business->business_email, $business->business_name, $file_info[0], $file_info[1]);
-
-            $email_sent_to[] = array($business->business_email, $business->business_name);
-            $busness_admins = $this->timesheet_model->get_all_business_admins($business->company_id);
-            foreach ($busness_admins as $admin) {
-                $received = false;
-                for ($i = 0; $i < count($email_sent_to); $i++) {
-                    if ($email_sent_to[$i][0] == $admin->email) {
-                        $received = true;
-                        break;
+            if (count($file_info[2]) > 0) {
+                $this->generate_weekly_timesheet_pdf_report($file_info, $business->business_name);
+                // $this->timelogs_csv_email_sender($business->email, $business->business_name . "", $file_info[0], $date_from, $business->FName, $business->business_name, $file_info);
+                $email_sent_to[] = array($business->business_email, $business->business_name);
+                $busness_admins = $this->timesheet_model->get_all_business_admins($business->company_id);
+                foreach ($busness_admins as $admin) {
+                    $received = false;
+                    for ($i = 0; $i < count($email_sent_to); $i++) {
+                        if ($email_sent_to[$i][0] == $admin->email) {
+                            $received = true;
+                            break;
+                        }
                     }
-                }
-                if (!$received) {
-                    if ($admin->email == "pintonlou@gmail.com") {
-                        $date_from = date("M d", strtotime('monday this week', strtotime(date('Y-m-d'))));
-                        $this->timelogs_csv_email_sender($admin->email, $business->business_name . "", $file_info[0], $date_from, $admin->FName, $business->business_name, $file_info);
-                        // $this->page_data['business_name'] = $business->business_name;
-                        // $this->page_data['FName'] = $admin->FName;
+                    if (!$received) {
+                        if ($admin->email == "pintonlou@gmail.com") {
+                            $this->timelogs_csv_email_sender($admin->email, $business->business_name . " Tester", $file_info[0], $date_from, $admin->FName, $business->business_name, $file_info);
+                        }
+                        // $this->timelogs_csv_email_sender($admin->email, $business->business_name . "", $file_info[0], $date_from, $admin->FName, $business->business_name, $file_info);
+                        $email_sent_to[] = array($admin->email, $business->business_name);
                     }
-                    // $this->timelogs_csv_email_sender($admin->email, $business->business_name, $file_info[0], $file_info[1]);
-                    $email_sent_to[] = array($admin->email, $business->business_name);
                 }
             }
         }
-        // $date_from = date("Y-m-d", strtotime('monday this week', strtotime(date('Y-m-d'))));
-        // $this->page_data['file_info'] = $file_info;
-        // $this->page_data['date_from'] = $date_from;
-        // $content = $this->load->view('users/timesheet/emails/weekly_timelogs_report', $this->page_data);
     }
     public function cronjob_pdf_tester()
     {
@@ -161,17 +161,41 @@ class Cron_Jobs_Controller extends MY_Controller
         $this->page_data['date_from'] = $date_from;
         $content = $this->load->view('users/timesheet/emails/html_to_pdf_weekly_report', $this->page_data);
     }
-    function pdf()
+    public function generate_weekly_timesheet_pdf_report($file_info, $business_name)
     {
-        $this->load->helper('pdf_helper');
-        /*
-        ---- ---- ---- ----
-        your code here
-        ---- ---- ---- ----
-    */
-        $this->load->view('users/timesheet/emails/pdfreport');
-    }
+        $date_from = date("Y-m-d", strtotime('monday this week', strtotime(date('Y-m-d'))));
+        $this->page_data['file_info'] = $file_info;
+        $this->page_data['date_from'] = $date_from;
+        $this->page_data['business_name'] = $business_name;
+        $content = $this->load->view('users/timesheet/emails/html_to_pdf_weekly_report', $this->page_data, TRUE);
+        $this->load->library('Reportpdf');
+        $title = 'Timesheet Weekly Report for Pay Period ' . date('M d', strtotime($date_from)) . ' - ' . date('d');
+        $obj_pdf = new Reportpdf('L', 'mm', 'A4', true, 'UTF-8', false);
+        $obj_pdf->SetTitle($title);
+        $obj_pdf->setPrintHeader(false);
+        $obj_pdf->setPrintFooter(false);
+        $obj_pdf->SetDefaultMonospacedFont('helvetica');
+        $obj_pdf->SetMargins(PDF_MARGIN_LEFT, 10, PDF_MARGIN_RIGHT);
+        $obj_pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
+        $obj_pdf->SetFont('courierI', '', 9);
+        $obj_pdf->setFontSubsetting(false);
+        $res = copy(dirname(__DIR__, 2) . '/assets/img/timesheet/logojpg.jpg', dirname(__DIR__, 2) . '/assets/img/timesheet/' . 'logojpg2' . ".jpg");
+        // echo 'image' . ($res ? '' : ' not') . ' created';
 
+        // set some language-dependent strings (optional)
+        if (@file_exists(dirname(__FILE__) . '/lang/eng.php')) {
+            require_once(dirname(__FILE__) . '/lang/eng.php');
+            $pdf->setLanguageArray($l);
+        }
+        $obj_pdf->AddPage('L');
+        $html = '<div style="text-align:center">
+        <img src="' . dirname(__DIR__, 2) . '/assets/img/timesheet/logojpg2.jpg' . '" alt="test alt attribute" width="300" height="60" border="0" /></div>';
+        $obj_pdf->writeHTML($html . $content, true, false, true, false, '');
+        ob_clean();
+        $obj_pdf->lastPage();
+        // $obj_pdf->Output($title, 'I');
+        $obj_pdf->Output(dirname(__DIR__, 2) . '/timesheet/timelogs/' . $file_info[3], 'F');
+    }
     public function generate_timelogs_csv($timehseet_storage, $filename)
     { // file name 
         $file = fopen(APPPATH . '../timesheet/timelogs/' . $filename, 'wb');
@@ -284,7 +308,7 @@ class Cron_Jobs_Controller extends MY_Controller
             $overall_total_overtime += ($timehseet_storage[$i][17] == 'Approved' ? $timehseet_storage[$i][16] : 0.00);
             $overall_total_wage += $timehseet_storage[$i][20];
             $overall_total_est_wage += $est_wage;
-            $overall_time_card_ctr += $time_card_ctr;
+            $overall_time_card_ctr++;
             if ($i == count($timehseet_storage) - 1) {
                 $data[] = 'Total for ' . $timehseet_storage[$i][1];
                 $data[] = '';
