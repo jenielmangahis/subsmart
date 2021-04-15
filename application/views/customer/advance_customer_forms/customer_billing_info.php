@@ -161,7 +161,7 @@
     </div>
     <div class="row form_line">
         <div class="col-md-4">
-            <label for="">Contract Term* (months)</label>
+            <label for="">Contract Term</label>
         </div>
         <div class="col-md-8">
             <select id="contract_term" name="contract_term" data-customer-source="dropdown" class="input_select searchable-dropdown" >

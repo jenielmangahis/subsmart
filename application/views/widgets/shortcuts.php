@@ -22,14 +22,10 @@
         height: 7px;
         background-color: black;
     }
-
-    @media screen and (max-width: 2400px) {
-       
-    }
 </style>
 
 <div class="<?= $class ?>"  data-id="<?= $id ?>" id="widget_<?= $id ?>">
-    <div  style="width: 300px; border: 1px solid #58c04e; background: #58c04e; color:white;  border-radius: 10px; text-align: center;padding: 5px;position: relative;margin: 0 auto;top: 21px;z-index: 1000;">
+    <div class="wid_header">
         <i class="fa fa-dashboard" aria-hidden="true"></i> Shorcuts
 
         <div class="float-right">
@@ -49,7 +45,7 @@
             <div class="card-body mt-3" style="padding:5px 10px; height: <?= $rawHeight ?>px;">
                 <div id="shortcutsSlide" class="carousel slide" style="height:<?= $rawHeight + 20 ?>px overflow:scroll;" data-ride="carousel">
                     <div class="carousel-inner">
-                        <div class="carousel-item active text-center">
+                        <div class="carousel-item active text-center shortcuts">
                             <div class="col-lg-12 no-padding">
                                 <div class="float-left col-lg-3 no-padding text-center pointer">
                                     <img class="col-lg-12 " src="<?= assets_url('img/shortcuts/accounting/') . '01_print_a_check.png' ?>" />
@@ -105,7 +101,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="carousel-item text-center">
+                        <div class="carousel-item text-center shortcuts">
                             <div class="col-lg-12 no-padding">
                                 <div class="float-left col-lg-3 no-padding text-center pointer">
                                     <img class="col-lg-12 " src="<?= assets_url('img/shortcuts/calendar/') . '02_add_or_assign_task.png' ?>" />
@@ -161,7 +157,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="carousel-item text-center">
+                        <div class="carousel-item text-center shortcuts">
                             <div class="col-lg-12 no-padding">
                                 <div class="float-left col-lg-3 no-padding text-center pointer">
                                     <img class="col-lg-12 " src="<?= assets_url('img/shortcuts/sales/') . '05_add_workorder.png' ?>" />
@@ -217,7 +213,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="carousel-item text-center">
+                        <div class="carousel-item text-center shortcuts">
                             <div class="col-lg-12 no-padding">
                                 <div class="float-left col-lg-3 no-padding text-center pointer">
                                     <img class="col-lg-12 " src="<?= assets_url('img/shortcuts/tools/') . '02_import_inventory_list.png' ?>" />

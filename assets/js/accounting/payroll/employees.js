@@ -117,11 +117,7 @@ function upcomingPayPeriods(el)
                         setDate.setDate(setDate.getDate() + 14);
                     break;
                     case 'twice-month' :
-                        if(setDate.getDate() === 15) {
-                            setDate.setDate(getTotalDaysOfMonth(setDate.getMonth() + 1, setDate.getFullYear()));
-                        } else {
-                            setDate.setDate(setDate.getDate() + 15);
-                        }
+                        setDate.setDate(setDate.getDate() + 15);
                     break;
                     case 'every-month' :
                         var totalDays = getTotalDaysOfMonth(setDate.getMonth() + 2, setDate.getFullYear());
@@ -812,6 +808,7 @@ $(document).on('submit', '#pay-schedule-form', function(e) {
 
             $('#add-employee-modal #pay-schedule option:selected').removeAttr('selected');
             $('#add-employee-modal #pay-schedule').append(`<option value="${result.id}" selected>${result.name}</option>`);
+            $('#add-employee-modal #pay-schedule').trigger('change');
 
             $('#add-pay-schedule-modal').modal('hide');
         }

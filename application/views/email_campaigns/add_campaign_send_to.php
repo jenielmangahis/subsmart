@@ -98,11 +98,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <div class="validation-error" style="display: none;"></div>
                             <div class="tabs-menu">
                                 <ul class="clearfix">
-                                  <li>1. Edit Campaign</li>
-                                  <li class="active">2. Select Customers</li>
-                                  <li>3. Build Email</li>
-                                  <li>4. Preview</li>
-                                  <li>5. Purchase</li>
+                                  <li><a href="<?= base_url('email_campaigns/edit_campaign/' . $emailCampaign->id); ?>">1. Edit Campaign1</a></li>
+                                  <li class="active"><a href="<?= base_url('email_campaigns/add_campaign_send_to'); ?>">2. Select Customers</a></li>
+                                  <li><a href="<?= base_url('email_campaigns/build_email'); ?>">3. Build Email</a></li>
+                                  <li><a href="<?= base_url('email_campaigns/preview_email_message'); ?>">4. Preview</a></li>
+                                  <li><a href="<?= base_url('email_campaigns/payment'); ?>">5. Purchase</a></li>
                                 </ul>
                             </div>
                             <hr />
@@ -114,7 +114,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <div>
                                         <div class="radio radio-sec margin-right">
                                             <input type="radio" name="to_type" value="1" id="to_type_1" <?= $emailCampaign->sending_type == 1 ? 'checked="checked"' : ''; ?> checked="checked">
-                                            <label for="to_type_1">All my customers with phone</label>
+                                            <label for="to_type_1">All my customers with email</label>
                                         </div>
                                         <div class="radio radio-sec margin-right">
                                             <input type="radio" name="to_type" value="2" id="to_type_3" <?= $emailCampaign->sending_type == 2 ? 'checked="checked"' : ''; ?>>
@@ -271,7 +271,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <hr />
                             <div>
                                 <div class="col-md-4 form-group md-right">
-                                    <a class="btn btn-default margin-right" href="<?php echo url('sms_campaigns/edit_campaign/' . $emailCampaign->id); ?>" style="float: left;margin-right: 10px;">« Back</a>
+                                    <a class="btn btn-default margin-right" href="<?php echo url('email_campaigns/edit_campaign/' . $emailCampaign->id); ?>" style="float: left;margin-right: 10px;">« Back</a>
                                     <button type="submit" class="btn btn-flat btn-primary margin-right btn-campaign-save-send-settings" style="float: left;margin-right: 0px;">Continue »</button>
                                 </div>
                             </div>

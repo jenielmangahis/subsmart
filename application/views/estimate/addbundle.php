@@ -67,12 +67,14 @@ defined('BASEPATH') or exit('No direct script access allowed');
                             <div class="row" style="background-color:white;margin-top:-2%;">
                                 <div class="col-md-6">
                                     <label for="customers" class="required"><b>Customer</b></label>
+                                    <div id="sel-customerdiv">
                                     <select id="sel-customer" name="customer_id" data-customer-source="dropdown" class="form-control searchable-dropdown" placeholder="Select">
                                         <option value="0">- none -</option>
                                         <?php foreach($customers as $c){ ?>
-                                            <option value="<?= $c->prof_id; ?>"><?= $c->first_name . ' ' . $c->last_name; ?></option>
+                                            <option value="<?= $c->prof_id; ?>"><?= $c->contact_name . '' . $c->first_name . ' ' . $c->last_name; ?></option>
                                         <?php } ?>
                                     </select>
+                                    </div>
                                 </div>
                                 <div class="col-md-3">
                                     <br><br><a class="link-modal-open" href="javascript:void(0)" data-toggle="modal"
@@ -1774,6 +1776,18 @@ $("#total_tax2_input").val(subtotaltax.toFixed(2));
 });
 
 </script>
+
+<script type="text/javascript">
+$(window).on('beforeunload', function(){
+    var c = confirm();
+    if(c){
+        return true;
+    }
+    else
+        return false;
+});
+</script>
+
 <script>
 jQuery(document).ready(function () {
     $(document).on('click','#Commercial',function(){

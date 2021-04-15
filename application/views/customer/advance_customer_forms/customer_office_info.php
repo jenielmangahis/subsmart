@@ -152,7 +152,7 @@
 
         <div class="row form_line">
             <div class="col-md-4">
-                <label for="">Cancellation Date</label>
+                <label for="">Cancel Date</label>
             </div>
             <div class="col-md-8">
                 <input type="text" class="form-control date_picker" name="cancel_date" id="date_picker" value="<?php if(isset($office_info)){ echo  $office_info->cancel_date; } ?>" />
@@ -160,7 +160,7 @@
         </div>
         <div class="row form_line">
             <div class="col-md-4">
-                <label for="">Cancellation Reason</label>
+                <label for="">Cancel Reason</label>
             </div>
             <div class="col-md-8">
                 <select id="cancel_reason" name="cancel_reason" data-customer-source="dropdown" class="input_select" >
@@ -181,7 +181,7 @@
                 <label for="">Collection Date</label>
             </div>
             <div class="col-md-8">
-                <input type="text" class="form-control date_picker" name="acs_collect_date" id="date_picker" value="<?php if(isset($access_info)){ echo $access_info->acs_collect_date; } ?>" />
+                <input type="text" class="form-control date_picker" name="collect_date" id="date_picker" value="<?php if(isset($access_info)){ echo $access_info->collect_date; } ?>" />
             </div>
         </div>
         <div class="row form_line">
@@ -197,8 +197,6 @@
                 </div>
             </div>
         </div>
-
-
         <!--<div class="row">
             <div class="col-md-4">
                 <label for="">Rep Tiered Upfront Bonus</label>
@@ -311,8 +309,6 @@
                 <input type="checkbox" name="rebate_offer" class="form-controls" value="1"  id="rebate_offer" <?php if(isset($office_info)){ echo $office_info->rebate_offer == 1 ? 'checked': ''; } ?>>
             </div>
         </div>
-
-
         <div class="row form_line">
             <div class="col-md-7">
                 <label for="">Rebate Check # 1</label>

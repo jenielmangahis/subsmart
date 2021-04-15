@@ -72,12 +72,12 @@
             <div class="col-auto pl-0 form-group">
                 <label for="">Preferred notification method</label><br/>
                 <div class="checkbox checkbox-sec margin-right my-0 mr-3">
-                    <input type="checkbox" name="notify_by" value="Email" checked
+                    <input type="checkbox" name="notify_by_email" value="1" checked
                             id="notify_by_email">
                     <label for="notify_by_email"><span>Notify By Email</span></label>
                 </div>
                 <div class="checkbox checkbox-sec margin-right my-0 mr-3">
-                    <input type="checkbox" name="notify_by" value="SMS" id="notify_by_sms">
+                    <input type="checkbox" name="notify_by_sms" value="1" id="notify_by_sms" checked>
                     <label for="notify_by_sms"><span>Notify By SMS/Text</span></label>
                 </div>
             </div>

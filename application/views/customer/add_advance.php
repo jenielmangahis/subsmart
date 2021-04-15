@@ -16,6 +16,7 @@ add_css(array(
         border-color: #999999;
         border-style: Solid;
         border-width: 1px;
+        width: 200px;
     }
     .table_body_customer{
         border-color: #999999;
@@ -24,13 +25,15 @@ add_css(array(
         background-color: #E5EBF2;
         height: 20px;
     }
+    .header_input{
+        width: 100px !important;
+    }
 </style>
     <div class="wrapper" role="wrapper">
         <?php include viewPath('includes/sidebars/customer'); ?>
         <!-- page wrapper start -->
         <div wrapper__section>
             <div class="container-fluid p-40">
-
               <div class="card">
                 <div class="row pl-0 pr-0">
                     <div class="col-md-12 pl-0 pr-0">
@@ -47,37 +50,6 @@ add_css(array(
                     </div>
                   </div>
               </div>
-                <div class="card">
-                    <div class="row ">
-                        <div class="col-md-12">
-                            <div style="margin-top: 5px;">
-                                <b>Account: </b><span> 6436456</span>&nbsp;&nbsp;&nbsp;<b>Online: </b><span> Yes</span>&nbsp;&nbsp;&nbsp;<b>In Service: </b><span> Yes</span> &nbsp;&nbsp;
-                                <b>Status: </b>
-                                <span>
-                                    <select id="statuss" name="status" data-customer-source="dropdown" class="input_selects" >
-                                        <option  value=""></option>
-                                        <option  value="Draft">Draft</option>
-                                        <option <?php if(isset($profile_info)){ if($profile_info->status == 'Charge Back'){ echo 'selected'; } } ?> value="Charge Back">Charge Back</option>
-                                        <option <?php if(isset($profile_info)){ if($profile_info->status == 'Cancelled'){ echo 'selected'; } } ?> value="Cancelled">Cancelled</option>
-                                        <option <?php if(isset($profile_info)){ if($profile_info->status == 'Collection'){ echo 'selected'; } } ?> value="Collection">Collection</option>
-                                        <option <?php if(isset($profile_info)){ if($profile_info->status == 'Cancel Pending'){ echo 'selected'; } } ?> value="Cancel Pending">Cancel Pending</option>
-                                        <option <?php if(isset($profile_info)){ if($profile_info->status == 'Installed'){ echo 'selected'; } } ?> value="Installed">Installed</option>
-                                        <option <?php if(isset($profile_info)){ if($profile_info->status == 'Lead'){ echo 'selected'; } } ?> value="Lead">Lead</option>
-                                        <option <?php if(isset($profile_info)){ if($profile_info->status == 'No Show'){ echo 'selected'; } } ?> value="No Show">No Show</option>
-                                        <option <?php if(isset($profile_info)){ if($profile_info->status == 'Pending'){ echo 'selected'; } } ?> value="Pending">Pending</option>
-                                        <option <?php if(isset($profile_info)){ if($profile_info->status == 'Past Due'){ echo 'selected'; } } ?> value="Past Due">Past Due</option>
-                                        <option <?php if(isset($profile_info)){ if($profile_info->status == 'Re-Scheduled'){ echo 'selected'; } } ?> value="Re-Scheduled">Re-Scheduled</option>
-                                        <option <?php if(isset($profile_info)){ if($profile_info->status == 'Scheduled'){ echo 'selected'; } } ?> value="Scheduled">Scheduled</option>
-                                        <option <?php if(isset($profile_info)){ if($profile_info->status == 'Service Customer'){ echo 'selected'; } } ?> value="Service Customer">Service Customer</option>
-                                        <option <?php if(isset($profile_info)){ if($profile_info->status == 'Other'){ echo 'selected'; } } ?> value="Other">Other</option>
-                                    </select>
-                                </span>
-                                &nbsp;&nbsp;&nbsp;
-                                <b>Equipment: </b><span> Installed </span>&nbsp;&nbsp;&nbsp;<b>Collections: </b><span>Collected </span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
                 <div class="card">
                     <div class="row ">
                         <div class="col-md-12">
@@ -119,7 +91,7 @@ add_css(array(
                                                 <input type="checkbox" name="rep_paper" class="form-controls" value="1"  id="rep_paper" <?php if(isset($office_info)){ echo $office_info->rebate_offer == 1 ? 'checked': ''; } ?>>
                                             </div>
                                             <div class="col-md-8">
-                                                <input type="text" class="form-control date_picker" name="sales_date" id="" value="<?php if(isset($office_info)){ echo  $office_info->sales_date; } ?>"/>
+                                                <input type="text" class="form-controls date_picker" name="sales_date" id="" value="<?php if(isset($office_info)){ echo  $office_info->sales_date; } ?>"/>
                                             </div>
                                         </div>
                                     </td>
@@ -129,7 +101,46 @@ add_css(array(
                                                 <input type="checkbox" name="rep_paper" class="form-controls" value="1"  id="rep_paper" <?php if(isset($office_info)){ echo $office_info->rebate_offer == 1 ? 'checked': ''; } ?>>
                                             </div>
                                             <div class="col-md-8">
-                                                <input type="text" class="form-control date_picker" name="sales_date" id="" value="<?php if(isset($office_info)){ echo  $office_info->sales_date; } ?>"/>
+                                                <input type="text" class="form-controls date_picker" name="sales_date" id="" value="<?php if(isset($office_info)){ echo  $office_info->sales_date; } ?>"/>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td align="center" class="table_body_customer">
+
+                                    </td>
+                                    <td align="center" class="table_body_customer">
+                                        <select id="statuss" name="status" data-customer-source="dropdown" class="input_selects" >
+                                            <option  value=""></option>
+                                            <option value="Pass">Approved</option>
+                                            <option value="Fail">Rejected</option>
+                                            <option value="PenK">Pending Kept</option>
+                                            <option value="PenS">Pending Sent</option>
+                                            <option value="None">None</option>
+                                        </select>
+                                    </td>
+                                    <td align="center" class="table_body_customer">
+                                        <div class="row">
+                                            <div class="col-md-2" style="margin-top: 5px;">
+                                                <input type="checkbox" name="rep_paper" class="form-controls" value="1"  id="rep_paper" <?php if(isset($office_info)){ echo $office_info->rebate_offer == 1 ? 'checked': ''; } ?>>
+                                            </div>
+                                            <div class="col-md-8">
+                                                <input type="text" class="form-controls date_picker" name="sales_date" id="" value="<?php if(isset($office_info)){ echo  $office_info->sales_date; } ?>"/>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td align="center" class="table_body_customer">
+
+                                    </td>
+                                    <td align="center" class="table_body_customer">
+
+                                    </td>
+                                    <td align="center" class="table_body_customer">
+                                        <div class="row">
+                                            <div class="col-md-2" style="margin-top: 5px;">
+                                                <input type="checkbox" name="rep_paper" class="form-controls" value="1"  id="rep_paper" <?php if(isset($office_info)){ echo $office_info->rebate_offer == 1 ? 'checked': ''; } ?>>
+                                            </div>
+                                            <div class="col-md-8">
+                                                <input type="text" class="form-controls date_picker" name="sales_date" id="" value="<?php if(isset($office_info)){ echo  $office_info->sales_date; } ?>"/>
                                             </div>
                                         </div>
                                     </td>
@@ -139,67 +150,7 @@ add_css(array(
                                                 <input type="checkbox" name="rep_paper" class="form-controls" value="1"  id="rep_paper" <?php if(isset($office_info)){ echo $office_info->rebate_offer == 1 ? 'checked': ''; } ?>>
                                             </div>
                                             <div class="col-md-8">
-                                                <input type="text" class="form-control date_picker" name="sales_date" id="" value="<?php if(isset($office_info)){ echo  $office_info->sales_date; } ?>"/>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td align="center" class="table_body_customer">
-                                        <div class="row">
-                                            <div class="col-md-2" style="margin-top: 5px;">
-                                                <input type="checkbox" name="rep_paper" class="form-controls" value="1"  id="rep_paper" <?php if(isset($office_info)){ echo $office_info->rebate_offer == 1 ? 'checked': ''; } ?>>
-                                            </div>
-                                            <div class="col-md-8">
-                                                <input type="text" class="form-control date_picker" name="sales_date" id="" value="<?php if(isset($office_info)){ echo  $office_info->sales_date; } ?>"/>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td align="center" class="table_body_customer">
-                                        <div class="row">
-                                            <div class="col-md-2" style="margin-top: 5px;">
-                                                <input type="checkbox" name="rep_paper" class="form-controls" value="1"  id="rep_paper" <?php if(isset($office_info)){ echo $office_info->rebate_offer == 1 ? 'checked': ''; } ?>>
-                                            </div>
-                                            <div class="col-md-8">
-                                                <input type="text" class="form-control date_picker" name="sales_date" id="" value="<?php if(isset($office_info)){ echo  $office_info->sales_date; } ?>"/>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td align="center" class="table_body_customer">
-                                        <div class="row">
-                                            <div class="col-md-2" style="margin-top: 5px;">
-                                                <input type="checkbox" name="rep_paper" class="form-controls" value="1"  id="rep_paper" <?php if(isset($office_info)){ echo $office_info->rebate_offer == 1 ? 'checked': ''; } ?>>
-                                            </div>
-                                            <div class="col-md-8">
-                                                <input type="text" class="form-control date_picker" name="sales_date" id="" value="<?php if(isset($office_info)){ echo  $office_info->sales_date; } ?>"/>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td align="center" class="table_body_customer">
-                                        <div class="row">
-                                            <div class="col-md-2" style="margin-top: 5px;">
-                                                <input type="checkbox" name="rep_paper" class="form-controls" value="1"  id="rep_paper" <?php if(isset($office_info)){ echo $office_info->rebate_offer == 1 ? 'checked': ''; } ?>>
-                                            </div>
-                                            <div class="col-md-8">
-                                                <input type="text" class="form-control date_picker" name="sales_date" id="" value="<?php if(isset($office_info)){ echo  $office_info->sales_date; } ?>"/>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td align="center" class="table_body_customer">
-                                        <div class="row">
-                                            <div class="col-md-2" style="margin-top: 5px;">
-                                                <input type="checkbox" name="rep_paper" class="form-controls" value="1"  id="rep_paper" <?php if(isset($office_info)){ echo $office_info->rebate_offer == 1 ? 'checked': ''; } ?>>
-                                            </div>
-                                            <div class="col-md-8">
-                                                <input type="text" class="form-control date_picker" name="sales_date" id="" value="<?php if(isset($office_info)){ echo  $office_info->sales_date; } ?>"/>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td align="center" class="table_body_customer">
-                                        <div class="row">
-                                            <div class="col-md-2" style="margin-top: 5px;">
-                                                <input type="checkbox" name="rep_paper" class="form-controls" value="1"  id="rep_paper" <?php if(isset($office_info)){ echo $office_info->rebate_offer == 1 ? 'checked': ''; } ?>>
-                                            </div>
-                                            <div class="col-md-8">
-                                                <input type="text" class="form-control date_picker" name="sales_date" id="" value="<?php if(isset($office_info)){ echo  $office_info->sales_date; } ?>"/>
+                                                <input type="text" class="form-controls date_picker" name="sales_date" id="" value="<?php if(isset($office_info)){ echo  $office_info->sales_date; } ?>"/>
                                             </div>
                                         </div>
                                     </td>

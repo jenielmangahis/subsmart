@@ -365,6 +365,10 @@ $(document).ready(function () {
         }
 
         $("#modalNewCustomer").modal("hide");
+        // $('#sel-customer').selectmenu('refresh');
+        // alert('js');
+        $('#sel-customerdiv').load(window.location.href +  ' #sel-customerdiv');
+        // $('#sel-cul').load(window.location.href +  ' #sel-cul');
       },
     });
   });

@@ -105,6 +105,18 @@
         $("#monitor_comp").select2({
             placeholder: "Select Company"
         });
+        $("#online").select2({
+            placeholder: "Select"
+        });
+        $("#in_service").select2({
+            placeholder: "Select"
+        });
+        $("#collections").select2({
+            placeholder: "Select"
+        });
+        $("#equipment").select2({
+            placeholder: "Select"
+        });
     });
     $(function() {
         $("nav:first").addClass("closed");
@@ -241,7 +253,7 @@
             //'setDate': new Date(),
             //minDate: new Date(),
         });
-        $('.date_picker').val(new Date().toLocaleDateString());
+        //$('.date_picker').val(new Date().toLocaleDateString());
 
         //$('.time_picker').val(new Date().toLocaleTimeString());
 
@@ -293,10 +305,16 @@
             //var url = form.attr('action');
             $.ajax({
                 type: "POST",
-                url: base_url + "customer/add_data_sheet",
+                url: base_url + "customer/save_customer_profile",
                 data: form.serialize(), // serializes the form's elements.
                 success: function(data)
                 {
+                    if(data === "Customer Already Exist!"){
+                        error(data);
+                    }else{
+                        sucess(data);
+                    }
+
                     if(data === "Added"){
                         sucess("New Customer has been Added Successfully!");
                     }else if(data === "Updated"){
@@ -304,7 +322,6 @@
                     }else{
                         console.log(data);
                     }
-
                 }
             });
         });
@@ -314,6 +331,21 @@
                 information,
                 'success'
             );
+        }
+        function error(information){
+            Swal.fire({
+                title: 'Sorry!',
+                text: information,
+                icon: 'error',
+                showCancelButton: false,
+                confirmButtonColor: '#32243d',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ok'
+            }).then((result) => {
+                if (result.value) {
+                    //window.location.href="/customer";
+                }
+            });
         }
         function sucess(information){
             Swal.fire({

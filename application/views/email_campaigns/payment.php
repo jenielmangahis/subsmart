@@ -47,106 +47,67 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     font-weight: 600;
     font-size: 17px;
 }
-.cart-summary-total{
-  /*font-weight: bold;*/
-  font-size: 22px;
+.card-help {
+    padding-left: 45px;
+    padding-top: 10px;
 }
-.payment-method{
-  padding: 0px;
-  list-style: none;
+.text-ter {
+    color: #888888;
 }
-.payment-method li{
-  margin-bottom: 35px;
+.card-type.visa {
+    background-position: 0 0;
 }
-.payment-method li input{
-  margin-right: 10px;
+.card-type {
+    margin-left: 25px;
+    display: inline-block;
+    width: 30px;
+    height: 20px;
+    background: url(<?= base_url("/assets/img/credit_cards.png"); ?>) no-repeat 0 0;
+    background-size: cover;
+    vertical-align: middle;
+    margin-right: 10px;
 }
-.payment-method li img{
-  display: inline-block;
+.card-type.americanexpress {
+    background-position: -83px 0;
 }
-/**
-   * The CSS shown here will not be introduced in the Quickstart guide, but shows
-   * how you can use CSS to style your Element's container.
-   */
-  .StripeElement {
+.expired{
+  color:red;
+}
+.card-type.discover {
+    background-position: -125px 0;
+}
+input[type="radio"], input[type="checkbox"] {
+    margin: 4px 5px 0 0 !important;
+}
+input[type=checkbox], input[type=radio] {
+    margin: 4px 0 0;
+    margin-top: 1px\9;
+    line-height: normal;
+}
+input[type=checkbox], input[type=radio] {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
     box-sizing: border-box;
-
-    height: 40px;
-
-    padding: 10px 12px;
-
-    border: 1px solid transparent;
-    border-radius: 4px;
-    background-color: white;
-
-    box-shadow: 0 1px 3px 0 #e6ebf1;
-    -webkit-transition: box-shadow 150ms ease;
-    transition: box-shadow 150ms ease;
-  }
-
-  .StripeElement--focus {
-    box-shadow: 0 1px 3px 0 #cfd7df;
-  }
-
-  .StripeElement--invalid {
-    border-color: #fa755a;
-  }
-
-  .StripeElement--webkit-autofill {
-    background-color: #fefde5 !important;
-  }
-  .stripe-btn, .stripe-cancel-btn{
-    border: none;
-      border-radius: 4px;
-      outline: none;
-      text-decoration: none;
-      color: #fff;
-      background: #32325d;
-      white-space: nowrap;
-      display: inline-block;
-      height: 40px;
-      line-height: 40px;
-      padding: 0 14px;
-      box-shadow: 0 4px 6px rgba(50, 50, 93, .11), 0 1px 3px rgba(0, 0, 0, .08);
-      border-radius: 4px;
-      font-size: 15px;
-      font-weight: 600;
-      letter-spacing: 0.025em;
-      text-decoration: none;
-      -webkit-transition: all 150ms ease;
-      transition: all 150ms ease;      
-      margin-left: 12px;
-      margin-top: 28px;
-  }
+    padding: 0;
+}
+label {
+    display: inline-block;
+    max-width: 100%;
+    margin-bottom: 5px;
+}
+label>input {
+  visibility: visible;
+}
+.cc-list li{
+  margin: 25px;
+}
 </style>
 <div class="wrapper" role="wrapper">
     <?php include viewPath('includes/sidebars/marketing'); ?>
     <!-- page wrapper start -->
     <div wrapper__section>
         <div class="container-fluid p-40">
-          <!--
-            <div class="page-title-box">
-                <div class="row align-items-center">
-                    <div class="col-sm-6">
-                        <h1 class="page-title">Create SMS Campaign</h1>
-                        <ol class="breadcrumb">
-                            <li class="breadcrumb-item active">Start a new SMS campaign to promote your business.</li>
-                        </ol>
-                    </div>
-                    <div class="col-sm-6">
-                        <div class="float-right d-none d-md-block">
-                            <div class="dropdown">
-                                    <a href="<?php echo url('sms_campaigns') ?>" class="btn btn-primary" aria-expanded="false">
-                                        <i class="mdi mdi-settings mr-2"></i> Go Back to SMS Blast list
-                                    </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            -->
-            <!-- end row -->
-            <?php echo form_open_multipart('sms_campaigns/process_payment', ['class' => 'form-validate', 'id' => 'payment-sms-blast', 'autocomplete' => 'off']); ?>
+            <?php echo form_open_multipart('sms_campaigns/process_payment', ['class' => 'form-validate', 'id' => 'activate-email-blast', 'autocomplete' => 'off']); ?>
             <div class="row">
                 <div class="col-xl-12">
                     <div class="card mt-0">
@@ -158,8 +119,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                           <div class="col-sm-6 right dashboard-container-1">
                             <div class="float-right d-none d-md-block">
                                 <div class="dropdown">
-                                        <a href="<?php echo url('sms_campaigns') ?>" class="btn btn-primary" aria-expanded="false">
-                                            <i class="mdi mdi-settings mr-2"></i> Go Back to SMS Blast list
+                                        <a href="<?php echo url('email_campaigns') ?>" class="btn btn-primary" aria-expanded="false">
+                                            <i class="mdi mdi-settings mr-2"></i> Go Back to Email Blast list
                                         </a>
                                 </div>
                             </div>
@@ -171,43 +132,69 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         </div>
 
                         <div class="card-body">
-                            <div class="validation-error" style="display: none;"></div>
+                            <div class="form-msg" style="display: none;"></div>
                             <div class="tabs-menu">
                                 <ul class="clearfix">
-                                  <li>1. Create Campaign</li>
-                                  <li>2. Select Customers</li>
-                                  <li>3. Build Email</li>
-                                  <li>4. Preview</li>
-                                  <li class="active">5. Purchase</li>
+                                  <li><a href="<?= base_url('email_campaigns/edit_campaign/' . $emailBlast->id); ?>">1. Create Campaign</a></li>
+                                  <li><a href="<?= base_url('email_campaigns/add_campaign_send_to'); ?>">2. Select Customers</a></li>
+                                  <li><a href="<?= base_url('email_campaigns/build_email'); ?>">3. Build Email</a></li>
+                                  <li><a href="<?= base_url('email_campaigns/preview_email_message'); ?>">4. Preview</a></li>
+                                  <li class="active"><a href="<?= base_url('email_campaigns/payment'); ?>">5. Purchase</a></li>
                                 </ul>
                             </div>
                             <hr />
                             <div class="row">
-                                <div class="col-md-8">                                    
+                                <div class="col-md-6">                                    
                                     <div class="payment-options">
-                                      <p><b>Select Payment Method</b></p>
-                                      <ul class="payment-method">
+                                      <p style="font-size: 23px;"><b>Payment Method</b></p>
+                                      <p>Pay securely using your credit card.</p>
+                                      <ul class="cc-list">
+                                      <?php foreach($creditCards as $c){ ?>
                                         <li>
-                                          <input type="radio" id="paypal" name="payment_method" value="paypal">
-                                          <img src="<?php echo $url->assets ?>img/paypal-logo.png" alt="" style="height: 62px;">
+                                          <?php 
+                                            $is_checked = '';
+                                            if( $emailBlast->cards_file_id == $c->id ){
+                                              $is_checked = 'checked="checked"';
+                                            }
+                                          ?>
+                                          <label class="weight-normal"><input <?= $is_checked; ?> type="radio" name="payment_method_token" value="<?= $c->id; ?>">
+                                          <?php 
+                                            $card_type = strtolower($c->cc_type); 
+                                            $card_type = str_replace(" ", "", $card_type);
+                                          ?>
+                                          <span class="card-type <?= $card_type; ?>"></span>                                       
+                                          <?php 
+                                            $card_number = maskCreditCardNumber($c->card_number);
+                                            echo $card_number;
+                                          ?>   
+                                          <?php
+                                            $today = date("y-m-d");  
+                                            $day   = date("d");                                 
+                                            $expires = date("y-m-d",strtotime($c->expiration_year . "-" . $c->expiration_month . "-" . $day));
+                                            $expired = 'expires';
+                                            if( strtotime($expires) < strtotime($today) ){
+                                              $expired = 'expired';
+                                            }
+                                            
+                                          ?>   
+                                            <span class="<?= $expired; ?>"> (<?= $expired; ?> <?= $c->expiration_month . "/" . $c->expiration_year; ?>)</span>
+                                          </label>
                                         </li>
-                                        <li>
-                                          <input type="radio" id="stripe" name="payment_method" value="stripe">
-                                          <img src="<?php echo $url->assets ?>img/stripe-logo.png" alt="" style="height: 62px;">
-                                        </li>
-                                        <li>
-                                          <input type="radio" id="converge" name="payment_method" value="converge">
-                                          <img src="<?php echo $url->assets ?>img/converge-logo.png" alt="" style="height: 62px;">
-                                        </li>
-                                      </ul> 
+                                      <?php } ?>
+                                      </ul>
+                                      <div data-payment="cc-save-container">
+                                          <label class="weight-normal"><input type="checkbox" name="chk_terms" id="chk-terms" value="1" checked="checked">
+                                          <span style="display: inline-block;margin-left: 22px;">Securely save my card for future purchases</span></label>
+                                          <span class="help help-block help-sm">Easy to pay on your future purchases.</span>
+                                      </div>
                                     </div>
                                     
                                     <div class="stripe-form" style="display: none;">
                                       <div class="col-md-12">
                                         <h4 class="font-weight-bold pl-0 my-4" style="font-size: 17px;"><strong>Stripe Payment Method</strong></h3>
                                           <div class="payment-method" style="display: block;margin-bottom: 16px;">
-                                            <label>SMS Campaign</label><br />
-                                            <label>Total Amount : <b><span class="total-amount">$<?= number_format($grand_total, 2); ?></span></b></label><br />
+                                            <label>Email Campaign</label><br />
+                                            <label>Total Amount : <b><span class="total-amount">$<?= number_format($total_price, 2); ?></span></b></label><br />
                                             <hr />
                                           </div>
                                         <div id="card-element"></div>                       
@@ -227,19 +214,26 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <hr class="card-hr" />
                                     <div class="row form-footer-container">
                                       <div class="col-md-4">
-                                        <button type="button" class="btn btn-flat btn-primary margin-right btn-sms-purchase" style="margin-right: 0px;">Purchase</button>
+                                        <button type="submit" class="btn btn-flat btn-primary margin-right btn-automation-activate" style="margin-right: 0px;">Purchase</button>
                                       </div>
-                                      <div class="col-md-8" style="text-align: right;"><strong>Amount to Pay $<?= number_format($grand_total, 2); ?></strong></div>
                                     </div>
                                 </div>
                                 <div class="col-md-4">
                                     <div class="cart-summary" style="background-color: #f2f2f2;padding: 20px;">
                                       <div class="row margin-bottom-sec ">
-                                        <div class="col-md-8"><strong style="font-size: 15px;">SMS Campaign</strong></div>
+                                        <div class="col-md-8"><strong style="font-size: 15px;">Email Campaign</strong></div>
                                       </div>
                                       <div class="row margin-top-sec margin-bottom-sec">
                                         <div class="col-md-6"><strong style="font-size: 15px;">Amount to Pay</strong></div>
-                                        <div class="col-md-6"><span class="cart-summary-total">$<?= number_format($grand_total, 2); ?></span></div>
+                                        <div class="col-md-6"><span class="cart-summary-total" style="font-size: 22px;">$<?= number_format($total_price, 2); ?></span></div>
+                                      </div>
+                                    </div>
+                                    <div class="row margin-top-sec margin-bottom-sec" style="text-align: center;">
+                                      <div class="payment-ssl" style="margin-top: 60px;text-align: center;width: 100%;">
+                                          <div class="margin-bottom">
+                                              <img src="<?= base_url("assets/img/credit_cards.png") ?>" style="display: inline-block;margin-bottom: 20px;" /><br />
+                                              <div class="text-ter">We accept all major credit cards</div>
+                                          </div>
                                       </div>
                                     </div>
                                 </div>
@@ -247,7 +241,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <hr />
                             <div>
                                 <div class="col-md-4 form-group md-right">
-                                    <a class="btn btn-default margin-right" href="<?php echo url('sms_campaigns/preview_sms_message/'); ?>">&laquo; Back</a>
+                                    <a class="btn btn-default margin-right" href="<?php echo url('email_campaigns/preview_email_message/'); ?>">&laquo; Back</a>
                                 </div>
                             </div>
                         </div>
@@ -263,178 +257,49 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     <!-- page wrapper end -->
 </div>
 <?php include viewPath('includes/footer'); ?>
-<script src="https://www.paypal.com/sdk/js?client-id=sb&currency=USD"></script>
 <script>
 $(function(){
-    $(".btn-sms-purchase").click(function(){      
-      $(".btn-sms-purchase").html('<span class="spinner-border spinner-border-sm m-0"></span>  Processing Payment');
-      
-      var payment_method = $('input[name="payment_method"]:checked').val();  
-      
-      if( payment_method == 'paypal' ){
-        var url = base_url + 'sms_campaigns/_load_paypal';
-        setTimeout(function () {
-          $.ajax({
-             type: "POST",
-             url: url,
-             dataType: "json",
-             data: $("#create_sms_blast").serialize(),
-             success: function(o)
-             {
-                if( o.is_success ){
-                    location.href = o.approvalUrl;
-                }else{
-                  Swal.fire({
-                    icon: 'error',
-                    title: 'Cannot Process Payment',
-                    text: o.msg
-                  });
-                  $(".btn-sms-purchase").html('Purchase');
-                }
-             }
-          });
-        }, 1000);
-
-
-      }else if( payment_method == 'converge' ){
-        $( "#payment-sms-blast" ).submit();
-      }else if( payment_method == 'stripe' ){
-        $(".payment-options").hide();
-        $(".form-footer-container").hide();
-        $(".btn-sms-purchase").html('Purchase');
-        $(".stripe-form").show();
-      }else{
-        Swal.fire({
-          icon: 'error',
-          title: 'Cannot Process Payment',
-          text: 'Please select payment method'
-        });
-        $(".btn-sms-purchase").html('Purchase');
-      }
-    });
-
-    $(".stripe-cancel-btn").click(function(){
-      $(".payment-options").show();
-      $(".form-footer-container").show();      
-      $(".stripe-form").hide();
-    });
-
-    $("#create_sms_blast").submit(function(e){
+    $("#activate-email-blast").submit(function(e){
         e.preventDefault();
-        var url = base_url + 'sms_campaigns/save_draft_campaign';
-        $(".btn-campaign-save-draft").html('<span class="spinner-border spinner-border-sm m-0"></span>  Saving');
-        setTimeout(function () {
-          $.ajax({
-             type: "POST",
-             url: url,
-             dataType: "json",
-             data: $("#create_sms_blast").serialize(),
-             success: function(o)
-             {
-                if( o.is_success ){
-                    $(".validation-error").hide();
-                    $(".validation-error").html('');
-                    //redirect to step2
-                    location.href = base_url + "sms_campaigns/add_campaign_send_to";
-                }else{
-                    $(".validation-error").show();
-                    $(".validation-error").html(o.err_msg);
-                    $(".btn-campaign-save-draft").html('Continue »');
-                }
-             }
+
+        if( $("#chk-terms").is(":checked") ){
+          var url = base_url + 'email_campaigns/activate_automation';
+          $(".btn-automation-activate").html('<span class="spinner-border spinner-border-sm m-0"></span>  Saving');
+          setTimeout(function () {
+            $.ajax({
+               type: "POST",
+               url: url,
+               dataType: "json",
+               data: $("#activate-email-blast").serialize(),
+               success: function(o)
+               {
+                  if( o.is_success ){
+                      $('.form-msg').hide().html("<p class='alert alert-info'>"+o.msg+"</p>").fadeIn(500);
+                      $(".btn-automation-activate").html('<span class="spinner-border spinner-border-sm m-0"></span>  Redirecting to list');
+                      setTimeout(function() {
+                          location.href = base_url + "email_campaigns";
+                      }, 2500);
+                  }else{
+                      $(".btn-automation-activate").html('Purchase');
+
+                      Swal.fire({
+                        icon: 'error',
+                        title: o.msg,
+                        text: 'Cannot activate campaign.'
+                      });
+                  }
+               }
+            });
+          }, 1000);
+        }else{
+          Swal.fire({
+            icon: 'error',
+            title: 'Cannot proceed.',
+            text: 'Please check form inputs'
           });
-        }, 1000);
-    });
-
-    // Create a Stripe client.
-    var stripe = Stripe('<?= STRIPE_PUBLISH_KEY; ?>');
-
-    // Create an instance of Elements.
-    var elements = stripe.elements();
-
-    // Custom styling can be passed to options when creating an Element.
-    // (Note that this demo uses a wider set of styles than the guide below.)
-    var style = {
-      base: {
-        color: '#32325d',
-        fontFamily: '"Helvetica Neue", Helvetica, sans-serif',
-        fontSmoothing: 'antialiased',
-        fontSize: '16px',
-        '::placeholder': {
-          color: '#aab7c4'
         }
-      },
-      invalid: {
-        color: '#fa755a',
-        iconColor: '#fa755a'
-      }
-    };
 
-    // Create an instance of the card Element.
-    var card = elements.create('card', {style: style});
-
-    // Add an instance of the card Element into the `card-element` <div>.
-    card.mount('#card-element');
-
-    // Handle real-time validation errors from the card Element.
-    card.on('change', function(event) {
-      var displayError = document.getElementById('card-errors');
-      if (event.error) {
-        displayError.textContent = event.error.message;
-      } else {
-        displayError.textContent = '';
-      }
+        
     });
-
-    // Handle form submission.
-    var form = document.getElementById('payment-sms-blast');
-    form.addEventListener('submit', function(event) {
-      event.preventDefault();
-      $(".stripe-btn").html('<span class="spinner-border spinner-border-sm m-0"></span>  Processing Payment');
-      stripe.createToken(card).then(function(result) {
-        if (result.error) {
-          // Inform the user if there was an error.
-          var errorElement = document.getElementById('card-errors');
-          errorElement.textContent = result.error.message;
-          $(".stripe-btn").html('Submit Payment');
-        } else {
-          // Send the token to your server.
-          stripeTokenHandler(result.token);
-        }
-      });
-    });
-
-    // Submit the form with the token ID.
-    function stripeTokenHandler(token) {
-      // Insert the token ID into the form so it gets submitted to the server
-      var form = document.getElementById('payment-sms-blast');
-      var hiddenInput = document.createElement('input');
-      hiddenInput.setAttribute('type', 'hidden');
-      hiddenInput.setAttribute('name', 'stripeToken');
-      hiddenInput.setAttribute('value', token.id);
-      form.appendChild(hiddenInput);
-
-      // Submit the form
-      stripeUpdateSmsPayment();
-      //form.submit();
-    }
-
-    function stripeUpdateSmsPayment(){
-      $(".payment-method").html('<div class="alert alert-success">Payment process completed.</div>');
-      $(".stripe-btn").html('<span class="spinner-border spinner-border-sm m-0"></span>');
-      var url = base_url + 'sms_campaigns/process_stripe_payment';
-      setTimeout(function () {
-        $.ajax({
-           type: "POST",
-           url: url,
-           dataType: "json",
-           data:$("#payment-sms-blast").serialize(),
-           success: function(o)
-           {
-              location.href = base_url + 'sms_campaigns';
-           }
-        });
-      }, 1000);
-    }
 });
 </script>

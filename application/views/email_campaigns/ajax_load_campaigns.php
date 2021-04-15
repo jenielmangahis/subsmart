@@ -11,28 +11,28 @@
                 </tr>
             </thead>
             <tbody>
-                <?php foreach($smsBlast as $sb){ ?>
+                <?php foreach($emailBlast as $eb){ ?>
                     <tr>
-                        <td><?= $sb->campaign_name; ?></td>
+                        <td><?= $eb->campaign_name; ?></td>
                         <td>
                             <?php 
-                            if( $sb->sending_type == 0 ){
+                            if( $eb->sending_type == 0 ){
                                 echo "-";
                             }else{
-                                echo $sendToOptions[$sb->sending_type];
+                                echo $sendToOptions[$eb->sending_type];
                             }
                             ?>    
                         </td>
                         <td>
                             <?php 
-                                if( $sb->date_sent == '0000-00-00' ){
+                                if( $eb->date_sent == '0000-00-00' ){
                                     echo '-';
                                 }else{
-                                    echo date("Y-m-d",strtotime($sb->date_sent));
+                                    echo date("Y-m-d",strtotime($eb->date_sent));
                                 }
                             ?>
                         </td>
-                        <td><?= $statusOptions[$sb->status]; ?></td>
+                        <td><?= $statusOptions[$eb->status]; ?></td>
                         <td>
                             <div class="dropdown dropdown-btn">
                                 <button class="btn btn-default dropdown-toggle" type="button" id="dropdown-edit" data-toggle="dropdown" aria-expanded="true">
@@ -40,22 +40,22 @@
                                 </button>
                                 <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="dropdown-edit">                            
                                     <!-- <li role="presentation">
-                                        <a role="menuitem" tabindex="-1" href="<?php echo base_url('credit_notes/view/' . $sb->id) ?>"><span class="fa fa-file-text-o icon"></span> View</a>
-                                    </li> -->      
-                                    <?php if($sb->status != 3){ ?>      
+                                        <a role="menuitem" tabindex="-1" href="<?php echo base_url('email_campaigns/view/' . $eb->id) ?>"><span class="fa fa-file-text-o icon"></span> View</a>
+                                    </li>  -->     
+                                    <?php if($eb->status != 3){ ?>      
                                     <li role="presentation">
-                                        <a role="menuitem" tabindex="-1" href="<?php echo base_url('sms_campaigns/edit_campaign/' . $sb->id) ?>"><span class="fa fa-pencil-square-o icon"></span> Edit</a>
+                                        <a role="menuitem" tabindex="-1" href="<?php echo base_url('email_campaigns/edit_campaign/' . $eb->id) ?>"><span class="fa fa-pencil-square-o icon"></span> Edit</a>
                                     </li>                
                                     <?php } ?>
                                     <li role="presentation">
-                                        <a role="menuitem" class="clone-sms-campaign" href="javascript:void(0);" data-name="<?= $sb->campaign_name; ?>" data-id="<?= $sb->id; ?>">
+                                        <a role="menuitem" class="clone-email-campaign" href="javascript:void(0);" data-name="<?= $eb->campaign_name; ?>" data-id="<?= $eb->id; ?>">
                                         <span class="fa fa-files-o icon"></span>  Clone</a>
                                     </li>
                                     <li role="separator" class="divider"></li>
-                                    <?php if($sb->status != 3){ ?>
+                                    <?php if($eb->status != 3){ ?>
                                     <li role="separator" class="divider"></li>
                                     <li role="presentation">
-                                        <a role="menuitem" class="close-sms-campaign" data-name="<?= $sb->campaign_name; ?>" data-id="<?= $sb->id; ?>" href="javascript:void(0);" data-id="<?= $sb->id; ?>"><span class="fa fa-trash-o icon"></span> Close</a>
+                                        <a role="menuitem" class="close-email-campaign" data-name="<?= $eb->campaign_name; ?>" data-id="<?= $eb->id; ?>" href="javascript:void(0);" data-id="<?= $eb->id; ?>"><span class="fa fa-trash-o icon"></span> Close</a>
                                     </li>
                                     <?php } ?>
                                 </ul>

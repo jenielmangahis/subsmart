@@ -83,13 +83,17 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                            ?>" required />
                             </div>
                             <div class="col-md-3 form-group">
-                                <label for="contact_email">Select Customer</label><label style="float:right;color:green;"><i class="fa fa-plus-square" aria-hidden="true"></i> New Customer</label>
+                                <label for="contact_email">Select Customer</label><label style="float:right;color:green;"><a class="link-modal-open" href="javascript:void(0)" data-toggle="modal"
+                                       data-target="#modalNewCustomer" style="color:#02A32C;"><span
+                                                class="fa fa-plus fa-margin-right" style="color:#02A32C;"></span>New Customer</a></label>
+                                <div id="sel-customerdiv">               
                                 <select id="sel-customer" name="customer_id" data-customer-source="dropdown" class="form-control searchable-dropdown" placeholder="Select">
                                         <option value="0">- none -</option>
                                         <?php foreach($customers as $c){ ?>
-                                            <option value="<?= $c->prof_id; ?>"><?= $c->first_name . ' ' . $c->last_name; ?></option>
+                                            <option value="<?= $c->prof_id; ?>"><?= $c->contact_name . '' . $c->first_name . ' ' . $c->last_name; ?></option>
                                         <?php } ?>
                                     </select>
+                                    </div>
                             </div>
                             <div class="col-md-3 form-group">
                                 <label for="security_number">Security Number</label>
@@ -116,7 +120,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         </div>
                         
                         <!-- end row -->
-                        <div class="row">                    
+                        <div class="row" id="sel-cul">                    
                             <div class="col-md-4 form-group">
                                 <label for="job_location">Job Location</label>
                                 <!-- <label style="float:right;color:green;"><i class="fa fa-plus-square" aria-hidden="true"></i> New Location</label> -->
@@ -820,11 +824,11 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 </div>
                             </div>
                             <div class="row">
-                                <div class=" col-md-4">
+                                <div class="col-md-4">
                                     <h6>Company Representative Approval</h6>
-                                    <div class="sigPad" id="smoothed1a" style="width:100%;border:solid gray 1px;">
+                                    <div class="sigPad" id="smoothed1a" style="width:100%;border:solid gray 1px;background-color:#00b300;">
                                     <!-- <a href="#" style="float:right;margin-right:10px;" class="smoothed1a_pencil" id="smoothed1a_pencil"><i class="fa fa-pencil" aria-hidden="true"></i></a> -->
-                                        <ul class="sigNav">
+                                        <ul class="sigNav" style="">
                                             <li class="drawIt"><a href="#draw-it">Draw It</a></li>
                                             <li class="clearButton"><a href="#clear">Clear</a></li>
                                         </ul>
@@ -833,8 +837,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         </ul>
                                         <div class="sig sigWrapper" id="smoothed1a_pencil" style="height:auto;pointer-events: none;">
                                             <div class="typed"></div>
-                                            <canvas class="pad" id="company_representative_approval_signature1a"
-                                                    width="400" height="250"></canvas>
+                                            <canvas class="pad" id="company_representative_approval_signature1a" style="width:100%;"></canvas>
                                             <input type="hidden" name="output-2" class="output">
                                         </div>
                                     </div>
@@ -848,9 +851,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                            id="comp_rep_approval" placeholder=""/>
 
                                 </div>
-                                <div class=" col-md-4">
+                                <div class="col-md-4">
                                     <h6>Primary Account Holder</h6>
-                                    <div class="sigPad" id="smoothed2a" style="width:100%;border:solid gray 1px;">
+                                    <div class="sigPad" id="smoothed2a" style="width:100%;border:solid gray 1px;background-color:#f7b900;">
                                     <!-- <p style="float:right;margin-right:10px;"><i class="fa fa-pencil" aria-hidden="true"></i></p> -->
                                         <ul class="sigNav">
                                             <li class="drawIt"><a href="#draw-it">Draw It</a></li>
@@ -861,8 +864,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         </ul>
                                         <div class="sig sigWrapper" style="height:auto;pointer-events: none;">
                                             <div class="typed"></div>
-                                            <canvas class="pad" id="primary_account_holder_signature2a" width="400"
-                                                    height="250"></canvas>
+                                            <canvas class="pad" id="primary_account_holder_signature2a" style="width:100%;"></canvas>
                                             <input type="hidden" name="output-2" class="output">
                                         </div>
                                     </div>
@@ -875,9 +877,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                            id="comp_rep_approval" placeholder=""/>
 
                                 </div>
-                                <div class=" col-md-4">
+                                <div class="col-md-4">
                                     <h6>Secondary Account Holder</h6>
-                                    <div class="sigPad" id="smoothed3a" style="width:100%;border:solid gray 1px;">
+                                    <div class="sigPad" id="smoothed3a" style="width:100%;border:solid gray 1px;background-color:#f75c1e;">
                                     <!-- <p style="float:right;margin-right:10px;"><i class="fa fa-pencil" aria-hidden="true"></i></p> -->
                                         <ul class="sigNav">
                                             <li class="drawIt"><a href="#draw-it">Draw It</a></li>
@@ -888,8 +890,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         </ul>
                                         <div class="sig sigWrapper" style="height:auto;pointer-events: none;">
                                             <div class="typed"></div>
-                                            <canvas class="pad" id="secondary_account_holder_signature3a" width="400"
-                                                    height="250"></canvas>
+                                            <canvas class="pad" id="secondary_account_holder_signature3a" style="width:100%;"></canvas>
                                             <input type="hidden" name="output-2" class="output">
                                         </div>
                                     </div>
@@ -1227,6 +1228,34 @@ defined('BASEPATH') or exit('No direct script access allowed');
     <!-- page wrapper end -->
 </div>
 <?php include viewPath('includes/footer'); ?>
+
+<script type="text/javascript">
+$(window).on('beforeunload', function(){
+    var c = confirm();
+    if(c){
+        return true;
+    }
+    else
+        return false;
+});
+</script>
+
+<script src="<?php echo $url->assets ?>js/add.js"></script>
+
+<script>
+jQuery(document).ready(function () {
+    $(document).on('click','#Commercial',function(){
+        $('#business_name_area').show();
+    });
+    $(document).on('click','#customer_type',function(){
+        $('#business_name_area').hide();
+    });
+    $(document).on('click','#advance',function(){
+        $('#business_name_area').hide();
+    });
+});
+</script>
+
 <script>
 
     document.getElementById('contact_mobile').addEventListener('input', function (e) {
@@ -1282,6 +1311,28 @@ $("#headerContent").html(function() {
     var companyName = $('#company_name').val();
 // Replace 'ok' with string you want to change, you can delete 'hello everyone' to remove the text
       return $(this).html().replace("{comp_name}", companyName);  
+
+});
+});
+
+jQuery(function($){
+
+// Replace 'td' with your html tag
+$("#thisdiv3").html(function() { 
+
+    // var companyName = $('#company_name').val();
+    // var now = new Date();
+    // now.setDate(now.getDate()+3);
+    var n=3; //number of days to add. 
+    var t = new Date();
+    t.setDate(t.getDate() + n); 
+    var month = "0"+(t.getMonth()+1);
+    var date = "0"+t.getDate();
+    month = month.slice(-2);
+    date = date.slice(-2);
+    var date = " "+ month +"-"+date +"-"+t.getFullYear();
+// alert(now);  
+      return $(this).html().replace("{current_date_3}", date);  
 
 });
 });

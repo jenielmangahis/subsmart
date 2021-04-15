@@ -339,10 +339,10 @@ class Sms_Campaigns extends MY_Controller {
 
     public function ajax_load_campaigns($status){
         $company_id = logged('company_id');
-        if( $status > 0 ){
-            $conditions[] = ['field' => 'sms_blast.status','value' => $status];    
-        }else{
+        if( $status == 'all' ){
             $conditions = array();
+        }else{
+            $conditions[] = ['field' => 'sms_blast.status','value' => $status];    
         }
         
         $smsBlast      = $this->SmsBlast_model->getAllByCompanyId($company_id, array(), $conditions);
@@ -419,12 +419,12 @@ class Sms_Campaigns extends MY_Controller {
             }else{
                 $this->session->set_flashdata('message', 'Record not found.');
                 $this->session->set_flashdata('alert_class', 'alert-danger');
-                redirect('credit_notes');
+                redirect('sms_campaigns');
             }
         }else{
             $this->session->set_flashdata('message', 'Record not found.');
             $this->session->set_flashdata('alert_class', 'alert-danger');
-            redirect('credit_notes');
+            redirect('sms_campaigns');
         }
     }
 

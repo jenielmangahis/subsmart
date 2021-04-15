@@ -57,6 +57,60 @@
                 <input type="text" class="form-control" name="acct_info" id="acct_info" value="<?php if(isset($alarm_info)){ echo $alarm_info->acct_info; } ?>"/>
             </div>
         </div>
+
+        <div class="row form_line">
+            <div class="col-md-4">
+                <label>Online</label>
+            </div>
+            <div class="col-md-8">
+                <select id="online" name="online" data-customer-source="dropdown" class="form-controls input_select">
+                    <option value="Yes">Yes</option>
+                    <option value="No">No</option>
+                </select>
+            </div>
+        </div>
+        <div class="row form_line">
+            <div class="col-md-4">
+                <label>In Service</label>
+            </div>
+            <div class="col-md-8">
+                <select id="in_service" name="in_service" data-customer-source="dropdown" class="form-controls input_select">
+                    <option value="Yes">Yes</option>
+                    <option  value="No">No</option>
+                </select>
+            </div>
+        </div>
+        <div class="row form_line">
+            <div class="col-md-4">
+                <label>Equipment</label>
+            </div>
+            <div class="col-md-8">
+                <select id="equipment" name="equipment" data-customer-source="dropdown" class="form-controls input_select">
+                    <option value=""></option>
+                    <option  value="Not Installed">Not Installed</option>
+                    <option  value="Installed">Installed</option>
+                    <option  value="System Pulled">System Pulled</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="row form_line">
+            <div class="col-md-4">
+                <label>Collections</label>
+            </div>
+            <div class="col-md-8">
+                <select id="collections" name="collections" data-customer-source="dropdown" class="form-controls input_select">
+                    <option value=""></option>
+                    <option  value="In Process">In Process</option>
+                    <option  value="Sent">Sent</option>
+                    <option  value="None Collectable">None Collectable</option>
+                    <option  value="In Collections">In Collection</option>
+                    <option  value="Civil Suit">Civil Suit</option>
+                    <option  value="Taken Action">Taken Action</option>
+                </select>
+            </div>
+        </div>
+
         <div class="row form_line">
             <div class="col-md-4">
                 <label for="">Abort Code</label>
@@ -310,19 +364,17 @@
                 <textarea type="text" class="form-controls" name="notes" id="notes" cols="100%" rows="5"> </textarea>
             </div>
         </div>
-
         <div class="card-header">
             <span style="position: absolute;right: 0;margin-right: 25px;font-size: 20px;padding-top:10px;" class="fa fa-ellipsis-v"></span>
 
             <h6 ><span class="fa fa-user"></span>&nbsp; Existing&nbsp;Notes</h6>
         </div>
         <div class="card-body">
-
         </div>
-        <div class="row">
+        <div class="row" style="margin: 0 0 0 5px;">
             <a href="<?php echo base_url('customer') ?>">
-                <button type="button" class="btn btn-primary btn-md "><span class="fa fa-remove"></span> Cancel </button> &nbsp;
+                <button type="button" class="btn btn-primary"><span class="fa fa-remove"></span> Cancel </button> &nbsp;
             </a>
-            <button type="submit" class="btn btn-primary btn-md" name="" id="" ><span class="fa fa-paper-plane-o"></span> Save </button>
+            <button type="submit" class="btn btn-primary" name="" id="" ><span class="fa fa-paper-plane-o"></span> Save </button>
         </div>
     </div>
