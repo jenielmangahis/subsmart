@@ -32,13 +32,30 @@ class Email_Automation extends MY_Controller {
         $optionCustomerType = $this->MarketingEmailAutomation_model->optionCustomerType();
         $optionRuleNotifyAt = $this->MarketingEmailAutomation_model->optionRuleNotifyAt();
         $optionCustomerGroup = $this->CustomerGroup_model->getAllByCompany($cid);
+        $emailAutomationTemplates = $this->MarketingEmailAutomationTemplate_model->getAllByCompanyId($cid);
 
         $this->page_data['selectedGroups'] = array();
         $this->page_data['customerGroups']  = $optionCustomerGroup;
         $this->page_data['optionRuleEvent'] = $optionRuleEvent;
         $this->page_data['optionCustomerType'] = $optionCustomerType;
         $this->page_data['optionRuleNotifyAt'] = $optionRuleNotifyAt;
+        $this->page_data['emailAutomationTemplates'] = $emailAutomationTemplates;
         $this->load->view('email_automation/add_email_automation', $this->page_data);
+    }
+
+    public function ajax_get_template_message(){
+        $post = $this->input->post();
+        $emailTemplate = $this->MarketingEmailAutomationTemplate_model->getById($post['tid']);
+        if( $emailTemplate ){
+            $message = $emailTemplate->email_body;
+        }else{
+            $message = '';
+        }
+        $json_data = [
+            'message' => $message
+        ];
+
+        echo json_encode($json_data);
     }
 
 	public function templates(){

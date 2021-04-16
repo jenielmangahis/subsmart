@@ -169,20 +169,19 @@ label>input {
                                   </div>                                  
                               </div>
 
-                              <div class="col-md-5">
+                              <div class="col-md-5" style="display: none;">
                                     <div class="panel-info">
                                         <div class="margin-bottom-sec">
                                             <label>Use default template</label>
-                                            <select name="template_id" class="form-control" data-template="dropdown">
-                                            <option value="0">- select -</option>
-                                            <option value="2295">Due for next service</option>
-                                            <option value="2296">Estimate Follow-up</option>
-                                            <option value="2297">Invoice Due Reminder</option>
-                                            <option value="2294">Thank you</option>
+                                            <select name="template_id" class="form-control email-template">
+                                            <option value="0">- Select -</option>
+                                            <?php foreach($emailAutomationTemplates as $et){ ?>
+                                              <option value="<?= $et->id; ?>"><?= $et->name; ?></option>
+                                            <?php } ?>
                                             </select>
                                         </div>
-                                        <button class="btn btn-primary margin-right" style="width: 80px;" data-template="select" data-on-click-label="Set...">Set</button>
-                                        <a data-template="manage" href="#">Manage templates</a>
+                                        <a class="btn btn-primary margin-right btn-set-template" href="javascript:void(0);">Set</a>                                        
+                                        <a href="<?= base_url("email_automation/templates"); ?>" target="_new">Manage templates</a>
                                         <hr>
                                         <div class="form-group">
                                             <label>Placeholders</label>
@@ -198,7 +197,7 @@ label>input {
                             <div class="row">
                                 <div class="col-md-4 form-group md-right">
                                     <a class="btn btn-default" href="<?php echo url('sms_automation') ?>" style="float: left;margin-right: 10px;">Cancel</a>
-                                    <button type="submit" class="btn btn-flat btn-primary margin-right btn-automation-save-draft" style="float: left;margin-right: 0px;">Continue »</button>
+                                    <button type="submit" class="btn btn-flat btn-primary margin-right btn-automation-save-draft" style="float: left;margin-right: 0px;">Save</button>
                                 </div>
                             </div>
                         </div>
@@ -254,8 +253,25 @@ $(function(){
       }
     });
 
+    $(document).on('click', '.btn-set-template', function(){
+      var tid = $('.email-template').val();
+      var url = base_url + 'email_automation/_get_template_message';
+      setTimeout(function () {
+        $.ajax({
+           type: "POST",
+           url: url,
+           dataType: "json",
+           data: {tid:tid},
+           success: function(o)
+           {
+              CKEDITOR.instances['mail_body'].insertHtml(o.message);
+           }
+        });
+      }, 300);
+    });
+
     // instance, using default configuration.
-    CKEDITOR.replace('mail_body', {
+    CKEDITOR.replace('mail_body1', {
         height: '400'
         //removePlugins: 'toolbar',
         //allowedContent: 'p h1 h2 strong em; a[!href]; img[!src,width,height] alignment;'
