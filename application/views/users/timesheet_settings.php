@@ -57,7 +57,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 
     #tsEmployeeDataTable .tbl-emp-name,
     .tbl-emp-status {
-        /*font-weight: bold;*/
+        font-weight: bold;
     }
 
     #tsEmployeeDataTable .tbl-emp-role {
@@ -141,7 +141,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                 <div class="col-xl-12">
                     <div class="card">
                         <div class="col-sm-12">
-                            <h3 class="page-title left">Time Employee</h3>
+                            <h3 class="page-title left">Timesheet Seetings</h3>
                         </div>
 
                         <div class="row" style="padding: 10px 33px 20px 33px;">
@@ -149,27 +149,59 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                 <a href="<?php echo url('/timesheet/attendance') ?>" class="banking-tab" style="text-decoration: none">Attendance</a>
                                 <a href="<?php echo url('/timesheet/attendance_logs') ?>" class="banking-tab">Time Logs</a>
                                 <a href="<?php echo url('/timesheet/notification') ?>" class="banking-tab">Notification</a>
-                                <a href="<?php echo url('/timesheet/employee') ?>" class="banking-tab<?php echo ($this->uri->segment(1) == "employee") ?: '-active'; ?>" style="text-decoration: none">Employee</a>
+                                <a href="<?php echo url('/timesheet/employee') ?>" class="banking-tab" style="text-decoration: none">Employee</a>
+                                <a href="<?php echo url('/timesheet/logs') ?>" class="banking-tab">Logs</a>
                                 <a href="<?php echo url('/timesheet/schedule') ?>" class="banking-tab">Schedule</a>
                                 <a href="<?php echo url('/timesheet/requests') ?>" class="banking-tab">Requests</a>
                                 <a href="<?php echo url('/timesheet/my_schedule') ?>" class="banking-tab">My Schedule</a>
-                                <a href="<?php echo url('/timesheet/settings') ?>" class="banking-tab">Settings</a>
+                                <a href="<?php echo url('/timesheet/settings') ?>" class="banking-tab-active">Settings</a>
                             </div>
                         </div>
                         <div class="card-body">
                             <!-- Date Selector -->
                             <div class="row">
-                                <div class="col-lg-3" style="">
-                                    <label for="tsEmployeeDatepicker" class="label-datepicker">Week of :</label>
-                                    <input type="text" class="form-control" id="tsEmployeeDatepicker" value="<?php echo date('m/d/Y', strtotime('monday this week')) ?>">
+                                <div class="col-md-12">
+                                    <ul class="nav nav-tabs">
+                                        <li class="nav-item">
+                                            <a class="nav-link timesheet_report_settings active" data-toggle="tab" href="#timesheet_report_settings">Timesheet Report Settings</a>
+                                        </li>
+                                    </ul>
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="col-lg-12 table-responsive">
-                                    <div class="table-wrapper-settings">
-                                        <table id="tsEmployeeDataTable" class="table table-hover table-to-list"></table>
-                                        <div class="table-ts-loader">
-                                            <img class="ts-loader-img" src="<?= base_url(); ?>/assets/css/timesheet/images/ring-loader.svg" alt="">
+                            <div class="tab-content">
+
+                                <div class="tab-pane container active" id="timesheet_report_settings">
+                                    <div class="row" style="padding-top: 20px;">
+                                        <div class="col-md-6">
+                                            <form id="timezone_settings_form" action="">
+
+                                                <div class="form-group">
+                                                    <label for="from_date_correction_requests" class="week-label">Select below the <b>Timezone</b> for your Timesheet Report</label>
+                                                    <select class="custom-select" id="tz_display_name">
+                                                        <?php
+                                                        foreach ($all_timezone_list as $timezone) {
+                                                            echo '<option value="' . $timezone->id . '">' . $timezone->display_name . '</option>';
+                                                        }
+                                                        ?>
+                                                    </select>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="tz_id_of_tz" class="week-label">ID of Timezone</label>
+                                                    <input type="text" class="form-control" id="tz_id_of_tz" value="" disabled>
+                                                    <?php
+                                                    foreach ($all_timezone_list as $timezone) {
+                                                        echo '<input type="text" id="tz_id_' . $timezone->id . '" value="' . $timezone->id_of_timezone . '" disabled style="display:none;   ">';
+                                                    }
+                                                    ?>
+                                                </div>
+
+                                                <div class="alert alert-success" role="alert">
+                                                    Please note that the next timesheet report will be sent <b id="next-timesheet-report"></b>
+                                                </div>
+                                                <div class="form-group">
+                                                    <button type="submit" id="tz_form_submit" class="btn btn-primary " style="float:left;">Save</button><img class="tz-form-img-loader" style="float:left; display:none;" src="<?= base_url(); ?>/assets/css/timesheet/images/ring-loader.svg" alt="">
+                                                </div>
+                                            </form>
                                         </div>
                                     </div>
                                 </div>
@@ -188,41 +220,4 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 </div>
 <?php include viewPath('includes/footer'); ?>
 <script>
-    $(document).ready(function() {
-        // Datepicker
-        $("#tsEmployeeDatepicker").datepicker();
-        let week_of = $('#tsEmployeeDatepicker').val();
-        $('#tsEmployeeDataTable').ready(showEmployeeTable(week_of));
-
-        $(document).on('change', '#tsEmployeeDatepicker', function() {
-            $("#tsEmployeeDataTable").DataTable().destroy();
-            let week = $(this).val();
-            showEmployeeTable(week);
-        });
-
-        function showEmployeeTable(week) {
-            $('#tsEmployeeDataTable_wrapper').css('display', 'none');
-            $('#tsEmployeeDataTable').css('display', 'none');
-            $(".table-ts-loader").fadeIn('fast', function() {
-                $('.table-ts-loader').css('display', 'block');
-            });
-            $.ajax({
-                url: "<?= base_url() ?>timesheet/showEmployeeTable",
-                type: "GET",
-                dataType: "json",
-                data: {
-                    week: week
-                },
-                success: function(data) {
-                    $(".table-ts-loader").fadeOut('fast', function() {
-                        $('#tsEmployeeDataTable').html(data).removeAttr('style').DataTable({
-                            "sort": false
-                        });
-                        $('#tsEmployeeDataTable_wrapper').css('display', 'block');
-                        $('.table-ts-loader').css('display', 'none');
-                    });
-                }
-            });
-        }
-    });
 </script>

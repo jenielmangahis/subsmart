@@ -1340,7 +1340,8 @@ a.top-1 {
               url: bc_events_url,
               method: 'POST'
 
-            }
+            },
+            eventOrder: ["starttime"]
             //events: <?php echo json_encode($resources_user_events); ?>,
 
         });

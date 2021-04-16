@@ -895,6 +895,7 @@ class Workcalender extends MY_Controller
             foreach($events as $event) {
                 if( $event->event_description != '' ){
                    if($event->employee_id > 0) {
+                   		$starttime = $event->start_date . " " . $event->start_time;
                         $start_date_time = date('Y-m-d H:i:s',strtotime($event->start_date . " " . $event->start_time));
                         $start_date_end  = date('Y-m-d H:i:s',strtotime($event->end_date . " " . $event->end_time));
 
@@ -932,6 +933,7 @@ class Workcalender extends MY_Controller
                         $resources_user_events[$inc]['customHtml'] = $custom_html;
                         $resources_user_events[$inc]['start'] = $event->start_date;
                         $resources_user_events[$inc]['end'] = $event->end_date;
+                        $resources_user_events[$inc]['starttime'] = strtotime($starttime);
                         $resources_user_events[$inc]['backgroundColor'] = $event->event_color;
 
                     $inc++;
@@ -1011,7 +1013,7 @@ class Workcalender extends MY_Controller
                 if(in_array($cl['id'], $enabled_mini_calendar)){
                     //Display in events
                     $optParams = array(
-                      'orderBy' => 'startTime',
+                      'orderBy' => 'starttime',
                       'singleEvents' => TRUE,
                       'timeMin' => $post['start'],
                       'timeMax' => $post['end'],
@@ -1044,12 +1046,14 @@ class Workcalender extends MY_Controller
 
                                 $start_date = $date->format('Y-m-d');
                                 $custom_html_start_date = $date->format('g:i a');
+                                $starttime = $start_date . ' ' . $date->format('g:i a');
                                 $is_with_time = true;
                             }else{
                                 $date = new DateTime($event->start->date);
                                 $date->setTimezone($tz);
 
                                 $start_date = $date->format('Y-m-d');
+                                $starttime  = $start_date . ' ' . date("g:i A");
                                 $custom_html_start_date = $date->format('Y-m-d');
                             }
 
@@ -1058,6 +1062,7 @@ class Workcalender extends MY_Controller
                                 $end_date = $event->end->dateTime;
 
                                 $custom_html_end_date = $date->format('g:i a');
+                                $start_time = $date->format('g:i a');
                                 $is_with_time = true;
                             }else{
                                 $date = new DateTime($event->end->date);
@@ -1090,6 +1095,7 @@ class Workcalender extends MY_Controller
                                 $resources_user_events[$inc]['description'] = $event->summary . "<br />" . "<i class='fa fa-calendar'></i> " . $start_date . " - " . $end_date;
                                 $resources_user_events[$inc]['start'] = $start_date;
                                 $resources_user_events[$inc]['end'] = $end_date;
+                                $resources_user_events[$inc]['starttime'] = strtotime($starttime);
                                 $resources_user_events[$inc]['backgroundColor'] = $bgcolor;
 
                                 $inc++;
@@ -1104,6 +1110,7 @@ class Workcalender extends MY_Controller
         $jobs = $this->Jobs_model->get_all_jobs();
         foreach( $jobs as $j ){
             if( $j->job_description != '' ){
+            	$starttime = $j->start_date . " " . $j->start_time;
                 $start_date_time = date('Y-m-d',strtotime($j->start_date . " " . $j->start_time));
                 $start_date_end  = date('Y-m-d',strtotime($j->end_date . " " . $j->end_time));
                 $backgroundColor = "#38a4f8";
@@ -1147,6 +1154,7 @@ class Workcalender extends MY_Controller
                 $resources_user_events[$inc]['customHtml'] = $custom_html;
                 $resources_user_events[$inc]['start'] = $start_date_time;
                 $resources_user_events[$inc]['end'] = $start_date_end;
+                $resources_user_events[$inc]['starttime'] = strtotime($starttime);
                 $resources_user_events[$inc]['backgroundColor'] = $backgroundColor;
 
                 $inc++;

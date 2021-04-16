@@ -42,40 +42,7 @@ class Timesheet extends MY_Controller
             //            "https://cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.js",
         ));
     }
-    // added for tracking Timesheet of employees: Single Employee View
-    //  public function timesheet_user()
-    //  {
-    //    $this->load->model('timesheet_model');
-    //    $this->load->model('users_model');
-    //    $this->page_data['users1']= $this->users_model->getById(getLoggedUserID());
-    //    $this->page_data['users'] = $this->users_model->getUsers();
-    //    $this->page_data['timesheet_users'] = $this->timesheet_model->getClockIns();
-    //
-    //    $this->load->view('users/timesheet-user', $this->page_data);
-    //  }
 
-    // added for tracking Timesheet of employees: Attendance View / Admin View
-    //  public function timesheet()
-    //  {
-    //    $this->load->model('timesheet_model');
-    //    $this->load->model('users_model');
-    //    $this->page_data['users1']= $this->users_model->getById(getLoggedUserID());
-    //    $this->page_data['users'] = $this->users_model->getUsers();
-    ////    $this->page_data['timesheet_users'] = $this->timesheet_model->getClockIns();
-    //
-    //    // get total numbers of "In" employees
-    //    $this->page_data['total_in'] = $this->timesheet_model->getTotalInEmployees();
-    //    // get total numbers of "Out" employees
-    //    $this->page_data['total_out'] = $this->timesheet_model->getTotalOutEmployees();
-    //    // get total numbers of "Not Logged In Today" employees
-    //    $this->page_data['total_not_logged_in_today'] = $this->timesheet_model->getTotalNotLoggedInTodayEmployees();
-    //    // get total numbers of "Not Logged In Today" employees
-    //    $this->page_data['total_employees'] = $this->timesheet_model->getTotalEmployees();
-    //
-    //    $this->load->view('users/timesheet-admin', $this->page_data);
-    //  }
-
-    // added for tracking Timesheet of employees: Schedule View
 
 
     public function tester()
@@ -4781,6 +4748,59 @@ class Timesheet extends MY_Controller
         $data = new stdClass();
         $data->display = $display;
         echo json_encode($data);
+    }
+    public function settings()
+    {
+        add_css(array(
+            "assets/css/timesheet/timesheet_settings.css"
+        ));
+
+        add_footer_js(array(
+            "assets/js/timesheet/timesheet_settings.js"
+
+        ));
+        $this->load->model('timesheet_model');
+        $this->page_data['all_timezone_list'] = $this->timesheet_model->get_all_timezone_list();
+        // var_dump($this->page_data['allnotification']);
+        $this->load->view('users/timesheet_settings', $this->page_data);
+    }
+    public function get_saved_timezone()
+    {
+        $current_saved = $this->timesheet_model->get_saved_timezone(logged('id'));
+        $current_tz = $this->input->post('usertimezone');
+        $data = new stdClass();
+        $data->hasSet = false;
+        if (count($current_saved) > 0) {
+            $data->hasSet = true;
+            foreach ($current_saved as $saved_tz) {
+                $data->timezone_id = $saved_tz->timezone_id;
+                $data->timezone_display_name = $saved_tz->timezone_id;
+                $data->timezone_id_of_tz = $saved_tz->id_of_timezone;
+            }
+        } else {
+            $tz_id = $this->timesheet_model->get_tz_id($current_tz);
+            foreach ($tz_id as $tz) {
+                $data->timezone_id = $tz->id;
+                $data->timezone_display_name = $tz->timezone_id;
+                $data->timezone_id_of_tz = $tz->id_of_timezone;
+            }
+        }
+        echo json_encode($data);
+    }
+    public function save_timezone_changes()
+    {
+        $timezone_id = $this->input->post("tz_display_name");
+        $user_id = logged('id');
+        $this->timesheet_model->save_timezone_changes($timezone_id, $user_id);
+        echo json_encode("saved");
+    }
+    public function get_next_report()
+    {
+        $timezone = $this->input->post("timezone");
+        $sunday_nextweek = date("Y-m-d", strtotime('sunday next week', strtotime(date('Y-m-d'))));
+        $date_converted = $this->datetime_zone_converter($sunday_nextweek, "UTC", $timezone);
+        $next_report_date = date('M d D h:i A', strtotime($date_converted));
+        echo json_encode($next_report_date);
     }
 }
 

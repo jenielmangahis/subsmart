@@ -543,12 +543,16 @@ class Workorder extends MY_Controller
     {
 
         $this->page_data['workorder'] = $this->workorder_model->getById($id);
+        
+        $this->page_data['company'] = $this->workorder_model->getCompanyCompanyId($id);
+        $this->page_data['customer'] = $this->workorder_model->getcustomerCompanyId($id);
+        $this->page_data['items'] = $this->workorder_model->getItems($id);
 
         // $this->page_data['Workorder']->role = $this->roles_model->getByWhere(['id' => $this->page_data['Workorder']->role])[0];
 
         // $this->page_data['Workorder']->activity = $this->activity_model->getByWhere(['user' => $id], ['order' => ['id', 'desc']]);
 
-        // print_r($this->page_data['workorder']);
+        // print_r($this->page_data['items']);
         $this->load->view('workorder/view', $this->page_data);
     }
 

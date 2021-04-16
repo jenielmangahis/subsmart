@@ -1474,6 +1474,49 @@ class Timesheet_model extends MY_Model
         $qry = $this->db->query("SELECT * fROM employee_pay_details WHERE user_id = " . $user_id);
         return $qry->result();
     }
+    public function get_all_timezone_list()
+    {
+        $qry = $this->db->query("SELECT * fROM timesheet_timezone_list");
+        return $qry->result();
+    }
+    public function get_saved_timezone($user_id)
+    {
+        $qry = $this->db->query("SELECT * fROM timesheet_timezone_list JOIN timesheet_timezone_admin_report ON timesheet_timezone_admin_report.timezone_id = timesheet_timezone_list.id WHERE timesheet_timezone_admin_report.user_id = " . $user_id . " LIMIT 1");
+        return $qry->result();
+    }
+    public function get_tz_id($current_tz)
+    {
+        $qry = $this->db->query("SELECT * fROM timesheet_timezone_list WHERE id_of_timezone ='" . $current_tz . "'");
+        return $qry->result();
+    }
+    public function save_timezone_changes($timezone_id, $user_id)
+    {
+        $current_saved = $this->get_saved_timezone($user_id);
+        if (count($current_saved) > 0) {
+            $update = array(
+                'timezone_id' => $timezone_id,
+                'user_id' => $user_id
+            );
+            $this->db->update(
+                "timesheet_timezone_admin_report",
+                $update
+            );
+        } else {
+            $insert = array(
+                'timezone_id' => $timezone_id,
+                'user_id' => $user_id
+            );
+            $this->db->insert(
+                "timesheet_timezone_admin_report",
+                $insert
+            );
+        }
+    }
+    public function get_user_id_by_email_and_company_id($email, $company_id)
+    {
+        $qry = $this->db->query("SELECT * fROM users WHERE email ='" . $email . "' AND company_id = '" . $company_id . "'");
+        return $qry->result();
+    }
 }
 
 

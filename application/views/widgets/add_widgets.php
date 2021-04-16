@@ -1,5 +1,5 @@
 <div class="col-lg-3 col-md-6 col-sm-12" id="addWidget">
-    <div  style="width: 300px; border: 1px solid #58c04e; background: #58c04e; color:white;  border-radius: 10px; text-align: center;padding: 5px;position: relative;margin: 0 auto;top: 21px;z-index: 1000;">
+    <div  class="wid_header">
         <i class="fa fa-bar-chart"></i> Add More Report
     </div>
     <div class="card" style="border: 2px solid #30233d; margin-top:0; border-radius: 40px; padding:5px;">

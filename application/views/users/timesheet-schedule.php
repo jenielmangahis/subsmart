@@ -123,6 +123,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                 <a href="<?php echo url('/timesheet/schedule') ?>" class="banking-tab<?php echo ($this->uri->segment(1) == "schedule") ?: '-active'; ?>">Schedule</a>
                                 <a href="<?php echo url('/timesheet/requests') ?>" class="banking-tab">Requests</a>
                                 <a href="<?php echo url('/timesheet/my_schedule') ?>" class="banking-tab">My Schedule</a>
+                                <a href="<?php echo url('/timesheet/settings') ?>" class="banking-tab">Settings</a>
                             </div>
                         </div>
                         <!-- Date Selector -->

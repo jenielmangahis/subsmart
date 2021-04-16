@@ -865,7 +865,7 @@ $(".select_item").click(function () {
                 "<td width=\"20%\"><input type=\"text\" data-itemid='"+idd+"' class=\"form-control tax_change2\" name=\"tax[]\" data-counter=\"0\" id='tax1_"+idd+"' min=\"0\" value=\"0\"></td>\n" +
                 "<td style=\"text-align: center\" class=\"d-flex\" width=\"15%\"><span data-subtotal='"+total_+"' id='span_total_"+idd+"' class=\"total_per_item\">"+total+
                 // "</span><a href=\"javascript:void(0)\" class=\"remove_item_row\"><i class=\"fa fa-times-circle\" aria-hidden=\"true\"></i></a>"+
-                "<input type=\"hidden\" name=\"total[]\" id='sub_total_text"+idd+"' value='"+total+"'></td>" +
+                "</span> <input type=\"hidden\" name=\"total[]\" id='sub_total_text"+idd+"' value='"+total+"'></td>" +
                 "</tr>";
             tableBody = $("#jobs_items_table_body");
             tableBody.append(markup);
@@ -908,6 +908,7 @@ $(".select_item").click(function () {
   // alert( 'yeah' + total);
 
   $("#span_total_" + in_id).text(total);
+  $("#sub_total_text" + in_id).val(total);
   $("#tax_1_" + in_id).text(tax1);
   $("#tax1_" + in_id).val(tax1);
   $("#discount_" + in_id).val(discount);
@@ -971,6 +972,8 @@ $(".select_item").click(function () {
   $("#total_tax_").text(subtotaltax.toFixed(2));
   $("#total_tax_").val(subtotaltax.toFixed(2));
   
+  
+  
 
   $("#grand_total").text(grand_total_w.toFixed(2));
   $("#grand_total_input").val(grand_total_w.toFixed(2));
@@ -1004,7 +1007,8 @@ $(".select_item").click(function () {
             // $('#sub_total'+id).data('subtotal',new_sub_total);
             // $('#sub_total'+id).text('$' + formatNumber(new_sub_total));
             $("#span_total_"+id).text(new_sub_total.toFixed(2));
-            $("#sub_total_text"+id).val(new_sub_total_val.toFixed(2));
+            // $("#sub_total_text" + id).val(new_sub_total.toFixed(2));
+            $("#sub_total_text"+id).val(new_sub_total.toFixed(2));
             // $(".total_per_item").text(new_sub_total_tax.toFixed(2));
             var counter = $(this).data("counter");
             // var counter = jQuery(obj)
