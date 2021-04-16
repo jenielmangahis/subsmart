@@ -231,6 +231,13 @@ $route['email_automation/ajax_set_default_template_edit'] = 'Email_Automation/aj
 $route['email_automation/ajax_set_place_holder'] = 'Email_Automation/ajax_set_place_holder';
 $route['email_automation/ajax_set_place_holder_edit'] = 'Email_Automation/ajax_set_place_holder_edit';
 
+$route['email_automation/add_email_automation'] = 'Email_Automation/add_email_automation';
+$route['email_automation/add_template'] = 'Email_Automation/add_template';
+$route['email_automation/save_template'] = 'Email_Automation/save_template';
+$route['email_automation/edit_template/(:num)'] = 'Email_Automation/edit_template/$1';
+$route['email_automation/update_template'] = 'Email_Automation/update_template';
+$route['email_automation/delete_template'] = 'Email_Automation/delete_template';
+
 $route['campaign_automation'] = 'Campaign_Automation';
 
 $route['terms-and-condition'] = 'pages/terms_and_condition';
