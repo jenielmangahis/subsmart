@@ -4,6 +4,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
 class Cron_Jobs_Controller extends MY_Controller
 {
 
+    private $timesheet_report_timezone = "UTC";
+    private $timesheet_report_timezone_id = 0;
     public function __construct()
     {
         parent::__construct();
@@ -11,17 +13,15 @@ class Cron_Jobs_Controller extends MY_Controller
     }
 
 
-    public function timelogs_csv_file_setter($company_id)
+    public function get_time_sheet_storage($company_id, $timezone, $timesheet_report_timezone_id)
     {
+        $this->timesheet_report_timezone = $timezone;
+        $this->timesheet_report_timezone_id = $timesheet_report_timezone_id;
         $date_from = date("Y-m-d", strtotime('monday this week', strtotime(date('Y-m-d'))));
         $date_to = date('Y-m-d');
-        $filename = $date_from . " to " . $date_to . ' ' . $company_id . '.csv';
-        $filename_pdf = $date_from . " to " . $date_to . ' ' . $company_id . '.pdf';
+        $filename = $date_from . " to " . $date_to . ' ' . $company_id . ' ' . $timesheet_report_timezone_id . '.csv';
+        $filename_pdf = $date_from . " to " . $date_to . ' ' . $company_id . ' ' . $timesheet_report_timezone_id . '.pdf';
         $time_sheet_storage = $this->generate_timelogs($date_from, $date_to, $filename, $company_id);
-        if (count($time_sheet_storage) > 0) {
-            $this->generate_timelogs_csv($time_sheet_storage, $filename);
-        }
-
         return array($filename, $date_from, $time_sheet_storage, $filename_pdf);
     }
     public function timelogs_csv_email_sender($receiver, $company_name, $filename, $date_from, $FName, $business_name, $file_info)
@@ -66,13 +66,28 @@ class Cron_Jobs_Controller extends MY_Controller
     }
     public function send_timesheet_logs_email_action()
     {
+
         $busnesses = $this->timesheet_model->get_all_businesses();
-        $date_from = date("M d", strtotime('monday this week', strtotime(date('Y-m-d'))));
         foreach ($busnesses as $business) {
             $email_sent_to = array();
-            $file_info = $this->timelogs_csv_file_setter($business->company_id);
+            $timezone = "UTC";
+            $timezone_id = 0;
+            $user_ids = $this->timesheet_model->get_user_id_by_email_and_company_id($business->business_name, $business->company_id);
 
+            foreach ($user_ids as $ids) {
+                $user_id = $ids->id;
+            }
+            if (count($user_ids) > 0) {
+                $saved_timezones = $this->timesheet_model->get_saved_timezone($user_id);
+                foreach ($saved_timezones as $tz) {
+                    $timezone = $tz->id_of_timezone;
+                    $timezone_id = $tz->timezone_id;
+                }
+            }
+            $file_info = $this->get_time_sheet_storage($business->company_id, $timezone, $timezone_id);
             if (count($file_info[2]) > 0) {
+                $date_from = date("M d", strtotime('monday this week', strtotime(date('Y-m-d'))));
+                $this->generate_timelogs_csv($file_info[2], $file_info[0]);
                 $this->generate_weekly_timesheet_pdf_report($file_info, $business->business_name);
                 $this->timelogs_csv_email_sender($business->email, $business->business_name . "", $file_info[0], $date_from, $business->FName, $business->business_name, $file_info);
                 $email_sent_to[] = array($business->business_email, $business->business_name);
@@ -86,6 +101,17 @@ class Cron_Jobs_Controller extends MY_Controller
                         }
                     }
                     if (!$received) {
+                        $timezone = "UTC";
+                        $timezone_id = 0;
+                        $saved_timezones = $this->timesheet_model->get_saved_timezone($admin->id);
+                        foreach ($saved_timezones as $tz) {
+                            $timezone = $tz->id_of_timezone;
+                            $timezone_id = $tz->timezone_id;
+                        }
+
+                        $file_info = $this->get_time_sheet_storage($business->company_id, $timezone, $timezone_id);
+                        $this->generate_timelogs_csv($file_info[2], $file_info[0]);
+                        $this->generate_weekly_timesheet_pdf_report($file_info, $business->business_name);
                         $this->timelogs_csv_email_sender($admin->email, $business->business_name . "", $file_info[0], $date_from, $admin->FName, $business->business_name, $file_info);
                         $email_sent_to[] = array($admin->email, $business->business_name);
                     }
@@ -96,11 +122,26 @@ class Cron_Jobs_Controller extends MY_Controller
     public function cronjob_tester()
     {
         $busnesses = $this->timesheet_model->get_all_businesses();
-        $date_from = date("M d", strtotime('monday this week', strtotime(date('Y-m-d'))));
         foreach ($busnesses as $business) {
             $email_sent_to = array();
-            $file_info = $this->timelogs_csv_file_setter($business->company_id);
+            $timezone = "UTC";
+            $timezone_id = 0;
+            $user_ids = $this->timesheet_model->get_user_id_by_email_and_company_id($business->business_name, $business->company_id);
+
+            foreach ($user_ids as $ids) {
+                $user_id = $ids->id;
+            }
+            if (count($user_ids) > 0) {
+                $saved_timezones = $this->timesheet_model->get_saved_timezone($user_id);
+                foreach ($saved_timezones as $tz) {
+                    $timezone = $tz->id_of_timezone;
+                    $timezone_id = $tz->timezone_id;
+                }
+            }
+            $file_info = $this->get_time_sheet_storage($business->company_id, $timezone, $timezone_id);
             if (count($file_info[2]) > 0) {
+                $date_from = date("M d", strtotime('monday this week', strtotime(date('Y-m-d'))));
+                $this->generate_timelogs_csv($file_info[2], $file_info[0]);
                 $this->generate_weekly_timesheet_pdf_report($file_info, $business->business_name);
                 // $this->timelogs_csv_email_sender($business->email, $business->business_name . "", $file_info[0], $date_from, $business->FName, $business->business_name, $file_info);
                 $email_sent_to[] = array($business->business_email, $business->business_name);
@@ -114,6 +155,17 @@ class Cron_Jobs_Controller extends MY_Controller
                         }
                     }
                     if (!$received) {
+                        $timezone = "UTC";
+                        $timezone_id = 0;
+                        $saved_timezones = $this->timesheet_model->get_saved_timezone($admin->id);
+                        foreach ($saved_timezones as $tz) {
+                            $timezone = $tz->id_of_timezone;
+                            $timezone_id = $tz->timezone_id;
+                        }
+
+                        $file_info = $this->get_time_sheet_storage($business->company_id, $timezone, $timezone_id);
+                        $this->generate_timelogs_csv($file_info[2], $file_info[0]);
+                        $this->generate_weekly_timesheet_pdf_report($file_info, $business->business_name);
                         if ($admin->email == "pintonlou@gmail.com") {
                             $this->timelogs_csv_email_sender($admin->email, $business->business_name . " Tester", $file_info[0], $date_from, $admin->FName, $business->business_name, $file_info);
                         }
@@ -124,49 +176,13 @@ class Cron_Jobs_Controller extends MY_Controller
             }
         }
     }
-    public function cronjob_pdf_tester()
-    {
-        $busnesses = $this->timesheet_model->get_all_businesses();
-        $email_sent_to = array();
-        $file_info = $this->timelogs_csv_file_setter(1);
-
-        // var_dump($file_info);
-        foreach ($busnesses as $business) {
-            // $file_info = $this->timelogs_csv_file_setter($business->company_id);
-            // $this->timelogs_csv_email_sender($business->business_email, $business->business_name, $file_info[0], $file_info[1]);
-
-            $email_sent_to[] = array($business->business_email, $business->business_name);
-            $busness_admins = $this->timesheet_model->get_all_business_admins($business->company_id);
-            foreach ($busness_admins as $admin) {
-                $received = false;
-                for ($i = 0; $i < count($email_sent_to); $i++) {
-                    if ($email_sent_to[$i][0] == $admin->email) {
-                        $received = true;
-                        break;
-                    }
-                }
-                if (!$received) {
-                    if ($admin->email == "pintonlou@gmail.com") {
-                        // $file_info = $this->timelogs_csv_email_sender($admin->email, $business->business_name . " This is a Tester", $file_info[0], $file_info[1]);
-                        $this->page_data['business_name'] = $business->business_name;
-                        $this->page_data['FName'] = $admin->FName;
-                    }
-                    // $this->timelogs_csv_email_sender($admin->email, $business->business_name, $file_info[0], $file_info[1]);
-                    $email_sent_to[] = array($admin->email, $business->business_name);
-                }
-            }
-        }
-        $date_from = date("Y-m-d", strtotime('monday this week', strtotime(date('Y-m-d'))));
-        $this->page_data['file_info'] = $file_info;
-        $this->page_data['date_from'] = $date_from;
-        $content = $this->load->view('users/timesheet/emails/html_to_pdf_weekly_report', $this->page_data);
-    }
     public function generate_weekly_timesheet_pdf_report($file_info, $business_name)
     {
         $date_from = date("Y-m-d", strtotime('monday this week', strtotime(date('Y-m-d'))));
         $this->page_data['file_info'] = $file_info;
         $this->page_data['date_from'] = $date_from;
         $this->page_data['business_name'] = $business_name;
+        $this->page_data['timesheet_report_timezone'] = $this->timesheet_report_timezone;
         $content = $this->load->view('users/timesheet/emails/html_to_pdf_weekly_report', $this->page_data, TRUE);
         $this->load->library('Reportpdf');
         $title = 'Timesheet Weekly Report for Pay Period ' . date('M d', strtotime($date_from)) . ' - ' . date('d');
@@ -201,10 +217,10 @@ class Cron_Jobs_Controller extends MY_Controller
         $file = fopen(APPPATH . '../timesheet/timelogs/' . $filename, 'wb');
         $header = array(
             "Employee",
-            "Date (UTC)",
+            "Date (" . $this->timesheet_report_timezone . ")",
             "Role",
             "Wage",
-            "Time Card (UTC)",
+            "Time Card (" . $this->timesheet_report_timezone . ")",
             "Act.& Sched Diff.",
             "Total Paid",
             "Regular",
@@ -343,8 +359,8 @@ class Cron_Jobs_Controller extends MY_Controller
     }
     public function generate_timelogs($date_from, $date_to, $filename, $company_id)
     {
-        $date_from = $this->datetime_zone_converter($date_from . " 00:00:00", "UTC", "UTC");
-        $date_to = $this->datetime_zone_converter($date_to . " 24:59:00", "UTC", "UTC");
+        $date_from = $this->datetime_zone_converter($date_from . " 00:00:00", $this->timesheet_report_timezone, "UTC");
+        $date_to = $this->datetime_zone_converter($date_to . " 24:59:00", $this->timesheet_report_timezone, "UTC");
 
         $attendances = $this->timesheet_model->get_all_attendance($date_from, $date_to, $company_id);
 
@@ -353,11 +369,7 @@ class Cron_Jobs_Controller extends MY_Controller
         $time_sheet_storage = array();
         foreach ($attendances as $attendance) {
             $data = array();
-            $shift_date = $attendance->date_created;
-            date_default_timezone_set("UTC");
-            $the_date = strtotime($shift_date);
-            date_default_timezone_set($this->session->userdata('usertimezone'));
-            $shift_date = date("m/d/Y", $the_date);
+            $shift_date = $this->datetime_zone_converter($attendance->date_created, "UTC", $this->timesheet_report_timezone);
             $data[] = $attendance->user_id; //0
             $data[] = $attendance->FName . ' ' .   $attendance->LName; //1
             $data[] = $attendance->title; //2
@@ -371,16 +383,8 @@ class Cron_Jobs_Controller extends MY_Controller
             $expected_break = '';
             $expected_work_hours = '';
             foreach ($shift_schedules as $sched) {
-                $olddate_start = $sched->shift_start;
-                $olddate_end = $sched->shift_end;
-                date_default_timezone_set("UTC");
-                $the_date1 = strtotime($olddate_start);
-                $the_date2 = strtotime($olddate_end);
-                date_default_timezone_set($this->session->userdata('usertimezone'));
-                $newdate_start = date("m/d/Y h:i A", $the_date1);
-                $newdate_end = date("m/d/Y h:i A", $the_date2);
-                $shift_start = $newdate_start;
-                $shift_end = $newdate_end;
+                $shift_start = $this->datetime_zone_converter($sched->shift_start, "UTC", $this->timesheet_report_timezone);
+                $shift_end = $this->datetime_zone_converter($sched->shift_end, "UTC", $this->timesheet_report_timezone);
                 $expected_hours = $sched->duration;
                 $expected_break = 0;
                 if ($expected_hours > 4) {
@@ -407,11 +411,7 @@ class Cron_Jobs_Controller extends MY_Controller
             $breakout = '';
 
             foreach ($auxes as $aux) {
-                $olddate = $aux->date_created;
-                date_default_timezone_set("UTC");
-                $the_date = strtotime($olddate);
-                date_default_timezone_set($this->session->userdata('usertimezone'));
-                $newdate = date("m/d/Y h:i A", $the_date);
+                $newdate = $this->datetime_zone_converter($aux->date_created, "UTC", $this->timesheet_report_timezone);
                 if ($aux->action == "Check in") {
                     $checkin = $newdate;
                 } elseif ($aux->action == "Check out") {

@@ -347,6 +347,40 @@ class Customer extends MY_Controller
         $this->load->view('customer/module', $this->page_data);
     }
 
+    public function add_advance($id=null)
+    {
+        $userid = $id;
+        $user_id = logged('id');
+        if(isset($userid) || !empty($userid)){
+            $this->page_data['profile_info'] = $this->customer_ad_model->get_data_by_id('prof_id',$userid,"acs_profile");
+            $this->page_data['access_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_access");
+            $this->page_data['office_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_office");
+            $this->page_data['billing_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_billing");
+            $this->page_data['alarm_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_alarm");
+
+            $get_customer_notes = array(
+                'where' => array(
+                    'fk_prof_id' => $userid
+                ),
+                'table' => 'acs_notes',
+                'select' => '*',
+            );
+            $this->page_data['customer_notes'] = $this->general->get_data_with_param($get_customer_notes);
+            //$this->page_data['device_info'] = $this->customer_ad_model->get_all_by_id('fk_prof_id',$userid,"acs_devices");
+        }
+        $get_login_user = array(
+            'where' => array(
+                'id' => $user_id
+            ),
+            'table' => 'users',
+            'select' => 'id,FName,LName',
+        );
+        $this->page_data['logged_in_user'] = $this->general->get_data_with_param($get_login_user,FALSE);
+        $this->page_data['sales_area'] = $this->customer_ad_model->get_all(FALSE,"","ASC","ac_salesarea","sa_id");
+        $this->page_data['employees'] = $this->customer_ad_model->get_all(FALSE,"","ASC","users","id");
+        $this->page_data['users'] = $this->users_model->getUsers();
+        $this->load->view('customer/add_advance', $this->page_data);
+    }
 
     public function leads()
     {   $is_allowed = $this->isAllowedModuleAccess(14);
@@ -405,7 +439,7 @@ class Customer extends MY_Controller
         $this->load->library('qrcode/ciqrcode');
         $SERVERFILEPATH = $_SERVER['DOCUMENT_ROOT'].'/assets/img/customer/qr/'.$profile_id.'.png';
 
-        $params['data'] = 'https://nsmartrac.com/customer/index/tab2/'.$profile_id;
+        $params['data'] = 'https://nsmartrac.com/customer/preview/'.$profile_id;
         $params['level'] = 'H';
         $params['size'] = 10;
         $params['savename'] = $SERVERFILEPATH;
@@ -453,14 +487,22 @@ class Customer extends MY_Controller
             $profile_id = $this->general->add_return_id($input_profile, 'acs_profile');
             $error = 0;
             $save_billing = $this->save_billing_information($input,$profile_id);
+            $save_office = $this->save_office_information($input,$profile_id);
+            $save_alarm = $this->save_alarm_information($input,$profile_id);
+            $save_access = $this->save_access_information($input,$profile_id);
             if($save_billing == 0){
                 echo 'Error Occured on Saving Billing Information';
+            }else if($save_office == 0){
+                echo 'Error Occured on Saving Office Information';
+            }else if($save_alarm == 0){
+                echo 'Error Occured on Saving Alarm Information';
+            }else if($save_access == 0){
+                echo 'Error Occured on Saving Access Information';
             }else{
+                $this->save_notes($input,$profile_id);
+                $this->qrcodeGenerator($profile_id);
                 echo 'Congrats, new customer added!';
             }
-//            if($this->save_billing_information($input,$profile_id)){
-//                echo 'Error Occured on Saving Billing Information';
-//            }
         }else {
             echo 'Customer Already Exist!';
         }
@@ -476,6 +518,8 @@ class Customer extends MY_Controller
         $input_billing['city'] = $input['billing_city'];
         $input_billing['state'] = $input['billing_state'];
         $input_billing['zip'] = $input['billing_zip'];
+        $input_billing['equipment'] = $input['equipment'];
+        $input_billing['initial_dep'] = $input['initial_dep'];
         $input_billing['mmr'] = $input['mmr'];
         $input_billing['bill_freq'] = $input['bill_freq'];
         $input_billing['bill_day'] = $input['bill_day'];
@@ -524,6 +568,7 @@ class Customer extends MY_Controller
         $input_office['cancel_date'] = $input['cancel_date'];
         $input_office['cancel_reason'] = $input['cancel_reason'];
         $input_office['collect_date'] = $input['collect_date'];
+        $input_office['collect_amount'] = $input['collect_amount'];
         $input_office['language'] = $input['language'];
         $input_office['pre_install_survey'] = $input['pre_install_survey'];
         $input_office['post_install_survey'] = $input['post_install_survey'];
@@ -575,7 +620,61 @@ class Customer extends MY_Controller
         $input_office['job_profit'] = $input['job_profit'];
         $input_office['url'] = $input['url'];
         return $this->general->add_($input_office, 'acs_office');
+    }
 
+    public function save_alarm_information($input,$id){
+        $input_alarm = array();
+
+        // alarm data
+        $input_alarm['fk_prof_id'] = $id;
+        $input_alarm['monitor_comp'] = $input['monitor_comp'];
+        $input_alarm['monitor_id'] = $input['monitor_id'];
+        //$input_alarm['install_date'] = $input['install_date'];
+        $input_alarm['acct_type'] = $input['acct_type'];
+        $input_alarm['online'] = $input['online'];
+        $input_alarm['in_service'] = $input['in_service'];
+        $input_alarm['equipment'] = $input['equipment'];
+        $input_alarm['collections'] = $input['collections'];
+        $input_alarm['credit_score_alarm'] = '';
+        $input_alarm['passcode'] = $input['passcode'];
+        $input_alarm['install_code'] = $input['install_code'];
+        $input_alarm['mcn'] = $input['mcn'];
+        $input_alarm['scn'] = $input['scn'];
+        $input_alarm['panel_type'] = $input['panel_type'];
+        $input_alarm['system_type'] = $input['system_type'];
+        $input_alarm['warranty_type'] = $input['warranty_type'];
+        $input_alarm['dealer'] = $input['dealer'];
+        $input_alarm['alarm_login'] = $input['alarm_login'];
+        $input_alarm['alarm_customer_id'] = $input['alarm_customer_id'];
+        $input_alarm['alarm_cs_account'] = $input['alarm_cs_account'];
+        return $this->general->add_($input_alarm, 'acs_alarm');
+    }
+
+    public function save_access_information($input,$id){
+        $input_access = array();
+
+        //access data
+        $input_access['fk_prof_id'] =$id;
+        if(isset($input['portal_status'])){
+            $input_access['portal_status'] = $input['portal_status'];
+        }else{
+            $input_access['portal_status'] = 2;
+        }
+
+        $input_access['reset_password'] ='';
+        $input_access['access_login'] = $input['access_login'];
+        $input_access['access_password'] = $input['access_password'];
+        return $this->general->add_($input_access, 'acs_access');
+    }
+
+    public function save_notes($input,$id){
+        $input_notes = array();
+
+        // notes data
+        $input_notes['fk_prof_id'] = $id;
+        $input_notes['note'] = $input['notes'];
+        $input_notes['datetime'] = date("m-d-Y h:i A");
+        $this->general->add_($input_notes, 'acs_notes');
     }
 
     public function add_data_sheet(){
@@ -584,52 +683,9 @@ class Customer extends MY_Controller
         $cid = logged('company_id');
         $input = $this->input->post();
 
-        $input_alarm = array();
-
-        $input_access = array();
-        // alarm data
-        $input_alarm['monitor_comp'] = $input['monitor_comp'];
-        $input_alarm['monitor_id'] = $input['monitor_id'];
-        $input_alarm['install_date'] = $input['install_date'];
-        $input_alarm['credit_score_alarm'] = $input['credit_score_alarm'];
-        $input_alarm['acct_type'] = $input['acct_type'];
-        $input_alarm['acct_info'] = $input['acct_info'];
-        $input_alarm['passcode'] = $input['passcode'];
-        $input_alarm['install_code'] = $input['install_code'];
-        $input_alarm['mcn'] = $input['mcn'];
-        $input_alarm['scn'] = $input['scn'];
-        $input_alarm['contact1'] = $input['contact1'];
-        $input_alarm['contact2'] = $input['contact2'];
-        $input_alarm['contact3'] = $input['contact3'];
-        $input_alarm['contact_name1'] = $input['contact_name1'];
-        $input_alarm['contact_name2'] = $input['contact_name2'];
-        $input_alarm['contact_name3'] = $input['contact_name3'];
-        $input_alarm['panel_type'] = $input['panel_type'];
-        $input_alarm['system_type'] = $input['system_type'];
-        $input_alarm['mon_waived'] = $input['mon_waived'];
-
-
-
-
-        //access data
-        if(isset($input['portal_status'])){
-            $input_access['portal_status'] = $input['portal_status'];
-        }else{
-            $input_access['portal_status'] = 2;
-        }
-        $input_access['reset_password'] = $input['reset_password'];
-        $input_access['login'] = $input['login'];
-        $input_access['password'] = $input['password'];
-        $input_access['acs_custom_field1'] = $input['acs_custom_field1'];
-        $input_access['acs_custom_field2'] = $input['acs_custom_field2'];
-        $input_access['acs_cancel_date'] = $input['acs_cancel_date'];
-        $input_access['acs_collect_date'] = $input['acs_collect_date'];
-        $input_access['acs_cancel_reason'] = $input['acs_cancel_reason'];
-        $input_access['collect_amount'] = $input['collect_amount'];
-
         $fk_prod_id = $input['prof_id'];
         if(empty($fk_prod_id)){
-            $fk_prod_id = $this->customer_ad_model->add($input_profile,"acs_profile");
+            $fk_prod_id = $this->customer_ad_model->add($input,"acs_profile");
 
             $input_access['fk_prof_id'] = $fk_prod_id;
             $input_office['fk_prof_id'] = $fk_prod_id;
@@ -640,28 +696,6 @@ class Customer extends MY_Controller
             $this->customer_ad_model->add($input_office,"acs_office");
             $this->customer_ad_model->add($input_alarm,"acs_alarm");
             $this->customer_ad_model->add($input_billing,"acs_billing");
-
-            $this->qrcodeGenerator($fk_prod_id);
-
-            if(isset($input['device_name'])){
-                $devices = count($input['device_name']);
-                for($xx=0;$xx<$devices;$xx++){
-                    $device_data = array();
-                    $device_data['fk_prof_id'] = $fk_prod_id;
-                    $device_data['device_name'] = $input['device_name'][$xx];
-                    $device_data['sold_by'] = $input['sold_by'][$xx];
-                    $device_data['device_points'] = $input['device_points'][$xx];
-                    $device_data['retail_cost'] = $input['retail_cost'][$xx];
-                    $device_data['purch_price'] = $input['purch_price'][$xx];
-                    $device_data['device_qty'] = $input['device_qty'][$xx];
-                    $device_data['total_points'] = $input['total_points'][$xx];
-                    $device_data['total_cost'] = $input['total_cost'][$xx];
-                    $device_data['total_purch_price'] = $input['total_purch_price'][$xx];
-                    $device_data['device_net'] = $input['device_net'][$xx];
-                    $this->customer_ad_model->add($device_data,"acs_devices");
-                    unset($device_data);
-                }
-            }
             echo "Added";
         }else{
             $input_profile['prof_id'] = $fk_prod_id;
@@ -765,31 +799,6 @@ class Customer extends MY_Controller
         }
     }
 
-    public function add_advance($id=null)
-    {
-        $userid = $id;
-        $user_id = logged('id');
-        if(isset($userid) || !empty($userid)){
-            $this->page_data['profile_info'] = $this->customer_ad_model->get_data_by_id('prof_id',$userid,"acs_profile");
-            $this->page_data['access_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_access");
-            $this->page_data['office_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_office");
-            $this->page_data['billing_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_billing");
-            $this->page_data['alarm_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_alarm");
-            $this->page_data['device_info'] = $this->customer_ad_model->get_all_by_id('fk_prof_id',$userid,"acs_devices");
-        }
-        $get_login_user = array(
-            'where' => array(
-                'id' => $user_id
-            ),
-            'table' => 'users',
-            'select' => 'id,FName,LName',
-        );
-        $this->page_data['logged_in_user'] = $this->general->get_data_with_param($get_login_user,FALSE);
-        $this->page_data['sales_area'] = $this->customer_ad_model->get_all(FALSE,"","ASC","ac_salesarea","sa_id");
-        $this->page_data['employees'] = $this->customer_ad_model->get_all(FALSE,"","ASC","users","id");
-        $this->page_data['users'] = $this->users_model->getUsers();
-        $this->load->view('customer/add_advance', $this->page_data);
-    }
 
     public function import_customer()
     {

@@ -1,0 +1,12 @@
+.nav-item .active {
+  border-bottom: 3px solid #498002 !important;
+  background-color: transparent !important;
+  font-weight: bold;
+}
+.nav-tabs .nav-link {
+  border: 0;
+}
+#tz_form_submit:disabled {
+  background-color: #dedede !important;
+  border: none;
+}

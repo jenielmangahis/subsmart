@@ -474,6 +474,69 @@ class Workorder_model extends MY_Model
         $query = $this->db->get();
         return $query->row();
     }
+
+    public function getCompanyCompanyId($id)
+    {
+        $this->db->select('company_id');
+		$this->db->from('workorders');
+		$this->db->where('id', $id);
+        $query = $this->db->get();
+        $comp = $query->row();
+        // // foreach($query as $q){
+        //     $company = $q->company_id;
+        // // }
+
+        $this->db->select('*');
+		$this->db->from('clients');
+		$this->db->where('id', $comp->company_id);
+        $query2 = $this->db->get();
+        return $query2->row();
+    }
+
+    public function getcustomerCompanyId($id)
+    {
+        $this->db->select('customer_id');
+		$this->db->from('workorders');
+		$this->db->where('id', $id);
+        $query = $this->db->get();
+        $cus = $query->row();
+        // // foreach($query as $q){
+        //     $company = $q->company_id;
+        // // }
+
+        $this->db->select('*');
+		$this->db->from('acs_profile');
+		$this->db->where('prof_id', $cus->customer_id);
+        $query2 = $this->db->get();
+        return $query2->row();
+    }
+
+    public function getItems($id)
+    {
+        $this->db->select('*');
+		$this->db->from('workorders');
+		$this->db->where('id', $id);
+        $query = $this->db->get();
+        $cus = $query->row();
+        // // foreach($query as $q){
+        //     $company = $q->company_id;
+        // // }
+
+        $where = array(
+            'type' => 'Work Order',
+            'type_id'   => $cus->id
+          );
+
+        $this->db->select('*');
+		$this->db->from('item_details');
+        // $this->db->where('type', 'Work Order');
+		// $this->db->where('type_id', $cus->id);
+        $this->db->where($where);
+        $query2 = $this->db->get();
+        return $query2->result();
+    }
+
+    
 }
 
 /* End of file Workorder_model.php */

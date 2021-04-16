@@ -230,10 +230,10 @@ defined('BASEPATH') or exit('No direct script access allowed');
         <tbody>
             <thead>
                 <tr style="font-weight: bold; background-color:#E6E6E6; text-align:left;">
-                    <th>Date (UTC)</th>
+                    <th>Date <br>(<?= $timesheet_report_timezone ?>)</th>
                     <th>Role</th>
                     <th style=" text-align:center;">Wage</th>
-                    <th>Time Card (UTC)</th>
+                    <th>Time Card <br>(<?= $timesheet_report_timezone ?>)</th>
                     <th>Act.& Sched Diff.</th>
                     <th>Total Paid</th>
                     <th>Regular</th>

@@ -99,7 +99,7 @@
         $("#system_type").select2({
             placeholder: "Select System Type"
         });
-        $("#alarm_login").select2({
+        $("#dealer").select2({
             placeholder: "Select Alarm Login"
         });
         $("#monitor_comp").select2({
