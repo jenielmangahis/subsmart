@@ -309,19 +309,12 @@
                 data: form.serialize(), // serializes the form's elements.
                 success: function(data)
                 {
-                    if(data === "Customer Already Exist!"){
+                    if(isNaN(data)){
                         error(data);
                     }else{
-                        sucess(data);
+                        sucess("New Customer has been Added Successfully!",data);
                     }
-
-                    if(data === "Added"){
-                        sucess("New Customer has been Added Successfully!");
-                    }else if(data === "Updated"){
-                        sucess("Customer Info has been Updated Successfully!");
-                    }else{
-                        console.log(data);
-                    }
+                    console.log(data);
                 }
             });
         });
@@ -347,7 +340,7 @@
                 }
             });
         }
-        function sucess(information){
+        function sucess(information,$id){
             Swal.fire({
                 title: 'Good job!',
                 text: information,
@@ -358,7 +351,7 @@
                 confirmButtonText: 'Ok'
             }).then((result) => {
                 if (result.value) {
-                    window.location.href="/customer";
+                    window.location.href="<?= base_url(); ?>/customer/preview/"+$id;
                 }
             });
         }

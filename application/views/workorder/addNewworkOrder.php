@@ -29,57 +29,71 @@ defined('BASEPATH') or exit('No direct script access allowed');
 }
    </style>
     <!-- page wrapper start -->
-    <div wrapper__section style="padding-left:1%;padding-top:2.5%;">
-        <div class="container-fluid" style="background-color:white;">
-            <div class="page-title-box">
-                <div class="row align-items-center">
-                    <div class="col-sm-6">
-                        <h3>New Work Orders</h3>
-                        <!-- <ol class="breadcrumb">
-                            <li class="breadcrumb-item active">Manage workorders.</li>
-                        </ol> -->
-                    </div>
+    <div wrapper__section>
+        <div class="container-fluid p-40">
+          <div class="card">
+              <div class="page-title-box pt-1 pb-0">
+                  <div class="row align-items-center">
+                      <div class="col-sm-12">
+                          </div>
+                          <!-- <h3 class="page-title mt-0">New Lead</h3> -->
+                          <h3 style="font-family: Sarabun, sans-serif">New Work Orders</h3>
+                          <!-- <div class="pl-3 pr-3 mt-1 row">
+                            <div class="col mb-4 left alert alert-warning mt-0 mb-2">
+                                <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">
+                                    To create new lead go to Lead TAB and Select new. Enter all the Lead information as shown below.
+                                    Enter Address information.  Enter Additional Information and Description
+                                    and Finally click Save Button.  All required fields must have information.
+                                </span>
+                            </div>
+                          </div> -->
+                      </div>
+                  </div>
+              </div>
+            <!-- end row -->
+            <!-- <div class="row">
+                <div class="col-md-12" style="background-color:#32243d;padding:1px;text-align:center;color:white;">
+                    <h5>General Information</h5>
                 </div>
             </div>
-            <!-- end row -->
+            <br> -->
+            <?php echo form_open_multipart('workorder/savenewWorkorder', [ 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?> 
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div id="header_area">
+                                <h4 class="mt-0 header-title mb-5">Header</h4>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <ol class="breadcrumb" style="margin-top:-30px;"> <i class="fa fa-pencil" aria-hidden="true"></i>
+                                            <li class="breadcrumb-item active">
+                                                <label style="background-color:#E8E8E9;" id="headerContent"><?php echo $headers->content; ?></label>
+                                                <input type="hidden" name="header" value="<?php echo $headers->content; ?>">
+                                            </li>
+                                        </ol>
+                                    </div> 
+                                </div>
+                                <br>
 
-            <?php echo form_open_multipart('workorder/savenewWorkorder', [ 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?>  
+                                <input type="hidden" id="company_name" value="<?php echo $clients->business_name; ?>">
+                                <input type="hidden" id="current_date" value="<?php echo @date('m-d-Y'); ?>">
 
-            <div class="row" style="margin-top:-30px;">
-                <div class="col-xl-12">
-                    <div class="card">
-                    <div class="card-body">
-                    <div id="header_area">
-                        <h4 class="mt-0 header-title mb-5">Header</h4>
-                        <div class="row">
-                            <div class="col-md-12">
-                                <ol class="breadcrumb" style="margin-top:-30px;"> <i class="fa fa-pencil" aria-hidden="true"></i>
-                                    <li class="breadcrumb-item active">
-                                        <label style="background-color:#E8E8E9;" id="headerContent"><?php echo $headers->content; ?></label>
-                                    </li>
-                                </ol>
-                            </div> 
+                                <input type="hidden" id="content_input" class="form-control" name="header" value="<?php echo $headers->content; ?>">
+                            </div>
                         </div>
-                        <br>
-
-                        <input type="hidden" id="company_name" value="<?php echo $clients->business_name; ?>">
-                        <input type="hidden" id="current_date" value="<?php echo @date('m-d-Y'); ?>">
-
-                        <input type="hidden" id="content_input" class="form-control" name="header" value="<?php echo $headers->content; ?>">
                     </div>
-                        <div class="row">                   
+                    <div class="row">                   
                             <div class="col-md-3 form-group">
                                 <label for="contact_name">Work Order #</label>
                                 <input type="text" class="form-control" name="workorder_number" id="contact_name" value="<?php echo "WO-"; 
                                            foreach ($number as $num):
-                                                $next = $num->workorder_number;
+                                                $next = $num->work_order_number;
                                                 $arr = explode("-", $next);
                                                 $date_start = $arr[0];
                                                 $nextNum = $arr[1];
                                             //    echo $number;
                                            endforeach;
                                            $val = $nextNum + 1;
-                                           echo str_pad($val,9,"0",STR_PAD_LEFT);
+                                           echo str_pad($val,7,"0",STR_PAD_LEFT);
                                            ?>" required />
                             </div>
                             <div class="col-md-3 form-group">
@@ -765,6 +779,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                     <label for="workorder_status">Status</label>
                                     <select name="status" id="workorder_status" class="form-control custom-select">
                                         <option value="New">New</option>
+                                        <option value="Draft">Draft</option>
                                         <option value="Scheduled">Scheduled</option>
                                         <option value="Started">Started</option>
                                         <option value="Paused">Paused</option>
@@ -904,8 +919,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
                                 </div>
                             </div>
-
-
+                
                             <div class="row" style="margin-top:80px;">                        
                                 <div class="form-group col-md-4">
                                     <label for="attachment">Attach Photo</label>
@@ -920,21 +934,35 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                     <input type="file" class="form-control" name="attachment" id="attachment">
                                 </div>                                                                
                             </div>
-                        <div class="row">
-                            <div class="col-md-12 form-group">
+
+                <br><br><br><br><br>
+                <div>
+
+                     <div class="form-group">
                                 <button type="submit" class="btn btn-flat btn-success">Submit</button>
                                 <button type="submit" class="btn btn-flat btn-success">Preview</button>
                                 <button type="submit" class="btn btn-flat btn-success" style="background-color: #32243d !important"><b>Save Template</b></button>
                                 <button type="submit" class="btn btn-flat btn-success" id="esignButton">eSign</button>
                                 <a href="<?php echo url('workorder') ?>" class="btn ">Cancel this</a>
-                            </div>
-                        </div>
                     </div>
-                    </div>
-                    <!-- end card -->
                 </div>
+            <!-- end card -->
             </div>
-            <div class="modal fade" id="checklistModal" role="dialog">
+
+
+
+
+        </div>
+
+        <style>
+
+        </style>
+        <?php echo form_close(); ?>
+    </div>
+    <!-- end container-fluid -->
+</div>
+
+<div class="modal fade" id="checklistModal" role="dialog">
                         <div class="modal-dialog">            
                         <!-- Modal content-->
                         <div class="modal-content">
@@ -953,10 +981,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     </div>
                 </div>
 
-            <?php echo form_close(); ?>
-
-            <!-- Modal Service Address -->
-            <div class="modal fade" id="modalServiceAddress" tabindex="-1" role="dialog"
+<!-- Modal Service Address -->
+<div class="modal fade" id="modalServiceAddress" tabindex="-1" role="dialog"
                  aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-lg" role="document">
                     <div class="modal-content">
@@ -1149,7 +1175,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
             <!-- Modal New Customer -->
             <div class="modal fade" id="modalNewCustomer" tabindex="-1" role="dialog"
-                 aria-labelledby="exampleModalLabel" aria-hidden="true">
+                 aria-labelledby="exampleModalLabel" data-keyboard="false" style="z-index: 1050 !important;">
                 <div class="modal-dialog modal-lg" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -1221,27 +1247,21 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     </div>
                 </div>
             </div>
-            <!-- end row -->
-        </div>
-        <!-- end container-fluid -->
-    </div>
-    <!-- page wrapper end -->
-</div>
+
 <?php include viewPath('includes/footer'); ?>
 
 <script type="text/javascript">
-$(window).on('beforeunload', function(){
-    var c = confirm();
-    if(c){
-        return true;
-    }
-    else
-        return false;
-});
+// $(window).on('beforeunload', function(){
+//     var c = confirm();
+//     if(c){
+//         return true;
+//     }
+//     else
+//         return false;
+// });
 </script>
 
 <script src="<?php echo $url->assets ?>js/add.js"></script>
-
 <script>
 jQuery(document).ready(function () {
     $(document).on('click','#Commercial',function(){

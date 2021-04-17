@@ -833,6 +833,8 @@ $(document).on('click', 'label[for="pay-schedule"] a', function(e) {
                 $('#edit-pay-schedule-modal #custom-schedule').trigger('change');
             }
 
+            $('#edit-pay-schedule-modal [name="end_of_first_pay_period"]:checked, #edit-pay-schedule-modal [name="end_of_second_pay_period"]:checked').trigger('change');
+
             $('#edit-pay-schedule-modal').modal('show');
         });
     }

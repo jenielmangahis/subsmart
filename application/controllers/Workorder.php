@@ -1674,7 +1674,7 @@ class Workorder extends MY_Controller
 
         $new_data = array(
             
-            'workorder_number' => $this->input->post('workorder_number'),
+            'work_order_number' => $this->input->post('workorder_number'),
             'customer_id' => $this->input->post('customer_id'),
             'security_number' => $this->input->post('security_number'),
             'birthdate' => $this->input->post('birthdate'),
@@ -1688,23 +1688,24 @@ class Workorder extends MY_Controller
             'cross_street' => $this->input->post('cross_street'),
             'password' => $this->input->post('password'),
             'offer_code' => $this->input->post('offer_code'),//
-            'job_tag' => $this->input->post('job_tag'),
+            'tags' => $this->input->post('job_tag'),
             'schedule_date_given' => $this->input->post('schedule_date_given'),
             'job_type' => $this->input->post('job_type'),
             'job_name' => $this->input->post('job_name'),
             'job_description' => $this->input->post('job_description'),
             'payment_method' => $this->input->post('payment_method'),
             'payment_amount' => $this->input->post('payment_amount'),
-            'account_holder_name' => $this->input->post('account_holder_name'),
-            'account_number' => $this->input->post('account_number'),
-            'expiry' => $this->input->post('expiry'),
-            'cvc' => $this->input->post('cvc'),
-            'terms_conditions' => $this->input->post('terms_conditions'),
+            // 'account_holder_name' => $this->input->post('account_holder_name'),
+            // 'account_number' => $this->input->post('account_number'),
+            // 'expiry' => $this->input->post('expiry'),
+            // 'cvc' => $this->input->post('cvc'),
+            'terms_and_conditions' => $this->input->post('terms_conditions'),
             'status' => $this->input->post('status'),
             'priority' => $this->input->post('priority'),
             'purchase_order_number' => $this->input->post('purchase_order_number'),
             'terms_of_use' => $this->input->post('terms_of_use'),
             'instructions' => $this->input->post('instructions'),
+            'header' => $this->input->post('header'),
 
             //signature
             // 'company_representative_signature' => $this->input->post('company_representative_signature'),
@@ -1713,12 +1714,13 @@ class Workorder extends MY_Controller
             // 'primary_account_holder_name' => $this->input->post('primary_account_holder_name'),
             // 'secondary_account_holder_signature' => $this->input->post('secondary_account_holder_signature'),
             // 'secondary_account_holder_name' => $this->input->post('secondary_account_holder_name'),
-            'company_representative_signature' => 'company_representative_signature',
-            'company_representative_name' => 'company_representative_name',
-            'primary_account_holder_signature' => 'primary_account_holder_signature',
-            'primary_account_holder_name' => 'primary_account_holder_name',
-            'secondary_account_holder_signature' => 'secondary_account_holder_signature',
-            'secondary_account_holder_name' => 'secondary_account_holder_name',
+
+            // 'company_representative_signature' => 'company_representative_signature',
+            // 'company_representative_name' => 'company_representative_name',
+            // 'primary_account_holder_signature' => 'primary_account_holder_signature',
+            // 'primary_account_holder_name' => 'primary_account_holder_name',
+            // 'secondary_account_holder_signature' => 'secondary_account_holder_signature',
+            // 'secondary_account_holder_name' => 'secondary_account_holder_name',
             
 
             //attachment
@@ -1734,7 +1736,7 @@ class Workorder extends MY_Controller
             'voucher_value' => $this->input->post('voucher_value'),
             'grand_total' => $this->input->post('grand_total'),
 
-            'user_id' => $user_id,
+            'employee_id' => $user_id,
             'company_id' => $company_id,
             'date_created' => date("Y-m-d H:i:s"),
             'date_updated' => date("Y-m-d H:i:s")

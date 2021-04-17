@@ -724,20 +724,59 @@ class Invoice extends MY_Controller {
             $notify_by_sms = '0';
         }
 
+        if($this->input->post('street_address') == null)
+        {
+            $street_address = '';
+        }else{
+            $street_address = $this->input->post('street_address');
+        }
+
+        if($this->input->post('suite_unit') == null)
+        {
+            $suite_unit = '';
+        }else{
+            $suite_unit = $this->input->post('suite_unit');
+        }
+
+        if($this->input->post('city') == null)
+        {
+            $city = '';
+        }else{
+            $city = $this->input->post('city');
+        }
+
+        if($this->input->post('postcode') == null)
+        {
+            $postcode = '';
+        }else{
+            $postcode = $this->input->post('postcode');
+        }
+
+        if($this->input->post('state') == null)
+        {
+            $state = '';
+        }else{
+            $state = $this->input->post('state');
+        }
+
         $new_data = array(
             'fk_user_id' => $user_id,
-            'contact_name' => $this->input->post('contact_name'),
+            // 'contact_name' => $this->input->post('contact_name'),
+            'first_name' => $this->input->post('first_name'),
+            'last_name' => $this->input->post('last_name'),
+            'middle_name' => $this->input->post('middle_name'),
             'email' => $this->input->post('contact_email'),
             'phone_m' => $this->input->post('contact_mobile'),
             'phone_h' => $this->input->post('contact_phone'),
             'business_name' => $this->input->post('business_name'),
             'customer_type' => $this->input->post('customer_type'),
 
-            'cross_street' => $this->input->post('street_address'),
-            'subdivision' => $this->input->post('suite_unit'),
-            'city' => $this->input->post('city'),
-            'zip_code' => $this->input->post('zip'),
-            'state' => $this->input->post('state'),
+            'mail_add' => $street_address,
+            'cross_street' => $street_address,
+            'subdivision' => $suite_unit,
+            'city' => $city,
+            'zip_code' => $postcode,
+            'state' => $state,
 
             'notify_email' => $notify_by_email,
             'notify_sms' => $notify_by_sms,
@@ -747,6 +786,7 @@ class Invoice extends MY_Controller {
         $addQuery = $this->invoice_model->savenewCustomer($new_data);
 
         if($addQuery > 0){
+            // echo 'Congrats, new customer added!';
             echo json_encode($addQuery);
             //$this->session->set_flashdata('Method added');
         }

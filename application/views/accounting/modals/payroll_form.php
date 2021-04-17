@@ -24,7 +24,7 @@
             <label for="payPeriod">Pay period</label>
             <select name="pay_period" id="payPeriod" class="form-control">
                 <?php foreach($payPeriods as $period) : ?>
-                    <option value="<?php echo $period['first_day'] . '-' . $period['last_day']; ?>" <?php echo $period['selected'] === true ? 'selected' : ''; ?>><?php echo $period['first_day'] . ' to ' . $period['last_day']; ?></option>
+                    <option value="<?php echo $period['first_day'] . '-' . $period['last_day']; ?>" data-pay_date="<?=$period['pay_date']?>" <?=$period['selected'] === true ? 'selected' : ''?>><?php echo $period['first_day'] . ' to ' . $period['last_day']; ?></option>
                 <?php endforeach; ?>
             </select>
         </div>
