@@ -284,7 +284,6 @@ $(function(){
     });
 
     $(".btn-stag").click(function(){
-        var sms_message = $("#sms-txt").val();
         var tag = "{{" + $(this).attr("data-id") + "}}";
 
         CKEDITOR.instances['mail_body'].insertHtml(tag);

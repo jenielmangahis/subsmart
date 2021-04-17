@@ -60,9 +60,9 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
     <div class="row pt-2 pb-5">
         <div class="col-md-1 trac360_main_sections trac360_side_transparent">
             <div class="btn-group-vertical">
-                <button type="button" class="btn btn-primary trac360_side_transparent trac360_side_controls pb-5" id=""><span class="fa fa-users fa-3x" class="text-center"></span><br>Group</button>
-                <a href="<?= base_url() ?>/trac360" class="btn btn-primary trac360_side_transparent trac360_side_controls pb-5" id=""><span class="fa fa-user fa-3x" class="text-center"></span><br>People</a>
-                <a href="<?= base_url() ?>/trac360/places" class="btn btn-primary trac360_side_transparent trac360_side_controls pb-5" id=""><span class="fa fa-map-marker fa-3x" class="text-center"></span><br>Places</a>
+            <a href="<?= base_url() ?>trac360" class="btn btn-primary trac360_side_transparent trac360_side_controls pb-5" id=""><span class="fa fa-users fa-3x" class="text-center"></span><br>Group</a>
+                <a href="<?= base_url() ?>trac360" class="btn btn-primary trac360_side_transparent trac360_side_controls pb-5" id=""><span class="fa fa-commenting-o fa-3x" class="text-center"></span><br>Messeages</a>
+                <a href="<?= base_url() ?>trac360/places" class="btn btn-primary trac360_side_transparent trac360_side_controls pb-5" id=""><span class="fa fa-map-marker fa-3x" class="text-center"></span><br>Places</a>
                 <button type="button" class="btn btn-primary trac360_side_transparent trac360_side_controls pb-5" id=""><span class="fa fa-map fa-3x" class="text-center"></span><br>History</button>
             </div>
         </div>

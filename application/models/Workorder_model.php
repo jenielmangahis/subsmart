@@ -188,7 +188,7 @@ class Workorder_model extends MY_Model
     }
 
     public function save_workorder($data){
-		$vendor = $this->db->insert('workorders', $data);
+		$vendor = $this->db->insert('work_orders', $data);
 	    $insert = $this->db->insert_id();
 		return  $insert;
 	}
@@ -366,7 +366,7 @@ class Workorder_model extends MY_Model
     public function getlastInsert(){
 
         $this->db->select('*');
-        $this->db->from('workorders');
+        $this->db->from('work_orders');
         // $this->db->where('company_id', $company_id);
         $this->db->order_by('id', 'DESC');
         $this->db->limit(1);
@@ -456,11 +456,11 @@ class Workorder_model extends MY_Model
     {
         $company_id = logged('company_id');
 
-        $this->db->select('workorders.* , acs_profile.first_name,  acs_profile.last_name, acs_profile.middle_name, acs_profile.prof_id');
+        $this->db->select('work_orders.* , acs_profile.first_name,  acs_profile.last_name, acs_profile.middle_name, acs_profile.prof_id');
 		// $this->db->from('workorders.* , acs_profile.first_name,  acs_profile.last_name, acs_profile.middle_name, acs_profile.prof_id');
-        $this->db->from('workorders');
-        $this->db->join('acs_profile', 'workorders.customer_id  = acs_profile.prof_id');
-		$this->db->where('workorders.company_id', $company_id);
+        $this->db->from('work_orders');
+        $this->db->join('acs_profile', 'work_orders.customer_id  = acs_profile.prof_id');
+		$this->db->where('work_orders.company_id', $company_id);
         $this->db->order_by('id', 'ASC');
         $query = $this->db->get();
         return $query->result();
@@ -469,7 +469,7 @@ class Workorder_model extends MY_Model
     public function getById($id)
     {
         $this->db->select('*');
-		$this->db->from('workorders');
+		$this->db->from('work_orders');
 		$this->db->where('id', $id);
         $query = $this->db->get();
         return $query->row();
@@ -478,7 +478,7 @@ class Workorder_model extends MY_Model
     public function getCompanyCompanyId($id)
     {
         $this->db->select('company_id');
-		$this->db->from('workorders');
+		$this->db->from('work_orders');
 		$this->db->where('id', $id);
         $query = $this->db->get();
         $comp = $query->row();
@@ -496,7 +496,7 @@ class Workorder_model extends MY_Model
     public function getcustomerCompanyId($id)
     {
         $this->db->select('customer_id');
-		$this->db->from('workorders');
+		$this->db->from('work_orders');
 		$this->db->where('id', $id);
         $query = $this->db->get();
         $cus = $query->row();
@@ -514,7 +514,7 @@ class Workorder_model extends MY_Model
     public function getItems($id)
     {
         $this->db->select('*');
-		$this->db->from('workorders');
+		$this->db->from('work_orders');
 		$this->db->where('id', $id);
         $query = $this->db->get();
         $cus = $query->row();

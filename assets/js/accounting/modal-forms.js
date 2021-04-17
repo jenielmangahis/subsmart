@@ -144,6 +144,13 @@ $(function() {
         </button>`);
     });
 
+    $(document).on('change', 'div#payrollModal select#payPeriod', function(e) {
+        var selected = $(this).find('option:selected');
+        var payDate = selected[0].dataset.pay_date;
+
+        $('div#payrollModal input#payDate').val(payDate);
+    });
+
     $(document).on('click', 'div#payrollModal div.modal-footer button#preview-payroll', function() {
         payrollForm = $('div#payrollModal div.modal-body').html();
         payrollFormData = new FormData(document.getElementById($('div#payrollModal').parent('form').attr('id')));

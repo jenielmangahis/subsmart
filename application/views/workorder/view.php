@@ -200,7 +200,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 													<table>
 														<tbody>
 														<tr>
-															<td colspan="2"><span># <?php echo $workorder->workorder_number ?></span></td>
+															<td colspan="2"><span># <?php echo $workorder->work_order_number ?></span></td>
 														</tr>
 														<tr>
 															<td align="left"><div style="margin-right: 10px;">Date:</div></td>

@@ -501,7 +501,7 @@ class Customer extends MY_Controller
             }else{
                 $this->save_notes($input,$profile_id);
                 $this->qrcodeGenerator($profile_id);
-                echo 'Congrats, new customer added!';
+                echo $profile_id;
             }
         }else {
             echo 'Customer Already Exist!';
@@ -730,8 +730,6 @@ class Customer extends MY_Controller
                     unset($device_data);
                 }
             }
-
-
             echo "Updated";
         }
     }

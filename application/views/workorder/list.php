@@ -224,7 +224,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                     <label for="work_order_id_<?php echo $workorder->id ?>"></label>
                                                 </div>
                                                 <div><a class="a-default table-nowrap" href="">
-                                                        <?php echo $workorder->workorder_number ?>
+                                                        <?php echo $workorder->work_order_number ?>
                                                     </a>
                                                 </div>
                                             </div>

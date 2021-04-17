@@ -13,7 +13,7 @@ function get_differenct_of_dates($date_start, $date_end)
   $difference += ($interval->i) * 60;
   $difference += $interval->s;
   return ($difference / 60) / 60;
-}
+} 
 ?>
 
 <!-- page wrapper start -->
@@ -36,15 +36,15 @@ function get_differenct_of_dates($date_start, $date_end)
           <div class="btn-group-vertical" style="width: 100%;">
             <ul class="trac360-side-bar-menu">
               <li>
-                <a href="<?= base_url() ?>/trac360" class="btn btn-primary  trac360_side_controls current-page" id=""><span class="fa fa-users fa-2x" class="text-center"></span><br>Group</a>
+                <a href="<?= base_url() ?>trac360" class="btn btn-primary  trac360_side_controls current-page" id=""><span class="fa fa-users fa-2x" class="text-center"></span><br>Group</a>
               </li>
               <li>
-                <a href="<?= base_url() ?>/trac360/" class="btn btn-primary  trac360_side_controls" id=""><span class="fa fa-commenting-o fa-2x" class="text-center"></span><br>Messages</a>
+                <a href="<?= base_url() ?>trac360/" class="btn btn-primary  trac360_side_controls" id=""><span class="fa fa-commenting-o fa-2x" class="text-center"></span><br>Messages</a>
               </li>
               <li>
-                <a href="<?= base_url() ?>/trac360/places" class="btn btn-primary  trac360_side_controls" id=""><span class="fa fa-map-marker fa-2x" class="text-center"></span><br>Places</a>
+                <a href="<?= base_url() ?>trac360/places" class="btn btn-primary  trac360_side_controls" id=""><span class="fa fa-map-marker fa-2x" class="text-center"></span><br>Places</a>
               </li>
-              <li><a href="<?= base_url() ?>/trac360/" class="btn btn-primary  trac360_side_controls" id=""><span class="fa fa-map fa-2x" class="text-center"></span><br>History</a>
+              <li><a href="<?= base_url() ?>trac360/" class="btn btn-primary  trac360_side_controls" id=""><span class="fa fa-map fa-2x" class="text-center"></span><br>History</a>
               </li>
             </ul>
           </div>
@@ -115,7 +115,9 @@ function get_differenct_of_dates($date_start, $date_end)
           echo $active_html . "" . $inactive_html;
           ?>
 
-
+          <div class="people-informaton-btn">
+          <img src="<?=base_url()?>"/>
+          </div>
         </div>
       </div>
 
@@ -153,10 +155,10 @@ function get_differenct_of_dates($date_start, $date_end)
   function set_initmap() {
     map = new google.maps.Map(document.getElementById("map"), {
       center: {
-        lat: 7.3087,
-        lng: 125.6841
+        lat: current_user_latitude,
+        lng: current_user_longitude
       },
-      zoom: 10,
+      zoom: 12,
     });
 
     /**
