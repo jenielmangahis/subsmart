@@ -97,7 +97,7 @@
             <label for="">Billing Method</label>
         </div>
         <div class="col-md-6">
-            Credit Card
+            <?php $bm = bill_methods($billing_info->bill_method); echo $bm['description']; ?>
         </div>
     </div>
 
@@ -106,7 +106,7 @@
             <label for="">Check Number</label>
         </div>
         <div class="col-md-6">
-            ---
+            <?= !empty($billing_info->check_num) ? $billing_info->check_num : '---' ?>
         </div>
     </div>
     <div class="row form_line" id="routingNumber">
@@ -114,7 +114,7 @@
             <label for="">Routing Number</label>
         </div>
         <div class="col-md-6">
-            ---
+            <?= !empty($billing_info->routing_num) ? $billing_info->routing_num : '---' ?>
         </div>
     </div>
     <div class="row form_line" id="accountNumber">
@@ -122,7 +122,7 @@
             <label for="">Account Number</label>
         </div>
         <div class="col-md-6">
-            ---
+            <?= !empty($billing_info->acct_num) ? $billing_info->acct_num : '---' ?>
         </div>
     </div>
     <div class="row form_line" id="CCN">
@@ -130,7 +130,7 @@
             <label for="">Credit Card Number</label>
         </div>
         <div class="col-md-6">
-            ---
+            <?= !empty($billing_info->credit_card_num) ? $billing_info->credit_card_num : '---' ?>
         </div>
     </div>
     <div class="row form_line" id="CCE">
@@ -138,7 +138,8 @@
             <label for="">Credit Card Expiration</label>
         </div>
         <div class="col-md-6">
-            ---
+            <?= !empty($billing_info->credit_card_exp) ? $billing_info->credit_card_exp : '---' ?>
+            <?= !empty($billing_info->credit_card_exp_mm_yyyy) ? $billing_info->credit_card_exp_mm_yyyy : '---' ?>
         </div>
     </div>
 
@@ -147,7 +148,7 @@
             <label for="">Account Credential</label>
         </div>
         <div class="col-md-6">
-            ---
+            <?= !empty($billing_info->account_credential) ? $billing_info->account_credential : '---' ?>
         </div>
     </div>
     <div class="row form_line account_cred" >
@@ -155,7 +156,7 @@
             <label for="">Account Note</label>
         </div>
         <div class="col-md-6">
-            ---
+            <?= !empty($billing_info->account_note) ? $billing_info->account_note : '---' ?>
         </div>
     </div>
     <div class="row form_line account_cred" id="confirmationPD">
@@ -163,7 +164,7 @@
             <label for="">Confirmation</label>
         </div>
         <div class="col-md-6">
-            ---
+            <?= !empty($billing_info->confirmation) ? $billing_info->confirmation : '---' ?>
         </div>
     </div>
 

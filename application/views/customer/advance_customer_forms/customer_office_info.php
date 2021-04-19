@@ -144,7 +144,8 @@
                 <select id="verification" name="verification" data-customer-source="dropdown" class="input_select" >
                     <option <?php if(isset($office_info)){ if($office_info->verification == "TrunsUnion"){ echo 'selected'; } } ?> value="TransUnion">TransUnion</option>
                     <option <?php if(isset($office_info)){ if($office_info->verification == "Experian"){ echo 'selected'; } } ?>  value="Experian">Experian </option>
-                    <option <?php if(isset($office_info)){ if($office_info->verification == "Equifax"){ echo 'selected'; } } ?>  value="Equifax ">Equifax  </option>
+                    <option <?php if(isset($office_info)){ if($office_info->verification == "Equifax"){ echo 'selected'; } } ?>  value="Equifax">Equifax  </option>
+                    <option <?php if(isset($office_info)){ if($office_info->verification == "Others"){ echo 'selected'; } } ?>  value="Others">Others  </option>
                 </select>
             </div>
         </div>
@@ -176,6 +177,24 @@
                 </select>
             </div>
         </div>
+
+        <div class="row form_line">
+            <div class="col-md-4">
+                <label>Collections</label>
+            </div>
+            <div class="col-md-8">
+                <select id="collections" name="collections" data-customer-source="dropdown" class="form-controls input_select">
+                    <option value=""></option>
+                    <option <?= isset($alarm_info) && $alarm_info->collections == 'In Process' ?  'selected' : '';?> value="In Process">In Process</option>
+                    <option <?= isset($alarm_info) && $alarm_info->collections == 'Sent' ?  'selected' : '';?> value="Sent">Sent</option>
+                    <option <?= isset($alarm_info) && $alarm_info->collections == 'None Collectable' ?  'selected' : '';?> value="None Collectable">None Collectable</option>
+                    <option <?= isset($alarm_info) && $alarm_info->collections == 'In Collections' ?  'selected' : '';?> value="In Collections">In Collection</option>
+                    <option <?= isset($alarm_info) && $alarm_info->collections == 'Civil Suit' ?  'selected' : '';?> value="Civil Suit">Civil Suit</option>
+                    <option <?= isset($alarm_info) && $alarm_info->collections == 'Taken Action' ?  'selected' : '';?> value="Taken Action">Taken Action</option>
+                </select>
+            </div>
+        </div>
+
         <div class="row form_line">
             <div class="col-md-4">
                 <label for="">Collection Date</label>

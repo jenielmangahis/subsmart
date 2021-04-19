@@ -86,10 +86,7 @@
                                     <td><?=$payDetail->pay_method === 'direct-deposit' ? 'Direct deposit' : 'Paper check'?></td>
                                     <td>
                                         <?php if($payDetail->pay_type !== 'commission') : ?>
-                                        <?php if($paySchedule->pay_frequency === 'every-week' && $payDetail->pay_type === 'hourly') {
-                                            $regPayHours = 40.00;
-                                        } ?>
-                                        <input type="number" name="reg_pay_hours[]" step="0.01" class="form-control w-75 float-right text-right regular-pay-hours" value="<?=number_format($regPayHours, 2, '.', ',')?>">
+                                        <input type="number" name="reg_pay_hours[]" step="0.01" class="form-control w-75 float-right text-right regular-pay-hours">
                                         <?php endif; ?>
                                     </td>
                                     <td>

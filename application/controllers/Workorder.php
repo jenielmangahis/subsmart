@@ -561,7 +561,7 @@ class Workorder extends MY_Controller
     {
         $company_id = logged('company_id');
         $user_id = logged('id');
-        $parent_id = $this->db->query("select parent_id from users where id=$user_id")->row();
+        $parent_id = $this->db->query("select id from users where id=$user_id")->row();
 
         if ($parent_id->parent_id == 1) {
             $this->page_data['users'] = $this->users_model->getAllUsersByCompany($user_id);
@@ -571,6 +571,8 @@ class Workorder extends MY_Controller
         $this->page_data['workstatus'] = $this->Workstatus_model->getByWhere(['company_id' => $company_id]);
         $this->page_data['workorder'] = $this->workorder_model->getById($id);
         $this->page_data['plans'] = $this->plans_model->getByWhere(['company_id' => $company_id]);
+        $this->page_data['customer'] = $this->workorder_model->getcustomerCompanyId($id);
+        $this->page_data['job_types'] = $this->workorder_model->getjob_types();
 
         foreach ($this->page_data['workorder'] as $key => $workorder) {
 
@@ -582,6 +584,7 @@ class Workorder extends MY_Controller
 
 //         echo '<pre>'; print_r($this->page_data['workorder']); die;
 
+        // print_r($this->page_data['workorder']);
         $this->load->view('workorder/edit', $this->page_data);
     }
 
@@ -1743,7 +1746,196 @@ class Workorder extends MY_Controller
         );
 
         $addQuery = $this->workorder_model->save_workorder($new_data);
+        
 
+        if($this->input->post('payment_method') == 'Cash'){
+            $payment_data = array(
+            
+                'payment_method' => $this->input->post('payment_method'),
+                'amount' => $this->input->post('payment_amount'),
+                'is_collected' => '1',
+                'work_order_id' => $addQuery,
+                'date_created' => date("Y-m-d H:i:s"),
+                'date_updated' => date("Y-m-d H:i:s")
+            );
+
+            $pay = $this->workorder_model->save_payment($payment_data);
+        }
+        elseif($this->input->post('payment_method') == 'Check'){
+            $payment_data = array(
+            
+                'payment_method' => $this->input->post('payment_method'),
+                'amount' => $this->input->post('payment_amount'),
+                'check_number' => $this->input->post('check_number'),
+                'routing_number' => $this->input->post('routing_number'),
+                'work_order_id' => $addQuery,
+                'date_created' => date("Y-m-d H:i:s"),
+                'date_updated' => date("Y-m-d H:i:s")
+            );
+
+            $pay = $this->workorder_model->save_payment($payment_data);
+        }
+        elseif($this->input->post('payment_method') == 'Credit Card'){
+            $payment_data = array(
+            
+                'payment_method' => $this->input->post('payment_method'),
+                'amount' => $this->input->post('payment_amount'),
+                'credit_number' => $this->input->post('credit_number'),
+                'credit_expiry' => $this->input->post('credit_expiry'),
+                'credit_cvc' => $this->input->post('credit_cvc'),
+                'work_order_id' => $addQuery,
+                'date_created' => date("Y-m-d H:i:s"),
+                'date_updated' => date("Y-m-d H:i:s")
+            );
+
+            $pay = $this->workorder_model->save_payment($payment_data);
+        }
+        elseif($this->input->post('payment_method') == 'Debit Card'){
+            $payment_data = array(
+            
+                'payment_method' => $this->input->post('payment_method'),
+                'amount' => $this->input->post('payment_amount'),
+                'credit_number' => $this->input->post('debit_credit_number'),
+                'credit_expiry' => $this->input->post('debit_credit_expiry'),
+                'credit_cvc' => $this->input->post('debit_credit_cvc'),
+                'work_order_id' => $addQuery,
+                'date_created' => date("Y-m-d H:i:s"),
+                'date_updated' => date("Y-m-d H:i:s")
+            );
+
+            $pay = $this->workorder_model->save_payment($payment_data);
+        }
+        elseif($this->input->post('payment_method') == 'ACH'){
+            $payment_data = array(
+            
+                'payment_method' => $this->input->post('payment_method'),
+                'amount' => $this->input->post('payment_amount'),
+                'routing_number' => $this->input->post('ach_routing_number'),
+                'account_number' => $this->input->post('ach_account_number'),
+                'work_order_id' => $addQuery,
+                'date_created' => date("Y-m-d H:i:s"),
+                'date_updated' => date("Y-m-d H:i:s")
+            );
+
+            $pay = $this->workorder_model->save_payment($payment_data);
+        }
+        elseif($this->input->post('payment_method') == 'Venmo'){
+            $payment_data = array(
+            
+                'payment_method' => $this->input->post('payment_method'),
+                'amount' => $this->input->post('payment_amount'),
+                'account_credentials' => $this->input->post('account_credentials'),
+                'account_note' => $this->input->post('account_note'),
+                'confirmation' => $this->input->post('confirmation'),
+                'work_order_id' => $addQuery,
+                'date_created' => date("Y-m-d H:i:s"),
+                'date_updated' => date("Y-m-d H:i:s")
+            );
+
+            $pay = $this->workorder_model->save_payment($payment_data);
+        }
+        elseif($this->input->post('payment_method') == 'Paypal'){
+            $payment_data = array(
+            
+                'payment_method' => $this->input->post('payment_method'),
+                'amount' => $this->input->post('payment_amount'),
+                'account_credentials' => $this->input->post('paypal_account_credentials'),
+                'account_note' => $this->input->post('paypal_account_note'),
+                'confirmation' => $this->input->post('paypal_confirmation'),
+                'work_order_id' => $addQuery,
+                'date_created' => date("Y-m-d H:i:s"),
+                'date_updated' => date("Y-m-d H:i:s")
+            );
+
+            $pay = $this->workorder_model->save_payment($payment_data);
+        }
+        elseif($this->input->post('payment_method') == 'Square'){
+            $payment_data = array(
+            
+                'payment_method' => $this->input->post('payment_method'),
+                'amount' => $this->input->post('payment_amount'),
+                'account_credentials' => $this->input->post('square_account_credentials'),
+                'account_note' => $this->input->post('square_account_note'),
+                'confirmation' => $this->input->post('square_confirmation'),
+                'work_order_id' => $addQuery,
+                'date_created' => date("Y-m-d H:i:s"),
+                'date_updated' => date("Y-m-d H:i:s")
+            );
+
+            $pay = $this->workorder_model->save_payment($payment_data);
+        }
+        elseif($this->input->post('payment_method') == 'Warranty Work'){
+            $payment_data = array(
+            
+                'payment_method' => $this->input->post('payment_method'),
+                'amount' => $this->input->post('payment_amount'),
+                'account_credentials' => $this->input->post('warranty_account_credentials'),
+                'account_note' => $this->input->post('warranty_account_note'),
+                'work_order_id' => $addQuery,
+                'date_created' => date("Y-m-d H:i:s"),
+                'date_updated' => date("Y-m-d H:i:s")
+            );
+
+            $pay = $this->workorder_model->save_payment($payment_data);
+        }
+        elseif($this->input->post('payment_method') == 'Home Owner Financing'){
+            $payment_data = array(
+            
+                'payment_method' => $this->input->post('payment_method'),
+                'amount' => $this->input->post('payment_amount'),
+                'account_credentials' => $this->input->post('home_account_credentials'),
+                'account_note' => $this->input->post('home_account_note'),
+                'work_order_id' => $addQuery,
+                'date_created' => date("Y-m-d H:i:s"),
+                'date_updated' => date("Y-m-d H:i:s")
+            );
+
+            $pay = $this->workorder_model->save_payment($payment_data);
+        }
+        elseif($this->input->post('payment_method') == 'e-Transfer'){
+            $payment_data = array(
+            
+                'payment_method' => $this->input->post('payment_method'),
+                'amount' => $this->input->post('payment_amount'),
+                'account_credentials' => $this->input->post('e_account_credentials'),
+                'account_note' => $this->input->post('e_account_note'),
+                'work_order_id' => $addQuery,
+                'date_created' => date("Y-m-d H:i:s"),
+                'date_updated' => date("Y-m-d H:i:s")
+            );
+
+            $pay = $this->workorder_model->save_payment($payment_data);
+        }
+        elseif($this->input->post('payment_method') == 'Other Credit Card Professor'){
+            $payment_data = array(
+            
+                'payment_method' => $this->input->post('payment_method'),
+                'amount' => $this->input->post('payment_amount'),
+                'credit_number' => $this->input->post('other_credit_number'),
+                'credit_expiry' => $this->input->post('other_credit_expiry'),
+                'credit_cvc' => $this->input->post('other_credit_cvc'),
+                'work_order_id' => $addQuery,
+                'date_created' => date("Y-m-d H:i:s"),
+                'date_updated' => date("Y-m-d H:i:s")
+            );
+
+            $pay = $this->workorder_model->save_payment($payment_data);
+        }
+        elseif($this->input->post('payment_method') == 'Other Payment Type'){
+            $payment_data = array(
+            
+                'payment_method' => $this->input->post('payment_method'),
+                'amount' => $this->input->post('payment_amount'),
+                'account_credentials' => $this->input->post('other_payment_account_credentials'),
+                'account_note' => $this->input->post('other_payment_account_note'),
+                'work_order_id' => $addQuery,
+                'date_created' => date("Y-m-d H:i:s"),
+                'date_updated' => date("Y-m-d H:i:s")
+            );
+
+            $pay = $this->workorder_model->save_payment($payment_data);
+        }
+        
         
         // $custom_data = array(
             

@@ -5,9 +5,26 @@
         <h6 ><span class="fa fa-user"></span>&nbsp; &nbsp;Existing Notes</h6>
     </div>
     <div class="card-body">
-        <div class="row form-line">
-            <i></i>
-        </div>
+        <?php if(isset($customer_notes)) :?>
+            <div class="row">
+                <table width="100%" cellpadding="0" cellspacing="0">
+                    <tbody>
+                    <?php foreach ($customer_notes as $note) : ?>
+                        <tr>
+                            <td style="width: 880px; text-align: left; vertical-align: top; font-size: 11px; color: #336699">
+                                <?= $note->datetime; ?>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: left; border: 1px; border-style: solid; border-color: #999999; background-color: #FFFF71; font-size: 11px">
+                                <?= $note->note; ?>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
+        <?php endif; ?>
     </div>
 
     <div class="card-header">

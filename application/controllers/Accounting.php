@@ -345,12 +345,12 @@ class Accounting extends MY_Controller {
     //     $this->page_data['employees'] = $this->users_model->getAll();
     //     $this->load->view('accounting/employees', $this->page_data);
     // }
-    public function contractors()
-    {
-        $this->page_data['users'] = $this->users_model->getUser(logged('id'));
-        $this->page_data['page_title'] = "Sales Overview";
-        $this->load->view('accounting/contractors', $this->page_data);
-    }
+    // public function contractors()
+    // {
+    //     $this->page_data['users'] = $this->users_model->getUser(logged('id'));
+    //     $this->page_data['page_title'] = "Sales Overview";
+    //     $this->load->view('accounting/contractors', $this->page_data);
+    // }
     public function workerscomp()
     {
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));

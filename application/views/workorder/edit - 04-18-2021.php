@@ -100,38 +100,83 @@
 											<input type="text" class="form-control" name="customer[last_name]"
 												   id="last_name"
 												   required placeholder="Enter Last Name"
-												   value="<?php echo $customer->last_name; ?>"/>
+												   value="<?php echo (!empty($workorder->customer['last_name'])) ? $workorder->customer['last_name'] : '' ?>"/>
 										</div>
 										<div class="col-md-3 form-group">
 											<label for="first_name">First Name</label>
 											<input type="text" class="form-control" name="customer[first_name]"
 												   id="first_name"
 												   required placeholder="Enter First Name"
-												   value="<?php echo $customer->first_name; ?>"/>
+												   value="<?php echo (!empty($workorder->customer['first_name'])) ? $workorder->customer['first_name'] : '' ?>"/>
 										</div>
 										<div class="col-md-2 form-group">
 											<label for="contact_mobile">Mobile</label>
 											<input type="text" class="form-control" name="customer[contact_mobile]"
 												   id="contact_mobile"
-												   value="<?php echo $customer->phone_m; ?>"
+												   value="<?php echo (!empty($workorder->customer['contact_mobile'])) ? $workorder->customer['contact_mobile'] : '' ?>"
 												   placeholder="Enter Mobile"/>
 
 										</div>
 
-										<!-- <div class="col-md-2 form-group">
+										<div class="col-md-2 form-group">
 											<label for="contact_dob">DOB</label>
 											<input type="text" class="form-control" name="customer[contact_dob]"
 												   id="customer_contact_dob"
 												   value="<?php echo (!empty($workorder->customer['contact_dob'])) ? date('m/d/Y', strtotime($workorder->customer['contact_dob'])) : '' ?>"
 												   placeholder="Enter DOB"/>
-										</div> -->
+										</div>
 
 										<div class="col-md-2 form-group">
 											<label for="contact_ssn">SSN</label>
 											<input type="text" class="form-control" name="customer[contact_ssn]"
 												   id="contact_ssn"
-												   value="<?php echo $workorder->security_number; ?>"
+												   value="<?php echo (!empty($workorder->customer['contact_ssn'])) ? $workorder->customer['contact_ssn'] : '' ?>"
 												   required
+												   placeholder="Enter SSN"/>
+										</div>
+									</div>
+
+									<div class="row">
+										<div class="col-md-12">
+											<span class="help help-sm">Spouse</span>
+										</div>
+										<div class="col-md-3 form-group">
+											<label for="spouse_last_name">Last Name</label>
+											<input type="text" class="form-control" name="customer[spouse_last_name]"
+												   id="spouse_last_name"
+												   required placeholder="Enter Last Name"
+												   value="<?php echo (!empty($workorder->customer['spouse_last_name'])) ? $workorder->customer['spouse_last_name'] : '' ?>"/>
+										</div>
+										<div class="col-md-3 form-group">
+											<label for="spouse_first_name">First Name</label>
+											<input type="text" class="form-control" name="customer[spouse_first_name]"
+												   id="spouse_first_name"
+												   required placeholder="Enter First Name"
+												   value="<?php echo (!empty($workorder->customer['spouse_first_name'])) ? $workorder->customer['spouse_first_name'] : '' ?>"/>
+										</div>
+										<div class="col-md-2 form-group">
+											<label for="spouse_contact_mobile">Mobile</label>
+											<input type="text" class="form-control" name="customer[spouse_contact_mobile]"
+												   id="spouse_contact_mobile"
+												   value="<?php echo (!empty($workorder->customer['spouse_contact_mobile'])) ? $workorder->customer['spouse_contact_mobile'] : '' ?>"
+												   placeholder="Enter Mobile"/>
+
+										</div>
+
+										<div class="col-md-2 form-group">
+											<label for="contact_dob">DOB</label>
+											<input type="text" class="form-control" name="customer[spouse_contact_dob]"
+												   id="customer_spouse_contact_dob"
+												   value="<?php echo (!empty($workorder->customer['spouse_contact_dob'])) ? date('m/d/Y', strtotime($workorder->customer['spouse_contact_dob'])) : '' ?>"
+												   placeholder="Enter DOB"/>
+										</div>
+
+										<div class="col-md-2 form-group">
+											<label for="spouse_contact_ssn">SSN</label>
+											<input type="text" class="form-control" name="customer[spouse_contact_ssn]"
+												   id="spouse_contact_ssn"
+												   required
+												   value="<?php echo (!empty($workorder->customer['spouse_contact_ssn'])) ? $workorder->customer['spouse_contact_ssn'] : '' ?>"
 												   placeholder="Enter SSN"/>
 										</div>
 									</div>
@@ -141,21 +186,21 @@
 											<label for="monitored_location">Monitored Location</label>
 											<input type="text" class="form-control" name="customer[monitored_location]"
 												   id="monitored_location"
-												   value="<?php echo $workorder->job_location; ?>"
+												   value="<?php echo (!empty($workorder->customer['monitored_location'])) ? $workorder->customer['monitored_location'] : '' ?>"
 												   required placeholder="Enter Monitored Location"/>
 										</div>
 										<div class="col-md-3 form-group">
 											<label for="city">City</label>
 											<input type="text" class="form-control" name="customer[city]"
 												   id="city"
-												   value="<?php echo $workorder->city; ?>"
+												   value="<?php echo (!empty($workorder->customer['city'])) ? $workorder->customer['city'] : '' ?>"
 												   required placeholder="Enter City"/>
 										</div>
 										<div class="col-md-2 form-group">
 											<label for="state">State</label>
 											<input type="text" class="form-control" name="customer[state]"
 												   id="state"
-												   value="<?php echo $workorder->state; ?>"
+												   value="<?php echo (!empty($workorder->customer['state'])) ? $workorder->customer['state'] : '' ?>"
 												   placeholder="Enter State"/>
 
 										</div>
@@ -164,7 +209,7 @@
 											<label for="zip">ZIP</label>
 											<input type="text" class="form-control" name="customer[zip]"
 												   id="zip"
-												   value="<?php echo $workorder->zip_code; ?>"
+												   value="<?php echo (!empty($workorder->customer['zip'])) ? $workorder->customer['zip'] : '' ?>"
 												   placeholder="Enter ZIP"/>
 										</div>
 
@@ -172,7 +217,7 @@
 											<label for="cross_street">Cross Street</label>
 											<input type="text" class="form-control" name="customer[cross_street]"
 												   id="cross_street"
-												   value="<?php echo $workorder->cross_street; ?>"
+												   value="<?php echo (!empty($workorder->customer['cross_street'])) ? $workorder->customer['cross_street'] : '' ?>"
 												   required
 												   placeholder="Enter Cross Street"/>
 										</div>
@@ -210,17 +255,35 @@
 											<label for="email">Email</label>
 											<input type="text" class="form-control" name="customer[email]"
 												   id="email"
-												   value="<?php echo $workorder->email; ?>"
+												   value="<?php echo (!empty($workorder->customer['email'])) ? $workorder->customer['email'] : '' ?>"
 												   required placeholder="Enter Email"/>
 										</div>
 										<div class="col-md-4 form-group">
 											<label for="password">Password</label>
-											<input type="text" class="form-control" name="customer[password]"
+											<input type="password" class="form-control" name="customer[password]"
 												   id="password"
-												   value="<?php echo $workorder->password; ?>"
+												   value="<?php echo (!empty($workorder->customer['password'])) ? $workorder->customer['password'] : '' ?>"
 												   placeholder="Enter Password"/>
 										</div>
-										
+										<!--
+										<div class="col-auto form-group">
+											<label for="">Notification Type</label><br/>
+											<?php foreach (get_config_item('notification_types') as $key => $notification_type) { ?>
+												<?php // echo array_search($notification_type, $workorder->customer['notification_type']); ?>
+												<div class="checkbox checkbox-sec margin-right my-0 mr-3">
+													<input type="checkbox" name="customer[notification_type][]"
+														   value="<?php echo $notification_type ?>"
+														<?php echo ((!empty($workorder->customer['notification_type'])) &&
+															array_search($notification_type, $workorder->customer['notification_type']) !== false)
+															? 'checked' : '' ?>
+														   id="customer_notification_type_email_<?php echo $key ?>">
+													<label for="customer_notification_type_email_<?php echo $key ?>"><span>
+															<?php echo $notification_type ?>
+														</span></label>
+												</div>
+											<?php } ?>
+										</div>
+										-->
 										<div class="col-md-4 form-group">
 											<label for="">Notification Type</label><br/>
 											<select name="customer[notification_type][]" id="customer_notification_type_email" class="form-control">
@@ -589,24 +652,25 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="job_type_id"> Job Type:</label>
-                                        <select name="job_type_id" id="job_type_id" class="form-control custom-select">
-                                                    <?php foreach($job_types as $jt){ ?>
-                                                        <option value="<?php echo $jt->title ?>"><?php echo $jt->title ?></option>
-
-                                                    <?php } ?>
-                                                        <!-- <option value="Service">Service</option>
-                                                        <option value="Design">Design</option>
-                                                        <option value="Maintenance">Maintenance</option>
-                                                        <option value="Repair">Repair</option>
-                                                        <option value="Replace">Replace</option> -->
-                                                    </select>
+                                        <select class="form-control" name="job_type_id" id="job_type_id">
+                                            <option>Select Job Type</option>
+                                            <?php foreach (get_job_types() as $jobType) { ?>
+                                                <option
+                                                        value="<?php echo $jobType->id ?>"
+                                                    <?php echo (!empty($workorder->job_type_id)
+                                                        && $workorder->job_type_id == $jobType->id) ?
+                                                        'selected' : '' ?>>
+                                                    <?php echo $jobType->title ?>
+                                                </option>
+                                            <?php } ?>
+                                        </select>
                                     </div>
                                 </div>
 
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="status_id"> Status:</label>
-                                        <!-- <select class="form-control" name="status_id" id="status_id" required>
+                                        <select class="form-control" name="status_id" id="status_id" required>
                                             <option>Select Status</option>
                                             <?php if (!empty($workstatus)) { ?>
                                                 <?php foreach ($workstatus as $status) { ?>
@@ -619,25 +683,14 @@
                                                     </option>
                                                 <?php } ?>
                                             <?php } ?>
-                                        </select> -->
-                                        <select name="status_id" id="status_id" class="form-control custom-select">
-                                        <option value="New">New</option>
-                                        <option value="Draft">Draft</option>
-                                        <option value="Scheduled">Scheduled</option>
-                                        <option value="Started">Started</option>
-                                        <option value="Paused">Paused</option>
-                                        <option value="Completed">Completed</option>
-                                        <option value="Invoiced">Invoiced</option>
-                                        <option value="Withdrawn">Withdrawn</option>
-                                        <option value="Closed">Closed</option>
-                                    </select>
+                                        </select>
                                     </div>
                                 </div>
 
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="job_priority"> Priority:</label>
-                                        <!-- <select class="form-control" name="job_priority" id="job_priority">
+                                        <select class="form-control" name="job_priority" id="job_priority">
                                             <option>Not Set</option>
                                             <?php foreach (get_priority_list() as $priority) { ?>
                                                 <option
@@ -648,12 +701,6 @@
                                                     <?php echo $priority->title ?>
                                                 </option>
                                             <?php } ?>
-                                        </select> -->
-                                        <select name="priority" id="workorder_priority" class="form-control custom-select">
-                                            <option value="Emergency">Emergency</option>
-                                            <option value="Low">Low</option>
-                                            <option value="Standard">Standard</option>
-                                            <option value="Urgent">Urgent</option>                
                                         </select>
                                     </div>
                                 </div>
@@ -1363,7 +1410,7 @@
                                 <div class=" col-md-12">
                                     <h6>Agreement</h6>
                                     <div style="height:400px; overflow:auto; background:#FFFFFF; padding-left:10px;">
-                                        <!-- <p>2. Install of the system. Company agrees to schedule and install an alarm
+                                        <p>2. Install of the system. Company agrees to schedule and install an alarm
                                             system and/or devices in connection with a Monitoring Agreement which
                                             customer will receive at the time of installation. Customer hereby agrees to
                                             buy the system/devices described below and incorporated herein for all
@@ -1399,8 +1446,7 @@
                                             consultation fee, the cost of the system and recovering fees. Customer
                                             agrees that this is a customized order. By signing this workorder, customer
                                             agrees that customized order can not be cancelled after three day of this
-                                            signed document.</p> -->
-                                            <?php echo $workorder->terms_and_conditions; ?>
+                                            signed document.</p>
                                     </div>
                                 </div>
                             </div>
@@ -1520,7 +1566,7 @@
                                 <div class=" col-md-12">
                                     <h6>Agreement</h6>
                                     <div style="height:200px; overflow:auto; background:#FFFFFF; padding-left:10px;">
-                                        <!-- <strong>**This isn't everything... just a summary**</strong> You may CANCEL this
+                                        <strong>**This isn't everything... just a summary**</strong> You may CANCEL this
                                         transaction, within THREE BUSINESS DAYS from the above date. If You cancel, You
                                         must make available to US in substantially as good condition as when received,
                                         any goods delivered to You under this contract or sale, You may, if You wish,
@@ -1528,8 +1574,7 @@
                                         expense and risk. To cancel this transaction, mail deliver a signed and
                                         postmarket, dated copy of this Notice of Cancellation or any other written
                                         notice to ALarm Direct, Inc., 6866 Pine Forest ROad, Suite B, Pensacola, FL
-                                        32526. NOT LATER THAN MIDNIGHT OF {Date plus 3 business days} -->
-                                        <?php echo $workorder->terms_of_use; ?>
+                                        32526. NOT LATER THAN MIDNIGHT OF {Date plus 3 business days}
                                     </div>
                                 </div>
 

@@ -115,7 +115,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                             </div>
                             <div class="col-md-3 form-group">
                                 <label for="birthdate">Birth Date</label>
-                                <input type="text" class="form-control" name="birthdate" id="date_of_birth" required/>
+                                <input type="date" class="form-control" name="birthdate" id="date_of_birth" required/>
                             </div>
                         </div>
                         <div class="row">                   
@@ -531,7 +531,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                             <div class="row">                        
                                 <div class="form-group col-md-4">
                                     <label for="contact_name">Schedule Date Given</label>
-                                    <input type="text" class="form-control" name="schedule_date_given" id="schedule_date_given" />
+                                    <input type="date" class="form-control" name="schedule_date_given" id="schedule_date_given" />
                                 </div>      
                                 <div class="form-group col-md-4">
                                     <label for="workorder_priority">Priority</label>
@@ -623,15 +623,15 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <div class="row">                   
                                     <div class="form-group col-md-4">
                                         <label for="job_type">Credit Card Number</label>
-                                        <input type="text" class="form-control" name="credit_number" id="credit_number" placeholder="0000 0000 0000 000" />
+                                        <input type="text" class="form-control" name="debit_credit_number" id="credit_number" placeholder="0000 0000 0000 000" />
                                     </div>
                                     <div class="form-group col-md-3">
                                         <label for="job_type">Credit Card Expiration</label>
-                                        <input type="text" class="form-control" name="credit_expiry" id="credit_expiry" placeholder="MM/YYYY"/>
+                                        <input type="text" class="form-control" name="debit_credit_expiry" id="credit_expiry" placeholder="MM/YYYY"/>
                                     </div>  
                                     <div class="form-group col-md-3">
                                         <label for="job_type">CVC</label>
-                                        <input type="text" class="form-control" name="credit_cvc" id="credit_cvc" placeholder="CVC"/>
+                                        <input type="text" class="form-control" name="debit_credit_cvc" id="credit_cvc" placeholder="CVC"/>
                                     </div>                                            
                                 </div>
                             </div>
@@ -1250,6 +1250,21 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 <?php include viewPath('includes/footer'); ?>
 
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAlMWhWMHlxQzuolWb2RrfUeb0JyhhPO9c&libraries=places"></script>
+<script>
+function initialize() {
+          var input = document.getElementById('job_location');
+          var autocomplete = new google.maps.places.Autocomplete(input);
+            google.maps.event.addListener(autocomplete, 'place_changed', function () {
+                var place = autocomplete.getPlace();
+                document.getElementById('city2').value = place.name;
+                document.getElementById('cityLat').value = place.geometry.location.lat();
+                document.getElementById('cityLng').value = place.geometry.location.lng();
+            });
+        }
+        google.maps.event.addDomListener(window, 'load', initialize);
+</script>
+
 <script type="text/javascript">
 // $(window).on('beforeunload', function(){
 //     var c = confirm();
@@ -1343,14 +1358,41 @@ $("#thisdiv3").html(function() {
     // var companyName = $('#company_name').val();
     // var now = new Date();
     // now.setDate(now.getDate()+3);
-    var n=3; //number of days to add. 
-    var t = new Date();
-    t.setDate(t.getDate() + n); 
-    var month = "0"+(t.getMonth()+1);
-    var date = "0"+t.getDate();
+    // var n=3; //number of days to add. 
+    // var t = new Date();
+    // t.setDate(t.getDate() + n); 
+    // var month = "0"+(t.getMonth()+1);
+    // var date = "0"+t.getDate();
+    // month = month.slice(-2);
+    // date = date.slice(-2);
+    // var date = " "+ month +"-"+date +"-"+t.getFullYear();
+
+
+    // var startDate = "16-APR-2021";
+    var startDate = new Date();
+    // var daaa = new Date();
+    
+    // var date = d.getDate();
+    // var month = d.getMonth() + 1; // Since getMonth() returns month from 0-11 not 1-12
+    // var year = d.getFullYear();
+        
+    // var startDate = date + "-" + month + "-" + year;
+
+    // startDate = new Date(startDate.replace(/-/g, "/"));
+    var endDate = "", noOfDaysToAdd = 3, count = 0;
+    while(count < noOfDaysToAdd){
+        endDate = new Date(startDate.setDate(startDate.getDate() + 1));
+        if(endDate.getDay() != 0 && endDate.getDay() != 6){
+        count++;
+        }
+    }
+    //alert(endDate);
+    var month = "0"+(endDate.getMonth()+1);
+    var date = "0"+endDate.getDate();
     month = month.slice(-2);
     date = date.slice(-2);
-    var date = " "+ month +"-"+date +"-"+t.getFullYear();
+    var date = " "+ month +"-"+date +"-"+endDate.getFullYear();
+
 // alert(now);  
       return $(this).html().replace("{current_date_3}", date);  
 
