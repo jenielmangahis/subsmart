@@ -87,23 +87,6 @@
 
         <div class="row form_line">
             <div class="col-md-4">
-                <label>Collections</label>
-            </div>
-            <div class="col-md-8">
-                <select id="collections" name="collections" data-customer-source="dropdown" class="form-controls input_select">
-                    <option value=""></option>
-                    <option <?= isset($alarm_info) && $alarm_info->collections == 'In Process' ?  'selected' : '';?> value="In Process">In Process</option>
-                    <option <?= isset($alarm_info) && $alarm_info->collections == 'Sent' ?  'selected' : '';?> value="Sent">Sent</option>
-                    <option <?= isset($alarm_info) && $alarm_info->collections == 'None Collectable' ?  'selected' : '';?> value="None Collectable">None Collectable</option>
-                    <option <?= isset($alarm_info) && $alarm_info->collections == 'In Collections' ?  'selected' : '';?> value="In Collections">In Collection</option>
-                    <option <?= isset($alarm_info) && $alarm_info->collections == 'Civil Suit' ?  'selected' : '';?> value="Civil Suit">Civil Suit</option>
-                    <option <?= isset($alarm_info) && $alarm_info->collections == 'Taken Action' ?  'selected' : '';?> value="Taken Action">Taken Action</option>
-                </select>
-            </div>
-        </div>
-
-        <div class="row form_line">
-            <div class="col-md-4">
                 <label for="">Abort Code</label>
             </div>
             <div class="col-md-8">

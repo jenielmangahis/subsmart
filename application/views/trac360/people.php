@@ -95,7 +95,7 @@ function get_differenct_of_dates($date_start, $date_end)
               $time_display = round($hours_diff / 24, 0) . " Days ago";
             } elseif ($hours_diff >= 1) {
               $time_display = round($hours_diff, 0) . " Hours ago";
-            } else {
+            } else {   
               if (round($hours_diff * 60, 2) < 1) {
                 $time_display = " Few seconds ago";
               } else {
@@ -117,7 +117,7 @@ function get_differenct_of_dates($date_start, $date_end)
 
           <div class="people-informaton-btn">
           <img src="<?=base_url()?>"/>
-          </div>
+          </divs>
         </div>
       </div>
 

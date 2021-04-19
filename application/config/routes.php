@@ -413,6 +413,11 @@ $route['accounting/employees/bonus-only-payroll'] = 'accounting_controllers/empl
 $route['accounting/employees/bonus-only-payroll-form/(:any)'] = 'accounting_controllers/employees/bonus_only_form/$1';
 $route['accounting/employees/generate-bonus-payroll/(:any)']['post'] = 'accounting_controllers/employees/generate_bonus_payroll/$1';
 
+$route['accounting/contractors'] = 'accounting_controllers/contractors/index';
+$route['accounting/contractors/load'] = 'accounting_controllers/contractors/load_contractors';
+$route['accounting/contractors/add']['post'] = 'accounting_controllers/contractors/add';
+$route['accounting/contractors/view/(:any)'] = 'accounting_controllers/contractors/view/$1';
+
 $route['accounting/vendor-details/(:any)'] = 'accounting/vendordetails/$1';
 $route['accounting/taxes/edit-settings'] = 'taxes/edit_settings';
 

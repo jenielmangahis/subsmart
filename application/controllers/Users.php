@@ -43,6 +43,7 @@ class Users extends MY_Controller {
 
         $this->load->model('IndustryType_model');
         $this->load->model('Users_model');
+        $this->load->model('Timesheet_model');
         $this->load->model('ServiceCategory_model');
         $this->load->model('PayScale_model');
 
@@ -693,11 +694,23 @@ class Users extends MY_Controller {
 	public function tracklocation()
 	{	
 //		ifPermissions('users_list');
-
-		$this->page_data['users1']= $this->users_model->getById(getLoggedUserID());
+		add_css(array(
+			"assets/css/timesheet/tracklocation.css"
+		));
 		
-		$this->page_data['users'] = $this->users_model->getUsers();
-			
+		$users= $this->users_model->getUsers();
+		$lasttracklocation_employee = array();
+		foreach($users as $employee){
+			$data=$this->users_model->getEmployeeLastestAux($employee->id);
+			if($data!=null){
+				$lasttracklocation_employee[] = $data;
+			}
+		}
+
+		$this->page_data['lasttracklocation_employee'] = $lasttracklocation_employee;
+		
+		$this->page_data['users1']= $this->users_model->getById(getLoggedUserID());
+		$this->page_data['current_user_id']= logged('id');
 		
 		$this->load->view('users/tracklocation', $this->page_data);
 

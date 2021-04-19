@@ -89,7 +89,14 @@ class Customer extends MY_Controller
             $this->page_data['office_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_office");
             $this->page_data['billing_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_billing");
             $this->page_data['alarm_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_alarm");
-           // $this->page_data['device_info'] = $this->customer_ad_model->get_all_by_id('fk_prof_id',$userid,"acs_devices");
+            $get_customer_notes = array(
+                'where' => array(
+                    'fk_prof_id' => $userid
+                ),
+                'table' => 'acs_notes',
+                'select' => '*',
+            );
+            $this->page_data['customer_notes'] = $this->general->get_data_with_param($get_customer_notes);
 
             $get_login_user = array(
                 'where' => array(

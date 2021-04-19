@@ -111,10 +111,6 @@ $(function() {
                     uiLibrary: 'bootstrap'
                 });
 
-                $('div#payrollModal [name="reg_pay_hours[]"]').each(function() {
-                    $(this).trigger('change');
-                });
-
                 payrollTotal();
             });
             $(this).parent().prepend(`

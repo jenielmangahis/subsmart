@@ -617,6 +617,10 @@ class Users_model extends MY_Model {
 		$query = $this->db->get('employee_pay_details');
 		return $query->result();
 	}
+	public function getEmployeeLastestAux($user_id){
+		$qry = $this->db->query("SELECT * fROM timesheet_logs Join users ON users.id=timesheet_logs.user_id WHERE timesheet_logs.user_id = $user_id order by timesheet_logs.date_created DESC Limit 1");
+        return $qry->row();
+	}
 }
 
 

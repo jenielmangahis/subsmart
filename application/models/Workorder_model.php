@@ -536,6 +536,13 @@ class Workorder_model extends MY_Model
         return $query2->result();
     }
 
+    public function save_payment($data)
+    {
+        $vendor = $this->db->insert('work_order_payments', $data);
+	    $insert_id = $this->db->insert_id();
+		return  $insert_id;
+    }
+
     
 }
 
