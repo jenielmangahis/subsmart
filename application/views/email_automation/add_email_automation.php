@@ -169,7 +169,7 @@ label>input {
                                   </div>                                  
                               </div>
 
-                              <div class="col-md-5" style="display: none;">
+                              <div class="col-md-5">
                                     <div class="panel-info">
                                         <div class="margin-bottom-sec">
                                             <label>Use default template</label>
@@ -271,7 +271,7 @@ $(function(){
     });
 
     // instance, using default configuration.
-    CKEDITOR.replace('mail_body1', {
+    CKEDITOR.replace('mail_body', {
         height: '400'
         //removePlugins: 'toolbar',
         //allowedContent: 'p h1 h2 strong em; a[!href]; img[!src,width,height] alignment;'

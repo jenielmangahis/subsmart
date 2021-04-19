@@ -2,6 +2,10 @@
 defined('BASEPATH') or exit('No direct script access allowed');
 ?>
 <?php include viewPath('includes/header_front'); ?>
+<script src="https://js.stripe.com/v3/"></script>
+<?php if($onlinePaymentAccount->stripe_publish_key != '' && $onlinePaymentAccount->stripe_secret_key != ''){ ?>
+<script src="https://api.convergepay.com/hosted-payments/PayWithConverge.js"></script>
+<?php } ?>
 <?php include viewPath('job/css/job_new'); ?>
 <style>
     .card{
@@ -26,6 +30,60 @@ defined('BASEPATH') or exit('No direct script access allowed');
     .icon_preview{
         font-size: 16px;
         color : #45a73c;
+    }
+    /**
+   * The CSS shown here will not be introduced in the Quickstart guide, but shows
+   * how you can use CSS to style your Element's container.
+   */
+    .StripeElement {
+      box-sizing: border-box;
+
+      height: 40px;
+
+      padding: 10px 12px;
+
+      border: 1px solid transparent;
+      border-radius: 4px;
+      background-color: white;
+
+      box-shadow: 0 1px 3px 0 #e6ebf1;
+      -webkit-transition: box-shadow 150ms ease;
+      transition: box-shadow 150ms ease;
+    }
+
+    .StripeElement--focus {
+      box-shadow: 0 1px 3px 0 #cfd7df;
+    }
+
+    .StripeElement--invalid {
+      border-color: #fa755a;
+    }
+
+    .StripeElement--webkit-autofill {
+      background-color: #fefde5 !important;
+    }
+    .stripe-btn, .stripe-cancel-btn{
+      border: none;
+        border-radius: 4px;
+        outline: none;
+        text-decoration: none;
+        color: #fff;
+        background: #32325d;
+        white-space: nowrap;
+        display: inline-block;
+        height: 40px;
+        line-height: 40px;
+        padding: 0 14px;
+        box-shadow: 0 4px 6px rgba(50, 50, 93, .11), 0 1px 3px rgba(0, 0, 0, .08);
+        border-radius: 4px;
+        font-size: 15px;
+        font-weight: 600;
+        letter-spacing: 0.025em;
+        text-decoration: none;
+        -webkit-transition: all 150ms ease;
+        transition: all 150ms ease;      
+        margin-left: 12px;
+        margin-top: 28px;
     }
 </style>
 <script src="https://api.convergepay.com/hosted-payments/PayWithConverge.js"></script>
@@ -219,7 +277,31 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                     <input type="hidden" id="jobid" value="<?= $jobs_data->job_unique_id; ?>">
                                     <input type="hidden" id="total_amount" value="<?= $subtotal; ?>">
                                     <br /><br />
-                                    <a class="btn btn-primary btn-pay-converge" href="javascript:void(0);"> PAY</a>
+
+                                    <div class="payment-api-container">
+                                      <?php if($onlinePaymentAccount){ ?>
+                                        <?php if($onlinePaymentAccount->converge_merchant_user_id != '' && $onlinePaymentAccount->converge_merchant_pin != ''){ ?>
+                                          <a class="btn btn-primary btn-pay-converge btn-pay" href="javascript:void(0);">PAY VIA CONVERGE</a>
+                                        <?php } ?>
+                                        <?php if($onlinePaymentAccount->stripe_publish_key != '' && $onlinePaymentAccount->stripe_secret_key != ''){ ?>
+                                          <a class="btn btn-primary btn-pay-stripe btn-pay" href="javascript:void(0);">PAY VIA STRIPE</a>
+
+                                          <div class="stripe-form" style="display: none;">
+                                            <div class="col-md-12">
+                                              <h4 class="font-weight-bold pl-0 my-4" style="font-size: 17px;"><strong>Stripe Payment Method</strong></h4>
+                                                <div class="payment-method" style="display: block;margin-bottom: 16px;">
+                                                  <label>Total Amount : <b><span class="total-amount">$<?= number_format((float)$subtotal,2,'.',','); ?></span></b></label><br />
+                                                  <hr />
+                                                </div>
+                                              <div id="card-element"></div>                       
+                                              <div id="card-errors" role="alert"></div>
+                                              <button class="stripe-btn">Submit Payment</button>`
+                                              <button type="button" class="stripe-cancel-btn margin-right">Cancel</button>
+                                            </div>
+                                          </div>
+                                        <?php } ?>
+                                      <?php } ?>
+                                    </div>
                                 </div>
 
                             </div>
@@ -239,6 +321,21 @@ defined('BASEPATH') or exit('No direct script access allowed');
 <?php include viewPath('includes/footer_pages'); ?>
 <script>
 $(function(){
+  function updateJobToPaid(){
+    var job_id = $("#jobid").val();
+    var url = base_url + '_update_job_status_paid';
+    $.ajax({
+       type: "POST",
+       url: url,
+       dataType: "json",
+       data: {job_id:job_id},
+       success: function(o)
+       {
+          $(".payment-api-container").hide();
+       }
+    });
+  }
+  //Converge payment
   $(".btn-pay-converge").click(function(){
     initiateLightbox();
   });
@@ -265,8 +362,9 @@ $(function(){
                   title: 'Cannot Process Payment',
                   text: o.msg
                 });
-                $(".btn-pay-converge").html('Pay');
               }
+
+              $(".btn-pay-converge").html('PAY VIA CONVERGE');
            }
         });
       }, 1000);
@@ -278,20 +376,133 @@ $(function(){
       };
       var callback = {
           onError: function (error) {
-              showResult("error", error);
+              //showResult("error", error);
+              Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: error
+              });
           },
           onCancelled: function () {
-                  showResult("cancelled", "");
+              //showResult("cancelled", "");
           },
           onDeclined: function (response) {
-              showResult("declined", JSON.stringify(response, null, '\t'));
+            Swal.fire({
+              icon: 'error',
+              title: 'Declined',
+              text: JSON.stringify(response, null, '\t')
+            });
+            //showResult("declined", JSON.stringify(response, null, '\t'));
           },
           onApproval: function (response) {
-              showResult("approval", JSON.stringify(response, null, '\t'));
+              Swal.fire({
+                icon: 'success',
+                title: 'Approval',
+                text: JSON.stringify(response, null, '\t')
+              });
+              updateJobToPaid();
+              //showResult("approval", JSON.stringify(response, null, '\t'));
           }
       };
       PayWithConverge.open(paymentFields, callback);
       return false;
   }
+  /*End Converge*/
+
+  //Stripe Payment
+  <?php if($onlinePaymentAccount->stripe_publish_key != '' && $onlinePaymentAccount->stripe_secret_key != ''){ ?>
+  $(".btn-pay-stripe").click(function(){
+    $(".payment-options").hide();
+    $(".form-footer-container").hide();
+    $(".btn-sms-purchase").html('Purchase');
+    $(".stripe-form").show();
+    $(".btn-pay").hide();
+  });
+  $(".stripe-cancel-btn").click(function(){
+    $(".payment-options").show();
+    $(".form-footer-container").show();      
+    $(".stripe-form").hide();
+    $(".btn-pay").show();
+  });
+  // Create a Stripe client.
+  var stripe = Stripe('<?= $onlinePaymentAccount->stripe_publish_key; ?>');
+
+  // Create an instance of Elements.
+  var elements = stripe.elements();
+
+  // Custom styling can be passed to options when creating an Element.
+  // (Note that this demo uses a wider set of styles than the guide below.)
+  var style = {
+    base: {
+      color: '#32325d',
+      fontFamily: '"Helvetica Neue", Helvetica, sans-serif',
+      fontSmoothing: 'antialiased',
+      fontSize: '16px',
+      '::placeholder': {
+        color: '#aab7c4'
+      }
+    },
+    invalid: {
+      color: '#fa755a',
+      iconColor: '#fa755a'
+    }
+  };
+
+  // Create an instance of the card Element.
+  var card = elements.create('card', {style: style});
+
+  // Add an instance of the card Element into the `card-element` <div>.
+  card.mount('#card-element');
+
+  // Handle real-time validation errors from the card Element.
+  card.on('change', function(event) {
+    var displayError = document.getElementById('card-errors');
+    if (event.error) {
+      displayError.textContent = event.error.message;
+    } else {
+      displayError.textContent = '';
+    }
+  });
+
+  // Handle form submission.
+  var form = document.getElementById('payment-sms-blast');
+  form.addEventListener('submit', function(event) {
+    event.preventDefault();
+    $(".stripe-btn").html('<span class="spinner-border spinner-border-sm m-0"></span>  Processing Payment');
+    stripe.createToken(card).then(function(result) {
+      if (result.error) {
+        // Inform the user if there was an error.
+        var errorElement = document.getElementById('card-errors');
+        errorElement.textContent = result.error.message;
+        $(".stripe-btn").html('Submit Payment');
+      } else {
+        // Send the token to your server.
+        stripeTokenHandler(result.token);
+      }
+    });
+  });
+
+  // Submit the form with the token ID.
+  function stripeTokenHandler(token) {
+    // Insert the token ID into the form so it gets submitted to the server
+    var form = document.getElementById('payment-sms-blast');
+    var hiddenInput = document.createElement('input');
+    hiddenInput.setAttribute('type', 'hidden');
+    hiddenInput.setAttribute('name', 'stripeToken');
+    hiddenInput.setAttribute('value', token.id);
+    form.appendChild(hiddenInput);
+
+    // Submit the form
+    stripeUpdateSmsPayment();
+    //form.submit();
+  }
+
+  function stripeUpdateSmsPayment(){
+    $(".payment-method").html('<div class="alert alert-success">Payment process completed.</div>');
+    $(".stripe-btn").html('<span class="spinner-border spinner-border-sm m-0"></span>');
+    updateJobToPaid();
+  }
+  <?php } ?>
+  /*End Stripe Payment*/
 });
 </script>
