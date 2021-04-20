@@ -10,7 +10,7 @@ $('input#search').on('keyup', function() {
     table.ajax.reload();
 });
 
-$(document).on('click', '#contractors-table tbody tr', function() {
+$(document).on('click', '#contractors-table tbody tr :not(button)', function() {
     var data = table.row(this).data();
 
     window.location.href = `/accounting/contractors/view/${data.id}`;
@@ -43,9 +43,17 @@ var table = $('#contractors-table').DataTable({
             name: 'name',
             orderable: false,
             fnCreatedCell: function(td, cellData, rowData, row, col) {
-                $(td).html(cellData);
+                var initial = cellData.charAt(0);
+                $(td).html(`
+                <div class="contractor-icon-container">
+                    <div class="contractor-icon">
+                        <span>${initial.toUpperCase()}</span>
+                    </div>
+                </div>
+                <span>${cellData}</span>
+                `);
                 if(rowData.status === "0") {
-                    $(td).append(' (deleted)');
+                    $(td).find('span:nth-child(2)').append(' (deleted)');
                 }
             }
         },

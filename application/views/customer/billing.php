@@ -38,7 +38,9 @@ add_css(array(
                             <div class="pl-3 pr-3 mt-1 row">
                                 <div class="col mb-4 left alert alert-warning mt-0 mb-2">
                                   <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">
-                                      No description for now
+                                      Make it easy for your customers by offering additional ways to pay.  The payments landscape is ever-changing.
+                                      Simply select the payment method and hit the button to Pre-Auth Now or Capture Now  the payment.
+                                      Each transaction will be saved in each customer history.
                                   </span>
                                 </div>
                             </div>
@@ -269,9 +271,13 @@ add_css(array(
                                                         <label for="">Notes</label>
                                                     </div>
                                                     <div class="col-md-8">
-                                                        <textarea type="text" class="form-controls" rows="5" cols="50" name="country" id="country" ></textarea>
+                                                        <textarea type="text" style="background-color: #fdeac3;" class="form-controls" rows="5" cols="50" name="country" id="country" ></textarea>
                                                     </div>
                                                 </div>
+
+                                                <button type="submit" class="btn btn-primary"></span> Pre Auth Now</button>
+                                                <button type="submit" class="btn btn-primary">Capture Now</button>
+
                                             </div>
                                         </div>
                                     </div>

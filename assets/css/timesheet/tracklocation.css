@@ -102,7 +102,11 @@ button.trac360_side_controls:active:hover {
     border: solid #8ac63e;
 }
 
-.sec-2-option img.inactive {
+.sec-2-option img.active-break {
+    border: solid #FFFF00;
+}
+
+.sec-2-option img.active-offline {
     border: solid #6c7585;
 }
 

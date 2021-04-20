@@ -105,7 +105,6 @@ h1, .breadcrumb-item, h5, .tbl-employee-name, p, .qUickStartde > span, .header-t
         width: 300px !important; 
         top:21px;
         z-index: 1020;
-        margin: 0 50px;
     }
 }
 
@@ -124,6 +123,18 @@ h1, .breadcrumb-item, h5, .tbl-employee-name, p, .qUickStartde > span, .header-t
 
 @media screen and (max-width: 1440px) {
 
+    .notification-list .nav-link{
+        padding: 0 5px !important;
+    }
+    .nav-user img{
+        width: 55px;
+        height: 55px;
+    }
+    
+    .icons-list-navbar{
+        margin-right: 9px !important;
+    }
+    
     .widget_header
     {
         padding: 5px !important;
@@ -140,7 +151,7 @@ h1, .breadcrumb-item, h5, .tbl-employee-name, p, .qUickStartde > span, .header-t
         width: 320px !important; 
         top:21px;
         z-index: 1020;
-        margin: 0 50px;
+        margin: 0 auto;
     }
     
     .widget_header > div.wid_header
@@ -161,4 +172,15 @@ h1, .breadcrumb-item, h5, .tbl-employee-name, p, .qUickStartde > span, .header-t
     {
         font-size: 10px !important;
     }
+}
+
+@media screen and (max-width: 1320px) {
+
+    .icons-list-navbar{
+        margin-right: 3px !important;
+    }
+    .navigation-menu li{
+        margin-right: 0px !important;
+    }
+    
 }

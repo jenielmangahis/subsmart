@@ -475,6 +475,39 @@ class Workorder_model extends MY_Model
         return $query->row();
     }
 
+    public function checktemplateId($id)
+    {
+        $this->db->select('*');
+		$this->db->from('company_work_order_used');
+		$this->db->where('company_id', $id);
+        $query = $this->db->get();
+        return $query->row();
+    }
+
+    public function addTemplate($data)
+    {
+        $vendor = $this->db->insert('company_work_order_used', $data);
+	    $insert_id = $this->db->insert_id();
+		return  $insert_id;
+    }
+
+    public function updateTemplate($data)
+    {
+        extract($data);
+        $this->db->where('company_id', $company_id);
+        $this->db->update('company_work_order_used', array('work_order_template_id' => $work_order_template_id));
+        return true;
+    }
+
+    public function getcompany_work_order_used($company_id)
+    {
+        $this->db->select('*');
+		$this->db->from('company_work_order_used');
+		$this->db->where('company_id', $company_id);
+        $query = $this->db->get();
+        return $query->row();
+    }
+
     public function getCompanyCompanyId($id)
     {
         $this->db->select('company_id');

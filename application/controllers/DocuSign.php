@@ -483,13 +483,15 @@ class DocuSign extends MY_Controller
             return;
         }
 
-        $file = $_FILES['file'];
+        $files = $_FILES['files'];
+        $count = count($files['name']);
 
-        if ($file['size'] > self::ONE_MB * 8) {
-            echo json_encode([
-                'success' => false,
-                'reason' => 'Maximum file size is less than 8MB',
-            ]);
+        for ($i = 0; $i < $count; $i++) {
+            if ($files['size'][$i] <= self::ONE_MB * 8) {
+                continue;
+            }
+
+            echo json_encode(['success' => false, 'reason' => 'Maximum file size is less than 8MB']);
             return;
         }
 
@@ -497,10 +499,6 @@ class DocuSign extends MY_Controller
         if (!file_exists($filepath)) {
             mkdir($filepath, 0777, true);
         }
-
-        $tempName = $file['tmp_name'];
-        $filename = $file['name'];
-        $filename = time() . "_" . rand(1, 9999999) . "_" . basename($filename);
 
         [
             'name' => $name,
@@ -526,14 +524,20 @@ class DocuSign extends MY_Controller
             $this->db->insert('user_docfile_templates', $payload);
             $insertedId = $this->db->insert_id();
 
-            $payload = [
-                'name' => $filename,
-                'path' => str_replace(FCPATH, '/', $filepath . $filename),
-                'template_id' => $insertedId,
-            ];
+            for ($i = 0; $i < $count; $i++) {
+                $tempName = $files['tmp_name'][$i];
+                $filename = $files['name'][$i];
+                $filename = time() . "_" . rand(1, 9999999) . "_" . basename($filename);
 
-            $this->db->insert('user_docfile_templates_documents', $payload);
-            move_uploaded_file($tempName, $filepath . $filename);
+                $payload = [
+                    'name' => $filename,
+                    'path' => str_replace(FCPATH, '/', $filepath . $filename),
+                    'template_id' => $insertedId,
+                ];
+
+                $this->db->insert('user_docfile_templates_documents', $payload);
+                move_uploaded_file($tempName, $filepath . $filename);
+            }
 
             if (!empty($recipients)) {
                 foreach ($recipients as $recipient) {

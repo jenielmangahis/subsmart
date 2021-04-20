@@ -121,6 +121,7 @@ function get_differenct_of_dates($date_start, $date_end)
         </div>
       </div>
 
+      </div>
     </div>
     <div class="col-md-9 map-section">
       <div id="map"></div>
@@ -134,8 +135,6 @@ function get_differenct_of_dates($date_start, $date_end)
 <!-- </div> -->
 <!-- page wrapper end -->
 <?php include viewPath('includes/footer'); ?>
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBg27wLl6BoSPmchyTRgvWuGHQhUUHE5AU&callback=initMap&libraries=&v=weekly" async></script>
-<script src="https://maps.googleapis.com/maps/api/geocode/json?address=Winnetka&key=AIzaSyBg27wLl6BoSPmchyTRgvWuGHQhUUHE5AU"></script>
 <script>
   var user_id = <?= $user_id ?>;
   var company_id = <?= $company_id ?>;
@@ -246,3 +245,5 @@ function get_differenct_of_dates($date_start, $date_end)
     ?>
   });
 </script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBg27wLl6BoSPmchyTRgvWuGHQhUUHE5AU&callback=initMap&libraries=&v=weekly" async></script>
+<script src="https://maps.googleapis.com/maps/api/geocode/json?address=Winnetka&key=AIzaSyBg27wLl6BoSPmchyTRgvWuGHQhUUHE5AU"></script>

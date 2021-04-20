@@ -72,7 +72,7 @@ function Signing(hash) {
       const $fields = currentFields.map((field, fieldIndex) => {
         const { field_name, coordinates, id: fieldId, value: fieldValue } = field; // prettier-ignore
         let text = recipient[field_name.toLowerCase()];
-        const { top, left } = JSON.parse(coordinates);
+        const { pageTop: top, left } = JSON.parse(coordinates);
 
         if (field_name === "Date Signed") {
           text = moment().format("MM/DD/YYYY");

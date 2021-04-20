@@ -417,6 +417,7 @@ $route['accounting/contractors'] = 'accounting_controllers/contractors/index';
 $route['accounting/contractors/load'] = 'accounting_controllers/contractors/load_contractors';
 $route['accounting/contractors/add']['post'] = 'accounting_controllers/contractors/add';
 $route['accounting/contractors/view/(:any)'] = 'accounting_controllers/contractors/view/$1';
+$route['accounting/contractors/(:any)/update-details']['post'] = 'accounting_controllers/contractors/update_details/$1';
 
 $route['accounting/vendor-details/(:any)'] = 'accounting/vendordetails/$1';
 $route['accounting/taxes/edit-settings'] = 'taxes/edit_settings';
@@ -792,6 +793,7 @@ $route['users/update_profile_setting'] = 'Users/update_profile_setting';
 //Job Front View
 $route['job_invoice_view/(:any)'] = 'Pages/job_customer_invoice_view/$1';
 $route['_converge_request_token'] = 'Pages/converge_token_request';
+$route['_update_job_status_paid'] = 'Pages/update_job_status_paid';
 
 //Job Checklists
 $route['job_checklists/list'] = 'Job_Checklists/index';

@@ -76,9 +76,24 @@ function Step3() {
       $element = $element.closest(".esignBuilder__field");
     }
 
-    const $parent = $element.closest(".docPage");
+    let docPage = undefined;
+
+    const elementYTop = $element.get(0).offsetTop;
+    const $pages = [...$docRenderer.find(".docPage")];
+
+    for (let index = 0; index < $pages.length; index++) {
+      const $docPage = $($pages[index]);
+      const docPageHeight = $docPage.height();
+      const docPageYBottom = $docPage.get(0).offsetTop + docPageHeight;
+
+      if (elementYTop <= docPageYBottom) {
+        position.pageTop = elementYTop - (docPageYBottom - docPageHeight);
+        docPage = parseInt($docPage.attr("data-page"));
+        break;
+      }
+    }
+
     const key = $element.find(".subData").data("key");
-    const docPage = $parent.data("page");
     const recipientId = $("#recipientsSelect").get(0).dataset.recipientId;
 
     const payload = {
@@ -209,12 +224,6 @@ function Step3() {
     // const hasOption = fieldsWithOption.includes(fieldName);
     const hasOption = true;
 
-    $element.draggable({
-      containment: ".ui-droppable",
-      appendTo: ".ui-droppable",
-      stop: (_, ui) => storeField(ui.position, $(ui.helper)),
-    });
-
     $element.find(".subData").on("click", function () {
       const $prevActive = $(`.${activeClass}`);
       const dataKey = $(this).data("key");
@@ -257,36 +266,46 @@ function Step3() {
       const { top: offsetTop } = $page.offset();
       const $pagePreview = await getPagePreview({ ...params, offsetTop });
       $docPreviewRenderer.append($pagePreview);
-
-      const $fields = currentFields.map(createField);
-      $page.append($fields);
-
-      $page.droppable({
-        drop: function (_, ui) {
-          if (!ui.draggable.hasClass("fields")) {
-            return;
-          }
-
-          const $item = $(ui.helper).clone();
-          const color = getComputedStyle($form.get(0)).getPropertyValue("--color"); // prettier-ignore
-          $element = createField({
-            coordinates: JSON.stringify(ui.position),
-            field_name: $item.text(),
-            color,
-            isNew: true,
-          });
-
-          $(this).append($element);
-          storeField(ui.position, $element);
-
-          $element.draggable({
-            containment: ".ui-droppable",
-            appendTo: ".ui-droppable",
-            stop: (_, ui) => storeField(ui.position, $(ui.helper)),
-          });
-        },
-      });
     }
+
+    const $pdfFields = fields.map(createField);
+    $docRenderer.append($pdfFields);
+
+    $($pdfFields).draggable({
+      containment: $docRenderer,
+      appendTo: $docRenderer,
+      stop: (_, ui) => storeField(ui.position, $(ui.helper)),
+    });
+
+    $fields.draggable({
+      containment: $docRenderer,
+      appendTo: $docRenderer,
+      helper: "clone",
+      revert: "invalid",
+    });
+
+    $docRenderer.droppable({
+      accept: ".fields",
+      drop: function (_, ui) {
+        const $item = $(ui.helper).clone();
+        const color = getComputedStyle($form.get(0)).getPropertyValue("--color"); // prettier-ignore
+        $element = createField({
+          coordinates: JSON.stringify(ui.position),
+          field_name: $item.text(),
+          color,
+          isNew: true,
+        });
+
+        $(this).append($element);
+        storeField(ui.position, $element);
+
+        $element.draggable({
+          containment: this,
+          appendTo: this,
+          stop: (_, ui) => storeField(ui.position, $(ui.helper)),
+        });
+      },
+    });
   }
 
   function createDropdownInput({ value = null }) {
@@ -436,7 +455,10 @@ function Step3() {
       const $active = $(".esignBuilder__field--active");
 
       const $parent = $active.closest(".ui-draggable");
-      const uniqueKey = $active.data("key");
+      let uniqueKey = $active.attr("data-key");
+      if (!uniqueKey) {
+        uniqueKey = $active.find(".subData").attr("data-key");
+      }
 
       const $button = $(this);
       const $loader = $button.find(".spinner-border");
@@ -487,12 +509,6 @@ function Step3() {
     await getFields();
     await renderPDF();
     attachEventHandlers();
-
-    $fields.draggable({
-      containment: ".ui-droppable",
-      appendTo: ".ui-droppable",
-      helper: "clone",
-    });
 
     $(".esignBuilder--loading").removeClass("esignBuilder--loading");
   }

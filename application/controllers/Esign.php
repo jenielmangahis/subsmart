@@ -780,6 +780,14 @@ class Esign extends MY_Controller {
 					'name' => $name,
 					'company_id' => logged('company_id'),
 				]);
+
+				$filepath = FCPATH . 'uploads/DocFiles/';
+				$documentPath = $filepath . $name;
+				$this->db->insert('user_docfile_documents', [
+					'name' => $name,
+					'path' => str_replace(FCPATH, '/', $documentPath),
+					'docfile_id' => $id,
+				]);
 			}
 
 			if(isset($_POST['next_step']) && $_POST['next_step'] == 0)

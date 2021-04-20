@@ -113,6 +113,9 @@ class Workorder extends MY_Controller
 
         $this->page_data['workorders'] = $this->workorder_model->getworkorderList();
 
+        $company_id = logged('company_id');
+        $this->page_data['company_work_order_used'] = $this->workorder_model->getcompany_work_order_used($company_id);
+
         // unserialized the value
 
         $statusFilter = array();
@@ -2001,6 +2004,56 @@ class Workorder extends MY_Controller
         else{
             echo json_encode(0);
         }
+    }
+
+    public function work_order_templates()
+    {
+        $company_id = logged('company_id');
+        $user_id = logged('id');
+        $this->page_data['users'] = $this->users_model->getUser(logged('id'));
+        $this->page_data['page_title'] = "All Templates";
+        
+        $this->load->view('workorder/work_order_templates', $this->page_data);
+    }
+
+    public function changeTemplate()
+    {
+        $company_id = logged('company_id');
+        $user_id = logged('id');
+
+        $template_id  =  $this->input->post('template');
+
+        $check = $this->workorder_model->checktemplateId($company_id);
+
+        if(empty($check))
+        {
+            $data = array(
+                'work_order_template_id' => $template_id,
+                'company_id' => $company_id,
+            );
+            $dataQuery = $this->workorder_model->addTemplate($data);
+
+        }else{
+            $data2 = array(
+                'work_order_template_id' => $template_id,
+                'company_id' => $company_id,
+            );
+            $dataQuery = $this->workorder_model->updateTemplate($data2);
+
+        }
+
+
+        echo json_encode($dataQuery);
+    }
+
+    public function NewworkOrderAlarm()
+    {
+        $company_id = logged('company_id');
+        $user_id = logged('id');
+        $this->page_data['users'] = $this->users_model->getUser(logged('id'));
+        $this->page_data['page_title'] = "Alarm Templates";
+        
+        $this->load->view('workorder/NewworkOrderAlarm', $this->page_data);
     }
 }
 

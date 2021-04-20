@@ -30,6 +30,23 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     #modalAddContractor label {
         font-weight: 600;
     }
+    .contractor-icon-container {
+        display: inline-block;
+        margin-right: 5px;
+    }
+    .contractor-icon {
+        height: 50px;
+        width: 50px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: #d4d7dc;
+        border-radius: 50%;
+    }
+    .contractor-icon span {
+        color: #8d9096;
+        font-size: 1.4rem;
+    }
 </style>
 <?php include viewPath('includes/header'); ?>
 <div class="wrapper" role="wrapper">

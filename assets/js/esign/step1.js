@@ -1,4 +1,6 @@
 function Step1() {
+  jQuery.noConflict();
+
   const validFileExtensions = ["pdf"];
 
   const $form = $("[data-form-step=1]");
@@ -82,6 +84,7 @@ function Step1() {
   async function showDocument() {
     $modalBody = $docModal.find(".modal-body");
     $modalBody.empty();
+    $docModal.modal("show");
 
     const document = await PDFJS.getDocument({ url: documentUrl });
     for (index = 1; index <= document.numPages; index++) {
@@ -98,8 +101,6 @@ function Step1() {
         canvasContext: canvas.getContext("2d"),
       });
     }
-
-    $docModal.modal("show");
   }
 
   function attachEventHandlers() {

@@ -161,9 +161,66 @@ class Contractors extends MY_Controller {
         add_footer_js(array(
             "assets/js/accounting/payroll/view-contractor.js"
         ));
+        $this->page_data['contractorTypes'] = $this->accounting_contractors_model->get_contractor_types();
+        $this->page_data['contractor_details'] = $this->accounting_contractors_model->get_contractor_details($contractorId);
         $this->page_data['contractor'] = $this->accounting_contractors_model->get_contractor($contractorId);
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->page_data['page_title'] = "Contractors";
         $this->load->view('accounting/contractors/view', $this->page_data);
+    }
+
+    public function update_details($contractorId)
+    {
+        $basicDetails = [
+            'name' => $this->input->post('name'),
+            'email' => $this->input->post('email'),
+            'updated_at' => date('Y-m-d H:i:s')
+        ];
+
+        $updateBasic = $this->accounting_contractors_model->update_basic_contractor_details($contractorId, $basicDetails);
+
+        if($updateBasic) {
+            $data = [
+                'contractor_type_id' => $this->input->post('contractor_type'),
+                'title' => $this->input->post('contractor_type') === "1" ? $this->input->post('title') : null,
+                'first_name' => $this->input->post('contractor_type') === "1" ? $this->input->post('first_name') : null,
+                'middle_name' => $this->input->post('contractor_type') === "1" ? $this->input->post('middle_name') : null,
+                'last_name' => $this->input->post('contractor_type') === "1" ? $this->input->post('last_name') : null,
+                'suffix' => $this->input->post('contractor_type') === "1" ? $this->input->post('suffix') : null,
+                'business_name' => $this->input->post('contractor_type') === "2" ? $this->input->post('business_name') : null,
+                'social_security_number' => $this->input->post('contractor_type') === "1" ? $this->input->post('social_sec_num') : null,
+                'employer_id_number' => $this->input->post('contractor_type') === "2" ? $this->input->post('emp_id_num') : null,
+                'address' => $this->input->post('address'),
+                'city' => $this->input->post('city'),
+                'state' => $this->input->post('state'),
+                'zip_code' => $this->input->post('zip_code')
+            ];
+    
+            $contractorDetails = $this->accounting_contractors_model->get_contractor_details($contractorId);
+    
+            if($contractorDetails) {
+                $data['updated_at'] = date("Y-m-d H:i:s");
+                $message = "Details updated successfully!";
+
+                $result = $this->accounting_contractors_model->update_contractor_details($contractorId, $data);
+            } else {
+                $data['created_at'] = date("Y-m-d H:i:s");
+                $data['updated_at'] = date("Y-m-d H:i:s");
+                $data['contractor_id'] = $contractorId;
+                $message = "Details added successfully!";
+
+                $result = $this->accounting_contractors_model->create_contractor_details($data);                
+            }
+
+            if($result) {
+                $this->session->set_flashdata('success', $message);
+            } else {
+                $this->session->set_flashdata('error', "Unexpected error, please try again!");
+            }
+        } else {
+            $this->session->set_flashdata('error', "Unexpected error, please try again!");
+        }
+
+        redirect("accounting/contractors/view/$contractorId");
     }
 }

@@ -300,26 +300,34 @@ class Pages extends MY_Controller {
 
     public function job_customer_invoice_view( $eid )
     {
-    	$this->load->model('Jobs_model');
-    	$this->load->model('AcsProfile_model');
-    	$this->load->model('Clients_model');
+        // load models
+        $this->load->model('general_model');
+        $this->load->model('jobs_model');
 
+        // load helpers
+        $this->load->helper('functions');
     	$this->load->helper(array('hashids_helper'));
 
+    	// decrypt job id
     	$job_id   = hashids_decrypt($eid, '', 15);
-    	$job      = $this->Jobs_model->get_specific_job($job_id);
-    	if( $job ){
-    		$customer = $this->AcsProfile_model->getByProfId($job->customer_id);
-    		$client   = $this->Clients_model->getById($job->company_id);
-
-    		$this->page_data['client'] = $client;
-    		$this->page_data['customer'] = $customer;
-    	}
-
+    	$job      = $this->jobs_model->get_specific_job($job_id);
+    	if($job){
+            $get_company_info = array(
+                'where' => array(
+                    'company_id' => $job->company_id,
+                ),
+                'table' => 'business_profile',
+                'select' => 'id,business_phone,business_name,business_logo,business_email,street,city,postal_code,state,business_image',
+            );
+            $this->page_data['company_info'] = $this->general_model->get_data_with_param($get_company_info,FALSE);
+            $this->page_data['jobs_data_items'] = $this->jobs_model->get_specific_job_items($job_id);
+    	}else{
+    	    // redirect to 404 page here
+        }
     	$this->page_data['page']->title = 'nSmartTrac - Customer Job Invoice';	
-    	$this->page_data['job'] = $job;
+    	$this->page_data['jobs_data'] = $job;
 		$this->page_data['eid'] = $eid;
-		$this->page_data['is_job_valid'] = $is_job_valid;
+		//$this->page_data['is_job_valid'] = $is_job_valid;
 		$this->load->view('pages/job_customer_invoice_view', $this->page_data);
     }
 
