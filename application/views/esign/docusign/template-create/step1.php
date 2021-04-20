@@ -20,7 +20,7 @@
     <div id="templateDocument">
         <h2 class="form__title">Add Document</h2>
         <div class="form-group">
-            <div class="d-flex fileupload">
+            <div class="fileupload">
                 <div class="custome-fileup">
                     <div class="upload-btn-wrapper">
                         <button type="button" class="btn">
@@ -31,7 +31,7 @@
                     </div>
                 </div>
 
-                <div class="ml-3 esignBuilder__docPreview d-none">
+                <!-- <div class="ml-3 esignBuilder__docPreview d-none">
                     <canvas></canvas>
                     <div class="esignBuilder__docInfo">
                         <h5 class="esignBuilder__docTitle"></h5>
@@ -50,7 +50,7 @@
                             </g>
                         </svg>
                     </div>
-                </div>
+                </div> -->
             </div>
         </div>
 

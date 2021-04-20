@@ -303,7 +303,6 @@ class Pages extends MY_Controller {
         // load models
         $this->load->model('general_model');
         $this->load->model('jobs_model');
-        $this->load->model('CompanyOnlinePaymentAccount_model');
 
         // load helpers
         $this->load->helper('functions');
@@ -320,8 +319,6 @@ class Pages extends MY_Controller {
                 'table' => 'business_profile',
                 'select' => 'id,business_phone,business_name,business_logo,business_email,street,city,postal_code,state,business_image',
             );
-            $onlinePaymentAccount = $this->CompanyOnlinePaymentAccount_model->getByCompanyId($job->company_id);
-            $this->page_data['onlinePaymentAccount'] = $onlinePaymentAccount;
             $this->page_data['company_info'] = $this->general_model->get_data_with_param($get_company_info,FALSE);
             $this->page_data['jobs_data_items'] = $this->jobs_model->get_specific_job_items($job_id);
     	}else{
@@ -422,20 +419,6 @@ class Pages extends MY_Controller {
         $this->page_data['profiledata'] = $profiledata;
         $this->page_data['selectedCategories'] = $selectedCategories;
         $this->load->view('pages/company_business_profile', $this->page_data);        
-    }
-
-    public function update_job_status_paid(){
-    	$this->load->model('Jobs_model');
-    	$this->load->model('AcsProfile_model');
-    	$this->load->model('Clients_model');
-    	$this->load->model('CompanyOnlinePaymentAccount_model');
-
-    	$this->load->helper(array('hashids_helper'));
-
-    	$post = $this->input->post();
-    	$job_id = hashids_decrypt($post['jobid'], '', 15);
-    	$job    = $this->Jobs_model->get_specific_job($job_id);
-    	$this->Jobs_model->update($job->id, ['status' => 'Completed']);
     }
 
 }

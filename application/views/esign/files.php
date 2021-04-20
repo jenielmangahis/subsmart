@@ -412,7 +412,7 @@
         <div class="card p-0 mb-0">
             <div class="site_content">
                 <div class="content_wrap" style="position: relative;">
-                    <div class="content_sidebar content_sidebar-left resizable" style="overflow-x: hidden">
+                    <div class="content_sidebar content_sidebar-left resizable" style="overflow-x: hidden" id="fieldsSidebar">
                         <div class="sidebar-fields sidebar-flex">
                             <div class="sidebar_main">
                                 <div class="dropdown esignBuilder__recipientSelect">
@@ -597,10 +597,9 @@
                         </div>
                     </div>
 
-                    <div
-                        id="main-pdf-render"
-                        role="region"
-                    ></div>
+                    <div class="main-pdf-render__container" role="region">
+                        <div id="main-pdf-render"></div>
+                    </div>
 
                     <div class="ng-scope content_sidebar content_sidebar-right ml-auto">
                         <div class="docsWrapper">

@@ -417,6 +417,7 @@ $route['accounting/contractors'] = 'accounting_controllers/contractors/index';
 $route['accounting/contractors/load'] = 'accounting_controllers/contractors/load_contractors';
 $route['accounting/contractors/add']['post'] = 'accounting_controllers/contractors/add';
 $route['accounting/contractors/view/(:any)'] = 'accounting_controllers/contractors/view/$1';
+$route['accounting/contractors/(:any)/update-details']['post'] = 'accounting_controllers/contractors/update_details/$1';
 
 $route['accounting/vendor-details/(:any)'] = 'accounting/vendordetails/$1';
 $route['accounting/taxes/edit-settings'] = 'taxes/edit_settings';

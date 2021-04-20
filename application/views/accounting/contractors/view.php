@@ -36,6 +36,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     #myTabContent #details .card:hover {
         border-color: #498002 !important;
     }
+    .modal span.select2-selection.select2-selection--single {
+        min-width: unset !important;
+    }
 </style>
 <?php include viewPath('includes/header'); ?>
 <div class="wrapper" role="wrapper">
@@ -136,11 +139,52 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <div class="tab-content" id="myTabContent">
                             <div class="tab-pane fade show active" id="details" role="tabpanel" aria-labelledby="details-tab">
                                 <div class="card cursor-pointer border">
-                                    <div class="card-body" style="padding-bottom: 1.25rem">
-                                        <div class="d-flex align-items-center justify-content-between">
-                                            <h5 class="m-0">Personal details</h5>
-                                            <a href="#" class="text-info">Add</a>
+                                    <div class="card-body" style="padding: 0">
+                                        <div class="row">
+                                            <div class="col-xl-12">
+                                                <div class="d-flex align-items-center justify-content-between">
+                                                    <h5 class="m-0">Personal details</h5>
+                                                    <?php if($contractor_details === null) : ?>
+                                                    <a href="#" class="text-info">Add</a>
+                                                    <?php endif; ?>
+                                                </div>
+                                            </div>
                                         </div>
+                                        <?php if($contractor_details) : ?>
+                                        <div class="row mt-3">
+                                            <div class="col-md-2">
+                                                <p class="m-0">Contractor type</p>
+                                                <h5 class="mt-0"><?=$contractor_details->contractor_type_id === "1" ? "Individual" : "Business"?></h5>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <p class="m-0">Name</p>
+                                                <?php
+                                                    $name = $contractor_details->title !== "" ? $contractor_details->title : "";
+                                                    $name .= ' '.$contractor_details->first_name;
+                                                    $name .= $contractor_details->middle_name !== "" ? " $contractor_details->middle_name" : "";
+                                                    $name .= ' '.$contractor_details->last_name;
+                                                    $name .= $contractor_details->suffix !== "" ? " $contractor_details->suffix" : "";
+                                                ?>
+                                                <h5 class="mt-0"><?=$name?></h5>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <p class="m-0">Display name</p>
+                                                <h5 class="mt-0"><?=$contractor->name?></h5>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <p class="m-0"><?=$contractor_details->contractor_type_id === "1" ? "Social Security number" : "Employer Identification number" ?></p>
+                                                <h5 class="mt-0"><?=$contractor_details->contractor_type_id === "1" ? $contractor_details->social_security_number : $contractor_details->employer_id_number?></h5>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <p class="m-0">Email</p>
+                                                <h5 class="mt-0"><?=$contractor->email?></h5>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <p class="m-0">Address</p>
+                                                <h5 class="m-0"><?="$contractor_details->address <br>$contractor_details->city, $contractor_details->state $contractor_details->zip_code"?></h5>
+                                            </div>
+                                        </div>
+                                        <?php endif; ?>
                                     </div>
                                 </div>
                             </div>
@@ -153,6 +197,185 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 </div>
             </div>
             <!-- end row -->
+
+            <div class="modal-right-side">
+                <div class="modal right fade" id="personal-details-modal" tabindex="" role="dialog" aria-labelledby="details-modal-label">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header bg-dark">
+                                <h3 class="modal-title" id="details-modal-label">&nbsp;</h3>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true" class="text-light">&times;</span></button>
+                            </div>
+                            <form action="/accounting/contractors/<?=$contractor->id?>/update-details" method="post">
+                            <div class="modal-body">
+                                <div class="row">
+                                    <div class="col-xl-12">
+                                        <div class="card p-0 my-3">
+                                            <div class="card-body">
+                                                <div class="row">
+                                                    <div class="col-xl-12">
+                                                        <div class="form-group">
+                                                            <label for="">Contractor type *</label>
+                                                            <?php foreach($contractorTypes as $type) : ?>
+                                                            <div class="form-check">
+                                                                <input type="radio" name="contractor_type" id="contractor-<?=strtolower($type->name)?>" class="form-check-input" value="<?=$type->id?>">
+                                                                <label for="contractor-<?=strtolower($type->name)?>" class="form-check-label" <?=$contractor_details !== null && $contractor_details->contractor_type_id === $type->id ? 'checked' : ''?>><?="$type->name - $type->description"?></label>
+                                                            </div>
+                                                            <?php endforeach; ?>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-xl-3 individual-type-field hide">
+                                                        <div class="form-group">
+                                                            <label for="title">Title</label>
+                                                            <input type="text" name="title" id="title" class="form-control">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xl-6 individual-type-field hide">
+                                                        <div class="form-group">
+                                                            <label for="first_name">First *</label>
+                                                            <input type="text" name="first_name" id="first_name" class="form-control">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xl-3 individual-type-field hide">
+                                                        <div class="form-group">
+                                                            <label for="middle_name">Middle</label>
+                                                            <input type="text" name="middle_name" id="middle_name" class="form-control">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xl-6 individual-type-field hide">
+                                                        <div class="form-group">
+                                                            <label for="last_name">Last *</label>
+                                                            <input type="text" name="last_name" id="last_name" class="form-control">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xl-4 individual-type-field hide">
+                                                        <div class="form-group">
+                                                            <label for="suffix">Suffix</label>
+                                                            <input type="text" name="suffix" id="suffix" class="form-control">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xl-12 business-type-field hide">
+                                                        <div class="form-group">
+                                                            <label for="business_name">Business name *</label>
+                                                            <input type="text" name="business_name" id="business_name" class="form-control">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xl-12 default-field hide">
+                                                        <div class="form-group">
+                                                            <label for="name">Display name *</label>
+                                                            <input type="text" name="name" id="name" class="form-control" value="<?=$contractor->name?>" required>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xl-12 individual-type-field hide">
+                                                        <div class="form-group">
+                                                            <label for="social_sec_num">Social Security number *</label>
+                                                            <input type="text" name="social_sec_num" id="social_sec_num" class="form-control">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xl-12 business-type-field hide">
+                                                        <div class="form-group">
+                                                            <label for="emp_id_num">Employer Identification Number *</label>
+                                                            <input type="text" name="emp_id_num" id="emp_id_num" class="form-control">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xl-12 default-field hide">
+                                                        <div class="form-group">
+                                                            <label for="email">Email</label>
+                                                            <input type="text" name="email" id="email" class="form-control" value="<?=$contractor->email?>">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xl-12 default-field hide">
+                                                        <div class="form-group">
+                                                            <label for="address">Address *</label>
+                                                            <textarea name="address" id="address" class="form-control" required></textarea>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xl-5 default-field hide">
+                                                        <div class="form-group">
+                                                            <label for="city">City *</label>
+                                                            <input type="text" name="city" id="city" class="form-control" required>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xl-2 default-field hide">
+                                                        <div class="form-group">
+                                                            <label for="state">State *</label>
+                                                            <select name="state" id="state" class="form-control" required>
+                                                                <option value="AK">AK</option>
+                                                                <option value="AL">AL</option>
+                                                                <option value="AR">AR</option>
+                                                                <option value="AZ">AZ</option>
+                                                                <option value="CA">CA</option>
+                                                                <option value="CO">CO</option>
+                                                                <option value="CT">CT</option>
+                                                                <option value="DC">DC</option>
+                                                                <option value="DE">DE</option>
+                                                                <option value="FL">FL</option>
+                                                                <option value="GA">GA</option>
+                                                                <option value="HI">HI</option>
+                                                                <option value="IA">IA</option>
+                                                                <option value="ID">ID</option>
+                                                                <option value="IL">IL</option>
+                                                                <option value="IN">IN</option>
+                                                                <option value="KS">KS</option>
+                                                                <option value="KY">KY</option>
+                                                                <option value="LA">LA</option>
+                                                                <option value="MA">MA</option>
+                                                                <option value="MD">MD</option>
+                                                                <option value="ME">ME</option>
+                                                                <option value="MI">MI</option>
+                                                                <option value="MN">MN</option>
+                                                                <option value="MO">MO</option>
+                                                                <option value="MS">MS</option>
+                                                                <option value="MT">MT</option>
+                                                                <option value="NC">NC</option>
+                                                                <option value="ND">ND</option>
+                                                                <option value="NE">NE</option>
+                                                                <option value="NH">NH</option>
+                                                                <option value="NJ">NJ</option>
+                                                                <option value="NM">NM</option>
+                                                                <option value="NV">NV</option>
+                                                                <option value="NY">NY</option>
+                                                                <option value="OH">OH</option>
+                                                                <option value="OK">OK</option>
+                                                                <option value="OR">OR</option>
+                                                                <option value="PA">PA</option>
+                                                                <option value="RI">RI</option>
+                                                                <option value="SC">SC</option>
+                                                                <option value="SD">SD</option>
+                                                                <option value="TN">TN</option>
+                                                                <option value="TX">TX</option>
+                                                                <option value="UT">UT</option>
+                                                                <option value="VA">VA</option>
+                                                                <option value="VT">VT</option>
+                                                                <option value="WA">WA</option>
+                                                                <option value="WI">WI</option>
+                                                                <option value="WV">WV</option>
+                                                                <option value="WY">WY</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xl-5 default-field hide">
+                                                        <div class="form-group">
+                                                            <label for="zip_code">ZIP code *</label>
+                                                            <input type="text" name="zip_code" id="zip_code" class="form-control" required>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer p-0">
+                                <button class="btn btn-success text-white w-100 rounded-0" type="submit">Save</button>
+                            </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
         <!-- end container-fluid -->
     </div>

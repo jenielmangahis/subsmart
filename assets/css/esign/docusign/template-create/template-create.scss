@@ -66,8 +66,24 @@
 }
 
 .fileupload {
+  --size: 240px;
+
+  display: grid !important;
+  gap: 10px;
+  grid-template-columns: repeat(auto-fit, minmax(var(--size), auto));
+  justify-content: left;
+
+  .esignBuilder__docPreview,
   .custome-fileup {
-    width: 240px;
+    min-height: var(--size);
+    max-width: var(--size);
+  }
+
+  .esignBuilder__docPreview canvas {
+    width: 100% !important;
+  }
+
+  .custome-fileup {
     border: 1px solid #d9d9d9;
     border-radius: 3px;
     padding: 60px 20px;

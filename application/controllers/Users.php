@@ -698,6 +698,9 @@ class Users extends MY_Controller {
 			"assets/css/timesheet/tracklocation.css"
 		));
 		
+        add_footer_js(array(
+            "assets/js/timesheet/tracklocation.js",
+        ));
 		$users= $this->users_model->getUsers();
 		$lasttracklocation_employee = array();
 		foreach($users as $employee){

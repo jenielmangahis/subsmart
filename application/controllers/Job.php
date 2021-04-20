@@ -1631,70 +1631,20 @@ class Job extends MY_Controller
     public function send_customer_invoice_email($id){
         include APPPATH . 'libraries/PHPMailer/PHPMailerAutoload.php';
         $this->load->helper(array('url', 'hashids_helper'));
-        $this->load->model('general_model');
+
         $this->load->model('AcsProfile_model');
 
         $job = $this->jobs_model->get_specific_job($id);
         if( $job ){
-            $eid      = hashids_encrypt($job->job_unique_id, '', 15);
-            $job_id   = hashids_decrypt($eid, '', 15);
+            $eid = hashids_encrypt($job->id, '', 15);
             $url = base_url('/job_invoice_view/' . $eid);
             $customer = $this->AcsProfile_model->getByProfId($job->customer_id);
 
-             $get_company_info = array(
-                'where' => array(
-                    'company_id' => $job->company_id,
-                ),
-                'table' => 'business_profile',
-                'select' => 'id,business_phone,business_name,business_logo,business_email,street,city,postal_code,state,business_image',
-            );
-
-            $company   = $this->general_model->get_data_with_param($get_company_info,FALSE);
-            $jobs_data_items = $this->jobs_model->get_specific_job_items($job_id);
-            /*echo "<pre>";
-            print_r($company);*/
-            //exit;
-
             $subject = "NsmarTrac : Job Invoice";
-            $img_source = base_url('/uploads/users/business_profile/'.$company->id.'/'.$company->business_image);
-            $msg .= "<img style='width: 300px;margin-top:41px;margin-bottom:24px;' alt='Logo' src='".$img_source."' /><br />";
-            $msg .= "<h1>Your Invoice from ". $company->business_name ."</h1><br />";
-            $msg .= "<p>Hi " . $customer->first_name . ",</p>";
-            $msg .= "<p>Attached please find invoice <b>#" . $job->job_number . "</b> for your service</p>";
-            $msg .= "<p>Thank you,</p><br />";
-
-            $msg .= "<table>";
-                $msg .= "<tr><td><b>Invoice Number</b></td><td>: ".$job->job_number."</td></tr>";
-                $msg .= "<tr><td><b>Service Date</b></td><td>: ".date('m/d/Y', strtotime($job->start_date))."</td></tr>";
-                $msg .= "<tr><td colspan='2'><br /></td></tr>";
-                $msg .= "<tr><td><b>Customer Name</b></td><td>: ".$job->first_name.' '.$job->last_name."</td></tr>";
-                $msg .= "<tr><td><b>Service Address</b></td><td>: ".$jobs_data->cust_city.' '.$jobs_data->cust_state.' '.$jobs_data->cust_zip_code."</td></tr>";
-            $msg .= "</table>";
-
-            $msg .= "<h2>Items</h2>";
-            $msg .= "<table>";
-            $subtotal = 0;
-                foreach ($jobs_data_items as $item){
-                    $total = $item->price * $item->qty;
-                    //$msg  .= "<tr><td>".$item->title."</td><td>".$item->qty."x".$item->price."</td><td>".number_format((float)$total,2,'.',',')."</td></tr>";
-                    $msg  .= "<tr><td width='300'>".$item->title."</td><td>".number_format((float)$total,2,'.',',')."</td></tr>";
-                    $subtotal = $subtotal + $total;
-                }                
-            $msg .= "<tr><td colspan='2'><hr /></td></tr>";
-            $msg .= "<tr><td width='300'>Subtotal</td><td>".number_format((float)$subtotal,2,'.',',')."</td></tr>";
-            $msg .= "</table>";
-            $msg .= "<br /><br />";
-            $msg .= "<table>";
-                $msg .= "<tr><td width='300'><h3>Amount Due</h3></td><td><h2>".number_format((float)$subtotal,2,'.',',')."</h2></td></tr>";
-                $msg .= "<tr><td colspan='2'><br /></td></tr>";
-                $msg .= "<tr><td colspan='2' style='text-align:center;'><a href='".$url."' style='background-color:#32243d;color:#fff;padding:10px 25px;border:1px solid transparent;border-radius:2px;font-size:22px;text-decoration:none;'>PAY ONLINE</a></td></tr>";
-            $msg .= "</table>";
-
-            $msg .= "<br /><br /><br /><br /><br /><br />";
-            $nsmart_logo = base_url("assets/dashboard/images/logo.png");
-            $msg .= "<table>";
-                $msg .= "<tr><td colspan='2' style='text-align:center;'><span style='margin-bottom:11px;display:inline-block;'>Powered By</span> <br /> <img style='width:328px;' src='".$nsmart_logo."' /></td></tr>";
-            $msg .= "</table>";
+            $msg = "<p>Hi " . $customer->first_name . ",</p>";
+            $msg .= "<p>Please see url below for invoice job number <b>".$job->job_number."</b>.</p>";
+            $msg .= "<p>Click <a href='".$url."'>here</a> to view your job invoice.</p><br />";
+            $msg .= "<p>Thank you <br /><br /> NsmarTrac Team</p>";
             
             //Email Sending
             $server    = MAIL_SERVER;

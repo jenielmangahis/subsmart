@@ -618,7 +618,7 @@ class Users_model extends MY_Model {
 		return $query->result();
 	}
 	public function getEmployeeLastestAux($user_id){
-		$qry = $this->db->query("SELECT * fROM timesheet_logs Join users ON users.id=timesheet_logs.user_id WHERE timesheet_logs.user_id = $user_id order by timesheet_logs.date_created DESC Limit 1");
+		$qry = $this->db->query("SELECT *,timesheet_attendance.status as att_status fROM timesheet_logs Join users ON users.id=timesheet_logs.user_id JOIN timesheet_attendance ON timesheet_attendance.id = timesheet_logs.attendance_id WHERE timesheet_logs.user_id = $user_id order by timesheet_logs.date_created DESC Limit 1");
         return $qry->row();
 	}
 }
