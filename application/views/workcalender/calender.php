@@ -1217,6 +1217,7 @@ a.top-1 {
               buttonText: 'List'
             }
           },
+          slotEventOverlap: false,
           resourceLabelDidMount: function(info) {
             console.log(info);
             let img = document.createElement('img');
