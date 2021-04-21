@@ -368,6 +368,9 @@
             <a href="<?php echo base_url('customer') ?>">
                 <button type="button" class="btn btn-primary"><span class="fa fa-remove"></span> Cancel </button> &nbsp;
             </a>
+            <?php if(isset($profile_info)): ?>
+                <input type="hidden" name="customer_id" value="<?= $profile_info->prof_id; ?>"/>
+            <?php endif; ?>
             <button type="submit" class="btn btn-primary" name="" id="" ><span class="fa fa-paper-plane-o"></span> <?=isset($profile_info) ? 'Save Changes' : 'Save'; ?> </button>
         </div>
     </div>

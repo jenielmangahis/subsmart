@@ -16,6 +16,14 @@ class Widgets extends MY_Controller {
 
     //put your code here
     
+    public function loadTechLeaderboard()
+    {
+        $comp_id = getLoggedCompanyID();
+        $this->load->model('widgets_model');
+        $data['tech_leaderboard'] = $this->widgets_model->loadTechLeaderboard($comp_id);
+        $this->load->view('widgets/tech_leaderboard_details', $data);
+    }
+    
     public function getOverdueInvoices()
     {
         $this->load->model('widgets_model');

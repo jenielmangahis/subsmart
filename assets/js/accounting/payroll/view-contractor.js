@@ -65,3 +65,18 @@ $('#social_sec_num').on('keyup', function() {
 });
 
 $('#personal-details-modal select').select2();
+
+$('#payments.tab-pane select').select2({
+    minimumResultsForSearch: -1
+});
+
+$('#contractor-payments-table').DataTable({
+    autoWidth: false,
+    searching: false,
+    processing: true,
+    // serverSide: true,
+    lengthChange: false,
+    info: false,
+    pageLength: 50,
+    order: [[0, 'asc']],
+});

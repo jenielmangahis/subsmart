@@ -3,6 +3,13 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Widgets_model extends MY_Model {
     
+    function loadTechLeaderboard($comp_id)
+    {
+        $this->db->where('company_id', $comp_id);
+        $this->db->where('role', 7);
+        return $this->db->get('users')->result();
+    }
+    
     function getOverdueInvoices($comp_id)
     {
         $this->db->join('acs_profile', 'invoices.customer_id = acs_profile.prof_id','right');

@@ -225,7 +225,7 @@
                 <label for="">Finance Amount</label>
             </div>
             <div class="col-md-6">
-                <?= !empty($billing_info->finance_amount) ?  $billing_info->finance_amount : '---' ?>
+                <?=  $billing_info->finance_amount != "" ?  $billing_info->finance_amount : '---' ?>
             </div>
         </div>
         <div class="row form_line">

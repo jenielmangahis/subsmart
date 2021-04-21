@@ -97,7 +97,7 @@
             <label for="">Billing Method</label>
         </div>
         <div class="col-md-6">
-            <?php $bm = bill_methods($billing_info->bill_method); echo $bm['description']; ?>
+            <?php $bm = bill_methods($billing_info->bill_method); ?> <?= !empty($bm['description']) ? $bm['description'] : '---'; ?>
         </div>
     </div>
 

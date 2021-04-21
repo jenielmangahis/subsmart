@@ -456,8 +456,11 @@ class Customer extends MY_Controller
 
     public function save_customer_profile(){
         $input = $this->input->post();
-
-        $check_customer= $this->customer_ad_model->check_customer($input);
+        if(isset($input['customer_id'])){
+            $check_customer='';
+        }else{
+            $check_customer= $this->customer_ad_model->check_customer($input);
+        }
         if(empty($check_customer)){
             // customer profile info
             $input_profile = array();
@@ -491,8 +494,12 @@ class Customer extends MY_Controller
             $input_profile['contact_phone2'] = $input['contact_phone2'];
             $input_profile['contact_phone3'] = $input['contact_phone3'];
             //$input_profile['notes'] = $input['notes'];
-            $profile_id = $this->general->add_return_id($input_profile, 'acs_profile');
-            $error = 0;
+            if(isset($input['customer_id'])){
+                $profile_id = $this->general->update_with_key_field($input_profile, $input['customer_id'],'acs_profile','prof_id');
+            }else{
+                $profile_id = $this->general->add_return_id($input_profile, 'acs_profile');
+            }
+
             $save_billing = $this->save_billing_information($input,$profile_id);
             $save_office = $this->save_office_information($input,$profile_id);
             $save_alarm = $this->save_alarm_information($input,$profile_id);
@@ -508,7 +515,12 @@ class Customer extends MY_Controller
             }else{
                 $this->save_notes($input,$profile_id);
                 $this->qrcodeGenerator($profile_id);
-                echo $profile_id;
+                if(isset($input['customer_id'])){
+                    echo $input['customer_id'];
+                }else{
+                    echo $profile_id;
+                }
+
             }
         }else {
             echo 'Customer Already Exist!';
@@ -518,7 +530,9 @@ class Customer extends MY_Controller
     public function save_billing_information($input,$id){
         $input_billing = array();
         // billing data
-        $input_billing['fk_prof_id'] = $id;
+        if(!isset($input['customer_id'])){
+            $input_billing['fk_prof_id'] = $id;
+        }
         $input_billing['card_fname'] = $input['card_fname'];
         $input_billing['card_lname'] = $input['card_lname'];
         $input_billing['card_address'] = $input['card_address'];
@@ -551,14 +565,22 @@ class Customer extends MY_Controller
         $input_billing['transaction_amount'] = $input['transaction_amount'];
         $input_billing['transaction_category'] = $input['transaction_category'];
         $input_billing['frequency'] = $input['frequency'];
-        return $this->general->add_($input_billing, 'acs_billing');
+
+        if(isset($input['customer_id'])){
+            return $this->general->update_with_key_field($input_billing, $input['customer_id'], 'acs_billing','fk_prof_id');
+        }else{
+            return $this->general->add_($input_billing, 'acs_billing');
+        }
+
     }
 
     public function save_office_information($input,$id){
         $input_office = array();
 
         // office data
-        $input_office['fk_prof_id'] = $id;
+        if(!isset($input['customer_id'])){
+            $input_office['fk_prof_id'] = $id;
+        }
         $input_office['welcome_sent'] = 0;
         $input_office['entered_by'] = $input['entered_by'];
         $input_office['time_entered'] = $input['time_entered'];
@@ -626,14 +648,21 @@ class Customer extends MY_Controller
         $input_office['labor_cost'] = $input['labor_cost'];
         $input_office['job_profit'] = $input['job_profit'];
         $input_office['url'] = $input['url'];
-        return $this->general->add_($input_office, 'acs_office');
+
+        if(isset($input['customer_id'])){
+            return $this->general->update_with_key_field($input_office, $input['customer_id'], 'acs_office','fk_prof_id');
+        }else{
+            return $this->general->add_($input_office, 'acs_office');
+        }
     }
 
     public function save_alarm_information($input,$id){
         $input_alarm = array();
 
         // alarm data
-        $input_alarm['fk_prof_id'] = $id;
+        if(!isset($input['customer_id'])){
+            $input_alarm['fk_prof_id'] = $id;
+        }
         $input_alarm['monitor_comp'] = $input['monitor_comp'];
         $input_alarm['monitor_id'] = $input['monitor_id'];
         //$input_alarm['install_date'] = $input['install_date'];
@@ -654,14 +683,21 @@ class Customer extends MY_Controller
         $input_alarm['alarm_login'] = $input['alarm_login'];
         $input_alarm['alarm_customer_id'] = $input['alarm_customer_id'];
         $input_alarm['alarm_cs_account'] = $input['alarm_cs_account'];
-        return $this->general->add_($input_alarm, 'acs_alarm');
+
+        if(isset($input['customer_id'])){
+            return $this->general->update_with_key_field($input_alarm, $input['customer_id'], 'acs_alarm','fk_prof_id');
+        }else{
+            return $this->general->add_($input_alarm, 'acs_alarm');
+        }
     }
 
     public function save_access_information($input,$id){
         $input_access = array();
 
         //access data
-        $input_access['fk_prof_id'] =$id;
+        if(!isset($input['customer_id'])){
+            $input_access['fk_prof_id'] = $id;
+        }
         if(isset($input['portal_status'])){
             $input_access['portal_status'] = $input['portal_status'];
         }else{
@@ -671,17 +707,23 @@ class Customer extends MY_Controller
         $input_access['reset_password'] ='';
         $input_access['access_login'] = $input['access_login'];
         $input_access['access_password'] = $input['access_password'];
-        return $this->general->add_($input_access, 'acs_access');
+
+        if(isset($input['customer_id'])){
+            return $this->general->update_with_key_field($input_access, $input['customer_id'], 'acs_access','fk_prof_id');
+        }else{
+            return $this->general->add_($input_access, 'acs_access');
+        }
     }
 
     public function save_notes($input,$id){
-        $input_notes = array();
-
-        // notes data
-        $input_notes['fk_prof_id'] = $id;
-        $input_notes['note'] = $input['notes'];
-        $input_notes['datetime'] = date("m-d-Y h:i A");
-        $this->general->add_($input_notes, 'acs_notes');
+        if(!empty($input_notes['note'])){
+            $input_notes = array();
+            // notes data
+            $input_notes['fk_prof_id'] = $id;
+            $input_notes['note'] = $input['notes'];
+            $input_notes['datetime'] = date("m-d-Y h:i A");
+            $this->general->add_($input_notes, 'acs_notes');
+        }
     }
 
     public function add_data_sheet(){

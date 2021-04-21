@@ -23,7 +23,7 @@
     <div class="card" style="border: 2px solid #30233d; margin-top:0; border-radius: 40px; padding:5px;">
         <div style="border: 5px solid #30233d; margin-top:0; border-radius: 40px; box-shadow: 1px 0px 15px 5px rgb(48, 35, 61);">
             <div class="card-body mt-2" style="padding:5px 10px; height: 363px; overflow: hidden">
-                <div style="height: 250px; overflow-y: scroll">
+                <div style="height:<?= $rawHeight-30; ?>px; overflow-y: scroll; padding:5px 15px;">
                     <div class="mb-2 col-lg-12 float-left">
                         <table class="table table-striped table-hover">
                             <tr>
@@ -63,8 +63,6 @@
                             ?>
                         </table>
                     </div>
-
-                    ?>
                 </div>
                 <div class="text-center">
                     <a class="text-info" href="<?= base_url() ?>job">SEE ALL ESTIMATES</a>

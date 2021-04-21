@@ -246,6 +246,37 @@ class Job extends MY_Controller
         $this->load->view('job/job_preview', $this->page_data);
     }
 
+    public function billing($id=null) {
+        $this->load->helper('functions');
+        $comp_id = logged('company_id');
+        $user_id = logged('id');
+        // get all employees
+        // get all job tags
+        $get_login_user = array(
+            'where' => array(
+                'id' => $user_id
+            ),
+            'table' => 'users',
+            'select' => 'id,FName,LName',
+        );
+        $this->page_data['logged_in_user'] = $this->general->get_data_with_param($get_login_user,FALSE);
+
+        $get_company_info = array(
+            'where' => array(
+                'company_id' => logged('company_id'),
+            ),
+            'table' => 'business_profile',
+            'select' => 'id,business_phone,business_name,business_logo,business_email,street,city,postal_code,state,business_image',
+        );
+        $this->page_data['company_info'] = $this->general->get_data_with_param($get_company_info,FALSE);
+
+        if(!$id==NULL){
+            $this->page_data['jobs_data'] = $this->jobs_model->get_specific_job($id);
+            $this->page_data['jobs_data_items'] = $this->jobs_model->get_specific_job_items($id);
+        }
+        $this->load->view('job/job_billing', $this->page_data);
+    }
+
     public function send_invoice_preview($id=null) {
         //$this->load->helper('functions');
         $comp_id = logged('company_id');
@@ -1737,7 +1768,6 @@ class Job extends MY_Controller
             $this->session->set_flashdata('message', 'Cannot find data.');
             $this->session->set_flashdata('alert_class', 'alert-danger');
         }
-
         redirect('job');
     }
 
