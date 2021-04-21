@@ -46,6 +46,7 @@ class Customer_advance_model extends MY_Model {
 
     public function get_data_by_id($fieldname,$fieldvalue,$tablename)
     {
+        $this->db->select('*');
         $this->db->where($fieldname, $fieldvalue);
         $query = $this->db->get($tablename);
         return $query->row();
@@ -63,7 +64,8 @@ class Customer_advance_model extends MY_Model {
     public function check_customer($search){
         $this->db->from("acs_profile");
         $this->db->select('prof_id');
-        $this->db->where('phone_m LIKE', '%' . $search['phone_m'] . '%');
+        $this->db->where('first_name', $search['first_name']);
+        $this->db->where('last_name', $search['last_name']);
         $query = $this->db->get();
         return $query->row();
     }
@@ -84,13 +86,13 @@ class Customer_advance_model extends MY_Model {
                 $this->db->where('acs_alarm.monitor_id LIKE', '%' . $search['monitoring_id'] . '%');
             }
             if($search['firstname'] != ""){
-                $this->db->or_where('acs_profile.first_name LIKE', '%' . $search['firstname'] . '%');
+                $this->db->where('acs_profile.first_name LIKE', '%' . $search['firstname'] . '%');
             }
             if($search['lastname'] != ""){
                 $this->db->or_where('acs_profile.last_name LIKE', '%' . $search['lastname'] . '%');
             }
             if($search['email'] !=  ""){
-                $this->db->or_where('acs_profile.email LIKE', '%' . $search['email'] . '%');
+                $this->db->where('acs_profile.email LIKE', '%' . $search['email'] . '%');
             }
             if($search['phone'] != ""){
                 $this->db->or_where('acs_profile.phone_h LIKE', '%' . $search['phone'] . '%');

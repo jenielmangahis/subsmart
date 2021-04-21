@@ -303,6 +303,7 @@ class Pages extends MY_Controller {
         // load models
         $this->load->model('general_model');
         $this->load->model('jobs_model');
+        $this->load->model('CompanyOnlinePaymentAccount_model');
 
         // load helpers
         $this->load->helper('functions');
@@ -319,6 +320,8 @@ class Pages extends MY_Controller {
                 'table' => 'business_profile',
                 'select' => 'id,business_phone,business_name,business_logo,business_email,street,city,postal_code,state,business_image',
             );
+
+            $this->page_data['onlinePaymentAccount'] = $this->CompanyOnlinePaymentAccount_model->getByCompanyId($job->company_id);
             $this->page_data['company_info'] = $this->general_model->get_data_with_param($get_company_info,FALSE);
             $this->page_data['jobs_data_items'] = $this->jobs_model->get_specific_job_items($job_id);
     	}else{

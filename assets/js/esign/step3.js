@@ -77,10 +77,11 @@ function Step3() {
     }
 
     let docPage = undefined;
+    let docId = undefined;
 
     const elementYTop = $element.get(0).offsetTop;
-    const $pages = [...$docRenderer.find(".docPage")];
 
+    const $pages = [...$docRenderer.find(".docPage")];
     for (let index = 0; index < $pages.length; index++) {
       const $docPage = $($pages[index]);
       const docPageHeight = $docPage.height();
@@ -93,6 +94,18 @@ function Step3() {
       }
     }
 
+    const $documents = [...$docRenderer.find(".docPageContainer")];
+    for (let index = 0; index < $documents.length; index++) {
+      const $document = $($documents[index]);
+      const docHeight = $document.height();
+      const docYBottom = $document.get(0).offsetTop + docHeight;
+
+      if (elementYTop <= docYBottom) {
+        docId = parseInt($document.attr("data-document-id"));
+        break;
+      }
+    }
+
     const key = $element.find(".subData").data("key");
     const recipientId = $("#recipientsSelect").get(0).dataset.recipientId;
 
@@ -100,6 +113,7 @@ function Step3() {
       coordinates: position,
       docfile_id: fileId,
       doc_page: docPage,
+      doc_id: docId,
       unique_key: key,
       field: $element.text().trim(),
       recipient_id: recipientId,
@@ -254,20 +268,65 @@ function Step3() {
     return $element;
   }
 
-  async function renderPDF() {
-    const document = await PDFJS.getDocument({ url: documentUrl });
-    for (let index = 1; index <= document.numPages; index++) {
-      const currentFields = fields.filter(({ doc_page }) => doc_page == index);
-      const params = { page: index, document };
+  async function renderPDF(data = null) {
+    if (data) {
+      const { id, path } = data;
+      const url = `${prefixURL}/${path}`;
 
-      const $page = await getPage(params);
-      $docRenderer.append($page);
+      const document = await PDFJS.getDocument({ url });
+      const $container = createElementFromHTML("<div></div>");
+      $container.addClass("docPageContainer");
+      $container.attr("data-document-id", id);
 
-      const { top: offsetTop } = $page.offset();
-      const $pagePreview = await getPagePreview({ ...params, offsetTop });
-      $docPreviewRenderer.append($pagePreview);
+      for (let index = 1; index <= document.numPages; index++) {
+        const params = { page: index, document };
+        const $page = await getPage(params);
+        $container.append($page);
+
+        const { top: offsetTop } = $page.offset();
+        const $pagePreview = await getPagePreview({ ...params, offsetTop });
+        $docPreviewRenderer.append($pagePreview);
+      }
+
+      $docRenderer.append($container);
+      //
+    } else {
+      const document = await PDFJS.getDocument({ url: documentUrl });
+      for (let index = 1; index <= document.numPages; index++) {
+        const params = { page: index, document };
+        const $page = await getPage(params);
+        $docRenderer.append($page);
+
+        const { top: offsetTop } = $page.offset();
+        const $pagePreview = await getPagePreview({ ...params, offsetTop });
+        $docPreviewRenderer.append($pagePreview);
+      }
     }
+  }
 
+  function createDropdownInput({ value = null }) {
+    const html = `
+        <div class="esignBuilder__optionInput">
+            <input class="form-control">
+            <button type="button" class="btn esignBuilder__dropdownClose" tabindex="-1">
+              <i class="fa fa-times"></i>
+            </button>
+        </div>
+      `;
+
+    const $element = createElementFromHTML(html);
+    $element.find("input").val(value);
+
+    const $close = $element.find(".esignBuilder__dropdownClose");
+
+    $close.on("click", function () {
+      $(this).parent().remove();
+    });
+
+    return $element;
+  }
+
+  function attachEventHandlers() {
     const $pdfFields = fields.map(createField);
     $docRenderer.append($pdfFields);
 
@@ -306,31 +365,7 @@ function Step3() {
         });
       },
     });
-  }
 
-  function createDropdownInput({ value = null }) {
-    const html = `
-        <div class="esignBuilder__optionInput">
-            <input class="form-control">
-            <button type="button" class="btn esignBuilder__dropdownClose" tabindex="-1">
-              <i class="fa fa-times"></i>
-            </button>
-        </div>
-      `;
-
-    const $element = createElementFromHTML(html);
-    $element.find("input").val(value);
-
-    const $close = $element.find(".esignBuilder__dropdownClose");
-
-    $close.on("click", function () {
-      $(this).parent().remove();
-    });
-
-    return $element;
-  }
-
-  function attachEventHandlers() {
     if (isTemplate) {
       $formSubmit.text("Save Template");
     }
@@ -501,17 +536,23 @@ function Step3() {
     fileId = isTemplate ? templateId : fileId;
 
     documentUrl = $form.data("doc-url");
-    if (isTemplate) {
-      const { data } = await getTemplateFile(templateId);
-      documentUrl = `${prefixURL}/${data.path}`;
+    if (!isTemplate) {
+      await getFields();
+      await renderPDF();
+      attachEventHandlers();
+
+      $(".esignBuilder--loading").removeClass("esignBuilder--loading");
+      return;
     }
 
+    const { data } = await getTemplateFile(templateId);
     await getFields();
-    await renderPDF();
+    await Promise.all(data.map(renderPDF));
     attachEventHandlers();
 
     $(".esignBuilder--loading").removeClass("esignBuilder--loading");
   }
+
   return { init };
 }
 

@@ -47,10 +47,22 @@
                 <div class="col-xl-12">
                     <div class="card">
                         <div class="card-body">
-                            <p>This Alarm System Work Order Agreement (the "Agreement") is made as of
+                        <div id="header_area">
+                            <!-- <p>This Alarm System Work Order Agreement (the "Agreement") is made as of
                                 <?php echo date('m/d/Y') ?>, by and between ADI, (the "Company") and the
-                                ("Customer") as the address shown below (the "Premise/Monitored Location") </p>
+                                ("Customer") as the address shown below (the "Premise/Monitored Location") </p> -->
+                                <ol class="breadcrumb" style="margin-top:-30px;"> <i class="fa fa-pencil" aria-hidden="true"></i>
+                                            <li class="breadcrumb-item active">
+                                                <label style="background-color:#E8E8E9;" id="headerContent"><?php echo $headers->content; ?></label>
+                                                <input type="hidden" name="header" value="<?php echo $headers->content; ?>">
+                                            </li>
+                                        </ol>
 
+                                        <input type="hidden" id="company_name" value="<?php echo $clients->business_name; ?>">
+                                <input type="hidden" id="current_date" value="<?php echo @date('m-d-Y'); ?>">
+
+                                <input type="hidden" id="content_input" class="form-control" name="header" value="<?php echo $headers->content; ?>">
+                            </div>
                             <!-- ====== CUSTOMER ====== -->
 							 <div class="row">
 								<div class="col-md-12">
@@ -644,25 +656,24 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="job_type_id"> Job Type:</label>
-                                        <select class="form-control" name="job_type_id" id="job_type_id">
-                                            <option>Select Job Type</option>
-                                            <?php foreach (get_job_types() as $jobType) { ?>
-                                                <option
-                                                        value="<?php echo $jobType->id ?>"
-                                                    <?php echo (!empty($workorder->job_type_id)
-                                                        && $workorder->job_type_id == $jobType->id) ?
-                                                        'selected' : '' ?>>
-                                                    <?php echo $jobType->title ?>
-                                                </option>
-                                            <?php } ?>
-                                        </select>
+                                        <select name="job_type" id="job_type" class="form-control custom-select">
+                                    <?php foreach($job_types as $jt){ ?>
+                                        <option value="<?php echo $jt->title ?>"><?php echo $jt->title ?></option>
+
+                                    <?php } ?>
+                                        <!-- <option value="Service">Service</option>
+                                        <option value="Design">Design</option>
+                                        <option value="Maintenance">Maintenance</option>
+                                        <option value="Repair">Repair</option>
+                                        <option value="Replace">Replace</option> -->
+                                    </select>
                                     </div>
                                 </div>
 
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="status_id"> Status:</label>
-                                        <select class="form-control" name="status_id" id="status_id" required>
+                                        <!-- <select class="form-control" name="status_id" id="status_id" required>
                                             <option>Select Status</option>
                                             <?php if (!empty($workstatus)) { ?>
                                                 <?php foreach ($workstatus as $status) { ?>
@@ -675,14 +686,25 @@
                                                     </option>
                                                 <?php } ?>
                                             <?php } ?>
-                                        </select>
+                                        </select> -->
+                                        <select name="status" id="workorder_status" class="form-control custom-select">
+                                        <option value="New">New</option>
+                                        <option value="Draft">Draft</option>
+                                        <option value="Scheduled">Scheduled</option>
+                                        <option value="Started">Started</option>
+                                        <option value="Paused">Paused</option>
+                                        <option value="Completed">Completed</option>
+                                        <option value="Invoiced">Invoiced</option>
+                                        <option value="Withdrawn">Withdrawn</option>
+                                        <option value="Closed">Closed</option>
+                                    </select>
                                     </div>
                                 </div>
 
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="job_priority"> Priority:</label>
-                                        <select class="form-control" name="job_priority" id="job_priority">
+                                        <!-- <select class="form-control" name="job_priority" id="job_priority">
                                             <option>Not Set</option>
                                             <?php foreach (get_priority_list() as $priority) { ?>
                                                 <option
@@ -693,7 +715,13 @@
                                                     <?php echo $priority->title ?>
                                                 </option>
                                             <?php } ?>
-                                        </select>
+                                        </select> -->
+                                        <select name="priority" id="workorder_priority" class="form-control custom-select">
+                                        <option value="Emergency">Emergency</option>
+                                        <option value="Low">Low</option>
+                                        <option value="Standard">Standard</option>
+                                        <option value="Urgent">Urgent</option>                
+                                    </select>
                                     </div>
                                 </div>
 
@@ -1044,7 +1072,7 @@
                                                         <th>Total</th>
                                                     </tr>
                                                     </thead>
-                                                    <tbody id="table_body">
+                                                    <tbody id="jobs_items_table_body">
                                                     <?php if (count($workorder->additional_services) > 0) { ?>
                                                         <input type="hidden" name="count"
                                                                value="<?php echo count($workorder->additional_services) > 0 ? count($workorder->additional_services) - 1 : 0; ?>"
@@ -1148,7 +1176,8 @@
                                                     <?php } ?>
                                                     </tbody>
                                                 </table>
-                                                <a href="#" class="btn btn-primary" id="add_another">Add Items</a>
+                                                <!-- <a href="#" class="btn btn-primary" id="add_another">Add Items</a> -->
+                                                <a class="link-modal-open" href="#" id="add_another_items" data-toggle="modal" data-target="#item_list"><span class="fa fa-plus-square fa-margin-right"></span>Add Items</a>
                                             </div>
                                         </div><br/>
 
@@ -1165,14 +1194,14 @@
                                                         <th>DESCRIPTION</th>
                                                         <th>Type</th>
                                                         <th width="100px">Quantity</th>
-                                                        <th>LOCATION</th>
+                                                        <!-- <th>LOCATION</th> -->
                                                         <th width="100px">COST</th>
                                                         <th width="100px">Discount</th>
                                                         <th>Tax(%)</th>
                                                         <th>Total</th>
                                                     </tr>
                                                     </thead>
-                                                    <tbody id="table_body">
+                                                    <tbody id="jobs_items_table_body">
                                                     <tr>
                                                         <td><input type="text" class="form-control getItems"
                                                                    onKeyup="getItems(this)" name="item[]">
@@ -1186,8 +1215,7 @@
                                                         <td><input type="text" class="form-control quantity"
                                                                    name="quantity[]"
                                                                    data-counter="0" id="quantity_0" value="1"></td>
-                                                        <td><input type="text" class="form-control" name="location[]">
-                                                        </td>
+                                                        <!-- <td><input type="text" class="form-control" name="location[]"> </td> -->
                                                         <td><input type="number" class="form-control price"
                                                                    name="price[]"
                                                                    data-counter="0" id="price_0" min="0" value="0"></td>
@@ -1196,12 +1224,17 @@
                                                                    data-counter="0" id="discount_0" min="0" value="0"
                                                                    readonly>
                                                         </td>
-                                                        <td><span id="span_tax_0">0.00 (7.5%)</span></td>
+                                                        <!-- <td><span id="span_tax_0">0.00 (7.5%)</span></td> -->
+                                                        <td width="150px"><input type="text" class="form-control tax_change" name="tax[]"
+                                                       data-counter="0" id="tax1_0" min="0" value="0">
+                                                       <!-- <span id="span_tax_0">0.0</span> -->
+                                                       </td>
                                                         <td><span id="span_total_0">0.00</span></td>
                                                     </tr>
                                                     </tbody>
                                                 </table>
-                                                <a href="#" class="btn btn-primary" id="add_another">Add Items</a>
+                                                <!-- <a href="#" class="btn btn-primary" id="add_another">Add Items</a> -->
+                                                <a class="link-modal-open" href="#" id="add_another_items" data-toggle="modal" data-target="#item_list"><span class="fa fa-plus-square fa-margin-right"></span>Add Items</a>
                                             </div>
                                         </div><br/>
 
@@ -1219,12 +1252,13 @@
                                         <table class="table table-bordered">
                                             <tr>
                                                 <td>Equipment Cost</td>
-                                                <td class="d-flex align-items-center">$ <input type="text"
+                                                 <td class="d-flex align-items-center">$ <!--<input type="text"
                                                                                                value="<?php echo !empty($workorder->total) ? $workorder->total['eqpt_cost'] : 0.00; ?>"
                                                                                                name="eqpt_cost"
                                                                                                id="eqpt_cost"
                                                                                                onfocusout="cal_total_due()"
-                                                                                               class="form-control">
+                                                                                               class="form-control"> -->
+                                                                                               <input type="text" name="subtotal" id="item_total" name="eqpt_cost" class="form-control" value="<?php echo !empty($workorder->total) ? $workorder->total['eqpt_cost'] : 0.00; ?>">
                                                 </td>
                                             </tr>
                                             <tr>
@@ -1265,8 +1299,9 @@
                                             </tr>
                                             <tr>
                                                 <td>Total Due</td>
-                                                <td class="d-flex align-items-center">$ <span
-                                                            id="total_due"><?php echo !empty($workorder->total) ? number_format($workorder->total['eqpt_cost'] + $workorder->total['sales_tax'] + $workorder->total['inst_cost'] + $workorder->total['one_time'] + $workorder->total['m_monitoring'], 2) : '0.00'; ?></span>
+                                                 <td class="d-flex align-items-center">$ <!--<span
+                                                            id="grand_total"><?php echo !empty($workorder->total) ? number_format($workorder->total['eqpt_cost'] + $workorder->total['sales_tax'] + $workorder->total['inst_cost'] + $workorder->total['one_time'] + $workorder->total['m_monitoring'], 2) : '0.00'; ?></span> -->
+                                                            <input type="hidden" name="adjustment_value" id="adjustment_input" value="0" class="form-control adjustment_input" style="width:100px; display:inline-block"><input type="hidden" name="markup_input_form" id="markup_input_form" class="markup_input" value="0"> <input type="text" name="grand_total" id="grand_total_input" value='0' class="form-control">
                                                 </td>
                                             </tr>
                                         </table>
@@ -1759,6 +1794,81 @@
         <!-- page wrapper end -->
     </div>
 
+    <!-- Modal -->
+    <div class="modal fade" id="update_header_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle">Update Header</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                            <textarea class="form-control ckeditor" name="update_header_content" id="editor3" cols="40" rows="40">
+                            <?php echo $headers->content; ?>
+                            </textarea>
+                            <input type="hidden" id="company_id_header" value="<?php echo getLoggedCompanyID(); ?>">
+                            <input type="hidden" id="update_h_id" value="<?php echo $headers->id; ?>">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary save_update_header">Save changes</button>
+                    </div>
+                    </div>
+                </div>
+            </div>
+
+     <!-- Modal -->
+     <div class="modal fade" id="item_list" tabindex="-1" role="dialog" aria-labelledby="newcustomerLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg" role="document" style="width:800px;position: absolute;top: 50%;left: 50%;transform: translate(-50%, -50%);">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="newcustomerLabel">Item Lists</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <table id="items_table_estimate" class="table table-hover" style="width: 100%;">
+                                        <thead>
+                                        <tr>
+                                            <td> Name</td>
+                                            <td> Rebatable</td>
+                                            <td> Qty</td>
+                                            <td> Price</td>
+                                            <td> Action</td>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <?php foreach($items as $item){ // print_r($item); ?>
+                                            <tr>
+                                                <td><?php echo $item->title; ?></td>
+                                                <td><?php echo $item->rebate; ?></td>
+                                                <td></td>
+                                                <td><?php echo $item->price; ?></td>
+                                                <td><button id="<?= $item->id; ?>" data-quantity="<?= $item->units; ?>" data-itemname="<?= $item->title; ?>" data-price="<?= $item->price; ?>" type="button" data-dismiss="modal" class="btn btn-sm btn-default select_item">
+                                                <span class="fa fa-plus"></span>
+                                            </button></td>
+                                            </tr>
+                                            
+                                        <?php } ?>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer modal-footer-detail">
+                            <div class="button-modal-list">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal"><span class="fa fa-remove"></span> Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
     <?php include viewPath('includes/footer'); ?>
 
     <script>
@@ -1782,3 +1892,155 @@
             });
         });
     </script>
+
+<script>
+// var value = $("#headerContent").text();
+// if(value.indexOf("agreement") != -1)
+// //   alert("true");
+// return $(this).text().replace("agreement", "yeahhhhh"); 
+// else
+//   alert("false");
+// $(".headerContent").text(function () {
+//     return $(this).text().replace("agreement", "yeahhhhh"); 
+// });​​​​​
+
+jQuery(function($){
+
+// Replace 'td' with your html tag
+$("#headerContent").html(function() { 
+
+// Replace 'ok' with string you want to change, you can delete 'hello everyone' to remove the text
+ var currentDate = $('#current_date').val();
+      return $(this).html().replace("{curr_date}", currentDate);  
+
+});
+});
+
+jQuery(function($){
+
+// Replace 'td' with your html tag
+$("#headerContent").html(function() { 
+
+    var companyName = $('#company_name').val();
+// Replace 'ok' with string you want to change, you can delete 'hello everyone' to remove the text
+      return $(this).html().replace("{comp_name}", companyName);  
+
+});
+});
+
+jQuery(function($){
+
+// Replace 'td' with your html tag
+$("#thisdiv3").html(function() { 
+
+    // var companyName = $('#company_name').val();
+    // var now = new Date();
+    // now.setDate(now.getDate()+3);
+    // var n=3; //number of days to add. 
+    // var t = new Date();
+    // t.setDate(t.getDate() + n); 
+    // var month = "0"+(t.getMonth()+1);
+    // var date = "0"+t.getDate();
+    // month = month.slice(-2);
+    // date = date.slice(-2);
+    // var date = " "+ month +"-"+date +"-"+t.getFullYear();
+
+
+    // var startDate = "16-APR-2021";
+    var startDate = new Date();
+    // var daaa = new Date();
+    
+    // var date = d.getDate();
+    // var month = d.getMonth() + 1; // Since getMonth() returns month from 0-11 not 1-12
+    // var year = d.getFullYear();
+        
+    // var startDate = date + "-" + month + "-" + year;
+
+    // startDate = new Date(startDate.replace(/-/g, "/"));
+    var endDate = "", noOfDaysToAdd = 3, count = 0;
+    while(count < noOfDaysToAdd){
+        endDate = new Date(startDate.setDate(startDate.getDate() + 1));
+        if(endDate.getDay() != 0 && endDate.getDay() != 6){
+        count++;
+        }
+    }
+    //alert(endDate);
+    var month = "0"+(endDate.getMonth()+1);
+    var date = "0"+endDate.getDate();
+    month = month.slice(-2);
+    date = date.slice(-2);
+    var date = " "+ month +"-"+date +"-"+endDate.getFullYear();
+
+// alert(now);  
+      return $(this).html().replace("{current_date_3}", date);  
+
+});
+});
+</script>
+
+<script>
+// var value = $("#headerContent").text();
+// if(value.indexOf("agreement") != -1)
+// //   alert("true");
+// return $(this).text().replace("agreement", "yeahhhhh"); 
+// else
+//   alert("false");
+// $(".headerContent").text(function () {
+//     return $(this).text().replace("agreement", "yeahhhhh"); 
+// });​​​​​
+
+jQuery(function($){
+
+// Replace 'td' with your html tag
+$("#content_input").val(function() { 
+
+// Replace 'ok' with string you want to change, you can delete 'hello everyone' to remove the text
+ var currentDate = $('#current_date').val();
+      return $(this).val().replace("day", currentDate);  
+
+});
+});
+
+jQuery(function($){
+
+// Replace 'td' with your html tag
+$("#content_input").val(function() { 
+
+    var companyName = $('#company_name').val();
+// Replace 'ok' with string you want to change, you can delete 'hello everyone' to remove the text
+      return $(this).val().replace("ADI", companyName);  
+
+});
+});
+</script>
+<script>
+$(document).on('click','#headerContent',function(){
+    //    alert('yeah');
+    $('#update_header_modal').modal('show');
+});
+
+$(document).on('click','.save_update_header',function(){
+    //    alert('yeah');
+    var id = $('#update_h_id').val();
+    // var content = $('.editor1_tc').val();
+    var content = CKEDITOR.instances['editor3'].getData();
+    // alert(content);
+      $.ajax({
+            url:"<?php echo base_url(); ?>workorder/save_update_header",
+            type: "POST",
+            data: {id : id, content : content },
+            success: function(dataResult){
+                // $('#table').html(dataResult); 
+                // alert('success')
+                console.log(dataResult);
+                $("#update_header_modal").modal('hide')
+                $('#header_area').load(window.location.href +  ' #header_area');
+            },
+                error: function(response){
+                alert('Error'+response);
+       
+                }
+	    });
+});
+
+</script>

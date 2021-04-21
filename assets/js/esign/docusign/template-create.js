@@ -13,8 +13,7 @@ function TemplateCreate() {
   const $formList = $("#setup-recipient-list");
   const $addRecipientButton = $("#add-recipient-button");
 
-  async function createFilePreview(event) {
-    const [file] = event.target.files;
+  async function createFilePreview(event, file) {
     const fileId = Date.now();
     const fileExtension = file.name.split(".").pop().toLowerCase();
 
@@ -98,19 +97,22 @@ function TemplateCreate() {
     $progress.removeClass("esignBuilder__uploadProgress--completed");
     $progressCheck.addClass("esignBuilder__uploadProgressCheck--completed");
 
-    const $subject = $form.find("#subject");
-    $subject.val(`${$subject.prop("placeholder")} ${file.name}`);
-
     files.push({ file, documentUrl, id: fileId });
     $docPreview.on("click", showDocument);
 
     const $target = $(event.target);
     $target.val("");
     $target.removeAttr("required");
+
+    const $subject = $form.find("#subject");
+    const filenames = files.map(({ file }) => file.name);
+    $subject.val(`${$subject.prop("placeholder")} ${filenames.join(", ")}`);
   }
 
   async function onChangeFile(event) {
-    createFilePreview(event);
+    const { files } = event.target;
+    const promises = [...files].map((file) => createFilePreview(event, file));
+    await Promise.all(promises);
   }
 
   function prepareForm() {

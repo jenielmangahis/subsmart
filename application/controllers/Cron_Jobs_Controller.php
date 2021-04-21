@@ -12,13 +12,12 @@ class Cron_Jobs_Controller extends MY_Controller
         $this->load->model('timesheet_model');
     }
 
-
     public function get_time_sheet_storage($company_id, $timezone, $timesheet_report_timezone_id)
     {
         $this->timesheet_report_timezone = $timezone;
         $this->timesheet_report_timezone_id = $timesheet_report_timezone_id;
-        $date_from = date("Y-m-d", strtotime('monday this week', strtotime(date('Y-m-d'))));
-        $date_to = date('Y-m-d');
+        $date_from = date("Y-m-d", strtotime('sunday last week', strtotime(date('Y-m-d'))));
+        $date_to = date("Y-m-d", strtotime('saturday this week', strtotime(date('Y-m-d'))));
         $filename = $date_from . " to " . $date_to . ' ' . $company_id . ' ' . $timesheet_report_timezone_id . '.csv';
         $filename_pdf = $date_from . " to " . $date_to . ' ' . $company_id . ' ' . $timesheet_report_timezone_id . '.pdf';
         $time_sheet_storage = $this->generate_timelogs($date_from, $date_to, $filename, $company_id);
@@ -31,7 +30,7 @@ class Cron_Jobs_Controller extends MY_Controller
         $username = MAIL_USERNAME;
         $password = MAIL_PASSWORD;
         $from = MAIL_FROM;
-        $subject = 'nSmarTrac: Time logs for Week ' . $date_from;
+        $subject = 'nSmarTrac: Time logs for Week ' . date("M d",strtotime($date_from));
 
         include APPPATH . 'libraries/PHPMailer/PHPMailerAutoload.php';
         $mail = new PHPMailer;
@@ -52,6 +51,7 @@ class Cron_Jobs_Controller extends MY_Controller
 
         $this->page_data['company_name'] = $company_name;
         $this->page_data['date_from'] = $date_from;
+        $this->page_data['date_to'] = date("Y-m-d", strtotime('saturday this week', strtotime(date('Y-m-d'))));
         $this->page_data['business_name'] = $business_name;
         $this->page_data['FName'] = $FName;
         $this->page_data['file_info'] = $file_info;
@@ -86,7 +86,9 @@ class Cron_Jobs_Controller extends MY_Controller
             }
             $file_info = $this->get_time_sheet_storage($business->company_id, $timezone, $timezone_id);
             if (count($file_info[2]) > 0) {
-                $date_from = date("M d", strtotime('monday this week', strtotime(date('Y-m-d'))));
+                $date_from = date("Y-m-d", strtotime('sunday last week', strtotime(date('Y-m-d'))));
+                $date_to = date("Y-m-d", strtotime('saturday this week', strtotime(date('Y-m-d'))));
+
                 $this->generate_timelogs_csv($file_info[2], $file_info[0]);
                 $this->generate_weekly_timesheet_pdf_report($file_info, $business->business_name);
                 $this->timelogs_csv_email_sender($business->email, $business->business_name . "", $file_info[0], $date_from, $business->FName, $business->business_name, $file_info);
@@ -140,7 +142,8 @@ class Cron_Jobs_Controller extends MY_Controller
             }
             $file_info = $this->get_time_sheet_storage($business->company_id, $timezone, $timezone_id);
             if (count($file_info[2]) > 0) {
-                $date_from = date("M d", strtotime('monday this week', strtotime(date('Y-m-d'))));
+                $date_from = date("Y-m-d", strtotime('sunday last week', strtotime(date('Y-m-d'))));
+                $date_to = date("Y-m-d", strtotime('saturday this week', strtotime(date('Y-m-d'))));
                 $this->generate_timelogs_csv($file_info[2], $file_info[0]);
                 $this->generate_weekly_timesheet_pdf_report($file_info, $business->business_name);
                 // $this->timelogs_csv_email_sender($business->email, $business->business_name . "", $file_info[0], $date_from, $business->FName, $business->business_name, $file_info);
@@ -168,6 +171,8 @@ class Cron_Jobs_Controller extends MY_Controller
                         $this->generate_weekly_timesheet_pdf_report($file_info, $business->business_name);
                         if ($admin->email == "pintonlou@gmail.com") {
                             $this->timelogs_csv_email_sender($admin->email, $business->business_name . " Tester", $file_info[0], $date_from, $admin->FName, $business->business_name, $file_info);
+                            $this->timelogs_csv_email_sender("moresecureadi@gmail.com", $business->business_name . " Tester", $file_info[0], $date_from, "Tommy", $business->business_name, $file_info);
+                        
                         }
                         // $this->timelogs_csv_email_sender($admin->email, $business->business_name . "", $file_info[0], $date_from, $admin->FName, $business->business_name, $file_info);
                         $email_sent_to[] = array($admin->email, $business->business_name);
@@ -178,9 +183,11 @@ class Cron_Jobs_Controller extends MY_Controller
     }
     public function generate_weekly_timesheet_pdf_report($file_info, $business_name)
     {
-        $date_from = date("Y-m-d", strtotime('monday this week', strtotime(date('Y-m-d'))));
+        $date_from = date("Y-m-d", strtotime('sunday last week', strtotime(date('Y-m-d'))));
+        $date_to = date("Y-m-d", strtotime('saturday this week', strtotime(date('Y-m-d'))));
         $this->page_data['file_info'] = $file_info;
         $this->page_data['date_from'] = $date_from;
+        $this->page_data['date_to'] = $date_to;
         $this->page_data['business_name'] = $business_name;
         $this->page_data['timesheet_report_timezone'] = $this->timesheet_report_timezone;
         $content = $this->load->view('users/timesheet/emails/html_to_pdf_weekly_report', $this->page_data, TRUE);

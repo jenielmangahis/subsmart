@@ -57,7 +57,7 @@ class Accounting_contractors_model extends MY_Model {
 	public function update_contractor_details($contractorId, $data)
 	{
 		$this->db->where('contractor_id', $contractorId);
-		$update = $this->db->update('accounting_contractor_details');
+		$update = $this->db->update('accounting_contractor_details', $data);
 
 		return $update;
 	}
@@ -66,5 +66,13 @@ class Accounting_contractors_model extends MY_Model {
 	{
 		$this->db->insert('accounting_contractor_details', $data);
 		return $this->db->insert_id();
+	}
+
+	public function update_contractor_status($contractorId, $status)
+	{
+		$this->db->where('id', $contractorId);
+		$update = $this->db->update($this->table, ['status' => $status, 'updated_at' => date("Y-m-d H:i:s")]);
+
+		return $update;
 	}
 }

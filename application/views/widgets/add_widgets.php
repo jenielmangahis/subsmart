@@ -1,4 +1,4 @@
-<div class="col-lg-3 col-md-6 col-sm-12" id="addWidget">
+<div class="col-lg-3 col-md-6 col-sm-12 widget_header" id="addWidget">
     <div  class="wid_header">
         <i class="fa fa-bar-chart"></i> Add More Report
     </div>

@@ -214,6 +214,14 @@ defined('BASEPATH') or exit('No direct script access allowed');
             background-color: #0069d9;
             border-color: #0062cc;
         }
+        .btn-success {
+            color: #fff !important;
+            background-color: #28a745;
+            border-color: #28a745;
+        }
+        .table{
+            width: 100%;
+        }
     </style>
 
 </head>
@@ -223,14 +231,153 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
         <section class="jumbotron text-center">
             <div class="container">
-                <img width="400" src="cid:logo_2u" alt="">
+                <!-- <img width="400" src="cid:logo_2u" alt=""> -->
                 <h1><?= $company_name ?></h1>
                 <h2>Timesheet Report</h2>
-                <p class="lead text-muted" style="text-align: left;"><label style="padding-bottom: 10px;">Hi <?= $FName ?>,</label><br>Below you'll find the timesheet report you requested for your team at <?= $business_name ?> for the pay period <?= $date_from ?> - <?= date("d") ?>.</p>
+                <p class="lead text-muted" style="text-align: left;"><label style="padding-bottom: 10px;">Hi <?= $FName ?>,</label><br>Below you'll find the timesheet report you requested for your team at <?= $business_name ?> for the pay period <?= date("M d",strtotime($date_from)) ?> - <?= date("d",strtotime($date_to)) ?>.</p>
                 <p>
                     <a href="<?= base_url('/timesheet/timelogs/') . $file_info[0] ?>" class="btn btn-primary my-2">Download .CSV</a>
                     <a href="<?= base_url('/timesheet/timelogs/') . $file_info[3] ?>" class="btn btn-primary my-2">Download .PDF</a>
                 </p>
+            <table class="table" >
+                <tbody>
+                    <thead>
+                        <tr style="font-weight: bold; border:solid 2px #E6E6E6;">
+                            <th style="text-align:left;">Employee</th>
+                            <th>Total Paid</th>
+                            <th>Regular</th>
+                            <th>Unpaid Breaks</th>
+                            <th>OT</th>
+                            <th>Est. Wages</th>
+                        </tr>
+                    </thead>
+                    <?php
+                    $timehseet_storage = $file_info[2];
+                    $id_running;
+                    $started = false;
+                    $table = '';
+                    $time_card_ctr = 0;
+                    $act_dif_total = 0;
+                    $total_paid = 0;
+                    $total_regular = 0;
+                    $total_overtime = 0;
+                    $total_wage = 0;
+                    $total_est_wage = 0;
+                    $overall_act_dif_total = 0;
+                    $overall_total_paid = 0;
+                    $overall_total_regular = 0;
+                    $overall_total_overtime = 0;
+                    $overall_total_wage = 0;
+                    $overall_total_est_wage = 0;
+                    $overall_time_card_ctr = 0;
+                    for ($i = 0; $i < count($timehseet_storage); $i++) {
+
+                        if ($id_running != $timehseet_storage[$i][0]) {
+                            if (!$started) {
+                                $started = true;
+                            } else {
+                                $table .= '<tr style="border:solid 2px #E6E6E6;">
+                                                    <td style="text-align: left;">' . $timehseet_storage[$i - 1][1] . '</td>
+                                                    <td >' . $total_paid . ' hours</td>
+                                                    <td >' . $total_regular . ' hours</td>
+                                                    <td >0.00</td>
+                                                    <td >' . $total_overtime . '</td>
+                                                    <td >$' . $total_est_wage . '</td>
+                                                </tr>';
+                                if ($i < count($timehseet_storage) - 1) {
+                                    $table .= '';
+                                }
+                            }
+                            $time_card_ctr = 0;
+                            $act_dif_total = 0;
+                            $total_paid = 0;
+                            $total_regular = 0;
+                            $total_overtime = 0;
+                            $total_wage = 0;
+                            $total_est_wage = 0;
+                            $id_running = $timehseet_storage[$i][0];
+                        }
+                        $clockout = ($timehseet_storage[$i][7] == '' ? '' : date("M d h:i A", strtotime($timehseet_storage[$i][7])));
+                        if ($timehseet_storage[$i][7] == '') {
+                            $actual_vs_expected = '-';
+                            $expected = 8;
+                        } else {
+                            $actual_vs_expected = $timehseet_storage[$i][10] == '' ?  8 - round($timehseet_storage[$i][18], 2) . "" : "0.00";
+                        }
+                        $regular_hours = ($timehseet_storage[$i][12] == '' ? 8 : $timehseet_storage[$i][12]);
+                        $paid_hours = ($timehseet_storage[$i][17] == 'Approved' ? $timehseet_storage[$i][18] : round($regular_hours, 2));
+
+                        $est_wage = 0;
+                        if ($timehseet_storage[$i][21] == "hourly") {
+                            $est_wage = round($paid_hours * $timehseet_storage[$i][20], 2);
+                        } else {
+                            $est_wage = round(($timehseet_storage[$i][20] / $regular_hours) * $paid_hours, 2);
+                        }
+                        $total_forked_hours =
+                            $table .= '';
+                        $time_card_ctr++;
+                        $act_dif_total += $timehseet_storage[$i][7] == '' ? 0 : $actual_vs_expected;
+                        $total_regular += ($timehseet_storage[$i][12] == '' ? 8 : $timehseet_storage[$i][12]);
+                        $total_paid += $paid_hours;
+                        $total_overtime += ($timehseet_storage[$i][17] == 'Approved' ? $timehseet_storage[$i][16] : 0.00);
+                        $total_wage += $timehseet_storage[$i][20];
+                        $total_est_wage += $est_wage;
+                        $overall_act_dif_total += $timehseet_storage[$i][7] == '' ? 0 : $actual_vs_expected;
+                        $overall_total_regular += ($timehseet_storage[$i][12] == '' ? 8 : $timehseet_storage[$i][12]);
+                        $overall_total_paid += $paid_hours;
+                        $overall_total_overtime += ($timehseet_storage[$i][17] == 'Approved' ? $timehseet_storage[$i][16] : 0.00);
+                        $overall_total_wage += $timehseet_storage[$i][20];
+                        $overall_total_est_wage += $est_wage;
+                        $overall_time_card_ctr++;
+                        if ($i == count($timehseet_storage) - 1) {
+                            $table .= '<tr style="border:solid 2px #E6E6E6;">
+                                                    <td style="text-align: left;">' . $timehseet_storage[$i][1] . '</td>
+                                                    <td >' . $total_paid . ' hours</td>
+                                                    <td >' . $total_regular . ' hours</td>
+                                                    <td >0.00</td>
+                                                    <td >' . $total_overtime . '</td>
+                                                    <td >$' . $total_est_wage . '</td>
+                                                </tr>';
+                        }
+                    }
+                    echo $table;
+                    ?>
+                </tbody>
+            </table>
+            <div style="text-align:left; font-weight: bold; margin-top:20px;">Total Work Hours - <?= $overall_total_paid ?> hours</div>
+            <table class="table">
+                    <thead>
+                        <tr style="font-weight: bold;  border:none;">
+                            <th>Regular</th>
+                            <th>OT</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr style="font-weight: bold; border:none;">
+                            <th style="color:#6c757d"><?= $overall_total_regular ?> hours</th>
+                            <th style="color:#6c757d"><?= $overall_total_overtime ?></th>
+                        </tr>
+                    </tbody>
+                </table>
+                <table class="table">
+                    <thead>
+                        <tr style="font-weight: bold; border:none;">
+                            <th>Unpaid Breaks</th>
+                            <th>Est. Wages</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr style="font-weight: bold; border:none;">
+                            <th style="color:#6c757d">0.00</th>
+                            <th style="color:#6c757d">$<?= $overall_total_est_wage ?></th>
+                        </tr>
+                    </tbody>
+                </table>
+                <p style="margin-top:20px;">
+                    <a href="<?= base_url('/dashboard')?>" class="btn btn-success my-2">VISIT MY ACCOUNT</a>
+                </p>
+                <p class="lead text-muted" style="text-align: left; margin-top:20px;"><label style="padding-bottom: 10px;">Thanks,<br><img width="200" src="cid:logo_2u" alt=""></p>
+                    
             </div>
         </section>
     </main>

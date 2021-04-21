@@ -75,7 +75,7 @@ class DocuSign extends MY_Controller
         $this->db->where('completed_at is NULL', null, false);
         $recipients = $this->db->get('user_docfile_recipients')->result();
 
-        $mail = getMailInstance();
+        $mail = getMailInstance(['subject' => $document->subject]);
         $templatePath = VIEWPATH . 'esign/docusign/email/invitation.html';
         $template = file_get_contents($templatePath);
 
@@ -593,7 +593,7 @@ SQL;
     public function apiTemplateFile($templateId)
     {
         $this->db->where('template_id', $templateId);
-        $records = $this->db->get('user_docfile_templates_documents')->row();
+        $records = $this->db->get('user_docfile_templates_documents')->result_array();
 
         header('content-type: application/json');
         echo json_encode(['data' => $records]);
@@ -631,6 +631,7 @@ SQL;
         $coordinates = json_encode($payload['coordinates']);
         $specs = $payload['specs'] ? json_encode($payload['specs']) : null;
         $docPage = $payload['doc_page'];
+        $docId = $payload['doc_id'];
         $field = $payload['field'];
         $recipientId = $payload['recipient_id'];
         $userId = logged('id');
@@ -648,6 +649,7 @@ SQL;
             $this->db->insert('user_docfile_templates_fields', [
                 'coordinates' => $coordinates,
                 'doc_page' => $docPage,
+                'doc_id' => $docId,
                 'template_id' => $templateId,
                 'field_name' => $field,
                 'unique_key' => $uniqueKey,
@@ -660,6 +662,7 @@ SQL;
             $this->db->update('user_docfile_templates_fields', [
                 'coordinates' => $coordinates,
                 'doc_page' => $docPage,
+                'doc_id' => $docId,
                 'template_id' => $templateId,
                 'field_name' => $field,
                 'unique_key' => $uniqueKey,
@@ -720,6 +723,7 @@ SQL;
             'name' => $template->name,
             'type' => count($recipients) > 1 ? 'Multiple' : 'Single',
             'status' => 'Draft',
+            'subject' => $template->subject,
             'message' => $template->message,
             'company_id' => logged('company_id'),
         ]);
@@ -728,15 +732,18 @@ SQL;
         // copy template document to user_docfile_documents
 
         $this->db->where('template_id', $template->id);
-        $templateDocument = $this->db->get('user_docfile_templates_documents')->row();
+        $templateFiles = $this->db->get('user_docfile_templates_documents')->result();
 
-        $documentPath = $filepath . $templateDocument->name;
-        copy(FCPATH . $templateDocument->path, $documentPath);
-        $this->db->insert('user_docfile_documents', [
-            'name' => $templateDocument->name,
-            'path' => str_replace(FCPATH, '/', $documentPath),
-            'docfile_id' => $docfileId,
-        ]);
+        foreach ($templateFiles as $file) {
+            $documentPath = $filepath . $file->name;
+            copy(FCPATH . $file->path, $documentPath);
+            $this->db->insert('user_docfile_documents', [
+                'name' => $file->name,
+                'path' => str_replace(FCPATH, '/', $documentPath),
+                'docfile_id' => $docfileId,
+                'template_id' => $file->id,
+            ]);
+        }
 
         // copy template recipients to user_docfile_recipients and
         // template recipient fields to user_docfile_fields
@@ -771,11 +778,16 @@ SQL;
             $recipientFields = $this->db->get('user_docfile_templates_fields')->result_array();
 
             foreach ($recipientFields as $field) {
+                $this->db->where('docfile_id', $docfileId);
+                $this->db->where('template_id', $field['doc_id']);
+                $file = $this->db->get('user_docfile_documents')->row(); // the file where the field belongs
+
                 $this->db->insert('user_docfile_fields', [
                     'coordinates' => $field['coordinates'],
                     'docfile_id' => $docfileId,
                     'field_name' => $field['field_name'],
                     'doc_page' => $field['doc_page'],
+                    'doc_id' => $file->id,
                     'unique_key ' => uniqid(),
                     'user_id' => logged('id'),
                     'user_docfile_recipients_id' => $recipientId,

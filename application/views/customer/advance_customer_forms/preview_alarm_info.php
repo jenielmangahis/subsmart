@@ -381,9 +381,9 @@
                 <label for="">Shareable Url Link</label>
             </div>
             <div class="col-md-6">
-                <?= !empty($office_info->url) ? $office_info->url : '---';?>
+                <?= !empty($office_info->url) ? $office_info->url : base_url('customer/preview/').$this->uri->segment(3); ?>
                 <br>
-                <a href="<?= base_url('customer/preview/').$this->uri->segment(3) ?>"  id="exportCustomers"><span class="fa fa-share"></span> Share</a>
+                <!--<a href="<?= base_url('customer/preview/').$this->uri->segment(3) ?>"  id="exportCustomers"><span class="fa fa-share"></span> Share</a>-->
             </div>
         </div>
     </div>

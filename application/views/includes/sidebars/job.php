@@ -30,7 +30,7 @@
         </span>
         <li class="nav-header" style="padding-top: 0px;margin-top: 0px;"><img src="<?= getCompanyBusinessProfileImage(); ?>" class="company-logo"/></li>
         <li class="nav-header" style="padding-top: 0px;margin-top: 0px;">JOBS</li>
-        <li class="submenus <?= $this->uri->segment(2) == 'new_job1' || $this->uri->segment(2) == '' || $this->uri->segment(2) == 'job_preview' ? "active" : "";  ?>">
+        <li class="submenus <?= $this->uri->segment(2) == 'new_job1' || $this->uri->segment(2) == '' || $this->uri->segment(2) == 'job_preview' || $this->uri->segment(2) == 'billing' ? "active" : "";  ?>">
             <a href="<?= base_url('job') ?>" title="Jobs"><span class="fa fa-briefcase"></span>Jobs</a>
         </li>
         <li class="submenus <?= ($this->uri->uri_string() == 'job/job_types') ? "active" : "";  ?>">

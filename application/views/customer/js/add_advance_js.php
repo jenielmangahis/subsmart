@@ -312,7 +312,11 @@
                     if(isNaN(data)){
                         error(data);
                     }else{
+                        <?php if(isset($profile_info)): ?>
+                        sucess("Customer Information has been Updated Successfully!",data);
+                        <?php else: ?>
                         sucess("New Customer has been Added Successfully!",data);
+                        <?php endif; ?>
                     }
                     console.log(data);
                 }
@@ -351,7 +355,7 @@
                 confirmButtonText: 'Ok'
             }).then((result) => {
                 if (result.value) {
-                    window.location.href="<?= base_url(); ?>/customer/preview/"+$id;
+                    window.location.href="<?= base_url(); ?>customer/preview/"+$id;
                 }
             });
         }

@@ -274,10 +274,8 @@ add_css(array(
                                                         <textarea type="text" style="background-color: #fdeac3;" class="form-controls" rows="5" cols="50" name="country" id="country" ></textarea>
                                                     </div>
                                                 </div>
-
-                                                <button type="submit" class="btn btn-primary"></span> Pre Auth Now</button>
+                                                <button type="submit" class="btn btn-primary">Pre Auth Now</button>
                                                 <button type="submit" class="btn btn-primary">Capture Now</button>
-
                                             </div>
                                         </div>
                                     </div>

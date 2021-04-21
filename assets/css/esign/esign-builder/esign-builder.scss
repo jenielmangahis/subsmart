@@ -244,6 +244,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    overflow-x: hidden;
   }
 
   &__footer {
@@ -400,8 +401,8 @@
   margin-left: 220px;
   margin-bottom: 100px;
   width: 100%;
-  height: 100vh;
-  overflow: scroll;
+  min-height: 100vh;
+  overflow: auto;
 }
 
 #main-pdf-render {

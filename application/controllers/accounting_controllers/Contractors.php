@@ -223,4 +223,21 @@ class Contractors extends MY_Controller {
 
         redirect("accounting/contractors/view/$contractorId");
     }
+
+    public function set_status($contractorId, $status)
+    {
+        if($status === 'inactive') {
+            $updateStatus = $this->accounting_contractors_model->update_contractor_status($contractorId, 0);
+        } else {
+            $updateStatus = $this->accounting_contractors_model->update_contractor_status($contractorId, 1);
+        }
+
+        if($updateStatus) {
+            $this->session->set_flashdata('success', "Contractor successfully set as $status.");
+        } else {
+            $this->session->set_flashdata('success', 'Unexpected error, please try again!');
+        }
+
+        redirect("accounting/contractors/view/$contractorId");
+    }
 }
