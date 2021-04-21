@@ -1038,7 +1038,7 @@ class Workcalender extends MY_Controller
 
                             if( $event->start->dateTime != '' ){
                                 $date = new DateTime($event->start->dateTime);
-                                //$date->setTimezone($tz);
+                                $date->setTimezone($tz);
 
                                 $start_date = $event->start->dateTime;
                                 $custom_html_start_date = $date->format('g:i a');
@@ -1046,7 +1046,7 @@ class Workcalender extends MY_Controller
                                 $is_with_time = true;
                             }else{
                                 $date = new DateTime($event->start->date);
-                                //$date->setTimezone($tz);
+                                $date->setTimezone($tz);
 
                                 $start_date = $date->format('Y-m-d') . " 12:00 am";
                                 $starttime  = $start_date . ' ' . date("g:i A");
@@ -1055,6 +1055,7 @@ class Workcalender extends MY_Controller
 
                             if( $event->end->dateTime != '' ){
                                 $date = new DateTime($event->end->dateTime);
+                                $date->setTimezone($tz);
                                 $end_date = $event->end->dateTime;
 
                                 $custom_html_end_date = $date->format('g:i a');
@@ -1062,7 +1063,7 @@ class Workcalender extends MY_Controller
                                 $is_with_time = true;
                             }else{
                                 $date = new DateTime($event->end->date);
-                                //$date->setTimezone($tz);
+                                $date->setTimezone($tz);
 
                                 $end_date = $date->format('Y-m-d') . " 12:00 am";
                                 $custom_html_end_date = $date->format('Y-m-d');
