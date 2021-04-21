@@ -1733,8 +1733,8 @@ class Job extends MY_Controller
             $username  = MAIL_USERNAME;
             $password  = MAIL_PASSWORD;
             $from      = MAIL_FROM;
-            //$recipient = $customer->email;
-            $recipient = 'bryann.revina03@gmail.com';
+            $recipient = $customer->email;
+            //$recipient = 'bryann.revina03@gmail.com';
             $attachment = $this->create_job_invoice_pdf($job->job_unique_id);
 
             $mail = new PHPMailer;
