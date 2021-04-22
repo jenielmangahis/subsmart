@@ -107,11 +107,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 <div class="col-sm-12 my-5 d-flex align-items-center">
                                     <div class="contractor-icon-container">
                                         <div class="contractor-icon">
-                                            <span><?=strtoupper(substr($contractor->name, 0, 1))?></span>
+                                            <span><?=strtoupper(substr($contractor->display_name, 0, 1))?></span>
                                         </div>
                                     </div>
                                     <div class="contractor-details-container">
-                                        <h4><?=$contractor->name?> <?=$contractor->status === "0" ? '(deleted)' : ''?></h5>
+                                        <h4><?=$contractor->display_name?> <?=$contractor->status === "0" ? '(deleted)' : ''?></h5>
                                         <div class="btn-group">
                                             <button class="btn" type="button" id="statusDropdownButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                 <?=$contractor->status === "1" ? 'Active' : 'Inactive' ?>&nbsp;&nbsp;<i class="fa fa-chevron-down"></i>
@@ -154,7 +154,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             <div class="col-xl-12">
                                                 <div class="d-flex align-items-center justify-content-between">
                                                     <h5 class="m-0">Personal details</h5>
-                                                    <?php if($contractor_details === null) : ?>
+                                                    <?php if($contractor->contractor_type_id === null || $contractor->contractor_type_id === "") : ?>
                                                     <a href="#" class="text-info">Add</a>
                                                     <?php else : ?>
                                                     <h5 class="edit-icon"><i class="fa fa-pencil"></i></h5>
@@ -162,30 +162,34 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                 </div>
                                             </div>
                                         </div>
-                                        <?php if($contractor_details) : ?>
+                                        <?php if($contractor->contractor_type_id !== null && $contractor->contractor_type_id !== "") : ?>
                                         <div class="row mt-3">
                                             <div class="col-md-2">
                                                 <p class="m-0">Contractor type</p>
-                                                <h5 class="mt-0"><?=$contractor_details->contractor_type_id === "1" ? "Individual" : "Business"?></h5>
+                                                <h5 class="mt-0"><?=$contractor->contractor_type_id === "1" ? "Individual" : "Business"?></h5>
                                             </div>
                                             <div class="col-md-3">
-                                                <p class="m-0">Name</p>
+                                                <p class="m-0"><?=$contractor->contractor_type_id === "1" ? "Name" : "Business name" ?></p>
                                                 <?php
-                                                    $name = $contractor_details->title !== "" ? $contractor_details->title : "";
-                                                    $name .= ' '.$contractor_details->first_name;
-                                                    $name .= $contractor_details->middle_name !== "" ? " $contractor_details->middle_name" : "";
-                                                    $name .= ' '.$contractor_details->last_name;
-                                                    $name .= $contractor_details->suffix !== "" ? " $contractor_details->suffix" : "";
+                                                    if($contractor->contractor_type_id === "1") {
+                                                        $name = $contractor->title !== "" ? $contractor->title : "";
+                                                        $name .= ' '.$contractor->f_name;
+                                                        $name .= $contractor->m_name !== "" ? " $contractor->m_name" : "";
+                                                        $name .= ' '.$contractor->l_name;
+                                                        $name .= $contractor->suffix !== "" ? " $contractor->suffix" : "";
+                                                    } else {
+                                                        $name = $contractor->company;
+                                                    }
                                                 ?>
                                                 <h5 class="mt-0"><?=$name?></h5>
                                             </div>
                                             <div class="col-md-3">
                                                 <p class="m-0">Display name</p>
-                                                <h5 class="mt-0"><?=$contractor->name?></h5>
+                                                <h5 class="mt-0"><?=$contractor->display_name?></h5>
                                             </div>
                                             <div class="col-md-2">
-                                                <p class="m-0"><?=$contractor_details->contractor_type_id === "1" ? "Social Security number" : "Employer Identification number" ?></p>
-                                                <h5 class="mt-0"><?=$contractor_details->contractor_type_id === "1" ? $contractor_details->social_security_number : $contractor_details->employer_id_number?></h5>
+                                                <p class="m-0"><?=$contractor->contractor_type_id === "1" ? "Social Security number" : "Employer Identification number" ?></p>
+                                                <h5 class="mt-0"><?=$contractor->contractor_type_id === "1" ? $contractor->tax_id : $contractor->tax_id?></h5>
                                             </div>
                                             <div class="col-md-2">
                                                 <p class="m-0">Email</p>
@@ -193,7 +197,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             </div>
                                             <div class="col-md-2">
                                                 <p class="m-0">Address</p>
-                                                <h5 class="m-0"><?="$contractor_details->address <br>$contractor_details->city, $contractor_details->state $contractor_details->zip_code"?></h5>
+                                                <h5 class="m-0"><?="$contractor->street <br>$contractor->city, $contractor->state $contractor->zip"?></h5>
                                             </div>
                                         </div>
                                         <?php endif; ?>
@@ -201,6 +205,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 </div>
                             </div>
                             <div class="tab-pane fade" id="payments" role="tabpanel" aria-labelledby="payments-tab">
+                                <input type="hidden" name="contractor_id" id="contractor-id" value="<?=$contractor->id?>">
                                 <div class="card">
                                     <div class="card-body p-0">
                                         <div class="row">
@@ -288,7 +293,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                             <label for="">Contractor type *</label>
                                                             <?php foreach($contractorTypes as $type) : ?>
                                                             <div class="form-check">
-                                                                <input type="radio" name="contractor_type" id="contractor-<?=strtolower($type->name)?>" class="form-check-input" value="<?=$type->id?>" <?=$contractor_details !== null && $contractor_details->contractor_type_id === $type->id ? 'checked' : ''?>>
+                                                                <input type="radio" name="contractor_type" id="contractor-<?=strtolower($type->name)?>" class="form-check-input" value="<?=$type->id?>" <?=$contractor->contractor_type_id === $type->id ? 'checked' : ''?>>
                                                                 <label for="contractor-<?=strtolower($type->name)?>" class="form-check-label"><?="$type->name - $type->description"?></label>
                                                             </div>
                                                             <?php endforeach; ?>
@@ -296,140 +301,140 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                     </div>
                                                 </div>
                                                 <div class="row">
-                                                    <div class="col-xl-3 individual-type-field <?=$contractor_details === null || $contractor_details->contractor_type_id === "2" && $contractor_details !== null ? "hide" : ""?>">
+                                                    <div class="col-xl-3 individual-type-field <?=$contractor->contractor_type_id === "1" ? "" : "hide"?>">
                                                         <div class="form-group">
                                                             <label for="title">Title</label>
-                                                            <input type="text" name="title" id="title" class="form-control" value="<?=$contractor_details !== null ? $contractor_details->title : ""?>">
+                                                            <input type="text" name="title" id="title" class="form-control" value="<?=$contractor->title?>">
                                                         </div>
                                                     </div>
-                                                    <div class="col-xl-6 individual-type-field <?=$contractor_details === null || $contractor_details->contractor_type_id === "2" && $contractor_details !== null ? "hide" : ""?>">
+                                                    <div class="col-xl-6 individual-type-field <?=$contractor->contractor_type_id === "1" ? "" : "hide"?>">
                                                         <div class="form-group">
                                                             <label for="first_name">First *</label>
-                                                            <input type="text" name="first_name" id="first_name" class="form-control" value="<?=$contractor_details !== null ? $contractor_details->first_name : ""?>">
+                                                            <input type="text" name="first_name" id="first_name" class="form-control" value="<?=$contractor->f_name?>">
                                                         </div>
                                                     </div>
-                                                    <div class="col-xl-3 individual-type-field <?=$contractor_details === null || $contractor_details->contractor_type_id === "2" && $contractor_details !== null ? "hide" : ""?>">
+                                                    <div class="col-xl-3 individual-type-field <?=$contractor->contractor_type_id === "1" ? "" : "hide"?>">
                                                         <div class="form-group">
                                                             <label for="middle_name">Middle</label>
-                                                            <input type="text" name="middle_name" id="middle_name" class="form-control" value="<?=$contractor_details !== null ? $contractor_details->middle_name : ""?>">
+                                                            <input type="text" name="middle_name" id="middle_name" class="form-control" value="<?=$contractor->m_name?>">
                                                         </div>
                                                     </div>
-                                                    <div class="col-xl-6 individual-type-field <?=$contractor_details === null || $contractor_details->contractor_type_id === "2" && $contractor_details !== null ? "hide" : ""?>">
+                                                    <div class="col-xl-6 individual-type-field <?=$contractor->contractor_type_id === "1" ? "" : "hide"?>">
                                                         <div class="form-group">
                                                             <label for="last_name">Last *</label>
-                                                            <input type="text" name="last_name" id="last_name" class="form-control" value="<?=$contractor_details !== null ? $contractor_details->last_name : ""?>">
+                                                            <input type="text" name="last_name" id="last_name" class="form-control" value="<?=$contractor->l_name?>">
                                                         </div>
                                                     </div>
-                                                    <div class="col-xl-4 individual-type-field <?=$contractor_details === null || $contractor_details->contractor_type_id === "2" && $contractor_details !== null ? "hide" : ""?>">
+                                                    <div class="col-xl-4 individual-type-field <?=$contractor->contractor_type_id === "1" ? "" : "hide"?>">
                                                         <div class="form-group">
                                                             <label for="suffix">Suffix</label>
-                                                            <input type="text" name="suffix" id="suffix" class="form-control" value="<?=$contractor_details !== null ? $contractor_details->suffix : ""?>">
+                                                            <input type="text" name="suffix" id="suffix" class="form-control" value="<?=$contractor->suffix?>">
                                                         </div>
                                                     </div>
-                                                    <div class="col-xl-12 business-type-field <?=$contractor_details === null || $contractor_details->contractor_type_id === "1" && $contractor_details !== null ? "hide" : ""?>">
+                                                    <div class="col-xl-12 business-type-field <?=$contractor->contractor_type_id === "2" ? "" : "hide"?>">
                                                         <div class="form-group">
                                                             <label for="business_name">Business name *</label>
-                                                            <input type="text" name="business_name" id="business_name" class="form-control" value="<?=$contractor_details !== null ? $contractor_details->business_name : ""?>">
+                                                            <input type="text" name="business_name" id="business_name" class="form-control" value="<?=$contractor->company?>">
                                                         </div>
                                                     </div>
-                                                    <div class="col-xl-12 default-field <?=$contractor_details === null ? "hide" : ""?>">
+                                                    <div class="col-xl-12 default-field <?=$contractor->contractor_type_id !== null && $contractor->contractor_type_id !== "" ? "" : "hide"?>">
                                                         <div class="form-group">
-                                                            <label for="name">Display name *</label>
-                                                            <input type="text" name="name" id="name" class="form-control" value="<?=$contractor->name?>" required>
+                                                            <label for="display_name">Display name *</label>
+                                                            <input type="text" name="display_name" id="display_name" class="form-control" value="<?=$contractor->display_name?>" required>
                                                         </div>
                                                     </div>
-                                                    <div class="col-xl-12 individual-type-field <?=$contractor_details === null || $contractor_details->contractor_type_id === "2" && $contractor_details !== null ? "hide" : ""?>">
+                                                    <div class="col-xl-12 individual-type-field <?=$contractor->contractor_type_id === "1" ? "" : "hide"?>">
                                                         <div class="form-group">
                                                             <label for="social_sec_num">Social Security number *</label>
-                                                            <input type="text" name="social_sec_num" id="social_sec_num" class="form-control" value="<?=$contractor_details !== null ? $contractor_details->social_security_number : ""?>">
+                                                            <input type="text" name="social_sec_num" id="social_sec_num" class="form-control" value="<?=$contractor->tax_id?>">
                                                         </div>
                                                     </div>
-                                                    <div class="col-xl-12 business-type-field <?=$contractor_details === null || $contractor_details->contractor_type_id === "1" && $contractor_details !== null ? "hide" : ""?>">
+                                                    <div class="col-xl-12 business-type-field <?=$contractor->contractor_type_id === "2" ? "" : "hide"?>">
                                                         <div class="form-group">
                                                             <label for="emp_id_num">Employer Identification Number *</label>
-                                                            <input type="text" name="emp_id_num" id="emp_id_num" class="form-control" value="<?=$contractor_details !== null ? $contractor_details->employer_id_number : ""?>">
+                                                            <input type="text" name="emp_id_num" id="emp_id_num" class="form-control" value="<?=$contractor->tax_id?>">
                                                         </div>
                                                     </div>
-                                                    <div class="col-xl-12 default-field <?=$contractor_details === null ? "hide" : ""?>">
+                                                    <div class="col-xl-12 default-field <?=$contractor->contractor_type_id !== null && $contractor->contractor_type_id !== "" ? "" : "hide"?>">
                                                         <div class="form-group">
                                                             <label for="email">Email</label>
                                                             <input type="text" name="email" id="email" class="form-control" value="<?=$contractor->email?>">
                                                         </div>
                                                     </div>
-                                                    <div class="col-xl-12 default-field <?=$contractor_details === null ? "hide" : ""?>">
+                                                    <div class="col-xl-12 default-field <?=$contractor->contractor_type_id !== null && $contractor->contractor_type_id !== "" ? "" : "hide"?>">
                                                         <div class="form-group">
                                                             <label for="address">Address *</label>
-                                                            <textarea name="address" id="address" class="form-control" required><?=$contractor_details !== null ? $contractor_details->address : ""?></textarea>
+                                                            <textarea name="address" id="address" class="form-control" required><?=$contractor->street?></textarea>
                                                         </div>
                                                     </div>
-                                                    <div class="col-xl-5 default-field <?=$contractor_details === null ? "hide" : ""?>">
+                                                    <div class="col-xl-5 default-field <?=$contractor->contractor_type_id !== null && $contractor->contractor_type_id !== "" ? "" : "hide"?>">
                                                         <div class="form-group">
                                                             <label for="city">City *</label>
-                                                            <input type="text" name="city" id="city" class="form-control" required value="<?=$contractor_details !== null ? $contractor_details->city : ""?>">
+                                                            <input type="text" name="city" id="city" class="form-control" required value="<?=$contractor->city?>">
                                                         </div>
                                                     </div>
-                                                    <div class="col-xl-2 default-field <?=$contractor_details === null ? "hide" : ""?>">
+                                                    <div class="col-xl-2 default-field <?=$contractor->contractor_type_id !== null && $contractor->contractor_type_id !== "" ? "" : "hide"?>">
                                                         <div class="form-group">
                                                             <label for="state">State *</label>
                                                             <select name="state" id="state" class="form-control" required>
-                                                                <option value="AK" <?=$contractor_details !== null && $contractor_details->state === "AK" ? "selected" : ""?>>AK</option>
-                                                                <option value="AL" <?=$contractor_details !== null && $contractor_details->state === "AL" ? "selected" : ""?>>AL</option>
-                                                                <option value="AR" <?=$contractor_details !== null && $contractor_details->state === "AR" ? "selected" : ""?>>AR</option>
-                                                                <option value="AZ" <?=$contractor_details !== null && $contractor_details->state === "AZ" ? "selected" : ""?>>AZ</option>
-                                                                <option value="CA" <?=$contractor_details !== null && $contractor_details->state === "CA" ? "selected" : ""?>>CA</option>
-                                                                <option value="CO" <?=$contractor_details !== null && $contractor_details->state === "CO" ? "selected" : ""?>>CO</option>
-                                                                <option value="CT" <?=$contractor_details !== null && $contractor_details->state === "CT" ? "selected" : ""?>>CT</option>
-                                                                <option value="DC" <?=$contractor_details !== null && $contractor_details->state === "DC" ? "selected" : ""?>>DC</option>
-                                                                <option value="DE" <?=$contractor_details !== null && $contractor_details->state === "DE" ? "selected" : ""?>>DE</option>
-                                                                <option value="FL" <?=$contractor_details !== null && $contractor_details->state === "FL" ? "selected" : ""?>>FL</option>
-                                                                <option value="GA" <?=$contractor_details !== null && $contractor_details->state === "GA" ? "selected" : ""?>>GA</option>
-                                                                <option value="HI" <?=$contractor_details !== null && $contractor_details->state === "HI" ? "selected" : ""?>>HI</option>
-                                                                <option value="IA" <?=$contractor_details !== null && $contractor_details->state === "IA" ? "selected" : ""?>>IA</option>
-                                                                <option value="ID" <?=$contractor_details !== null && $contractor_details->state === "ID" ? "selected" : ""?>>ID</option>
-                                                                <option value="IL" <?=$contractor_details !== null && $contractor_details->state === "IL" ? "selected" : ""?>>IL</option>
-                                                                <option value="IN" <?=$contractor_details !== null && $contractor_details->state === "IN" ? "selected" : ""?>>IN</option>
-                                                                <option value="KS" <?=$contractor_details !== null && $contractor_details->state === "KS" ? "selected" : ""?>>KS</option>
-                                                                <option value="KY" <?=$contractor_details !== null && $contractor_details->state === "KY" ? "selected" : ""?>>KY</option>
-                                                                <option value="LA" <?=$contractor_details !== null && $contractor_details->state === "LA" ? "selected" : ""?>>LA</option>
-                                                                <option value="MA" <?=$contractor_details !== null && $contractor_details->state === "MA" ? "selected" : ""?>>MA</option>
-                                                                <option value="MD" <?=$contractor_details !== null && $contractor_details->state === "MD" ? "selected" : ""?>>MD</option>
-                                                                <option value="ME" <?=$contractor_details !== null && $contractor_details->state === "ME" ? "selected" : ""?>>ME</option>
-                                                                <option value="MI" <?=$contractor_details !== null && $contractor_details->state === "MI" ? "selected" : ""?>>MI</option>
-                                                                <option value="MN" <?=$contractor_details !== null && $contractor_details->state === "MN" ? "selected" : ""?>>MN</option>
-                                                                <option value="MO" <?=$contractor_details !== null && $contractor_details->state === "MO" ? "selected" : ""?>>MO</option>
-                                                                <option value="MS" <?=$contractor_details !== null && $contractor_details->state === "MS" ? "selected" : ""?>>MS</option>
-                                                                <option value="MT" <?=$contractor_details !== null && $contractor_details->state === "MT" ? "selected" : ""?>>MT</option>
-                                                                <option value="NC" <?=$contractor_details !== null && $contractor_details->state === "NC" ? "selected" : ""?>>NC</option>
-                                                                <option value="ND" <?=$contractor_details !== null && $contractor_details->state === "ND" ? "selected" : ""?>>ND</option>
-                                                                <option value="NE" <?=$contractor_details !== null && $contractor_details->state === "NE" ? "selected" : ""?>>NE</option>
-                                                                <option value="NH" <?=$contractor_details !== null && $contractor_details->state === "NH" ? "selected" : ""?>>NH</option>
-                                                                <option value="NJ" <?=$contractor_details !== null && $contractor_details->state === "NJ" ? "selected" : ""?>>NJ</option>
-                                                                <option value="NM" <?=$contractor_details !== null && $contractor_details->state === "NM" ? "selected" : ""?>>NM</option>
-                                                                <option value="NV" <?=$contractor_details !== null && $contractor_details->state === "NV" ? "selected" : ""?>>NV</option>
-                                                                <option value="NY" <?=$contractor_details !== null && $contractor_details->state === "NY" ? "selected" : ""?>>NY</option>
-                                                                <option value="OH" <?=$contractor_details !== null && $contractor_details->state === "OH" ? "selected" : ""?>>OH</option>
-                                                                <option value="OK" <?=$contractor_details !== null && $contractor_details->state === "OK" ? "selected" : ""?>>OK</option>
-                                                                <option value="OR" <?=$contractor_details !== null && $contractor_details->state === "OR" ? "selected" : ""?>>OR</option>
-                                                                <option value="PA" <?=$contractor_details !== null && $contractor_details->state === "PA" ? "selected" : ""?>>PA</option>
-                                                                <option value="RI" <?=$contractor_details !== null && $contractor_details->state === "RI" ? "selected" : ""?>>RI</option>
-                                                                <option value="SC" <?=$contractor_details !== null && $contractor_details->state === "SC" ? "selected" : ""?>>SC</option>
-                                                                <option value="SD" <?=$contractor_details !== null && $contractor_details->state === "SD" ? "selected" : ""?>>SD</option>
-                                                                <option value="TN" <?=$contractor_details !== null && $contractor_details->state === "TN" ? "selected" : ""?>>TN</option>
-                                                                <option value="TX" <?=$contractor_details !== null && $contractor_details->state === "TX" ? "selected" : ""?>>TX</option>
-                                                                <option value="UT" <?=$contractor_details !== null && $contractor_details->state === "UT" ? "selected" : ""?>>UT</option>
-                                                                <option value="VA" <?=$contractor_details !== null && $contractor_details->state === "VA" ? "selected" : ""?>>VA</option>
-                                                                <option value="VT" <?=$contractor_details !== null && $contractor_details->state === "VT" ? "selected" : ""?>>VT</option>
-                                                                <option value="WA" <?=$contractor_details !== null && $contractor_details->state === "WA" ? "selected" : ""?>>WA</option>
-                                                                <option value="WI" <?=$contractor_details !== null && $contractor_details->state === "WI" ? "selected" : ""?>>WI</option>
-                                                                <option value="WV" <?=$contractor_details !== null && $contractor_details->state === "WV" ? "selected" : ""?>>WV</option>
-                                                                <option value="WY" <?=$contractor_details !== null && $contractor_details->state === "WY" ? "selected" : ""?>>WY</option>
+                                                                <option value="AK" <?=$contractor->contractor_type_id !== null && $contractor_details->state === "AK" ? "selected" : ""?>>AK</option>
+                                                                <option value="AL" <?=$contractor->contractor_type_id !== null && $contractor_details->state === "AL" ? "selected" : ""?>>AL</option>
+                                                                <option value="AR" <?=$contractor->contractor_type_id !== null && $contractor_details->state === "AR" ? "selected" : ""?>>AR</option>
+                                                                <option value="AZ" <?=$contractor->contractor_type_id !== null && $contractor_details->state === "AZ" ? "selected" : ""?>>AZ</option>
+                                                                <option value="CA" <?=$contractor->contractor_type_id !== null && $contractor_details->state === "CA" ? "selected" : ""?>>CA</option>
+                                                                <option value="CO" <?=$contractor->contractor_type_id !== null && $contractor_details->state === "CO" ? "selected" : ""?>>CO</option>
+                                                                <option value="CT" <?=$contractor->contractor_type_id !== null && $contractor_details->state === "CT" ? "selected" : ""?>>CT</option>
+                                                                <option value="DC" <?=$contractor->contractor_type_id !== null && $contractor_details->state === "DC" ? "selected" : ""?>>DC</option>
+                                                                <option value="DE" <?=$contractor->contractor_type_id !== null && $contractor_details->state === "DE" ? "selected" : ""?>>DE</option>
+                                                                <option value="FL" <?=$contractor->contractor_type_id !== null && $contractor_details->state === "FL" ? "selected" : ""?>>FL</option>
+                                                                <option value="GA" <?=$contractor->contractor_type_id !== null && $contractor_details->state === "GA" ? "selected" : ""?>>GA</option>
+                                                                <option value="HI" <?=$contractor->contractor_type_id !== null && $contractor_details->state === "HI" ? "selected" : ""?>>HI</option>
+                                                                <option value="IA" <?=$contractor->contractor_type_id !== null && $contractor_details->state === "IA" ? "selected" : ""?>>IA</option>
+                                                                <option value="ID" <?=$contractor->contractor_type_id !== null && $contractor_details->state === "ID" ? "selected" : ""?>>ID</option>
+                                                                <option value="IL" <?=$contractor->contractor_type_id !== null && $contractor_details->state === "IL" ? "selected" : ""?>>IL</option>
+                                                                <option value="IN" <?=$contractor->contractor_type_id !== null && $contractor_details->state === "IN" ? "selected" : ""?>>IN</option>
+                                                                <option value="KS" <?=$contractor->contractor_type_id !== null && $contractor_details->state === "KS" ? "selected" : ""?>>KS</option>
+                                                                <option value="KY" <?=$contractor->contractor_type_id !== null && $contractor_details->state === "KY" ? "selected" : ""?>>KY</option>
+                                                                <option value="LA" <?=$contractor->contractor_type_id !== null && $contractor_details->state === "LA" ? "selected" : ""?>>LA</option>
+                                                                <option value="MA" <?=$contractor->contractor_type_id !== null && $contractor_details->state === "MA" ? "selected" : ""?>>MA</option>
+                                                                <option value="MD" <?=$contractor->contractor_type_id !== null && $contractor_details->state === "MD" ? "selected" : ""?>>MD</option>
+                                                                <option value="ME" <?=$contractor->contractor_type_id !== null && $contractor_details->state === "ME" ? "selected" : ""?>>ME</option>
+                                                                <option value="MI" <?=$contractor->contractor_type_id !== null && $contractor_details->state === "MI" ? "selected" : ""?>>MI</option>
+                                                                <option value="MN" <?=$contractor->contractor_type_id !== null && $contractor_details->state === "MN" ? "selected" : ""?>>MN</option>
+                                                                <option value="MO" <?=$contractor->contractor_type_id !== null && $contractor_details->state === "MO" ? "selected" : ""?>>MO</option>
+                                                                <option value="MS" <?=$contractor->contractor_type_id !== null && $contractor_details->state === "MS" ? "selected" : ""?>>MS</option>
+                                                                <option value="MT" <?=$contractor->contractor_type_id !== null && $contractor_details->state === "MT" ? "selected" : ""?>>MT</option>
+                                                                <option value="NC" <?=$contractor->contractor_type_id !== null && $contractor_details->state === "NC" ? "selected" : ""?>>NC</option>
+                                                                <option value="ND" <?=$contractor->contractor_type_id !== null && $contractor_details->state === "ND" ? "selected" : ""?>>ND</option>
+                                                                <option value="NE" <?=$contractor->contractor_type_id !== null && $contractor_details->state === "NE" ? "selected" : ""?>>NE</option>
+                                                                <option value="NH" <?=$contractor->contractor_type_id !== null && $contractor_details->state === "NH" ? "selected" : ""?>>NH</option>
+                                                                <option value="NJ" <?=$contractor->contractor_type_id !== null && $contractor_details->state === "NJ" ? "selected" : ""?>>NJ</option>
+                                                                <option value="NM" <?=$contractor->contractor_type_id !== null && $contractor_details->state === "NM" ? "selected" : ""?>>NM</option>
+                                                                <option value="NV" <?=$contractor->contractor_type_id !== null && $contractor_details->state === "NV" ? "selected" : ""?>>NV</option>
+                                                                <option value="NY" <?=$contractor->contractor_type_id !== null && $contractor_details->state === "NY" ? "selected" : ""?>>NY</option>
+                                                                <option value="OH" <?=$contractor->contractor_type_id !== null && $contractor_details->state === "OH" ? "selected" : ""?>>OH</option>
+                                                                <option value="OK" <?=$contractor->contractor_type_id !== null && $contractor_details->state === "OK" ? "selected" : ""?>>OK</option>
+                                                                <option value="OR" <?=$contractor->contractor_type_id !== null && $contractor_details->state === "OR" ? "selected" : ""?>>OR</option>
+                                                                <option value="PA" <?=$contractor->contractor_type_id !== null && $contractor_details->state === "PA" ? "selected" : ""?>>PA</option>
+                                                                <option value="RI" <?=$contractor->contractor_type_id !== null && $contractor_details->state === "RI" ? "selected" : ""?>>RI</option>
+                                                                <option value="SC" <?=$contractor->contractor_type_id !== null && $contractor_details->state === "SC" ? "selected" : ""?>>SC</option>
+                                                                <option value="SD" <?=$contractor->contractor_type_id !== null && $contractor_details->state === "SD" ? "selected" : ""?>>SD</option>
+                                                                <option value="TN" <?=$contractor->contractor_type_id !== null && $contractor_details->state === "TN" ? "selected" : ""?>>TN</option>
+                                                                <option value="TX" <?=$contractor->contractor_type_id !== null && $contractor_details->state === "TX" ? "selected" : ""?>>TX</option>
+                                                                <option value="UT" <?=$contractor->contractor_type_id !== null && $contractor_details->state === "UT" ? "selected" : ""?>>UT</option>
+                                                                <option value="VA" <?=$contractor->contractor_type_id !== null && $contractor_details->state === "VA" ? "selected" : ""?>>VA</option>
+                                                                <option value="VT" <?=$contractor->contractor_type_id !== null && $contractor_details->state === "VT" ? "selected" : ""?>>VT</option>
+                                                                <option value="WA" <?=$contractor->contractor_type_id !== null && $contractor_details->state === "WA" ? "selected" : ""?>>WA</option>
+                                                                <option value="WI" <?=$contractor->contractor_type_id !== null && $contractor_details->state === "WI" ? "selected" : ""?>>WI</option>
+                                                                <option value="WV" <?=$contractor->contractor_type_id !== null && $contractor_details->state === "WV" ? "selected" : ""?>>WV</option>
+                                                                <option value="WY" <?=$contractor->contractor_type_id !== null && $contractor_details->state === "WY" ? "selected" : ""?>>WY</option>
                                                             </select>
                                                         </div>
                                                     </div>
-                                                    <div class="col-xl-5 default-field <?=$contractor_details === null ? "hide" : ""?>">
+                                                    <div class="col-xl-5 default-field <?=$contractor->contractor_type_id !== null && $contractor->contractor_type_id !== "" ? "" : "hide"?>">
                                                         <div class="form-group">
                                                             <label for="zip_code">ZIP code *</label>
-                                                            <input type="text" name="zip_code" id="zip_code" class="form-control" required value="<?=$contractor_details !== null ? $contractor_details->zip_code : ""?>">
+                                                            <input type="text" name="zip_code" id="zip_code" class="form-control" required value="<?=$contractor->zip?>">
                                                         </div>
                                                     </div>
                                                 </div>

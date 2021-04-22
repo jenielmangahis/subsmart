@@ -207,4 +207,74 @@ class Vendors_model extends MY_Model {
 		}
 		return $allData;
 	}
+
+	public function get_company_contractors($status)
+	{
+		$this->db->where('company_id', logged('company_id'));
+		$this->db->where('contractor', 1);
+		$this->db->where_in('status', $status);
+		$this->db->order_by('display_name', 'asc');
+		$query = $this->db->get($this->table);
+
+		return $query->result();
+	}
+
+	public function get_contractor($vendorId)
+	{
+		$this->db->where('company_id', logged('company_id'));
+		$this->db->where('id', $vendorId);
+		$this->db->where('contractor', 1);
+		return $this->db->get($this->table)->row();
+	}
+
+	public function get_contractor_types()
+	{
+		return $this->db->get('accounting_contractor_types')->result();
+	}
+
+	public function update_contractor($vendorId, $data)
+	{
+		$this->db->where('company_id', logged('company_id'));
+		$this->db->where('id', $vendorId);
+		$update = $this->db->update($this->table, $data);
+
+		return $update;
+	}
+
+	public function update_contractor_status($contractorId, $status)
+	{
+		$this->db->where('id', $contractorId);
+		$update = $this->db->update($this->table, ['status' => $status, 'updated_at' => date("Y-m-d H:i:s")]);
+
+		return $update;
+	}
+
+	public function get_vendor_bill_transactions($vendorId)
+	{
+		$this->db->where('company_id', logged('company_id'));
+		$this->db->where('vendor_id', $vendorId);
+		$this->db->where('status', 1);
+		$query = $this->db->get('accounting_bill');
+
+		return $query->result();
+	}
+
+	public function get_vendor_check_transactions($vendorId)
+	{
+		// $this->db->where('company_id', logged('company_id'));
+		$this->db->where('vendor_id', $vendorId);
+		$this->db->where('status', 1);
+		$query = $this->db->get('accounting_check');
+
+		return $query->result();
+	}
+
+	public function get_vendor_expense_transactions($vendorId)
+	{
+		$this->db->where('vendor_id', $vendorId);
+		$this->db->where('status', 1);
+		$query = $this->db->get('accounting_expense');
+
+		return $query->result();
+	}
 }

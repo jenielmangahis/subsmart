@@ -37,7 +37,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                       <div class="col-sm-12">
                           </div>
                           <!-- <h3 class="page-title mt-0">New Lead</h3> -->
-                          <h3 style="font-family: Sarabun, sans-serif">Update New Work Orders</h3>
+                          <h3 style="font-family: Sarabun, sans-serif">Update Work Order</h3>
                           <!-- <div class="pl-3 pr-3 mt-1 row">
                             <div class="col mb-4 left alert alert-warning mt-0 mb-2">
                                 <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">
@@ -84,22 +84,16 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     <div class="row">                   
                             <div class="col-md-3 form-group">
                                 <label for="contact_name">Work Order #</label>
-                                <input type="text" class="form-control" name="workorder_number" id="contact_name" value="<?php echo $workorder->work_order_number; ?>" required />
+                                <input type="text" class="form-control" name="workorder_number" id="contact_name" value="<?php echo $workorder->work_order_number; ?>" readonly />
                             </div>
                             <div class="col-md-3 form-group">
-											<label for="last_name">Last Name</label>
-											<input type="text" class="form-control" name="customer[last_name]"
-												   id="last_name"
-												   required placeholder="Enter Last Name"
-												   value="<?php echo $customer->last_name; ?>"/>
-										</div>
-										<div class="col-md-3 form-group">
-											<label for="first_name">First Name</label>
-											<input type="text" class="form-control" name="customer[first_name]"
-												   id="first_name"
-												   required placeholder="Enter First Name"
-												   value="<?php echo $customer->first_name; ?>"/>
-										</div>
+								<label for="last_name">Last Name</label>
+								<input type="text" class="form-control" name="customer[last_name]" id="last_name" required placeholder="Enter Last Name" value="<?php echo $customer->last_name; ?>"/>
+							</div>
+							<div class="col-md-3 form-group">
+								<label for="first_name">First Name</label>
+								<input type="text" class="form-control" name="customer[first_name]" id="first_name" required placeholder="Enter First Name" value="<?php echo $customer->first_name; ?>"/>
+							</div>
                         </div>
                         <div class="row">
                         <div class="col-md-3 form-group">
@@ -108,7 +102,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                             </div>
                             <div class="col-md-3 form-group">
                                 <label for="birthdate">Birth Date</label>
-                                <input type="date" class="form-control" name="birthdate" id="date_of_birth" value="<?php echo $workorder->birthdate; ?>"/>
+                                <input type="text" class="form-control" name="birthdate" id="date_of_birth" value="<?php echo $workorder->birthdate; ?>"/>
                             </div>
                             </div>
                         <div class="row">                   

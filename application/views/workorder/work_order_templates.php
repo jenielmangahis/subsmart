@@ -8,7 +8,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
 <style>
 .active-template
 {
-    background-color: #D9C6F9;
+    /* background-color: #D9C6F9; */
+    background-image: linear-gradient(#7F52CC, #D571FA, #4EF1ED);
 }
 
 </style>
@@ -31,34 +32,34 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
                 <h1>Choose Your Template</h1>
                 <div class="container">
-                    <div class="product active-template" style="border: solid gray 2px;border-radius: 25px;" id="standard-template">
+                    <div class="product active-template whole-div" style="border: solid #F8F8F8 2px;border-radius: 25px;box-shadow: 3px 6px #E7E6E6;" id="standard-template">
                         <div class="effect-1"></div>
                         <div class="effect-2"></div>
-                        <div class="content">
-                        <div class="exercise"></div>
-                        </div>
+                        <!-- <div class="content">
+                            <div class="exercise"></div>
+                        </div> -->
                         <span class="title">
                         Standard Template
                         <span>Default</span>
                         </span>
                     </div>
-                    <div class="product" style="border: solid gray 2px;border-radius: 25px;" id="alarm-template">
+                    <div class="product active-template" style="border: solid #F8F8F8 2px;border-radius: 25px;box-shadow: 3px 6px #E7E6E6;" id="alarm-template">
                         <div class="effect-1"></div>
                         <div class="effect-2"></div>
-                        <div class="content">
+                        <!-- <div class="content">
                         <div class="sleep"></div>
-                        </div>
+                        </div> -->
                         <span class="title">
-                        Alarm System Template
+                        Alarm Template
                         <!-- <span>Restore Balance</span> -->
                         </span>
                     </div>
-                    <div class="product" style="border: solid gray 2px;border-radius: 25px;" id="other-template">
+                    <div class="product active-template" style="border: solid #F8F8F8 2px;border-radius: 25px;box-shadow: 3px 6px #E7E6E6;" id="other-template">
                         <div class="effect-1"></div>
                         <div class="effect-2"></div>
-                        <div class="content">
+                        <!-- <div class="content">
                         <div class="meditation"></div>
-                        </div>
+                        </div> -->
                         <span class="title">
                         Other Template
                         <!-- <span>Practice gratitude</span> -->
@@ -111,6 +112,60 @@ defined('BASEPATH') or exit('No direct script access allowed');
       </div>
     </div>
 
+    <div id="successm" class="modal fade" role="dialog">
+      <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+          <!-- <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">Modal Header</h4>
+          </div> -->
+          <div class="modal-body">
+            <center><h2>Successfully changed!</h2>
+            <button type="button" class="btn btn-success workordermodal" data-toggle="modal" data-target="#workordermodal">Create New Work Order</button></center>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="modal fade" id="workordermodal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">New Work Order</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body text-center">
+              <p class="text-lg margin-bottom">
+                  What type of Work Order you want to create
+              </p><center>
+              <div class="margin-bottom text-center" style="width:60%;">
+                  <div class="help help-sm">Create new work Order</div>
+                  <?php if(empty($company_work_order_used->work_order_template_id)){ ?>
+                  <a class="btn btn-primary add-modal__btn-success" style="background-color: #2ab363 !important" href="<?php echo base_url('workorder/NewworkOrder') ?>"><span class="fa fa-file-text-o"></span> New Work Order</a>
+                  <?php }
+                  elseif($company_work_order_used->work_order_template_id == '0'){ ?>
+                  <a class="btn btn-primary add-modal__btn-success" style="background-color: #2ab363 !important" href="<?php echo base_url('workorder/NewworkOrder') ?>"><span class="fa fa-file-text-o"></span> New Work Order</a>
+                  <?php }
+                  elseif($company_work_order_used->work_order_template_id == '1'){ ?>
+                  <a class="btn btn-primary add-modal__btn-success" style="background-color: #2ab363 !important" href="<?php echo base_url('workorder/NewworkOrderAlarm') ?>"><span class="fa fa-file-text-o"></span> New Work Order</a>
+                  <?php } ?>
+              </div>
+              <div class="margin-bottom" style="width:60%;">
+                  <div class="help help-sm">Existing Work Order</div>
+                  <a class="btn btn-primary add-modal__btn-success" style="background-color: #2ab363 !important" href="<?php echo base_url('workorder/NewworkOrder?type=2') ?>"><span class="fa fa-list-ul fa-margin-right"></span> Existing </a>
+              </div></center>
+        </div>
+    </div>
+</div>
+
 
 <?php include viewPath('includes/footer'); ?>
 
@@ -130,12 +185,17 @@ $(document).on('click','#standard-template',function(){
             data: {template : template },
             success: function(dataResult){
                 $("#myModal").modal("hide");
+                $("#successm").modal("show");
             },
                 error: function(response){
                 alert('Error'+response);
        
                 }
 	    });
+    });
+
+    $(".workordermodal").click(function() {
+        $("#successm").modal("hide");
     });
 
 });
@@ -156,12 +216,17 @@ $(document).on('click','#alarm-template',function(){
             data: {template : template },
             success: function(dataResult){
                 $("#myModal").modal("hide");
+                $("#successm").modal("show");
             },
                 error: function(response){
                 alert('Error'+response);
        
                 }
 	    });
+    });
+
+    $(".workordermodal").click(function() {
+        $("#successm").modal("hide");
     });
 });
 

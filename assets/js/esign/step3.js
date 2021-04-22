@@ -271,7 +271,7 @@ function Step3() {
   async function renderPDF(data = null) {
     if (data) {
       const { id, path } = data;
-      const url = `${prefixURL}/${path}`;
+      const url = `${prefixURL}/${path.replace(/^\//, "")}`;
 
       const document = await PDFJS.getDocument({ url });
       const $container = createElementFromHTML("<div></div>");
@@ -547,7 +547,11 @@ function Step3() {
 
     const { data } = await getTemplateFile(templateId);
     await getFields();
-    await Promise.all(data.map(renderPDF));
+
+    for (let index = 0; index < data.length; index++) {
+      await renderPDF(data[index]);
+    }
+
     attachEventHandlers();
 
     $(".esignBuilder--loading").removeClass("esignBuilder--loading");

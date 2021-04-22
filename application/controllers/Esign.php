@@ -225,7 +225,7 @@ class Esign extends MY_Controller {
 		$recipients = array_map(function ($recipient, $index) {
 			$index += 1;
 			if (empty($recipient['name'])) { // doesnt have name
-				$recipient['name'] = "Recipient $index";
+				$recipient['name'] = $recipient['role_name'];
 			}
 
 			return $recipient;
@@ -318,7 +318,7 @@ class Esign extends MY_Controller {
         SELECT `user_docfile_fields`.*, `user_docfile_recipients`.`color` FROM `user_docfile_fields`
         LEFT JOIN `user_docfile_recipients` ON `user_docfile_recipients`.`id` = `user_docfile_fields`.`user_docfile_recipients_id`
         WHERE `user_docfile_fields`.`docfile_id` = ? AND `user_docfile_fields`.`user_id` = ?
-        SQL;
+SQL;
 
 		$records = (array) $this->db->query($query, [$docId, logged('id')])->result();
 

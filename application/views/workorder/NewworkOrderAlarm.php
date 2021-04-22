@@ -82,6 +82,12 @@
 												<?php } ?>
 											</select>
 										</div>
+
+                                        <div class="col-md-4 form-group" style="display:none;" id="business_name_area">
+											<label for="customer_install_type">Business Name</label><br/>
+											<input type="text" class="form-control" name="business_name" id="business_name" required placeholder="Enter Name" />
+										</div>
+
 										<div class="col-md-4 form-group">
 											<label for="customer_install_type">Install Type</label><br/>
 											<select name="customer[install_type]"
@@ -299,10 +305,11 @@
 										<div class="col-md-4 form-group">
 											<label for="">Notification Type</label><br/>
 											<select name="customer[notification_type][]" id="customer_notification_type_email" class="form-control">
-                                            <option>Select Notification Type</option>
-											<?php foreach (get_config_item('notification_types') as $key => $notification_type) { ?>
-												<option value="<?= $notification_type; ?>" <?php echo ((!empty($workorder->customer['notification_type'])) && array_search($notification_type, $workorder->customer['notification_type']) !== false)? 'selected' : '' ?>><?php echo $notification_type ?> </option>
-											<?php } ?>
+                                                <option>Select Notification Type</option>
+                                                <option value="Text">Text</option>
+                                                <option value="Email">Email</option>
+                                                <option value="Text and Email">Text and Email</option>
+                                                <option value="None">None</option>
 											 </select>
 										</div>
 									</div>
@@ -545,11 +552,35 @@
                                 </div>
                                 <div class="col-md-6 form-group">
                                     <label for="street_address"> Plan Type:</label>
-                                        <select
+                                        <!-- <select
                                                 name="plan_type"
                                                 id="plan_type"
                                                 class="form-control">
                                             <option>Select Plan Type</option>
+                                        </select> -->
+                                        <select name="plan_type" id="plan_type" class="form-control">
+                                            <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == ''){echo "selected";} } ?> value=""></option>
+                                            <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == 'DIGI'){echo "selected";} } ?> value="DIGI">Landline</option>
+                                            <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == 'DW2W'){echo "selected";} } ?> value="DW2W">Landline W/ 2-Way</option>
+                                            <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == 'DWCB'){echo "selected";} } ?> value="DWCB">Landline W/ Cell Backup</option>
+                                            <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == 'D2CB'){echo "selected";} } ?> value="D2CB">Landline W/ 2-Way &amp; Cell Backup</option>
+                                            <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == 'CPDB'){echo "selected";} } ?> value="CPDB">Cell Primary</option>
+                                            <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == 'CP2W'){echo "selected";} } ?> value="CP2W">Cell Primary w/2Way</option>
+                                            <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == 'WSF'){echo "selected";} } ?> value="WSF">Wireless Signal Forwarding</option>
+                                            <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == 'C'){echo "selected";} } ?> value="C">Commercial</option>
+                                            <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == 'CP'){echo "selected";} } ?> value="CP">Commercial Plus</option>
+                                            <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == 'I'){echo "selected";} } ?> value="I">Interactive</option>
+                                            <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == 'IG'){echo "selected";} } ?> value="IG">Interactive Gold</option>
+                                            <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == 'IPA'){echo "selected";} } ?> value="IPA">Interactive Plus Automation</option>
+                                            <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == 'IwDVR'){echo "selected";} } ?> value="IwDVR">Interactive w/DVR</option>
+                                            <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == 'IwDB'){echo "selected";} } ?> value="IwDB">Interactive w/Dbell</option>
+                                            <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == 'IwDBIP'){echo "selected";} } ?> value="IwDBIP">Interactive w/Dbell & IP Camera</option>
+                                            <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == 'PERS'){echo "selected";} } ?> value="PERS">PERS</option>
+                                            <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == 'WIFI'){echo "selected";} } ?> value="WIFI">WIFI</option>
+                                            <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == 'CPwWIFI'){echo "selected";} } ?> value="CPwWIFI">Cell Primary w/WIFI</option>
+                                            <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == 'CPwAC'){echo "selected";} } ?> value="CPwAC">Cell Primary w/Access Control</option>
+                                            <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == 'IwAC'){echo "selected";} } ?> value="IwAC">Interactive w/Access Control</option>
+                                            <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == 'IwACwA'){echo "selected";} } ?> value="IwACwA">Interactive w/Access Control w/Automn</option>
                                         </select>
                                 </div>
                                 <div class="form-group col-md-6">
@@ -581,67 +612,83 @@
                                     </div>
 
                                 </div>
-                            </div>
 
-                            <!-- ====== EQUIPMENT ====== -->
-                            <div class="row">
-                                <div class="form-group col-md-12">
-                                    <h5 class="box-title">Equipment</h5>
-                                </div>
-                                <div class="c__custom c__custom_width col-md-4">
-                                    <div class="col-md-12">
+                                    <!-- ====== EQUIPMENT ====== -->
+                                <!-- <div class="row"> -->
+                                    <div class="col-md-4">
                                         <label>Panel Type</label>
-                                    </div>
-                                    <select class="form-control" name="panel_type[]" id="panel_type">
-                                        <option>--SELECT--</option>
-                                        <?php foreach (get_config_item('panel_types') as $key => $panel_type) { ?>
-                                            <option value="<?php echo $panel_type ?>"
-                                                <?php echo (!empty($workorder->panel_type[0]) && $workorder->panel_type[0] == $panel_type) ? "selected" : "" ?>>
-                                                <?php echo $panel_type ?>
-                                            </option>
-                                        <?php } ?>
-                                    </select>
-
-                                </div>
-
-                                <div class="col-md-4">
-                                    <div class="form-group">
-                                        <label for="panel_location"> Panel Location:</label>
-                                        <input type="text" class="form-control" name="panel_location"
-                                               value="<?php echo (!empty($workorder->panel_location)) ? $workorder->panel_location : '' ?>"
-                                               id="panel_location" placeholder=""/>
-                                    </div>
-								</div>
-								<div class="col-md-4">
-                                    <div class="form-group">
-                                        <label for="panel_communication"> Panel Communication:</label>
-                                        <select name="panel_communication"
-                                                class="form-control"
-                                                id="panel_communication">
-                                            <option>--SELECT--</option>
-                                            <?php foreach (get_config_item('panel_communications') as $key => $panel_communication) { ?>
-                                                <option value="<?php echo $panel_communication ?>" <?php echo (!empty($workorder->panel_communication) && $workorder->panel_communication == $panel_communication) ? 'selected' : '' ?>>
-                                                    <?php echo $panel_communication ?>
-                                                </option>
-                                            <?php } ?>
+                                        <select name="panel_type" id="panel_type" class="form-control">
+                                            <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == ''){echo "selected";} } ?> value=""></option>
+                                            <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'AERIONICS'){echo "selected";} } ?> value="AERIONICS">AERIONICS</option>
+                                            <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'AlarmNet'){echo "selected";} } ?> value="AlarmNet">AlarmNet</option>
+                                            <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'Alarm.com'){echo "selected";} } ?> value="Alarm.com">Alarm.com</option>
+                                            <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'Alula'){echo "selected";} } ?> value="Alula">Alula</option>
+                                            <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'Bosch'){echo "selected";} } ?> value="Bosch">Bosch</option>
+                                            <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'DSC'){echo "selected";} } ?> value="DSC">DSC</option>
+                                            <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'ELK'){echo "selected";} } ?> value="ELK">ELK</option>
+                                            <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'FBI'){echo "selected";} } ?> value="FBI">FBI</option>
+                                            <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'GRI'){echo "selected";} } ?> value="GRI">GRI</option>
+                                            <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'GE'){echo "selected";} } ?> value="GE">GE</option>
+                                            <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'Honeywell'){echo "selected";} } ?> value="Honeywell">Honeywell</option>
+                                            <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'Honeywell'){echo "selected";} } ?> value="Honeywell Touch">Honeywell Touch</option>
+                                            <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'Honeywell'){echo "selected";} } ?> value="Honeywell 3000">Honeywell 3000</option>
+                                            <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'Honeywell'){echo "selected";} } ?> value="Honeywell Vista">Honeywell Vista</option>
+                                            <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'Honeywell'){echo "selected";} } ?> value="Honeywell Vista with Sim">Honeywell Vista with Sim</option>
+                                            <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'Honeywell'){echo "selected";} } ?> value="Honeywell Lyric">Honeywell Lyric</option>
+                                            <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'IEI'){echo "selected";} } ?> value="IEI">IEI</option>
+                                            <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'MIER'){echo "selected";} } ?> value="MIER">MIER</option>
+                                            <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == '2 GIG'){echo "selected";} } ?> value="2 GIG">2 GIG</option>
+                                            <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == '2 GIG'){echo "selected";} } ?> value="2 GIG Go Panel 2">2 GIG Go Panel 2</option>
+                                            <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == '2 GIG'){echo "selected";} } ?> value="2 GIG Go Panel 3">2 GIG Go Panel 3</option>
+                                            <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'Qolsys'){echo "selected";} } ?> value="Qolsyx">Qolsys</option>
+                                            <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'Qolsys'){echo "selected";} } ?> value="Qolsyx">Qolsys IQ Panel 2</option>
+                                            <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'QIP2P'){echo "selected";} } ?> value="QIP2P">Qolsys IQ Panel 2 Plus</option>
+                                            <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'Qolsys'){echo "selected";} } ?> value="">Qolsys IQ Panel 3</option>
+                                            <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'Custom'){echo "selected";} } ?> value="Custom">Custom</option>
+                                            <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'DIGI'){echo "selected";} } ?> value="Other">Other</option>
                                         </select>
-                                        <!--                                        <input type="text" class="form-control" name="panel_communication"-->
-                                        <!--                                               value="-->
-                                        <?php //echo (!empty($workorder->panel_communication)) ? $workorder->panel_communication : '' ?><!--"-->
-                                        <!--                                               id="panel_communication" placeholder=""/>-->
-                                    </div>
-                                </div>
 
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="panel_location"> Panel Location:</label>
+                                            <input type="text" class="form-control" name="panel_location"
+                                                value="<?php echo (!empty($workorder->panel_location)) ? $workorder->panel_location : '' ?>"
+                                                id="panel_location" placeholder=""/>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="panel_communication"> Panel Communication:</label>
+                                            <select name="panel_communication"
+                                                    class="form-control"
+                                                    id="panel_communication">
+                                                <option>--SELECT--</option>
+                                                <?php foreach (get_config_item('panel_communications') as $key => $panel_communication) { ?>
+                                                    <option value="<?php echo $panel_communication ?>" <?php echo (!empty($workorder->panel_communication) && $workorder->panel_communication == $panel_communication) ? 'selected' : '' ?>>
+                                                        <?php echo $panel_communication ?>
+                                                    </option>
+                                                <?php } ?>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                <!-- </div> -->
+
+                                
                             </div>
+
+                            
 
                             <!-- ====== JOB ====== -->
                             <div class="row">
                                 <div class="form-group col-md-12">
                                     <h5 class="box-title">Job</h5>
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-4">
                                     <div class="form-group">
-                                        <label for="date_w_issued"> Date Issued:</label>
+                                        <label for="date_w_issued"> Requested Date:</label>
                                         <div class='input-group date datepicker'>
                                             <input type='text'
                                                    value="<?php echo (!empty($workorder->date_issued)) ?
@@ -653,7 +700,7 @@
                                     </div>
                                 </div>
 
-                                <div class="col-md-6">
+                                <div class="col-md-4">
                                     <div class="form-group">
                                         <label for="job_type_id"> Job Type:</label>
                                         <select name="job_type" id="job_type" class="form-control custom-select">
@@ -669,6 +716,18 @@
                                     </select>
                                     </div>
                                 </div>
+                                
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="job_type_id">Job Tag</label>
+                                        <select name="job_tag" id="job_tag" class="form-control custom-select">
+                                        <?php foreach($job_tags as $tags){ ?>
+                                                <option value="<?php echo $tags->name; ?>"><?php echo $tags->name; ?><option>
+                                            <?php } ?>
+                                    </select>
+                                    </div>
+                                </div>
+                                
 
                                 <div class="col-md-6">
                                     <div class="form-group">
@@ -1487,104 +1546,86 @@
                                             and you authorize payment and confirmation with nSmarTrac. </p>
                                     </div>
                                 </div>
-                                <div class="col-md-12 float-left custom-signaturepad">
-                                <div class="col-md-4 float-left">
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">
                                     <h6>Company Representative Approval</h6>
-
-                                    <?php if ($workorder->company_rep_approval) {
-
-                                        $img = str_replace('[removed]', '', $workorder->company_rep_approval); ?>
-                                        <img src="<?php echo 'data:image/png;base64,' . $img; ?>" alt=""
-                                             style="width: 100%;">
-                                    <?php } else { ?>
-                                        <div class="sigPad" id="smoothed" >
-                                            <ul class="sigNav">
-                                                <li class="drawIt"><a href="#draw-it">Draw It</a></li>
-                                                <li class="clearButton"><a href="#clear">Clear</a></li>
-                                            </ul>
-                                            <div class="sig sigWrapper" style="height:auto;">
-                                                <div class="typed"></div>
-                                                <canvas class="pad" id="company_representative_approval_signature"></canvas>
-                                                <input type="hidden" name="output-2" class="output">
-                                            </div>
+                                    <div class="sigPad" id="smoothed1a" style="width:100%;border:solid gray 1px;background-color:#00b300;">
+                                    <!-- <a href="#" style="float:right;margin-right:10px;" class="smoothed1a_pencil" id="smoothed1a_pencil"><i class="fa fa-pencil" aria-hidden="true"></i></a> -->
+                                        <ul class="sigNav" style="">
+                                            <li class="drawIt"><a href="#draw-it">Draw It</a></li>
+                                            <li class="clearButton"><a href="#clear">Clear</a></li>
+                                        </ul>
+                                        <ul class="edit">
+                                            <li class="smoothed1a_pencil pointer"><a onclick="myFunction()" style="float:right;margin-right:10px;" class="smoothed1a_pencil"><i class="fa fa-pencil" aria-hidden="true"></i></a></li>
+                                        </ul>
+                                        <div class="sig sigWrapper" id="smoothed1a_pencil" style="height:auto;pointer-events: none;">
+                                            <div class="typed"></div>
+                                            <canvas class="pad" id="company_representative_approval_signature1a" style="width:100%;"></canvas>
+                                            <input type="hidden" name="output-2" class="output">
                                         </div>
-                                        <input type="hidden" id="saveCompanySignatureDB"
-                                               name="company_representative_approval_signature">
-                                    <?php } ?>
-
+                                    </div>
+                                    <input type="hidden" id="saveCompanySignatureDB1a"
+                                           name="company_representative_approval_signature1a">
                                     <br>
 
                                     <label for="comp_rep_approval">Printed Name</label>
                                     <input type="text6" class="form-control mb-3"
                                            name="company_representative_printed_name"
-                                           value="<?php echo (!empty($workorder->company_rep_name)) ? $workorder->company_rep_name : '' ?>"
                                            id="comp_rep_approval" placeholder=""/>
 
                                 </div>
-                                <div class="col-md-4 float-left">
+                                <div class="col-md-4">
                                     <h6>Primary Account Holder</h6>
-                                    <?php if ($workorder->primary_account_holder) {
-
-                                        $img = str_replace('[removed]', '', $workorder->primary_account_holder); ?>
-                                        <img src="<?php echo 'data:image/png;base64,' . $img; ?>" alt=""
-                                             style="width: 100%;">
-                                    <?php } else { ?>
-                                        <div class="sigPad" id="smoothed2" >
-                                            <ul class="sigNav">
-                                                <li class="drawIt"><a href="#draw-it">Draw It</a></li>
-                                                <li class="clearButton"><a href="#clear">Clear</a></li>
-                                            </ul>
-                                            <div class="sig sigWrapper" style="height:auto;">
-                                                <div class="typed"></div>
-                                                <canvas class="pad" id="primary_account_holder_signature"></canvas>
-                                                <input type="hidden" name="output-2" class="output">
-                                            </div>
+                                    <div class="sigPad" id="smoothed2a" style="width:100%;border:solid gray 1px;background-color:#f7b900;">
+                                    <!-- <p style="float:right;margin-right:10px;"><i class="fa fa-pencil" aria-hidden="true"></i></p> -->
+                                        <ul class="sigNav">
+                                            <li class="drawIt"><a href="#draw-it">Draw It</a></li>
+                                            <li class="clearButton"><a href="#clear">Clear</a></li>
+                                        </ul>
+                                        <ul class="edit">
+                                            <li class="smoothed1a_pencil pointer"><a onclick="myFunctiontwo()" style="float:right;margin-right:10px;" class="smoothed1a_pencil"><i class="fa fa-pencil" aria-hidden="true"></i></a></li>
+                                        </ul>
+                                        <div class="sig sigWrapper" style="height:auto;pointer-events: none;">
+                                            <div class="typed"></div>
+                                            <canvas class="pad" id="primary_account_holder_signature2a" style="width:100%;"></canvas>
+                                            <input type="hidden" name="output-2" class="output">
                                         </div>
-
-                                        <input type="hidden" id="savePrimaryAccountSignatureDB"
-                                               name="primary_account_holder_signature">
-                                    <?php } ?>
-
+                                    </div>
+                                    <input type="hidden" id="savePrimaryAccountSignatureDB2a"
+                                           name="primary_account_holder_signature2a">
                                     <br>
 
                                     <label for="comp_rep_approval">Printed Name</label>
                                     <input type="text6" class="form-control mb-3" name="primary_account_holder_name"
-                                           value="<?php echo (!empty($workorder->primary_account_holder_name)) ? $workorder->primary_account_holder_name : '' ?>"
                                            id="comp_rep_approval" placeholder=""/>
 
                                 </div>
-                                <div class="col-md-4 float-left">
+                                <div class="col-md-4">
                                     <h6>Secondary Account Holder</h6>
-
-                                    <?php if ($workorder->secondary_account_holder) {
-
-                                        $img = str_replace('[removed]', '', $workorder->secondary_account_holder); ?>
-                                        <img src="<?php echo 'data:image/png;base64,' . $img; ?>" alt=""
-                                             style="width: 100%;">
-                                    <?php } else { ?>
-                                        <div class="sigPad" id="smoothed3" >
-                                            <ul class="sigNav">
-                                                <li class="drawIt"><a href="#draw-it">Draw It</a></li>
-                                                <li class="clearButton"><a href="#clear">Clear</a></li>
-                                            </ul>
-                                            <div class="sig sigWrapper" style="height:auto;">
-                                                <div class="typed"></div>
-                                                <canvas class="pad" id="secondary_account_holder_signature"></canvas>
-                                                <input type="hidden" name="output-2" class="output">
-                                            </div>
+                                    <div class="sigPad" id="smoothed3a" style="width:100%;border:solid gray 1px;background-color:#f75c1e;">
+                                    <!-- <p style="float:right;margin-right:10px;"><i class="fa fa-pencil" aria-hidden="true"></i></p> -->
+                                        <ul class="sigNav">
+                                            <li class="drawIt"><a href="#draw-it">Draw It</a></li>
+                                            <li class="clearButton"><a href="#clear">Clear</a></li>
+                                        </ul>
+                                        <ul class="edit">
+                                            <li class="smoothed1a_pencil pointer"><a onclick="myFunctionthree()" style="float:right;margin-right:10px;" class="smoothed1a_pencil"><i class="fa fa-pencil" aria-hidden="true"></i></a></li>
+                                        </ul>
+                                        <div class="sig sigWrapper" style="height:auto;pointer-events: none;">
+                                            <div class="typed"></div>
+                                            <canvas class="pad" id="secondary_account_holder_signature3a" style="width:100%;"></canvas>
+                                            <input type="hidden" name="output-2" class="output">
                                         </div>
-                                        <input type="hidden" id="saveSecondaryAccountSignatureDB"
-                                               name="secondery_account_holder_signature">
-                                    <?php } ?>
-
+                                    </div>
+                                    <input type="hidden" id="saveSecondaryAccountSignatureDB3a"
+                                           name="secondary_account_holder_signature3a">
                                     <br>
 
                                     <label for="comp_rep_approval">Printed Name</label>
                                     <input type="text6" class="form-control mb-3" name="secondery_account_holder_name"
-                                           value="<?php echo (!empty($workorder->secondary_account_holder_name)) ? $workorder->secondary_account_holder_name : '' ?>"
                                            id="comp_rep_approval" placeholder=""/>
 
-                                </div>
                                 </div>
                             </div>
 
@@ -2042,5 +2083,26 @@ $(document).on('click','.save_update_header',function(){
                 }
 	    });
 });
+
+</script>
+
+<script>
+// $(document).on('onchange','#customer_type',function(){
+//     //    alert('yeah');
+// });
+
+document.getElementById("customer_type").onchange = function() {
+    if (this.value == 'Commercial') {
+        // alert('in');
+         $('#business_name_area').show();
+    	}
+    else if(this.value == 'Residential'){
+        $('#business_name_area').hide();
+        }
+    else if(this.value == 'Advance'){
+        $('#business_name_area').hide();
+        }
+
+	}
 
 </script>

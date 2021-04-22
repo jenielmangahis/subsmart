@@ -1461,7 +1461,7 @@ class Timesheet_model extends MY_Model
     }
     public function get_all_businesses()
     {
-        $qry = $this->db->query("SELECT id,company_id,business_name,business_email FROM business_profile");
+        $qry = $this->db->query("SELECT id,company_id,business_name,business_email,business_image FROM business_profile");
         return $qry->result();
     }
     public function get_all_business_admins($company_id)
@@ -1489,13 +1489,14 @@ class Timesheet_model extends MY_Model
         $qry = $this->db->query("SELECT * fROM timesheet_timezone_list WHERE id_of_timezone ='" . $current_tz . "'");
         return $qry->result();
     }
-    public function save_timezone_changes($timezone_id, $user_id)
+    public function save_timezone_changes($timezone_id, $user_id, $subscribe)
     {
         $current_saved = $this->get_saved_timezone($user_id);
         if (count($current_saved) > 0) {
             $update = array(
                 'timezone_id' => $timezone_id,
-                'user_id' => $user_id
+                'user_id' => $user_id,
+                "subscribed" => $subscribe
             );
             $this->db->update(
                 "timesheet_timezone_admin_report",
@@ -1504,7 +1505,8 @@ class Timesheet_model extends MY_Model
         } else {
             $insert = array(
                 'timezone_id' => $timezone_id,
-                'user_id' => $user_id
+                'user_id' => $user_id,
+                'subscribed' => $subscribe
             );
             $this->db->insert(
                 "timesheet_timezone_admin_report",

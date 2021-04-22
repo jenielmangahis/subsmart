@@ -14,6 +14,10 @@
     .fillAndSign__signatureDraw {
         max-height: 40px;
     }
+
+    .signing__signatureInput {
+        width: 100% !important;
+    }
   </style>
 </head>
 <body>
