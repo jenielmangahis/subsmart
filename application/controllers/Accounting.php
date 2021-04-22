@@ -422,8 +422,8 @@ class Accounting extends MY_Controller {
             'opening_balance' => $this->input->post('opening_balance'),
             'opening_balance_as_of_date' => $this->input->post('opening_balance_as_of_date'),
             'account_number' => $this->input->post('account_number'),
-            'business_number' => $this->input->post('business_number'),
-            'default_expense_amount' => $this->input->post('default_expense_amount'),
+            'tax_id' => $this->input->post('business_number'),
+            'default_expense_account' => $this->input->post('default_expense_amount'),
             'notes' => $this->input->post('notes'),
             'attachments' => $file_name,
             'status' => 1,
@@ -521,8 +521,8 @@ class Accounting extends MY_Controller {
             'opening_balance' => $this->input->post('opening_balance'),
             'opening_balance_as_of_date' => $this->input->post('opening_balance_as_of_date'),
             'account_number' => $this->input->post('account_number'),
-            'business_number' => $this->input->post('business_number'),
-            'default_expense_amount' => $this->input->post('default_expense_amount'),
+            'tax_id' => $this->input->post('business_number'),
+            'default_expense_account' => $this->input->post('default_expense_amount'),
             'notes' => $this->input->post('notes'),
             'date_modified' => date("Y-m-d H:i:s")
         );

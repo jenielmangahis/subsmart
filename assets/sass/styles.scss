@@ -21,10 +21,12 @@
   }
   
   .product {
-	flex: auto;
-	font-size: 1.5rem;
+	// flex: auto;
+	// font-size: 1.5rem;
+	cursor: pointer;
 	margin: 0 1vw calc(1vw + 50px) 1vw;
-	min-width: calc(33% - 2vw);
+	min-width: 150px;
+	min-height: 200px;
 	position: relative;
   }
   
@@ -37,7 +39,7 @@
   .content {
 	background: white;
 	border-radius: 30%;
-	height: 84%;
+	height: 90%;
 	margin: 8%;
 	position: absolute;
 	width: 84%;
@@ -112,17 +114,17 @@
   .exercise {
 	background-image: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
 	border-radius: 5px;
-	height: 50%;
-	margin: 25%;
-	width: 50%;
+	height: 76%;
+	margin: 12%;
+	width: 76%;
   }
   
   .sleep {
 	background-image: linear-gradient(to top, #fff1eb 0%, #ace0f9 100%);
 	border-radius: 50%;
-	height: 50%;
-	margin: 25%;
-	width: 50%;
+	height: 85%;
+	margin: 7%;
+	width: 85%;
   }
   
   .meditation {
@@ -133,10 +135,10 @@
 	  #e3eeff 100%
 	);
 	border-radius: 5px;
-	height: 40%;
-	margin: 30%;
+	height: 55%;
+	margin: 11%;
 	transform: rotate(45deg);
-	width: 40%;
+	width: 80%;
   }
   
   .twitter {

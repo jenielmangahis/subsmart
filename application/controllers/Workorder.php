@@ -588,7 +588,7 @@ class Workorder extends MY_Controller
 
 //         echo '<pre>'; print_r($this->page_data['workorder']); die;
 
-        // print_r($this->page_data['workorder']);
+        // print_r($this->page_data['customer']);
         $this->load->view('workorder/edit', $this->page_data);
     }
 
@@ -2013,6 +2013,7 @@ class Workorder extends MY_Controller
         $user_id = logged('id');
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->page_data['page_title'] = "All Templates";
+        $this->page_data['company_work_order_used'] = $this->workorder_model->getcompany_work_order_used($company_id);
         
         $this->load->view('workorder/work_order_templates', $this->page_data);
     }

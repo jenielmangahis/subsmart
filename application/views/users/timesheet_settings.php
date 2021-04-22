@@ -174,29 +174,36 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                     <div class="row" style="padding-top: 20px;">
                                         <div class="col-md-6">
                                             <form id="timezone_settings_form" action="">
-
                                                 <div class="form-group">
-                                                    <label for="from_date_correction_requests" class="week-label">Select below the <b>Timezone</b> for your Timesheet Report</label>
-                                                    <select class="custom-select" id="tz_display_name">
+                                                    <div class="custom-control custom-switch">
+                                                        <input type="checkbox" on class="custom-control-input" id="subcribe_weekly_report" checked>
+                                                        <label class="custom-control-label" for="subcribe_weekly_report">Toggle on if you want to receive the timesheet report weekly</label>
+                                                    </div>
+                                                </div>
+                                                <div class="subscribed-fields">
+                                                    <div class="form-group">
+                                                        <label for="from_date_correction_requests" class="week-label">Select below the <b>Timezone</b> for your Timesheet Report</label>
+                                                        <select class="custom-select" id="tz_display_name">
+                                                            <?php
+                                                            foreach ($all_timezone_list as $timezone) {
+                                                                echo '<option value="' . $timezone->id . '">' . $timezone->display_name . '</option>';
+                                                            }
+                                                            ?>
+                                                        </select>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="tz_id_of_tz" class="week-label">ID of Timezone</label>
+                                                        <input type="text" class="form-control" id="tz_id_of_tz" value="" disabled>
                                                         <?php
                                                         foreach ($all_timezone_list as $timezone) {
-                                                            echo '<option value="' . $timezone->id . '">' . $timezone->display_name . '</option>';
+                                                            echo '<input type="text" id="tz_id_' . $timezone->id . '" value="' . $timezone->id_of_timezone . '" disabled style="display:none;   ">';
                                                         }
                                                         ?>
-                                                    </select>
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="tz_id_of_tz" class="week-label">ID of Timezone</label>
-                                                    <input type="text" class="form-control" id="tz_id_of_tz" value="" disabled>
-                                                    <?php
-                                                    foreach ($all_timezone_list as $timezone) {
-                                                        echo '<input type="text" id="tz_id_' . $timezone->id . '" value="' . $timezone->id_of_timezone . '" disabled style="display:none;   ">';
-                                                    }
-                                                    ?>
-                                                </div>
+                                                    </div>
 
-                                                <div class="alert alert-success" role="alert">
-                                                    Please note that the next timesheet report will be sent <b id="next-timesheet-report"></b>
+                                                    <div class="alert alert-success" role="alert">
+                                                        Please note that the next timesheet report will be sent <b id="next-timesheet-report"></b>
+                                                    </div>
                                                 </div>
                                                 <div class="form-group">
                                                     <button type="submit" id="tz_form_submit" class="btn btn-primary " style="float:left;">Save</button><img class="tz-form-img-loader" style="float:left; display:none;" src="<?= base_url(); ?>/assets/css/timesheet/images/ring-loader.svg" alt="">

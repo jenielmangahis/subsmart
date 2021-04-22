@@ -40,14 +40,15 @@ class DocuSign extends MY_Controller
         $document = $this->db->get('user_docfile')->row();
 
         $this->db->where('docfile_id', $documentId);
-        $documentFile = $this->db->get('user_docfile_documents')->row();
+        $this->db->order_by('id', 'ASC');
+        $files = $this->db->get('user_docfile_documents')->result_array();
 
         header('content-type: application/json');
         echo json_encode([
             'document' => $document,
             'recipient' => $recipient,
             'fields' => $fields,
-            'file' => $documentFile,
+            'files' => $files,
         ]);
     }
 
@@ -548,6 +549,7 @@ class DocuSign extends MY_Controller
                         'email' => $recipient['email'],
                         'role' => $recipient['role'],
                         'color' => $recipient['color'],
+                        'role_name' => $recipient['role_name'],
                     ];
 
                     $this->db->insert('user_docfile_templates_recipients', $payload);
@@ -568,8 +570,33 @@ class DocuSign extends MY_Controller
 
     public function apiTemplates()
     {
-        $this->db->where('company_id', logged('company_id'));
+        $shared = filter_var($this->input->get('shared'), FILTER_VALIDATE_BOOLEAN);
+
+        if (!$shared) {
+            $this->db->where('company_id', logged('company_id'));
+            $this->db->where('user_id', logged('id'));
+            $this->db->order_by('created_at', 'DESC');
+            $records = $this->db->get('user_docfile_templates')->result();
+
+            header('content-type: application/json');
+            echo json_encode(['data' => $records]);
+            return;
+        }
+
         $this->db->where('user_id', logged('id'));
+        $sharedTemplates = $this->db->get('user_docfile_templates_shared')->result_array();
+
+        if (empty($sharedTemplates)) {
+            header('content-type: application/json');
+            echo json_encode(['data' => []]);
+            return;
+        }
+
+        $sharedTemplateIds = array_map(function ($template) {
+            return $template['template_id'];
+        }, $sharedTemplates);
+
+        $this->db->where_in('id', $sharedTemplateIds);
         $this->db->order_by('created_at', 'DESC');
         $records = $this->db->get('user_docfile_templates')->result();
 
@@ -593,6 +620,7 @@ SQL;
     public function apiTemplateFile($templateId)
     {
         $this->db->where('template_id', $templateId);
+        $this->db->order_by('id', 'ASC');
         $records = $this->db->get('user_docfile_templates_documents')->result_array();
 
         header('content-type: application/json');
@@ -732,6 +760,7 @@ SQL;
         // copy template document to user_docfile_documents
 
         $this->db->where('template_id', $template->id);
+        $this->db->order_by('id', 'ASC');
         $templateFiles = $this->db->get('user_docfile_templates_documents')->result();
 
         foreach ($templateFiles as $file) {

@@ -155,6 +155,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
         .text-muted {
             color: #6c757d !important;
+            font-size: 13px !important;
         }
 
         .lead {
@@ -228,13 +229,23 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 <body>
     <main role="main">
-
         <section class="jumbotron text-center">
             <div class="container">
-                <!-- <img width="400" src="cid:logo_2u" alt=""> -->
-                <h1><?= $company_name ?></h1>
-                <h2>Timesheet Report</h2>
-                <p class="lead text-muted" style="text-align: left;"><label style="padding-bottom: 10px;">Hi <?= $FName ?>,</label><br>Below you'll find the timesheet report you requested for your team at <?= $business_name ?> for the pay period <?= date("M d",strtotime($date_from)) ?> - <?= date("d",strtotime($date_to)) ?>.</p>
+
+                <?php 
+                if($has_logo){ 
+                ?>
+                <p style="text-align: left;"><img width="100" src="cid:company_logo" alt="" style="width:100px;"></p>
+                <?php
+                }else{
+                ?>
+                <h4 style="text-align:left;"><?=$business_name?></h4>
+                <?php
+                }
+                ?>
+                <h2 style="text-align:left;">Timesheet Report</h2>
+                <h3 style="text-align:left;"><?= date("M d",strtotime($date_from)) ?> - <?= date("d",strtotime($date_to)) ?></h3>
+                <p class="lead text-muted" style="text-align: left; margin-top:20px;"><label style="padding-bottom: 10px;">Hi <?= $FName ?>,</label><br>Below you'll find the timesheet report you requested for your team at <?= $business_name ?> for the pay period <?= date("M d",strtotime($date_from)) ?> - <?= date("d",strtotime($date_to)) ?>.</p>
                 <p>
                     <a href="<?= base_url('/timesheet/timelogs/') . $file_info[0] ?>" class="btn btn-primary my-2">Download .CSV</a>
                     <a href="<?= base_url('/timesheet/timelogs/') . $file_info[3] ?>" class="btn btn-primary my-2">Download .PDF</a>
@@ -376,10 +387,17 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 <p style="margin-top:20px;">
                     <a href="<?= base_url('/dashboard')?>" class="btn btn-success my-2">VISIT MY ACCOUNT</a>
                 </p>
-                <p class="lead text-muted" style="text-align: left; margin-top:20px;"><label style="padding-bottom: 10px;">Thanks,<br><img width="200" src="cid:logo_2u" alt=""></p>
+                <p class="lead text-muted" style="text-align: left; margin-top:20px;">
+                    <label style="padding-bottom: 5px;">Thanks,<br><br> nSmarTrac Team<br>You are receiving this email because you signed up for nSmarTrac. If you'd rather not receive this type of email, please click here to <a href="<?=base_url('/timesheet/settings')?>">unsubscribe</a>
+                
+                </p>
+                <p class="lead text-muted" style="text-align: left;">
+                    6866 Pine Forest Road Suite C. Pensacola, Florida 32526
+                </p>
+                <p style="text-align: left; margin-top:20px;"><img width="100" src="cid:logo_2u" alt="" style="width:100px;"></p>
                     
             </div>
-        </section>
+        </section>  
     </main>
 </body>
 

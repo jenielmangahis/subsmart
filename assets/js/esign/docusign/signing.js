@@ -52,19 +52,24 @@ function Signing(hash) {
     return $element;
   }
 
-  async function renderPDF() {
-    const { fields, recipient, file } = data;
+  async function renderPDF(file) {
+    const { fields, recipient } = data;
     const filepath = file.path.replace(/^\/|\/$/g, "");
 
     const documentUrl = `${prefixURL}/${filepath}`;
     const document = await PDFJS.getDocument({ url: documentUrl });
 
-    for (let index = 1; index <= document.numPages; index++) {
-      const currentFields = fields.filter(({ doc_page }) => doc_page == index);
-      const params = { page: index, document };
+    const $container = createElementFromHTML("<div></div>");
+    $container.attr("data-file-id", file.id);
 
+    for (let index = 1; index <= document.numPages; index++) {
+      const currentFields = fields.filter(({ doc_page, doc_id }) => {
+        return doc_page == index && doc_id == file.id;
+      });
+
+      const params = { page: index, document };
       const $page = await getPage(params);
-      $documentContainer.append($page);
+      $container.append($page);
 
       const canvas = $page.find("canvas").get(0);
       const context = canvas.getContext("2d");
@@ -324,6 +329,7 @@ function Signing(hash) {
       });
 
       $page.append($fields);
+      $documentContainer.append($container);
     }
   }
 
@@ -428,7 +434,14 @@ function Signing(hash) {
       $(this).find(".spinner-border").removeClass("d-none");
 
       const fieldId = $signatureModal.attr("data-field-id");
-      await storeFieldValue({ id: fieldId, value: signatureDataUrl });
+
+      const $signatureFields = $("[data-field-type=signature]");
+      const fieldIds = [...$signatureFields].map((e) =>
+        $(e).attr("id").replace("signature", "")
+      );
+
+      const promises = fieldIds.map((id) => storeFieldValue({ id, value: signatureDataUrl })); // prettier-ignore
+      await Promise.all(promises);
 
       const html = `
         <div class="fillAndSign__signatureContainer">
@@ -437,7 +450,8 @@ function Signing(hash) {
       `;
 
       $element = createElementFromHTML(html);
-      $(`#signature${fieldId}`).html($element);
+      $("[data-field-type=signature]").html($element);
+      // $(`#signature${fieldId}`).html($element);
 
       $signatureModal.modal("hide");
 
@@ -560,7 +574,12 @@ function Signing(hash) {
     signaturePad = new SignaturePad($signaturePadCanvas.get(0));
 
     await fetchData();
-    await renderPDF();
+
+    const { files } = data;
+    for (let index = 0; index < files.length; index++) {
+      await renderPDF(files[index]);
+    }
+
     attachEventHandlers();
 
     $(".loader").addClass("d-none");

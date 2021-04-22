@@ -224,7 +224,7 @@ function TemplateCreate() {
       $(this).attr("disabled", false);
       $(this).find(".spinner-border").addClass("d-none");
 
-      window.location = `${prefixURL}/esign/Files?template_id=${templateId}&next_step=3&`;
+      window.location = `${prefixURL}/esign/Files?template_id=${templateId}&next_step=3`;
     });
 
     $form.find("#docFile").on("change", onChangeFile);
@@ -260,6 +260,7 @@ function TemplateCreate() {
 
     if ($.isEmptyObject(data)) {
       data.id = new Date().getTime();
+      data.role_name = "";
       data.name = "";
       data.email = "";
       data.role = "Needs to Sign";
@@ -460,7 +461,7 @@ function Recipient({
       },
     ];
 
-    const { name, email } = data;
+    const { name, email, role_name = "" } = data;
     const role = roles.find(({ value }) => value === data.role);
     const requireFields = isPreparingTemplate;
 
@@ -470,7 +471,19 @@ function Recipient({
           <div class="row">
             <div class="col-md-8">
               <div class="form-group">
-                <label>Name *</label>
+                <label>Role</label>
+                <input
+                  type="text"
+                  data-key="role_name"
+                  name="role_name"
+                  value="${role_name}"
+                  class="form-control"
+                  required
+                >
+              </div>
+
+              <div class="form-group">
+                <label>Name</label>
                 <input
                   type="text"
                   data-key="name"
@@ -482,7 +495,7 @@ function Recipient({
               </div>
 
               <div class="form-group">
-                <label>Email *</label>
+                <label>Email</label>
                 <input
                   type="email"
                   data-key="email"
@@ -534,6 +547,7 @@ function Recipient({
     `;
 
     const $element = createElementFromHTML(html);
+    const $roleInput = $element.find("[data-key=role_name]");
     const $nameInput = $element.find("[data-key=name]");
     const $emailInput = $element.find("[data-key=email]");
     const $removeButton = $element.find(".delete-icon");
@@ -542,6 +556,7 @@ function Recipient({
     validateName($nameInput);
     validateEmail($emailInput);
 
+    $roleInput.on("keyup", onChange);
     $nameInput.on("keyup", onChange);
     $emailInput.on("keyup", onChange);
     $removeButton.on("click", onRemove);
