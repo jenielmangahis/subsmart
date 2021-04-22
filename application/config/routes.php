@@ -238,6 +238,8 @@ $route['email_automation/edit_template/(:num)'] = 'Email_Automation/edit_templat
 $route['email_automation/update_template'] = 'Email_Automation/update_template';
 $route['email_automation/delete_template'] = 'Email_Automation/delete_template';
 $route['email_automation/_get_template_message'] = 'Email_Automation/ajax_get_template_message';
+$route['email_automation/create_email_automation'] = 'Email_Automation/ajax_create_email_automation';
+$route['email_automation/_generate_preview'] = 'Email_Automation/generate_preview';
 
 $route['campaign_automation'] = 'Campaign_Automation';
 

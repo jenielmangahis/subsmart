@@ -803,9 +803,9 @@ class Workcalender extends MY_Controller
             $company_id = logged('company_id'); $company_id = 15;
             $events = $this->event_model->getAllByCompany($company_id);
         }elseif( $role == 4 ){
-        	$events = $this->event_model->getAllByUserId();
+            $events = $this->event_model->getAllByUserId();
         }else{
-        	$company_id = logged('company_id');
+            $company_id = logged('company_id');
             $events = $this->event_model->getAllByCompany($company_id);
         }
 
@@ -891,7 +891,7 @@ class Workcalender extends MY_Controller
             foreach($events as $event) {
                 if( $event->event_description != '' ){
                    if($event->employee_id > 0) {
-                   		$starttime = $event->start_date . " " . $event->start_time;
+                        $starttime = $event->start_date . " " . $event->start_time;
                         $start_date_time = date('Y-m-d H:i:s',strtotime($event->start_date . " " . $event->start_time));
                         $start_date_end  = date('Y-m-d H:i:s',strtotime($event->end_date . " " . $event->end_time));
 
@@ -1040,7 +1040,7 @@ class Workcalender extends MY_Controller
                                 $date = new DateTime($event->start->dateTime);
                                 $date->setTimezone($tz);
 
-                                $start_date = $event->start->dateTime;
+                                $start_date = $date->format('Y-m-d H:i:s');
                                 $custom_html_start_date = $date->format('g:i a');
                                 $starttime = $start_date . ' ' . $date->format('g:i a');
                                 $is_with_time = true;
@@ -1056,7 +1056,8 @@ class Workcalender extends MY_Controller
                             if( $event->end->dateTime != '' ){
                                 $date = new DateTime($event->end->dateTime);
                                 $date->setTimezone($tz);
-                                $end_date = $event->end->dateTime;
+                                //$end_date = $event->end->dateTime;
+                                $end_date = $date->format('Y-m-d H:i:s');
 
                                 $custom_html_end_date = $date->format('g:i a');
                                 $start_time = $date->format('g:i a');
@@ -1107,7 +1108,7 @@ class Workcalender extends MY_Controller
         $jobs = $this->Jobs_model->get_all_jobs();
         foreach( $jobs as $j ){
             if( $j->job_description != '' ){
-            	$starttime = $j->start_date . " " . $j->start_time;
+                $starttime = $j->start_date . " " . $j->start_time;
                 $start_date_time = date('Y-m-d H:i:s',strtotime($j->start_date . " " . $j->start_time));
                 $start_date_end  = date('Y-m-d H:i:s',strtotime($j->end_date . " " . $j->end_time));
                 $backgroundColor = "#38a4f8";

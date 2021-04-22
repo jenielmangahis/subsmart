@@ -50,13 +50,29 @@ label>input {
  visibility: visible;
  position: inherit;
 }
+.group-tags .btn{
+    display: inline-block;
+    width: auto;
+    margin: 5px;
+    padding: 5px 10px;
+}
+.modal-tags-list li{
+    margin-bottom: : 30px;
+}
+.tags-group-name{
+    background-color: #32243D;
+    color : #ffffff;
+    padding: 10px !important;
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
 </style>
 <div class="wrapper" role="wrapper">
     <?php include viewPath('includes/sidebars/marketing'); ?>
     <!-- page wrapper start -->
     <div wrapper__section>
         <div class="container-fluid p-40">
-            <?php echo form_open_multipart('sms_automation/save', ['class' => 'form-validate', 'id' => 'create_sms_automation', 'autocomplete' => 'off']); ?>
+            <?php echo form_open_multipart('create_email_automation/save', ['class' => 'form-validate', 'id' => 'create_email_automation', 'autocomplete' => 'off']); ?>
             <div class="row">
                 <div class="col-xl-12">
                     <div class="card mt-0">
@@ -187,7 +203,7 @@ label>input {
                                             <label>Placeholders</label>
                                             <p class="margin-bottom">Click to select and insert placeholders in the content which will dynamically be replaced with the appropriate data.</p>
                                             <div>
-                                                <a class="btn btn-default" href="#" data-tags-modal="open" data-template-default-id="">Insert Placeholders</a>
+                                                <a class="btn btn-default btn-insert-smart-tags" href="javascript:void(0);">Insert Placeholders</a>
                                             </div>
                                         </div>
                                     </div>
@@ -195,9 +211,10 @@ label>input {
                             </div>
                             <hr />
                             <div class="row">
-                                <div class="col-md-4 form-group md-right">
+                                <div class="col-md-4 form-group md-right">                                    
+                                    <button type="submit" class="btn btn-flat btn-primary margin-right btn-automation-save" style="float: left;margin-right: 10px;">Save</button>
+                                    <a class="btn btn-primary btn-preview-email" href="javascript:void(0);" style="float: left;margin-right: 10px;">Preview</a>                                    
                                     <a class="btn btn-default" href="<?php echo url('sms_automation') ?>" style="float: left;margin-right: 10px;">Cancel</a>
-                                    <button type="submit" class="btn btn-flat btn-primary margin-right btn-automation-save-draft" style="float: left;margin-right: 0px;">Save</button>
                                 </div>
                             </div>
                         </div>
@@ -207,6 +224,76 @@ label>input {
             </div>
             <?php echo form_close(); ?>
             <!-- end row -->
+
+            <div class="modal fade" id="modalSmartTags" tabindex="-1" role="dialog" aria-labelledby="modalSmartTagsTitle" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle">Insert Placeholders</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div class="modal-body" style="padding: 0px 30px;">
+                        <p>Click one of the placeholders below to insert.</p>
+                        <ul class="modal-tags-list" data-tags-modal="list">
+                            <li>
+                                <div class="text-ter weight-medium tags-group-name">Customer</div>
+                                <div class="group-tags">
+                                    <a class="btn btn-default btn-stag" data-id="customer.name">Full Name</a>
+                                    <a class="btn btn-default btn-stag" data-id="customer.first_name">First Name</a>
+                                    <a class="btn btn-default btn-stag" data-id="customer.last_name">Last Name</a>
+                                    <a class="btn btn-default btn-stag" data-id="customer.phone">Phone</a>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="text-ter weight-medium tags-group-name">Business</div>
+                                <div class="group-tags">
+                                    <a class="btn btn-default btn-stag" data-id="business.name">Name</a>
+                                    <a class="btn btn-default btn-stag" data-id="business.email">Email</a>
+                                    <a class="btn btn-default btn-stag" data-id="business.phone">Phone</a>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="text-ter weight-medium tags-group-name">Other</div>
+                                <div class="group-tags">
+                                    <a class="btn btn-default btn-stag" data-id="estimate.custom_number">Estimate Number (last)</a>
+                                    <a class="btn btn-default btn-stag" data-id="estimate.date_added_text">Estimate Date  (last)</a>
+                                    <a class="btn btn-default btn-stag" data-id="estimate.total_text">Estimate Amount (last)</a>
+                                    <a class="btn btn-default btn-stag" data-id="invoice.custom_number">Invoice Number (last)</a>
+                                    <a class="btn btn-default btn-stag" data-id="invoice.date_issued_text">Invoice Date Issued (last)</a>
+                                    <a class="btn btn-default btn-stag" data-id="invoice.total_text">Invoice Amount (last)</a>
+                                    <a class="btn btn-default btn-stag" data-id="event.date_start_text">Job Date (last)</a>
+                                </div>
+                            </li>
+                        </ul>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                      </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal fade" id="modalPreviewEmail" tabindex="-1" role="dialog" aria-labelledby="modalPreviewEmailTitle" aria-hidden="true">
+                <div class="modal-dialog modal-lg" role="document" style="margin-top:5%;">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle">Preview Email</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div class="modal-body" style="padding: 0px 30px;">
+                        <div class="email-blast-msg" style="height: 600px;overflow: auto;"></div>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                      </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
         <!-- end container-fluid -->
     </div>
@@ -215,31 +302,64 @@ label>input {
 <?php include viewPath('includes/footer'); ?>
 <script>
 $(function(){
-    $("#create_sms_automation").submit(function(e){
+    $("#create_email_automation").submit(function(e){
         e.preventDefault();
-        var url = base_url + 'sms_automation/save_draft_automation';
-        $(".btn-automation-save-draft").html('<span class="spinner-border spinner-border-sm m-0"></span>  Saving');
+        var url = base_url + 'email_automation/create_email_automation';
+        $(".btn-automation-save").html('<span class="spinner-border spinner-border-sm m-0"></span>  Saving');
         setTimeout(function () {
           $.ajax({
              type: "POST",
              url: url,
              dataType: "json",
-             data: $("#create_sms_automation").serialize(),
+             data: $("#create_email_automation").serialize(),
              success: function(o)
              {
                 if( o.is_success ){
-                    $(".validation-error").hide();
-                    $(".validation-error").html('');
-                    //redirect to step2
-                    location.href = base_url + "sms_automation/build_sms";
+                    location.href = base_url + "email_automation";
                 }else{
-                    $(".validation-error").show();
-                    $(".validation-error").html(o.err_msg);
-                    $(".btn-automation-save-draft").html('Continue »');
+                    Swal.fire({
+                      icon: 'error',
+                      title: 'Cannot proceed.',
+                      text: o.msg
+                    });
+                    $(".btn-automation-save").html('Save');
                 }
              }
           });
         }, 1000);
+    });
+
+    $(".btn-insert-smart-tags").click(function(){
+        $("#modalSmartTags").modal('show');
+    });
+
+    $(".btn-stag").click(function(){
+        var tag = "{{" + $(this).attr("data-id") + "}}";
+
+        CKEDITOR.instances['mail_body'].insertHtml(tag);
+        $("#modalSmartTags").modal("hide");
+    });
+
+    $(".btn-preview-email").click(function(){
+        var email_body = CKEDITOR.instances['mail_body'].getData();
+        var email_subject = $("#email_subject").val();
+        $("#modalPreviewEmail").modal('show');
+
+        var url = base_url + 'email_automation/_generate_preview';
+        $(".email-blast-msg").html('<span class="spinner-border spinner-border-sm m-0"></span>');
+
+        setTimeout(function () {
+          $.ajax({
+             type: "POST",
+             url: url,
+             data: {email_body:email_body, email_subject:email_subject},
+             success: function(o)
+             {
+                $(".email-blast-msg").html(o);
+             }
+          });
+        }, 1000);
+
     });
 
     $("#rule-event").change(function(){

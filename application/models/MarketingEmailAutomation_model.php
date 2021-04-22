@@ -14,6 +14,9 @@ class MarketingEmailAutomation_model extends MY_Model
     public $customer_type_residential = 1;
     public $customer_type_commercial = 2;
 
+    public $is_active = 1;
+    public $is_inactive = 0;
+
     public function getAll($filters=array())
     {
         $id = logged('id');
@@ -109,6 +112,14 @@ class MarketingEmailAutomation_model extends MY_Model
         ];
 
         return $options;
+    }
+
+    public function isActive(){
+        return $this->is_active;
+    }
+
+    public function isInactive(){
+        return $this->is_inactive;
     }
 
 }
