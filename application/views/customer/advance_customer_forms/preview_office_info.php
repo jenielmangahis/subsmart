@@ -268,5 +268,9 @@
                 <?= !empty($billing_info->frequency) ?  $billing_info->frequency : '---' ?>
             </div>
         </div>
+        <br>
+        <a href="<?= base_url('customer/subscription/'.$this->uri->segment(3)) ?>">
+        <button type="submit" class="btn btn-primary">Capture Now</button>
+        </a>
     </div>
 </div>

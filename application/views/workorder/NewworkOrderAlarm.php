@@ -11,6 +11,12 @@
   .custom-signaturepad .sigPad  {
     width: 100% !important;
   }
+  #group_area{
+    background-color:#F9F9F9;
+  }
+  #group_area:hover{
+    background-color:#EBFFE2;
+  }
 </style>
 <div class="wrapper" role="wrapper">
     <?php include viewPath('includes/sidebars/workorder'); ?>
@@ -64,7 +70,7 @@
                                 <input type="hidden" id="content_input" class="form-control" name="header" value="<?php echo $headers->content; ?>">
                             </div>
                             <!-- ====== CUSTOMER ====== -->
-							 <div class="row">
+							 <div class="row" id="group_area">
 								<div class="col-md-12">
 									<div class="row">
 										<div class="form-group col-md-12">
@@ -318,7 +324,7 @@
                             </div>
 
                             <!-- ====== EMERGENCY CALL LIST ====== -->
-                            <div class="row">
+                            <div class="row" id="group_area">
                                 <div class="form-group col-md-12">
                                     <h5 class="box-title">Emergency Call List</h5>
                                 </div>
@@ -546,7 +552,7 @@
                             </div>
 
                             <!-- ====== CUSTOMER ACCOUNT INFORMATION ====== -->
-                            <div class="row">
+                            <div class="row" id="group_area">
                                 <div class="form-group col-md-12">
                                     <h5 class="box-title">Customer Account Information</h5>
                                 </div>
@@ -682,7 +688,7 @@
                             
 
                             <!-- ====== JOB ====== -->
-                            <div class="row">
+                            <div class="row" id="group_area">
                                 <div class="form-group col-md-12">
                                     <h5 class="box-title">Job</h5>
                                 </div>
@@ -787,13 +793,13 @@
                             </div>
 
                             <!-- ====== ENHANCED SERVICES ====== -->
-                            <div class="row">
+                            <div class="row" id="group_area">
                                 <div class="form-group col-md-12">
                                     <h5 class="box-title">Enhanced Services</h5>
                                 </div>
                                 <div class="col-sm-12 col-md-6">
                                     <div class="panel-group">
-                                        <div class="panel panel-default">
+                                        <div class="panels panel-default">
                                             <div class="panel-heading">
                                                 <h4 class="panel-title">
                                                     <a data-toggle="collapse" href="#collapse1">Cameras <i
@@ -1107,7 +1113,7 @@
                             </div>
 
                             <!-- ====== Additional Equipment/Services ====== -->
-                            <div class="row">
+                            <div class="row" id="group_area">
                                 <div class="form-group col-md-12">
                                     <h5 class="box-title">Additional Equipment/Services</h5>
                                 </div>
@@ -1302,7 +1308,7 @@
                             </div>
 
                             <!-- ====== TOTAL / BILLING ====== -->
-                            <div class="row">
+                            <div class="row" id="group_area">
                                 <div class="col-sm-12 col-md-6">
                                     <div class="form-group col-md-12">
                                         <h5 class="box-title">Total</h5>
@@ -1325,8 +1331,7 @@
                                                 <td class="d-flex align-items-center">$ <input type="text"
                                                                                                value="<?php echo !empty($workorder->total) ? $workorder->total['sales_tax'] : 0.00; ?>"
                                                                                                name="sales_tax"
-                                                                                               id="sales_tax"
-                                                                                               onfocusout="cal_total_due()"
+                                                                                               id="sales_taxs"
                                                                                                class="form-control">
                                                 </td>
                                             </tr>
@@ -1485,6 +1490,27 @@
                                                            id="cvv" placeholder="" required/>
                                                 </div>
                                             </div>
+
+                                            <div class="row" style="border:none; margin-bottom:20px; padding-bottom:0px;">
+                                                <div class=" col-md-4">
+                                                    <label for="card_no">Routing Number</label>
+                                                    <input type="text" class="form-control card-number required"
+                                                           name="Routing" />
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <label for="datepicker_exp_date">Checking Number</label>
+                                                    <div class="form-group">
+                                                        <div class='input-group date datepicker'>
+                                                            <input type='text' name="Checking" class="form-control" id="card_exp_date"/>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class=" col-md-4">
+                                                    <label for="cvv">Account Number</label>
+                                                    <input type="text" class="form-control card-cvc required"
+                                                           name="Account" />
+                                                </div>
+                                            </div>
                                         </div>
 
                                     </div>
@@ -1492,53 +1518,19 @@
                             </div>
 
                             <!-- ====== AGREEMENT ====== -->
-                            <div class="row">
-                                <div class=" col-md-12">
+                            <div class="row" id="group_area">
+                                <div class=" col-md-12"><label style="float:right;color:green;"><a href="#" style="color:green;" data-toggle="modal" data-target="#terms_conditions_modal">Update Terms and Condition</a></label>
                                     <h6>Agreement</h6>
-                                    <div style="height:400px; overflow:auto; background:#FFFFFF; padding-left:10px;">
-                                        <p>2. Install of the system. Company agrees to schedule and install an alarm
-                                            system and/or devices in connection with a Monitoring Agreement which
-                                            customer will receive at the time of installation. Customer hereby agrees to
-                                            buy the system/devices described below and incorporated herein for all
-                                            purposes by this reference (the “System /Services”), in accordance with the
-                                            terms and conditions set forth. IF CUSTOMER FAIL TO FULLFILL THE MONITORING
-                                            AGREEMENT, Customer agrees to pay the consultation fee, the cost of the
-                                            system and recovering fees.</p>
-                                        <p>3. Customer agrees to have system maintained for an initial term of 60 months
-                                            at the above monthly rate in exchange for a reduced cost of the system. Upon
-                                            the execution of this agreement shall automatically start the billing
-                                            process. Customer understands that the monthly payments must be paid through
-                                            “Direct Billing” through their banking institution or credit card. Customers
-                                            acknowledge that they authorize Company to obtain a Security System.
-                                            Residential Clients: CUSTOMER HAS THE RIGHT TO CANCEL THIS TRANSACTION at
-                                            any time prior to midnight on the 3rd business day after the above date of
-                                            this work order in writing. Customer agrees that no verbal method is valid,
-                                            and must be submitted only in writing. The date on this agreement is the
-                                            agreed upon date for both the Company and the Customer</p>
-                                        <p>4. Client verifies that they are owners of the property listed above. In the
-                                            event the system has to be removed, Client agrees and understands that there
-                                            will be an additional $299.00 restocking/removal fee and early termination
-                                            fees will apply.</p>
-                                        <p>5. Client understands that this is a new Monitoring Agreement through our
-                                            central station. Alarm.com or .net is not affiliated nor has any bearing on
-                                            the current monitoring services currently or previously initiated by Client
-                                            with other alarm companies. By signing this work order, Client agrees and
-                                            understands that they have read the above requirements and would like to
-                                            take advantage of our services. Client understand that is a binding
-                                            agreement for both party.</p>
-                                        <p>6. Customer agrees that the system is preprogramed for each specific
-                                            location. accordance with the terms and conditions set forth. IF CUSTOMER
-                                            FAIL TO FULLFILL THE MONITORING AGREEMENT, Customer agrees to pay the
-                                            consultation fee, the cost of the system and recovering fees. Customer
-                                            agrees that this is a customized order. By signing this workorder, customer
-                                            agrees that customized order can not be cancelled after three day of this
-                                            signed document.</p>
+                                    <div style="height:400px; overflow:auto; background:#FFFFFF; padding-left:10px;" id="thisdiv2">
+                                    <?php echo $terms_conditions->content; ?></p>
+                                            <input type="hidden" id="company_id" value="<?php echo getLoggedCompanyID(); ?>">
+                                            <input type="hidden" class="form-control" name="terms_conditions" id="terms_conditions" value="<?php echo $terms_conditions->content; ?>" />
                                     </div>
                                 </div>
                             </div>
 
                             <!-- ====== SIGNATURE ====== -->
-                            <div class="row">
+                            <div class="row" id="group_area">
                                 <div class=" col-md-12">
                                     <div class="work_nore">
                                         <h6>Signature</h6>
@@ -1547,7 +1539,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="row">
+                            <div class="row" id="group_area">
                                 <div class="col-md-4">
                                     <h6>Company Representative Approval</h6>
                                     <div class="sigPad" id="smoothed1a" style="width:100%;border:solid gray 1px;background-color:#00b300;">
@@ -1630,19 +1622,13 @@
                             </div>
 
                             <!-- ====== TERMS OF USE ====== -->
-                            <div class="row">
-                                <div class=" col-md-12">
+                            <div class="row" id="group_area">
+                                <div class=" col-md-12"><label style="float:right;color:green;"><a href="#" style="color:green;" data-toggle="modal" data-target="#terms_use_modal">Update Terms of Use</a></label>
                                     <h6>Agreement</h6>
-                                    <div style="height:200px; overflow:auto; background:#FFFFFF; padding-left:10px;">
-                                        <strong>**This isn't everything... just a summary**</strong> You may CANCEL this
-                                        transaction, within THREE BUSINESS DAYS from the above date. If You cancel, You
-                                        must make available to US in substantially as good condition as when received,
-                                        any goods delivered to You under this contract or sale, You may, if You wish,
-                                        comply with Our instructions regarding the return shipment of the goods at Your
-                                        expense and risk. To cancel this transaction, mail deliver a signed and
-                                        postmarket, dated copy of this Notice of Cancellation or any other written
-                                        notice to ALarm Direct, Inc., 6866 Pine Forest ROad, Suite B, Pensacola, FL
-                                        32526. NOT LATER THAN MIDNIGHT OF {Date plus 3 business days}
+                                    <div style="height:200px; overflow:auto; background:#FFFFFF; padding-left:10px;" id="thisdiv3">
+                                    <p><?php echo $terms_uses->content; ?></p>
+                                            <input type="hidden" id="company_id" value="<?php echo getLoggedCompanyID(); ?>">
+                                            <input type="hidden" class="form-control" name="terms_of_use" id="terms_of_use"  value="<?php echo $terms_uses->content; ?>"/>
                                     </div>
                                 </div>
 
@@ -1658,10 +1644,10 @@
 
 
                             <!-- ====== POST SERVICE SUMMARY ====== -->
-                            <div class="row">
+                            <div class="row" id="group_area">
                                 <div class="col-md-12">
                                     <div class="panel-group">
-                                        <div class="panel panel-default">
+                                        <div class="panels panel-default">
                                             <div class="panel-heading">
                                                 <h4 class="panel-title">
                                                     <a data-toggle="collapse" href="#POST-SERVICEcollapse1">POST-SERVICE
@@ -1910,6 +1896,56 @@
                 </div>
             </div>
 
+             <!-- Modal -->
+             <div class="modal fade" id="terms_conditions_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle">Update Terms and Conditions</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                            <textarea class="form-control ckeditor editor1_tc" name="editor1" id="editor1" cols="40" rows="40">
+                            <?php echo $terms_conditions->content; ?>
+                            </textarea>
+                            <input type="hidden" id="company_id_modal" value="<?php echo getLoggedCompanyID(); ?>">
+                            <input type="hidden" id="update_tc_id" value="<?php echo $terms_conditions->id; ?>">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary save_terms_and_conditions">Save changes</button>
+                    </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal -->
+            <div class="modal fade" id="terms_use_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle">Update Terms of Use</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                            <textarea class="form-control ckeditor" name="update_tu" id="editor2" cols="40" rows="40">
+                            <?php echo $terms_uses->content; ?>
+                            </textarea>
+                            <input type="hidden" id="company_id_modal" value="<?php echo getLoggedCompanyID(); ?>">
+                            <input type="hidden" id="update_tu_id" value="<?php echo $terms_uses->id; ?>">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary save_terms_of_use">Save changes</button>
+                    </div>
+                    </div>
+                </div>
+            </div>
+
     <?php include viewPath('includes/footer'); ?>
 
     <script>
@@ -2104,5 +2140,61 @@ document.getElementById("customer_type").onchange = function() {
         }
 
 	}
+
+</script>
+
+<script>
+$(document).on('click','.save_terms_and_conditions',function(){
+    //    alert('yeah');
+    var id = $('#update_tc_id').val();
+    // var content = $('.editor1_tc').val();
+    var content = CKEDITOR.instances['editor1'].getData();
+    // alert(content);
+      $.ajax({
+            url:"<?php echo base_url(); ?>workorder/save_update_tc",
+            type: "POST",
+            data: {id : id, content : content },
+            success: function(dataResult){
+                // $('#table').html(dataResult); 
+                // alert('success')
+                console.log(dataResult);
+                $("#terms_conditions_modal").modal('hide')
+                $('#thisdiv2').load(window.location.href +  ' #thisdiv2');
+            },
+                error: function(response){
+                alert('Error'+response);
+       
+                }
+	    });
+        
+    });
+
+</script>
+
+<script>
+$(document).on('click','.save_terms_of_use',function(){
+    //    alert('yeah');
+    var id = $('#update_tu_id').val();
+    // var content = $('.editor1_tc').val();
+    var content = CKEDITOR.instances['editor2'].getData();
+    // alert(content);
+      $.ajax({
+            url:"<?php echo base_url(); ?>workorder/save_update_tu",
+            type: "POST",
+            data: {id : id, content : content },
+            success: function(dataResult){
+                // $('#table').html(dataResult); 
+                // alert('success')
+                console.log(dataResult);
+                $("#terms_use_modal").modal('hide')
+                $('#thisdiv3').load(window.location.href +  ' #thisdiv3');
+            },
+                error: function(response){
+                alert('Error'+response);
+       
+                }
+	    });
+        
+    });
 
 </script>

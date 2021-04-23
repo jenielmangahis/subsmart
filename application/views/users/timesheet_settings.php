@@ -175,6 +175,14 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                         <div class="col-md-6">
                                             <form id="timezone_settings_form" action="">
                                                 <div class="form-group">
+                                                        <div class="custom-control custom-switch">
+                                                            <input type="checkbox" on class="custom-control-input" id="est_wage_privacy" >
+                                                            <label class="custom-control-label" for="est_wage_privacy">Include <b>Estimated Wages</b> to the weekly timesheet report.</label>
+                                                            <label class="est_wage_privacy_editor" for="est_wage_privacy">Latest update by <span>Lou Pinton Apr 5, 2021</span></label>
+                                                            
+                                                        </div>
+                                                    </div>
+                                                <div class="form-group">
                                                     <div class="custom-control custom-switch">
                                                         <input type="checkbox" on class="custom-control-input" id="subcribe_weekly_report" checked>
                                                         <label class="custom-control-label" for="subcribe_weekly_report">Toggle on if you want to receive the timesheet report weekly</label>

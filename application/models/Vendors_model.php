@@ -249,30 +249,46 @@ class Vendors_model extends MY_Model {
 		return $update;
 	}
 
-	public function get_vendor_bill_transactions($vendorId)
+	public function get_vendor_bill_transactions($vendorId, $filters = [])
 	{
 		$this->db->where('company_id', logged('company_id'));
 		$this->db->where('vendor_id', $vendorId);
 		$this->db->where('status', 1);
+		if($filters['start-date']) {
+			$this->db->where('bill_date >=', $filters['start-date']);
+			$this->db->where('bill_date <=', $filters['end-date']);
+		}
+
 		$query = $this->db->get('accounting_bill');
 
 		return $query->result();
 	}
 
-	public function get_vendor_check_transactions($vendorId)
+	public function get_vendor_check_transactions($vendorId, $filters = [])
 	{
 		// $this->db->where('company_id', logged('company_id'));
 		$this->db->where('vendor_id', $vendorId);
 		$this->db->where('status', 1);
+		if($filters['start-date']) {
+			$this->db->where('payment_date >=', $filters['start-date']);
+			$this->db->where('payment_date <=', $filters['end-date']);
+		}
+
 		$query = $this->db->get('accounting_check');
 
 		return $query->result();
 	}
 
-	public function get_vendor_expense_transactions($vendorId)
+	public function get_vendor_expense_transactions($vendorId, $filters = [])
 	{
+		// $this->db->where('company_id', logged('company_id'));
 		$this->db->where('vendor_id', $vendorId);
 		$this->db->where('status', 1);
+		if($filters['start-date']) {
+			$this->db->where('payment_date >=', $filters['start-date']);
+			$this->db->where('payment_date <=', $filters['end-date']);
+		}
+		
 		$query = $this->db->get('accounting_expense');
 
 		return $query->result();

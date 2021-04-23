@@ -115,7 +115,6 @@ class Customer extends MY_Controller
     }
 
     public function billing($id=null){
-
         // check if customer is allowed to view this page
         $is_allowed = $this->isAllowedModuleAccess(9);
         if( !$is_allowed ){
@@ -128,7 +127,7 @@ class Customer extends MY_Controller
         $user_id = logged('id');
         if(isset($userid) || !empty($userid)){
             $this->page_data['profile_info'] = $this->customer_ad_model->get_data_by_id('prof_id',$userid,"acs_profile");
-             $this->page_data['billing_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_billing");
+            $this->page_data['billing_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_billing");
 
             $get_login_user = array(
                 'where' => array(
@@ -141,6 +140,34 @@ class Customer extends MY_Controller
         }
 
         $this->load->view('customer/billing', $this->page_data);
+    }
+
+    public function subscription($id=null){
+        // check if customer is allowed to view this page
+        $is_allowed = $this->isAllowedModuleAccess(9);
+        if( !$is_allowed ){
+            $this->page_data['module'] = 'customer';
+            echo $this->load->view('no_access_module', $this->page_data, true);
+            die();
+        }
+
+        $userid = $id;
+        $user_id = logged('id');
+        if(isset($userid) || !empty($userid)){
+            $this->page_data['profile_info'] = $this->customer_ad_model->get_data_by_id('prof_id',$userid,"acs_profile");
+            $this->page_data['billing_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_billing");
+
+            $get_login_user = array(
+                'where' => array(
+                    'id' => $user_id
+                ),
+                'table' => 'users',
+                'select' => 'id,FName,LName',
+            );
+            $this->page_data['logged_in_user'] = $this->general->get_data_with_param($get_login_user,FALSE);
+        }
+
+        $this->load->view('customer/subscription', $this->page_data);
 
     }
 

@@ -142,7 +142,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
-        <div class="modal-body text-center">
+        <div class="modal-body text-center" id="selecting_form">
               <p class="text-lg margin-bottom">
                   What type of Work Order you want to create
               </p><center>
@@ -186,6 +186,7 @@ $(document).on('click','#standard-template',function(){
             success: function(dataResult){
                 $("#myModal").modal("hide");
                 $("#successm").modal("show");
+                $('#selecting_form').load(window.location.href +  ' #selecting_form');
             },
                 error: function(response){
                 alert('Error'+response);
@@ -217,6 +218,7 @@ $(document).on('click','#alarm-template',function(){
             success: function(dataResult){
                 $("#myModal").modal("hide");
                 $("#successm").modal("show");
+                $('#selecting_form').load(window.location.href +  ' #selecting_form');
             },
                 error: function(response){
                 alert('Error'+response);

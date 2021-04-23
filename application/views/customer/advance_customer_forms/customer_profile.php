@@ -239,7 +239,7 @@
                 <label for="">Contact Phone 1</label>
             </div>
             <div class="col-md-8">
-                <input type="text" class="form-control" placeholder="xxx-xxx-xxxx" name="contact_phone1" id="contact_phone1" value="<?php if(isset($profile_info)){ echo $profile_info->contact_phone1; } ?>"/>
+                <input type="text" class="form-control phone_number" maxlength="12" placeholder="xxx-xxx-xxxx" name="contact_phone1" id="contact_phone1" value="<?php if(isset($profile_info)){ echo $profile_info->contact_phone1; } ?>"/>
             </div>
         </div>
         <div class="row form_line">
@@ -255,7 +255,7 @@
                 <label for="">Contact Phone 2</label>
             </div>
             <div class="col-md-8">
-                <input type="text" class="form-control" placeholder="xxx-xxx-xxxx" name="contact_phone2" id="contact_phone2" value="<?php if(isset($profile_info)){ echo $profile_info->contact_phone2; } ?>"/>
+                <input type="text" class="form-control phone_number" maxlength="12" placeholder="xxx-xxx-xxxx" name="contact_phone2" id="contact_phone2" value="<?php if(isset($profile_info)){ echo $profile_info->contact_phone2; } ?>"/>
             </div>
         </div>
         <div class="row form_line">
@@ -271,7 +271,7 @@
                 <label for="">Contact Phone 3</label>
             </div>
             <div class="col-md-8">
-                <input type="text" class="form-control" placeholder="xxx-xxx-xxxx" name="contact_phone3" id="contact_phone3" value="<?php if(isset($profile_info)){ echo $profile_info->contact_phone3; } ?>"/>
+                <input type="text" class="form-control phone_number" maxlength="12" placeholder="xxx-xxx-xxxx" name="contact_phone3" id="contact_phone3" value="<?php if(isset($profile_info)){ echo $profile_info->contact_phone3; } ?>"/>
             </div>
         </div>
     </div>

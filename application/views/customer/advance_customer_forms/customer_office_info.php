@@ -255,7 +255,6 @@
             </div>
             <div class="col-md-8">
                 <select id="language" name="language" data-customer-source="dropdown" class="input_select">
-                    <option <?php if(isset($office_info)){ if($office_info->language == ""){ echo 'selected'; } } ?> value="">Select</option>
                     <option <?php if(isset($office_info)){ if($office_info->language == "English"){ echo 'selected'; } } ?> value="English">English</option>
                     <option <?php if(isset($office_info)){ if($office_info->language == "Spanish"){ echo 'selected'; } } ?> value="Spanish">Spanish</option>
                     <option <?php if(isset($office_info)){ if($office_info->language == "Mandarin Chinese"){ echo 'selected'; } } ?> value="Mandarin Chinese">Mandarin Chinese</option>

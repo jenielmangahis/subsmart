@@ -281,6 +281,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     $overall_total_wage = 0;
                     $overall_total_est_wage = 0;
                     $overall_time_card_ctr = 0;
+                    $overall_pto = 0;
                     for ($i = 0; $i < count($timehseet_storage); $i++) {
 
                         if ($id_running != $timehseet_storage[$i][0]) {
@@ -291,7 +292,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                     <td style="text-align: left;">' . $timehseet_storage[$i - 1][1] . '</td>
                                                     <td >' . $total_paid . ' hours</td>
                                                     <td >' . $total_regular . ' hours</td>
-                                                    <td >0.00</td>
                                                     <td >' . $total_overtime . '</td>
                                                     <td >$' . $total_est_wage . '</td>
                                                 </tr>';
@@ -345,7 +345,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                     <td style="text-align: left;">' . $timehseet_storage[$i][1] . '</td>
                                                     <td >' . $total_paid . ' hours</td>
                                                     <td >' . $total_regular . ' hours</td>
-                                                    <td >0.00</td>
                                                     <td >' . $total_overtime . '</td>
                                                     <td >$' . $total_est_wage . '</td>
                                                 </tr>';
@@ -361,26 +360,14 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         <tr style="font-weight: bold;  border:none;">
                             <th>Regular</th>
                             <th>OT</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr style="font-weight: bold; border:none;">
-                            <th style="color:#6c757d"><?= $overall_total_regular ?> hours</th>
-                            <th style="color:#6c757d"><?= $overall_total_overtime ?></th>
-                        </tr>
-                    </tbody>
-                </table>
-                <table class="table">
-                    <thead>
-                        <tr style="font-weight: bold; border:none;">
-                            <th>Unpaid Breaks</th>
                             <th>Est. Wages</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr style="font-weight: bold; border:none;">
-                            <th style="color:#6c757d">0.00</th>
-                            <th style="color:#6c757d">$<?= $overall_total_est_wage ?></th>
+                            <td style="color:#6c757d"><?= $overall_total_regular ?> hours</td>
+                            <td style="color:#6c757d"><?= $overall_total_overtime ?></td>
+                            <td style="color:#6c757d">$<?= $overall_total_est_wage ?></td>
                         </tr>
                     </tbody>
                 </table>

@@ -163,6 +163,35 @@ class Contractors extends MY_Controller {
         add_footer_js(array(
             "assets/js/accounting/payroll/view-contractor.js"
         ));
+
+        $paymentsCount = 0;
+        $checks = $this->vendors_model->get_vendor_check_transactions($contractorId);
+        $expenses = $this->vendors_model->get_vendor_expense_transactions($contractorId);
+        $bills = $this->vendors_model->get_vendor_bill_transactions($contractorId);
+
+        $paymentsCount += count($checks);
+        $paymentsCount += count($expenses);
+        $paymentsCount += count($bills);
+
+        $paymentsTotal = 0.00;
+        if($checks && count($checks) > 0) {
+            foreach($checks as $check) {
+                $paymentsTotal += floatval($check->total_amount);
+            }
+        }
+        if($expenses && count($expenses) > 0) {
+            foreach($expenses as $expense) {
+                $paymentsTotal += floatval($expense->amount);
+            }
+        }
+        if($bills && count($bills) > 0) {
+            foreach($bills as $bill) {
+                $paymentsTotal += floatval($bill->total_amount);
+            }
+        }
+
+        $this->page_data['paymentsTotal'] = number_format($paymentsTotal, 2, '.', ',');
+        $this->page_data['paymentsCount'] = $paymentsCount;
         $this->page_data['contractorTypes'] = $this->vendors_model->get_contractor_types();
         // $this->page_data['contractor_details'] = $this->accounting_contractors_model->get_contractor_details($contractorId);
         $this->page_data['contractor'] = $this->vendors_model->get_contractor($contractorId);
@@ -217,5 +246,236 @@ class Contractors extends MY_Controller {
         }
 
         redirect("accounting/contractors/view/$contractorId");
+    }
+
+    public function load_contractor_payments($contractorId)
+    {
+        $post = json_decode(file_get_contents('php://input'), true);
+        $start = $post['start'];
+        $limit = $post['length'];
+        $date = $post['date'];
+        $type = $post['type'];
+        $paymentMethod = $post['payment_method'];
+
+        $filter = [];
+        switch ($date) {
+            case 'this-month' :
+                $filter['start-date'] = date("Y-m-01");
+                $filter['end-date'] = date("Y-m-t");
+            break;
+            case 'last-3-months' :
+                $filter['start-date'] = date("Y-m-d", strtotime(date("Y-m-d").' -3 months'));
+                $filter['end-date'] = date("Y-m-d");
+            break;
+            case 'last-12-months' :
+                $filter['start-date'] = date("Y-m-d", strtotime(date("Y-m-d").' -12 months'));
+                $filter['end-date'] = date("Y-m-d");
+            break;
+            case 'year-to-date' :
+                $filter['start-date'] = date("Y-m-d", strtotime(date("Y-m-d").' -1 year'));
+                $filter['end-date'] = date("Y-m-d");
+            break;
+        }
+
+        $recordsTotal = 0;
+
+        switch($type) {
+            case 'check' :
+                $checks = $this->vendors_model->get_vendor_check_transactions($contractorId, $filter);
+                $recordsTotal += count($checks);
+            break;
+            case 'expense' :
+                $expenses = $this->vendors_model->get_vendor_expense_transactions($contractorId, $filter);
+                $recordsTotal += count($expenses);
+            break;
+            case 'bill-payment' :
+                $bills = $this->vendors_model->get_vendor_bill_transactions($contractorId, $filter);
+                $recordsTotal += count($bills);
+            break;
+            default :
+                $checks = $this->vendors_model->get_vendor_check_transactions($contractorId, $filter);
+                $expenses = $this->vendors_model->get_vendor_expense_transactions($contractorId, $filter);
+                $bills = $this->vendors_model->get_vendor_bill_transactions($contractorId, $filter);
+                $recordsTotal += count($checks);
+                $recordsTotal += count($expenses);
+                $recordsTotal += count($bills);
+            break;
+        }
+
+        $data = [];
+        if($checks && count($checks) > 0) {
+            foreach($checks as $check) {
+                $data[] = [
+                    'date' => $check->payment_date,
+                    'type' => 'Check',
+                    'payment_method' => 'Check',
+                    'amount' => "$$check->total_amount"
+                ];
+            }
+        }
+
+        if($expenses && count($expenses) > 0) {
+            foreach($expenses as $expense) {
+                if($expense->payment_method !== 'Check' && $expense->payment_method !== 'Direct deposit') {
+                    $payMethod = 'Other';
+                } else {
+                    $payMethod = $expense->payment_method;
+                }
+
+                $data[] = [
+                    'date' => $expense->payment_date,
+                    'type' => 'Expense',
+                    'payment_method' => $payMethod,
+                    'amount' => "$$expense->amount"
+                ];
+            }
+        }
+
+        if($bills && count($bills) > 0) {
+            foreach($bills as $bill) {
+                $data[] = [
+                    'date' => $bill->bill_date,
+                    'type' => 'Bill payment',
+                    'payment_method' => 'Check',
+                    'amount' => "$$bill->total_amount"
+                ];
+            }
+        }
+
+        $data = array_filter($data, function($value, $key) use ($paymentMethod) {
+            switch($paymentMethod) {
+                case 'check' :
+                    return $value['payment_method'] === 'Check';
+                break;
+                case 'direct-deposit' :
+                    return $value['payment_method'] === 'Direct deposit';
+                break;
+                case 'other' :
+                    return $value['payment_method'] === 'Other';
+                break;
+                default :
+                    return true;
+                break;
+            }
+        }, ARRAY_FILTER_USE_BOTH);
+
+        usort($data, function($a, $b) {
+            return strtotime($a['date']) < strtotime($b['date']);
+        });
+
+        $result = [
+            'draw' => $post['draw'],
+            'recordsTotal' => $recordsTotal,
+            'recordsFiltered' => count($data),
+            'data' => array_slice($data, $start, $limit)
+        ];
+
+        echo json_encode($result);
+    }
+
+    public function get_payments_total($contractorId)
+    {
+        $post = $this->input->post();
+        $date = $post['date'];
+        $type = $post['type'];
+        $paymentMethod = $post['payment_method'];
+
+        $filter = [];
+        switch ($date) {
+            case 'this-month' :
+                $filter['start-date'] = date("Y-m-01");
+                $filter['end-date'] = date("Y-m-t");
+            break;
+            case 'last-3-months' :
+                $filter['start-date'] = date("Y-m-d", strtotime(date("Y-m-d").' -3 months'));
+                $filter['end-date'] = date("Y-m-d");
+            break;
+            case 'last-12-months' :
+                $filter['start-date'] = date("Y-m-d", strtotime(date("Y-m-d").' -12 months'));
+                $filter['end-date'] = date("Y-m-d");
+            break;
+            case 'year-to-date' :
+                $filter['start-date'] = date("Y-m-d", strtotime(date("Y-m-d").' -1 year'));
+                $filter['end-date'] = date("Y-m-d");
+            break;
+        }
+
+        switch($type) {
+            case 'check' :
+                $checks = $this->vendors_model->get_vendor_check_transactions($contractorId, $filter);
+            break;
+            case 'expense' :
+                $expenses = $this->vendors_model->get_vendor_expense_transactions($contractorId, $filter);
+            break;
+            case 'bill-payment' :
+                $bills = $this->vendors_model->get_vendor_bill_transactions($contractorId, $filter);
+            break;
+            default :
+                $checks = $this->vendors_model->get_vendor_check_transactions($contractorId, $filter);
+                $expenses = $this->vendors_model->get_vendor_expense_transactions($contractorId, $filter);
+                $bills = $this->vendors_model->get_vendor_bill_transactions($contractorId, $filter);
+            break;
+        }
+
+        if($checks && count($checks) > 0) {
+            foreach($checks as $check) {
+                $data[] = [
+                    'payment_method' => 'Check',
+                    'amount' => "$check->total_amount"
+                ];
+            }
+        }
+
+        if($expenses && count($expenses) > 0) {
+            foreach($expenses as $expense) {
+                if($expense->payment_method !== 'Check' && $expense->payment_method !== 'Direct deposit') {
+                    $payMethod = 'Other';
+                } else {
+                    $payMethod = $expense->payment_method;
+                }
+
+                $data[] = [
+                    'payment_method' => $payMethod,
+                    'amount' => "$expense->amount"
+                ];
+            }
+        }
+
+        if($bills && count($bills) > 0) {
+            foreach($bills as $bill) {
+                $data[] = [
+                    'payment_method' => 'Check',
+                    'amount' => "$bill->total_amount"
+                ];
+            }
+        }
+
+        $data = array_filter($data, function($value, $key) use ($paymentMethod) {
+            switch($paymentMethod) {
+                case 'check' :
+                    return $value['payment_method'] === 'Check';
+                break;
+                case 'direct-deposit' :
+                    return $value['payment_method'] === 'Direct deposit';
+                break;
+                case 'other' :
+                    return $value['payment_method'] === 'Other';
+                break;
+                default :
+                    return true;
+                break;
+            }
+        }, ARRAY_FILTER_USE_BOTH);
+
+        $paymentsCount = count($data);
+        $paymentsTotal = 0.00;
+        foreach($data as $rec) {
+            $paymentsTotal += floatval($rec['amount']);
+        }
+
+        echo json_encode([
+            'payments_count' => $paymentsCount,
+            'payments_total' => number_format($paymentsTotal, 2, '.', ',')
+        ]);
     }
 }

@@ -70,13 +70,67 @@ $('#payments.tab-pane select').select2({
     minimumResultsForSearch: -1
 });
 
+$('#date, #type, #payment-method').on('change', function() {
+    $('#contractor-payments-table').DataTable().ajax.reload();
+
+    var data = new FormData();
+    data.append('date', $('#date').val());
+    data.append('type', $('#type').val());
+    data.append('payment_method', $('#payment-method').val());
+
+    $.ajax({
+        url: `/accounting/contractors/${$('#contractor-id').val()}/get-payments-total`,
+        data: data,
+        type: 'post',
+        processData: false,
+        contentType: false,
+        success: function(res) {
+            var result = JSON.parse(res);
+
+            $('h6 span.payments-count').html(result.payments_count);
+            $('h6 span.payments-total').html(result.payments_total);
+        }
+    });
+});
+
 $('#contractor-payments-table').DataTable({
     autoWidth: false,
     searching: false,
     processing: true,
-    // serverSide: true,
+    serverSide: true,
     lengthChange: false,
     info: false,
     pageLength: 50,
-    order: [[0, 'asc']],
+    ordering: false,
+    ajax: {
+        url: `/accounting/contractors/${$('#contractor-id').val()}/load-payments`,
+        dataType: 'json',
+        contentType: 'application/json',
+        type: 'POST',
+        data: function(d) {
+            d.date = $('#date').val();
+            d.type = $('#type').val();
+            d.payment_method = $('#payment-method').val();
+            return JSON.stringify(d);
+        },
+        pagingType: 'full_numbers'
+    },
+    columns: [
+        {
+            name: 'date',
+            data: 'date'
+        },
+        {
+            name: 'type',
+            data: 'type'
+        },
+        {
+            name: 'payment_method',
+            data: 'payment_method'
+        },
+        {
+            name: 'amount',
+            data: 'amount'
+        }
+    ]
 });

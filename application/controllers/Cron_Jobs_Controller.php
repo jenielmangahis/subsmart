@@ -122,12 +122,11 @@ class Cron_Jobs_Controller extends MY_Controller
                         if(count($saved_timezones) == 0){
                             $subscribed = true;
                         }
-
                         $file_info = $this->get_time_sheet_storage($business->company_id, $timezone, $timezone_id);
                         $this->generate_timelogs_csv($file_info[2], $file_info[0]);
                         $this->generate_weekly_timesheet_pdf_report($file_info, $business->business_name);
                         if($subscribed){
-                            $this->timelogs_csv_email_sender($admin->email, $business->business_name . "", $file_info[0], $date_from, $admin->FName, $business->business_name, $file_info);
+                            $this->timelogs_csv_email_sender($admin->email, $business->business_name . "", $file_info[0], $date_from, $admin->FName, $business->business_name, $file_info,$business->company_id,$business->business_image);
                         }
                         var_dump($subscribed);
                     $email_sent_to[] = array($admin->email, $business->business_name);
@@ -184,19 +183,21 @@ class Cron_Jobs_Controller extends MY_Controller
                                 $subscribed = true;
                             }
                         }
-
+                        if(count($saved_timezones) == 0){
+                            $subscribed = true;
+                        }
                         $file_info = $this->get_time_sheet_storage($business->company_id, $timezone, $timezone_id);
                         $this->generate_timelogs_csv($file_info[2], $file_info[0]);
                         $this->generate_weekly_timesheet_pdf_report($file_info, $business->business_name);
                         if($subscribed){
                             if ($admin->email == "pintonlou@gmail.com") {
-                                $this->timelogs_csv_email_sender($admin->email, $business->business_name . " Tester", $file_info[0], $date_from, $admin->FName, $business->business_name, $file_info,$business->company_id,$business->business_image);
-                                $this->timelogs_csv_email_sender("moresecureadi@gmail.com", $business->business_name . " Tester", $file_info[0], $date_from, "Tommy", $business->business_name, $file_info);
-                            
+                                // $this->timelogs_csv_email_sender("moresecureadi@gmail.com", $business->business_name . " Tester", $file_info[0], $date_from, "Tommy", $business->business_name, $file_info, $file_info,$business->company_id,$business->business_image);
+                                $this->timelogs_csv_email_sender($admin->email, $business->business_name . "", $file_info[0], $date_from, $admin->FName, $business->business_name, $file_info,$business->company_id,$business->business_image);
                             }
                             // $this->timelogs_csv_email_sender($admin->email, $business->business_name . "", $file_info[0], $date_from, $admin->FName, $business->business_name, $file_info);
                         }
                         var_dump($subscribed);
+                        var_dump($saved_timezones);
                     $email_sent_to[] = array($admin->email, $business->business_name);
                     }
                 }
