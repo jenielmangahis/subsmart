@@ -144,7 +144,14 @@
                 <label for="">Social Security No.</label>
             </div>
             <div class="col-md-6">
-                <?= isset($profile_info) && !empty($profile_info->ssn) ? $profile_info->ssn : '---';?>
+                <?php
+                    $ssn_numbers = explode('-',$profile_info->ssn);
+                    if(isset($ssn_numbers[2])){
+                        echo '**-***-'.$ssn_numbers[2];
+                    }else{
+                        echo 'n/a';
+                    }
+                ?>
             </div>
         </div>
         <div class="row form_line">

@@ -238,6 +238,8 @@ $route['email_automation/edit_template/(:num)'] = 'Email_Automation/edit_templat
 $route['email_automation/update_template'] = 'Email_Automation/update_template';
 $route['email_automation/delete_template'] = 'Email_Automation/delete_template';
 $route['email_automation/_get_template_message'] = 'Email_Automation/ajax_get_template_message';
+$route['email_automation/create_email_automation'] = 'Email_Automation/ajax_create_email_automation';
+$route['email_automation/_generate_preview'] = 'Email_Automation/generate_preview';
 
 $route['campaign_automation'] = 'Campaign_Automation';
 
@@ -419,6 +421,8 @@ $route['accounting/contractors/add']['post'] = 'accounting_controllers/contracto
 $route['accounting/contractors/view/(:any)'] = 'accounting_controllers/contractors/view/$1';
 $route['accounting/contractors/(:any)/update-details']['post'] = 'accounting_controllers/contractors/update_details/$1';
 $route['accounting/contractors/set-status/(:any)/(:any)'] = 'accounting_controllers/contractors/set_status/$1/$2';
+$route['accounting/contractors/(:any)/load-payments']['post'] = 'accounting_controllers/contractors/load_contractor_payments/$1';
+$route['accounting/contractors/(:any)/get-payments-total']['post'] = 'accounting_controllers/contractors/get_payments_total/$1';
 
 $route['accounting/vendor-details/(:any)'] = 'accounting/vendordetails/$1';
 $route['accounting/taxes/edit-settings'] = 'taxes/edit_settings';

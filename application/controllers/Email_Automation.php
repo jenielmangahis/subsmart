@@ -323,6 +323,74 @@ class Email_Automation extends MY_Controller {
 
         redirect('email_automation');
     }  
+
+    public function ajax_create_email_automation(){
+        $is_success = false;
+        $msg = '';
+
+        $post = $this->input->post();
+        if( !empty($post) ){
+            $user = $this->session->userdata('logged');
+            $data = array(
+                'user_id' => $user['id'],
+                'rule_event' => post('rule_event'),
+                'rule_notify_at' => post('rule_notify_at'),
+                'rule_notify_op' => post('rule_notify_op'),
+                'name' => post('name'),
+                'email_subject' => post('email_subject'),
+                'email_body' => post('email_body'),
+                'exclude_customer_group' => post('exclude_customer_group'),
+                'customer_type_service' => post('business_customer_type_service'),
+                'is_active' => $this->MarketingEmailAutomation_model->isActive(),
+                'date_created' => date("Y-m-d H:i:s"),
+                'date_modified' => date("Y-m-d H:i:s")
+            );
+            
+            $bookingServiceItem = $this->MarketingEmailAutomation_model->create($data);
+            $this->session->set_flashdata('message', 'Email Automation was successfully saved.');
+            $this->session->set_flashdata('alert_class', 'alert-success');
+
+            $is_success = true;
+            $msg = 'Add Email Automation Successful';
+        }
+
+        $json_data = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ]; 
+
+        echo json_encode($json_data);
+    }
+
+    public function generate_preview(){
+        $this->load->model('Clients_model');
+
+        $post = $this->input->post(); 
+        $cid  = logged('company_id');
+
+        $subject = $post['email_subject'];
+        $message = $post['email_body'];
+        $company = $this->Clients_model->getById($cid);
+
+        $this->page_data['message'] = $this->replaceSmartTags($message);
+        $this->page_data['subject'] = $subject;
+        $this->page_data['company'] = $company;
+        $this->load->view('email_automation/preview_email', $this->page_data);
+    }
+
+    public function replaceSmartTags($message){
+        $cid  = logged('company_id');
+        $company = $this->Clients_model->getById($cid);
+
+        $message = str_replace("{{customer.name}}", 'John Doe', $message);
+        $message = str_replace("{{customer.first_name}}", 'John', $message);
+        $message = str_replace("{{customer.last_name}}", 'Doe', $message);
+        $message = str_replace("{{business.email}}", $company->email_address, $message);
+        $message = str_replace("{{business.phone}}", $company->phone_number, $message);
+        $message = str_replace("{{business.name}}", $company->business_name, $message);
+
+        return $message;
+    }
 }
 
 

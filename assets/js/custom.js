@@ -928,6 +928,7 @@ $(".select_item").click(function () {
   }
 
   var eqpt_cost = 0;
+  // var total_cost = 0;
   var cnt = $("#count").val();
   var total_discount = 0;
   for (var p = 0; p <= cnt; p++) {
@@ -936,6 +937,7 @@ $(".select_item").click(function () {
     var discount = $("#discount_" + p).val();
     // var discount= $('#discount_' + p).val();
     // eqpt_cost += parseFloat(prc) - parseFloat(discount);
+    // total_cost += parseFloat(prc);
     eqpt_cost += parseFloat(prc) * parseFloat(quantity);
     total_discount += parseFloat(discount);
   }
@@ -944,8 +946,28 @@ $(".select_item").click(function () {
 //   subtotal += parseFloat( $( this ).val() ) || 0;
 // });
 
+var total_cost = 0;
+  // $("#span_total_0").each(function(){
+    $('*[id^="price_"]').each(function(){
+      total_cost += parseFloat($(this).val());
+  });
+
+var tax_tot = 0;
+$('*[id^="tax1_"]').each(function(){
+  tax_tot += parseFloat($(this).val());
+});
+
+over_tax = parseFloat(tax_tot).toFixed(2);
+// alert(over_tax);
+
+$("#sales_taxs").val(over_tax);
+$("#total_tax_input").val(over_tax);
+$("#total_tax_").text(over_tax);
+
+
   eqpt_cost = parseFloat(eqpt_cost).toFixed(2);
   total_discount = parseFloat(total_discount).toFixed(2);
+  stotal_cost = parseFloat(total_cost).toFixed(2);
   // var test = 5;
 
   var subtotal = 0;
@@ -967,7 +989,8 @@ $(".select_item").click(function () {
   $("#total_discount").val(total_discount);
   $("#span_sub_total_0").text(total_discount);
   $("#span_sub_total_invoice").text(subtotal.toFixed(2));
-  $("#item_total").val(subtotal.toFixed(2));
+  // $("#item_total").val(subtotal.toFixed(2));
+  $("#item_total").val(stotal_cost);
   
   var s_total = subtotal.toFixed(2);
   var adjustment = $("#adjustment_input").val();
@@ -975,8 +998,8 @@ $(".select_item").click(function () {
   var markup = $("#markup_input_form").val();
   var grand_total_w = grand_total + parseFloat(markup);
 
-  $("#total_tax_").text(subtotaltax.toFixed(2));
-  $("#total_tax_").val(subtotaltax.toFixed(2));
+  // $("#total_tax_").text(subtotaltax.toFixed(2));
+  // $("#total_tax_").val(subtotaltax.toFixed(2));
   
   
   
@@ -1354,6 +1377,7 @@ function calculation(counter) {
   // alert('dri');
 
   var eqpt_cost = 0;
+  var total_cost = 0;
   var cnt = $("#count").val();
   var total_discount = 0;
   for (var p = 0; p <= cnt; p++) {
@@ -1362,6 +1386,7 @@ function calculation(counter) {
     var discount = $("#discount_" + p).val();
     // var discount= $('#discount_' + p).val();
     // eqpt_cost += parseFloat(prc) - parseFloat(discount);
+    total_cost += parseFloat(prc);
     eqpt_cost += parseFloat(prc) * parseFloat(quantity);
     total_discount += parseFloat(discount);
   }
@@ -1372,6 +1397,7 @@ function calculation(counter) {
 
   eqpt_cost = parseFloat(eqpt_cost).toFixed(2);
   total_discount = parseFloat(total_discount).toFixed(2);
+  stotal_cost = parseFloat(total_cost).toFixed(2);
   // var test = 5;
 
   var subtotal = 0;
@@ -1389,11 +1415,13 @@ function calculation(counter) {
 
   // alert(subtotaltax);
 
+  $("#item_total").val(stotal_cost);
+  
   $("#eqpt_cost").val(eqpt_cost);
   $("#total_discount").val(total_discount);
   $("#span_sub_total_0").text(total_discount);
   $("#span_sub_total_invoice").text(subtotal.toFixed(2));
-  $("#item_total").val(subtotal.toFixed(2));
+  // $("#item_total").val(subtotal.toFixed(2));
   
   var s_total = subtotal.toFixed(2);
   var adjustment = $("#adjustment_input").val();
@@ -1427,7 +1455,9 @@ function calculation(counter) {
 
   var sls = (parseFloat(eqpt_cost).toFixed(2) * 7.5) / 100;
   sls = parseFloat(sls).toFixed(2);
-  $("#sales_tax").val(sls);
+  $("#sales_taxs").val(sls);
+  $("#total_tax_").html(sls);
+  $("#total_tax_input").val(sls);
   cal_total_due();
 }
 

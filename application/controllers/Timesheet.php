@@ -4786,6 +4786,7 @@ class Timesheet extends MY_Controller
                 $data->timezone_id_of_tz = $tz->id_of_timezone;
             }
         }
+        // $est_wage_privacy
         echo json_encode($data);
     }
     public function save_timezone_changes()
@@ -4799,6 +4800,16 @@ class Timesheet extends MY_Controller
             $sub_val=0;
         }
         $this->timesheet_model->save_timezone_changes($timezone_id, $user_id,$sub_val);
+
+        $est_wage_privacy = $this->input->post("est_wage_privacy")."";
+        $company_id = logged('company_id');
+        $date_time_now = date("Y-m-d H:i:s");
+        $est_wage_private = 0;
+        if($est_wage_privacy == "true"){
+            $est_wage_private = 1;
+        }
+        $this->timesheet_model->save_est_wage_privacy($est_wage_private, $company_id, $date_time_now, $user_id);
+
         echo json_encode("saved");
     }
     public function get_next_report()

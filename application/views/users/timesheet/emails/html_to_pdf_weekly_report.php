@@ -284,7 +284,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                             <td style="font-weight:bold;">' . $total_overtime . '</td>
                                             <td style="font-weight:bold;">$' . $total_est_wage . '</td>
                                             <td style="font-weight:bold;"></td>
-                                        </tr>';
+                                    </tr>';
                         if ($i < count($timehseet_storage) - 1) {
                             $table .= '
                                         <tr>

@@ -411,6 +411,11 @@ a.top-1 {
     height: 400px;
     overflow-x: hidden;
   }
+  .fc-event-main{
+      white-space: nowrap !important;
+      min-height:34px !important;
+      overflow:hidden;
+  }
 </style>
 <div class="wrapper" role="wrapper">
     <div class="row">

@@ -1519,6 +1519,50 @@ class Timesheet_model extends MY_Model
         $qry = $this->db->query("SELECT * fROM users WHERE email ='" . $email . "' AND company_id = '" . $company_id . "'");
         return $qry->result();
     }
+    public function get_leaves($date_from, $date_to, $user_id)
+    {
+        $this->db->reset_query();
+        $qry = $this->db->query("SELECT timesheet_leave.*,timesheet_pto.name, users.FName, users.LName FROM timesheet_leave  JOIN timesheet_pto ON timesheet_pto.id=timesheet_leave.pto_id JOIN users ON users.id=timesheet_leave.user_id WHERE users.id = " . $user_id . " AND timesheet_leave.date_created >= '" . $from_date . "' AND timesheet_leave.date_created <= '" . $to_date . "' ORDER BY timesheet_leave.date_created DESC");
+        return $qry->result();
+    }
+    public function save_est_wage_privacy($est_wage_private, $company_id, $date_time_now, $user_id)
+    {
+        $this->db->reset_query();
+        $qry = $this->db->query("SELECT * from timesheet_report_company_privacy WHERE company_id = ".$company_id."");
+        $saved= $qry->result();
+
+        $this->db->reset_query();
+
+        $found=false;
+        foreach($saved as $privacy){
+            $timesheet_report_company_privacy_id = $privacy->id;
+            $found=true;
+        }
+        if($found){
+            $update = array(
+                'est_wage_private' => $est_wage_private,
+                'company_id' => $company_id,
+                'datetime_updated' => $date_time_now
+            );
+            $this->db->update('timesheet_report_company_privacy',$update);
+
+        }else{
+            $insert = array(
+                'est_wage_private' => $est_wage_private,
+                'company_id' => $company_id,
+                'datetime_updated' => $date_time_now
+            );
+            $this->db->insert('timesheet_report_company_privacy',$insert);
+            $timesheet_report_company_privacy_id= $this->db->insert_id();
+            
+        }
+        $insert = array(
+            'timesheet_report_company_privacy_id' => $timesheet_report_company_privacy_id,
+            'user_id' => $user_id
+        );
+        $this->db->insert('timesheet_report_company_privacy_editor',$insert);
+        
+    }
 }
 
 

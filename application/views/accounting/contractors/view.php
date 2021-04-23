@@ -246,10 +246,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         </div>
                                         <div class="row">
                                             <div class="col-sm-6">
-                                                <h6>0 payments found</h6>
+                                                <h6><span class="payments-count"><?=$paymentsCount?></span> payments found</h6>
                                             </div>
                                             <div class="col-sm-6">
-                                                <h6 class="float-right">Total : $0.00</h6>
+                                                <h6 class="float-right">Total : $<span class="payments-total"><?=$paymentsTotal?></span></h6>
                                             </div>
                                             <div class="col-sm-12">
                                                 <table class="table table-bordered my-3" id="contractor-payments-table">

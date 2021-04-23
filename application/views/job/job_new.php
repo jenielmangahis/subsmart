@@ -1444,6 +1444,9 @@ include viewPath('includes/footer');
         $("#employee_id").select2({
             placeholder: "Select Employee"
         });
+        $("#sales_rep").select2({
+            placeholder: "Sales Rep"
+        });
     });
 </script>
 

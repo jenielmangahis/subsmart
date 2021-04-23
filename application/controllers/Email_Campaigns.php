@@ -242,7 +242,9 @@ class Email_Campaigns extends MY_Controller {
         $cid  = logged('company_id');
         $company = $this->Clients_model->getById($cid);
 
-        $message = str_replace("{{customer.name}}", $company->first_name . ' ' . $company->last_name, $message);
+        $message = str_replace("{{customer.name}}", 'John Doe', $message);
+        $message = str_replace("{{customer.first_name}}", 'John', $message);
+        $message = str_replace("{{customer.last_name}}", 'Doe', $message);
         $message = str_replace("{{business.email}}", $company->email_address, $message);
         $message = str_replace("{{business.phone}}", $company->phone_number, $message);
         $message = str_replace("{{business.name}}", $company->business_name, $message);
