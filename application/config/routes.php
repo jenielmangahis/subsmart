@@ -243,6 +243,9 @@ $route['email_automation/_generate_preview'] = 'Email_Automation/generate_previe
 $route['email_automation/_load_automation_list'] = 'Email_Automation/ajax_load_automation_list';
 $route['email_automation/_update_automation_is_active'] = 'Email_Automation/ajax_update_automation_is_active';
 $route['email_automation/_delete_automation'] = 'Email_Automation/ajax_delete_automation';
+$route['email_automation/edit_automation'] = 'Email_Automation/edit_automation';
+$route['email_automation/edit_automation/(:any)?'] = 'Email_Automation/edit_automation/$1';
+$route['email_automation/_update_email_automation'] = 'Email_Automation/ajax_update_email_automation';
 
 $route['campaign_automation'] = 'Campaign_Automation';
 

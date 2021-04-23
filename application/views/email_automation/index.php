@@ -167,6 +167,7 @@ $(function(){
                 $(".delete-body-container").html('<p>Are you sure you want delete the email automation <b><span class="delete-automation-name"></span></b>?</p>');
                 $(".delete-automation-name").html(automation_name);
                 $("#modalDeleteAutomation").modal('show');
+                $(".btn-delete-automation").html('Yes');
               });
 
               $(document).on('change', '.automation-toggle', function(){
@@ -186,14 +187,7 @@ $(function(){
                    dataType:"json",
                    success: function(o)
                    {
-                     $(".btn-delete-automation").html('Yes');                         
-                     if( o.is_success == 1 ){
-                      $(".delete-body-container").html("<div class='alert alert-info'>"+o.msg+"</div>");                          
-                      load_automation_list('all');
-                     }else{
-                      $(".delete-body-container").html("<div class='alert alert-danger'>"+o.msg+"</div>");
-                     }
-                     $(".delete-modal-footer").hide();
+                     
 
                    }
                 });
@@ -215,18 +209,38 @@ $(function(){
            dataType:"json",
            success: function(o)
            {
-             $(".btn-delete-automation").html('Yes');                         
-             if( o.is_success == 1 ){
-              $(".delete-body-container").html("<div class='alert alert-info'>"+o.msg+"</div>");                          
-              load_automation_list('all');
-             }else{
-              $(".delete-body-container").html("<div class='alert alert-danger'>"+o.msg+"</div>");
-             }
-             $(".delete-modal-footer").hide();
+              $("#modalDeleteAutomation").modal('hide');
+              if( o.is_success ){
+                Swal.fire({
+                  title: 'Delete',
+                  text: 'Email automation was successfully deleted!',
+                  icon: 'success',
+                  showCancelButton: false,
+                  confirmButtonColor: '#32243d',
+                  cancelButtonColor: '#d33',
+                  confirmButtonText: 'Ok'
+              }).then((result) => {
+                  if (result.value) {
+                      location.reload();
+                  }
+              });
+              }else{
+                Swal.fire({
+                    title: 'Warning!',
+                    text: o.msg,
+                    icon: 'warning',
+                    showCancelButton: false,
+                    confirmButtonColor: '#32243d',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Ok'
+                }).then((result) => {
 
+                });
+              }
            }
         });                    
       }, 800);
+    });
 });
 
 </script>

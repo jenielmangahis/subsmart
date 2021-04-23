@@ -72,6 +72,10 @@ class MarketingEmailAutomation_model extends MY_Model
         return $query;
     }
 
+    public function deleteEmailAutomationById($id){
+        $this->db->delete($this->table, array('id' => $id));
+    }
+
 
     public function getById($id)
     {

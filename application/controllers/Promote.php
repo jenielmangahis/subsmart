@@ -17,7 +17,6 @@ class Promote extends MY_Controller {
 
 	public function deals()
 	{
-		$this->page_data['activeTab'] = 'sdf';
 		$this->load->view('promote/deals', $this->page_data);
 	}
 

@@ -26,8 +26,8 @@
                 <div style="height: <?= $rawHeight-40 ?>px; overflow-y: scroll">
                     <?php
                     $jobCounter = 0;
-                    if ($job) {
-                        foreach ($job as $jb) :
+                    if ($upcomingJobs) {
+                        foreach ($upcomingJobs as $jb) :
                             ?>
                             <div class="mb-2 col-lg-12 float-left jobsRow" style="border-bottom: 1px solid #ccc; padding-bottom: 5px; cursor: pointer">
 

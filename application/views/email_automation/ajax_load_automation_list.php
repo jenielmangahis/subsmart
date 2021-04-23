@@ -36,7 +36,7 @@
                                 </button>
                                 <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="dropdown-edit">                            
                                     <li role="presentation">
-                                        <a role="menuitem" tabindex="-1" href="<?php echo base_url('sms_automation/edit_automation/' . $s->id) ?>"><span class="fa fa-pencil icon"></span> Edit</a>
+                                        <a role="menuitem" tabindex="-1" href="<?php echo base_url('email_automation/edit_automation/' . $s->id) ?>"><span class="fa fa-pencil icon"></span> Edit</a>
                                     </li> 
                                     <li role="presentation">
                                         <a role="menuitem" class="delete-email-automation" data-name="<?= $s->name; ?>" data-id="<?= $s->id; ?>" href="javascript:void(0);"><span class="fa fa-trash-o icon"></span> Delete</a>
