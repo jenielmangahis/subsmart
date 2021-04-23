@@ -240,6 +240,9 @@ $route['email_automation/delete_template'] = 'Email_Automation/delete_template';
 $route['email_automation/_get_template_message'] = 'Email_Automation/ajax_get_template_message';
 $route['email_automation/create_email_automation'] = 'Email_Automation/ajax_create_email_automation';
 $route['email_automation/_generate_preview'] = 'Email_Automation/generate_preview';
+$route['email_automation/_load_automation_list'] = 'Email_Automation/ajax_load_automation_list';
+$route['email_automation/_update_automation_is_active'] = 'Email_Automation/ajax_update_automation_is_active';
+$route['email_automation/_delete_automation'] = 'Email_Automation/ajax_delete_automation';
 
 $route['campaign_automation'] = 'Campaign_Automation';
 

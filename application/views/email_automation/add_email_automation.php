@@ -214,7 +214,7 @@ label>input {
                                 <div class="col-md-4 form-group md-right">                                    
                                     <button type="submit" class="btn btn-flat btn-primary margin-right btn-automation-save" style="float: left;margin-right: 10px;">Save</button>
                                     <a class="btn btn-primary btn-preview-email" href="javascript:void(0);" style="float: left;margin-right: 10px;">Preview</a>                                    
-                                    <a class="btn btn-default" href="<?php echo url('sms_automation') ?>" style="float: left;margin-right: 10px;">Cancel</a>
+                                    <a class="btn btn-default" href="<?php echo url('email_automation') ?>" style="float: left;margin-right: 10px;">Cancel</a>
                                 </div>
                             </div>
                         </div>
