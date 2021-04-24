@@ -4,7 +4,11 @@ defined('BASEPATH') or exit('No direct script access allowed');
 <?php 
 $group_items = array();
 foreach($jobs_data_items as $ji){
-    $group_items[$ji->type][] = [
+    $type = 'product';
+    if( $ji->type != 'product' ){
+        $type = 'service';
+    }
+    $group_items[$type][] = [
         'item_name' => $ji->title,
         'item_price' => $ji->price,
         'item_qty' => $ji->qty
