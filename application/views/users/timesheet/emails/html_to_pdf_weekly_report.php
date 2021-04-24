@@ -237,9 +237,11 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     <th>Act.& Sched Diff.</th>
                     <th>Total Paid</th>
                     <th>Regular</th>
-                    <th>Unpaid Breaks</th>
                     <th>OT</th>
-                    <th>Est. Wages</th>
+                    <?php if($est_wage_privacy == 1){
+                        echo '<th>Est. Wages</th>';
+                    }
+                    ?>
                     <th>Notes</th>
                 </tr>
             </thead>
@@ -273,6 +275,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         </tr>
                                     ';
                     } else {
+                        if($est_wage_privacy == 1){
+                            $est_wage_privacy_html = '<td style="font-weight:bold;">$' . $total_est_wage . '</td>';
+                        }
                         $table .= '<tr style="background-color:#F2F2F2;font-weight:500;">
                                             <td colspan="2"> Total for ' . $timehseet_storage[$i - 1][1] . '</td>
                                             <td style="font-weight:bold; text-align:center;">$' . $total_wage . '</td>
@@ -280,9 +285,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                             <td style="font-weight:bold;text-align:center;">' . $act_dif_total . '</td>
                                             <td style="font-weight:bold;">' . $total_paid . '</td>
                                             <td style="font-weight:bold;">' . $total_regular . '</td>
-                                            <td style="font-weight:bold;">0.00</td>
                                             <td style="font-weight:bold;">' . $total_overtime . '</td>
-                                            <td style="font-weight:bold;">$' . $total_est_wage . '</td>
+                                            '.$est_wage_privacy_html.'
                                             <td style="font-weight:bold;"></td>
                                     </tr>';
                         if ($i < count($timehseet_storage) - 1) {
@@ -318,7 +322,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 } else {
                     $est_wage = round(($timehseet_storage[$i][20] / $regular_hours) * $paid_hours, 2);
                 }
-                $total_forked_hours =
+                if($est_wage_privacy == 1){
+                    $est_wage_privacy_html = '<td>$' . $est_wage . '</td>';
+                }
                     $table .= '<tr>
                                     <td>' . date("D M d", strtotime($timehseet_storage[$i][3])) . '</td>
                                     <td>' . $timehseet_storage[$i][2] . '</td>
@@ -327,9 +333,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                     <td style="text-align:center;">' . $actual_vs_expected  . '</td>
                                     <td>' . $paid_hours . '</td>
                                     <td>' . $regular_hours . '</td>
-                                    <td>0.00</td>
                                     <td>'  . ($timehseet_storage[$i][17] == 'Approved' ? $timehseet_storage[$i][16] : 0.00) . '</td>
-                                    <td>$' . $est_wage . '</td>
+                                    '.$est_wage_privacy_html.'
                                     <td>' . $timehseet_storage[$i][19] . '</td>
                                 </tr>';
                 $time_card_ctr++;
@@ -347,6 +352,10 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 $overall_total_est_wage += $est_wage;
                 $overall_time_card_ctr++;
                 if ($i == count($timehseet_storage) - 1) {
+                    
+                if($est_wage_privacy == 1){
+                    $est_wage_privacy_html = '<td style="font-weight:bold;">$' . $total_est_wage . '</td>';
+                }
                     $table .= '<tr style="background-color:#F2F2F2; font-weight:500;">
                                             <td colspan="2"> Total for ' . $timehseet_storage[$i][1] . '</td>
                                             <td style="font-weight:bold; text-align:center;">$' . $total_wage . '</td>
@@ -354,9 +363,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                             <td style="font-weight:bold;text-align:center;">' . $act_dif_total . '</td>
                                             <td style="font-weight:bold;">' . $total_paid . '</td>
                                             <td style="font-weight:bold;">' . $total_regular . '</td>
-                                            <td style="font-weight:bold;">0.00</td>
                                             <td style="font-weight:bold;">' . $total_overtime . '</td>
-                                            <td style="font-weight:bold;">$' . $total_est_wage . '</td>
+                                            '.$est_wage_privacy_html.'
                                             <td style="font-weight:bold;"></td>
                                         </tr>';
                 }
@@ -371,9 +379,10 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 <th style="text-align:center;"><?= $overall_act_dif_total ?></th>
                 <th><?= $overall_total_paid ?></th>
                 <th><?= $overall_total_regular ?></th>
-                <th>0.00</th>
                 <th><?= $overall_total_overtime ?></th>
-                <th>$<?= $overall_total_est_wage ?></th>
+                <?php if($est_wage_privacy == 1){
+                    echo '<th>$'.$overall_total_est_wage .'</th>';
+                } ?>
                 <th></th>
             </tr>
         </tfoot>

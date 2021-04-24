@@ -329,22 +329,16 @@
       transform: translateX(0);
     }
 
-    &[data-field-type="field"] {
-      .options,
-      .note,
-      .formula {
-        display: none;
-      }
+    .options,
+    .note,
+    .formula,
+    .text {
+      display: none;
     }
 
     &[data-field-type="options"] {
       .options {
         display: block;
-      }
-
-      .note,
-      .formula {
-        display: none;
       }
     }
 
@@ -352,21 +346,17 @@
       .formula {
         display: block;
       }
-
-      .note,
-      .options {
-        display: none;
-      }
     }
 
     &[data-field-type="note"] {
       .note {
         display: block;
       }
+    }
 
-      .formula,
-      .options {
-        display: none;
+    &[data-field-type="text"] {
+      .text {
+        display: block;
       }
     }
 
@@ -407,4 +397,43 @@
 
 #main-pdf-render {
   position: relative;
+}
+
+.esignBuilder__field {
+  min-width: 100px;
+
+  .subData {
+    height: 100%;
+    width: 100%;
+    padding: 0 !important;
+    min-height: inherit;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .ui-resizable-handle {
+    --size: 13px;
+    width: var(--size);
+    height: var(--size);
+    background-color: #e2e2e2;
+    border-radius: var(--size);
+  }
+
+  .ui-resizable-handle {
+    position: absolute;
+  }
+
+  .ui-resizable {
+    &-e {
+      top: 50%;
+      right: calc(-1 * (var(--size) / 2));
+      transform: translateY(-50%);
+      cursor: e-resize;
+    }
+  }
+}
+
+.ui-draggable {
+  width: initial;
 }

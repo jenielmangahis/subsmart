@@ -422,13 +422,17 @@ $route['accounting/employees/bonus-only-payroll-form/(:any)'] = 'accounting_cont
 $route['accounting/employees/generate-bonus-payroll/(:any)']['post'] = 'accounting_controllers/employees/generate_bonus_payroll/$1';
 
 $route['accounting/contractors'] = 'accounting_controllers/contractors/index';
-$route['accounting/contractors/load'] = 'accounting_controllers/contractors/load_contractors';
+$route['accounting/contractors/load']['post'] = 'accounting_controllers/contractors/load_contractors';
 $route['accounting/contractors/add']['post'] = 'accounting_controllers/contractors/add';
 $route['accounting/contractors/view/(:any)'] = 'accounting_controllers/contractors/view/$1';
 $route['accounting/contractors/(:any)/update-details']['post'] = 'accounting_controllers/contractors/update_details/$1';
 $route['accounting/contractors/set-status/(:any)/(:any)'] = 'accounting_controllers/contractors/set_status/$1/$2';
 $route['accounting/contractors/(:any)/load-payments']['post'] = 'accounting_controllers/contractors/load_contractor_payments/$1';
 $route['accounting/contractors/(:any)/get-payments-total']['post'] = 'accounting_controllers/contractors/get_payments_total/$1';
+
+$route['accounting/vendors'] = 'accounting_controllers/vendors/index';
+$route['accounting/vendors/load']['post'] = 'accounting_controllers/vendors/load_vendors'; 
+$route['accounting/vendors/add']['post'] = 'accounting_controllers/vendors/add'; 
 
 $route['accounting/vendor-details/(:any)'] = 'accounting/vendordetails/$1';
 $route['accounting/taxes/edit-settings'] = 'taxes/edit_settings';

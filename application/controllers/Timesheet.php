@@ -4761,7 +4761,9 @@ class Timesheet extends MY_Controller
         ));
         $this->load->model('timesheet_model');
         $this->page_data['all_timezone_list'] = $this->timesheet_model->get_all_timezone_list();
-        // var_dump($this->page_data['allnotification']);
+        $report_privacy = $this->timesheet_model->get_timesheet_report_privacy(logged("company_id"));
+        $this->page_data['report_privacy'] = $report_privacy;
+        $this->page_data['report_privacy_updated'] = $this->datetime_zone_converter($report_privacy->datetime_updated,"UTC",$this->session->userdata("usertimezone"));
         $this->load->view('users/timesheet_settings', $this->page_data);
     }
     public function get_saved_timezone()

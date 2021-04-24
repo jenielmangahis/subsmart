@@ -233,7 +233,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                             <th><b>Total</b></th>
                                         </tr>
                                         </thead>
-                                        <tbody id="table_body_new">
+                                        <tbody id="jobs_items_table_body">
                                         <tr>
                                             <td><input type="text" class="form-control getItems"
                                                        onKeyup="getItems(this)" name="item[]">
@@ -265,7 +265,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                     <div class="row">
                                         <!-- <a class="link-modal-open pt-1 pl-2" href="#" id="add_another_new_invoice" style="color:#02A32C;"><span
                                                     class="fa fa-plus-square fa-margin-right" style="color:#02A32C;"></span>Add Items</a> -->
-                                        <a href="#" id="add_another_new_invoice" style="color:#02A32C;"><i class="fa fa-plus-square" aria-hidden="true"></i> Add another line </a>
+                                        <a href="#" id="add_another_new_invoice2" style="color:#02A32C;" data-toggle="modal" data-target="#item_list"><i class="fa fa-plus-square" aria-hidden="true"></i> Add another line </a>
                                         <hr style="display:inline-block; width:91%">
                                     </div>
                                     <div class="row">
@@ -277,7 +277,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                 <label style="padding: 0 .75rem;">Subtotal</label>
                                             </div>
                                             <div class="col-sm-6 text-right pr-3">
-                                                $ <span id="span_sub_total_invoice">0.00</span>
+                                                $ <span id="item_total_text">0.00</span>
                                                 <input type="hidden" name="sub_total" id="item_total">
                                             </div>
                                             <div class="col-sm-12">
@@ -301,6 +301,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                 <label style="padding: .375rem .75rem;">Grand Total ($)</label>
                                             </div>
                                             <div class="col-sm-6 text-right pr-3">
+                                            <input type="hidden" name="adjustment_value" id="adjustment_input" value="0" class="form-control adjustment_input" style="width:100px; display:inline-block"><input type="hidden" name="markup_input_form" id="markup_input_form" class="markup_input" value="0">
                                                 <span id="grand_total">0.00</span>
                                                 <input type="hidden" name="grand_total" id="grand_total_input" value='0'>
                                             </div>
@@ -691,6 +692,56 @@ defined('BASEPATH') or exit('No direct script access allowed');
     </div>
     <!-- page wrapper end -->
 </div>
+
+<!-- Modal -->
+<div class="modal fade" id="item_list" tabindex="-1" role="dialog" aria-labelledby="newcustomerLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg" role="document" style="width:800px;position: absolute;top: 50%;left: 50%;transform: translate(-50%, -50%);">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="newcustomerLabel">Item Lists</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <table id="items_table_estimate" class="table table-hover" style="width: 100%;">
+                                        <thead>
+                                        <tr>
+                                            <td> Name</td>
+                                            <td> Rebatable</td>
+                                            <td> Qty</td>
+                                            <td> Price</td>
+                                            <td> Action</td>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <?php foreach($items as $item){ // print_r($item); ?>
+                                            <tr>
+                                                <td><?php echo $item->title; ?></td>
+                                                <td><?php echo $item->rebate; ?></td>
+                                                <td></td>
+                                                <td><?php echo $item->price; ?></td>
+                                                <td><button id="<?= $item->id; ?>" data-quantity="<?= $item->units; ?>" data-itemname="<?= $item->title; ?>" data-price="<?= $item->price; ?>" type="button" data-dismiss="modal" class="btn btn-sm btn-default select_item">
+                                                <span class="fa fa-plus"></span>
+                                            </button></td>
+                                            </tr>
+                                            
+                                        <?php } ?>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer modal-footer-detail">
+                            <div class="button-modal-list">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal"><span class="fa fa-remove"></span> Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 <?php include viewPath('accounting/add_new_term'); ?>
 <?php include viewPath('includes/footer'); ?>
 

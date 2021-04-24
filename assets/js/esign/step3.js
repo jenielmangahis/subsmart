@@ -109,13 +109,19 @@ function Step3() {
     const key = $element.find(".subData").data("key");
     const recipientId = $("#recipientsSelect").get(0).dataset.recipientId;
 
+    const fieldName = $element.text().trim();
+
+    if (fieldName === "Text") {
+      specs = { ...specs, width: parseInt($element.css("width"), 10) };
+    }
+
     const payload = {
       coordinates: position,
       docfile_id: fileId,
       doc_page: docPage,
       doc_id: docId,
       unique_key: key,
-      field: $element.text().trim(),
+      field: fieldName,
       recipient_id: recipientId,
       specs,
     };
@@ -190,6 +196,12 @@ function Step3() {
         const $inputs = options.map((value) => createDropdownInput({ value })); // prettier-ignore
         $optionsSidebar.append($inputs);
       }
+    } else if (field_name === "Text") {
+      fieldType = "text";
+      $("#requiredText").prop("checked", false);
+      $("#readOnlyText").prop("checked", false);
+      $("#requiredText").prop("checked", specs.is_required);
+      $("#readOnlyText").prop("checked", specs.is_read_only);
     }
 
     $optionsSidebar.attr("data-field-type", fieldType);
@@ -237,6 +249,17 @@ function Step3() {
     ];
     // const hasOption = fieldsWithOption.includes(fieldName);
     const hasOption = true;
+
+    if (fieldName === "Text") {
+      let { specs } = field;
+      specs = specs ? JSON.parse(specs) : { width: "initial" };
+      $element.css({ width: specs.width });
+
+      $element.resizable({
+        handles: "e",
+        stop: (_, ui) => storeField(ui.position, $(ui.helper)),
+      });
+    }
 
     $element.find(".subData").on("click", function () {
       const $prevActive = $(`.${activeClass}`);
@@ -438,6 +461,11 @@ function Step3() {
         specs = { formula: $formulaInput.val() };
       } else if (fieldType === "note") {
         specs = { note: $noteInput.val() };
+      } else if (fieldType === "text") {
+        specs = {
+          is_required: $("#requiredText").is(":checked"),
+          is_read_only: $("#readOnlyText").is(":checked"),
+        };
       } else {
         if (!$optionInputs.length) {
           return;

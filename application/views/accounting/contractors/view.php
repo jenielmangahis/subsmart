@@ -27,7 +27,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     .contractor-details-container h4 {
         margin: 0;
     }
-    .contractor-details-container .btn-group button:hover, .contractor-details-container .btn-group button:focus {
+    .contractor-details-container .dropdown button:hover, .contractor-details-container .dropdown button:focus {
         color: unset;
     }
     #myTabContent .tab-pane {
@@ -112,8 +112,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     </div>
                                     <div class="contractor-details-container">
                                         <h4><?=$contractor->display_name?> <?=$contractor->status === "0" ? '(deleted)' : ''?></h5>
-                                        <div class="btn-group">
-                                            <button class="btn" type="button" id="statusDropdownButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <div class="dropdown d-flex">
+                                            <button class="btn m-auto" type="button" id="statusDropdownButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                 <?=$contractor->status === "1" ? 'Active' : 'Inactive' ?>&nbsp;&nbsp;<i class="fa fa-chevron-down"></i>
                                             </button>
 
