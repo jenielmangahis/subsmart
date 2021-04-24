@@ -183,6 +183,7 @@ class Invoice extends MY_Controller {
             $this->page_data['terms'] = $terms;
         }
 
+        $this->page_data['items'] = $this->items_model->getItemlist();
 
         $this->load->view('invoice/add', $this->page_data);
 

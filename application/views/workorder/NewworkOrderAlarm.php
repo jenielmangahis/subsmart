@@ -1242,7 +1242,7 @@
                                                     </tbody>
                                                 </table>
                                                 <!-- <a href="#" class="btn btn-primary" id="add_another">Add Items</a> -->
-                                                <a class="link-modal-open" href="#" id="add_another_items" data-toggle="modal" data-target="#item_list"><span class="fa fa-plus-square fa-margin-right"></span>Add Items</a>
+                                                <a class="link-modal-open" href="#" id="add_another_itemss" data-toggle="modal" data-target="#item_list"><span class="fa fa-plus-square fa-margin-right"></span>Add Items</a>
                                             </div>
                                         </div><br/>
 
@@ -1299,7 +1299,7 @@
                                                     </tbody>
                                                 </table>
                                                 <!-- <a href="#" class="btn btn-primary" id="add_another">Add Items</a> -->
-                                                <a class="link-modal-open" href="#" id="add_another_items" data-toggle="modal" data-target="#item_list"><span class="fa fa-plus-square fa-margin-right"></span>Add Items</a>
+                                                <a class="link-modal-open" href="#" id="add_another_itemss" data-toggle="modal" data-target="#item_list"><span class="fa fa-plus-square fa-margin-right"></span>Add Items</a>
                                             </div>
                                         </div><br/>
 
@@ -1492,20 +1492,20 @@
                                             </div>
 
                                             <div class="row" style="border:none; margin-bottom:20px; padding-bottom:0px;">
-                                                <div class=" col-md-4">
+                                                <div class=" col-md-6">
                                                     <label for="card_no">Routing Number</label>
                                                     <input type="text" class="form-control card-number required"
                                                            name="Routing" />
                                                 </div>
-                                                <div class="col-md-4">
+                                                <!-- <div class="col-md-4">
                                                     <label for="datepicker_exp_date">Checking Number</label>
                                                     <div class="form-group">
                                                         <div class='input-group date datepicker'>
                                                             <input type='text' name="Checking" class="form-control" id="card_exp_date"/>
                                                         </div>
                                                     </div>
-                                                </div>
-                                                <div class=" col-md-4">
+                                                </div> -->
+                                                <div class=" col-md-6">
                                                     <label for="cvv">Account Number</label>
                                                     <input type="text" class="form-control card-cvc required"
                                                            name="Account" />
@@ -1947,6 +1947,33 @@
             </div>
 
     <?php include viewPath('includes/footer'); ?>
+
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAlMWhWMHlxQzuolWb2RrfUeb0JyhhPO9c&libraries=places"></script>
+<script>
+function initialize() {
+          var input = document.getElementById('panel_location');
+          var autocomplete = new google.maps.places.Autocomplete(input);
+            google.maps.event.addListener(autocomplete, 'place_changed', function () {
+                var place = autocomplete.getPlace();
+                document.getElementById('city2').value = place.name;
+                document.getElementById('cityLat').value = place.geometry.location.lat();
+                document.getElementById('cityLng').value = place.geometry.location.lng();
+            });
+        }
+        google.maps.event.addDomListener(window, 'load', initialize);
+
+        function initialize2() {
+          var input = document.getElementById('monitored_location');
+          var autocomplete = new google.maps.places.Autocomplete(input);
+            google.maps.event.addListener(autocomplete, 'place_changed', function () {
+                var place = autocomplete.getPlace();
+                // document.getElementById('city2').value = place.name;
+                // document.getElementById('cityLat').value = place.geometry.location.lat();
+                // document.getElementById('cityLng').value = place.geometry.location.lng();
+            });
+        }
+        google.maps.event.addDomListener(window, 'load', initialize2);
+</script>
 
     <script>
         function validatecard() {

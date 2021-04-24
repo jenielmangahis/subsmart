@@ -1416,6 +1416,7 @@ function calculation(counter) {
   // alert(subtotaltax);
 
   $("#item_total").val(stotal_cost);
+  $("#item_total_text").html(stotal_cost);
   
   $("#eqpt_cost").val(eqpt_cost);
   $("#total_discount").val(total_discount);
@@ -1436,6 +1437,7 @@ function calculation(counter) {
   $("#grand_total").text(grand_total_w.toFixed(2));
   $("#grand_total_input").val(grand_total_w.toFixed(2));
   $("#grandtotal_input").val(grand_total_w.toFixed(2));
+  
 
   if($("#grand_total").length && $("#grand_total").val().length)
   {
