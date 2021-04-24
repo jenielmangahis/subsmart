@@ -148,11 +148,11 @@ class Accounting extends MY_Controller {
         $this->page_data['attachments'] = $this->expenses_model->getAttachment();
         $this->load->view('accounting/expenses', $this->page_data);
     }
-    public function vendors(){
-        $this->page_data['users'] = $this->users_model->getUser(logged('id'));
-        $this->page_data['vendors'] = $this->vendors_model->getVendors();
-        $this->load->view('accounting/vendors', $this->page_data);
-    }
+    // public function vendors(){
+    //     $this->page_data['users'] = $this->users_model->getUser(logged('id'));
+    //     $this->page_data['vendors'] = $this->vendors_model->getVendors();
+    //     $this->load->view('accounting/vendors', $this->page_data);
+    // }
 
     public function receivables()
     {
@@ -373,83 +373,83 @@ class Accounting extends MY_Controller {
 
 
     /*** Vendors ***/
-    public function addVendor()
-    {
-        $id = logged('id');
-        $filePath = "./uploads/accounting/vendors/".$id;
-        $file_name = "";
+    // public function addVendor()
+    // {
+    //     $id = logged('id');
+    //     $filePath = "./uploads/accounting/vendors/".$id;
+    //     $file_name = "";
 
-        if (!file_exists($filePath)) {
-            mkdir($filePath);
-        }
+    //     if (!file_exists($filePath)) {
+    //         mkdir($filePath);
+    //     }
 
-		$config['upload_path']  =  $filePath;
-        $config['allowed_types']   = 'gif|jpg|png|jpeg|doc|docx|pdf|xlx|xls|csv';
-        $config['max_size']        = '20000';
+	// 	$config['upload_path']  =  $filePath;
+    //     $config['allowed_types']   = 'gif|jpg|png|jpeg|doc|docx|pdf|xlx|xls|csv';
+    //     $config['max_size']        = '20000';
 
-        $this->load->library('upload', $config);
+    //     $this->load->library('upload', $config);
 
-        if ($this->upload->do_upload('attachFiles'))
-        {
-            $image = $this->upload->data();
-            $file_name = $image['file_name'];
-        }
+    //     if ($this->upload->do_upload('attachFiles'))
+    //     {
+    //         $image = $this->upload->data();
+    //         $file_name = $image['file_name'];
+    //     }
 
-        $config = $this->uploadlib->initialize($config);
-        $this->load->library('upload',$config);
+    //     $config = $this->uploadlib->initialize($config);
+    //     $this->load->library('upload',$config);
 
-        $new_data = array(
-            'title' => $this->input->post('title'),
-            'f_name' => $this->input->post('f_name'),
-            'm_name' => $this->input->post('m_name'),
-            'l_name' => $this->input->post('l_name'),
-            'suffix' => $this->input->post('suffix'),
-            'email' => $this->input->post('email'),
-            'company' => $this->input->post('company'),
-            'display_name' => $this->input->post('display_name'),
-            'to_display' => $this->input->post('to_display'),
-            'street' => $this->input->post('street'),
-            'city' => $this->input->post('city'),
-            'state' => $this->input->post('state'),
-            'zip' => $this->input->post('zip'),
-            'country' => $this->input->post('country'),
-            'phone' => $this->input->post('phone'),
-            'mobile' => $this->input->post('mobile'),
-            'fax' => $this->input->post('fax'),
-            'website' => $this->input->post('website'),
-            'billing_rate' => $this->input->post('billing_rate'),
-            'terms' => $this->input->post('terms'),
-            'opening_balance' => $this->input->post('opening_balance'),
-            'opening_balance_as_of_date' => $this->input->post('opening_balance_as_of_date'),
-            'account_number' => $this->input->post('account_number'),
-            'tax_id' => $this->input->post('business_number'),
-            'default_expense_account' => $this->input->post('default_expense_amount'),
-            'notes' => $this->input->post('notes'),
-            'attachments' => $file_name,
-            'status' => 1,
-            'created_by' => logged('id'),
-            'date_created' => date("Y-m-d H:i:s"),
-            'date_modified' => date("Y-m-d H:i:s")
-        );
+    //     $new_data = array(
+    //         'title' => $this->input->post('title'),
+    //         'f_name' => $this->input->post('f_name'),
+    //         'm_name' => $this->input->post('m_name'),
+    //         'l_name' => $this->input->post('l_name'),
+    //         'suffix' => $this->input->post('suffix'),
+    //         'email' => $this->input->post('email'),
+    //         'company' => $this->input->post('company'),
+    //         'display_name' => $this->input->post('display_name'),
+    //         'to_display' => $this->input->post('to_display'),
+    //         'street' => $this->input->post('street'),
+    //         'city' => $this->input->post('city'),
+    //         'state' => $this->input->post('state'),
+    //         'zip' => $this->input->post('zip'),
+    //         'country' => $this->input->post('country'),
+    //         'phone' => $this->input->post('phone'),
+    //         'mobile' => $this->input->post('mobile'),
+    //         'fax' => $this->input->post('fax'),
+    //         'website' => $this->input->post('website'),
+    //         'billing_rate' => $this->input->post('billing_rate'),
+    //         'terms' => $this->input->post('terms'),
+    //         'opening_balance' => $this->input->post('opening_balance'),
+    //         'opening_balance_as_of_date' => $this->input->post('opening_balance_as_of_date'),
+    //         'account_number' => $this->input->post('account_number'),
+    //         'tax_id' => $this->input->post('business_number'),
+    //         'default_expense_account' => $this->input->post('default_expense_amount'),
+    //         'notes' => $this->input->post('notes'),
+    //         'attachments' => $file_name,
+    //         'status' => 1,
+    //         'created_by' => logged('id'),
+    //         'date_created' => date("Y-m-d H:i:s"),
+    //         'date_modified' => date("Y-m-d H:i:s")
+    //     );
 
-        $addQuery = $this->vendors_model->createVendor($new_data);
+    //     $addQuery = $this->vendors_model->createVendor($new_data);
 
-        if($addQuery > 0){
+    //     if($addQuery > 0){
 
-            $new_id = $addQuery;
-            $comp = mb_substr($this->input->post('company'), 0, 3);
-            $vendor_id = strtolower($comp) . $new_id;
+    //         $new_id = $addQuery;
+    //         $comp = mb_substr($this->input->post('company'), 0, 3);
+    //         $vendor_id = strtolower($comp) . $new_id;
 
-            $updateQuery = $this->vendors_model->updateVendor($new_id, array("vendor_id" => $vendor_id));
+    //         $updateQuery = $this->vendors_model->updateVendor($new_id, array("vendor_id" => $vendor_id));
 
-            if($updateQuery){
-                echo json_encode($updateQuery);
-            }
-        }
-        else{
-            echo json_encode(0);
-        }
-    }
+    //         if($updateQuery){
+    //             echo json_encode($updateQuery);
+    //         }
+    //     }
+    //     else{
+    //         echo json_encode(0);
+    //     }
+    // }
 
     public function deleteVendor(){
 
@@ -4211,15 +4211,89 @@ class Accounting extends MY_Controller {
     }
 
     public function listworkOrder(){
-        // $this->page_data['users'] = $this->users_model->getUser(logged('id'));
-        // $this->page_data['page_title'] = "Work Order List";
-        // print_r($this->page_data);
-        $is_allowed = $this->isAllowedModuleAccess(24);
-        if( !$is_allowed ){
-            $this->page_data['module'] = 'workorder';
-            echo $this->load->view('no_access_module', $this->page_data, true);
-            die();
-        }
+        // // $this->page_data['users'] = $this->users_model->getUser(logged('id'));
+        // // $this->page_data['page_title'] = "Work Order List";
+        // // print_r($this->page_data);
+        // $is_allowed = $this->isAllowedModuleAccess(24);
+        // if( !$is_allowed ){
+        //     $this->page_data['module'] = 'workorder';
+        //     echo $this->load->view('no_access_module', $this->page_data, true);
+        //     die();
+        // }
+
+        // $is_allowed = $this->isAllowedModuleAccess(24);
+        // if( !$is_allowed ){
+        //     $this->page_data['module'] = 'workorder';
+        //     echo $this->load->view('no_access_module', $this->page_data, true);
+        //     die();
+        // }
+
+        // $role = logged('role');
+        // $this->page_data['workorderStatusFilters'] = array ();
+        // $this->page_data['workorders'] = array ();
+        // // $this->page_data['jobs'] = $this->jobs_model->getByWhere(['company_id' => logged('company_id')]);
+        // if ($role == 2 || $role == 3) {
+        //     $company_id = logged('company_id');
+
+        //     if (!empty($tab_index)) {
+        //         $this->page_data['tab_index'] = $tab_index;
+        //         // $this->page_data['workorders'] = $this->workorder_model->filterBy(array('status' => $tab_index), $company_id);
+        //     } else {
+
+        //         // search
+        //         if (!empty(get('search'))) {
+
+        //             $this->page_data['search'] = get('search');
+        //             // $this->page_data['workorders'] = $this->workorder_model->filterBy(array('search' => get('search')), $company_id);
+        //         } elseif (!empty(get('order'))) {
+
+        //             $this->page_data['search'] = get('search');
+        //             // $this->page_data['workorders'] = $this->workorder_model->filterBy(array('order' => get('order')), $company_id);
+
+        //         } else {
+
+        //             // $this->page_data['workorders'] = $this->workorder_model->getAllOrderByCompany($company_id);
+        //         }
+        //     }
+
+        //     // $this->page_data['workorderStatusFilters'] = $this->workorder_model->getStatusWithCount($company_id);
+        // }
+        // if ($role == 4) {
+
+        //     if (!empty($tab_index)) {
+
+        //         $this->page_data['tab_index'] = $tab_index;
+        //         // $this->page_data['workorders'] = $this->workorder_model->filterBy();
+
+        //     } elseif (!empty(get('order'))) {
+
+        //         $this->page_data['order'] = get('order');
+        //         // $this->page_data['workorders'] = $this->workorder_model->filterBy(array('order' => get('order')), $company_id);
+
+        //     } else {
+
+        //         if (!empty(get('search'))) {
+
+        //             $this->page_data['search'] = get('search');
+        //             // $this->page_data['workorders'] = $this->workorder_model->filterBy(array('search' => get('search')), $company_id);
+        //         } else {
+        //             // $this->page_data['workorders'] = $this->workorder_model->getAllByUserId();
+        //         }
+        //     }
+
+        //     // $this->page_data['workorderStatusFilters'] = $this->workorder_model->getStatusWithCount();
+        // }
+
+        // // unserialized the value
+
+        // $statusFilter = array();
+        // foreach ($this->page_data['workorders'] as $workorder) {
+
+        //     if (is_serialized($workorder)) {
+
+        //         $workorder = unserialize($workorder);
+        //     }
+        // }
 
         $is_allowed = $this->isAllowedModuleAccess(24);
         if( !$is_allowed ){
@@ -4231,7 +4305,7 @@ class Accounting extends MY_Controller {
         $role = logged('role');
         $this->page_data['workorderStatusFilters'] = array ();
         $this->page_data['workorders'] = array ();
-        // $this->page_data['jobs'] = $this->jobs_model->getByWhere(['company_id' => logged('company_id')]);
+        $this->page_data['jobs'] = $this->jobs_model->getByWhere(['company_id' => logged('company_id')]);
         if ($role == 2 || $role == 3) {
             $company_id = logged('company_id');
 
@@ -4284,6 +4358,11 @@ class Accounting extends MY_Controller {
             // $this->page_data['workorderStatusFilters'] = $this->workorder_model->getStatusWithCount();
         }
 
+        $this->page_data['workorders'] = $this->workorder_model->getworkorderList();
+
+        $company_id = logged('company_id');
+        $this->page_data['company_work_order_used'] = $this->workorder_model->getcompany_work_order_used($company_id);
+
         // unserialized the value
 
         $statusFilter = array();
@@ -4294,6 +4373,7 @@ class Accounting extends MY_Controller {
                 $workorder = unserialize($workorder);
             }
         }
+
         $this->load->view('accounting/work_order_list', $this->page_data);
     }
 
@@ -4862,6 +4942,17 @@ class Accounting extends MY_Controller {
         $this->page_data['estimate']->customer = $this->customer_model->getCustomer($this->page_data['estimate']->customer_id);
         $this->page_data['plans'] = $this->plans_model->getByWhere(['company_id' => $company_id]);
         $this->load->view('accounting/updateEstimateOptions', $this->page_data);
+    }
+
+    public function work_order_templates()
+    {
+        $company_id = logged('company_id');
+        $user_id = logged('id');
+        $this->page_data['users'] = $this->users_model->getUser(logged('id'));
+        $this->page_data['page_title'] = "All Templates";
+        $this->page_data['company_work_order_used'] = $this->workorder_model->getcompany_work_order_used($company_id);
+        
+        $this->load->view('accounting/work_order_templates', $this->page_data);
     }
 
 }

@@ -1681,11 +1681,19 @@ class Job extends MY_Controller
             );
 
             $company   = $this->general_model->get_data_with_param($get_company_info,FALSE);
-            $jobs_data_items = $this->jobs_model->get_specific_job_items($job_id);
-            /*echo "<pre>";
-            print_r($company);*/
-            //exit;
-
+            $jobs_data_items = $this->jobs_model->get_specific_job_items($job_id);                                    
+            $group_items = array();
+            foreach($jobs_data_items as $ji){
+                $type = 'product';
+                if($ji->type != 'product'){
+                    $type = 'service';
+                }
+                $group_items[$type][] = [
+                    'item_name' => $ji->title,
+                    'item_price' => $ji->price,
+                    'item_qty' => $ji->qty
+                ];
+            }
             $subject = "NsmarTrac : Job Invoice";
             $img_source = base_url('/uploads/users/business_profile/'.$company->id.'/'.$company->business_image);
             $msg .= "<img style='width: 300px;margin-top:41px;margin-bottom:24px;' alt='Logo' src='".$img_source."' /><br />";
@@ -1701,32 +1709,43 @@ class Job extends MY_Controller
                 $msg .= "<tr><td><b>Customer Name</b></td><td>: ".$job->first_name.' '.$job->last_name."</td></tr>";
                 $msg .= "<tr><td><b>Service Address</b></td><td>: ".$jobs_data->cust_city.' '.$jobs_data->cust_state.' '.$jobs_data->cust_zip_code."</td></tr>";
             $msg .= "</table>";
+            
+            $grand_total = 0;
+            foreach($group_items as $type => $items){
+                $subtotal = 0;
 
-            $msg .= "<h2>Items</h2>";
-            $msg .= "<table>";
-            $subtotal = 0;
-                foreach ($jobs_data_items as $item){
-                    $total = $item->price * $item->qty;
+                $msg .= "<h2>".ucfirst($type)."</h2>";
+                $msg .= "<table>";
+                foreach($items as $i){
+                    $total = $i['item_price'] * $i['item_qty'];
                     //$msg  .= "<tr><td>".$item->title."</td><td>".$item->qty."x".$item->price."</td><td>".number_format((float)$total,2,'.',',')."</td></tr>";
-                    $msg  .= "<tr><td width='300'>".$item->title."</td><td>".number_format((float)$total,2,'.',',')."</td></tr>";
-                    $subtotal = $subtotal + $total;
-                }                
-            $msg .= "<tr><td colspan='2'><hr /></td></tr>";
-            $msg .= "<tr><td width='300'>Subtotal</td><td>".number_format((float)$subtotal,2,'.',',')."</td></tr>";
-            $msg .= "</table>";
+                    $msg  .= "<tr><td width='300'>".$i['item_name']."</td><td>".number_format((float)$total,2,'.',',')."</td></tr>";
+                    $subtotal = $subtotal + $total;                    
+                }
+                $msg .= "<tr><td colspan='2'><hr /></td></tr>";
+                $msg .= "<tr><td width='300'>Subtotal</td><td>".number_format((float)$subtotal,2,'.',',')."</td></tr>";
+                $msg .= "</table>";
+
+                $grand_total += $subtotal;
+
+            }
+
             $msg .= "<br /><br />";
             $msg .= "<table>";
-                $msg .= "<tr><td width='300'><h3>Amount Due</h3></td><td><h2>".number_format((float)$subtotal,2,'.',',')."</h2></td></tr>";
-                $msg .= "<tr><td colspan='2'><br /></td></tr>";
-                $msg .= "<tr><td colspan='2' style='text-align:center;'><a href='".$url."' style='background-color:#32243d;color:#fff;padding:10px 25px;border:1px solid transparent;border-radius:2px;font-size:22px;text-decoration:none;'>PAY ONLINE</a></td></tr>";
+                $msg .= "<tr><td width='300'><h3>Amount Due</h3></td><td><h2>".number_format((float)$grand_total,2,'.',',')."</h2></td></tr>";
+                $msg .= "<tr><td colspan='2'><br><br></td></tr>";
+                $msg .= "<tr><td colspan='2' style='text-align:center;'><a href='".$url."' style='background-color:#32243d;color:#fff;padding:10px 25px;border:1px solid transparent;border-radius:2px;font-size:22px;text-decoration:none;'>PAY NOW</a></td></tr>";
             $msg .= "</table>";
 
-            $msg .= "<br /><br /><br /><br /><br /><br />";
+            $msg .= "<p style='margin-top:43px;width:23%;color:#222;font-size:16px;text-align:left;padding:19px;'>Delinquent Account are subject to Property Liens. Interest will be charged to delinquent accounts at the rate of 1.5% (18% Annum) per month. In the event of default, the customer agrees to pay all cost of collection, including attorney's fees, whether suit is brought or not.</p>";
+            $msg .= "<p style='width:24%;color:#222;font-size:16px;text-align:center;padding:1px;'><a href='tel:".$company->business_phone."'>".$company->business_phone."</a> | <a href='mailto:".$company->business_email."'>".$company->business_email."</a></p>";
+
+            $msg .= "<br><br><br><br><br>";
             $nsmart_logo = base_url("assets/dashboard/images/logo.png");
             $msg .= "<table>";
-                $msg .= "<tr><td colspan='2' style='text-align:center;'><span style='margin-bottom:11px;display:inline-block;'>Powered By</span> <br /> <img style='width:328px;' src='".$nsmart_logo."' /></td></tr>";
+                $msg .= "<tr><td colspan='2' style='text-align:center;'><span style='display:inline-block;'>Powered By</span> <br><br> <img style='width:328px;margin-bottom:40px;' src='".$nsmart_logo."' /></td></tr>";
             $msg .= "</table>";
-            
+
             //Email Sending
             $server    = MAIL_SERVER;
             $port      = MAIL_PORT ;
@@ -1736,7 +1755,7 @@ class Job extends MY_Controller
             $recipient = $customer->cust_email;
             //$recipient = 'bryann.revina03@gmail.com';
             $attachment = $this->create_job_invoice_pdf($job->job_unique_id);
-
+            
             $mail = new PHPMailer;
             //$mail->SMTPDebug = 4;
             $mail->isSMTP();
@@ -1804,7 +1823,7 @@ class Job extends MY_Controller
         $obj_pdf->setPrintHeader(false);
         $obj_pdf->setPrintFooter(false);
         //$obj_pdf->SetDefaultMonospacedFont('helvetica');
-        $obj_pdf->SetMargins(10, 10, 10, true);
+        $obj_pdf->SetMargins(10, 5, 10, 0, true);
         $obj_pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
         //$obj_pdf->SetFont('courierI', '', 9);
         $obj_pdf->setFontSubsetting(false);

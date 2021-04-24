@@ -1,6 +1,8 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <?php include viewPath('includes/header'); ?>
+
+
 <style>
 .cell-active{
     background-color: #5bc0de;
@@ -97,7 +99,7 @@ table.dataTable tbody tr td {
                     <!-- end card -->
                 </div>
 
-                <!-- Modal Close SMS  -->
+                <!-- Modal Delete Email Automation  -->
                 <div class="modal fade bd-example-modal-sm" id="modalDeleteAutomation" tabindex="-1" role="dialog" aria-labelledby="modalDeleteAutomationTitle" aria-hidden="true">
                   <div class="modal-dialog modal-md" role="document">
                     <div class="modal-content">
@@ -110,7 +112,7 @@ table.dataTable tbody tr td {
                       <?php echo form_open_multipart('', ['class' => 'form-validate', 'id' => 'form-delete-automation', 'autocomplete' => 'off' ]); ?>
                       <?php echo form_input(array('name' => 'automationid', 'type' => 'hidden', 'value' => '', 'id' => 'automationid'));?>
                       <div class="modal-body delete-body-container">
-                          <p>Are you sure you want delete the sms automation <b><span class="delete-automation-name"></span></b>?</p>
+                          <p>Are you sure you want delete the email automation <b><span class="delete-automation-name"></span></b>?</p>
                       </div>
                       <div class="modal-footer delete-modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
@@ -131,7 +133,114 @@ table.dataTable tbody tr td {
 <?php include viewPath('includes/footer'); ?>
 <script>
 $(function(){
-    
+    load_load_automation_list();
+    function load_load_automation_list(){
+      var url = base_url + 'email_automation/_load_automation_list';
+      $(".automation-list-container").html('<span class="spinner-border spinner-border-sm m-0"></span>');
+      setTimeout(function () {
+        $.ajax({
+           type: "POST",
+           url: url,
+           //data: ,
+           success: function(o)
+           {
+              $(".automation-list-container").html(o);
+              //table.destroy();
+              var table = $('#dataTableAutomation').DataTable({
+                  "searching" : false,
+                  "pageLength": 10,
+                  "order": [],
+                   "aoColumnDefs": [
+                    { "sWidth": "40%", "aTargets": [ 0 ] },
+                    { "sWidth": "20%", "aTargets": [ 1 ] },
+                    { "sWidth": "20%", "aTargets": [ 2 ] },
+                    { "sWidth": "20%", "aTargets": [ 3 ] },
+                    { "sWidth": "10%", "aTargets": [ 4 ] }
+                  ]
+              });     
+
+              $(document).on('click', '.delete-email-automation', function(){
+                var automation_name = $(this).attr("data-name");
+                var automation_id = $(this).attr("data-id");
+                $("#automationid").val(automation_id);
+                $(".delete-modal-footer").show();
+                $(".delete-body-container").html('<p>Are you sure you want delete the email automation <b><span class="delete-automation-name"></span></b>?</p>');
+                $(".delete-automation-name").html(automation_name);
+                $("#modalDeleteAutomation").modal('show');
+                $(".btn-delete-automation").html('Yes');
+              });
+
+              $(document).on('change', '.automation-toggle', function(){
+                var automation_id = $(this).attr("data-id");
+
+                if ($(this).prop('checked')) {
+                  var is_active = 1;
+                }else{
+                  var is_active = 0;
+                }
+
+                var url = base_url + 'email_automation/_update_automation_is_active';
+                $.ajax({
+                   type: "POST",
+                   url: url,
+                   data : {automation_id:automation_id, is_active:is_active},
+                   dataType:"json",
+                   success: function(o)
+                   {
+                     
+
+                   }
+                });
+              });
+           }
+        });
+      }, 1000);      
+    }
+
+    $("#form-delete-automation").submit(function(e){
+      e.preventDefault();
+      var url = base_url + 'email_automation/_delete_automation';
+      $(".btn-delete-automation").html('<span class="spinner-border spinner-border-sm m-0"></span>');
+      setTimeout(function () {
+        $.ajax({
+           type: "POST",
+           url: url,
+           data : $("#form-delete-automation").serialize(),
+           dataType:"json",
+           success: function(o)
+           {
+              $("#modalDeleteAutomation").modal('hide');
+              if( o.is_success ){
+                Swal.fire({
+                  title: 'Delete',
+                  text: 'Email automation was successfully deleted!',
+                  icon: 'success',
+                  showCancelButton: false,
+                  confirmButtonColor: '#32243d',
+                  cancelButtonColor: '#d33',
+                  confirmButtonText: 'Ok'
+              }).then((result) => {
+                  if (result.value) {
+                      location.reload();
+                  }
+              });
+              }else{
+                Swal.fire({
+                    title: 'Warning!',
+                    text: o.msg,
+                    icon: 'warning',
+                    showCancelButton: false,
+                    confirmButtonColor: '#32243d',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Ok'
+                }).then((result) => {
+
+                });
+              }
+           }
+        });                    
+      }, 800);
+    });
 });
 
 </script>

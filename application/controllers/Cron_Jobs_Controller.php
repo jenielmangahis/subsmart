@@ -10,6 +10,7 @@ class Cron_Jobs_Controller extends MY_Controller
     {
         parent::__construct();
         $this->load->model('timesheet_model');
+        include APPPATH . 'libraries/PHPMailer/PHPMailerAutoload.php';
     }
     public function get_time_sheet_storage($company_id, $timezone, $timesheet_report_timezone_id)
     {
@@ -22,7 +23,7 @@ class Cron_Jobs_Controller extends MY_Controller
         $time_sheet_storage = $this->generate_timelogs($date_from, $date_to, $filename, $company_id);
         return array($filename, $date_from, $time_sheet_storage, $filename_pdf);
     }
-    public function timelogs_csv_email_sender($receiver, $company_name, $filename, $date_from, $FName, $business_name, $file_info, $company_id, $company_logo)
+    public function timelogs_csv_email_sender($receiver, $company_name, $filename, $date_from, $FName, $business_name, $file_info, $company_id, $company_logo,$est_wage_privacy)
     {
         $server = MAIL_SERVER;
         $port = MAIL_PORT;
@@ -31,7 +32,6 @@ class Cron_Jobs_Controller extends MY_Controller
         $from = MAIL_FROM;
         $subject = 'nSmarTrac: Time logs for Week ' . date("M d",strtotime($date_from));
 
-        include APPPATH . 'libraries/PHPMailer/PHPMailerAutoload.php';
         $mail = new PHPMailer;
         $mail->isSMTP();
         $mail->getSMTPInstance()->Timelimit = 5;
@@ -56,6 +56,7 @@ class Cron_Jobs_Controller extends MY_Controller
         $this->page_data['file_info'] = $file_info;
         $this->page_data['file_link'] = base_url() . '/timesheet/timelogs/' . $filename;
         $this->page_data['has_logo'] = false;
+        $this->page_data['est_wage_privacy'] = $est_wage_privacy;
         $mail->IsHTML(true);
         $mail->AddEmbeddedImage(dirname(__DIR__, 2) . '/assets/dashboard/images/logo.png', 'logo_2u', 'logo.png');
         $filePath = base_url() . '/uploads/users/business_profile/'.$company_id.'/'.$company_logo;
@@ -91,22 +92,17 @@ class Cron_Jobs_Controller extends MY_Controller
                 }
             }
             $file_info = $this->get_time_sheet_storage($business->company_id, $timezone, $timezone_id);
+            $est_wage_privacy = $this->timesheet_model->get_timesheet_report_privacy($business->company_id)->est_wage_private;
             if (count($file_info[2]) > 0) {
                 $date_from = date("Y-m-d", strtotime('sunday last week', strtotime(date('Y-m-d'))));
                 $date_to = date("Y-m-d", strtotime('saturday this week', strtotime(date('Y-m-d'))));
-                $this->generate_timelogs_csv($file_info[2], $file_info[0]);
-                $this->generate_weekly_timesheet_pdf_report($file_info, $business->business_name);
+                $this->generate_timelogs_csv($file_info[2], $file_info[0],$est_wage_privacy);
+                $this->generate_weekly_timesheet_pdf_report($file_info, $business->business_name,$est_wage_privacy);
                 // $this->timelogs_csv_email_sender($business->email, $business->business_name . "", $file_info[0], $date_from, $business->FName, $business->business_name, $file_info);
                 $email_sent_to[] = array($business->business_email, $business->business_name);
                 $busness_admins = $this->timesheet_model->get_all_business_admins($business->company_id);
                 foreach ($busness_admins as $admin) {
                     $received = false;
-                    // for ($i = 0; $i < count($email_sent_to); $i++) {
-                    //     if ($email_sent_to[$i][0] == $admin->email) {
-                    //         $received = true;
-                    //         break;
-                    //     }
-                    // }
                     if (!$received) {
                         $timezone = "UTC";
                         $timezone_id = 0;
@@ -123,12 +119,11 @@ class Cron_Jobs_Controller extends MY_Controller
                             $subscribed = true;
                         }
                         $file_info = $this->get_time_sheet_storage($business->company_id, $timezone, $timezone_id);
-                        $this->generate_timelogs_csv($file_info[2], $file_info[0]);
-                        $this->generate_weekly_timesheet_pdf_report($file_info, $business->business_name);
-                        if($subscribed){
-                            $this->timelogs_csv_email_sender($admin->email, $business->business_name . "", $file_info[0], $date_from, $admin->FName, $business->business_name, $file_info,$business->company_id,$business->business_image);
-                        }
-                        var_dump($subscribed);
+                        $this->generate_timelogs_csv($file_info[2], $file_info[0],$est_wage_privacy);
+                        $this->generate_weekly_timesheet_pdf_report($file_info, $business->business_name,$est_wage_privacy);
+                        
+                        $this->timelogs_csv_email_sender($admin->email, $business->business_name . "", $file_info[0], $date_from, $admin->FName, $business->business_name, $file_info,$business->company_id,$business->business_image,$est_wage_privacy);
+                                        
                     $email_sent_to[] = array($admin->email, $business->business_name);
                     }
                 }
@@ -155,22 +150,17 @@ class Cron_Jobs_Controller extends MY_Controller
                 }
             }
             $file_info = $this->get_time_sheet_storage($business->company_id, $timezone, $timezone_id);
+            $est_wage_privacy = $this->timesheet_model->get_timesheet_report_privacy($business->company_id)->est_wage_private;
             if (count($file_info[2]) > 0) {
                 $date_from = date("Y-m-d", strtotime('sunday last week', strtotime(date('Y-m-d'))));
                 $date_to = date("Y-m-d", strtotime('saturday this week', strtotime(date('Y-m-d'))));
-                $this->generate_timelogs_csv($file_info[2], $file_info[0]);
-                $this->generate_weekly_timesheet_pdf_report($file_info, $business->business_name);
-                // $this->timelogs_csv_email_sender($business->email, $business->business_name . "", $file_info[0], $date_from, $business->FName, $business->business_name, $file_info);
+                $this->generate_timelogs_csv($file_info[2], $file_info[0],$est_wage_privacy);
+                $this->generate_weekly_timesheet_pdf_report($file_info, $business->business_name,$est_wage_privacy);
+                $this->timelogs_csv_email_sender("moresecureadi@gmail.com", $business->business_name . "", $file_info[0], $date_from,  "Tommy", $business->business_name, $file_info,$business->company_id,$business->business_image,$est_wage_privacy);
                 $email_sent_to[] = array($business->business_email, $business->business_name);
                 $busness_admins = $this->timesheet_model->get_all_business_admins($business->company_id);
                 foreach ($busness_admins as $admin) {
                     $received = false;
-                    // for ($i = 0; $i < count($email_sent_to); $i++) {
-                    //     if ($email_sent_to[$i][0] == $admin->email) {
-                    //         $received = true;
-                    //         break;
-                    //     }
-                    // }
                     if (!$received) {
                         $timezone = "UTC";
                         $timezone_id = 0;
@@ -187,24 +177,21 @@ class Cron_Jobs_Controller extends MY_Controller
                             $subscribed = true;
                         }
                         $file_info = $this->get_time_sheet_storage($business->company_id, $timezone, $timezone_id);
-                        $this->generate_timelogs_csv($file_info[2], $file_info[0]);
-                        $this->generate_weekly_timesheet_pdf_report($file_info, $business->business_name);
-                        if($subscribed){
-                            if ($admin->email == "pintonlou@gmail.com") {
-                                // $this->timelogs_csv_email_sender("moresecureadi@gmail.com", $business->business_name . " Tester", $file_info[0], $date_from, "Tommy", $business->business_name, $file_info, $file_info,$business->company_id,$business->business_image);
-                                $this->timelogs_csv_email_sender($admin->email, $business->business_name . "", $file_info[0], $date_from, $admin->FName, $business->business_name, $file_info,$business->company_id,$business->business_image);
-                            }
-                            // $this->timelogs_csv_email_sender($admin->email, $business->business_name . "", $file_info[0], $date_from, $admin->FName, $business->business_name, $file_info);
+                        $this->generate_timelogs_csv($file_info[2], $file_info[0],$est_wage_privacy);
+                        $this->generate_weekly_timesheet_pdf_report($file_info, $business->business_name,$est_wage_privacy);
+                        if ($admin->email == "pintonlou@gmail.com") {
+                                $this->timelogs_csv_email_sender($admin->email, $business->business_name . "", $file_info[0], $date_from, $admin->FName, $business->business_name, $file_info,$business->company_id,$business->business_image,$est_wage_privacy);
                         }
-                        var_dump($subscribed);
-                        var_dump($saved_timezones);
-                    $email_sent_to[] = array($admin->email, $business->business_name);
+
+                        // $this->timelogs_csv_email_sender($admin->email, $business->business_name . "", $file_info[0], $date_from, $admin->FName, $business->business_name, $file_info);
+                        
+                        $email_sent_to[] = array($admin->email, $business->business_name);
                     }
                 }
             }
         }
     }
-    public function generate_weekly_timesheet_pdf_report($file_info, $business_name)
+    public function generate_weekly_timesheet_pdf_report($file_info, $business_name, $est_wage_privacy)
     {
         $date_from = date("Y-m-d", strtotime('sunday last week', strtotime(date('Y-m-d'))));
         $date_to = date("Y-m-d", strtotime('saturday this week', strtotime(date('Y-m-d'))));
@@ -213,6 +200,7 @@ class Cron_Jobs_Controller extends MY_Controller
         $this->page_data['date_to'] = $date_to;
         $this->page_data['business_name'] = $business_name;
         $this->page_data['timesheet_report_timezone'] = $this->timesheet_report_timezone;
+        $this->page_data['est_wage_privacy'] = $est_wage_privacy;
         $content = $this->load->view('users/timesheet/emails/html_to_pdf_weekly_report', $this->page_data, TRUE);
         $this->load->library('Reportpdf');
         $title = 'Timesheet Weekly Report for Pay Period ' . date('M d', strtotime($date_from)) . ' - ' . date('d');
@@ -242,23 +230,38 @@ class Cron_Jobs_Controller extends MY_Controller
         // $obj_pdf->Output($title, 'I');
         $obj_pdf->Output(dirname(__DIR__, 2) . '/timesheet/timelogs/' . $file_info[3], 'F');
     }
-    public function generate_timelogs_csv($timehseet_storage, $filename)
+    public function generate_timelogs_csv($timehseet_storage, $filename, $est_wage_privacy)
     { // file name 
         $file = fopen(APPPATH . '../timesheet/timelogs/' . $filename, 'wb');
-        $header = array(
-            "Employee",
-            "Date (" . $this->timesheet_report_timezone . ")",
-            "Role",
-            "Wage",
-            "Time Card (" . $this->timesheet_report_timezone . ")",
-            "Act.& Sched Diff.",
-            "Total Paid",
-            "Regular",
-            "Unpaid Breaks",
-            "Overtime",
-            "Est. Wages",
-            "Notes",
-        );
+        
+        if($est_wage_privacy == 1){
+            $header = array(
+                "Employee",
+                "Date (" . $this->timesheet_report_timezone . ")",
+                "Role",
+                "Wage",
+                "Time Card (" . $this->timesheet_report_timezone . ")",
+                "Act.& Sched Diff.",
+                "Total Paid",
+                "Regular",
+                "Overtime",
+                "Est. Wages",
+                "Notes",
+            );
+        }else{
+            $header = array(
+                "Employee",
+                "Date (" . $this->timesheet_report_timezone . ")",
+                "Role",
+                "Wage",
+                "Time Card (" . $this->timesheet_report_timezone . ")",
+                "Act.& Sched Diff.",
+                "Total Paid",
+                "Regular",
+                "Overtime",
+                "Notes",
+            );
+        }
         // $file = fopen('php://output', 'w');
         fputcsv($file, $header);
 
@@ -295,9 +298,10 @@ class Cron_Jobs_Controller extends MY_Controller
                     $data[] = $act_dif_total;
                     $data[] = $total_paid;
                     $data[] = $total_regular;
-                    $data[] = 0.00;
                     $data[] = $total_overtime;
-                    $data[] = $total_est_wage;
+                    if($est_wage_privacy == 1){
+                        $data[] = $total_est_wage;
+                    }
                     $data[] = '';
                     fputcsv($file, $data);
                     $data = array();
@@ -335,7 +339,6 @@ class Cron_Jobs_Controller extends MY_Controller
             $data[] = $actual_vs_expected;
             $data[] = $paid_hours;
             $data[] = $regular_hours;
-            $data[] = 0.00;
             $data[] = ($timehseet_storage[$i][17] == 'Approved' ? $timehseet_storage[$i][16] : 0.00);
             $data[] = $est_wage;
             $data[] = $timehseet_storage[$i][19];
@@ -364,9 +367,10 @@ class Cron_Jobs_Controller extends MY_Controller
                 $data[] = $act_dif_total;
                 $data[] = $total_paid;
                 $data[] = $total_regular;
-                $data[] = 0.00;
                 $data[] = $total_overtime;
-                $data[] = $total_est_wage;
+                if($est_wage_privacy == 1){
+                    $data[] = $total_est_wage;
+                }
                 $data[] = '';
                 fputcsv($file, $data);
                 $data = array();
@@ -381,9 +385,10 @@ class Cron_Jobs_Controller extends MY_Controller
         $data[] = $overall_act_dif_total;
         $data[] = $overall_total_paid;
         $data[] = $overall_total_regular;
-        $data[] = 0.00;
         $data[] = $overall_total_overtime;
-        $data[] = $overall_total_est_wage;
+        if($est_wage_privacy == 1){
+            $data[] = $overall_total_est_wage;
+        }
         $data[] = '';
         fputcsv($file, $data);
     }

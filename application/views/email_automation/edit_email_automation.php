@@ -72,14 +72,14 @@ label>input {
     <!-- page wrapper start -->
     <div wrapper__section>
         <div class="container-fluid p-40">
-            <?php echo form_open_multipart('create_email_automation/save', ['class' => 'form-validate', 'id' => 'create_email_automation', 'autocomplete' => 'off']); ?>
+            <?php echo form_open_multipart('update_email_automation/save', ['class' => 'form-validate', 'id' => 'update_email_automation', 'autocomplete' => 'off']); ?>
             <div class="row">
                 <div class="col-xl-12">
                     <div class="card mt-0">
 
                         <div class="row">
                           <div class="col-sm-6 left">
-                            <h3 class="page-title">Add Email Automation</h3>
+                            <h3 class="page-title">Edit Email Automation</h3>
                           </div>
                           <div class="col-sm-6 right dashboard-container-1">
                             <div class="float-right d-none d-md-block">
@@ -102,7 +102,7 @@ label>input {
                                     <label for=""><b>On Event</b></label><br />
                                     <select class="form-control" id="rule-event"  name="rule_event" style="width: 55%;">
                                       <?php foreach($optionRuleEvent as $key => $value){ ?>
-                                        <option value="<?= $key; ?>"><?= $value; ?></option>
+                                        <option <?= $emailAutomation->rule_event == $key ? 'selected="selected"' : ''; ?> value="<?= $key; ?>"><?= $value; ?></option>
                                       <?php } ?>
                                     </select>
                                 </div>
@@ -112,7 +112,7 @@ label>input {
                                     <label for=""><b>Send</b><br /><small>This represents the time when we send the text.</small></label><br />
                                     <select class="form-control" name="rule_notify_at" style="width: 55%;">
                                       <?php foreach($optionRuleNotifyAt as $key => $value){ ?>
-                                        <option value="<?= $key; ?>"><?= $value; ?></option>
+                                        <option <?= $emailAutomation->rule_notify_at == $key ? 'selected="selected"' : ''; ?> value="<?= $key; ?>"><?= $value; ?></option>
                                       <?php } ?>
                                     </select>
                                     <div style="display: inline-block;">
@@ -128,7 +128,7 @@ label>input {
                             <div class="row">
                                 <div class="col-md-6 form-group">
                                     <label for=""><b>Automation Name</b><br /><small>Set a name for your own reference.</small></label>
-                                    <input type="text" class="form-control" name="automation_name" id="" required placeholder="" autofocus style="width: 55%;"/>
+                                    <input type="text" class="form-control" value="<?= $emailAutomation->name; ?>" name="automation_name" id="" required placeholder="" autofocus style="width: 55%;"/>
                                 </div>
                             </div>
                             <div class="row">
@@ -136,7 +136,7 @@ label>input {
                                     <label for=""><b>Customer Type</b></label><Br />
                                     <select class="form-control" name="business_customer_type_service" style="width: 55%;">
                                       <?php foreach($optionCustomerType as $key => $value){ ?>
-                                        <option value="<?= $key; ?>"><?= $value; ?></option>
+                                        <option <?= $emailAutomation->business_customer_type_service == $key ? 'selected="selected"' : ''; ?> value="<?= $key; ?>"><?= $value; ?></option>
                                       <?php } ?>
                                     </select>
                                 </div>
@@ -163,14 +163,14 @@ label>input {
                                   <div class="row">
                                     <div class="col-md-12 form-group">
                                         <label for="formClient-Name">Subject</label>
-                                        <input type="text" class="form-control" name="email_subject" value="<?= $emailCampaign ? $emailCampaign->email_subject : ''; ?>" id="email_subject" required placeholder="" autofocus/>
+                                        <input type="text" class="form-control" name="email_subject" value="<?= $emailAutomation->email_subject; ?>" id="email_subject" required placeholder="" autofocus/>
                                     </div>
 
                                     <div class="col-md-12 form-group">
                                         <label for="formClient-Name">Email Body</label>
                                         <textarea name="email_body" cols="40" rows="30"  class="form-control" id="mail_body" autocomplete="off">
-                                          <?php if($emailCampaign->email_body != ''){ ?>
-                                            <?= $emailCampaign->email_body; ?>
+                                          <?php if($emailAutomation->email_body != ''){ ?>
+                                            <?= $emailAutomation->email_body; ?>
                                           <?php }else{ ?>
                                             <h2>Dear {{customer.first_name}},</h2>
                                             <br />
@@ -302,27 +302,45 @@ label>input {
 <?php include viewPath('includes/footer'); ?>
 <script>
 $(function(){
-    $("#create_email_automation").submit(function(e){
+    $("#update_email_automation").submit(function(e){
         e.preventDefault();
-        var url = base_url + 'email_automation/create_email_automation';
+        var url = base_url + 'email_automation/update_email_automation';
         $(".btn-automation-save").html('<span class="spinner-border spinner-border-sm m-0"></span>  Saving');
         setTimeout(function () {
           $.ajax({
              type: "POST",
              url: url,
              dataType: "json",
-             data: $("#create_email_automation").serialize(),
+             data: $("#update_email_automation").serialize(),
              success: function(o)
              {
+                $(".btn-automation-save").html('Save');
                 if( o.is_success ){
-                    location.href = base_url + "email_automation";
+                    Swal.fire({
+                        title: 'Email automation was successfully upated!',
+                        text: '',
+                        icon: 'success',
+                        showCancelButton: false,
+                        confirmButtonColor: '#32243d',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Ok'
+                    }).then((result) => {
+                        if (result.value) {
+                            window.location.href= base_url + 'email_automation';
+                        }
+                    });
                 }else{
                     Swal.fire({
-                      icon: 'error',
-                      title: 'Cannot proceed.',
-                      text: o.msg
+                        title: 'Warning!',
+                        text: o.msg,
+                        icon: 'warning',
+                        showCancelButton: false,
+                        confirmButtonColor: '#32243d',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Ok'
+                    }).then((result) => {
+
                     });
-                    $(".btn-automation-save").html('Save');
                 }
              }
           });

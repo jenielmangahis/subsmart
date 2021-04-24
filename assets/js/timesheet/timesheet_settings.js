@@ -4,6 +4,7 @@ $(document).ready(function() {
             tz_display_name: $("#tz_display_name").val(),
             tz_id_of_tz: $("#tz_id_of_tz").val(),
             subscribe: $("#subcribe_weekly_report").is(":checked"),
+            est_wage_privacy: $("#est_wage_privacy").is(":checked")
         };
 
         Swal.fire({
@@ -61,6 +62,7 @@ $(document).ready(function() {
 
     function set_current_timezone() {
         var current_tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+        // alert(current_tz);
         $.ajax({
             url: baseURL + "/timesheet/get_saved_timezone",
             type: "POST",
@@ -78,9 +80,11 @@ $(document).ready(function() {
                         $(".subscribed-fields").hide();
                     }
                 } else {
-                    $("#tz_display_name").val(data.timezone_id);
-                    $("#tz_id_of_tz").val(data.timezone_id_of_tz);
+                    $("#tz_display_name").val(36);
+                    $("#tz_id_of_tz").val("Etc/GMT");
+
                 }
+
                 $.ajax({
                     type: "POST",
                     url: baseURL + "/timesheet/get_next_report",

@@ -1,20 +1,10 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 ?>
-<?php 
-$group_items = array();
-foreach($jobs_data_items as $ji){
-    $group_items[$ji->type][] = [
-        'item_name' => $ji->title,
-        'item_price' => $ji->price,
-        'item_qty' => $ji->qty
-    ];
-}
 
-?>
 <table style="width: 100%;font-size: 10px;">
     <tr>
-        <td style="text-align: right;" colspan=2><span style="font-weight: 700;font-size: 16px;"><?=  $jobs_data->job_number;  ?></span><br></td>
+        <td style="text-align: right;" colspan=2><p style="font-weight: 700;font-size: 16px;"><?=  $jobs_data->job_number;  ?></p><br /></td>
     </tr>
     <tr>
         <td style="width:50%;">
@@ -50,79 +40,91 @@ foreach($jobs_data_items as $ji){
         </td>
     </tr>
 </table>
-<br><br><br>
-<table style="width: 100%;margin-top: 20px;font-size: 9px;">
+<br /><Br /><br />
+<table style="width: 100%;margin-top: 20px;font-size: 10px;">
     <tr>
         <td>
             <b>FROM</b><br><br>
             <b><?= trim($company_info->business_name); ?></b><br>
             <span><?= $company_info->street; ?></span><br>
             <span><?= $company_info->city.', '.$company_info->state.' '.$company_info->postal_code ; ?></span><br>
-            <span>Phone: <?= $company_info->business_phone ; ?></span>
+            <span> Phone: <?= $company_info->business_phone ; ?></span>
         </td>
         <td>
             <b>TO</b><br><br>
             <b><?= $jobs_data->first_name.' '.$jobs_data->last_name; ?></b><br>
             <span><?= $jobs_data->mail_add; ?></span><br>
-            <span><?= $jobs_data->cust_city.' '.$jobs_data->cust_state.' '.$jobs_data->cust_zip_code ; ?></span><br>
-            <span>Email: <?= $jobs_data->cust_email ; ?></span> <a href="mailto:<?= $jobs_data->cust_email ; ?>"></a><br>
+            <span><?= $jobs_data->cust_city.' '.$jobs_data->cust_state.' '.$jobs_data->cust_zip_code ; ?></span> <span class="fa fa-copy icon_preview"></span><br>
+            <span>Email: <?= $jobs_data->cust_email ; ?></span> <a href="mailto:<?= $jobs_data->cust_email ; ?>"><span class="fa fa-envelope icon_preview"></span></a><br>
             <span>Phone:  </span>
             <?php if($jobs_data->phone_h!="" || $jobs_data->phone_h!=NULL): ?>
                 <?= $jobs_data->phone_h;  ?>
+                <span class="fa fa-phone icon_preview"></span>
+                <span class="fa fa-envelope-open-text icon_preview"></span>
             <?php else : echo 'N/A';?>
             <?php endif; ?>
-            / 
+            <br>
             <span>Mobile: </span>
             <?php if($jobs_data->phone_m!="" || $jobs_data->phone_m!=NULL): ?>
                 <?= $jobs_data->phone_h;  ?>
                 <?= $jobs_data->phone_m;  ?>
+                <span class="fa fa-phone icon_preview"></span>
+                <span class="fa fa-envelope-open-text icon_preview"></span>
             <?php else : echo 'N/A';?>
             <?php endif; ?>
         </td>
     </tr>
 </table>
-<h4 style="font-size: 9px;">JOB DETAILS :</h4>
-<?php foreach($group_items as $type => $items){ ?>
-<table style="font-size: 9px;padding: 5px;">
+<h4>JOB DETAILS :</h4>
+<table style="font-size: 10px;padding: 5px;">
     <tr>
-        <td style="width:400px;border:1px solid black;"><b><?= ucfirst($type); ?></b></td>
+        <td style="width:400px;border:1px solid black;">Items</td>
         <td style="width:50px;border:1px solid black;">Qty</td>
         <td style="width:100px;border:1px solid black;">Price</td>
         <td style="width:100px;border:1px solid black;">Total</td>
     </tr>
-    <?php foreach($items as $i){ ?>
-    <?php 
-        $total    = $i['item_price'] * $i['item_qty']; 
+    <?php
+    $subtotal = 0.00;
+    foreach ($jobs_data_items as $item):
+        $total = $item->price * $item->qty;
+        ?>
+        <tr>
+            <td style="border:1px solid black;"><?= $item->title; ?></td>
+            <td style="text-align: left;border:1px solid black;"><?= $item->qty; ?></td>
+            <td style="text-align: left;border:1px solid black;">$<?= $item->price; ?></td>
+            <td style="text-align: left;border:1px solid black;">$<?= number_format((float)$total,2,'.',','); ?></td>
+        </tr>
+        <?php
         $subtotal = $subtotal + $total;
+    endforeach;
     ?>
     <tr>
-        <td style="border:1px solid black;"><?= $i['item_name']; ?></td>
-        <td style="text-align: left;border:1px solid black;"><?= $i['item_qty']; ?></td>
-        <td style="text-align: left;border:1px solid black;">$<?= $i['item_price']; ?></td>
-        <td style="text-align: left;border:1px solid black;text-align: right;">$<?= number_format((float)$total,2,'.',','); ?></td>
+        <td colspan="4"><br></td>
     </tr>
-    <?php } ?>
-    <?php $grand_total += $subtotal; ?>
     <tr>
-        <td style="background-color: #cfcfcf;border:1px solid black;"><b>Sub Total</b></td>
-        <td colspan="3" style="background-color: #cfcfcf;border:1px solid black;text-align: right;"><b>$<?= number_format((float)$subtotal,2,'.',','); ?></b></td>
+        <td colspan="3">
+            <b>Sub Total</b>
+        </td>
+        <td>
+            <b>$<?= number_format((float)$subtotal,2,'.',','); ?></b>
+        </td>
     </tr>
-</table>
-<br><br>
-<?php } ?>
-
-<table style="font-size: 10px;padding: 5px;margin: 0px;">
     <tr>
-        <td colspan="3"><b>Grand Total</b></td>
-        <td><b>$<?= number_format((float)$grand_total,2,'.',','); ?></b></td>
+        <td colspan="3">
+            <b>Grand Total</b>
+        </td>
+        <td>
+            <b>$<?= number_format((float)$subtotal,2,'.',','); ?></b>
+        </td>
     </tr>
 </table>
 <table style="font-size: 10px;padding: 5px;">
     <tr>
-        <td style="width: 50px;"><b>NOTES</b></td>
+        <td>NOTES</td>
         <td><?=  $jobs_data->message; ?></td>
-        <td><b>ASSIGNED TO</b></td>
-        <td><?php
+        <td>ASSIGNED TO</td>
+        <td>
+            <?php
             $employee_date = get_employee_name($jobs_data->employee_id);
             $shared1 = get_employee_name($jobs_data->employee2_id);
             $shared2 = get_employee_name($jobs_data->employee3_id);
@@ -139,12 +141,15 @@ foreach($jobs_data_items as $ji){
                 <span><?= $shared3->FName; ?></span> <span class="fa fa-envelope-open-text icon_preview"></span><br>
             <?php endif; ?>
         </td>
-        <!-- <td colspan="2"><b>URL LINK</b> :<span><a style="color: darkred;" target="_blank" href="<?= $jobs_data->link; ?>"><?= $jobs_data->link; ?></a></span></td> -->
+        <td>URL LINK</td>
+        <td><span><a style="color: darkred;" target="_blank" href="<?= $jobs_data->link; ?>"><?= $jobs_data->link; ?></a></span></td>
     </tr>
 </table>
+<h4>NOTES :</h4>
+<br><br>
 <table style="font-size: 10px;padding: 5px;">
     <tr>
-        <td><span style="font-weight: 700;font-size: 18px;color: darkred;">Total : $<?= number_format((float)$grand_total,2,'.',','); ?></span></td>
+        <td><span style="font-weight: 700;font-size: 20px;color: darkred;">Total : $<?= number_format((float)$subtotal,2,'.',','); ?></span></td>
     </tr>
 </table>
 

@@ -1563,6 +1563,18 @@ class Timesheet_model extends MY_Model
         $this->db->insert('timesheet_report_company_privacy_editor',$insert);
         
     }
+    public function get_timesheet_report_privacy($company_id){
+        $this->db->reset_query();
+        $qry = $this->db->query("SELECT * from 
+        timesheet_report_company_privacy 
+        JOIN timesheet_report_company_privacy_editor 
+        ON timesheet_report_company_privacy.id=timesheet_report_company_privacy_editor.timesheet_report_company_privacy_id
+        JOIN users
+        ON users.id = timesheet_report_company_privacy_editor.user_id
+         WHERE timesheet_report_company_privacy.company_id = ".$company_id." 
+         order by timesheet_report_company_privacy_editor.date_created DESC LIMIT 1");
+        return $qry->row();
+    }
 }
 
 

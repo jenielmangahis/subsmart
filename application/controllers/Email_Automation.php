@@ -193,6 +193,81 @@ class Email_Automation extends MY_Controller {
         redirect('email_automation');
     }    
 
+    public function edit_automation($id){
+        $company_id  = logged('company_id');
+        $emailAutomation = $this->MarketingEmailAutomation_model->getById($id);
+        if( $emailAutomation ){            
+            if( $emailAutomation->company_id == $company_id  ){                
+                $optionRuleEvent = $this->MarketingEmailAutomation_model->optionsRuleEvent();
+                $optionCustomerType = $this->MarketingEmailAutomation_model->optionCustomerType();
+                $optionRuleNotifyAt = $this->MarketingEmailAutomation_model->optionRuleNotifyAt();
+                $optionCustomerGroup = $this->CustomerGroup_model->getAllByCompany($cid);
+                $emailAutomationTemplates = $this->MarketingEmailAutomationTemplate_model->getAllByCompanyId($cid);
+
+                $this->page_data['emailAutomation'] = $emailAutomation;
+                $this->page_data['selectedGroups'] = array();
+                $this->page_data['customerGroups']  = $optionCustomerGroup;
+                $this->page_data['optionRuleEvent'] = $optionRuleEvent;
+                $this->page_data['optionCustomerType'] = $optionCustomerType;
+                $this->page_data['optionRuleNotifyAt'] = $optionRuleNotifyAt;
+                $this->page_data['emailAutomationTemplates'] = $emailAutomationTemplates;
+                $this->load->view('email_automation/edit_email_automation', $this->page_data);
+            }else{
+                $this->session->set_flashdata('message', 'Email Automation not found');
+                $this->session->set_flashdata('alert_class', 'alert-danger');
+                redirect('email_automation');
+            }
+        }else{
+            $this->session->set_flashdata('message', 'Email Automation not found');
+            $this->session->set_flashdata('alert_class', 'alert-danger');
+            redirect('email_automation');
+        }
+    }
+
+    public function ajax_update_email_automation(){
+        $is_success = false;
+        $msg = 'Cannot save data. Please check your entries.';
+
+        $post = $this->input->post();
+
+        if( !empty($post) ) {
+            $emailAutomation = $this->MarketingEmailAutomation_model->getById($post['automationid']);
+            if( $emailAutomation ){
+                $exclude_customer_group = array();
+                if( isset($post['exclude_customer_group']) ){
+                    foreach($post['exclude_customer_group'] as $value){
+                        $exclude_customer_group[] = $value;
+                    }
+                }
+                $data = array(
+                    'rule_event' => $post['rule_event'],
+                    'rule_notify_at' => $post['rule_notify_at'],
+                    'rule_notify_op' => $post['rule_notify_op'],
+                    'name' => $post['automation_name'],
+                    'email_subject' => $post['email_subject'],
+                    'email_body' => $post['email_body'],
+                    'exclude_customer_group' => serialize($exclude_customer_group),
+                    'customer_type_service' => $post['business_customer_type_service'],
+                    'date_modified' => date("Y-m-d H:i:s")
+                );
+
+                $this->MarketingEmailAutomation_model->update($emailAutomation->id, $to_update);
+
+                $is_success = true;
+                $msg = 'Add Email Automation Successful';
+            }else{
+                $msg = 'Cannot find record';
+            }
+        }
+
+        $json_data = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($json_data);
+    } 
+
     public function ajax_edit_template(){
     	$id = post('tid');
     	$template = $this->MarketingEmailAutomationTemplate_model->getById($id);
@@ -331,16 +406,22 @@ class Email_Automation extends MY_Controller {
         $post = $this->input->post();
         if( !empty($post) ){
             $user = $this->session->userdata('logged');
+            $exclude_customer_group = array();
+            if( isset($post['exclude_customer_group']) ){
+                foreach($post['exclude_customer_group'] as $value){
+                    $exclude_customer_group[] = $value;
+                }
+            }
             $data = array(
                 'user_id' => $user['id'],
-                'rule_event' => post('rule_event'),
-                'rule_notify_at' => post('rule_notify_at'),
-                'rule_notify_op' => post('rule_notify_op'),
-                'name' => post('name'),
-                'email_subject' => post('email_subject'),
-                'email_body' => post('email_body'),
-                'exclude_customer_group' => post('exclude_customer_group'),
-                'customer_type_service' => post('business_customer_type_service'),
+                'rule_event' => $post['rule_event'],
+                'rule_notify_at' => $post['rule_notify_at'],
+                'rule_notify_op' => $post['rule_notify_op'],
+                'name' => $post['automation_name'],
+                'email_subject' => $post['email_subject'],
+                'email_body' => $post['email_body'],
+                'exclude_customer_group' => serialize($exclude_customer_group),
+                'customer_type_service' => $post['business_customer_type_service'],
                 'is_active' => $this->MarketingEmailAutomation_model->isActive(),
                 'date_created' => date("Y-m-d H:i:s"),
                 'date_modified' => date("Y-m-d H:i:s")
@@ -390,6 +471,64 @@ class Email_Automation extends MY_Controller {
         $message = str_replace("{{business.name}}", $company->business_name, $message);
 
         return $message;
+    }
+
+    public function ajax_load_automation_list(){
+        $company_id = logged('company_id');
+        
+        $emailAutomation = $this->MarketingEmailAutomation_model->getAllByCompanyId($company_id);
+        $optionRuleEvent = $this->MarketingEmailAutomation_model->optionsRuleEvent();
+        $optionRuleNotifyAt = $this->MarketingEmailAutomation_model->optionRuleNotifyAt();
+        $optionIsActive = $this->MarketingEmailAutomation_model->optionsIsActive();
+
+        $this->page_data['optionRuleNotifyAt'] = $optionRuleNotifyAt;
+        $this->page_data['optionRuleEvent']    = $optionRuleEvent;
+        $this->page_data['optionIsActive']     = $optoptionIsActiveionStatus;
+        $this->page_data['emailAutomation']    = $emailAutomation;
+        $this->load->view('email_automation/ajax_load_automation_list', $this->page_data);
+    }
+
+    public function ajax_update_automation_is_active(){
+        $post = $this->input->post(); 
+        
+        $company_id = logged('company_id');
+        $automation = $this->MarketingEmailAutomation_model->getById($post['automation_id']);
+        if( $automation ){
+            if( $company_id == $automation->company_id ){
+                $data = array(
+                    'is_active' => $post['is_active'],
+                    'date_modified' => date("Y-m-d H:i:s")
+                );
+                $emailAutomation = $this->MarketingEmailAutomation_model->update($automation->id, $data);
+            }
+        } 
+    }
+
+    public function ajax_delete_automation(){
+        $company_id = logged('company_id');
+        $is_success = 0;
+        $msg    = '';
+
+        $post = $this->input->post(); 
+        $emailAutomation = $this->MarketingEmailAutomation_model->getById($post['automationid']);
+        if( $emailAutomation ){
+            if( $emailAutomation->company_id == $company_id  ){
+                $this->MarketingEmailAutomation_model->deleteEmailAutomationById($emailAutomation->id);
+                $is_success = 1;
+                $msg = 'Record deleted';
+            }else{
+                $msg = 'Cannot find record';    
+            }
+        }else{
+            $msg = 'Cannot find record';
+        }
+
+        $json_data = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($json_data);
     }
 }
 

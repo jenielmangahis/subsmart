@@ -1,108 +1,176 @@
-<?php defined('BASEPATH') OR exit('No direct script access allowed'); ?>
-
+<?php
+defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <?php include viewPath('includes/header'); ?>
+<style>
+.cell-active{
+    background-color: #5bc0de;
+}
+.page-title {
+  font-family: Sarabun, sans-serif !important;
+  font-size: 1.75rem !important;
+  font-weight: 600 !important;
+}
+.cell-inactive{
+    background-color: #d9534f;
+}
+.left {
+  float: left;
+}
+.pr-b10 {
+  position: relative;
+  bottom: 10px;
+}
+.p-40 {
+  padding-top: 40px !important;
+}
+img.event-marker {
+    display: block;
+    margin: 0 auto;
+}
+tr.odd {
+    background: #f1f1f1 !important;
+}
+table.table tbody tr td {
+    width: 15%;
+    text-align: right;
+}
+table.table tbody tr td:first-child {
+    width: 85%;
+    text-align: left;
+}
+table.dataTable {
+    border-collapse: collapse;
+    margin-top: 5px;
+}
+table.dataTable thead tr th {
+    border: 1px solid black !important;
+}
+table.dataTable tbody tr td {
+    border: 1px solid black !important;
+}
+@media only screen and (max-width: 600px) {
+  .p-40 {
+    padding-top: 0px !important;
+  }
+  .pr-b10 {
+    position: relative;
+    bottom: 0px;
+  }
+}
+.event-marker{
+  height: 50px;
+  width: 50px;
+  border: 1px solid #dee2e6;
+}
+</style>
 <div class="wrapper" role="wrapper">
     <?php include viewPath('includes/sidebars/marketing'); ?>
     <!-- page wrapper start -->
     <div wrapper__section>
-        <?php include viewPath('includes/notifications'); ?>
-        <div class="container-fluid">
-            <div class="row pt-3">
+        <div class="container-fluid p-40">
+            <!-- end row -->
+            <div class="row">
                 <div class="col-xl-12">
-                    <div class="card">
-                        <div class="card-body" >
-                            <div class="col-md-12">
-
-                                <h3 class="page-title col-lg-6 float-left">Deals &amp; Steals</h3>
-                                <div class="pull-right">
-                                    <a class="btn btn-primary btn-md" href="https://www.markate.com/pro/promote/deals/main/add"><span class="fa fa-plus"></span> Create Deal</a>
-                                </div>
-                                <div class="alert alert-warning col-md-12 mt-4 mb-4 row" role="alert">
-                                    <span style="color:black;">
-                                        Listing all automations
-                                    </span>
-                                </div>  
-                                
-                                <div class="col-sm-5 col-md-5 text-right float-right magbottompad">
-                                    <a class="margin-right-sec" href="https://www.markate.com/pro/promote/deals/reports"><span class="fa fa fa-bar-chart fa-margin-right"></span> Stats</a>
-                                    <a href="https://www.markate.com/pro/promote/deals/orders_business"><span class="fa fa-file-text-o fa-margin-right"></span> My Payments</a>
-                                </div>
+                    <div class="card mt-0" style="min-height: 400px !important;">
+                        <div class="row">
+                          <div class="col-sm-6 left">
+                            <h3 class="page-title">Deals & Steals</h3>
+                          </div>
+                          <div class="col-sm-6 right dashboard-container-1">
+                              <div class="text-right">
+                                  <a href="<?php echo url('sms_campaigns/add_sms_blast') ?>" class="btn btn-primary btn-md"><i class="fa fa-plus"></i> Create Deal</a><br />
+                              </div>
+                          </div>
+                        </div>
+                        <div class="alert alert-warning mt-2 mb-4" role="alert">
+                            <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">Listing the deals that are currently running.
+                            </span>
+                        </div>
+                        <?php include viewPath('flash'); ?>
+                        <!-- Main content -->
+                        <section class="content">
+                            <div class="tabs mt-2">
+                                <ul class="clearfix ul-mobile" id="myTab" role="tablist">
+                                        <li class="nav-item nav-all active">
+                                            <a class="nav-link" id="c-all-tab" data-toggle="tab" href="#all-campaigns" role="tab" aria-controls="One" aria-selected="true">Active Deals <span class="sms-total-all sms-tab-counter"></span></a>
+                                        </li>
+                                        <li class="nav-item nav-scheduled">
+                                            <a class="nav-link" id="c-scheduled-tab" data-toggle="tab" href="#scheduled-campaigns" role="tab" aria-controls="Two" aria-selected="false">Scheduled <span class="sms-total-scheduled sms-tab-counter"></span></a>
+                                        </li>
+                                        <li class="nav-item nav-closed">
+                                            <a class="nav-link" id="c-closed-tab" data-toggle="tab" href="#closed-campaigns" role="tab" aria-controls="Three" aria-selected="false">Ended <span class="sms-total-closed sms-tab-counter"></span></a>
+                                        </li>
+                                        <li class="nav-item nav-draft">
+                                            <a class="nav-link" id="c-draft-tab" data-toggle="tab" href="#draft-campaigns" role="tab" aria-controls="Three" aria-selected="false">Draft <span class="sms-total-draft sms-tab-counter"></span></a>
+                                        </li>
+                                </ul>
                             </div>
-
-            <div class="tabs"><ul class="clearfix"><li class="active"><a href="https://www.markate.com/pro/promote/deals/main/index/tab/active">Active Deals <span>(0)</span></a></li><li><a href="https://www.markate.com/pro/promote/deals/main/index/tab/scheduled">Scheduled <span>(0)</span></a></li><li><a href="https://www.markate.com/pro/promote/deals/main/index/tab/closed">Ended <span>(0)</span></a></li><li><a href="https://www.markate.com/pro/promote/deals/main/index/tab/draft">Draft <span>(2)</span></a></li></ul></div><table class="table table-hover table-to-list fix-reponsive-table" data-id="deals">
-                <thead>
-                    <tr>
-                        <th>Deal</th>
-                        <th></th>
-                        <th class="text-center">Views</th>
-                        <th class="text-center">Bookings</th>
-                        <th>Valid </th>
-                        <th>Status</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                </tbody>
-            </table>
-
-            <div class="row pagination-container">
-                <div class="col-md-20"><ul class="pagination"></ul></div>
-                <div class="col-md-4 text-right"></div>
+                            <div class="campaign-list-container"></div>
+                        </section>
+                        <!-- /.content -->
+                    </div>
+                    <!-- end card -->
+                </div>
             </div>
-            <div class="modal" data-deal-close="modal" tabindex="-1" role="dialog">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">×</span>
-                            </button>
-                            <h4 class="modal-title">Close Deal</h4>
-                        </div>
-                        <div class="modal-body">
-                            <div class="validation-error hide"></div>
-                            <form name="form-modal">
-                                <p>
-                                    You are about to close the deal <span class="bold" data-id="dealTitle"></span>
-                                </p>
-                                <p class="text-ter">Please be aware that no money will be refunded for remaining period.</p>
-                            </form>
-                        </div>
-                        <div class="modal-footer">
-                            <button class="btn btn-default" type="button" data-dismiss="modal">Cancel</button>
-                            <button class="btn btn-primary" type="button" data-deal-close="submit">Close the Deal</button>
-                        </div>
-                    </div>
+            <!-- end row -->
+
+            <!-- Modal Close SMS  -->
+            <div class="modal fade bd-example-modal-sm" id="modalCloseCampaign" tabindex="-1" role="dialog" aria-labelledby="modalCloseCampaignTitle" aria-hidden="true">
+              <div class="modal-dialog modal-md" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle"><i class="fa fa-trash"></i> Close</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <?php echo form_open_multipart('', ['class' => 'form-validate', 'id' => 'form-close-campaign', 'autocomplete' => 'off' ]); ?>
+                  <?php echo form_input(array('name' => 'smsid', 'type' => 'hidden', 'value' => '', 'id' => 'smsid'));?>
+                  <div class="modal-body close-body-container">
+                      <p>Are you sure you want close the campaign <b><span class="close-campaign-name"></span></b>?</p>
+                  </div>
+                  <div class="modal-footer close-modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                    <button type="submit" class="btn btn-danger btn-close-campaign">Yes</button>
+                  </div>
+                  <?php echo form_close(); ?>
                 </div>
-            </div><div class="modal" data-deal-renew="modal" tabindex="-1" role="dialog">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">×</span>
-                            </button>
-                            <h4 class="modal-title">Rerun Deal</h4>
-                        </div>
-                        <div class="modal-body">
-                            <div class="validation-error hide"></div>
-                            <form name="form-modal">
-                                <p>
-                                    Great! You are about to rerun this deal <span class="bold" data-id="dealTitle"></span> for a new period.
-                                </p>
-                                <p>
-                                    You will be able to edit the deal, make changes if required, preview and publish it.
-                                </p>
-                            </form>
-                        </div>
-                        <div class="modal-footer">
-                            <button class="btn btn-default" type="button" data-dismiss="modal">Close</button>
-                            <button class="btn btn-primary" type="button" data-deal-renew="submit">Rerun the Deal</button>
-                        </div>
-                    </div>
+              </div>
+            </div>
+
+            <!-- Modal Clone SMS  -->
+            <div class="modal fade bd-example-modal-sm" id="modalCloneCampaign" tabindex="-1" role="dialog" aria-labelledby="modalCloneCampaignTitle" aria-hidden="true">
+              <div class="modal-dialog modal-md" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle"><i class="fa fa-files-o icon"></i> Clone</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <?php echo form_open_multipart('', ['class' => 'form-validate', 'id' => 'form-clone-campaign', 'autocomplete' => 'off' ]); ?>
+                  <?php echo form_input(array('name' => 'smsid', 'type' => 'hidden', 'value' => '', 'id' => 'clone-smsid'));?>
+                  <div class="modal-body clone-body-container">
+                      <p>Are you sure you want clone the campaign <b><span class="clone-campaign-name"></span></b>?</p>
+                  </div>
+                  <div class="modal-footer clone-modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                    <button type="submit" class="btn btn-primary btn-clone-campaign">Yes</button>
+                  </div>
+                  <?php echo form_close(); ?>
                 </div>
+              </div>
             </div>
 
         </div>
+        <!-- end container-fluid -->
     </div>
+    <!-- page wrapper end -->
 </div>
-<!-- page wrapper end -->
 <?php include viewPath('includes/footer'); ?>
+<script>
+$(function(){
+    
+});
+
+</script>

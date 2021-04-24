@@ -49,6 +49,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
             .jumbotron {
                 padding: 4rem 2rem;
             }
+            .nsmartrac-address{
+                font-size:10px!important;
+            }
         }
 
         @media (min-width: 1200px) {
@@ -257,9 +260,10 @@ defined('BASEPATH') or exit('No direct script access allowed');
                             <th style="text-align:left;">Employee</th>
                             <th>Total Paid</th>
                             <th>Regular</th>
-                            <th>Unpaid Breaks</th>
                             <th>OT</th>
-                            <th>Est. Wages</th>
+                            <?php if($est_wage_privacy == 1){
+                                echo '<th>Est. Wages</th>';
+                            }?>
                         </tr>
                     </thead>
                     <?php
@@ -288,12 +292,15 @@ defined('BASEPATH') or exit('No direct script access allowed');
                             if (!$started) {
                                 $started = true;
                             } else {
+                                if($est_wage_privacy == 1){
+                                    $est_wage_html = '<td >$' . $total_est_wage . '</td>';
+                                }
                                 $table .= '<tr style="border:solid 2px #E6E6E6;">
                                                     <td style="text-align: left;">' . $timehseet_storage[$i - 1][1] . '</td>
                                                     <td >' . $total_paid . ' hours</td>
                                                     <td >' . $total_regular . ' hours</td>
                                                     <td >' . $total_overtime . '</td>
-                                                    <td >$' . $total_est_wage . '</td>
+                                                    '.$est_wage_html.'
                                                 </tr>';
                                 if ($i < count($timehseet_storage) - 1) {
                                     $table .= '';
@@ -341,12 +348,16 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         $overall_total_est_wage += $est_wage;
                         $overall_time_card_ctr++;
                         if ($i == count($timehseet_storage) - 1) {
+
+                            if($est_wage_privacy == 1){
+                                $est_wage_html = '<td >$' . $total_est_wage . '</td>';
+                            }
                             $table .= '<tr style="border:solid 2px #E6E6E6;">
                                                     <td style="text-align: left;">' . $timehseet_storage[$i][1] . '</td>
                                                     <td >' . $total_paid . ' hours</td>
                                                     <td >' . $total_regular . ' hours</td>
                                                     <td >' . $total_overtime . '</td>
-                                                    <td >$' . $total_est_wage . '</td>
+                                                    '.$est_wage_html.'
                                                 </tr>';
                         }
                     }
@@ -360,14 +371,18 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         <tr style="font-weight: bold;  border:none;">
                             <th>Regular</th>
                             <th>OT</th>
-                            <th>Est. Wages</th>
+                            <?php if($est_wage_privacy == 1){
+                                echo '<th>Est. Wages</th>';
+                            }?>
                         </tr>
                     </thead>
                     <tbody>
                         <tr style="font-weight: bold; border:none;">
                             <td style="color:#6c757d"><?= $overall_total_regular ?> hours</td>
                             <td style="color:#6c757d"><?= $overall_total_overtime ?></td>
-                            <td style="color:#6c757d">$<?= $overall_total_est_wage ?></td>
+                            <?php if($est_wage_privacy == 1){
+                                echo '<td style="color:#6c757d">'.$overall_total_est_wage.'</td>';
+                            }?>
                         </tr>
                     </tbody>
                 </table>
@@ -378,8 +393,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     <label style="padding-bottom: 5px;">Thanks,<br><br> nSmarTrac Team<br>You are receiving this email because you signed up for nSmarTrac. If you'd rather not receive this type of email, please click here to <a href="<?=base_url('/timesheet/settings')?>">unsubscribe</a>
                 
                 </p>
-                <p class="lead text-muted" style="text-align: left;">
-                    6866 Pine Forest Road Suite C. Pensacola, Florida 32526
+                <p class="lead text-muted nsmartrac-address" style="text-align:left;font-size: 10px!important;color: #6C757D!important;">
+                    6866 Pine Forest Road Suite C &#8226; Pensacola, Florida 32526
                 </p>
                 <p style="text-align: left; margin-top:20px;"><img width="100" src="cid:logo_2u" alt="" style="width:100px;"></p>
                     
