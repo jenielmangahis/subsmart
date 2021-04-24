@@ -277,31 +277,35 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                     <input type="hidden" id="jobid" value="<?= $jobs_data->job_unique_id; ?>">
                                     <input type="hidden" id="total_amount" value="<?= $subtotal; ?>">
                                     <br /><br />
+                                    <?php if($jobs_data->status != 'Completed'){ ?>
+                                        <?php echo form_open_multipart(null, ['class' => 'form-validate', 'id' => 'payment-job-invoice', 'autocomplete' => 'off']); ?>
+                                        <div class="payment-msg"></div>
+                                        <div class="payment-api-container">
+                                          <?php if($onlinePaymentAccount){ ?>
+                                            <?php if($onlinePaymentAccount->converge_merchant_user_id != '' && $onlinePaymentAccount->converge_merchant_pin != ''){ ?>
+                                              <a class="btn btn-primary btn-pay-converge btn-pay" href="javascript:void(0);">PAY VIA CONVERGE</a>
+                                            <?php } ?>
+                                            <?php if($onlinePaymentAccount->stripe_publish_key != '' && $onlinePaymentAccount->stripe_secret_key != ''){ ?>
+                                              <a class="btn btn-primary btn-pay-stripe btn-pay" href="javascript:void(0);">PAY VIA STRIPE</a>
 
-                                    <div class="payment-api-container">
-                                      <?php if($onlinePaymentAccount){ ?>
-                                        <?php if($onlinePaymentAccount->converge_merchant_user_id != '' && $onlinePaymentAccount->converge_merchant_pin != ''){ ?>
-                                          <a class="btn btn-primary btn-pay-converge btn-pay" href="javascript:void(0);">PAY VIA CONVERGE</a>
-                                        <?php } ?>
-                                        <?php if($onlinePaymentAccount->stripe_publish_key != '' && $onlinePaymentAccount->stripe_secret_key != ''){ ?>
-                                          <a class="btn btn-primary btn-pay-stripe btn-pay" href="javascript:void(0);">PAY VIA STRIPE</a>
-
-                                          <div class="stripe-form" style="display: none;">
-                                            <div class="col-md-12">
-                                              <h4 class="font-weight-bold pl-0 my-4" style="font-size: 17px;"><strong>Stripe Payment Method</strong></h4>
-                                                <div class="payment-method" style="display: block;margin-bottom: 16px;">
-                                                  <label>Total Amount : <b><span class="total-amount">$<?= number_format((float)$subtotal,2,'.',','); ?></span></b></label><br />
-                                                  <hr />
+                                              <div class="stripe-form" style="display: none;">
+                                                <div class="col-md-12">
+                                                  <h4 class="font-weight-bold pl-0 my-4" style="font-size: 17px;"><strong>Stripe Payment Method</strong></h4>
+                                                    <div class="payment-method" style="display: block;margin-bottom: 16px;">
+                                                      <label>Total Amount : <b><span class="total-amount">$<?= number_format((float)$subtotal,2,'.',','); ?></span></b></label><br />
+                                                      <hr />
+                                                    </div>
+                                                  <div id="card-element"></div>                       
+                                                  <div id="card-errors" role="alert"></div>
+                                                  <button class="stripe-btn">Submit Payment</button>`
+                                                  <button type="button" class="stripe-cancel-btn margin-right">Cancel</button>
                                                 </div>
-                                              <div id="card-element"></div>                       
-                                              <div id="card-errors" role="alert"></div>
-                                              <button class="stripe-btn">Submit Payment</button>`
-                                              <button type="button" class="stripe-cancel-btn margin-right">Cancel</button>
-                                            </div>
-                                          </div>
-                                        <?php } ?>
-                                      <?php } ?>
-                                    </div>
+                                              </div>
+                                            <?php } ?>
+                                          <?php } ?>
+                                        </div>
+                                        <?php echo form_close(); ?>
+                                    <?php } ?>
                                 </div>
 
                             </div>
@@ -465,7 +469,7 @@ $(function(){
   });
 
   // Handle form submission.
-  var form = document.getElementById('payment-sms-blast');
+  var form = document.getElementById('payment-job-invoice');
   form.addEventListener('submit', function(event) {
     event.preventDefault();
     $(".stripe-btn").html('<span class="spinner-border spinner-border-sm m-0"></span>  Processing Payment');
@@ -485,7 +489,7 @@ $(function(){
   // Submit the form with the token ID.
   function stripeTokenHandler(token) {
     // Insert the token ID into the form so it gets submitted to the server
-    var form = document.getElementById('payment-sms-blast');
+    var form = document.getElementById('payment-job-invoice');
     var hiddenInput = document.createElement('input');
     hiddenInput.setAttribute('type', 'hidden');
     hiddenInput.setAttribute('name', 'stripeToken');
@@ -498,7 +502,8 @@ $(function(){
   }
 
   function stripeUpdateSmsPayment(){
-    $(".payment-method").html('<div class="alert alert-success">Payment process completed.</div>');
+    $(".payment-api-container").hide();
+    $(".payment-msg").html('<div class="alert alert-success">Payment process completed.</div>');
     $(".stripe-btn").html('<span class="spinner-border spinner-border-sm m-0"></span>');
     updateJobToPaid();
   }

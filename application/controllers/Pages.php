@@ -432,10 +432,10 @@ class Pages extends MY_Controller {
 
     	$this->load->helper(array('hashids_helper'));
 
-    	$post = $this->input->post();
-    	$job_id = hashids_decrypt($post['jobid'], '', 15);
-    	$job    = $this->Jobs_model->get_specific_job($job_id);
-    	$this->Jobs_model->update($job->id, ['status' => 'Completed']);
+    	$post = $this->input->post();    	
+    	//$job_id = hashids_decrypt($post['jobid'], '', 15);
+    	$job = $this->Jobs_model->get_specific_job($post['job_id']);
+    	$this->Jobs_model->update($job->job_unique_id, ['status' => 'Completed']);
     }
 
 }
