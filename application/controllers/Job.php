@@ -1684,7 +1684,11 @@ class Job extends MY_Controller
             $jobs_data_items = $this->jobs_model->get_specific_job_items($job_id);                                    
             $group_items = array();
             foreach($jobs_data_items as $ji){
-                $group_items[$ji->type][] = [
+                $type = 'product';
+                if($ji->type != 'product'){
+                    $type = 'service';
+                }
+                $group_items[$type][] = [
                     'item_name' => $ji->title,
                     'item_price' => $ji->price,
                     'item_qty' => $ji->qty
@@ -1734,7 +1738,7 @@ class Job extends MY_Controller
             $msg .= "</table>";
 
             $msg .= "<p style='margin-top:43px;width:23%;color:#222;font-size:16px;text-align:left;padding:19px;'>Delinquent Account are subject to Property Liens. Interest will be charged to delinquent accounts at the rate of 1.5% (18% Annum) per month. In the event of default, the customer agrees to pay all cost of collection, including attorney's fees, whether suit is brought or not.</p>";
-            $msg .= "<p style='width:24%;color:#222;font-size:16px;text-align:center;padding:1px;'><a href='tel:8444067286'>(844) 406-7286</a> | <a href='mailto:support@nsmartrac.com'>support@nsmartrac.com</a></p>";
+            $msg .= "<p style='width:24%;color:#222;font-size:16px;text-align:center;padding:1px;'><a href='tel:".$company->business_phone."'>".$company->business_phone."</a> | <a href='mailto:".$company->business_email."'>".$company->business_email."</a></p>";
 
             $msg .= "<br><br><br><br><br>";
             $nsmart_logo = base_url("assets/dashboard/images/logo.png");
