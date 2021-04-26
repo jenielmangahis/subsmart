@@ -1392,10 +1392,8 @@ add_css(array(
                             </button>
                         </a>
 
-                        <a href="<?= base_url('job/send_customer_invoice_email/').$jobs_data->job_unique_id; ?>">
-                            <button type="submit" class="btn btn-primary">
-                                <span class="fa fa-paper-plane-o"></span> Send Invoice
-                            </button>
+                        <a href="<?= base_url('job/send_customer_invoice_email/').$jobs_data->job_unique_id; ?>" class="btn btn-primary">
+                            <span class="fa fa-paper-plane-o"></span> Send Invoice
                         </a>
                     </div>
                 </div>
