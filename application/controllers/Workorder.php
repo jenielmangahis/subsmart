@@ -764,7 +764,8 @@ class Workorder extends MY_Controller
         }
 
         if( $post['user'] == 'all' ){
-            $users    = $this->Users_model->getAll();
+            $company_id  = logged('company_id');
+            $users       = $this->Users_model->getCompanyUsers($company_id);
             $default_imp_img = base_url('uploads/users/default.png');
             foreach( $users as $user ){
                 //Set Center Map
@@ -814,7 +815,7 @@ class Workorder extends MY_Controller
                                     </tr>
                                 </table>";
                                 $locations[] = [
-                                    'title' => $description_a,
+                                    'title' => $pointA,
                                     'lat' => $center_lat,
                                     'lng' => $center_lng,
                                     'title' => "<b>Start Point</b><br />" . $pointA,
@@ -822,7 +823,7 @@ class Workorder extends MY_Controller
                                     'marker' => 'https://staging.nsmartrac.com/uploads/icons/caretaker_48px.png'
                                 ];
                                 $locations[] = [
-                                    'title' => $description_b,
+                                    'title' => $pointB,
                                     'lat' => $json['results'][0]['geometry']['location']['lat'],
                                     'lng' => $json['results'][0]['geometry']['location']['lng'],
                                     'description' => $description_b,
@@ -858,14 +859,14 @@ class Workorder extends MY_Controller
                             $json   = json_decode($gdata, true);
                             if( isset($json['results'][0]['geometry']['location']['lat']) && $json['results'][0]['geometry']['location']['lat'] != '' ){
                                $locations[] = [
-                                    'title' => $description_a,
+                                    'title' => $pointA,
                                     'lat' => $center_lat,
                                     'lng' => $center_lng,
                                     'description' => $description_a,
                                     'marker' => 'https://staging.nsmartrac.com/uploads/icons/caretaker_48px.png'
                                 ];
                                 $locations[] = [
-                                    'title' => $description_b,
+                                    'title' => $pointB,
                                     'lat' => $json['results'][0]['geometry']['location']['lat'],
                                     'lng' => $json['results'][0]['geometry']['location']['lng'],
                                     'description' => $description_b,
@@ -932,7 +933,7 @@ class Workorder extends MY_Controller
                         $json   = json_decode($gdata, true);
                         if( isset($json['results'][0]['geometry']['location']['lat']) && $json['results'][0]['geometry']['location']['lat'] != '' ){
                             $locations[] = [
-                                'title' => $description_a,
+                                'title' => $pointA,
                                 'lat' => $center_lat,
                                 'lng' => $center_lng,
                                 'description' => $description_a,
@@ -942,7 +943,7 @@ class Workorder extends MY_Controller
                                 'title' => $description_b,
                                 'lat' => $json['results'][0]['geometry']['location']['lat'],
                                 'lng' => $json['results'][0]['geometry']['location']['lng'],
-                                'description' => $description_b,
+                                'description' => $pointB,
                                 'marker' => $marker
                             ];
                         }
@@ -967,7 +968,7 @@ class Workorder extends MY_Controller
                             $json   = json_decode($gdata, true);
                             if( isset($json['results'][0]['geometry']['location']['lat']) && $json['results'][0]['geometry']['location']['lat'] != '' ){
                                 $locations[$counter] = [
-                                    'title' => $description_a,
+                                    'title' => $pointA,
                                     'lat' => $center_lat,
                                     'lng' => $center_lng,
                                     'description' => $description_a,
