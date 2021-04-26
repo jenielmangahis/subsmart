@@ -1489,14 +1489,15 @@ class Timesheet_model extends MY_Model
         $qry = $this->db->query("SELECT * fROM timesheet_timezone_list WHERE id_of_timezone ='" . $current_tz . "'");
         return $qry->result();
     }
-    public function save_timezone_changes($timezone_id, $user_id, $subscribe)
+    public function save_timezone_changes($timezone_id, $user_id, $subscribe,$report_series)
     {
         $current_saved = $this->get_saved_timezone($user_id);
         if (count($current_saved) > 0) {
             $update = array(
                 'timezone_id' => $timezone_id,
                 'user_id' => $user_id,
-                "subscribed" => $subscribe
+                'subscribed' => $subscribe,
+                'report_series' => $report_series
             );
             $this->db->update(
                 "timesheet_timezone_admin_report",
@@ -1506,7 +1507,8 @@ class Timesheet_model extends MY_Model
             $insert = array(
                 'timezone_id' => $timezone_id,
                 'user_id' => $user_id,
-                'subscribed' => $subscribe
+                'subscribed' => $subscribe,
+                'report_series' => $report_series
             );
             $this->db->insert(
                 "timesheet_timezone_admin_report",

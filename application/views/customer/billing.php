@@ -45,31 +45,28 @@ add_css(array(
                                 </div>
                             </div>
                             <div class="col-md-12">
-                                <input type="radio" name="commision_scheme[]" class="form-controls" value="1" checked id="commision_scheme1" <?php if(isset($office_info)){ echo $office_info->commision_scheme == 1 ? 'checked': ''; } ?> >
+                                <input type="radio" name="method" class="payment_method" value="CC" checked id="CC">
                                 <span >Credit Card</span> &nbsp;&nbsp;
 
-                                <input type="radio" name="commision_scheme[]" class="form-controls" value="1" id="commision_scheme1" <?php if(isset($office_info)){ echo $office_info->commision_scheme == 1 ? 'checked': ''; } ?> >
-                                <span >Debit Card</span> &nbsp;&nbsp;
-
-                                <input type="radio" name="commision_scheme[]" class="form-controls" value="1" id="commision_scheme1" <?php if(isset($office_info)){ echo $office_info->commision_scheme == 1 ? 'checked': ''; } ?> >
+                                <input type="radio" name="method" class="payment_method" value="CASH" id="CASH">
                                 <span >Cash</span> &nbsp;&nbsp;
 
-                                <input type="radio" name="commision_scheme[]" class="form-controls" value="1" id="commision_scheme1" <?php if(isset($office_info)){ echo $office_info->commision_scheme == 1 ? 'checked': ''; } ?> >
+                                <input type="radio" name="method"  class="payment_method" value="CHECK" id="CHECK">
+                                <span >Check</span> &nbsp;&nbsp;
+
+                                <input type="radio" name="method" class="payment_method" value="ACH" id="ACH">
                                 <span >ACH</span> &nbsp;&nbsp;
 
-                                <input type="radio" name="commision_scheme[]" class="form-controls" value="1" id="commision_scheme1" <?php if(isset($office_info)){ echo $office_info->commision_scheme == 1 ? 'checked': ''; } ?> >
+                                <input type="radio" name="method" class="payment_method" value="VENMO" id="VENMO">
                                 <span >Venmo</span> &nbsp;&nbsp;
 
-                                <input type="radio" name="commision_scheme[]" class="form-controls" value="1" id="commision_scheme1" <?php if(isset($office_info)){ echo $office_info->commision_scheme == 1 ? 'checked': ''; } ?> >
+                                <input type="radio" name="method" class="payment_method" value="PP" id="PP">
                                 <span >Paypal</span> &nbsp;&nbsp;
 
-                                <input type="radio" name="commision_scheme[]" class="form-controls" value="1" id="commision_scheme1" <?php if(isset($office_info)){ echo $office_info->commision_scheme == 1 ? 'checked': ''; } ?> >
+                                <input type="radio" name="method" class="payment_method" value="SQ" id="SQ">
                                 <span >Square</span> &nbsp;&nbsp;
 
-                                <input type="radio" name="commision_scheme[]" class="form-controls" value="1" id="commision_scheme1" <?php if(isset($office_info)){ echo $office_info->commision_scheme == 1 ? 'checked': ''; } ?> >
-                                <span >eCheck</span> &nbsp;&nbsp;
-
-                                <input type="radio" name="commision_scheme[]" class="form-controls" value="0" id="commision_scheme" <?php if(isset($office_info)){ echo $office_info->commision_scheme == 0 ? 'checked': ''; } ?>>
+                                <input type="radio" name="method" class="payment_method" value="OPT" id="OPT">
                                 <span>Others</span>
                             </div>
                             <br>
@@ -173,55 +170,156 @@ add_css(array(
                                             <div class="card-body">
                                                 <div class="row form_line">
                                                     <div class="col-md-4">
-                                                        <label>Card Number</label>
+                                                        <label>Billing Frequency</label>
+                                                    </div>
+                                                    <div class="col-md-8">
+                                                        <div class="row">
+                                                            <div class="col-md-6">
+                                                                <input type="text" class="form-control" name="first_name" id="first_name" value="Every 1 month" readonly/>
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                <input type="text" class="form-control" name="first_name" id="first_name" value="Every 3rd" readonly/>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div id="credit_card">
+                                                    <div class="row form_line">
+                                                        <div class="col-md-4">
+                                                            <label>Card Number</label>
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            <input type="text" class="form-control" name="first_name" id="first_name" value="<?php if(isset($billing_info ) && $billing_info->credit_card_num != 0){ echo $billing_info->credit_card_num; } ?>" required/>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row form_line">
+                                                        <div class="col-md-4">
+                                                            <label for="">Expiration </label>
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            <div class="row">
+                                                                <div class="col-md-4">
+                                                                    <select id="exp_month" name="exp_month" data-customer-source="dropdown" class="input_select" >
+                                                                        <option  value=""></option>
+                                                                        <option  value="1">01</option>
+                                                                        <option  value="2">02</option>
+                                                                        <option  value="3">03</option>
+                                                                        <option  value="4">04</option>
+                                                                        <option  value="5">05</option>
+                                                                        <option  value="6">06</option>
+                                                                        <option  value="7">07</option>
+                                                                        <option  value="8">08</option>
+                                                                        <option  value="9">09</option>
+                                                                        <option  value="10">10</option>
+                                                                        <option  value="11">11</option>
+                                                                        <option  value="12">12</option>
+                                                                    </select>
+                                                                </div>
+                                                                <div class="col-md-4">
+                                                                    <select id="exp_year" name="exp_year" data-customer-source="dropdown" class="input_select" >
+                                                                        <option  value=""></option>
+                                                                        <option  value="2021">2021</option>
+                                                                        <option  value="2022">2022</option>
+                                                                        <option  value="2023">2023</option>
+                                                                        <option  value="2024">2024</option>
+                                                                        <option  value="2025">2025</option>
+                                                                        <option  value="2026">2026</option>
+                                                                        <option  value="2027">2027</option>
+                                                                        <option  value="2028">2028</option>
+                                                                        <option  value="2029">2029</option>
+                                                                        <option  value="2030">2030</option>
+                                                                        <option  value="2031">2031</option>
+                                                                    </select>
+                                                                </div>
+                                                                <div class="col-md-4">
+                                                                    <input type="text" class="form-control" name="first_name" id="first_name" value="" placeholder="CVC"/>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row form_line" id="payment_collected">
+                                                    <div class="col-md-4"></div>
+                                                    <div class="col-md-8">
+                                                        <input type="checkbox" name="notify_by" value="collected">
+                                                        <span >Payment has been collected.</span>
+                                                    </div>
+                                                </div>
+
+                                                <div class="row form_line" id="check_number">
+                                                    <div class="col-md-4">
+                                                        <label>Check Number</label>
                                                     </div>
                                                     <div class="col-md-8">
                                                         <input type="text" class="form-control" name="first_name" id="first_name" value="<?php if(isset($billing_info ) && $billing_info->credit_card_num != 0){ echo $billing_info->credit_card_num; } ?>" required/>
                                                     </div>
                                                 </div>
-                                                <div class="row form_line">
+                                                <div class="row form_line CNRN">
                                                     <div class="col-md-4">
-                                                        <label for="">Expiration </label>
+                                                        <label>Routing Number</label>
                                                     </div>
                                                     <div class="col-md-8">
-                                                        <div class="row">
-                                                            <div class="col-md-6">
-                                                                <select id="exp_month" name="exp_month" data-customer-source="dropdown" class="input_select" >
-                                                                    <option  value=""></option>
-                                                                    <option  value="1">01</option>
-                                                                    <option  value="2">02</option>
-                                                                    <option  value="3">03</option>
-                                                                    <option  value="4">04</option>
-                                                                    <option  value="5">05</option>
-                                                                    <option  value="6">06</option>
-                                                                    <option  value="7">07</option>
-                                                                    <option  value="8">08</option>
-                                                                    <option  value="9">09</option>
-                                                                    <option  value="10">10</option>
-                                                                    <option  value="11">11</option>
-                                                                    <option  value="12">12</option>
-                                                                </select>
-                                                            </div>
-                                                            <div class="col-md-6">
-                                                                <select id="exp_year" name="exp_year" data-customer-source="dropdown" class="input_select" >
-                                                                    <option  value=""></option>
-                                                                    <option  value="2021">2021</option>
-                                                                    <option  value="2022">2022</option>
-                                                                    <option  value="2023">2023</option>
-                                                                    <option  value="2024">2024</option>
-                                                                    <option  value="2025">2025</option>
-                                                                    <option  value="2026">2026</option>
-                                                                    <option  value="2027">2027</option>
-                                                                    <option  value="2028">2028</option>
-                                                                    <option  value="2029">2029</option>
-                                                                    <option  value="2030">2030</option>
-                                                                    <option  value="2031">2031</option>
-                                                                </select>
-                                                            </div>
-                                                        </div>
-
+                                                        <input type="text" class="form-control" name="first_name" id="first_name" value="<?php if(isset($billing_info ) && $billing_info->credit_card_num != 0){ echo $billing_info->credit_card_num; } ?>" required/>
                                                     </div>
                                                 </div>
+
+                                                <div class="row form_line CNRN">
+                                                    <div class="col-md-4">
+                                                        <label>Account Number</label>
+                                                    </div>
+                                                    <div class="col-md-8">
+                                                        <input type="text" class="form-control" name="first_name" id="first_name" value="<?php if(isset($billing_info ) && $billing_info->credit_card_num != 0){ echo $billing_info->credit_card_num; } ?>" required/>
+                                                    </div>
+                                                </div>
+                                                <div class="row form_line" id="day_of_month">
+                                                    <div class="col-md-4">
+                                                        <label for="">Day of Month</label>
+                                                    </div>
+                                                    <div class="col-md-8">
+                                                        <select id="day_of_month_ach" name="day_of_month" class="form-control">
+                                                            <option value="">Select Day of Month</option>
+                                                            <?php for($x=1;$x<=31;$x++){ ?>
+                                                                <option value="<?= $x; ?>"><?= $x; ?></option>
+                                                            <?php } ?>
+                                                        </select>
+                                                    </div>
+                                                </div>
+
+                                                <div class="row form_line account_cred" >
+                                                    <div class="col-md-4">
+                                                        <label for="">Account Credential</label>
+                                                    </div>
+                                                    <div class="col-md-8">
+                                                        <input type="number" class="form-control" name="account_credential" id="account_credential" value="<?= isset($billing_info) ? $billing_info->account_credential : ''; ?>" />
+                                                    </div>
+                                                </div>
+                                                <div class="row form_line account_cred" >
+                                                    <div class="col-md-4">
+                                                        <label for="">Account Note</label>
+                                                    </div>
+                                                    <div class="col-md-8">
+                                                        <input type="number" class="form-control" name="account_note" id="account_note" value="<?= isset($billing_info) ? $billing_info->account_note : ''; ?>"/>
+                                                    </div>
+                                                </div>
+                                                <div class="row form_line account_cred" id="confirmationPD">
+                                                    <div class="col-md-4">
+                                                        <label for="">Confirmation</label>
+                                                    </div>
+                                                    <div class="col-md-8">
+                                                        <input type="number" class="form-control" name="confirmation" id="confirmation" value="<?= isset($billing_info) ? $billing_info->confirmation : ''; ?>"/>
+                                                    </div>
+                                                </div>
+
+                                                <div class="row form_line" id="docu_signed">
+                                                    <div class="col-md-4"></div>
+                                                    <div class="col-md-8">
+                                                        <input type="checkbox" name="notify_by" value="collected">
+                                                        <span >Document Signed.</span>
+                                                    </div>
+                                                </div>
+
+
+
                                                 <div class="row form_line">
                                                     <div class="col-md-4">
                                                         <label for="">Transaction Subtotal </label>
@@ -246,7 +344,6 @@ add_css(array(
                                                         <input type="text" class="form-control" name="state" id="state"  required/>
                                                     </div>
                                                 </div>
-
                                                 <div class="row form_line">
                                                     <div class="col-md-4">
                                                         <label for="">Transaction Category</label>

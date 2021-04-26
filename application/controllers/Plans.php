@@ -46,6 +46,7 @@ class Plans extends MY_Controller {
             echo $this->load->view('no_access_module', $this->page_data, true);
             die();
         }
+		$this->page_data['items'] = $this->items_model->getItemlist();
 		// ifPermissions('add_plan');
 		$this->load->view('plans/add', $this->page_data);
 	}

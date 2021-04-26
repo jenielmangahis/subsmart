@@ -1,10 +1,19 @@
 $(document).ready(function() {
     $("#timezone_settings_form").submit(function(event) {
+        var report_series = 0;
+        if ($("#report_series_1").is(":checked")) {
+            report_series = 1;
+        } else if ($("#report_series_2").is(":checked")) {
+            report_series = 2;
+        } else {
+            report_series = 3;
+        }
         var formData = {
             tz_display_name: $("#tz_display_name").val(),
             tz_id_of_tz: $("#tz_id_of_tz").val(),
             subscribe: $("#subcribe_weekly_report").is(":checked"),
-            est_wage_privacy: $("#est_wage_privacy").is(":checked")
+            est_wage_privacy: $("#est_wage_privacy").is(":checked"),
+            report_series: report_series
         };
 
         Swal.fire({
@@ -84,7 +93,7 @@ $(document).ready(function() {
                     $("#tz_id_of_tz").val("Etc/GMT");
 
                 }
-
+                subcribe_weekly_report_changed();
                 $.ajax({
                     type: "POST",
                     url: baseURL + "/timesheet/get_next_report",
@@ -106,4 +115,16 @@ $(document).ready(function() {
             $(".subscribed-fields").hide();
         }
     });
+
+    $("#subcribe_weekly_report").change(function() {
+        subcribe_weekly_report_changed();
+    });
+
+    function subcribe_weekly_report_changed() {
+        if ($("#subcribe_weekly_report").is(":checked")) {
+            $(".report_series_div").show();
+        } else {
+            $(".report_series_div").hide();
+        }
+    }
 });

@@ -4763,13 +4763,15 @@ class Timesheet extends MY_Controller
         $this->page_data['all_timezone_list'] = $this->timesheet_model->get_all_timezone_list();
         $report_privacy = $this->timesheet_model->get_timesheet_report_privacy(logged("company_id"));
         $this->page_data['report_privacy'] = $report_privacy;
+        $this->page_data['report_settings'] = $this->timesheet_model->get_saved_timezone(logged("id"));
         $this->page_data['report_privacy_updated'] = $this->datetime_zone_converter($report_privacy->datetime_updated,"UTC",$this->session->userdata("usertimezone"));
         $this->load->view('users/timesheet_settings', $this->page_data);
     }
     public function get_saved_timezone()
     {
         $current_saved = $this->timesheet_model->get_saved_timezone(logged('id'));
-        $current_tz = $this->input->post('usertimezone');
+        $current_tz = $this->input->post('usertimezone'
+    );
         $data = new stdClass();
         $data->hasSet = false;
         if (count($current_saved) > 0) {
@@ -4796,12 +4798,13 @@ class Timesheet extends MY_Controller
         $timezone_id = $this->input->post("tz_display_name");
         $user_id = logged('id');
         $subscribe = $this->input->post("subscribe")."";
+        $report_series = $this->input->post("report_series");
         if($subscribe == "true"){
             $sub_val=1;
         }else{
             $sub_val=0;
         }
-        $this->timesheet_model->save_timezone_changes($timezone_id, $user_id,$sub_val);
+        $this->timesheet_model->save_timezone_changes($timezone_id, $user_id,$sub_val,$report_series);
 
         $est_wage_privacy = $this->input->post("est_wage_privacy")."";
         $company_id = logged('company_id');
