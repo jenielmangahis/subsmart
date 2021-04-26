@@ -542,7 +542,23 @@
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <?php echo put_footer_assets(); ?>
 <style>
-    .esignBuilder__field  {
+    .esignBuilder__field,
+    .ui-draggable-dragging {
         width: initial;
+    }
+
+    .ui-draggable-dragging {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #ffd65b !important;
+        min-width: 100px;
+        border-radius: 3px !important;
+    }
+
+    .ui-draggable-dragging .swatch {
+        margin-right: 8px !important;
+        background-color: #ffd65b !important;
+        display: none !important;
     }
 </style>

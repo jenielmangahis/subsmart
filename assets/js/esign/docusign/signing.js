@@ -283,6 +283,12 @@ function Signing(hash) {
 
         if (field_name === "Text" || text === undefined) {
           const { value } = fieldValue || { value: "" };
+          const { specs: fieldSpecs } = field;
+          const specs = fieldSpecs ? JSON.parse(fieldSpecs) : {};
+          const { width, is_required = false, is_read_only = false } = specs;
+          const isRequired = is_required.toLocaleString() === "true";
+          const isReadOnly = is_read_only.toLocaleString() === "true";
+
           const html = `
             <div class="docusignField" style="position: relative; display: flex; align-items: center;">
               <input type="text" placeholder="${field_name}" value="${value}" />
@@ -293,6 +299,21 @@ function Signing(hash) {
           `;
 
           const $element = createElementFromHTML(html);
+          const $input = $element.find("input");
+
+          // requires assets/js/esign/docusign/input.autoresize.js
+          $input.autoresize({ minWidth: width ? width : 100 });
+
+          $input.prop("required", isRequired);
+          $input.prop("readonly", isReadOnly);
+
+          if (!isRequired) {
+            $element.addClass("docusignField--notRequired");
+          }
+
+          if (isReadOnly) {
+            $element.addClass("docusignField--readOnly");
+          }
 
           let typingTimer;
           let doneTypingInterval = 1000;
@@ -497,7 +518,11 @@ function Signing(hash) {
           return;
         }
 
-        if ($input.is("input:text") && isEmptyOrSpaces($input.val())) {
+        if (
+          $input.is("input:text") &&
+          $input.prop("required") &&
+          isEmptyOrSpaces($input.val())
+        ) {
           $input.focus();
           scrollToElement();
           return;
@@ -584,9 +609,6 @@ function Signing(hash) {
 
     $(".loader").addClass("d-none");
     if (data.recipient.completed_at) markAsFinished();
-
-    // requires assets/js/esign/docusign/input.autoresize.js
-    $("input:text").autoresize({ minWidth: 150 });
   }
 
   return { init };

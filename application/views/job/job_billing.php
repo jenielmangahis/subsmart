@@ -77,7 +77,6 @@ add_css(array(
 
                                 <input type="radio" name="method" class="payment_method" value="OPT" id="OPT">
                                 <span>Others</span>
-
                             </div>
                             <br>
                             <form id="customer_form">
@@ -309,7 +308,7 @@ add_css(array(
                                                     </div>
                                                     <div class="col-md-8">
                                                         <select id="day_of_month_ach" name="day_of_month" class="form-controls">
-                                                            <option value="">Select Day of Month</option>
+                                                            <option value=""></option>
                                                             <?php for($x=1;$x<=31;$x++){ ?>
                                                                 <option value="<?= $x; ?>"><?= $x; ?></option>
                                                             <?php } ?>

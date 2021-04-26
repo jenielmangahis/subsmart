@@ -48,6 +48,26 @@ class Dashboard extends Widgets {
         ));
     }
     
+    public function sendFeed()
+    {
+        $this->load->model('Feeds_model');
+        $subject = post('subject');
+        $feedMessage = post('message');
+        $company_id = logged('company_id');
+        $user_id = logged('id');
+        
+        $feedDetails = array(
+            'sender_id' => $user_id,
+            'sender_name' => getLoggedName(),
+            'title'         => $subject,
+            'message'       => $feedMessage,
+            'company_id'    => $company_id
+        );
+        
+        if($this->Feeds_model->saveFeeds($feedDetails)):
+            echo 'Feed Successfully Sent';
+        endif;
+    }
     
     public function sendSMS()
     {

@@ -87,6 +87,10 @@ h1, .breadcrumb-item, h5, .tbl-employee-name, p, .qUickStartde > span, .header-t
     /*z-index: 1000;*/
 }
 
+.techLeadDetails > div{
+        width: 180px !important;
+}
+
 @media screen and (max-width: 2400px) {
     .shortcuts > div > div > img
     {
@@ -123,6 +127,13 @@ h1, .breadcrumb-item, h5, .tbl-employee-name, p, .qUickStartde > span, .header-t
 
 @media screen and (max-width: 1440px) {
 
+    .techLeadDetails > div.progress{
+        width: 140px !important;
+    }
+    .techLeadDetails > div.jobs{
+        width: 50px;
+    }
+    
     .notification-list .nav-link{
         padding: 0 5px !important;
     }

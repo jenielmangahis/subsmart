@@ -67,8 +67,23 @@ body {
   }
 }
 
-.docusignField--focused {
-  --border-style: dotted;
+.docusignField {
+  &--focused {
+    --border-style: dotted;
+  }
+
+  &--notRequired {
+    input {
+      --border-color: #bbb;
+    }
+  }
+
+  &--readOnly {
+    input {
+      --border-color: #bbb;
+      background-color: #cecece;
+    }
+  }
 }
 
 .signing {
@@ -81,7 +96,7 @@ body {
   select {
     font-size: 12px;
     font-family: monospace;
-    border: 2px var(--border-style) #bf1e2e;
+    border: 2px var(--border-style) var(--border-color, #bf1e2e);
     outline: 0;
   }
 

@@ -9,6 +9,15 @@ class Feeds_model extends MY_Model {
 	{
 		parent::__construct();
     }
+    
+    function saveFeeds($details)
+    {
+        if($this->db->insert($this->table, $details)):
+            return true;
+        else:
+            return false;
+        endif;
+    }
 
     function getByCompanyId() {
         $comp_id = logged('company_id');
