@@ -61,12 +61,12 @@ add_css(array(
                                         </div>
                                         <div class="stepwizard-step col-xs-3">
                                             <a href="#" type="button" class="btn btn-circle <?= isset($jobs_data) && $jobs_data->status == 'Scheduled'  ? 'btn-success' : 'btn-default' ; ?>" disabled><span style="font-size: 24px;" class="fa fa-calendar-check-o"></span></a>
-                                            <p class=""><small>Schedule</small></p>
+                                            <p class=""><small>Scheduled</small></p>
                                         </div>
                                         <div class="stepwizard-step col-xs-3">
                                             <a href="#" <?php if(isset($jobs_data) && $jobs_data->status == 'Scheduled'): ?>data-toggle="modal" data-target="#omw_modal" data-backdrop="static" data-keyboard="false" <?php endif; ?> type="button" class="btn btn-circle <?= isset($jobs_data) && $jobs_data->status == 'On My Way'  ? 'btn-success' : 'btn-default' ; ?>">
                                                 <span style="font-size: 24px;" class="fa fa-ship"></span></a>
-                                            <p><small>OMW</small></p>
+                                            <p><small>Arrival</small></p>
                                         </div> &nbsp;&nbsp;
                                         <div class="stepwizard-step col-xs-3">
                                             <a href="#" <?php if(isset($jobs_data) && $jobs_data->status == 'On My Way'): ?>data-toggle="modal" data-target="#start_modal" data-backdrop="static" data-keyboard="false" <?php endif; ?>  type="button" class="btn btn-circle <?= isset($jobs_data) && $jobs_data->status == 'Started'  ? 'btn-success' : 'btn-default' ; ?>" disabled="disabled">
@@ -145,6 +145,7 @@ add_css(array(
                             </div>
                             <select id="employee_id" name="employee_id" class="form-control" required>
                                 <option value="">Select Employee</option>
+                                <option value="10001">Select All Employees</option>
                                 <?php if(!empty($employees)): ?>
                                     <?php foreach ($employees as $employee): ?>
                                         <option <?= isset($jobs_data) && $jobs_data->employee_id == $employee->id ? 'selected' : '';  ?> value="<?= $employee->id; ?>"><?= $employee->FName.','.$employee->LName; ?></option>
@@ -639,10 +640,13 @@ add_css(array(
                                         <tbody>
                                         <tr>
                                             <td id="cust_fullname">xxxxx xxxxx</td>
-                                            <td><a href="<?= base_url('customer'); ?>"><span class="fa fa-user customer_right_icon"></span></a></td>
+                                            <td><a target="_blank" href="#" id="customer_preview"><span class="fa fa-user customer_right_icon"></span></a></td>
                                         </tr>
                                         <tr>
-                                            <td id="cust_address">-------------</td>
+                                            <td >
+                                                <div id="cust_address">-------------</div>
+                                                <div id="cust_address2">-------------</div>
+                                            </td>
                                             <td><a href=""><span class="fa fa-map-marker customer_right_icon"></span></a></td>
                                         </tr>
                                         <tr>
@@ -673,7 +677,7 @@ add_css(array(
                                 </td>
                             </tr>
                             </thead>
-                            <tbody id="jobs_items_table_body">
+                            <tbody id="jobs_items">
                             <tr>
                                 <td>
                                     <small>Job Type</small>
@@ -686,10 +690,10 @@ add_css(array(
                                 <td>
                                 </td>
                                 <td>
-                                    <button type="button" class="btn btn-sm btn-primary"><span class="fa fa-paper-plane-o"  style=""></span></button>
+                                    <!--<button type="button" class="btn btn-sm btn-primary"><span class="fa fa-paper-plane-o"  style=""></span></button>
                                     <button type="button" class="btn btn-sm btn-primary"><span class="fa fa-file"  style="color:"></span></button>
                                     <button type="button" class="btn btn-sm btn-primary"><span class="fa fa-print" style="color:"></span></button>
-                                    <button type="button" class="btn btn-sm btn-primary"><span class="fa fa-plus"  style="color:"></span></button>
+                                    <button type="button" class="btn btn-sm btn-primary"><span class="fa fa-plus"  style="color:"></span></button>-->
                                 </td>
                                 <td>
                                 </td>
@@ -904,7 +908,7 @@ add_css(array(
                                     </div>
                                 </div>-->
                                 <div class="col-sm-12">
-                                    <input class="form-control" value="Thank you for your business, Please call <?= $company_info->business_name; ?> at <?= $company_info->business_phone; ?> for quality customer service.">
+                                    <input class="form-control" value="Thank you for your business, Please call <?= $company_info->business_name; ?> at (<?= $company_info->business_phone; ?>) for quality customer service.">
                                 </div>
                                 <div class="col-sm-12">
                                     <hr>
@@ -1065,95 +1069,8 @@ add_css(array(
 <!-- end container-fluid -->
 </div>
 
-<!-- New Customer Modal -->
-<div class="modal fade" id="new_customer" tabindex="-1" role="dialog" aria-labelledby="newcustomerLabel" aria-hidden="true">
-    <div class="modal-dialog modal-md" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="newcustomerLabel">Add new customer</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <form id="new_customer_form">
-                <div class="modal-body">
-                    <div class="contact-info">
-                        <div class="row">
-
-                            <div class="col-md-12">
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label>First Name</label>
-                                            <input type="text" name="first_name" class="form-control" required>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label>Last Name</label>
-                                            <input type="text" name="last_name" class="form-control" required>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-5">
-                                        <div class="form-group">
-                                            <label>Middle Initial</label>
-                                            <input type="text" name="middle_name" class="form-control" placeholder="optional" >
-                                        </div>
-                                    </div>
-                                    <div class="col-md-7">
-                                        <div class="form-group">
-                                            <label>Email</label>
-                                            <input type="email" name="email" class="form-control" required>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-12">
-                                        <div class="form-group">
-                                            <label>Phone</label>
-                                            <input type="text" name="phone_h" class="form-control" required>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-12">
-                                        <div class="form-group">
-                                            <label>Address</label>
-                                            <input type="text" name="mail_add" class="form-control" required>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            <label>City</label>
-                                            <input type="text" name="city" class="form-control" required>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            <label>State</label>
-                                            <input type="text" name="state" class="form-control" required>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            <label>Zip Code</label>
-                                            <input type="text" name="zip_code" class="form-control" required>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <hr>
-                        </div>
-                    </div>
-
-                </div>
-                <div class="modal-footer modal-footer-detail">
-                    <div class="button-modal-list">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal"><span class="fa fa-remove"></span> Close</button>
-                        <button type="submit" class="btn btn-primary"><span class="fa fa-paper-plane-o"></span> Save</button>
-                    </div>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-
+<!-- Modals -->
+<?php include viewPath('job/modals/new_customer'); ?>
 <?php include viewPath('job/modals/inventory_location'); ?>
 <?php include viewPath('job/modals/new_inventory'); ?>
 
@@ -1370,11 +1287,8 @@ add_css(array(
                 </select>
             </div>
             <div class="modal-footer">
-                <button type="button" id="" class="btn btn-primary">
-                    <span class="fa fa-paper-plane-o"></span> Save
-                </button>
-                <button type="button" id="" class="btn btn-default" data-dismiss="modal">
-                    <span class="fa fa-remove"></span> Close
+                <button type="button" id="" class="btn btn-primary" data-dismiss="modal">
+                    <span class="fa fa-paper-plane-o"></span> Save / Close
                 </button>
             </div>
         </div>
@@ -1387,12 +1301,12 @@ add_css(array(
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">On My Way</h4>
+                <h4 class="modal-title">Arrival</h4>
             </div>
             <form id="update_status_to_omw">
             <div class="modal-body">
                 <p>This will start travel duration tracking.</p>
-                <p>On my way at:</p>
+                <p>Arrive at:</p>
                 <input type="date" name="omw_date" id="omw_date" class="form-control" required>
                 <input type="hidden" name="id" id="jobid" value="<?php if(isset($jobs_data)){echo $jobs_data->job_unique_id;} ?>">
                 <input type="hidden" name="status" id="status" value="On My Way">
@@ -1470,230 +1384,25 @@ add_css(array(
                         <?php } ?>
                     </select>
                 </div>
-                <hr>
                 <div class="col-sm-12">
                     <div class="col-md-12">
-                        <label for="">Method</label>
-                        <select id="pay_method" name="method" class="form-control">
-                            <option value="">Select Payment Method</option>
-                            <option <?php if(isset($jobs_data) && $jobs_data->pay_method == 'CC') {echo 'selected'; } ?> value="CC">Credit Card</option>
-                            <option <?php if(isset($jobs_data) && $jobs_data->pay_method == 'CHECK') {echo 'selected'; } ?> value="CHECK">Check</option>
-                            <option <?php if(isset($jobs_data) && $jobs_data->pay_method == 'CASH') {echo 'selected'; } ?> value="CASH">Cash</option>
-                            <option <?php if(isset($jobs_data) && $jobs_data->pay_method == 'ACH') {echo 'selected'; } ?> value="ACH">ACH</option>
-                            <option <?php if(isset($jobs_data) && $jobs_data->pay_method == 'VENMO') {echo 'selected'; } ?> value="VENMO">Venmo</option>
-                            <option <?php if(isset($jobs_data) && $jobs_data->pay_method == 'PP') {echo 'selected'; } ?> value="PP">Paypal</option>
-                            <option <?php if(isset($jobs_data) && $jobs_data->pay_method == 'SQ') {echo 'selected'; } ?> value="SQ">Square</option>
-                            <option <?php if(isset($jobs_data) && $jobs_data->pay_method == 'WW') {echo 'selected'; } ?> value="WW">Warranty Work</option>
-                            <option <?php if(isset($jobs_data) && $jobs_data->pay_method == 'HOF') {echo 'selected'; } ?> value="HOF">Home Owner Financing</option>
-                            <option <?php if(isset($jobs_data) && $jobs_data->pay_method == 'eT') {echo 'selected'; } ?> value="eT">e-Transfer</option>
-                            <option <?php if(isset($jobs_data) && $jobs_data->pay_method == 'OCCP') {echo 'selected'; } ?> value="OCCP">Other Credit Card Processor</option>
-                            <option <?php if(isset($jobs_data) && $jobs_data->pay_method == 'OPT') {echo 'selected'; } ?> value="OPT">Other Payment Type</option>
-                        </select>
-                    </div>
-                        <div class="col-md-12">
-                            <label for="">Amount <small class="help help-sm" >(in dollar)</small></label>
-                            <input class="form-control" id="pay_amount" value="<?= isset($jobs_data) ? $jobs_data->amount : ''; ?>" name="amount" type="text" placeholder="0.00">
-                        </div>
-                        <div class="col-md-12">
-                            <h6>Payment Details</h6>
-                            <div class="row">
-                                <div id="credit_card_form">
-                                    <div class="col-md-12">
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <div class="form-group">
-                                                    <div class="input-group">
-                                                        <input type="text" name="account_holder_name" class="form-control" id="cardNumber" placeholder="Account Holder Name" />
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-12">
-                                                <div class="form-group">
-                                                    <div class="input-group">
-                                                        <input type="number" name="card_number" class="form-control" id="cardNumber" placeholder="1234 1234 1234 1234" />
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <input type="text" name="card_expiry" class="form-control" id="expityMonth" placeholder="MM/YY" />
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <input type="number" name="card_cvc" class="form-control" id="cvCode" placeholder="CVC" />
-                                                </div>
-                                            </div>
-                                            <div class="col-sm-12">
-                                                <label >Save card to file</label>
-                                                <div class="onoffswitch grid-onoffswitch" style="float: right;">
-                                                    <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" value="1" data-customize="open" id="onoff-customize">
-                                                    <label class="onoffswitch-label" for="onoff-customize">
-                                                        <span class="onoffswitch-inner"></span> <span class="onoffswitch-switch"></span></label>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-12" style="text-align: center !important;">
-                                                <br>
-                                                <button type="button" class="btn btn-sm btn-primary">
-                                                    <span class="fa fa-search-plus"></span> Scan Payment
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div id="check_form" style="display: none;">
-                                    <div class="col-md-12">
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <div class="input-group">
-                                                        <input type="number" name="route_number" class="form-control" id="cardNumber" placeholder="Routing #" />
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <div class="input-group">
-                                                        <input type="number" name="account_number" class="form-control" id="cardNumber" placeholder="Account #" />
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-12" style="text-align: center !important;">
-                                                <br>
-                                                <button type="button" class="btn btn-sm btn-primary">
-                                                    <span class="fa fa-search-plus"></span> Scan Payment
-                                                </button>
-                                                <br>
-                                                <div class="form-group" style="text-align: center;">
-                                                    <input type="checkbox" name="notify_by" value="collected" id="notify_by_email">
-                                                    <label for="notify_by_email">Payment has been collected.</label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div id="ach_form" style="display: none;">
-                                    <div class="col-md-12">
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <div class="input-group">
-                                                        <input type="number" name="route_number" class="form-control" id="cardNumber" placeholder="Routing #"  />
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <div class="input-group">
-                                                        <input type="number" name="account_number" class="form-control" id="cardNumber" placeholder="Account #"  />
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-12">
-                                                <div class="form-group">
-                                                    <select id="day_of_month_ach" name="day_of_month" class="form-control">
-                                                        <option value="">Select Day of Month</option>
-                                                        <?php for($x=1;$x<=31;$x++){ ?>
-                                                            <option value="<?= $x; ?>"><?= $x; ?></option>
-                                                        <?php } ?>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-12" style="text-align: center !important;">
-                                                <br>
-                                                <button type="button" class="btn btn-sm btn-primary">
-                                                    <span class="fa fa-search-plus"></span> Scan Payment
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div id="cash_form" style="display: none;">
-                                    <div class="col-md-12">
-                                        <div class="row">
-                                            <div class="col-md-12" style="text-align: center !important;">
-                                                <br>
-                                                <button type="button" class="btn btn-sm btn-primary">
-                                                    <span class="fa fa-search-plus"></span> Scan Payment
-                                                </button>
-                                                <br>
-                                            </div>
-                                            <div class="form-group" style="text-align: center !important;">
-                                                <input type="checkbox" name="is_collected" value="1" id="notify_by_email">
-                                                <label for="notify_by_email">Payment has been collected.</label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div id="others_warranty_form" style="display: none;">
-                                    <div class="col-md-12">
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <div class="form-group">
-                                                    <div class="input-group">
-                                                        <input type="number" name="acct_credential" class="form-control" id="cardNumber" placeholder="Account Credential"  />
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-12">
-                                                <div class="form-group">
-                                                    <div class="input-group">
-                                                        <textarea  class="form-control" name="acct_note" id="cardNumber" placeholder="Account Note"></textarea>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-12">
-                                                <div class="form-group" style="text-align: center;">
-                                                    <input type="checkbox" name="is_signed" value="1" id="notify_by_email">
-                                                    <label for="notify_by_email">Document Signed</label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div id="svp_form" style="display: none;">
-                                    <div class="col-md-12">
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <div class="form-group">
-                                                    <div class="input-group">
-                                                        <input type="number" name="acct_credential" class="form-control" id="cardNumber" placeholder="Account Credential"  />
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-12">
-                                                <div class="form-group">
-                                                    <div class="input-group">
-                                                        <textarea  class="form-control" name="acct_note" id="cardNumber" placeholder="Account Note"></textarea>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-12">
-                                                <div class="form-group">
-                                                    <div class="input-group">
-                                                        <textarea  class="form-control" name="acct_confirm" id="cardNumber" placeholder="Confirmation"></textarea>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-12" style="text-align: center !important;">
-                            <br>
-                            <button type="button" id="save_payment" class="btn btn-sm btn-primary">
-                                <span class="fa fa-paper-plane-o"></span> Save Payment
+                        <a href="<?= base_url('job/billing/').$jobs_data->job_unique_id; ?>">
+                            <button type="button" class="btn btn-primary">
+                                <span class="fa fa-money"></span> Pay Now
                             </button>
-                        </div>
-                    </div>
+                        </a>
 
+                        <a href="<?= base_url('job/send_customer_invoice_email/').$jobs_data->job_unique_id; ?>">
+                            <button type="submit" class="btn btn-primary">
+                                <span class="fa fa-paper-plane-o"></span> Send Invoice
+                            </button>
+                        </a>
+                    </div>
+                </div>
+                <br>
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary">
-                        <span class="fa fa-paper-plane-o"></span> Save
-                    </button>
                     <button type="button" id="" class="btn btn-default" data-dismiss="modal">
-                        <span class="fa fa-remove"></span> Close
+                        <span class="fa fa-remove"></span> Cancel
                     </button>
                 </div>
             </form>
@@ -1734,6 +1443,9 @@ include viewPath('includes/footer');
         });
         $("#employee_id").select2({
             placeholder: "Select Employee"
+        });
+        $("#sales_rep").select2({
+            placeholder: "Sales Rep"
         });
     });
 </script>

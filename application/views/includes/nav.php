@@ -108,7 +108,7 @@ $user_id = getLoggedUserID();
                         <?php ////if (hasPermissions('WORKORDER_MASTER')): ?>
                         <a class="dropdown-item" href="<?php echo url('/workorder') ?>"><i class="fa fa-list-alt"></i><b> Work Orders</b></a>
                         <?php //endif ?>
-                        <a class="dropdown-item" href="<?php echo base_url('invoice') ?>"><i class="fa fa-file-text-o"></i><b> Invoices</b></a>
+                        <a class="dropdown-item" href="<?php echo base_url('invoice') ?>"><i class="fa fa-file-text"></i><b> Invoices</b></a>
                         <?php ////if (hasPermissions('items_list')): ?>
                         <!-- <a class="dropdown-item" href="<?php echo url('/items') ?>"><i class="fa fa-cubes"></i><b> Items</b></a> -->
                         <?php //endif ?>
@@ -116,7 +116,7 @@ $user_id = getLoggedUserID();
                         <!-- <a class="dropdown-item" href="<?php echo url('/plans') ?>"><i class="fa fa-list"></i> Plans</a> -->
                         <?php //endif ?>
                         <?php ////if (hasPermissions('items_list')): ?>
-                        <a class="dropdown-item" href="<?php echo url('customer/ticketslist') ?>"><i class="fa fa-ticket"></i> Tickets</a>
+                        <a class="dropdown-item" href="<?php echo url('customer/ticketslist') ?>"><i class="fas fa-ticket-alt"></i>Tickets</a>
                         <a class="dropdown-item" href="<?php echo url('credit_notes') ?>"><i class="fa fa-list"></i> Credit Notes</a>
                         <?php //endif ?>
                         <?php ////if (hasPermissions('items_list')): ?>

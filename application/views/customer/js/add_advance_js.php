@@ -99,11 +99,23 @@
         $("#system_type").select2({
             placeholder: "Select System Type"
         });
-        $("#alarm_login").select2({
+        $("#dealer").select2({
             placeholder: "Select Alarm Login"
         });
         $("#monitor_comp").select2({
             placeholder: "Select Company"
+        });
+        $("#online").select2({
+            placeholder: "Select"
+        });
+        $("#in_service").select2({
+            placeholder: "Select"
+        });
+        $("#collections").select2({
+            placeholder: "Select"
+        });
+        $("#equipment").select2({
+            placeholder: "Select"
         });
     });
     $(function() {
@@ -211,7 +223,17 @@
             return (key == 8 || key == 9 || key == 46 || (key >= 48 && key <= 57) || (key >= 96 && key <= 105));
         });
 
+
+
         $("#date_picker").datetimepicker({
+            format: "l",
+            //minDate: new Date(),
+        });
+        $("#recurring_start_date").datetimepicker({
+            format: "l",
+            //minDate: new Date(),
+        });
+        $("#recurring_end_date").datetimepicker({
             format: "l",
             //minDate: new Date(),
         });
@@ -231,7 +253,7 @@
             //'setDate': new Date(),
             //minDate: new Date(),
         });
-        $('.date_picker').val(new Date().toLocaleDateString());
+        //$('.date_picker').val(new Date().toLocaleDateString());
 
         //$('.time_picker').val(new Date().toLocaleTimeString());
 
@@ -283,18 +305,20 @@
             //var url = form.attr('action');
             $.ajax({
                 type: "POST",
-                url: base_url + "customer/add_data_sheet",
+                url: base_url + "customer/save_customer_profile",
                 data: form.serialize(), // serializes the form's elements.
                 success: function(data)
                 {
-                    if(data === "Added"){
-                        sucess("New Customer has been Added Successfully!");
-                    }else if(data === "Updated"){
-                        sucess("Customer Info has been Updated Successfully!");
+                    if(isNaN(data)){
+                        error(data);
                     }else{
-                        console.log(data);
+                        <?php if(isset($profile_info)): ?>
+                        sucess("Customer Information has been Updated Successfully!",data);
+                        <?php else: ?>
+                        sucess("New Customer has been Added Successfully!",data);
+                        <?php endif; ?>
                     }
-
+                    console.log(data);
                 }
             });
         });
@@ -305,7 +329,22 @@
                 'success'
             );
         }
-        function sucess(information){
+        function error(information){
+            Swal.fire({
+                title: 'Sorry!',
+                text: information,
+                icon: 'error',
+                showCancelButton: false,
+                confirmButtonColor: '#32243d',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ok'
+            }).then((result) => {
+                if (result.value) {
+                    //window.location.href="/customer";
+                }
+            });
+        }
+        function sucess(information,$id){
             Swal.fire({
                 title: 'Good job!',
                 text: information,
@@ -316,7 +355,7 @@
                 confirmButtonText: 'Ok'
             }).then((result) => {
                 if (result.value) {
-                    window.location.href="/customer";
+                    window.location.href="<?= base_url(); ?>customer/preview/"+$id;
                 }
             });
         }

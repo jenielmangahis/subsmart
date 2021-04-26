@@ -1,138 +1,82 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed'); ?>
-<?php include viewPath('includes/header'); ?>
-<style>
-    /*Tabs*/
-    .tab-pane{
-        margin-top: 20px;
-    }
-    .nav-item .active{
-        border-bottom: 3px solid #498002!important;
-        background-color: transparent!important;
-        font-weight: bold;
-    }
-    .nav-tabs .nav-link{
-        border: 0;
-    }
-    .page-title, .box-title {
-      font-family: Sarabun, sans-serif !important;
-      font-size: 1.75rem !important;
-      font-weight: 600 !important;
-      padding-top: 0px;
-      position: relative;
-      bottom: 10px;
-    }
-    button.btn-info {
-      background: #32253c !important;
-    }
-    .pr-b10 {
-      position: relative;
-      bottom: 15px;
-    }
-    .page-title-box {
-        padding-bottom: 2px !important;
-        padding-top: 10px !important;
-    }
-    .float-right.d-none.d-md-block {
-        position: relative;
-        top: 0px;
-    }
-    ul.nav.nav-tabs {
-      margin-left: 20px;
-      margin-right: 20px;
-    }
-    .p-40 {
-      padding-top: 38px !important;
-      padding-left: 30px !important;
-    }
-    .p-20 {
-      padding-top: 35px !important;
-      padding-bottom: 25px !important;
-      padding-right: 20px !important;
-      padding-left: 5px !important;
-    }
-    button#addPayscale {
-      border: 1px solid transparent;
-      border-radius: 2px;
-      box-shadow: none;
-      font-size: 16px;
-      transition: none;
-      height: 38px;
-      position: relative;
-      bottom: 5px;
-    }
-    @media only screen and (max-width: 600px) {
-      .p-40 {
-        padding-top: 0px !important;
-      }
-      .float-right.d-none.d-md-block {
-          position: relative;
-          bottom: 0px;
-      }
-      .pr-b10 {
-        position: relative;
-        bottom: 0px;
-      }
-    }
-</style>
+<?php include viewPath('includes/header');
+function get_differenct_of_dates($date_start, $date_end)
+{
+  $start = new DateTime($date_start);
+  $end =  new DateTime($date_end);
+  $interval = $start->diff($end);
+
+  $difference = ($interval->days * 24 * 60) * 60;
+  $difference += ($interval->h * 60) * 60;
+  $difference += ($interval->i) * 60;
+  $difference += $interval->s;
+  return ($difference / 60) / 60; // hours
+} 
+
+?>
+
 <div class="wrapper" role="wrapper">
     <?php include viewPath('includes/sidebars/employee'); ?>
     <!-- page wrapper start -->
     <div wrapper__section>
-        <div class="container-fluid">
-            <div class="page-title-box p-40">
-                <!--<div class="row align-items-center">
-                    <div class="col-sm-6">
-                        <h1 class="page-title">Employees</h1>
-                        <ol class="breadcrumb">
-                            <li class="breadcrumb-item active">Track Employees Location</li>
-                        </ol>
+        <div class="container-fluid tracklocation">
+            <div class="row" style="margin:0;">
+                <div class="col-md-4 overflow-auto" style="margin-top:30px; padding:0; height:80vh">
+                    <div class="col-sm-12">
+                            <h3 class="page-title" style="margin-bottom:20px !important;"> Employees Last Aux Locations</h3>
+                        
                     </div>
-                    <div class="col-sm-6">
-                        <div class="float-right d-none d-md-block">
-
+                    
+                    <?php
+                    
+                        for($i =0;$i < count($lasttracklocation_employee);$i++){
+                            $image = base_url() . '/uploads/users/user-profile/' . $lasttracklocation_employee[$i]->profile_img;
+                            if (!@getimagesize($image)) {
+                            $image = base_url('uploads/users/default.png');
+                        }
+                        $exploded = explode(",", $lasttracklocation_employee[$i]->user_location);
+                        if($lasttracklocation_employee[$i]->user_id == $current_user_id){
+                            $current_user_location = $exploded;
+                            $current_location_has_set = true;
+                        }
+                        if($lasttracklocation_employee[$i]->action == "Check in" || $lasttracklocation_employee[$i]->action == "Break out"){
+                            $online_sttaus = "active";
+                        }elseif($lasttracklocation_employee[$i]->action == "Break in" ){
+                            $online_sttaus = "active-break";
+                        }else{
+                            $online_sttaus = "active-offline";
+                        }
+                        $time_deference = get_differenct_of_dates($lasttracklocation_employee[$i]->date_created, date("Y-m-d H:i:s"));
+                        ?>
+                    <div id="sec-2-option-<?=$lasttracklocation_employee[$i]->user_id ?>" class="sec-2-option <?=$lasttracklocation_employee[$i]->user_id==$current_user_id?"current_view":""?>" onclick="employee_selected(<?=$exploded[0]?>,<?=$exploded[1]?>,<?=$lasttracklocation_employee[$i]->user_id?>)"><div class="row ">
+                        <div class="col-md-4 profile"><center><img src="<?=$image?>" alt="user" class="rounded-circle user-profile <?=$online_sttaus?>"></center><p class="name"> <?=$lasttracklocation_employee[$i]->FName?> </p>
+                        </div>
+                        <div class="col-md-8 details">
+                        <p id="last_tract_location_14"><span class="fa fa-map-marker"></span> <?=($lasttracklocation_employee[$i]->user_location_address=="")?"Location Not Available.": $lasttracklocation_employee[$i]->user_location_address ?></p><p><span class="fa fa-clock-o"></span> 
+                        <?php 
+                        if($time_deference > 24){
+                            echo round(($time_deference/24),0)
+                            ." days ago";
+                        }elseif($time_deference > 0.59){
+                            echo round(($time_deference),0)
+                            ." hours ago";
+                        }else{
+                            echo round(($time_deference*60),0)
+                            ." minutes ago";
+                        }
+                        ?>
+                        </p></div>
                         </div>
                     </div>
-                </div>-->
-            </div>
-            <!-- end row -->
-            <div class="row">
-                <div class="col-xl-12">
-                    <div class="card p-20">
-                        <div class="card-body" style="padding: 0px !important;">
-                            <div class="col-sm-12">
-                                <h3 class="page-title" style="margin-bottom:0px !important;">Employees</h3>
-                                <div class="pl-3 pr-3 mt-0 row">
-                                  <div class="col mb-4 left alert alert-warning mt-0 mb-2">
-                                      <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">Track Employees Location.</span>
-                                  </div>
-                                </div>
-                                <!--
-                                <ol class="breadcrumb">
-                                    <li class="breadcrumb-item active">Track Employees Location</li>
-                                </ol> -->
-                            </div>
-                            <ul class="nav nav-tabs">
-                                <li class="nav-item">
-                                    <a class="nav-link active" data-toggle="tab" href="#trackMap">Map</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" data-toggle="tab" href="#trackPlaces">Add Places</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" data-toggle="tab" href="#trackSettings">Settings</a>
-                                </li>
-                            </ul>
-                            <div class="tab-content">
-                                <div class="tab-pane container active" id="trackMap">
-                                    <div id="googleMap" style="width:100%;height:400px;"></div>
-                                </div>
-                                <div class="tab-pane container fade" id="trackPlaces">
-                                </div>
-                                <div class="tab-pane container fade" id="trackSettings">
-                                </div>
-                            </div>
-                        </div>
+                    <div style="display:none;"><div id="map_marker_<?=$lasttracklocation_employee[$i]->user_id ?>" class="popup-map-marker"><img src="<?=$image ?>" class="popup-map-marker" title="<?=$lasttracklocation_employee[$i]->FName . ' ' . $lasttracklocation_employee[$i]->LName ?>" /></div></div>
+                    <?php
+                    }
+                    ?>
+                </div>
+                <div class="col-md-8 map-section">
+                    <div id="map">
+                        
                     </div>
                     <!-- end card -->
                 </div>
@@ -145,12 +89,99 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 </div>
 <?php include viewPath('includes/footer'); ?>
 <script>
-    function myMap() {
+    function myMap2() {
         let mapProp= {
             center:new google.maps.LatLng(29.8134,-95.4641),
             zoom:5,
         };
-        let map = new google.maps.Map(document.getElementById("googleMap"),mapProp);
+        let map = new google.maps.Map(document.getElementById("map"),mapProp);
     }
+    
 </script>
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBK803I2sEIkUtnUPJqmyClYQy5OVV7-E4&callback=myMap"></script>
+<script>
+var map;
+var popup, Popup;
+    function initMap() {
+        var lat =7.3087;
+        var lng = 125.6841;
+        <?php 
+        if($current_location_has_set == true){
+            echo "lat=".$current_user_location[0].";";
+            echo "lng=".$current_user_location[1].";";
+        }
+        ?>
+        let mapProp= {
+            center:new google.maps.LatLng(lat,lng),
+            zoom:5,
+        };
+         map = new google.maps.Map(document.getElementById("map"),mapProp);
+
+    /**
+     * A customized popup on the map.
+     */
+    class Popup extends google.maps.OverlayView {
+      constructor(position, content) {
+        super();
+        this.position = position;
+        content.classList.add("popup-bubble");
+        // This zero-height div is positioned at the bottom of the bubble.
+        const bubbleAnchor = document.createElement("div");
+        bubbleAnchor.classList.add("popup-bubble-anchor");
+        bubbleAnchor.appendChild(content);
+        // This zero-height div is positioned at the bottom of the tip.
+        this.containerDiv = document.createElement("div");
+        this.containerDiv.classList.add("popup-container");
+        this.containerDiv.appendChild(bubbleAnchor);
+        // Optionally stop clicks, etc., from bubbling up to the map.
+        Popup.preventMapHitsAndGesturesFrom(this.containerDiv);
+      }
+      /** Called when the popup is added to the map. */
+      onAdd() {
+        this.getPanes().floatPane.appendChild(this.containerDiv);
+      }
+      /** Called when the popup is removed from the map. */
+      onRemove() {
+        if (this.containerDiv.parentElement) {
+          this.containerDiv.parentElement.removeChild(this.containerDiv);
+        }
+      }
+      /** Called each frame when the popup needs to draw itself. */
+      draw() {
+        const divPosition = this.getProjection().fromLatLngToDivPixel(
+          this.position
+        );
+        // Hide the popup when it is far out of view.
+        const display =
+          Math.abs(divPosition.x) < 4000 && Math.abs(divPosition.y) < 4000 ?
+          "block" :
+          "none";
+
+        if (display === "block") {
+          this.containerDiv.style.left = divPosition.x + "px";
+          this.containerDiv.style.top = divPosition.y + "px";
+        }
+
+        if (this.containerDiv.style.display !== display) {
+          this.containerDiv.style.display = display;
+        }
+      }
+    }
+
+    <?php
+    for ($i=0;$i<count($lasttracklocation_employee);$i++) {
+      
+        $exploded = explode(",", $lasttracklocation_employee[$i]->user_location);
+    ?>
+        popup = new Popup(
+          new google.maps.LatLng(<?= $exploded[0] ?>, <?= $exploded[1] ?>),
+          document.getElementById("map_marker_<?= $lasttracklocation_employee[$i]->user_id ?>")
+        );
+        popup.setMap(map);
+      
+    <?php
+      }
+    ?>
+  }
+</script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBg27wLl6BoSPmchyTRgvWuGHQhUUHE5AU&callback=initMap&libraries=&v=weekly" async></script>
+<script src="https://maps.googleapis.com/maps/api/geocode/json?address=Winnetka&key=AIzaSyBg27wLl6BoSPmchyTRgvWuGHQhUUHE5AU"></script>

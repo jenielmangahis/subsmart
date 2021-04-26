@@ -1,0 +1,158 @@
+.docusignTemplateCreate {
+  display: grid;
+  grid-template-columns: 260px auto;
+  padding-top: 95px !important;
+
+  .navbar-side {
+    position: relative !important;
+    top: 0 !important;
+    height: 100% !important;
+  }
+
+  .title {
+    font-family: Sarabun, sans-serif;
+    font-size: 1.75rem;
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+    margin-bottom: 20px;
+    color: #484848;
+  }
+
+  .card {
+    box-shadow: 0 0 13px 0 rgb(116 116 117 / 44%);
+
+    position: relative;
+
+    &.card--loading {
+      max-height: 100vh;
+      min-height: 100vh;
+      overflow: hidden;
+
+      .loader {
+        display: grid;
+      }
+    }
+
+    .loader {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 4;
+
+      display: none;
+      place-content: center;
+      background-color: #fff;
+    }
+  }
+
+  &__spacer {
+    height: 50px;
+  }
+}
+
+.form {
+  max-width: 600px;
+
+  &__title {
+    font-family: Sarabun, sans-serif;
+    font-size: 18px;
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+    margin-bottom: 8px;
+    color: #484848;
+  }
+}
+
+.fileupload {
+  --size: 240px;
+
+  display: grid !important;
+  gap: 10px;
+  grid-template-columns: repeat(auto-fit, minmax(var(--size), auto));
+  justify-content: left;
+
+  .esignBuilder__docPreview,
+  .custome-fileup {
+    min-height: var(--size);
+    max-width: var(--size);
+  }
+
+  .esignBuilder__docPreview canvas {
+    width: 100% !important;
+  }
+
+  .custome-fileup {
+    border: 1px solid #d9d9d9;
+    border-radius: 3px;
+    padding: 60px 20px;
+  }
+
+  .upload-btn-wrapper {
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    display: inline-block;
+  }
+
+  input[type="file"] {
+    font-size: 0px;
+    position: absolute;
+    left: 0;
+    top: 0;
+    opacity: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .custome-fileup .btn span {
+    padding: 5px 15px;
+    width: 100%;
+    display: block;
+    background: #2463d1;
+    text-align: center;
+    font-size: 14px;
+    font-weight: bold;
+    color: #fff;
+    text-transform: uppercase;
+  }
+
+  .custome-fileup .btn {
+    width: 100%;
+    text-align: center;
+    background: transparent;
+    display: block;
+    padding: 0;
+  }
+
+  .custome-fileup .btn img {
+    display: block;
+    margin: 0 auto 15px;
+  }
+}
+
+.recipientForm {
+  box-shadow: 0 1px 2px 0 rgb(0 0 0 / 10%);
+  border: 1px solid #d9d9d9;
+  position: relative;
+  padding: 15px;
+
+  &__container {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    gap: 15px;
+
+    &:not(:hover) {
+      .delete-icon {
+        visibility: hidden;
+        opacity: 0;
+      }
+    }
+
+    .delete-icon {
+      font-size: 24px;
+    }
+  }
+}

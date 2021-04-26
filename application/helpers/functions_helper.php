@@ -110,4 +110,58 @@ if (!function_exists('get_total_item_qty')){
         return $CI->general->get_column_sum($get_item_qty_total);
     }
 }
+if (!function_exists('bill_methods')){
+    function bill_methods($name=null){
+        $bill_methods = array(
+            array(
+                'name' => 'CC',
+                'description' => 'Credit Card',
+            ),array(
+                'name' => 'DC',
+                'description' => 'Debit Card',
+            ),array(
+                'name' => 'CHECK',
+                'description' => 'CHECK',
+            ),array(
+                'name' => 'CASH',
+                'description' => 'CASH',
+            ),array(
+                'name' => 'ACH',
+                'description' => 'ACH',
+            ),array(
+                'name' => 'VENMO',
+                'description' => 'VENMO',
+            ),array(
+                'name' => 'PP',
+                'description' => 'Paypal',
+            ),array(
+                'name' => 'SQ',
+                'description' => 'Square',
+            ),array(
+                'name' => 'WW',
+                'description' => 'Warranty Work',
+            ),array(
+                'name' => 'HOF',
+                'description' => 'Home Owner Financing',
+            ),array(
+                'name' => 'eT',
+                'description' => 'e-Transfer',
+            ),array(
+                'name' => 'OCCP',
+                'description' => 'Other Credit Card Processor',
+            ),array(
+                'name' => 'OPT',
+                'description' => 'Other Payment Type',
+            ),
+        );
+        if(isset($name)){
+            for($x=0;$x<count($bill_methods);$x++){
+                if($bill_methods[$x]['name'] == $name){
+                    return $bill_methods[$x];
+                }
+            }
+        }
+        return $bill_methods;
+    }
+}
 ?>

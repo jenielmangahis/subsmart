@@ -69,44 +69,56 @@ add_css(array(
                             <div class="card">
                                 <div class="card-header">
                                     <div class="right-text">
-                                    <b style="margin-left: 38px;">EVENT</b>
-                                    <p class="page-title ">#<?=  $jobs_data->event_number; ?> </p>
+                                    <p class="page-title " style="font-weight: 700;font-size: 16px;"><?=  $jobs_data->event_number; ?> </p>
                                     </div>
-                                    <br>
                                     <hr>
                                 </div>
                                 <div class="card-body">
                                     <div class="row">
                                         <div class="col-md-6">
-                                            <?php if($company_info->business_logo != "" && $jobs_data->event_type == 'Estimate'): ?>
-                                                <img style="width: 100px" id="attachment-image" alt="Attachment" src="<?=  base_url().$company_info->business_logo; ?> ">
+                                            <?php if($company_info->business_image != "" ): ?>
+                                                <img style="width: 100px" id="attachment-image" alt="Attachment" src="<?=  '/uploads/users/business_profile/'.$company_info->id.'/'.$company_info->business_image; ?> ">
                                             <?php endif; ?>
                                         </div>
-                                        <div class="col-md-6">
+                                        <div class="col-md-3">
                                             <table class="right-text">
                                                 <tbody>
                                                     <tr>
-                                                        <td align="right" width="35%">Job Tags:</td>
-                                                        <td align="right" width="65%"><?= $jobs_data->event_tag;  ?></td>
+                                                        <td align="right">Event Type :</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td align="right" >Event Tags :</td>
                                                     </tr>
                                                     <tr>
                                                         <td align="right" >Date :</td>
-                                                        <td align="right"><?= isset($jobs_data) ?  date('m/d/Y', strtotime($jobs_data->start_date)) : '';  ?></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td align="right" >Type :</td>
-                                                        <td align="right"><?= $jobs_data->event_type;  ?></td>
-                                                    </tr>
+                                                     </tr>
                                                     <tr>
                                                         <td align="right" >Status :</td>
-                                                        <td align="right"><?=  $jobs_data->status;  ?></td>
-                                                    </tr>
+                                                     </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <table class="right-text">
+                                                <tbody>
+                                                <tr>
+                                                    <td align="right" ><?= $jobs_data->event_type;  ?></td>
+                                                </tr>
+                                                <tr>
+                                                    <td align="right" ><?= $jobs_data->event_tag;  ?></td>
+                                                </tr>
+                                                <tr>
+                                                    <td align="right"><?= isset($jobs_data) ?  date('m/d/Y', strtotime($jobs_data->start_date)) : '';  ?></td>
+                                                </tr>
+                                                <tr>
+                                                    <td align="right" style="font-weight: 600;"><?=  $jobs_data->status;  ?></td>
+                                                </tr>
                                                 </tbody>
                                             </table>
                                         </div>
 
-                                        <?php if($jobs_data->event_type == 'Estimate'): ?>
 
+                                        <?php if($jobs_data->event_type == 'Estimate'): ?>
                                         <div class="col-md-12">
                                             <h6 class="title-border">FROM :</h6>
                                             <b><?= $company_info->business_name; ?></b><br>
@@ -115,12 +127,13 @@ add_css(array(
                                             <span> Phone: <?= $company_info->business_phone ; ?></span>
                                         </div>
 
-                                        <?php else: $created_by = get_employee_name($jobs_data->created_by) ?>
+                                        <?php else: $created_by = get_employee_name($jobs_data->created_by); echo  $created_by;?>
                                             <div class="col-md-12">
-                                                <h6 class="title-border">Created By :</h6>
+                                                <br>
+                                                <h6 class="title-border">Created By :<i><?= $created_by->FName.' '.$created_by->LName  ?></i> </h6>
                                                 <div class="row">
                                                     <div class="col-md-4">
-                                                        <p><?= $created_by->FName.' '.$created_by->LName  ?></p>
+
                                                     </div>
                                                     <div id="map" class="col-md-4"></div>
                                                     <div id="streetViewBody" class="col-md-4"></div>
@@ -165,7 +178,7 @@ add_css(array(
                                                 <tbody>
                                                     <?php
                                                         $subtotal = 0.00;
-                                                        foreach ($jobs_data_items as $item):
+                                                        foreach ($event_items as $item):
                                                         $total = $item->price * $item->qty;
                                                     ?>
                                                         <tr>
@@ -203,7 +216,7 @@ add_css(array(
                                         <div class="col-md-12">
                                             <br><br>
                                             <h6 class="title-border">Notes :</h6>
-                                            <span><?=  $jobs_data->message; ?></span>
+                                            <span><?=  $jobs_data->notes; ?></span>
                                         </div>
 
                                         <div class="col-md-12">
@@ -212,13 +225,13 @@ add_css(array(
                                             <?php
                                                 $employee_date = get_employee_name($jobs_data->employee_id)
                                             ?>
-                                            <span><?= $employee_date->FName. ' '. $employee_date->LName; ?></span> <span class="fa fa-envelope-open-text icon_preview"></span>
+                                            <span><?= $employee_date->FName; ?></span> <span class="fa fa-envelope-open-text icon_preview"></span>
                                         </div>
 
                                         <div class="col-md-12">
                                             <br>
                                             <h6 class="title-border">Url Link :</h6>
-                                            <span><a style="color: darkred;" target="_blank" href="<?= $jobs_data->link; ?>"><?= $jobs_data->link; ?></a></span>
+                                            <span><a style="color: darkred;" target="_blank" href="<?= $jobs_data->url_link; ?>"><?= $jobs_data->url_link; ?></a></span>
                                         </div>
 
                                         <div class="col-md-12">

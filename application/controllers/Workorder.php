@@ -111,6 +111,11 @@ class Workorder extends MY_Controller
             // $this->page_data['workorderStatusFilters'] = $this->workorder_model->getStatusWithCount();
         }
 
+        $this->page_data['workorders'] = $this->workorder_model->getworkorderList();
+
+        $company_id = logged('company_id');
+        $this->page_data['company_work_order_used'] = $this->workorder_model->getcompany_work_order_used($company_id);
+
         // unserialized the value
 
         $statusFilter = array();
@@ -538,15 +543,19 @@ class Workorder extends MY_Controller
 
 
     public function view($id)
-
     {
 
-        $this->page_data['Workorder'] = $this->workorder_model->getById($id);
+        $this->page_data['workorder'] = $this->workorder_model->getById($id);
+        
+        $this->page_data['company'] = $this->workorder_model->getCompanyCompanyId($id);
+        $this->page_data['customer'] = $this->workorder_model->getcustomerCompanyId($id);
+        $this->page_data['items'] = $this->workorder_model->getItems($id);
 
-        $this->page_data['Workorder']->role = $this->roles_model->getByWhere(['id' => $this->page_data['Workorder']->role])[0];
+        // $this->page_data['Workorder']->role = $this->roles_model->getByWhere(['id' => $this->page_data['Workorder']->role])[0];
 
-        $this->page_data['Workorder']->activity = $this->activity_model->getByWhere(['user' => $id], ['order' => ['id', 'desc']]);
+        // $this->page_data['Workorder']->activity = $this->activity_model->getByWhere(['user' => $id], ['order' => ['id', 'desc']]);
 
+        // print_r($this->page_data['items']);
         $this->load->view('workorder/view', $this->page_data);
     }
 
@@ -555,16 +564,19 @@ class Workorder extends MY_Controller
     {
         $company_id = logged('company_id');
         $user_id = logged('id');
-        $parent_id = $this->db->query("select parent_id from users where id=$user_id")->row();
+        $parent_id = $this->db->query("select id from users where id=$user_id")->row();
 
         if ($parent_id->parent_id == 1) {
             $this->page_data['users'] = $this->users_model->getAllUsersByCompany($user_id);
         } else {
             $this->page_data['users'] = $this->users_model->getAllUsersByCompany($parent_id->parent_id, $user_id);
         }
+        $this->page_data['headers'] = $this->workorder_model->getheaderByID();
         $this->page_data['workstatus'] = $this->Workstatus_model->getByWhere(['company_id' => $company_id]);
         $this->page_data['workorder'] = $this->workorder_model->getById($id);
         $this->page_data['plans'] = $this->plans_model->getByWhere(['company_id' => $company_id]);
+        $this->page_data['customer'] = $this->workorder_model->getcustomerCompanyId($id);
+        $this->page_data['job_types'] = $this->workorder_model->getjob_types();
 
         foreach ($this->page_data['workorder'] as $key => $workorder) {
 
@@ -576,6 +588,7 @@ class Workorder extends MY_Controller
 
 //         echo '<pre>'; print_r($this->page_data['workorder']); die;
 
+        // print_r($this->page_data['customer']);
         $this->load->view('workorder/edit', $this->page_data);
     }
 
@@ -751,7 +764,8 @@ class Workorder extends MY_Controller
         }
 
         if( $post['user'] == 'all' ){
-            $users    = $this->Users_model->getAll();
+            $company_id  = logged('company_id');
+            $users       = $this->Users_model->getCompanyUsers($company_id);
             $default_imp_img = base_url('uploads/users/default.png');
             foreach( $users as $user ){
                 //Set Center Map
@@ -801,7 +815,7 @@ class Workorder extends MY_Controller
                                     </tr>
                                 </table>";
                                 $locations[] = [
-                                    'title' => $description_a,
+                                    'title' => $pointA,
                                     'lat' => $center_lat,
                                     'lng' => $center_lng,
                                     'title' => "<b>Start Point</b><br />" . $pointA,
@@ -809,7 +823,7 @@ class Workorder extends MY_Controller
                                     'marker' => 'https://staging.nsmartrac.com/uploads/icons/caretaker_48px.png'
                                 ];
                                 $locations[] = [
-                                    'title' => $description_b,
+                                    'title' => $pointB,
                                     'lat' => $json['results'][0]['geometry']['location']['lat'],
                                     'lng' => $json['results'][0]['geometry']['location']['lng'],
                                     'description' => $description_b,
@@ -845,14 +859,14 @@ class Workorder extends MY_Controller
                             $json   = json_decode($gdata, true);
                             if( isset($json['results'][0]['geometry']['location']['lat']) && $json['results'][0]['geometry']['location']['lat'] != '' ){
                                $locations[] = [
-                                    'title' => $description_a,
+                                    'title' => $pointA,
                                     'lat' => $center_lat,
                                     'lng' => $center_lng,
                                     'description' => $description_a,
                                     'marker' => 'https://staging.nsmartrac.com/uploads/icons/caretaker_48px.png'
                                 ];
                                 $locations[] = [
-                                    'title' => $description_b,
+                                    'title' => $pointB,
                                     'lat' => $json['results'][0]['geometry']['location']['lat'],
                                     'lng' => $json['results'][0]['geometry']['location']['lng'],
                                     'description' => $description_b,
@@ -919,7 +933,7 @@ class Workorder extends MY_Controller
                         $json   = json_decode($gdata, true);
                         if( isset($json['results'][0]['geometry']['location']['lat']) && $json['results'][0]['geometry']['location']['lat'] != '' ){
                             $locations[] = [
-                                'title' => $description_a,
+                                'title' => $pointA,
                                 'lat' => $center_lat,
                                 'lng' => $center_lng,
                                 'description' => $description_a,
@@ -929,7 +943,7 @@ class Workorder extends MY_Controller
                                 'title' => $description_b,
                                 'lat' => $json['results'][0]['geometry']['location']['lat'],
                                 'lng' => $json['results'][0]['geometry']['location']['lng'],
-                                'description' => $description_b,
+                                'description' => $pointB,
                                 'marker' => $marker
                             ];
                         }
@@ -954,7 +968,7 @@ class Workorder extends MY_Controller
                             $json   = json_decode($gdata, true);
                             if( isset($json['results'][0]['geometry']['location']['lat']) && $json['results'][0]['geometry']['location']['lat'] != '' ){
                                 $locations[$counter] = [
-                                    'title' => $description_a,
+                                    'title' => $pointA,
                                     'lat' => $center_lat,
                                     'lng' => $center_lng,
                                     'description' => $description_a,
@@ -1125,6 +1139,8 @@ class Workorder extends MY_Controller
         $data = array(
             'id' => $this->input->post('id'),
             'content' => $this->input->post('content'),
+            'company_id' => $company_id,
+            'date_created' => date("Y-m-d H:i:s"),
             'date_updated' => date("Y-m-d H:i:s")
         );
 
@@ -1158,6 +1174,8 @@ class Workorder extends MY_Controller
         $data = array(
             'id' => $this->input->post('id'),
             'content' => $this->input->post('content'),
+            'company_id' => $company_id,
+            'date_created' => date("Y-m-d H:i:s"),
             'date_updated' => date("Y-m-d H:i:s")
         );
 
@@ -1629,6 +1647,7 @@ class Workorder extends MY_Controller
         $this->page_data['page_title'] = "Work Order";
         // print_r($this->page_data['customers']);
 
+        add_footer_js('assets/js/esign/docusign/workorder.js');
         $this->load->view('workorder/addNewworkOrder', $this->page_data);
     }
 
@@ -1663,7 +1682,7 @@ class Workorder extends MY_Controller
 
         $new_data = array(
             
-            'workorder_number' => $this->input->post('workorder_number'),
+            'work_order_number' => $this->input->post('workorder_number'),
             'customer_id' => $this->input->post('customer_id'),
             'security_number' => $this->input->post('security_number'),
             'birthdate' => $this->input->post('birthdate'),
@@ -1677,23 +1696,24 @@ class Workorder extends MY_Controller
             'cross_street' => $this->input->post('cross_street'),
             'password' => $this->input->post('password'),
             'offer_code' => $this->input->post('offer_code'),//
-            'job_tag' => $this->input->post('job_tag'),
+            'tags' => $this->input->post('job_tag'),
             'schedule_date_given' => $this->input->post('schedule_date_given'),
             'job_type' => $this->input->post('job_type'),
             'job_name' => $this->input->post('job_name'),
             'job_description' => $this->input->post('job_description'),
             'payment_method' => $this->input->post('payment_method'),
             'payment_amount' => $this->input->post('payment_amount'),
-            'account_holder_name' => $this->input->post('account_holder_name'),
-            'account_number' => $this->input->post('account_number'),
-            'expiry' => $this->input->post('expiry'),
-            'cvc' => $this->input->post('cvc'),
-            'terms_conditions' => $this->input->post('terms_conditions'),
+            // 'account_holder_name' => $this->input->post('account_holder_name'),
+            // 'account_number' => $this->input->post('account_number'),
+            // 'expiry' => $this->input->post('expiry'),
+            // 'cvc' => $this->input->post('cvc'),
+            'terms_and_conditions' => $this->input->post('terms_conditions'),
             'status' => $this->input->post('status'),
             'priority' => $this->input->post('priority'),
             'purchase_order_number' => $this->input->post('purchase_order_number'),
             'terms_of_use' => $this->input->post('terms_of_use'),
             'instructions' => $this->input->post('instructions'),
+            'header' => $this->input->post('header'),
 
             //signature
             // 'company_representative_signature' => $this->input->post('company_representative_signature'),
@@ -1702,12 +1722,13 @@ class Workorder extends MY_Controller
             // 'primary_account_holder_name' => $this->input->post('primary_account_holder_name'),
             // 'secondary_account_holder_signature' => $this->input->post('secondary_account_holder_signature'),
             // 'secondary_account_holder_name' => $this->input->post('secondary_account_holder_name'),
-            'company_representative_signature' => 'company_representative_signature',
-            'company_representative_name' => 'company_representative_name',
-            'primary_account_holder_signature' => 'primary_account_holder_signature',
-            'primary_account_holder_name' => 'primary_account_holder_name',
-            'secondary_account_holder_signature' => 'secondary_account_holder_signature',
-            'secondary_account_holder_name' => 'secondary_account_holder_name',
+
+            // 'company_representative_signature' => 'company_representative_signature',
+            // 'company_representative_name' => 'company_representative_name',
+            // 'primary_account_holder_signature' => 'primary_account_holder_signature',
+            // 'primary_account_holder_name' => 'primary_account_holder_name',
+            // 'secondary_account_holder_signature' => 'secondary_account_holder_signature',
+            // 'secondary_account_holder_name' => 'secondary_account_holder_name',
             
 
             //attachment
@@ -1723,14 +1744,203 @@ class Workorder extends MY_Controller
             'voucher_value' => $this->input->post('voucher_value'),
             'grand_total' => $this->input->post('grand_total'),
 
-            'user_id' => $user_id,
+            'employee_id' => $user_id,
             'company_id' => $company_id,
             'date_created' => date("Y-m-d H:i:s"),
             'date_updated' => date("Y-m-d H:i:s")
         );
 
         $addQuery = $this->workorder_model->save_workorder($new_data);
+        
 
+        if($this->input->post('payment_method') == 'Cash'){
+            $payment_data = array(
+            
+                'payment_method' => $this->input->post('payment_method'),
+                'amount' => $this->input->post('payment_amount'),
+                'is_collected' => '1',
+                'work_order_id' => $addQuery,
+                'date_created' => date("Y-m-d H:i:s"),
+                'date_updated' => date("Y-m-d H:i:s")
+            );
+
+            $pay = $this->workorder_model->save_payment($payment_data);
+        }
+        elseif($this->input->post('payment_method') == 'Check'){
+            $payment_data = array(
+            
+                'payment_method' => $this->input->post('payment_method'),
+                'amount' => $this->input->post('payment_amount'),
+                'check_number' => $this->input->post('check_number'),
+                'routing_number' => $this->input->post('routing_number'),
+                'work_order_id' => $addQuery,
+                'date_created' => date("Y-m-d H:i:s"),
+                'date_updated' => date("Y-m-d H:i:s")
+            );
+
+            $pay = $this->workorder_model->save_payment($payment_data);
+        }
+        elseif($this->input->post('payment_method') == 'Credit Card'){
+            $payment_data = array(
+            
+                'payment_method' => $this->input->post('payment_method'),
+                'amount' => $this->input->post('payment_amount'),
+                'credit_number' => $this->input->post('credit_number'),
+                'credit_expiry' => $this->input->post('credit_expiry'),
+                'credit_cvc' => $this->input->post('credit_cvc'),
+                'work_order_id' => $addQuery,
+                'date_created' => date("Y-m-d H:i:s"),
+                'date_updated' => date("Y-m-d H:i:s")
+            );
+
+            $pay = $this->workorder_model->save_payment($payment_data);
+        }
+        elseif($this->input->post('payment_method') == 'Debit Card'){
+            $payment_data = array(
+            
+                'payment_method' => $this->input->post('payment_method'),
+                'amount' => $this->input->post('payment_amount'),
+                'credit_number' => $this->input->post('debit_credit_number'),
+                'credit_expiry' => $this->input->post('debit_credit_expiry'),
+                'credit_cvc' => $this->input->post('debit_credit_cvc'),
+                'work_order_id' => $addQuery,
+                'date_created' => date("Y-m-d H:i:s"),
+                'date_updated' => date("Y-m-d H:i:s")
+            );
+
+            $pay = $this->workorder_model->save_payment($payment_data);
+        }
+        elseif($this->input->post('payment_method') == 'ACH'){
+            $payment_data = array(
+            
+                'payment_method' => $this->input->post('payment_method'),
+                'amount' => $this->input->post('payment_amount'),
+                'routing_number' => $this->input->post('ach_routing_number'),
+                'account_number' => $this->input->post('ach_account_number'),
+                'work_order_id' => $addQuery,
+                'date_created' => date("Y-m-d H:i:s"),
+                'date_updated' => date("Y-m-d H:i:s")
+            );
+
+            $pay = $this->workorder_model->save_payment($payment_data);
+        }
+        elseif($this->input->post('payment_method') == 'Venmo'){
+            $payment_data = array(
+            
+                'payment_method' => $this->input->post('payment_method'),
+                'amount' => $this->input->post('payment_amount'),
+                'account_credentials' => $this->input->post('account_credentials'),
+                'account_note' => $this->input->post('account_note'),
+                'confirmation' => $this->input->post('confirmation'),
+                'work_order_id' => $addQuery,
+                'date_created' => date("Y-m-d H:i:s"),
+                'date_updated' => date("Y-m-d H:i:s")
+            );
+
+            $pay = $this->workorder_model->save_payment($payment_data);
+        }
+        elseif($this->input->post('payment_method') == 'Paypal'){
+            $payment_data = array(
+            
+                'payment_method' => $this->input->post('payment_method'),
+                'amount' => $this->input->post('payment_amount'),
+                'account_credentials' => $this->input->post('paypal_account_credentials'),
+                'account_note' => $this->input->post('paypal_account_note'),
+                'confirmation' => $this->input->post('paypal_confirmation'),
+                'work_order_id' => $addQuery,
+                'date_created' => date("Y-m-d H:i:s"),
+                'date_updated' => date("Y-m-d H:i:s")
+            );
+
+            $pay = $this->workorder_model->save_payment($payment_data);
+        }
+        elseif($this->input->post('payment_method') == 'Square'){
+            $payment_data = array(
+            
+                'payment_method' => $this->input->post('payment_method'),
+                'amount' => $this->input->post('payment_amount'),
+                'account_credentials' => $this->input->post('square_account_credentials'),
+                'account_note' => $this->input->post('square_account_note'),
+                'confirmation' => $this->input->post('square_confirmation'),
+                'work_order_id' => $addQuery,
+                'date_created' => date("Y-m-d H:i:s"),
+                'date_updated' => date("Y-m-d H:i:s")
+            );
+
+            $pay = $this->workorder_model->save_payment($payment_data);
+        }
+        elseif($this->input->post('payment_method') == 'Warranty Work'){
+            $payment_data = array(
+            
+                'payment_method' => $this->input->post('payment_method'),
+                'amount' => $this->input->post('payment_amount'),
+                'account_credentials' => $this->input->post('warranty_account_credentials'),
+                'account_note' => $this->input->post('warranty_account_note'),
+                'work_order_id' => $addQuery,
+                'date_created' => date("Y-m-d H:i:s"),
+                'date_updated' => date("Y-m-d H:i:s")
+            );
+
+            $pay = $this->workorder_model->save_payment($payment_data);
+        }
+        elseif($this->input->post('payment_method') == 'Home Owner Financing'){
+            $payment_data = array(
+            
+                'payment_method' => $this->input->post('payment_method'),
+                'amount' => $this->input->post('payment_amount'),
+                'account_credentials' => $this->input->post('home_account_credentials'),
+                'account_note' => $this->input->post('home_account_note'),
+                'work_order_id' => $addQuery,
+                'date_created' => date("Y-m-d H:i:s"),
+                'date_updated' => date("Y-m-d H:i:s")
+            );
+
+            $pay = $this->workorder_model->save_payment($payment_data);
+        }
+        elseif($this->input->post('payment_method') == 'e-Transfer'){
+            $payment_data = array(
+            
+                'payment_method' => $this->input->post('payment_method'),
+                'amount' => $this->input->post('payment_amount'),
+                'account_credentials' => $this->input->post('e_account_credentials'),
+                'account_note' => $this->input->post('e_account_note'),
+                'work_order_id' => $addQuery,
+                'date_created' => date("Y-m-d H:i:s"),
+                'date_updated' => date("Y-m-d H:i:s")
+            );
+
+            $pay = $this->workorder_model->save_payment($payment_data);
+        }
+        elseif($this->input->post('payment_method') == 'Other Credit Card Professor'){
+            $payment_data = array(
+            
+                'payment_method' => $this->input->post('payment_method'),
+                'amount' => $this->input->post('payment_amount'),
+                'credit_number' => $this->input->post('other_credit_number'),
+                'credit_expiry' => $this->input->post('other_credit_expiry'),
+                'credit_cvc' => $this->input->post('other_credit_cvc'),
+                'work_order_id' => $addQuery,
+                'date_created' => date("Y-m-d H:i:s"),
+                'date_updated' => date("Y-m-d H:i:s")
+            );
+
+            $pay = $this->workorder_model->save_payment($payment_data);
+        }
+        elseif($this->input->post('payment_method') == 'Other Payment Type'){
+            $payment_data = array(
+            
+                'payment_method' => $this->input->post('payment_method'),
+                'amount' => $this->input->post('payment_amount'),
+                'account_credentials' => $this->input->post('other_payment_account_credentials'),
+                'account_note' => $this->input->post('other_payment_account_note'),
+                'work_order_id' => $addQuery,
+                'date_created' => date("Y-m-d H:i:s"),
+                'date_updated' => date("Y-m-d H:i:s")
+            );
+
+            $pay = $this->workorder_model->save_payment($payment_data);
+        }
+        
         
         // $custom_data = array(
             
@@ -1796,6 +2006,134 @@ class Workorder extends MY_Controller
         else{
             echo json_encode(0);
         }
+    }
+
+    public function work_order_templates()
+    {
+        $company_id = logged('company_id');
+        $user_id = logged('id');
+        $this->page_data['users'] = $this->users_model->getUser(logged('id'));
+        $this->page_data['page_title'] = "All Templates";
+        $this->page_data['company_work_order_used'] = $this->workorder_model->getcompany_work_order_used($company_id);
+        
+        $this->load->view('workorder/work_order_templates', $this->page_data);
+    }
+
+    public function changeTemplate()
+    {
+        $company_id = logged('company_id');
+        $user_id = logged('id');
+
+        $template_id  =  $this->input->post('template');
+
+        $check = $this->workorder_model->checktemplateId($company_id);
+
+        if(empty($check))
+        {
+            $data = array(
+                'work_order_template_id' => $template_id,
+                'company_id' => $company_id,
+            );
+            $dataQuery = $this->workorder_model->addTemplate($data);
+
+        }else{
+            $data2 = array(
+                'work_order_template_id' => $template_id,
+                'company_id' => $company_id,
+            );
+            $dataQuery = $this->workorder_model->updateTemplate($data2);
+
+        }
+
+
+        echo json_encode($dataQuery);
+    }
+
+    public function NewworkOrderAlarm()
+    {
+        // $company_id = logged('company_id');
+        // $user_id = logged('id');
+        $this->load->model('AcsProfile_model');
+        $query_autoincrment = $this->db->query("SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE table_name = 'customer_groups'");
+        $result_autoincrement = $query_autoincrment->result_array();
+
+        if(count( $result_autoincrement )) {
+            if($result_autoincrement[0]['AUTO_INCREMENT'])
+            {
+                $this->page_data['auto_increment_estimate_id'] = 1;
+            } else {
+
+                $this->page_data['auto_increment_estimate_id'] = $result_autoincrement[0]['AUTO_INCREMENT'];
+            }
+        } else {
+            $this->page_data['auto_increment_estimate_id'] = 0;
+        }
+
+        $user_id = logged('id');
+
+        $company_id = logged('company_id');
+
+        $this->page_data['users'] = $this->users_model->getUser(logged('id'));
+        $this->page_data['page_title'] = "Alarm Templates";
+
+        $this->load->library('session');
+
+        $users_data = $this->session->all_userdata();
+        // foreach($users_data as $usersD){
+        //     $userID = $usersD->id;
+            
+        // }
+
+        // print_r($user_id);
+        // $users = $this->users_model->getUserByID($user_id);
+        // print_r($users);
+        // echo $company_id;
+
+        $role = logged('role');
+        if( $role == 1 || $role == 2){
+            $this->page_data['customers'] = $this->AcsProfile_model->getAll();
+            // $this->page_data['customers'] = $this->AcsProfile_model->getAllByCompanyId($company_id);
+        }else{
+            // $this->page_data['customers'] = $this->AcsProfile_model->getAll();
+            $this->page_data['customers'] = $this->AcsProfile_model->getAllByCompanyId($company_id);
+        }
+        $type = $this->input->get('type');
+        $this->page_data['type'] = $type;
+        $this->page_data['items'] = $this->items_model->getItemlist();
+        $this->page_data['plans'] = $this->plans_model->getByWhere(['company_id' => $company_id]);
+        // $this->page_data['number'] = $this->estimate_model->getlastInsert();
+        $this->page_data['number'] = $this->workorder_model->getlastInsert();
+
+        $termsCondi = $this->workorder_model->getTerms($company_id);
+        if($termsCondi){
+            // $this->page_data['terms_conditions'] = $this->workorder_model->getTermsDefault();
+            $this->page_data['terms_conditions'] = $this->workorder_model->getTermsbyID();
+        }else{
+            // $this->page_data['terms_conditions'] = $this->workorder_model->getTermsbyID();
+            $this->page_data['terms_conditions'] = $this->workorder_model->getTermsDefault();
+        }
+
+        $termsUse = $this->workorder_model->getTermsUse($company_id);
+        if($termsUse){
+            // $this->page_data['terms_conditions'] = $this->workorder_model->getTermsDefault();
+            $this->page_data['terms_uses'] = $this->workorder_model->getTermsUsebyID();
+        }else{
+            // $this->page_data['terms_conditions'] = $this->workorder_model->getTermsbyID();
+            $this->page_data['terms_uses'] = $this->workorder_model->getTermsUseDefault();
+        }
+
+        // print_r($this->page_data['terms_conditions']);
+        $this->page_data['fields'] = $this->workorder_model->getCustomByID();
+        $this->page_data['headers'] = $this->workorder_model->getheaderByID();
+        $this->page_data['checklists'] = $this->workorder_model->getchecklistByUser($user_id);
+        $this->page_data['job_types'] = $this->workorder_model->getjob_types();
+
+        $this->page_data['job_tags'] = $this->workorder_model->getjob_tagsById();
+        $this->page_data['clients'] = $this->workorder_model->getclientsById();
+
+        $this->page_data['items'] = $this->items_model->getItemlist();
+        
+        $this->load->view('workorder/NewworkOrderAlarm', $this->page_data);
     }
 }
 

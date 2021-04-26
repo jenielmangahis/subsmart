@@ -2,59 +2,320 @@
 defined('BASEPATH') or exit('No direct script access allowed');
 ?>
 <?php include viewPath('includes/header_front'); ?>
+<script src="https://js.stripe.com/v3/"></script>
+<?php if($onlinePaymentAccount->stripe_publish_key != '' && $onlinePaymentAccount->stripe_secret_key != ''){ ?>
+<script src="https://api.convergepay.com/hosted-payments/PayWithConverge.js"></script>
+<?php } ?>
+<?php include viewPath('job/css/job_new'); ?>
+<style>
+    .card{
+        box-shadow: 0 0 13px 0 rgb(116 116 117) !important;
+    }
+    .card-body {
+        padding: 0 !important;
+    }
+    .right-text{
+        position: relative;
+        float:right;
+        right: 0;
+        bottom: 10px;
+    }
+    #map{
+        height: 190px;
+    }
+    .title-border{
+        border-bottom: 2px solid rgba(0,0,0,.1);
+        padding-bottom: 5px;
+    }
+    .icon_preview{
+        font-size: 16px;
+        color : #45a73c;
+    }
+    /**
+   * The CSS shown here will not be introduced in the Quickstart guide, but shows
+   * how you can use CSS to style your Element's container.
+   */
+    .StripeElement {
+      box-sizing: border-box;
+
+      height: 40px;
+
+      padding: 10px 12px;
+
+      border: 1px solid transparent;
+      border-radius: 4px;
+      background-color: white;
+
+      box-shadow: 0 1px 3px 0 #e6ebf1;
+      -webkit-transition: box-shadow 150ms ease;
+      transition: box-shadow 150ms ease;
+    }
+
+    .StripeElement--focus {
+      box-shadow: 0 1px 3px 0 #cfd7df;
+    }
+
+    .StripeElement--invalid {
+      border-color: #fa755a;
+    }
+
+    .StripeElement--webkit-autofill {
+      background-color: #fefde5 !important;
+    }
+    .stripe-btn, .stripe-cancel-btn{
+      border: none;
+        border-radius: 4px;
+        outline: none;
+        text-decoration: none;
+        color: #fff;
+        background: #32325d;
+        white-space: nowrap;
+        display: inline-block;
+        height: 40px;
+        line-height: 40px;
+        padding: 0 14px;
+        box-shadow: 0 4px 6px rgba(50, 50, 93, .11), 0 1px 3px rgba(0, 0, 0, .08);
+        border-radius: 4px;
+        font-size: 15px;
+        font-weight: 600;
+        letter-spacing: 0.025em;
+        text-decoration: none;
+        -webkit-transition: all 150ms ease;
+        transition: all 150ms ease;      
+        margin-left: 12px;
+        margin-top: 28px;
+    }
+</style>
 <script src="https://api.convergepay.com/hosted-payments/PayWithConverge.js"></script>
 <div>
     <!-- page wrapper start -->
     <div>
         <div class="container-fluid">
             <br class="clear"/>
-            <div class="row">                
-                <div class="col-xl-12">
-                  <?php include viewPath('flash'); ?>
+            <div class="row">
+                <div class="col-md-3"></div>
+                <div class="col-md-6">
                     <div class="card">
-                      <?php if($job){ ?>
-
-                        <div class="col-xl-5 left" style="margin-bottom: 33px;">
-                          <h5><span class="fa fa-user-o fa-margin-right"></span> From <span class="invoice-txt"> <?= $client->business_name; ?></span></h5>
-                          <div class="col-xl-5 ml-0 pl-0">
-                            <span class=""><?= $client->business_address; ?></span><br />
-                            <span class="">EMAIL: <?= $client->email_address; ?></span><br />
-                            <span class="">PHONE: <?= $client->phone_number; ?></span>
-                          </div>
+                        <div class="card-header">
+                            <div class="right-text">
+                                <p class="page-title " style="font-weight: 700;font-size: 16px;"><?=  $jobs_data->job_number;  ?> </p>
+                            </div>
+                            <hr>
                         </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-5">
+                                    <?php if($company_info->business_image != "" ): ?>
+                                        <img style="width: 100px" id="attachment-image" alt="Attachment" src="<?=  '/uploads/users/business_profile/'.$company_info->id.'/'.$company_info->business_image; ?> ">
+                                    <?php endif; ?>
+                                </div>
+                                <div class="col-md-3">
+                                    <table class="right-text">
+                                        <tbody>
+                                        <tr>
+                                            <td align="right" width="45%">Job Type :</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right" >Job Tags:</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right" >Date :</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right" >Priority :</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right" >Status :</td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="col-md-4">
+                                    <table class="right-text">
+                                        <tbody>
+                                        <tr>
+                                            <td align="right" width="65%"><?= $jobs_data->job_type;  ?></td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right" ><?= $jobs_data->name;  ?></td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right"><?= isset($jobs_data) ?  date('m/d/Y', strtotime($jobs_data->start_date)) : '';  ?></td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right" style="color: darkred;"><?=  $jobs_data->priority;  ?></td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right" style="font-weight: 600;"><?=  $jobs_data->status;  ?></td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                    <div class="col-md-6">
+                                        <br>
+                                        <h6 class="title-border">FROM :</h6>
+                                        <b><?= $company_info->business_name; ?></b><br>
+                                        <span><?= $company_info->street; ?></span><br>
+                                        <span><?= $company_info->city.', '.$company_info->state.' '.$company_info->postal_code ; ?></span><br>
+                                        <span> Phone: <?= $company_info->business_phone ; ?></span>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <br>
+                                        <h6 class="title-border">TO :</h6>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <b><?= $jobs_data->first_name.' '.$jobs_data->last_name; ?></b><br>
+                                                <span><?= $jobs_data->mail_add; ?></span><br>
+                                                <span><?= $jobs_data->cust_city.' '.$jobs_data->cust_state.' '.$jobs_data->cust_zip_code ; ?></span> <span class="fa fa-copy icon_preview"></span><br>
+                                                <span>Email: <?= $jobs_data->cust_email ; ?></span> <a href="mailto:<?= $jobs_data->cust_email ; ?>"><span class="fa fa-envelope icon_preview"></span></a><br>
+                                                <span>Phone:  </span>
+                                                <?php if($jobs_data->phone_h!="" || $jobs_data->phone_h!=NULL): ?>
+                                                    <?= $jobs_data->phone_h;  ?>
+                                                    <span class="fa fa-phone icon_preview"></span>
+                                                    <span class="fa fa-envelope-open-text icon_preview"></span>
+                                                <?php else : echo 'N/A';?>
+                                                <?php endif; ?>
+                                                <br>
+                                                <span>Mobile: </span>
+                                                <?php if($jobs_data->phone_m!="" || $jobs_data->phone_m!=NULL): ?>
+                                                    <?= $jobs_data->phone_h;  ?>
+                                                    <?= $jobs_data->phone_m;  ?>
+                                                    <span class="fa fa-phone icon_preview"></span>
+                                                    <span class="fa fa-envelope-open-text icon_preview"></span>
+                                                <?php else : echo 'N/A';?>
+                                                <?php endif; ?>
+                                                <br>
+                                            </div>
+                                        </div>
+                                    </div>
 
-                        <div class="col-xl-5 left">
-                          <h5><span class="fa fa-user-o fa-margin-right"></span> To <span class="invoice-txt"> <?= $customer->first_name . ' ' . $customer->last_name; ?></span></h5> 
-                          <div class="col-xl-5 ml-0 pl-0">
-                            <span class=""><?= $customer->mail_add . " " . $customer->city ?></span><br /><br />
-                            <span class="">EMAIL: <span class=""><?= $customer->email; ?></span></span><br />
-                            <span class="">PHONE: <span class=""><?= $customer->phone_w; ?></span></span><br />
-                          </div>
-                        </div>
+                                <div class="col-md-12">
+                                    <h6 class="title-border">JOB DETAILS :</h6>
+                                    <table class="table table-bordered">
+                                        <thead>
+                                        <tr>
+                                            <td>Items</td>
+                                            <td>Qty</td>
+                                            <td>Price</td>
+                                            <td>Total</td>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <?php
+                                        $subtotal = 0.00;
+                                        foreach ($jobs_data_items as $item):
+                                            $total = $item->price * $item->qty;
+                                            ?>
+                                            <tr>
+                                                <td><?= $item->title; ?></td>
+                                                <td><?= $item->qty; ?></td>
+                                                <td>$<?= $item->price; ?></td>
+                                                <td>$<?= number_format((float)$total,2,'.',','); ?></td>
+                                            </tr>
+                                            <?php
+                                            $subtotal = $subtotal + $total;
+                                        endforeach;
+                                        ?>
+                                        </tbody>
+                                    </table>
+                                    <hr>
+                                    <b>Sub Total</b>
+                                    <b class="right-text">$<?= number_format((float)$subtotal,2,'.',','); ?></b>
+                                    <br><hr>
 
-                         <div class="col-xl-5 left" style="margin-bottom: 33px;">
-                          <div class="col-xl-5 ml-0 pl-0">
-                            <span class="">JOB NUMBER: <?= $job->job_number; ?></span><br />                            
-                          </div>
-                        </div>
-                      
-                      <?php }else{ ?>
-                        <div class="alert alert-danger" role="alert">
-                          Invalid job number
-                        </div>
-                      <?php } ?>
+                                    <?php if($jobs_data->tax != NULL): ?>
+                                        <b>Tax </b>
+                                        <i class="right-text">$0.00</i>
+                                        <br><hr>
+                                    <?php endif; ?>
 
-                      <div>
-                        <span>Total : $400</span> 
-                        <input type="hidden" id="jobid" value="<?= $eid; ?>">               
-                        <input type="hidden" id="total_amount" value="400">            
-                        <br /><br />   
-                        <a class="btn btn-info btn-pay-converge" href="javascript:void(0);">PAY</a>
-                      </div>
-                  </div>
+                                    <?php if($jobs_data->discount != NULL): ?>
+                                        <b>Discount </b>
+                                        <i class="right-text">$0.00</i>
+                                        <br><hr>
+                                    <?php endif; ?>
+
+                                    <b>Grand Total</b>
+                                    <b class="right-text">$<?= number_format((float)$subtotal,2,'.',','); ?></b>
+                                </div>
+                                <div class="col-md-4">
+                                    <br>
+                                    <h6 class="title-border">NOTES :</h6>
+                                    <span><?=  $jobs_data->message; ?></span>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <br>
+                                    <h6 class="title-border">ASSIGNED TO :</h6>
+                                    <?php
+                                    $employee_date = get_employee_name($jobs_data->employee_id);
+                                    $shared1 = get_employee_name($jobs_data->employee2_id);
+                                    $shared2 = get_employee_name($jobs_data->employee3_id);
+                                    $shared3 = get_employee_name($jobs_data->employee4_id);
+                                    ?>
+                                    <span><?= $employee_date->FName; ?></span> <span class="fa fa-envelope-open-text icon_preview"></span><br>
+                                    <?php if(isset($shared1) && !empty($shared1) && $shared1!=NULL ): ?>
+                                        <span><?= $shared1->FName; ?></span> <span class="fa fa-envelope-open-text icon_preview"></span><br>
+                                    <?php endif; ?>
+                                    <?php if(isset($shared2) && !empty($shared2) && $shared2!=NULL ): ?>
+                                        <span><?= $shared2->FName; ?></span> <span class="fa fa-envelope-open-text icon_preview"></span><br>
+                                    <?php endif; ?>
+                                    <?php if(isset($shared3) && !empty($shared3) && $shared3!=NULL ): ?>
+                                        <span><?= $shared3->FName; ?></span> <span class="fa fa-envelope-open-text icon_preview"></span><br>
+                                    <?php endif; ?>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <br>
+                                    <h6 class="title-border">URL LINK :</h6>
+                                    <span><a style="color: darkred;" target="_blank" href="<?= $jobs_data->link; ?>"><?= $jobs_data->link; ?></a></span>
+                                </div>
+
+                                <div class="col-md-12">
+                                    <h6 class="title-border"></h6>
+                                    <span style="font-weight: 700;font-size: 20px;color: darkred;">Total : $<?= number_format((float)$subtotal,2,'.',','); ?></span>
+                                    <input type="hidden" id="jobid" value="<?= $jobs_data->job_unique_id; ?>">
+                                    <input type="hidden" id="total_amount" value="<?= $subtotal; ?>">
+                                    <br /><br />
+                                    <?php if($jobs_data->status != 'Completed'){ ?>
+                                        <?php echo form_open_multipart(null, ['class' => 'form-validate', 'id' => 'payment-job-invoice', 'autocomplete' => 'off']); ?>
+                                        <div class="payment-msg"></div>
+                                        <div class="payment-api-container">
+                                          <?php if($onlinePaymentAccount){ ?>
+                                            <?php if($onlinePaymentAccount->converge_merchant_user_id != '' && $onlinePaymentAccount->converge_merchant_pin != ''){ ?>
+                                              <a class="btn btn-primary btn-pay-converge btn-pay" href="javascript:void(0);">PAY VIA CONVERGE</a>
+                                            <?php } ?>
+                                            <?php if($onlinePaymentAccount->stripe_publish_key != '' && $onlinePaymentAccount->stripe_secret_key != ''){ ?>
+                                              <a class="btn btn-primary btn-pay-stripe btn-pay" href="javascript:void(0);">PAY VIA STRIPE</a>
+
+                                              <div class="stripe-form" style="display: none;">
+                                                <div class="col-md-12">
+                                                  <h4 class="font-weight-bold pl-0 my-4" style="font-size: 17px;"><strong>Stripe Payment Method</strong></h4>
+                                                    <div class="payment-method" style="display: block;margin-bottom: 16px;">
+                                                      <label>Total Amount : <b><span class="total-amount">$<?= number_format((float)$subtotal,2,'.',','); ?></span></b></label><br />
+                                                      <hr />
+                                                    </div>
+                                                  <div id="card-element"></div>                       
+                                                  <div id="card-errors" role="alert"></div>
+                                                  <button class="stripe-btn">Submit Payment</button>`
+                                                  <button type="button" class="stripe-cancel-btn margin-right">Cancel</button>
+                                                </div>
+                                              </div>
+                                            <?php } ?>
+                                          <?php } ?>
+                                        </div>
+                                        <?php echo form_close(); ?>
+                                    <?php } ?>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
                 </div>
-          </div>
-
+                <div class="col-md-3">
+                    <?php //include viewPath('flash'); ?>
+                </div>
+            </div>
       </div>
     </div>
         <!-- end container-fluid -->
@@ -64,6 +325,21 @@ defined('BASEPATH') or exit('No direct script access allowed');
 <?php include viewPath('includes/footer_pages'); ?>
 <script>
 $(function(){
+  function updateJobToPaid(){
+    var job_id = $("#jobid").val();
+    var url = base_url + '_update_job_status_paid';
+    $.ajax({
+       type: "POST",
+       url: url,
+       dataType: "json",
+       data: {job_id:job_id},
+       success: function(o)
+       {
+          $(".payment-api-container").hide();
+       }
+    });
+  }
+  //Converge payment
   $(".btn-pay-converge").click(function(){
     initiateLightbox();
   });
@@ -90,8 +366,9 @@ $(function(){
                   title: 'Cannot Process Payment',
                   text: o.msg
                 });
-                $(".btn-pay-converge").html('Pay');
               }
+
+              $(".btn-pay-converge").html('PAY VIA CONVERGE');
            }
         });
       }, 1000);
@@ -103,20 +380,134 @@ $(function(){
       };
       var callback = {
           onError: function (error) {
-              showResult("error", error);
+              //showResult("error", error);
+              Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: error
+              });
           },
           onCancelled: function () {
-                  showResult("cancelled", "");
+              //showResult("cancelled", "");
           },
           onDeclined: function (response) {
-              showResult("declined", JSON.stringify(response, null, '\t'));
+            Swal.fire({
+              icon: 'error',
+              title: 'Declined',
+              text: JSON.stringify(response, null, '\t')
+            });
+            //showResult("declined", JSON.stringify(response, null, '\t'));
           },
           onApproval: function (response) {
-              showResult("approval", JSON.stringify(response, null, '\t'));
+              Swal.fire({
+                icon: 'success',
+                title: 'Approval',
+                text: JSON.stringify(response, null, '\t')
+              });
+              updateJobToPaid();
+              //showResult("approval", JSON.stringify(response, null, '\t'));
           }
       };
       PayWithConverge.open(paymentFields, callback);
       return false;
   }
+  /*End Converge*/
+
+  //Stripe Payment
+  <?php if($onlinePaymentAccount->stripe_publish_key != '' && $onlinePaymentAccount->stripe_secret_key != ''){ ?>
+  $(".btn-pay-stripe").click(function(){
+    $(".payment-options").hide();
+    $(".form-footer-container").hide();
+    $(".btn-sms-purchase").html('Purchase');
+    $(".stripe-form").show();
+    $(".btn-pay").hide();
+  });
+  $(".stripe-cancel-btn").click(function(){
+    $(".payment-options").show();
+    $(".form-footer-container").show();      
+    $(".stripe-form").hide();
+    $(".btn-pay").show();
+  });
+  // Create a Stripe client.
+  var stripe = Stripe('<?= $onlinePaymentAccount->stripe_publish_key; ?>');
+
+  // Create an instance of Elements.
+  var elements = stripe.elements();
+
+  // Custom styling can be passed to options when creating an Element.
+  // (Note that this demo uses a wider set of styles than the guide below.)
+  var style = {
+    base: {
+      color: '#32325d',
+      fontFamily: '"Helvetica Neue", Helvetica, sans-serif',
+      fontSmoothing: 'antialiased',
+      fontSize: '16px',
+      '::placeholder': {
+        color: '#aab7c4'
+      }
+    },
+    invalid: {
+      color: '#fa755a',
+      iconColor: '#fa755a'
+    }
+  };
+
+  // Create an instance of the card Element.
+  var card = elements.create('card', {style: style});
+
+  // Add an instance of the card Element into the `card-element` <div>.
+  card.mount('#card-element');
+
+  // Handle real-time validation errors from the card Element.
+  card.on('change', function(event) {
+    var displayError = document.getElementById('card-errors');
+    if (event.error) {
+      displayError.textContent = event.error.message;
+    } else {
+      displayError.textContent = '';
+    }
+  });
+
+  // Handle form submission.
+  var form = document.getElementById('payment-job-invoice');
+  form.addEventListener('submit', function(event) {
+    event.preventDefault();
+    $(".stripe-btn").html('<span class="spinner-border spinner-border-sm m-0"></span>  Processing Payment');
+    stripe.createToken(card).then(function(result) {
+      if (result.error) {
+        // Inform the user if there was an error.
+        var errorElement = document.getElementById('card-errors');
+        errorElement.textContent = result.error.message;
+        $(".stripe-btn").html('Submit Payment');
+      } else {
+        // Send the token to your server.
+        stripeTokenHandler(result.token);
+      }
+    });
+  });
+
+  // Submit the form with the token ID.
+  function stripeTokenHandler(token) {
+    // Insert the token ID into the form so it gets submitted to the server
+    var form = document.getElementById('payment-job-invoice');
+    var hiddenInput = document.createElement('input');
+    hiddenInput.setAttribute('type', 'hidden');
+    hiddenInput.setAttribute('name', 'stripeToken');
+    hiddenInput.setAttribute('value', token.id);
+    form.appendChild(hiddenInput);
+
+    // Submit the form
+    stripeUpdateSmsPayment();
+    //form.submit();
+  }
+
+  function stripeUpdateSmsPayment(){
+    $(".payment-api-container").hide();
+    $(".payment-msg").html('<div class="alert alert-success">Payment process completed.</div>');
+    $(".stripe-btn").html('<span class="spinner-border spinner-border-sm m-0"></span>');
+    updateJobToPaid();
+  }
+  <?php } ?>
+  /*End Stripe Payment*/
 });
 </script>

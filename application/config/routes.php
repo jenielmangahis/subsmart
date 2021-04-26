@@ -231,6 +231,22 @@ $route['email_automation/ajax_set_default_template_edit'] = 'Email_Automation/aj
 $route['email_automation/ajax_set_place_holder'] = 'Email_Automation/ajax_set_place_holder';
 $route['email_automation/ajax_set_place_holder_edit'] = 'Email_Automation/ajax_set_place_holder_edit';
 
+$route['email_automation/add_email_automation'] = 'Email_Automation/add_email_automation';
+$route['email_automation/add_template'] = 'Email_Automation/add_template';
+$route['email_automation/save_template'] = 'Email_Automation/save_template';
+$route['email_automation/edit_template/(:num)'] = 'Email_Automation/edit_template/$1';
+$route['email_automation/update_template'] = 'Email_Automation/update_template';
+$route['email_automation/delete_template'] = 'Email_Automation/delete_template';
+$route['email_automation/_get_template_message'] = 'Email_Automation/ajax_get_template_message';
+$route['email_automation/create_email_automation'] = 'Email_Automation/ajax_create_email_automation';
+$route['email_automation/_generate_preview'] = 'Email_Automation/generate_preview';
+$route['email_automation/_load_automation_list'] = 'Email_Automation/ajax_load_automation_list';
+$route['email_automation/_update_automation_is_active'] = 'Email_Automation/ajax_update_automation_is_active';
+$route['email_automation/_delete_automation'] = 'Email_Automation/ajax_delete_automation';
+$route['email_automation/edit_automation'] = 'Email_Automation/edit_automation';
+$route['email_automation/edit_automation/(:any)?'] = 'Email_Automation/edit_automation/$1';
+$route['email_automation/_update_email_automation'] = 'Email_Automation/ajax_update_email_automation';
+
 $route['campaign_automation'] = 'Campaign_Automation';
 
 $route['terms-and-condition'] = 'pages/terms_and_condition';
@@ -279,6 +295,7 @@ $route['accounting/get-job-tag-modal'] = 'accounting_modals/job_tag_modal';
 $route['accounting/get-job-tag-form'] = 'accounting_modals/job_tag_form';
 $route['accounting/get-group-tag-form'] = 'accounting_modals/group_job_tag_form';
 $route['accounting/edit-group-tag-form'] = 'accounting_modals/edit_group_tag_form';
+$route['accounting/get-payroll-form/(:any)'] = 'accounting_modals/get_payroll_form/$1';
 $route['accounting/generate-payroll']['post'] = 'accounting_modals/generate_payroll';
 $route['accounting/get-customers']['post'] = 'accounting_modals/get_statement_customers';
 $route['accounting/get-recurring-form-fields/(:any)'] = 'accounting_modals/get_recurring_modal_fields/$1';
@@ -396,6 +413,26 @@ $route['accounting/employees/add-pay-schedule-form'] = 'accounting_controllers/e
 $route['accounting/employees/add-pay-schedule']['post'] = 'accounting_controllers/employees/add_pay_schedule';
 $route['accounting/employees/edit-pay-schedule/(:any)'] = 'accounting_controllers/employees/edit_pay_schedule/$1';
 $route['accounting/employees/update-pay-schedule/(:any)']['post'] = 'accounting_controllers/employees/update_pay_schedule/$1';
+$route['accounting/employees/get-pay-date/(:any)'] = 'accounting_controllers/employees/get_pay_date/$1';
+$route['accounting/employees/commission-only-payroll'] = 'accounting_controllers/employees/commission_only_modal';
+$route['accounting/employees/generate-commission-payroll']['post'] = 'accounting_controllers/employees/generate_commission_payroll';
+$route['accounting/employees/get-employee-pay-details/(:any)'] = 'accounting_controllers/employees/get_employee_pay_details/$1'; 
+$route['accounting/employees/bonus-only-payroll'] = 'accounting_controllers/employees/bonus_only_modal';
+$route['accounting/employees/bonus-only-payroll-form/(:any)'] = 'accounting_controllers/employees/bonus_only_form/$1';
+$route['accounting/employees/generate-bonus-payroll/(:any)']['post'] = 'accounting_controllers/employees/generate_bonus_payroll/$1';
+
+$route['accounting/contractors'] = 'accounting_controllers/contractors/index';
+$route['accounting/contractors/load']['post'] = 'accounting_controllers/contractors/load_contractors';
+$route['accounting/contractors/add']['post'] = 'accounting_controllers/contractors/add';
+$route['accounting/contractors/view/(:any)'] = 'accounting_controllers/contractors/view/$1';
+$route['accounting/contractors/(:any)/update-details']['post'] = 'accounting_controllers/contractors/update_details/$1';
+$route['accounting/contractors/set-status/(:any)/(:any)'] = 'accounting_controllers/contractors/set_status/$1/$2';
+$route['accounting/contractors/(:any)/load-payments']['post'] = 'accounting_controllers/contractors/load_contractor_payments/$1';
+$route['accounting/contractors/(:any)/get-payments-total']['post'] = 'accounting_controllers/contractors/get_payments_total/$1';
+
+$route['accounting/vendors'] = 'accounting_controllers/vendors/index';
+$route['accounting/vendors/load']['post'] = 'accounting_controllers/vendors/load_vendors'; 
+$route['accounting/vendors/add']['post'] = 'accounting_controllers/vendors/add'; 
 
 $route['accounting/vendor-details/(:any)'] = 'accounting/vendordetails/$1';
 $route['accounting/taxes/edit-settings'] = 'taxes/edit_settings';
@@ -581,6 +618,18 @@ $route['email_campaigns/save_draft_campaign'] = 'Email_Campaigns/create_draft_ca
 $route['email_campaigns/add_campaign_send_to'] = 'Email_Campaigns/add_campaign_send_to';
 $route['email_campaigns/create_campaign_send_to'] = 'Email_Campaigns/create_campaign_send_to';
 $route['email_campaigns/build_email'] = 'Email_Campaigns/build_email';
+$route['email_campaigns/create_email_message'] = 'Email_Campaigns/create_email_message';
+$route['email_campaigns/preview_email_message'] = 'Email_Campaigns/preview_email_message';
+$route['email_campaigns/create_send_schedule'] = 'Email_Campaigns/create_send_schedule';
+$route['email_campaigns/payment'] = 'Email_Campaigns/payment';
+$route['email_campaigns/_generate_preview'] = 'Email_Campaigns/generate_preview';
+$route['email_campaigns/activate_automation'] = 'Email_Campaigns/activate_automation';
+$route['email_campaigns/_load_campaigns/(:any)'] = 'Email_Campaigns/ajax_load_campaigns/$1';
+$route['email_campaigns/_load_email_campaign_counter'] = 'Email_Campaigns/ajax_load_email_campaign_counter';
+$route['email_campaigns/edit_campaign/(:num)'] = 'Email_Campaigns/edit_email_campaign/$1';
+$route['email_campaigns/_clone_campaign'] = 'Email_Campaigns/ajax_clone_campaign';
+$route['email_campaigns/_close_campaign'] = 'Email_Campaigns/ajax_close_campaign';
+
 
 //offers
 $route['offers/add_offer'] = 'Offers/add_offer';
@@ -759,6 +808,7 @@ $route['users/update_profile_setting'] = 'Users/update_profile_setting';
 //Job Front View
 $route['job_invoice_view/(:any)'] = 'Pages/job_customer_invoice_view/$1';
 $route['_converge_request_token'] = 'Pages/converge_token_request';
+$route['_update_job_status_paid'] = 'Pages/update_job_status_paid';
 
 //Job Checklists
 $route['job_checklists/list'] = 'Job_Checklists/index';

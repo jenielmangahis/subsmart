@@ -411,6 +411,11 @@ a.top-1 {
     height: 400px;
     overflow-x: hidden;
   }
+  .fc-event-main{
+      white-space: nowrap !important;
+      min-height:34px !important;
+      overflow:hidden;
+  }
 </style>
 <div class="wrapper" role="wrapper">
     <div class="row">
@@ -556,7 +561,7 @@ a.top-1 {
 
 
                               <div class="row cus-dashboard-div">
-                                <div class="col-widget" id="widget_3">
+                                  <!--<div class="col-widget" id="widget_3">
                                   <div style="width: 300px; border: 1px solid #58c04e; background: #58c04e; color:white;  border-radius: 10px; text-align: center;padding: 5px;position: relative;margin: 0 auto;top: 21px;z-index: 1000;">
                                      <i class="fa fa-calendar" aria-hidden="true"></i> Upcoming Jobs
                                   </div>
@@ -569,7 +574,7 @@ a.top-1 {
                                             <div class="row d-lg-flex">
                                                 <div class="col-md-12">
                                                     <div class="cus-dashboard-div">
-                                                        <div id="upcoming-jobs-container"></div>
+
                                                     </div>
                                                 </div>
                                             </div>
@@ -581,35 +586,57 @@ a.top-1 {
                                       </div>
                                     </div>
                                 </div>
-                              </div>
-
-                              <div class="col-widget" id="widget_3">
-                                <div style="width: 300px; border: 1px solid #58c04e; background: #58c04e; color:white;  border-radius: 10px; text-align: center;padding: 5px;position: relative;margin: 0 auto;top: 21px;z-index: 1000;">
-                                   <i class="fa fa-paper-plane" aria-hidden="true"></i> Upcoming Events
-                                </div>
-
-                                <div class="card" style="border: 2px solid #30233d; margin-top:0; border-radius: 40px; padding:5px;">
-                                  <div style="border: 5px solid #30233d; margin-top:0; border-radius: 40px; box-shadow: 1px 0px 15px 5px rgb(48, 35, 61);">
-                                    <div class="card-body mt-3" style="padding:5px 10px; height: 300px;">
-                                      <div style="height: 280px;">
-                                        <div class="mb-2 col-lg-12 float-left jobsRow" style="padding-bottom: 5px; cursor: pointer;height:250px;">
-                                          <div class="row d-lg-flex">
-                                              <div class="col-md-12">
-                                                  <div class="cus-dashboard-div">
-                                                      <div id="upcoming-events-container"></div>
+                              </div>-->
+                                  <!--<div class="col-widget" id="widget_3">
+                                    <div style="width: 300px; border: 1px solid #58c04e; background: #58c04e; color:white;  border-radius: 10px; text-align: center;padding: 5px;position: relative;margin: 0 auto;top: 21px;z-index: 1000;">
+                                       <i class="fa fa-paper-plane" aria-hidden="true"></i> Upcoming Events
+                                    </div>
+                                    <div class="card" style="border: 2px solid #30233d; margin-top:0; border-radius: 40px; padding:5px;">
+                                      <div style="border: 5px solid #30233d; margin-top:0; border-radius: 40px; box-shadow: 1px 0px 15px 5px rgb(48, 35, 61);">
+                                        <div class="card-body mt-3" style="padding:5px 10px; height: 300px;">
+                                          <div style="height: 280px;">
+                                            <div class="mb-2 col-lg-12 float-left jobsRow" style="padding-bottom: 5px; cursor: pointer;height:250px;">
+                                              <div class="row d-lg-flex">
+                                                  <div class="col-md-12">
+                                                      <div class="cus-dashboard-div">
+                                                      </div>
                                                   </div>
                                               </div>
+                                            </div>
                                           </div>
                                         </div>
-                                        <div class="text-center">
-                                            <a class="text-info" href="<?= base_url()?>events">SEE ALL EVENTS</a>
-                                        </div>
                                       </div>
-                                    </div>
                                   </div>
-                              </div>
+                                </div>-->
                             </div>
-                            </div>
+                                <div class="calendar-menu" style="text-align: left;">
+                                    <div style="background: #f2f2f2; padding: 20px;">
+                                        <div class="margin-bottom">
+                                            <div>
+                                                <a class="text-right" style="position: absolute;text-align: right;right: 50px;color: #ffffff;margin-top: 5px;" href="<?= base_url()?>job">SEE ALL JOBS</a>
+                                                <h3 class="left-header">
+                                                    <i class="fa fa-calendar"></i> Upcoming Jobs
+                                                </h3>
+
+                                            </div>
+                                            <div id="upcoming-jobs-container"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="calendar-menu" style="text-align: left;">
+                                    <div style="background: #f2f2f2; padding: 20px;">
+                                        <div class="margin-bottom">
+                                            <div>
+                                                <a class="text-right" style="position: absolute;text-align: right;right: 50px;color: #ffffff;margin-top: 5px;" href="<?= base_url()?>events">SEE ALL EVENTS</a>
+                                                <h3 class="left-header">
+                                                    <i class="fa fa-calendar"></i> Upcoming Events
+                                                </h3>
+
+                                            </div>
+                                            <div id="upcoming-events-container"></div>
+                                        </div>
+                                    </div>
+                                </div>
 
                               <div class="calendar-menu" style="text-align: left;">
                                   <div style="background: #f2f2f2; padding: 20px;">
@@ -927,7 +954,7 @@ a.top-1 {
 
 <!-- MODAL EVENT DETAILS -->
 <div id="modalEventDetails" class="modal fade" role="dialog" style="">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-md">
 
         <!-- Modal content-->
         <div class="modal-content">
@@ -935,12 +962,12 @@ a.top-1 {
                 <h4 style="" class="modal-title">Schedule</h4>
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
-            <div class="modal-body">
+            <div class="modal-body" style="padding-top: 0px; padding-bottom: 2px;">
                 <p>loading...</p>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-danger btn-event-delete" id="delete_schedule">Delete</button>
+                <button type="button" class="btn btn-danger btn-event-delete" id="delete_schedule" style="display: none">Delete</button>
                 <button type="button" class="btn btn-primary btn-event-edit" id="edit_schedule" style="display: none">Edit Schedule
                 </button>
                 <!-- <button type="button" class="btn btn-primary btn-event-edit-workorder" id="edit_workorder" style="display: none">Edit Wordorder
@@ -1195,6 +1222,7 @@ a.top-1 {
               buttonText: 'List'
             }
           },
+          slotEventOverlap: false,
           resourceLabelDidMount: function(info) {
             console.log(info);
             let img = document.createElement('img');
@@ -1236,18 +1264,22 @@ a.top-1 {
 
                     $("#edit_schedule").attr('data-event-id', arg.event._def.extendedProps.eventId);*/
                 }else if( typeof arg.event._def.extendedProps.geventID != 'undefined' ){
-                  $("#modalEventDetails").modal('show');
+                  window.open(
+                    arg.event._def.extendedProps.googleCalendarLink,
+                    '_blank' // <- This is what makes it open in a new window.
+                  );
+                 /* $("#modalEventDetails").modal('show');
                   $('#modalEventDetails .modal-body').html("loading...");
 
                     apiUrl = base_url + 'workcalender/modal_gevent_details';
                     isGet = 0;
                     var gData = {
                       'gevent_id' : arg.event._def.extendedProps.geventID,
-                      'title' : arg.event._def.extendedProps.description,
+                      'title' : arg.event._def.extendedProps.customHtml,
                       'start_date' : arg.event._def.extendedProps.start,
                       'end_date' : arg.event._def.extendedProps.end,
-                    };
-                } else {
+                    };*/
+                } /*else {
 
                     apiUrl = base_url + 'workcalender/short_details/' + arg.event._def.extendedProps.wordOrderId;
 
@@ -1255,9 +1287,9 @@ a.top-1 {
                     //$("#edit_workorder").show();
 
                     //$("#edit_workorder").attr('data-workorder-id', arg.event._def.extendedProps.wordOrderId);
-                }
+                }*/
 
-                if( isGet == 1 ){
+                /*if( isGet == 1 ){
                   jQuery.ajax({
                       url: apiUrl,
                       // dataType: 'json',
@@ -1291,7 +1323,7 @@ a.top-1 {
                           $("#modalEventDetails").find('.modal-body').html(response);
                       }
                   });
-                }
+                }*/
 
             },
             loading: function (isLoading) {
@@ -1314,7 +1346,8 @@ a.top-1 {
               url: bc_events_url,
               method: 'POST'
 
-            }
+            },
+            eventOrder: ["starttime"]
             //events: <?php echo json_encode($resources_user_events); ?>,
 
         });

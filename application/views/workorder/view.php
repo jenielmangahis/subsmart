@@ -2,6 +2,132 @@
 defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
 <?php include viewPath('includes/header'); ?>
+<style>
+/* common */
+.ribbon {
+  width: 150px;
+  height: 150px;
+  overflow: hidden;
+  position: absolute;
+}
+.ribbon::before,
+.ribbon::after {
+  position: absolute;
+  z-index: -1;
+  content: '';
+  display: block;
+  border: 5px solid #2980b9;
+}
+.ribbon span {
+  position: absolute;
+  display: block;
+  width: 225px;
+  padding: 15px 0;
+  background-color: #3498db;
+  box-shadow: 0 5px 10px rgba(0,0,0,.1);
+  color: #fff;
+  font: 700 18px/1 'Lato', sans-serif;
+  text-shadow: 0 1px 1px rgba(0,0,0,.2);
+  text-transform: uppercase;
+  text-align: center;
+}
+
+/* top left*/
+.ribbon-top-left {
+  top: -10px;
+  left: -10px;
+}
+.ribbon-top-left::before,
+.ribbon-top-left::after {
+  border-top-color: transparent;
+  border-left-color: transparent;
+}
+.ribbon-top-left::before {
+  top: 0;
+  right: 0;
+}
+.ribbon-top-left::after {
+  bottom: 0;
+  left: 0;
+}
+.ribbon-top-left span {
+  right: -25px;
+  top: 30px;
+  transform: rotate(-45deg);
+}
+
+/* top right*/
+.ribbon-top-right {
+  top: -10px;
+  right: -10px;
+}
+.ribbon-top-right::before,
+.ribbon-top-right::after {
+  border-top-color: transparent;
+  border-right-color: transparent;
+}
+.ribbon-top-right::before {
+  top: 0;
+  left: 0;
+}
+.ribbon-top-right::after {
+  bottom: 0;
+  right: 0;
+}
+.ribbon-top-right span {
+  left: -25px;
+  top: 30px;
+  transform: rotate(45deg);
+}
+
+/* bottom left*/
+.ribbon-bottom-left {
+  bottom: -10px;
+  left: -10px;
+}
+.ribbon-bottom-left::before,
+.ribbon-bottom-left::after {
+  border-bottom-color: transparent;
+  border-left-color: transparent;
+}
+.ribbon-bottom-left::before {
+  bottom: 0;
+  right: 0;
+}
+.ribbon-bottom-left::after {
+  top: 0;
+  left: 0;
+}
+.ribbon-bottom-left span {
+  right: -25px;
+  bottom: 30px;
+  transform: rotate(225deg);
+}
+
+/* bottom right*/
+.ribbon-bottom-right {
+  bottom: -10px;
+  right: -10px;
+}
+.ribbon-bottom-right::before,
+.ribbon-bottom-right::after {
+  border-bottom-color: transparent;
+  border-right-color: transparent;
+}
+.ribbon-bottom-right::before {
+  bottom: 0;
+  left: 0;
+}
+.ribbon-bottom-right::after {
+  top: 0;
+  right: 0;
+}
+.ribbon-bottom-right span {
+  left: -25px;
+  bottom: 30px;
+  transform: rotate(-225deg);
+}
+</style>
     <!-- page wrapper start -->
      
 	<div class="wrapper" role="wrapper">
@@ -9,14 +135,14 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     <div wrapper__section>
         <?php include viewPath('includes/notifications'); ?>
 				<div class="order-heading">
-					<h1>Work Order #WO-00396</h1>
+					<h3>Work Order # <?php echo $workorder->workorder_number ?></h3>
 				</div>
 
 				<div class="order-menu">
 					<div class="row">
 						<div class="col-md-4">
 										<div class="user-return">
-											<a href=""><i class="fa fa-angle-left" aria-hidden="true"></i> Return to Work Orders</a>
+											<a href="<?php echo base_url('workorder'); ?>"><i class="fa fa-angle-left" aria-hidden="true"></i> Return to Work Orders</a>
 										</div>
 						</div>
 						<div class="col-md-8">
@@ -52,63 +178,84 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 				</div>
 
 
-			<div class="row">
+			<div class="row" style="padding:1%;">
 				<div class="col-md-8">
-					<div role="white__holder">
+					<div role="white__holder" style="background-color:;padding:5%;border:solid #F4F2F6 3px;box-shadow: 10px 5px 5px #DEDEDE;">
+					<div class="ribbon ribbon-top-left"><span><?php echo $workorder->status ?></span></div>
 							<div class="workorder-inner">
 								<div clas="row">
 										<div class="col-sm-12 col-sm-push-12 text-right-sm ">
-
-										
-														<div class="workorder-text" style="margin-top: 10px; margin-bottom: 20px;">
-											                <span class="presenter-title">WORK ORDER</span><br>
-											                <span># WO-00396</span>
-											            </div>	
-											            <div class="workord-table">
-															<table class="presenter-info margin-bottom">
-												                <tbody>
-												                    <tr>
-												                        <td><div style="margin-right: 20px;">Date:</div></td>
-												                        <td class="text-right-sm">Mar 12, 2020</td>
-												                    </tr>
-												                                        <tr>
-												                        <td><div style="margin-right: 20px;">Type:</div></td>
-												                        <td class="text-right-sm">Service</td>
-												                    </tr>
-												                                                            <tr>
-												                        <td><div style="margin-right: 20px;">Priority:</div></td>
-												                        <td class="text-right-sm">Standard</td>
-												                    </tr>
-												                </tbody>
-												            </table>
-
-											            </div>
-											
-									</div>
-									<div class="col-sm-12 col-sm-pull-12">
+										<div class="row">
+											<div class="col-md-6">
 												<div style="margin-bottom: 20px;">
-		                							<img class="presenter-print-logo" style="max-width: 230px; max-height: 200px;" src="http://nsmartrac.com/assets/dashboard/images/logo.png">
-		         							   </div>
+													<img class="presenter-print-logo" style="max-width: 230px; max-height: 200px;" src="http://nsmartrac.com/assets/dashboard/images/logo.png">
+												</div>
+											</div>
+											<div class="col-md-6">
+											<div class="workorder-text" style="margin-top: 10px; margin-bottom: 20px;">
+											    <span class="presenter-title">WORK ORDER</span><br>
+											    
+												<!-- </div>	-->
+												<div align="right"> 
+													<table>
+														<tbody>
+														<tr>
+															<td colspan="2"><span># <?php echo $workorder->work_order_number ?></span></td>
+														</tr>
+														<tr>
+															<td align="left"><div style="margin-right: 10px;">Date:</div></td>
+															<td align="left"><?php echo $workorder->date_created ?></td>
+														</tr>
+														<tr>
+															<td align="left"><div style="margin-right: 10px;">Type:</div></td>
+															<td align="left"><?php echo $workorder->job_type ?></td>
+														</tr>
+															<td align="left"><div style="margin-right: 10px;">Priority:</div></td>
+															<td align="left"><?php echo $workorder->priority ?></td>
+														</tr>
+														</tbody>
+													</table>
+												</div>
+											</div>
+											</div>
+
+											
+										</div>
+											
+										</div>
+									<!-- <div class="row">
+										<div class="col-md-6">
+											<div style="margin-bottom: 20px;">
+												<img class="presenter-print-logo" style="max-width: 230px; max-height: 200px;" src="http://nsmartrac.com/assets/dashboard/images/logo.png">
+											</div>
+										</div>
+										<div class="col-md-6">
+											
+										</div>
+									</div> -->
+									<div class="col-sm-12 col-sm-pull-12">
 
 		         							   <div class="user-info">
 		         							   		<div class="ul-info">
 		         							   			<ul>
 		         							   				<li><a href="" class="ul-head"> FROM:</a></li>
-		         							   				<li><a href="" class="ul-head">ADi</a></li>
+		         							   				<li><a href="" class="ul-head"><?php echo $company->business_name ?></a></li>
 		         							   				<li><a href="" class="ul-text">License: EF, AL, MS</a></li>
-		         							   				<li><a href="" class="ul-text">6866 Pine Forest Road</a></li>
-		         							   				<li><a href="" class="ul-text">Pensacola, FL, 32526</a></li>
-		         							   				<li><a href="" class="ul-text">Email: moresecureadi@gmail.com</a></li>
-		         							   				<li><a href="" class="ul-text">Phone: (850) 478-0530 </a></li>			   			
+		         							   				<li><a href="" class="ul-text"><?php echo $company->business_address ?></a></li>
+		         							   				<!-- <li><a href="" class="ul-text">Pensacola, FL, 32526</a></li> -->
+		         							   				<li><a href="" class="ul-text">Email: <?php echo $company->email_address ?></a></li>
+		         							   				<li><a href="" class="ul-text">Phone: <?php echo $company->phone_number ?> </a></li>			   			
 		         							   			</ul>
-		         							   		</div>
+		         							   		</div><br>
 		         							   		<div class="ul-info">
 		         							   			<ul>
 		         							   				<li><a href="" class="ul-head">Customer:</a></li>
-		         							   				<li><span class="ul-head line">Test customer</span><a href="" class="line ul-btns-text">view</a></li>
+		         							   				<li><span class="ul-head line"><?php echo $customer->contact_name .''. $customer->first_name .' '. $customer->middle_name .' '. $customer->last_name ?></span><a href="" class="line ul-btns-text" style="color:green;">view</a></li>
+															<li><a href="" class="ul-text"><?php echo $customer->mail_add .' '. $customer->city .' '. $customer->state .', '. $customer->country .', '. $customer->zip_code ?></a></li>
+															<li><a href="" class="ul-text">Phone: <?php echo $customer->phone_h ?></a></li>
 		         							   			
 		         							   			</ul>
-		         							   		</div>
+		         							   		</div><br>
 
 		         							   		<div class="ul-info">
 		         							   			<ul>
@@ -119,24 +266,24 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 		         							   			</ul>
 		         							   		</div>
 
-		         							   		<div class="ul-info">
+		         							   		<!-- <div class="ul-info">
 		         							   			<ul>
 		         							   				<li><a href="" class="ul-head">Appointment:</a></li>
 		         							   		
 		         							   				<li><a href="" class="ul-text">Not set </a></li>	
 		         							   			
 		         							   			</ul>
-		         							   		</div>
+		         							   		</div> --><br>
 		         							   			<div class="ul-info">
 			         							   			<ul>
-			         							   				<li><a href="" class="ul-head">Location:</a></li>
-			         							   		
-			         							   				<li><a href="" class="ul-btns">Show Map</a></li>	
+			         							   				<li><a href="#" class="ul-head">Location </a></li>
+																<li><?php echo $workorder->job_location .' '. $workorder->city .' '. $workorder->state .', '. $workorder->zip_code .', '. $workorder->cross_street  ?> &emsp; <a href="#" style="color:green;">Show Map</a></li>	
+			         							   				<!-- <li></li>	 -->
 			         							   			
 			         							   			</ul>
 		         							   			</div>
 
-		         							   </div>
+		         							   </div><br><br>
 		         							   <!--  user info end-->
 
 		         							   <div class="table-inner">
@@ -153,19 +300,23 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 											                </tr>
 											            </thead>
 													            <tbody>
+																<?php foreach($items as $item){ ?>
 													                <tr class="table-items__tr">
-													                    <td style="width: 30px; text-align: center;" valign="top">  1 </td>
-													                    <td valign="top"> 4 Buttons Remote   </td>
-													                    <td style="width: 50px; text-align: right;" valign="top"> 1  </td>
+													                    <td style="width: 30px; text-align: center;" valign="top">  # </td>
+													                    <td valign="top"> <?php echo $item->item ?>   </td>
+													                    <td style="width: 50px; text-align: right;" valign="top"> <?php echo $item->qty ?>  </td>
+													                    <td style="width: 80px; text-align: right;" valign="top">$<?php echo $item->cost ?></td>
 													                    <td style="width: 80px; text-align: right;" valign="top">
-													                        $159.00       </td>
+													                        <!-- $99.99<br>(62.89%)                     -->
+																			$<?php echo $item->discount ?>
+																			</td>
 													                    <td style="width: 80px; text-align: right;" valign="top">
-													                        $99.99<br>(62.89%)                    </td>
-													                    <td style="width: 80px; text-align: right;" valign="top">
-													                        $4.43<br>(7.5%)                    </td>
-													                    <td style="width: 90px; padding: 8px 8px 8px 0; text-align: right;" valign="top">
-													                        $63.44                    </td>
+													                        <!-- $4.43<br>(7.5%)                     -->
+																			$<?php echo $item->tax ?>
+																			</td>
+													                    <td style="width: 90px; padding: 8px 8px 8px 0; text-align: right;" valign="top">$<?php echo $item->total ?></td>
 													                </tr>
+																	<?php } ?>
 													                <tr class="table-items__tr-last">
 													                    <td></td>
 													                    <td colspan="6"></td>
@@ -189,11 +340,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 													                        <tbody>
 													                            <tr>
 													                                <td style="padding: 8px 0; text-align: right; border-bottom: 1px solid #eaeaea;" class="text-right">Subtotal</td>
-													                                <td style="padding: 8px 8px 8px 0; text-align: right; border-bottom: 1px solid #eaeaea;" class="text-right">$63.44</td>
+													                                <td style="padding: 8px 8px 8px 0; text-align: right; border-bottom: 1px solid #eaeaea;" class="text-right">$<?php echo $workorder->subtotal ?></td>
 													                            </tr>
 													                                                        <tr>
 													                                <td style="padding: 8px 0; text-align: right; background: #f4f4f4;" class="text-right"><b>Grand Total ($)</b></td>
-													                                <td style="width: 90px; padding: 8px 8px 8px 0; text-align: right; background: #f4f4f4;" class="text-right"><b>$63.44</b></td>
+													                                <td style="width: 90px; padding: 8px 8px 8px 0; text-align: right; background: #f4f4f4;" class="text-right"><b>$<?php echo $workorder->grand_total ?></b></td>
 													                            </tr>
 													                          </tbody>
 													                    </table>
@@ -317,6 +468,22 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 					
 				</div>
 			</div>
+
+			<div class="row" style="padding:1%;">
+				<div class="col-md-6">
+					<h6>Location on Map</h6>
+					<hr>
+					<!-- aaa<div id="googleMap"></div> -->
+					<div class="mapouter"><div class="gmap_canvas"><iframe width="100%" height="500" id="gmap_canvas" src="https://maps.google.com/maps?q=2880%20Broadway,%20New%20York&t=&z=13&ie=UTF8&iwloc=&output=embed" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"></iframe><a href="https://123movies-to.org"></a><br><style>.mapouter{position:relative;text-align:right;height:500px;width:600px;}</style><a href="https://www.embedgooglemap.net"></a><style>.gmap_canvas {overflow:hidden;background:none!important;height:500px;width:600px;}</style></div></div>
+				</div>
+			</div>
+			<br>
+			<div class="row">
+				<div class="col-md-4">
+					<div class="user-return">
+						<a href="<?php echo base_url('workorder'); ?>"><i class="fa fa-angle-left" aria-hidden="true"></i> Return to Work Orders</a>
+				</div>
+			</div>
 		</div>
 	</div>
 	 
@@ -345,4 +512,22 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     </div> 
 </div>
 <?php include viewPath('includes/footer'); ?>
-  
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<!-- <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&callback=initialize"></script>
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBg27wLl6BoSPmchyTRgvWuGHQhUUHE5AU&callback=initialize&libraries=&v=weekly"></script> -->
+<!-- <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBg27wLl6BoSPmchyTRgvWuGHQhUUHE5AU&libraries=places"></script> -->
+<!-- <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBg27wLl6BoSPmchyTRgvWuGHQhUUHE5AU&callback=myMap"></script> -->
+<script
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBg27wLl6BoSPmchyTRgvWuGHQhUUHE5AU&callback=initMap&libraries=&v=weekly"
+      async
+    ></script>
+<script>
+let map;
+
+function initMap() {
+  map = new google.maps.Map(document.getElementById("googleMap"), {
+	center: { lat: -34.397, lng: 150.644 },
+	zoom: 8,
+  });
+}
+</script>

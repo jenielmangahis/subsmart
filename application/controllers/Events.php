@@ -47,7 +47,7 @@ class Events extends MY_Controller
             'where' => array(
                 'company_id' => $comp_id
             ),
-            'table' => 'event_setting',
+            'table' => 'event_settings',
             'select' => 'id',
         );
         $event_settings = $this->general->get_data_with_param($get_event_settings);
@@ -58,7 +58,7 @@ class Events extends MY_Controller
                 'event_next_num' => 1,
                 'company_id' => $comp_id,
             );
-            $this->general->add_($event_settings_data, 'event_setting');
+            $this->general->add_($event_settings_data, 'event_settings');
         }
 
         // get all job tags
@@ -100,6 +100,9 @@ class Events extends MY_Controller
         $this->page_data['color_settings'] = $this->general->get_data_with_param($get_color_settings);
 
         $get_job_types = array(
+            'where' => array(
+                'company_id' => logged('company_id')
+            ),
             'table' => 'event_types',
             'select' => 'id,title',
             'order' => array(
@@ -134,7 +137,8 @@ class Events extends MY_Controller
 
         if(!$id==NULL){
             $this->page_data['jobs_data'] = $this->event_model->get_specific_event($id);
-            $this->page_data['jobs_data_items'] = $this->event_model->get_specific_event_items($id);
+            $this->page_data['event_items'] = $this->event_model->get_specific_event_items($id);
+            //print_r($this->page_data['jobs_data_items'] );
         }
 
         $this->load->view('events/event_new', $this->page_data);
@@ -194,12 +198,14 @@ class Events extends MY_Controller
 
         $get_company_info = array(
             'where' => array(
-                'id' => logged('company_id'),
+                'company_id' => logged('company_id'),
             ),
             'table' => 'business_profile',
-            'select' => 'business_phone,business_name,business_logo,business_email,street,city,postal_code,state',
+            'select' => 'id,business_phone,business_name,business_logo,business_email,street,city,postal_code,state,business_image',
         );
         $this->page_data['company_info'] = $this->general->get_data_with_param($get_company_info,FALSE);
+
+        echo logged('company_id');
 
         // get items
         $get_items = array(
@@ -241,9 +247,10 @@ class Events extends MY_Controller
             'select' => 'id,invoice_number,date_issued,job_name,customer_id',
         );
         $this->page_data['invoices'] = $this->general->get_data_with_param($get_invoices);
-        if(!$id==NULL){
+        if($id!=NULL){
             $this->page_data['jobs_data'] = $this->event_model->get_specific_event($id);
-            $this->page_data['jobs_data_items'] = $this->event_model->get_specific_event_items($id);
+            $this->page_data['event_items'] = $this->event_model->get_specific_event_items($id);
+            print_r($this->page_data['event_items']);
         }
         $this->load->view('events/event_preview', $this->page_data);
     }
@@ -501,15 +508,11 @@ class Events extends MY_Controller
             'where' => array(
                 'company_id' => $comp_id
             ),
-            'table' => 'event_setting',
+            'table' => 'event_settings',
             'select' => '*',
-            'limit' => 1,
-            'order' => array(
-                'order_by' => 'id'
-            ),
         );
         $event_settings = $this->general->get_data_with_param($get_event_settings);
-        $event_number = $event_settings[0]->event_prefix.'-000'.$event_settings[0]->event_next_num;
+        $event_number = $event_settings[0]->event_prefix.' - #000000'.$event_settings[0]->event_next_num;
 
         $events_data = array(
             'event_number' => $event_number,
@@ -526,12 +529,13 @@ class Events extends MY_Controller
             'customer_reminder_notification' => $input['customer_reminder_notification'],
             'url_link' => $input['link'],
             'event_address' => $input['event_address'],
-            'status' => 1,//$this->input->post('job_status'),
+            'status' => 'Scheduled',//$this->input->post('job_status'),
             'description' => $input['message'],
             'created_by' => $input['created_by'],
             'company_id' => $comp_id,
-            //'date_created' => date('Y-m-d H:i:s'),
-            'notes' => $input['notes'],
+            //'date_issued' => date('Y-m-d'),
+            'notes' => $input['message'],
+            'amount' => $input['total_event_amount'],
             //'tax_rate' => $input['tax_rate'],
         );
         $event_id = $this->general->add_return_id($events_data, 'events');
@@ -547,13 +551,10 @@ class Events extends MY_Controller
                 unset($events_items_data);
             }
         }
-
         $event_settings_data = array(
-            'event_prefix' => 'EVENT',
             'event_next_num' => $event_settings[0]->event_next_num + 1,
-            'company_id' => $comp_id,
         );
-        $this->general->add_($event_settings_data, 'event_setting');
+        $this->general->update_with_key($event_settings_data,$event_settings[0]->id, 'event_settings');
 
         echo $event_id;
     }

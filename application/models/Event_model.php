@@ -38,8 +38,8 @@ class Event_model extends MY_Model
 
     public function get_specific_event_items($id)
     {
-        $this->db->from($this->table_items);
-        $this->db->select('items.title,items.price,event_items.qty');
+        $this->db->select('items.title,items.price,event_items.qty,event_items.event_id');
+        $this->db->from('event_items');
         $this->db->join('items', 'items.id = event_items.items_id','left');
         $this->db->where("event_items.event_id", $id);
         $query = $this->db->get();

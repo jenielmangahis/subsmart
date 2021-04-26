@@ -103,6 +103,7 @@ function occupyFields(rowData, type, action = 'edit')
 	$(`#${type}-form-modal #name`).val(name);
 	$(`#${type}-form-modal #sku`).val(rowData.sku);
 	$(`#${type}-form-modal #category`).val(rowData.category_id);
+	$(`#${type}-form-modal #rebate-item`).prop('checked', rowData.rebate === '1');
 	$(`#${type}-form-modal #reorderPoint`).val(rowData.reorder_point);
 	$(`#${type}-form-modal #description`).val(rowData.sales_desc);
 	$(`#${type}-form-modal #price`).val(rowData.sales_price);

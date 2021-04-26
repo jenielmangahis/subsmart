@@ -29,7 +29,7 @@
                                         <a role="menuitem" tabindex="-1" href="<?php echo base_url('sms_automation/edit_automation/' . $s->id) ?>"><span class="fa fa-pencil icon"></span> Edit</a>
                                     </li> 
                                     <li role="presentation">
-                                        <a role="menuitem" class="delete-sms-automation" data-name="<?= $s->automation_name; ?>" data-id="<?= $s->id; ?>" href="javascript:void(0);" data-id="<?= $s->id; ?>"><span class="fa fa-trash-o icon"></span> Delete</a>
+                                        <a role="menuitem" class="delete-sms-automation" data-name="<?= $s->automation_name; ?>" data-id="<?= $s->id; ?>" href="javascript:void(0);"><span class="fa fa-trash-o icon"></span> Delete</a>
                                     </li>
                                 </ul>
                             </div>

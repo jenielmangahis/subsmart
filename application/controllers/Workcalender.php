@@ -803,9 +803,9 @@ class Workcalender extends MY_Controller
             $company_id = logged('company_id'); $company_id = 15;
             $events = $this->event_model->getAllByCompany($company_id);
         }elseif( $role == 4 ){
-        	$events = $this->event_model->getAllByUserId();
+            $events = $this->event_model->getAllByUserId();
         }else{
-        	$company_id = logged('company_id');
+            $company_id = logged('company_id');
             $events = $this->event_model->getAllByCompany($company_id);
         }
 
@@ -866,11 +866,7 @@ class Workcalender extends MY_Controller
             $events = $this->event_model->getAllByCompany($company_id);
         }*/
 
-        if( $role == 1 || $role == 2 ){
-           $events = $this->event_model->getAllEvents();
-        }else{
-           $events = $this->event_model->getAllByCompany($company_id);
-        }
+        $events = $this->event_model->getAllByCompany($company_id);
 
         /*if ($role == 4) {
             $events = $this->event_model->getAllByUserId();
@@ -895,6 +891,7 @@ class Workcalender extends MY_Controller
             foreach($events as $event) {
                 if( $event->event_description != '' ){
                    if($event->employee_id > 0) {
+                        $starttime = $event->start_date . " " . $event->start_time;
                         $start_date_time = date('Y-m-d H:i:s',strtotime($event->start_date . " " . $event->start_time));
                         $start_date_end  = date('Y-m-d H:i:s',strtotime($event->end_date . " " . $event->end_time));
 
@@ -932,6 +929,7 @@ class Workcalender extends MY_Controller
                         $resources_user_events[$inc]['customHtml'] = $custom_html;
                         $resources_user_events[$inc]['start'] = $event->start_date;
                         $resources_user_events[$inc]['end'] = $event->end_date;
+                        $resources_user_events[$inc]['starttime'] = strtotime($starttime);
                         $resources_user_events[$inc]['backgroundColor'] = $event->event_color;
 
                     $inc++;
@@ -1011,7 +1009,7 @@ class Workcalender extends MY_Controller
                 if(in_array($cl['id'], $enabled_mini_calendar)){
                     //Display in events
                     $optParams = array(
-                      'orderBy' => 'startTime',
+                      'orderBy' => 'starttime',
                       'singleEvents' => TRUE,
                       'timeMin' => $post['start'],
                       'timeMax' => $post['end'],
@@ -1030,36 +1028,46 @@ class Workcalender extends MY_Controller
 
                         if( empty($gevent) ){
 
+                            $is_with_time = false;
+
                             if( $event->start->timeZone != '' ){
                                 $tz = new DateTimeZone($event->start->timeZone);
-                                $timezone = $event->start->timeZone;
                             }else{
                                 $tz = new DateTimeZone($user_timezone);
-                                $timezone = $user_timezone;
                             }
 
                             if( $event->start->dateTime != '' ){
                                 $date = new DateTime($event->start->dateTime);
                                 $date->setTimezone($tz);
 
-                                $start_date = $date->format('Y-m-d');
+                                $start_date = $date->format('Y-m-d H:i:s');
+                                $custom_html_start_date = $date->format('g:i a');
+                                $starttime = $start_date . ' ' . $date->format('g:i a');
+                                $is_with_time = true;
                             }else{
                                 $date = new DateTime($event->start->date);
                                 $date->setTimezone($tz);
 
-                                $start_date = $date->format('Y-m-d');
+                                $start_date = $date->format('Y-m-d') . " 12:00 am";
+                                $starttime  = $start_date . ' ' . date("g:i A");
+                                $custom_html_start_date = $date->format('Y-m-d');
                             }
 
                             if( $event->end->dateTime != '' ){
                                 $date = new DateTime($event->end->dateTime);
                                 $date->setTimezone($tz);
+                                //$end_date = $event->end->dateTime;
+                                $end_date = $date->format('Y-m-d H:i:s');
 
-                                $end_date = $date->format('Y-m-d');
+                                $custom_html_end_date = $date->format('g:i a');
+                                $start_time = $date->format('g:i a');
+                                $is_with_time = true;
                             }else{
                                 $date = new DateTime($event->end->date);
                                 $date->setTimezone($tz);
 
-                                $end_date = $date->format('Y-m-d');
+                                $end_date = $date->format('Y-m-d') . " 12:00 am";
+                                $custom_html_end_date = $date->format('Y-m-d');
                             }
 
                             if( $googleColor ){
@@ -1067,7 +1075,16 @@ class Workcalender extends MY_Controller
                             }
 
                             if( $event->summary != '' ){
-                                $custom_html = "<i class='fa fa-calendar'></i> " . $start_date . " - " . $end_date . "<br /><small>Google Event</small><br /><small>" . $event->summary . "</small>";
+
+
+                                if( $is_with_time ){
+                                    $custom_html = "<i class='fa fa-calendar'></i> " . $custom_html_start_date . " - " . $custom_html_end_date . "<br /><small>Google Event</small><br /><small>" . $event->summary . "</small>";
+                                }else{
+                                    $custom_html = "<i class='fa fa-calendar'></i> " . $event->summary . "<br /><small>Google Event</small><br />";
+                                }
+                                
+
+                                $resources_user_events[$inc]['googleCalendarLink'] = $event->htmlLink;
                                 $resources_user_events[$inc]['geventID'] = $event->id;
                                 $resources_user_events[$inc]['eventType'] = 'events';
                                 $resources_user_events[$inc]['resourceId'] = "user17";
@@ -1076,6 +1093,7 @@ class Workcalender extends MY_Controller
                                 $resources_user_events[$inc]['description'] = $event->summary . "<br />" . "<i class='fa fa-calendar'></i> " . $start_date . " - " . $end_date;
                                 $resources_user_events[$inc]['start'] = $start_date;
                                 $resources_user_events[$inc]['end'] = $end_date;
+                                $resources_user_events[$inc]['starttime'] = strtotime($starttime);
                                 $resources_user_events[$inc]['backgroundColor'] = $bgcolor;
 
                                 $inc++;
@@ -1090,8 +1108,9 @@ class Workcalender extends MY_Controller
         $jobs = $this->Jobs_model->get_all_jobs();
         foreach( $jobs as $j ){
             if( $j->job_description != '' ){
-                $start_date_time = date('Y-m-d',strtotime($j->start_date . " " . $j->start_time));
-                $start_date_end  = date('Y-m-d',strtotime($j->end_date . " " . $j->end_time));
+                $starttime = $j->start_date . " " . $j->start_time;
+                $start_date_time = date('Y-m-d H:i:s',strtotime($j->start_date . " " . $j->start_time));
+                $start_date_end  = date('Y-m-d H:i:s',strtotime($j->end_date . " " . $j->end_time));
                 $backgroundColor = "#38a4f8";
 
                 if($j->event_color != ''){
@@ -1133,6 +1152,7 @@ class Workcalender extends MY_Controller
                 $resources_user_events[$inc]['customHtml'] = $custom_html;
                 $resources_user_events[$inc]['start'] = $start_date_time;
                 $resources_user_events[$inc]['end'] = $start_date_end;
+                $resources_user_events[$inc]['starttime'] = strtotime($starttime);
                 $resources_user_events[$inc]['backgroundColor'] = $backgroundColor;
 
                 $inc++;
@@ -1637,6 +1657,7 @@ class Workcalender extends MY_Controller
                 'type' => 'events',
                 'event_title' => get_customer_by_id($u->customer_id)->contact_name,
                 'event_type' => $u->event_type,
+                'event_tag' => $u->event_tag,
                 'event_number' => $u->event_number,
                 'event_description' => $u->event_description,
                 'start_date' => date('F j, Y', strtotime($u->start_date)),
@@ -1648,6 +1669,8 @@ class Workcalender extends MY_Controller
                 'address' => $u->event_address . ' ' . $u->event_state,
                 'url_link' => $u->url_link,
                 'profile_img' => $u->profile_img,
+                'first_name' => $u->FName,
+                'last_name' => $u->LName,
             ];
         }
 

@@ -1217,7 +1217,7 @@ class Timesheet_model extends MY_Model
         $qry = $this->db->query("SELECT 
         timesheet_attendance.id,timesheet_attendance.user_id,timesheet_attendance.date_created,timesheet_attendance.shift_duration, timesheet_attendance.break_duration, timesheet_attendance.overtime, timesheet_attendance.overtime_status,timesheet_attendance.status,
         users.FName, users.LName, roles.title
-            FROM timesheet_attendance JOIN users ON timesheet_attendance.user_id = users.id JOIN roles ON users.role = roles.id WHERE timesheet_attendance.date_created >='" . $date_from . "' AND timesheet_attendance.date_created <='" . $date_to . "' AND users.company_id = " . $company_id . " order by timesheet_attendance.date_created DESC");
+            FROM timesheet_attendance JOIN users ON timesheet_attendance.user_id = users.id JOIN roles ON users.role = roles.id WHERE timesheet_attendance.date_created >='" . $date_from . "' AND timesheet_attendance.date_created <='" . $date_to . "' AND users.company_id = " . $company_id . " order by timesheet_attendance.user_id ASC, timesheet_attendance.date_created ASC");
         return $qry->result();
     }
     public function get_logs_of_attendance($att_id)
@@ -1458,6 +1458,124 @@ class Timesheet_model extends MY_Model
         $this->db->reset_query();
         $qry = $this->db->query("SELECT * FROM timesheet_logs WHERE attendance_id=" . $att_id);
         return $qry->result();
+    }
+    public function get_all_businesses()
+    {
+        $qry = $this->db->query("SELECT id,company_id,business_name,business_email,business_image FROM business_profile");
+        return $qry->result();
+    }
+    public function get_all_business_admins($company_id)
+    {
+        $qry = $this->db->query("SELECT users.id,users.company_id,users.email,users.FName,users.LName FROM business_profile JOIN users ON business_profile.company_id = users.company_id WHERE business_profile.company_id=$company_id and users.role < 5");
+        return $qry->result();
+    }
+    public function get_employee_pay_details($user_id)
+    {
+        $qry = $this->db->query("SELECT * fROM employee_pay_details WHERE user_id = " . $user_id);
+        return $qry->result();
+    }
+    public function get_all_timezone_list()
+    {
+        $qry = $this->db->query("SELECT * fROM timesheet_timezone_list");
+        return $qry->result();
+    }
+    public function get_saved_timezone($user_id)
+    {
+        $qry = $this->db->query("SELECT * fROM timesheet_timezone_list JOIN timesheet_timezone_admin_report ON timesheet_timezone_admin_report.timezone_id = timesheet_timezone_list.id WHERE timesheet_timezone_admin_report.user_id = " . $user_id . " LIMIT 1");
+        return $qry->result();
+    }
+    public function get_tz_id($current_tz)
+    {
+        $qry = $this->db->query("SELECT * fROM timesheet_timezone_list WHERE id_of_timezone ='" . $current_tz . "'");
+        return $qry->result();
+    }
+    public function save_timezone_changes($timezone_id, $user_id, $subscribe,$report_series)
+    {
+        $current_saved = $this->get_saved_timezone($user_id);
+        if (count($current_saved) > 0) {
+            $update = array(
+                'timezone_id' => $timezone_id,
+                'user_id' => $user_id,
+                'subscribed' => $subscribe,
+                'report_series' => $report_series
+            );
+            $this->db->update(
+                "timesheet_timezone_admin_report",
+                $update
+            );
+        } else {
+            $insert = array(
+                'timezone_id' => $timezone_id,
+                'user_id' => $user_id,
+                'subscribed' => $subscribe,
+                'report_series' => $report_series
+            );
+            $this->db->insert(
+                "timesheet_timezone_admin_report",
+                $insert
+            );
+        }
+    }
+    public function get_user_id_by_email_and_company_id($email, $company_id)
+    {
+        $qry = $this->db->query("SELECT * fROM users WHERE email ='" . $email . "' AND company_id = '" . $company_id . "'");
+        return $qry->result();
+    }
+    public function get_leaves($date_from, $date_to, $user_id)
+    {
+        $this->db->reset_query();
+        $qry = $this->db->query("SELECT timesheet_leave.*,timesheet_pto.name, users.FName, users.LName FROM timesheet_leave  JOIN timesheet_pto ON timesheet_pto.id=timesheet_leave.pto_id JOIN users ON users.id=timesheet_leave.user_id WHERE users.id = " . $user_id . " AND timesheet_leave.date_created >= '" . $from_date . "' AND timesheet_leave.date_created <= '" . $to_date . "' ORDER BY timesheet_leave.date_created DESC");
+        return $qry->result();
+    }
+    public function save_est_wage_privacy($est_wage_private, $company_id, $date_time_now, $user_id)
+    {
+        $this->db->reset_query();
+        $qry = $this->db->query("SELECT * from timesheet_report_company_privacy WHERE company_id = ".$company_id."");
+        $saved= $qry->result();
+
+        $this->db->reset_query();
+
+        $found=false;
+        foreach($saved as $privacy){
+            $timesheet_report_company_privacy_id = $privacy->id;
+            $found=true;
+        }
+        if($found){
+            $update = array(
+                'est_wage_private' => $est_wage_private,
+                'company_id' => $company_id,
+                'datetime_updated' => $date_time_now
+            );
+            $this->db->update('timesheet_report_company_privacy',$update);
+
+        }else{
+            $insert = array(
+                'est_wage_private' => $est_wage_private,
+                'company_id' => $company_id,
+                'datetime_updated' => $date_time_now
+            );
+            $this->db->insert('timesheet_report_company_privacy',$insert);
+            $timesheet_report_company_privacy_id= $this->db->insert_id();
+            
+        }
+        $insert = array(
+            'timesheet_report_company_privacy_id' => $timesheet_report_company_privacy_id,
+            'user_id' => $user_id
+        );
+        $this->db->insert('timesheet_report_company_privacy_editor',$insert);
+        
+    }
+    public function get_timesheet_report_privacy($company_id){
+        $this->db->reset_query();
+        $qry = $this->db->query("SELECT * from 
+        timesheet_report_company_privacy 
+        JOIN timesheet_report_company_privacy_editor 
+        ON timesheet_report_company_privacy.id=timesheet_report_company_privacy_editor.timesheet_report_company_privacy_id
+        JOIN users
+        ON users.id = timesheet_report_company_privacy_editor.user_id
+         WHERE timesheet_report_company_privacy.company_id = ".$company_id." 
+         order by timesheet_report_company_privacy_editor.date_created DESC LIMIT 1");
+        return $qry->row();
     }
 }
 

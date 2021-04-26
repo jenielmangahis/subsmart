@@ -32,3 +32,4 @@ application/cache/*
 application/config/database.php
 uploads/fillandsign/
 uploads/jobs/attachment
+uploads/users/*

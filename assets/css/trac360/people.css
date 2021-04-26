@@ -1,0 +1,225 @@
+/* Set the size of the div element that contains the map */
+
+#map_canvas,
+.ToFit {
+    height: 100% !important;
+    width: 100%;
+}
+
+.trac360_main_sections {
+    height: 75vh;
+    /* The height is 400 pixels */
+    width: 100%;
+    /* The width is the width of the web page */
+    padding: 0;
+}
+
+.trac360_side_transparent,
+button.trac360_side_controls:hover,
+button.trac360_side_controls:active:hover {
+    background-color: transparent !important;
+}
+
+.trac360_side_controls:focus,
+.trac360_side_controls:hover,
+.trac360_side_controls:hover {
+    outline-style: none !important;
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+#map {
+    height: 100%;
+    /* The height is 400 pixels */
+    width: 100%;
+    /* The width is the width of the web page */
+}
+
+#topnav {
+    position: inherit;
+}
+
+.map-section {
+    padding-right: 0px;
+    padding-left: 0px;
+}
+
+.trac360-side-bar-menu li a {
+    padding: 20px;
+    padding-top: 30px;
+    padding-bottom: 30px;
+    width: 100%;
+    text-align: center;
+    border-radius: 0px;
+    border: none;
+    background-color: transparent;
+    transition: cubic-bezier(1, 0, 0, 1);
+    -moz-transition: all 0.2s ease-in;
+    -o-transition: all 0.2s ease-in;
+    -webkit-transition: all 0.2s ease-in;
+    transition: all 0.2s ease-in;
+}
+
+.trac360-side-bar-menu li a:hover,
+.trac360-side-bar-menu li a.current-page {
+    background-color: #7362b5;
+}
+
+.trac360-side-bar-menu {
+    width: 100%;
+}
+
+.sec-2-option {
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    color: #6c7585;
+    border-bottom: solid 2px;
+    height: 150px;
+    transition: cubic-bezier(1, 0, 0, 1);
+    -moz-transition: all 0.2s ease-in;
+    -o-transition: all 0.2s ease-in;
+    -webkit-transition: all 0.2s ease-in;
+    transition: all 0.2s ease-in;
+}
+
+.sec-2-option:hover {
+    background-color: #f7f6ef;
+    cursor: pointer;
+    border-left: solid 10px #6241a4;
+}
+
+.sec-2-option>.row {
+    margin: 0;
+}
+
+.sec-2-option img.user-profile {
+    height: 64px;
+    width: 64px;
+    border-radius: 50%;
+}
+
+.sec-2-option img.active {
+    border: solid #8ac63e;
+}
+
+.sec-2-option img.inactive {
+    border: solid #6c7585;
+}
+
+.sec-2-option .name {
+    font-size: 15px;
+    padding-top: 10px;
+    margin: 0;
+}
+
+.sec-2-option .profile {
+    text-align: center;
+}
+
+.sec-2-option .deatils {
+    text-align: left;
+}
+
+.sec-2-option.current_view {
+    background-color: #f7f6ef;
+    border-left: solid 10px #6241a4;
+}
+
+
+/* pop up marker style */
+
+.popup-bubble {
+    /* Position the bubble centred-above its parent. */
+    position: absolute;
+    top: 0;
+    left: 0;
+    transform: translate(-50%, -100%);
+    /* Style the bubble. */
+    /*background-color: #8ac63e;*/
+    /*padding: 5px;*/
+    /*border-radius: 50%;*/
+    font-family: sans-serif;
+    overflow-y: auto;
+    max-height: 200px;
+    /*box-shadow: 0px 2px 10px 1px rgba(0, 0, 0, 0.5);*/
+}
+
+
+/* The parent of the bubble. A zero-height div at the top of the tip. */
+
+.popup-bubble-anchor {
+    /* Position the div a fixed distance above the tip. */
+    position: absolute;
+    width: 100%;
+    bottom: 8px;
+    left: 0;
+}
+
+
+/* This element draws the tip. */
+
+.popup-bubble-anchor::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    /* Center the tip horizontally. */
+    transform: translate(-50%, 0);
+    /* The tip is a https://css-tricks.com/snippets/css/css-triangle/ */
+    width: 0;
+    height: 0;
+    /* The tip is 8px high, and 12px wide. */
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-top: 10px solid #8ac63e;
+    margin-top: -5px;
+}
+
+
+/* JavaScript will position this div at the bottom of the popup tip. */
+
+.popup-container {
+    cursor: auto;
+    height: 0;
+    position: absolute;
+    /* The max width of the info window. */
+    width: 200px;
+}
+
+img.popup-map-marker {
+    border: solid #8ac63e 5px;
+    height: 50px;
+    width: 50px;
+    border-radius: 50%;
+}
+
+div.popup-map-marker {
+    cursor: pointer;
+}
+
+img.popup-map-marker:hover {
+    height: 70px;
+    width: 70px;
+}
+
+div.popup-map-marker h3 {
+    display: none;
+    background-color: #fff;
+    font-size: 12px;
+    padding: 5px;
+    border-radius: 5px;
+    color: #6c7585;
+    position: absolute;
+    margin-left: 50px;
+}
+
+div.popup-map-marker:hover h3 {
+    display: block;
+}
+
+.page-title-box {
+    padding: 10px 0;
+}

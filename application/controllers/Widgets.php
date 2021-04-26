@@ -15,6 +15,31 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Widgets extends MY_Controller {
 
     //put your code here
+    
+    public function loadTechLeaderboard()
+    {
+        $comp_id = getLoggedCompanyID();
+        $this->load->model('widgets_model');
+        $data['tech_leaderboard'] = $this->widgets_model->loadTechLeaderboard($comp_id);
+        $this->load->view('widgets/tech_leaderboard_details', $data);
+    }
+    
+    public function getOverdueInvoices()
+    {
+        $this->load->model('widgets_model');
+        $comp_id = getLoggedCompanyID();
+        
+        $data['invoices'] = $this->widgets_model->getOverdueInvoices($comp_id);
+        $this->load->view('widgets/accounting/overdue_invoices_details', $data);
+    }
+    
+    public function getJobTags()
+    {
+        $this->load->model('widgets_model');
+        $data['tags'] = $this->widgets_model->getTags();
+        $this->load->view('widgets/tags_details', $data);
+        
+    }
 
     public function getLeadSource()
     {

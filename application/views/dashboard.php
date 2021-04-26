@@ -4,68 +4,10 @@
 <!--<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.css">
 </link>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.css" integrity="sha512-/zs32ZEJh+/EO2N1b0PEdoA10JkdC3zJ8L5FTiQu82LR9S/rOQNfQN7U59U9BC12swNeRAz3HSzIL2vpp4fv3w==" crossorigin="anonymous" />
-<link rel="stylesheet" href="<?= base_url("assets/plugins/morris.js/morris.css") ?>">
+
 <!-- page wrapper start -->
+<link rel="stylesheet" href="<?= base_url("assets/css/dashboard-responsive.css") ?>">
 
-<style>
-    h1, .breadcrumb-item, h5, .tbl-employee-name, p, .qUickStartde > span, .header-title, a, .modal-title{
-        font-family: Sarabun, sans-serif !important;
-    }
-
-    .pointer{
-        cursor: pointer;
-    }
-
-    .dynamic-widget .card{
-        height: 400px !important
-    }
-
-    .card-header{
-        border-bottom: 1px solid gray !important;
-        font-family: Sarabun, sans-serif !important;
-    }
-
-    .card-body h6{
-        font-size: 16px;
-        font-family: Open sans, Lato, Arial, sans-serif;
-        font-weight: 400;
-        line-height: 1.5;
-    }
-
-    .card-body .job-status{
-        width:100%;
-        background:#a5d8ff;
-        color: rgb(33, 150, 243);
-        text-align: center;
-        font-size: 12px;
-        line-height: 1.5;
-        margin-top:10px;
-    }
-
-    .card-body .job-caption{
-        color: #616161;
-        font-size: 10px;
-        font-family: Roboto, Lato, Arial, sans-serif;
-        font-weight: 800;
-        line-height: 1.3;
-        text-transform: uppercase;
-    }
-    .smart__grid{
-        background: #fff;
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        grid-gap: 10px;
-        height: 78vh;
-        padding: 10px;
-    }
-    .smart__grid > div{
-        background: #f2f2f2;
-        text-align: center;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-</style>
 <div class="wrapper" style="padding: 80px 14px;">
     <div class="bg-white" style=" border-radius: 30px 30px 0 0;margin-top: 15px;">
         <?php $this->load->view('includes/sidebars/dashboard/dashboard', $sidebar); ?>
@@ -126,16 +68,16 @@
                         <div class="modal-dialog modal-md" role="document" style="max-width: 592px; margin-top:230px;">
                             <div class="modal-content" style="border-radius: 30px;">
                                 <div class="modal-header">
-                                    <input type="text" placeholder="Subject Line" class="form-control" />
+                                    <input type="text" placeholder="Subject Line" id="feedSubject" class="form-control" />
                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                         <span aria-hidden="true">&times;</span>
                                     </button>
                                 </div>
                                 <div class="modal-body text-center">
-                                    <textarea style="height:130px;" class="form-control" placeholder="Feed Message" ></textarea>
+                                    <textarea style="height:130px;" id="feedMessage" class="form-control" placeholder="Feed Message" ></textarea>
                                 </div>
                                 <div class="modal-footer">
-                                    <button class="float-right btn btn-success btn-small">Send Feed</button>
+                                    <button onclick="sendFeed()" class="float-right btn btn-success btn-small">Send Feed</button>
                                 </div>
                             </div>
                         </div>
@@ -161,7 +103,24 @@
                             </div>
                         </div>
                     </div>
-
+                    <script type="text/javascript">
+                        function sendFeed()
+                        {
+                            $.ajax({
+                                type: "POST",
+                                url: "<?= base_url() ?>/dashboard/sendFeed",
+                                data: {
+                                    subject : $('#feedSubject').val(),
+                                    message : $('#feedMessage').val()
+                                }, // serializes the form's elements.
+                                success: function (data)
+                                {
+                                    $('#newFeed').modal('hide')
+                                    alert(data)
+                                }
+                            });
+                        }
+                    </script>    
                     <?php include viewPath('flash'); ?>
                     <div class="col-12 d-md-none d-block p-0">
                         <div class="smart__grid" id="1">
@@ -213,7 +172,7 @@
                             <?php
                             foreach ($widgets as $wids):
                                 if ($wids->wu_is_main):
-                                    $data['class'] = 'col-lg-4 col-md-4 col-sm-12';
+                                    $data['class'] = 'col-lg-4 col-md-4 col-sm-12 main_widget_header';
                                     $data['rawHeight'] = '420';
                                     $data['height'] = 'height: 420px;';
                                     $data['isMain'] = True;
@@ -230,7 +189,7 @@
                     <?php
                     foreach ($widgets as $wids):
                         if (!$wids->wu_is_main):
-                            $data['class'] = 'col-lg-3 col-md-6 col-sm-12';
+                            $data['class'] = 'col-lg-3 col-md-6 col-sm-12 widget_header';
                             $data['rawHeight'] = '360';
                             $data['height'] = 'height: 360px;';
                             $data['isMain'] = False;
@@ -842,6 +801,8 @@
     $(document).ready(function () {
         var TimeStamp = null;
         waitForClockInOut();
+        
+       console.log("Your screen resolution is: " + screen.width + "x" + screen.height);
         
         $('#onoff-customize').change(function () {
             if (this.checked) {

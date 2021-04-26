@@ -23,7 +23,7 @@ if(isset($jobs_data)){
                         selected = "selected";
                     }
                     //console.log(cust_id);
-                    toAppend += '<option '+selected+' value='+o.prof_id+'>'+o.first_name + ', ' + o.last_name +'</option>';
+                    toAppend += '<option '+selected+' value='+o.prof_id+'>'+o.first_name + ' ' + o.last_name +'</option>';
                 });
                 $('#customer_id').append(toAppend);
                 //console.log(template_data);
@@ -69,9 +69,13 @@ if(isset($jobs_data)){
             success: function(data)
             {
                 var customer_data = JSON.parse(data);
-                //console.log(customer_data);
+                console.log(customer_data);
                 $('#cust_fullname').text(customer_data.first_name + ' ' + customer_data.last_name);
-                $('#cust_address').text(customer_data.mail_add + ' ' + customer_data.city + ',' + ' ' + customer_data.state + ' ' + customer_data.zip_code);
+                if(customer_data.mail_add !== null){
+                    $('#cust_address').text(customer_data.mail_add + ' ');
+                }
+                $("#customer_preview").attr("href", "/customer/preview/"+customer_data.prof_id);
+                $('#cust_address2').text(customer_data.city + ',' + ' ' + customer_data.state + ' ' + customer_data.zip_code);
                 $('#cust_number').text(customer_data.phone_h);
                 $('#cust_email').text(customer_data.email);
                 $('#mail_to').attr("href","mailto:"+customer_data.email);
@@ -122,7 +126,8 @@ if(isset($jobs_data)){
                 confirmButtonText: 'Ok'
             }).then((result) => {
                 if (result.value) {
-                    window.location.href='<?= base_url(); ?>job/new_job1/'+$id;
+                    //window.location.href='<?= base_url(); ?>job/new_job1/'+$id;
+                    window.location.href='<?= base_url(); ?>job/';
                 }
             });
         }
@@ -174,14 +179,15 @@ if(isset($jobs_data)){
             var withCommas = Number(total).toLocaleString('en');
             console.log(total);
             markup = "<tr id=\"ss\">" +
-                "<td width=\"35%\"><small>Item name</small><input value='"+title+"' type=\"text\" name=\"item_name[]\" class=\"form-control\" ><input type=\"hidden\" value='"+idd+"' name=\"item_id[]\"></td>\n" +
+                "<td width=\"35%\"><small>Item name</small><input readonly value='"+title+"' type=\"text\" name=\"item_name[]\" class=\"form-control\" ><input type=\"hidden\" value='"+idd+"' name=\"item_id[]\"></td>\n" +
                 "<td width=\"20%\"><small>Qty</small><input data-itemid='"+idd+"' id='"+idd+"' value='"+qty+"' type=\"number\" name=\"item_qty[]\" class=\"form-control qty\"></td>\n" +
-                "<td width=\"20%\"><small>Unit Price</small><input id='price"+idd+"' value='"+price+"'  type=\"number\" name=\"item_price[]\" class=\"form-control\" placeholder=\"Unit Price\"></td>\n" +
+                "<td width=\"20%\"><small>Unit Price</small><input readonly id='price"+idd+"' value='"+price+"'  type=\"number\" name=\"item_price[]\" class=\"form-control\" placeholder=\"Unit Price\"></td>\n" +
                 //"<td width=\"10%\"><small>Unit Cost</small><input type=\"text\" name=\"item_cost[]\" class=\"form-control\"></td>\n" +
                 //"<td width=\"25%\"><small>Inventory Location</small><input type=\"text\" name=\"item_loc[]\" class=\"form-control\"></td>\n" +
-                "<td style=\"text-align: center\" class=\"d-flex\" width=\"15%\"><b data-subtotal='"+total_+"' id='sub_total"+idd+"' class=\"total_per_item\">$"+formatNumber(total)+"</b><a href=\"javascript:void(0)\" class=\"remove_item_row\"><i class=\"fa fa-times-circle\" aria-hidden=\"true\"></i></a></td>" +
+                "<td  style=\"text-align: center;margin-top: 20px;\" class=\"d-flex\" width=\"15%\"><b style=\"font-size: 16px;\" data-subtotal='"+total_+"' id='sub_total"+idd+"' class=\"total_per_item\">"+total+"</b></td>" +
+                "<td width=\"20%\"><button style=\"margin-top: 20px;\" type=\"button\" class=\"btn btn-primary btn-sm items_remove_btn remove_item_row\"><span class=\"fa fa-trash-o\"></span></button></td>\n" +
                 "</tr>";
-            tableBody = $("#jobs_items_table_body");
+            tableBody = $("#jobs_items");
             tableBody.append(markup);
             markup2 = "<tr id=\"sss\">" +
                 "<td >"+title+"</td>\n" +
@@ -245,10 +251,12 @@ if(isset($jobs_data)){
 
         $("body").delegate(".remove_item_row", "click", function(){
             $(this).parent().parent().remove();
+            calculate_subtotal();
         });
 
         $("body").delegate(".remove_audit_item_row", "click", function(){
             $(this).parent().parent().remove();
+            calculate_subtotal();
         });
 
         $("body").delegate(".color-scheme", "click", function(){
@@ -750,11 +758,11 @@ if(isset($jobs_data)){
                 success: function(data){
                     var emp_data = JSON.parse(data);
                     if($this.id === 'employee2' ){
-                        $('#emp2_id').val(emp_data.FName + emp_data.LName);
+                        $('#emp2_id').val(emp_data.FName);
                     }else if($this.id === 'employee3' ){
-                        $('#emp3_id').val(emp_data.FName + emp_data.LName);
+                        $('#emp3_id').val(emp_data.FName);
                     }else if($this.id === 'employee4' ){
-                        $('#emp4_id').val(emp_data.FName + emp_data.LName);
+                        $('#emp4_id').val(emp_data.FName);
                     }
                     console.log(emp_data);
                 }

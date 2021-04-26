@@ -5,7 +5,7 @@
 <div class="card-body">
     <div class="row form_line">
         <div class="col-md-4">
-            <label for="">Card Holder First Name</label>
+            <label for="">Card First Name</label>
         </div>
         <div class="col-md-8">
             <input type="text" class="form-control" name="card_fname" id="card_fname" value="<?php if(isset($billing_info)){ echo $billing_info->card_fname; } ?>" />
@@ -13,7 +13,7 @@
     </div>
     <div class="row form_line">
         <div class="col-md-4">
-            <label for="">Card Holder Last Name</label>
+            <label for="">Card Last Name</label>
         </div>
         <div class="col-md-8">
             <input type="text" class="form-control" name="card_lname" id="card_lname" value="<?php if(isset($billing_info)){ echo $billing_info->card_lname; } ?>"/>
@@ -21,7 +21,7 @@
     </div>
     <div class="row form_line">
         <div class="col-md-4">
-            <label for="">Card Holder Address </label>
+            <label for="">Card Address </label>
         </div>
         <div class="col-md-8">
             <input type="text" class="form-control" name="card_address" id="card_address" value="<?php if(isset($billing_info)){ echo $billing_info->card_address; } ?>"/>
@@ -42,6 +42,32 @@
                 <div class="col-md-4">
                     <input type="text" class="form-control" name="billing_zip" id="billing_zip" value="<?php if(isset($billing_info)){ echo $billing_info->zip; } ?>"/>
                 </div>
+            </div>
+        </div>
+    </div>
+    <div class="row form_line">
+        <div class="col-md-4">
+            <label for="">Equipment</label>
+        </div>
+        <div class="col-md-8">
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="basic-addon1">$</span>
+                </div>
+                <input type="text" class="form-control input_select" name="equipment" >
+            </div>
+        </div>
+    </div>
+    <div class="row form_line">
+        <div class="col-md-4">
+            <label for="">Initial Dep</label>
+        </div>
+        <div class="col-md-8">
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="basic-addon1">$</span>
+                </div>
+                <input type="text" class="form-control input_select" name="initial_dep"  >
             </div>
         </div>
     </div>
@@ -152,7 +178,7 @@
                 <?php
                 for ($days=0;$days<32;$days++){
                     ?>
-                    <option <?php if(isset($billing_info)){ if($billing_info->bill_day == days_of_month($prefix)){ echo 'selected'; } } ?> value="<?= days_of_month($days); ?>"><?= days_of_month($days) < 1 ? '' : days_of_month($days) ; ?></option>
+                        <option <?php if(isset($billing_info)){ if($billing_info->bill_day == days_of_month($days)){ echo 'selected'; } } ?> value="<?= days_of_month($days); ?>"><?= days_of_month($days) < 1 ? '' : days_of_month($days) ; ?></option>
                     <?php
                 }
                 ?>
@@ -161,7 +187,7 @@
     </div>
     <div class="row form_line">
         <div class="col-md-4">
-            <label for="">Contract Term* (months)</label>
+            <label for="">Contract Term</label>
         </div>
         <div class="col-md-8">
             <select id="contract_term" name="contract_term" data-customer-source="dropdown" class="input_select searchable-dropdown" >
@@ -210,19 +236,19 @@
         </div>
         <div class="col-md-8">
             <select id="bill_method" name="bill_method" data-customer-source="dropdown" class="input_select searchable-dropdown">
-                <option  value="CC">Credit Card</option>
-                <option  value="DC">Debit Card</option>
-                <option  value="CHECK">Check</option>
-                <option  value="CASH">Cash</option>
-                <option  value="ACH">ACH</option>
-                <option  value="VENMO">Venmo</option>
-                <option  value="PP">Paypal</option>
-                <option  value="SQ">Square</option>
-                <option  value="WW">Warranty Work</option>
-                <option  value="HOF">Home Owner Financing</option>
-                <option  value="eT">e-Transfer</option>
-                <option  value="OCCP">Other Credit Card Processor</option>
-                <option  value="OPT">Other Payment Type</option>
+                <option <?= isset($billing_info) && $billing_info->bill_method == 'CC' ?  'selected' : '';?> value="CC">Credit Card</option>
+                <option <?= isset($billing_info) && $billing_info->bill_method == 'DC' ?  'selected' : '';?> value="DC">Debit Card</option>
+                <option <?= isset($billing_info) && $billing_info->bill_method == 'CHECK' ?  'selected' : '';?> value="CHECK">Check</option>
+                <option <?= isset($billing_info) && $billing_info->bill_method == 'CASH' ?  'selected' : '';?> value="CASH">Cash</option>
+                <option <?= isset($billing_info) && $billing_info->bill_method == 'ACH' ?  'selected' : '';?> value="ACH">ACH</option>
+                <option <?= isset($billing_info) && $billing_info->bill_method == 'VENMO' ?  'selected' : '';?> value="VENMO">Venmo</option>
+                <option <?= isset($billing_info) && $billing_info->bill_method == 'PP' ?  'selected' : '';?> value="PP">Paypal</option>
+                <option <?= isset($billing_info) && $billing_info->bill_method == 'SQ' ?  'selected' : '';?> value="SQ">Square</option>
+                <option <?= isset($billing_info) && $billing_info->bill_method == 'WW' ?  'selected' : '';?> value="WW">Warranty Work</option>
+                <option <?= isset($billing_info) && $billing_info->bill_method == 'HOF' ?  'selected' : '';?> value="HOF">Home Owner Financing</option>
+                <option <?= isset($billing_info) && $billing_info->bill_method == 'eT' ?  'selected' : '';?> value="eT">e-Transfer</option>
+                <option <?= isset($billing_info) && $billing_info->bill_method == 'OCCP' ?  'selected' : '';?> value="OCCP">Other Credit Card Processor</option>
+                <option <?= isset($billing_info) && $billing_info->bill_method == 'OPT' ?  'selected' : '';?> value="OPT">Other Payment Type</option>
             </select>
         </div>
     </div>
@@ -256,7 +282,7 @@
             <label for="">Credit Card Number</label>
         </div>
         <div class="col-md-8">
-            <input type="number" placeholder="0000 0000 0000 0000" class="form-control" name="credit_card_num" id="credit_card_num" value="<?php if(isset($billing_info)){  $billing_info->credit_card_num == 0 ? '' :  $billing_info->credit_card_num; } ?>"/>
+            <input type="number" placeholder="0000 0000 0000 0000" class="form-control" name="credit_card_num" id="credit_card_num" value="<?= isset($billing_info) &&  $billing_info->credit_card_num == 0 ? '' :  $billing_info->credit_card_num; ?>"/>
         </div>
     </div>
     <div class="row form_line" id="CCE">
@@ -280,7 +306,7 @@
             <label for="">Account Credential</label>
         </div>
         <div class="col-md-8">
-            <input type="number" class="form-control" name="account_credential" id="account_credential"/>
+            <input type="number" class="form-control" name="account_credential" id="account_credential" value="<?= isset($billing_info) ? $billing_info->account_credential : ''; ?>" />
         </div>
     </div>
     <div class="row form_line account_cred" >
@@ -288,7 +314,7 @@
             <label for="">Account Note</label>
         </div>
         <div class="col-md-8">
-            <input type="number" class="form-control" name="account_note" id="account_note"/>
+            <input type="number" class="form-control" name="account_note" id="account_note" value="<?= isset($billing_info) ? $billing_info->account_note : ''; ?>"/>
         </div>
     </div>
     <div class="row form_line account_cred" id="confirmationPD">
@@ -296,7 +322,7 @@
             <label for="">Confirmation</label>
         </div>
         <div class="col-md-8">
-            <input type="number" class="form-control" name="confirmation" id="confirmation"/>
+            <input type="number" class="form-control" name="confirmation" id="confirmation" value="<?= isset($billing_info) ? $billing_info->confirmation : ''; ?>"/>
         </div>
     </div>
 
@@ -311,15 +337,20 @@
             <label for="">Finance Amount</label>
         </div>
         <div class="col-md-8">
-            <input type="text" placeholder="$" class="form-control datepicker" name="recurring_start_date" id="recurring_start_date" value="<?php if(isset($billing_info)){ echo $billing_info->bill_start_date; } ?>" />
-        </div>
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="basic-addon1">$</span>
+                </div>
+                <input type="text" class="form-control input_select" name="finance_amount"  value="<?= isset($billing_info) ? $billing_info->finance_amount : ''; ?> ">
+            </div>
+         </div>
     </div>
     <div class="row form_line">
         <div class="col-md-4">
             <label for="">Recurring Start Date</label>
         </div>
         <div class="col-md-8">
-            <input type="text" class="form-control datepicker" name="recurring_start_date" id="recurring_start_date" value="<?php if(isset($billing_info)){ echo $billing_info->bill_start_date; } ?>" />
+            <input type="text" class="form-control datepicker" name="recurring_start_date" id="recurring_start_date" value="<?= isset($billing_info) ? $billing_info->recurring_start_date : ''; ?>" />
         </div>
     </div>
     <div class="row form_line">
@@ -327,7 +358,7 @@
             <label for="">Recurring End Date</label>
         </div>
         <div class="col-md-8">
-            <input type="text" class="form-control datepicker" name="recurring_start_date" id="recurring_start_date" value="<?php if(isset($billing_info)){ echo $billing_info->bill_start_date; } ?>" />
+            <input type="text" class="form-control datepicker" name="recurring_end_date" id="recurring_end_date" value="<?= isset($billing_info) ? $billing_info->recurring_end_date : ''; ?>" />
         </div>
     </div>
     <div class="row form_line">
@@ -335,7 +366,12 @@
             <label for="">Transaction Amount</label>
         </div>
         <div class="col-md-8">
-            <input type="text" placeholder="$" class="form-control datepicker" name="recurring_start_date" id="recurring_start_date" value="<?php if(isset($billing_info)){ echo $billing_info->bill_start_date; } ?>" />
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="basic-addon1">$</span>
+                </div>
+                <input type="text" class="form-control input_select" name="transaction_amount" value="<?= isset($billing_info) ? $billing_info->transaction_amount : ''; ?>">
+            </div>
         </div>
     </div>
     <div class="row form_line">
@@ -345,15 +381,15 @@
         <div class="col-md-8">
             <select id="transaction_category" name="transaction_category" data-customer-source="dropdown" class="input_select" >
                 <option  value=""></option>
-                <option  value="E">Equipment</option>
-                <option  value="MMR">MMR</option>
-                <option  value="RMR">RMR</option>
-                <option  value="MS">Monthly Subscription</option>
-                <option  value="AF">Activation Fee</option>
-                <option  value="FM">First Month</option>
-                <option  value="AFM">Activation + First Month</option>
-                <option  value="D">Deposit</option>
-                <option  value="O">Other</option>
+                <option <?= isset($billing_info) && $billing_info->transaction_category == 'E' ?  'selected' : '';?> value="E">Equipment</option>
+                <option <?= isset($billing_info) && $billing_info->transaction_category == 'MMR' ?  'selected' : '';?> value="MMR">MMR</option>
+                <option <?= isset($billing_info) && $billing_info->transaction_category == 'RMR' ?  'selected' : '';?> value="RMR">RMR</option>
+                <option <?= isset($billing_info) && $billing_info->transaction_category == 'MS' ?  'selected' : '';?> value="MS">Monthly Subscription</option>
+                <option <?= isset($billing_info) && $billing_info->transaction_category == 'AF' ?  'selected' : '';?> value="AF">Activation Fee</option>
+                <option <?= isset($billing_info) && $billing_info->transaction_category == 'FM' ?  'selected' : '';?> value="FM">First Month</option>
+                <option <?= isset($billing_info) && $billing_info->transaction_category == 'AFM' ?  'selected' : '';?> value="AFM">Activation + First Month</option>
+                <option <?= isset($billing_info) && $billing_info->transaction_category == 'D' ?  'selected' : '';?> value="D">Deposit</option>
+                <option <?= isset($billing_info) && $billing_info->transaction_category == 'O' ?  'selected' : '';?> value="O">Other</option>
             </select>
         </div>
     </div>
@@ -364,18 +400,18 @@
         <div class="col-md-8">
             <select id="frequency" name="frequency" data-customer-source="dropdown" class="input_select" >
                 <option  value=""></option>
-                <option  value="1">1 month</option>
-                <option  value="2">2 months</option>
-                <option  value="3">3 months</option>
-                <option  value="4">4 months</option>
-                <option  value="5">5 months</option>
-                <option  value="6">6 months</option>
-                <option  value="7">7 months</option>
-                <option  value="8">8 months</option>
-                <option  value="8">9 months</option>
-                <option  value="10">10 months</option>
-                <option  value="11">11 months</option>
-                <option  value="12">12 months</option>
+                <option <?= isset($billing_info) && $billing_info->frequency == 1 ?  'selected' : '';?> value="1">1 month</option>
+                <option <?= isset($billing_info) && $billing_info->frequency == 2 ?  'selected' : '';?> value="2">2 months</option>
+                <option <?= isset($billing_info) && $billing_info->frequency == 3 ?  'selected' : '';?> value="3">3 months</option>
+                <option <?= isset($billing_info) && $billing_info->frequency == 4 ?  'selected' : '';?> value="4">4 months</option>
+                <option <?= isset($billing_info) && $billing_info->frequency == 5 ?  'selected' : '';?> value="5">5 months</option>
+                <option <?= isset($billing_info) && $billing_info->frequency == 6 ?  'selected' : '';?> value="6">6 months</option>
+                <option <?= isset($billing_info) && $billing_info->frequency == 7 ?  'selected' : '';?> value="7">7 months</option>
+                <option <?= isset($billing_info) && $billing_info->frequency == 8 ?  'selected' : '';?> value="8">8 months</option>
+                <option <?= isset($billing_info) && $billing_info->frequency == 9 ?  'selected' : '';?> value="8">9 months</option>
+                <option <?= isset($billing_info) && $billing_info->frequency == 10 ?  'selected' : '';?> value="10">10 months</option>
+                <option <?= isset($billing_info) && $billing_info->frequency == 11 ?  'selected' : '';?> value="11">11 months</option>
+                <option <?= isset($billing_info) && $billing_info->frequency == 12 ?  'selected' : '';?> value="12">12 months</option>
             </select>
         </div>
     </div>

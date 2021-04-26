@@ -42,6 +42,15 @@ $(document).ready(function(){
   get_most_download_files();
   get_most_previewd_files();
   get_recently_uploaded_files();  
+
+  if (vType === 'mylibrary') {
+    getDocusingTemplates();
+  }
+
+  if (vType === 'sharedlibrary') {
+    getDocusingTemplates(shared=true);
+  }
+
 // -------------------------------------------------------------------------------------------------------------
 
 // -------------------------------------------------------------------------------------------------------------
@@ -2965,7 +2974,7 @@ function get_recently_uploaded_files() {
     <div class="vault__spacer vault__spacer--isLarge"></div>
   `);
 
-  $grid = $('#recentlyUploaded .vault__filesGrid');
+  const $grid = $('#recentlyUploaded .vault__filesGrid');
   $grid.append(fileLoader(7));
 
   $.ajax({
@@ -2978,6 +2987,42 @@ function get_recently_uploaded_files() {
           showCreatedDate: true,
           onClick: onClickFile,
           onDoubleClick: onDoubleClickFile,
+        })
+      ));
+
+      $grid.empty();
+      $grid.append(fileElements.length > 0 ? fileElements : emptyMessage());
+    },
+    error: function(_, textStatus, errorThrown){
+      $('span[target="recent_uploads"]').removeClass('fa-spin');
+      showFolderManagerNotif(textStatus, errorThrown, 'error');
+    }   
+  });
+}
+
+function getDocusingTemplates(shared=false) {
+  $('#docusign_templates').empty();
+  $('#docusign_templates').append(`
+    <div class="row vault" id="docusigntTemplates">
+      <div class="vault__files">
+          <h6 class="vault__title">Docusign Templates</h6>
+          <div class="vault__spacer"></div>
+          <div class="vault__filesGrid"></div>
+      </div>
+    </div>
+    <div class="vault__spacer vault__spacer--isLarge"></div>
+  `);
+
+  const $grid = $('#docusigntTemplates .vault__filesGrid');
+  $grid.append(fileLoader(7));
+
+  $.ajax({
+    type: 'GET',
+    url: `${base_url}DocuSign/apiTemplates?shared=${shared}`,
+    success: function({ data }) {
+      const fileElements = data.map((file) => (
+        createDocusignTemplate(file, {
+          showCreatedDate: true,
         })
       ));
 
@@ -3066,6 +3111,70 @@ function createFile(file, options = {}) {
   return element;
 }
 
+function createDocusignTemplate(file, options = {}) {
+    const prefixURL = location.hostname === "localhost" ? "/nsmartrac" : "";
+
+    const { id, name, create_at } = file;
+    const { onClick = null, onDoubleClick = null } = options;
+    const createdString = moment(create_at).format("MMMM DD, YYYY");
+    const templateUrl = `${prefixURL}/DocuSign/templatePrepare?id=${id}`;
+
+    const svgIcon = `<svg style="width: inherit; height: inherit;" viewBox="0 0 640 512"><path fill="currentColor" d="M623.2 192c-51.8 3.5-125.7 54.7-163.1 71.5-29.1 13.1-54.2 24.4-76.1 24.4-22.6 0-26-16.2-21.3-51.9 1.1-8 11.7-79.2-42.7-76.1-25.1 1.5-64.3 24.8-169.5 126L192 182.2c30.4-75.9-53.2-151.5-129.7-102.8L7.4 116.3C0 121-2.2 130.9 2.5 138.4l17.2 27c4.7 7.5 14.6 9.7 22.1 4.9l58-38.9c18.4-11.7 40.7 7.2 32.7 27.1L34.3 404.1C27.5 421 37 448 64 448c8.3 0 16.5-3.2 22.6-9.4 42.2-42.2 154.7-150.7 211.2-195.8-2.2 28.5-2.1 58.9 20.6 83.8 15.3 16.8 37.3 25.3 65.5 25.3 35.6 0 68-14.6 102.3-30 33-14.8 99-62.6 138.4-65.8 8.5-.7 15.2-7.3 15.2-15.8v-32.1c.2-9.1-7.5-16.8-16.6-16.2z"/></svg>`;
+
+    const html = `
+    <div class="col-md-2 vault__file vault__docusignTemplate">
+      <div
+        class="table-responsive shadow-sm rounded border border-secondary h-100 py-2 vault__fileInner"
+        isfolder="0"
+      >
+          <table class="border border-0 mb-0 h-100" style="width: 95%">
+            <tbody>
+                <tr class="node" isfolder="0">
+                  <td isfolder="0" style="position: relative;">
+                    <span style="--size: 85px; width: var(--size); height: var(--size); color: var(--green)">
+                      ${svgIcon}
+                    </span>
+
+                    <a class="btn btn-sm btn-secondary btn-action" style="position: absolute;" href="${templateUrl}">
+                      Use Template
+                    </a>
+                  </td>
+                  <td style="width: 85%" class="pl-2">
+                    <div>
+                      <span style="--size: 25px; width: var(--size); height: var(--size); color: var(--green);" class="mr-2">
+                        ${svgIcon}
+                      </span>
+                      <span class="vault__fileName">${name}</span>
+                    </div>
+                    <span class="vault__fileDate">${createdString}</span>
+                  </td>
+                </tr>
+            </tbody>
+          </table>
+      </div>
+    </div>
+    `;
+  
+    const element = createElementFromHTML(html);
+    const $element = $(element);
+    const $elementInner = $element.find('.vault__fileInner');
+  
+    $element.click(function () {
+      removeCurrentHighlighted();
+      $element.addClass('vault__item--isActive');
+      $elementInner.addClass('bg-info');
+      $elementInner.addClass('text-white');
+  
+      if (onClick) onClick(file);
+    });
+  
+    $element.dblclick(function() {
+      if (onDoubleClick) onDoubleClick(file);
+    });
+  
+    return element;
+  }
+  
 function createFolder(folder, options = {}) {
   const { folder_id, create_date, FCreatedBy, LCreatedBy, folder_name, c_folder, path, total_contents } = folder;
   const { isTrash = false, onClick = null, onDoubleClick = null } = options;

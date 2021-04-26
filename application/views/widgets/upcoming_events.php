@@ -5,7 +5,7 @@
 </style>
 
 <div class="<?= $class ?>"  data-id="<?= $id ?>" id="widget_<?= $id ?>">
-    <div  style="width: 300px; border: 1px solid #58c04e; background: #58c04e; color:white;  border-radius: 10px; text-align: center;padding: 5px;position: relative;margin: 0 auto;top: 21px;z-index: 1000;">
+    <div  class="wid_header">
         <i class="fa fa-calendar" aria-hidden="true"></i> Upcoming Events
         
         <div class="float-right">
@@ -27,8 +27,8 @@
                 <div style=" height: <?= $rawHeight ?>px; overflow-y: scroll">
                     <?php
                     $jobCounter = 0;
-                    if ($events) {
-                        foreach ($events as $jb) :
+                    if ($upcomingEvents) {
+                        foreach ($upcomingEvents as $jb) :
                             ?>
                             <div class="mb-2 col-lg-12 float-left jobsRow" style="border-bottom: 1px solid #ccc; padding-bottom: 5px; cursor: pointer">
 

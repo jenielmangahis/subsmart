@@ -183,14 +183,14 @@ a.btn-primary.btn-md {
 												<th>DESCRIPTION</th>
 												<th>Type</th>
 												<th width="100px">Quantity</th>
-												<th>LOCATION</th>
+												<!-- <th>LOCATION</th> -->
 												<th width="100px">COST</th>
 												<th width="100px">Discount</th>
 												<th>Tax(%)</th>
 												<th>Total</th>
 											</tr>
 										</thead>
-										<tbody id="table_body">
+										<tbody id="jobs_items_table_body">
 											<tr>
 												<td><input type="text" autocomplete="off" class="form-control getItems" onKeyup="getItems(this)" name="item[]"><ul class="suggestions"></ul></td>
 												<td><select name="item_type[]" class="form-control">
@@ -198,16 +198,16 @@ a.btn-primary.btn-md {
 													<option value="material">Material</option>
 													<option value="service">Service</option>
 													</select></td>
-												<td><input type="text" class="form-control quantity" name="quantity[]" data-counter="0" id="quantity_0" value="1"></td>
-												<td><input type="text" class="form-control" name="location[]"></td>
-												<td><input readonly type="number" class="form-control price" name="price[]" data-counter="0" id="price_0" min="0" value="0"></td>
-												<td><input type="number" class="form-control discount" name="discount[]" data-counter="0" id="discount_0" min="0" value="0" readonly></td>
-												<td><span id="span_tax_0">0.00 (7.5%)</span></td>
+												<td width="100px"><input type="text" class="form-control quantity" name="quantity[]" data-counter="0" id="quantity_0" value="1"></td>
+												<!-- <td><input type="text" class="form-control" name="location[]"></td> -->
+												<td width="140px"><input readonly type="number" class="form-control price" name="price[]" data-counter="0" id="price_0" min="0" value="0"></td>
+												<td width="100px"><input type="number" class="form-control discount" name="discount[]" data-counter="0" id="discount_0" min="0" value="0"></td>
+												<td width="100px"><span id="span_tax_0">0.00 (7.5%)</span></td>
 												<td><span id="span_total_0">0.00</span></td>
 											</tr>
 										</tbody>
 									</table>
-									<a href="#" class="btn btn-primary" id="add_another">Add Items</a>
+									<a href="#" class="btn btn-primary" id="add_another_old" data-toggle="modal" data-target="#item_list">Add Items</a>
 								</div>
 
 								<div class="col-sm-6 mt-3">
@@ -229,6 +229,57 @@ a.btn-primary.btn-md {
    <!-- end container-fluid -->
 </div>
 <!-- page wrapper end -->
+
+<!-- Modal -->
+<div class="modal fade" id="item_list" tabindex="-1" role="dialog" aria-labelledby="newcustomerLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg" role="document" style="width:800px;position: absolute;top: 50%;left: 50%;transform: translate(-50%, -50%);">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="newcustomerLabel">Item Lists</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <table id="items_table_estimate" class="table table-hover" style="width: 100%;">
+                                        <thead>
+                                        <tr>
+                                            <td> Name</td>
+                                            <td> Rebatable</td>
+                                            <td> Qty</td>
+                                            <td> Price</td>
+                                            <td> Action</td>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <?php foreach($items as $item){ // print_r($item); ?>
+                                            <tr>
+                                                <td><?php echo $item->title; ?></td>
+                                                <td><?php echo $item->rebate; ?></td>
+                                                <td></td>
+                                                <td><?php echo $item->price; ?></td>
+                                                <td><button id="<?= $item->id; ?>" data-quantity="<?= $item->units; ?>" data-itemname="<?= $item->title; ?>" data-price="<?= $item->price; ?>" type="button" data-dismiss="modal" class="btn btn-sm btn-default select_item">
+                                                <span class="fa fa-plus"></span>
+                                            </button></td>
+                                            </tr>
+                                            
+                                        <?php } ?>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer modal-footer-detail">
+                            <div class="button-modal-list">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal"><span class="fa fa-remove"></span> Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
 <?php include viewPath('includes/footer'); ?>
 <script>
    $(document).ready(function() {

@@ -188,7 +188,7 @@ class Workorder_model extends MY_Model
     }
 
     public function save_workorder($data){
-		$vendor = $this->db->insert('workorders', $data);
+		$vendor = $this->db->insert('work_orders', $data);
 	    $insert = $this->db->insert_id();
 		return  $insert;
 	}
@@ -366,7 +366,7 @@ class Workorder_model extends MY_Model
     public function getlastInsert(){
 
         $this->db->select('*');
-        $this->db->from('workorders');
+        $this->db->from('work_orders');
         // $this->db->where('company_id', $company_id);
         $this->db->order_by('id', 'DESC');
         $this->db->limit(1);
@@ -406,6 +406,12 @@ class Workorder_model extends MY_Model
     public function update_tc($data)
     {
         extract($data);
+
+        if($id == NULL){
+            $vendor = $this->db->insert('terms_and_conditions', $data);
+            $insert_id = $this->db->insert_id();
+            return  $insert_id;
+        }else{
         // $vendor = $this->db->update('custom_fields', $data);
         //           $this->db->where('id', $data['id']);
 	    // $insert = $this->db->insert_id();
@@ -413,6 +419,7 @@ class Workorder_model extends MY_Model
         $this->db->where('id', $id);
         $this->db->update('terms_and_conditions', array('content' => $content));
         return $data;
+        }
     }
 
     public function update_header_f($data)
@@ -430,6 +437,11 @@ class Workorder_model extends MY_Model
     public function update_tu($data)
     {
         extract($data);
+        if($id == NULL){
+            $vendor = $this->db->insert('terms_of_use', $data);
+            $insert_id = $this->db->insert_id();
+            return  $insert_id;
+        }else{
         // $vendor = $this->db->update('custom_fields', $data);
         //           $this->db->where('id', $data['id']);
 	    // $insert = $this->db->insert_id();
@@ -437,7 +449,134 @@ class Workorder_model extends MY_Model
         $this->db->where('id', $id);
         $this->db->update('terms_of_use', array('content' => $content));
         return $data;
+        }
     }
+
+    public function getworkorderList()
+    {
+        $company_id = logged('company_id');
+
+        $this->db->select('work_orders.* , acs_profile.first_name,  acs_profile.last_name, acs_profile.middle_name, acs_profile.prof_id');
+		// $this->db->from('workorders.* , acs_profile.first_name,  acs_profile.last_name, acs_profile.middle_name, acs_profile.prof_id');
+        $this->db->from('work_orders');
+        $this->db->join('acs_profile', 'work_orders.customer_id  = acs_profile.prof_id');
+		$this->db->where('work_orders.company_id', $company_id);
+        $this->db->order_by('id', 'ASC');
+        $query = $this->db->get();
+        return $query->result();
+    }
+
+    public function getById($id)
+    {
+        $this->db->select('*');
+		$this->db->from('work_orders');
+		$this->db->where('id', $id);
+        $query = $this->db->get();
+        return $query->row();
+    }
+
+    public function checktemplateId($id)
+    {
+        $this->db->select('*');
+		$this->db->from('company_work_order_used');
+		$this->db->where('company_id', $id);
+        $query = $this->db->get();
+        return $query->row();
+    }
+
+    public function addTemplate($data)
+    {
+        $vendor = $this->db->insert('company_work_order_used', $data);
+	    $insert_id = $this->db->insert_id();
+		return  $insert_id;
+    }
+
+    public function updateTemplate($data)
+    {
+        extract($data);
+        $this->db->where('company_id', $company_id);
+        $this->db->update('company_work_order_used', array('work_order_template_id' => $work_order_template_id));
+        return true;
+    }
+
+    public function getcompany_work_order_used($company_id)
+    {
+        $this->db->select('*');
+		$this->db->from('company_work_order_used');
+		$this->db->where('company_id', $company_id);
+        $query = $this->db->get();
+        return $query->row();
+    }
+
+    public function getCompanyCompanyId($id)
+    {
+        $this->db->select('company_id');
+		$this->db->from('work_orders');
+		$this->db->where('id', $id);
+        $query = $this->db->get();
+        $comp = $query->row();
+        // // foreach($query as $q){
+        //     $company = $q->company_id;
+        // // }
+
+        $this->db->select('*');
+		$this->db->from('clients');
+		$this->db->where('id', $comp->company_id);
+        $query2 = $this->db->get();
+        return $query2->row();
+    }
+
+    public function getcustomerCompanyId($id)
+    {
+        $this->db->select('customer_id');
+		$this->db->from('work_orders');
+		$this->db->where('id', $id);
+        $query = $this->db->get();
+        $cus = $query->row();
+        // // foreach($query as $q){
+        //     $company = $q->company_id;
+        // // }
+
+        $this->db->select('*');
+		$this->db->from('acs_profile');
+		$this->db->where('prof_id', $cus->customer_id);
+        $query2 = $this->db->get();
+        return $query2->row();
+    }
+
+    public function getItems($id)
+    {
+        $this->db->select('*');
+		$this->db->from('work_orders');
+		$this->db->where('id', $id);
+        $query = $this->db->get();
+        $cus = $query->row();
+        // // foreach($query as $q){
+        //     $company = $q->company_id;
+        // // }
+
+        $where = array(
+            'type' => 'Work Order',
+            'type_id'   => $cus->id
+          );
+
+        $this->db->select('*');
+		$this->db->from('item_details');
+        // $this->db->where('type', 'Work Order');
+		// $this->db->where('type_id', $cus->id);
+        $this->db->where($where);
+        $query2 = $this->db->get();
+        return $query2->result();
+    }
+
+    public function save_payment($data)
+    {
+        $vendor = $this->db->insert('work_order_payments', $data);
+	    $insert_id = $this->db->insert_id();
+		return  $insert_id;
+    }
+
+    
 }
 
 /* End of file Workorder_model.php */

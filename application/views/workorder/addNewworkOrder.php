@@ -21,69 +21,93 @@ defined('BASEPATH') or exit('No direct script access allowed');
         padding-top:100px !important;
     }
     .pointer {cursor: pointer;}
+
+    .highlight{
+    background-color:#CAA1FC;
+    color:red;
+    padding:12px;
+}
    </style>
     <!-- page wrapper start -->
-    <div wrapper__section style="padding-left:1%;padding-top:2.5%;">
-        <div class="container-fluid" style="background-color:white;">
-            <div class="page-title-box">
-                <div class="row align-items-center">
-                    <div class="col-sm-6">
-                        <h3>New Work Orders</h3>
-                        <!-- <ol class="breadcrumb">
-                            <li class="breadcrumb-item active">Manage workorders.</li>
-                        </ol> -->
-                    </div>
+    <div wrapper__section>
+        <div class="container-fluid p-40">
+          <div class="card">
+              <div class="page-title-box pt-1 pb-0">
+                  <div class="row align-items-center">
+                      <div class="col-sm-12">
+                          </div>
+                          <!-- <h3 class="page-title mt-0">New Lead</h3> -->
+                          <h3 style="font-family: Sarabun, sans-serif">New Work Orders</h3>
+                          <!-- <div class="pl-3 pr-3 mt-1 row">
+                            <div class="col mb-4 left alert alert-warning mt-0 mb-2">
+                                <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">
+                                    To create new lead go to Lead TAB and Select new. Enter all the Lead information as shown below.
+                                    Enter Address information.  Enter Additional Information and Description
+                                    and Finally click Save Button.  All required fields must have information.
+                                </span>
+                            </div>
+                          </div> -->
+                      </div>
+                  </div>
+              </div>
+            <!-- end row -->
+            <!-- <div class="row">
+                <div class="col-md-12" style="background-color:#32243d;padding:1px;text-align:center;color:white;">
+                    <h5>General Information</h5>
                 </div>
             </div>
-            <!-- end row -->
+            <br> -->
+            <?php echo form_open_multipart('workorder/savenewWorkorder', [ 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?> 
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div id="header_area">
+                                <h4 class="mt-0 header-title mb-5">Header</h4>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <ol class="breadcrumb" style="margin-top:-30px;"> <i class="fa fa-pencil" aria-hidden="true"></i>
+                                            <li class="breadcrumb-item active">
+                                                <label style="background-color:#E8E8E9;" id="headerContent"><?php echo $headers->content; ?></label>
+                                                <input type="hidden" name="header" value="<?php echo $headers->content; ?>">
+                                            </li>
+                                        </ol>
+                                    </div> 
+                                </div>
+                                <br>
 
-            <?php echo form_open_multipart('workorder/savenewWorkorder', [ 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?>  
+                                <input type="hidden" id="company_name" value="<?php echo $clients->business_name; ?>">
+                                <input type="hidden" id="current_date" value="<?php echo @date('m-d-Y'); ?>">
 
-            <div class="row" style="margin-top:-30px;">
-                <div class="col-xl-12">
-                    <div class="card">
-                    <div class="card-body">
-                    <div id="header_area">
-                        <h4 class="mt-0 header-title mb-5">Header</h4>
-                        <div class="row">
-                            <div class="col-md-12">
-                                <ol class="breadcrumb" style="margin-top:-30px;"> <i class="fa fa-pencil" aria-hidden="true"></i>
-                                    <li class="breadcrumb-item active">
-                                        <label style="background-color:#E8E8E9;" id="headerContent"><?php echo $headers->content; ?></label>
-                                    </li>
-                                </ol>
-                            </div> 
+                                <input type="hidden" id="content_input" class="form-control" name="header" value="<?php echo $headers->content; ?>">
+                            </div>
                         </div>
-                        <br>
-
-                        <input type="hidden" id="company_name" value="<?php echo $clients->business_name; ?>">
-                        <input type="hidden" id="current_date" value="<?php echo @date('m-d-Y'); ?>">
-
-                        <input type="hidden" id="content_input" class="form-control" name="header" value="<?php echo $headers->content; ?>">
                     </div>
-                        <div class="row">                   
+                    <div class="row">                   
                             <div class="col-md-3 form-group">
                                 <label for="contact_name">Work Order #</label>
                                 <input type="text" class="form-control" name="workorder_number" id="contact_name" value="<?php echo "WO-"; 
                                            foreach ($number as $num):
-                                                $next = $num->workorder_number;
+                                                $next = $num->work_order_number;
                                                 $arr = explode("-", $next);
                                                 $date_start = $arr[0];
                                                 $nextNum = $arr[1];
                                             //    echo $number;
                                            endforeach;
                                            $val = $nextNum + 1;
-                                           echo str_pad($val,9,"0",STR_PAD_LEFT);
+                                           echo str_pad($val,7,"0",STR_PAD_LEFT);
                                            ?>" required />
                             </div>
                             <div class="col-md-3 form-group">
-                                <label for="contact_email">Select Customer</label><label style="float:right;color:green;"><i class="fa fa-plus-square" aria-hidden="true"></i> New Customer</label>
+                                <label for="contact_email">Select Customer</label><label style="float:right;color:green;"><a class="link-modal-open" href="javascript:void(0)" data-toggle="modal"
+                                       data-target="#modalNewCustomer" style="color:#02A32C;"><span
+                                                class="fa fa-plus fa-margin-right" style="color:#02A32C;"></span>New Customer</a></label>
+                                <div id="sel-customerdiv">               
                                 <select id="sel-customer" name="customer_id" data-customer-source="dropdown" class="form-control searchable-dropdown" placeholder="Select">
                                         <option value="0">- none -</option>
                                         <?php foreach($customers as $c){ ?>
-                                            <option value="<?= $c->prof_id; ?>"><?= $c->first_name . ' ' . $c->last_name; ?></option>
+                                            <option value="<?= $c->prof_id; ?>"><?= $c->contact_name . '' . $c->first_name . ' ' . $c->last_name; ?></option>
                                         <?php } ?>
                                     </select>
+                                    </div>
                             </div>
                             <div class="col-md-3 form-group">
                                 <label for="security_number">Security Number</label>
@@ -91,7 +115,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                             </div>
                             <div class="col-md-3 form-group">
                                 <label for="birthdate">Birth Date</label>
-                                <input type="text" class="form-control" name="birthdate" id="date_of_birth" required/>
+                                <input type="date" class="form-control" name="birthdate" id="date_of_birth" required/>
                             </div>
                         </div>
                         <div class="row">                   
@@ -110,7 +134,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         </div>
                         
                         <!-- end row -->
-                        <div class="row">                    
+                        <div class="row" id="sel-cul">                    
                             <div class="col-md-4 form-group">
                                 <label for="job_location">Job Location</label>
                                 <!-- <label style="float:right;color:green;"><i class="fa fa-plus-square" aria-hidden="true"></i> New Location</label> -->
@@ -507,7 +531,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                             <div class="row">                        
                                 <div class="form-group col-md-4">
                                     <label for="contact_name">Schedule Date Given</label>
-                                    <input type="text" class="form-control" name="schedule_date_given" id="schedule_date_given" />
+                                    <input type="date" class="form-control" name="schedule_date_given" id="schedule_date_given" />
                                 </div>      
                                 <div class="form-group col-md-4">
                                     <label for="workorder_priority">Priority</label>
@@ -555,7 +579,11 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <div class="form-group col-md-4">
                                     <label for="job_type">Amount</label><small class="help help-sm"> ( $ )</small>
                                     <input type="text" class="form-control" name="payment_amount" id="payment_amount"  />
-                                </div>                                       
+                                </div>
+                                <div class="form-group col-md-4" id="cash_area" style="display:none;">
+                                                <br><br>
+                                      <input type="checkbox" id="collected_checkbox"> <b style="font-size:14px;" id="collected_checkbox_label"> Cash collected already </b>          
+                                </div>                                      
                             </div>
                             <div id="check_area" style="display:none;">
                                 <div class="row">                   
@@ -595,15 +623,15 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <div class="row">                   
                                     <div class="form-group col-md-4">
                                         <label for="job_type">Credit Card Number</label>
-                                        <input type="text" class="form-control" name="credit_number" id="credit_number" placeholder="0000 0000 0000 000" />
+                                        <input type="text" class="form-control" name="debit_credit_number" id="credit_number" placeholder="0000 0000 0000 000" />
                                     </div>
                                     <div class="form-group col-md-3">
                                         <label for="job_type">Credit Card Expiration</label>
-                                        <input type="text" class="form-control" name="credit_expiry" id="credit_expiry" placeholder="MM/YYYY"/>
+                                        <input type="text" class="form-control" name="debit_credit_expiry" id="credit_expiry" placeholder="MM/YYYY"/>
                                     </div>  
                                     <div class="form-group col-md-3">
                                         <label for="job_type">CVC</label>
-                                        <input type="text" class="form-control" name="credit_cvc" id="credit_cvc" placeholder="CVC"/>
+                                        <input type="text" class="form-control" name="debit_credit_cvc" id="credit_cvc" placeholder="CVC"/>
                                     </div>                                            
                                 </div>
                             </div>
@@ -751,6 +779,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                     <label for="workorder_status">Status</label>
                                     <select name="status" id="workorder_status" class="form-control custom-select">
                                         <option value="New">New</option>
+                                        <option value="Draft">Draft</option>
                                         <option value="Scheduled">Scheduled</option>
                                         <option value="Started">Started</option>
                                         <option value="Paused">Paused</option>
@@ -810,11 +839,11 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 </div>
                             </div>
                             <div class="row">
-                                <div class=" col-md-4">
+                                <div class="col-md-4">
                                     <h6>Company Representative Approval</h6>
-                                    <div class="sigPad" id="smoothed1a" style="width:100%;border:solid gray 1px;">
+                                    <div class="sigPad" id="smoothed1a" style="width:100%;border:solid gray 1px;background-color:#00b300;">
                                     <!-- <a href="#" style="float:right;margin-right:10px;" class="smoothed1a_pencil" id="smoothed1a_pencil"><i class="fa fa-pencil" aria-hidden="true"></i></a> -->
-                                        <ul class="sigNav">
+                                        <ul class="sigNav" style="">
                                             <li class="drawIt"><a href="#draw-it">Draw It</a></li>
                                             <li class="clearButton"><a href="#clear">Clear</a></li>
                                         </ul>
@@ -823,8 +852,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         </ul>
                                         <div class="sig sigWrapper" id="smoothed1a_pencil" style="height:auto;pointer-events: none;">
                                             <div class="typed"></div>
-                                            <canvas class="pad" id="company_representative_approval_signature1a"
-                                                    width="400" height="250"></canvas>
+                                            <canvas class="pad" id="company_representative_approval_signature1a" style="width:100%;"></canvas>
                                             <input type="hidden" name="output-2" class="output">
                                         </div>
                                     </div>
@@ -838,9 +866,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                            id="comp_rep_approval" placeholder=""/>
 
                                 </div>
-                                <div class=" col-md-4">
+                                <div class="col-md-4">
                                     <h6>Primary Account Holder</h6>
-                                    <div class="sigPad" id="smoothed2a" style="width:100%;border:solid gray 1px;">
+                                    <div class="sigPad" id="smoothed2a" style="width:100%;border:solid gray 1px;background-color:#f7b900;">
                                     <!-- <p style="float:right;margin-right:10px;"><i class="fa fa-pencil" aria-hidden="true"></i></p> -->
                                         <ul class="sigNav">
                                             <li class="drawIt"><a href="#draw-it">Draw It</a></li>
@@ -851,8 +879,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         </ul>
                                         <div class="sig sigWrapper" style="height:auto;pointer-events: none;">
                                             <div class="typed"></div>
-                                            <canvas class="pad" id="primary_account_holder_signature2a" width="400"
-                                                    height="250"></canvas>
+                                            <canvas class="pad" id="primary_account_holder_signature2a" style="width:100%;"></canvas>
                                             <input type="hidden" name="output-2" class="output">
                                         </div>
                                     </div>
@@ -865,9 +892,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                            id="comp_rep_approval" placeholder=""/>
 
                                 </div>
-                                <div class=" col-md-4">
+                                <div class="col-md-4">
                                     <h6>Secondary Account Holder</h6>
-                                    <div class="sigPad" id="smoothed3a" style="width:100%;border:solid gray 1px;">
+                                    <div class="sigPad" id="smoothed3a" style="width:100%;border:solid gray 1px;background-color:#f75c1e;">
                                     <!-- <p style="float:right;margin-right:10px;"><i class="fa fa-pencil" aria-hidden="true"></i></p> -->
                                         <ul class="sigNav">
                                             <li class="drawIt"><a href="#draw-it">Draw It</a></li>
@@ -878,8 +905,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         </ul>
                                         <div class="sig sigWrapper" style="height:auto;pointer-events: none;">
                                             <div class="typed"></div>
-                                            <canvas class="pad" id="secondary_account_holder_signature3a" width="400"
-                                                    height="250"></canvas>
+                                            <canvas class="pad" id="secondary_account_holder_signature3a" style="width:100%;"></canvas>
                                             <input type="hidden" name="output-2" class="output">
                                         </div>
                                     </div>
@@ -893,8 +919,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
                                 </div>
                             </div>
-
-
+                
                             <div class="row" style="margin-top:80px;">                        
                                 <div class="form-group col-md-4">
                                     <label for="attachment">Attach Photo</label>
@@ -909,21 +934,35 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                     <input type="file" class="form-control" name="attachment" id="attachment">
                                 </div>                                                                
                             </div>
-                        <div class="row">
-                            <div class="col-md-12 form-group">
+
+                <br><br><br><br><br>
+                <div>
+
+                     <div class="form-group">
                                 <button type="submit" class="btn btn-flat btn-success">Submit</button>
                                 <button type="submit" class="btn btn-flat btn-success">Preview</button>
                                 <button type="submit" class="btn btn-flat btn-success" style="background-color: #32243d !important"><b>Save Template</b></button>
-                                <button type="submit" class="btn btn-flat btn-success">eSign</button>
+                                <button type="submit" class="btn btn-flat btn-success" id="esignButton">eSign</button>
                                 <a href="<?php echo url('workorder') ?>" class="btn ">Cancel this</a>
-                            </div>
-                        </div>
                     </div>
-                    </div>
-                    <!-- end card -->
                 </div>
+            <!-- end card -->
             </div>
-            <div class="modal fade" id="checklistModal" role="dialog">
+
+
+
+
+        </div>
+
+        <style>
+
+        </style>
+        <?php echo form_close(); ?>
+    </div>
+    <!-- end container-fluid -->
+</div>
+
+<div class="modal fade" id="checklistModal" role="dialog">
                         <div class="modal-dialog">            
                         <!-- Modal content-->
                         <div class="modal-content">
@@ -942,10 +981,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     </div>
                 </div>
 
-            <?php echo form_close(); ?>
-
-            <!-- Modal Service Address -->
-            <div class="modal fade" id="modalServiceAddress" tabindex="-1" role="dialog"
+<!-- Modal Service Address -->
+<div class="modal fade" id="modalServiceAddress" tabindex="-1" role="dialog"
                  aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-lg" role="document">
                     <div class="modal-content">
@@ -1138,7 +1175,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
             <!-- Modal New Customer -->
             <div class="modal fade" id="modalNewCustomer" tabindex="-1" role="dialog"
-                 aria-labelledby="exampleModalLabel" aria-hidden="true">
+                 aria-labelledby="exampleModalLabel" data-keyboard="false" style="z-index: 1050 !important;">
                 <div class="modal-dialog modal-lg" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -1183,13 +1220,77 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     </div>
                 </div>
             </div>
-            <!-- end row -->
-        </div>
-        <!-- end container-fluid -->
-    </div>
-    <!-- page wrapper end -->
-</div>
+
+            <div class="modal fade" id="docusignTemplateModal" tabindex="-1" role="dialog" aria-labelledby="docusignTemplateModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="docusignTemplateModalLabel">Select Template</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <table id="templatesTable" class="table" style="width: 100%;">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Created Date</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    </div>
+                    </div>
+                </div>
+            </div>
+
 <?php include viewPath('includes/footer'); ?>
+
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAlMWhWMHlxQzuolWb2RrfUeb0JyhhPO9c&libraries=places"></script>
+<script>
+function initialize() {
+          var input = document.getElementById('job_location');
+          var autocomplete = new google.maps.places.Autocomplete(input);
+            google.maps.event.addListener(autocomplete, 'place_changed', function () {
+                var place = autocomplete.getPlace();
+                document.getElementById('city2').value = place.name;
+                document.getElementById('cityLat').value = place.geometry.location.lat();
+                document.getElementById('cityLng').value = place.geometry.location.lng();
+            });
+        }
+        google.maps.event.addDomListener(window, 'load', initialize);
+</script>
+
+<script type="text/javascript">
+// $(window).on('beforeunload', function(){
+//     var c = confirm();
+//     if(c){
+//         return true;
+//     }
+//     else
+//         return false;
+// });
+</script>
+
+<script src="<?php echo $url->assets ?>js/add.js"></script>
+<script>
+jQuery(document).ready(function () {
+    $(document).on('click','#Commercial',function(){
+        $('#business_name_area').show();
+    });
+    $(document).on('click','#customer_type',function(){
+        $('#business_name_area').hide();
+    });
+    $(document).on('click','#advance',function(){
+        $('#business_name_area').hide();
+    });
+});
+</script>
+
 <script>
 
     document.getElementById('contact_mobile').addEventListener('input', function (e) {
@@ -1245,6 +1346,55 @@ $("#headerContent").html(function() {
     var companyName = $('#company_name').val();
 // Replace 'ok' with string you want to change, you can delete 'hello everyone' to remove the text
       return $(this).html().replace("{comp_name}", companyName);  
+
+});
+});
+
+jQuery(function($){
+
+// Replace 'td' with your html tag
+$("#thisdiv3").html(function() { 
+
+    // var companyName = $('#company_name').val();
+    // var now = new Date();
+    // now.setDate(now.getDate()+3);
+    // var n=3; //number of days to add. 
+    // var t = new Date();
+    // t.setDate(t.getDate() + n); 
+    // var month = "0"+(t.getMonth()+1);
+    // var date = "0"+t.getDate();
+    // month = month.slice(-2);
+    // date = date.slice(-2);
+    // var date = " "+ month +"-"+date +"-"+t.getFullYear();
+
+
+    // var startDate = "16-APR-2021";
+    var startDate = new Date();
+    // var daaa = new Date();
+    
+    // var date = d.getDate();
+    // var month = d.getMonth() + 1; // Since getMonth() returns month from 0-11 not 1-12
+    // var year = d.getFullYear();
+        
+    // var startDate = date + "-" + month + "-" + year;
+
+    // startDate = new Date(startDate.replace(/-/g, "/"));
+    var endDate = "", noOfDaysToAdd = 3, count = 0;
+    while(count < noOfDaysToAdd){
+        endDate = new Date(startDate.setDate(startDate.getDate() + 1));
+        if(endDate.getDay() != 0 && endDate.getDay() != 6){
+        count++;
+        }
+    }
+    //alert(endDate);
+    var month = "0"+(endDate.getMonth()+1);
+    var date = "0"+endDate.getDate();
+    month = month.slice(-2);
+    date = date.slice(-2);
+    var date = " "+ month +"-"+date +"-"+endDate.getFullYear();
+
+// alert(now);  
+      return $(this).html().replace("{current_date_3}", date);  
 
 });
 });
@@ -1566,6 +1716,13 @@ $(document).ready(function(){
 // // roomOcc.push(label);
 
 // });
+$(function () {
+    $('#collected_checkbox').click(function() {
+        // alert('yes');
+        var actualTime = "";
+        $('#collected_checkbox_label').toggleClass("highlight");
+    });
+});
 
 $('.mytxtc').each(function(e){
         $.ajaxSetup({
@@ -1860,6 +2017,7 @@ document.getElementById("payment_method").onchange = function() {
     if (this.value == 'Cash') {
         // alert('cash');
 		// $('#exampleModal').modal('toggle');
+        $('#cash_area').show();
         $('#check_area').hide();
         $('#credit_card').hide();
         $('#debit_card').hide();
@@ -1876,6 +2034,7 @@ document.getElementById("payment_method").onchange = function() {
 	
     else if(this.value == 'Check'){
         // alert('Check');
+        $('#cash_area').hide();
         $('#check_area').show();
         $('#credit_card').hide();
         $('#debit_card').hide();
@@ -1891,6 +2050,7 @@ document.getElementById("payment_method").onchange = function() {
     }
     else if(this.value == 'Credit Card'){
         // alert('Credit card');
+        $('#cash_area').hide();
         $('#check_area').hide();
         $('#credit_card').show();
         $('#debit_card').hide();
@@ -1906,6 +2066,7 @@ document.getElementById("payment_method").onchange = function() {
     }
     else if(this.value == 'Debit Card'){
         // alert('Credit card');
+        $('#cash_area').hide();
         $('#check_area').hide();
         $('#credit_card').hide();
         $('#debit_card').show();
@@ -1921,6 +2082,7 @@ document.getElementById("payment_method").onchange = function() {
     }
     else if(this.value == 'ACH'){
         // alert('Credit card');
+        $('#cash_area').hide();
         $('#check_area').hide();
         $('#credit_card').hide();
         $('#debit_card').hide();
@@ -1936,6 +2098,7 @@ document.getElementById("payment_method").onchange = function() {
     }
     else if(this.value == 'Venmo'){
         // alert('Credit card');
+        $('#cash_area').hide();
         $('#check_area').hide();
         $('#credit_card').hide();
         $('#debit_card').hide();
@@ -1951,6 +2114,7 @@ document.getElementById("payment_method").onchange = function() {
     }
     else if(this.value == 'Paypal'){
         // alert('Credit card');
+        $('#cash_area').hide();
         $('#check_area').hide();
         $('#credit_card').hide();
         $('#debit_card').hide();
@@ -1966,6 +2130,7 @@ document.getElementById("payment_method").onchange = function() {
     }
     else if(this.value == 'Square'){
         // alert('Credit card');
+        $('#cash_area').hide();
         $('#check_area').hide();
         $('#credit_card').hide();
         $('#debit_card').hide();
@@ -1981,6 +2146,7 @@ document.getElementById("payment_method").onchange = function() {
     }
     else if(this.value == 'Warranty Work'){
         // alert('Credit card');
+        $('#cash_area').hide();
         $('#check_area').hide();
         $('#credit_card').hide();
         $('#debit_card').hide();
@@ -1996,6 +2162,7 @@ document.getElementById("payment_method").onchange = function() {
     }
     else if(this.value == 'Home Owner Financing'){
         // alert('Credit card');
+        $('#cash_area').hide();
         $('#check_area').hide();
         $('#credit_card').hide();
         $('#debit_card').hide();
@@ -2011,6 +2178,7 @@ document.getElementById("payment_method").onchange = function() {
     }
     else if(this.value == 'e-Transfer'){
         // alert('Credit card');
+        $('#cash_area').hide();
         $('#check_area').hide();
         $('#credit_card').hide();
         $('#debit_card').hide();
@@ -2026,6 +2194,7 @@ document.getElementById("payment_method").onchange = function() {
     }
     else if(this.value == 'Other Credit Card Professor'){
         // alert('Credit card');
+        $('#cash_area').hide();
         $('#check_area').hide();
         $('#credit_card').hide();
         $('#debit_card').hide();
@@ -2041,6 +2210,7 @@ document.getElementById("payment_method").onchange = function() {
     }
     else if(this.value == 'Other Payment Type'){
         // alert('Credit card');
+        $('#cash_area').hide();
         $('#check_area').hide();
         $('#credit_card').hide();
         $('#debit_card').hide();

@@ -25,7 +25,6 @@ class Job extends MY_Controller
     }
 
     public function index() {
-
         $is_allowed = true; //$this->isAllowedModuleAccess(15);
         if( !$is_allowed ){
             $this->page_data['module'] = 'job';
@@ -52,6 +51,25 @@ class Job extends MY_Controller
         );
         $this->page_data['logged_in_user'] = $this->general->get_data_with_param($get_login_user,FALSE);
 
+        // check if settings has been set
+        $get_job_settings = array(
+            'where' => array(
+                'company_id' => $comp_id
+            ),
+            'table' => 'job_settings',
+            'select' => 'id',
+        );
+        $event_settings = $this->general->get_data_with_param($get_job_settings);
+        // add default event settings if not set
+        if(empty($event_settings)){
+            $event_settings_data = array(
+                'job_num_prefix' => 'JOB',
+                'job_num_next' => 1,
+                'company_id' => $comp_id,
+            );
+            $this->general->add_($event_settings_data, 'job_settings');
+        }
+
 
         $get_employee = array(
             'where' => array(
@@ -64,11 +82,26 @@ class Job extends MY_Controller
 
         // get all job tags
         $get_job_tags = array(
+            'where' => array(
+                'company_id' => logged('company_id')
+            ),
             'table' => 'job_tags',
             'select' => 'id,name',
         );
         $this->page_data['tags'] = $this->general->get_data_with_param($get_job_tags);
-        //echo logged('company_id');
+
+        $get_job_types = array(
+            'where' => array(
+                'company_id' => logged('company_id')
+            ),
+            'table' => 'job_types',
+            'select' => 'id,title',
+            'order' => array(
+                'order_by' => 'id',
+                'ordering' => 'DESC',
+            ),
+        );
+        $this->page_data['job_types'] = $this->general->get_data_with_param($get_job_types);
 
         // get color settings
         $get_color_settings = array(
@@ -80,19 +113,10 @@ class Job extends MY_Controller
         );
         $this->page_data['color_settings'] = $this->general->get_data_with_param($get_color_settings);
 
-        $get_job_types = array(
-            'table' => 'job_types',
-            'select' => 'id,title',
-            'order' => array(
-                'order_by' => 'id',
-                'ordering' => 'DESC',
-            ),
-        );
-        $this->page_data['job_types'] = $this->general->get_data_with_param($get_job_types);
 
         $get_company_info = array(
             'where' => array(
-                'id' => logged('company_id'),
+                'company_id' => logged('company_id'),
             ),
             'table' => 'business_profile',
             'select' => 'business_phone,business_name',
@@ -206,97 +230,51 @@ class Job extends MY_Controller
         );
         $this->page_data['logged_in_user'] = $this->general->get_data_with_param($get_login_user,FALSE);
 
-        $get_employee = array(
-            'where' => array(
-                'company_id' => $comp_id
-            ),
-            'table' => 'users',
-            'select' => 'id,FName,LName',
-        );
-        $this->page_data['employees'] = $this->general->get_data_with_param($get_employee);
-
-        // get all job tags
-        $get_job_tags = array(
-            'table' => 'job_tags',
-            'select' => 'id,name',
-        );
-        $this->page_data['tags'] = $this->general->get_data_with_param($get_job_tags);
-        //echo logged('company_id');
-
-        // get color settings
-        $get_color_settings = array(
-            'where' => array(
-                'company_id' => logged('company_id')
-            ),
-            'table' => 'color_settings',
-            'select' => '*',
-        );
-        $this->page_data['color_settings'] = $this->general->get_data_with_param($get_color_settings);
-
-        $get_job_types = array(
-            'table' => 'job_types',
-            'select' => 'id,title',
-            'order' => array(
-                'order_by' => 'id',
-                'ordering' => 'DESC',
-            ),
-        );
-        $this->page_data['job_types'] = $this->general->get_data_with_param($get_job_types);
-
         $get_company_info = array(
             'where' => array(
-                'id' => logged('company_id'),
+                'company_id' => logged('company_id'),
             ),
             'table' => 'business_profile',
-            'select' => 'business_phone,business_name,business_logo,business_email,street,city,postal_code,state',
+            'select' => 'id,business_phone,business_name,business_logo,business_email,street,city,postal_code,state,business_image',
         );
         $this->page_data['company_info'] = $this->general->get_data_with_param($get_company_info,FALSE);
 
-        // get items
-        $get_items = array(
-            'where' => array(
-                'company_id' => logged('company_id'),
-                'is_active' => 1,
-            ),
-            'table' => 'items',
-            'select' => 'id,title,price',
-        );
-        $this->page_data['items'] = $this->general->get_data_with_param($get_items);
-
-        // get estimates
-        $get_estimates = array(
-            'where' => array(
-                'company_id' => logged('company_id'),
-            ),
-            'table' => 'estimates',
-            'select' => 'id,estimate_number,estimate_date,job_name,customer_id',
-        );
-        $this->page_data['estimates'] = $this->general->get_data_with_param($get_estimates);
-
-        // get workorder
-        $get_workorder = array(
-            'where' => array(
-                'company_id' => logged('company_id'),
-            ),
-            'table' => 'work_orders',
-            'select' => 'id,work_order_number,start_date,job_name,customer_id',
-        );
-        $this->page_data['workorders'] = $this->general->get_data_with_param($get_workorder);
-
-        // get invoices
-        $get_invoices = array(
-            'where' => array(
-                'company_id' => logged('company_id'),
-            ),
-            'table' => 'invoices',
-            'select' => 'id,invoice_number,date_issued,job_name,customer_id',
-        );
-        $this->page_data['invoices'] = $this->general->get_data_with_param($get_invoices);
         if(!$id==NULL){
             $this->page_data['jobs_data'] = $this->jobs_model->get_specific_job($id);
             $this->page_data['jobs_data_items'] = $this->jobs_model->get_specific_job_items($id);
         }
         $this->load->view('job/job_preview', $this->page_data);
+    }
+
+    public function billing($id=null) {
+        $this->load->helper('functions');
+        $comp_id = logged('company_id');
+        $user_id = logged('id');
+        // get all employees
+        // get all job tags
+        $get_login_user = array(
+            'where' => array(
+                'id' => $user_id
+            ),
+            'table' => 'users',
+            'select' => 'id,FName,LName',
+        );
+        $this->page_data['logged_in_user'] = $this->general->get_data_with_param($get_login_user,FALSE);
+
+        $get_company_info = array(
+            'where' => array(
+                'company_id' => logged('company_id'),
+            ),
+            'table' => 'business_profile',
+            'select' => 'id,business_phone,business_name,business_logo,business_email,street,city,postal_code,state,business_image',
+        );
+        $this->page_data['company_info'] = $this->general->get_data_with_param($get_company_info,FALSE);
+
+        if(!$id==NULL){
+            $this->page_data['jobs_data'] = $this->jobs_model->get_specific_job($id);
+            $this->page_data['jobs_data_items'] = $this->jobs_model->get_specific_job_items($id);
+        }
+        $this->load->view('job/job_billing', $this->page_data);
     }
 
     public function send_invoice_preview($id=null) {
@@ -784,13 +762,9 @@ class Job extends MY_Controller
             ),
             'table' => 'job_settings',
             'select' => '*',
-            'limit' => 1,
-            'order' => array(
-                'order_by' => 'id'
-            ),
         );
         $job_settings = $this->general->get_data_with_param($get_job_settings);
-        $job_number = $job_settings[0]->job_num_prefix.'-000'.$job_settings[0]->job_num_next;
+        $job_number = $job_settings[0]->job_num_prefix.' - #000000'.$job_settings[0]->job_num_next;
 
         $jobs_data = array(
             'job_number' => $job_number,
@@ -818,6 +792,7 @@ class Job extends MY_Controller
             'attachment' => $input['attachment'],
             'tax_rate' => $input['tax_rate'],
             'job_type' => $input['job_type'],
+            'date_issued' => $input['start_date'],
         );
         $jobs_id = $this->general->add_return_id($jobs_data, 'jobs');
 
@@ -880,32 +855,10 @@ class Job extends MY_Controller
 
         }
         $this->general->add_($jobs_payments_data, 'jobs_pay_details');
-
         $jobs_settings_data = array(
-            'job_num_prefix' => 'JOB',
-            'job_num_next' => $job_settings[0]->job_num_next + 1,
-            'company_id' => $comp_id
+            'job_num_next' => $job_settings[0]->job_num_next + 1
         );
-        $this->general->add_($jobs_settings_data, 'job_settings');
-
-        // add to cslendar of the new job
-//        $events_data = array(
-//            'customer_id' => $input['customer_id'],
-//            'event_description' => $input['job_description'],
-//            'employee_id' => $input['employee_id'],
-//            'start_date' => $input['start_date'],
-//            'start_time' => $input['start_time'],
-//            'end_date' => $input['end_date'],
-//            'end_time' => $input['end_time'],
-//            'event_color' => $jobs_id,
-//            'customer_reminder_notification' => $input['customer_reminder_notification'],
-//            'company_id' => $comp_id,
-//            //'description' => $jobs_id,
-//            //'tags' => $jobs_id,
-//            'notify_at' => $input['customer_reminder_notification'],
-//        );
-//        $this->general->add_($events_data, 'events');
-
+        $this->general->update_with_key($jobs_settings_data,$job_settings[0]->id, 'job_settings');
         echo $jobs_id;
     }
 
@@ -1709,21 +1662,90 @@ class Job extends MY_Controller
     public function send_customer_invoice_email($id){
         include APPPATH . 'libraries/PHPMailer/PHPMailerAutoload.php';
         $this->load->helper(array('url', 'hashids_helper'));
-
+        $this->load->model('general_model');
         $this->load->model('AcsProfile_model');
 
         $job = $this->jobs_model->get_specific_job($id);
         if( $job ){
-            $eid = hashids_encrypt($job->job_unique_id, '', 15);
+            $eid      = hashids_encrypt($job->job_unique_id, '', 15);
+            $job_id   = hashids_decrypt($eid, '', 15);
             $url = base_url('/job_invoice_view/' . $eid);
             $customer = $this->AcsProfile_model->getByProfId($job->customer_id);
 
+             $get_company_info = array(
+                'where' => array(
+                    'company_id' => $job->company_id,
+                ),
+                'table' => 'business_profile',
+                'select' => 'id,business_phone,business_name,business_logo,business_email,street,city,postal_code,state,business_image',
+            );
+
+            $company   = $this->general_model->get_data_with_param($get_company_info,FALSE);
+            $jobs_data_items = $this->jobs_model->get_specific_job_items($job_id);                                    
+            $group_items = array();
+            foreach($jobs_data_items as $ji){
+                $type = 'product';
+                if($ji->type != 'product'){
+                    $type = 'service';
+                }
+                $group_items[$type][] = [
+                    'item_name' => $ji->title,
+                    'item_price' => $ji->price,
+                    'item_qty' => $ji->qty
+                ];
+            }
             $subject = "NsmarTrac : Job Invoice";
-            $msg = "<p>Hi " . $customer->first_name . ",</p>";
-            $msg .= "<p>Please see url below for invoice job number <b>".$job->job_number."</b>.</p>";
-            $msg .= "<p>Click <a href='".$url."'>here</a> to view your job invoice.</p><br />";
-            $msg .= "<p>Thank you <br /><br /> NsmarTrac Team</p>";
+            $img_source = base_url('/uploads/users/business_profile/'.$company->id.'/'.$company->business_image);
+            $msg .= "<img style='width: 300px;margin-top:41px;margin-bottom:24px;' alt='Logo' src='".$img_source."' /><br />";
+            $msg .= "<h1>Your Invoice from ". $company->business_name ."</h1><br />";
+            $msg .= "<p>Hi " . $customer->first_name . ",</p>";
+            $msg .= "<p>Attached please find invoice <b>#" . $job->job_number . "</b> for your service</p>";
+            $msg .= "<p>Thank you,</p><br />";
+
+            $msg .= "<table>";
+                $msg .= "<tr><td><b>Invoice Number</b></td><td>: ".$job->job_number."</td></tr>";
+                $msg .= "<tr><td><b>Service Date</b></td><td>: ".date('m/d/Y', strtotime($job->start_date))."</td></tr>";
+                $msg .= "<tr><td colspan='2'><br /></td></tr>";
+                $msg .= "<tr><td><b>Customer Name</b></td><td>: ".$job->first_name.' '.$job->last_name."</td></tr>";
+                $msg .= "<tr><td><b>Service Address</b></td><td>: ".$jobs_data->cust_city.' '.$jobs_data->cust_state.' '.$jobs_data->cust_zip_code."</td></tr>";
+            $msg .= "</table>";
             
+            $grand_total = 0;
+            foreach($group_items as $type => $items){
+                $subtotal = 0;
+
+                $msg .= "<h2>".ucfirst($type)."</h2>";
+                $msg .= "<table>";
+                foreach($items as $i){
+                    $total = $i['item_price'] * $i['item_qty'];
+                    //$msg  .= "<tr><td>".$item->title."</td><td>".$item->qty."x".$item->price."</td><td>".number_format((float)$total,2,'.',',')."</td></tr>";
+                    $msg  .= "<tr><td width='300'>".$i['item_name']."</td><td>".number_format((float)$total,2,'.',',')."</td></tr>";
+                    $subtotal = $subtotal + $total;                    
+                }
+                $msg .= "<tr><td colspan='2'><hr /></td></tr>";
+                $msg .= "<tr><td width='300'>Subtotal</td><td>".number_format((float)$subtotal,2,'.',',')."</td></tr>";
+                $msg .= "</table>";
+
+                $grand_total += $subtotal;
+
+            }
+
+            $msg .= "<br /><br />";
+            $msg .= "<table>";
+                $msg .= "<tr><td width='300'><h3>Amount Due</h3></td><td><h2>".number_format((float)$grand_total,2,'.',',')."</h2></td></tr>";
+                $msg .= "<tr><td colspan='2'><br><br></td></tr>";
+                $msg .= "<tr><td colspan='2' style='text-align:center;'><a href='".$url."' style='background-color:#32243d;color:#fff;padding:10px 25px;border:1px solid transparent;border-radius:2px;font-size:22px;text-decoration:none;'>PAY NOW</a></td></tr>";
+            $msg .= "</table>";
+
+            $msg .= "<p style='margin-top:43px;width:23%;color:#222;font-size:16px;text-align:left;padding:19px;'>Delinquent Account are subject to Property Liens. Interest will be charged to delinquent accounts at the rate of 1.5% (18% Annum) per month. In the event of default, the customer agrees to pay all cost of collection, including attorney's fees, whether suit is brought or not.</p>";
+            $msg .= "<p style='width:24%;color:#222;font-size:16px;text-align:center;padding:1px;'><a href='tel:".$company->business_phone."'>".$company->business_phone."</a> | <a href='mailto:".$company->business_email."'>".$company->business_email."</a></p>";
+
+            $msg .= "<br><br><br><br><br>";
+            $nsmart_logo = base_url("assets/dashboard/images/logo.png");
+            $msg .= "<table>";
+                $msg .= "<tr><td colspan='2' style='text-align:center;'><span style='display:inline-block;'>Powered By</span> <br><br> <img style='width:328px;margin-bottom:40px;' src='".$nsmart_logo."' /></td></tr>";
+            $msg .= "</table>";
+
             //Email Sending
             $server    = MAIL_SERVER;
             $port      = MAIL_PORT ;
@@ -1732,7 +1754,8 @@ class Job extends MY_Controller
             $from      = MAIL_FROM;
             $recipient = $customer->email;
             //$recipient = 'bryann.revina03@gmail.com';
-
+            $attachment = $this->create_job_invoice_pdf($job->job_unique_id);
+            
             $mail = new PHPMailer;
             //$mail->SMTPDebug = 4;
             $mail->isSMTP();
@@ -1750,6 +1773,7 @@ class Job extends MY_Controller
             $mail->isHTML(true);
             $mail->Subject = $subject;
             $mail->Body    = $msg;
+            $mail->addAttachment($attachment);  
 
             if(!$mail->Send()) {
                 $this->session->set_flashdata('alert-type', 'danger');
@@ -1763,8 +1787,62 @@ class Job extends MY_Controller
             $this->session->set_flashdata('message', 'Cannot find data.');
             $this->session->set_flashdata('alert_class', 'alert-danger');
         }
-
         redirect('job');
+    }
+
+    public function create_job_invoice_pdf($job_id){
+        // load models
+        $this->load->model('general_model');
+        $this->load->model('jobs_model');
+        $this->load->model('CompanyOnlinePaymentAccount_model');
+
+        // load helpers
+        $this->load->helper('functions');
+
+        $job = $this->jobs_model->get_specific_job($job_id);
+        $get_company_info = array(
+            'where' => array(
+                'company_id' => $job->company_id,
+            ),
+            'table' => 'business_profile',
+            'select' => 'id,business_phone,business_name,business_logo,business_email,street,city,postal_code,state,business_image',
+        );
+        $onlinePaymentAccount = $this->CompanyOnlinePaymentAccount_model->getByCompanyId($job->company_id);
+        $this->page_data['onlinePaymentAccount'] = $onlinePaymentAccount;
+        $this->page_data['company_info'] = $this->general_model->get_data_with_param($get_company_info,FALSE);
+        $this->page_data['jobs_data_items'] = $this->jobs_model->get_specific_job_items($job_id);
+        $this->page_data['jobs_data'] = $job;
+        $content = $this->load->view('job/job_customer_invoice_pdf', $this->page_data, TRUE);
+        //echo $content;exit;
+
+        $this->load->library('Reportpdf');
+        $title = 'jobinvoice';
+
+        $obj_pdf = new Reportpdf('L', 'mm', 'A4', true, 'UTF-8', false);
+        $obj_pdf->SetTitle($title);
+        $obj_pdf->setPrintHeader(false);
+        $obj_pdf->setPrintFooter(false);
+        //$obj_pdf->SetDefaultMonospacedFont('helvetica');
+        $obj_pdf->SetMargins(10, 5, 10, 0, true);
+        $obj_pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
+        //$obj_pdf->SetFont('courierI', '', 9);
+        $obj_pdf->setFontSubsetting(false);
+        // set some language-dependent strings (optional)
+        if (@file_exists(dirname(__FILE__) . '/lang/eng.php')) {
+            require_once(dirname(__FILE__) . '/lang/eng.php');
+            $pdf->setLanguageArray($l);
+        }
+        $obj_pdf->AddPage('L');
+        $html = '';
+        $obj_pdf->writeHTML($html . $content, true, false, true, false, '');
+        ob_clean();
+        $obj_pdf->lastPage();
+        // $obj_pdf->Output($title, 'I');
+        $filename = strtolower($job->job_number) . ".pdf";
+        $file     = dirname(__DIR__, 2) . '/uploads/job_invoce_pdf/' . $filename;
+        $obj_pdf->Output($file, 'F');        
+        //$obj_pdf->Output($file, 'F');
+        return $file;
     }
 }
 

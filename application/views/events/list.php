@@ -1,126 +1,3 @@
-<style>
-    hr{
-        border: 0.5px solid #32243d !important;
-        width: 100%;
-    }
-    .form-group {
-        margin-bottom: 2px !important;
-    }
-    .banking-tab-container {
-        border-bottom: 1px solid grey;
-        padding-left: 0;
-    }
-    .form-line{
-        padding-bottom: 1px;
-    }
-    .input_select{
-        color: #363636;
-        border: 2px solid #e0e0e0;
-        box-shadow: none;
-        display: inline-block !important;
-        width: 100%;
-        background-color: #fff;
-        background-clip: padding-box;
-        font-size: 11px !important;
-    }
-    .pb-30 {
-        padding-bottom: 30px;
-    }
-    h5.card-title.mb-0, p.card-text.mt-txt {
-        text-align: center !important;
-    }
-    .dropdown-toggle::after {
-        display: block;
-        position: absolute;
-        top: 54% !important;
-        right: 9px !important;
-    }
-    .card-deck-upgrades {
-        display: block;
-    }
-    .card-deck-upgrades div {
-        padding: 20px;
-        float: left;
-        width: 33.33%;
-    }
-    .card-body.align-left {
-        width: 100% !important;
-    }
-    .card-deck-upgrades div a {
-        display: block;
-        width: 100%;
-        min-height: 400px;
-        float: left;
-        text-align: center;
-    }
-    .page-title, .box-title {
-        font-family: Sarabun, sans-serif !important;
-        font-size: 1.75rem !important;
-        font-weight: 600 !important;
-        padding-top: 5px;
-    }
-    .pr-b10 {
-        position: relative;
-        bottom: 10px;
-    }
-    .left {
-        float: left;
-    }
-    .p-40 {
-        padding-left: 15px !important;
-        padding-top: 40px !important;
-    }
-    a.btn-primary.btn-md {
-        height: 38px;
-        display: inline-block;
-        border: 0px;
-        padding-top: 7px;
-        position: relative;
-        top: 0px;
-    }
-    .card.p-20 {
-        padding-top: 18px !important;
-    }
-    .fr-right {
-        float: right;
-        justify-content: flex-end;
-    }
-    .p-20 {
-        padding-top: 25px !important;
-        padding-bottom: 25px !important;
-        padding-right: 20px !important;
-        padding-left: 20px !important;
-    }
-    .pd-17 {
-        position: relative;
-        left: 17px;
-    }
-    @media only screen and (max-width: 1300px) {
-        .card-deck-upgrades div a {
-            min-height: 440px;
-        }
-    }
-    @media only screen and (max-width: 1250px) {
-        .card-deck-upgrades div a {
-            min-height: 480px;
-        }
-        .card-deck-upgrades div {
-            padding: 10px !important;
-        }
-    }
-    @media only screen and (max-width: 600px) {
-        .p-40 {
-            padding-top: 0px !important;
-        }
-        .pr-b10 {
-            position: relative;
-            bottom: 0px;
-        }
-    }
-    .card{
-        box-shadow: 0 0 13px 0 rgb(116 116 117) !important;
-    }
-</style>
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 // CSS to add only Customer module
@@ -132,6 +9,9 @@ add_css(array(
     'assets/textEditor/summernote-bs4.css',
 ));
 ?>
+<!-- load page css -->
+<?php include viewPath('events/css/list'); ?>
+
 <?php include viewPath('includes/header'); ?>
 <div class="wrapper" role="wrapper">
     <?php include viewPath('includes/sidebars/events'); ?>
@@ -184,16 +64,7 @@ add_css(array(
                                         <a class="nav-link active" href="#" aria-controls="tab1" aria-selected="true">Started (0)</a>
                                     </li>
                                     <li>
-                                        <a class="nav-link active" href="#" aria-controls="tab1" aria-selected="true">Paused (0)</a>
-                                    </li>
-                                    <li>
-                                        <a class="nav-link active" href="#" aria-controls="tab1" aria-selected="true">Invoiced (0)</a>
-                                    </li>
-                                    <li>
-                                        <a class="nav-link active" href="#" aria-controls="tab1" aria-selected="true">Withdrawn (0)</a>
-                                    </li>
-                                    <li>
-                                        <a class="nav-link active" href="#" aria-controls="tab1" aria-selected="true">Closed (0)</a>
+                                        <a class="nav-link active" href="#" aria-controls="tab1" aria-selected="true">Finished (0)</a>
                                     </li>
                                 </ul>
                             </div>
@@ -205,7 +76,7 @@ add_css(array(
                                             <!--<th class="text-center"><input type="checkbox" class="form-control" id="jobCheckbox" value=""></th>-->
                                             <th scope="col"><strong>Job Number</strong></th>
                                             <th scope="col"><strong>Date</strong></th>
-                                            <th scope="col"><strong>Customer</strong></th>
+                                            <!-- <th scope="col"><strong>Customer</strong></th>-->
                                             <th scope="col"><strong>Employee</strong></th>
                                             <th scope="col"><strong>Amount</strong></th>
                                             <th scope="col"><strong>Event Type</strong></th>
@@ -218,9 +89,9 @@ add_css(array(
                                             <tr>
                                                 <td class="pl-3"><?= $event->event_number; ?></td>
                                                 <td class="pl-3"><?php echo date_format(date_create($event->date_created),"m/d/Y"); ?></td>
-                                                <td class="pl-3"><?= $event->first_name.' '.$event->last_name ; ?></td>
+                                                <!--<td class="pl-3"><?= $event->first_name.' '.$event->last_name ; ?></td>-->
                                                 <td class="pl-3"><?= $event->FName.' '.$event->LName ; ?></td>
-                                                <td class="pl-3">$0.00<?= $event->amount; ?></td>
+                                                <td class="pl-3">$<?= number_format((float)$event->amount,2,'.',',') ; ?></td>
                                                 <td class="pl-3"><?= $event->event_type; ?></td>
                                                 <td class="pl-3"><?= $event->event_tag; ?></td>
                                                 <td class="pl-3">

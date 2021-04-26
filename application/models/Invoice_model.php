@@ -457,6 +457,13 @@ class Invoice_model extends MY_Model
         $result = $this->db->get();
         return $result->result();
     }
+
+    public function savenewCustomer($data)
+    {
+        $custom = $this->db->insert('acs_profile', $data);
+	    $insert = $this->db->insert_id();
+		return  $insert;
+    }
 }
 
 /* End of file Invoice_model.php */

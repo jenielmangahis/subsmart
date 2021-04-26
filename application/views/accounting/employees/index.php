@@ -91,8 +91,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                     <span class="sr-only">Toggle Dropdown</span>
                                                 </button>
                                                 <div class="dropdown-menu">
-                                                    <a class="dropdown-item" href="#">Bonus only</a>
-                                                    <a class="dropdown-item" href="#">Commision only</a>
+                                                    <a class="dropdown-item" href="#" id="bonus-only">Bonus only</a>
+                                                    <?php if($commission_pays !== null && count($commission_pays) > 0) : ?>
+                                                    <a class="dropdown-item" href="#" id="commission-only">Commision only</a>
+                                                    <?php endif; ?>
                                                 </div>
                                             </div>
                                         </div>

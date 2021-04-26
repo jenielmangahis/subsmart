@@ -51,6 +51,25 @@ class Items extends MY_Controller
         exit();
     }
 
+    public function getitems_cm()
+    {
+        $keyword = get('sk');
+        // $res = $this->items_model->getByLike('title',$keyword);
+        $company_id = logged('company_id');
+        $res = $this->db->where('company_id', $company_id)->like('title', $keyword, 'after')->get('items')->result();
+        foreach ($res as $row) {
+            if( $row->discount == '' ){
+                $discount = 0;
+            }else{
+                $discount = $row->discount;
+            }
+            $gh = "'" . $row->title . "'," . $row->price . "," . $discount . "," . $row->id;
+
+            echo '<li onClick="setitemCM(this,' . $gh . ')">' . $row->title . '</li>';
+        }
+        exit();
+    }
+
     public function index()
     {
         $is_allowed = $this->isAllowedModuleAccess(20);

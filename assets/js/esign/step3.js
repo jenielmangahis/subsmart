@@ -16,12 +16,12 @@ function Step3() {
   const $fields = $(".fields");
 
   const $recipientSelect = $(".esignBuilder__recipientSelect");
-
-  const fileId = parseInt($("[name=file_id]").val());
-  const documentUrl = $form.data("doc-url");
-  const prefixURL = location.hostname === "localhost" ? "/nsmartrac" : "";
-
   const $optionsSidebar = $(".esignBuilder__optionsSidebar");
+
+  let fileId = undefined;
+  let documentUrl = undefined;
+  let isTemplate = undefined;
+  const prefixURL = location.hostname === "localhost" ? "/nsmartrac" : "";
 
   async function renderPage({ canvas, page, document }) {
     const documentPage = await document.getPage(page);
@@ -76,22 +76,62 @@ function Step3() {
       $element = $element.closest(".esignBuilder__field");
     }
 
-    const $parent = $element.closest(".docPage");
+    let docPage = undefined;
+    let docId = undefined;
+
+    const elementYTop = $element.get(0).offsetTop;
+
+    const $pages = [...$docRenderer.find(".docPage")];
+    for (let index = 0; index < $pages.length; index++) {
+      const $docPage = $($pages[index]);
+      const docPageHeight = $docPage.height();
+      const docPageYBottom = $docPage.get(0).offsetTop + docPageHeight;
+
+      if (elementYTop <= docPageYBottom) {
+        position.pageTop = elementYTop - (docPageYBottom - docPageHeight);
+        docPage = parseInt($docPage.attr("data-page"));
+        break;
+      }
+    }
+
+    const $documents = [...$docRenderer.find(".docPageContainer")];
+    for (let index = 0; index < $documents.length; index++) {
+      const $document = $($documents[index]);
+      const docHeight = $document.height();
+      const docYBottom = $document.get(0).offsetTop + docHeight;
+
+      if (elementYTop <= docYBottom) {
+        docId = parseInt($document.attr("data-document-id"));
+        break;
+      }
+    }
+
     const key = $element.find(".subData").data("key");
-    const docPage = $parent.data("page");
     const recipientId = $("#recipientsSelect").get(0).dataset.recipientId;
+
+    const fieldName = $element.text().trim();
+
+    if (fieldName === "Text") {
+      specs = { ...specs, width: parseInt($element.css("width"), 10) };
+    }
 
     const payload = {
       coordinates: position,
       docfile_id: fileId,
       doc_page: docPage,
+      doc_id: docId,
       unique_key: key,
-      field: $element.text().trim(),
+      field: fieldName,
       recipient_id: recipientId,
       specs,
     };
 
-    const endpoint = `${prefixURL}/esign/apiCreateUserDocfileFields`;
+    let endpoint = `${prefixURL}/esign/apiCreateUserDocfileFields`;
+    if (isTemplate) {
+      endpoint = `${prefixURL}/DocuSign/apiCreateTemplateFields`;
+      payload.template_id = fileId;
+    }
+
     const response = await fetch(endpoint, {
       method: "POST",
       body: JSON.stringify(payload),
@@ -114,7 +154,11 @@ function Step3() {
   }
 
   async function getFields() {
-    const endpoint = `${prefixURL}/esign/apiGetUserDocfileFields/${fileId}`;
+    let endpoint = `${prefixURL}/esign/apiGetUserDocfileFields/${fileId}`;
+    if (isTemplate) {
+      endpoint = `${prefixURL}/DocuSign/apiGetTemplateFields/${fileId}`;
+    }
+
     const response = await fetch(endpoint);
     const data = await response.json();
     fields = data.fields;
@@ -152,6 +196,12 @@ function Step3() {
         const $inputs = options.map((value) => createDropdownInput({ value })); // prettier-ignore
         $optionsSidebar.append($inputs);
       }
+    } else if (field_name === "Text") {
+      fieldType = "text";
+      $("#requiredText").prop("checked", false);
+      $("#readOnlyText").prop("checked", false);
+      $("#requiredText").prop("checked", specs.is_required);
+      $("#readOnlyText").prop("checked", specs.is_read_only);
     }
 
     $optionsSidebar.attr("data-field-type", fieldType);
@@ -184,17 +234,10 @@ function Step3() {
         style="left: ${left}px; top: ${top}px; --color: ${color}"
       >
         <div class="subData" data-key="${uniqueKey}">${fieldName}</div>
-
-        <div class="esignBuilder__fieldOptions">
-            <div class="esignBuilder__fieldClose">
-                <i class="fa fa-times"></i>
-            </div>
-        </div>
       </div>
     `;
 
     const $element = createElementFromHTML(html);
-    $close = $element.find(".esignBuilder__fieldClose");
     const activeClass = "esignBuilder__field--active";
 
     const fieldsWithOption = [
@@ -207,23 +250,16 @@ function Step3() {
     // const hasOption = fieldsWithOption.includes(fieldName);
     const hasOption = true;
 
-    $close.on("click", async (event) => {
-      const $parent = $(event.target).closest(".ui-draggable");
-      const $signature = $parent.find(".subData");
-      const uniqueKey = $signature.data("key");
+    if (fieldName === "Text") {
+      let { specs } = field;
+      specs = specs ? JSON.parse(specs) : { width: "initial" };
+      $element.css({ width: specs.width });
 
-      const endpoint = `${prefixURL}/esign/apiDeleteDocfileField/${uniqueKey}`;
-      await fetch(endpoint, { method: "DELETE" });
-
-      $parent.remove();
-      hideFieldSidebar();
-    });
-
-    $element.draggable({
-      containment: ".ui-droppable",
-      appendTo: ".ui-droppable",
-      stop: (_, ui) => storeField(ui.position, $(ui.helper)),
-    });
+      $element.resizable({
+        handles: "e",
+        stop: (_, ui) => storeField(ui.position, $(ui.helper)),
+      });
+    }
 
     $element.find(".subData").on("click", function () {
       const $prevActive = $(`.${activeClass}`);
@@ -255,47 +291,39 @@ function Step3() {
     return $element;
   }
 
-  async function renderPDF() {
-    const document = await PDFJS.getDocument({ url: documentUrl });
-    for (let index = 1; index <= document.numPages; index++) {
-      const currentFields = fields.filter(({ doc_page }) => doc_page == index);
-      const params = { page: index, document };
+  async function renderPDF(data = null) {
+    if (data) {
+      const { id, path } = data;
+      const url = `${prefixURL}/${path.replace(/^\//, "")}`;
 
-      const $page = await getPage(params);
-      $docRenderer.append($page);
+      const document = await PDFJS.getDocument({ url });
+      const $container = createElementFromHTML("<div></div>");
+      $container.addClass("docPageContainer");
+      $container.attr("data-document-id", id);
 
-      const { top: offsetTop } = $page.offset();
-      const $pagePreview = await getPagePreview({ ...params, offsetTop });
-      $docPreviewRenderer.append($pagePreview);
+      for (let index = 1; index <= document.numPages; index++) {
+        const params = { page: index, document };
+        const $page = await getPage(params);
+        $container.append($page);
 
-      const $fields = currentFields.map(createField);
-      $page.append($fields);
+        const { top: offsetTop } = $page.offset();
+        const $pagePreview = await getPagePreview({ ...params, offsetTop });
+        $docPreviewRenderer.append($pagePreview);
+      }
 
-      $page.droppable({
-        drop: function (_, ui) {
-          if (!ui.draggable.hasClass("fields")) {
-            return;
-          }
+      $docRenderer.append($container);
+      //
+    } else {
+      const document = await PDFJS.getDocument({ url: documentUrl });
+      for (let index = 1; index <= document.numPages; index++) {
+        const params = { page: index, document };
+        const $page = await getPage(params);
+        $docRenderer.append($page);
 
-          const $item = $(ui.helper).clone();
-          const color = getComputedStyle($form.get(0)).getPropertyValue("--color"); // prettier-ignore
-          $element = createField({
-            coordinates: JSON.stringify(ui.position),
-            field_name: $item.text(),
-            color,
-            isNew: true,
-          });
-
-          $(this).append($element);
-          storeField(ui.position, $element);
-
-          $element.draggable({
-            containment: ".ui-droppable",
-            appendTo: ".ui-droppable",
-            stop: (_, ui) => storeField(ui.position, $(ui.helper)),
-          });
-        },
-      });
+        const { top: offsetTop } = $page.offset();
+        const $pagePreview = await getPagePreview({ ...params, offsetTop });
+        $docPreviewRenderer.append($pagePreview);
+      }
     }
   }
 
@@ -322,6 +350,49 @@ function Step3() {
   }
 
   function attachEventHandlers() {
+    const $pdfFields = fields.map(createField);
+    $docRenderer.append($pdfFields);
+
+    $($pdfFields).draggable({
+      containment: $docRenderer,
+      appendTo: $docRenderer,
+      stop: (_, ui) => storeField(ui.position, $(ui.helper)),
+    });
+
+    $fields.draggable({
+      containment: $docRenderer,
+      appendTo: $docRenderer,
+      helper: "clone",
+      revert: "invalid",
+    });
+
+    $docRenderer.droppable({
+      accept: ".fields",
+      drop: function (_, ui) {
+        const $item = $(ui.helper).clone();
+        const color = getComputedStyle($form.get(0)).getPropertyValue("--color"); // prettier-ignore
+        $element = createField({
+          coordinates: JSON.stringify(ui.position),
+          field_name: $item.text(),
+          color,
+          isNew: true,
+        });
+
+        $(this).append($element);
+        storeField(ui.position, $element);
+
+        $element.draggable({
+          containment: this,
+          appendTo: this,
+          stop: (_, ui) => storeField(ui.position, $(ui.helper)),
+        });
+      },
+    });
+
+    if (isTemplate) {
+      $formSubmit.text("Save Template");
+    }
+
     const setColor = (color) => {
       $form.get(0).style.setProperty("--color", color);
     };
@@ -343,6 +414,11 @@ function Step3() {
 
     $formSubmit.on("click", async function (event) {
       event.preventDefault();
+
+      if (isTemplate) {
+        window.location = `${prefixURL}/vault/mylibrary`;
+        return;
+      }
 
       const $button = $(this);
       const $loader = $button.find(".spinner-border");
@@ -385,6 +461,11 @@ function Step3() {
         specs = { formula: $formulaInput.val() };
       } else if (fieldType === "note") {
         specs = { note: $noteInput.val() };
+      } else if (fieldType === "text") {
+        specs = {
+          is_required: $("#requiredText").is(":checked"),
+          is_read_only: $("#readOnlyText").is(":checked"),
+        };
       } else {
         if (!$optionInputs.length) {
           return;
@@ -437,7 +518,10 @@ function Step3() {
       const $active = $(".esignBuilder__field--active");
 
       const $parent = $active.closest(".ui-draggable");
-      const uniqueKey = $active.data("key");
+      let uniqueKey = $active.attr("data-key");
+      if (!uniqueKey) {
+        uniqueKey = $active.find(".subData").attr("data-key");
+      }
 
       const $button = $(this);
       const $loader = $button.find(".spinner-border");
@@ -445,7 +529,11 @@ function Step3() {
       $loader.removeClass("d-none");
       $button.attr("disabled", true);
 
-      const endpoint = `${prefixURL}/esign/apiDeleteDocfileField/${uniqueKey}`;
+      let endpoint = `${prefixURL}/esign/apiDeleteDocfileField/${uniqueKey}`;
+      if (isTemplate) {
+        endpoint = `${prefixURL}/DocuSign/apiDeleteTemplateField/${uniqueKey}`;
+      }
+
       await fetch(endpoint, { method: "DELETE" });
 
       $loader.addClass("d-none");
@@ -460,17 +548,43 @@ function Step3() {
     });
   }
 
+  async function getTemplateFile(id) {
+    const endpoint = `${prefixURL}/DocuSign/apiTemplateFile/${id}`;
+    const response = await fetch(endpoint);
+    const data = await response.json();
+    return data;
+  }
+
   async function init() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const templateId = urlParams.get("template_id");
+    isTemplate = Boolean(templateId);
+
+    fileId = parseInt($("[name=file_id]").val());
+    fileId = isTemplate ? templateId : fileId;
+
+    documentUrl = $form.data("doc-url");
+    if (!isTemplate) {
+      await getFields();
+      await renderPDF();
+      attachEventHandlers();
+
+      $(".esignBuilder--loading").removeClass("esignBuilder--loading");
+      return;
+    }
+
+    const { data } = await getTemplateFile(templateId);
     await getFields();
-    await renderPDF();
+
+    for (let index = 0; index < data.length; index++) {
+      await renderPDF(data[index]);
+    }
+
     attachEventHandlers();
 
-    $fields.draggable({
-      containment: ".ui-droppable",
-      appendTo: ".ui-droppable",
-      helper: "clone",
-    });
+    $(".esignBuilder--loading").removeClass("esignBuilder--loading");
   }
+
   return { init };
 }
 

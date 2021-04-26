@@ -137,11 +137,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <div class="validation-error" style="display: none;"></div>
                             <div class="tabs-menu">
                                 <ul class="clearfix">
-                                  <li>1. Create Campaign</li>
-                                  <li>2. Select Customers</li>
-                                  <li class="active">3. Build Email</li>
-                                  <li>4. Preview</li>
-                                  <li>5. Purchase</li>
+                                  <li><a href="<?= base_url('email_campaigns/edit_campaign/' . $emailCampaign->id); ?>">1. Create Campaign</a></li>
+                                  <li><a href="<?= base_url('email_campaigns/add_campaign_send_to'); ?>">2. Select Customers</a></li>
+                                  <li class="active"><a href="<?= base_url('email_campaigns/build_email'); ?>">3. Build Email</a></li>
+                                  <li><a href="<?= base_url('email_campaigns/preview_email_message'); ?>">4. Preview</a></li>
+                                  <li><a href="<?= base_url('email_campaigns/payment'); ?>">5. Purchase</a></li>
                                 </ul>
                             </div>
                             <hr />
@@ -151,16 +151,16 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                   <div class="row">
                                     <div class="col-md-12 form-group">
                                         <label for="formClient-Name">Subject</label>
-                                        <input type="text" class="form-control" name="email_camapaign_name" id="" required placeholder="" autofocus/>
+                                        <input type="text" class="form-control" name="email_subject" value="<?= $emailCampaign ? $emailCampaign->email_subject : ''; ?>" id="email_subject" required placeholder="" autofocus/>
                                     </div>
 
                                     <div class="col-md-12 form-group">
                                         <label for="formClient-Name">Email Body</label>
-                                        <textarea name="mail_body" cols="40" rows="30"  class="form-control" id="mail_body" autocomplete="off">
+                                        <textarea name="email_body" cols="40" rows="30"  class="form-control" id="mail_body" autocomplete="off">
                                           <?php if($emailCampaign->email_body != ''){ ?>
                                             <?= $emailCampaign->email_body; ?>
                                           <?php }else{ ?>
-                                            <h1>Dear {{customer.first_name}},</h1>
+                                            <h2>Dear {{customer.first_name}},</h2>
                                             <br />
                                             <p>Sample email content.</p>
                                             <br />
@@ -189,8 +189,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                   <a class="btn btn-default margin-right btn-preview-email" href="javascript:void(0);">Preview Email</a>
                               </div>
                               <div class="col-sm-6 text-right">
-                                  <a class="btn btn-default margin-right" href="<?php echo url('sms_campaigns/add_campaign_send_to/'); ?>" style="margin-right: 10px;">&laquo; Back</a>
-                                  <button class="btn btn-primary btn-create-sms-msg" type="submit">Continue &raquo;</button>
+                                  <a class="btn btn-default margin-right" href="<?php echo url('email_campaigns/add_campaign_send_to/'); ?>" style="margin-right: 10px;">&laquo; Back</a>
+                                  <button class="btn btn-primary btn-create-email-msg" type="submit">Continue &raquo;</button>
                               </div>
                           </div>
 
@@ -251,7 +251,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             </div>
 
             <div class="modal fade" id="modalPreviewEmail" tabindex="-1" role="dialog" aria-labelledby="modalPreviewEmailTitle" aria-hidden="true">
-                <div class="modal-dialog" role="document" style="margin-top:5%;">
+                <div class="modal-dialog modal-md" role="document" style="margin-top:5%;">
                     <div class="modal-content">
                       <div class="modal-header">
                         <h5 class="modal-title" id="exampleModalLongTitle">Preview Email</h5>
@@ -259,7 +259,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                           <span aria-hidden="true">&times;</span>
                         </button>
                       </div>
-                      <div class="modal-body" style="padding: 0px 30px;text-align:center;">
+                      <div class="modal-body" style="padding: 0px 30px;">
                         <div class="email-blast-msg"></div>
                       </div>
                       <div class="modal-footer">
@@ -284,7 +284,6 @@ $(function(){
     });
 
     $(".btn-stag").click(function(){
-        var sms_message = $("#sms-txt").val();
         var tag = "{{" + $(this).attr("data-id") + "}}";
 
         CKEDITOR.instances['mail_body'].insertHtml(tag);
@@ -293,8 +292,8 @@ $(function(){
 
     $("#create_email_blast").submit(function(e){
         e.preventDefault();
-        var url = base_url + 'email_campaigns/save_draft_campaign';
-        $(".btn-campaign-save-draft").html('<span class="spinner-border spinner-border-sm m-0"></span>  Saving');
+        var url = base_url + 'email_campaigns/create_email_message';
+        $(".btn-create-email-msg").html('<span class="spinner-border spinner-border-sm m-0"></span>  Saving');
         setTimeout(function () {
           $.ajax({
              type: "POST",
@@ -307,11 +306,11 @@ $(function(){
                     $(".validation-error").hide();
                     $(".validation-error").html('');
                     //redirect to step2
-                    location.href = base_url + "email_campaigns/add_campaign_send_to";
+                    location.href = base_url + "email_campaigns/preview_email_message";
                 }else{
                     $(".validation-error").show();
                     $(".validation-error").html(o.err_msg);
-                    $(".btn-campaign-save-draft").html('Continue »');
+                    $(".btn-create-email-msg").html('Continue »');
                 }
              }
           });
@@ -320,8 +319,24 @@ $(function(){
 
     $(".btn-preview-email").click(function(){
         var email_body = CKEDITOR.instances['mail_body'].getData();
+        var email_subject = $("#email_subject").val();
         $("#modalPreviewEmail").modal('show');
-        $(".email-blast-msg").html(email_body);
+
+        var url = base_url + 'email_campaigns/_generate_preview';
+        $(".email-blast-msg").html('<span class="spinner-border spinner-border-sm m-0"></span>');
+
+        setTimeout(function () {
+          $.ajax({
+             type: "POST",
+             url: url,
+             data: {email_body:email_body, email_subject:email_subject},
+             success: function(o)
+             {
+                $(".email-blast-msg").html(o);
+             }
+          });
+        }, 1000);
+
     });
 
     // instance, using default configuration.

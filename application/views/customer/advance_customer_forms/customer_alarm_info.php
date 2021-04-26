@@ -11,18 +11,18 @@
             <div class="col-md-8">
                 <select id="monitor_comp" name="monitor_comp" data-customer-source="dropdown" class="input_select" >
                     <option value=""></option>
-                    <option value="ABT">ADT</option>
-                    <option value="CMS">CMS</option>
-                    <option value="CMS">COPS</option>
-                    <option value="CMS">FrontPoint</option>
-                    <option value="CMS">ProtectionOne</option>
-                    <option value="CMS">Stanley</option>
-                    <option value="CMS">Guardian</option>
-                    <option value="CMS">Vector</option>
-                    <option value="CMS">Central</option>
-                    <option value="CMS">Brinks</option>
-                    <option value="CMS">Equipment Funding</option>
-                    <option value="CMS">Other</option>
+                    <option <?= isset($alarm_info) && $alarm_info->monitor_comp == 'ADT' ?  'selected' : '';?> value="ABT">ADT</option>
+                    <option <?= isset($alarm_info) && $alarm_info->monitor_comp == 'CMS' ?  'selected' : '';?> value="CMS">CMS</option>
+                    <option <?= isset($alarm_info) && $alarm_info->monitor_comp == 'COPS' ?  'selected' : '';?> value="COPS">COPS</option>
+                    <option <?= isset($alarm_info) && $alarm_info->monitor_comp == 'FrontPoint' ?  'selected' : '';?> value="FrontPoint">FrontPoint</option>
+                    <option <?= isset($alarm_info) && $alarm_info->monitor_comp == 'ProtectionOne' ?  'selected' : '';?> value="ProtectionOne">ProtectionOne</option>
+                    <option <?= isset($alarm_info) && $alarm_info->monitor_comp == 'Stanley' ?  'selected' : '';?> value="Stanley">Stanley</option>
+                    <option <?= isset($alarm_info) && $alarm_info->monitor_comp == 'Guardian' ?  'selected' : '';?> value="Guardian">Guardian</option>
+                    <option <?= isset($alarm_info) && $alarm_info->monitor_comp == 'Vector' ?  'selected' : '';?> value="Vector">Vector</option>
+                    <option <?= isset($alarm_info) && $alarm_info->monitor_comp == 'Central' ?  'selected' : '';?> value="Central">Central</option>
+                    <option <?= isset($alarm_info) && $alarm_info->monitor_comp == 'Brinks' ?  'selected' : '';?> value="Brinks">Brinks</option>
+                    <option <?= isset($alarm_info) && $alarm_info->monitor_comp == 'Equipment Funding' ?  'selected' : '';?> value="Equipment Funding">Equipment Funding</option>
+                    <option <?= isset($alarm_info) && $alarm_info->monitor_comp == 'Other' ?  'selected' : '';?> value="Other">Other</option>
                 </select>
 
             </div>
@@ -51,12 +51,40 @@
         </div>
         <div class="row form_line">
             <div class="col-md-4">
-                <label for="">Account Number</label>
+                <label>Online</label>
             </div>
             <div class="col-md-8">
-                <input type="text" class="form-control" name="acct_info" id="acct_info" value="<?php if(isset($alarm_info)){ echo $alarm_info->acct_info; } ?>"/>
+                <select id="online" name="online" data-customer-source="dropdown" class="form-controls input_select">
+                    <option <?= isset($alarm_info) && $alarm_info->online == 'Yes' ?  'selected' : '';?> value="Yes">Yes</option>
+                    <option <?= isset($alarm_info) && $alarm_info->online == 'No' ?  'selected' : '';?> value="No">No</option>
+                </select>
             </div>
         </div>
+        <div class="row form_line">
+            <div class="col-md-4">
+                <label>In Service</label>
+            </div>
+            <div class="col-md-8">
+                <select id="in_service" name="in_service" data-customer-source="dropdown" class="form-controls input_select">
+                    <option <?= isset($alarm_info) && $alarm_info->in_service == 'Yes' ?  'selected' : '';?> value="Yes">Yes</option>
+                    <option <?= isset($alarm_info) && $alarm_info->in_service == 'No' ?  'selected' : '';?> value="No">No</option>
+                </select>
+            </div>
+        </div>
+        <div class="row form_line">
+            <div class="col-md-4">
+                <label>Equipment</label>
+            </div>
+            <div class="col-md-8">
+                <select id="equipment" name="equipment" data-customer-source="dropdown" class="form-controls input_select">
+                    <option value=""></option>
+                    <option <?= isset($alarm_info) && $alarm_info->equipment == 'Not Installed' ?  'selected' : '';?> value="Not Installed">Not Installed</option>
+                    <option <?= isset($alarm_info) && $alarm_info->equipment == 'Installed' ?  'selected' : '';?> value="Installed">Installed</option>
+                    <option <?= isset($alarm_info) && $alarm_info->equipment == 'System Pulled' ?  'selected' : '';?> value="System Pulled">System Pulled</option>
+                </select>
+            </div>
+        </div>
+
         <div class="row form_line">
             <div class="col-md-4">
                 <label for="">Abort Code</label>
@@ -133,28 +161,28 @@
             </div>
             <div class="col-md-8">
                 <select name="system_type" id="system_type" class="input_select">
-                    <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == ''){echo "selected";} } ?> value=""></option>
-                    <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'DIGI'){echo "selected";} } ?> value="DIGI">Landline</option>
-                    <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'DW2W'){echo "selected";} } ?> value="DW2W">Landline W/ 2-Way</option>
-                    <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'DWCB'){echo "selected";} } ?> value="DWCB">Landline W/ Cell Backup</option>
-                    <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'D2CB'){echo "selected";} } ?> value="D2CB">Landline W/ 2-Way &amp; Cell Backup</option>
-                    <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'CPDB'){echo "selected";} } ?> value="CPDB">Cell Primary</option>
-                    <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'CP2W'){echo "selected";} } ?> value="CP2W">Cell Primary w/2Way</option>
-                    <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'CP2W'){echo "selected";} } ?> value="CP2W">Wireless Signal Forwarding</option>
-                    <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'CP2W'){echo "selected";} } ?> value="CP2W">Commercial</option>
-                    <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'CP2W'){echo "selected";} } ?> value="CP2W">Commercial Plus</option>
-                    <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'CP2W'){echo "selected";} } ?> value="CP2W">Interactive</option>
-                    <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'CP2W'){echo "selected";} } ?> value="CP2W">Interactive Gold</option>
-                    <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'CP2W'){echo "selected";} } ?> value="CP2W">Interactive Plus Automation</option>
-                    <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'CP2W'){echo "selected";} } ?> value="CP2W">Interactive w/DVR</option>
-                    <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'CP2W'){echo "selected";} } ?> value="CP2W">Interactive w/Dbell</option>
-                    <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'CP2W'){echo "selected";} } ?> value="CP2W">Interactive w/Dbell & IP Camera</option>
-                    <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'CP2W'){echo "selected";} } ?> value="CP2W">PERS</option>
-                    <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'CP2W'){echo "selected";} } ?> value="CP2W">WIFI</option>
-                    <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'CP2W'){echo "selected";} } ?> value="CP2W">Cell Primary w/WIFI</option>
-                    <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'CP2W'){echo "selected";} } ?> value="CP2W">Cell Primary w/Access Control</option>
-                    <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'CP2W'){echo "selected";} } ?> value="CP2W">Interactive w/Access Control</option>
-                    <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'CP2W'){echo "selected";} } ?> value="CP2W">Interactive w/Access Control w/Automn</option>
+                    <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == ''){echo "selected";} } ?> value=""></option>
+                    <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == 'DIGI'){echo "selected";} } ?> value="DIGI">Landline</option>
+                    <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == 'DW2W'){echo "selected";} } ?> value="DW2W">Landline W/ 2-Way</option>
+                    <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == 'DWCB'){echo "selected";} } ?> value="DWCB">Landline W/ Cell Backup</option>
+                    <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == 'D2CB'){echo "selected";} } ?> value="D2CB">Landline W/ 2-Way &amp; Cell Backup</option>
+                    <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == 'CPDB'){echo "selected";} } ?> value="CPDB">Cell Primary</option>
+                    <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == 'CP2W'){echo "selected";} } ?> value="CP2W">Cell Primary w/2Way</option>
+                    <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == 'WSF'){echo "selected";} } ?> value="WSF">Wireless Signal Forwarding</option>
+                    <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == 'C'){echo "selected";} } ?> value="C">Commercial</option>
+                    <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == 'CP'){echo "selected";} } ?> value="CP">Commercial Plus</option>
+                    <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == 'I'){echo "selected";} } ?> value="I">Interactive</option>
+                    <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == 'IG'){echo "selected";} } ?> value="IG">Interactive Gold</option>
+                    <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == 'IPA'){echo "selected";} } ?> value="IPA">Interactive Plus Automation</option>
+                    <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == 'IwDVR'){echo "selected";} } ?> value="IwDVR">Interactive w/DVR</option>
+                    <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == 'IwDB'){echo "selected";} } ?> value="IwDB">Interactive w/Dbell</option>
+                    <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == 'IwDBIP'){echo "selected";} } ?> value="IwDBIP">Interactive w/Dbell & IP Camera</option>
+                    <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == 'PERS'){echo "selected";} } ?> value="PERS">PERS</option>
+                    <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == 'WIFI'){echo "selected";} } ?> value="WIFI">WIFI</option>
+                    <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == 'CPwWIFI'){echo "selected";} } ?> value="CPwWIFI">Cell Primary w/WIFI</option>
+                    <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == 'CPwAC'){echo "selected";} } ?> value="CPwAC">Cell Primary w/Access Control</option>
+                    <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == 'IwAC'){echo "selected";} } ?> value="IwAC">Interactive w/Access Control</option>
+                    <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == 'IwACwA'){echo "selected";} } ?> value="IwACwA">Interactive w/Access Control w/Automn</option>
                 </select>
                 <a href="<?= base_url() ?>customer/settings" target="_blank"  style="color:#58bc4f;font-size: 10px;"><span class="fa fa-plus"></span> Manage System Type</a>&nbsp;&nbsp;
             </div>
@@ -165,13 +193,13 @@
             </div>
             <div class="col-md-8">
                 <select id="warranty_type" name="warranty_type" data-customer-source="dropdown" class="input_select" >
-                    <option <?php if(isset($office_info)){ if($office_info->warranty_type == ""){ echo 'selected'; } } ?> value="">Select</option>
-                    <option <?php if(isset($office_info)){ if($office_info->warranty_type == "Limited. 90 Days"){ echo 'selected'; } } ?> value="Limited. 90 Days">Limited 90 Days</option>
-                    <option <?php if(isset($office_info)){ if($office_info->warranty_type == "1 Year"){ echo 'selected'; } } ?>  value="1 Year">1 Year</option>
-                    <option <?php if(isset($office_info)){ if($office_info->warranty_type == "$25 Trip"){ echo 'selected'; } } ?>  value="$25 Trip">$25 Trip</option>
-                    <option <?php if(isset($office_info)){ if($office_info->warranty_type == "$50 Trip and $65 Deductible"){ echo 'selected'; } } ?>  value="$50 Trip and $65 Deductible">$50 Trip and $65 Deductible</option>
-                    <option <?php if(isset($office_info)){ if($office_info->warranty_type == "Extended"){ echo 'selected'; } } ?>  value="Extended">Extended</option>
-                    <option <?php if(isset($office_info)){ if($office_info->warranty_type == "None"){ echo 'selected'; } } ?>  value="None">None</option>
+                    <option <?php if(isset($alarm_info)){ if($alarm_info->warranty_type == ""){ echo 'selected'; } } ?> value="">Select</option>
+                    <option <?php if(isset($alarm_info)){ if($alarm_info->warranty_type == "Limited. 90 Days"){ echo 'selected'; } } ?> value="Limited. 90 Days">Limited 90 Days</option>
+                    <option <?php if(isset($alarm_info)){ if($alarm_info->warranty_type == "1 Year"){ echo 'selected'; } } ?>  value="1 Year">1 Year</option>
+                    <option <?php if(isset($alarm_info)){ if($alarm_info->warranty_type == "$25 Trip"){ echo 'selected'; } } ?>  value="$25 Trip">$25 Trip</option>
+                    <option <?php if(isset($alarm_info)){ if($alarm_info->warranty_type == "$50 Trip and $65 Deductible"){ echo 'selected'; } } ?>  value="$50 Trip and $65 Deductible">$50 Trip and $65 Deductible</option>
+                    <option <?php if(isset($alarm_info)){ if($alarm_info->warranty_type == "Extended"){ echo 'selected'; } } ?>  value="Extended">Extended</option>
+                    <option <?php if(isset($alarm_info)){ if($alarm_info->warranty_type == "None"){ echo 'selected'; } } ?>  value="None">None</option>
                 </select>
             </div>
         </div>
@@ -181,9 +209,10 @@
                 <label for="">Dealer</label>
             </div>
             <div class="col-md-8">
-                <select id="alarm_login" name="alarm_login" data-customer-source="dropdown" class="input_select" >
-                    <option value="Alarm.com">Alarm.com</option>
-                    <option value="AlarmNet">AlarmNet</option>
+                <select id="dealer" name="dealer" data-customer-source="dropdown" class="input_select" >
+                    <option value=""></option>
+                    <option <?php if(isset($alarm_info)){ if($alarm_info->dealer == "Alarm.com"){ echo 'selected'; } } ?> value="Alarm.com">Alarm.com</option>
+                    <option <?php if(isset($alarm_info)){ if($alarm_info->dealer == "AlarmNet"){ echo 'selected'; } } ?> value="AlarmNet">AlarmNet</option>
                 </select>
             </div>
         </div>
@@ -192,7 +221,7 @@
                 <label for=""> Login </label>
             </div>
             <div class="col-md-8">
-                <input type="text" class="form-control" name="login" id="login" value="<?php if(isset($access_info)){ echo $access_info->login; } ?>"/>
+                <input type="text" class="form-control" name="alarm_login" id="alarm_login" value="<?php if(isset($alarm_info)){ echo $alarm_info->alarm_login; } ?>"/>
             </div>
         </div>
         <div class="row form_line">
@@ -200,7 +229,7 @@
                 <label for="">Customer ID </label>
             </div>
             <div class="col-md-8">
-                <input type="text" class="form-control" name="login" id="login" value="<?php if(isset($access_info)){ echo $access_info->login; } ?>"/>
+                <input type="text" class="form-control" name="alarm_customer_id" id="alarm_customer_id" value="<?php if(isset($alarm_info)){ echo $alarm_info->alarm_customer_id; } ?>"/>
             </div>
         </div>
         <div class="row form_line">
@@ -208,7 +237,7 @@
                 <label for="">CS Account</label>
             </div>
             <div class="col-md-8">
-                <input type="text" class="form-control" name="login" id="login" value="<?php if(isset($access_info)){ echo $access_info->login; } ?>"/>
+                <input type="text" class="form-control" name="alarm_cs_account" id="alarm_cs_account" value="<?php if(isset($alarm_info)){ echo $alarm_info->alarm_cs_account; } ?>"/>
             </div>
         </div>
     </div>
@@ -245,7 +274,7 @@
                     <label for="">Login</label>
                 </div>
                 <div class="col-md-6">
-                    <input type="text" class="form-control" name="login" id="login" value="<?php if(isset($access_info)){ echo $access_info->login; } ?>"/>
+                    <input type="text" class="form-control" name="access_login" id="login" value="<?php if(isset($access_info)){ echo $access_info->access_login; } ?>"/>
                 </div>
             </div>
             <div class="row form_line">
@@ -253,11 +282,9 @@
                     <label for="">Password</label>
                 </div>
                 <div class="col-md-6">
-                    <input type="text" class="form-control" name="password" id="password" value="<?php if(isset($access_info)){ echo $access_info->password; } ?>"/>
+                    <input type="text" class="form-control" name="access_password" id="password" value="<?php if(isset($access_info)){ echo $access_info->access_password; } ?>"/>
                 </div>
             </div>
-
-
         </div>
 
         <div class="card-header">
@@ -309,99 +336,41 @@
             <div class="row form-line">
                 <textarea type="text" class="form-controls" name="notes" id="notes" cols="100%" rows="5"> </textarea>
             </div>
-
         </div>
-
         <div class="card-header">
             <span style="position: absolute;right: 0;margin-right: 25px;font-size: 20px;padding-top:10px;" class="fa fa-ellipsis-v"></span>
 
-            <h6 ><span class="fa fa-user"></span>&nbsp; &nbsp;Devices</h6>
+            <h6 ><span class="fa fa-user"></span>&nbsp; Existing&nbsp;Notes</h6>
         </div>
         <div class="card-body">
-            <div class="row">
-                <!--<div style="margin-right:15px; padding-top:1px;font-size: 10px !important;" align="left" class="normaltext1">
-                    <a href="javascript:void(0);" id="moreFields" class="more_fields" style="color:#58bc4f;"><span class="fa fa-plus"></span> Add Device </a>&nbsp;&nbsp;
-                </div>-->
-                <table cellpadding="0" cellspacing="3" style="width: 100%; border-color: #525759; border-style: solid; border-collapse: collapse; border-width: 1px;font-size: 10px !important;">
-                    <thead>
-                    <tr>
-                        <td style="border-color: #525759; border-style: solid; border-collapse: collapse; border-width: 1px">
-                            <b>Name</b>
-                        </td>
-                        <td style="border-color: #525759; border-style: solid; border-collapse: collapse; border-width: 1px">
-                            <b>Sold By</b></td>
-                        <td style="border-color: #525759; border-style: solid; border-collapse: collapse; border-width: 1px">
-                            <b>Points</b></td>
-                        <td style="border-color: #525759; border-style: solid; border-collapse: collapse; border-width: 1px">
-                            <b>Retail Cost</b></td>
-                        <td style="border-color: #525759; border-style: solid; border-collapse: collapse; border-width: 1px">
-                            <b>Purchase Price</b></td>
-                        <td style="border-color: #525759; border-style: solid; border-collapse: collapse; border-width: 1px">
-                            <b>Qty</b></td>
-                        <td style="border-color: #525759; border-style: solid; border-collapse: collapse; border-width: 1px">
-                            <b>Tot Points</b></td>
-                        <td style="border-color: #525759; border-style: solid; border-collapse: collapse; border-width: 1px">
-                            <b>Tot Cost</b></td>
-                        <td style="border-color: #525759; border-style: solid; border-collapse: collapse; border-width: 1px">
-                            <b>Tot Purchase Price</b></td>
-                        <td style="border-color: #525759; border-style: solid; border-collapse: collapse; border-width: 1px">
-                            <b>Net</b></td>
-                        <td style="border-color: #525759; border-style: solid; border-collapse: collapse; border-width: 1px">
-
-                        </td>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <?php if (isset($device_info)) : ?>
-                        <?php foreach ($device_info as $device) { ?>
+            <?php if(isset($customer_notes)) :?>
+                <div class="row">
+                    <table width="100%" cellpadding="0" cellspacing="0">
+                        <tbody>
+                        <?php foreach ($customer_notes as $note) : ?>
                             <tr>
-                                <td style="text-align: left; border-color: #525759; border-style: solid; border-collapse: collapse; border-width: 1px">
-                                    <?= $device->device_name; ?>
-                                </td>
-                                <td style="text-align: left; border-color: #525759; border-style: solid; border-collapse: collapse; border-width: 1px">
-                                    <?= $device->sold_by; ?>
-                                </td>
-                                <td style="border-color: #525759; border-style: solid; border-collapse: collapse; border-width: 1px">
-                                    <?= $device->device_points; ?>
-                                </td>
-                                <td style="border-color: #525759; border-style: solid; border-collapse: collapse; border-width: 1px; color: #336699; text-align: right">
-                                    <?= '$'.$device->retail_cost; ?>
-                                </td>
-                                <td style="border-color: #525759; border-style: solid; border-collapse: collapse; border-width: 1px; color: #CC3300; text-align: right">
-                                    <?= '$'.$device->purch_price; ?>
-                                </td>
-                                <td style="border-color: #525759; border-style: solid; border-collapse: collapse; border-width: 1px">
-                                    <?= $device->device_qty; ?>
-                                </td>
-                                <td style="border-color: #525759; border-style: solid; border-collapse: collapse; border-width: 1px">
-                                    <?= $device->total_points; ?>
-                                </td>
-                                <td style="border-color: #525759; border-style: solid; border-collapse: collapse; border-width: 1px; color: #336699; text-align: right">
-                                    <?= '$'.$device->total_cost; ?>
-                                </td>
-                                <td style="border-color: #525759; border-style: solid; border-collapse: collapse; border-width: 1px; color: #CC3300; text-align: right">
-                                    <?= '$'.$device->total_purch_price; ?>
-                                </td>
-                                <td style="border-color: #525759; border-style: solid; border-collapse: collapse; border-width: 1px; color: Green; text-align: right">
-                                    <?= '$'.$device->device_net; ?>
-                                </td>
-                                <td style="border-color: #525759; border-style: solid; border-collapse: collapse; border-width: 1px; color: Green; text-align: right">
-                                    <a id="<?= $device->dev_id; ?>" href="javascript:void(0);" class="remove_device" style="color:#58bc4f;"><span class="fa fa-trash-o"></span> </a>&nbsp;&nbsp;
+                                <td style="width: 880px; text-align: left; vertical-align: top; font-size: 11px; color: #336699">
+                                    <?= $note->datetime; ?>
                                 </td>
                             </tr>
-                        <?php } ?>
-                    <?php endif ?>
-                    </tbody>
-                </table>
-                <span id="writeroot"></span>
-            </div>
-            <br>
-            <div class="row">
-                <a href="<?php echo base_url('customer') ?>">
-                    <button type="button" class="btn btn-primary btn-md "><span class="fa fa-remove"></span> Cancel </button> &nbsp;
-                </a>
-                <button type="submit" class="btn btn-primary btn-md" name="" id="" ><span class="fa fa-paper-plane-o"></span> Save </button>
-            </div>
+                            <tr>
+                                <td style="text-align: left; border: 1px; border-style: solid; border-color: #999999; background-color: #FFFF71; font-size: 11px">
+                                    <?= $note->note; ?>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
+            <?php endif; ?>
+        </div>
+        <div class="row" style="margin: 0 0 0 5px;">
+            <a href="<?php echo base_url('customer') ?>">
+                <button type="button" class="btn btn-primary"><span class="fa fa-remove"></span> Cancel </button> &nbsp;
+            </a>
+            <?php if(isset($profile_info)): ?>
+                <input type="hidden" name="customer_id" value="<?= $profile_info->prof_id; ?>"/>
+            <?php endif; ?>
+            <button type="submit" class="btn btn-primary" name="" id="" ><span class="fa fa-paper-plane-o"></span> <?=isset($profile_info) ? 'Save Changes' : 'Save'; ?> </button>
         </div>
     </div>
-</div>

@@ -25,162 +25,7 @@
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
 
     <title>eSign</title>
-    <style>
-        .hideElement {
-            display: none;
-        }
 
-        .ui-draggable {
-            width: auto !important;
-        }
-
-        .menu_listItem-disabledFeature .menu_item.disabled:hover {
-            color: #999999;
-        }
-
-        .menu_listItem-disabledFeature .menu_item.disabled .menu_hoverAction {
-            position: absolute;
-            right: 12px;
-        }
-
-        .menu_item-smartContractInfo {
-            position: absolute;
-            right: 2px;
-            visibility: hidden;
-            color: #999999;
-        }
-
-        .menu_item-smartContractInfoShow:hover * {
-            visibility: visible;
-        }
-
-        .tab-badge-left-margin {
-            margin-left: auto;
-        }
-
-        .document-page {
-            border: 2px solid black;
-            margin-top: 30px;
-        }
-
-        .document-page:first-child {
-            margin-top: 50px !important;
-        }
-
-        /* *** Sidebar *** */
-        .edit-sidebar-1 {
-            background: #fff;
-            width: 300px;
-            height: 100vh;
-            overflow: auto;
-            position: fixed;
-            right: 0%;
-            top: 0;
-            z-index: 10;
-            background: #f5f5f5;
-            padding: 95px 0 30px;
-            transition: .4s linear;
-        }
-
-        .edit-sidebar {
-            background: #fff;
-            width: 300px;
-            height: 100vh;
-            overflow: auto;
-            position: fixed;
-            right: 0%;
-            top: 0;
-            z-index: 10;
-            background: #f5f5f5;
-            padding: 95px 0 30px;
-            transition: .4s linear;
-        }
-
-        .edit-sidebar-open {
-            right: 0 !important;
-            transition: .4s linear;
-        }
-
-        .edit-sidebar h3 {
-            padding: 15px 30px;
-            border-bottom: 1px solid #e0e0e0;
-            font-weight: normal;
-            font-size: 16px;
-            color: #333;
-            margin: 0;
-        }
-
-        .edit-sidebar h3 i {
-            margin-right: 5px;
-        }
-
-        .edit-sidebar-1 h3 i {
-            margin-right: 5px;
-        }
-
-        .collapsible-section-card {
-            background-color: #f4f4f4;
-        }
-
-        .collapsible-section-card .actions {
-            display: none;
-        }
-
-        .collapsible-section-card:hover .actions {
-            display: block;
-        }
-
-        .collapsible-section-card:focus-within .actions {
-            display: block;
-        }
-
-        .collapsible-section-card:hover .action-wrapper {
-            border-top: 1px solid #e9e9e9;
-        }
-
-        .collapsible-section-card textarea {
-            border: 0px;
-            resize: none;
-        }
-
-        .collapsible-section-card:hover .section-label-header {
-            display: block;
-        }
-
-        .collapsible-section-card:focus-within .section-label-header {
-            display: block;
-        }
-
-        .collapsible-section-card .section-label-header {
-            display: none;
-        }
-
-        .absolute-div-properties-panel {
-            position: absolute;
-            z-index: 2;
-            width: 100%;
-            height: 100%;
-        }
-
-        body {
-            padding-bottom: 0px !important;
-        }
-
-        .resize-x-handle-flip {
-            transform: rotateX(180deg);
-        }
-
-        .x-text-flip-back {
-            transform: rotateX(180deg);
-        }
-
-        .vertical-scroll {
-            min-height: 20px;
-            resize: vertical;
-            overflow: auto;
-        }
-        select { font-family: 'FontAwesome', Verdana }
-    </style>
     <?php echo put_header_assets(); ?>
 </head>
 
@@ -398,15 +243,21 @@
 
 
     <?php if (isset($next_step) && $next_step == 3): ?>
-        <?php echo form_open_multipart('esign/recipients', ['id' => 'upload_file', 'class' => 'form-validate mb-0 esignBuilder esignBuilder--step3', 'autocomplete' => 'off', 'data-form-step' => '3', 'data-doc-url' => base_url('uploads/DocFiles/' . $file_url)]); ?>
+        <?php echo form_open_multipart('esign/recipients', ['id' => 'upload_file', 'class' => 'form-validate mb-0 esignBuilder esignBuilder--step3 esignBuilder--loading', 'autocomplete' => 'off', 'data-form-step' => '3', 'data-doc-url' => base_url('uploads/DocFiles/' . $file_url)]); ?>
 
         <input type="hidden" value="3" name="next_step" />
         <input type="hidden" value="<?php echo isset($file_id) && $file_id > 0 ? $file_id : 0 ?>" name="file_id" />
 
+        <div class="loader">
+            <div class="spinner-border" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+        </div>
+
         <div class="card p-0 mb-0">
             <div class="site_content">
                 <div class="content_wrap" style="position: relative;">
-                    <div class="content_sidebar content_sidebar-left resizable" style="overflow-x: hidden">
+                    <div class="content_sidebar content_sidebar-left resizable" style="overflow-x: hidden" id="fieldsSidebar">
                         <div class="sidebar-fields sidebar-flex">
                             <div class="sidebar_main">
                                 <div class="dropdown esignBuilder__recipientSelect">
@@ -591,10 +442,9 @@
                         </div>
                     </div>
 
-                    <div
-                        id="main-pdf-render"
-                        role="region"
-                    ></div>
+                    <div class="main-pdf-render__container" role="region">
+                        <div id="main-pdf-render"></div>
+                    </div>
 
                     <div class="ng-scope content_sidebar content_sidebar-right ml-auto">
                         <div class="docsWrapper">
@@ -627,6 +477,19 @@
                 <button type="button" class="btn btn-primary btn-block" id="addOption">
                     + Add Option
                 </button>
+            </div>
+
+            <div class="text">
+                <div class="mt-2 mb-2">
+                    <div>
+                        <input type="checkbox" name="requiredText" id="requiredText">
+                        <label for="requiredText">Required Field</label>
+                    </div>
+                    <div>
+                        <input type="checkbox" name="readOnlyText" id="readOnlyText">
+                        <label for="readOnlyText">Read Only</label>
+                    </div>
+                </div>
             </div>
 
             <div class="formula">
@@ -675,22 +538,27 @@
 </body>
 
 </html>
-<style>
-    .main-wrapper {
-        padding: 213px 0 292px;
-        width: 100%;
-    }
-
-    #all-recipients-wrp {
-        padding: 213px 0 292px;
-    }
-
-
-    /* reception list */
-    #setup-recipient-list .form-box {
-        margin: 13px 0 13px 0;
-    }
-</style>
 <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <?php echo put_footer_assets(); ?>
+<style>
+    .esignBuilder__field,
+    .ui-draggable-dragging {
+        width: initial;
+    }
+
+    .ui-draggable-dragging {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #ffd65b !important;
+        min-width: 100px;
+        border-radius: 3px !important;
+    }
+
+    .ui-draggable-dragging .swatch {
+        margin-right: 8px !important;
+        background-color: #ffd65b !important;
+        display: none !important;
+    }
+</style>

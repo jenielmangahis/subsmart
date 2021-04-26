@@ -89,7 +89,14 @@ class Customer extends MY_Controller
             $this->page_data['office_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_office");
             $this->page_data['billing_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_billing");
             $this->page_data['alarm_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_alarm");
-            $this->page_data['device_info'] = $this->customer_ad_model->get_all_by_id('fk_prof_id',$userid,"acs_devices");
+            $get_customer_notes = array(
+                'where' => array(
+                    'fk_prof_id' => $userid
+                ),
+                'table' => 'acs_notes',
+                'select' => '*',
+            );
+            $this->page_data['customer_notes'] = $this->general->get_data_with_param($get_customer_notes);
 
             $get_login_user = array(
                 'where' => array(
@@ -104,11 +111,10 @@ class Customer extends MY_Controller
         $this->page_data['employees'] = $this->customer_ad_model->get_all(FALSE,"","ASC","users","id");
         $this->page_data['users'] = $this->users_model->getUsers();
 
-        $this->load->view('customer/preview2', $this->page_data);
+        $this->load->view('customer/preview', $this->page_data);
     }
 
-    public function preview2($id=null){
-
+    public function billing($id=null){
         // check if customer is allowed to view this page
         $is_allowed = $this->isAllowedModuleAccess(9);
         if( !$is_allowed ){
@@ -121,11 +127,7 @@ class Customer extends MY_Controller
         $user_id = logged('id');
         if(isset($userid) || !empty($userid)){
             $this->page_data['profile_info'] = $this->customer_ad_model->get_data_by_id('prof_id',$userid,"acs_profile");
-            $this->page_data['access_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_access");
-            $this->page_data['office_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_office");
             $this->page_data['billing_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_billing");
-            $this->page_data['alarm_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_alarm");
-            $this->page_data['device_info'] = $this->customer_ad_model->get_all_by_id('fk_prof_id',$userid,"acs_devices");
 
             $get_login_user = array(
                 'where' => array(
@@ -136,11 +138,36 @@ class Customer extends MY_Controller
             );
             $this->page_data['logged_in_user'] = $this->general->get_data_with_param($get_login_user,FALSE);
         }
-        $this->page_data['sales_area'] = $this->customer_ad_model->get_all(FALSE,"","ASC","ac_salesarea","sa_id");
-        $this->page_data['employees'] = $this->customer_ad_model->get_all(FALSE,"","ASC","users","id");
-        $this->page_data['users'] = $this->users_model->getUsers();
 
-        $this->load->view('customer/preview2', $this->page_data);
+        $this->load->view('customer/billing', $this->page_data);
+    }
+
+    public function subscription($id=null){
+        // check if customer is allowed to view this page
+        $is_allowed = $this->isAllowedModuleAccess(9);
+        if( !$is_allowed ){
+            $this->page_data['module'] = 'customer';
+            echo $this->load->view('no_access_module', $this->page_data, true);
+            die();
+        }
+
+        $userid = $id;
+        $user_id = logged('id');
+        if(isset($userid) || !empty($userid)){
+            $this->page_data['profile_info'] = $this->customer_ad_model->get_data_by_id('prof_id',$userid,"acs_profile");
+            $this->page_data['billing_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_billing");
+
+            $get_login_user = array(
+                'where' => array(
+                    'id' => $user_id
+                ),
+                'table' => 'users',
+                'select' => 'id,FName,LName',
+            );
+            $this->page_data['logged_in_user'] = $this->general->get_data_with_param($get_login_user,FALSE);
+        }
+
+        $this->load->view('customer/subscription', $this->page_data);
 
     }
 
@@ -354,6 +381,40 @@ class Customer extends MY_Controller
         $this->load->view('customer/module', $this->page_data);
     }
 
+    public function add_advance($id=null)
+    {
+        $userid = $id;
+        $user_id = logged('id');
+        if(isset($userid) || !empty($userid)){
+            $this->page_data['profile_info'] = $this->customer_ad_model->get_data_by_id('prof_id',$userid,"acs_profile");
+            $this->page_data['access_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_access");
+            $this->page_data['office_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_office");
+            $this->page_data['billing_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_billing");
+            $this->page_data['alarm_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_alarm");
+
+            $get_customer_notes = array(
+                'where' => array(
+                    'fk_prof_id' => $userid
+                ),
+                'table' => 'acs_notes',
+                'select' => '*',
+            );
+            $this->page_data['customer_notes'] = $this->general->get_data_with_param($get_customer_notes);
+            //$this->page_data['device_info'] = $this->customer_ad_model->get_all_by_id('fk_prof_id',$userid,"acs_devices");
+        }
+        $get_login_user = array(
+            'where' => array(
+                'id' => $user_id
+            ),
+            'table' => 'users',
+            'select' => 'id,FName,LName',
+        );
+        $this->page_data['logged_in_user'] = $this->general->get_data_with_param($get_login_user,FALSE);
+        $this->page_data['sales_area'] = $this->customer_ad_model->get_all(FALSE,"","ASC","ac_salesarea","sa_id");
+        $this->page_data['employees'] = $this->customer_ad_model->get_all(FALSE,"","ASC","users","id");
+        $this->page_data['users'] = $this->users_model->getUsers();
+        $this->load->view('customer/add_advance', $this->page_data);
+    }
 
     public function leads()
     {   $is_allowed = $this->isAllowedModuleAccess(14);
@@ -412,7 +473,7 @@ class Customer extends MY_Controller
         $this->load->library('qrcode/ciqrcode');
         $SERVERFILEPATH = $_SERVER['DOCUMENT_ROOT'].'/assets/img/customer/qr/'.$profile_id.'.png';
 
-        $params['data'] = 'https://nsmartrac.com/customer/index/tab2/'.$profile_id;
+        $params['data'] = 'https://nsmartrac.com/customer/preview/'.$profile_id;
         $params['level'] = 'H';
         $params['size'] = 10;
         $params['savename'] = $SERVERFILEPATH;
@@ -420,158 +481,154 @@ class Customer extends MY_Controller
         //echo '<img src="'.base_url().'assets/img/customer/qr/names.png" />';
     }
 
-    public function add_data_sheet(){
-        $user_id = logged('id');
-        $cid = logged('company_id');
+    public function save_customer_profile(){
         $input = $this->input->post();
-
-        $input_profile = array();
-        $input_billing = array();
-        $input_alarm = array();
-        $input_office = array();
-        $input_access = array();
-        $input_profile['fk_user_id'] = logged('id');
-        $input_profile['fk_sa_id'] = $input['fk_sa_id'];
-        $input_profile['company_id'] = $cid;
-        $input_profile['first_name'] = $input['first_name'];
-        $input_profile['last_name'] = $input['last_name'];
-        $input_profile['middle_name'] = $input['middle_name'];
-        $input_profile['prefix'] = $input['prefix'];
-        $input_profile['prefix'] = $input['prefix'];
-        $input_profile['business_name'] = $input['business_name'];
-        $input_profile['email'] = $input['email'];
-
-        if(is_array($input['ssn']) && !empty($input['ssn'])){
-           // echo $input['ssn'];
-            if(empty($input['ssn'][0])){
-                $input_profile['ssn'] = '';
-            }else{
-                $input_profile['ssn'] = $input['ssn'][0].'-'.$input['ssn'][1].'-'.$input['ssn'][2];
-            }
+        if(isset($input['customer_id'])){
+            $check_customer='';
         }else{
-            $input_profile['ssn'] = '';
+            $check_customer= $this->customer_ad_model->check_customer($input);
         }
-        $input_profile['date_of_birth'] = $input['date_of_birth'];
-        $input_profile['phone_h'] = $input['phone_h'];
-        $input_profile['phone_w'] = $input['phone_w'];
-        $input_profile['phone_m'] = $input['phone_m'];
-        $input_profile['fax'] = $input['fax'];
-        $input_profile['mail_add'] = $input['mail_add'];
-        $input_profile['city'] = $input['city'];
-        $input_profile['state'] = $input['state'];
-        $input_profile['country'] = $input['country'];
-        $input_profile['zip_code'] = $input['zip_code'];
-        $input_profile['cross_street'] = $input['cross_street'];
-        $input_profile['subdivision'] = $input['subdivision'];
-       // $input_profile['img_path'] = $input['img_path'];
-        $input_profile['pay_history'] = $input['pay_history'];
-        $input_profile['notes'] = $input['notes'];
-        $input_profile['status'] = $input['status'];
-       // $input_profile['assign'] = $input['assign'];
+        if(empty($check_customer)){
+            // customer profile info
+            $input_profile = array();
+            $input_profile['fk_user_id'] = logged('id');
+            $input_profile['fk_sa_id'] = $input['fk_sa_id'];
+            $input_profile['company_id'] = logged('company_id');
+            $input_profile['status'] = $input['status'];
+            $input_profile['customer_type'] = $input['customer_type'];
+            $input_profile['business_name'] = $input['business_name'];
+            $input_profile['first_name'] = $input['first_name'];
+            $input_profile['last_name'] = $input['last_name'];
+            $input_profile['middle_name'] = $input['middle_name'];
+            $input_profile['prefix'] = $input['prefix'];
+            $input_profile['suffix'] = $input['suffix'];
+            $input_profile['mail_add'] = $input['mail_add'];
+            $input_profile['city'] = $input['city'];
+            $input_profile['state'] = $input['state'];
+            $input_profile['country'] = $input['country'];
+            $input_profile['zip_code'] = $input['zip_code'];
+            $input_profile['cross_street'] = $input['cross_street'];
+            $input_profile['subdivision'] = $input['subdivision'];
+            $input_profile['email'] = $input['email'];
+            $input_profile['ssn'] = $input['ssn'];
+            $input_profile['date_of_birth'] = $input['date_of_birth'];
+            $input_profile['phone_h'] = $input['phone_h'];
+            $input_profile['phone_m'] = $input['phone_m'];
+            $input_profile['contact_name1'] = $input['contact_name1'];
+            $input_profile['contact_name2'] = $input['contact_name2'];
+            $input_profile['contact_name3'] = $input['contact_name3'];
+            $input_profile['contact_phone1'] = $input['contact_phone1'];
+            $input_profile['contact_phone2'] = $input['contact_phone2'];
+            $input_profile['contact_phone3'] = $input['contact_phone3'];
+            //$input_profile['notes'] = $input['notes'];
+            if(isset($input['customer_id'])){
+                $profile_id = $this->general->update_with_key_field($input_profile, $input['customer_id'],'acs_profile','prof_id');
+            }else{
+                $profile_id = $this->general->add_return_id($input_profile, 'acs_profile');
+            }
 
+            $save_billing = $this->save_billing_information($input,$profile_id);
+            $save_office = $this->save_office_information($input,$profile_id);
+            $save_alarm = $this->save_alarm_information($input,$profile_id);
+            $save_access = $this->save_access_information($input,$profile_id);
+            if($save_billing == 0){
+                echo 'Error Occured on Saving Billing Information';
+            }else if($save_office == 0){
+                echo 'Error Occured on Saving Office Information';
+            }else if($save_alarm == 0){
+                echo 'Error Occured on Saving Alarm Information';
+            }else if($save_access == 0){
+                echo 'Error Occured on Saving Access Information';
+            }else{
+                $this->save_notes($input,$profile_id);
+                $this->qrcodeGenerator($profile_id);
+                if(isset($input['customer_id'])){
+                    echo $input['customer_id'];
+                }else{
+                    echo $profile_id;
+                }
+
+            }
+        }else {
+            echo 'Customer Already Exist!';
+        }
+    }
+
+    public function save_billing_information($input,$id){
+        $input_billing = array();
         // billing data
+        if(!isset($input['customer_id'])){
+            $input_billing['fk_prof_id'] = $id;
+        }
         $input_billing['card_fname'] = $input['card_fname'];
         $input_billing['card_lname'] = $input['card_lname'];
         $input_billing['card_address'] = $input['card_address'];
         $input_billing['city'] = $input['billing_city'];
         $input_billing['state'] = $input['billing_state'];
         $input_billing['zip'] = $input['billing_zip'];
+        $input_billing['equipment'] = $input['equipment'];
+        $input_billing['initial_dep'] = $input['initial_dep'];
         $input_billing['mmr'] = $input['mmr'];
         $input_billing['bill_freq'] = $input['bill_freq'];
         $input_billing['bill_day'] = $input['bill_day'];
         $input_billing['contract_term'] = $input['contract_term'];
-        $input_billing['bill_method'] = $input['bill_method'];
         $input_billing['bill_start_date'] = $input['bill_start_date'];
         $input_billing['bill_end_date'] = $input['bill_end_date'];
+
+        $input_billing['bill_method'] = $input['bill_method'];
         $input_billing['check_num'] = $input['check_num'];
         $input_billing['routing_num'] = $input['routing_num'];
         $input_billing['acct_num'] = $input['acct_num'];
         $input_billing['credit_card_num'] = $input['credit_card_num'];
         $input_billing['credit_card_exp'] = $input['credit_card_exp'];
         $input_billing['credit_card_exp_mm_yyyy'] = $input['credit_card_exp_mm_yyyy'];
+        $input_billing['account_credential'] = $input['account_credential'];
+        $input_billing['account_note'] = $input['account_note'];
+        $input_billing['confirmation'] = $input['confirmation'];
 
-        // alarm data
-        $input_alarm['monitor_comp'] = $input['monitor_comp'];
-        $input_alarm['monitor_id'] = $input['monitor_id'];
-        $input_alarm['install_date'] = $input['install_date'];
-        $input_alarm['credit_score_alarm'] = $input['credit_score_alarm'];
-        $input_alarm['acct_type'] = $input['acct_type'];
-        $input_alarm['acct_info'] = $input['acct_info'];
-        $input_alarm['passcode'] = $input['passcode'];
-        $input_alarm['install_code'] = $input['install_code'];
-        $input_alarm['mcn'] = $input['mcn'];
-        $input_alarm['scn'] = $input['scn'];
-        $input_alarm['contact1'] = $input['contact1'];
-        $input_alarm['contact2'] = $input['contact2'];
-        $input_alarm['contact3'] = $input['contact3'];
-        $input_alarm['contact_name1'] = $input['contact_name1'];
-        $input_alarm['contact_name2'] = $input['contact_name2'];
-        $input_alarm['contact_name3'] = $input['contact_name3'];
-        $input_alarm['panel_type'] = $input['panel_type'];
-        $input_alarm['system_type'] = $input['system_type'];
-        $input_alarm['mon_waived'] = $input['mon_waived'];
+        $input_billing['finance_amount'] = $input['finance_amount'];
+        $input_billing['recurring_start_date'] = $input['recurring_start_date'];
+        $input_billing['recurring_end_date'] = $input['recurring_end_date'];
+        $input_billing['transaction_amount'] = $input['transaction_amount'];
+        $input_billing['transaction_category'] = $input['transaction_category'];
+        $input_billing['frequency'] = $input['frequency'];
+
+        if(isset($input['customer_id'])){
+            return $this->general->update_with_key_field($input_billing, $input['customer_id'], 'acs_billing','fk_prof_id');
+        }else{
+            return $this->general->add_($input_billing, 'acs_billing');
+        }
+
+    }
+
+    public function save_office_information($input,$id){
+        $input_office = array();
 
         // office data
-        if(isset($input['welcome_sent'])){
-            $input_office['welcome_sent'] = $input['welcome_sent'];
-        }else{
-            $input_office['welcome_sent'] = 0;
+        if(!isset($input['customer_id'])){
+            $input_office['fk_prof_id'] = $id;
         }
-
-        if(isset($input['rebate'])){
-            $input_office['rebate'] = $input['rebate'][0];
-        }else{
-            $input_office['rebate'] = 2;
-        }
-
-        if(isset($input['commision_scheme'])){
-            $input_office['commision_scheme'] = $input['commision_scheme'][0];
-        }else{
-            $input_office['commision_scheme'] = 2;
-        }
-
-        $input_office['rep_comm'] = $input['rep_comm'];
-        $input_office['rep_upfront_pay'] = $input['rep_upfront_pay'];
-        $input_office['tech_comm'] = $input['tech_comm'];
-        $input_office['tech_upfront_pay'] = $input['tech_upfront_pay'];
-        $input_office['rep_charge_back'] = $input['rep_charge_back'];
-        $input_office['rep_payroll_charge_back'] = $input['rep_payroll_charge_back'];
-
-        if(isset($input['pso'])){
-            $input_office['pso'] = $input['pso'][0];
-        }else{
-            $input_office['pso'] = 2;
-        }
-
-        $input_office['assign_to'] = $input['assign_to'];
-        $input_office['points_include'] = $input['points_include'];
-        $input_office['price_per_point'] = $input['price_per_point'];
-        $input_office['purchase_price'] = $input['purchase_price'];
-        $input_office['purchase_multiple'] = $input['purchase_multiple'];
-        $input_office['purchase_discount'] = $input['purchase_discount'];
+        $input_office['welcome_sent'] = 0;
         $input_office['entered_by'] = $input['entered_by'];
         $input_office['time_entered'] = $input['time_entered'];
         $input_office['sales_date'] = $input['sales_date'];
         $input_office['credit_score'] = $input['credit_score'];
-        $input_office['language'] = $input['language'];
+        $input_office['pay_history'] = $input['pay_history'];
         $input_office['fk_sales_rep_office'] = $input['fk_sales_rep_office'];
         $input_office['technician'] = $input['technician'];
-        $input_office['save_date'] = $input['save_date'];
-        $input_office['save_by'] = $input['save_by'];
-        $input_office['cancel_date'] = $input['cancel_date'];
-        $input_office['cancel_reason'] = $input['cancel_reason'];
-
-        if(isset($input['sched_conflict'])){
-            $input_office['sched_conflict'] = $input['sched_conflict'];
-        }else{
-            $input_office['sched_conflict'] = 0;
-        }
-
         $input_office['install_date'] = $input['install_date'];
         $input_office['tech_arrive_time'] = $input['tech_arrive_time'];
         $input_office['tech_depart_time'] = $input['tech_depart_time'];
+        $input_office['lead_source'] = $input['lead_source'];
+        $input_office['verification'] = $input['verification'];
+        $input_office['cancel_date'] = $input['cancel_date'];
+        $input_office['cancel_reason'] = $input['cancel_reason'];
+        $input_office['collect_date'] = $input['collect_date'];
+        $input_office['collect_amount'] = $input['collect_amount'];
+        $input_office['language'] = $input['language'];
         $input_office['pre_install_survey'] = $input['pre_install_survey'];
-        $input_office['post_install_survey	'] = $input['post_install_survey'];
+        $input_office['post_install_survey'] = $input['post_install_survey'];
+        $input_office['monitoring_waived'] = $input['monitoring_waived'];
 
         if(isset($input['rebate_offer'])){
             $input_office['rebate_offer'] = $input['rebate_offer'];
@@ -586,31 +643,125 @@ class Customer extends MY_Controller
         $input_office['activation_fee'] = $input['activation_fee'];
         $input_office['way_of_pay'] = $input['way_of_pay'];
 
-        $input_office['lead_source'] = $input['lead_source'];
+        if(isset($input['commision_scheme'])){
+            $input_office['commision_scheme'] = $input['commision_scheme'][0];
+        }else{
+            $input_office['commision_scheme'] = 2;
+        }
+
+        $input_office['rep_comm'] = $input['rep_comm'];
+        $input_office['rep_upfront_pay'] = $input['rep_upfront_pay'];
+        $input_office['rep_tiered_bonus'] = $input['rep_tiered_bonus'];
+        $input_office['rep_holdfund_bonus'] = $input['rep_holdfund_bonus'];
+        $input_office['rep_deduction'] = $input['rep_deduction'];
+        $input_office['tech_comm'] = $input['tech_comm'];
+        $input_office['tech_upfront_pay'] = $input['tech_upfront_pay'];
+        $input_office['tech_deduction'] = $input['tech_deduction'];
+        $input_office['rep_charge_back'] = $input['rep_charge_back'];
+        $input_office['rep_payroll_charge_back'] = $input['rep_payroll_charge_back'];
+
+        if(isset($input['pso'])){
+            $input_office['pso'] = $input['pso'][0];
+        }else{
+            $input_office['pso'] = 2;
+        }
+
+        $input_office['points_include'] = $input['points_include'];
+        $input_office['price_per_point'] = $input['price_per_point'];
+        $input_office['purchase_price'] = $input['purchase_price'];
+        $input_office['purchase_multiple'] = $input['purchase_multiple'];
+        $input_office['purchase_discount'] = $input['purchase_discount'];
+        $input_office['equipment_cost'] = $input['equipment_cost'];
+        $input_office['labor_cost'] = $input['labor_cost'];
+        $input_office['job_profit'] = $input['job_profit'];
         $input_office['url'] = $input['url'];
-        $input_office['verification'] = $input['verification'];
-        $input_office['warranty_type'] = $input['warranty_type'];
-        $input_office['office_custom_field1'] = $input['office_custom_field1'];
+
+        if(isset($input['customer_id'])){
+            return $this->general->update_with_key_field($input_office, $input['customer_id'], 'acs_office','fk_prof_id');
+        }else{
+            return $this->general->add_($input_office, 'acs_office');
+        }
+    }
+
+    public function save_alarm_information($input,$id){
+        $input_alarm = array();
+
+        // alarm data
+        if(!isset($input['customer_id'])){
+            $input_alarm['fk_prof_id'] = $id;
+        }
+        $input_alarm['monitor_comp'] = $input['monitor_comp'];
+        $input_alarm['monitor_id'] = $input['monitor_id'];
+        //$input_alarm['install_date'] = $input['install_date'];
+        $input_alarm['acct_type'] = $input['acct_type'];
+        $input_alarm['online'] = $input['online'];
+        $input_alarm['in_service'] = $input['in_service'];
+        $input_alarm['equipment'] = $input['equipment'];
+        $input_alarm['collections'] = $input['collections'];
+        $input_alarm['credit_score_alarm'] = '';
+        $input_alarm['passcode'] = $input['passcode'];
+        $input_alarm['install_code'] = $input['install_code'];
+        $input_alarm['mcn'] = $input['mcn'];
+        $input_alarm['scn'] = $input['scn'];
+        $input_alarm['panel_type'] = $input['panel_type'];
+        $input_alarm['system_type'] = $input['system_type'];
+        $input_alarm['warranty_type'] = $input['warranty_type'];
+        $input_alarm['dealer'] = $input['dealer'];
+        $input_alarm['alarm_login'] = $input['alarm_login'];
+        $input_alarm['alarm_customer_id'] = $input['alarm_customer_id'];
+        $input_alarm['alarm_cs_account'] = $input['alarm_cs_account'];
+
+        if(isset($input['customer_id'])){
+            return $this->general->update_with_key_field($input_alarm, $input['customer_id'], 'acs_alarm','fk_prof_id');
+        }else{
+            return $this->general->add_($input_alarm, 'acs_alarm');
+        }
+    }
+
+    public function save_access_information($input,$id){
+        $input_access = array();
 
         //access data
+        if(!isset($input['customer_id'])){
+            $input_access['fk_prof_id'] = $id;
+        }
         if(isset($input['portal_status'])){
             $input_access['portal_status'] = $input['portal_status'];
         }else{
             $input_access['portal_status'] = 2;
         }
-        $input_access['reset_password'] = $input['reset_password'];
-        $input_access['login'] = $input['login'];
-        $input_access['password'] = $input['password'];
-        $input_access['acs_custom_field1'] = $input['acs_custom_field1'];
-        $input_access['acs_custom_field2'] = $input['acs_custom_field2'];
-        $input_access['acs_cancel_date'] = $input['acs_cancel_date'];
-        $input_access['acs_collect_date'] = $input['acs_collect_date'];
-        $input_access['acs_cancel_reason'] = $input['acs_cancel_reason'];
-        $input_access['collect_amount'] = $input['collect_amount'];
+
+        $input_access['reset_password'] ='';
+        $input_access['access_login'] = $input['access_login'];
+        $input_access['access_password'] = $input['access_password'];
+
+        if(isset($input['customer_id'])){
+            return $this->general->update_with_key_field($input_access, $input['customer_id'], 'acs_access','fk_prof_id');
+        }else{
+            return $this->general->add_($input_access, 'acs_access');
+        }
+    }
+
+    public function save_notes($input,$id){
+        if(!empty($input_notes['note'])){
+            $input_notes = array();
+            // notes data
+            $input_notes['fk_prof_id'] = $id;
+            $input_notes['note'] = $input['notes'];
+            $input_notes['datetime'] = date("m-d-Y h:i A");
+            $this->general->add_($input_notes, 'acs_notes');
+        }
+    }
+
+    public function add_data_sheet(){
+
+        $user_id = logged('id');
+        $cid = logged('company_id');
+        $input = $this->input->post();
 
         $fk_prod_id = $input['prof_id'];
         if(empty($fk_prod_id)){
-            $fk_prod_id = $this->customer_ad_model->add($input_profile,"acs_profile");
+            $fk_prod_id = $this->customer_ad_model->add($input,"acs_profile");
 
             $input_access['fk_prof_id'] = $fk_prod_id;
             $input_office['fk_prof_id'] = $fk_prod_id;
@@ -621,28 +772,6 @@ class Customer extends MY_Controller
             $this->customer_ad_model->add($input_office,"acs_office");
             $this->customer_ad_model->add($input_alarm,"acs_alarm");
             $this->customer_ad_model->add($input_billing,"acs_billing");
-
-            $this->qrcodeGenerator($fk_prod_id);
-
-            if(isset($input['device_name'])){
-                $devices = count($input['device_name']);
-                for($xx=0;$xx<$devices;$xx++){
-                    $device_data = array();
-                    $device_data['fk_prof_id'] = $fk_prod_id;
-                    $device_data['device_name'] = $input['device_name'][$xx];
-                    $device_data['sold_by'] = $input['sold_by'][$xx];
-                    $device_data['device_points'] = $input['device_points'][$xx];
-                    $device_data['retail_cost'] = $input['retail_cost'][$xx];
-                    $device_data['purch_price'] = $input['purch_price'][$xx];
-                    $device_data['device_qty'] = $input['device_qty'][$xx];
-                    $device_data['total_points'] = $input['total_points'][$xx];
-                    $device_data['total_cost'] = $input['total_cost'][$xx];
-                    $device_data['total_purch_price'] = $input['total_purch_price'][$xx];
-                    $device_data['device_net'] = $input['device_net'][$xx];
-                    $this->customer_ad_model->add($device_data,"acs_devices");
-                    unset($device_data);
-                }
-            }
             echo "Added";
         }else{
             $input_profile['prof_id'] = $fk_prod_id;
@@ -677,8 +806,6 @@ class Customer extends MY_Controller
                     unset($device_data);
                 }
             }
-
-
             echo "Updated";
         }
     }
@@ -746,23 +873,6 @@ class Customer extends MY_Controller
         }
     }
 
-    public function add_advance($id=null)
-    {
-        $userid = $id;
-        $user_id = logged('id');
-        if(isset($userid) || !empty($userid)){
-            $this->page_data['profile_info'] = $this->customer_ad_model->get_data_by_id('prof_id',$userid,"acs_profile");
-            $this->page_data['access_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_access");
-            $this->page_data['office_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_office");
-            $this->page_data['billing_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_billing");
-            $this->page_data['alarm_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_alarm");
-            $this->page_data['device_info'] = $this->customer_ad_model->get_all_by_id('fk_prof_id',$userid,"acs_devices");
-        }
-        $this->page_data['sales_area'] = $this->customer_ad_model->get_all(FALSE,"","ASC","ac_salesarea","sa_id");
-        $this->page_data['employees'] = $this->customer_ad_model->get_all(FALSE,"","ASC","users","id");
-        $this->page_data['users'] = $this->users_model->getUsers();
-        $this->load->view('customer/add_advance', $this->page_data);
-    }
 
     public function import_customer()
     {
@@ -1945,6 +2055,37 @@ class Customer extends MY_Controller
         $this->load->view('customer/group/list', $this->page_data);
     }
 
+    public function group_edit($id=null)
+    {
+        $is_allowed = $this->isAllowedModuleAccess(11);
+        if( !$is_allowed ){
+            $this->page_data['module'] = 'customer_group';
+            echo $this->load->view('no_access_module', $this->page_data, true);
+            die();
+        }
+        if(!$id==NULL){
+            // save new updated group data
+            $input = $this->input->post();
+            if ($input) {
+                $input['date_added'] = date("d-m-Y h:i A");
+                if ($this->general->update_with_key($input,$id,"customer_groups")) {
+                    redirect(base_url('customer/group'));
+                }
+            }
+            $get_company_info = array(
+                'where' => array(
+                    'id' => $id,
+                ),
+                'table' => 'customer_groups',
+                'select' => '*',
+            );
+            $this->page_data['customerGroup'] = $this->general->get_data_with_param($get_company_info,FALSE);
+        }else{
+            redirect(base_url('customer/group'));
+        }
+        $this->load->view('customer/group/edit', $this->page_data);
+    }
+
     public function group_add()
     {
         $is_allowed = $this->isAllowedModuleAccess(11);
@@ -1966,6 +2107,20 @@ class Customer extends MY_Controller
         }
         $this->page_data['page_title'] = 'Customer Group Add';
         $this->load->view('customer/group/add', $this->page_data);
+    }
+
+    public function group_delete() {
+        $group_delete = array(
+            'where' => array(
+                'id' => $_POST['id']
+            ),
+            'table' => 'customer_groups'
+        );
+        if($this->general->delete_($group_delete)){
+            echo true;
+        }else{
+            echo false;
+        }
     }
 
     public function categorizeNameAlphabetically($items) {

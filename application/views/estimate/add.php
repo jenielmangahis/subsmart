@@ -66,12 +66,14 @@ defined('BASEPATH') or exit('No direct script access allowed');
                             <div class="row" style="background-color:white;margin-top:-2%;">
                                 <div class="col-md-6">
                                     <label for="customers" class="required"><b>Customer</b></label>
-                                    <select name="customer_id" id="customer_id" class="form-control" required>
+                                    <div id="sel-customerdiv">
+                                    <select name="customer_id"  id="sel-customer" class="form-control" required>
                                         <option value="0">Select a customer</option>
                                         <?php foreach ($customers as $customer):?>
-                                        <option value="<?php echo $customer->prof_id?>"><?php echo $customer->first_name."&nbsp;".$customer->last_name;?> </option>
+                                        <option value="<?php echo $customer->prof_id?>"><?php echo $customer->contact_name . '' . $customer->first_name."&nbsp;".$customer->last_name;?> </option>
                                         <?php endforeach; ?>
                                     </select>
+                                    </div>
                                 </div>
                                 <div class="col-md-3">
                                     <br><br><a class="link-modal-open" href="javascript:void(0)" data-toggle="modal"
@@ -588,7 +590,7 @@ function initialize() {
 
 $(document).ready(function(){
  
-    $('#customer_id').change(function(){
+    $('#sel-customer').change(function(){
     var id  = $(this).val();
     //alert(id);
 
@@ -622,6 +624,17 @@ $(document).ready(function(){
     });
 });
 
+</script>
+
+<script type="text/javascript">
+$(window).on('beforeunload', function(){
+    var c = confirm();
+    if(c){
+        return true;
+    }
+    else
+        return false;
+});
 </script>
 
 <script>

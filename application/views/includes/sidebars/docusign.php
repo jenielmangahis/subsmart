@@ -26,15 +26,15 @@
       max-height: 120px;
       border-radius: 69px;
     }
-    svg#svg-sprite-menu-close {
+    /* svg#svg-sprite-menu-close {
       position: relative;
       bottom: 64px;
-    }
+    } */
 </style>
 <nav class="navbar-side d-none d-md-block">
     <ul class="nav">
 
-        <span class="nav-close" style="padding-top: 0px;margin-top: 20%;">
+        <span class="nav-close">
             <svg viewBox="0 0 16 14" id="svg-sprite-menu-close" xmlns="http://www.w3.org/2000/svg" transform="scale(1, -1)" width="20px" height="100%">
                 <path d="M3.3 4H15c.6 0 1 .4 1 1s-.4 1-1 1H3.3l2.2 2.2c.4.4.4 1.1 0 1.5-.4.4-1.1.4-1.5 0L.3 6c-.2-.3-.3-.6-.3-.9V5v-.1c0-.3.1-.6.3-.9L4 .3c.4-.4 1.1-.4 1.5 0 .4.4.4 1.1 0 1.5L3.3 4zM8 8h7c.6 0 1 .4 1 1s-.4 1-1 1H8c-.6 0-1-.4-1-1s.4-1 1-1zm0 4h7c.6 0 1 .4 1 1s-.4 1-1 1H8c-.6 0-1-.4-1-1s.4-1 1-1z"></path>
             </svg>
@@ -52,22 +52,22 @@
         </li>
 
         <li class="submenus">
-            <a href="<?=base_url('docusign/manage')?>?view=inbox" title="Inbox">
+            <a href="<?=base_url('DocuSign/manage')?>?view=inbox" title="Inbox">
             <span class="fa fa-inbox"></span>Inbox</a>
         </li>
 
         <li class="submenus">
-            <a href="<?=base_url('docusign/manage')?>?view=sent" title="Sent">
+            <a href="<?=base_url('DocuSign/manage')?>?view=sent" title="Sent">
             <span class="fa fa-send"></span>Sent</a>
         </li>
 
         <li class="submenus">
-            <a href="<?=base_url('docusign/manage')?>?view=drafts" title="Drafts">
+            <a href="<?=base_url('DocuSign/manage')?>?view=drafts" title="Drafts">
             <span class="fa fa-pencil"></span>Drafts</a>
         </li>
 
         <li class="submenus">
-            <a href="<?=base_url('docusign/manage')?>?view=deleted" title="Deleted">
+            <a href="<?=base_url('DocuSign/manage')?>?view=deleted" title="Deleted">
             <span class="fa fa-trash"></span>Deleted</a>
         </li>
     </ul>

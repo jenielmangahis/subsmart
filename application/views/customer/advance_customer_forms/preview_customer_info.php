@@ -8,7 +8,7 @@
                 <label>Status</label>
             </div>
             <div class="col-md-6">
-                <?= isset($profile_info) && !empty($profile_info->status) ? $profile_info->status : '---';?>
+                <?= !empty($profile_info->status) ? $profile_info->status : '---';?>
             </div>
         </div>
         <div class="row form_line">
@@ -144,7 +144,14 @@
                 <label for="">Social Security No.</label>
             </div>
             <div class="col-md-6">
-                <?= isset($profile_info) && !empty($profile_info->ssn) ? $profile_info->ssn : '---';?>
+                <?php
+                    $ssn_numbers = explode('-',$profile_info->ssn);
+                    if(isset($ssn_numbers[2])){
+                        echo '**-***-'.$ssn_numbers[2];
+                    }else{
+                        echo 'n/a';
+                    }
+                ?>
             </div>
         </div>
         <div class="row form_line">
@@ -195,7 +202,7 @@
                 <label for="">Contact Name 1</label>
             </div>
             <div class="col-md-6">
-               ---
+                <?= !empty($profile_info->contact_name1) ? $profile_info->contact_name1 : '---';?>
             </div>
         </div>
         <div class="row form_line">
@@ -203,7 +210,7 @@
                 <label for="">Contact Phone 1</label>
             </div>
             <div class="col-md-6">
-                ---
+                <?= !empty($profile_info->contact_phone1) ? $profile_info->contact_phone1 : '---';?>
             </div>
         </div>
         <div class="row form_line">
@@ -211,7 +218,7 @@
                 <label for="">Contact Name 2</label>
             </div>
             <div class="col-md-6">
-                ---
+                <?= !empty($profile_info->contact_name2) ? $profile_info->contact_name2 : '---';?>
             </div>
         </div>
         <div class="row form_line">
@@ -219,7 +226,7 @@
                 <label for="">Contact Phone 2</label>
             </div>
             <div class="col-md-6">
-                ---
+                <?= !empty($profile_info->contact_phone2) ? $profile_info->contact_phone2 : '---';?>
             </div>
         </div>
         <div class="row form_line">
@@ -227,7 +234,7 @@
                 <label for="">Contact Name 3</label>
             </div>
             <div class="col-md-6">
-                ---
+                <?= !empty($profile_info->contact_name3) ? $profile_info->contact_name3 : '---';?>
             </div>
         </div>
         <div class="row form_line">
@@ -235,7 +242,7 @@
                 <label for="">Contact Phone 3</label>
             </div>
             <div class="col-md-6">
-                ---
+                <?= !empty($profile_info->contact_phone3) ? $profile_info->contact_phone3 : '---';?>
             </div>
         </div>
 

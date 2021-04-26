@@ -16,7 +16,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 </div>
                 
                     <div style="background-color:#fdeac3; width:100%;padding:.5%;margin-bottom:5px;margin-top:5px;margin-bottom:10px;">
-                        Work order are are crucial to an organization’s maintenance operation. They help everyone from maintenance managers to technicians organize, assign, prioritize, track, and complete key tasks. When done well, work orders allow you to capture information, share it, and use it to get the work done as efficiently as possible.  Our work order has legal headers and two (2) places where you can outline specific terms.  This form will empower you team to move forward with each project without looking backward. Signature place holders and specific term(s) statements will help make this work order into a binding agreement.  
+                        Work order are are crucial to an organization’s maintenance operation. They help everyone from maintenance managers to technicians organize, assign, prioritize, track, and complete key tasks. When done well, work orders allow you to capture information, share it, and use it to get the work done as efficiently as possible.  Our work order has legal headers and two (2) places where you can outline specific terms.  This form will empower you team to move forward with each project without looking backward. Signature place holders and specific term(s) statements will help make this work order into a binding agreement.
                     </div>
                 <div class="row" style="margin-bottom:20px;">
                     <div class="col">
@@ -25,8 +25,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     <div class="col-auto">
                         <div class="h1-spacer">
                             <a href="<?php echo base_url('workorder/settings') ?>" style="padding-right:20px;"><i class="fa fa-cog" style="font-size:24px;"></i> Settings </a>
-                             <a class="btn btn-primary btn-md" href="<?php echo base_url('/builder?form_id=27') ?>">
-                                <span class="fa fa-pencil"></span> &nbsp; Customize Form
+                             <a class="btn btn-primary btn-md" href="<?php echo base_url('workorder/work_order_templates') ?>">
+                             <i class="fa fa-address-book-o"></i> &nbsp; Industry Templates
                             </a>
                             <!-- <a class="btn btn-primary btn-md" href="#" data-toggle="modal" data-target="#workordermodal">
                                 <span class="fa fa-plus"></span> &nbsp; New Work Order
@@ -224,7 +224,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                     <label for="work_order_id_<?php echo $workorder->id ?>"></label>
                                                 </div>
                                                 <div><a class="a-default table-nowrap" href="">
-                                                        WO-00<?php echo $workorder->id ?>
+                                                        <?php echo $workorder->work_order_number ?>
                                                     </a>
                                                 </div>
                                             </div>
@@ -237,12 +237,14 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         </td>
                                         <td>
                                             <div class="table-nowrap">
-                                                <?php echo date('M d, Y', strtotime($workorder->date_issued)) ?>
+                                                <?php echo date('M d, Y', strtotime($workorder->date_created)) ?>
                                             </div>
                                         </td>
                                         <td>
                                             <a href="<?php echo base_url('customer/view/' . $workorder->customer_id) ?>">
-                                                <?php echo get_customer_by_id($workorder->customer_id)->contact_name ?>
+                                                <?php //echo get_customer_by_id($workorder->customer_id)->contact_name 
+                                                echo $workorder->first_name . ' ' .  $workorder->middle_name . ' ' . $workorder->last_name;
+                                                ?>
                                             </a>
                                             <div>Scheduled on: 30 Mar 2020, 2:00 pm to 4:00 pm</div>
                                         </td>
@@ -345,6 +347,39 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         </div>
     </div>
 
+    <div class="modal fade" id="workordermodal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">New Work Order</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body text-center">
+              <p class="text-lg margin-bottom">
+                  What type of Work Order you want to create
+              </p><center>
+              <div class="margin-bottom text-center" style="width:60%;">
+                  <div class="help help-sm">Create new work Order</div>
+                  <?php if(empty($company_work_order_used->work_order_template_id)){ ?>
+                  <a class="btn btn-primary add-modal__btn-success" style="background-color: #2ab363 !important" href="<?php echo base_url('workorder/NewworkOrder') ?>"><span class="fa fa-file-text-o"></span> New Work Order</a>
+                  <?php }
+                  elseif($company_work_order_used->work_order_template_id == '0'){ ?>
+                  <a class="btn btn-primary add-modal__btn-success" style="background-color: #2ab363 !important" href="<?php echo base_url('workorder/NewworkOrder') ?>"><span class="fa fa-file-text-o"></span> New Work Order</a>
+                  <?php }
+                  elseif($company_work_order_used->work_order_template_id == '1'){ ?>
+                  <a class="btn btn-primary add-modal__btn-success" style="background-color: #2ab363 !important" href="<?php echo base_url('workorder/NewworkOrderAlarm') ?>"><span class="fa fa-file-text-o"></span> New Work Order</a>
+                  <?php } ?>
+              </div>
+              <div class="margin-bottom" style="width:60%;">
+                  <div class="help help-sm">Existing Work Order</div>
+                  <a class="btn btn-primary add-modal__btn-success" style="background-color: #2ab363 !important" href="<?php echo base_url('workorder/NewworkOrder?type=2') ?>"><span class="fa fa-list-ul fa-margin-right"></span> Existing </a>
+              </div></center>
+        </div>
+    </div>
+</div>
+
     <div class="modal fade" id="newJobModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -387,4 +422,3 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     <!-- page wrapper end -->
     <?php include viewPath('includes/footer'); ?>
 </div>
-<?php include viewPath('workorder/workorder_modal_w'); ?>

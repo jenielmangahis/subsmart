@@ -59,111 +59,31 @@ class Trac360 extends MY_Controller
 
     public function index()
     {
+        add_css(array(
+            "assets/css/trac360/people.css"
+        ));
+        add_footer_js(array(
+            "assets/js/trac360/people.js"
+
+        ));
         $company_id = logged('company_id');
         $user_id = logged('id');
 
         $user_locations = $this->trac360_model->get_current_user_location($company_id);
-        $locations = array();
-        foreach ($user_locations as $user) {
-            $found = false;
-            $found_ctr = 0;
-            $current_user_location = "";
-            if ($user->last_tracked_location != "") {
-                for ($i = 0; $i < count($locations); $i++) {
-                    if ($locations[$i][0] == $user->last_tracked_location) {
-                        $found = true;
-                        $found_ctr = $i;
-                        break;
-                    }
-                }
-                if (!$found) {
-                    $locations[] = array($user->last_tracked_location, array($user->name), $user->profile_img);
-                } else {
-                    $names = $locations[$found_ctr][1];
-                    $names[] =  $user->name;
-                    $locations[$found_ctr][1] = $names;
-                }
-                $current_user_location = $user->last_tracked_location;
-                if ($user->user_id == $user_id) {
-                    $current_user_location = $user->user_location;
-                }
-            } else {
-                $last_loc = $this->trac360_model->get_last_location_from_timesheet_logs($user->user_id);
-                for ($i = 0; $i < count($locations); $i++) {
-                    if ($locations[$i][0] == $last_loc->user_location) {
-                        $found = true;
-                        $found_ctr = $i;
-                        break;
-                    }
-                }
-                if (!$found) {
-                    $locations[] = array($last_loc->user_location, array($user->name), $user->profile_img,);
-                } else {
-                    $names = $locations[$found_ctr][1];
-                    $names[] =  $user->name;
-                    $locations[$found_ctr][1] = $names;
-                }
-                if ($user->user_id == $user_id) {
-                    $current_user_location = $last_loc->user_location;
-                }
-            }
-        }
 
-        $config['zoom'] = "6";
-        $config['center'] = $current_user_location;
-        $config['apiKey'] = 'AIzaSyCL77vydXglokkXuSZV8cF8aJ3ZxueBhrU';
 
-        $this->googlemaps->initialize($config);
-
-        for ($i = 0; $i < count($locations); $i++) {
-            $marker = array();
-            $names = $locations[$i][1];
-            $name = "";
-            for ($x = 0; $x < count($names); $x++) {
-                if ($name == "") {
-                    $name = $names[$x];
-                } else {
-                    $name .= "<br>" . $names[$x];
-                }
-            }
-
-            $marker['position'] = $locations[$i][0];
-
-            if ($current_user_location == $locations[$i][0]) {
-                $marker['animation'] =  'BOUNCE';
-            } else {
-                $marker['animation'] =  'DROP';
-            }
-
-            $image = base_url('uploads/users/user-profile/' . $locations[$i][2]);
-            if (!@getimagesize($image)) {
-                $image = base_url('assets/img/trac360/default.png');
-            }
-
-            $marker['infowindow_content'] = $name;
-            if (count($names) > 1) {
-                $marker['icon'] = base_url() . "assets/img/trac360/group.png";
-                $marker['icon_scaledSize'] = '50,50';
-            } else {
-                // $image = base_url('uploads/users/user-profile/' . $locations[$i][2]);
-                $marker['icon'] = $image;
-                $marker['icon_scaledSize'] = '30,30';
-            }
-            $this->googlemaps->add_marker($marker);
-        }
-
-        $data = $this->googlemaps->create_map();
-
-        $this->page_data['map'] = $data['html'];
-        $this->page_data['map_js'] = $data['js'];
-        $this->page_data['apiKey'] = 'AIzaSyCL77vydXglokkXuSZV8cF8aJ3ZxueBhrU';
-        $this->page_data['categories'] = $this->users_geographic_positions_categories_model->getByWhere(array('company_id' => $company_id));
-        $this->page_data['users'] = $this->users_model->getByWhere(array('company_id' => $company_id));
-
-        $this->page_data['trac360_manager'] = $this->load->view('modals/trac360_manager', array(), true);
-        $this->page_data['current_user_location'] = $current_user_location;
-        $this->load->view('trac360/main', $this->page_data);
+        $this->page_data['user_locations'] = $user_locations;
+        $this->page_data['company_id'] = $company_id;
+        $this->page_data['user_id'] = $user_id;
+        $this->load->view('trac360/people', $this->page_data);
         // var_dump($data);
+    }
+    public function tester()
+    {
+        $pizza  = "8.045953500047293,123.51302520681782";
+        $pieces = explode(",", $pizza);
+        echo "lat:" . $pieces[0]; // piece1
+        echo "lng:" . $pieces[1]; // piece2
     }
 
     public function getUserGeoPosition($uid)
@@ -379,5 +299,21 @@ class Trac360 extends MY_Controller
         $this->page_data['map'] = $data['html'];
         $this->page_data['map_js'] = $data['js'];
         $this->load->view('trac360/places', $this->page_data);
+    }
+    public function current_user_update_last_tracked_location()
+    {
+        $user_id = $this->input->post("user_id");
+        $company_id = $this->input->post("company_id");
+        $lat = $this->input->post("lat");
+        $lng = $this->input->post("lng");
+        $formatted_address = $this->input->post("formatted_address");
+        $this->trac360_model->current_user_update_last_tracked_location($user_id, $company_id, $lat, $lng, $formatted_address);
+        $data = new stdClass();
+        $data->user_id = $user_id;
+        $data->company_id = $company_id;
+        $data->lat = $lat;
+        $data->lng = $lng;
+        $data->formatted_address = $formatted_address;
+        echo json_encode($data);
     }
 }

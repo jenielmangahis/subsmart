@@ -365,9 +365,35 @@ $(document).ready(function () {
         }
 
         $("#modalNewCustomer").modal("hide");
+        // $('#sel-customer').selectmenu('refresh');
+        // alert('js');
+        // $('#sel-customerdiv').load(window.location.href +  ' #sel-customerdiv');
+        // location.reload();
+        setTimeout(function() {
+          location.reload();
+      }, 1000);
+
+        sucess("New Customer has been Added Successfully!");
+        // $('#sel-cul').load(window.location.href +  ' #sel-cul');
       },
     });
   });
+
+  function sucess(information){
+    Swal.fire({
+        title: 'Good job!',
+        text: information,
+        icon: 'success',
+        showCancelButton: false,
+        confirmButtonColor: '#32243d',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Ok'
+    }).then((result) => {
+        if (result.value) {
+            window.location.href="/customer";
+        }
+    });
+}
 
   // remove service address
   $(document).on("click", ".inquiry-contact-list__delete", function () {

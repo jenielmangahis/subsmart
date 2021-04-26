@@ -5,7 +5,7 @@
 </style>
 
 <div class="<?= $class ?>"  data-id="<?= $id ?>" id="widget_<?= $id ?>">
-    <div  style="width: 300px; border: 1px solid #58c04e; background: #58c04e; color:white;  border-radius: 10px; text-align: center;padding: 5px;position: relative;margin: 0 auto;top: 21px;z-index: 1000;">
+    <div  class="wid_header">
         <i class="fa fa-calendar" aria-hidden="true"></i> Upcoming Jobs
         
         <div class="float-right">
@@ -26,8 +26,8 @@
                 <div style="height: <?= $rawHeight-40 ?>px; overflow-y: scroll">
                     <?php
                     $jobCounter = 0;
-                    if ($job) {
-                        foreach ($job as $jb) :
+                    if ($upcomingJobs) {
+                        foreach ($upcomingJobs as $jb) :
                             ?>
                             <div class="mb-2 col-lg-12 float-left jobsRow" style="border-bottom: 1px solid #ccc; padding-bottom: 5px; cursor: pointer">
 
@@ -48,7 +48,7 @@
                                 <div class="col-lg-7 float-left mt-2" style="padding-right: 0;">
                                     <a href="<?php echo base_url('job/job_preview/' . $jb->id); ?>">
                                         <h6 style="font-weight:600; margin:0;font-size: 13px;"><?php echo $jb->job_number . ' : ' . $jb->job_type. ' - ' . $jb->tags_name; ?></h6>
-                                        <b class="text-muted">
+                                        <b style="color:#45a73c;">
                                             <?= $jb->first_name. ' '. $jb->last_name; ?>
                                         </b><br>
                                        <small class="text-muted" ><?= $jb->mail_add .' '. $jb->cust_city.' '.$jb->cust_state.' '.$jb->cust_zip_code; ?></small><br>

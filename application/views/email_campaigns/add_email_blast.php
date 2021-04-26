@@ -97,7 +97,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <hr />
                             <div>
                                 <div class="col-md-4 form-group md-right">
-                                    <a class="btn btn-default" href="<?php echo url('sms_campaigns') ?>" style="float: left;margin-right: 10px;">Cancel</a>
+                                    <a class="btn btn-default" href="<?php echo url('email_campaigns') ?>" style="float: left;margin-right: 10px;">Cancel</a>
                                     <button type="submit" class="btn btn-flat btn-primary margin-right btn-campaign-save-draft" style="float: left;margin-right: 0px;">Continue »</button>
                                 </div>
                             </div>

@@ -270,7 +270,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
     }
 </style>
 <div class="<?= $class ?>" data-id="<?= $id ?>"  id="widget_<?= $id ?>">
-    <div  style="width: 300px; border: 1px solid #58c04e; background: #58c04e; color:white;  border-radius: 10px; text-align: center;padding: 5px;position: relative;margin: 0 auto;top: 21px;z-index: 1000;">
+    <div  class="wid_header">
         <i class="fa fa-book" aria-hidden="true"></i> Timesheet
         
         <div class="float-right">

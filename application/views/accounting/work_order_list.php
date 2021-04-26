@@ -25,12 +25,13 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     <div class="col-auto">
                         <div class="h1-spacer">
                             <a href="<?php echo base_url('workorder/settings') ?>" style="padding-right:20px;"><i class="fa fa-cog" style="font-size:24px;"></i> Settings </a>
-                             <a class=" btn-primary btn-md" href="<?php echo base_url('/builder?form_id=27') ?>">
-                                <span class="fa fa-pencil"></span> &nbsp; Customize Form
+                             <a class=" btn-primary btn-md" href="<?php echo base_url('accounting/work_order_templates') ?>">
+                                <span class="fa fa-pencil"></span> &nbsp; Industry Templates
                             </a>
                             <!-- <a class="btn btn-primary btn-md" href="#" data-toggle="modal" data-target="#workordermodal">
                                 <span class="fa fa-plus"></span> &nbsp; New Work Order
                             </a> -->
+                            <!-- <a href="#" class=" btn-primary btn-md" data-toggle="modal" data-target="#workordermodal"><span class="fa fa-plus"></span> &nbsp; New Work Order</a> -->
                             <a href="#" class=" btn-primary btn-md" data-toggle="modal" data-target="#workordermodal"><span class="fa fa-plus"></span> &nbsp; New Work Order</a>
                         </div>
                     </div>
@@ -222,7 +223,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                     <label for="work_order_id_<?php echo $workorder->id ?>"></label>
                                                 </div>
                                                 <div><a class="a-default table-nowrap" href="">
-                                                        WO-00<?php echo $workorder->id ?>
+                                                        <?php echo $workorder->work_order_number ?>
                                                     </a>
                                                 </div>
                                             </div>
@@ -235,12 +236,14 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         </td>
                                         <td>
                                             <div class="table-nowrap">
-                                                <?php echo date('M d, Y', strtotime($workorder->date_issued)) ?>
+                                                <?php echo date('M d, Y', strtotime($workorder->date_created)) ?>
                                             </div>
                                         </td>
                                         <td>
                                             <a href="<?php echo base_url('customer/view/' . $workorder->customer_id) ?>">
-                                                <?php echo get_customer_by_id($workorder->customer_id)->contact_name ?>
+                                                <?php //echo get_customer_by_id($workorder->customer_id)->contact_name 
+                                                echo $workorder->first_name . ' ' .  $workorder->middle_name . ' ' . $workorder->last_name;
+                                                ?>
                                             </a>
                                             <div>Scheduled on: 30 Mar 2020, 2:00 pm to 4:00 pm</div>
                                         </td>
@@ -342,6 +345,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             </div>
         </div>
     </div>
+
 
     <div class="modal fade" id="newJobModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">

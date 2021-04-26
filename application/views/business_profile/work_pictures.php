@@ -20,7 +20,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     position: relative;
     top: 30px;
     float: right;
-    right: 10px;
+        background-color: #000000;
+    width: 16%;
+    padding: 5px;
 }
 .pr-b10 {
   position: relative;
@@ -90,6 +92,11 @@ div.picture-container div.img img {
     color: #ffffff !important;
     font-size: 18px;
 }
+.img-zoom{
+  margin-right: 7px;
+  color: #ffffff !important;
+  font-size: 18px;
+}
 .image-caption{
   position: relative;
     top: -25px;
@@ -136,7 +143,8 @@ div.picture-container div.img img {
                                 <li class="col-image-<?= $key ?>">
                                   <div class="picture-container ui-sortable-handle">
                                     <div class="img">
-                                        <div class="option-container">
+                                        <div class="option-container" style="background-color: #000000;">
+                                          <a class="img-zoom" href="<?= url("uploads/work_pictures/" . $profiledata->company_id . "/" . $i['file']); ?>" data-fancybox="gallery" data-caption="<?= $i['caption']; ?>"><i class="fa fa-search-plus"></i></a>
                                           <a class="img-caption" data-caption="<?= $i['caption']; ?>" data-id="<?= $key; ?>" href="javascript:void(0);"><i class="fa fa-pencil"></i></a>
                                           <a class="img-delete" data-name="<?= $i['file']; ?>" data-id="<?= $key; ?>" href="javascript:void(0);"><i class="fa fa-trash-o icon"></i></a>
                                         </div>

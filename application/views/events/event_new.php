@@ -57,24 +57,23 @@ add_css(array(
                                             <p class=""><small>Draft</small></p>
                                         </div>&nbsp;
                                         <div class="stepwizard-step col-xs-3">
-                                            <a href="#" type="button" class="btn btn-circle <?= isset($jobs_data) && $jobs_data->status == '1'  ? 'btn-success' : 'btn-default' ; ?>" disabled><span style="font-size: 24px;" class="fa fa-calendar-check-o"></span></a>
+                                            <a href="#" type="button" class="btn btn-circle <?= isset($jobs_data) && $jobs_data->status == 'Scheduled'  ? 'btn-success' : 'btn-default' ; ?>" disabled><span style="font-size: 24px;" class="fa fa-calendar-check-o"></span></a>
                                             <p class=""><small>Schedule</small></p>
                                         </div>&nbsp;
-                                        <div class="stepwizard-step col-xs-3" id="btn_omw_status" style="display:none;">
+                                        <div class="stepwizard-step col-xs-3" id="btn_omw_statuss" style="display:none;">
                                             <a href="#" <?php if(isset($jobs_data) && $jobs_data->status == '1'): ?>data-toggle="modal" data-target="#omw_modal" data-backdrop="static" data-keyboard="false" <?php endif; ?> type="button" class="btn btn-circle <?= isset($jobs_data) && $jobs_data->status == '2'  ? 'btn-success' : 'btn-default' ; ?>" disabled="disabled"><span style="font-size: 24px;" class="fa fa-ship"></span></a>
                                             <p><small>OMW</small></p>
                                         </div> &nbsp;
                                         <div class="stepwizard-step col-xs-3">
-                                            <a href="#" <?php if(isset($jobs_data) && ($jobs_data->status == '2' || $jobs_data->status == '1')): ?>data-toggle="modal" data-target="#start_modal" data-backdrop="static" data-keyboard="false" <?php endif; ?> type="button" class="btn btn-circle <?= isset($jobs_data) && $jobs_data->status == '3'  ? 'btn-success' : 'btn-default' ; ?>" disabled="disabled"><span style="font-size: 24px;" class="fa fa-hourglass-start"></span></a>
+                                            <a href="#" <?php if(isset($jobs_data) && ($jobs_data->status == '2' || $jobs_data->status == 'Started')): ?>data-toggle="modal" data-target="#start_modal" data-backdrop="static" data-keyboard="false" <?php endif; ?> type="button" class="btn btn-circle <?= isset($jobs_data) && $jobs_data->status == '3'  ? 'btn-success' : 'btn-default' ; ?>" disabled="disabled"><span style="font-size: 24px;" class="fa fa-hourglass-start"></span></a>
                                             <p><small>Started</small></p>
                                         </div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-
                                         <div class="stepwizard-step col-xs-3">
-                                            <a href="#" <?php if(isset($jobs_data) && $jobs_data->status == '3'): ?>data-toggle="modal" data-target="#finish_modal" data-backdrop="static" data-keyboard="false" <?php endif; ?> type="button" class="btn btn-circle <?= isset($jobs_data) && $jobs_data->status == '4'  ? 'btn-success' : 'btn-default' ; ?>" disabled="disabled"><span style="font-size: 24px;" class="fa fa-stop"></span></a>
+                                            <a href="#" <?php if(isset($jobs_data) && $jobs_data->status == 'Finised'): ?>data-toggle="modal" data-target="#finish_modal" data-backdrop="static" data-keyboard="false" <?php endif; ?> type="button" class="btn btn-circle <?= isset($jobs_data) && $jobs_data->status == '4'  ? 'btn-success' : 'btn-default' ; ?>" disabled="disabled"><span style="font-size: 24px;" class="fa fa-stop"></span></a>
                                             <p><small>Finished</small></p>
                                         </div>
 
-                                        <div class="stepwizard-step col-xs-3" id="convert_to_job" style="display:none;">
+                                        <div class="stepwizard-step col-xs-3" id="convert_to_job" <?php if(isset($jobs_data) && $jobs_data->event_type == 'Estimate'): ?> style="display:block;"<?php else: ?> style="display:none;" <?php endif; ?> >
                                             <a href="#" type="button" class="btn btn-circle <?= isset($jobs_data) && $jobs_data->status == '5'  ? 'btn-success' : 'btn-default' ; ?>" disabled="disabled">
                                                 <span style="font-size: 24px;" class="fa fa-copy"></span>
                                             </a>
@@ -165,8 +164,18 @@ add_css(array(
                                 <option selected="">Central Time (UTC -5)</option>
                             </select>
 
+                            <h6>Select Event Type</h6>
+                            <select id="event_type_option" name="event_types" class="form-control" required>
+                                <option value="">Select Event Type</option>
+                                <?php if(!empty($job_types)): ?>
+                                    <?php foreach ($job_types as $type): ?>
+                                        <option <?php if(isset($jobs_data) && $jobs_data->event_type == $type->title) {echo 'selected'; } ?> value="<?= $type->title; ?>"><?= $type->title; ?></option>
+                                    <?php endforeach; ?>
+                                <?php endif; ?>
+                            </select>
+
                             <h6>Select Event Tag</h6>
-                            <select id="job_tags" name="tags" class="form-control">
+                            <select id="event_tags_option" name="tags" class="form-control">
                                 <option value="">Select Event Tag</option>
                                 <?php if(!empty($tags)): ?>
                                     <?php foreach ($tags as $tag): ?>
@@ -175,15 +184,7 @@ add_css(array(
                                 <?php endif; ?>
                             </select>
 
-                            <h6>Select Event Type</h6>
-                            <select id="job_type_option" name="jobtypes" class="form-control" required>
-                                <option value="">Select Event Type</option>
-                                <?php if(!empty($job_types)): ?>
-                                    <?php foreach ($job_types as $type): ?>
-                                        <option <?php if(isset($jobs_data) && $jobs_data->event_type == $type->title) {echo 'selected'; } ?> value="<?= $type->title; ?>"><?= $type->title; ?></option>
-                                    <?php endforeach; ?>
-                                <?php endif; ?>
-                            </select>
+
                             <p></p>
                             <div id="pac-container">
                                 <input id="event_address" value="<?= isset($jobs_data) ?  $jobs_data->event_address : '';  ?>" name="event_address" class="form-control" type="text" placeholder="Enter a location" />
@@ -198,17 +199,10 @@ add_css(array(
 
                     <div class="card" id="notes_left_card" style="display: <?= isset($jobs_data) ? 'none' : 'block' ;?>;">
                         <div class="card-header">
-                            <span style="display: flex;" class="btn" type="button">
-                                <h6 class="page-title"> <span class="fa fa-book box_footer_icon"></span> &nbsp; Private Notes </h6>
-                            </span>
+                           <h6 class="page-titles"> <span class="fa fa-book box_footer_icon"></span> &nbsp; Private Notes </h6>
                         </div>
-                        <div id="collapseOne" class="collapses" aria-labelledby="headingOne" data-parent="#collapseOne">
-                        <div class="card-body">
+                       <div class="card-body">
                             <div class="row">
-                                <!--<div style="background-color: #32243d; width: 32px; height: 32px;">
-                                <img alt="Vance Wayne" src="https://housecall-attachments-production.s3.amazonaws.com/service_pros/avatars/000/137/270/original/avatar_1565038188.jpeg?1565038188" class="MuiAvatar-img">
-                                 </div>
-                                <p>&nbsp; 01/27/2021, 5:36pm</p>-->
                                 <div id="notes_edit_btn" class="pencil" style="width:100%; height:100px;cursor: pointer;">
                                     <?= isset($jobs_data) ? $jobs_data->message : ''; ?>
                                 </div>
@@ -230,34 +224,11 @@ add_css(array(
                             </div>
                         </div>
                             <br>
-                        </div>
+
                     </div>
-                    <div class="card" id="attach_left_card" style="display:none;">
-                        <div class="card-header" >
-                            <button style="display: flex;" class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#photos_attachment" aria-expanded="true" aria-controls="photos_attachment">
-                                <h6 class="page-title"><span style="font-size: 20px;"  class="fa fa-image"></span>&nbsp; &nbsp;Photos / Attachments</h6>
-                            </button>
-                        </div>
-                        <div class="card-body">
-                            <div id="photos_attachment" class="collapse" aria-labelledby="headingTwo" data-parent="#photos_attachment">
-                                <div class="card-body">
-                                    <div class="form-group">
-                                        <div class="form-group col-md-12">
-                                            <img style="width: 100%" id="attachment-image" alt="Attachment" src="<?= isset($jobs_data) ? $jobs_data->attachment : "/uploads/jobs/placeholder.jpg"; ?> ">
-                                            <small>Optionally attach files to this Job. Allowed type: pdf, doc, docx, png, jpg, gif.</small>
-                                            <input type="file" class="form-control" name="attachment-file" id="attachment-file">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <br>
-                        </div>
-                    </div>
-                    <div class="card" id="url_left_card" style="display: <?= isset($jobs_data) ? 'none' : 'block' ;?>;">
+                   <div class="card" id="url_left_card" style="display: <?= isset($jobs_data) ? 'none' : 'block' ;?>;">
                         <div class="card-header" id="headingThree">
-                            <button style="display: flex;" class="btn btn-link " type="button">
-                                <h6 class="page-title"><span style="font-size: 20px;"  class="fa fa-link"></span> &nbsp; &nbsp;Url Link </h6>
-                            </button>
+                           <h6 class="page-title"><span style="font-size: 20px;"  class="fa fa-link"></span> &nbsp; &nbsp;Url Link </h6>
                         </div>
                         <div class="card-body">
                             <div id="url_link_form" class="collapses" aria-labelledby="headingThree" data-parent="#url_link_form">
@@ -339,26 +310,53 @@ add_css(array(
                                 </td>
                             </tr>
                             </thead>
-                            <tbody id="jobs_items_table_body">
+                            <tbody id="events_items">
                             <tr>
                                 <td>
                                     <small>Event Type</small>
-                                    <input type="text" id="job_type" name="event_type" value="<?= isset($jobs_data) ? $jobs_data->job_type : ''; ?>" class="form-control" readonly >
+                                    <input type="text" id="event_type" name="event_type" value="<?= isset($jobs_data) ? $jobs_data->event_type : ''; ?>" class="form-control" readonly >
                                 </td>
-                                <td>
-                                </td>
+                                <td></td>
                                 <td>
                                     <small>Event Tags</small>
-                                    <input type="text" name="event_tag" class="form-control" value="<?= isset($jobs_data) ? $jobs_data->name : ''; ?>" id="job_tags_right" readonly>
+                                    <input type="text" name="event_tag" class="form-control" value="<?= isset($jobs_data) ? $jobs_data->event_tag : ''; ?>" id="job_tags_right" readonly>
                                 </td>
-                                <td>
-                                </td>
-                                <td>
-
-                                </td>
-                                <td>
-                                </td>
+                                <td></td>
+                                <td></td>
                             </tr>
+                            <?php if(isset($jobs_data)): ?>
+                                <?php
+                                $subtotal = 0.00;
+                                foreach ($event_items as $item):
+                                    $total = $item->price * $item->qty;
+                                    ?>
+                                    <tr id="ss">
+                                    <td width="35%">
+                                        <small>Item name</small>
+                                        <input value='<?= $item->title; ?>' type="text" name="item_name[]" class="form-control" >
+                                        <input type="hidden" value='"+idd+"' name="item_id[]">
+                                    </td>
+                                    <td width="20%">
+                                        <small>Qty</small>
+                                        <input data-itemid='' id='' value='<?= $item->qty; ?>' type="number" name="item_qty[]" class="form-control qty">
+                                    </td>
+                                    <td width="20%">
+                                        <small>Unit Price</small>
+                                        <input id='price<?= $item->price; ?>' value='<?= $item->price; ?>'  type="number" name="item_price[]" class="form-control" placeholder="Unit Price">
+                                    </td>
+                                    <td  style="text-align: center;margin-top: 20px;" class="d-flex" width="15%">
+                                        <b style="font-size: 16px;" data-subtotal='"+total_+"' id='sub_total"+idd+"' class="total_per_item"><?= number_format((float)$total,2,'.',',');?></b>
+                                    </td>
+                                    <td width="20%">
+                                            <button style="margin-top: 20px;" type="button" class="btn btn-primary btn-sm items_remove_btn remove_item_row">
+                                                <span class="fa fa-trash-o"></span></button>
+                                        </td>
+                                    </tr>
+                                    <?php
+                                    $subtotal = $subtotal + $total;
+                                endforeach;
+                                ?>
+                            <?php endif; ?>
                             </tbody>
                         </table>
                         <div class="col-sm-12">
@@ -374,7 +372,6 @@ add_css(array(
                         </div>
                         <div class="col-md-12 table-responsive">
                             <div class="row">
-
                                 <div class="col-md-6 row pr-0">
                                         <!--<div class="col-sm-6 ">
                                             <label style="padding: 0 .75rem;">Subtotal</label>
@@ -420,10 +417,10 @@ add_css(array(
                                         </a>
                                     </div>-->
                                     <div class="col-sm-6">
-                                        <label style="padding: 0 .75rem;">Total</label>
+                                        <label style="padding: 0 .75rem;font-size: 20px;font-weight: 800;">Total</label>
                                     </div>
-                                    <div class="col-sm-6 text-right pr-3">
-                                        <label id="invoice_overall_total">$<?= isset($jobs_data) ? number_format((float)$subtotal,2,'.',',') : '0.00'; ?></label>
+                                    <div class="col-sm-6 text-right">
+                                        <span id="invoice_overall_total" style="font-size: 20px;font-weight: 800;right: 0;text-align: right;position: absolute;">$<?= isset($jobs_data) ? number_format((float)$subtotal,2,'.',',') : '0.00'; ?></span>
                                         <input type="hidden" name="sub_total" id="sub_total_form_input" value='0'>
                                     </div>
                                 </div>
@@ -473,7 +470,7 @@ add_css(array(
                                                     <?php
                                                     if(isset($jobs_data) && $jobs_data->url_link != NULL) {
                                                         ?>
-                                                        <a target="_blank" href="<?= $jobs_data->url_link; ?>"><p><?= $jobs_data->url_link; ?></p></a>
+                                                        <a style="color: darkred;" target="_blank" href="<?= $jobs_data->url_link; ?>"><p><?= $jobs_data->url_link; ?></p></a>
                                                         <?php
                                                     }else{
                                                         ?>
@@ -498,6 +495,7 @@ add_css(array(
                             <br>
                         </div>-->
                         <div class="row">
+                            <input id="total_event_amount" type="hidden" name="total_event_amount">
                             <input id="signature_link" type="hidden" name="signature_link">
                             <input id="name" type="hidden" name="authorize_name">
                             <input id="datetime_signed" type="hidden" name="datetime_signed">
@@ -956,8 +954,23 @@ include viewPath('includes/footer');
 <script src="https://momentjs.com/downloads/moment-with-locales.js"></script>
 
 
-<?php include viewPath('events/js/job_new_js'); ?>
-
+<?php include viewPath('events/js/new_event_js'); ?>
+<script>
+    $(function(){
+        $("#customer_id").select2({
+            placeholder: "Select Customer"
+        });
+        $("#employee_id").select2({
+            placeholder: "Select Employee"
+        });
+        $("#event_type_option").select2({
+            placeholder: "Select Event Type"
+        });
+        $("#event_tags_option").select2({
+            placeholder: "Select Event Tag"
+        });
+    });
+</script>
 <script>
     var geocoder;
     function initMap(address=null) {

@@ -194,10 +194,10 @@
 
         <div class="row form_line">
             <div class="col-md-4">
-                <label for="">Email <span class="required"> *</span></label>
+                <label for="">Email </label>
             </div>
             <div class="col-md-8">
-                <input type="email" class="form-control" name="email" id="email" value="<?php if(isset($profile_info)){ echo $profile_info->email; } ?>" required/>
+                <input type="email" class="form-control" name="email" id="email" value="<?php if(isset($profile_info)){ echo $profile_info->email; } ?>" />
             </div>
         </div>
 
@@ -231,7 +231,7 @@
                 <label for="">Contact Name 1</label>
             </div>
             <div class="col-md-8">
-                <input type="text" class="form-control" name="contact_name1" id="contact_name1" value="<?php if(isset($alarm_info)){ echo $alarm_info->contact_name1; } ?>"/>
+                <input type="text" class="form-control" name="contact_name1" id="contact_name1" value="<?php if(isset($profile_info)){ echo $profile_info->contact_name1; } ?>"/>
             </div>
         </div>
         <div class="row form_line">
@@ -239,7 +239,7 @@
                 <label for="">Contact Phone 1</label>
             </div>
             <div class="col-md-8">
-                <input type="text" class="form-control" placeholder="xxx-xxx-xxxx" name="contact1" id="contact1" value="<?php if(isset($alarm_info)){ echo $alarm_info->contact1; } ?>"/>
+                <input type="text" class="form-control phone_number" maxlength="12" placeholder="xxx-xxx-xxxx" name="contact_phone1" id="contact_phone1" value="<?php if(isset($profile_info)){ echo $profile_info->contact_phone1; } ?>"/>
             </div>
         </div>
         <div class="row form_line">
@@ -247,7 +247,7 @@
                 <label for="">Contact Name 2</label>
             </div>
             <div class="col-md-8">
-                <input type="text" class="form-control" name="contact_name2" id="contact_name2" value="<?php if(isset($alarm_info)){ echo $alarm_info->contact_name2; } ?>"/>
+                <input type="text" class="form-control" name="contact_name2" id="contact_name2" value="<?php if(isset($profile_info)){ echo $profile_info->contact_name2; } ?>"/>
             </div>
         </div>
         <div class="row form_line">
@@ -255,7 +255,7 @@
                 <label for="">Contact Phone 2</label>
             </div>
             <div class="col-md-8">
-                <input type="text" class="form-control" placeholder="xxx-xxx-xxxx" name="contact2" id="contact2" value="<?php if(isset($alarm_info)){ echo $alarm_info->contact2; } ?>"/>
+                <input type="text" class="form-control phone_number" maxlength="12" placeholder="xxx-xxx-xxxx" name="contact_phone2" id="contact_phone2" value="<?php if(isset($profile_info)){ echo $profile_info->contact_phone2; } ?>"/>
             </div>
         </div>
         <div class="row form_line">
@@ -263,7 +263,7 @@
                 <label for="">Contact Name 3</label>
             </div>
             <div class="col-md-8">
-                <input type="text" class="form-control" name="contact_name3" id="contact_name3" value="<?php if(isset($alarm_info)){ echo $alarm_info->contact_name3; } ?>" />
+                <input type="text" class="form-control" name="contact_name3" id="contact_name3" value="<?php if(isset($profile_info)){ echo $profile_info->contact_name3; } ?>" />
             </div>
         </div>
         <div class="row form_line">
@@ -271,20 +271,9 @@
                 <label for="">Contact Phone 3</label>
             </div>
             <div class="col-md-8">
-                <input type="text" class="form-control" placeholder="xxx-xxx-xxxx" name="contact3" id="contact3" value="<?php if(isset($alarm_info)){ echo $alarm_info->contact3; } ?>"/>
+                <input type="text" class="form-control phone_number" maxlength="12" placeholder="xxx-xxx-xxxx" name="contact_phone3" id="contact_phone3" value="<?php if(isset($profile_info)){ echo $profile_info->contact_phone3; } ?>"/>
             </div>
         </div>
-
-        <!--<div class="row form_line" id="fax_">
-            <div class="col-md-4">
-                <label for="">Fax</label>
-            </div>
-            <div class="col-md-8">
-                <input type="text" class="form-control" name="fax" id="fax" value="<?php if(isset($profile_info->fax)){ echo $profile_info->fax; } ?>" />
-            </div>
-        </div>-->
-
     </div>
-
     <?php include viewPath('customer/advance_customer_forms/customer_billing_info'); ?>
 </div>

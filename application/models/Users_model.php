@@ -569,6 +569,7 @@ class Users_model extends MY_Model {
 
 	public function getEmployeePayDetails($user_id)
 	{
+		$this->db->where('company_id', logged('company_id'));
 		$this->db->where('user_id', $user_id);
 		$query = $this->db->get('employee_pay_details');
 		return $query->row();
@@ -576,6 +577,7 @@ class Users_model extends MY_Model {
 
 	public function updateEmployeePayDetails($user_id, $data)
 	{
+		$this->db->where('company_id', logged('company_id'));
 		$this->db->where('user_id', $user_id);
 		$update = $this->db->update('employee_pay_details', $data);
 		return $update;
@@ -583,7 +585,41 @@ class Users_model extends MY_Model {
 
 	public function deleteEmployeePayDetails($user_id)
 	{
-		$this->db->delete('employee_pay_details', array('user_id' => $user_id));
+		$this->db->delete('employee_pay_details', array('company_id' => logged('company_id'), 'user_id' => $user_id));
+	}
+
+	public function getPayDetailsByPayType($payType)
+	{
+		$this->db->where('company_id', logged('company_id'));
+		$this->db->where('pay_type', $payType);
+		$this->db->where('status', 1);
+		$query = $this->db->get('employee_pay_details');
+		return $query->result();
+	}
+
+	public function getActiveEmployeePayDetails()
+	{
+		$company_id = logged('company_id');
+		$this->db->select('*');
+		$this->db->from('employee_pay_details');
+		$this->db->join('users', 'users.id = employee_pay_details.user_id');
+		$this->db->where('users.company_id', $company_id);
+		$this->db->where('users.status', 1);
+		$query = $this->db->get();
+		return $query->result();
+	}
+
+	public function getPayDetailsByPaySched($paySchedId)
+	{
+		$this->db->where('company_id', logged('company_id'));
+		$this->db->where('pay_schedule_id', $paySchedId);
+		$this->db->where('status', 1);
+		$query = $this->db->get('employee_pay_details');
+		return $query->result();
+	}
+	public function getEmployeeLastestAux($user_id){
+		$qry = $this->db->query("SELECT *,timesheet_attendance.status as att_status fROM timesheet_logs Join users ON users.id=timesheet_logs.user_id JOIN timesheet_attendance ON timesheet_attendance.id = timesheet_logs.attendance_id WHERE timesheet_logs.user_id = $user_id order by timesheet_logs.date_created DESC Limit 1");
+        return $qry->row();
 	}
 }
 

@@ -39,9 +39,9 @@
                                     <span class="btn-label">Manage</span><span class="caret-holder"><span class="caret"></span></span>
                                 </button>
                                 <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="dropdown-edit">                            
-                                    <li role="presentation">
+                                    <!-- <li role="presentation">
                                         <a role="menuitem" tabindex="-1" href="<?php echo base_url('credit_notes/view/' . $sb->id) ?>"><span class="fa fa-file-text-o icon"></span> View</a>
-                                    </li>      
+                                    </li> -->      
                                     <?php if($sb->status != 3){ ?>      
                                     <li role="presentation">
                                         <a role="menuitem" tabindex="-1" href="<?php echo base_url('sms_campaigns/edit_campaign/' . $sb->id) ?>"><span class="fa fa-pencil-square-o icon"></span> Edit</a>

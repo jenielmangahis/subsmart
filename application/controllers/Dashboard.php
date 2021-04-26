@@ -48,6 +48,26 @@ class Dashboard extends Widgets {
         ));
     }
     
+    public function sendFeed()
+    {
+        $this->load->model('Feeds_model');
+        $subject = post('subject');
+        $feedMessage = post('message');
+        $company_id = logged('company_id');
+        $user_id = logged('id');
+        
+        $feedDetails = array(
+            'sender_id' => $user_id,
+            'sender_name' => getLoggedName(),
+            'title'         => $subject,
+            'message'       => $feedMessage,
+            'company_id'    => $company_id
+        );
+        
+        if($this->Feeds_model->saveFeeds($feedDetails)):
+            echo 'Feed Successfully Sent';
+        endif;
+    }
     
     public function sendSMS()
     {
@@ -102,7 +122,9 @@ class Dashboard extends Widgets {
         $this->page_data['estimate'] = $this->estimate_model->getAllByCompany(logged('company_id'));
         
         $this->page_data['job'] = $this->jobs_model->getJob(logged('company_id'));
+        $this->page_data['upcomingJobs'] = $this->jobs_model->getAllUpcomingJobsByCompanyId(logged('company_id'));
         $this->page_data['events'] = $this->event_model->get_all_events(5);
+        $this->page_data['upcomingEvents'] = $this->event_model->getAllUpComingEventsByCompanyId(logged('company_id'));
         $this->page_data['widgets'] = $this->widgets_model->getWidgetListPerUser($user_id);
         $this->page_data['status_arr'] = $status_arr;
         $this->load->view('dashboard', $this->page_data);

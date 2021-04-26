@@ -43,6 +43,7 @@ class Users extends MY_Controller {
 
         $this->load->model('IndustryType_model');
         $this->load->model('Users_model');
+        $this->load->model('Timesheet_model');
         $this->load->model('ServiceCategory_model');
         $this->load->model('PayScale_model');
 
@@ -67,6 +68,14 @@ class Users extends MY_Controller {
 	
 	public function businessview()
 	{	
+		add_css(array(
+            "assets/css/jquery.fancybox.css"
+        ));
+
+        add_footer_js(array(
+            "assets/js/jquery.fancybox.min.js"
+        ));
+
 		//ifPermissions('businessdetail');
 		$user = (object)$this->session->userdata('logged');		
 		$cid=logged('id');
@@ -214,6 +223,13 @@ class Users extends MY_Controller {
 
 	public function portfolio()
 	{	
+		add_css(array(
+            "assets/css/jquery.fancybox.css"
+        ));
+
+        add_footer_js(array(
+            "assets/js/jquery.fancybox.min.js"
+        ));
 		//ifPermissions('businessdetail');
 		$user = (object)$this->session->userdata('logged');		
 		//print_r($user);die;
@@ -305,8 +321,7 @@ class Users extends MY_Controller {
 		unset($pdata['btn-continue']);
 		$bid = $pdata['id'];
 		unset($pdata['id']);
-		if($bid!=''){
-			echo 5;exit;
+		if($bid!=''){			
 			if( $action == 'availability' ){
 
 				$schedules = array();
@@ -678,11 +693,26 @@ class Users extends MY_Controller {
 	public function tracklocation()
 	{	
 //		ifPermissions('users_list');
-
-		$this->page_data['users1']= $this->users_model->getById(getLoggedUserID());
+		add_css(array(
+			"assets/css/timesheet/tracklocation.css"
+		));
 		
-		$this->page_data['users'] = $this->users_model->getUsers();
-			
+        add_footer_js(array(
+            "assets/js/timesheet/tracklocation.js",
+        ));
+		$users= $this->users_model->getUsers();
+		$lasttracklocation_employee = array();
+		foreach($users as $employee){
+			$data=$this->users_model->getEmployeeLastestAux($employee->id);
+			if($data!=null){
+				$lasttracklocation_employee[] = $data;
+			}
+		}
+
+		$this->page_data['lasttracklocation_employee'] = $lasttracklocation_employee;
+		
+		$this->page_data['users1']= $this->users_model->getById(getLoggedUserID());
+		$this->page_data['current_user_id']= logged('id');
 		
 		$this->load->view('users/tracklocation', $this->page_data);
 
@@ -779,7 +809,6 @@ class Users extends MY_Controller {
         $profile_img = $this->input->post('values[profile_photo]');
         $payscale_id = $this->input->post('values[empPayscale]');
         $emp_number  = $this->input->post('values[emp_number]');
-        $user_type   = $this->input->post('values[user_type]');
         $cid=logged('company_id');
         $add = array(
             'FName' => $fname,
@@ -798,7 +827,6 @@ class Users extends MY_Controller {
             'city' => $city,
             'postal_code' => $postal_code,
             'payscale_id' => $payscale_id,
-            'user_type' => $user_type,
             'employee_number' => $emp_number
         );
         $last_id = $this->users_model->addNewEmployee($add);
