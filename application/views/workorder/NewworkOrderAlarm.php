@@ -209,16 +209,17 @@
 										<div class="col-md-3 form-group">
 											<label for="monitored_location">Monitored Location</label>
 											<input type="text" class="form-control" name="customer[monitored_location]"
-												   id="monitored_location"
+												   id="ship-address"
 												   value="<?php echo (!empty($workorder->customer['monitored_location'])) ? $workorder->customer['monitored_location'] : '' ?>"
-												   required placeholder="Enter Monitored Location"/>
+												   required placeholder="Monitored Location"/>
 										</div>
 										<div class="col-md-3 form-group">
 											<label for="city">City</label>
-											<input type="text" class="form-control" name="customer[city]"
+											<!-- <input type="text" class="form-control" name="customer[city]"
 												   id="city"
 												   value="<?php echo (!empty($workorder->customer['city'])) ? $workorder->customer['city'] : '' ?>"
-												   required placeholder="Enter City"/>
+												   required placeholder="Enter City"/> -->
+                                                   <input type="text" class="form-control" name="city" id="locality" placeholder="Enter Name" />
 										</div>
 										<div class="col-md-2 form-group">
 											<label for="state">State</label>
@@ -231,10 +232,11 @@
 
 										<div class="col-md-2 form-group">
 											<label for="zip">ZIP</label>
-											<input type="text" class="form-control" name="customer[zip]"
+											<!-- <input type="text" class="form-control" name="customer[zip]"
 												   id="zip"
 												   value="<?php echo (!empty($workorder->customer['zip'])) ? $workorder->customer['zip'] : '' ?>"
-												   placeholder="Enter ZIP"/>
+												   placeholder="Enter ZIP"/> -->
+                                                   <input type="text" id="postcode" name="postcode" class="form-control"  placeholder="Enter zip"/>
 										</div>
 
 										<div class="col-md-2 form-group">
@@ -243,52 +245,36 @@
 												   id="cross_street"
 												   value="<?php echo (!empty($workorder->customer['cross_street'])) ? $workorder->customer['cross_street'] : '' ?>"
 												   required
-												   placeholder="Enter Cross Street"/>
+												   placeholder="Cross Street"/>
 										</div>
 									</div>
 
 									<div class="row">
-										<div class="col-md-4 form-group">
-											<label for="contact_phone">Phone Number</label>
-											<div class="input-group phone-input">
-												<span class="input-group-btn">
-													<button type="button" class="btn btn-default dropdown-toggle"
-															data-toggle="dropdown" aria-expanded="false"><span
-																class="type-text"><?php echo (!empty($workorder->customer['contact_phone']['type'])) ? $workorder->customer['contact_phone']['type'] : 'Type' ?></span> <span
-																class="caret"></span></button>
-													<ul class="dropdown-menu" role="menu">
-														<li><a class="changePhoneType" href="javascript:;"
-															   data-type-value="mobile">Mobile</a></li>
-														<li><a class="changePhoneType" href="javascript:;"
-															   data-type-value="home">Home</a></li>
-														<li><a class="changePhoneType" href="javascript:;"
-															   data-type-value="work">Work</a></li>
-													</ul>
-												</span>
-												<input type="hidden" name="customer[contact_phone][type]" class="type-input"
-													   value="<?php echo (!empty($workorder->customer['contact_phone']['type'])) ? $workorder->customer['contact_phone']['type'] : '' ?>"
-													   value="mobile"/>
-												<input type="text" name="customer[contact_phone][number]"
-													   class="form-control"
-													   value="<?php echo (!empty($workorder->customer['contact_phone']['number'])) ? $workorder->customer['contact_phone']['number'] : '' ?>"
-													   placeholder="Enter Phone"/>
-											</div>
-
-										</div>
-										<div class="col-md-4 form-group">
+										<div class="col-md-3 form-group">
 											<label for="email">Email</label>
 											<input type="text" class="form-control" name="customer[email]"
 												   id="email"
 												   value="<?php echo (!empty($workorder->customer['email'])) ? $workorder->customer['email'] : '' ?>"
 												   required placeholder="Enter Email"/>
 										</div>
-										<div class="col-md-4 form-group">
+										<div class="col-md-2 form-group">
 											<label for="password">Password</label>
 											<input type="password" class="form-control" name="customer[password]"
 												   id="password"
 												   value="<?php echo (!empty($workorder->customer['password'])) ? $workorder->customer['password'] : '' ?>"
 												   placeholder="Enter Password"/>
 										</div>
+                                        
+                                        <div class="col-md-3 form-group">
+                                            <label for="">Notification Type</label><br/>
+                                                <select name="customer[notification_type][]" id="customer_notification_type_email" class="form-control">
+                                                    <option>Notification Type</option>
+                                                    <option value="Text">Text</option>
+                                                    <option value="Email">Email</option>
+                                                    <option value="Text and Email">Text and Email</option>
+                                                    <option value="None">None</option>
+                                                </select>
+                                        </div>
 										<!--
 										<div class="col-auto form-group">
 											<label for="">Notification Type</label><br/>
@@ -308,16 +294,7 @@
 											<?php } ?>
 										</div>
 										-->
-										<div class="col-md-4 form-group">
-											<label for="">Notification Type</label><br/>
-											<select name="customer[notification_type][]" id="customer_notification_type_email" class="form-control">
-                                                <option>Select Notification Type</option>
-                                                <option value="Text">Text</option>
-                                                <option value="Email">Email</option>
-                                                <option value="Text and Email">Text and Email</option>
-                                                <option value="None">None</option>
-											 </select>
-										</div>
+										
 									</div>
 
 								</div>
@@ -328,7 +305,7 @@
                                 <div class="form-group col-md-12">
                                     <h5 class="box-title">Emergency Call List</h5>
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-md-4">
                                     <div class="form-group">
                                         <label for="1st_call_verification_name">1st Call Verification Name</label>
                                         <input type="text" class="form-control"
@@ -338,7 +315,7 @@
                                                required placeholder="Enter 1st Call Verification Name"/>
                                     </div>
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-md-4">
                                     <div class="form-group">
                                         <label for="contact_phone">Phone Number</label>
                                         <div class="input-group phone-input">
@@ -368,7 +345,7 @@
 
                                     </div>
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-md-4">
                                     <div class="form-group">
                                         <label for="emergency_call_relation">Relation</label>
                                         <input type="text" class="form-control" name="emergency_call_list[relation][]"
@@ -377,7 +354,7 @@
                                                required placeholder="Enter Relation"/>
                                     </div>
                                 </div>
-                                <div class="col-md-3">
+                                <!-- <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="emergency_carrier_name">Carrier Name</label>
                                         <input type="text" class="form-control"
@@ -386,9 +363,9 @@
                                                value="<?php echo (!empty($workorder->emergency_call_list['carrier_name'][0])) ? $workorder->emergency_call_list['carrier_name'][0] : '' ?>"
                                                required placeholder="Enter Carrier Name"/>
                                     </div>
-                                </div>
+                                </div> -->
 
-                                <div class="col-md-3">
+                                <div class="col-md-4">
                                     <div class="form-group">
                                         <label for="2nd_call_verification_name">2nd Call Verification Name</label>
                                         <input type="text" class="form-control"
@@ -398,7 +375,7 @@
                                                required placeholder="Enter 2nd Call Verification Name"/>
                                     </div>
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-md-4">
                                     <div class="form-group">
                                         <label for="contact_phone">Phone Number</label>
                                         <div class="input-group phone-input">
@@ -428,7 +405,7 @@
 
                                     </div>
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-md-4">
                                     <div class="form-group">
                                         <label for="emergency_call_relation">Relation</label>
                                         <input type="text" class="form-control" name="emergency_call_list[relation][]"
@@ -437,7 +414,7 @@
                                                required placeholder="Enter Relation"/>
                                     </div>
                                 </div>
-                                <div class="col-md-3">
+                                <!-- <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="emergency_carrier_name">Carrier Name</label>
                                         <input type="text" class="form-control"
@@ -446,11 +423,11 @@
                                                value="<?php echo (!empty($workorder->emergency_call_list['carrier_name'][1])) ? $workorder->emergency_call_list['carrier_name'][1] : '' ?>"
                                                required placeholder="Enter Carrier Name"/>
                                     </div>
-                                </div>
+                                </div> -->
 
-                                <div class="col-md-3">
+                                <div class="col-md-4">
                                     <div class="form-group">
-                                        <label for="emergency_call_emergency_contact_1">Emergency Contact</label>
+                                        <label for="emergency_call_emergency_contact_1">3rd Call Verification Name</label>
                                         <input type="text" class="form-control"
                                                name="emergency_call_list[emergency_contact_1]"
                                                id="emergency_call_emergency_contact_1"
@@ -458,7 +435,7 @@
                                                required placeholder="Enter Emergency Contact"/>
                                     </div>
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-md-4">
                                     <div class="form-group">
                                         <label for="contact_phone">Phone Number</label>
                                         <div class="input-group phone-input">
@@ -488,7 +465,7 @@
 
                                     </div>
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-md-4">
                                     <div class="form-group">
                                         <label for="emergency_call_relation">Relation</label>
                                         <input type="text" class="form-control" name="emergency_call_list[relation][]"
@@ -498,11 +475,11 @@
                                     </div>
                                 </div>
 
-                                <div class="col-md-3">
-								</div>
-                                <div class="col-md-3">
+                                <!-- <div class="col-md-3">
+								</div> -->
+                                <div class="col-md-4">
                                     <div class="form-group">
-                                        <label for="emergency_call_emergency_contact_2">Emergency Contact</label>
+                                        <label for="emergency_call_emergency_contact_2">4th Call Verification Name</label>
                                         <input type="text" class="form-control"
                                                name="emergency_call_list[emergency_contact_2]"
                                                id="emergency_call_emergency_contact_2"
@@ -510,7 +487,7 @@
                                                required placeholder="Enter Emergency Contact"/>
                                     </div>
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-md-4">
                                     <div class="form-group">
                                         <label for="contact_phone">Phone Number</label>
                                         <div class="input-group phone-input">
@@ -540,7 +517,7 @@
 
                                     </div>
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-md-4">
                                     <div class="form-group">
                                         <label for="emergency_call_relation">Relation</label>
                                         <input type="text" class="form-control" name="emergency_call_list[relation][]"
@@ -554,7 +531,7 @@
                             <!-- ====== CUSTOMER ACCOUNT INFORMATION ====== -->
                             <div class="row" id="group_area">
                                 <div class="form-group col-md-12">
-                                    <h5 class="box-title">Customer Account Information</h5>
+                                    <h5 class="box-title">Customer System Information</h5>
                                 </div>
                                 <div class="col-md-6 form-group">
                                     <label for="street_address"> Plan Type:</label>
@@ -808,7 +785,7 @@
                                                 </h4>
                                             </div>
                                             <div id="collapse1" class="panel-collapse collapse">
-                                                <table class="table">
+                                                <table class="table" style="width:50%;">
                                                     <tr>
                                                         <th></th>
                                                         <th>WO</th>
@@ -817,32 +794,32 @@
                                                     </tr>
                                                     <tr>
                                                         <td>Honeywell</td>
-                                                        <td><input type="text" class="form-control"
+                                                        <td style="min-width:10%;"><input type="text" class="form-control"
                                                                    name="ip_cameras[honeywell][wo]"
                                                                    value="<?php echo (!empty($workorder->ip_cameras)) ? $workorder->ip_cameras['honeywell']['wo'] : '' ?>"
                                                                    placeholder=""/>
                                                         </td>
-                                                        <td><input type="text" class="form-control"
+                                                        <td style="min-width:80px;"><input type="text" class="form-control"
                                                                    value="<?php echo (!empty($workorder->ip_cameras)) ? $workorder->ip_cameras['honeywell']['wi'] : '' ?>"
                                                                    name="ip_cameras[honeywell][wi]" placeholder=""/>
                                                         </td>
-                                                        <td><input type="text" class="form-control"
+                                                        <td style="min-width:80px;"><input type="text" class="form-control"
                                                                    value="<?php echo (!empty($workorder->ip_cameras)) ? $workorder->ip_cameras['honeywell']['doorbell_cam'] : '' ?>"
                                                                    name="ip_cameras[honeywell][doorbell_cam]"
                                                                    placeholder=""/>
                                                         </td>
                                                     </tr>
                                                     <tr>
-                                                        <td>AVYCON</td>
-                                                        <td><input type="text" class="form-control"
+                                                        <td>Alarm.com</td>
+                                                        <td style="min-width:80px;"><input type="text" class="form-control"
                                                                    value="<?php echo (!empty($workorder->ip_cameras)) ? $workorder->ip_cameras['avycon']['wo'] : '' ?>"
                                                                    name="ip_cameras[avycon][wo]" placeholder=""/>
                                                         </td>
-                                                        <td><input type="text" class="form-control"
+                                                        <td style="min-width:80px;"><input type="text" class="form-control"
                                                                    value="<?php echo (!empty($workorder->ip_cameras)) ? $workorder->ip_cameras['avycon']['wi'] : '' ?>"
                                                                    name="ip_cameras[avycon][wi]" placeholder=""/>
                                                         </td>
-                                                        <td><input type="text" class="form-control"
+                                                        <td style="min-width:80px;"><input type="text" class="form-control"
                                                                    value="<?php echo (!empty($workorder->ip_cameras)) ? $workorder->ip_cameras['avycon']['doorbell_cam'] : '' ?>"
                                                                    name="ip_cameras[avycon][doorbell_cam]"
                                                                    placeholder=""/>
@@ -850,15 +827,15 @@
                                                     </tr>
                                                     <tr>
                                                         <td>Other</td>
-                                                        <td><input type="text" class="form-control"
+                                                        <td style="min-width:80px;"><input type="text" class="form-control"
                                                                    value="<?php echo (!empty($workorder->ip_cameras)) ? $workorder->ip_cameras['other']['wo'] : '' ?>"
                                                                    name="ip_cameras[other][wo]" placeholder=""/>
                                                         </td>
-                                                        <td><input type="text" class="form-control"
+                                                        <td style="min-width:80px;"><input type="text" class="form-control"
                                                                    value="<?php echo (!empty($workorder->ip_cameras)) ? $workorder->ip_cameras['other']['wi'] : '' ?>"
                                                                    name="ip_cameras[other][wi]" placeholder=""/>
                                                         </td>
-                                                        <td><input type="text" class="form-control"
+                                                        <td style="min-width:80px;"><input type="text" class="form-control"
                                                                    value="<?php echo (!empty($workorder->ip_cameras)) ? $workorder->ip_cameras['other']['doorbell_cam'] : '' ?>"
                                                                    name="ip_cameras[other][doorbell_cam]"
                                                                    placeholder=""/>
@@ -872,7 +849,7 @@
 
                                 <div class="col-sm-12 col-md-6">
                                     <div class="panel-group">
-                                        <div class="panel panel-default">
+                                        <div class="panels panel-default">
                                             <div class="panel-heading">
                                                 <h4 class="panel-title">
                                                     <a data-toggle="collapse" href="#collapse2">Doorlocks: <i
@@ -882,7 +859,7 @@
                                             </div>
                                             <div id="collapse2" class="panel-collapse collapse">
                                                 <div class="panel-body">
-                                                    <table class="table">
+                                                    <table class="table" style="width:50%;">
                                                         <tr>
                                                             <th></th>
                                                             <th>Brass</th>
@@ -891,17 +868,17 @@
                                                         </tr>
                                                         <tr>
                                                             <td>Deadbolt</td>
-                                                            <td><input type="text" class="form-control"
+                                                            <td style="min-width:80px;"><input type="text" class="form-control"
                                                                        name="doorlocks[deadbolt][brass]"
                                                                        value="<?php echo (!empty($workorder->doorlocks)) ? $workorder->doorlocks['deadbolt']['brass'] : '' ?>"
                                                                        placeholder=""/>
                                                             </td>
-                                                            <td><input type="text" class="form-control"
+                                                            <td style="min-width:80px;"><input type="text" class="form-control"
                                                                        value="<?php echo (!empty($workorder->doorlocks)) ? $workorder->doorlocks['deadbolt']['nickal'] : '' ?>"
                                                                        name="doorlocks[deadbolt][nickal]"
                                                                        placeholder=""/>
                                                             </td>
-                                                            <td><input type="text" class="form-control"
+                                                            <td style="min-width:80px;"><input type="text" class="form-control"
                                                                        value="<?php echo (!empty($workorder->doorlocks)) ? $workorder->doorlocks['deadbolt']['bronze'] : '' ?>"
                                                                        name="doorlocks[deadbolt][bronze]"
                                                                        placeholder=""/>
@@ -909,15 +886,15 @@
                                                         </tr>
                                                         <tr>
                                                             <td>Handle</td>
-                                                            <td><input type="text" class="form-control"
+                                                            <td style="min-width:80px;"><input type="text" class="form-control"
                                                                        value="<?php echo (!empty($workorder->doorlocks)) ? $workorder->doorlocks['handle']['brass'] : '' ?>"
                                                                        name="doorlocks[handle][brass]" placeholder=""/>
                                                             </td>
-                                                            <td><input type="text" class="form-control"
+                                                            <td style="min-width:80px;"><input type="text" class="form-control"
                                                                        value="<?php echo (!empty($workorder->doorlocks)) ? $workorder->doorlocks['handle']['nickal'] : '' ?>"
                                                                        name="doorlocks[handle][nickal]" placeholder=""/>
                                                             </td>
-                                                            <td><input type="text" class="form-control"
+                                                            <td style="min-width:80px;"><input type="text" class="form-control"
                                                                        value="<?php echo (!empty($workorder->doorlocks)) ? $workorder->doorlocks['handle']['bronze'] : '' ?>"
                                                                        name="doorlocks[handle][bronze]" placeholder=""/>
                                                             </td>
@@ -931,7 +908,7 @@
 
                                 <div class="col-sm-12 col-md-6">
                                     <div class="panel-group">
-                                        <div class="panel panel-default">
+                                        <div class="panels panel-default">
                                             <div class="panel-heading">
                                                 <h4 class="panel-title">
                                                     <a data-toggle="collapse" href="#collapse3">DVR <i
@@ -940,7 +917,7 @@
                                                 </h4>
                                             </div>
                                             <div id="collapse3" class="panel-collapse collapse">
-                                                <table class="table">
+                                                <table class="table" style="width:50%;">
                                                     <tr>
                                                         <th></th>
                                                         <th>4 Channel</th>
@@ -964,7 +941,7 @@
                                                         </td>
                                                     </tr>
                                                     <tr>
-                                                        <td>AVYCON</td>
+                                                        <td>Alarm.com</td>
                                                         <td><input type="text" class="form-control"
                                                                    value="<?php echo (!empty($workorder->dvr_nvr)) ? $workorder->dvr_nvr['avycon']['4_channel'] : '' ?>"
                                                                    name="dvr_nvr[avycon][4_channel]" placeholder=""/>
@@ -1001,7 +978,7 @@
 
                                 <div class="col-sm-12 col-md-6">
                                     <div class="panel-group">
-                                        <div class="panel panel-default">
+                                        <div class="panels panel-default">
                                             <div class="panel-heading">
                                                 <h4 class="panel-title">
                                                     <a data-toggle="collapse" href="#collapse4">AUTOMATION <i
@@ -1010,41 +987,41 @@
                                                 </h4>
                                             </div>
                                             <div id="collapse4" class="panel-collapse collapse">
-                                                <table class="table">
+                                                <table class="table" style="width:30%;">
                                                     <tr>
-                                                        <th></th>
+                                                        <!-- <th></th> -->
                                                         <th>Thermostats</th>
                                                         <th>Lights & Bulbs</th>
                                                     </tr>
                                                     <tr>
-                                                        <td></td>
-                                                        <td><input type="text" class="form-control"
+                                                        <!-- <td></td> -->
+                                                        <td style="min-width:100px;"><input type="text" class="form-control"
                                                                    value="<?php echo (!empty($workorder->automation)) ? $workorder->automation['thermostats'][0] : '' ?>"
                                                                    name="automation[thermostats][]" placeholder=""/>
                                                         </td>
-                                                        <td><input type="text" class="form-control"
+                                                        <td style="min-width:100px;"><input type="text" class="form-control"
                                                                    value="<?php echo (!empty($workorder->automation)) ? $workorder->automation['light_bulbs'][0] : '' ?>"
                                                                    name="automation[light_bulbs][]" placeholder=""/>
                                                         </td>
                                                     </tr>
                                                     <tr>
-                                                        <td></td>
-                                                        <td><input type="text" class="form-control"
+                                                        <!-- <td></td> -->
+                                                        <td style="min-width:100px;"><input type="text" class="form-control"
                                                                    value="<?php echo (!empty($workorder->automation)) ? $workorder->automation['thermostats'][1] : '' ?>"
                                                                    name="automation[thermostats][]" placeholder=""/>
                                                         </td>
-                                                        <td><input type="text" class="form-control"
+                                                        <td style="min-width:100px;"><input type="text" class="form-control"
                                                                    value="<?php echo (!empty($workorder->automation)) ? $workorder->automation['light_bulbs'][1] : '' ?>"
                                                                    name="automation[light_bulbs][]" placeholder=""/>
                                                         </td>
                                                     </tr>
                                                     <tr>
-                                                        <td></td>
-                                                        <td><input type="text" class="form-control"
+                                                        <!-- <td></td> -->
+                                                        <td style="min-width:100px;"><input type="text" class="form-control"
                                                                    value="<?php echo (!empty($workorder->automation)) ? $workorder->automation['thermostats'][2] : '' ?>"
                                                                    name="automation[thermostats][]" placeholder=""/>
                                                         </td>
-                                                        <td><input type="text" class="form-control"
+                                                        <td style="min-width:100px;"><input type="text" class="form-control"
                                                                    value="<?php echo (!empty($workorder->automation)) ? $workorder->automation['light_bulbs'][2] : '' ?>"
                                                                    name="automation[light_bulbs][]" placeholder=""/>
                                                         </td>
@@ -1057,7 +1034,7 @@
 
                                 <div class="col-sm-12 col-md-6">
                                     <div class="panel-group">
-                                        <div class="panel panel-default">
+                                        <div class="panels panel-default">
                                             <div class="panel-heading">
                                                 <h4 class="panel-title">
                                                     <a data-toggle="collapse" href="#collapse5">PERS <i
@@ -1066,7 +1043,7 @@
                                                 </h4>
                                             </div>
                                             <div id="collapse5" class="panel-collapse collapse">
-                                                <table class="table">
+                                                <table class="table" style="width:50%;">
                                                     <tr>
                                                         <th></th>
                                                         <th>Fall Detection</th>
@@ -1074,16 +1051,16 @@
                                                     </tr>
                                                     <tr>
                                                         <td></td>
-                                                        <td><input type="text" class="form-control"
+                                                        <td style="min-width:100px;"><input type="number" class="form-control"
                                                                    value="<?php echo (!empty($workorder->pers)) ? $workorder->pers['fall_detection'][0] : '' ?>"
                                                                    name="pers[fall_detection][]" placeholder=""/>
                                                         </td>
-                                                        <td><input type="text" class="form-control"
+                                                        <td style="min-width:100px;"><input type="number" class="form-control"
                                                                    value="<?php echo (!empty($workorder->pers)) ? $workorder->pers['wo_fall_detection'][0] : '' ?>"
                                                                    name="pers[wo_fall_detection][]" placeholder=""/>
                                                         </td>
                                                     </tr>
-                                                    <tr>
+                                                    <!-- <tr>
                                                         <td></td>
                                                         <td><input type="text" class="form-control"
                                                                    value="<?php echo (!empty($workorder->pers)) ? $workorder->pers['fall_detection'][1] : '' ?>"
@@ -1103,7 +1080,7 @@
                                                         <td><input type="text" class="form-control"
                                                                    value="<?php echo (!empty($workorder->pers)) ? $workorder->pers['wo_fall_detection'][2] : '' ?>"
                                                                    name="pers[wo_fall_detection][]" placeholder=""/>
-                                                        </td>
+                                                        </td> -->
                                                     </tr>
                                                 </table>
                                             </div>
@@ -1131,7 +1108,7 @@
                                                         <th>Type</th>
                                                         <th width="100px">Quantity</th>
                                                         <th>LOCATION</th>
-                                                        <th width="100px">COST</th>
+                                                        <th width="140px">COST</th>
                                                         <th width="100px">Discount</th>
                                                         <th>Tax(%)</th>
                                                         <th>Total</th>
@@ -1154,14 +1131,14 @@
                                                                 </td>
                                                                 <td><select name="item_type[]" class="form-control">
 
-                                                                        <option value="material" <?php if ($row['item_type'] == 'material') echo 'selected'; ?>>
-                                                                            Material
+                                                                        <option value="Product" <?php if ($row['item_type'] == 'Product') echo 'selected'; ?>>
+                                                                        Product
                                                                         </option>
-                                                                        <option value="product" <?php if ($row['item_type'] == 'product') echo 'selected'; ?>>
-                                                                            Product
+                                                                        <option value="Service" <?php if ($row['item_type'] == 'Service') echo 'selected'; ?>>
+                                                                        Service
                                                                         </option>
-                                                                        <option value="service" <?php if ($row['item_type'] == 'service') echo 'selected'; ?>>
-                                                                            Service
+                                                                        <option value="QSP" <?php if ($row['item_type'] == 'QSP') echo 'selected'; ?>>
+                                                                        QSP
                                                                         </option>
                                                                     </select></td>
                                                                 <td>
@@ -1193,7 +1170,7 @@
                                                                            value="0"
                                                                            readonly>
                                                                 </td>
-                                                                <td>
+                                                                <td style="width:85px;">
 															<span id="span_tax_<?php echo $i; ?>"><?php $tax = ($row['price'] * 7.5 / 100) * $row['quantity'];
                                                                 echo number_format($tax, 2) ?></span>
                                                                 </td>
@@ -1216,9 +1193,9 @@
                                                                 <ul class="suggestions"></ul>
                                                             </td>
                                                             <td><select name="item_type[]" class="form-control">
-                                                                    <option value="service">Service</option>
-                                                                    <option value="material">Material</option>
-                                                                    <option value="product">Product</option>
+                                                                    <option value="Product">Product</option>
+                                                                    <option value="Service">Service</option>
+                                                                    <option value="QSP">QSP</option>
                                                                 </select></td>
                                                             <td><input type="text" class="form-control quantity"
                                                                        name="quantity[]" data-counter="0"
@@ -1234,7 +1211,7 @@
                                                                        name="discount[]" data-counter="0"
                                                                        id="discount_0"
                                                                        min="0" value="0" readonly></td>
-                                                            <td><span id="span_tax_0">0.00 (7.5%)</span></td>
+                                                            <td style="width:85px;"><span id="span_tax_0">0.00 (7.5%)</span></td>
                                                             <td><span id="span_total_0">0.00</span></td>
                                                         </tr>
 
@@ -1260,7 +1237,7 @@
                                                         <th>Type</th>
                                                         <th width="100px">Quantity</th>
                                                         <!-- <th>LOCATION</th> -->
-                                                        <th width="100px">COST</th>
+                                                        <th width="140px">COST</th>
                                                         <th width="100px">Discount</th>
                                                         <th>Tax(%)</th>
                                                         <th>Total</th>
@@ -1273,9 +1250,9 @@
                                                             <ul class="suggestions"></ul>
                                                         </td>
                                                         <td><select name="item_type[]" class="form-control">
-                                                                <option value="product">Product</option>
-                                                                <option value="material">Material</option>
-                                                                <option value="service">Service</option>
+                                                                <option value="Product">Product</option>
+                                                                <option value="Service">Service</option>
+                                                                <option value="QSP">QSP</option>
                                                             </select></td>
                                                         <td><input type="text" class="form-control quantity"
                                                                    name="quantity[]"
@@ -1290,7 +1267,7 @@
                                                                    readonly>
                                                         </td>
                                                         <!-- <td><span id="span_tax_0">0.00 (7.5%)</span></td> -->
-                                                        <td width="150px"><input type="text" class="form-control tax_change" name="tax[]"
+                                                        <td style="width:85px;"><input type="text" class="form-control tax_change" name="tax[]"
                                                        data-counter="0" id="tax1_0" min="0" value="0">
                                                        <!-- <span id="span_tax_0">0.0</span> -->
                                                        </td>
@@ -1309,12 +1286,12 @@
 
                             <!-- ====== TOTAL / BILLING ====== -->
                             <div class="row" id="group_area">
-                                <div class="col-sm-12 col-md-6">
+                                <div class="col-sm-12 col-md-5">
                                     <div class="form-group col-md-12">
                                         <h5 class="box-title">Total</h5>
                                     </div>
                                     <div class="col-md-12">
-                                        <table class="table table-bordered">
+                                        <table class="table table-bordered" style="width:80%;">
                                             <tr>
                                                 <td>Equipment Cost</td>
                                                  <td class="d-flex align-items-center">$ <!--<input type="text"
@@ -1374,12 +1351,12 @@
                                     <!--                                    <button class="btn btn-block btn-lg btn-primary">Import</button>-->
                                 </div>
 
-                                <div class="col-sm-12 col-md-6">
+                                <div class="col-sm-12 col-md-7">
                                     <div class="form-group col-md-12">
                                         <h5 class="box-title">Billing Information</h5>
                                     </div>
                                     <div class="row">
-                                        <div class="col-md-4">
+                                        <div class="col-md-3">
                                             <label for="billing_date">Billing Date</label>
                                             <div class="form-group">
                                                 <select name="billing_date" id="billing_date" class="form-control">
@@ -1392,10 +1369,10 @@
                                                 </select>
                                             </div>
                                         </div>
-                                        <div class="col-md-4">
+                                        <div class="col-md-3">
                                             <div class="form-group">
                                                 <label for="payment_type"> Payment Type:</label>
-                                                <select name="payment_type"
+                                                <!-- <select name="payment_type"
                                                         class="form-control"
                                                         id="payment_type">
                                                     <option>--SELECT--</option>
@@ -1404,6 +1381,22 @@
                                                             <?php echo $payment_type ?>
                                                         </option>
                                                     <?php } ?>
+                                                </select> -->
+                                                <select name="payment_method" id="payment_method" class="form-control custom-select">
+                                                    <option value="">Choose method</option>
+                                                    <option value="Cash">Cash</option>
+                                                    <option value="Check">Check</option>
+                                                    <option value="Credit Card">Credit Card</option>
+                                                    <option value="Debit Card">Debit Card</option>
+                                                    <option value="ACH">ACH</option>
+                                                    <option value="Venmo">Venmo</option>
+                                                    <option value="Paypal">Paypal</option>
+                                                    <option value="Square">Square</option>
+                                                    <option value="Warranty Work">Warranty Work</option>
+                                                    <option value="Home Owner Financing">Home Owner Financing</option>
+                                                    <option value="e-Transfer">e-Transfer</option>
+                                                    <option value="Other Credit Card Professor">Other Credit Card Professor</option>
+                                                    <option value="Other Payment Type">Other Payment Type</option>
                                                 </select>
                                                 <!--                                                <input type="text" class="form-control" name="payment_type"-->
                                                 <!--                                                       value="-->
@@ -1411,7 +1404,7 @@
                                                 <!--                                                       id="payment_type" placeholder=""/>-->
                                             </div>
                                         </div>
-                                        <div class="col-md-4">
+                                        <div class="col-md-3">
                                             <div class="form-group">
                                                 <label for="billing_freq"> Billing Frequency:</label>
                                                 <select name="billing_freq"
@@ -1430,8 +1423,27 @@
                                                 <!--                                                       id="billing_freq" placeholder=""/>-->
                                             </div>
                                         </div>
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label for="job_type">Amount</label><small class="help help-sm"> ( $ )</small>
+                                                <input type="text" class="form-control" name="payment_amount" id="payment_amount"  />
+                                            </div>
+                                            <div id="cash_area" style="display:none;margin-top:-20px;">
+                                                <input type="checkbox" id="collected_checkbox"> <b style="font-size:14px;" id="collected_checkbox_label"> Cash collected already </b>          
+                                            </div>     
+                                        </div>
                                     </div>
-                                    <div class="row">
+                                    <!-- <div class="row">
+                                        <div class="form-group col-md-4">
+                                            <label for="job_type">Amount</label><small class="help help-sm"> ( $ )</small>
+                                            <input type="text" class="form-control" name="payment_amount" id="payment_amount"  />
+                                        </div>
+                                        <div class="form-group col-md-4" id="cash_area" style="display:none;">
+                                                        <br><br>
+                                            <input type="checkbox" id="collected_checkbox"> <b style="font-size:14px;" id="collected_checkbox_label"> Cash collected already </b>          
+                                        </div>     
+                                    </div> -->
+                                    <!-- <div class="row">
 
                                         <div class="col-md-12">
                                             Credit Card Type:<br>
@@ -1497,14 +1509,6 @@
                                                     <input type="text" class="form-control card-number required"
                                                            name="Routing" />
                                                 </div>
-                                                <!-- <div class="col-md-4">
-                                                    <label for="datepicker_exp_date">Checking Number</label>
-                                                    <div class="form-group">
-                                                        <div class='input-group date datepicker'>
-                                                            <input type='text' name="Checking" class="form-control" id="card_exp_date"/>
-                                                        </div>
-                                                    </div>
-                                                </div> -->
                                                 <div class=" col-md-6">
                                                     <label for="cvv">Account Number</label>
                                                     <input type="text" class="form-control card-cvc required"
@@ -1513,6 +1517,212 @@
                                             </div>
                                         </div>
 
+                                    </div> -->
+                                    <div id="check_area" style="display:none;">
+                                        <div class="row">                   
+                                            <div class="form-group col-md-4">
+                                                <label for="job_type">Check Number</label>
+                                                <input type="text" class="form-control" name="check_number" id="check_number"/>
+                                            </div>
+                                            <div class="form-group col-md-4">
+                                                <label for="job_type">Routing Number</label>
+                                                <input type="text" class="form-control" name="routing_number" id="routing_number"/>
+                                            </div>                                             
+                                        <!-- </div>
+                                        <div class="row"> -->
+                                            <div class="form-group col-md-4">
+                                                <label for="job_type">Account Number</label>
+                                                <input type="text" class="form-control" name="account_number" id="account_number"/>
+                                            </div>                                       
+                                        </div>
+                                    </div>
+                                    <div id="credit_card" style="display:none;">
+                                        <div class="row">
+                                                <div class="col-md-12">
+                                                    Credit Card Type:<br>
+                                                    <div class="checkbox checkbox-sec margin-right mr-4">
+                                                        <input type="radio" name="card[radio_credit_card]" value="Visa"
+                                                            <?php echo (!empty($workorder->card['radio_credit_card']) && $workorder->card['radio_credit_card'] == 'Visa') ? 'checked' : '' ?>
+                                                            id="radio_credit_card">
+                                                        <label for="radio_credit_card"><span>Visa</span></label>
+                                                    </div>
+                                                    <div class="checkbox checkbox-sec margin-right mr-4">
+                                                        <input type="radio" name="card[radio_credit_card]" value="Amex"
+                                                            <?php echo (!empty($workorder->card['radio_credit_card']) && $workorder->card['radio_credit_card'] == 'Amex') ? 'checked' : '' ?>
+                                                            id="radio_credit_cardAmex">
+                                                        <label for="radio_credit_cardAmex"><span>Amex</span></label>
+                                                    </div>
+                                                    <div class="checkbox checkbox-sec margin-right mr-4">
+                                                        <input type="radio" name="card[radio_credit_card]" value="Mastercard"
+                                                            <?php echo (!empty($workorder->card['radio_credit_card']) && $workorder->card['radio_credit_card'] == 'Mastercard') ? 'checked' : '' ?>
+                                                            id="radio_credit_cardMastercard">
+                                                        <label for="radio_credit_cardMastercard"><span>Mastercard</span></label>
+                                                    </div>
+                                                    <div class="checkbox checkbox-sec margin-right mr-4">
+                                                        <input type="radio" name="card[radio_credit_card]" value="Discover"
+                                                            <?php echo (!empty($workorder->card['radio_credit_card']) && $workorder->card['radio_credit_card'] == 'Discover') ? 'checked' : '' ?>
+                                                            id="radio_credit_cardMasterDiscover">
+                                                        <label for="radio_credit_cardMasterDiscover"><span>Discover</span></label>
+                                                    </div>
+                                                </div>
+                                        </div>
+                                        <div class="row">                                            
+                                        </div>
+                                        <br><br>
+                                        <div class="row">                   
+                                            <div class="form-group col-md-4">
+                                                <label for="job_type">Credit Card Number</label>
+                                                <input type="text" class="form-control" name="credit_number" id="credit_number" placeholder="0000 0000 0000 000" />
+                                            </div>
+                                            <div class="form-group col-md-4">
+                                                <label for="job_type">Credit Card Expiration</label>
+                                                <input type="text" class="form-control" name="credit_expiry" id="credit_expiry" placeholder="MM/YYYY"/>
+                                            </div>  
+                                            <div class="form-group col-md-4">
+                                                <label for="job_type">CVC</label>
+                                                <input type="text" class="form-control" name="credit_cvc" id="credit_cvc" placeholder="CVC"/>
+                                            </div>                                             
+                                        </div>
+                                    </div>
+                                    <div id="debit_card" style="display:none;">
+                                        <div class="row">                   
+                                            <div class="form-group col-md-4">
+                                                <label for="job_type">Credit Card Number</label>
+                                                <input type="text" class="form-control" name="debit_credit_number" id="credit_number" placeholder="0000 0000 0000 000" />
+                                            </div>
+                                            <div class="form-group col-md-4">
+                                                <label for="job_type">Credit Card Expiration</label>
+                                                <input type="text" class="form-control" name="debit_credit_expiry" id="credit_expiry" placeholder="MM/YYYY"/>
+                                            </div>  
+                                            <div class="form-group col-md-4">
+                                                <label for="job_type">CVC</label>
+                                                <input type="text" class="form-control" name="debit_credit_cvc" id="credit_cvc" placeholder="CVC"/>
+                                            </div>                                            
+                                        </div>
+                                    </div>
+                                    <div id="ach_area" style="display:none;">
+                                        <div class="row">                   
+                                            <div class="form-group col-md-4">
+                                                <label for="job_type">Routing Number</label>
+                                                <input type="text" class="form-control" name="ach_routing_number" id="ach_routing_number" />
+                                            </div>
+                                            <div class="form-group col-md-4">
+                                                <label for="job_type">Account Number</label>
+                                                <input type="text" class="form-control" name="ach_account_number" id="ach_account_number" />
+                                            </div>  
+                                        </div>
+                                    </div>
+                                    <div id="venmo_area" style="display:none;">
+                                        <div class="row">                   
+                                            <div class="form-group col-md-4">
+                                                <label for="job_type">Account Credential</label>
+                                                <input type="text" class="form-control" name="account_credentials" id="account_credentials"/>
+                                            </div>
+                                            <div class="form-group col-md-4">
+                                                <label for="job_type">Account Note</label>
+                                                <input type="text" class="form-control" name="account_note" id="account_note"/>
+                                            </div>  
+                                            <div class="form-group col-md-4">
+                                                <label for="job_type">Confirmation</label>
+                                                <input type="text" class="form-control" name="confirmation" id="confirmation"/>
+                                            </div>                                            
+                                        </div>
+                                    </div>
+                                    <div id="paypal_area" style="display:none;">
+                                        <div class="row">                   
+                                            <div class="form-group col-md-4">
+                                                <label for="job_type">Account Credential</label>
+                                                <input type="text" class="form-control" name="paypal_account_credentials" id="paypal_account_credentials"/>
+                                            </div>
+                                            <div class="form-group col-md-4">
+                                                <label for="job_type">Account Note</label>
+                                                <input type="text" class="form-control" name="paypal_account_note" id="paypal_account_note"/>
+                                            </div>  
+                                            <div class="form-group col-md-4">
+                                                <label for="job_type">Confirmation</label>
+                                                <input type="text" class="form-control" name="paypal_confirmation" id="paypal_confirmation"/>
+                                            </div>                                            
+                                        </div>
+                                    </div>
+                                    <div id="square_area" style="display:none;">
+                                        <div class="row">                   
+                                            <div class="form-group col-md-4">
+                                                <label for="job_type">Account Credential</label>
+                                                <input type="text" class="form-control" name="square_account_credentials" id="square_account_credentials"/>
+                                            </div>
+                                            <div class="form-group col-md-4">
+                                                <label for="job_type">Account Note</label>
+                                                <input type="text" class="form-control" name="square_account_note" id="square_account_note"/>
+                                            </div>  
+                                            <div class="form-group col-md-4">
+                                                <label for="job_type">Confirmation</label>
+                                                <input type="text" class="form-control" name="square_confirmation" id="square_confirmation"/>
+                                            </div>                                            
+                                        </div>
+                                    </div>
+                                    <div id="warranty_area" style="display:none;">
+                                        <div class="row">                   
+                                            <div class="form-group col-md-4">
+                                                <label for="job_type">Account Credential</label>
+                                                <input type="text" class="form-control" name="warranty_account_credentials" id="warranty_account_credentials"/>
+                                            </div>
+                                            <div class="form-group col-md-4">
+                                                <label for="job_type">Account Note</label>
+                                                <input type="text" class="form-control" name="warranty_account_note" id="warranty_account_note"/>
+                                            </div>                                         
+                                        </div>
+                                    </div>
+                                    <div id="home_area" style="display:none;">
+                                        <div class="row">                   
+                                            <div class="form-group col-md-4">
+                                                <label for="job_type">Account Credential</label>
+                                                <input type="text" class="form-control" name="home_account_credentials" id="home_account_credentials"/>
+                                            </div>
+                                            <div class="form-group col-md-4">
+                                                <label for="job_type">Account Note</label>
+                                                <input type="text" class="form-control" name="home_account_note" id="home_account_note"/>
+                                            </div>                                         
+                                        </div>
+                                    </div>
+                                    <div id="e_area" style="display:none;">
+                                        <div class="row">                   
+                                            <div class="form-group col-md-4">
+                                                <label for="job_type">Account Credential</label>
+                                                <input type="text" class="form-control" name="e_account_credentials" id="e_account_credentials"/>
+                                            </div>
+                                            <div class="form-group col-md-4">
+                                                <label for="job_type">Account Note</label>
+                                                <input type="text" class="form-control" name="e_account_note" id="e_account_note"/>
+                                            </div>                                         
+                                        </div>
+                                    </div>
+                                    <div id="other_credit_card" style="display:none;">
+                                        <div class="row">                   
+                                            <div class="form-group col-md-4">
+                                                <label for="job_type">Credit Card Number</label>
+                                                <input type="text" class="form-control" name="other_credit_number" id="other_credit_number" placeholder="0000 0000 0000 000" />
+                                            </div>
+                                            <div class="form-group col-md-4">
+                                                <label for="job_type">Credit Card Expiration</label>
+                                                <input type="text" class="form-control" name="other_credit_expiry" id="other_credit_expiry" placeholder="MM/YYYY"/>
+                                            </div>  
+                                            <div class="form-group col-md-4">
+                                                <label for="job_type">CVC</label>
+                                                <input type="text" class="form-control" name="other_credit_cvc" id="other_credit_cvc" placeholder="CVC"/>
+                                            </div>                                             
+                                        </div>
+                                    </div>
+                                    <div id="other_payment_area" style="display:none;">
+                                        <div class="row">                   
+                                            <div class="form-group col-md-4">
+                                                <label for="job_type">Account Credential</label>
+                                                <input type="text" class="form-control" name="other_payment_account_credentials" id="other_payment_account_credentials"/>
+                                            </div>
+                                            <div class="form-group col-md-4">
+                                                <label for="job_type">Account Note</label>
+                                                <input type="text" class="form-control" name="other_payment_account_note" id="other_payment_account_note"/>
+                                            </div>                                         
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -1948,32 +2158,95 @@
 
     <?php include viewPath('includes/footer'); ?>
 
-    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAlMWhWMHlxQzuolWb2RrfUeb0JyhhPO9c&libraries=places"></script>
-<script>
-function initialize() {
-          var input = document.getElementById('panel_location');
-          var autocomplete = new google.maps.places.Autocomplete(input);
-            google.maps.event.addListener(autocomplete, 'place_changed', function () {
-                var place = autocomplete.getPlace();
-                document.getElementById('city2').value = place.name;
-                document.getElementById('cityLat').value = place.geometry.location.lat();
-                document.getElementById('cityLng').value = place.geometry.location.lng();
-            });
-        }
-        google.maps.event.addDomListener(window, 'load', initialize);
+    <script>
+      // This sample uses the Places Autocomplete widget to:
+      // 1. Help the user select a place
+      // 2. Retrieve the address components associated with that place
+      // 3. Populate the form fields with those address components.
+      // This sample requires the Places library, Maps JavaScript API.
+      // Include the libraries=places parameter when you first load the API.
+      // For example: <script
+      // src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places">
+      let autocomplete;
+      let address1Field;
+      let address2Field;
+      let postalField;
 
-        function initialize2() {
-          var input = document.getElementById('monitored_location');
-          var autocomplete = new google.maps.places.Autocomplete(input);
-            google.maps.event.addListener(autocomplete, 'place_changed', function () {
-                var place = autocomplete.getPlace();
-                // document.getElementById('city2').value = place.name;
-                // document.getElementById('cityLat').value = place.geometry.location.lat();
-                // document.getElementById('cityLng').value = place.geometry.location.lng();
-            });
+      function initAutocomplete() {
+        address1Field = document.querySelector("#ship-address");
+        address2Field = document.querySelector("#address2");
+        postalField = document.querySelector("#postcode");
+        // Create the autocomplete object, restricting the search predictions to
+        // addresses in the US and Canada.
+        autocomplete = new google.maps.places.Autocomplete(address1Field, {
+          componentRestrictions: { country: ["us", "ca"] },
+          fields: ["address_components", "geometry"],
+          types: ["address"],
+        });
+        address1Field.focus();
+        // When the user selects an address from the drop-down, populate the
+        // address fields in the form.
+        autocomplete.addListener("place_changed", fillInAddress);
+      }
+
+      function fillInAddress() {
+        // Get the place details from the autocomplete object.
+        const place = autocomplete.getPlace();
+        let address1 = "";
+        let postcode = "";
+
+        // Get each component of the address from the place details,
+        // and then fill-in the corresponding field on the form.
+        // place.address_components are google.maps.GeocoderAddressComponent objects
+        // which are documented at http://goo.gle/3l5i5Mr
+        for (const component of place.address_components) {
+          const componentType = component.types[0];
+
+          switch (componentType) {
+            case "street_number": {
+              address1 = `${component.long_name} ${address1}`;
+              break;
+            }
+
+            case "route": {
+              address1 += component.short_name;
+              break;
+            }
+
+            case "postal_code": {
+              postcode = `${component.long_name}${postcode}`;
+              break;
+            }
+
+            case "postal_code_suffix": {
+              postcode = `${postcode}-${component.long_name}`;
+              break;
+            }
+            case "locality":
+              document.querySelector("#locality").value = component.long_name;
+              break;
+
+            case "administrative_area_level_1": {
+              document.querySelector("#state").value = component.short_name;
+              break;
+            }
+            case "country":
+              document.querySelector("#country").value = component.long_name;
+              break;
+          }
         }
-        google.maps.event.addDomListener(window, 'load', initialize2);
-</script>
+        address1Field.value = address1;
+        postalField.value = postcode;
+        // After filling the form with address components from the Autocomplete
+        // prediction, set cursor focus on the second address line to encourage
+        // entry of subpremise information such as apartment, unit, or floor number.
+        address2Field.focus();
+      }
+    </script>
+    <script
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAlMWhWMHlxQzuolWb2RrfUeb0JyhhPO9c&callback=initAutocomplete&libraries=places&v=weekly"
+      async
+    ></script>
 
     <script>
         function validatecard() {
@@ -2224,4 +2497,302 @@ $(document).on('click','.save_terms_of_use',function(){
         
     });
 
+</script>
+
+<script>
+$(document).on("click", "label.mytxt", function () {
+        var txt = $(".mytxt").text();
+        $(".mytxt").replaceWith("<input class='mytxt'/>");
+        $(".mytxt").val(txt);
+        $(".custom1").val(txt);
+    });
+
+    $(document).on("blur", "input.mytxt", function () {
+        var txt = $(this).val();
+        $(this).replaceWith("<label class='mytxt'></label>");
+        $(".mytxt").text(txt);
+        $(".custom1").val(txt);
+});
+$(document).on("click", "label.mytxt2", function () {
+        var txt = $(".mytxt2").text();
+        $(".mytxt2").replaceWith("<input class='mytxt2'/>");
+        $(".mytxt2").val(txt);
+        $(".custom2").val(txt);
+    });
+
+    $(document).on("blur", "input.mytxt2", function () {
+        var txt = $(this).val();
+        $(this).replaceWith("<label class='mytxt2'></label>");
+        $(".mytxt2").text(txt);
+        $(".custom2").val(txt);
+});
+
+$(document).on("click", "label.mytxt3", function () {
+        var txt = $(".mytxt3").text();
+        $(".mytxt3").replaceWith("<input class='mytxt3'/>");
+        $(".mytxt3").val(txt);
+        $(".custom3").val(txt);
+    });
+
+    $(document).on("blur", "input.mytxt3", function () {
+        var txt = $(this).val();
+        $(this).replaceWith("<label class='mytxt3'></label>");
+        $(".mytxt3").text(txt);
+        $(".custom3").val(txt);
+});
+
+$(document).on("click", "label.mytxt4", function () {
+        var txt = $(".mytxt4").text();
+        $(".mytxt4").replaceWith("<input class='mytxt4'/>");
+        $(".mytxt4").val(txt);
+        $(".custom4").val(txt);
+    });
+
+    $(document).on("blur", "input.mytxt4", function () {
+        var txt = $(this).val();
+        $(this).replaceWith("<label class='mytxt4'></label>");
+        $(".mytxt4").text(txt);
+        $(".custom4").val(txt);
+});
+
+$(document).on("click", "label.mytxt5", function () {
+        var txt = $(".mytxt5").text();
+        $(".mytxt5").replaceWith("<input class='mytxt5'/>");
+        $(".mytxt5").val(txt);
+        $(".custom5").val(txt);
+    });
+
+    $(document).on("blur", "input.mytxt5", function () {
+        var txt = $(this).val();
+        $(this).replaceWith("<label class='mytxt5'></label>");
+        $(".mytxt5").text(txt);
+        $(".custom5").val(txt);
+});
+
+$(document).on("click", "label.mytxt6", function () {
+        var txt = $(".mytxt6").text();
+        $(".mytxt6").replaceWith("<input class='form-control mytxt6' />");
+        $(".mytxt6").val(txt);
+        $(".custom6").val(txt);
+    });
+
+    $(document).on("blur", "input.mytxt6", function () {
+        var txt = $(this).val();
+        $(this).replaceWith("<label class='form-control mytxt6'></label>");
+        $(".mytxt6").text(txt);
+        $(".custom6").val(txt);
+});
+
+document.getElementById("payment_method").onchange = function() {
+    if (this.value == 'Cash') {
+        // alert('cash');
+		// $('#exampleModal').modal('toggle');
+        $('#cash_area').show();
+        $('#check_area').hide();
+        $('#credit_card').hide();
+        $('#debit_card').hide();
+        $('#ach_area').hide();
+        $('#venmo_area').hide();
+        $('#paypal_area').hide();
+        $('#square_area').hide();
+        $('#warranty_area').hide();
+        $('#home_area').hide();
+        $('#e_area').hide();
+        $('#other_credit_card').hide();
+        $('#other_payment_area').hide();
+    	}
+	
+    else if(this.value == 'Check'){
+        // alert('Check');
+        $('#cash_area').hide();
+        $('#check_area').show();
+        $('#credit_card').hide();
+        $('#debit_card').hide();
+        $('#ach_area').hide();
+        $('#venmo_area').hide();
+        $('#paypal_area').hide();
+        $('#square_area').hide();
+        $('#warranty_area').hide();
+        $('#home_area').hide();
+        $('#e_area').hide();
+        $('#other_credit_card').hide();
+        $('#other_payment_area').hide();
+    }
+    else if(this.value == 'Credit Card'){
+        // alert('Credit card');
+        $('#cash_area').hide();
+        $('#check_area').hide();
+        $('#credit_card').show();
+        $('#debit_card').hide();
+        $('#ach_area').hide();
+        $('#venmo_area').hide();
+        $('#paypal_area').hide();
+        $('#square_area').hide();
+        $('#warranty_area').hide();
+        $('#home_area').hide();
+        $('#e_area').hide();
+        $('#other_credit_card').hide();
+        $('#other_payment_area').hide();
+    }
+    else if(this.value == 'Debit Card'){
+        // alert('Credit card');
+        $('#cash_area').hide();
+        $('#check_area').hide();
+        $('#credit_card').hide();
+        $('#debit_card').show();
+        $('#ach_area').hide();
+        $('#venmo_area').hide();
+        $('#paypal_area').hide();
+        $('#square_area').hide();
+        $('#warranty_area').hide();
+        $('#home_area').hide();
+        $('#e_area').hide();
+        $('#other_credit_card').hide();
+        $('#other_payment_area').hide();
+    }
+    else if(this.value == 'ACH'){
+        // alert('Credit card');
+        $('#cash_area').hide();
+        $('#check_area').hide();
+        $('#credit_card').hide();
+        $('#debit_card').hide();
+        $('#ach_area').show();
+        $('#venmo_area').hide();
+        $('#paypal_area').hide();
+        $('#square_area').hide();
+        $('#warranty_area').hide();
+        $('#home_area').hide();
+        $('#e_area').hide();
+        $('#other_credit_card').hide();
+        $('#other_payment_area').hide();
+    }
+    else if(this.value == 'Venmo'){
+        // alert('Credit card');
+        $('#cash_area').hide();
+        $('#check_area').hide();
+        $('#credit_card').hide();
+        $('#debit_card').hide();
+        $('#ach_area').hide();
+        $('#venmo_area').show();
+        $('#paypal_area').hide();
+        $('#square_area').hide();
+        $('#warranty_area').hide();
+        $('#home_area').hide();
+        $('#e_area').hide();
+        $('#other_credit_card').hide();
+        $('#other_payment_area').hide();
+    }
+    else if(this.value == 'Paypal'){
+        // alert('Credit card');
+        $('#cash_area').hide();
+        $('#check_area').hide();
+        $('#credit_card').hide();
+        $('#debit_card').hide();
+        $('#ach_area').hide();
+        $('#venmo_area').hide();
+        $('#paypal_area').show();
+        $('#square_area').hide();
+        $('#warranty_area').hide();
+        $('#home_area').hide();
+        $('#e_area').hide();
+        $('#other_credit_card').hide();
+        $('#other_payment_area').hide();
+    }
+    else if(this.value == 'Square'){
+        // alert('Credit card');
+        $('#cash_area').hide();
+        $('#check_area').hide();
+        $('#credit_card').hide();
+        $('#debit_card').hide();
+        $('#ach_area').hide();
+        $('#venmo_area').hide();
+        $('#paypal_area').hide();
+        $('#square_area').show();
+        $('#warranty_area').hide();
+        $('#home_area').hide();
+        $('#e_area').hide();
+        $('#other_credit_card').hide();
+        $('#other_payment_area').hide();
+    }
+    else if(this.value == 'Warranty Work'){
+        // alert('Credit card');
+        $('#cash_area').hide();
+        $('#check_area').hide();
+        $('#credit_card').hide();
+        $('#debit_card').hide();
+        $('#ach_area').hide();
+        $('#venmo_area').hide();
+        $('#paypal_area').hide();
+        $('#square_area').hide();
+        $('#warranty_area').show();
+        $('#home_area').hide();
+        $('#e_area').hide();
+        $('#other_credit_card').hide();
+        $('#other_payment_area').hide();
+    }
+    else if(this.value == 'Home Owner Financing'){
+        // alert('Credit card');
+        $('#cash_area').hide();
+        $('#check_area').hide();
+        $('#credit_card').hide();
+        $('#debit_card').hide();
+        $('#ach_area').hide();
+        $('#venmo_area').hide();
+        $('#paypal_area').hide();
+        $('#square_area').hide();
+        $('#warranty_area').hide();
+        $('#home_area').show();
+        $('#e_area').hide();
+        $('#other_credit_card').hide();
+        $('#other_payment_area').hide();
+    }
+    else if(this.value == 'e-Transfer'){
+        // alert('Credit card');
+        $('#cash_area').hide();
+        $('#check_area').hide();
+        $('#credit_card').hide();
+        $('#debit_card').hide();
+        $('#ach_area').hide();
+        $('#venmo_area').hide();
+        $('#paypal_area').hide();
+        $('#square_area').hide();
+        $('#warranty_area').hide();
+        $('#home_area').hide();
+        $('#e_area').show();
+        $('#other_credit_card').hide();
+        $('#other_payment_area').hide();
+    }
+    else if(this.value == 'Other Credit Card Professor'){
+        // alert('Credit card');
+        $('#cash_area').hide();
+        $('#check_area').hide();
+        $('#credit_card').hide();
+        $('#debit_card').hide();
+        $('#ach_area').hide();
+        $('#venmo_area').hide();
+        $('#paypal_area').hide();
+        $('#square_area').hide();
+        $('#warranty_area').hide();
+        $('#home_area').hide();
+        $('#e_area').hide();
+        $('#other_credit_card').show();
+        $('#other_payment_area').hide();
+    }
+    else if(this.value == 'Other Payment Type'){
+        // alert('Credit card');
+        $('#cash_area').hide();
+        $('#check_area').hide();
+        $('#credit_card').hide();
+        $('#debit_card').hide();
+        $('#ach_area').hide();
+        $('#venmo_area').hide();
+        $('#paypal_area').hide();
+        $('#square_area').hide();
+        $('#warranty_area').hide();
+        $('#home_area').hide();
+        $('#e_area').hide();
+        $('#other_credit_card').hide();
+        $('#other_payment_area').show();
+    }
+}
 </script>

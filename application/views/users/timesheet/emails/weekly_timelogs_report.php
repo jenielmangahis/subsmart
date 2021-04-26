@@ -248,7 +248,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 ?>
                 <h2 style="text-align:left;">Timesheet Report</h2>
                 <h3 style="text-align:left;"><?= date("M d",strtotime($date_from)) ?> - <?= date("d",strtotime($date_to)) ?></h3>
-                <p class="lead text-muted" style="text-align: left; margin-top:20px;"><label style="padding-bottom: 10px;">Hi <?= $FName ?>,</label><br>Below you'll find the timesheet report you requested for your team at <?= $business_name ?> for the pay period <?= date("M d",strtotime($date_from)) ?> - <?= date("d",strtotime($date_to)) ?>.</p>
+                <p class="lead text-muted" style="text-align: left; margin-top:20px;"><label style="padding-bottom: 10px;">Hi <?= $FName ?>,</label><br>Below you'll find the timesheet report you requested for your team at <?= $business_name ?> for the time period <?= date("M d",strtotime($date_from)) ?> - <?= date("d",strtotime($date_to)) ?>.</p>
                 <p>
                     <a href="<?= base_url('/timesheet/timelogs/') . $file_info[0] ?>" class="btn btn-primary my-2">Download .CSV</a>
                     <a href="<?= base_url('/timesheet/timelogs/') . $file_info[3] ?>" class="btn btn-primary my-2">Download .PDF</a>

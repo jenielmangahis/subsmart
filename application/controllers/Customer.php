@@ -2055,6 +2055,37 @@ class Customer extends MY_Controller
         $this->load->view('customer/group/list', $this->page_data);
     }
 
+    public function group_edit($id=null)
+    {
+        $is_allowed = $this->isAllowedModuleAccess(11);
+        if( !$is_allowed ){
+            $this->page_data['module'] = 'customer_group';
+            echo $this->load->view('no_access_module', $this->page_data, true);
+            die();
+        }
+        if(!$id==NULL){
+            // save new updated group data
+            $input = $this->input->post();
+            if ($input) {
+                $input['date_added'] = date("d-m-Y h:i A");
+                if ($this->general->update_with_key($input,$id,"customer_groups")) {
+                    redirect(base_url('customer/group'));
+                }
+            }
+            $get_company_info = array(
+                'where' => array(
+                    'id' => $id,
+                ),
+                'table' => 'customer_groups',
+                'select' => '*',
+            );
+            $this->page_data['customerGroup'] = $this->general->get_data_with_param($get_company_info,FALSE);
+        }else{
+            redirect(base_url('customer/group'));
+        }
+        $this->load->view('customer/group/edit', $this->page_data);
+    }
+
     public function group_add()
     {
         $is_allowed = $this->isAllowedModuleAccess(11);
@@ -2076,6 +2107,20 @@ class Customer extends MY_Controller
         }
         $this->page_data['page_title'] = 'Customer Group Add';
         $this->load->view('customer/group/add', $this->page_data);
+    }
+
+    public function group_delete() {
+        $group_delete = array(
+            'where' => array(
+                'id' => $_POST['id']
+            ),
+            'table' => 'customer_groups'
+        );
+        if($this->general->delete_($group_delete)){
+            echo true;
+        }else{
+            echo false;
+        }
     }
 
     public function categorizeNameAlphabetically($items) {

@@ -820,6 +820,7 @@ SQL;
                     'unique_key ' => uniqid(),
                     'user_id' => logged('id'),
                     'user_docfile_recipients_id' => $recipientId,
+                    'specs' => $field['specs'],
                 ]);
             }
         }

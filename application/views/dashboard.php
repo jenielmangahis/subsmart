@@ -68,16 +68,16 @@
                         <div class="modal-dialog modal-md" role="document" style="max-width: 592px; margin-top:230px;">
                             <div class="modal-content" style="border-radius: 30px;">
                                 <div class="modal-header">
-                                    <input type="text" placeholder="Subject Line" class="form-control" />
+                                    <input type="text" placeholder="Subject Line" id="feedSubject" class="form-control" />
                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                         <span aria-hidden="true">&times;</span>
                                     </button>
                                 </div>
                                 <div class="modal-body text-center">
-                                    <textarea style="height:130px;" class="form-control" placeholder="Feed Message" ></textarea>
+                                    <textarea style="height:130px;" id="feedMessage" class="form-control" placeholder="Feed Message" ></textarea>
                                 </div>
                                 <div class="modal-footer">
-                                    <button class="float-right btn btn-success btn-small">Send Feed</button>
+                                    <button onclick="sendFeed()" class="float-right btn btn-success btn-small">Send Feed</button>
                                 </div>
                             </div>
                         </div>
@@ -103,7 +103,24 @@
                             </div>
                         </div>
                     </div>
-
+                    <script type="text/javascript">
+                        function sendFeed()
+                        {
+                            $.ajax({
+                                type: "POST",
+                                url: "<?= base_url() ?>/dashboard/sendFeed",
+                                data: {
+                                    subject : $('#feedSubject').val(),
+                                    message : $('#feedMessage').val()
+                                }, // serializes the form's elements.
+                                success: function (data)
+                                {
+                                    $('#newFeed').modal('hide')
+                                    alert(data)
+                                }
+                            });
+                        }
+                    </script>    
                     <?php include viewPath('flash'); ?>
                     <div class="col-12 d-md-none d-block p-0">
                         <div class="smart__grid" id="1">

@@ -1,6 +1,14 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed'); ?>
-<?php include viewPath('includes/header'); ?>
+<?php 
+
+include viewPath('includes/header'); 
+$report_series = 3;
+foreach($report_settings as $settings){
+    $report_series = $settings->report_series;
+}
+
+?>
 <style type="text/css">
     .red {
         background-color: red;
@@ -179,14 +187,50 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                                         
                                                             <input type="checkbox" on class="custom-control-input" id="est_wage_privacy" <?=$report_privacy->est_wage_private==1 ? "checked":""?>>
                                                             <label class="custom-control-label" for="est_wage_privacy">Include <b>Estimated Wages</b> to the weekly timesheet report.</label>
-                                                            <label class="est_wage_privacy_editor" for="est_wage_privacy">Latest update by <span><?=$report_privacy->FName?> <?=$report_privacy->LName?>  <?=date("M d, Y h:i A", strtotime($report_privacy_updated))?></span></label>
+                                                            <?php
+                                                            if($report_privacy != null){
+                                                            ?>
+                                                             <label class="est_wage_privacy_editor" for="est_wage_privacy">Latest update by <span><?=$report_privacy->FName?> <?=$report_privacy->LName?>  <?=date("M d, Y h:i A", strtotime($report_privacy_updated))?></span></label>
+                                                                                                                   
+                                                            <?php
+                                                            }?>
                                                             
                                                         </div>
-                                                    </div>
+                                                </div>
                                                 <div class="form-group">
                                                     <div class="custom-control custom-switch">
                                                         <input type="checkbox" on class="custom-control-input" id="subcribe_weekly_report" checked>
-                                                        <label class="custom-control-label" for="subcribe_weekly_report">Toggle on if you want to receive the timesheet report weekly</label>
+                                                        <label class="custom-control-label" for="subcribe_weekly_report">Toggle on if you want to receive the timesheet report</label>
+                                                    </div>
+                                                </div>
+
+                                                <div class="row report_series_div" style="margin-bottom: 20px;">
+                                                    <div class="col-md-12">
+                                                        <label>Receive timesheet report</lable>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <div class="form-check">
+                                                            <div class="checkbox checkbox-sec margin-right">
+                                                                <input type="radio" name="user_type" value="1" id="report_series_1" <?=$report_series==1?"checked":""?> >
+                                                                <label for="report_series_1"><span>Daily</span></label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <div class="form-check">
+                                                            <div class="checkbox checkbox-sec margin-right">
+                                                                <input type="radio" name="user_type" value="2" id="report_series_2" <?=$report_series==2?"checked":""?> >
+                                                                <label for="report_series_2"><span>Biweekly</span></label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <div class="form-check">
+                                                            <div class="checkbox checkbox-sec margin-right">
+                                                                <input type="radio" name="user_type" value="3" id="report_series_3" <?=$report_series==3?"checked":""?> >
+                                                                <label for="report_series_3"><span>Weekly</span></label>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
                                                 <div class="subscribed-fields">
@@ -210,9 +254,9 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                                         ?>
                                                     </div>
 
-                                                    <div class="alert alert-success" role="alert">
+                                                    <!-- <div class="alert alert-success" role="alert">
                                                         Please note that the next timesheet report will be sent <b id="next-timesheet-report"></b>
-                                                    </div>
+                                                    </div> -->
                                                 </div>
                                                 <div class="form-group">
                                                     <button type="submit" id="tz_form_submit" class="btn btn-primary " style="float:left;">Save</button><img class="tz-form-img-loader" style="float:left; display:none;" src="<?= base_url(); ?>/assets/css/timesheet/images/ring-loader.svg" alt="">
