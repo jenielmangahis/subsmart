@@ -159,16 +159,15 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             <td><?= $customerGroup->date_added; ?></td>
                                             <td>
                                                 <?php //if (hasPermissions('plan_edit')): ?>
-                                                    <a href="<?php echo url('customer/group_edit/' . $customerGroup->id) ?>"
+                                                    <a href="<?php echo url('customer/group/edit/' . $customerGroup->id) ?>"
                                                        class="btn btn-sm btn-default" title="Edit item"
                                                        data-toggle="tooltip"><i class="fa fa-pencil"></i></a>
                                                 <?php //endif ?>
                                                 <?php //if (hasPermissions('plan_delete')): ?>
-                                                    <button id="<?= $customerGroup->id ?>"
-                                                       class="btn btn-sm btn-default remove-data-item delete_group"
+                                                    <a href="<?php echo url('customer/group/delete/' . $customerGroup->id) ?>"
+                                                       class="btn btn-sm btn-default remove-data-item"
                                                        title="Delete item" data-toggle="tooltip"><i
-                                                                class="fa fa-trash"></i>
-                                                    </button>
+                                                                class="fa fa-trash"></i></a>
                                                 <?php //endif ?>
                                             </td>
                                         </tr>
@@ -194,38 +193,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <!-- page wrapper end -->
 <?php include viewPath('includes/footer'); ?>
 <script>
-    $('#dataTable1').DataTable();
-
-    $(".delete_group").on( "click", function( event ) {
-        var ID=this.id;
-        // alert(ID);
-        Swal.fire({
-            title: 'Continue to REMOVE this Customer Group?',
-            text: "",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#32243d',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes',
-            cancelButtonText: 'No',
-        }).then((result) => {
-            if (result.value) {
-                $.ajax({
-                    type: "POST",
-                    url: "/customer/group_delete",
-                    data: {id : ID}, // serializes the form's elements.
-                    success: function(data)
-                    {
-                        if(data){
-                            window.location.reload();
-                        }else{
-                            console.log(data);
-                        }
-                    }
-                });
-            }
-        });
-    });
-
+    $('#dataTable1').DataTable()
 
 </script>
