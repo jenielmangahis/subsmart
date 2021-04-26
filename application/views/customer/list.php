@@ -141,7 +141,7 @@ add_css(array(
                             <div class="row margin-bottom-ter align-items-center">
                                     <!-- Nav tabs -->
                                     <div class="col-auto">
-                                        <h2 class="page-title">Customer Manager List</h2>
+                                        <h3 class="box-title" style="position: relative;top: 5px;">Customer Manager List</h3>
                                     </div>
                                     <div class="col text-right-sm d-flex justify-content-end align-items-center">
                                     <div class="float-right d-md-block">
