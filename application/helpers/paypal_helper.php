@@ -3,8 +3,8 @@
 function paypal_credential($type = ""){
     $return = "";
 
-    $client_id     = "Aez8D4HQA5lVwwkJ2Qw_48nnQgnS5A6HAh94VSHmJFQ6JU6hI8vuPDS0b-a-nNQ8g6WQyTP0etlyE-7z";
-    $client_secret = "EAqn8WY2sWEzIaQ3R3DwCqgJv4eigbiKW_eMjW50GccL5_nVSUHZc49HQaQKUDdSHFhjydiOEARQYIQT";
+    $client_id     = "AbhNwKUnlEE3b1mikrpZ5ITkyF41KQId9UmlIAy5MoMTqRPhoLVWk5QSn_Jjw2NdkNbm0WoKYrOGkY7";
+    $client_secret = "EDohbd-p_O15FFpDEUxZVRVkG_xTIWfncBBVYoKIbD6MPhSkXqz46rm92emzZK8ZEnHkmQymjwLdI1H";
 
     if($type == 'client_id') {
         $return = $client_id;
