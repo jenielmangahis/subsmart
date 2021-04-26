@@ -22,7 +22,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <div class="page-title-box">
                                         <div class="row align-items-center">
                                             <div class="col-sm-6">
-                                                <h1 class="page-title">Add Group</h1>
+                                                <h3 class="box-title">Add Group</h3>
                                                 <ol class="breadcrumb">
                                                     <li class="breadcrumb-item active">Enter the name for the new group.</li>
                                                 </ol>
@@ -30,7 +30,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             <div class="col-sm-6">
                                                 <div class="float-right d-none d-md-block">
                                                     <div class="dropdown">
-                                                        <a href="<?php echo url('customer/group/') ?>" class="btn btn-primary"
+                                                        <a style="position: relative;bottom: 16px;" href="<?php echo url('customer/group/') ?>" class="btn btn-primary"
                                                            aria-expanded="false">
                                                             <i class="mdi mdi-settings mr-2"></i> Go Back to Groups
                                                         </a>
