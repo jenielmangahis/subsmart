@@ -321,8 +321,7 @@ class Users extends MY_Controller {
 		unset($pdata['btn-continue']);
 		$bid = $pdata['id'];
 		unset($pdata['id']);
-		if($bid!=''){
-			echo 5;exit;
+		if($bid!=''){			
 			if( $action == 'availability' ){
 
 				$schedules = array();
