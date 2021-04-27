@@ -1730,6 +1730,10 @@ class Job extends MY_Controller
 
             }
 
+            $nsmart_logo  = base_url("assets/dashboard/images/logo.png");
+            $refer_friend = base_url("assets/img/refer_friend.jpg");
+            $refer_friend_url = base_url('refer_friend');
+
             $msg .= "<br /><br />";
             $msg .= "<table>";
                 $msg .= "<tr><td width='300'><h3>Amount Due</h3></td><td><h2>".number_format((float)$grand_total,2,'.',',')."</h2></td></tr>";
@@ -1739,13 +1743,14 @@ class Job extends MY_Controller
 
             $msg .= "<p style='margin-top:43px;width:23%;color:#222;font-size:16px;text-align:left;padding:19px;'>Delinquent Account are subject to Property Liens. Interest will be charged to delinquent accounts at the rate of 1.5% (18% Annum) per month. In the event of default, the customer agrees to pay all cost of collection, including attorney's fees, whether suit is brought or not.</p>";
             $msg .= "<p style='width:24%;color:#222;font-size:16px;text-align:center;padding:1px;'><a href='tel:".$company->business_phone."'>".$company->business_phone."</a> | <a href='mailto:".$company->business_email."'>".$company->business_email."</a></p>";
+            $msg .= "<a href='".$refer_friend_url."' style='margin-left:156px;'><img src='".$refer_friend."' style='width:122px;' /></a>";
 
             $msg .= "<br><br><br><br><br>";
-            $nsmart_logo = base_url("assets/dashboard/images/logo.png");
-            $msg .= "<table>";
+            
+            $msg .= "<table style='margin-left:48px;'>";
                 $msg .= "<tr><td colspan='2' style='text-align:center;'><span style='display:inline-block;'>Powered By</span> <br><br> <img style='width:328px;margin-bottom:40px;' src='".$nsmart_logo."' /></td></tr>";
             $msg .= "</table>";
-
+            
             //Email Sending
             $server    = MAIL_SERVER;
             $port      = MAIL_PORT ;

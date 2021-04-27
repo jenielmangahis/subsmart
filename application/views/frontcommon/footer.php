@@ -82,6 +82,10 @@
 	<script src="<?php echo $url->assets ?>frontend/js/circle-progress.min.js"></script>
 	<script src="<?php echo $url->assets ?>frontend/js/jquery.magnific-popup.min.js"></script>
 	<script src="<?php echo $url->assets ?>frontend/js/main.js"></script>
+	<script src="<?php echo $url->assets;?>plugins/sweetalert/sweetalert2@10.js"></script>
+	<script type="text/javascript">
+	window.base_url = <?php echo json_encode(base_url()); ?>;
+	</script>
 	<?php
 		if (isset($footerBottomScripts)) {
 			echo $footerBottomScripts;

@@ -436,6 +436,77 @@ class Pages extends MY_Controller {
     	//$job_id = hashids_decrypt($post['jobid'], '', 15);
     	$job = $this->Jobs_model->get_specific_job($post['job_id']);
     	$this->Jobs_model->update($job->job_unique_id, ['status' => 'Completed']);
+
+    	$json_data = ['is_success' => 1];
+    	echo json_encode($json_data);
+    }
+
+    public function front_refer_friend(){
+    	$this->page_data['page']->title = 'Refer a Friend';	
+        $this->load->view('pages/refer_friend', $this->page_data);        
+    }
+
+    public function send_refer_email(){
+    	include APPPATH . 'libraries/PHPMailer/PHPMailerAutoload.php';
+    	
+    	$is_success = true;
+    	$post    = $this->input->post();
+
+    	$subject = "NsmarTrac : Refer a Friend";
+    	$refer_friend = base_url("assets/img/refer_friend.jpg");
+    	$nsmart_logo  = base_url("assets/dashboard/images/logo.png");
+    	$msg .= "<img style='width: 100px;margin-top:41px;margin-bottom:24px;' alt='Logo' src='".$refer_friend."' /><br />";
+    	$msg .= "<p>Someone has refer a friend. Below are the details</p>";
+    	$row = 1;
+    	$msg .= "<table style='font-size: 14px;padding: 5px;'>";
+    		$msg .= "<tr><td></td><td>Name</td><td>Email</td></tr>";
+    		foreach($post['refer'] as $value){
+    			if( $value['name'] != '' && $value['email'] != '' ){
+    				$msg .= "<tr><td>".$row.".</td><td>".$value['name']."</td><td>".$value['email']."</td></tr>";
+    				$row++;
+    			}    			
+    		}
+    	$msg .= "</table>";
+
+    	$msg .= "<br><br><br><br><br>";
+            
+        $msg .= "<table style='margin-left:48px;'>";
+            $msg .= "<tr><td colspan='2' style='text-align:center;'><span style='display:inline-block;'>Powered By</span> <br><br> <img style='width:328px;margin-bottom:40px;' src='".$nsmart_logo."' /></td></tr>";
+        $msg .= "</table>";
+
+        //Email Sending
+        $server    = MAIL_SERVER;
+        $port      = MAIL_PORT ;
+        $username  = MAIL_USERNAME;
+        $password  = MAIL_PASSWORD;
+        $from      = MAIL_FROM;        
+        $recipient = 'bryann.revina03@gmail.com';
+
+        $mail = new PHPMailer;
+        //$mail->SMTPDebug = 4;
+        $mail->isSMTP();
+        $mail->Host = $server;
+        $mail->SMTPAuth = true;
+        $mail->Username   = $username;
+        $mail->Password   = $password;
+        $mail->getSMTPInstance()->Timelimit = 5;
+        $mail->SMTPSecure = 'ssl';
+        $mail->Timeout    =   10; // set the timeout (seconds)
+        $mail->Port = $port;
+        $mail->From = $from;
+        $mail->FromName = 'NsmarTrac';
+        $mail->addAddress($recipient, $recipient);
+        $mail->isHTML(true);
+        $mail->Subject = $subject;
+        $mail->Body    = $msg;
+
+        if(!$mail->Send()) {
+            $is_success = false;
+        }
+
+    	$json_data = ['is_success' => $is_success];
+
+    	echo json_encode($json_data);
     }
 
 }
