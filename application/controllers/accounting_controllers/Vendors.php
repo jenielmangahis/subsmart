@@ -203,4 +203,18 @@ class Vendors extends MY_Controller {
 
         redirect("accounting/vendors");
     }
+
+    public function view($vendorId)
+    {
+        add_footer_js(array(
+            "assets/js/accounting/expenses/view-vendor.js"
+        ));
+
+        $vendor = $this->vendors_model->get_vendor_by_id($vendorId);
+
+        $this->page_data['vendor'] = $vendor;
+        $this->page_data['users'] = $this->users_model->getUser(logged('id'));
+        $this->page_data['page_title'] = "Vendors";
+        $this->load->view('accounting/vendors/view', $this->page_data);
+    }
 }

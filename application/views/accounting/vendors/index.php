@@ -18,6 +18,23 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     .btn-transparent:focus {
         border-color: #6B6C72 !important;
     }
+    #vendors-table tbody td:nth-child(2) a:hover {
+        text-decoration: underline;
+        color: #38a4f8 !important;
+    }
+    #vendors-table .btn-group .btn:hover, #vendors-table .btn-group .btn:focus {
+        color: unset;
+    }
+    #vendors-table .btn-group .btn {
+        padding: 10px;
+    }
+    #vendors-table tbody tr td:first-child {
+        padding-left: 18px;
+        padding-right: 18px;
+    }
+    #vendors-table thead tr th:first-child {
+        width: 1;
+    }
 </style>
 <?php include viewPath('includes/header'); ?>
 <div class="wrapper" role="wrapper">
@@ -164,10 +181,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                     </a>
                                                     <div class="dropdown-menu p-3" aria-labelledby="dropdownMenuLink">
                                                         <p class="m-0">Columns</p>
-                                                        <p class="m-0"><input type="checkbox"> Address</p>
-                                                        <p class="m-0"><input type="checkbox"> Attachments</p>
-                                                        <p class="m-0"><input type="checkbox" checked> Phone</p>
-                                                        <p class="m-0"><input type="checkbox" checked> Email</p>
+                                                        <p class="m-0"><input type="checkbox" id="address_chk"> Address</p>
+                                                        <p class="m-0"><input type="checkbox" id="attachments_chk"> Attachments</p>
+                                                        <p class="m-0"><input type="checkbox" id="phone_chk" checked> Phone</p>
+                                                        <p class="m-0"><input type="checkbox" id="email_chk" checked> Email</p>
 											            <p class="m-0">Other</p>
                                                         <p class="m-0"><input type="checkbox" id="inc_inactive" value="1"> Include Inactive</p>
                                                         <p class="m-0">Rows</p>
@@ -192,15 +209,15 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         <tr>
                                             <th><input type="checkbox"></th>
                                             <th>Vendor/Company</th>
-                                            <th class="">Address</th>
-                                            <th>Phone</th>
-                                            <th>Email</th>
-                                            <th class="text-center"><i class="fa fa-paperclip"></i></th>
+                                            <th class="hide address">Address</th>
+                                            <th class="phone">Phone</th>
+                                            <th class="email">Email</th>
+                                            <th class="text-center hide attachments"><i class="fa fa-paperclip"></i></th>
                                             <th>Open Balance</th>
                                             <th class="text-right">Action</th>
                                         </tr>
 									</thead>
-									<tbody class="cursor-pointer"></tbody>
+									<tbody></tbody>
 								</table>
                             </div>
                         </div>
@@ -221,153 +238,256 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <button type="button" class="close" data-dismiss="modal">&times;</button>
                         </div>
                         <div class="modal-body">
-                            
                             <div class="row">
-                                <div class="col-md-7">
-                                    <div class="form-ib-group">
-                                        <div class="form-ib" style="width: 56px">
-                                            <label for="">Title</label>
-                                            <input type="text" name="title" class="form-control" required>
-                                        </div>
-                                        <div class="form-ib" style="width: 106px">
-                                            <label for="">First name</label>
-                                            <input type="text" name="f_name" class="form-control" required>
-                                        </div>
-                                        <div class="form-ib" style="width: 106px">
-                                            <label for="">Middle name</label>
-                                            <input type="text" name="m_name" class="form-control">
-                                        </div>
-                                        <div class="form-ib" style="width: 106px">
-                                            <label for="">Last name</label>
-                                            <input type="text" name="l_name" class="form-control" required>
-                                        </div>
-                                        <div class="form-ib" style="width: 56px">
-                                            <label for="">Suffix</label>
-                                            <input type="text" name="suffix" class="form-control">
-                                        </div>
-                                    </div>
-                                    <div class="form-ib-group">
-                                        <div class="form-ib">
-                                            <label for="">Company</label>
-                                            <input type="text" name="company" class="form-control" required>
-                                        </div>
-                                    </div>
-                                    <div class="form-ib-group">
-                                        <div class="form-ib">
-                                            <label for="" style="margin-right: 10px">Print on check as </label>
-                                            <input type="checkbox" value="1" name="to_display"><span style="margin-left: 10px">Use display name</span>
-                                            <input type="text" name="display_name" class="form-control">
-                                        </div>
-                                    </div>
-                                    <div class="form-ib-group">
-                                        <div class="form-ib">
-                                            <label for="" style="margin-right: 10px">Address</label>
-                                            <a href="https://www.google.com/maps?q=++++" target="_blank" style="color: #0b97c4;">map</a>
-                                            <textarea name="street" id="street" cols="30" rows="2" class="form-control" placeholder="Street" required></textarea>
-                                            <input name="city" type="text" class="form-control address-form" placeholder="City/Town" required>
-                                            <input name="state" type="text" class="form-control address-form" placeholder="State/Province" required>
-                                            <input name="zip" type="text" class="form-control address-form" placeholder="ZIP Code" required>
-                                            <input name="country" type="text" class="form-control address-form" placeholder="Country" required>
-                                        </div>
-                                    </div>
-                                    <div class="form-ib-group">
-                                        <div class="form-ib">
-                                            <label for="">Notes</label>
-                                            <textarea name="notes" id="notes" cols="30" rows="2" class="form-control"></textarea>
-                                        </div>
-                                    </div>
-                                    <div class="form-ib-group">
-                                        <div class="form-ib">
-                                            <label for="" style="margin-right: 15px"><i class="fa fa-paperclip"></i>&nbsp;Attachment</label> 
-                                            <span>Maximum size: 20MB</span>
-                                            <form action="/file-upload" class="dropzone" style="height: 50px;border:1px dashed grey;">
-                                                <div class="fallback">
-                                                    <input name="attachFiles" type="file" multiple />
+                                <div class="col-xl-12">
+                                    <div class="card p-0 m-0">
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <div class="col-md-7">
+                                                    <div class="form-ib-group">
+                                                        <div class="form-row">
+                                                            <div class="col-sm-2">
+                                                                <div class="form-ib">
+                                                                    <label for="title">Title</label>
+                                                                    <input type="text" name="title" id="title" class="form-control">
+                                                                </div>
+                                                            </div>
+                                                            <div class="col">
+                                                                <div class="form-ib">
+                                                                    <label for="f_name">First name</label>
+                                                                    <input type="text" name="f_name" id="f_name" class="form-control">
+                                                                </div>
+                                                            </div>
+                                                            <div class="col">
+                                                                <div class="form-ib">
+                                                                    <label for="m_name">Middle name</label>
+                                                                    <input type="text" name="m_name" id="m_name" class="form-control">
+                                                                </div>
+                                                            </div>
+                                                            <div class="col">
+                                                                <div class="form-ib">
+                                                                    <label for="l_name">Last name</label>
+                                                                    <input type="text" name="l_name" id="l_name" class="form-control">
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-sm-2">
+                                                                <div class="form-ib">
+                                                                    <label for="suffix">Suffix</label>
+                                                                    <input type="text" name="suffix" id="suffix" class="form-control">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-ib-group">
+                                                        <div class="form-row">
+                                                            <div class="col">
+                                                                <div class="form-ib">
+                                                                    <label for="company">Company</label>
+                                                                    <input type="text" name="company" id="company" class="form-control" required>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-ib-group">
+                                                        <div class="form-row">
+                                                            <div class="col">
+                                                                <div class="form-ib">
+                                                                    <label for="display_name"><span class="text-danger">*</span> Display name as</label>
+                                                                    <input type="text" name="display_name" id="display_name" class="form-control" required>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-ib-group">
+                                                        <div class="form-row">
+                                                            <div class="col">
+                                                                <div class="form-ib">
+                                                                    <label for="print_on_check_name" style="margin-right: 10px">Print on check as </label>
+                                                                    <input type="checkbox" value="1" name="use_display_name" id="use_display_name"><label for="use_display_name" class="ml-3">Use display name</label>
+                                                                    <input type="text" name="print_on_check_name" id="print_on_check_name" class="form-control">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-ib-group">
+                                                        <div class="form-row">
+                                                            <div class="col-12">
+                                                                <div class="form-ib">
+                                                                    <label for="street" style="margin-right: 10px">Address</label>
+                                                                    <a href="https://www.google.com/maps?q=++++" target="_blank" style="color: #0b97c4;">map</a>
+                                                                    <textarea name="street" id="street" cols="30" rows="2" class="form-control" placeholder="Street" required></textarea>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-6">
+                                                                <div class="form-ib mt-1">
+                                                                    <input name="city" type="text" class="form-control" placeholder="City/Town" required>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-6">
+                                                                <div class="form-ib mt-1">
+                                                                    <input name="state" type="text" class="form-control" placeholder="State/Province" required>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-6">
+                                                                <div class="form-ib mt-1">
+                                                                    <input name="zip" type="text" class="form-control" placeholder="ZIP Code" required>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-6">
+                                                                <div class="form-ib mt-1">
+                                                                    <input name="country" type="text" class="form-control" placeholder="Country" required>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-ib-group">
+                                                        <div class="form-row">
+                                                            <div class="col">
+                                                                <div class="form-ib">
+                                                                    <label for="notes">Notes</label>
+                                                                    <textarea name="notes" id="notes" cols="30" rows="2" class="form-control"></textarea>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-ib-group">
+                                                        <div class="form-row">
+                                                            <div class="col">
+                                                                <div class="form-ib">
+                                                                    <label for="attachment" style="margin-right: 15px"><i class="fa fa-paperclip"></i>&nbsp;Attachment</label> 
+                                                                    <span>Maximum size: 20MB</span>
+                                                                    <div id="employeeProfilePhoto" class="dropzone" style="border: 1px solid #e1e2e3;background: #ffffff;width: 100%;">
+                                                                        <div class="dz-message" style="margin: 20px;border">
+                                                                            <span style="font-size: 16px;color: rgb(180,132,132);font-style: italic;">Drag and drop files here or</span>
+                                                                            <a href="#" style="font-size: 16px;color: #0b97c4">browse to upload</a>
+                                                                        </div>
+                                                                    </div>
+                                                                    <!-- <input type="hidden" name="img_id" id="photoIdAdd">
+                                                                    <input type="hidden" name="profile_photo" id="photoNameAdd"> -->
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-ib-group">
+                                                        <h4>Get custom fields with Advanced</h4>
+                                                        <p>Custom fields let you add more detailed info about your customers and transactions.
+                                                            Sort, track, and report info that's important to you.
+                                                        </p>
+                                                        <a href="#" style="color: #0b97c4;">Learn more</a>
+                                                    </div>
                                                 </div>
-                                            </form>
-                                        </div>
-                                    </div>
-                                    <div class="form-ib-group">
-                                        <h4>Get custom fields with Advanced</h4>
-                                        <p>Custom fields let you add more detailed info about your customers and transactions.
-                                            Sort, track, and report info that's important to you.
-                                        </p>
-                                        <a href="#" style="color: #0b97c4;">Learn more</a>
-                                    </div>
-                                </div>
-                                <div class="col-md-5">
-                                    <div class="form-ib-group">
-                                        <div class="form-ib">
-                                            <label for="">Email</label>
-                                            <input type="text" class="form-control" name="email" placeholder="Separate multiple emails with commas" required>
-                                        </div>
-                                    </div>
-                                    <div class="form-ib-group">
-                                        <div class="form-ib" style="width: 129px">
-                                            <label for="">Phone</label>
-                                            <input type="text" name="phone" class="form-control" required>
-                                        </div>
-                                        <div class="form-ib" style="width: 129px">
-                                            <label for="">Mobile</label>
-                                            <input type="text" name="mobile" class="form-control" required>
-                                        </div>
-                                        <div class="form-ib" style="width: 129px">
-                                            <label for="">Fax</label>
-                                            <input type="text" name="fax" class="form-control">
-                                        </div>
-                                    </div>
-                                    <div class="form-ib-group">
-                                        <!--<div class="form-ib" style="width: 126px;">
-                                            <label for="">Other</label>
-                                            <input type="text" class="form-control">
-                                        </div>-->
-                                        <div class="form-ib">
-                                            <label for="">Website</label>
-                                            <input type="text" name="website" class="form-control">
-                                        </div>
-                                    </div>
-                                    <div class="form-ib-group">
-                                        <div class="form-ib" style="width: 126px;">
-                                            <label for="">Billing rate (/hr)</label>
-                                            <input type="text" name="billing_rate" class="form-control" required>
-                                        </div>
-                                        <div class="form-ib" style="width: 265px;">
-                                            <label for="">Terms</label>
-                                            <select class="form-control" name="terms" required>
-                                            <option value="1">Due on Receipt</option>
-                                            <option value="2">Net 15</option>
-                                            <option value="3">Net 30</option>
-                                            <option value="4">Net 60</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="form-ib-group">
-                                        <div class="form-ib" style="width: 147px">
-                                            <label for="">Opening balance</label>
-                                            <input type="text" name="opening_balance" class="form-control" required>
-                                        </div>
-                                        <div class="form-ib" style="width: 190px">
-                                            <label for="">as of</label>
-                                            <input type="date" name="opening_balance_as_of_date" class="form-control" required>
-                                        </div>
-                                    </div>
-                                    <div class="form-ib-group">
-                                        <div class="form-ib" style="width: 70%">
-                                            <label for="">Account no.</label>
-                                            <input type="text" name="account_number" class="form-control" placeholder="Appears in the memo of all payment" required>
-                                        </div>
-                                    </div>
-                                    <div class="form-ib-group">
-                                        <div class="form-ib" style="width: 50%">
-                                            <label for="">Business ID No.</label>
-                                            <input type="text" name="business_number" class="form-control" required>
-                                            
-                                        </div>
-                                    </div>
-                                    <div class="form-ib-group">
-                                        <div class="form-ib" style="width: 60%">
-                                            <label for="">Default expense account</label>
-                                            <input type="text" name="default_expense_amount" class="form-control" placeholder="Choose Account" required>
+                                                <div class="col-md-5">
+                                                    <div class="form-ib-group">
+                                                        <div class="form-row">
+                                                            <div class="col">
+                                                                <div class="form-ib">
+                                                                    <label for="email">Email</label>
+                                                                    <input type="text" class="form-control" name="email" id="email" placeholder="Separate multiple emails with commas">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-ib-group">
+                                                        <div class="form-row">
+                                                            <div class="col">
+                                                                <div class="form-ib">
+                                                                    <label for="phone">Phone</label>
+                                                                    <input type="text" name="phone" id="phone" class="form-control">
+                                                                </div>
+                                                            </div>
+                                                            <div class="col">
+                                                                <div class="form-ib">
+                                                                    <label for="mobile">Mobile</label>
+                                                                    <input type="text" name="mobile" id="mobile" class="form-control">
+                                                                </div>
+                                                            </div>
+                                                            <div class="col">
+                                                                <div class="form-ib">
+                                                                    <label for="fax">Fax</label>
+                                                                    <input type="text" name="fax" id="fax" class="form-control">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-ib-group">
+                                                        <div class="form-row">
+                                                            <div class="col">
+                                                                <div class="form-ib">
+                                                                    <label for="website">Website</label>
+                                                                    <input type="text" name="website" id="website" class="form-control">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-ib-group">
+                                                        <div class="form-row">
+                                                            <div class="col">
+                                                                <div class="form-ib">
+                                                                    <label for="billing_rate">Billing rate (/hr)</label>
+                                                                    <input type="text" name="billing_rate" id="billing_rate" class="form-control">
+                                                                </div>
+                                                            </div>
+                                                            <div class="col">
+                                                                <div class="form-ib">
+                                                                    <label for="terms">Terms</label>
+                                                                    <select class="form-control" name="terms" id="terms">
+                                                                    <option value="1">Due on Receipt</option>
+                                                                    <option value="2">Net 15</option>
+                                                                    <option value="3">Net 30</option>
+                                                                    <option value="4">Net 60</option>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-ib-group">
+                                                        <div class="form-row">
+                                                            <div class="col">
+                                                                <div class="form-ib">
+                                                                    <label for="opening_balance">Opening balance</label>
+                                                                    <input type="text" name="opening_balance" id="opening_balance" class="form-control">
+                                                                </div>
+                                                            </div>
+                                                            <div class="col">
+                                                                <div class="form-ib">
+                                                                    <label for="opening_balance_as_of_date">as of</label>
+                                                                    <input type="date" name="opening_balance_as_of_date" id="opening_balance_as_of_date" class="form-control" required>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-ib-group">
+                                                        <div class="form-row">
+                                                            <div class="col">
+                                                                <div class="form-ib">
+                                                                    <label for="account_number">Account no.</label>
+                                                                    <input type="text" name="account_number" id="account_number" class="form-control" placeholder="Appears in the memo of all payment" required>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-ib-group">
+                                                        <div class="form-row">
+                                                            <div class="col">
+                                                                <div class="form-ib">
+                                                                    <label for="">Business ID No.</label>
+                                                                    <input type="text" name="business_number" id="account_number" class="form-control" required>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-ib-group">
+                                                        <div class="form-row">
+                                                            <div class="col">
+                                                                <div class="form-ib">
+                                                                    <label for="expense_account">Default expense account</label>
+                                                                    <input type="text" name="default_expense_amount" id="expense_account" class="form-control" placeholder="Choose Account" required>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>

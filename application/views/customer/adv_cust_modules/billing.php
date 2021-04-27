@@ -146,7 +146,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <label class="alarm_label"> <span >Contract Term :</span> </label>
                             </td>
                             <td width="50%" align="right" valign="top">
-                                <label class="alarm_answer"><b> <?php if(isset($billing_info)){ echo $billing_info->contract_term; }; ?></b> </label>
+                                <label class="alarm_answer"><b> <?php if(isset($billing_info)){ echo $billing_info->contract_term. ' months'; }; ?></b> </label>
                             </td>
                         </tr>
                         <tr>

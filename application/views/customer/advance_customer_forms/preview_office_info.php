@@ -6,7 +6,7 @@
     <div class="card-body">
         <div class="row form_line">
             <div class="col-md-6">
-                <label for="">Entered By</label>
+                Entered By
             </div>
             <div class="col-md-6">
                 <?= $logged_in_user->FName.' '. $logged_in_user->LName; ?>
@@ -14,7 +14,7 @@
         </div>
         <div class="row form_line">
             <div class="col-md-6">
-                <label for="">Time Entered</label>
+                Time Entered
             </div>
             <div class="col-md-6">
                 <?= !empty($office_info->time_entered) ?  $office_info->time_entered : '---' ?>
@@ -22,7 +22,7 @@
         </div>
         <div class="row form_line">
             <div class="col-md-6">
-                <label for="">Sales Date</label>
+                Sales Date
             </div>
             <div class="col-md-6">
                 <?= isset($office_info) && !empty($office_info->sales_date) ?  $office_info->sales_date : '---' ?>
@@ -30,7 +30,7 @@
         </div>
         <div class="row form_line">
             <div class="col-md-6">
-                <label for="">Credit Score </label>
+                Credit Score 
             </div>
             <div class="col-md-6">
                 <?= isset($office_info) && !empty($office_info->credit_score) ?  $office_info->credit_score : '---' ?>
@@ -42,21 +42,24 @@
                 <label class="alarm_label"> <span >Pay History </span>
             </div>
             <div class="col-md-6">
-                <?= isset($office_info) && !empty($office_info->pay_history) ?  $office_info->pay_history : '---' ?>
+                <?= !empty($office_info->pay_history) ?  pay_history($office_info->pay_history) : '---' ?>
             </div>
         </div>
 
         <div class="row form_line">
             <div class="col-md-6">
-                <label for="">Sales Rep</label>
+                Sales Rep
             </div>
             <div class="col-md-6">
-                <?= isset($office_info) && !empty($office_info->fk_sales_rep_office) ?  $office_info->fk_sales_rep_office : '---' ?> <span style="position: absolute;right: 0;margin-right: 25px;font-size: 20px;padding-top:10px;" class="fa fa-envelope"></span>
+                <?php
+                     $sales_rep = !empty($office_info->fk_sales_rep_office) ?  get_employee_name($office_info->fk_sales_rep_office) : '---';
+                ?>
+                <?= $sales_rep->FName. ' ' . $sales_rep->LName; ?> <span style="position: absolute;right: 0;margin-right: 25px;font-size: 20px;padding-top:10px;" class="fa fa-envelope"></span>
             </div>
         </div>
         <div class="row form_line">
             <div class="col-md-6">
-                <label for="">Technician</label>
+                Technician
             </div>
             <div class="col-md-6">
                 <?= isset($office_info) && !empty($office_info->technician) ?  $office_info->technician : '---' ?><span style="position: absolute;right: 0;margin-right: 25px;font-size: 20px;padding-top:10px;" class="fa fa-envelope"></span>
@@ -64,7 +67,7 @@
         </div>
         <div class="row form_line">
             <div class="col-md-6">
-                <label for="">Install Date</label>
+                Install Date
             </div>
             <div class="col-md-6">
                 <?= isset($office_info) && !empty($office_info->install_date) ?  $office_info->install_date : '---' ?>
@@ -72,7 +75,7 @@
         </div>
         <div class="row form_line">
             <div class="col-md-6">
-                <label for="">Tech Arrival Time</label>
+                Tech Arrival Time
             </div>
             <div class="col-md-6">
                 <?= isset($office_info) && !empty($office_info->tech_arrive_time) ?  $office_info->tech_arrive_time : '---' ?>
@@ -80,7 +83,7 @@
         </div>
         <div class="row form_line">
             <div class="col-md-6">
-                <label for="">Tech Departure Time</label>
+                Tech Departure Time
             </div>
             <div class="col-md-6">
                 <?= isset($office_info) && !empty($office_info->tech_depart_time) ?  $office_info->tech_depart_time : '---' ?>
@@ -88,7 +91,7 @@
         </div>
         <div class="row form_line">
             <div class="col-md-6">
-                <label for="">Lead Source</label>
+                Lead Source
             </div>
             <div class="col-md-6">
                 <?= isset($office_info) && !empty($office_info->lead_source) ?  $office_info->lead_source : '---' ?>
@@ -96,7 +99,7 @@
         </div>
         <div class="row form_line">
             <div class="col-md-6">
-                <label for="">Verification:</label>
+                Verification:
             </div>
             <div class="col-md-6">
                 <?= isset($office_info) && !empty($office_info->verification) ?  $office_info->verification : '---' ?>
@@ -105,7 +108,7 @@
 
         <div class="row form_line">
             <div class="col-md-6">
-                <label for="">Cancel Date</label>
+                Cancel Date
             </div>
             <div class="col-md-6">
                 <?= isset($office_info) && !empty($office_info->cancel_date) ?  $office_info->cancel_date : '---' ?>
@@ -113,7 +116,7 @@
         </div>
         <div class="row form_line">
             <div class="col-md-6">
-                <label for="">Cancel Reason</label>
+                Cancel Reason
             </div>
             <div class="col-md-6">
                 <?= isset($office_info) && !empty($office_info->cancel_reason) ?  $office_info->cancel_reason : '---' ?>
@@ -121,7 +124,7 @@
         </div>
         <div class="row form_line">
             <div class="col-md-6">
-                <label for="">Collection Date</label>
+                Collection Date
             </div>
             <div class="col-md-6">
                 <?= isset($office_info) && !empty($office_info->collect_date) ?  $office_info->collect_date : '---' ?>
@@ -129,15 +132,15 @@
         </div>
         <div class="row form_line">
             <div class="col-md-6">
-                <label for="">Collection Amount</label>
+                Collection Amount
             </div>
             <div class="col-md-6">
-                <?= isset($office_info) && !empty($office_info->collect_amount) ?  $office_info->collect_amount : '---' ?>
+                $<?= isset($office_info) && !empty($office_info->collect_amount) ?  number_format((float)$office_info->collect_amount,2,'.',',') : '$0.00' ?>
             </div>
         </div>
         <div class="row form_line">
             <div class="col-md-6">
-                <label for="">Language</label>
+                Language
             </div>
             <div class="col-md-6">
                 <?= !empty($office_info->language) ?  $office_info->language : '---' ?>
@@ -151,16 +154,22 @@
     <div class="card-body">
         <div class="row form_line">
             <div class="col-md-6">
-                <label for="">Portal Status (on/off)</label>
+                Portal Status (on/off)
             </div>
             <div class="col-md-6">
-                <?= !empty($access_info->portal_status) ?  $access_info->portal_status : '---' ?>
+                <?php
+                    if($access_info->portal_status == 1){
+                        echo 'On';
+                    }else{
+                        echo 'Off';
+                    }
+                ?>
             </div>
         </div>
 
         <div class="row form_line">
             <div class="col-md-6">
-                <label for="">Login</label>
+                Login
             </div>
             <div class="col-md-6">
                 <?= !empty($access_info->access_login) ?  $access_info->access_login : '---' ?>
@@ -168,7 +177,7 @@
         </div>
         <div class="row form_line">
             <div class="col-md-6">
-                <label for="">Password</label>
+                Password
             </div>
             <div class="col-md-6">
                 <?=  !empty($access_info->access_password) ?  $access_info->access_password : '---' ?>
@@ -183,7 +192,7 @@
     <div class="card-body">
         <div class="row form_line">
             <div class="col-md-6">
-                <label for="">Custom Field 1</label>
+                Custom Field 1
             </div>
             <div class="col-md-6">
                 ---
@@ -191,7 +200,7 @@
         </div>
         <div class="row form_line">
             <div class="col-md-6">
-                <label for="">Custom Field 2</label>
+                Custom Field 2
             </div>
             <div class="col-md-6">
                 ---
@@ -199,7 +208,7 @@
         </div>
         <div class="row form_line">
             <div class="col-md-6">
-                <label for="">Custom Field 3</label>
+                Custom Field 3
             </div>
             <div class="col-md-6">
                 ---
@@ -207,7 +216,7 @@
         </div>
         <div class="row form_line">
             <div class="col-md-6">
-                <label for="">Custom Field 4</label>
+                Custom Field 4
             </div>
             <div class="col-md-6">
                 ---
@@ -222,15 +231,15 @@
     <div class="card-body">
         <div class="row form_line">
             <div class="col-md-6">
-                <label for="">Finance Amount</label>
+                Finance Amount
             </div>
             <div class="col-md-6">
-                <?=  $billing_info->finance_amount != "" ?  $billing_info->finance_amount : '---' ?>
+                $<?=  $billing_info->finance_amount != "" ? number_format((float)$billing_info->finance_amount ,2,'.',',') : '0.00' ?>
             </div>
         </div>
         <div class="row form_line">
             <div class="col-md-6">
-                <label for="">Recurring Start Date</label>
+                Recurring Start Date
             </div>
             <div class="col-md-6">
                 <?= !empty($billing_info->recurring_start_date) ?  $billing_info->recurring_start_date : '---' ?>
@@ -238,7 +247,7 @@
         </div>
         <div class="row form_line">
             <div class="col-md-6">
-                <label for="">Recurring End Date</label>
+                Recurring End Date
             </div>
             <div class="col-md-6">
                 <?= !empty($billing_info->recurring_end_date) ?  $billing_info->recurring_end_date : '---' ?>
@@ -246,15 +255,15 @@
         </div>
         <div class="row form_line">
             <div class="col-md-6">
-                <label for="">Transaction Amount</label>
+                Transaction Amount
             </div>
             <div class="col-md-6">
-                <?= !empty($billing_info->transaction_amount) ?  $billing_info->transaction_amount : '---' ?>
+                $<?= !empty($billing_info->transaction_amount) ?  number_format((float)$billing_info->transaction_amount ,2,'.',',') : '0.00' ?>
             </div>
         </div>
         <div class="row form_line">
             <div class="col-md-6">
-                <label for="">Transaction Category</label>
+                Transaction Category
             </div>
             <div class="col-md-6">
                 <?= !empty($billing_info->transaction_category) ?  $billing_info->transaction_category : '---' ?>
@@ -262,10 +271,10 @@
         </div>
         <div class="row form_line">
             <div class="col-md-6">
-                <label for="">Frequency</label>
+                Frequency
             </div>
             <div class="col-md-6">
-                <?= !empty($billing_info->frequency) ?  $billing_info->frequency : '---' ?>
+                <?= !empty($billing_info->frequency) ?  $billing_info->frequency.' months' : '---' ?>
             </div>
         </div>
         <br>

@@ -180,22 +180,25 @@ foreach($report_settings as $settings){
 
                                 <div class="tab-pane container active" id="timesheet_report_settings">
                                     <div class="row" style="padding-top: 20px;">
-                                        <div class="col-md-6">
+                                        <div class="col-md-12">
                                             <form id="timezone_settings_form" action="">
-                                                <div class="form-group">
-                                                        <div class="custom-control custom-switch">
-                                                        
-                                                            <input type="checkbox" on class="custom-control-input" id="est_wage_privacy" <?=$report_privacy->est_wage_private==1 ? "checked":""?>>
-                                                            <label class="custom-control-label" for="est_wage_privacy">Include <b>Estimated Wages</b> to the weekly timesheet report.</label>
-                                                            <?php
-                                                            if($report_privacy != null){
-                                                            ?>
-                                                             <label class="est_wage_privacy_editor" for="est_wage_privacy">Latest update by <span><?=$report_privacy->FName?> <?=$report_privacy->LName?>  <?=date("M d, Y h:i A", strtotime($report_privacy_updated))?></span></label>
-                                                                                                                   
-                                                            <?php
-                                                            }?>
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <div class="form-group ">
+                                                            <div class="custom-control custom-switch">
                                                             
+                                                                <input type="checkbox" on class="custom-control-input" id="est_wage_privacy" <?=$report_privacy->est_wage_private==1 ? "checked":""?>>
+                                                                <label class="custom-control-label" for="est_wage_privacy">Include <b>Estimated Wages</b> to the weekly timesheet report.</label>
+                                                                <?php
+                                                                if($report_privacy != null){
+                                                                ?>
+                                                                <label class="est_wage_privacy_editor" for="est_wage_privacy">Latest update by <span><?=$report_privacy->FName?> <?=$report_privacy->LName?>  <?=date("M d, Y h:i A", strtotime($report_privacy_updated))?></span></label>
+                                                                                                                    
+                                                                <?php
+                                                                }?>
+                                                            </div>
                                                         </div>
+                                                    </div>
                                                 </div>
                                                 <div class="form-group">
                                                     <div class="custom-control custom-switch">
@@ -208,7 +211,7 @@ foreach($report_settings as $settings){
                                                     <div class="col-md-12">
                                                         <label>Receive timesheet report</lable>
                                                     </div>
-                                                    <div class="col-md-4">
+                                                    <div class="col-md-2">
                                                         <div class="form-check">
                                                             <div class="checkbox checkbox-sec margin-right">
                                                                 <input type="radio" name="user_type" value="1" id="report_series_1" <?=$report_series==1?"checked":""?> >
@@ -216,7 +219,7 @@ foreach($report_settings as $settings){
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div class="col-md-4">
+                                                    <div class="col-md-2">
                                                         <div class="form-check">
                                                             <div class="checkbox checkbox-sec margin-right">
                                                                 <input type="radio" name="user_type" value="2" id="report_series_2" <?=$report_series==2?"checked":""?> >
@@ -224,7 +227,7 @@ foreach($report_settings as $settings){
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div class="col-md-4">
+                                                    <div class="col-md-2">
                                                         <div class="form-check">
                                                             <div class="checkbox checkbox-sec margin-right">
                                                                 <input type="radio" name="user_type" value="3" id="report_series_3" <?=$report_series==3?"checked":""?> >
@@ -233,25 +236,108 @@ foreach($report_settings as $settings){
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="subscribed-fields">
-                                                    <div class="form-group">
-                                                        <label for="from_date_correction_requests" class="week-label">Select below the <b>Timezone</b> for your Timesheet Report</label>
-                                                        <select class="custom-select" id="tz_display_name">
-                                                            <?php
-                                                            foreach ($all_timezone_list as $timezone) {
-                                                                echo '<option value="' . $timezone->id . '">' . $timezone->display_name . '</option>';
-                                                            }
-                                                            ?>
-                                                        </select>
+                                                <div class="row report_schedule" style="margin-bottom: 20px;">
+                                                    <div class="col-md-1">
+                                                        <div class="form-group">
+                                                            <div class="custom-control custom-switch">
+                                                                <input type="checkbox" on="" name="sched_day" value="Sunday" class="custom-control-input" id="sched_sun" checked="" onchange="sched_day_changed()">
+                                                                <label class="custom-control-label" for="sched_sun">Sun</label>
+                                                            </div>
+                                                        </div>
                                                     </div>
-                                                    <div class="form-group">
-                                                        <label for="tz_id_of_tz" class="week-label">ID of Timezone</label>
-                                                        <input type="text" class="form-control" id="tz_id_of_tz" value="" disabled>
-                                                        <?php
-                                                        foreach ($all_timezone_list as $timezone) {
-                                                            echo '<input type="text" id="tz_id_' . $timezone->id . '" value="' . $timezone->id_of_timezone . '" disabled style="display:none;   ">';
-                                                        }
-                                                        ?>
+                                                    <div class="col-md-1">
+                                                        <div class="form-group">
+                                                            <div class="custom-control custom-switch">
+                                                                <input type="checkbox" on="" name="sched_day" value="Monday" class="custom-control-input" id="sched_m" checked="" onchange="sched_day_changed()">
+                                                                <label class="custom-control-label" for="sched_m">Mon</label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-1">
+                                                        <div class="form-group">
+                                                            <div class="custom-control custom-switch">
+                                                                <input type="checkbox" on="" name="sched_day" value="Tuesday" class="custom-control-input" id="sched_t" checked="" onchange="sched_day_changed()">
+                                                                <label class="custom-control-label" for="sched_t">Tue</label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-1">
+                                                        <div class="form-group">
+                                                            <div class="custom-control custom-switch">
+                                                                <input type="checkbox" on="" name="sched_day" value="Wednesday" class="custom-control-input" id="sched_w" checked="" onchange="sched_day_changed()">
+                                                                <label class="custom-control-label" for="sched_w">Wed</label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-1">
+                                                        <div class="form-group">
+                                                            <div class="custom-control custom-switch">
+                                                                <input type="checkbox" on="" name="sched_day" value="Thursday" class="custom-control-input" id="sched_th" checked="" onchange="sched_day_changed()">
+                                                                <label class="custom-control-label" for="sched_th">Thu</label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-1">
+                                                        <div class="form-group">
+                                                            <div class="custom-control custom-switch">
+                                                                <input type="checkbox" on="" name="sched_day" value="Friday" class="custom-control-input" id="sched_f" checked="" onchange="sched_day_changed()">
+                                                                <label class="custom-control-label" for="sched_f">Fri</label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-1">
+                                                        <div class="form-group">
+                                                            <div class="custom-control custom-switch">
+                                                                <input type="checkbox" on="" name="sched_day" value="Saturday" class="custom-control-input" id="sched_sat" checked="" onchange="sched_day_changed()">
+                                                                <label class="custom-control-label" for="sched_sat">Sat</label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="row">
+                                                        <div class="col-md-4">
+                                                            <div class="form-group" style="padding-left:1.25rem;">
+                                                                <label for="from_date_correction_requests" class="week-label">Select time:</label>
+                                                                <select class="custom-select" id="sched_time">
+                                                                    <?php 
+                                                                    $selected='selected="selected"';
+                                                                    for($i=0;$i<24;$i++){
+                                                                        echo '<option value="'.date('H:i:s',strtotime($i.':00:00')).'" '.$selected.'>'.date('h:i A', strtotime($i.':00:00')).'</option>';
+                                                                        $selected='';
+                                                                    }
+                                                                    ?>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                
+                                                <div class="subscribed-fields">
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+                                                            <div class="form-group">
+                                                                <label for="from_date_correction_requests" class="week-label">Select below the <b>Timezone</b> for your Timesheet Report</label>
+                                                                <select class="custom-select" id="tz_display_name">
+                                                                    <?php
+                                                                    foreach ($all_timezone_list as $timezone) {
+                                                                        echo '<option value="' . $timezone->id . '">' . $timezone->display_name . '</option>';
+                                                                    }
+                                                                    ?>
+                                                                </select>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <label for="tz_id_of_tz" class="week-label">ID of Timezone</label>
+                                                                <input type="text" class="form-control" id="tz_id_of_tz" value="" disabled>
+                                                                <?php
+                                                                foreach ($all_timezone_list as $timezone) {
+                                                                    echo '<input type="text" id="tz_id_' . $timezone->id . '" value="' . $timezone->id_of_timezone . '" disabled style="display:none;   ">';
+                                                                }
+                                                                ?>
+                                                            </div>
+                                                        </div>
                                                     </div>
 
                                                     <!-- <div class="alert alert-success" role="alert">

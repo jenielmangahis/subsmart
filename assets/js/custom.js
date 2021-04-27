@@ -2069,7 +2069,7 @@ $("#smoothed1a").signaturePad({
 });
 
 function myFunction() {
-  var x = document.getElementById("company_representative_approval_signature1a");
+  var x = document.getElementById("sign");
   if (x.style.pointerEvents === "auto") {
     x.style.pointerEvents = "none";
   } else {
@@ -2078,7 +2078,7 @@ function myFunction() {
 }
 
 function myFunctiontwo() {
-  var x = document.getElementById("primary_account_holder_signature2a");
+  var x = document.getElementById("sign2");
   if (x.style.pointerEvents === "auto") {
     x.style.pointerEvents = "none";
   } else {
@@ -2087,7 +2087,7 @@ function myFunctiontwo() {
 }
 
 function myFunctionthree() {
-  var x = document.getElementById("secondary_account_holder_signature3a");
+  var x = document.getElementById("sign3");
   if (x.style.pointerEvents === "auto") {
     x.style.pointerEvents = "none";
   } else {
@@ -2100,7 +2100,7 @@ $("#company_representative_approval_signature1a").on("click touchstart",
   function () {
     var canvas = document.getElementById(
       "company_representative_approval_signature1a"
-    );
+    );    
     var dataURL = canvas.toDataURL("image/png");
     $("#saveCompanySignatureDB1a").val(dataURL);
   }
@@ -2129,4 +2129,14 @@ $("#secondary_account_holder_signature3a").on("click touchstart", function () {
   var dataURL = canvas.toDataURL("image/png");
   $("#saveSecondaryAccountSignatureDB3a").val(dataURL);
 });
+
+// $('.sigPad > div').each(function(){
+//   var container = $(this);
+//   if(this.scrollWidth !== $(this).width()) {
+//     container.find('.pad').each(function(){
+//       var child = $(this);
+//       child.width(container.get(0).scrollWidth);
+//     });
+//   }
+// });
 

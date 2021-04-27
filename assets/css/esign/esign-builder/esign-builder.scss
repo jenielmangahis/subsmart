@@ -433,8 +433,42 @@
       cursor: e-resize;
     }
   }
+
+  &--active {
+    border-color: blue !important;
+  }
 }
 
 .ui-draggable {
   width: initial;
+}
+
+.esignBuilder__fieldRadio,
+.esignBuilder__fieldCheckbox {
+  --size: 20px;
+  --border-radius: var(--size);
+
+  &.subData {
+    padding: 3px !important;
+    background-color: rgba(232, 232, 232, 0.5) !important;
+    border-radius: 4px !important;
+    width: auto !important;
+
+    span {
+      display: none;
+    }
+  }
+
+  &::after {
+    content: "";
+    width: var(--size);
+    height: var(--size);
+    border: 2px solid #c7c7c7;
+    display: block;
+    border-radius: var(--border-radius);
+  }
+}
+
+.esignBuilder__fieldCheckbox {
+  --border-radius: 2px;
 }

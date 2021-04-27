@@ -21,9 +21,10 @@
         line-height: 150%;
     }
     label{
-        font-size: 14px !important;
+        font-size: 13px !important;
         position: absolute;
         top: 5px;
+        word-break: break-all;
     }
 
     hr{
@@ -36,6 +37,9 @@
 
     .form_line{
         padding-bottom: 2px;
+        line-height: 30px;
+        word-break: break-all;
+        font-size: 13px;
     }
     .btn {
         font-size: 12px !important;

@@ -38,7 +38,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <label class="alarm_label"> <span >Pre Survey :</span> </label>
                             </td>
                             <td width="50%" align="right" valign="top">
-                                <label class="alarm_label"><b> <?php if(isset($office_info)){ echo $office_info->pre_install_survey; }; ?></b> </label>
+                                <label class="alarm_label"><b>
+                                        <?php if(isset($office_info)){ echo $office_info->pre_install_survey; }; ?>
+                                    </b> </label>
                             </td>
                         </tr>
 <!--                        <tr>-->
@@ -82,7 +84,14 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <label class="alarm_label"> <span >Sales Rep :</span> </label>
                             </td>
                             <td width="50%" align="right" valign="top">
-                                <label class="alarm_answer"><b> <?php if(isset($office_info)){ echo $office_info->fk_sales_rep_office; }; ?></b> </label>
+                                <label class="alarm_answer">
+                                    <b>
+                                        <?php
+                                        $sales_rep = !empty($office_info->fk_sales_rep_office) ?  get_employee_name($office_info->fk_sales_rep_office) : '---';
+                                        ?>
+                                        <?= $sales_rep->FName. ' ' . $sales_rep->LName; ?>
+                                    </b>
+                                </label>
                             </td>
                         </tr>
                         <tr>

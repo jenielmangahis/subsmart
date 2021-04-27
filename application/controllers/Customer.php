@@ -313,7 +313,7 @@ class Customer extends MY_Controller
         $this->load->view('customer/settings', $this->page_data);
     }
 
-    public function module()
+    public function module($id=null)
     {
         $this->load->library('wizardlib');
         $is_allowed = $this->isAllowedModuleAccess(9);
@@ -331,7 +331,7 @@ class Customer extends MY_Controller
             $input['ams_values'] = "profile,score,tech,access,admin,office,owner,docu,tasks,memo,invoice,assign,cim,billing,alarm,dispute" ;
             $this->customer_ad_model->add($input,"ac_module_sort");
         }
-        $userid = $this->uri->segment(4);
+        $userid =$id;
         if(!isset($userid) || empty($userid)){
             $get_id = $this->customer_ad_model->get_all(1,"","DESC","acs_profile","prof_id");
             if(!empty($get_id)){
@@ -345,19 +345,15 @@ class Customer extends MY_Controller
 
         // set a global data for customer profile id
         $this->page_data['customer_profile_id'] = $userid;
-
-        //$this->session->set_userdata('customer_data_session', 233);
-        //$this->session->unset_userdata('customer_data_session');
-
-        if(isset($userid) || !empty($userid)){
-            $this->page_data['profile_info'] = $this->customer_ad_model->get_data_by_id('prof_id',$userid,"acs_profile");
-//            $this->page_data['access_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_access");
-//            $this->page_data['office_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_office");
-//            $this->page_data['billing_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_billing");
-//            $this->page_data['alarm_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_alarm");
-//            $this->page_data['audit_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_audit_import");
-//            $this->page_data['minitab'] = $this->uri->segment(5);
-//            $this->page_data['task_info'] = $this->customer_ad_model->get_all_by_id("fk_prof_id",$userid,"acs_tasks");
+        if($id!=null){
+            $this->page_data['profile_info'] = $this->customer_ad_model->get_data_by_id('prof_id',$id,"acs_profile");
+            $this->page_data['access_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$id,"acs_access");
+            $this->page_data['office_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$id,"acs_office");
+            $this->page_data['billing_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$id,"acs_billing");
+            $this->page_data['alarm_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$id,"acs_alarm");
+            $this->page_data['audit_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$id,"acs_audit_import");
+            //$this->page_data['minitab'] = $this->uri->segment(5);
+            $this->page_data['task_info'] = $this->customer_ad_model->get_all_by_id("fk_prof_id",$id,"acs_tasks");
             $this->page_data['module_sort'] = $this->customer_ad_model->get_data_by_id('fk_user_id',$user_id,"ac_module_sort");
             $this->page_data['cust_modules'] = $this->customer_ad_model->getModulesList();
 
@@ -367,15 +363,10 @@ class Customer extends MY_Controller
                 $this->page_data['letter_template'] = $this->Esign_model->get_template_by_id($template_id);
             }
             // print_r($this->page_data['alarm_info']);
+        }else{
+            redirect(base_url('customer/'));
         }
-//        $this->page_data['library_templates'] = $this->Esign_model->get_library_template_by_category($user_id);
-//        $this->page_data['library_categories'] = $this->Esign_model->get_library_categories();
         $this->page_data['cust_tab'] = $this->uri->segment(3);
-//        $this->page_data['affiliates'] = $this->customer_ad_model->get_all(FALSE,"","","affiliates","id");
-//        $this->page_data['furnishers'] = $this->customer_ad_model->get_all(FALSE,"","","acs_furnisher","furn_id");
-//        $this->page_data['reasons'] = $this->customer_ad_model->get_all(FALSE,"","","acs_reasons","reason_id");
-//        $this->page_data['lead_types'] = $this->customer_ad_model->get_all(FALSE,"","","ac_leadtypes","lead_id");
-//        $this->page_data['sales_area'] = $this->customer_ad_model->get_all(FALSE,"","","ac_salesarea","sa_id");
         $this->page_data['users'] = $this->users_model->getUsers();
         $this->page_data['history_activity_list'] = $this->activity->getActivity($user_id, [6,0], 1);
         $this->load->view('customer/module', $this->page_data);
@@ -522,7 +513,8 @@ class Customer extends MY_Controller
             $input_profile['contact_phone3'] = $input['contact_phone3'];
             //$input_profile['notes'] = $input['notes'];
             if(isset($input['customer_id'])){
-                $profile_id = $this->general->update_with_key_field($input_profile, $input['customer_id'],'acs_profile','prof_id');
+                $this->general->update_with_key_field($input_profile, $input['customer_id'],'acs_profile','prof_id');
+                $profile_id = $input['customer_id'];
             }else{
                 $profile_id = $this->general->add_return_id($input_profile, 'acs_profile');
             }
@@ -539,15 +531,16 @@ class Customer extends MY_Controller
                 echo 'Error Occured on Saving Alarm Information';
             }else if($save_access == 0){
                 echo 'Error Occured on Saving Access Information';
-            }else{
-                $this->save_notes($input,$profile_id);
+            }else {
+                if ($input['notes'] != "" && $input['notes'] != NULL && !empty($input['notes'])){
+                    $this->save_notes($input,$profile_id);
+                }
                 $this->qrcodeGenerator($profile_id);
                 if(isset($input['customer_id'])){
                     echo $input['customer_id'];
                 }else{
                     echo $profile_id;
                 }
-
             }
         }else {
             echo 'Customer Already Exist!';
@@ -593,12 +586,19 @@ class Customer extends MY_Controller
         $input_billing['transaction_category'] = $input['transaction_category'];
         $input_billing['frequency'] = $input['frequency'];
 
-        if(isset($input['customer_id'])){
+
+        $check = array(
+            'where' => array(
+                'fk_prof_id' => $id
+            ),
+            'table' => 'acs_billing'
+        );
+        $exist = $this->general->get_data_with_param($check,FALSE);
+        if($exist){
             return $this->general->update_with_key_field($input_billing, $input['customer_id'], 'acs_billing','fk_prof_id');
         }else{
             return $this->general->add_($input_billing, 'acs_billing');
         }
-
     }
 
     public function save_office_information($input,$id){
@@ -676,7 +676,14 @@ class Customer extends MY_Controller
         $input_office['job_profit'] = $input['job_profit'];
         $input_office['url'] = $input['url'];
 
-        if(isset($input['customer_id'])){
+        $check = array(
+            'where' => array(
+                'fk_prof_id' => $id
+            ),
+            'table' => 'acs_office'
+        );
+        $exist = $this->general->get_data_with_param($check,FALSE);
+        if($exist){
             return $this->general->update_with_key_field($input_office, $input['customer_id'], 'acs_office','fk_prof_id');
         }else{
             return $this->general->add_($input_office, 'acs_office');
@@ -711,7 +718,14 @@ class Customer extends MY_Controller
         $input_alarm['alarm_customer_id'] = $input['alarm_customer_id'];
         $input_alarm['alarm_cs_account'] = $input['alarm_cs_account'];
 
-        if(isset($input['customer_id'])){
+        $check = array(
+            'where' => array(
+                'fk_prof_id' => $id
+            ),
+            'table' => 'acs_alarm'
+        );
+        $exist = $this->general->get_data_with_param($check,FALSE);
+        if($exist){
             return $this->general->update_with_key_field($input_alarm, $input['customer_id'], 'acs_alarm','fk_prof_id');
         }else{
             return $this->general->add_($input_alarm, 'acs_alarm');
@@ -720,11 +734,8 @@ class Customer extends MY_Controller
 
     public function save_access_information($input,$id){
         $input_access = array();
-
         //access data
-        if(!isset($input['customer_id'])){
-            $input_access['fk_prof_id'] = $id;
-        }
+        $input_access['fk_prof_id'] = $id;
         if(isset($input['portal_status'])){
             $input_access['portal_status'] = $input['portal_status'];
         }else{
@@ -735,7 +746,14 @@ class Customer extends MY_Controller
         $input_access['access_login'] = $input['access_login'];
         $input_access['access_password'] = $input['access_password'];
 
-        if(isset($input['customer_id'])){
+        $check = array(
+            'where' => array(
+                'fk_prof_id' => $id
+            ),
+            'table' => 'acs_access'
+        );
+        $exist = $this->general->get_data_with_param($check,FALSE);
+        if($exist){
             return $this->general->update_with_key_field($input_access, $input['customer_id'], 'acs_access','fk_prof_id');
         }else{
             return $this->general->add_($input_access, 'acs_access');
@@ -743,14 +761,13 @@ class Customer extends MY_Controller
     }
 
     public function save_notes($input,$id){
-        if(!empty($input_notes['note'])){
-            $input_notes = array();
+        $input_notes = array();
             // notes data
             $input_notes['fk_prof_id'] = $id;
             $input_notes['note'] = $input['notes'];
             $input_notes['datetime'] = date("m-d-Y h:i A");
             $this->general->add_($input_notes, 'acs_notes');
-        }
+
     }
 
     public function add_data_sheet(){
@@ -872,7 +889,6 @@ class Customer extends MY_Controller
             echo "Done";
         }
     }
-
 
     public function import_customer()
     {

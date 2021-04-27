@@ -17,6 +17,20 @@
   #group_area:hover{
     background-color:#EBFFE2;
   }
+/* 
+  #company_representative_approval_signature1a{
+  border: solid 1px blue;  
+  width: 100%;
+} */
+
+#signature-pad {min-height:200px;}
+#signature-pad canvas {background-color:white;left: 0;top: 0;width: 100%;min-height:250px;height: 100%}
+
+#signature-pad2 {min-height:200px;}
+#signature-pad2 canvas {background-color:white;left: 0;top: 0;width: 100%;min-height:250px;height: 100%}
+
+#signature-pad3 {min-height:200px;}
+#signature-pad3 canvas {background-color:white;left: 0;top: 0;width: 100%;min-height:250px;height: 100%}
 </style>
 <div class="wrapper" role="wrapper">
     <?php include viewPath('includes/sidebars/workorder'); ?>
@@ -46,7 +60,7 @@
                 </div>
             </div>
             <!-- end row -->
-            <?php echo form_open_multipart('workorder/update/' . $workorder->id, ['class' => 'form-validate require-validation', 'id' => 'workorder_form', 'autocomplete' => 'off']); ?>
+            <?php echo form_open_multipart('workorder/savenewWorkorderAlarm', [ 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?> 
 
 
             <div class="row custom__border">
@@ -54,9 +68,6 @@
                     <div class="card">
                         <div class="card-body">
                         <div id="header_area">
-                            <!-- <p>This Alarm System Work Order Agreement (the "Agreement") is made as of
-                                <?php echo date('m/d/Y') ?>, by and between ADI, (the "Company") and the
-                                ("Customer") as the address shown below (the "Premise/Monitored Location") </p> -->
                                 <ol class="breadcrumb" style="margin-top:-30px;"> <i class="fa fa-pencil" aria-hidden="true"></i>
                                             <li class="breadcrumb-item active">
                                                 <label style="background-color:#E8E8E9;" id="headerContent"><?php echo $headers->content; ?></label>
@@ -78,7 +89,7 @@
 										</div>
 										<div class="col-md-4 form-group">
 											<label for="">Customer Type</label><br/>
-											<select name="customer[customer_type]"
+											<select name="customer_type"
 													class="form-control"
 													id="customer_type">
 												<?php foreach (get_config_item('customer_types') as $key => $customer_type) { ?>
@@ -91,12 +102,12 @@
 
                                         <div class="col-md-4 form-group" style="display:none;" id="business_name_area">
 											<label for="customer_install_type">Business Name</label><br/>
-											<input type="text" class="form-control" name="business_name" id="business_name" required placeholder="Enter Name" />
+											<input type="text" class="form-control" name="business_name" id="business_name" placeholder="Enter Name" />
 										</div>
 
 										<div class="col-md-4 form-group">
 											<label for="customer_install_type">Install Type</label><br/>
-											<select name="customer[install_type]"
+											<select name="install_type"
 													class="form-control"
 													id="customer_install_type">
 												<?php foreach (get_config_item('install_types') as $key => $install_type) { ?>
@@ -112,8 +123,7 @@
 												Company Name </label>
 											<input type="text" class="form-control" name="customer[company_name]"
 												   id="customer_company_name"
-												   value="<?php echo (!empty($workorder->customer['company_name'])) ? $workorder->customer['company_name'] : '' ?>"
-												   required
+												   value="<?php echo (!empty($workorder->customer['company_name'])) ? $workorder->customer['company_name'] : '' ?>" 
 												   placeholder="Enter Company Name" <?php echo (!empty($workorder->customer['install_type']) && $workorder->customer['install_type'] == 'Takeover') ? "" : 'disabled' ?> />
 										</div>
 									</div>
@@ -121,38 +131,35 @@
 									<div class="row">
 										<div class="col-md-3 form-group">
 											<label for="last_name">Last Name</label>
-											<input type="text" class="form-control" name="customer[last_name]"
+											<input type="text" class="form-control" name="last_name"
 												   id="last_name"
 												   required placeholder="Enter Last Name"
 												   value="<?php echo (!empty($workorder->customer['last_name'])) ? $workorder->customer['last_name'] : '' ?>"/>
 										</div>
 										<div class="col-md-3 form-group">
 											<label for="first_name">First Name</label>
-											<input type="text" class="form-control" name="customer[first_name]"
-												   id="first_name"
-												   required placeholder="Enter First Name"
-												   value="<?php echo (!empty($workorder->customer['first_name'])) ? $workorder->customer['first_name'] : '' ?>"/>
+											<input type="text" class="form-control" name="first_name"
+												   id="first_name" required
+												   required placeholder="Enter First Name" />
 										</div>
 										<div class="col-md-2 form-group">
 											<label for="contact_mobile">Mobile</label>
-											<input type="text" class="form-control" name="customer[contact_mobile]"
-												   id="contact_mobile"
-												   value="<?php echo (!empty($workorder->customer['contact_mobile'])) ? $workorder->customer['contact_mobile'] : '' ?>"
-												   placeholder="Enter Mobile"/>
+											<input type="text" class="form-control" name="mobile_number" required
+												   id="contact_mobile" />
 
 										</div>
 
 										<div class="col-md-2 form-group">
 											<label for="contact_dob">DOB</label>
-											<input type="text" class="form-control" name="customer[contact_dob]"
-												   id="customer_contact_dob"
+											<input type="text" class="form-control" name="dob"
+												   id="customer_contact_dob" required
 												   value="<?php echo (!empty($workorder->customer['contact_dob'])) ? date('m/d/Y', strtotime($workorder->customer['contact_dob'])) : '' ?>"
 												   placeholder="Enter DOB"/>
 										</div>
 
 										<div class="col-md-2 form-group">
 											<label for="contact_ssn">SSN</label>
-											<input type="text" class="form-control" name="customer[contact_ssn]"
+											<input type="text" class="form-control" name="security_number"
 												   id="contact_ssn"
 												   value="<?php echo (!empty($workorder->customer['contact_ssn'])) ? $workorder->customer['contact_ssn'] : '' ?>"
 												   required
@@ -166,21 +173,20 @@
 										</div>
 										<div class="col-md-3 form-group">
 											<label for="spouse_last_name">Last Name</label>
-											<input type="text" class="form-control" name="customer[spouse_last_name]"
+											<input type="text" class="form-control" name="s_last_name"
 												   id="spouse_last_name"
-												   required placeholder="Enter Last Name"
-												   value="<?php echo (!empty($workorder->customer['spouse_last_name'])) ? $workorder->customer['spouse_last_name'] : '' ?>"/>
+												     placeholder="Enter Last Name" />
 										</div>
 										<div class="col-md-3 form-group">
 											<label for="spouse_first_name">First Name</label>
-											<input type="text" class="form-control" name="customer[spouse_first_name]"
+											<input type="text" class="form-control" name="s_first_name"
 												   id="spouse_first_name"
-												   required placeholder="Enter First Name"
+												     placeholder="Enter First Name"
 												   value="<?php echo (!empty($workorder->customer['spouse_first_name'])) ? $workorder->customer['spouse_first_name'] : '' ?>"/>
 										</div>
 										<div class="col-md-2 form-group">
 											<label for="spouse_contact_mobile">Mobile</label>
-											<input type="text" class="form-control" name="customer[spouse_contact_mobile]"
+											<input type="text" class="form-control" name="s_mobile"
 												   id="spouse_contact_mobile"
 												   value="<?php echo (!empty($workorder->customer['spouse_contact_mobile'])) ? $workorder->customer['spouse_contact_mobile'] : '' ?>"
 												   placeholder="Enter Mobile"/>
@@ -189,7 +195,7 @@
 
 										<div class="col-md-2 form-group">
 											<label for="contact_dob">DOB</label>
-											<input type="text" class="form-control" name="customer[spouse_contact_dob]"
+											<input type="text" class="form-control" name="s_dob"
 												   id="customer_spouse_contact_dob"
 												   value="<?php echo (!empty($workorder->customer['spouse_contact_dob'])) ? date('m/d/Y', strtotime($workorder->customer['spouse_contact_dob'])) : '' ?>"
 												   placeholder="Enter DOB"/>
@@ -197,9 +203,8 @@
 
 										<div class="col-md-2 form-group">
 											<label for="spouse_contact_ssn">SSN</label>
-											<input type="text" class="form-control" name="customer[spouse_contact_ssn]"
+											<input type="text" class="form-control" name="s_ssn"
 												   id="spouse_contact_ssn"
-												   required
 												   value="<?php echo (!empty($workorder->customer['spouse_contact_ssn'])) ? $workorder->customer['spouse_contact_ssn'] : '' ?>"
 												   placeholder="Enter SSN"/>
 										</div>
@@ -208,40 +213,30 @@
 									<div class="row">
 										<div class="col-md-3 form-group">
 											<label for="monitored_location">Monitored Location</label>
-											<input type="text" class="form-control" name="customer[monitored_location]"
+											<input type="text" class="form-control" name="monitored_location"
 												   id="ship-address"
 												   value="<?php echo (!empty($workorder->customer['monitored_location'])) ? $workorder->customer['monitored_location'] : '' ?>"
 												   required placeholder="Monitored Location"/>
 										</div>
 										<div class="col-md-3 form-group">
-											<label for="city">City</label>
-											<!-- <input type="text" class="form-control" name="customer[city]"
-												   id="city"
-												   value="<?php echo (!empty($workorder->customer['city'])) ? $workorder->customer['city'] : '' ?>"
-												   required placeholder="Enter City"/> -->
+											<label for="city">City</label> 
                                                    <input type="text" class="form-control" name="city" id="locality" placeholder="Enter Name" />
 										</div>
 										<div class="col-md-2 form-group">
 											<label for="state">State</label>
-											<input type="text" class="form-control" name="customer[state]"
-												   id="state"
-												   value="<?php echo (!empty($workorder->customer['state'])) ? $workorder->customer['state'] : '' ?>"
-												   placeholder="Enter State"/>
+											<input type="text" class="form-control" name="state"
+												   id="state" />
 
 										</div>
 
 										<div class="col-md-2 form-group">
-											<label for="zip">ZIP</label>
-											<!-- <input type="text" class="form-control" name="customer[zip]"
-												   id="zip"
-												   value="<?php echo (!empty($workorder->customer['zip'])) ? $workorder->customer['zip'] : '' ?>"
-												   placeholder="Enter ZIP"/> -->
-                                                   <input type="text" id="postcode" name="postcode" class="form-control"  placeholder="Enter zip"/>
+											<label for="zip">ZIP</label> 
+                                                   <input type="text" id="postcode" name="zip_code" class="form-control"  placeholder="Enter Zip"/>
 										</div>
 
 										<div class="col-md-2 form-group">
 											<label for="cross_street">Cross Street</label>
-											<input type="text" class="form-control" name="customer[cross_street]"
+											<input type="text" class="form-control" name="cross_street"
 												   id="cross_street"
 												   value="<?php echo (!empty($workorder->customer['cross_street'])) ? $workorder->customer['cross_street'] : '' ?>"
 												   required
@@ -252,22 +247,20 @@
 									<div class="row">
 										<div class="col-md-3 form-group">
 											<label for="email">Email</label>
-											<input type="text" class="form-control" name="customer[email]"
-												   id="email"
+											<input type="text" class="form-control" name="email"
+												   id="email" 
 												   value="<?php echo (!empty($workorder->customer['email'])) ? $workorder->customer['email'] : '' ?>"
 												   required placeholder="Enter Email"/>
 										</div>
 										<div class="col-md-2 form-group">
 											<label for="password">Password</label>
-											<input type="password" class="form-control" name="customer[password]"
-												   id="password"
-												   value="<?php echo (!empty($workorder->customer['password'])) ? $workorder->customer['password'] : '' ?>"
-												   placeholder="Enter Password"/>
+											<input type="text" class="form-control" name="password" required
+												   id="password" >
 										</div>
                                         
                                         <div class="col-md-3 form-group">
                                             <label for="">Notification Type</label><br/>
-                                                <select name="customer[notification_type][]" id="customer_notification_type_email" class="form-control">
+                                                <select name="notification_type" id="customer_notification_type_email" class="form-control" required>
                                                     <option>Notification Type</option>
                                                     <option value="Text">Text</option>
                                                     <option value="Email">Email</option>
@@ -309,7 +302,7 @@
                                     <div class="form-group">
                                         <label for="1st_call_verification_name">1st Call Verification Name</label>
                                         <input type="text" class="form-control"
-                                               name="emergency_call_list[1st_call_verification_name]"
+                                               name="1st_verification_name"
                                                value="<?php echo (!empty($workorder->emergency_call_list['1st_call_verification_name'])) ? $workorder->emergency_call_list['1st_call_verification_name'] : '' ?>"
                                                id="1st_call_verification_name"
                                                required placeholder="Enter 1st Call Verification Name"/>
@@ -333,11 +326,11 @@
                                                            data-type-value="work">Work</a></li>
                                                 </ul>
                                             </span>
-                                            <input type="hidden" name="emergency_call_list[phone][type][]"
+                                            <input type="hidden" name="1st_number_type"
                                                    class="type-input"
                                                    value="<?php echo (!empty($workorder->emergency_call_list['phone']['type'][0])) ? $workorder->emergency_call_list['phone']['type'][0] : '' ?>"
                                                    value="mobile"/>
-                                            <input type="text" name="emergency_call_list[phone][number][]"
+                                            <input type="text" name="1st_number"
                                                    class="form-control"
                                                    value="<?php echo (!empty($workorder->emergency_call_list['phone']['number'][0])) ? $workorder->emergency_call_list['phone']['number'][0] : '' ?>"
                                                    placeholder="Enter Phone"/>
@@ -348,7 +341,7 @@
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <label for="emergency_call_relation">Relation</label>
-                                        <input type="text" class="form-control" name="emergency_call_list[relation][]"
+                                        <input type="text" class="form-control" name="1st_relation"
                                                id="emergency_call_relation"
                                                value="<?php echo (!empty($workorder->emergency_call_list['relation'][0])) ? $workorder->emergency_call_list['relation'][0] : '' ?>"
                                                required placeholder="Enter Relation"/>
@@ -369,7 +362,7 @@
                                     <div class="form-group">
                                         <label for="2nd_call_verification_name">2nd Call Verification Name</label>
                                         <input type="text" class="form-control"
-                                               name="emergency_call_list[2nd_call_verification_name]"
+                                               name="2nd_verification_name"
                                                id="2nd_call_verification_name"
                                                value="<?php echo (!empty($workorder->emergency_call_list['2nd_call_verification_name'])) ? $workorder->emergency_call_list['2nd_call_verification_name'] : '' ?>"
                                                required placeholder="Enter 2nd Call Verification Name"/>
@@ -393,11 +386,11 @@
                                                            data-type-value="work">Work</a></li>
                                                 </ul>
                                             </span>
-                                            <input type="hidden" name="emergency_call_list[phone][type][]"
+                                            <input type="hidden" name="2nd_number_type"
                                                    class="type-input"
                                                    value="<?php echo (!empty($workorder->emergency_call_list['phone']['type'][1])) ? $workorder->emergency_call_list['phone']['type'][1] : '' ?>"
                                                    value="mobile"/>
-                                            <input type="text" name="emergency_call_list[phone][number][]"
+                                            <input type="text" name="2nd_number"
                                                    class="form-control"
                                                    value="<?php echo (!empty($workorder->emergency_call_list['phone']['number'][1])) ? $workorder->emergency_call_list['phone']['number'][1] : '' ?>"
                                                    placeholder="Enter Phone"/>
@@ -408,7 +401,7 @@
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <label for="emergency_call_relation">Relation</label>
-                                        <input type="text" class="form-control" name="emergency_call_list[relation][]"
+                                        <input type="text" class="form-control" name="2nd_relation"
                                                id="emergency_call_relation"
                                                value="<?php echo (!empty($workorder->emergency_call_list['relation'][1])) ? $workorder->emergency_call_list['relation'][1] : '' ?>"
                                                required placeholder="Enter Relation"/>
@@ -429,7 +422,7 @@
                                     <div class="form-group">
                                         <label for="emergency_call_emergency_contact_1">3rd Call Verification Name</label>
                                         <input type="text" class="form-control"
-                                               name="emergency_call_list[emergency_contact_1]"
+                                               name="3rd_verification_name"
                                                id="emergency_call_emergency_contact_1"
                                                value="<?php echo (!empty($workorder->emergency_call_list['emergency_contact_1'])) ? $workorder->emergency_call_list['emergency_contact_1'] : '' ?>"
                                                required placeholder="Enter Emergency Contact"/>
@@ -453,11 +446,11 @@
                                                            data-type-value="work">Work</a></li>
                                                 </ul>
                                             </span>
-                                            <input type="hidden" name="emergency_call_list[phone][type][]"
+                                            <input type="hidden" name="3rd_number_type"
                                                    class="type-input"
                                                    value="<?php echo (!empty($workorder->emergency_call_list['phone']['type'][2])) ? $workorder->emergency_call_list['phone']['type'][2] : '' ?>"
                                                    value="mobile"/>
-                                            <input type="text" name="emergency_call_list[phone][number][]"
+                                            <input type="text" name="3rd_number"
                                                    class="form-control"
                                                    value="<?php echo (!empty($workorder->emergency_call_list['phone']['number'][2])) ? $workorder->emergency_call_list['phone']['number'][2] : '' ?>"
                                                    placeholder="Enter Phone"/>
@@ -468,7 +461,7 @@
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <label for="emergency_call_relation">Relation</label>
-                                        <input type="text" class="form-control" name="emergency_call_list[relation][]"
+                                        <input type="text" class="form-control" name="3rd_relation"
                                                id="emergency_call_relation"
                                                value="<?php echo (!empty($workorder->emergency_call_list['relation'][2])) ? $workorder->emergency_call_list['relation'][2] : '' ?>"
                                                required placeholder="Enter Relation"/>
@@ -481,7 +474,7 @@
                                     <div class="form-group">
                                         <label for="emergency_call_emergency_contact_2">4th Call Verification Name</label>
                                         <input type="text" class="form-control"
-                                               name="emergency_call_list[emergency_contact_2]"
+                                               name="4th_verification_name"
                                                id="emergency_call_emergency_contact_2"
                                                value="<?php echo (!empty($workorder->emergency_call_list['emergency_contact_2'])) ? $workorder->emergency_call_list['emergency_contact_2'] : '' ?>"
                                                required placeholder="Enter Emergency Contact"/>
@@ -505,11 +498,11 @@
                                                            data-type-value="work">Work</a></li>
                                                 </ul>
                                             </span>
-                                            <input type="hidden" name="emergency_call_list[phone][type][]"
+                                            <input type="hidden" name="4th_number_type"
                                                    class="type-input"
                                                    value="<?php echo (!empty($workorder->emergency_call_list['phone']['type'][3])) ? $workorder->emergency_call_list['phone']['type'][3] : '' ?>"
                                                    value="mobile"/>
-                                            <input type="text" name="emergency_call_list[phone][number][]"
+                                            <input type="text" name="4th_number"
                                                    class="form-control"
                                                    value="<?php echo (!empty($workorder->emergency_call_list['phone']['number'][3])) ? $workorder->emergency_call_list['phone']['number'][3] : '' ?>"
                                                    placeholder="Enter Phone"/>
@@ -520,7 +513,7 @@
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <label for="emergency_call_relation">Relation</label>
-                                        <input type="text" class="form-control" name="emergency_call_list[relation][]"
+                                        <input type="text" class="form-control" name="4th_relation"
                                                id="emergency_call_relation"
                                                value="<?php echo (!empty($workorder->emergency_call_list['relation'][3])) ? $workorder->emergency_call_list['relation'][3] : '' ?>"
                                                required placeholder="Enter Relation"/>
@@ -541,7 +534,7 @@
                                                 class="form-control">
                                             <option>Select Plan Type</option>
                                         </select> -->
-                                        <select name="plan_type" id="plan_type" class="form-control">
+                                        <select name="plan_type" id="plan_types" class="form-control" required>
                                             <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == ''){echo "selected";} } ?> value=""></option>
                                             <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == 'DIGI'){echo "selected";} } ?> value="DIGI">Landline</option>
                                             <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == 'DW2W'){echo "selected";} } ?> value="DW2W">Landline W/ 2-Way</option>
@@ -571,9 +564,9 @@
                                         <label>Account Type</label>
                                     </div>
                                     <div class="col-md-12">
-                                        <select name="account_type[name]"
+                                        <select name="account_type"
                                                 class="form-control"
-                                                id="account_type">
+                                                id="account_type" required>
                                             <option>--SELECT--</option>
                                             <?php foreach (get_config_item('account_types') as $key => $account_type) { ?>
                                                 <option value="<?php echo $account_type ?>"
@@ -600,7 +593,7 @@
                                 <!-- <div class="row"> -->
                                     <div class="col-md-4">
                                         <label>Panel Type</label>
-                                        <select name="panel_type" id="panel_type" class="form-control">
+                                        <select name="panel_type" id="panel_type" class="form-control" required>
                                             <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == ''){echo "selected";} } ?> value=""></option>
                                             <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'AERIONICS'){echo "selected";} } ?> value="AERIONICS">AERIONICS</option>
                                             <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'AlarmNet'){echo "selected";} } ?> value="AlarmNet">AlarmNet</option>
@@ -715,20 +708,6 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="status_id"> Status:</label>
-                                        <!-- <select class="form-control" name="status_id" id="status_id" required>
-                                            <option>Select Status</option>
-                                            <?php if (!empty($workstatus)) { ?>
-                                                <?php foreach ($workstatus as $status) { ?>
-                                                    <option
-                                                            value="<?php echo $status->id ?>"
-                                                        <?php echo (!empty($workorder->status_id)
-                                                            && $workorder->status_id == $status->id) ?
-                                                            'selected' : '' ?>>
-                                                        <?php echo $status->title ?>
-                                                    </option>
-                                                <?php } ?>
-                                            <?php } ?>
-                                        </select> -->
                                         <select name="status" id="workorder_status" class="form-control custom-select">
                                         <option value="New">New</option>
                                         <option value="Draft">Draft</option>
@@ -745,23 +724,11 @@
 
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="job_priority"> Priority:</label>
-                                        <!-- <select class="form-control" name="job_priority" id="job_priority">
-                                            <option>Not Set</option>
-                                            <?php foreach (get_priority_list() as $priority) { ?>
-                                                <option
-                                                        value="<?php echo $priority->id ?>"
-                                                    <?php echo (!empty($workorder->priority_id)
-                                                        && $workorder->priority_id == $priority->id) ?
-                                                        'selected' : '' ?>>
-                                                    <?php echo $priority->title ?>
-                                                </option>
-                                            <?php } ?>
-                                        </select> -->
+                                        <label for="job_priority"> Priority:</label> 
                                         <select name="priority" id="workorder_priority" class="form-control custom-select">
+                                        <option value="Standard">Standard</option>
                                         <option value="Emergency">Emergency</option>
                                         <option value="Low">Low</option>
-                                        <option value="Standard">Standard</option>
                                         <option value="Urgent">Urgent</option>                
                                     </select>
                                     </div>
@@ -1294,20 +1261,13 @@
                                         <table class="table table-bordered" style="width:80%;">
                                             <tr>
                                                 <td>Equipment Cost</td>
-                                                 <td class="d-flex align-items-center">$ <!--<input type="text"
-                                                                                               value="<?php echo !empty($workorder->total) ? $workorder->total['eqpt_cost'] : 0.00; ?>"
-                                                                                               name="eqpt_cost"
-                                                                                               id="eqpt_cost"
-                                                                                               onfocusout="cal_total_due()"
-                                                                                               class="form-control"> -->
-                                                                                               <input type="text" name="subtotal" id="item_total" name="eqpt_cost" class="form-control" value="<?php echo !empty($workorder->total) ? $workorder->total['eqpt_cost'] : 0.00; ?>">
+                                                 <td class="d-flex align-items-center">$  <input type="text" name="subtotal" id="item_total" name="eqpt_cost" class="form-control" >
                                                 </td>
                                             </tr>
                                             <tr>
                                                 <td>Sales Tax</td>
-                                                <td class="d-flex align-items-center">$ <input type="text"
-                                                                                               value="<?php echo !empty($workorder->total) ? $workorder->total['sales_tax'] : 0.00; ?>"
-                                                                                               name="sales_tax"
+                                                <td class="d-flex align-items-center">$ <input type="text" 
+                                                                                               name="taxes"
                                                                                                id="sales_taxs"
                                                                                                class="form-control">
                                                 </td>
@@ -1322,9 +1282,8 @@
                                                 <td>One Time Program and Setup</td>
                                                 <td class="d-flex align-items-center">$ <input type="text"
                                                                                                value="<?php echo !empty($workorder->total) ? $workorder->total['one_time'] : 0.00; ?>"
-                                                                                               name="one_time"
+                                                                                               name="otp_setup"
                                                                                                id="one_time"
-                                                                                               onfocusout="cal_total_due()"
                                                                                                class="form-control">
                                                 </td>
                                             </tr>
@@ -1332,17 +1291,16 @@
                                                 <td>Monthly Monitoring</td>
                                                 <td class="d-flex align-items-center">$ <input type="text"
                                                                                                value="<?php echo !empty($workorder->total) ? $workorder->total['m_monitoring'] : 0.00; ?>"
-                                                                                               name="m_monitoring"
+                                                                                               name="monthly_monitoring"
                                                                                                id="m_monitoring"
-                                                                                               onfocusout="cal_total_due()"
                                                                                                class="form-control">
                                                 </td>
                                             </tr>
                                             <tr>
                                                 <td>Total Due</td>
-                                                 <td class="d-flex align-items-center">$ <!--<span
-                                                            id="grand_total"><?php echo !empty($workorder->total) ? number_format($workorder->total['eqpt_cost'] + $workorder->total['sales_tax'] + $workorder->total['inst_cost'] + $workorder->total['one_time'] + $workorder->total['m_monitoring'], 2) : '0.00'; ?></span> -->
-                                                            <input type="hidden" name="adjustment_value" id="adjustment_input" value="0" class="form-control adjustment_input" style="width:100px; display:inline-block"><input type="hidden" name="markup_input_form" id="markup_input_form" class="markup_input" value="0"> <input type="text" name="grand_total" id="grand_total_input" value='0' class="form-control">
+                                                 <td class="d-flex align-items-center">$ 
+                                                            <input type="hidden" name="adjustment_value" id="adjustment_input" value="0" class="form-control adjustment_input" style="width:100px; display:inline-block"><input type="hidden" name="markup_input_form" id="markup_input_form" class="markup_input" value="0"> 
+                                                            <input type="text" name="grand_total_text" id="grand_total_input" class="form-control" placeholder="0">
                                                 </td>
                                             </tr>
                                         </table>
@@ -1371,17 +1329,7 @@
                                         </div>
                                         <div class="col-md-3">
                                             <div class="form-group">
-                                                <label for="payment_type"> Payment Type:</label>
-                                                <!-- <select name="payment_type"
-                                                        class="form-control"
-                                                        id="payment_type">
-                                                    <option>--SELECT--</option>
-                                                    <?php foreach (get_config_item('payment_types') as $key => $payment_type) { ?>
-                                                        <option value="<?php echo $payment_type ?>" <?php echo (!empty($workorder->payment_type) && $workorder->payment_type == $payment_type) ? 'selected' : '' ?>>
-                                                            <?php echo $payment_type ?>
-                                                        </option>
-                                                    <?php } ?>
-                                                </select> -->
+                                                <label for="payment_type"> Payment Type:</label> 
                                                 <select name="payment_method" id="payment_method" class="form-control custom-select">
                                                     <option value="">Choose method</option>
                                                     <option value="Cash">Cash</option>
@@ -1392,6 +1340,7 @@
                                                     <option value="Venmo">Venmo</option>
                                                     <option value="Paypal">Paypal</option>
                                                     <option value="Square">Square</option>
+                                                    <option value="Invoicing">Invoicing</option>
                                                     <option value="Warranty Work">Warranty Work</option>
                                                     <option value="Home Owner Financing">Home Owner Financing</option>
                                                     <option value="e-Transfer">e-Transfer</option>
@@ -1584,6 +1533,40 @@
                                             </div>                                             
                                         </div>
                                     </div>
+                                    <div id="invoicing" style="display:none;">
+                                        
+                                        <input type="checkbox" id="same_as"> <b>Same as above in Monitoring Address</b> <br><br>
+                                        <div class="row">                   
+                                            <div class="col-md-4 form-group">
+                                                <label for="monitored_location">Mail Address</label>
+                                                <input type="text" class="form-control" name="mail-address"
+                                                    id="mail-address" placeholder="Monitored Location"/>
+                                            </div>
+                                            <div class="col-md-4 form-group">
+                                                <label for="city">City</label>
+                                                    <input type="text" class="form-control" name="mail_locality" id="mail_locality" placeholder="Enter Name" />
+                                            </div>
+                                            <div class="col-md-4 form-group">
+                                                <label for="state">State</label>
+                                                <input type="text" class="form-control" name="mail_state"
+                                                    id="mail_state" 
+                                                    placeholder="Enter State"/>
+                                            </div>
+                                        </div>
+                                        <div class="row">  
+                                            <div class="col-md-4 form-group">
+                                                <label for="zip">ZIP</label> 
+                                                    <input type="text" id="mail_postcode" name="mail_postcode" class="form-control"  placeholder="Enter Zip"/>
+                                            </div>
+
+                                            <div class="col-md-4 form-group">
+                                                <label for="cross_street">Cross Street</label>
+                                                <input type="text" class="form-control" name="mail_cross_street"
+                                                    id="mail_cross_street" 
+                                                    placeholder="Cross Street"/>
+                                            </div>                                        
+                                        </div>
+                                    </div>
                                     <div id="debit_card" style="display:none;">
                                         <div class="row">                   
                                             <div class="form-group col-md-4">
@@ -1763,7 +1746,10 @@
                                         </ul>
                                         <div class="sig sigWrapper" id="smoothed1a_pencil" style="height:auto;pointer-events: none;">
                                             <div class="typed"></div>
-                                            <canvas class="pad" id="company_representative_approval_signature1a" style="width:100%;"></canvas>
+                                            <!-- <canvas class="pad" id="company_representative_approval_signature1a"  style="width:100%;"></canvas> -->
+                                            <div id="signature-pad">
+                                            <canvas style="border:1px solid #000" id="sign"></canvas>
+                                            </div>
                                             <input type="hidden" name="output-2" class="output">
                                         </div>
                                     </div>
@@ -1790,7 +1776,10 @@
                                         </ul>
                                         <div class="sig sigWrapper" style="height:auto;pointer-events: none;">
                                             <div class="typed"></div>
-                                            <canvas class="pad" id="primary_account_holder_signature2a" style="width:100%;"></canvas>
+                                            <!-- <canvas class="pad" id="primary_account_holder_signature2a" style="width:100%;"></canvas> -->
+                                            <div id="signature-pad2">
+                                            <canvas style="border:1px solid #000" id="sign2"></canvas>
+                                            </div>
                                             <input type="hidden" name="output-2" class="output">
                                         </div>
                                     </div>
@@ -1816,7 +1805,10 @@
                                         </ul>
                                         <div class="sig sigWrapper" style="height:auto;pointer-events: none;">
                                             <div class="typed"></div>
-                                            <canvas class="pad" id="secondary_account_holder_signature3a" style="width:100%;"></canvas>
+                                            <!-- <canvas class="pad" id="secondary_account_holder_signature3a" style="width:100%;"></canvas> -->
+                                            <div id="signature-pad3">
+                                            <canvas style="border:1px solid #000" id="sign3"></canvas>
+                                            </div>
                                             <input type="hidden" name="output-2" class="output">
                                         </div>
                                     </div>
@@ -1854,10 +1846,10 @@
 
 
                             <!-- ====== POST SERVICE SUMMARY ====== -->
-                            <div class="row" id="group_area">
+                            <!-- <div class="row" id="group_area">
                                 <div class="col-md-12">
                                     <div class="panel-group">
-                                        <div class="panels panel-default">
+                                        <div class="panel panel-default">
                                             <div class="panel-heading">
                                                 <h4 class="panel-title">
                                                     <a data-toggle="collapse" href="#POST-SERVICEcollapse1">POST-SERVICE
@@ -1986,15 +1978,16 @@
                                     </div>
 
                                 </div>
-                            </div>
+                            </div> -->
 
 
                             <div class="row">
                                 <div class="col-md-4 form-group">
-                                    <button type="button" onClick="validatecard();"
+                                    <!-- <button type="button" onClick="validatecard();"
                                             class="btn btn-flat btn-primary">
                                         Submit
-                                    </button>
+                                    </button> -->
+                                    <input type="submit" value="Submit" class="btn btn-flat btn-primary">
                                     <a href="<?php echo url('workorder') ?>" class="btn btn-danger">Cancel this</a>
                                 </div>
                             </div>
@@ -2158,6 +2151,135 @@
 
     <?php include viewPath('includes/footer'); ?>
 
+<script>
+var wrapper = document.getElementById("signature-pad");
+var canvas = wrapper.querySelector("canvas");
+
+var sign = new SignaturePad(document.getElementById('sign'), {
+  backgroundColor: 'rgba(255, 255, 255, 0)',
+  penColor: 'rgb(0, 0, 0)'
+});
+
+function resizeCanvas() {
+     var ratio =  Math.max(window.devicePixelRatio || 1, 1);
+
+     canvas.width = canvas.offsetWidth * ratio;
+     canvas.height = canvas.offsetHeight * ratio;
+     canvas.getContext("2d").scale(ratio, ratio);
+}
+
+window.onresize = resizeCanvas;
+resizeCanvas();
+</script>
+
+<script>
+var wrapper = document.getElementById("signature-pad2");
+var canvas = wrapper.querySelector("canvas");
+
+var sign = new SignaturePad(document.getElementById('sign2'), {
+  backgroundColor: 'rgba(255, 255, 255, 0)',
+  penColor: 'rgb(0, 0, 0)'
+});
+
+function resizeCanvas() {
+     var ratio =  Math.max(window.devicePixelRatio || 1, 1);
+
+     canvas.width = canvas.offsetWidth * ratio;
+     canvas.height = canvas.offsetHeight * ratio;
+     canvas.getContext("2d").scale(ratio, ratio);
+}
+
+window.onresize = resizeCanvas;
+resizeCanvas();
+</script>
+
+<script>
+var wrapper = document.getElementById("signature-pad3");
+var canvas = wrapper.querySelector("canvas");
+
+var sign = new SignaturePad(document.getElementById('sign3'), {
+  backgroundColor: 'rgba(255, 255, 255, 0)',
+  penColor: 'rgb(0, 0, 0)'
+});
+
+function resizeCanvas() {
+     var ratio =  Math.max(window.devicePixelRatio || 1, 1);
+
+     canvas.width = canvas.offsetWidth * ratio;
+     canvas.height = canvas.offsetHeight * ratio;
+     canvas.getContext("2d").scale(ratio, ratio);
+}
+
+window.onresize = resizeCanvas;
+resizeCanvas();
+</script>
+
+    <script>
+    $(document).on("focusout", "#one_time", function () {
+        var counter = $(this).val();
+        var m_monitoring = $("#m_monitoring").val();
+        var subtotal = 0;
+        // $("#span_total_0").each(function(){
+            $('*[id^="span_total_"]').each(function(){
+            subtotal += parseFloat($(this).text());
+        });
+
+        grand_tot = parseFloat(counter) + parseFloat(subtotal) + parseFloat(m_monitoring);
+        //  alert(grand_tot);
+        var grand = $("#grand_total_input").val(grand_tot);
+    });
+
+    $(document).on("focusout", "#m_monitoring", function () {
+        var counter = $(this).val();
+        // var grand = $("#grand_total_input").val();
+        var one_time = $("#one_time").val();
+        var subtotal = 0;
+        // $("#span_total_0").each(function(){
+            $('*[id^="span_total_"]').each(function(){
+            subtotal += parseFloat($(this).text());
+        });
+
+        grand_tot = parseFloat(counter) + parseFloat(subtotal) + parseFloat(one_time);
+        //  alert(grand_tot);
+        var grand = $("#grand_total_input").val(grand_tot);
+    });
+
+    // $(document).on("checked", "#same_as", function () {
+    //     alert('yeah');
+    // });
+    </script>
+
+<script type="text/javascript">
+    $(function()
+    {
+      $('[id="same_as"]').change(function()
+      {
+        if ($(this).is(':checked')) {
+        //    alert('get the location');
+
+          var ship_address = $("#ship-address").val();
+          var locality = $("#locality").val();
+          var state = $("#state").val();
+          var postcode = $("#postcode").val();
+          var cross_street = $("#cross_street").val();
+
+          $("#mail-address").val(ship_address);
+          $("#mail_locality").val(locality);
+          $("#mail_state").val(state);
+          $("#mail_postcode").val(postcode);
+          $("#mail_cross_street").val(cross_street);
+
+        }else{
+            $("#mail-address").val('');
+            $("#mail_locality").val('');
+            $("#mail_state").val('');
+            $("#mail_postcode").val('');
+            $("#mail_cross_street").val('');
+        }
+      });
+    });
+  </script>
+
     <script>
       // This sample uses the Places Autocomplete widget to:
       // 1. Help the user select a place
@@ -2249,16 +2371,16 @@
     ></script>
 
     <script>
-        function validatecard() {
-            var inputtxt = $('.card-number').val();
+        // function validatecard() {
+        //     var inputtxt = $('.card-number').val();
 
-            if (inputtxt == 4242424242424242) {
-                $('.require-validation').submit();
-            } else {
-                alert("Not a valid card number!");
-                return false;
-            }
-        }
+        //     if (inputtxt == 4242424242424242) {
+        //         $('.require-validation').submit();
+        //     } else {
+        //         alert("Not a valid card number!");
+        //         return false;
+        //     }
+        // }
 
         $(document).ready(function () {
 
@@ -2594,6 +2716,7 @@ document.getElementById("payment_method").onchange = function() {
         $('#ach_area').hide();
         $('#venmo_area').hide();
         $('#paypal_area').hide();
+        $('#invoicing').hide();
         $('#square_area').hide();
         $('#warranty_area').hide();
         $('#home_area').hide();
@@ -2601,6 +2724,23 @@ document.getElementById("payment_method").onchange = function() {
         $('#other_credit_card').hide();
         $('#other_payment_area').hide();
     	}
+    else if(this.value == 'Invoicing'){
+
+        $('#cash_area').hide();
+        $('#check_area').hide();
+        $('#invoicing').show();
+        $('#credit_card').hide();
+        $('#debit_card').hide();
+        $('#ach_area').hide();
+        $('#venmo_area').hide();
+        $('#paypal_area').hide();
+        $('#square_area').hide();
+        $('#warranty_area').hide();
+        $('#home_area').hide();
+        $('#e_area').hide();
+        $('#other_credit_card').hide();
+        $('#other_payment_area').hide();
+    }
 	
     else if(this.value == 'Check'){
         // alert('Check');
@@ -2608,6 +2748,7 @@ document.getElementById("payment_method").onchange = function() {
         $('#check_area').show();
         $('#credit_card').hide();
         $('#debit_card').hide();
+        $('#invoicing').hide();
         $('#ach_area').hide();
         $('#venmo_area').hide();
         $('#paypal_area').hide();
@@ -2624,6 +2765,7 @@ document.getElementById("payment_method").onchange = function() {
         $('#check_area').hide();
         $('#credit_card').show();
         $('#debit_card').hide();
+        $('#invoicing').hide();
         $('#ach_area').hide();
         $('#venmo_area').hide();
         $('#paypal_area').hide();
@@ -2642,6 +2784,7 @@ document.getElementById("payment_method").onchange = function() {
         $('#debit_card').show();
         $('#ach_area').hide();
         $('#venmo_area').hide();
+        $('#invoicing').hide();
         $('#paypal_area').hide();
         $('#square_area').hide();
         $('#warranty_area').hide();
@@ -2656,6 +2799,7 @@ document.getElementById("payment_method").onchange = function() {
         $('#check_area').hide();
         $('#credit_card').hide();
         $('#debit_card').hide();
+        $('#invoicing').hide();
         $('#ach_area').show();
         $('#venmo_area').hide();
         $('#paypal_area').hide();
@@ -2673,6 +2817,7 @@ document.getElementById("payment_method").onchange = function() {
         $('#credit_card').hide();
         $('#debit_card').hide();
         $('#ach_area').hide();
+        $('#invoicing').hide();
         $('#venmo_area').show();
         $('#paypal_area').hide();
         $('#square_area').hide();
@@ -2688,6 +2833,7 @@ document.getElementById("payment_method").onchange = function() {
         $('#check_area').hide();
         $('#credit_card').hide();
         $('#debit_card').hide();
+        $('#invoicing').hide();
         $('#ach_area').hide();
         $('#venmo_area').hide();
         $('#paypal_area').show();
@@ -2703,6 +2849,7 @@ document.getElementById("payment_method").onchange = function() {
         $('#cash_area').hide();
         $('#check_area').hide();
         $('#credit_card').hide();
+        $('#invoicing').hide();
         $('#debit_card').hide();
         $('#ach_area').hide();
         $('#venmo_area').hide();
@@ -2719,6 +2866,7 @@ document.getElementById("payment_method").onchange = function() {
         $('#cash_area').hide();
         $('#check_area').hide();
         $('#credit_card').hide();
+        $('#invoicing').hide();
         $('#debit_card').hide();
         $('#ach_area').hide();
         $('#venmo_area').hide();
@@ -2736,6 +2884,7 @@ document.getElementById("payment_method").onchange = function() {
         $('#check_area').hide();
         $('#credit_card').hide();
         $('#debit_card').hide();
+        $('#invoicing').hide();
         $('#ach_area').hide();
         $('#venmo_area').hide();
         $('#paypal_area').hide();
@@ -2752,6 +2901,7 @@ document.getElementById("payment_method").onchange = function() {
         $('#check_area').hide();
         $('#credit_card').hide();
         $('#debit_card').hide();
+        $('#invoicing').hide();
         $('#ach_area').hide();
         $('#venmo_area').hide();
         $('#paypal_area').hide();
@@ -2768,6 +2918,7 @@ document.getElementById("payment_method").onchange = function() {
         $('#check_area').hide();
         $('#credit_card').hide();
         $('#debit_card').hide();
+        $('#invoicing').hide();
         $('#ach_area').hide();
         $('#venmo_area').hide();
         $('#paypal_area').hide();
@@ -2784,6 +2935,7 @@ document.getElementById("payment_method").onchange = function() {
         $('#check_area').hide();
         $('#credit_card').hide();
         $('#debit_card').hide();
+        $('#invoicing').hide();
         $('#ach_area').hide();
         $('#venmo_area').hide();
         $('#paypal_area').hide();

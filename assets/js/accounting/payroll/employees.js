@@ -806,9 +806,9 @@ $(document).on('submit', '#pay-schedule-form', function(e) {
         success: function(res) {
             var result = JSON.parse(res);
 
-            $('#add-employee-modal #pay-schedule option:selected').removeAttr('selected');
-            $('#add-employee-modal #pay-schedule').append(`<option value="${result.id}" selected>${result.name}</option>`);
-            $('#add-employee-modal #pay-schedule').trigger('change');
+            $('#pay-schedule option:selected').removeAttr('selected');
+            $('#pay-schedule').append(`<option value="${result.id}" selected>${result.name}</option>`);
+            $('#pay-schedule').trigger('change');
 
             $('#add-pay-schedule-modal').modal('hide');
         }
@@ -855,9 +855,9 @@ $(document).on('submit', '#edit-pay-schedule-form', function(e) {
             var result = JSON.parse(res);
             var prev = $('#pay-schedule option:selected').prev();
 
-            $(`#add-employee-modal #pay-schedule option:selected`).remove();
+            $(`#pay-schedule option:selected`).remove();
             $(`<option value="${result.id}" selected>${result.name}</option>`).insertAfter(prev);
-            $('#add-employee-modal #pay-schedule').trigger('change');
+            $('#pay-schedule').trigger('change');
 
             $('#edit-pay-schedule-modal').modal('hide');
         }

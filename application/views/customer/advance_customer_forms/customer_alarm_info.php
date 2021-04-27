@@ -6,7 +6,7 @@
     <div class="card-body">
         <div class="row form_line">
             <div class="col-md-4">
-                <label for="">Monitoring Company</label>
+                Monitoring Company
             </div>
             <div class="col-md-8">
                 <select id="monitor_comp" name="monitor_comp" data-customer-source="dropdown" class="input_select" >
@@ -29,7 +29,7 @@
         </div>
         <div class="row form_line">
             <div class="col-md-4">
-                <label for="">Monitoring ID</label>
+                Monitoring ID
             </div>
             <div class="col-md-8">
                 <input type="text" class="form-control" name="monitor_id" id="monitor_id" value="<?php if(isset($alarm_info)){ echo $alarm_info->monitor_id != 0 ? $alarm_info->monitor_id : '' ; } ?>"/>
@@ -38,7 +38,7 @@
 
         <div class="row form_line">
             <div class="col-md-4">
-                <label for="">Account Type</label>
+                Account Type
             </div>
             <div class="col-md-8">
                 <select name="acct_type" id="acct_type" class="input_select">
@@ -51,7 +51,7 @@
         </div>
         <div class="row form_line">
             <div class="col-md-4">
-                <label>Online</label>
+                <label>Online
             </div>
             <div class="col-md-8">
                 <select id="online" name="online" data-customer-source="dropdown" class="form-controls input_select">
@@ -62,7 +62,7 @@
         </div>
         <div class="row form_line">
             <div class="col-md-4">
-                <label>In Service</label>
+                <label>In Service
             </div>
             <div class="col-md-8">
                 <select id="in_service" name="in_service" data-customer-source="dropdown" class="form-controls input_select">
@@ -73,7 +73,7 @@
         </div>
         <div class="row form_line">
             <div class="col-md-4">
-                <label>Equipment</label>
+                <label>Equipment
             </div>
             <div class="col-md-8">
                 <select id="equipment" name="equipment" data-customer-source="dropdown" class="form-controls input_select">
@@ -87,7 +87,7 @@
 
         <div class="row form_line">
             <div class="col-md-4">
-                <label for="">Abort Code</label>
+                Abort Code
             </div>
             <div class="col-md-8">
                 <input type="text" class="form-control" name="passcode" id="passcode" value="<?php if(isset($alarm_info)){ echo $alarm_info->passcode; } ?>"/>
@@ -95,7 +95,7 @@
         </div>
         <div class="row form_line">
             <div class="col-md-4">
-                <label for="">Installer Code</label>
+                Installer Code
             </div>
             <div class="col-md-8">
                 <input type="text" class="form-control" name="install_code" id="install_code" value="<?php if(isset($alarm_info)){ echo $alarm_info->install_code!=0 ?  $alarm_info->install_code : ''; } ?>"/>
@@ -103,7 +103,7 @@
         </div>
         <div class="row form_line">
             <div class="col-md-4">
-                <label for="">Monitoring Confirm#</label>
+                Monitoring Confirm#
             </div>
             <div class="col-md-8">
                 <input type="text" class="form-control" name="mcn" id="mcn" value="<?php if(isset($alarm_info)){ echo $alarm_info->mcn !=0 ? $alarm_info->mcn : ''; } ?>"/>
@@ -111,7 +111,7 @@
         </div>
         <div class="row form_line">
             <div class="col-md-4">
-                <label for="">Signal Confirm#</label>
+                Signal Confirm#
             </div>
             <div class="col-md-8">
                 <input type="text" class="form-control" name="scn" id="scn" value="<?php if(isset($alarm_info)){ echo $alarm_info->scn !=0 ? $alarm_info->scn : ''; } ?>"/>
@@ -120,7 +120,7 @@
 
         <div class="row form_line">
             <div class="col-md-4">
-                <label for="">Panel Type</label>
+                Panel Type
             </div>
             <div class="col-md-8">
                 <select name="panel_type" id="panel_type" class="input_select">
@@ -136,60 +136,60 @@
                     <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'GRI'){echo "selected";} } ?> value="GRI">GRI</option>
                     <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'GE'){echo "selected";} } ?> value="GE">GE</option>
                     <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'Honeywell'){echo "selected";} } ?> value="Honeywell">Honeywell</option>
-                    <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'Honeywell'){echo "selected";} } ?> value="Honeywell Touch">Honeywell Touch</option>
-                    <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'Honeywell'){echo "selected";} } ?> value="Honeywell 3000">Honeywell 3000</option>
+                    <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'Honeywell Touch'){echo "selected";} } ?> value="Honeywell Touch">Honeywell Touch</option>
+                    <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'Honeywell 3000'){echo "selected";} } ?> value="Honeywell 3000">Honeywell 3000</option>
                     <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'Honeywell'){echo "selected";} } ?> value="Honeywell Vista">Honeywell Vista</option>
-                    <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'Honeywell'){echo "selected";} } ?> value="Honeywell Vista with Sim">Honeywell Vista with Sim</option>
-                    <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'Honeywell'){echo "selected";} } ?> value="Honeywell Lyric">Honeywell Lyric</option>
+                    <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'Honeywell Vista with Sim'){echo "selected";} } ?> value="Honeywell Vista with Sim">Honeywell Vista with Sim</option>
+                    <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'Honeywell Lyric'){echo "selected";} } ?> value="Honeywell Lyric">Honeywell Lyric</option>
                     <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'IEI'){echo "selected";} } ?> value="IEI">IEI</option>
                     <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'MIER'){echo "selected";} } ?> value="MIER">MIER</option>
                     <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == '2 GIG'){echo "selected";} } ?> value="2 GIG">2 GIG</option>
-                    <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == '2 GIG'){echo "selected";} } ?> value="2 GIG Go Panel 2">2 GIG Go Panel 2</option>
-                    <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == '2 GIG'){echo "selected";} } ?> value="2 GIG Go Panel 3">2 GIG Go Panel 3</option>
+                    <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == '2 GIG Go Panel 2'){echo "selected";} } ?> value="2 GIG Go Panel 2">2 GIG Go Panel 2</option>
+                    <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == '2 GIG Go Panel 3'){echo "selected";} } ?> value="2 GIG Go Panel 3">2 GIG Go Panel 3</option>
                     <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'Qolsys'){echo "selected";} } ?> value="Qolsyx">Qolsys</option>
-                    <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'Qolsys'){echo "selected";} } ?> value="Qolsyx">Qolsys IQ Panel 2</option>
-                    <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'QIP2P'){echo "selected";} } ?> value="QIP2P">Qolsys IQ Panel 2 Plus</option>
-                    <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'Qolsys'){echo "selected";} } ?> value="">Qolsys IQ Panel 3</option>
+                    <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'Qolsys IQ Panel 2'){echo "selected";} } ?> value="Qolsys IQ Panel 2">Qolsys IQ Panel 2</option>
+                    <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'Qolsys IQ Panel 2 Plus'){echo "selected";} } ?> value="Qolsys IQ Panel 2 Plus">Qolsys IQ Panel 2 Plus</option>
+                    <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'Qolsys IQ Panel 3'){echo "selected";} } ?> value="Qolsys IQ Panel 3">Qolsys IQ Panel 3</option>
                     <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'Custom'){echo "selected";} } ?> value="Custom">Custom</option>
-                    <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'DIGI'){echo "selected";} } ?> value="Other">Other</option>
+                    <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'Other'){echo "selected";} } ?> value="Other">Other</option>
                 </select>
             </div>
         </div>
         <div class="row form_line">
             <div class="col-md-4">
-                <label for="">System Package Type</label>
+                System Package Type
             </div>
             <div class="col-md-8">
                 <select name="system_type" id="system_type" class="input_select">
                     <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == ''){echo "selected";} } ?> value=""></option>
-                    <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == 'DIGI'){echo "selected";} } ?> value="DIGI">Landline</option>
-                    <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == 'DW2W'){echo "selected";} } ?> value="DW2W">Landline W/ 2-Way</option>
-                    <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == 'DWCB'){echo "selected";} } ?> value="DWCB">Landline W/ Cell Backup</option>
-                    <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == 'D2CB'){echo "selected";} } ?> value="D2CB">Landline W/ 2-Way &amp; Cell Backup</option>
-                    <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == 'CPDB'){echo "selected";} } ?> value="CPDB">Cell Primary</option>
-                    <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == 'CP2W'){echo "selected";} } ?> value="CP2W">Cell Primary w/2Way</option>
-                    <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == 'WSF'){echo "selected";} } ?> value="WSF">Wireless Signal Forwarding</option>
-                    <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == 'C'){echo "selected";} } ?> value="C">Commercial</option>
-                    <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == 'CP'){echo "selected";} } ?> value="CP">Commercial Plus</option>
-                    <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == 'I'){echo "selected";} } ?> value="I">Interactive</option>
-                    <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == 'IG'){echo "selected";} } ?> value="IG">Interactive Gold</option>
-                    <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == 'IPA'){echo "selected";} } ?> value="IPA">Interactive Plus Automation</option>
-                    <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == 'IwDVR'){echo "selected";} } ?> value="IwDVR">Interactive w/DVR</option>
-                    <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == 'IwDB'){echo "selected";} } ?> value="IwDB">Interactive w/Dbell</option>
-                    <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == 'IwDBIP'){echo "selected";} } ?> value="IwDBIP">Interactive w/Dbell & IP Camera</option>
+                    <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == 'Landline'){echo "selected";} } ?> value="Landline">Landline</option>
+                    <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == 'Landline W/ 2-Way'){echo "selected";} } ?> value="Landline W/ 2-Way">Landline W/ 2-Way</option>
+                    <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == 'Landline W/ Cell Backup'){echo "selected";} } ?> value="Landline W/ Cell Backup">Landline W/ Cell Backup</option>
+                    <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == 'Landline W/ 2-Way & Cell Backup'){echo "selected";} } ?> value="Landline W/ 2-Way & Cell Backup">Landline W/ 2-Way & Cell Backup</option>
+                    <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == 'Cell Primary'){echo "selected";} } ?> value="Cell Primary">Cell Primary</option>
+                    <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == 'Cell Primary w/2Way'){echo "selected";} } ?> value="Cell Primary w/2Way">Cell Primary w/2Way</option>
+                    <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == 'Wireless Signal Forwarding'){echo "selected";} } ?> value="Wireless Signal Forwarding">Wireless Signal Forwarding</option>
+                    <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == 'Commercial'){echo "selected";} } ?> value="Commercial">Commercial</option>
+                    <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == 'Commercial Plus'){echo "selected";} } ?> value="Commercial Plus">Commercial Plus</option>
+                    <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == 'Interactive'){echo "selected";} } ?> value="I">Interactive</option>
+                    <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == 'Interactive Gold'){echo "selected";} } ?> value="Interactive Gold">Interactive Gold</option>
+                    <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == 'Interactive Plus Automation'){echo "selected";} } ?> value="Interactive Plus Automation">Interactive Plus Automation</option>
+                    <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == 'Interactive w/DVR'){echo "selected";} } ?> value="Interactive w/DVR">Interactive w/DVR</option>
+                    <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == 'Interactive w/Dbell'){echo "selected";} } ?> value="Interactive w/Dbell">Interactive w/Dbell</option>
+                    <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == 'Interactive w/Dbell & IP Camera'){echo "selected";} } ?> value="Interactive w/Dbell & IP Camera">Interactive w/Dbell & IP Camera</option>
                     <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == 'PERS'){echo "selected";} } ?> value="PERS">PERS</option>
                     <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == 'WIFI'){echo "selected";} } ?> value="WIFI">WIFI</option>
-                    <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == 'CPwWIFI'){echo "selected";} } ?> value="CPwWIFI">Cell Primary w/WIFI</option>
-                    <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == 'CPwAC'){echo "selected";} } ?> value="CPwAC">Cell Primary w/Access Control</option>
-                    <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == 'IwAC'){echo "selected";} } ?> value="IwAC">Interactive w/Access Control</option>
-                    <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == 'IwACwA'){echo "selected";} } ?> value="IwACwA">Interactive w/Access Control w/Automn</option>
+                    <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == 'Cell Primary w/WIFI'){echo "selected";} } ?> value="Cell Primary w/WIFI">Cell Primary w/WIFI</option>
+                    <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == 'Cell Primary w/Access Control'){echo "selected";} } ?> value="Cell Primary w/Access Control">Cell Primary w/Access Control</option>
+                    <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == 'Interactive w/Access Control'){echo "selected";} } ?> value="Interactive w/Access Control">Interactive w/Access Control</option>
+                    <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == 'Interactive w/Access Control w/Automn'){echo "selected";} } ?> value="Interactive w/Access Control w/Automn">Interactive w/Access Control w/Automn</option>
                 </select>
                 <a href="<?= base_url() ?>customer/settings" target="_blank"  style="color:#58bc4f;font-size: 10px;"><span class="fa fa-plus"></span> Manage System Type</a>&nbsp;&nbsp;
             </div>
         </div>
         <div class="row form_line">
             <div class="col-md-4">
-                <label for="">Warranty Type</label>
+                Warranty Type
             </div>
             <div class="col-md-8">
                 <select id="warranty_type" name="warranty_type" data-customer-source="dropdown" class="input_select" >
@@ -206,7 +206,7 @@
         <hr>
         <div class="row form_line">
             <div class="col-md-4">
-                <label for="">Dealer</label>
+                Dealer
             </div>
             <div class="col-md-8">
                 <select id="dealer" name="dealer" data-customer-source="dropdown" class="input_select" >
@@ -218,7 +218,7 @@
         </div>
         <div class="row form_line">
             <div class="col-md-4">
-                <label for=""> Login </label>
+                 Login 
             </div>
             <div class="col-md-8">
                 <input type="text" class="form-control" name="alarm_login" id="alarm_login" value="<?php if(isset($alarm_info)){ echo $alarm_info->alarm_login; } ?>"/>
@@ -226,7 +226,7 @@
         </div>
         <div class="row form_line">
             <div class="col-md-4">
-                <label for="">Customer ID </label>
+                Customer ID 
             </div>
             <div class="col-md-8">
                 <input type="text" class="form-control" name="alarm_customer_id" id="alarm_customer_id" value="<?php if(isset($alarm_info)){ echo $alarm_info->alarm_customer_id; } ?>"/>
@@ -234,7 +234,7 @@
         </div>
         <div class="row form_line">
             <div class="col-md-4">
-                <label for="">CS Account</label>
+                CS Account
             </div>
             <div class="col-md-8">
                 <input type="text" class="form-control" name="alarm_cs_account" id="alarm_cs_account" value="<?php if(isset($alarm_info)){ echo $alarm_info->alarm_cs_account; } ?>"/>
@@ -250,7 +250,7 @@
         <div class="card-body">
             <div class="row form_line">
                 <div class="col-md-6">
-                    <label for="">Portal Status (on/off)</label>
+                    Portal Status (on/off)
                 </div>
                 <div class="col-md-6">
                     <input type="radio" name="portal_status" value="1" id="portal_status1" <?php if(isset($access_info)){ echo $access_info->portal_status == 1 ? 'checked': ''; } ?> >
@@ -263,7 +263,7 @@
 
             <div class="row form_line">
                 <div class="col-md-6">
-                    <label for="">Reset Password </label>
+                    Reset Password 
                 </div>
                 <div class="col-md-6">
                     <button type="button" class="btn btn-primary btn-md" name="reset_password" id="reset_password" >Send Email Reset </button>
@@ -271,7 +271,7 @@
             </div>
             <div class="row form_line">
                 <div class="col-md-6">
-                    <label for="">Login</label>
+                    Login
                 </div>
                 <div class="col-md-6">
                     <input type="text" class="form-control" name="access_login" id="login" value="<?php if(isset($access_info)){ echo $access_info->access_login; } ?>"/>
@@ -279,7 +279,7 @@
             </div>
             <div class="row form_line">
                 <div class="col-md-6">
-                    <label for="">Password</label>
+                    Password
                 </div>
                 <div class="col-md-6">
                     <input type="text" class="form-control" name="access_password" id="password" value="<?php if(isset($access_info)){ echo $access_info->access_password; } ?>"/>
@@ -295,7 +295,7 @@
         <div class="card-body">
             <div class="row form_line">
                 <div class="col-md-4">
-                    <label for="">Custom Field 1</label>
+                    Custom Field 1
                 </div>
                 <div class="col-md-8">
                     <input type="text" class="form-control" name="office_custom_field1" id="office_custom_field1" value="<?php if(isset($office_info)){ echo  $office_info->office_custom_field1; } ?>" />
@@ -303,7 +303,7 @@
             </div>
             <div class="row form_line">
                 <div class="col-md-4">
-                    <label for="">Custom Field 2</label>
+                    Custom Field 2
                 </div>
                 <div class="col-md-8">
                     <input type="text" class="form-control" name="office_custom_field1" id="office_custom_field1" value="<?php if(isset($office_info)){ echo  $office_info->office_custom_field1; } ?>" />
@@ -311,7 +311,7 @@
             </div>
             <div class="row form_line">
                 <div class="col-md-4">
-                    <label for="">Custom Field 3</label>
+                    Custom Field 3
                 </div>
                 <div class="col-md-8">
                     <input type="text" class="form-control" name="office_custom_field1" id="office_custom_field1" value="<?php if(isset($office_info)){ echo  $office_info->office_custom_field1; } ?>" />
@@ -319,7 +319,7 @@
             </div>
             <div class="row form_line">
                 <div class="col-md-4">
-                    <label for="">Custom Field 4</label>
+                    Custom Field 4
                 </div>
                 <div class="col-md-8">
                     <input type="text" class="form-control" name="office_custom_field1" id="office_custom_field1" value="<?php if(isset($office_info)){ echo  $office_info->office_custom_field1; } ?>" />
@@ -334,7 +334,7 @@
         </div>
         <div class="card-body">
             <div class="row form-line">
-                <textarea type="text" class="form-controls" name="notes" id="notes" cols="100%" rows="5"> </textarea>
+                <textarea type="text" class="form-controls" name="notes" id="notes" cols="100%" rows="5"></textarea>
             </div>
         </div>
         <div class="card-header">

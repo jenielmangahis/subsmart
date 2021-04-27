@@ -433,6 +433,7 @@ $route['accounting/contractors/(:any)/get-payments-total']['post'] = 'accounting
 $route['accounting/vendors'] = 'accounting_controllers/vendors/index';
 $route['accounting/vendors/load']['post'] = 'accounting_controllers/vendors/load_vendors'; 
 $route['accounting/vendors/add']['post'] = 'accounting_controllers/vendors/add'; 
+$route['accounting/vendors/view/(:any)'] = 'accounting_controllers/vendors/view/$1';
 
 $route['accounting/vendor-details/(:any)'] = 'accounting/vendordetails/$1';
 $route['accounting/taxes/edit-settings'] = 'taxes/edit_settings';

@@ -69,7 +69,7 @@ add_css(array(
                                             <p><small>Arrival</small></p>
                                         </div> &nbsp;&nbsp;
                                         <div class="stepwizard-step col-xs-3">
-                                            <a href="#" <?php if(isset($jobs_data) && $jobs_data->status == 'On My Way'): ?>data-toggle="modal" data-target="#start_modal" data-backdrop="static" data-keyboard="false" <?php endif; ?>  type="button" class="btn btn-circle <?= isset($jobs_data) && $jobs_data->status == 'Started'  ? 'btn-success' : 'btn-default' ; ?>" disabled="disabled">
+                                            <a href="#" <?php if(isset($jobs_data) && $jobs_data->status == 'Arrival'): ?>data-toggle="modal" data-target="#start_modal" data-backdrop="static" data-keyboard="false" <?php endif; ?>  type="button" class="btn btn-circle <?= isset($jobs_data) && $jobs_data->status == 'Started'  ? 'btn-success' : 'btn-default' ; ?>" disabled="disabled">
                                                 <span style="font-size: 24px;" class="fa fa-hourglass-start"></span></a>
                                             <p><small>Start</small></p>
                                         </div>
@@ -1309,7 +1309,7 @@ add_css(array(
                 <p>Arrive at:</p>
                 <input type="date" name="omw_date" id="omw_date" class="form-control" required>
                 <input type="hidden" name="id" id="jobid" value="<?php if(isset($jobs_data)){echo $jobs_data->job_unique_id;} ?>">
-                <input type="hidden" name="status" id="status" value="On My Way">
+                <input type="hidden" name="status" id="status" value="Arrival">
                 <select id="omw_time" name="omw_time" class="form-control" required>
                     <?php for($x=0;$x<time_availability(0,TRUE);$x++){ ?>
                         <option <?= isset($jobs_data) && strtolower($jobs_data->start_time) == time_availability($x) ?  'selected' : '';  ?> value="<?= time_availability($x); ?>"><?= time_availability($x); ?></option>

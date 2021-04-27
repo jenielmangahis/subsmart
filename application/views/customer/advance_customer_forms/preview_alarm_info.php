@@ -7,7 +7,7 @@
     <div class="card-body">
         <div class="row form_line">
             <div class="col-md-6">
-                <label for="">Monitoring Company</label>
+                Monitoring Company
             </div>
             <div class="col-md-6">
                 <?= !empty($alarm_info->monitor_comp) ? $alarm_info->monitor_comp : '---';?>
@@ -15,7 +15,7 @@
         </div>
         <div class="row form_line">
             <div class="col-md-6">
-                <label for="">Monitoring ID</label>
+                Monitoring ID
             </div>
             <div class="col-md-6">
                 <?= !empty($alarm_info->monitor_id) ? $alarm_info->monitor_id : '---';?>
@@ -24,7 +24,7 @@
 
         <div class="row form_line">
             <div class="col-md-6">
-                <label for="">Account Type</label>
+                Account Type
             </div>
             <div class="col-md-6">
                 <?= !empty($alarm_info->acct_type) ? $alarm_info->acct_type : '---';?>
@@ -33,7 +33,7 @@
 
         <div class="row form_line">
             <div class="col-md-6">
-                <label for="">Abort/Password Code</label>
+                Abort/Password Code
             </div>
             <div class="col-md-6">
                 <?= !empty($alarm_info->passcode) ? $alarm_info->passcode : '---';?>
@@ -41,7 +41,7 @@
         </div>
         <div class="row form_line">
             <div class="col-md-6">
-                <label for="">Installer Code</label>
+                Installer Code
             </div>
             <div class="col-md-6">
                 <?= !empty($alarm_info->install_code) ? $alarm_info->install_code : '---';?>
@@ -49,7 +49,7 @@
         </div>
         <div class="row form_line">
             <div class="col-md-6">
-                <label for="">Monitoring Confirm #</label>
+                Monitoring Confirm #
             </div>
             <div class="col-md-6">
                 <?= !empty($alarm_info->mcn) ? $alarm_info->mcn : '---';?>
@@ -57,7 +57,7 @@
         </div>
         <div class="row form_line">
             <div class="col-md-6">
-                <label for="">Signal Confirm #</label>
+                Signal Confirm #
             </div>
             <div class="col-md-6">
                 <?= !empty($alarm_info->scn) ? $alarm_info->scn : '---';?>
@@ -66,7 +66,7 @@
 
         <div class="row form_line">
             <div class="col-md-6">
-                <label for="">Panel Type</label>
+                Panel Type
             </div>
             <div class="col-md-6">
                 <?= !empty($alarm_info->panel_type) ? $alarm_info->panel_type : '---';?>
@@ -74,7 +74,7 @@
         </div>
         <div class="row form_line">
             <div class="col-md-6">
-                <label for="">System Package Type</label>
+                System Package Type
             </div>
             <div class="col-md-6">
                 <?= !empty($alarm_info->system_type) ? $alarm_info->system_type : '---';?>
@@ -82,7 +82,7 @@
         </div>
         <div class="row form_line">
             <div class="col-md-6">
-                <label for="">Warranty Type</label>
+                Warranty Type
             </div>
             <div class="col-md-6">
                 <?= !empty($alarm_info->warranty_type) ? $alarm_info->warranty_type : '---';?>
@@ -91,7 +91,7 @@
         <hr>
         <div class="row form_line">
             <div class="col-md-6">
-                <label for="">Dealer</label>
+                Dealer
             </div>
             <div class="col-md-6">
                 <?= !empty($alarm_info->dealer) ? $alarm_info->dealer : '---';?>
@@ -99,7 +99,7 @@
         </div>
         <div class="row form_line">
             <div class="col-md-6">
-                <label for=""> Login </label>
+                 Login 
             </div>
             <div class="col-md-6">
                 <?= !empty($alarm_info->alarm_login) ? $alarm_info->alarm_login : '---';?>
@@ -107,7 +107,7 @@
         </div>
         <div class="row form_line">
             <div class="col-md-6">
-                <label for="">Customer ID </label>
+                Customer ID 
             </div>
             <div class="col-md-6">
                 <?= !empty($alarm_info->alarm_customer_id) ? $alarm_info->alarm_customer_id : '---';?>
@@ -115,7 +115,7 @@
         </div>
         <div class="row form_line">
             <div class="col-md-6">
-                <label for="">CS Account</label>
+                CS Account
             </div>
             <div class="col-md-6">
                 <?= !empty($alarm_info->alarm_cs_account) ? $alarm_info->alarm_cs_account : '---';?>
@@ -129,7 +129,7 @@
     <div class="card-body">
         <div class="row form_line">
             <div class="col-md-6">
-                <label for="">Pre-Install Survey</label>
+                Pre-Install Survey
             </div>
             <div class="col-md-6" style="color: <?= $office_info->pre_install_survey == 'Pass' ? 'darkgreen' : 'darkred';?>; ">
                 <?= !empty($office_info->pre_install_survey) ? $office_info->pre_install_survey : '---';?>
@@ -137,7 +137,7 @@
         </div>
         <div class="row form_line">
             <div class="col-md-6">
-                <label for="">Post-Install Survey</label>
+                Post-Install Survey
             </div>
             <div class="col-md-6" style="color: <?= $office_info->pre_install_survey == 'Pass' ? 'darkgreen' : 'darkred';?>;">
                 <?= !empty($office_info->post_install_survey) ? $office_info->post_install_survey : '---';?>
@@ -146,10 +146,10 @@
         <hr>
         <div class="row form_line">
             <div class="col-md-6">
-                <label for="">Monitoring Waived</label>
+                Monitoring Waived
             </div>
             <div class="col-md-6">
-                <?= !empty($office_info->monitoring_waived) ? $office_info->monitoring_waived : '---';?>
+                <?= !empty($office_info->monitoring_waived) ? $office_info->monitoring_waived.' months' : '---';?>
             </div>
         </div>
 
@@ -158,14 +158,14 @@
                 <label for="rebate_offer"><span>Rebate Offered</span>
             </div>
             <div class="col-md-6">
-                <?= !empty($office_info->rebate_offer) ? $office_info->rebate_offer : '---';?>
+                <?= $office_info->rebate_offer == 1 ? 'Enabled' : '---';?>
             </div>
         </div>
 
 
         <div class="row form_line">
             <div class="col-md-6">
-                <label for="">Rebate Check # 1</label>
+                Rebate Check # 1
             </div>
             <div class="col-md-6">
                 <?= !empty($office_info->rebate_check1) ? $office_info->rebate_check1 : '---';?>
@@ -173,15 +173,15 @@
         </div>
         <div class="row form_line">
             <div class="col-md-6">
-                <label for="">Amount $</label>
+                Amount $
             </div>
             <div class="col-md-6">
-                <?= !empty($office_info->rebate_check1_amt) ? $office_info->rebate_check1_amt : '---';?>
+                $<?= !empty($office_info->rebate_check1_amt) ? number_format((float)$office_info->rebate_check1_amt,2,'.',',') : '0.00';?>
             </div>
         </div>
         <div class="row form_line">
             <div class="col-md-6">
-                <label for="">Rebate Check # 2</label>
+                Rebate Check # 2
             </div>
             <div class="col-md-6">
                 <?= !empty($office_info->rebate_check2) ? $office_info->rebate_check2 : '---';?>
@@ -189,15 +189,15 @@
         </div>
         <div class="row form_line">
             <div class="col-md-6">
-                <label for="">Amount $</label>
+                Amount $
             </div>
             <div class="col-md-6">
-                <?= !empty($office_info->rebate_check2_amt) ? $office_info->rebate_check2_amt : '---';?>
+                $<?= !empty($office_info->rebate_check2_amt) ? number_format((float)$office_info->rebate_check2_amt,2,'.',',') : '0.00';?>
             </div>
         </div>
         <div class="row form_line">
             <div class="col-md-6">
-                <label for="">Activation Fee</label>
+                Activation Fee
             </div>
             <div class="col-md-6">
                 <?= !empty($office_info->activation_fee) ? $office_info->activation_fee : '---';?>
@@ -207,77 +207,77 @@
         <hr>
         <div class="row form_line">
             <div class="col-md-6">
-                <label for="">Commision Scheme</label>
+                Commision Scheme
             </div>
             <div class="col-md-6">
-                <?= !empty($office_info->commision_scheme) ? $office_info->commision_scheme : '---';?>
-            </div>
-        </div>
-        <div class="row form_line">
-            <div class="col-md-6">
-                <label for="">Rep Commission </label>
-            </div>
-            <div class="col-md-6">
-                <?= !empty($office_info->rep_comm) ? $office_info->rep_comm : '---';?>
+                <?= $office_info->commision_scheme == 1 ? 'On' : 'Off';?>
             </div>
         </div>
         <div class="row form_line">
             <div class="col-md-6">
-                <label for="">Rep Upfront Pay</label>
+                Rep Commission 
             </div>
             <div class="col-md-6">
-                <?= !empty($office_info->rep_upfront_pay) ? $office_info->rep_upfront_pay : '---';?>
-            </div>
-        </div>
-        <div class="row form_line">
-            <div class="col-md-6">
-                <label for="">Rep Tiered Upront Bonus</label>
-            </div>
-            <div class="col-md-6">
-                <?= !empty($office_info->rep_tiered_bonus) ? $office_info->rep_tiered_bonus : '---';?>
+                $<?= !empty($office_info->rep_comm) ?number_format((float)$office_info->rep_comm,2,'.',',') : '0.00';?>
             </div>
         </div>
         <div class="row form_line">
             <div class="col-md-6">
-                <label for="">Rep Tiered Holdfund</label>
+                Rep Upfront Pay
             </div>
             <div class="col-md-6">
-                <?= !empty($office_info->rep_holdfund_bonus) ? $office_info->rep_holdfund_bonus : '---';?>
+                $<?= !empty($office_info->rep_upfront_pay) ? number_format((float)$office_info->rep_upfront_pay,2,'.',',') : '0.00';?>
             </div>
         </div>
-
         <div class="row form_line">
             <div class="col-md-6">
-                <label for="">Rep Deduction Total</label>
+                Rep Tiered Upront Bonus
             </div>
             <div class="col-md-6">
-                <?= !empty($office_info->rep_deduction) ? $office_info->rep_deduction : '---';?>
+                $<?= !empty($office_info->rep_tiered_bonus) ? number_format((float)$office_info->rep_tiered_bonus,2,'.',',') : '0.00';?>
+            </div>
+        </div>
+        <div class="row form_line">
+            <div class="col-md-6">
+                Rep Tiered Holdfund
+            </div>
+            <div class="col-md-6">
+                $<?= !empty($office_info->rep_holdfund_bonus) ? number_format((float)$office_info->rep_holdfund_bonus,2,'.',',') : '0.00';?>
             </div>
         </div>
 
         <div class="row form_line">
             <div class="col-md-6">
-                <label for="">Tech Commission </label>
+                Rep Deduction Total
             </div>
             <div class="col-md-6">
-                <?= !empty($office_info->tech_comm) ? $office_info->tech_comm : '---';?>
-            </div>
-        </div>
-        <div class="row form_line">
-            <div class="col-md-6">
-                <label for="tech_upfront_pay">Tech Upfront Pay </label>
-            </div>
-            <div class="col-md-6">
-                <?= !empty($office_info->tech_upfront_pay) ? $office_info->tech_upfront_pay : '---';?>
+                $<?= !empty($office_info->rep_deduction) ? number_format((float)$office_info->rep_deduction,2,'.',',') : '0.00';?>
             </div>
         </div>
 
         <div class="row form_line">
             <div class="col-md-6">
-                <label for="">Tech Deduction Total</label>
+                Tech Commission 
             </div>
             <div class="col-md-6">
-                <?= !empty($office_info->tech_deduction) ? $office_info->tech_deduction : '---';?>
+                $<?= !empty($office_info->tech_comm) ? number_format((float)$office_info->tech_comm,2,'.',',') : '0.00';?>
+            </div>
+        </div>
+        <div class="row form_line">
+            <div class="col-md-6">
+                <label for="tech_upfront_pay">Tech Upfront Pay 
+            </div>
+            <div class="col-md-6">
+                $<?= !empty($office_info->tech_upfront_pay) ? number_format((float)$office_info->tech_upfront_pay,2,'.',',') : '0.00';?>
+            </div>
+        </div>
+
+        <div class="row form_line">
+            <div class="col-md-6">
+                Tech Deduction Total
+            </div>
+            <div class="col-md-6">
+                <?= !empty($office_info->tech_deduction) ? number_format((float)$office_info->price_per_point,2,'.',','): '---';?>
             </div>
         </div>
 
@@ -285,33 +285,33 @@
 
         <div class="row form_line">
             <div class="col-md-8">
-                <label for="">Rep Hold Fund Charge Back </label>
+                Rep Hold Fund Charge Back 
             </div>
             <div class="col-md-4">
-                <?= !empty($office_info->rep_charge_back) ? $office_info->rep_charge_back : '---';?>
+                $<?= !empty($office_info->rep_charge_back) ? number_format((float)$office_info->rep_charge_back,2,'.',','): '0.00';?>
             </div>
         </div>
         <div class="row form_line">
             <div class="col-md-8">
-                <label for="">Rep Payroll Charge Back </label>
+                Rep Payroll Charge Back 
             </div>
             <div class="col-md-4">
-                <?= !empty($office_info->rep_payroll_charge_back) ? $office_info->rep_payroll_charge_back : '---';?>
+                $<?= !empty($office_info->rep_payroll_charge_back) ? number_format((float)$office_info->rep_payroll_charge_back,2,'.',',') : '0.00';?>
             </div>
         </div>
         <hr>
         <div class="row form_line">
             <div class="col-md-6">
-                <label for="">Points Scheme Override</label>
+                Points Scheme Override
             </div>
             <div class="col-md-6">
-                <?= !empty($office_info->pso) ? $office_info->pso : '---';?>
+                <?= $office_info->pso == 1 ? 'On' : 'Off';?>
             </div>
         </div>
 
         <div class="row form_line">
             <div class="col-md-6">
-                <label for="">Points Included</label>
+                Points Included
             </div>
             <div class="col-md-6">
                 <?= !empty($office_info->points_include) ? $office_info->points_include : '---';?>
@@ -319,24 +319,24 @@
         </div>
         <div class="row form_line">
             <div class="col-md-6">
-                <label for="">Price Per Point </label>
+                Price Per Point 
             </div>
             <div class="col-md-6">
-                <?= !empty($office_info->price_per_point) ? $office_info->price_per_point : '---';?>
+                $<?= !empty($office_info->price_per_point) ? number_format((float)$office_info->price_per_point,2,'.',',') : '0.00';?>
             </div>
         </div>
         <hr>
         <div class="row form_line">
             <div class="col-md-6">
-                <label for="">Purchase Price </label>
+                Purchase Price 
             </div>
             <div class="col-md-6">
-                <?= !empty($office_info->purchase_price) ? $office_info->purchase_price : '---';?>
+                $<?= !empty($office_info->purchase_price) ? number_format((float)$office_info->purchase_price,2,'.',',') : '0.00';?>
             </div>
         </div>
         <div class="row form_line">
             <div class="col-md-6">
-                <label for="">Purchase Multiple</label>
+                Purchase Multiple
             </div>
             <div class="col-md-6">
                 <?= !empty($office_info->purchase_multiple) ? $office_info->purchase_multiple : '---';?>
@@ -344,46 +344,46 @@
         </div>
         <div class="row form_line">
             <div class="col-md-6">
-                <label for="">Purchase Discount </label>
+                Purchase Discount 
             </div>
             <div class="col-md-6">
-                <?= !empty($office_info->purchase_discount) ? $office_info->purchase_discount : '---';?>
+                $<?= !empty($office_info->purchase_discount) ? number_format((float)$office_info->purchase_discount,2,'.',',') : '0.00';?>
             </div>
         </div>
         <hr>
         <div class="row form_line">
             <div class="col-md-6">
-                <label for="">Equipment Cost</label>
+                Equipment Cost
             </div>
             <div class="col-md-6">
-                <?= !empty($office_info->equipment_cost) ? $office_info->equipment_cost : '---';?>
-            </div>
-        </div>
-        <div class="row form_line">
-            <div class="col-md-6">
-                <label for="">Labor Cost</label>
-            </div>
-            <div class="col-md-6">
-                <?= !empty($office_info->labor_cost) ? $office_info->labor_cost : '---';?>
+                $<?= !empty($office_info->equipment_cost) ? number_format((float)$office_info->equipment_cost,2,'.',',') : '0.00';?>
             </div>
         </div>
         <div class="row form_line">
             <div class="col-md-6">
-                <label for="">Job Profit</label>
+                Labor Cost
             </div>
             <div class="col-md-6">
-                <?= !empty($office_info->job_profit) ? $office_info->job_profit : '---';?>
+                $<?= !empty($office_info->labor_cost) ? number_format((float)$office_info->labor_cost,2,'.',',') : '0.00';?>
+            </div>
+        </div>
+        <div class="row form_line">
+            <div class="col-md-6">
+                Job Profit
+            </div>
+            <div class="col-md-6">
+                $<?= !empty($office_info->job_profit) ? number_format((float)$office_info->job_profit,2,'.',',') : '0.00';?>
             </div>
         </div>
         <br>
         <div class="row form_line">
             <div class="col-md-6">
-                <label for="">Shareable Url Link</label>
+                Shareable Url Link
             </div>
             <div class="col-md-6">
-                <?= !empty($office_info->url) ? $office_info->url : base_url('customer/preview/').$this->uri->segment(3); ?>
-                <br>
+                <input readonly type="text" id="sharableLink" value="<?=  base_url('customer/preview/').$this->uri->segment(3); ?>"/>
                 <!--<a href="<?= base_url('customer/preview/').$this->uri->segment(3) ?>"  id="exportCustomers"><span class="fa fa-share"></span> Share</a>-->
+                <a onclick="copy_url();" id="copyLink" href="javascript:void(0);"><span style="color: darkgreen;" class="fa fa-copy"></span></a>
             </div>
         </div>
     </div>

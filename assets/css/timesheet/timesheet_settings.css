@@ -21,3 +21,8 @@
 label.est_wage_privacy_editor {
     font-size: 10px;
 }
+
+.report_schedule label {
+    font-size: 13px;
+    padding-top: 3px;
+}

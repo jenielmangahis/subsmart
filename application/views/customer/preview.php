@@ -126,7 +126,7 @@ add_css(array(
                         <a href="#" id="more_detail_furnisher" class="header_link">Scanned Documents</a> |
                         <a href="#" id="more_detail_furnisher" class="header_link">Credit Report</a> |
                         <a href="<?php echo base_url('customer/add_advance/'.$this->uri->segment(3)); ?>" id="more_detail_furnisher" class="header_link">Edit Customer</a> |
-                        <a href="<?php echo base_url('customer/module'); ?>" id="more_detail_furnisher" class="header_link">Customer Dashboard</a>
+                        <a href="<?php echo base_url('customer/module/'.$this->uri->segment(3)); ?>" id="more_detail_furnisher" class="header_link">Customer Dashboard</a>
                     </div>
                 </div>
             </div>
@@ -168,3 +168,4 @@ add_css(array(
         ));
         ?>
         <?php include viewPath('includes/footer'); ?>
+        <?php include viewPath('customer/js/preview_js'); ?>

@@ -551,7 +551,7 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        background-color: #ffd65b !important;
+        /* background-color: #ffd65b !important; */
         min-width: 100px;
         border-radius: 3px !important;
     }
@@ -560,5 +560,9 @@
         margin-right: 8px !important;
         background-color: #ffd65b !important;
         display: none !important;
+    }
+
+    .menu_item:hover {
+        background: unset;
     }
 </style>

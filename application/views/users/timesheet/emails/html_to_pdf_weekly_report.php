@@ -289,7 +289,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                             '.$est_wage_privacy_html.'
                                             <td style="font-weight:bold;"></td>
                                     </tr>';
-                        if ($i < count($timehseet_storage) - 1) {
+                        if ($i <= count($timehseet_storage) - 1) {
                             $table .= '
                                         <tr>
                                             <th colspan="12" style="font-weight:bold;"> ' . $timehseet_storage[$i][1] . '</th>
