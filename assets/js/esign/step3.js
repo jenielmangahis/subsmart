@@ -231,23 +231,31 @@ function Step3() {
     const html = `
       <div
         class="menu_item ui-draggable ui-draggable-handle ui-draggable-dragging esignBuilder__field"
-        style="left: ${left}px; top: ${top}px; --color: ${color}"
+        style="left: ${left}px; top: ${top}px; --color: ${hexToRGB(color, 0.5)}"
       >
-        <div class="subData" data-key="${uniqueKey}">${fieldName}</div>
+        <div class="subData">
+          <span>${fieldName}</span>
+        </div>
       </div>
     `;
 
     const $element = createElementFromHTML(html);
-    const activeClass = "esignBuilder__field--active";
+    const $subData = $element.find(".subData");
 
-    const fieldsWithOption = [
-      "Dropdown",
-      "Checkbox",
-      "Radio",
-      "Formula",
-      "Note",
-    ];
-    // const hasOption = fieldsWithOption.includes(fieldName);
+    if (fieldName === "Checkbox") {
+      $element.css({ minWidth: "unset" });
+      $subData.addClass("esignBuilder__fieldCheckbox");
+    }
+
+    if (fieldName === "Radio") {
+      $element.css({ minWidth: "unset" });
+      $subData.addClass("esignBuilder__fieldRadio");
+    }
+
+    $subData.css({ border: `2px solid ${color}` });
+    $subData.attr("data-key", uniqueKey);
+
+    const activeClass = "esignBuilder__field--active";
     const hasOption = true;
 
     if (fieldName === "Text") {
@@ -261,7 +269,7 @@ function Step3() {
       });
     }
 
-    $element.find(".subData").on("click", function () {
+    $subData.on("click", function () {
       const $prevActive = $(`.${activeClass}`);
       const dataKey = $(this).data("key");
       const currField = fields.find(({ unique_key }) => unique_key == dataKey);
@@ -353,6 +361,10 @@ function Step3() {
     const $pdfFields = fields.map(createField);
     $docRenderer.append($pdfFields);
 
+    const getRecipientColor = () => {
+      return getComputedStyle($form.get(0)).getPropertyValue("--color"); // prettier-ignore
+    };
+
     $($pdfFields).draggable({
       containment: $docRenderer,
       appendTo: $docRenderer,
@@ -364,13 +376,21 @@ function Step3() {
       appendTo: $docRenderer,
       helper: "clone",
       revert: "invalid",
+      start: function (_, ui) {
+        const $element = $(ui.helper);
+        const color = getRecipientColor();
+        $element.css({
+          backgroundColor: hexToRGB(color, 0.5),
+          border: `2px solid ${color}`,
+        });
+      },
     });
 
     $docRenderer.droppable({
       accept: ".fields",
       drop: function (_, ui) {
         const $item = $(ui.helper).clone();
-        const color = getComputedStyle($form.get(0)).getPropertyValue("--color"); // prettier-ignore
+        const color = getRecipientColor();
         $element = createField({
           coordinates: JSON.stringify(ui.position),
           field_name: $item.text(),
@@ -546,6 +566,24 @@ function Step3() {
     $form.on("submit", function (event) {
       event.preventDefault();
     });
+
+    $("body").on("click", function (event) {
+      const $target = $(event.target);
+
+      if ($target.hasClass("esignBuilder__field")) {
+        return;
+      }
+
+      if ($target.closest(".esignBuilder__field").length) {
+        return;
+      }
+
+      $(".esignBuilder__optionsSidebar--show")
+        .removeClass("esignBuilder__optionsSidebar--show"); // prettier-ignore
+
+      $(".esignBuilder__field--active")
+        .removeClass("esignBuilder__field--active"); // prettier-ignore
+    });
   }
 
   async function getTemplateFile(id) {
@@ -577,11 +615,19 @@ function Step3() {
     await getFields();
 
     for (let index = 0; index < data.length; index++) {
-      await renderPDF(data[index]);
+      try {
+        await renderPDF(data[index]);
+      } catch (error) {
+        console.log(error);
+        continue;
+      }
+
+      if (index === 1) {
+        $(".esignBuilder--loading").removeClass("esignBuilder--loading");
+      }
     }
 
     attachEventHandlers();
-
     $(".esignBuilder--loading").removeClass("esignBuilder--loading");
   }
 
@@ -599,4 +645,32 @@ $(document).ready(function () {
 // https://stackoverflow.com/a/3261380/8062659
 function isEmpty(str) {
   return !str || 0 === str.length;
+}
+
+// https://stackoverflow.com/a/44550181/8062659
+function hexToRGB(hex, alpha) {
+  if (!hex || [4, 7].indexOf(hex.length) === -1) {
+    return; // throw new Error('Bad Hex');
+  }
+
+  hex = hex.substr(1);
+  // if shortcuts (#F00) -> set to normal (#FF0000)
+  if (hex.length === 3) {
+    hex = hex
+      .split("")
+      .map(function (el) {
+        return el + el + "";
+      })
+      .join("");
+  }
+
+  var r = parseInt(hex.slice(0, 2), 16),
+    g = parseInt(hex.slice(2, 4), 16),
+    b = parseInt(hex.slice(4, 6), 16);
+
+  if (alpha !== undefined) {
+    return "rgba(" + r + ", " + g + ", " + b + ", " + alpha + ")";
+  } else {
+    return "rgb(" + r + ", " + g + ", " + b + ")";
+  }
 }

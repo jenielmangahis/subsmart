@@ -142,18 +142,8 @@ add_css(array(
                             font-size: 12px !important;
                         }
                     </style>
-
                     <div class="tab-pane active standard-accordion" id="advance">
                         <div class="col-sm-12">
-                            <div class="float-right d-md-block">
-                                <div class="dropdown">
-                                    <a class="btn btn-primary btn-md" href="#"><span class="fa fa-print"></span> Print</a>
-                                    <!--<a class="btn btn-primary btn-md" href="<?php echo url('customer/add_lead') ?>"><span class="fa fa-plus"></span> New Lead</a>
-                                                        <a class="btn btn-primary btn-md" href="<?php echo url('customer/add_advance') ?>"><span class="fa fa-plus"></span> New Customer</a>-->
-                                </div>
-                            </div>
-                            <div class="col-md-12">
-
                                 <div class="col-sm-12">
                                     <div class="col-sm-12 text-right-sm" style="align:right;">
                                         <span class="text-ter" style="position: absolute; right: 83px !important; top: 8px;">Customize</span>
@@ -185,7 +175,6 @@ add_css(array(
 
                                     <input type="hidden" id="custom_modules" value="<?= $module_sort->ams_values ?>" />
                                 </div>
-                            </div>
                         </div>
                     </div>
 

@@ -764,7 +764,8 @@ class Workorder extends MY_Controller
         }
 
         if( $post['user'] == 'all' ){
-            $users    = $this->Users_model->getAll();
+            $company_id  = logged('company_id');
+            $users       = $this->Users_model->getCompanyUsers($company_id);
             $default_imp_img = base_url('uploads/users/default.png');
             foreach( $users as $user ){
                 //Set Center Map
@@ -814,7 +815,7 @@ class Workorder extends MY_Controller
                                     </tr>
                                 </table>";
                                 $locations[] = [
-                                    'title' => $description_a,
+                                    'title' => $pointA,
                                     'lat' => $center_lat,
                                     'lng' => $center_lng,
                                     'title' => "<b>Start Point</b><br />" . $pointA,
@@ -822,7 +823,7 @@ class Workorder extends MY_Controller
                                     'marker' => 'https://staging.nsmartrac.com/uploads/icons/caretaker_48px.png'
                                 ];
                                 $locations[] = [
-                                    'title' => $description_b,
+                                    'title' => $pointB,
                                     'lat' => $json['results'][0]['geometry']['location']['lat'],
                                     'lng' => $json['results'][0]['geometry']['location']['lng'],
                                     'description' => $description_b,
@@ -858,14 +859,14 @@ class Workorder extends MY_Controller
                             $json   = json_decode($gdata, true);
                             if( isset($json['results'][0]['geometry']['location']['lat']) && $json['results'][0]['geometry']['location']['lat'] != '' ){
                                $locations[] = [
-                                    'title' => $description_a,
+                                    'title' => $pointA,
                                     'lat' => $center_lat,
                                     'lng' => $center_lng,
                                     'description' => $description_a,
                                     'marker' => 'https://staging.nsmartrac.com/uploads/icons/caretaker_48px.png'
                                 ];
                                 $locations[] = [
-                                    'title' => $description_b,
+                                    'title' => $pointB,
                                     'lat' => $json['results'][0]['geometry']['location']['lat'],
                                     'lng' => $json['results'][0]['geometry']['location']['lng'],
                                     'description' => $description_b,
@@ -932,7 +933,7 @@ class Workorder extends MY_Controller
                         $json   = json_decode($gdata, true);
                         if( isset($json['results'][0]['geometry']['location']['lat']) && $json['results'][0]['geometry']['location']['lat'] != '' ){
                             $locations[] = [
-                                'title' => $description_a,
+                                'title' => $pointA,
                                 'lat' => $center_lat,
                                 'lng' => $center_lng,
                                 'description' => $description_a,
@@ -942,7 +943,7 @@ class Workorder extends MY_Controller
                                 'title' => $description_b,
                                 'lat' => $json['results'][0]['geometry']['location']['lat'],
                                 'lng' => $json['results'][0]['geometry']['location']['lng'],
-                                'description' => $description_b,
+                                'description' => $pointB,
                                 'marker' => $marker
                             ];
                         }
@@ -967,7 +968,7 @@ class Workorder extends MY_Controller
                             $json   = json_decode($gdata, true);
                             if( isset($json['results'][0]['geometry']['location']['lat']) && $json['results'][0]['geometry']['location']['lat'] != '' ){
                                 $locations[$counter] = [
-                                    'title' => $description_a,
+                                    'title' => $pointA,
                                     'lat' => $center_lat,
                                     'lng' => $center_lng,
                                     'description' => $description_a,
@@ -1649,6 +1650,7 @@ class Workorder extends MY_Controller
         add_footer_js('assets/js/esign/docusign/workorder.js');
         $this->load->view('workorder/addNewworkOrder', $this->page_data);
     }
+    
 
     public function addcustomeField()
     {
@@ -1746,7 +1748,8 @@ class Workorder extends MY_Controller
             'employee_id' => $user_id,
             'company_id' => $company_id,
             'date_created' => date("Y-m-d H:i:s"),
-            'date_updated' => date("Y-m-d H:i:s")
+            'date_updated' => date("Y-m-d H:i:s"),
+            'template_id' => '1'
         );
 
         $addQuery = $this->workorder_model->save_workorder($new_data);
@@ -2133,6 +2136,364 @@ class Workorder extends MY_Controller
         $this->page_data['items'] = $this->items_model->getItemlist();
         
         $this->load->view('workorder/NewworkOrderAlarm', $this->page_data);
+    }
+
+    public function savenewWorkorderAlarm()
+    {
+        $company_id  = getLoggedCompanyID();
+        $user_id  = getLoggedUserID();
+
+        $new_data = array(
+            
+            'security_number' => $this->input->post('security_number'),
+            'mobile_number' => $this->input->post('mobile_number'),
+            'email' => $this->input->post('email'),
+            'job_location' => $this->input->post('monitored_location'),
+            'city' => $this->input->post('city'),
+            'state' => $this->input->post('state'),
+            'zip_code' => $this->input->post('zip_code'),
+            'cross_street' => $this->input->post('cross_street'),
+            'password' => $this->input->post('password'),
+            'tags' => $this->input->post('job_tag'),
+            'job_type' => $this->input->post('job_type'),
+            'payment_method' => $this->input->post('payment_method'),
+            'payment_amount' => $this->input->post('payment_amount'),
+            'terms_and_conditions' => $this->input->post('terms_conditions'),
+            'status' => $this->input->post('status'),
+            'priority' => $this->input->post('priority'),
+            'terms_of_use' => $this->input->post('terms_of_use'),
+            'header' => $this->input->post('header'),
+            'date_issued' => $this->input->post('date_issued'),
+
+            //signature
+            // 'company_representative_signature' => $this->input->post('company_representative_signature'),
+            // 'company_representative_name' => $this->input->post('company_representative_name'),
+            // 'primary_account_holder_signature' => $this->input->post('primary_account_holder_signature'),
+            // 'primary_account_holder_name' => $this->input->post('primary_account_holder_name'),
+            // 'secondary_account_holder_signature' => $this->input->post('secondary_account_holder_signature'),
+            // 'secondary_account_holder_name' => $this->input->post('secondary_account_holder_name'),
+
+            // 'company_representative_signature' => 'company_representative_signature',
+            // 'company_representative_name' => 'company_representative_name',
+            // 'primary_account_holder_signature' => 'primary_account_holder_signature',
+            // 'primary_account_holder_name' => 'primary_account_holder_name',
+            // 'secondary_account_holder_signature' => 'secondary_account_holder_signature',
+            // 'secondary_account_holder_name' => 'secondary_account_holder_name',
+            
+
+            'subtotal' => $this->input->post('subtotal'),
+            'taxes' => $this->input->post('taxes'),
+            'otp_setup' => $this->input->post('otp_setup'),
+            'monthly_monitoring' => $this->input->post('monthly_monitoring'),
+            'grand_total' => $this->input->post('grand_total_text'),
+
+            'employee_id' => $user_id,
+            'company_id' => $company_id,
+            'date_created' => date("Y-m-d H:i:s"),
+            'date_updated' => date("Y-m-d H:i:s"),
+            'template_id' => '2'
+            
+        );
+
+        $addQuery = $this->workorder_model->save_workorder($new_data);
+
+        $alarm = array(
+            
+            'customer_type' => $this->input->post('customer_type'),
+            'business_name' => $this->input->post('business_name'),
+            'install_type' => $this->input->post('install_type'),
+            'last_name' => $this->input->post('last_name'),
+            'first_name' => $this->input->post('first_name'),
+            'dob' => $this->input->post('dob'),
+            's_last_name' => $this->input->post('s_last_name'),
+            's_first_name' => $this->input->post('s_first_name'),
+            's_mobile' => $this->input->post('s_mobile'),
+            's_dob' => $this->input->post('s_dob'),
+            's_ssn' => $this->input->post('s_ssn'),
+            'notification_type' => $this->input->post('notification_type'),
+            '1st_verification_name' => $this->input->post('1st_verification_name'),
+            '1st_number' => $this->input->post('1st_number'),
+            '1st_number_type' => $this->input->post('1st_number_type'),
+            '1st_relation' => $this->input->post('1st_relation'),
+            '2nd_verification_name' => $this->input->post('2nd_verification_name'),
+            '2nd_number' => $this->input->post('2nd_number'),
+            '2nd_number_type' => $this->input->post('2nd_number_type'),
+            '2nd_relation' => $this->input->post('2nd_relation'),
+            '3rd_verification_name' => $this->input->post('3rd_verification_name'),
+            '3rd_number' => $this->input->post('3rd_number'),
+            '3rd_number_type' => $this->input->post('3rd_number_type'),
+            '3rd_relation' => $this->input->post('3rd_relation'),
+            '4th_verification_name' => $this->input->post('4th_verification_name'),
+            '4th_number' => $this->input->post('4th_number'),
+            '4th_number_type' => $this->input->post('4th_number_type'),
+            '4th_relation' => $this->input->post('4th_relation'),
+            'plan_type' => $this->input->post('plan_type'),
+            'account_type' => $this->input->post('account_type'),
+            'panel_type' => $this->input->post('panel_type'),
+            'panel_location' => $this->input->post('panel_location'),
+            'panel_communication' => $this->input->post('panel_communication'),
+            'job_requested_date' => $this->input->post('date_issued'),
+            'initials' => $this->input->post('initials'),
+            'work_order_id' => $addQuery
+        );
+
+        $w_alarm = $this->workorder_model->save_alarm($alarm);
+        
+
+        if($this->input->post('payment_method') == 'Cash'){
+            $payment_data = array(
+            
+                'payment_method' => $this->input->post('payment_method'),
+                'amount' => $this->input->post('payment_amount'),
+                'is_collected' => '1',
+                'work_order_id' => $addQuery,
+                'date_created' => date("Y-m-d H:i:s"),
+                'date_updated' => date("Y-m-d H:i:s")
+            );
+
+            $pay = $this->workorder_model->save_payment($payment_data);
+        }
+        elseif($this->input->post('payment_method') == 'Check'){
+            $payment_data = array(
+            
+                'payment_method' => $this->input->post('payment_method'),
+                'amount' => $this->input->post('payment_amount'),
+                'check_number' => $this->input->post('check_number'),
+                'routing_number' => $this->input->post('routing_number'),
+                'work_order_id' => $addQuery,
+                'date_created' => date("Y-m-d H:i:s"),
+                'date_updated' => date("Y-m-d H:i:s")
+            );
+
+            $pay = $this->workorder_model->save_payment($payment_data);
+        }
+        //added apr 26, 2021
+        elseif($this->input->post('payment_method') == 'Invoicing'){
+            $payment_data = array(
+            
+                'payment_method' => $this->input->post('payment_method'),
+                'amount' => $this->input->post('payment_amount'),
+                'mail-address' => $this->input->post('mail-address'),
+                'mail_locality' => $this->input->post('mail_locality'),
+                'mail_state' => $this->input->post('mail_state'),
+                'mail_postcode' => $this->input->post('mail_postcode'),
+                'mail_cross_street' => $this->input->post('mail_cross_street'),
+                'work_order_id' => $addQuery,
+                'date_created' => date("Y-m-d H:i:s"),
+                'date_updated' => date("Y-m-d H:i:s")
+            );
+
+            $pay = $this->workorder_model->save_payment($payment_data);
+        }
+        //end added
+        elseif($this->input->post('payment_method') == 'Credit Card'){
+            $payment_data = array(
+            
+                'payment_method' => $this->input->post('payment_method'),
+                'amount' => $this->input->post('payment_amount'),
+                'credit_number' => $this->input->post('credit_number'),
+                'credit_expiry' => $this->input->post('credit_expiry'),
+                'credit_cvc' => $this->input->post('credit_cvc'),
+                'work_order_id' => $addQuery,
+                'date_created' => date("Y-m-d H:i:s"),
+                'date_updated' => date("Y-m-d H:i:s")
+            );
+
+            $pay = $this->workorder_model->save_payment($payment_data);
+        }
+        elseif($this->input->post('payment_method') == 'Debit Card'){
+            $payment_data = array(
+            
+                'payment_method' => $this->input->post('payment_method'),
+                'amount' => $this->input->post('payment_amount'),
+                'credit_number' => $this->input->post('debit_credit_number'),
+                'credit_expiry' => $this->input->post('debit_credit_expiry'),
+                'credit_cvc' => $this->input->post('debit_credit_cvc'),
+                'work_order_id' => $addQuery,
+                'date_created' => date("Y-m-d H:i:s"),
+                'date_updated' => date("Y-m-d H:i:s")
+            );
+
+            $pay = $this->workorder_model->save_payment($payment_data);
+        }
+        elseif($this->input->post('payment_method') == 'ACH'){
+            $payment_data = array(
+            
+                'payment_method' => $this->input->post('payment_method'),
+                'amount' => $this->input->post('payment_amount'),
+                'routing_number' => $this->input->post('ach_routing_number'),
+                'account_number' => $this->input->post('ach_account_number'),
+                'work_order_id' => $addQuery,
+                'date_created' => date("Y-m-d H:i:s"),
+                'date_updated' => date("Y-m-d H:i:s")
+            );
+
+            $pay = $this->workorder_model->save_payment($payment_data);
+        }
+        elseif($this->input->post('payment_method') == 'Venmo'){
+            $payment_data = array(
+            
+                'payment_method' => $this->input->post('payment_method'),
+                'amount' => $this->input->post('payment_amount'),
+                'account_credentials' => $this->input->post('account_credentials'),
+                'account_note' => $this->input->post('account_note'),
+                'confirmation' => $this->input->post('confirmation'),
+                'work_order_id' => $addQuery,
+                'date_created' => date("Y-m-d H:i:s"),
+                'date_updated' => date("Y-m-d H:i:s")
+            );
+
+            $pay = $this->workorder_model->save_payment($payment_data);
+        }
+        elseif($this->input->post('payment_method') == 'Paypal'){
+            $payment_data = array(
+            
+                'payment_method' => $this->input->post('payment_method'),
+                'amount' => $this->input->post('payment_amount'),
+                'account_credentials' => $this->input->post('paypal_account_credentials'),
+                'account_note' => $this->input->post('paypal_account_note'),
+                'confirmation' => $this->input->post('paypal_confirmation'),
+                'work_order_id' => $addQuery,
+                'date_created' => date("Y-m-d H:i:s"),
+                'date_updated' => date("Y-m-d H:i:s")
+            );
+
+            $pay = $this->workorder_model->save_payment($payment_data);
+        }
+        elseif($this->input->post('payment_method') == 'Square'){
+            $payment_data = array(
+            
+                'payment_method' => $this->input->post('payment_method'),
+                'amount' => $this->input->post('payment_amount'),
+                'account_credentials' => $this->input->post('square_account_credentials'),
+                'account_note' => $this->input->post('square_account_note'),
+                'confirmation' => $this->input->post('square_confirmation'),
+                'work_order_id' => $addQuery,
+                'date_created' => date("Y-m-d H:i:s"),
+                'date_updated' => date("Y-m-d H:i:s")
+            );
+
+            $pay = $this->workorder_model->save_payment($payment_data);
+        }
+        elseif($this->input->post('payment_method') == 'Warranty Work'){
+            $payment_data = array(
+            
+                'payment_method' => $this->input->post('payment_method'),
+                'amount' => $this->input->post('payment_amount'),
+                'account_credentials' => $this->input->post('warranty_account_credentials'),
+                'account_note' => $this->input->post('warranty_account_note'),
+                'work_order_id' => $addQuery,
+                'date_created' => date("Y-m-d H:i:s"),
+                'date_updated' => date("Y-m-d H:i:s")
+            );
+
+            $pay = $this->workorder_model->save_payment($payment_data);
+        }
+        elseif($this->input->post('payment_method') == 'Home Owner Financing'){
+            $payment_data = array(
+            
+                'payment_method' => $this->input->post('payment_method'),
+                'amount' => $this->input->post('payment_amount'),
+                'account_credentials' => $this->input->post('home_account_credentials'),
+                'account_note' => $this->input->post('home_account_note'),
+                'work_order_id' => $addQuery,
+                'date_created' => date("Y-m-d H:i:s"),
+                'date_updated' => date("Y-m-d H:i:s")
+            );
+
+            $pay = $this->workorder_model->save_payment($payment_data);
+        }
+        elseif($this->input->post('payment_method') == 'e-Transfer'){
+            $payment_data = array(
+            
+                'payment_method' => $this->input->post('payment_method'),
+                'amount' => $this->input->post('payment_amount'),
+                'account_credentials' => $this->input->post('e_account_credentials'),
+                'account_note' => $this->input->post('e_account_note'),
+                'work_order_id' => $addQuery,
+                'date_created' => date("Y-m-d H:i:s"),
+                'date_updated' => date("Y-m-d H:i:s")
+            );
+
+            $pay = $this->workorder_model->save_payment($payment_data);
+        }
+        elseif($this->input->post('payment_method') == 'Other Credit Card Professor'){
+            $payment_data = array(
+            
+                'payment_method' => $this->input->post('payment_method'),
+                'amount' => $this->input->post('payment_amount'),
+                'credit_number' => $this->input->post('other_credit_number'),
+                'credit_expiry' => $this->input->post('other_credit_expiry'),
+                'credit_cvc' => $this->input->post('other_credit_cvc'),
+                'work_order_id' => $addQuery,
+                'date_created' => date("Y-m-d H:i:s"),
+                'date_updated' => date("Y-m-d H:i:s")
+            );
+
+            $pay = $this->workorder_model->save_payment($payment_data);
+        }
+        elseif($this->input->post('payment_method') == 'Other Payment Type'){
+            $payment_data = array(
+            
+                'payment_method' => $this->input->post('payment_method'),
+                'amount' => $this->input->post('payment_amount'),
+                'account_credentials' => $this->input->post('other_payment_account_credentials'),
+                'account_note' => $this->input->post('other_payment_account_note'),
+                'work_order_id' => $addQuery,
+                'date_created' => date("Y-m-d H:i:s"),
+                'date_updated' => date("Y-m-d H:i:s")
+            );
+
+            $pay = $this->workorder_model->save_payment($payment_data);
+        }
+
+        // $name = $this->input->post('custom_field');
+        // $value = $this->input->post('custom_value');
+
+        // $c = 0;
+        //     foreach($name as $row2){
+        //         $dataa['name'] = $name[$c];
+        //         $dataa['value'] = $value[$c];
+        //         $dataa['form_id'] = $addQuery;
+        //         $dataa['company_id'] = $company_id;
+        //         $dataa['date_added'] = date("Y-m-d H:i:s");
+        //         $addQuery2a = $this->workorder_model->additem_details($dataa);
+        //         $c++;
+        //     }
+
+
+        if($addQuery > 0){
+            $a = $this->input->post('items');
+            $b = $this->input->post('item_type');
+            $d = $this->input->post('quantity');
+            $f = $this->input->post('price');
+            $g = $this->input->post('discount');
+            $h = $this->input->post('tax');
+            $ii = $this->input->post('total');
+
+            $i = 0;
+            foreach($a as $row){
+                $data['item'] = $a[$i];
+                $data['item_type'] = $b[$i];
+                $data['qty'] = $d[$i];
+                $data['cost'] = $f[$i];
+                $data['discount'] = $g[$i];
+                $data['tax'] = $h[$i];
+                $data['total'] = $ii[$i];
+                $data['type'] = 'Work Order Alarm';
+                $data['type_id'] = $addQuery;
+                // $data['status'] = '1';
+                $data['created_at'] = date("Y-m-d H:i:s");
+                $data['updated_at'] = date("Y-m-d H:i:s");
+                $addQuery2 = $this->accounting_invoices_model->additem_details($data);
+                $i++;
+            }
+
+           redirect('workorder');
+        }
+        else{
+            echo json_encode(0);
+        }
     }
 }
 

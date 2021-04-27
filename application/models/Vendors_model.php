@@ -208,6 +208,13 @@ class Vendors_model extends MY_Model {
 		return $allData;
 	}
 
+	public function get_vendor_by_id($id)
+	{
+		$this->db->where('company_id', logged('company_id'));
+		$this->db->where('id', $id);
+		return $this->db->get($this->table)->row();
+	}
+
 	public function get_company_contractors($status)
 	{
 		$this->db->where('company_id', logged('company_id'));

@@ -23,15 +23,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <label class="alarm_label"> <span >Login :</span> </label>
                             </td>
                             <td width="50%" align="right" valign="top">
-                                <label class="alarm_answer"><b> <?php if(isset($access_info)){ echo $access_info->login; }; ?></b> </label>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td width="50%" align="right" valign="top">
-                                <label class="alarm_label"> <span>CustomFld1 :</span> </label>
-                            </td>
-                            <td width="50%" align="right" valign="top">
-                                <label class="alarm_answer"><b> <?php if(isset($access_info)){ echo $access_info->acs_custom_field1; }; ?></b> </label>
+                                <label class="alarm_answer"><b> <?php if(isset($access_info)){ echo $access_info->access_login; }; ?></b> </label>
                             </td>
                         </tr>
                         <tr>
@@ -39,7 +31,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <label class="alarm_label"> <span >Cancel Date :</span> </label>
                             </td>
                             <td width="50%" align="right" valign="top">
-                                <label class="alarm_label"><b> <?php if(isset($access_info)){ echo $access_info->acs_cancel_date; }; ?></b> </label>
+                                <label class="alarm_label"><b> <?php if(isset($office_info)){ echo $office_info->cancel_date; }; ?></b> </label>
                             </td>
                         </tr>
                         <tr>
@@ -47,7 +39,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <label class="alarm_label"> <span >Cancel Reason :</span> </label>
                             </td>
                             <td width="50%" align="right" valign="top">
-                                <label class="alarm_answer"><b> <?php if(isset($access_info)){ echo $access_info->acs_cancel_reason; }; ?></b> </label>
+                                <label class="alarm_answer"><b> <?php if(isset($office_info)){ echo $office_info->cancel_reason; }; ?></b> </label>
                             </td>
                         </tr>
                         </tbody>
@@ -63,19 +55,10 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         <tbody>
                         <tr>
                             <td width="50%" align="right" valign="top">
-                                <label class="alarm_label"> <span >CustomFld2 :</span> </label>
-                            </td>
-                            <td width="50%" align="right" valign="top">
-                                <label class="alarm_answer"><b><?php if(isset($access_info)){ echo $access_info->acs_custom_field2; }; ?></b> </label>
-
-                            </td>
-                        </tr>
-                        <tr>
-                            <td width="50%" align="right" valign="top">
                                 <label class="alarm_label"> <span >Collection Date :</span> </label>
                             </td>
                             <td width="50%" align="right" valign="top">
-                                <label class="alarm_answer"><b> <?php if(isset($access_info)){ echo $access_info->acs_collect_date; }; ?></b> </label>
+                                <label class="alarm_answer"><b> <?php if(isset($office_info)){ echo $office_info->collect_date; }; ?></b> </label>
                             </td>
                         </tr>
                         <tr>
@@ -83,7 +66,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <label class="alarm_label"> <span >Collection Amt :</span> </label>
                             </td>
                             <td width="50%" align="right" valign="top">
-                                <label class="alarm_answer"><b> <?php if(isset($access_info)){ echo $access_info->collect_amount; }; ?></b> </label>
+                                <label class="alarm_answer"><b> <?php if(isset($office_info)){ echo $office_info->collect_amount; }; ?></b> </label>
                             </td>
                         </tr>
                         </tbody>

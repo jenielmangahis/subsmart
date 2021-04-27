@@ -8,14 +8,24 @@ $(document).ready(function() {
         } else {
             report_series = 3;
         }
+        var sched_day = '';
+        $('input[name="sched_day"]:checked').each(function() {
+            if (sched_day != '') {
+                sched_day += ',' + this.value;
+            } else {
+                sched_day = this.value;
+            }
+        });
         var formData = {
             tz_display_name: $("#tz_display_name").val(),
             tz_id_of_tz: $("#tz_id_of_tz").val(),
             subscribe: $("#subcribe_weekly_report").is(":checked"),
             est_wage_privacy: $("#est_wage_privacy").is(":checked"),
-            report_series: report_series
+            report_series: report_series,
+            sched_day: sched_day,
+            sched_time: $("#sched_time").val()
         };
-
+        // alert($("#tz_id_of_tz").val());
         Swal.fire({
             html: "Are you sure you want receive Timesheet Report in <strong>" +
                 $("#tz_id_of_tz").val() +
@@ -81,12 +91,55 @@ $(document).ready(function() {
                 if (data.hasSet) {
                     $("#tz_display_name").val(data.timezone_id);
                     $("#tz_id_of_tz").val(data.timezone_id_of_tz);
+                    $("#sched_time").val(data.sched_time);
                     if (data.subscribed == 1) {
                         $("#subcribe_weekly_report").attr("checked");
                         $(".subscribed-fields").show();
                     } else {
                         $("#subcribe_weekly_report").removeAttr("checked");
                         $(".subscribed-fields").hide();
+                    }
+
+                    var sched_day = data.sched_day;
+                    $("#sched_sun").prop("checked", false);
+                    $("#sched_m").prop("checked", false);
+                    $("#sched_t").prop("checked", false);
+                    $("#sched_w").prop("checked", false);
+                    $("#sched_th").prop("checked", false);
+                    $("#sched_f").prop("checked", false);
+                    $("#sched_sat").prop("checked", false);
+                    for (var i = 0; i < sched_day.length; i++) {
+                        if (sched_day[i] == "Sunday") {
+                            $("#sched_sun").prop("checked", true);
+                        }
+                        if (sched_day[i] == "Monday") {
+                            $("#sched_m").prop("checked", true);
+                        }
+                        if (sched_day[i] == "Tuesday") {
+                            $("#sched_t").prop("checked", true);
+                        }
+                        if (sched_day[i] == "Wednesday") {
+                            $("#sched_w").prop("checked", true);
+                        }
+                        if (sched_day[i] == "Thursday") {
+                            $("#sched_th").prop("checked", true);
+                        }
+                        if (sched_day[i] == "Friday") {
+                            $("#sched_f").prop("checked", true);
+                        }
+                        if (sched_day[i] == "Saturday") {
+                            $("#sched_sat").prop("checked", true);
+                        }
+                    }
+                    sched_day_changed();
+                    if (data.report_series == 1) {
+                        $('#report_series_1').prop("checked", true);
+                        report_series_1_changed();
+                    } else if (data.report_series == 2) {
+                        $('#report_series_2').prop("checked", true);
+
+                    } else {
+                        $('#report_series_3').prop("checked", true);
                     }
                 } else {
                     $("#tz_display_name").val(36);
@@ -127,4 +180,160 @@ $(document).ready(function() {
             $(".report_series_div").hide();
         }
     }
+
+    $('#report_series_1').change(function() {
+        report_series_1_changed();
+    });
+    report_series_1_changed();
+
+    function report_series_1_changed() {
+        if ($('#report_series_1').is(':checked')) {
+
+            $('#sched_sun').prop('checked', true);
+            $('#sched_m').prop('checked', true);
+            $('#sched_t').prop('checked', true);
+            $('#sched_w').prop('checked', true);
+            $('#sched_th').prop('checked', true);
+            $('#sched_f').prop('checked', true);
+            $('#sched_sat').prop('checked', true);
+
+
+            $('#sched_sun').attr('disabled', true);
+            $('#sched_m').attr('disabled', true);
+            $('#sched_t').attr('disabled', true);
+            $('#sched_w').attr('disabled', true);
+            $('#sched_th').attr('disabled', true);
+            $('#sched_f').attr('disabled', true);
+            $('#sched_sat').attr('disabled', true);
+        }
+    }
+    $('#report_series_2').change(function() {
+        report_series_2_changed();
+    });
+
+    function report_series_2_changed() {
+        if ($('#report_series_2').is(':checked')) {
+            $('#sched_sun').prop('checked', true);
+            $('#sched_m').prop('checked', false);
+            $('#sched_t').prop('checked', false);
+            $('#sched_w').prop('checked', true);
+            $('#sched_th').prop('checked', false);
+            $('#sched_f').prop('checked', false);
+            $('#sched_sat').prop('checked', false);
+
+            $('#sched_sun').removeAttr('disabled');
+            $('#sched_m').removeAttr('disabled');
+            $('#sched_t').removeAttr('disabled');
+            $('#sched_w').removeAttr('disabled');
+            $('#sched_th').removeAttr('disabled');
+            $('#sched_f').removeAttr('disabled');
+            $('#sched_sat').removeAttr('disabled');
+            sched_day_changed();
+        }
+    }
+    $('#report_series_3').change(function() {
+        report_series_3_changed();
+    });
+    report_series_3_changed();
+
+    function report_series_3_changed() {
+        if ($('#report_series_3').is(':checked')) {
+            $('#sched_sun').prop('checked', true);
+            $('#sched_m').prop('checked', false);
+            $('#sched_t').prop('checked', false);
+            $('#sched_w').prop('checked', false);
+            $('#sched_th').prop('checked', false);
+            $('#sched_f').prop('checked', false);
+            $('#sched_sat').prop('checked', false);
+
+            $('#sched_sun').removeAttr('disabled');
+            $('#sched_m').removeAttr('disabled');
+            $('#sched_t').removeAttr('disabled');
+            $('#sched_w').removeAttr('disabled');
+            $('#sched_th').removeAttr('disabled');
+            $('#sched_f').removeAttr('disabled');
+            $('#sched_sat').removeAttr('disabled');
+            sched_day_changed();
+        }
+    }
+
 });
+
+function sched_day_changed() {
+    if ($('#report_series_2').is(':checked')) {
+        var counter = 0;
+        $('input[name="sched_day"]:checked').each(function() {
+            counter++;
+        });
+        if (counter >= 2) {
+            if (!$('#sched_sun').is(':checked')) {
+                $('#sched_sun').attr('disabled', true);
+            }
+            if (!$('#sched_m').is(':checked')) {
+                $('#sched_m').attr('disabled', true);
+            }
+            if (!$('#sched_t').is(':checked')) {
+                $('#sched_t').attr('disabled', true);
+            }
+            if (!$('#sched_w').is(':checked')) {
+                $('#sched_w').attr('disabled', true);
+            }
+            if (!$('#sched_th').is(':checked')) {
+                $('#sched_th').attr('disabled', true);
+            }
+            if (!$('#sched_f').is(':checked')) {
+                $('#sched_f').attr('disabled', true);
+            }
+            if (!$('#sched_sat').is(':checked')) {
+                $('#sched_sat').attr('disabled', true);
+            }
+        } else {
+            $('#sched_sun').removeAttr('disabled');
+            $('#sched_m').removeAttr('disabled');
+            $('#sched_t').removeAttr('disabled');
+            $('#sched_w').removeAttr('disabled');
+            $('#sched_th').removeAttr('disabled');
+            $('#sched_f').removeAttr('disabled');
+            $('#sched_sat').removeAttr('disabled');
+        }
+    }
+
+    if ($('#report_series_3').is(':checked')) {
+        var counter = 0;
+        $('input[name="sched_day"]:checked').each(function() {
+            counter++;
+        });
+        if (counter >= 1) {
+            if (!$('#sched_sun').is(':checked')) {
+                $('#sched_sun').attr('disabled', true);
+            }
+            if (!$('#sched_m').is(':checked')) {
+                $('#sched_m').attr('disabled', true);
+            }
+            if (!$('#sched_t').is(':checked')) {
+                $('#sched_t').attr('disabled', true);
+            }
+            if (!$('#sched_w').is(':checked')) {
+                $('#sched_w').attr('disabled', true);
+            }
+            if (!$('#sched_th').is(':checked')) {
+                $('#sched_th').attr('disabled', true);
+            }
+            if (!$('#sched_f').is(':checked')) {
+                $('#sched_f').attr('disabled', true);
+            }
+            if (!$('#sched_sat').is(':checked')) {
+                $('#sched_sat').attr('disabled', true);
+            }
+        } else {
+            $('#sched_sun').removeAttr('disabled');
+            $('#sched_m').removeAttr('disabled');
+            $('#sched_t').removeAttr('disabled');
+            $('#sched_w').removeAttr('disabled');
+            $('#sched_th').removeAttr('disabled');
+            $('#sched_f').removeAttr('disabled');
+            $('#sched_sat').removeAttr('disabled');
+        }
+    }
+
+}

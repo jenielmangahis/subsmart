@@ -164,4 +164,14 @@ if (!function_exists('bill_methods')){
         return $bill_methods;
     }
 }
+
+if (!function_exists('pay_history')){
+    function pay_history($id=null){
+        $status = array('','Excellent','Good','Fair','Poor','Very Poor');
+        if($id==null){
+            $id=1;
+        }
+        return $status[$id];
+    }
+}
 ?>

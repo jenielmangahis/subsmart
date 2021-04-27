@@ -141,7 +141,7 @@ add_css(array(
                             <div class="row margin-bottom-ter align-items-center">
                                     <!-- Nav tabs -->
                                     <div class="col-auto">
-                                        <h2 class="page-title">Customer Manager List</h2>
+                                        <h3 class="box-title" style="position: relative;top: 5px;">Customer Manager List</h3>
                                     </div>
                                     <div class="col text-right-sm d-flex justify-content-end align-items-center">
                                     <div class="float-right d-md-block">
@@ -376,6 +376,7 @@ add_css(array(
                                     </div>
                                     </form>
                                 </div>
+
                             </div>
                             <div class="tab-pane fade show active" id="tab1" role="tabpanel" aria-labelledby="tab1">
                                 <?php if (isset($profiles) && !empty($profiles)) : ?>
@@ -429,7 +430,7 @@ add_css(array(
                                                         </button>
                                                         <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="dropdown-edit">
                                                             <li role="presentation">
-                                                                <a href="<?php echo base_url('customer/preview/'.$customer->prof_id); ?>" class="editItemBtn">
+                                                                <a role="menuitem" tabindex="-1" href="<?php echo base_url('customer/preview/'.$customer->prof_id); ?>" class="editItemBtn">
                                                                     <span class="fa fa-search-plus icon"></span>
                                                                     Preview
                                                                 </a>
@@ -484,7 +485,7 @@ add_css(array(
                                                     </a>
                                                     <a href="#"  style="text-decoration:none;display:inline-block;" id="<?php echo $customer->prof_id; ?>" title="Delete Customer" class="delete_cust">
                                                                                                     <img src="https://app.creditrepaircloud.com/application/images/cross.png" width="16px" height="16px" border="0">
-                                                                                                </a>
+                                                                                                </a
                                                     <a href="mailto:<?= $customer->email; ?>" style="text-decoration:none; display:inline-block;" >
                                                         <img src="/assets/img/customer/actions/ac_email.png" width="16px" height="16px" border="0" title="Email Customer">
                                                     </a>
@@ -505,13 +506,14 @@ add_css(array(
                                                     </a>
                                                     <a href="#" style="text-decoration:none; display:inline-block;" >
                                                         <img src="/assets/img/customer/actions/ac_sms.png" width="16px" height="16px" border="0" title="Message Customer">
-                                                    </a>-->
-                                                    <!--<a href="<?php echo url('/customer/index/tab2/' . $customer->prof_id); ?>"  style="text-decoration:none; display:inline-block;">
+                                                    </a>
+                                                    <a href="<?php echo url('/customer/index/tab2/' . $customer->prof_id); ?>"  style="text-decoration:none; display:inline-block;">
                                                                                                     <img src="https://app.creditrepaircloud.com/application/images/assign-contact.png" border="0" title="View Profile">
                                                                                                 </a>-->
                                                 </td>
                                             </tr>
                                         <?php endforeach; ?>
+
                                     </tbody>
                                 </table>
                                 <?php endif; ?>

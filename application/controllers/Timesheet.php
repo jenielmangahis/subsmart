@@ -4781,6 +4781,9 @@ class Timesheet extends MY_Controller
                 $data->timezone_display_name = $saved_tz->timezone_id;
                 $data->timezone_id_of_tz = $saved_tz->id_of_timezone;
                 $data->subscribed = $saved_tz->subscribed;
+                $data->sched_day = explode(",",$saved_tz->schedule_day);
+                $data->sched_time = date('H:i:s',strtotime($this->datetime_zone_converter(date('Y-m-d')." ".$saved_tz->schedule_time,'UTC',$saved_tz->id_of_timezone)));;
+                $data->report_series = $saved_tz->report_series;
             }
         } else {
             $tz_id = $this->timesheet_model->get_tz_id($current_tz);
@@ -4799,12 +4802,15 @@ class Timesheet extends MY_Controller
         $user_id = logged('id');
         $subscribe = $this->input->post("subscribe")."";
         $report_series = $this->input->post("report_series");
+        $sched_day=$this->input->post("sched_day");
+        $tz_id_of_tz = $this->input->post("tz_id_of_tz");
+        $sched_time= date('H:i:s',strtotime($this->datetime_zone_converter(date('Y-m-d')." ".$this->input->post("sched_time"),$tz_id_of_tz,'UTC')));
         if($subscribe == "true"){
             $sub_val=1;
         }else{
             $sub_val=0;
         }
-        $this->timesheet_model->save_timezone_changes($timezone_id, $user_id,$sub_val,$report_series);
+        $this->timesheet_model->save_timezone_changes($timezone_id, $user_id,$sub_val,$report_series,$sched_day,$sched_time);
 
         $est_wage_privacy = $this->input->post("est_wage_privacy")."";
         $company_id = logged('company_id');

@@ -5,23 +5,15 @@
     <div class="card-body">
         <div class="row form_line">
             <div class="col-md-6">
-                <label>Status</label>
+                <label>Customer Type
             </div>
             <div class="col-md-6">
-                <?= !empty($profile_info->status) ? $profile_info->status : '---';?>
-            </div>
-        </div>
-        <div class="row form_line">
-            <div class="col-md-6">
-                <label>Customer Type</label>
-            </div>
-            <div class="col-md-6">
-                <?= isset($profile_info) && !empty($profile_info->status) ? $profile_info->status : '---';?>
+                <?= !empty($profile_info->customer_type) ? $profile_info->customer_type : '---';?>
             </div>
         </div>
         <div class="row form_line">
             <div class="col-md-6">
-                <label>Sales Area</label>
+                <label>Sales Area
             </div>
             <div class="col-md-6">
                 <?php $salesArea='---'; foreach ($sales_area as $sa): ?>
@@ -36,7 +28,7 @@
         </div>
         <div class="row form_line" id="businessName">
             <div class="col-md-6" id="businessNameLabel">
-                <label for="" >Business Name</label>
+                <label for="" >Business Name
             </div>
             <div class="col-md-6" id="businessNameInput">
                 <?= isset($profile_info) && !empty($profile_info->business_name) ? $profile_info->business_name : '---';?>
@@ -44,7 +36,7 @@
         </div>
         <div class="row form_line">
             <div class="col-md-6">
-                <label>First Name </label>
+                <label>First Name 
             </div>
             <div class="col-md-6">
                 <?= isset($profile_info) && !empty($profile_info->first_name) ? $profile_info->first_name : '---';?>
@@ -52,7 +44,7 @@
         </div>
         <div class="row form_line">
             <div class="col-md-6">
-                <label for="">Middle Initial</label>
+                Middle Initial
             </div>
             <div class="col-md-6">
                 <?= isset($profile_info) && !empty($profile_info->middle_name) ? strtoupper($profile_info->middle_name) : '---';?>
@@ -60,7 +52,7 @@
         </div>
         <div class="row form_line">
             <div class="col-md-6">
-                <label for="">Last Name</label>
+                Last Name
             </div>
             <div class="col-md-6">
                 <?= isset($profile_info) && !empty($profile_info->last_name) ? $profile_info->last_name : '---';?>
@@ -68,7 +60,7 @@
         </div>
         <div class="row form_line">
             <div class="col-md-6">
-                <label>Name Prefix</label>
+                <label>Name Prefix
             </div>
             <div class="col-md-6">
                 <?= isset($profile_info) && !empty($profile_info->prefix) ? $profile_info->prefix : '---';?>
@@ -76,7 +68,7 @@
         </div>
         <div class="row form_line">
             <div class="col-md-6">
-                <label for="">Suffix</label>
+                Suffix
             </div>
             <div class="col-md-6">
                 <?= isset($profile_info) && !empty($profile_info->suffix) ? $profile_info->suffix : '---';?>
@@ -84,7 +76,7 @@
         </div>
         <div class="row form_line">
             <div class="col-md-6">
-                <label for="">Address </label>
+                Address 
             </div>
             <div class="col-md-6">
                 <?= isset($profile_info) && !empty($profile_info->mail_add) ? $profile_info->mail_add : '---';?>
@@ -92,7 +84,7 @@
         </div>
         <div class="row form_line">
             <div class="col-md-6">
-                <label for="">City </label>
+                City 
             </div>
             <div class="col-md-6">
                 <?= isset($profile_info) && !empty($profile_info->city) ? $profile_info->city : '---';?>
@@ -100,7 +92,7 @@
         </div>
         <div class="row form_line">
             <div class="col-md-6">
-                <label for="">State </label>
+                State 
             </div>
             <div class="col-md-6">
                 <?= isset($profile_info) && !empty($profile_info->state) ? $profile_info->state : '---';?>
@@ -109,7 +101,7 @@
 
         <div class="row form_line">
             <div class="col-md-6">
-                <label for="">Zip Code</label>
+                Zip Code
             </div>
             <div class="col-md-6">
                 <?= isset($profile_info) && !empty($profile_info->zip_code) ? $profile_info->zip_code : '---';?>
@@ -117,7 +109,7 @@
         </div>
         <div class="row form_line">
             <div class="col-md-6">
-                <label for="">Cross Street</label>
+                Cross Street
             </div>
             <div class="col-md-6">
                 <?= isset($profile_info) && !empty($profile_info->cross_street) ? $profile_info->cross_street : '---';?>
@@ -125,7 +117,7 @@
         </div>
         <div class="row form_line">
             <div class="col-md-6">
-                <label for="">County</label>
+                County
             </div>
             <div class="col-md-6">
                 <?= isset($profile_info) && !empty($profile_info->country) ? $profile_info->country : '---';?>
@@ -133,7 +125,7 @@
         </div>
         <div class="row form_line">
             <div class="col-md-6">
-                <label for="">Subdivision</label>
+                Subdivision
             </div>
             <div class="col-md-6">
                 <?= isset($profile_info) && !empty($profile_info->subdivision) ? $profile_info->subdivision : '---';?>
@@ -141,7 +133,7 @@
         </div>
         <div class="row form_line">
             <div class="col-md-6">
-                <label for="">Social Security No.</label>
+                Social Security No.
             </div>
             <div class="col-md-6">
                 <?php
@@ -156,7 +148,7 @@
         </div>
         <div class="row form_line">
             <div class="col-md-6">
-                <label for="">Date Of Birth </label>
+                Date Of Birth 
             </div>
             <div class="col-md-6">
                 <?= isset($profile_info) && !empty($profile_info->date_of_birth) ? $profile_info->date_of_birth : '---';?>
@@ -165,7 +157,7 @@
 
         <div class="row form_line">
             <div class="col-md-6">
-                <label for="">Email </label>
+                Email 
             </div>
             <div class="col-md-6">
                 <?= isset($profile_info) && !empty($profile_info->email) ? $profile_info->email : '---';?>
@@ -174,7 +166,7 @@
 
         <div class="row form_line">
             <div class="col-md-6">
-                <label for="">Phone (H)</label>
+                Phone (H)
             </div>
             <div class="col-md-6">
                 <?= isset($profile_info) && !empty($profile_info->phone_h) ? $profile_info->phone_h : '---';?>
@@ -182,7 +174,7 @@
         </div>
         <!--<div class="row form_line">
             <div class="col-md-6">
-                <label for="">Phone (W)</label>
+                Phone (W)
             </div>
             <div class="col-md-6">
                 <input type="text" class="form-control phone_number" maxlength="12" placeholder="xxx-xxx-xxxx" name="phone_w" id="phone_w" value="<?php if(isset($profile_info)){ echo $profile_info->phone_w; } ?>" />
@@ -190,7 +182,7 @@
         </div>-->
         <div class="row form_line">
             <div class="col-md-6">
-                <label for="">Phone (M)</label>
+                Phone (M)
             </div>
             <div class="col-md-6">
                 <?= isset($profile_info) && !empty($profile_info->phone_m) ? $profile_info->phone_m : '---';?>
@@ -199,7 +191,7 @@
         <hr>
         <div class="row form_line">
             <div class="col-md-6 ">
-                <label for="">Contact Name 1</label>
+                Contact Name 1
             </div>
             <div class="col-md-6">
                 <?= !empty($profile_info->contact_name1) ? $profile_info->contact_name1 : '---';?>
@@ -207,7 +199,7 @@
         </div>
         <div class="row form_line">
             <div class="col-md-6">
-                <label for="">Contact Phone 1</label>
+                Contact Phone 1
             </div>
             <div class="col-md-6">
                 <?= !empty($profile_info->contact_phone1) ? $profile_info->contact_phone1 : '---';?>
@@ -215,7 +207,7 @@
         </div>
         <div class="row form_line">
             <div class="col-md-6">
-                <label for="">Contact Name 2</label>
+                Contact Name 2
             </div>
             <div class="col-md-6">
                 <?= !empty($profile_info->contact_name2) ? $profile_info->contact_name2 : '---';?>
@@ -223,7 +215,7 @@
         </div>
         <div class="row form_line">
             <div class="col-md-6">
-                <label for="">Contact Phone 2</label>
+                Contact Phone 2
             </div>
             <div class="col-md-6">
                 <?= !empty($profile_info->contact_phone2) ? $profile_info->contact_phone2 : '---';?>
@@ -231,7 +223,7 @@
         </div>
         <div class="row form_line">
             <div class="col-md-6">
-                <label for="">Contact Name 3</label>
+                Contact Name 3
             </div>
             <div class="col-md-6">
                 <?= !empty($profile_info->contact_name3) ? $profile_info->contact_name3 : '---';?>
@@ -239,7 +231,7 @@
         </div>
         <div class="row form_line">
             <div class="col-md-6">
-                <label for="">Contact Phone 3</label>
+                Contact Phone 3
             </div>
             <div class="col-md-6">
                 <?= !empty($profile_info->contact_phone3) ? $profile_info->contact_phone3 : '---';?>
@@ -248,7 +240,7 @@
 
         <!--<div class="row form_line" id="fax_">
             <div class="col-md-6">
-                <label for="">Fax</label>
+                Fax
             </div>
             <div class="col-md-6">
                 <input type="text" class="form-control" name="fax" id="fax" value="<?php if(isset($profile_info->fax)){ echo $profile_info->fax; } ?>" />

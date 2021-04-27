@@ -4,7 +4,7 @@
 <div class="card-body">
     <div class="row form_line">
         <div class="col-md-6">
-            <label for="">Card Holder First Name</label>
+            Card Holder First Name
         </div>
         <div class="col-md-6">
             <?= isset($billing_info) && !empty($billing_info->card_fname) ? $billing_info->card_fname : '---' ?>
@@ -12,7 +12,7 @@
     </div>
     <div class="row form_line">
         <div class="col-md-6">
-            <label for="">Card Holder Last Name</label>
+           Card Holder Last Name
         </div>
         <div class="col-md-6">
             <?= isset($billing_info) && !empty($billing_info->card_lname) ? $billing_info->card_lname : '---' ?>
@@ -20,7 +20,7 @@
     </div>
     <div class="row form_line">
         <div class="col-md-6">
-            <label for="">Card Holder Address </label>
+           Card Holder Address
         </div>
         <div class="col-md-6">
             <?= isset($billing_info) && !empty($billing_info->card_address) ? $billing_info->card_address : '---' ?>
@@ -28,7 +28,7 @@
     </div>
     <div class="row form_line">
         <div class="col-md-6">
-            <label for="">City State ZIP</label>
+            City State ZIP
         </div>
         <div class="col-md-6">
             <?= isset($billing_info) && !empty($billing_info->city) ? $billing_info->city : '---' ?>
@@ -38,7 +38,7 @@
     </div>
     <div class="row form_line">
         <div class="col-md-6">
-            <label for="">Rate Plan </label>
+            Rate Plan
         </div>
         <div class="col-md-6">
             <?= isset($billing_info) && !empty($billing_info->mmr) ? '$'. $billing_info->mmr : '---' ?>
@@ -46,7 +46,7 @@
     </div>
     <div class="row form_line">
         <div class="col-md-6">
-            <label for="">Billing Frequency</label>
+           Billing Frequency
         </div>
         <div class="col-md-6">
             <?= isset($billing_info) && !empty($billing_info->bill_freq) ? $billing_info->bill_freq : '---' ?>
@@ -54,7 +54,7 @@
     </div>
     <div class="row form_line">
         <div class="col-md-6">
-            <label for="">Billing Day of Month</label>
+            Billing Day of Month
         </div>
         <div class="col-md-6">
             <?= isset($billing_info) && !empty($billing_info->bill_day) ? $billing_info->bill_day : '---' ?>
@@ -62,15 +62,15 @@
     </div>
     <div class="row form_line">
         <div class="col-md-6">
-            <label for="">Contract Term* (months)</label>
+            Contract Term* (months)
         </div>
         <div class="col-md-6">
-            <?= isset($billing_info) && !empty($billing_info->contract_term) ? $billing_info->contract_term : '---' ?>
+            <?= isset($billing_info) && !empty($billing_info->contract_term) ? $billing_info->contract_term.' months' : '---' ?>
         </div>
     </div>
     <div class="row form_line">
         <div class="col-md-6">
-            <label for="">Billing Start Date</label>
+            Billing Start Date
         </div>
         <div class="col-md-6">
             <?= isset($billing_info) && !empty($billing_info->bill_start_date) ? $billing_info->bill_start_date : '---' ?>
@@ -78,7 +78,7 @@
     </div>
     <div class="row form_line">
         <div class="col-md-6">
-            <label for="">Billing End Date</label>
+            Billing End Date
         </div>
         <div class="col-md-6">
             <?= isset($billing_info) && !empty($billing_info->bill_end_date) ? $billing_info->bill_end_date : '---' ?>
@@ -94,7 +94,7 @@
 
     <div class="row form_line">
         <div class="col-md-6">
-            <label for="">Billing Method</label>
+            Billing Method
         </div>
         <div class="col-md-6">
             <?php $bm = bill_methods($billing_info->bill_method); ?> <?= !empty($bm['description']) ? $bm['description'] : '---'; ?>
@@ -103,7 +103,7 @@
 
     <div class="row form_line" id="checkNumber">
         <div class="col-md-6">
-            <label for="">Check Number</label>
+            Check Number
         </div>
         <div class="col-md-6">
             <?= !empty($billing_info->check_num) ? $billing_info->check_num : '---' ?>
@@ -111,7 +111,7 @@
     </div>
     <div class="row form_line" id="routingNumber">
         <div class="col-md-6">
-            <label for="">Routing Number</label>
+            Routing Number
         </div>
         <div class="col-md-6">
             <?= !empty($billing_info->routing_num) ? $billing_info->routing_num : '---' ?>
@@ -119,7 +119,7 @@
     </div>
     <div class="row form_line" id="accountNumber">
         <div class="col-md-6">
-            <label for="">Account Number</label>
+            Account Number
         </div>
         <div class="col-md-6">
             <?= !empty($billing_info->acct_num) ? $billing_info->acct_num : '---' ?>
@@ -127,7 +127,7 @@
     </div>
     <div class="row form_line" id="CCN">
         <div class="col-md-6">
-            <label for="">Credit Card Number</label>
+            Credit Card Number
         </div>
         <div class="col-md-6">
             <?= !empty($billing_info->credit_card_num) ? $billing_info->credit_card_num : '---' ?>
@@ -135,7 +135,7 @@
     </div>
     <div class="row form_line" id="CCE">
         <div class="col-md-6">
-            <label for="">Credit Card Expiration</label>
+            Credit Card Expiration
         </div>
         <div class="col-md-6">
             <?= !empty($billing_info->credit_card_exp) ? $billing_info->credit_card_exp : '---' ?>
@@ -145,7 +145,7 @@
 
     <div class="row form_line account_cred" >
         <div class="col-md-6">
-            <label for="">Account Credential</label>
+            Account Credential
         </div>
         <div class="col-md-6">
             <?= !empty($billing_info->account_credential) ? $billing_info->account_credential : '---' ?>
@@ -153,7 +153,7 @@
     </div>
     <div class="row form_line account_cred" >
         <div class="col-md-6">
-            <label for="">Account Note</label>
+            Account Note
         </div>
         <div class="col-md-6">
             <?= !empty($billing_info->account_note) ? $billing_info->account_note : '---' ?>
@@ -161,7 +161,7 @@
     </div>
     <div class="row form_line account_cred" id="confirmationPD">
         <div class="col-md-6">
-            <label for="">Confirmation</label>
+            Confirmation
         </div>
         <div class="col-md-6">
             <?= !empty($billing_info->confirmation) ? $billing_info->confirmation : '---' ?>

@@ -6,7 +6,7 @@
     <div class="card-body">
         <div class="row form_line">
             <div class="col-md-4">
-                <label for="">Entered By</label>
+                Entered By
             </div>
             <div class="col-md-8">
                 <input type="text" class="form-control" name="entered_by" id="entered_by" value="<?php if(isset($office_info) && $office_info->entered_by){ echo  $office_info->entered_by; } else { echo $logged_in_user->FName.' '. $logged_in_user->LName;} ?>"/>
@@ -14,7 +14,7 @@
         </div>
         <div class="row form_line">
             <div class="col-md-4">
-                <label for="">Time Entered</label>
+                Time Entered
             </div>
             <div class="col-md-8">
                 <input type="text" class="form-control timepicker" name="time_entered" id="time_entered" value="<?php if(isset($office_info)){ echo  $office_info->time_entered; } ?>" />
@@ -22,7 +22,7 @@
         </div>
         <div class="row form_line">
             <div class="col-md-4">
-                <label for="">Sales Date</label>
+                Sales Date
             </div>
             <div class="col-md-8">
                 <input type="text" class="form-control date_picker" name="sales_date" id="" value="<?php if(isset($office_info)){ echo  $office_info->sales_date; } ?>"/>
@@ -30,7 +30,7 @@
         </div>
         <div class="row form_line">
             <div class="col-md-4">
-                <label for="">Credit Score </label>
+                Credit Score 
             </div>
             <div class="col-md-8">
                 <select id="credit_score" name="credit_score" data-customer-source="dropdown" class="input_select" >
@@ -61,7 +61,7 @@
 
         <div class="row form_line">
             <div class="col-md-4">
-                <label for="">Sales Rep</label>
+                Sales Rep
             </div>
             <div class="col-md-8">
                 <select id="fk_sales_rep_office" name="fk_sales_rep_office" data-customer-source="dropdown" class="input_select" >
@@ -74,7 +74,7 @@
         </div>
         <div class="row form_line">
             <div class="col-md-4">
-                <label for="">Technician</label>
+                Technician
             </div>
             <div class="col-md-8">
                 <select id="technician" name="technician"  class="input_select">
@@ -87,7 +87,7 @@
         </div>
         <div class="row form_line">
             <div class="col-md-4">
-                <label for="">Install Date</label>
+                Install Date
             </div>
             <div class="col-md-8">
                 <input type="text" class="form-control date_picker" name="install_date" id="" value="<?php if(isset($office_info)){ echo  $office_info->install_date; } ?>"/>
@@ -95,7 +95,7 @@
         </div>
         <div class="row form_line">
             <div class="col-md-4">
-                <label for="">Tech Arrival Time</label>
+                Tech Arrival Time
             </div>
             <div class="col-md-8">
                 <div class="input-group bootstrap-timepicker timepicker">
@@ -105,7 +105,7 @@
         </div>
         <div class="row form_line">
             <div class="col-md-4">
-                <label for="">Tech Depart Time</label>
+                Tech Depart Time
             </div>
             <div class="col-md-8">
                 <div class="input-group bootstrap-timepicker timepicker">
@@ -115,7 +115,7 @@
         </div>
         <div class="row form_line">
             <div class="col-md-4">
-                <label for="">Lead Source</label>
+                Lead Source
             </div>
             <div class="col-md-8">
                 <select id="lead_source" name="lead_source" data-customer-source="dropdown" class="input_select">
@@ -138,7 +138,7 @@
         </div>
         <div class="row form_line">
             <div class="col-md-4">
-                <label for="">Verification:</label>
+                Verification:
             </div>
             <div class="col-md-8">
                 <select id="verification" name="verification" data-customer-source="dropdown" class="input_select" >
@@ -153,7 +153,7 @@
 
         <div class="row form_line">
             <div class="col-md-4">
-                <label for="">Cancel Date</label>
+                Cancel Date
             </div>
             <div class="col-md-8">
                 <input type="text" class="form-control date_picker" name="cancel_date" id="date_picker" value="<?php if(isset($office_info)){ echo  $office_info->cancel_date; } ?>" />
@@ -161,7 +161,7 @@
         </div>
         <div class="row form_line">
             <div class="col-md-4">
-                <label for="">Cancel Reason</label>
+                Cancel Reason
             </div>
             <div class="col-md-8">
                 <select id="cancel_reason" name="cancel_reason" data-customer-source="dropdown" class="input_select" >
@@ -180,7 +180,7 @@
 
         <div class="row form_line">
             <div class="col-md-4">
-                <label>Collections</label>
+                <label>Collections
             </div>
             <div class="col-md-8">
                 <select id="collections" name="collections" data-customer-source="dropdown" class="form-controls input_select">
@@ -197,7 +197,7 @@
 
         <div class="row form_line">
             <div class="col-md-4">
-                <label for="">Collection Date</label>
+                Collection Date
             </div>
             <div class="col-md-8">
                 <input type="text" class="form-control date_picker" name="collect_date" id="date_picker" value="<?php if(isset($office_info)){ echo $office_info->collect_date; } ?>" />
@@ -205,7 +205,7 @@
         </div>
         <div class="row form_line">
             <div class="col-md-4">
-                <label for="">Collection Amount</label>
+                Collection Amount
             </div>
             <div class="col-md-8">
                 <div class="input-group">
@@ -218,40 +218,40 @@
         </div>
         <!--<div class="row">
             <div class="col-md-4">
-                <label for="">Rep Tiered Upfront Bonus</label>
+                Rep Tiered Upfront Bonus
             </div>
             <div class="col-md-8">
-                <label>$0.00</label>
+                <label>$0.00
             </div>
         </div>
         <div class="row">
             <div class="col-md-4">
-                <label for="">Rep Tiered Holdfund Bonus</label>
+                Rep Tiered Holdfund Bonus
             </div>
             <div class="col-md-8">
-                <label>$0.00</label>
+                <label>$0.00
             </div>
         </div>
         <div class="row">
             <div class="col-md-4">
-                <label for="">Rep Deductions Total</label>
+                Rep Deductions Total
             </div>
             <div class="col-md-8">
-                <label>$0.00</label>
+                <label>$0.00
             </div>
         </div>
         <div class="row">
             <div class="col-md-4">
-                <label for="">Tech Deductions Total</label>
+                Tech Deductions Total
             </div>
             <div class="col-md-8">
-                <label>$0.00</label>
+                <label>$0.00
             </div>
         </div>-->
 
         <div class="row form_line">
             <div class="col-md-4">
-                <label for="">Language</label>
+                Language
             </div>
             <div class="col-md-8">
                 <select id="language" name="language" data-customer-source="dropdown" class="input_select">
@@ -271,7 +271,7 @@
     <div class="card-body">
         <div class="row form_line">
             <div class="col-md-7">
-                <label for="">Pre-Install Survey</label>
+                Pre-Install Survey
             </div>
             <div class="col-md-5">
                 <select id="pre_install_survey" name="pre_install_survey" data-customer-source="dropdown" class="input_select" >
@@ -284,7 +284,7 @@
         </div>
         <div class="row form_line">
             <div class="col-md-7">
-                <label for="">Post-Install Survey</label>
+                Post-Install Survey
             </div>
             <div class="col-md-5">
                 <select id="post_install_survey" name="post_install_survey" data-customer-source="dropdown" class="input_select" >
@@ -298,7 +298,7 @@
         <hr>
         <div class="row form_line">
             <div class="col-md-7">
-                <label for="">Monitoring Waived</label>
+                Monitoring Waived
             </div>
             <div class="col-md-5">
                 <select id="monitoring_waived" name="monitoring_waived" data-customer-source="dropdown" class="input_select" >
@@ -329,13 +329,13 @@
         </div>
         <div class="row form_line">
             <div class="col-md-7">
-                <label for="">Rebate Check # 1</label>
+                Rebate Check # 1
             </div>
             <div class="col-md-5">
                 <input type="number" class="form-control" name="rebate_check1" id="rebate_check1" value="<?php if(isset($office_info)){ echo  $office_info->rebate_check1; } ?>"/>
             </div>
             <div class="col-md-7">
-                <label for="">Amount $</label>
+                Amount $
             </div>
             <div class="col-md-5">
                 <input type="number" class="form-control" name="rebate_check1_amt" id="rebate_check1_amt" value="<?php if(isset($office_info)){ echo  $office_info->rebate_check1_amt; } ?>"/>
@@ -343,13 +343,13 @@
         </div>
         <div class="row form_line">
             <div class="col-md-7">
-                <label for="">Rebate Check # 2</label>
+                Rebate Check # 2
             </div>
             <div class="col-md-5">
                 <input type="number" class="form-control" name="rebate_check2" id="rebate_check2" value="<?php if(isset($office_info)){ echo  $office_info->rebate_check2; } ?>"/>
             </div>
             <div class="col-md-7">
-                <label for="">Amount $</label>
+                Amount $
             </div>
             <div class="col-md-5">
                 <input type="number" class="form-control" name="rebate_check2_amt" id="rebate_check2_amt" value="<?php if(isset($office_info)){ echo  $office_info->rebate_check2_amt; } ?>" />
@@ -357,7 +357,7 @@
         </div>
         <div class="row form_line">
             <div class="col-md-7">
-                <label for="">Activation Fee</label>
+                Activation Fee
             </div>
             <div class="col-md-5">
                 <select id="activation_fee" name="activation_fee" data-customer-source="dropdown" class="input_select">
@@ -415,7 +415,7 @@
         <hr>
         <div class="row form_line">
             <div class="col-md-7">
-                <label for="">Commision Scheme Override</label>
+                Commision Scheme Override
             </div>
             <div class="col-md-5">
                 <input type="radio" name="commision_scheme[]" class="form-controls" value="1" id="commision_scheme1" <?php if(isset($office_info)){ echo $office_info->commision_scheme == 1 ? 'checked': ''; } ?> >
@@ -426,7 +426,7 @@
         </div>
         <div class="row form_line">
             <div class="col-md-7">
-                <label for="">Rep Commission </label>
+                Rep Commission 
             </div>
             <div class="col-md-5">
                 <div class="input-group">
@@ -439,7 +439,7 @@
         </div>
         <div class="row form_line">
             <div class="col-md-7">
-                <label for="">Rep Upfront Pay</label>
+                Rep Upfront Pay
             </div>
             <div class="col-md-5">
                 <div class="input-group">
@@ -452,7 +452,7 @@
         </div>
         <div class="row form_line">
             <div class="col-md-7">
-                <label for="">Rep Tiered Upront Bonus</label>
+                Rep Tiered Upront Bonus
             </div>
             <div class="col-md-5">
                 <div class="input-group">
@@ -465,7 +465,7 @@
         </div>
         <div class="row form_line">
             <div class="col-md-7">
-                <label for="">Rep Tiered Holdfund Bonus</label>
+                Rep Tiered Holdfund Bonus
             </div>
             <div class="col-md-5">
                 <div class="input-group">
@@ -479,7 +479,7 @@
 
         <div class="row form_line">
             <div class="col-md-7">
-                <label for="">Rep Deduction Total</label>
+                Rep Deduction Total
             </div>
             <div class="col-md-5">
                 <div class="input-group">
@@ -493,7 +493,7 @@
 
         <div class="row form_line">
             <div class="col-md-7">
-                <label for="">Tech Commission </label>
+                Tech Commission 
             </div>
             <div class="col-md-5">
                 <div class="input-group">
@@ -506,7 +506,7 @@
         </div>
         <div class="row form_line">
             <div class="col-md-7">
-                <label for="tech_upfront_pay">Tech Upfront Pay </label>
+                <label for="tech_upfront_pay">Tech Upfront Pay 
             </div>
             <div class="col-md-5">
                 <div class="input-group">
@@ -520,7 +520,7 @@
 
         <div class="row form_line">
             <div class="col-md-7">
-                <label for="">Tech Deduction Total</label>
+                Tech Deduction Total
             </div>
             <div class="col-md-5">
                 <div class="input-group">
@@ -536,7 +536,7 @@
 
         <div class="row form_line">
             <div class="col-md-7">
-                <label for="">Rep Hold Fund Charge Back </label>
+                Rep Hold Fund Charge Back 
             </div>
             <div class="col-md-5">
                 <div class="input-group">
@@ -549,7 +549,7 @@
         </div>
         <div class="row form_line">
             <div class="col-md-7">
-                <label for="">Rep Payroll Charge Back </label>
+                Rep Payroll Charge Back 
             </div>
             <div class="col-md-5">
                 <div class="input-group">
@@ -563,7 +563,7 @@
         <hr>
         <div class="row form_line">
             <div class="col-md-7">
-                <label for="">Points Scheme Override</label>
+                Points Scheme Override
             </div>
             <div class="col-md-5">
                 <input type="radio" name="pso[]" class="form-controls" value="1" id="pso1" <?php if(isset($office_info)){ echo $office_info->pso == 1 ? 'checked': ''; } ?> >
@@ -576,7 +576,7 @@
 
         <div class="row form_line">
             <div class="col-md-7">
-                <label for="">Points Included</label>
+                Points Included
             </div>
             <div class="col-md-5">
                 <input type="number" class="form-control" name="points_include" id="points_include" value="<?php if(isset($office_info)){ echo $office_info->points_include !=0 ? $office_info->points_include : '';  } ?>"  />
@@ -584,7 +584,7 @@
         </div>
         <div class="row form_line">
             <div class="col-md-7">
-                <label for="">Price Per Point </label>
+                Price Per Point 
             </div>
             <div class="col-md-5">
                 <div class="input-group">
@@ -598,7 +598,7 @@
         <hr>
         <div class="row form_line">
             <div class="col-md-7">
-                <label for="">Purchase Price </label>
+                Purchase Price 
             </div>
             <div class="col-md-5">
                 <div class="input-group">
@@ -611,7 +611,7 @@
         </div>
         <div class="row form_line">
             <div class="col-md-7">
-                <label for="">Purchase Multiple</label>
+                Purchase Multiple
             </div>
             <div class="col-md-5">
                 <select id="purchase_multiple" name="purchase_multiple" data-customer-source="dropdown" class="input_select ">
@@ -628,7 +628,7 @@
         </div>
         <div class="row form_line">
             <div class="col-md-7">
-                <label for="">Purchase Discount </label>
+                Purchase Discount 
             </div>
             <div class="col-md-5">
                 <div class="input-group">
@@ -642,7 +642,7 @@
         <hr>
         <div class="row form_line">
             <div class="col-md-7">
-                <label for="">Equipment Cost</label>
+                Equipment Cost
             </div>
             <div class="col-md-5">
                 <div class="input-group">
@@ -655,7 +655,7 @@
         </div>
         <div class="row form_line">
             <div class="col-md-7">
-                <label for="">Labor Cost</label>
+                Labor Cost
             </div>
             <div class="col-md-5">
                 <div class="input-group">
@@ -668,7 +668,7 @@
         </div>
         <div class="row form_line">
             <div class="col-md-7">
-                <label for="">Job Profit</label>
+                Job Profit
             </div>
             <div class="col-md-5">
                 <div class="input-group">
@@ -682,7 +682,7 @@
         <br>
         <div class="row form_line">
             <div class="col-md-5">
-                <label for="">Shareable Url Link</label>
+                Shareable Url Link
             </div>
             <div class="col-md-7">
                 <input type="url" placeholder="https://sample.com" class="form-control" name="url" id="url" value="<?php if(isset($office_info)){ echo  $office_info->url; } ?>" />

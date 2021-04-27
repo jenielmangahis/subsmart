@@ -45,7 +45,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
     echo url('/customer/index/tab2/' . $profile_info->prof_id) . '/mt5';
 } ?>" class="normaltext1" style="color:#58bc4f;">-->
                                     <a href="<?php if (isset($profile_info)) {
-    echo url('/customer/add_advance/' . $profile_info->prof_id) . '/tab1';
+    echo url('/customer/add_advance/' . $profile_info->prof_id);
 } ?>" class="normaltext1" style="color:#58bc4f;">
                                         View/Edit Profile
                                     </a>&nbsp;&nbsp;
