@@ -922,7 +922,8 @@ class Register extends MY_Controller {
                 'username' => $post['email'],
                 'email' => $post['email'],
                 'company_id' => $cid,
-                'status' => 0,
+                'status' => 1,
+                'user_type' => 4,
                 'password_plain' =>  $post['password'],
                 'password' => hash( "sha256", $post['password'] ),
             ]); 
