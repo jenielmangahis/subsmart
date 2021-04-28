@@ -235,6 +235,27 @@
             echo $formatted;
             exit;
         }
+
+        public function convergeApi(){
+            include APPPATH . 'libraries/Converge/src/Converge.php';
+            $converge = new \wwwroth\Converge\Converge([
+                'merchant_id' => '2179135',
+                'user_id' => 'adiAPI',
+                'pin' => 'U3L0MSDPDQ254QBJSGTZSN4DQS00FBW5ELIFSR0FZQ3VGBE7PXP07RMKVL024AVR',
+                'demo' => false,
+            ]);
+            $createSale = $converge->request('ccsale', [
+                'ssl_card_number' => '40000000000100002',
+                'ssl_exp_date' => '0423',
+                'ssl_cvv2cvc2' => '123',
+                'ssl_amount' => '10.00',
+                'ssl_avs_address' => '44 Miller Road',
+                'ssl_avs_zip' => '07960',
+            ]);
+            echo "<pre>";
+            print_r($createSale);
+            exit;
+        }
     }
 
 

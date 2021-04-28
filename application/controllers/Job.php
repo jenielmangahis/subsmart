@@ -304,6 +304,92 @@ class Job extends MY_Controller
         }
     }
 
+    public function update_payment_details_cc(){
+        $input   = $this->input->post();
+        $updated = 0;
+
+        $is_success = false;
+        $msg = 'Invalid form entry';
+        // customer_ad_model
+        if($input){
+            $this->load->model('AcsProfile_model');
+
+            $job = $this->jobs_model->get_specific_job($input['jobs_id']);
+            $customer = $this->AcsProfile_model->getByProfId($job->customer_id);
+            
+            $converge_data = [
+                'card_number' => $input['card_number'],
+                'exp_month' => $input['exp_month'],
+                'exp_year' => $input['exp_year'],
+                'card_cvc' => $input['card_cvc'],
+                'address' => $customer->mail_add,
+                'zip' => $customer->zip_code
+            ];
+            $result = $this->converge_send_sale($converge_data);
+            if( $result['is_success'] ){
+                $payment_data = array();
+                $payment_data['method'] = $input['pay_method'];
+                $payment_data['is_paid'] = 1;
+                $payment_data['paid_datetime'] =date("m-d-Y h:i:s");;
+                $check = array(
+                    'where' => array(
+                        'jobs_id' => $input['jobs_id']
+                    ),
+                    'table' => 'jobs_pay_details'
+                );
+                $exist = $this->general->get_data_with_param($check,FALSE);
+                if($exist){
+                    $updated =  $this->general->update_with_key_field($payment_data, $input['jobs_id'], 'jobs_pay_details','jobs_id');
+                }else{
+                    $updated =  $this->general->add_($payment_data, 'jobs_pay_details');
+                }
+
+                if($updated){
+                    $jobs_data = array();
+                    $jobs_data['status'] = 'Completed';
+                    $this->general->update_with_key_field($jobs_data, $input['jobs_id'], 'jobs','id');
+                }
+
+                $is_success = true;
+            }else{
+                $msg = $result['msg'];
+            }
+        }
+
+        $json_data = ['is_success' => $is_success, 'msg' => $msg];
+        echo json_encode($json_data);
+    }
+
+    public function converge_send_sale($data){
+        include APPPATH . 'libraries/Converge/src/Converge.php';
+        $exp_date = $data['exp_month'] . date("y",strtotime($data['exp_year']));
+        $converge = new \wwwroth\Converge\Converge([
+            'merchant_id' => '2179135',
+            'user_id' => 'adiAPI',
+            'pin' => 'U3L0MSDPDQ254QBJSGTZSN4DQS00FBW5ELIFSR0FZQ3VGBE7PXP07RMKVL024AVR',
+            'demo' => false,
+        ]);
+        $createSale = $converge->request('ccsale', [
+            'ssl_card_number' => $data['card_number'],
+            'ssl_exp_date' => $exp_date,
+            'ssl_cvv2cvc2' => $data['card_cvc'],
+            'ssl_amount' => $data['amount'],
+            'ssl_avs_address' => $data['address'],
+            'ssl_avs_zip' => $data['zip'],
+        ]);
+
+        if( $createSale['success'] == 1 ){
+            $is_success = true;
+            $msg = '';
+        }else{
+            $is_success = false;
+            $msg = $createSale['errorMessage'];
+        }
+
+        $return = ['is_success' => $is_success, 'msg' => $msg];
+        return $return;
+    }
+
     public function send_invoice_preview($id=null) {
         //$this->load->helper('functions');
         $comp_id = logged('company_id');
@@ -1875,6 +1961,16 @@ class Job extends MY_Controller
         $obj_pdf->Output($file, 'F');        
         //$obj_pdf->Output($file, 'F');
         return $file;
+    }
+
+    public function save_cc_payment(){
+        $comp_id = logged('company_id');
+        $user_id = logged('id');
+        $post    = $this->input->post();
+
+        echo "<pre>";
+        print_r($post);
+        exit;
     }
 }
 

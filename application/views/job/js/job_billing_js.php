@@ -4,20 +4,52 @@
         $("#payment_info").submit(function(e) {
             e.preventDefault(); // avoid to execute the actual submit of the form.
             var form = $(this);
+            var payment_method = $("#pay_method").val();
             //var url = form.attr('action');
-            $.ajax({
-                type: "POST",
-                url: "<?= base_url() ?>/job/update_payment_details",
-                data: form.serialize(), // serializes the form's elements.
-                success: function(data) {
-                    console.log(data);
-                    if(data === '1'){
-                        sucess();
-                    }else{
-                        error();
+            if( payment_method == 'CC' ){
+                $(".btn-save-payment").html('<span class="spinner-border spinner-border-sm m-0"></span>');
+                setTimeout(function () {
+                    $.ajax({
+                        type: "POST",
+                        url: "<?= base_url() ?>job/update_payment_details_cc",
+                        data: form.serialize(), // serializes the form's elements.
+                        dataType:'json',
+                        success: function(data) {
+                            if(data.is_success){
+                                sucess();
+                            }else{
+                                Swal.fire({
+                                    title: 'Sorry!',
+                                    text: data.msg,
+                                    icon: 'error',
+                                    showCancelButton: false,
+                                    confirmButtonColor: '#32243d',
+                                    cancelButtonColor: '#d33',
+                                    confirmButtonText: 'Ok'
+                                }).then((result) => {
+
+                                });
+                            }
+
+                            $(".btn-save-payment").html('Save');
+                        }
+                    });
+                }, 500);
+            }else{
+                $.ajax({
+                    type: "POST",
+                    url: "<?= base_url() ?>job/update_payment_details",
+                    data: form.serialize(), // serializes the form's elements.
+                    success: function(data) {
+                        console.log(data);
+                        if(data === '1'){
+                            sucess();
+                        }else{
+                            error();
+                        }
                     }
-                }
-            });
+                });    
+            }
         });
     });
 
