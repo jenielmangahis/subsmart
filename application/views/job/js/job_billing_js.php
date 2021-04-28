@@ -1,4 +1,56 @@
 <script>
+
+    $(document).ready(function() {
+        $("#payment_info").submit(function(e) {
+            e.preventDefault(); // avoid to execute the actual submit of the form.
+            var form = $(this);
+            //var url = form.attr('action');
+            $.ajax({
+                type: "POST",
+                url: "<?= base_url() ?>/job/update_payment_details",
+                data: form.serialize(), // serializes the form's elements.
+                success: function(data) {
+                    console.log(data);
+                    if(data === '1'){
+                        sucess();
+                    }else{
+                        error();
+                    }
+                }
+            });
+        });
+    });
+
+    function sucess(){
+        Swal.fire({
+            title: 'Good Job!',
+            text: 'Job has been paid!',
+            icon: 'success',
+            showCancelButton: false,
+            confirmButtonColor: '#32243d',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Ok'
+        }).then((result) => {
+            if (result.value) {
+                window.location.href='<?= base_url(); ?>job/';
+            }
+        });
+    }
+
+    function error(){
+        Swal.fire({
+            title: 'Sorry!',
+            text: 'Something goes wrong, contact your administrator!',
+            icon: 'error',
+            showCancelButton: false,
+            confirmButtonColor: '#32243d',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Ok'
+        }).then((result) => {
+
+        });
+    }
+
     $(function(){
         $("#exp_month").select2({
             placeholder: "Month"
@@ -23,6 +75,7 @@
 
     $('.payment_method').on( 'change', function () {
         var method = this.value;
+        $('#pay_method').val(method);
         if(method === 'CASH'){
             hide_all();
             $("#payment_collected").show('slow');
@@ -58,4 +111,7 @@
         $("#check_number").hide('slow');
         $("#docu_signed").hide('slow');
     }
+
+
+
 </script>

@@ -23,7 +23,8 @@ $(document).ready(function() {
             est_wage_privacy: $("#est_wage_privacy").is(":checked"),
             report_series: report_series,
             sched_day: sched_day,
-            sched_time: $("#sched_time").val()
+            sched_time: $("#sched_time").val(),
+            email_report: $("#email_report").val()
         };
         // alert($("#tz_id_of_tz").val());
         Swal.fire({
@@ -92,6 +93,7 @@ $(document).ready(function() {
                     $("#tz_display_name").val(data.timezone_id);
                     $("#tz_id_of_tz").val(data.timezone_id_of_tz);
                     $("#sched_time").val(data.sched_time);
+                    $("#email_report").val(data.email_report);
                     if (data.subscribed == 1) {
                         $("#subcribe_weekly_report").attr("checked");
                         $(".subscribed-fields").show();
@@ -109,42 +111,47 @@ $(document).ready(function() {
                     $("#sched_f").prop("checked", false);
                     $("#sched_sat").prop("checked", false);
                     for (var i = 0; i < sched_day.length; i++) {
-                        if (sched_day[i] == "Sunday") {
+                        if (sched_day[i] == "Sun") {
                             $("#sched_sun").prop("checked", true);
+                            $('#sched_sun').removeAttr('disabled');
                         }
-                        if (sched_day[i] == "Monday") {
+                        if (sched_day[i] == "Mon") {
                             $("#sched_m").prop("checked", true);
+                            $('#sched_m').removeAttr('disabled');
                         }
-                        if (sched_day[i] == "Tuesday") {
+                        if (sched_day[i] == "Tue") {
                             $("#sched_t").prop("checked", true);
+                            $('#sched_t').removeAttr('disabled');
                         }
-                        if (sched_day[i] == "Wednesday") {
+                        if (sched_day[i] == "Wed") {
                             $("#sched_w").prop("checked", true);
+                            $('#sched_w').removeAttr('disabled');
                         }
-                        if (sched_day[i] == "Thursday") {
+                        if (sched_day[i] == "Thu") {
                             $("#sched_th").prop("checked", true);
+                            $('#sched_th').removeAttr('disabled');
                         }
-                        if (sched_day[i] == "Friday") {
+                        if (sched_day[i] == "Fri") {
                             $("#sched_f").prop("checked", true);
+                            $('#sched_f').removeAttr('disabled');
                         }
-                        if (sched_day[i] == "Saturday") {
+                        if (sched_day[i] == "Sat") {
                             $("#sched_sat").prop("checked", true);
+                            $('#sched_sat').removeAttr('disabled');
                         }
                     }
-                    sched_day_changed();
                     if (data.report_series == 1) {
                         $('#report_series_1').prop("checked", true);
                         report_series_1_changed();
                     } else if (data.report_series == 2) {
                         $('#report_series_2').prop("checked", true);
-
                     } else {
                         $('#report_series_3').prop("checked", true);
                     }
                 } else {
                     $("#tz_display_name").val(36);
                     $("#tz_id_of_tz").val("Etc/GMT");
-
+                    $("#email_report").val(data.email);
                 }
                 subcribe_weekly_report_changed();
                 $.ajax({

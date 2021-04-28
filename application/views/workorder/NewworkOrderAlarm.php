@@ -17,6 +17,7 @@
   #group_area:hover{
     background-color:#EBFFE2;
   }
+  .pointer {cursor: pointer;}
 /* 
   #company_representative_approval_signature1a{
   border: solid 1px blue;  
@@ -1750,7 +1751,7 @@
                                             <div id="signature-pad">
                                             <canvas style="border:1px solid #000" id="sign"></canvas>
                                             </div>
-                                            <input type="hidden" name="output-2" class="output">
+                                            <input type="hidden" name="output-1" class="output">
                                         </div>
                                     </div>
                                     <input type="hidden" id="saveCompanySignatureDB1a"
@@ -1809,7 +1810,7 @@
                                             <div id="signature-pad3">
                                             <canvas style="border:1px solid #000" id="sign3"></canvas>
                                             </div>
-                                            <input type="hidden" name="output-2" class="output">
+                                            <input type="hidden" name="output-3" class="output">
                                         </div>
                                     </div>
                                     <input type="hidden" id="saveSecondaryAccountSignatureDB3a"

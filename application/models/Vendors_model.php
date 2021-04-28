@@ -29,6 +29,7 @@ class Vendors_model extends MY_Model {
 		return  $insert_id;
     }
 	public function updateVendor($id, $data){
+		$this->db->where('company_id', logged('company_id'));
 	    $this->db->where('id', $id);
 		$vendor = $this->db->update('accounting_vendors', $data);
 		if($vendor){

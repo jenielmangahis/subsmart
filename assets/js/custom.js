@@ -2074,6 +2074,7 @@ function myFunction() {
     x.style.pointerEvents = "none";
   } else {
     x.style.pointerEvents = "auto";
+    x.style.cursor = "alias";
   }
 }
 
@@ -2083,6 +2084,7 @@ function myFunctiontwo() {
     x.style.pointerEvents = "none";
   } else {
     x.style.pointerEvents = "auto";
+    x.style.cursor = "alias";
   }
 }
 
@@ -2092,6 +2094,7 @@ function myFunctionthree() {
     x.style.pointerEvents = "none";
   } else {
     x.style.pointerEvents = "auto";
+    x.style.cursor = "alias";
   }
 }
 
