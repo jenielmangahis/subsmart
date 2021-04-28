@@ -434,6 +434,8 @@ $route['accounting/vendors'] = 'accounting_controllers/vendors/index';
 $route['accounting/vendors/load']['post'] = 'accounting_controllers/vendors/load_vendors'; 
 $route['accounting/vendors/add']['post'] = 'accounting_controllers/vendors/add'; 
 $route['accounting/vendors/view/(:any)'] = 'accounting_controllers/vendors/view/$1';
+$route['accounting/vendors/(:any)/update']['post'] = 'accounting_controllers/vendors/update/$1';
+$route['accounting/vendors/attachments']['post'] = 'accounting_controllers/vendors/attachments';
 
 $route['accounting/vendor-details/(:any)'] = 'accounting/vendordetails/$1';
 $route['accounting/taxes/edit-settings'] = 'taxes/edit_settings';
@@ -678,6 +680,8 @@ $route['offer_codes/update_edit_offer'] = 'Offer_Codes/update_edit_offer';
 
 //Registration
 $route['registration/_use_offer_code'] = 'Register/registration_use_code';
+$route['registration/_create_registration'] = 'Register/ajax_create_registration';
+$route['registration/_converge_request_token'] = 'Register/ajax_converge_token_request';
 
 //Public Add Employee
 $route['add_company_employee/(:any)'] = 'Pages/front_add_employee/$1';
@@ -810,6 +814,10 @@ $route['users/update_profile_setting'] = 'Users/update_profile_setting';
 $route['job_invoice_view/(:any)'] = 'Pages/job_customer_invoice_view/$1';
 $route['_converge_request_token'] = 'Pages/converge_token_request';
 $route['_update_job_status_paid'] = 'Pages/update_job_status_paid';
+
+//Refer Friend
+$route['refer_friend'] = 'Pages/front_refer_friend';
+$route['_send_refer_email'] = 'Pages/send_refer_email';
 
 //Job Checklists
 $route['job_checklists/list'] = 'Job_Checklists/index';

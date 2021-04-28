@@ -3,6 +3,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
 <?php include viewPath('frontcommon/header'); ?>
 <script src="https://js.stripe.com/v3/"></script>
+<script src="https://checkout.stripe.com/checkout.js"></script>
+<script src="https://www.paypal.com/sdk/js?client-id=<?= $paypal_client_id; ?>&currency=USD"></script>
+<script src="https://api.convergepay.com/hosted-payments/PayWithConverge.js"></script>
 <style>
 	.steps-form {
 	    display: table;
@@ -135,7 +138,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 		list-style: none;
 	}
 	.payment-method li{
-		margin-bottom: 35px;
+		margin-bottom: 8px;
 	}
 	.payment-method li input{
 		margin-right: 10px;
@@ -211,6 +214,20 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 	.terms-content{
 		/*margin-left: 17px;*/
 	}
+	#stripe-button{
+		width: 100%;
+	    color: #ffffff;
+	    font-weight: bold;
+	    padding: 12px;
+	    background-color: #5469d4;
+	}
+	#converge-button{
+		width: 100%;
+	    color: #ffffff;
+	    font-weight: bold;
+	    padding: 12px;
+	    background-color: #0070ba;
+	}
 </style>
 <section page="register" message="" class="ng-isolate-scope">
 	<div class="f-height-v2">
@@ -264,6 +281,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 									<?php } ?>
 
 						    		<?php echo form_open_multipart('register/subscribe', [ 'class' => 'form-validate subscribe-form-payment', 'id' => 'subscribe-form-payment', 'autocomplete' => 'off' ]); ?>
+						    		<input type="hidden" name="payment_method" id="payment-method" value="">
+						    		<input type="hidden" name="payment_method_status" id="payment-method-status" value="">
 							      	<input type="hidden" name="plan_id" id="plan_id" value="">
 						            <input type="hidden" name="plan_price" id="plan_price" value="">
 						            <input type="hidden" name="plan_price_discounted" id="plan_price_discounted" value="">
@@ -323,14 +342,14 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 								          	<div class="step-2-error-msg"></div>
 								          	<div class="col-md-6 float-left z-100">
 												<div class="input-group z-100">
-													<input autocomplete="off" type="text" name="firstname" class="form-control ng-pristine ng-untouched ng-valid ng-empty" placeholder="First Name" required="">
+													<input autocomplete="off" type="text" name="firstname" id="firstname" class="form-control ng-pristine ng-untouched ng-valid ng-empty" placeholder="First Name" required="">
 												</div>
 											</div>
 
 
 											<div class="col-md-6 float-left z-100">
 												<div class="input-group z-100">
-													<input autocomplete="off" type="text" name="lastname" class="form-control ng-pristine ng-untouched ng-valid ng-empty" placeholder="Last Name" required="">
+													<input autocomplete="off" type="text" name="lastname" id="lastname" class="form-control ng-pristine ng-untouched ng-valid ng-empty" placeholder="Last Name" required="">
 												</div>
 											</div>
 
@@ -418,65 +437,42 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 								          	<label>Plan : <b><span class="plan-selected"></span> / <span class="plan-price"></span></b></label><br />
 								          	<label>Total Amount : <b><span class="total-amount"></span></b></label><br />
 								          	<hr />
-								          	<p><b>Payment Method</b></p>
-								          	<ul class="payment-method">
-								          		<li>
-								          			<input type="radio" id="paypal" name="payment_method" value="paypal">
-								          			<img src="<?php echo $url->assets ?>img/paypal-logo.png" alt="" style="height: 62px;">
-								          		</li>
-								          		<li>
-								          			<input type="radio" id="stripe" name="payment_method" value="stripe">
-								          			<img src="<?php echo $url->assets ?>img/stripe-logo.png" alt="" style="height: 62px;">
-								          		</li>
-								          		<li>
-								          			<input type="radio" id="converge" name="payment_method" value="converge">
-								          			<img src="<?php echo $url->assets ?>img/converge-logo.png" alt="" style="height: 62px;">
-								          		</li>
-								          	</ul>	
-								          	<hr />
-								          	<!-- Grid row -->
-											  <div class="form-row align-items-center" style="margin-top: 30px;">
-											    <!-- Grid column -->
-											    <div class="col-auto">
-											      <!-- Material input -->
-											      <label class="sr-only" for="inlineFormInputGroupMD">Username</label>
-											      <div class="md-form input-group mb-3">
-											        <div class="input-group-prepend">
-											          <span class="input-group-text md-addon">Use Offer Code</span>
-											        </div>
-											        <input type="text" class="form-control pl-2 rounded-0" name="offer_code" id="offer-code"
-											          placeholder="">
-											      </div>
-											    </div>
-											    <!-- Grid column -->
+								          	<div class="payment-method-container">
+									          	<p><b>Payment Method</b></p>
+									          	<ul class="payment-method">
+									          		<li><div id="paypal-button-container"></div></li>
+									          		<li><a class="btn btn-primary" id="stripe-button" href="javascript:void(0);">PAY VIA STRIPE</a></li>
+									          		<li><a class="btn btn-primary" id="converge-button" href="javascript:void(0);">PAY VIA CONVERGE</a></li>
+									          		<li>
+									          			<div class="form-row align-items-center" style="margin-top: 30px;">
+										          			<!-- Grid column -->
+														    <div class="col-auto">
+														      <!-- Material input -->
+														      <label class="sr-only" for="inlineFormInputGroupMD">Username</label>
+														      <div class="md-form input-group mb-3">
+														        <div class="input-group-prepend">
+														          <span class="input-group-text md-addon">Use Offer Code</span>
+														        </div>
+														        <input type="text" class="form-control pl-2 rounded-0" name="offer_code" id="offer-code"
+														          placeholder="">
+														      </div>
+														    </div>
+													    	<!-- Grid column -->
 
-											    <!-- Grid column -->
-											    <div class="col-auto">
-											      <button type="button" class="btn btn-primary mb-0 btn-use-offer-code" style="position: relative;top: -12px;">Use Code</button>
-											    </div>
-											    <!-- Grid column -->
-											  </div>
-											  <!-- Grid row -->
-											  <a href="javascript:void(0);" class="btn-terms-agreement" style="margin-top: 29px;display: block;">Service Subscription License Agreement</a>
-
+														    <!-- Grid column -->
+														    <div class="col-auto">
+														      <button type="button" class="btn btn-primary mb-0 btn-use-offer-code" style="position: relative;top: -12px;">Use Code</button>
+														    </div>
+														    <!-- Grid column -->
+														</div>
+									          		</li>
+									          	</ul>	
+								          	</div>
+											<a href="javascript:void(0);" class="btn-terms-agreement" style="margin-top: 29px;display: block;">Service Subscription License Agreement</a>
 								      	  </div>
 								          <button class="btn btn-indigo btn-rounded prevBtn float-left" data-key="step-2" type="button">Previous</button>
-								          <button type="submit" class="btn btn-default btn-rounded float-right step3-btn-processPayment" data-key="step-4">Proceed to Payment</button>
+								          <!-- <button type="submit" class="btn btn-default btn-rounded float-right step3-btn-processPayment" data-key="step-4">Proceed to Payment</button> -->
 								        </div>
-							      	</div>
-
-							      	<div class="stripe-form" style="display: none;">
-							      		<div class="col-md-12">
-							      			<h3 class="font-weight-bold pl-0 my-4"><strong>Step 3 : Stripe Payment Method</strong></h3>
-									          <div class="payment-method" style="display: block;margin-bottom: 16px;">
-									          	<label>Plan : <b><span class="plan-selected"></span> / <span class="plan-price"></span></b></label><br />
-									          	<label>Total Amount : <b><span class="total-amount"></span></b></label><br />
-									          	<hr />
-									          </div>
-											  <div id="card-element"></div>											  
-											  <div id="card-errors" role="alert"></div>
-											  <button class="stripe-btn">Submit Payment</button>`
-							      		</div>
 							      	</div>
 
 							      	<!-- 4th Step -->
@@ -900,75 +896,179 @@ $(function(){
     });
 
 
-    // Create a Stripe client.
-	var stripe = Stripe('pk_test_51IcoTsKPiost1m5gilfxDCpqQR0T139pAGFVUv6rSIMEn4N14ARbfQUL8MIWMLSyBloYhEluuY5Dh9N9oZG2Ku1600AgrjHJA6');
+    //Stripe
+    var handler = StripeCheckout.configure({
+		key: '<?= STRIPE_PUBLISH_KEY; ?>',
+		image: '',
+		token: function(token) {
+			$("#payment-method").val('stripe');
+            $("#payment-method-status").val('COMPLETED');
+            activate_registration();   
+			/*$("#stripeToken").val(token.id);
+			$("#stripeEmail").val(token.email);
+			$("#amountInCents").val(Math.floor($("#amountInDollars").val() * 100));
+			$("#myForm").submit();*/
 
-	// Create an instance of Elements.
-	var elements = stripe.elements();
-
-	// Custom styling can be passed to options when creating an Element.
-	// (Note that this demo uses a wider set of styles than the guide below.)
-	var style = {
-	  base: {
-	    color: '#32325d',
-	    fontFamily: '"Helvetica Neue", Helvetica, sans-serif',
-	    fontSmoothing: 'antialiased',
-	    fontSize: '16px',
-	    '::placeholder': {
-	      color: '#aab7c4'
-	    }
-	  },
-	  invalid: {
-	    color: '#fa755a',
-	    iconColor: '#fa755a'
-	  }
-	};
-
-	// Create an instance of the card Element.
-	var card = elements.create('card', {style: style});
-
-	// Add an instance of the card Element into the `card-element` <div>.
-	card.mount('#card-element');
-
-	// Handle real-time validation errors from the card Element.
-	card.on('change', function(event) {
-	  var displayError = document.getElementById('card-errors');
-	  if (event.error) {
-	    displayError.textContent = event.error.message;
-	  } else {
-	    displayError.textContent = '';
-	  }
+		}
 	});
 
-	// Handle form submission.
-	var form = document.getElementById('subscribe-form-payment');
-	form.addEventListener('submit', function(event) {
-	  event.preventDefault();
-
-	  stripe.createToken(card).then(function(result) {
-	    if (result.error) {
-	      // Inform the user if there was an error.
-	      var errorElement = document.getElementById('card-errors');
-	      errorElement.textContent = result.error.message;
-	    } else {
-	      // Send the token to your server.
-	      stripeTokenHandler(result.token);
-	    }
-	  });
+	$('#stripe-button').on('click', function(e) {
+	var amountInCents = Math.floor($("#plan_price_discounted").val() * 100);
+	var displayAmount = parseFloat(Math.floor($("#plan_price_discounted").val() * 100) / 100).toFixed(2);
+	// Open Checkout with further options
+	handler.open({
+		name: 'nSmarTrac',
+		description: 'Subscription amount ($' + displayAmount + ')',
+		amount: amountInCents,
+	});
+	e.preventDefault();
 	});
 
-	// Submit the form with the token ID.
-	function stripeTokenHandler(token) {
-	  // Insert the token ID into the form so it gets submitted to the server
-	  var form = document.getElementById('subscribe-form-payment');
-	  var hiddenInput = document.createElement('input');
-	  hiddenInput.setAttribute('type', 'hidden');
-	  hiddenInput.setAttribute('name', 'stripeToken');
-	  hiddenInput.setAttribute('value', token.id);
-	  form.appendChild(hiddenInput);
+	// Close Checkout on page navigation
+	$(window).on('popstate', function() {
+	handler.close();
+	});
 
-	  // Submit the form
-	  form.submit();
+	//Converge payment
+	$("#converge-button").click(function(){
+		initiateLightbox();
+	});
+
+	function initiateLightbox () {
+	  var job_id = $("#jobid").val();
+	  var total_amount = $("#plan_price_discounted").val();
+	  var firstname = $("#firstname").val();
+	  var lastname  = $("#lastname").val();
+
+	  var url = base_url + 'registration/_converge_request_token';
+	  $("#converge-button").html('<span class="spinner-border spinner-border-sm m-0"></span>');
+	  setTimeout(function () {
+	    $.ajax({
+	       type: "POST",
+	       url: url,
+	       dataType: "json",
+	       data: {firstname:firstname, lastname:lastname, total_amount:total_amount},
+	       success: function(o)
+	       {
+	          if( o.is_success ){
+	              openLightbox(o.token)
+	          }else{
+	            Swal.fire({
+	              icon: 'error',
+	              title: 'Cannot Process Payment',
+	              text: o.msg
+	            });
+	          }
+
+	          $("#converge-button").html('PAY VIA CONVERGE');
+	       }
+	    });
+	  }, 1000);
 	}
+
+	function openLightbox (token) {
+	  var paymentFields = {
+	          ssl_txn_auth_token: token
+	  };
+	  var callback = {
+	      onError: function (error) {
+	          //showResult("error", error);
+	          Swal.fire({
+	            icon: 'error',
+	            title: 'Error',
+	            text: error
+	          });
+	      },
+	      onCancelled: function () {
+	          //showResult("cancelled", "");
+	      },
+	      onDeclined: function (response) {
+	        Swal.fire({
+	          icon: 'error',
+	          title: 'Declined',
+	          text: JSON.stringify(response, null, '\t')
+	        });
+	        //showResult("declined", JSON.stringify(response, null, '\t'));
+	      },
+	      onApproval: function (response) {	          
+	          $("#payment-method").val('stripe');
+	          $("#payment-method-status").val('COMPLETED');
+	          activate_registration();
+	          //showResult("approval", JSON.stringify(response, null, '\t'));
+	      }
+	  };
+	  PayWithConverge.open(paymentFields, callback);
+	  return false;
+	}
+
+
+	//Paypal
+	// Render the PayPal button into #paypal-button-container
+    paypal.Buttons({
+    	style: {
+            layout: 'horizontal',
+            tagline: false,
+            //height:25,
+            color:'blue'
+        },
+        // Set up the transaction
+        createOrder: function(data, actions) {
+            return actions.order.create({
+            	payer: {
+					name: {
+					  given_name: $("#firstname").val() + " " + $("#lastname").val()
+					},
+					email_address: $("#email_address").val(),
+				},
+                purchase_units: [{
+                    amount: {
+                        value: $("#plan_price_discounted").val()
+                    }
+                }],
+                application_context: {
+			    	shipping_preference: 'NO_SHIPPING'
+			    }
+            });
+        },
+        // Finalize the transaction
+        onApprove: function(data, actions) {
+            return actions.order.capture().then(function(details) {
+                // Show a success message to the buyer
+                //console.log(details);
+                $("#payment-method").val('paypal');
+                $("#payment-method-status").val(details.status);
+                activate_registration();                
+            });
+        }
+    }).render('#paypal-button-container');
+
+    function activate_registration(payment_method){
+    	$(".payment-method-container").hide();
+        var url = base_url + 'registration/_create_registration';
+        setTimeout(function () {
+	        $.ajax({
+	           type: "POST",
+	           url: url,
+	           dataType: "json",
+	           data: $("#subscribe-form-payment").serialize(),
+	           success: function(o)
+	           {	
+	           		Swal.fire({
+		                title: 'Payment Successful!',
+		                text: 'You can now login to your account',
+		                icon: 'success',
+		                showCancelButton: false,
+		                confirmButtonColor: '#32243d',
+		                cancelButtonColor: '#d33',
+		                confirmButtonText: 'Login'
+		            }).then((result) => {
+		                if (result.value) {
+		                    window.location.href= base_url + 'login';
+		                }
+		            });
+	           }
+	        });
+	    }, 500);
+    }
 });
 </script>

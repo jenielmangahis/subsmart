@@ -1027,7 +1027,6 @@
 }
 #edit-vendor-modal .modal-dialog .modal-body,
 #new-vendor-modal .modal-dialog .modal-body{
-    /* overflow: scroll; */
     max-height: 480px;
 }
 #edit-vendor-modal .modal-dialog .modal-footer-vendor,

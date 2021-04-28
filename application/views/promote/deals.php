@@ -78,7 +78,7 @@ table.dataTable tbody tr td {
                           </div>
                           <div class="col-sm-6 right dashboard-container-1">
                               <div class="text-right">
-                                  <a href="<?php echo url('sms_campaigns/add_sms_blast') ?>" class="btn btn-primary btn-md"><i class="fa fa-plus"></i> Create Deal</a><br />
+                                  <a href="<?php echo url('promote/create_deals') ?>" class="btn btn-primary btn-md"><i class="fa fa-plus"></i> Create Deal</a><br />
                               </div>
                           </div>
                         </div>

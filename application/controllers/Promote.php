@@ -3,8 +3,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Promote extends MY_Controller {
 
-	public function __construct()
-	{
+	public function __construct(){
 		parent::__construct();
 		$this->checkLogin();
 		$this->page_data['page']->title = 'Create Deal';
@@ -15,9 +14,12 @@ class Promote extends MY_Controller {
         ));
 	}
 
-	public function deals()
-	{
+	public function deals(){
 		$this->load->view('promote/deals', $this->page_data);
+	}
+
+	public function create_deals(){
+		$this->load->view('promote/add_deals', $this->page_data);
 	}
 
 }

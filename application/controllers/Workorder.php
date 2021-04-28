@@ -1749,7 +1749,7 @@ class Workorder extends MY_Controller
             'company_id' => $company_id,
             'date_created' => date("Y-m-d H:i:s"),
             'date_updated' => date("Y-m-d H:i:s"),
-            'template_id' => '1'
+            'work_order_type_id' => '1'
         );
 
         $addQuery = $this->workorder_model->save_workorder($new_data);
@@ -2143,6 +2143,40 @@ class Workorder extends MY_Controller
         $company_id  = getLoggedCompanyID();
         $user_id  = getLoggedUserID();
 
+        // $data = $this->input->post('output-1');
+        // $file = md5(uniqid()) . '.png';
+
+        // // remove "data:image/png;base64,"
+        // $uri =  substr($data,strpos($data,",")+1);
+
+        
+        // $decoded=base64_decode($uri);
+        // // save to file in uploads folder of codeigniter
+        // file_put_contents('./uploads/'.$file, base64_decode($uri));
+        // // file_put_contents('newImage.JPG',$decoded);
+
+        // $config = array(
+        //     'upload_path' => "./uploads/",
+        //     'allowed_types' => "gif|jpg|png|jpeg|pdf",
+        //     'overwrite' => TRUE,
+        //     'max_size' => "2048000", // Can be set to particular file size , here it is 2 MB(2048 Kb)
+        //     'max_height' => "768",
+        //     'max_width' => "1024"
+        //     );
+        //     $this->load->library('upload', $config);
+    
+    
+        //     if(!$this->upload->do_upload('output-1'))  
+        //     {  
+        //         echo $this->upload->display_errors();  
+        //     }  
+        //     else  
+        //     {                   
+        //         $data = $this->upload->data();  
+        //         $imgval = array('success' => 'success' ,'data_image' => $data["file_name"]);  
+        //         echo json_encode($imgval );
+        //     }
+
         $new_data = array(
             
             'security_number' => $this->input->post('security_number'),
@@ -2191,7 +2225,7 @@ class Workorder extends MY_Controller
             'company_id' => $company_id,
             'date_created' => date("Y-m-d H:i:s"),
             'date_updated' => date("Y-m-d H:i:s"),
-            'template_id' => '2'
+            'work_order_type_id' => '2'
             
         );
 
@@ -2493,6 +2527,7 @@ class Workorder extends MY_Controller
         }
         else{
             echo json_encode(0);
+            // print_r($file_put_contents);die;
         }
     }
 }

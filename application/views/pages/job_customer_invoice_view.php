@@ -3,8 +3,12 @@ defined('BASEPATH') or exit('No direct script access allowed');
 ?>
 <?php include viewPath('includes/header_front'); ?>
 <script src="https://js.stripe.com/v3/"></script>
+<script src="https://checkout.stripe.com/checkout.js"></script>
 <?php if($onlinePaymentAccount->stripe_publish_key != '' && $onlinePaymentAccount->stripe_secret_key != ''){ ?>
 <script src="https://api.convergepay.com/hosted-payments/PayWithConverge.js"></script>
+<?php } ?>
+<?php if($onlinePaymentAccount->paypal_client_id != '' && $onlinePaymentAccount->paypal_client_secret != ''){ ?>
+<script src="https://www.paypal.com/sdk/js?client-id=<?= $onlinePaymentAccount->paypal_client_id; ?>&currency=USD"></script>
 <?php } ?>
 <?php include viewPath('job/css/job_new'); ?>
 <style>
@@ -85,6 +89,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
         margin-left: 12px;
         margin-top: 28px;
     }
+    .paypal-buttons-context-iframe{
+        top: 19px;
+    }
 </style>
 <script src="https://api.convergepay.com/hosted-payments/PayWithConverge.js"></script>
 <div>
@@ -98,6 +105,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     <div class="card">
                         <div class="card-header">
                             <div class="right-text">
+                                <input type="hidden" id="job-number" value="<?=  $jobs_data->job_number;  ?>">
                                 <p class="page-title " style="font-weight: 700;font-size: 16px;"><?=  $jobs_data->job_number;  ?> </p>
                             </div>
                             <hr>
@@ -106,7 +114,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                             <div class="row">
                                 <div class="col-md-5">
                                     <?php if($company_info->business_image != "" ): ?>
-                                        <img style="width: 100px" id="attachment-image" alt="Attachment" src="<?=  '/uploads/users/business_profile/'.$company_info->id.'/'.$company_info->business_image; ?> ">
+                                        <img style="width: 100px" id="attachment-image" alt="Attachment" src="<?= base_url('/uploads/users/business_profile/'.$company_info->id.'/'.$company_info->business_image); ?>">
                                     <?php endif; ?>
                                 </div>
                                 <div class="col-md-3">
@@ -287,20 +295,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                             <?php } ?>
                                             <?php if($onlinePaymentAccount->stripe_publish_key != '' && $onlinePaymentAccount->stripe_secret_key != ''){ ?>
                                               <a class="btn btn-primary btn-pay-stripe btn-pay" href="javascript:void(0);">PAY VIA STRIPE</a>
-
-                                              <div class="stripe-form" style="display: none;">
-                                                <div class="col-md-12">
-                                                  <h4 class="font-weight-bold pl-0 my-4" style="font-size: 17px;"><strong>Stripe Payment Method</strong></h4>
-                                                    <div class="payment-method" style="display: block;margin-bottom: 16px;">
-                                                      <label>Total Amount : <b><span class="total-amount">$<?= number_format((float)$subtotal,2,'.',','); ?></span></b></label><br />
-                                                      <hr />
-                                                    </div>
-                                                  <div id="card-element"></div>                       
-                                                  <div id="card-errors" role="alert"></div>
-                                                  <button class="stripe-btn">Submit Payment</button>`
-                                                  <button type="button" class="stripe-cancel-btn margin-right">Cancel</button>
-                                                </div>
-                                              </div>
+                                            <?php } ?>
+                                            <?php if($onlinePaymentAccount->paypal_client_id != '' && $onlinePaymentAccount->paypal_client_secret != ''){ ?>
+                                              <div id="paypal-button-container" style="display: inline-block;height: 44px;"></div>
                                             <?php } ?>
                                           <?php } ?>
                                         </div>
@@ -336,6 +333,11 @@ $(function(){
        success: function(o)
        {
           $(".payment-api-container").hide();
+          Swal.fire({
+            icon: 'success',
+            title: 'Payment Successful',
+            text: 'Payment process completed.'
+          });            
        }
     });
   }
@@ -398,12 +400,7 @@ $(function(){
             });
             //showResult("declined", JSON.stringify(response, null, '\t'));
           },
-          onApproval: function (response) {
-              Swal.fire({
-                icon: 'success',
-                title: 'Approval',
-                text: JSON.stringify(response, null, '\t')
-              });
+          onApproval: function (response) {              
               updateJobToPaid();
               //showResult("approval", JSON.stringify(response, null, '\t'));
           }
@@ -413,101 +410,68 @@ $(function(){
   }
   /*End Converge*/
 
-  //Stripe Payment
-  <?php if($onlinePaymentAccount->stripe_publish_key != '' && $onlinePaymentAccount->stripe_secret_key != ''){ ?>
-  $(".btn-pay-stripe").click(function(){
-    $(".payment-options").hide();
-    $(".form-footer-container").hide();
-    $(".btn-sms-purchase").html('Purchase');
-    $(".stripe-form").show();
-    $(".btn-pay").hide();
-  });
-  $(".stripe-cancel-btn").click(function(){
-    $(".payment-options").show();
-    $(".form-footer-container").show();      
-    $(".stripe-form").hide();
-    $(".btn-pay").show();
-  });
-  // Create a Stripe client.
-  var stripe = Stripe('<?= $onlinePaymentAccount->stripe_publish_key; ?>');
-
-  // Create an instance of Elements.
-  var elements = stripe.elements();
-
-  // Custom styling can be passed to options when creating an Element.
-  // (Note that this demo uses a wider set of styles than the guide below.)
-  var style = {
-    base: {
-      color: '#32325d',
-      fontFamily: '"Helvetica Neue", Helvetica, sans-serif',
-      fontSmoothing: 'antialiased',
-      fontSize: '16px',
-      '::placeholder': {
-        color: '#aab7c4'
-      }
-    },
-    invalid: {
-      color: '#fa755a',
-      iconColor: '#fa755a'
-    }
-  };
-
-  // Create an instance of the card Element.
-  var card = elements.create('card', {style: style});
-
-  // Add an instance of the card Element into the `card-element` <div>.
-  card.mount('#card-element');
-
-  // Handle real-time validation errors from the card Element.
-  card.on('change', function(event) {
-    var displayError = document.getElementById('card-errors');
-    if (event.error) {
-      displayError.textContent = event.error.message;
-    } else {
-      displayError.textContent = '';
-    }
-  });
-
-  // Handle form submission.
-  var form = document.getElementById('payment-job-invoice');
-  form.addEventListener('submit', function(event) {
-    event.preventDefault();
-    $(".stripe-btn").html('<span class="spinner-border spinner-border-sm m-0"></span>  Processing Payment');
-    stripe.createToken(card).then(function(result) {
-      if (result.error) {
-        // Inform the user if there was an error.
-        var errorElement = document.getElementById('card-errors');
-        errorElement.textContent = result.error.message;
-        $(".stripe-btn").html('Submit Payment');
-      } else {
-        // Send the token to your server.
-        stripeTokenHandler(result.token);
-      }
+    //Stripe Payment
+    <?php if($onlinePaymentAccount->stripe_publish_key != '' && $onlinePaymentAccount->stripe_secret_key != ''){ ?>    
+    var handler = StripeCheckout.configure({
+        key: '<?= $onlinePaymentAccount->stripe_publish_key; ?>',
+        image: '',
+        token: function(token) {
+          updateJobToPaid();                  
+        }
     });
-  });
 
-  // Submit the form with the token ID.
-  function stripeTokenHandler(token) {
-    // Insert the token ID into the form so it gets submitted to the server
-    var form = document.getElementById('payment-job-invoice');
-    var hiddenInput = document.createElement('input');
-    hiddenInput.setAttribute('type', 'hidden');
-    hiddenInput.setAttribute('name', 'stripeToken');
-    hiddenInput.setAttribute('value', token.id);
-    form.appendChild(hiddenInput);
+    $('.btn-pay-stripe').on('click', function(e) {
+    var amountInCents = Math.floor($("#total_amount").val() * 100);
+    var displayAmount = parseFloat(Math.floor($("#total_amount").val() * 100) / 100).toFixed(2);
+    // Open Checkout with further options
+    handler.open({
+        image : '<?= base_url('/uploads/users/business_profile/'.$company_info->id.'/'.$company_info->business_image); ?>',
+        name: $("#job-number").val(),
+        description: 'Total amount ($' + displayAmount + ')',
+        amount: amountInCents,
+    });
+    e.preventDefault();
+    });
 
-    // Submit the form
-    stripeUpdateSmsPayment();
-    //form.submit();
-  }
-
-  function stripeUpdateSmsPayment(){
-    $(".payment-api-container").hide();
-    $(".payment-msg").html('<div class="alert alert-success">Payment process completed.</div>');
-    $(".stripe-btn").html('<span class="spinner-border spinner-border-sm m-0"></span>');
-    updateJobToPaid();
-  }
+    // Close Checkout on page navigation
+    $(window).on('popstate', function() {
+    handler.close();
+    });
   <?php } ?>
   /*End Stripe Payment*/
+
+    //Paypal
+    // Render the PayPal button into #paypal-button-container
+    paypal.Buttons({
+        style: {
+            layout: 'horizontal',
+            tagline: false,
+            height:45,
+            color:'blue'
+        },
+        // Set up the transaction
+        createOrder: function(data, actions) {
+            return actions.order.create({                
+                purchase_units: [{
+                    amount: {
+                        value: $("#total_amount").val()
+                    }
+                }],
+                application_context: {
+                    shipping_preference: 'NO_SHIPPING'
+                }
+            });
+        },
+        // Finalize the transaction
+        onApprove: function(data, actions) {
+            return actions.order.capture().then(function(details) {
+                // Show a success message to the buyer
+                //console.log(details);
+                updateJobToPaid();       
+            });
+        }
+    }).render('#paypal-button-container');
+
+    /*End paypal*/
 });
 </script>

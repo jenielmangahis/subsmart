@@ -15,6 +15,68 @@ $(document).on('click', '#vendors-table tbody tr td:not(:first-child,:last-child
     window.location.href = '/accounting/vendors/view/'+data.id;
 });
 
+$(document).on('change', '#new-vendor-modal #use_display_name', function() {
+    if($(this).prop('checked')) {
+        $('#new-vendor-modal #print_on_check_name').prop('disabled', true);
+    } else {
+        $('#new-vendor-modal #print_on_check_name').prop('disabled', false);
+    }
+});
+
+$('.datepicker').datepicker({
+    uiLibrary: 'bootstrap',
+    todayBtn: "linked",
+    language: "de"
+});
+
+$('select').select2();
+
+var attachmentId = [];
+var selected = [];
+var attachments = new Dropzone('#vendorAttachments', {
+    url: '/accounting/vendors/attachments',
+    acceptedFiles: "image/*",
+    maxFilesize: 20,
+    uploadMultiple: true,
+    // maxFiles: 1,
+    addRemoveLinks: true,
+    init: function() {
+        this.on("success", function(file, response) {
+            var ids = JSON.parse(response)['attachment_ids'];
+            for(i in ids) {
+                if($('#new-vendor-modal').find(`input[name="attachments[]"][value="${ids[i]}"]`).length === 0) {
+                    $('#new-vendor-modal #vendorAttachments').parent().append(`<input type="hidden" name="attachments[]" value="${ids[i]}">`);
+                }
+            }
+            // attachmentId.push(file_name.replace(/\"/g, ""));
+            // selected.push(file);
+        });
+    },
+    // removedfile: function(file) {
+    //     var name = fname;
+    //     var index = selected.map(function(d, index) {
+    //         if (d == file) return index;
+    //     }).filter(isFinite)[0];
+    //     $.ajax({
+    //         type: "POST",
+    //         url: base_url + 'users/removeProfilePhoto',
+    //         dataType: 'json',
+    //         data: {
+    //             name: name,
+    //             index: index
+    //         },
+    //         success: function(data) {
+    //             if (data == 1) {
+    //                 $('#photoId').val(null);
+    //             }
+    //         }
+    //     });
+    //     //remove thumbnail
+    //     var previewElement;
+    //     return (previewElement = file.previewElement) != null ? (previewElement.parentNode.removeChild(file.previewElement)) : (void 0);
+    // }
+});
+
 var table = $('#vendors-table').DataTable({
     autoWidth: false,
     searching: false,
@@ -52,7 +114,7 @@ var table = $('#vendors-table').DataTable({
             fnCreatedCell: function(td, cellData, rowData, row, col) {
                 $(td).html(`<a href="/accounting/vendors/view/${rowData.id}">${cellData}</a>`);
 
-                if(rowData.company_name !== "") {
+                if(rowData.company_name !== "" && rowData.company_name !== null) {
                     $(td).append(`<p class="m-0 text-muted">${rowData.company_name}</p>`);
                 }
             }

@@ -240,7 +240,7 @@ foreach($report_settings as $settings){
                                                     <div class="col-md-1">
                                                         <div class="form-group">
                                                             <div class="custom-control custom-switch">
-                                                                <input type="checkbox" on="" name="sched_day" value="Sunday" class="custom-control-input" id="sched_sun" checked="" onchange="sched_day_changed()">
+                                                                <input type="checkbox" on="" name="sched_day" value="Sun" class="custom-control-input" id="sched_sun" checked="" onchange="sched_day_changed()">
                                                                 <label class="custom-control-label" for="sched_sun">Sun</label>
                                                             </div>
                                                         </div>
@@ -248,7 +248,7 @@ foreach($report_settings as $settings){
                                                     <div class="col-md-1">
                                                         <div class="form-group">
                                                             <div class="custom-control custom-switch">
-                                                                <input type="checkbox" on="" name="sched_day" value="Monday" class="custom-control-input" id="sched_m" checked="" onchange="sched_day_changed()">
+                                                                <input type="checkbox" on="" name="sched_day" value="Mon" class="custom-control-input" id="sched_m" checked="" onchange="sched_day_changed()">
                                                                 <label class="custom-control-label" for="sched_m">Mon</label>
                                                             </div>
                                                         </div>
@@ -256,7 +256,7 @@ foreach($report_settings as $settings){
                                                     <div class="col-md-1">
                                                         <div class="form-group">
                                                             <div class="custom-control custom-switch">
-                                                                <input type="checkbox" on="" name="sched_day" value="Tuesday" class="custom-control-input" id="sched_t" checked="" onchange="sched_day_changed()">
+                                                                <input type="checkbox" on="" name="sched_day" value="Tue" class="custom-control-input" id="sched_t" checked="" onchange="sched_day_changed()">
                                                                 <label class="custom-control-label" for="sched_t">Tue</label>
                                                             </div>
                                                         </div>
@@ -264,7 +264,7 @@ foreach($report_settings as $settings){
                                                     <div class="col-md-1">
                                                         <div class="form-group">
                                                             <div class="custom-control custom-switch">
-                                                                <input type="checkbox" on="" name="sched_day" value="Wednesday" class="custom-control-input" id="sched_w" checked="" onchange="sched_day_changed()">
+                                                                <input type="checkbox" on="" name="sched_day" value="Wed" class="custom-control-input" id="sched_w" checked="" onchange="sched_day_changed()">
                                                                 <label class="custom-control-label" for="sched_w">Wed</label>
                                                             </div>
                                                         </div>
@@ -273,7 +273,7 @@ foreach($report_settings as $settings){
                                                     <div class="col-md-1">
                                                         <div class="form-group">
                                                             <div class="custom-control custom-switch">
-                                                                <input type="checkbox" on="" name="sched_day" value="Thursday" class="custom-control-input" id="sched_th" checked="" onchange="sched_day_changed()">
+                                                                <input type="checkbox" on="" name="sched_day" value="Thu" class="custom-control-input" id="sched_th" checked="" onchange="sched_day_changed()">
                                                                 <label class="custom-control-label" for="sched_th">Thu</label>
                                                             </div>
                                                         </div>
@@ -282,7 +282,7 @@ foreach($report_settings as $settings){
                                                     <div class="col-md-1">
                                                         <div class="form-group">
                                                             <div class="custom-control custom-switch">
-                                                                <input type="checkbox" on="" name="sched_day" value="Friday" class="custom-control-input" id="sched_f" checked="" onchange="sched_day_changed()">
+                                                                <input type="checkbox" on="" name="sched_day" value="Fri" class="custom-control-input" id="sched_f" checked="" onchange="sched_day_changed()">
                                                                 <label class="custom-control-label" for="sched_f">Fri</label>
                                                             </div>
                                                         </div>
@@ -291,7 +291,7 @@ foreach($report_settings as $settings){
                                                     <div class="col-md-1">
                                                         <div class="form-group">
                                                             <div class="custom-control custom-switch">
-                                                                <input type="checkbox" on="" name="sched_day" value="Saturday" class="custom-control-input" id="sched_sat" checked="" onchange="sched_day_changed()">
+                                                                <input type="checkbox" on="" name="sched_day" value="Sat" class="custom-control-input" id="sched_sat" checked="" onchange="sched_day_changed()">
                                                                 <label class="custom-control-label" for="sched_sat">Sat</label>
                                                             </div>
                                                         </div>
@@ -299,7 +299,7 @@ foreach($report_settings as $settings){
                                                 </div>
 
                                                 <div class="row">
-                                                        <div class="col-md-4">
+                                                        <div class="col-md-2">
                                                             <div class="form-group" style="padding-left:1.25rem;">
                                                                 <label for="from_date_correction_requests" class="week-label">Select time:</label>
                                                                 <select class="custom-select" id="sched_time">
@@ -311,6 +311,13 @@ foreach($report_settings as $settings){
                                                                     }
                                                                     ?>
                                                                 </select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <div class="form-group">
+                                                                <label for="exampleInputEmail1">Email address</label>
+                                                                <input type="email" class="form-control" id="email_report" aria-describedby="emailHelp" placeholder="Enter email" required>
+                                                                <small  class="form-text text-muted">This is where we will send the timesheet report.</small>
                                                             </div>
                                                         </div>
                                                     </div>

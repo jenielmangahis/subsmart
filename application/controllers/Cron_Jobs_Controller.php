@@ -72,243 +72,70 @@ class Cron_Jobs_Controller extends MY_Controller
         $mail->addAddress($receiver);
         $mail->Send();
     }
-    public function send_timesheet_logs_email_action() //weekly_timesheet_report
-    { 
-        $busnesses = $this->timesheet_model->get_all_businesses();
-        foreach ($busnesses as $business) {
-            $email_sent_to = array();
-            $timezone = "UTC";
-            $timezone_id = 0;
-            $user_ids = $this->timesheet_model->get_user_id_by_email_and_company_id($business->business_name, $business->company_id);
 
-            foreach ($user_ids as $ids) {
-                $user_id = $ids->id;
-            }
-            if (count($user_ids) > 0) {
-                $saved_timezones = $this->timesheet_model->get_saved_timezone($user_id);
-                foreach ($saved_timezones as $tz) {
-                    $timezone = $tz->id_of_timezone;
-                    $timezone_id = $tz->timezone_id;
-                }
-            }
-            $file_info = $this->get_time_sheet_storage($business->company_id, $timezone, $timezone_id);
-            $est_wage_privacy = $this->timesheet_model->get_timesheet_report_privacy($business->company_id)->est_wage_private;
-            if (count($file_info[2]) > 0) {
-                $date_from = date("Y-m-d", strtotime('sunday last week', strtotime(date('Y-m-d'))));
-                $date_to = date("Y-m-d", strtotime('saturday this week', strtotime(date('Y-m-d'))));
-                
-                $email_sent_to[] = array($business->business_email, $business->business_name);
-                $busness_admins = $this->timesheet_model->get_all_business_admins($business->company_id);
-                foreach ($busness_admins as $admin) {
-                    $received = false;
-                    if (!$received) {
-                        $timezone = "UTC";
-                        $timezone_id = 0;
-                        $subscribed = false;
-                        $saved_timezones = $this->timesheet_model->get_saved_timezone($admin->id);
-                        foreach ($saved_timezones as $tz) {
-                            $timezone = $tz->id_of_timezone;
-                            $timezone_id = $tz->timezone_id;
-                            if($tz->subscribed == 1 && $tz->report_series == 3){
-                                $subscribed = true;
-                            }
-                        }
-                        if(count($saved_timezones) == 0){
-                            $subscribed = true;
-                        }
-                        if($subscribed){
-                            $file_info = $this->get_time_sheet_storage($business->company_id, $timezone, $timezone_id);
-                            $this->generate_timelogs_csv($file_info[2], $file_info[0],$est_wage_privacy);
-                            $this->generate_weekly_timesheet_pdf_report($file_info, $business->business_name,$est_wage_privacy);
-                           
-                            $this->timelogs_csv_email_sender($admin->email, $business->business_name , $file_info[0], $date_from, $admin->FName. "", $business->business_name, $file_info,$business->company_id,$business->business_image,$est_wage_privacy);
-                            
-                            $email_sent_to[] = array($admin->email, $business->business_name);
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    public function biweekly_timsheet_report()
+    public function timesheet_report_sender()
     {
-        $busnesses = $this->timesheet_model->get_all_businesses();
-        foreach ($busnesses as $business) {
-            $email_sent_to = array();
-            $timezone = "UTC";
-            $timezone_id = 0;
-            $user_ids = $this->timesheet_model->get_user_id_by_email_and_company_id($business->business_name, $business->company_id);
-
-            foreach ($user_ids as $ids) {
-                $user_id = $ids->id;
-            }
-            if (count($user_ids) > 0) {
-                $saved_timezones = $this->timesheet_model->get_saved_timezone($user_id);
-                foreach ($saved_timezones as $tz) {
-                    $timezone = $tz->id_of_timezone;
-                    $timezone_id = $tz->timezone_id;
-                }
-            }
-            $file_info = $this->get_time_sheet_storage($business->company_id, $timezone, $timezone_id);
-            $est_wage_privacy = $this->timesheet_model->get_timesheet_report_privacy($business->company_id)->est_wage_private;
+        $admins_for_reports = $this->get_admin_for_reports();
+        for($i = 0; $i < count($admins_for_reports); $i++){
+            $admin = $this->timesheet_model->get_user_and_company_details($admins_for_reports[$i][0]);
+            $file_info = $this->get_time_sheet_storage($admin->company_id, $admin->id_of_timezone, $admin->timezone_id);
+            $est_wage_privacy = $this->timesheet_model->get_timesheet_report_privacy($admin->company_id)->est_wage_private;
             if (count($file_info[2]) > 0) {
                 $date_from = date("Y-m-d", strtotime('sunday last week', strtotime(date('Y-m-d'))));
                 $date_to = date("Y-m-d", strtotime('saturday this week', strtotime(date('Y-m-d'))));
-                
-                $email_sent_to[] = array($business->business_email, $business->business_name);
-                $busness_admins = $this->timesheet_model->get_all_business_admins($business->company_id);
-                foreach ($busness_admins as $admin) {
-                    $received = false;
-                    if (!$received) {
-                        $timezone = "UTC";
-                        $timezone_id = 0;
-                        $subscribed = false;
-                        $saved_timezones = $this->timesheet_model->get_saved_timezone($admin->id);
-                        foreach ($saved_timezones as $tz) {
-                            $timezone = $tz->id_of_timezone;
-                            $timezone_id = $tz->timezone_id;
-                            if($tz->subscribed == 1 && $tz->report_series == 2){
-                                $subscribed = true;
-                            }
-                        }
-                        if($subscribed){
-                            $file_info = $this->get_time_sheet_storage($business->company_id, $timezone, $timezone_id);
-                            $this->generate_timelogs_csv($file_info[2], $file_info[0],$est_wage_privacy);
-                            $this->generate_weekly_timesheet_pdf_report($file_info, $business->business_name,$est_wage_privacy);
-                            
-                            $this->timelogs_csv_email_sender($admin->email, $business->business_name . "", $file_info[0], $date_from, $admin->FName, $business->business_name, $file_info);
-                            
-                            $email_sent_to[] = array($admin->email, $business->business_name);
-                        }
-                    }
+                $subscribed = false;
+                if($admin->subscribed == 1){
+                    $subscribed=true;
+                }
+                if($subscribed){
+                    $this->generate_timelogs_csv($file_info[2], $file_info[0],$est_wage_privacy);
+                    $this->generate_weekly_timesheet_pdf_report($file_info, $admin->business_name,$est_wage_privacy);
+                    
+                    $this->timelogs_csv_email_sender($admin->email_report, $admin->business_name . "", $file_info[0], $date_from, $admin->FName, $admin->business_name, $file_info,$admin->company_id,$admin->business_image,$est_wage_privacy);
+                    
+                    $this->timesheet_model->save_timesheet_report_file_names($admin->user_id, $file_info[0]);
+                    $this->timesheet_model->save_timesheet_report_file_names($admin->user_id, $file_info[3]);
+                }
+            }    
+        }
+        if(date('d') ==  1){
+            //deleting all report from previous month
+            $first_date_lastMonth = date("Y-m-d", strtotime("first day of last month"));
+            $old_timesheet_reports = $this->timesheet_model->get_old_timesheet_reports($first_date_lastMonth);
+            foreach($old_timesheet_reports as $reports){
+                $file_pointer = dirname(__DIR__, 2) . '/timesheet/timelogs/' . $reports->file_name; 
+                if (file_exists($file_pointer)) {
+                    // Use unlink() function to delete a file 
+                    unlink($file_pointer);
                 }
             }
+            $this->timesheet_model->delete_old_timesheet_reports($first_date_lastMonth);
         }
     }
-
-    public function daily_timsheet_report()
-    {
-        $busnesses = $this->timesheet_model->get_all_businesses();
-        foreach ($busnesses as $business) {
-            $email_sent_to = array();
-            $timezone = "UTC";
-            $timezone_id = 0;
-            $user_ids = $this->timesheet_model->get_user_id_by_email_and_company_id($business->business_name, $business->company_id);
-
-            foreach ($user_ids as $ids) {
-                $user_id = $ids->id;
+    public function get_admin_for_reports(){
+        $hour_now = date("H").":00:00";
+        $admins_subject_for_report = $this->timesheet_model->get_admins_subject_for_report($hour_now);
+        
+        $date_hour_now_pst = date('Y-m-d')." ".$hour_now;
+        $admins_for_reports=array();
+        foreach($admins_subject_for_report as $admin){
+            $date_hour_now_pst = $this->datetime_zone_converter($date_hour_now_pst,'UTC',$admin->id_of_timezone);
+            $week_day = date("D", strtotime($date_hour_now_pst));
+            $schedules = explode(",",$admin->schedule_day);
+            $found= false;
+            for($i = 0; $i<count($schedules); $i++){
+                if($schedules[$i] == $week_day){
+                    $found = true;
+                    break;
+                }   
             }
-            if (count($user_ids) > 0) {
-                $saved_timezones = $this->timesheet_model->get_saved_timezone($user_id);
-                foreach ($saved_timezones as $tz) {
-                    $timezone = $tz->id_of_timezone;
-                    $timezone_id = $tz->timezone_id;
-                }
-            }
-            $file_info = $this->get_time_sheet_storage($business->company_id, $timezone, $timezone_id);
-            $est_wage_privacy = $this->timesheet_model->get_timesheet_report_privacy($business->company_id)->est_wage_private;
-            if (count($file_info[2]) > 0) {
-                $date_from = date("Y-m-d", strtotime('sunday last week', strtotime(date('Y-m-d'))));
-                $date_to = date("Y-m-d", strtotime('saturday this week', strtotime(date('Y-m-d'))));
-                
-                $email_sent_to[] = array($business->business_email, $business->business_name);
-                $busness_admins = $this->timesheet_model->get_all_business_admins($business->company_id);
-                foreach ($busness_admins as $admin) {
-                    $received = false;
-
-                    if (!$received) {
-                        $timezone = "UTC";
-                        $timezone_id = 0;
-                        $subscribed = false;
-                        $saved_timezones = $this->timesheet_model->get_saved_timezone($admin->id);
-                        foreach ($saved_timezones as $tz) {
-                            $timezone = $tz->id_of_timezone;
-                            $timezone_id = $tz->timezone_id;
-                            if($tz->subscribed == 1 && $tz->report_series == 1){
-                                $subscribed = true;
-                            }
-                        }
-                        if($subscribed){
-                            $file_info = $this->get_time_sheet_storage($business->company_id, $timezone, $timezone_id);
-                            $this->generate_timelogs_csv($file_info[2], $file_info[0],$est_wage_privacy);
-                            $this->generate_weekly_timesheet_pdf_report($file_info, $business->business_name,$est_wage_privacy);
-                            
-                            $this->timelogs_csv_email_sender($admin->email, $business->business_name . "", $file_info[0], $date_from, $admin->FName, $business->business_name, $file_info);
-                            
-                            $email_sent_to[] = array($admin->email, $business->business_name);
-                        }
-                    }
-
-                }
+            if($found){
+                $admins_for_reports[] = array($admin->user_id, $admin->company_id);
             }
         }
+        return $admins_for_reports;
+
     }
-    public function cronjob_tester()
-    {
-        $busnesses = $this->timesheet_model->get_all_businesses();
-        foreach ($busnesses as $business) {
-            $email_sent_to = array();
-            $timezone = "UTC";
-            $timezone_id = 0;
-            $user_ids = $this->timesheet_model->get_user_id_by_email_and_company_id($business->business_name, $business->company_id);
-
-            foreach ($user_ids as $ids) {
-                $user_id = $ids->id;
-            }
-            if (count($user_ids) > 0) {
-                $saved_timezones = $this->timesheet_model->get_saved_timezone($user_id);
-                foreach ($saved_timezones as $tz) {
-                    $timezone = $tz->id_of_timezone;
-                    $timezone_id = $tz->timezone_id;
-                }
-            }
-            $file_info = $this->get_time_sheet_storage($business->company_id, $timezone, $timezone_id);
-            $est_wage_privacy = $this->timesheet_model->get_timesheet_report_privacy($business->company_id)->est_wage_private;
-            if (count($file_info[2]) > 0) {
-                $date_from = date("Y-m-d", strtotime('sunday last week', strtotime(date('Y-m-d'))));
-                $date_to = date("Y-m-d", strtotime('saturday this week', strtotime(date('Y-m-d'))));
-                // $this->generate_timelogs_csv($file_info[2], $file_info[0],$est_wage_privacy);
-                // $this->generate_weekly_timesheet_pdf_report($file_info, $business->business_name,$est_wage_privacy);
-                // $this->timelogs_csv_email_sender("moresecureadi@gmail.com", $business->business_name . "", $file_info[0], $date_from,  "Tommy", $business->business_name, $file_info,$business->company_id,$business->business_image,$est_wage_privacy);
-                $email_sent_to[] = array($business->business_email, $business->business_name);
-                $busness_admins = $this->timesheet_model->get_all_business_admins($business->company_id);
-                foreach ($busness_admins as $admin) {
-                    $received = false;
-                    if (!$received) {
-                        $timezone = "UTC";
-                        $timezone_id = 0;
-                        $subscribed = false;
-                        $saved_timezones = $this->timesheet_model->get_saved_timezone($admin->id);
-                        foreach ($saved_timezones as $tz) {
-                            $timezone = $tz->id_of_timezone;
-                            $timezone_id = $tz->timezone_id;
-                            if($tz->subscribed == 1){
-                                $subscribed = true;
-                            }
-                        }
-                        if(count($saved_timezones) == 0){
-                            $subscribed = true;
-                        }
-                        if($subscribed){
-                            $file_info = $this->get_time_sheet_storage($business->company_id, $timezone, $timezone_id);
-                            $this->generate_timelogs_csv($file_info[2], $file_info[0],$est_wage_privacy);
-                            $this->generate_weekly_timesheet_pdf_report($file_info, $business->business_name,$est_wage_privacy);
-                            if ($admin->email == "pintonlou@gmail.com") {
-                                    $this->timelogs_csv_email_sender($admin->email, $business->business_name . "", $file_info[0], $date_from, $admin->FName, $business->business_name, $file_info,$business->company_id,$business->business_image,$est_wage_privacy);
-                            }
-
-                            // $this->timelogs_csv_email_sender($admin->email, $business->business_name . "", $file_info[0], $date_from, $admin->FName, $business->business_name, $file_info);
-                            
-                            $email_sent_to[] = array($admin->email, $business->business_name);
-                        }
-                        
-                    }
-                }
-            }
-        }
-    }
-
     public function generate_weekly_timesheet_pdf_report($file_info, $business_name, $est_wage_privacy)
     {
         $date_from = date("Y-m-d", strtotime('sunday last week', strtotime(date('Y-m-d'))));

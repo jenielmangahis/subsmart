@@ -143,7 +143,11 @@ class Register extends MY_Controller {
         }
 
         $industryTypes = $this->IndustryType_model->getAll();
+        $paypal_client_id     = paypal_credential('client_id');
+        $paypal_client_secret = paypal_credential('client_secret');     
 
+        $this->page_data['paypal_client_id']     = $paypal_client_id;
+        $this->page_data['paypal_client_secret'] = $paypal_client_secret;
         $this->page_data['industryTypes'] = $industryTypes; 
         $this->page_data['ip_exist'] = $ip_exist; 
         $this->page_data['payment_complete'] = $payment_complete; 
@@ -737,6 +741,8 @@ class Register extends MY_Controller {
                 'industry_type_id' => $post['industry_type_id'],
                 'password' => $post['password'],
                 'ip_address' => getValidIpAddress(),
+                'plan_date_registered' => date("Y-m-d"),
+                'plan_date_registered' => date("Y-m-d", strtotime("+1 month")),
                 'date_created'  => date("Y-m-d H:i:s"),
                 'date_modified' => date("Y-m-d H:i:s"),
                 'is_plan_active' => 1,
@@ -869,8 +875,119 @@ class Register extends MY_Controller {
         exit;
     }
 
+    public function ajax_create_registration()
+    {
+        $is_success = true;
+        $is_valid   = false;
 
+        $post = $this->input->post(); 
+        if( $post['payment_method'] == 'paypal' ){
+            if( $post['payment_method_status'] == 'COMPLETED' ){
+                $is_valid = true;   
+            }
+        }elseif( $post['payment_method'] == 'stripe' ){
+            if( $post['payment_method_status'] == 'COMPLETED' ){
+                $is_valid = true;   
+            }
+        }
 
+        if( $is_valid ){
+            $today = strtotime(date("Y-m-d"));
+            $cid   = $this->Clients_model->create([
+                'first_name' => $post['firstname'],
+                'last_name'  => $post['lastname'],
+                'email_address' => $post['email'],
+                'phone_number'  => $post['phone'],
+                'business_name' => $post['business_name'],
+                'business_address' => $post['business_address'],
+                'number_of_employee' => $post['number_of_employee'],
+                'industry_type_id' => $post['industry_type_id'],
+                'password' => $post['password'],
+                'ip_address' => getValidIpAddress(),
+                'date_created'  => date("Y-m-d H:i:s"),
+                'date_modified' => date("Y-m-d H:i:s"),
+                'is_plan_active' => 1,
+                'nsmart_plan_id' => $post['plan_id'],
+                'payment_method' => $post['payment_method'],
+                'plan_date_registered' => date("Y-m-d", $today),
+                'plan_date_expiration' => date("Y-m-d", strtotime("+1 month", $today)),
+                'is_trial' => 1,
+                'is_startup' => 1
+            ]);
+
+            $uid = $this->users_model->create([
+                'role' => 3,
+                'FName' => $post['firstname'],
+                'LName' => $post['lastname'],
+                'username' => $post['email'],
+                'email' => $post['email'],
+                'company_id' => $cid,
+                'status' => 0,
+                'password_plain' =>  $post['password'],
+                'password' => hash( "sha256", $post['password'] ),
+            ]); 
+        }
+
+        $json_data = ['is_success' => $is_success];
+
+        echo json_encode($json_data);
+    }
+
+    public function ajax_converge_token_request(){
+        // Set variables
+        $merchantID = "2159250"; //Converge 6 or 7-Digit Account ID *Not the 10-Digit Elavon Merchant ID*
+        $merchantUserID = "nsmartapi"; //Converge User ID *MUST FLAG AS HOSTED API USER IN CONVERGE UI*
+        $merchantPinCode = "UJN5ASLON7DJGDET68VF4JQGJILOZ8SDAWXG7SQRDEON0YY8ARXFXS6E19UA1E2X"; //Converge PIN (64 CHAR A/N)
+
+        //$url = "https://api.demo.convergepay.com/hosted-payments/transaction_token"; // URL to Converge demo session token server
+        $url = "https://api.convergepay.com/hosted-payments/transaction_token"; // URL to Converge production session token server
+
+        $post = $this->input->post();
+        /*Payment Field Variables*/
+        // In this section, we set variables to be captured by the PHP file and passed to Converge in the curl request.
+        $firstname = $post['firstname']; //Post first name
+        $lastname  = $post['lastname']; //Post first name
+        $amount    = $post['total_amount']; //Post Tran Amount
+        //$merchanttxnid = $_POST['ssl_merchant_txn_id']; //Capture user-defined ssl_merchant_txn_id as POST data
+        //$invoicenumber = $_POST['ssl_invoice_number']; //Capture user-defined ssl_invoice_number as POST data
+
+        //Follow the above pattern to add additional fields to be sent in curl request below.
+
+        $ch = curl_init();    // initialize curl handle
+        curl_setopt($ch, CURLOPT_URL,$url); // set url to post to
+        curl_setopt($ch,CURLOPT_POST, true); // set POST method
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+
+        // Set up the post fields. If you want to add custom fields, you would add them in Converge, and add the field name in the curlopt_postfields string.
+        curl_setopt($ch,CURLOPT_POSTFIELDS,
+        "ssl_merchant_id=$merchantID".
+        "&ssl_user_id=$merchantUserID".
+        "&ssl_pin=$merchantPinCode".
+        "&ssl_transaction_type=CCSALE".
+        "&ssl_first_name=$firstname".
+        "&ssl_last_name=$lastname".
+        "&ssl_get_token=Y".
+        "&ssl_add_token=Y".
+        "&ssl_amount=$amount"
+        );
+
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_VERBOSE, true);
+
+        $result = curl_exec($ch); // run the curl procss
+        curl_close($ch); // Close cURL
+
+        //session tokens need to be URL encoded
+        $token = urlencode($result);
+        $is_success = true;
+
+        $json_data = ['is_success' => $is_success, 'token' => $token];
+
+        echo json_encode($json_data);
+        //echo $sessiontoken;  //shows the session token.
+    }
 }
 
 /* End of file Register.php */
