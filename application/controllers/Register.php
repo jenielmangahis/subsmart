@@ -980,7 +980,8 @@ class Register extends MY_Controller {
         curl_close($ch); // Close cURL
 
         //session tokens need to be URL encoded
-        $token = urlencode($result);
+        //$token = urlencode($result);
+        $token = $result;
         $is_success = true;
 
         $json_data = ['is_success' => $is_success, 'token' => $token];
