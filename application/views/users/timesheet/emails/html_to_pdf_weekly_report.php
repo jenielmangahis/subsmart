@@ -225,7 +225,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 <body>
     <h2>Timesheet Report</h2>
-    <p class="lead text-muted" style="text-align: left; font-size:10px; color:#212529;">Below you'll find the timesheet report you requested for your team at <b> <?= $business_name ?></b> for the time period <b><?= date('M d', strtotime($date_from)) ?> - <?= date("d",strtotime($date_to)) ?></b>.</p>
+    <p class="lead text-muted" style="text-align: left; font-size:10px; color:#212529;">Below you'll find the timesheet report you requested for your team at <b> <?= $business_name ?></b> for the time period <b><?= date('M d', strtotime($date_from)) ?> - <?= date("d",strtotime($date_to))<date("d",strtotime($date_from))?date("M d",strtotime($date_to)):date("d",strtotime($date_to)) ?></b>.</p>
     <table class="table">
         <tbody>
             <thead>

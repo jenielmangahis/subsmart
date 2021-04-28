@@ -8,6 +8,7 @@ class Vendors extends MY_Controller {
 		parent::__construct();
         $this->checkLogin();
         $this->load->model('vendors_model');
+        $this->load->model('accounting_attachments_model');
 
         add_css(array(
             "assets/css/accounting/banking.css?v='rand()'",
@@ -135,29 +136,6 @@ class Vendors extends MY_Controller {
 
     public function add()
     {
-        $id = logged('id');
-        $filePath = "./uploads/accounting/vendors/".$id;
-        $file_name = "";
-
-        if (!file_exists($filePath)) {
-            mkdir($filePath);
-        }
-
-		$config['upload_path']  =  $filePath;
-        $config['allowed_types']   = 'gif|jpg|png|jpeg|doc|docx|pdf|xlx|xls|csv';
-        $config['max_size']        = '20000';
-
-        $this->load->library('upload', $config);
-
-        if ($this->upload->do_upload('attachFiles'))
-        {
-            $image = $this->upload->data();
-            $file_name = $image['file_name'];
-        }
-
-        $config = $this->uploadlib->initialize($config);
-        $this->load->library('upload',$config);
-
         $new_data = array(
             'company_id' =>logged('company_id'),
             'title' => $this->input->post('title'),
@@ -168,7 +146,8 @@ class Vendors extends MY_Controller {
             'email' => $this->input->post('email'),
             'company' => $this->input->post('company'),
             'display_name' => $this->input->post('display_name'),
-            'to_display' => $this->input->post('to_display'),
+            'to_display' => $this->input->post('use_display_name'),
+            'print_on_check_name' => $this->input->post('use_display_name') === "1" ? $this->input->post('use_display_name') : $this->input->post('print_on_check_name'),
             'street' => $this->input->post('street'),
             'city' => $this->input->post('city'),
             'state' => $this->input->post('state'),
@@ -181,12 +160,12 @@ class Vendors extends MY_Controller {
             'billing_rate' => $this->input->post('billing_rate'),
             'terms' => $this->input->post('terms'),
             'opening_balance' => $this->input->post('opening_balance'),
-            'opening_balance_as_of_date' => $this->input->post('opening_balance_as_of_date'),
+            'opening_balance_as_of_date' => date("Y-m-d", strtotime($this->input->post('opening_balance_as_of_date'))),
             'account_number' => $this->input->post('account_number'),
             'tax_id' => $this->input->post('business_number'),
             'default_expense_account' => $this->input->post('default_expense_amount'),
             'notes' => $this->input->post('notes'),
-            'attachments' => $file_name,
+            'attachments' => json_encode($this->input->post('attachments')),
             'status' => 1,
             'created_by' => logged('id'),
             'created_at' => date("Y-m-d H:i:s"),
@@ -216,5 +195,106 @@ class Vendors extends MY_Controller {
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->page_data['page_title'] = "Vendors";
         $this->load->view('accounting/vendors/view', $this->page_data);
+    }
+
+    public function update($vendorId)
+    {
+        $data = array(
+            'title' => $this->input->post('title'),
+            'f_name' => $this->input->post('f_name'),
+            'm_name' => $this->input->post('m_name'),
+            'l_name' => $this->input->post('l_name'),
+            'suffix' => $this->input->post('suffix'),
+            'email' => $this->input->post('email'),
+            'company' => $this->input->post('company'),
+            'display_name' => $this->input->post('display_name'),
+            'to_display' => $this->input->post('use_display_name'),
+            'print_on_check_name' => $this->input->post('use_display_name') === "1" ? $this->input->post('display_name') : $this->input->post('print_on_check_name'),
+            'street' => $this->input->post('street'),
+            'city' => $this->input->post('city'),
+            'state' => $this->input->post('state'),
+            'zip' => $this->input->post('zip'),
+            'country' => $this->input->post('country'),
+            'phone' => $this->input->post('phone'),
+            'mobile' => $this->input->post('mobile'),
+            'fax' => $this->input->post('fax'),
+            'website' => $this->input->post('website'),
+            'billing_rate' => $this->input->post('billing_rate') !== "" ? $this->input->post('billing_rate') : null,
+            'terms' => $this->input->post('terms'),
+            'opening_balance' => $this->input->post('opening_balance'),
+            'opening_balance_as_of_date' => date("Y-m-d", strtotime($this->input->post('opening_balance_as_of_date'))),
+            'account_number' => $this->input->post('account_number') !== "" ? $this->input->post('account_number') : null,
+            'tax_id' => $this->input->post('business_number'),
+            'default_expense_account' => $this->input->post('default_expense_amount'),
+            'notes' => $this->input->post('notes'),
+            'attachments' => json_encode($this->input->post('attachments')),
+            'updated_at' => date("Y-m-d H:i:s")
+        );
+
+        $update = $this->vendors_model->updateVendor($vendorId, $data);
+
+        if($update) {
+            $this->session->set_flashdata('success', "Vendor updated successfully!");
+        } else{
+            $this->session->set_flashdata('error', "Unexpected error, please try again!");
+        }
+
+        redirect("accounting/vendors/view/$vendorId");
+    }
+
+    public function attachments()
+    {
+        $files = $_FILES['file'];
+
+        if(count($files['name']) > 0) {
+            $insert = $this->uploadFile($files);
+
+            $return = new stdClass();
+            $return->attachment_ids = $insert;
+            echo json_encode($return);
+        } else {
+            echo json_encode('error');
+        }
+    }
+
+    private function uploadFile($files)
+    {
+        $this->load->helper('string');
+        $data = [];
+        foreach($files['name'] as $key => $name)
+        {
+            $extension = end(explode('.', $name));
+
+            do {
+                $randomString = random_string('alnum');
+                $fileNameToStore = $randomString . '.' .$extension;
+                $exists = file_exists('./uploads/accounting/attachments/'.$fileNameToStore);
+            } while ($exists);
+
+            $fileType = explode('/', $files['type'][$key]);
+            $uploadedName = str_replace('.'.$extension, '', $name);
+
+            $data[] = [
+                'company_id' => getLoggedCompanyID(),
+                'type' => $fileType[0] === 'application' ? ucfirst($fileType[1]) : ucfirst($fileType[0]),
+                'uploaded_name' => $uploadedName,
+                'stored_name' => $fileNameToStore,
+                'file_extension' => $extension,
+                'size' => $files['size'][$key],
+                'notes' => null,
+                'status' => 1,
+                'created_at' => date('Y-m-d h:i:s'),
+                'updated_at' => date('Y-m-d h:i:s')
+            ];
+
+            move_uploaded_file($files['tmp_name'][$key], './uploads/accounting/attachments/'.$fileNameToStore);
+        }
+
+        $attachmentIds = [];
+        foreach($data as $attachment) {
+            $attachmentIds[] = $this->accounting_attachments_model->create($attachment);
+        }
+
+        return $attachmentIds;
     }
 }

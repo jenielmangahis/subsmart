@@ -27,6 +27,15 @@ defined('BASEPATH') or exit('No direct script access allowed');
     color:red;
     padding:12px;
 }
+
+#signature-pad {min-height:200px;}
+#signature-pad canvas {background-color:white;left: 0;top: 0;width: 100%;min-height:250px;height: 100%}
+
+#signature-pad2 {min-height:200px;}
+#signature-pad2 canvas {background-color:white;left: 0;top: 0;width: 100%;min-height:250px;height: 100%}
+
+#signature-pad3 {min-height:200px;}
+#signature-pad3 canvas {background-color:white;left: 0;top: 0;width: 100%;min-height:250px;height: 100%}
    </style>
     <!-- page wrapper start -->
     <div wrapper__section>
@@ -852,7 +861,10 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         </ul>
                                         <div class="sig sigWrapper" id="smoothed1a_pencil" style="height:auto;pointer-events: none;">
                                             <div class="typed"></div>
-                                            <canvas class="pad" id="company_representative_approval_signature1a" style="width:100%;"></canvas>
+                                            <!-- <canvas class="pad" id="company_representative_approval_signature1a" style="width:100%;"></canvas> -->
+                                            <div id="signature-pad">
+                                            <canvas style="border:1px solid #000" id="sign"></canvas>
+                                            </div>
                                             <input type="hidden" name="output-2" class="output">
                                         </div>
                                     </div>
@@ -879,7 +891,10 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         </ul>
                                         <div class="sig sigWrapper" style="height:auto;pointer-events: none;">
                                             <div class="typed"></div>
-                                            <canvas class="pad" id="primary_account_holder_signature2a" style="width:100%;"></canvas>
+                                            <!-- <canvas class="pad" id="primary_account_holder_signature2a" style="width:100%;"></canvas> -->
+                                            <div id="signature-pad2">
+                                            <canvas style="border:1px solid #000" id="sign2"></canvas>
+                                            </div>
                                             <input type="hidden" name="output-2" class="output">
                                         </div>
                                     </div>
@@ -905,7 +920,10 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         </ul>
                                         <div class="sig sigWrapper" style="height:auto;pointer-events: none;">
                                             <div class="typed"></div>
-                                            <canvas class="pad" id="secondary_account_holder_signature3a" style="width:100%;"></canvas>
+                                            <!-- <canvas class="pad" id="secondary_account_holder_signature3a" style="width:100%;"></canvas> -->
+                                            <div id="signature-pad3">
+                                            <canvas style="border:1px solid #000" id="sign3"></canvas>
+                                            </div>
                                             <input type="hidden" name="output-2" class="output">
                                         </div>
                                     </div>
@@ -1249,6 +1267,69 @@ defined('BASEPATH') or exit('No direct script access allowed');
             </div>
 
 <?php include viewPath('includes/footer'); ?>
+
+<script>
+var wrapper = document.getElementById("signature-pad");
+var canvas = wrapper.querySelector("canvas");
+
+var sign = new SignaturePad(document.getElementById('sign'), {
+  backgroundColor: 'rgba(255, 255, 255, 0)',
+  penColor: 'rgb(0, 0, 0)'
+});
+
+function resizeCanvas() {
+     var ratio =  Math.max(window.devicePixelRatio || 1, 1);
+
+     canvas.width = canvas.offsetWidth * ratio;
+     canvas.height = canvas.offsetHeight * ratio;
+     canvas.getContext("2d").scale(ratio, ratio);
+}
+
+window.onresize = resizeCanvas;
+resizeCanvas();
+</script>
+
+<script>
+var wrapper = document.getElementById("signature-pad2");
+var canvas = wrapper.querySelector("canvas");
+
+var sign = new SignaturePad(document.getElementById('sign2'), {
+  backgroundColor: 'rgba(255, 255, 255, 0)',
+  penColor: 'rgb(0, 0, 0)'
+});
+
+function resizeCanvas() {
+     var ratio =  Math.max(window.devicePixelRatio || 1, 1);
+
+     canvas.width = canvas.offsetWidth * ratio;
+     canvas.height = canvas.offsetHeight * ratio;
+     canvas.getContext("2d").scale(ratio, ratio);
+}
+
+window.onresize = resizeCanvas;
+resizeCanvas();
+</script>
+
+<script>
+var wrapper = document.getElementById("signature-pad3");
+var canvas = wrapper.querySelector("canvas");
+
+var sign = new SignaturePad(document.getElementById('sign3'), {
+  backgroundColor: 'rgba(255, 255, 255, 0)',
+  penColor: 'rgb(0, 0, 0)'
+});
+
+function resizeCanvas() {
+     var ratio =  Math.max(window.devicePixelRatio || 1, 1);
+
+     canvas.width = canvas.offsetWidth * ratio;
+     canvas.height = canvas.offsetHeight * ratio;
+     canvas.getContext("2d").scale(ratio, ratio);
+}
+
+window.onresize = resizeCanvas;
+resizeCanvas();
+</script>
 
 <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAlMWhWMHlxQzuolWb2RrfUeb0JyhhPO9c&libraries=places"></script>
 <script>

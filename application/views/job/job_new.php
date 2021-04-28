@@ -92,7 +92,7 @@ add_css(array(
                                             <p><small>Invoice</small></p>
                                         </div>
                                         <div class="stepwizard-step col-xs-3">
-                                            <a href="#" type="button" class="btn btn-circle <?= isset($jobs_data) && $jobs_data->status == 'Withdrawn'  ? 'btn-success' : 'btn-default' ; ?>" disabled="disabled">
+                                            <a href="#" type="button" class="btn btn-circle <?= isset($jobs_data) && $jobs_data->status == 'Completed'  ? 'btn-success' : 'btn-default' ; ?>" disabled="disabled">
                                                 <span style="font-size: 24px;" class="fa  fa-check"></span>
                                             </a>
                                             <p><small>Completed</small></p>
