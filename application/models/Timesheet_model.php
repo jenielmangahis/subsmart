@@ -190,7 +190,7 @@ class Timesheet_model extends MY_Model
 
     public function get_company_admins($company_id)
     {
-        $query = $this->db->query("SELECT * From users join timesheet_team_members on timesheet_team_members.user_id = users.id where timesheet_team_members.company_id = " . $company_id . " and timesheet_team_members.role = 'Admin' and users.id=timesheet_team_members.user_id");
+        $query = $this->db->query("SELECT * From users  where company_id = " . $company_id . " ");
         return $query->result();
     }
 
@@ -1614,15 +1614,19 @@ class Timesheet_model extends MY_Model
         );
         $this->db->insert('timesheet_report_filename_storage',$insert);
     }
-    public function get_old_timesheet_reports($first_date_lastMonth){
+    public function get_old_timesheet_reports($date_lastweek){
         
         $this->db->reset_query();
-        $qry = $this->db->query("SELECT * FROM timesheet_report_filename_storage WHERE date_created < '$first_date_lastMonth'");
+        $qry = $this->db->query("SELECT * FROM timesheet_report_filename_storage WHERE date_created < '$date_lastweek'");
         return $qry->result();
     }
-    public function delete_old_timesheet_reports($first_date_lastMonth){
+    public function delete_old_timesheet_reports($date_lastweek){
         $this->db->reset_query();
-        $this->db->query("DELETE FROM timesheet_report_filename_storage WHERE date_created < '$first_date_lastMonth'");
+        $this->db->query("DELETE FROM timesheet_report_filename_storage WHERE date_created < '$date_lastweek'");
+    }
+    public function delete_old_notifications($date_lastweek){
+        $this->db->reset_query();
+        $this->db->query("DELETE FROM user_notification WHERE date_created < '$date_lastweek'");
     }
 }
 

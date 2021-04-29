@@ -36,6 +36,66 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 #signature-pad3 {min-height:200px;}
 #signature-pad3 canvas {background-color:white;left: 0;top: 0;width: 100%;min-height:250px;height: 100%}
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+}
+
+.switch input { 
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #10ab06;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #10ab06;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
    </style>
     <!-- page wrapper start -->
     <div wrapper__section>
@@ -283,7 +343,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         <thead style="background-color:#E9E8EA;">
                                         <tr>
                                             <th>Name</th>
-                                            <th>Type</th>
+                                            <th>Group</th>
                                             <!-- <th>Description</th> -->
                                             <th width="150px">Quantity</th>
                                             <!-- <th>Location</th> -->
@@ -578,6 +638,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         <option value="Venmo">Venmo</option>
                                         <option value="Paypal">Paypal</option>
                                         <option value="Square">Square</option>
+                                        <option value="Invoicing">Invoicing</option>
                                         <option value="Warranty Work">Warranty Work</option>
                                         <option value="Home Owner Financing">Home Owner Financing</option>
                                         <option value="e-Transfer">e-Transfer</option>
@@ -594,6 +655,40 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                       <input type="checkbox" id="collected_checkbox"> <b style="font-size:14px;" id="collected_checkbox_label"> Cash collected already </b>          
                                 </div>                                      
                             </div>
+                            <div id="invoicing" style="display:none;">
+                                        
+                                        <input type="checkbox" id="same_as"> <b>Same as above Address</b> <br><br>
+                                        <div class="row">                   
+                                            <div class="col-md-4 form-group">
+                                                <label for="monitored_location">Mail Address</label>
+                                                <input type="text" class="form-control" name="mail-address"
+                                                    id="mail-address" placeholder="Monitored Location"/>
+                                            </div>
+                                            <div class="col-md-4 form-group">
+                                                <label for="city">City</label>
+                                                    <input type="text" class="form-control" name="mail_locality" id="mail_locality" placeholder="Enter Name" />
+                                            </div>
+                                            <div class="col-md-4 form-group">
+                                                <label for="state">State</label>
+                                                <input type="text" class="form-control" name="mail_state"
+                                                    id="mail_state" 
+                                                    placeholder="Enter State"/>
+                                            </div>
+                                        </div>
+                                        <div class="row">  
+                                            <div class="col-md-4 form-group">
+                                                <label for="zip">ZIP</label> 
+                                                    <input type="text" id="mail_postcode" name="mail_postcode" class="form-control"  placeholder="Enter Zip"/>
+                                            </div>
+
+                                            <div class="col-md-4 form-group">
+                                                <label for="cross_street">Cross Street</label>
+                                                <input type="text" class="form-control" name="mail_cross_street"
+                                                    id="mail_cross_street" 
+                                                    placeholder="Cross Street"/>
+                                            </div>                                        
+                                        </div>
+                                    </div>
                             <div id="check_area" style="display:none;">
                                 <div class="row">                   
                                     <div class="form-group col-md-4">
@@ -1144,7 +1239,17 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         <?php foreach($items as $item){ // print_r($item); ?>
                                             <tr>
                                                 <td><?php echo $item->title; ?></td>
-                                                <td><?php echo $item->rebate; ?></td>
+                                                <td><?php if($item->rebate == 1){ ?>
+                                                    <label class="switch">
+                                                    <input type="checkbox" checked>
+                                                    <span class="slider round"></span>
+                                                    </label>
+                                                <?php }else{ ?>
+                                                    <label class="switch">
+                                                    <input type="checkbox">
+                                                    <span class="slider round"></span>
+                                                    </label>
+                                                <?php  } ?></td>
                                                 <td></td>
                                                 <td><?php echo $item->price; ?></td>
                                                 <td><button id="<?= $item->id; ?>" data-quantity="<?= $item->units; ?>" data-itemname="<?= $item->title; ?>" data-price="<?= $item->price; ?>" type="button" data-dismiss="modal" class="btn btn-sm btn-default select_item">
@@ -2105,6 +2210,7 @@ document.getElementById("payment_method").onchange = function() {
         $('#ach_area').hide();
         $('#venmo_area').hide();
         $('#paypal_area').hide();
+        $('#invoicing').hide();
         $('#square_area').hide();
         $('#warranty_area').hide();
         $('#home_area').hide();
@@ -2112,6 +2218,23 @@ document.getElementById("payment_method").onchange = function() {
         $('#other_credit_card').hide();
         $('#other_payment_area').hide();
     	}
+    else if(this.value == 'Invoicing'){
+
+        $('#cash_area').hide();
+        $('#check_area').hide();
+        $('#invoicing').show();
+        $('#credit_card').hide();
+        $('#debit_card').hide();
+        $('#ach_area').hide();
+        $('#venmo_area').hide();
+        $('#paypal_area').hide();
+        $('#square_area').hide();
+        $('#warranty_area').hide();
+        $('#home_area').hide();
+        $('#e_area').hide();
+        $('#other_credit_card').hide();
+        $('#other_payment_area').hide();
+    }
 	
     else if(this.value == 'Check'){
         // alert('Check');
@@ -2119,6 +2242,7 @@ document.getElementById("payment_method").onchange = function() {
         $('#check_area').show();
         $('#credit_card').hide();
         $('#debit_card').hide();
+        $('#invoicing').hide();
         $('#ach_area').hide();
         $('#venmo_area').hide();
         $('#paypal_area').hide();
@@ -2135,6 +2259,7 @@ document.getElementById("payment_method").onchange = function() {
         $('#check_area').hide();
         $('#credit_card').show();
         $('#debit_card').hide();
+        $('#invoicing').hide();
         $('#ach_area').hide();
         $('#venmo_area').hide();
         $('#paypal_area').hide();
@@ -2153,6 +2278,7 @@ document.getElementById("payment_method").onchange = function() {
         $('#debit_card').show();
         $('#ach_area').hide();
         $('#venmo_area').hide();
+        $('#invoicing').hide();
         $('#paypal_area').hide();
         $('#square_area').hide();
         $('#warranty_area').hide();
@@ -2167,6 +2293,7 @@ document.getElementById("payment_method").onchange = function() {
         $('#check_area').hide();
         $('#credit_card').hide();
         $('#debit_card').hide();
+        $('#invoicing').hide();
         $('#ach_area').show();
         $('#venmo_area').hide();
         $('#paypal_area').hide();
@@ -2184,6 +2311,7 @@ document.getElementById("payment_method").onchange = function() {
         $('#credit_card').hide();
         $('#debit_card').hide();
         $('#ach_area').hide();
+        $('#invoicing').hide();
         $('#venmo_area').show();
         $('#paypal_area').hide();
         $('#square_area').hide();
@@ -2199,6 +2327,7 @@ document.getElementById("payment_method").onchange = function() {
         $('#check_area').hide();
         $('#credit_card').hide();
         $('#debit_card').hide();
+        $('#invoicing').hide();
         $('#ach_area').hide();
         $('#venmo_area').hide();
         $('#paypal_area').show();
@@ -2214,6 +2343,7 @@ document.getElementById("payment_method").onchange = function() {
         $('#cash_area').hide();
         $('#check_area').hide();
         $('#credit_card').hide();
+        $('#invoicing').hide();
         $('#debit_card').hide();
         $('#ach_area').hide();
         $('#venmo_area').hide();
@@ -2230,6 +2360,7 @@ document.getElementById("payment_method").onchange = function() {
         $('#cash_area').hide();
         $('#check_area').hide();
         $('#credit_card').hide();
+        $('#invoicing').hide();
         $('#debit_card').hide();
         $('#ach_area').hide();
         $('#venmo_area').hide();
@@ -2247,6 +2378,7 @@ document.getElementById("payment_method").onchange = function() {
         $('#check_area').hide();
         $('#credit_card').hide();
         $('#debit_card').hide();
+        $('#invoicing').hide();
         $('#ach_area').hide();
         $('#venmo_area').hide();
         $('#paypal_area').hide();
@@ -2263,6 +2395,7 @@ document.getElementById("payment_method").onchange = function() {
         $('#check_area').hide();
         $('#credit_card').hide();
         $('#debit_card').hide();
+        $('#invoicing').hide();
         $('#ach_area').hide();
         $('#venmo_area').hide();
         $('#paypal_area').hide();
@@ -2279,6 +2412,7 @@ document.getElementById("payment_method").onchange = function() {
         $('#check_area').hide();
         $('#credit_card').hide();
         $('#debit_card').hide();
+        $('#invoicing').hide();
         $('#ach_area').hide();
         $('#venmo_area').hide();
         $('#paypal_area').hide();
@@ -2295,6 +2429,7 @@ document.getElementById("payment_method").onchange = function() {
         $('#check_area').hide();
         $('#credit_card').hide();
         $('#debit_card').hide();
+        $('#invoicing').hide();
         $('#ach_area').hide();
         $('#venmo_area').hide();
         $('#paypal_area').hide();

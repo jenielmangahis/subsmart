@@ -332,7 +332,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                 <div class="attachments-container w-50">
                                                     <label for="attachment" style="margin-right: 15px"><i class="fa fa-paperclip"></i>&nbsp;Attachment</label> 
                                                     <span>Maximum size: 20MB</span>
-                                                    <div id="employeeProfilePhoto" class="dropzone" style="border: 1px solid #e1e2e3;background: #ffffff;width: 100%;">
+                                                    <div id="previewVendorAttachments" class="dropzone" style="border: 1px solid #e1e2e3;background: #ffffff;width: 100%;">
                                                         <div class="dz-message" style="margin: 20px;border">
                                                             <span style="font-size: 16px;color: rgb(180,132,132);font-style: italic;">Drag and drop files here or</span>
                                                             <a href="#" style="font-size: 16px;color: #0b97c4">browse to upload</a>
@@ -525,6 +525,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                     <a href="#" style="font-size: 16px;color: #0b97c4">browse to upload</a>
                                                                 </div>
                                                             </div>
+                                                            <?php if($vendor->attachments !== null && $vendor->attachments !== "") : ?>
+                                                                <?php foreach(json_decode($vendor->attachments, true) as $attachment) : ?>
+                                                                    <input type="hidden" name="attachments[]" value="<?=$attachment?>">
+                                                                <?php endforeach; ?>
+                                                            <?php endif; ?>
                                                         </div>
                                                     </div>
                                                 </div>

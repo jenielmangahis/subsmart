@@ -257,6 +257,48 @@ class Vendors extends MY_Controller {
         }
     }
 
+    public function update_attachments($vendorId)
+    {
+        $files = $_FILES['file'];
+
+        if(count($files['name']) > 0) {
+            $insert = $this->uploadFile($files);
+            $vendor = $this->vendors_model->get_vendor_by_id($vendorId);
+
+            if($vendor->attachments !== null || $vendor->attachments !== "") {
+                foreach(json_decode($vendor->attachments, true) as $attachment) {
+                    array_unshift($insert, $attachment);
+                }
+            }
+
+            $update = $this->vendors_model->updateVendor($vendorId, ['attachments' => json_encode($insert)]);
+
+            $return = new stdClass();
+            $return->attachment_ids = $insert;
+            echo json_encode($return);
+        } else {
+            echo json_encode('error');
+        }
+    }
+
+    public function remove_attachment($vendorId)
+    {
+        $attachmentId = $this->input->post('attachment_id');
+        $vendor = $this->vendors_model->get_vendor_by_id($vendorId);
+        $attachments = json_decode($vendor->attachments, true);
+        $attachmentKey = array_search($attachmentId, $attachments);
+        unset($attachments[$attachmentKey]);
+
+        $update = $this->vendors_model->updateVendor($vendorId, ['attachments' => json_encode($attachments)]);
+
+        $return = [
+            'data' => $vendorId,
+            'success' => $update
+        ];
+
+        echo json_encode($return);
+    }
+
     private function uploadFile($files)
     {
         $this->load->helper('string');
@@ -296,5 +338,18 @@ class Vendors extends MY_Controller {
         }
 
         return $attachmentIds;
+    }
+
+    public function get_vendor_attachments($vendorId)
+    {
+        $vendor = $this->vendors_model->get_vendor_by_id($vendorId);
+        $attachments = json_decode($vendor->attachments, true);
+        
+        $attached = [];
+        foreach($attachments as $attachment) {
+            $attached[] = $this->accounting_attachments_model->getById($attachment);
+        }
+
+        echo json_encode($attached);
     }
 }

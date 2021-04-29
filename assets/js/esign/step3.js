@@ -172,6 +172,7 @@ function Step3() {
     const $formulaInput = $optionsSidebar.find("#formulaInput");
     const $noteInput = $optionsSidebar.find("#noteInput");
     const $optionInputs = $optionsSidebar.find(".esignBuilder__optionInput");
+    const $fieldNameInput = $optionsSidebar.find("#textFieldName");
 
     $fieldId.html("");
     $fieldId.html(field.unique_key);
@@ -179,6 +180,7 @@ function Step3() {
     $formulaInput.val("");
     $noteInput.val("");
     $optionInputs.remove();
+    $fieldNameInput.val("");
 
     const fieldTypeWithOptions = ["Checkbox", "Dropdown", "Radio"];
     let fieldType = "field";
@@ -202,6 +204,8 @@ function Step3() {
       $("#readOnlyText").prop("checked", false);
       $("#requiredText").prop("checked", specs.is_required);
       $("#readOnlyText").prop("checked", specs.is_read_only);
+      $("#textFieldName").prop("checked", specs.is_read_only);
+      $fieldNameInput.val(specs.name ? specs.name : "");
     }
 
     $optionsSidebar.attr("data-field-type", fieldType);
@@ -222,16 +226,19 @@ function Step3() {
     const coordinates = JSON.parse(coords);
     const top = parseInt(coordinates.top, 10);
     const left = parseInt(coordinates.left, 10);
+    const specs = field.specs ? JSON.parse(field.specs) : {};
 
     const fieldName = field_name.trim();
     const uniqueKey = unique_key || Date.now();
     field.field_name = fieldName;
     field.unique_key = uniqueKey;
 
+    const rgba = hexToRGB(color, specs.is_required ? 0.7 : 0.3);
+
     const html = `
       <div
         class="menu_item ui-draggable ui-draggable-handle ui-draggable-dragging esignBuilder__field"
-        style="left: ${left}px; top: ${top}px; --color: ${hexToRGB(color, 0.5)}"
+        style="left: ${left}px; top: ${top}px; --color: ${rgba}"
       >
         <div class="subData">
           <span>${fieldName}</span>
@@ -482,9 +489,11 @@ function Step3() {
       } else if (fieldType === "note") {
         specs = { note: $noteInput.val() };
       } else if (fieldType === "text") {
+        const fieldName = $("#textFieldName").val().trim();
         specs = {
           is_required: $("#requiredText").is(":checked"),
           is_read_only: $("#readOnlyText").is(":checked"),
+          name: !isEmpty(fieldName) ? fieldName : null,
         };
       } else {
         if (!$optionInputs.length) {
@@ -514,6 +523,13 @@ function Step3() {
       const top = $parent.css("top");
       const left = $parent.css("left");
       const position = { top, left };
+
+      if (specs && specs.hasOwnProperty("is_required")) {
+        const key = $parent.find(".subData").data("key");
+        const { color } = fields.find((f) => f.unique_key == key);
+        const rgba = hexToRGB(color, specs.is_required ? 0.7 : 0.3);
+        $parent.get(0).style.setProperty("--color", rgba);
+      }
 
       const $button = $(this);
       const $loader = $button.find(".spinner-border");
@@ -575,6 +591,10 @@ function Step3() {
       }
 
       if ($target.closest(".esignBuilder__field").length) {
+        return;
+      }
+
+      if ($target.closest(".esignBuilder__optionsSidebar").length) {
         return;
       }
 

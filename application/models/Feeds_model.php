@@ -4,10 +4,20 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Feeds_model extends MY_Model {
 
 	public $table = 'feed';
+        private $bulletin = 'news';
 	
 	public function __construct()
 	{
 		parent::__construct();
+    }
+    
+    function saveNewsLetter($details)
+    {
+        if($this->db->insert($this->bulletin, $details)):
+            return true;
+        else:
+            return false;
+        endif;
     }
     
     function saveFeeds($details)

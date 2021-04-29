@@ -32,10 +32,9 @@ $('.datepicker').datepicker({
 $('select').select2();
 
 var attachmentId = [];
-var selected = [];
+var attachedFiles = [];
 var attachments = new Dropzone('#vendorAttachments', {
     url: '/accounting/vendors/attachments',
-    acceptedFiles: "image/*",
     maxFilesize: 20,
     uploadMultiple: true,
     // maxFiles: 1,
@@ -47,34 +46,24 @@ var attachments = new Dropzone('#vendorAttachments', {
                 if($('#new-vendor-modal').find(`input[name="attachments[]"][value="${ids[i]}"]`).length === 0) {
                     $('#new-vendor-modal #vendorAttachments').parent().append(`<input type="hidden" name="attachments[]" value="${ids[i]}">`);
                 }
+
+                attachmentId.push(ids[i]);
             }
-            // attachmentId.push(file_name.replace(/\"/g, ""));
-            // selected.push(file);
+            attachedFiles.push(file);
         });
     },
-    // removedfile: function(file) {
-    //     var name = fname;
-    //     var index = selected.map(function(d, index) {
-    //         if (d == file) return index;
-    //     }).filter(isFinite)[0];
-    //     $.ajax({
-    //         type: "POST",
-    //         url: base_url + 'users/removeProfilePhoto',
-    //         dataType: 'json',
-    //         data: {
-    //             name: name,
-    //             index: index
-    //         },
-    //         success: function(data) {
-    //             if (data == 1) {
-    //                 $('#photoId').val(null);
-    //             }
-    //         }
-    //     });
-    //     //remove thumbnail
-    //     var previewElement;
-    //     return (previewElement = file.previewElement) != null ? (previewElement.parentNode.removeChild(file.previewElement)) : (void 0);
-    // }
+    removedfile: function(file) {
+        var ids = attachmentId;
+        var index = attachedFiles.map(function(d, index) {
+            if (d == file) return index;
+        }).filter(isFinite)[0];
+
+        $('#new-vendor-modal').find(`input[name="attachments[]"][value="${ids[index]}"]`).remove();
+
+        //remove thumbnail
+        var previewElement;
+        return (previewElement = file.previewElement) !== null ? (previewElement.parentNode.removeChild(file.previewElement)) : (void 0);
+    }
 });
 
 var table = $('#vendors-table').DataTable({

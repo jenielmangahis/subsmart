@@ -32,7 +32,7 @@ class Cron_Jobs_Controller extends MY_Controller
         $from = MAIL_FROM;
         $subject = 'nSmarTrac: Time logs for Week ' . date("M d",strtotime($date_from));
 
-        $mail = new PHPMailer;
+        $mail = new PHPMailer(true);
         $mail->isSMTP();
         $mail->getSMTPInstance()->Timelimit = 5;
         $mail->Host = $server;
@@ -70,11 +70,60 @@ class Cron_Jobs_Controller extends MY_Controller
         $content = $this->load->view('users/timesheet/emails/weekly_timelogs_report', $this->page_data, TRUE);
         $mail->MsgHTML($content);
         $mail->addAddress($receiver);
-        $mail->Send();
+        if(!$mail->Send()) {
+            echo 'Message could not be sent.';
+            echo 'Mailer Error: ' . $mail->ErrorInfo;
+            exit;
+        }
+    }
+    public function tester()
+    {
+        $server = MAIL_SERVER;
+        $port = MAIL_PORT;
+        $username = MAIL_USERNAME;
+        $password = MAIL_PASSWORD;
+        $from = MAIL_FROM;
+        $subject = 'nSmarTrac: Time logs for Week ' . date("M d");
+
+        $mail = new PHPMailer(true);
+        $mail->isSMTP();
+        $mail->getSMTPInstance()->Timelimit = 5;
+        $mail->Host = $server;
+        $mail->SMTPAuth = true;
+        $mail->Username = $username;
+        $mail->Password = $password;
+        $mail->SMTPSecure = 'ssl';
+        $mail->Timeout = 10; // seconds
+        $mail->Port = $port;
+        $mail->From = $from;
+        $mail->FromName = 'nSmarTrac';
+        $mail->Subject = "Sample";
+
+        //get job data
+
+        $mail->IsHTML(true);
+        $mail->AddEmbeddedImage(dirname(__DIR__, 2) . '/assets/dashboard/images/logo.png', 'logo_2u', 'logo.png');
+        $filePath = base_url() . '/uploads/users/business_profile/'.$company_id.'/'.$company_logo;
+        if (@getimagesize($filePath)) {
+            $mail->AddEmbeddedImage(dirname(__DIR__, 2) . '/uploads/users/business_profile/'.$company_id.'/'.$company_logo, 'company_logo', $company_logo);
+            $this->page_data['has_logo'] = true;
+            
+        }
+
+        $mail->Body =  'Timesheet Report.';
+        $mail->MsgHTML("Sample ni");
+        $mail->addAddress("pintonnelfa@gmail.com");    
+        try {
+            $mail->Send();
+        } catch (Exception $e) {
+            echo 'Caught exception: ',  $e->getMessage(), "\n";
+        }
     }
 
     public function timesheet_report_sender()
     {
+        $this->timesheet_model->save_timesheet_report_file_names(100, "Conjob works");
+        $this->delete_old_timesheet_reports_and_notifications();
         $admins_for_reports = $this->get_admin_for_reports();
         for($i = 0; $i < count($admins_for_reports); $i++){
             $admin = $this->timesheet_model->get_user_and_company_details($admins_for_reports[$i][0]);
@@ -95,22 +144,25 @@ class Cron_Jobs_Controller extends MY_Controller
                     
                     $this->timesheet_model->save_timesheet_report_file_names($admin->user_id, $file_info[0]);
                     $this->timesheet_model->save_timesheet_report_file_names($admin->user_id, $file_info[3]);
+                    var_dump($admin->email_report);
                 }
             }    
         }
-        if(date('d') ==  1){
-            //deleting all report from previous month
-            $first_date_lastMonth = date("Y-m-d", strtotime("first day of last month"));
-            $old_timesheet_reports = $this->timesheet_model->get_old_timesheet_reports($first_date_lastMonth);
-            foreach($old_timesheet_reports as $reports){
-                $file_pointer = dirname(__DIR__, 2) . '/timesheet/timelogs/' . $reports->file_name; 
-                if (file_exists($file_pointer)) {
-                    // Use unlink() function to delete a file 
-                    unlink($file_pointer);
-                }
+    }
+    public function delete_old_timesheet_reports_and_notifications(){
+
+        $date_lastweek = date("Y-m-d", strtotime("monday last week"));
+        //deleting all report from previous month
+        $old_timesheet_reports = $this->timesheet_model->get_old_timesheet_reports($date_lastweek);
+        foreach($old_timesheet_reports as $reports){
+            $file_pointer = dirname(__DIR__, 2) . '/timesheet/timelogs/' . $reports->file_name; 
+            if (file_exists($file_pointer)) {
+                // Use unlink() function to delete a file 
+                unlink($file_pointer);
             }
-            $this->timesheet_model->delete_old_timesheet_reports($first_date_lastMonth);
         }
+        $this->timesheet_model->delete_old_timesheet_reports($date_lastweek);
+        $this->timesheet_model->delete_old_notifications($date_lastweek);
     }
     public function get_admin_for_reports(){
         $hour_now = date("H").":00:00";
@@ -134,7 +186,6 @@ class Cron_Jobs_Controller extends MY_Controller
             }
         }
         return $admins_for_reports;
-
     }
     public function generate_weekly_timesheet_pdf_report($file_info, $business_name, $est_wage_privacy)
     {
