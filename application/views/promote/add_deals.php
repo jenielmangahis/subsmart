@@ -71,7 +71,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     <!-- page wrapper start -->
     <div wrapper__section>
         <div class="container-fluid p-40">
-            <?php echo form_open_multipart('users/save', ['class' => 'form-validate', 'id' => 'create_sms_blast', 'autocomplete' => 'off']); ?>
+            <?php echo form_open_multipart(null, ['class' => 'form-validate', 'id' => 'create_deals_steals', 'autocomplete' => 'off']); ?>
             <div class="row">
                 <div class="col-xl-12">
                     <div class="card mt-0">
@@ -148,37 +148,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     </div>
                                 </div>
                             </div>
-                            <div class="row">
-                              <div class="card">
-                                <label>Photos</label> <span class="form-required">*</span>
-                                <p>
-                                    Add photos to spotlight features of this deal. You can upload up to <b>5 images</b>.
-                                </p>
-                                <p class="help margin-bottom-ter">
-                                    Tips - Click and drag the images to reorder them.  First image from left will be set as default image and appear in listings.
-                                </p>
-                                <div id="form-image-upload">
-
-                                    
-
-                                    <span class="btn btn-default fileinput-button vertical-top"><span class="fa fa-camera"></span> Upload Image <input data-fileupload="file" name="fileimage" type="file"></span>
-
-                                    <div class="" data-fileupload="progressbar" style="display: none;">
-                                        <div class="text">Uploading</div>
-                                        <div class="progress">
-                                            <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            </div>
-                            
                             <hr />
                             <div>
                                 <div class="col-md-4 form-group md-right">
-                                    <a class="btn btn-default" href="<?php echo url('sms_campaigns') ?>" style="float: left;margin-right: 10px;">Cancel</a>
-                                    <button type="submit" class="btn btn-flat btn-primary margin-right btn-campaign-save-draft" style="float: left;margin-right: 0px;">Continue »</button>
+                                    <a class="btn btn-default" href="<?php echo url('promote/deals') ?>" style="float: left;margin-right: 10px;">Cancel</a>
+                                    <button type="submit" class="btn btn-flat btn-primary margin-right btn-deals-save-draft" style="float: left;margin-right: 0px;">Continue »</button>
                                 </div>
                             </div>
                         </div>
@@ -211,27 +185,30 @@ $(function(){
       $("#discount-fixed").html(discount_fix.toFixed(2));
     }
 
-    $("#create_sms_blast").submit(function(e){
+    $("#create_deals_steals").submit(function(e){
         e.preventDefault();
-        var url = base_url + 'sms_campaigns/save_draft_campaign';
-        $(".btn-campaign-save-draft").html('<span class="spinner-border spinner-border-sm m-0"></span>  Saving');
+        var url = base_url + 'promote/_save_deals_steals';
+        $(".btn-deals-save-draft").html('<span class="spinner-border spinner-border-sm m-0"></span>  Saving');
         setTimeout(function () {
           $.ajax({
              type: "POST",
              url: url,
              dataType: "json",
-             data: $("#create_sms_blast").serialize(),
+             data: $("#create_deals_steals").serialize(),
              success: function(o)
              {
                 if( o.is_success ){
                     $(".validation-error").hide();
                     $(".validation-error").html('');
                     //redirect to step2
-                    location.href = base_url + "sms_campaigns/add_campaign_send_to";
+                    location.href = base_url + "promote/add_send_to";
                 }else{
                     $(".validation-error").show();
                     $(".validation-error").html(o.err_msg);
-                    $(".btn-campaign-save-draft").html('Continue »');
+                    $([document.documentElement, document.body]).animate({
+                        scrollTop: $("#create_deals_steals").offset().top
+                    }, 500);                    
+                    $(".btn-deals-save-draft").html('Continue »');
                 }
              }
           });

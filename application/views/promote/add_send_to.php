@@ -72,19 +72,19 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     <!-- page wrapper start -->
     <div wrapper__section>
         <div class="container-fluid p-40">
-            <?php echo form_open_multipart('sms_campaigns/save_send_to', ['class' => 'form-validate', 'id' => 'create_campaign_send_to', 'autocomplete' => 'off']); ?>
+            <?php echo form_open_multipart('sms_campaigns/save_send_to', ['class' => 'form-validate', 'id' => 'create_send_to', 'autocomplete' => 'off']); ?>
             <div class="row">
                 <div class="col-xl-12">
                       <div class="card mt-0">
                         <div class="row">
                           <div class="col-sm-6 left">
-                            <h3 class="page-title">Email Blast</h3>
+                            <h3 class="page-title">Deals</h3>
                           </div>
                           <div class="col-sm-6 right dashboard-container-1">
                             <div class="float-right d-none d-md-block">
                                 <div class="dropdown">
-                                        <a href="<?php echo url('email_campaigns') ?>" class="btn btn-primary" aria-expanded="false">
-                                            <i class="mdi mdi-settings mr-2"></i> Go Back to Email Blast list
+                                        <a href="<?php echo url('promote/deals') ?>" class="btn btn-primary" aria-expanded="false">
+                                            <i class="mdi mdi-settings mr-2"></i> Go Back to Deals Steals list
                                         </a>
                                 </div>
                             </div>
@@ -98,11 +98,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <div class="validation-error" style="display: none;"></div>
                             <div class="tabs-menu">
                                 <ul class="clearfix">
-                                  <li><a href="<?= base_url('email_campaigns/edit_campaign/' . $emailCampaign->id); ?>">1. Edit Campaign</a></li>
-                                  <li class="active"><a href="<?= base_url('email_campaigns/add_campaign_send_to'); ?>">2. Select Customers</a></li>
-                                  <li><a href="<?= base_url('email_campaigns/build_email'); ?>">3. Build Email</a></li>
-                                  <li><a href="<?= base_url('email_campaigns/preview_email_message'); ?>">4. Preview</a></li>
-                                  <li><a href="<?= base_url('email_campaigns/payment'); ?>">5. Purchase</a></li>
+                                  <li>1. Create Deal</li>
+                                  <li class="active">2. Select Customers</li>
+                                  <li>3. Build Email</li>
+                                  <li>4. Preview</li>
+                                  <li>5. Purchase</li>
                                 </ul>
                             </div>
                             <hr />
@@ -110,18 +110,18 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <div class="margin-bottom">
                                 <div class="form-group">
                                     <label><b>Who are you sending to?</b></label>
-                                    <?php if($emailCampaign){ ?>
+                                    <?php if($dealsSteals){ ?>
                                     <div>
                                         <div class="radio radio-sec margin-right">
-                                            <input type="radio" name="to_type" value="1" id="to_type_1" <?= $emailCampaign->sending_type == 1 ? 'checked="checked"' : ''; ?> checked="checked">
+                                            <input type="radio" name="to_type" value="1" id="to_type_1" <?= $dealsSteals->sending_type == 1 ? 'checked="checked"' : ''; ?> checked="checked">
                                             <label for="to_type_1">All my customers with email</label>
                                         </div>
                                         <div class="radio radio-sec margin-right">
-                                            <input type="radio" name="to_type" value="2" id="to_type_3" <?= $emailCampaign->sending_type == 2 ? 'checked="checked"' : ''; ?>>
+                                            <input type="radio" name="to_type" value="2" id="to_type_3" <?= $dealsSteals->sending_type == 2 ? 'checked="checked"' : ''; ?>>
                                             <label for="to_type_3">To a customer group</label>
                                         </div>
                                         <div class="radio radio-sec margin-right">
-                                            <input type="radio" name="to_type" value="3" id="to_type_2" <?= $emailCampaign->sending_type == 3 ? 'checked="checked"' : ''; ?>>
+                                            <input type="radio" name="to_type" value="3" id="to_type_2" <?= $dealsSteals->sending_type == 3 ? 'checked="checked"' : ''; ?>>
                                             <label for="to_type_2">Only to certain customers</label>
                                         </div>
                                     </div>
@@ -234,18 +234,18 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 </div>
                                 <div class="margin-bottom-sec">
                                     <label><b>Customer Type</b></label>
-                                    <?php if($emailCampaign){ ?>
+                                    <?php if($dealsSteals){ ?>
                                         <div>
                                             <div class="radio radio-sec margin-right">
-                                                <input type="radio" name="optionC[customer_type_service]" value="0" <?= $emailCampaign->customer_type == 0 ? 'checked="checked"' : ''; ?> id="customer-group-type-both" checked="checked">
+                                                <input type="radio" name="optionC[customer_type_service]" value="0" <?= $dealsSteals->customer_type == 0 ? 'checked="checked"' : ''; ?> id="customer-group-type-both" checked="checked">
                                                 <label for="customer-group-type-both">Both Residential and Commercial</label>
                                             </div>
                                             <div class="radio radio-sec margin-right">
-                                                <input type="radio" name="optionC[customer_type_service]" value="1" <?= $emailCampaign->customer_type == 1 ? 'checked="checked"' : ''; ?> id="customer-group-type-residential">
+                                                <input type="radio" name="optionC[customer_type_service]" value="1" <?= $dealsSteals->customer_type == 1 ? 'checked="checked"' : ''; ?> id="customer-group-type-residential">
                                                 <label for="customer-group-type-residential">Residential customers</label>
                                             </div>
                                             <div class="radio radio-sec margin-right">
-                                                <input type="radio" name="optionC[customer_type_service]" value="2" <?= $emailCampaign->customer_type == 2 ? 'checked="checked"' : ''; ?> id="customer-group-type-commercial">
+                                                <input type="radio" name="optionC[customer_type_service]" value="2" <?= $dealsSteals->customer_type == 2 ? 'checked="checked"' : ''; ?> id="customer-group-type-commercial">
                                                 <label for="customer-group-type-commercial">Commercial customers</label>
                                             </div>
                                         </div>
@@ -271,8 +271,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <hr />
                             <div>
                                 <div class="col-md-4 form-group md-right">
-                                    <a class="btn btn-default margin-right" href="<?php echo url('email_campaigns/edit_campaign/' . $emailCampaign->id); ?>" style="float: left;margin-right: 10px;">« Back</a>
-                                    <button type="submit" class="btn btn-flat btn-primary margin-right btn-campaign-save-send-settings" style="float: left;margin-right: 0px;">Continue »</button>
+                                    <a class="btn btn-default margin-right" href="<?php echo url('promote/edit_deals_steals/' . $dealsSteals->id); ?>" style="float: left;margin-right: 10px;">« Back</a>
+                                    <button type="submit" class="btn btn-flat btn-primary margin-right btn-save-send-settings" style="float: left;margin-right: 0px;">Continue »</button>
                                 </div>
                             </div>
                         </div>
@@ -291,16 +291,16 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <script>
 $(function(){
     <?php 
-        if( $emailCampaign ){
-            if($emailCampaign->sending_type == 1){
+        if( $dealsSteals ){
+            if($dealsSteals->sending_type == 1){
                 echo "to_type_1.click();";
-            }elseif( $emailCampaign->sending_type == 2 ){
+            }elseif( $dealsSteals->sending_type == 2 ){
                 echo '$(".sending-option-1").hide();';
                 echo '$(".sending-option-2").hide();';
                 echo '$(".sending-option-3").show();';
             }else{
-                echo '$(".sending-option-1").hide();';
-                echo '$(".sending-option-2").show();';
+                echo '$(".sending-option-1").show();';
+                echo '$(".sending-option-2").hide();';
                 echo '$(".sending-option-3").hide();';
             } 
         }
@@ -339,28 +339,31 @@ $(function(){
         $(".contact-group-selected-count").html(contact_group_selected);
     });
 
-    $("#create_campaign_send_to").submit(function(e){
+    $("#create_send_to").submit(function(e){
         e.preventDefault();
-        var url = base_url + 'email_campaigns/create_campaign_send_to';
-        $(".btn-campaign-save-send-settings").html('<span class="spinner-border spinner-border-sm m-0"></span>  Saving');
+        var url = base_url + 'promote/create_send_to';
+        $(".btn-save-send-settings").html('<span class="spinner-border spinner-border-sm m-0"></span>  Saving');
         setTimeout(function () {
           $.ajax({
              type: "POST",
              url: url,
              dataType: "json",
-             data: $("#create_campaign_send_to").serialize(),
+             data: $("#create_send_to").serialize(),
              success: function(o)
              {
                 if( o.is_success ){
                     $(".validation-error").hide();
                     $(".validation-error").html('');
                     //redirect to step2
-                    location.href = base_url + "email_campaigns/build_email";
+                    location.href = base_url + "promote/build_email";
                 }else{
                     $(".validation-error").show();
                     $(".validation-error").html(o.err_msg);
+                    $([document.documentElement, document.body]).animate({
+                        scrollTop: $("#create_send_to").offset().top
+                    }, 500); 
                 }
-                $(".btn-campaign-save-send-settings").html('Continue »');
+                $(".btn-save-send-settings").html('Continue »');
              }
           });
         }, 1000);
