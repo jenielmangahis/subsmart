@@ -91,30 +91,30 @@ add_css(array(
                                     <td align="center" class="table_body_customer">
                                         <div class="row">
                                             <div class="col-md-2 header_checkbox" >
-                                                <input type="checkbox" name="rep_paper" class="form-controls" value="1"  id="rep_paper" <?php if(isset($office_info)){ echo $office_info->rebate_offer == 1 ? 'checked': ''; } ?>>
+                                                <input type="checkbox" name="rep_paper" class="form-controls" value="1"  id="rep_paper" <?= !isset($profile_info) ? 'checked': '';  ?>>
                                             </div>
                                             <div class="col-md-8">
-                                                <input type="text" class="form-control date_picker" name="sales_date" id="" value="<?php if(isset($office_info)){ echo  $office_info->sales_date; } ?>"/>
+                                                <input type="text" class="form-control date_picker" name="sales_date" id="" />
                                             </div>
                                         </div>
                                     </td>
                                     <td align="center" class="table_body_customer">
                                         <div class="row">
                                             <div class="col-md-2 header_checkbox" >
-                                                <input type="checkbox" name="rep_paper" class="form-controls" value="1"  id="rep_paper" <?php if(isset($office_info)){ echo $office_info->rebate_offer == 1 ? 'checked': ''; } ?>>
+                                                <input type="checkbox" name="rep_paper" class="form-controls" value="1"  id="rep_paper" <?= !isset($profile_info) ? 'checked': '';  ?>>
                                             </div>
                                             <div class="col-md-8">
-                                                <input type="text" class="form-control date_picker" name="sales_date" id="" value="<?php if(isset($office_info)){ echo  $office_info->sales_date; } ?>"/>
+                                                <input type="text" class="form-control date_picker" name="sales_date" id=""/>
                                             </div>
                                         </div>
                                     </td>
                                     <td align="center" class="table_body_customer">
                                         <div class="row">
                                             <div class="col-md-2 header_checkbox" >
-                                                <input type="checkbox" name="rep_paper" class="form-controls" value="1"  id="rep_paper" <?php if(isset($office_info)){ echo $office_info->rebate_offer == 1 ? 'checked': ''; } ?>>
+                                                <input type="checkbox" name="rep_paper" class="form-controls" value="1"  id="rep_paper" <?= !isset($profile_info) ? 'checked': '';  ?>>
                                             </div>
                                             <div class="col-md-8">
-                                                <input type="text" class="form-control date_picker" name="sales_date" id="" value="<?php if(isset($office_info)){ echo  $office_info->sales_date; } ?>"/>
+                                                <input type="text" class="form-control date_picker" name="sales_date" id="" />
                                             </div>
                                         </div>
                                     </td>
@@ -131,10 +131,10 @@ add_css(array(
                                     <td align="center" class="table_body_customer">
                                         <div class="row">
                                             <div class="col-md-2 header_checkbox">
-                                                <input type="checkbox" name="rep_paper" class="form-controls" value="1"  id="rep_paper" <?php if(isset($office_info)){ echo $office_info->rebate_offer == 1 ? 'checked': ''; } ?>>
+                                                <input type="checkbox" name="rep_paper" class="form-controls" value="1"  id="rep_paper" <?= !isset($profile_info) ? 'checked': '';  ?>>
                                             </div>
                                             <div class="col-md-8">
-                                                <input type="text" class="form-control date_picker" name="sales_date" id="" value="<?php if(isset($office_info)){ echo  $office_info->sales_date; } ?>"/>
+                                                <input type="text" class="form-control date_picker" name="sales_date" id="" />
                                             </div>
                                         </div>
                                     </td>
@@ -157,20 +157,20 @@ add_css(array(
                                     <td align="center" class="table_body_customer">
                                         <div class="row">
                                             <div class="col-md-2 header_checkbox">
-                                                <input type="checkbox" name="rep_paper" class="form-controls" value="1"  id="rep_paper" <?php if(isset($office_info)){ echo $office_info->rebate_offer == 1 ? 'checked': ''; } ?>>
+                                                <input type="checkbox" name="rep_paper" class="form-controls" value="1"  id="rep_paper" <?= !isset($profile_info) ? 'checked': '';  ?>>
                                             </div>
                                             <div class="col-md-8">
-                                                <input type="text" class="form-control date_picker" name="sales_date" id="" value="<?php if(isset($office_info)){ echo  $office_info->sales_date; } ?>"/>
+                                                <input type="text" class="form-control date_picker" name="sales_date" id="" />
                                             </div>
                                         </div>
                                     </td>
                                     <td align="center" class="table_body_customer">
                                         <div class="row">
                                             <div class="col-md-2 header_checkbox" >
-                                                <input type="checkbox" name="rep_paper" class="form-controls" value="1"  id="rep_paper" <?php if(isset($office_info)){ echo $office_info->rebate_offer == 1 ? 'checked': ''; } ?>>
+                                                <input type="checkbox" name="rep_paper" class="form-controls" value="1"  id="rep_paper" <?= !isset($profile_info) ? 'checked': '';  ?>>
                                             </div>
                                             <div class="col-md-8">
-                                                <input type="text" class="form-control date_picker" name="sales_date" id="" value="<?php if(isset($office_info)){ echo  $office_info->sales_date; } ?>"/>
+                                                <input type="text" class="form-control date_picker" name="sales_date" id="" />
                                             </div>
                                         </div>
                                     </td>

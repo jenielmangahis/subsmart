@@ -63,6 +63,10 @@
 
                             <?php
                         endforeach;
+                    }else{
+                        ?>
+                    <h3 class="text-center" style="margin-top: 110px !important;">No Upcoming Jobs</h3>
+                        <?php
                     }
                     ?>
                 </div>

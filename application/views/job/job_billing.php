@@ -180,7 +180,7 @@ add_css(array(
                                                 <h6 ><span class="fa fa-user"></span>&nbsp; &nbsp;Payment Information</h6>
                                             </div>
                                             <div class="card-body">
-                                                <input type="hidden" id="pay_method" name="pay_method"/>
+                                                <input type="hidden" id="pay_method" name="pay_method" value="CC" />
                                                 <input type="hidden" id="jobs_id" value="<?= $this->uri->segment(3); ?>" name="jobs_id"/>
                                                 <div class="row form_line">
                                                     <div class="col-md-4">
@@ -221,15 +221,15 @@ add_css(array(
                                                                 <div class="col-md-4">
                                                                     <select id="exp_month" name="card_mmyy" data-customer-source="dropdown" class="input_select" >
                                                                         <option  value=""></option>
-                                                                        <option  value="1">01</option>
-                                                                        <option  value="2">02</option>
-                                                                        <option  value="3">03</option>
-                                                                        <option  value="4">04</option>
-                                                                        <option  value="5">05</option>
-                                                                        <option  value="6">06</option>
-                                                                        <option  value="7">07</option>
-                                                                        <option  value="8">08</option>
-                                                                        <option  value="9">09</option>
+                                                                        <option  value="01">01</option>
+                                                                        <option  value="02">02</option>
+                                                                        <option  value="03">03</option>
+                                                                        <option  value="04">04</option>
+                                                                        <option  value="05">05</option>
+                                                                        <option  value="06">06</option>
+                                                                        <option  value="07">07</option>
+                                                                        <option  value="08">08</option>
+                                                                        <option  value="09">09</option>
                                                                         <option  value="10">10</option>
                                                                         <option  value="11">11</option>
                                                                         <option  value="12">12</option>
@@ -353,7 +353,7 @@ add_css(array(
                                                 <div style="text-align: right;right: 0;position: relative;">
                                                     <br><br>
                                                     <button type="button" class="btn btn-primary"> <span class="fa fa-remove"></span> Cancel</button>
-                                                    <button type="submit" class="btn btn-primary"> <span class="fa fa-money"></span> Save</button>
+                                                    <button type="submit" class="btn btn-primary btn-save-payment"> <span class="fa fa-money"></span> Save</button>
                                                 </div>
 
                                             </div>

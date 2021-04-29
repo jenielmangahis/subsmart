@@ -93,12 +93,12 @@
 
                                 </div>
                                 <div class="modal-body text-center">
-                                    <textarea style="height:130px;" class="form-control" placeholder="News Bulletin" ></textarea>
+                                    <textarea style="height:130px;" class="form-control" id="news" placeholder="News Bulletin" ></textarea>
                                     <br />
-                                    <input class="float-left" type="file" value="Upload File" />
+                                    <input class="float-left" id="file" type="file" value="Upload File" />
                                 </div>
                                 <div class="modal-footer">
-                                    <button class="float-right btn btn-success btn-small">Send Newsletter</button>
+                                    <button onclick="sendNewsLetter()" class="float-right btn btn-success btn-small">Send Newsletter</button>
                                 </div>
                             </div>
                         </div>
@@ -117,6 +117,39 @@
                                 {
                                     $('#newFeed').modal('hide')
                                     alert(data)
+                                }
+                            });
+                        }
+                        
+                        function _(el){
+                           return document.getElementById(el);
+                        }
+                        function sendNewsLetter()
+                        {
+                            var file = _("file").files[0];
+	
+                            var formdata = new FormData();
+                            formdata.append("file", file);
+                            formdata.append('news',$('#news').val());
+
+                            $.ajax({
+                                url: '<?php echo base_url(); ?>newsletter/saveNewsBulletin',
+                                method: 'POST',
+                                data: formdata,
+                                cache: false,
+                                contentType: false,
+                                processData: false,
+                                dataType: 'json',
+                                
+                                success: function (response) {
+                                    if(response.success)
+                                    {
+                                        alert(response.msg)
+                                    }else{
+                                        alert(response.msg)
+                                    }
+                                    
+                                    $('#addNewsLetter').modal('hide');
                                 }
                             });
                         }

@@ -1109,4 +1109,5 @@ function edit_attendance_log_form_changed() {
     }
 
     $("#form_minutes_late").html(Math.round(arrayofdurations[2] * 60));
+
 }

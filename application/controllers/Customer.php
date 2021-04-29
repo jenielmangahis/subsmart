@@ -74,7 +74,7 @@ class Customer extends MY_Controller
     }
 
     public function preview($id=null){
-
+        $this->load->model('jobs_model');
         $is_allowed = $this->isAllowedModuleAccess(9);
         if( !$is_allowed ){
             $this->page_data['module'] = 'customer';
@@ -106,6 +106,7 @@ class Customer extends MY_Controller
                 'select' => 'id,FName,LName',
             );
             $this->page_data['logged_in_user'] = $this->general->get_data_with_param($get_login_user,FALSE);
+            $this->page_data['jobs_data_items'] = $this->jobs_model->get_customer_job_items($id);
         }
         $this->page_data['sales_area'] = $this->customer_ad_model->get_all(FALSE,"","ASC","ac_salesarea","sa_id");
         $this->page_data['employees'] = $this->customer_ad_model->get_all(FALSE,"","ASC","users","id");

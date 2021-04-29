@@ -281,9 +281,21 @@ function Signing(hash) {
           return $element;
         }
 
+        if (field_name === "Formula") {
+          const html = `
+            <div class="docusignField" style="position: relative; display: flex; align-items: center;">
+              <input type="text" data-key="${field.unique_key}" placeholder="${field_name}" readonly />
+            </div>
+          `;
+
+          const $element = createElementFromHTML(html);
+          $element.css({ top, left, position: "absolute" });
+          return $element;
+        }
+
         if (field_name === "Text" || text === undefined) {
           const { value } = fieldValue || { value: "" };
-          const { specs: fieldSpecs } = field;
+          const { specs: fieldSpecs, unique_key } = field;
           const specs = fieldSpecs ? JSON.parse(fieldSpecs) : {};
           const { width, is_required = false, is_read_only = false } = specs;
           const isRequired = is_required.toLocaleString() === "true";
@@ -291,7 +303,7 @@ function Signing(hash) {
 
           const html = `
             <div class="docusignField" style="position: relative; display: flex; align-items: center;">
-              <input type="text" placeholder="${field_name}" value="${value}" />
+              <input type="text" placeholder="${field_name}" value="${value}" data-key="${unique_key}" />
               <div class="spinner-border spinner-border-sm d-none" role="status" style="position: absolute; right: 4px;">
                 <span class="sr-only">Loading...</span>
               </div>
@@ -352,6 +364,52 @@ function Signing(hash) {
       $page.append($fields);
       $documentContainer.append($container);
     }
+
+    const formulas = fields.filter((field) => {
+      const { specs: fieldSpecs } = field;
+      const specs = fieldSpecs ? JSON.parse(fieldSpecs) : {};
+      return field.field_name === "Formula" && specs.formula;
+    });
+
+    formulas.forEach((field) => {
+      const specs = JSON.parse(field.specs);
+      const regex = /\[(?<fieldname>\w+)]/g;
+
+      const $formula = $(`[data-key="${field.unique_key}"]`);
+      const setValue = (v) => {
+        let formula;
+        while ((match = regex.exec(specs.formula))) {
+          const { fieldname } = match.groups;
+
+          if (!formula) {
+            formula = specs.formula.replace(`[${fieldname}]`, v[fieldname]);
+          } else {
+            formula = formula.replace(`[${fieldname}]`, v[fieldname]);
+          }
+        }
+
+        try {
+          $formula.val(eval(formula));
+        } catch (error) {
+          $formula.val("Invalid");
+        }
+      };
+
+      let match, values = {}; // prettier-ignore
+      while ((match = regex.exec(specs.formula))) {
+        const { fieldname } = match.groups;
+        const $input = $(`[data-key="${fieldname}"]`);
+        values[fieldname] = $input.val();
+
+        $input.on("keyup", function (event) {
+          const { value } = event.target;
+          values[fieldname] = value || 0;
+          setValue(values);
+        });
+      }
+
+      setValue(values);
+    });
   }
 
   async function storeFieldValue({ id, value }) {

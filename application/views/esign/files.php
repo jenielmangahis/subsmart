@@ -400,12 +400,12 @@
                                     <div class="sidebar_item">
                                         <div class="menu-fields">
                                             <ul class="menu_list">
-                                                <!-- <li class="menu_listItem">
+                                                <li class="menu_listItem">
                                                     <div class="fields menu_item">
                                                         <span class="swatch swatch-recipient swatch-lg swatch-ext-0"><i class="icon icon-color-tagger icon-palette-field-formula"></i></span>
                                                         <span class="u-ellipsis ng-binding">Formula</span>
                                                     </div>
-                                                </li> -->
+                                                </li>
 
                                                 <li class="menu_listItem">
                                                     <div class="fields menu_item">
@@ -489,13 +489,20 @@
                         <input type="checkbox" name="readOnlyText" id="readOnlyText">
                         <label for="readOnlyText">Read Only</label>
                     </div>
+
+                    <hr/>
+
+                    <div>
+                        <label for="textFieldName">Field name</label>
+                        <input type="text" name="textFieldName" id="textFieldName" class="w-100">
+                    </div>
                 </div>
             </div>
 
             <div class="formula">
                 <p class="mt-2 mb-2">
                     Build a formula from number and date fields in your envelope.
-                    Field ids must be enclosed in square brackets ("[]").
+                    Field names must be enclosed in square brackets ("[]").
                 </p>
 
                 <textarea style="width: 100%;" id="formulaInput"></textarea>
@@ -551,8 +558,6 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        /* background-color: #ffd65b !important; */
-        min-width: 100px;
         border-radius: 3px !important;
     }
 

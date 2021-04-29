@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: ADMIN
- * Date: 1/11/2021
- * Time: 7:27 PM
- */
 
 class General_model extends MY_Model {
 

@@ -175,8 +175,19 @@ button.trac360_side_controls:active:hover {
     /* The tip is 8px high, and 12px wide. */
     border-left: 6px solid transparent;
     border-right: 6px solid transparent;
-    border-top: 10px solid #8ac63e;
     margin-top: -5px;
+}
+
+.popup-bubble-anchor.active::after {
+    border-top: 10px solid #8ac63e;
+}
+
+.popup-bubble-anchor.active-break::after {
+    border-top: 10px solid #FFFF00;
+}
+
+.popup-bubble-anchor.active-offline::after {
+    border-top: 10px solid #6C7584;
 }
 
 
@@ -191,10 +202,21 @@ button.trac360_side_controls:active:hover {
 }
 
 img.popup-map-marker {
-    border: solid #8ac63e 5px;
     height: 50px;
     width: 50px;
     border-radius: 50%;
+}
+
+.popup-map-marker.active img.popup-map-marker {
+    border: solid #8ac63e 5px;
+}
+
+.popup-map-marker.active-break img.popup-map-marker {
+    border: solid #FFFF00 5px;
+}
+
+.popup-map-marker.active-offline img.popup-map-marker {
+    border: solid #6C7584 5px;
 }
 
 div.popup-map-marker {

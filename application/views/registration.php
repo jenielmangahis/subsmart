@@ -963,7 +963,7 @@ $(function(){
 	          $("#converge-button").html('PAY VIA CONVERGE');
 	       }
 	    });
-	  }, 1000);
+	  }, 500);
 	}
 
 	function openLightbox (token) {

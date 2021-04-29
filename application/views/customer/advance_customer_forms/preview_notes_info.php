@@ -36,22 +36,31 @@
         <div class="row">
             <table class="table">
                 <thead>
-                <tr>
-                    <td>Name</td>
-                    <td>Sold by</td>
-                    <td>Points</td>
-                    <td>Retail Cost</td>
-                    <td>Purchase Price</td>
-                    <td>Qty</td>
-                    <td>Total Points</td>
-                    <td>Total Cost</td>
-                    <td>Total Purcahse Price</td>
-                    <td>Net</td>
-                </tr>
-
+                    <tr>
+                        <td>Name</td>
+                        <td>Points</td>
+                        <td>Purchase Price</td>
+                        <td>Qty</td>
+                        <td>Total</td>
+                    </tr>
                 </thead>
                 <tbody>
-
+                <?php
+                $subtotal = 0.00;
+                foreach ($jobs_data_items as $item):
+                    $total = $item->price * $item->qty;
+                    ?>
+                    <tr>
+                        <td><?= $item->title; ?></td>
+                        <td>0</td>
+                        <td>$<?= $item->price; ?></td>
+                        <td><?= $item->qty; ?></td>
+                        <td>$<?= number_format((float)$total,2,'.',','); ?></td>
+                    </tr>
+                    <?php
+                    $subtotal = $subtotal + $total;
+                endforeach;
+                ?>
                 </tbody>
             </table>
         </div>

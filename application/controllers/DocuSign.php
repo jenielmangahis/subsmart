@@ -699,10 +699,14 @@ SQL;
             ]);
         }
 
-        $recordId = $isCreated ? $this->db->insert_id() : $record->id;
-        $this->db->where('id', $recordId);
-        $record = $this->db->get('user_docfile_templates_fields')->row();
+        $query = <<<SQL
+        SELECT `user_docfile_templates_fields`.*, `user_docfile_templates_recipients`.`color` FROM `user_docfile_templates_fields`
+        LEFT JOIN `user_docfile_templates_recipients` ON `user_docfile_templates_recipients`.`id` = `user_docfile_templates_fields`.`recipients_id`
+        WHERE `user_docfile_templates_fields`.`id` = ?
+SQL;
 
+        $recordId = $isCreated ? $this->db->insert_id() : $record->id;
+        $record = $this->db->query($query, [$recordId])->row();
         echo json_encode(['record' => $record, 'is_created' => $isCreated]);
     }
 

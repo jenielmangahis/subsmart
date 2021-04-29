@@ -21,7 +21,7 @@ function get_differenct_of_dates($date_start, $date_end)
 <!--<div wrapper__section>-->
 <div id="main_body" class="container-fluid" style="background-color: #6241A4; margin-bottom:-20px;">
   <div class="row">
-    <div class="col-md-3">
+    <div class="col-md-4">
       <div class="row">
         <div class="col-md-4"></div>
         <div class="col-md-8 page-title-box align-items-center">
@@ -123,7 +123,7 @@ function get_differenct_of_dates($date_start, $date_end)
 
       </div>
     </div>
-    <div class="col-md-9 map-section">
+    <div class="col-md-8 map-section">
       <div id="map"></div>
     </div>
   </div>

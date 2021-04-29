@@ -32,6 +32,66 @@
 
 #signature-pad3 {min-height:200px;}
 #signature-pad3 canvas {background-color:white;left: 0;top: 0;width: 100%;min-height:250px;height: 100%}
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+}
+
+.switch input { 
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #10ab06;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #10ab06;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
 </style>
 <div class="wrapper" role="wrapper">
     <?php include viewPath('includes/sidebars/workorder'); ?>
@@ -1073,8 +1133,8 @@
                                                     <thead>
                                                     <tr>
                                                         <th>DESCRIPTION</th>
-                                                        <th>Type</th>
-                                                        <th width="100px">Quantity</th>
+                                                        <th>GROUP</th>
+                                                        <th width="100px">QUANTITY</th>
                                                         <th>LOCATION</th>
                                                         <th width="140px">COST</th>
                                                         <th width="100px">Discount</th>
@@ -1202,7 +1262,7 @@
                                                     <thead>
                                                     <tr>
                                                         <th>DESCRIPTION</th>
-                                                        <th>Type</th>
+                                                        <th>GROUP</th>
                                                         <th width="100px">Quantity</th>
                                                         <!-- <th>LOCATION</th> -->
                                                         <th width="140px">COST</th>
@@ -2077,7 +2137,19 @@
                                         <?php foreach($items as $item){ // print_r($item); ?>
                                             <tr>
                                                 <td><?php echo $item->title; ?></td>
-                                                <td><?php echo $item->rebate; ?></td>
+                                                <td>
+                                                <?php if($item->rebate == 1){ ?>
+                                                    <label class="switch">
+                                                    <input type="checkbox" checked>
+                                                    <span class="slider round"></span>
+                                                    </label>
+                                                <?php }else{ ?>
+                                                    <label class="switch">
+                                                    <input type="checkbox">
+                                                    <span class="slider round"></span>
+                                                    </label>
+                                                <?php  } ?>
+                                                    </td>
                                                 <td></td>
                                                 <td><?php echo $item->price; ?></td>
                                                 <td><button id="<?= $item->id; ?>" data-quantity="<?= $item->units; ?>" data-itemname="<?= $item->title; ?>" data-price="<?= $item->price; ?>" type="button" data-dismiss="modal" class="btn btn-sm btn-default select_item">

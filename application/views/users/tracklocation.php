@@ -69,7 +69,7 @@ function get_differenct_of_dates($date_start, $date_end)
                         </p></div>
                         </div>
                     </div>
-                    <div style="display:none;"><div id="map_marker_<?=$lasttracklocation_employee[$i]->user_id ?>" class="popup-map-marker"><img src="<?=$image ?>" class="popup-map-marker" title="<?=$lasttracklocation_employee[$i]->FName . ' ' . $lasttracklocation_employee[$i]->LName ?>" /></div></div>
+                    <div style="display:none;"><div id="map_marker_<?=$lasttracklocation_employee[$i]->user_id ?>" class="popup-map-marker <?=$online_sttaus?>" data-online-status="<?=$online_sttaus?>"><img src="<?=$image ?>" class="popup-map-marker" title="<?=$lasttracklocation_employee[$i]->FName . ' ' . $lasttracklocation_employee[$i]->LName ?>" /></div></div>
                     <?php
                     }
                     ?>
@@ -120,13 +120,15 @@ var popup, Popup;
      * A customized popup on the map.
      */
     class Popup extends google.maps.OverlayView {
-      constructor(position, content) {
+      constructor(position, content,online_status) {
         super();
         this.position = position;
         content.classList.add("popup-bubble");
+        
         // This zero-height div is positioned at the bottom of the bubble.
         const bubbleAnchor = document.createElement("div");
         bubbleAnchor.classList.add("popup-bubble-anchor");
+        bubbleAnchor.classList.add(online_status);
         bubbleAnchor.appendChild(content);
         // This zero-height div is positioned at the bottom of the tip.
         this.containerDiv = document.createElement("div");
@@ -174,7 +176,8 @@ var popup, Popup;
     ?>
         popup = new Popup(
           new google.maps.LatLng(<?= $exploded[0] ?>, <?= $exploded[1] ?>),
-          document.getElementById("map_marker_<?= $lasttracklocation_employee[$i]->user_id ?>")
+          document.getElementById("map_marker_<?= $lasttracklocation_employee[$i]->user_id ?>"),
+          $("#map_marker_<?= $lasttracklocation_employee[$i]->user_id ?>").attr("data-online-status")
         );
         popup.setMap(map);
       
