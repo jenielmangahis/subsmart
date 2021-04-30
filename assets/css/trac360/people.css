@@ -29,11 +29,25 @@ button.trac360_side_controls:active:hover {
     box-shadow: none !important;
 }
 
-#map {
+#map,
+#map-holder {
     height: 100%;
     /* The height is 400 pixels */
     width: 100%;
     /* The width is the width of the web page */
+}
+
+#map-loader {
+    height: 100%;
+    width: 100%;
+    background-color: #E1E1E1;
+    text-align: center;
+    padding-top: 200px;
+    color: #737171;
+}
+
+#map-loader img {
+    width: 200px;
 }
 
 #topnav {
@@ -222,4 +236,10 @@ div.popup-map-marker:hover h3 {
 
 .page-title-box {
     padding: 10px 0;
+}
+
+.last_tract_location {
+    height: 75px;
+    margin: 0;
+    overflow: hidden;
 }

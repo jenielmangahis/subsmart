@@ -256,7 +256,7 @@ class Email_Campaigns extends MY_Controller {
     {
         $json_data = [
                 'is_success' => false,
-                'err_msg' => 'Please enter Campaign Name'
+                'err_msg' => 'Cannot save data'
         ];
 
 

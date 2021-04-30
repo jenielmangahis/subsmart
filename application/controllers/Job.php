@@ -1930,13 +1930,14 @@ class Job extends MY_Controller
         $this->page_data['company_info'] = $this->general_model->get_data_with_param($get_company_info,FALSE);
         $this->page_data['jobs_data_items'] = $this->jobs_model->get_specific_job_items($job_id);
         $this->page_data['jobs_data'] = $job;
-        $content = $this->load->view('job/job_customer_invoice_pdf', $this->page_data, TRUE);
+        //$content = $this->load->view('job/job_customer_invoice_pdf', $this->page_data, TRUE);
+        $content = $this->load->view('job/job_customer_invoice_pdf_test', $this->page_data, TRUE);
         //echo $content;exit;
 
         $this->load->library('Reportpdf');
         $title = 'jobinvoice';
 
-        $obj_pdf = new Reportpdf('L', 'mm', 'A4', true, 'UTF-8', false);
+        $obj_pdf = new Reportpdf('P', 'mm', 'A4', true, 'UTF-8', false);
         $obj_pdf->SetTitle($title);
         $obj_pdf->setPrintHeader(false);
         $obj_pdf->setPrintFooter(false);
@@ -1950,7 +1951,7 @@ class Job extends MY_Controller
             require_once(dirname(__FILE__) . '/lang/eng.php');
             $pdf->setLanguageArray($l);
         }
-        $obj_pdf->AddPage('L');
+        $obj_pdf->AddPage('P');
         $html = '';
         $obj_pdf->writeHTML($html . $content, true, false, true, false, '');
         ob_clean();

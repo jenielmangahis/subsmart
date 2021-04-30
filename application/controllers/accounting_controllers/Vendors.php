@@ -9,6 +9,7 @@ class Vendors extends MY_Controller {
         $this->checkLogin();
         $this->load->model('vendors_model');
         $this->load->model('accounting_attachments_model');
+        $this->load->model('chart_of_accounts_model');
 
         add_css(array(
             "assets/css/accounting/banking.css?v='rand()'",
@@ -61,6 +62,10 @@ class Vendors extends MY_Controller {
         add_footer_js(array(
             "assets/js/accounting/expenses/vendors.js"
         ));
+
+        $this->page_data['expenseAccs'] = $this->chart_of_accounts_model->get_expense_accounts();
+        $this->page_data['otherExpenseAccs'] = $this->chart_of_accounts_model->get_other_expense_accounts();
+        $this->page_data['cogsAccs'] = $this->chart_of_accounts_model->get_cogs_accounts();
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->page_data['page_title'] = "Vendors";
         $this->load->view('accounting/vendors/index', $this->page_data);
@@ -191,6 +196,9 @@ class Vendors extends MY_Controller {
 
         $vendor = $this->vendors_model->get_vendor_by_id($vendorId);
 
+        $this->page_data['expenseAccs'] = $this->chart_of_accounts_model->get_expense_accounts();
+        $this->page_data['otherExpenseAccs'] = $this->chart_of_accounts_model->get_other_expense_accounts();
+        $this->page_data['cogsAccs'] = $this->chart_of_accounts_model->get_cogs_accounts();
         $this->page_data['vendor'] = $vendor;
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->page_data['page_title'] = "Vendors";
@@ -227,7 +235,7 @@ class Vendors extends MY_Controller {
             'tax_id' => $this->input->post('business_number'),
             'default_expense_account' => $this->input->post('default_expense_amount'),
             'notes' => $this->input->post('notes'),
-            'attachments' => json_encode($this->input->post('attachments')),
+            'attachments' => $this->input->post('attachments') !== null ? json_encode($this->input->post('attachments')) : null,
             'updated_at' => date("Y-m-d H:i:s")
         );
 
@@ -346,10 +354,185 @@ class Vendors extends MY_Controller {
         $attachments = json_decode($vendor->attachments, true);
         
         $attached = [];
-        foreach($attachments as $attachment) {
-            $attached[] = $this->accounting_attachments_model->getById($attachment);
+        if($attachments !== null && count($attachments) > 0) {
+            foreach($attachments as $attachment) {
+                $attached[] = $this->accounting_attachments_model->getById($attachment);
+            }
         }
 
         echo json_encode($attached);
+    }
+
+    public function load_transactions($vendorId)
+    {
+        $post = json_decode(file_get_contents('php://input'), true);
+        $order = $post['order'][0]['dir'];
+        $orderColumn = $post['order'][0]['column'];
+        $columnName = $post['columns'][$orderColumn]['name'];
+        $start = $post['start'];
+        $limit = $post['length'];
+        $type = $post['type'];
+        $date = $post['date'];
+        $inactive = $post['inactive'];
+
+        $filters = [
+            'type' => $type,
+            'status' => [
+                1
+            ]
+        ];
+
+        if($inactive) {
+            array_push($filters['status'], 0);
+        }
+
+        switch($date) {
+            case 'today' :
+                $filters['start-date'] = date("Y-m-d");
+                $filters['end-date'] = date("Y-m-d");
+            break;
+            case 'yesterday' :
+                $filters['start-date'] = date("Y-m-d", strtotime(date("m/d/Y").' -1 day'));
+                $filters['end-date'] = date("Y-m-d", strtotime(date("m/d/Y").' -1 day'));
+            break;
+            case 'this-week' :
+                $filters['start-date'] = date("Y-m-d", strtotime("this week -1 day"));
+                $filters['end-date'] = date("Y-m-d", strtotime("sunday -1 day"));
+            break;
+            case 'this-month' :
+                $filters['start-date'] = date("Y-m-01");
+                $filters['end-date'] = date("Y-m-t");
+            case 'this-quarter' :
+                $quarters = [
+                    1 => [
+                        'start' => date("01/01/Y"),
+                        'end' => date("03/t/Y")
+                    ],
+                    2 => [
+                        'start' => date("04/01/Y"),
+                        'end' => date("06/t/Y")
+                    ],
+                    3 => [
+                        'start' => date("07/01/Y"),
+                        'end' => date("09/t/Y")
+                    ],
+                    4 => [
+                        'start' => date("10/01/Y"),
+                        'end' => date("12/t/Y")
+                    ]
+                ];
+                $month = date('n');
+                $quarter = ceil($month / 3);
+                
+                $filters['start-date'] = $quarters[$quarter]['start'];
+                $filters['end-date'] = $quarters[$quarter]['end'];
+            break;
+            case 'this-year' :
+                $filters['start-date'] = date("Y-01-01");
+                $filters['end-date'] = date("Y-12-t");
+            break;
+            case 'last-week' :
+                $filters['start-date'] = date("Y-m-d", strtotime("this week -1 week -1 day"));
+                $filters['end-date'] = date("Y-m-d", strtotime("sunday -1 week -1 day"));
+            break;
+            case 'last-month' :
+                $filters['start-date'] = date("Y-m-01", strtotime(date("m/01/Y")." -1 month"));
+                $filters['end-date'] = date("Y-m-t", strtotime(date("m/01/Y")." -1 month"));
+            break;
+            case 'last-quarter' :
+                $quarters = [
+                    1 => [
+                        'start' => date("01/01/Y"),
+                        'end' => date("03/t/Y")
+                    ],
+                    2 => [
+                        'start' => date("04/01/Y"),
+                        'end' => date("06/t/Y")
+                    ],
+                    3 => [
+                        'start' => date("07/01/Y"),
+                        'end' => date("09/t/Y")
+                    ],
+                    4 => [
+                        'start' => date("10/01/Y"),
+                        'end' => date("12/t/Y")
+                    ]
+                ];
+                $month = date('n');
+                $quarter = ceil($month / 3);
+
+                $filters['start-date'] = date("Y-m-d", strtotime($quarters[$quarter]['start']." -3 months"));
+                $filters['end-date'] = date("Y-m-t", strtotime($filters['start-date']." +2 months"));
+            break;
+            case 'last-year' :
+                $filters['start-date'] = date("Y-01-01", strtotime(date("01/01/Y")." -1 year"));
+                $filters['end-date'] = date("Y-12-t", strtotime(date("12/t/Y")." -1 year"));
+            break;
+            case 'last-365-days' :
+                $filters['start-date'] = date("Y-m-d", strtotime(date("m/d/Y")." -365 days"));
+                $filters['end-date'] = date("Y-m-d");
+            break;
+        }
+
+        $data = $this->get_transactions($vendorId, $filters);
+
+        usort($data, function($a, $b) use ($order, $columnName) {
+            if($columnName !== 'date') {
+                if($order === 'asc') {
+                    return strcmp($a[$columnName], $b[$columnName]);
+                } else {
+                    return strcmp($b[$columnName], $a[$columnName]);
+                }
+            } else {
+                if($order === 'asc') {
+                    return strtotime($a[$columnName]) > strtotime($b[$columnname]);
+                } else {
+                    return strtotime($a[$columnName]) < strtotime($b[$columnname]);
+                }
+            }
+        });
+
+        $result = [
+            'draw' => $post['draw'],
+            'recordsTotal' => count($data),
+            'recordsFiltered' => count($data),
+            'data' => array_slice($data, $start, $limit)
+        ];
+
+        echo json_encode($result);
+    }
+
+    private function get_transactions($vendorId, $filters)
+    {
+        $vendor = $this->vendors_model->get_vendor_by_id($vendorId);
+        switch($filters['type']) {
+            default :
+                $expenses = $this->vendors_model->get_vendor_expense_transactions($vendorId, $filters);
+            break;
+        }
+
+        $transactions = [];
+        if(isset($expenses) && count($expenses) > 0) {
+            foreach($expenses as $expense) {
+                $transactions[] = [
+                    'id' => $expense->id,
+                    'date' => date("m/d/Y", strtotime($expense->payment_date)),
+                    'type' => 'Expense',
+                    'number' => $expense->ref_number,
+                    'payee' => $vendor->display_name,
+                    'method' => $expense->payment_method,
+                    'source' => '',
+                    'category' => '',
+                    'memo' => $expense->memo,
+                    'due_date' => '',
+                    'balance' => '$0.00',
+                    'total' => '$'.number_format(floatval($expense->amount), 2, '.', ','),
+                    'status' => 'Paid',
+                    'attachments' => ''
+                ];
+            }
+        }
+
+        return $transactions;
     }
 }

@@ -1952,20 +1952,11 @@ class Timesheet extends MY_Controller
         $android_tokens = array();
         $ios_token_ctr = 0;
         $android_token_ctr = 0;
-        if ($device_type == "Android") {
-            // send_android_push($tokens, $body, $title);
-            $android_tokens[] = $token;
-            $android_token_ctr++;
-        } elseif ($device_type == "iOS") {
-            // send_ios_push($tokens, $body, $title);
-            $ios_tokens[] = $token;
-            $ios_token_ctr++;
-        }
 
         // ////Admin App notification
 
         // $data=$under_company_id;
-        $company_admins = $this->timesheet_model->get_company_admins($under_company_id);
+        $company_admins = $this->timesheet_model->get_company_users($under_company_id);
         foreach ($company_admins as $admin) {
             $device_type = $admin->device_type;
             if ($device_type == "Android") {

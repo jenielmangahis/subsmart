@@ -743,6 +743,8 @@ SQL;
         }
 
         $payload = json_decode(file_get_contents('php://input'), true);
+        $message = $payload['message'];
+        $subject = $payload['subject'];
         $recipients = $payload['recipients'];
 
         // copy template to user_docfile
@@ -755,8 +757,8 @@ SQL;
             'name' => $template->name,
             'type' => count($recipients) > 1 ? 'Multiple' : 'Single',
             'status' => 'Draft',
-            'subject' => $template->subject,
-            'message' => $template->message,
+            'subject' => $subject,
+            'message' => $message,
             'company_id' => logged('company_id'),
         ]);
         $docfileId = $this->db->insert_id();
@@ -829,7 +831,7 @@ SQL;
             }
         }
 
-        $mail = getMailInstance();
+        $mail = getMailInstance(['subject' => $payload['subject']]);
         $templatePath = VIEWPATH . 'esign/docusign/email/invitation.html';
         $template = file_get_contents($templatePath);
 
@@ -852,6 +854,8 @@ SQL;
             $data = [
                 '%link%' => $baseUrl . '/signing?hash=' . $hash,
                 '%inviter%' => $inviterName,
+                '%message%' => nl2br(htmlentities($payload['message'], ENT_QUOTES, 'UTF-8')),
+                '%inviter_email%' => $inviter->email,
             ];
 
             $message = strtr($template, $data);

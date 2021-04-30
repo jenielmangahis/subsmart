@@ -427,16 +427,29 @@ class Pages extends MY_Controller {
 
     public function update_job_status_paid(){
     	$this->load->model('Jobs_model');
-    	$this->load->model('AcsProfile_model');
-    	$this->load->model('Clients_model');
-    	$this->load->model('CompanyOnlinePaymentAccount_model');
-
-    	$this->load->helper(array('hashids_helper'));
+    	$this->load->model('General_model', 'general');
 
     	$post = $this->input->post();    	
     	//$job_id = hashids_decrypt($post['jobid'], '', 15);
     	$job = $this->Jobs_model->get_specific_job($post['job_id']);
     	$this->Jobs_model->update($job->job_unique_id, ['status' => 'Completed']);
+
+    	$payment_data = array();
+        $payment_data['method'] = 'CC';
+        $payment_data['is_paid'] = 1;
+        $payment_data['paid_datetime'] =date("m-d-Y h:i:s");;
+        $check = array(
+            'where' => array(
+                'jobs_id' => $post['job_id']
+            ),
+            'table' => 'jobs_pay_details'
+        );
+        $exist = $this->general->get_data_with_param($check,FALSE);
+        if($exist){
+            $this->general->update_with_key_field($payment_data, $post['jobs_id'], 'jobs_pay_details','jobs_id');
+        }else{
+            $this->general->add_($payment_data, 'jobs_pay_details');
+        }
 
     	$json_data = ['is_success' => 1];
     	echo json_encode($json_data);
@@ -456,14 +469,14 @@ class Pages extends MY_Controller {
     	$subject = "NsmarTrac : Refer a Friend";
     	$refer_friend = base_url("assets/img/refer_friend.jpg");
     	$nsmart_logo  = base_url("assets/dashboard/images/logo.png");
-    	$msg .= "<img style='width: 100px;margin-top:41px;margin-bottom:24px;' alt='Logo' src='".$refer_friend."' /><br />";
+    	$msg .= "<img style='width: 162px;margin-top:41px;margin-bottom:24px;' alt='Logo' src='".$refer_friend."' /><br />";
     	$msg .= "<p>Someone has refer a friend. Below are the details</p>";
     	$row = 1;
     	$msg .= "<table style='font-size: 14px;padding: 5px;'>";
-    		$msg .= "<tr><td></td><td>Name</td><td>Email</td></tr>";
+    		$msg .= "<tr><td></td><td style='padding:5px;'>Name</td><td style='padding:5px;'>Email</td></tr>";
     		foreach($post['refer'] as $value){
     			if( $value['name'] != '' && $value['email'] != '' ){
-    				$msg .= "<tr><td>".$row.".</td><td>".$value['name']."</td><td>".$value['email']."</td></tr>";
+    				$msg .= "<tr><td style='padding:5px;'>".$row.".</td><td style='padding:5px;'>".$value['name']."</td><td style='padding:5px;'>".$value['email']."</td></tr>";
     				$row++;
     			}    			
     		}
@@ -481,7 +494,7 @@ class Pages extends MY_Controller {
         $username  = MAIL_USERNAME;
         $password  = MAIL_PASSWORD;
         $from      = MAIL_FROM;        
-        $recipient = 'bryann.revina03@gmail.com';
+        $recipient = 'support@nsmartrac.com';
 
         $mail = new PHPMailer;
         //$mail->SMTPDebug = 4;
