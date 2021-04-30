@@ -5,7 +5,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <script src="https://js.stripe.com/v3/"></script>
 <script src="https://checkout.stripe.com/checkout.js"></script>
 <script src="https://www.paypal.com/sdk/js?client-id=<?= $paypal_client_id; ?>&currency=USD"></script>
-<script src="https://api.convergepay.com/hosted-payments/PayWithConverge.js"></script>
+<!-- <script src="https://api.convergepay.com/hosted-payments/PayWithConverge.js"></script> --> <!-- Production --> 
+<script src="https://demo.convergepay.com/hosted-payments/PayWithConverge.js"></script> <!-- Demo -->
 <style>
 	.steps-form {
 	    display: table;

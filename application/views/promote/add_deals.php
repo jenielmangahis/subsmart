@@ -114,6 +114,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                   <input type="text" class="form-control" name="title" placeholder="e.g. Up to 40 % off House Cleaning" id="" required placeholder="" autofocus/>
                               </div>
                               <div class="col-md-12 form-group">
+                                  <label for="">Image</label>
+                                  <div class="help help-block help-sm">Add photo to spotlight features of this deal. </div>
+                                  <input type="file" class="form-control" name="image" required placeholder="" autofocus/>
+                              </div>
+                              <div class="col-md-12 form-group">
                                   <label for="">Description</label>
                                   <div class="help help-block help-sm">Describe how users will benefit when they buy the deal</div>
                                   <textarea name="description" cols="40" rows="3" class="form-control" required autocomplete="off" placeholder="e.g. Grab our special cleaning deal and book a service now!  Spots get filled fast! Get them while they're HOT."></textarea>
@@ -188,13 +193,17 @@ $(function(){
     $("#create_deals_steals").submit(function(e){
         e.preventDefault();
         var url = base_url + 'promote/_save_deals_steals';
+        var form     = $('#create_deals_steals')[0];
+        var formData = new FormData(form);
         $(".btn-deals-save-draft").html('<span class="spinner-border spinner-border-sm m-0"></span>  Saving');
         setTimeout(function () {
           $.ajax({
              type: "POST",
              url: url,
              dataType: "json",
-             data: $("#create_deals_steals").serialize(),
+             data: formData,
+             processData: false,
+             contentType: false,
              success: function(o)
              {
                 if( o.is_success ){

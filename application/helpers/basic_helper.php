@@ -3394,3 +3394,22 @@ function createSlug($str, $delimiter = '-'){
     return $slug;
 
 } 
+
+function replaceSmartTags($message){
+    $cid  = logged('company_id');
+
+    $CI =& get_instance();
+    $CI->load->model('Clients_model');
+    $CI->load->model('Payment_records_model', 'payment_records_model');
+    $company_id = logged('company_id');
+    $company = $CI->Clients_model->getById($cid);
+
+    $message = str_replace("{{customer.name}}", 'John Doe', $message);
+    $message = str_replace("{{customer.first_name}}", 'John', $message);
+    $message = str_replace("{{customer.last_name}}", 'Doe', $message);
+    $message = str_replace("{{business.email}}", $company->email_address, $message);
+    $message = str_replace("{{business.phone}}", $company->phone_number, $message);
+    $message = str_replace("{{business.name}}", $company->business_name, $message);
+
+    return $message;
+}

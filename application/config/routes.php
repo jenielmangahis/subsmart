@@ -845,3 +845,4 @@ $route['promote/create_send_to'] = 'Promote/create_send_to';
 $route['promote/build_email'] = 'Promote/build_email';
 $route['promote/create_email_message'] = 'Promote/create_email_message';
 $route['promote/preview_email_message'] = 'Promote/preview_email_message';
+$route['promote/_generate_preview'] = 'Promote/generate_preview';

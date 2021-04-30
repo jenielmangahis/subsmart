@@ -27,6 +27,18 @@ class Business_model extends MY_Model {
         return $query;
     }
 
+    public function getById($id)
+    {
+
+        $this->db->select('*');
+        $this->db->from($this->table);
+
+        $this->db->where('id', $id);
+
+        $query = $this->db->get()->row();
+        return $query;
+    }
+
     public function getByCompanyId($company_id)
     {
         $this->db->select('*');
