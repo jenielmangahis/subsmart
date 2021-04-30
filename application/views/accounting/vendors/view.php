@@ -8,6 +8,16 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         background-color: #32243D;
         border: 1px solid #32243D;
     }
+    #transactions-table tbody td:nth-child(2) a:hover {
+        text-decoration: underline;
+        color: #38a4f8 !important;
+    }
+    #transactions-table .btn-group .btn:hover, #transactions-table .btn-group .btn:focus {
+        color: unset;
+    }
+    #transactions-table .btn-group .btn {
+        padding: 10px;
+    }
     #myTabContent .tab-pane {
         padding: 15px;
     }
@@ -239,17 +249,17 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                             </a>
                                                             <div class="dropdown-menu p-3" aria-labelledby="dropdownMenuLink">
                                                                 <p class="m-0">Columns</p>
-                                                                <p class="m-0"><input type="checkbox"> Method</p>
-                                                                <p class="m-0"><input type="checkbox"> Source</p>
-                                                                <p class="m-0"><input type="checkbox"> Due date</p>
-                                                                <p class="m-0"><input type="checkbox"> Balance</p>
-                                                                <p class="m-0"><input type="checkbox"> Status</p>
-                                                                <p class="m-0"><input type="checkbox"> Attachments</p>
-                                                                <p class="m-0"><input type="checkbox"checked> Type</p>
-                                                                <p class="m-0"><input type="checkbox"checked> No.</p>
-                                                                <p class="m-0"><input type="checkbox"checked> Payee</p>
-                                                                <p class="m-0"><input type="checkbox"checked> Category</p>
-                                                                <p class="m-0"><input type="checkbox"checked> Memo</p>
+                                                                <p class="m-0"><input type="checkbox" id="method_chk" onchange="showCol(this)"> Method</p>
+                                                                <p class="m-0"><input type="checkbox" id="source_chk" onchange="showCol(this)"> Source</p>
+                                                                <p class="m-0"><input type="checkbox" id="due_date_chk" onchange="showCol(this)"> Due date</p>
+                                                                <p class="m-0"><input type="checkbox" id="balance_chk" onchange="showCol(this)"> Balance</p>
+                                                                <p class="m-0"><input type="checkbox" id="status_chk" onchange="showCol(this)"> Status</p>
+                                                                <p class="m-0"><input type="checkbox" id="attachments_chk" onchange="showCol(this)"> Attachments</p>
+                                                                <p class="m-0"><input type="checkbox" id="type_chk" onchange="showCol(this)" checked> Type</p>
+                                                                <p class="m-0"><input type="checkbox" id="number_chk" onchange="showCol(this)" checked> No.</p>
+                                                                <p class="m-0"><input type="checkbox" id="payee_chk" onchange="showCol(this)" checked> Payee</p>
+                                                                <p class="m-0"><input type="checkbox" id="category_chk" onchange="showCol(this)" checked> Category</p>
+                                                                <p class="m-0"><input type="checkbox" id="memo_chk" onchange="showCol(this)" checked> Memo</p>
                                                                 <p class="m-0">Other</p>
                                                                 <p class="m-0"><input type="checkbox" id="inc_inactive" value="1"> Include Inactive</p>
                                                                 <p class="m-0">Rows</p>
@@ -274,12 +284,12 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                             <th class="source hide">Source</th>
                                                             <th class="category">Category</th>
                                                             <th class="memo">Memo</th>
-                                                            <th class="due-date hide">Due date</th>
+                                                            <th class="due_date hide">Due date</th>
                                                             <th class="balance hide">Balance</th>
                                                             <th>Total</th>
                                                             <th class="status hide">Status</th>
                                                             <th class="attachments hide">Attachments</th>
-                                                            <th>Action</th>
+                                                            <th width="5%">Action</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody></tbody>
@@ -647,7 +657,58 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                     <div class="col">
                                                         <div class="form-ib">
                                                             <label for="expense_account">Default expense account</label>
-                                                            <input type="text" name="default_expense_amount" id="expense_account" class="form-control" placeholder="Choose Account" required>
+                                                            <select name="default_expense_amount" id="expense_account" class="form-control">
+                                                                <option value="" selected disabled>Choose Account</option>
+                                                                <?php if(count($expenseAccs) > 0) : ?>
+                                                                    <optgroup label="Expenses">
+                                                                    <?php foreach($expenseAccs as $expenseAcc) : ?>
+                                                                        <option value="<?=$expenseAcc->id?>" <?=$expenseAcc->id === $vendor->default_expense_account ? 'selected' : ''?>><?=$expenseAcc->name?></option>
+
+                                                                        <?php $childAccs = $this->chart_of_accounts_model->getChildAccounts($expenseAcc->id); ?>
+                                                                        <?php if(count($childAccs) > 0) : ?>
+                                                                            <optgroup label="&nbsp;&nbsp;&nbsp;&nbsp;Sub-accounts of <?=$expenseAcc->name?>">
+                                                                            <?php foreach($childAccs as $childAcc) : ?>
+                                                                                <option value="<?=$childAcc->id?>" <?=$childAcc->id === $vendor->default_expense_account ? 'selected' : ''?>>&nbsp;&nbsp;&nbsp;<?=$childAcc->name?></option>
+                                                                            <?php endforeach; ?>
+                                                                            </optgroup>
+                                                                        <?php endif; ?>
+                                                                    <?php endforeach; ?>
+                                                                    </optgroup>
+                                                                <?php endif; ?>
+                                                                <?php if(count($otherExpenseAccs) > 0) : ?>
+                                                                    <optgroup label="Other Expenses">
+                                                                    <?php foreach($otherExpenseAccs as $otherExpenseAcc) : ?>
+                                                                        <option value="<?=$otherExpenseAcc->id?>" <?=$otherExpenseAcc->id === $vendor->default_expense_account ? 'selected' : ''?>><?=$otherExpenseAcc->name?></option>
+
+                                                                        <?php $childAccs = $this->chart_of_accounts_model->getChildAccounts($otherExpenseAcc->id); ?>
+                                                                        <?php if(count($childAccs) > 0) : ?>
+                                                                            <optgroup label="&nbsp;&nbsp;&nbsp;&nbsp;Sub-accounts of <?=$otherExpenseAcc->name?>">
+                                                                            <?php foreach($childAccs as $childAcc) : ?>
+                                                                                <option value="<?=$childAcc->id?>" <?=$childAcc->id === $vendor->default_expense_account ? 'selected' : ''?>>&nbsp;&nbsp;&nbsp;<?=$childAcc->name?></option>
+                                                                            <?php endforeach; ?>
+                                                                            </optgroup>
+                                                                        <?php endif; ?>
+                                                                    <?php endforeach; ?>
+                                                                    </optgroup>
+                                                                <?php endif; ?>
+                                                                <?php if(count($cogsAccs) > 0) : ?>
+                                                                    <optgroup label="Cost of Goods Sold">
+                                                                    <?php foreach($cogsAccs as $cogsAcc) : ?>
+                                                                        <option value="<?=$cogsAcc->id?>" <?=$cogsAcc->id === $vendor->default_expense_account ? 'selected' : ''?>>&nbsp;<?=$cogsAcc->name?></option>
+
+                                                                        <?php $childAccs = $this->chart_of_accounts_model->getChildAccounts($cogsAcc->id); ?>
+                                                                        <?php if(count($childAccs) > 0) : ?>
+                                                                            <optgroup label="&nbsp;&nbsp;&nbsp;&nbsp;Sub-accounts of <?=$cogsAcc->name?>">
+                                                                            <?php foreach($childAccs as $childAcc) : ?>
+                                                                                <option value="<?=$childAcc->id?>" <?=$childAcc->id === $vendor->default_expense_account ? 'selected' : ''?>>&nbsp;&nbsp;&nbsp;&nbsp;<?=$childAcc->name?></option>
+                                                                            <?php endforeach; ?>
+                                                                            </optgroup>
+                                                                        <?php endif; ?>
+                                                                    <?php endforeach; ?>
+                                                                    </optgroup>
+                                                                <?php endif; ?>
+                                                            </select>
+                                                            <!-- <input type="text" name="default_expense_amount" id="expense_account" class="form-control" placeholder="Choose Account" required> -->
                                                         </div>
                                                     </div>
                                                 </div>

@@ -98,7 +98,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             <div class="validation-error" style="display: none;"></div>
                             <div class="tabs-menu">
                                 <ul class="clearfix">
-                                  <li><a href="<?= base_url('email_campaigns/edit_campaign/' . $emailCampaign->id); ?>">1. Edit Campaign1</a></li>
+                                  <li><a href="<?= base_url('email_campaigns/edit_campaign/' . $emailCampaign->id); ?>">1. Edit Campaign</a></li>
                                   <li class="active"><a href="<?= base_url('email_campaigns/add_campaign_send_to'); ?>">2. Select Customers</a></li>
                                   <li><a href="<?= base_url('email_campaigns/build_email'); ?>">3. Build Email</a></li>
                                   <li><a href="<?= base_url('email_campaigns/preview_email_message'); ?>">4. Preview</a></li>
@@ -173,7 +173,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             <li>
                                                 <div class="checkbox checkbox-sm">
                                                     <input class="checkbox-select chk-exclude-contact-group" type="checkbox" name="optionA[exclude_customer_group_id][]" value="<?= $cg->id; ?>" id="chk-exclude-customer-group-<?= $cg->id; ?>" <?= array_key_exists($cg->id, $selectedExcludes) ? 'checked="checked"' : ''; ?>>
-                                                    <label for="chk-exclude-customer-group-<?= $cg->id; ?>"><?= $cg->name; ?></label>
+                                                    <label for="chk-exclude-customer-group-<?= $cg->id; ?>"><?= $cg->title; ?></label>
                                                 </div>
                                             </li>
                                         <?php } ?>
@@ -226,7 +226,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             <li>
                                                 <div class="checkbox checkbox-sm">
                                                     <input class="checkbox-select chk-contact-group" type="checkbox" <?= array_key_exists($cg->id, $selectedGroups) ? 'checked="checked"' : ''; ?> name="optionC[customer_group_id][]" value="<?= $cg->id; ?>" id="chk-customer-group-<?= $cg->id; ?>">
-                                                    <label for="chk-customer-group-<?= $cg->id; ?>"><?= $cg->name; ?></label>
+                                                    <label for="chk-customer-group-<?= $cg->id; ?>"><?= $cg->title; ?></label>
                                                 </div>
                                             </li>
                                         <?php } ?>

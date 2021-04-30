@@ -5,7 +5,7 @@
 <div class="card-body">
     <div class="row form_line">
         <div class="col-md-4">
-            <label for="">Card First Name</label>
+            Card First Name
         </div>
         <div class="col-md-8">
             <input type="text" class="form-control" name="card_fname" id="card_fname" value="<?php if(isset($billing_info)){ echo $billing_info->card_fname; } ?>" />
@@ -13,7 +13,7 @@
     </div>
     <div class="row form_line">
         <div class="col-md-4">
-            <label for="">Card Last Name</label>
+            Card Last Name
         </div>
         <div class="col-md-8">
             <input type="text" class="form-control" name="card_lname" id="card_lname" value="<?php if(isset($billing_info)){ echo $billing_info->card_lname; } ?>"/>
@@ -21,7 +21,7 @@
     </div>
     <div class="row form_line">
         <div class="col-md-4">
-            <label for="">Card Address </label>
+            Card Address 
         </div>
         <div class="col-md-8">
             <input type="text" class="form-control" name="card_address" id="card_address" value="<?php if(isset($billing_info)){ echo $billing_info->card_address; } ?>"/>
@@ -29,7 +29,7 @@
     </div>
     <div class="row form_line">
         <div class="col-md-4">
-            <label for="">City State ZIP</label>
+            City State ZIP
         </div>
         <div class="col-md-8">
             <div class="row">
@@ -47,7 +47,7 @@
     </div>
     <div class="row form_line">
         <div class="col-md-4">
-            <label for="">Equipment</label>
+            Equipment
         </div>
         <div class="col-md-8">
             <div class="input-group">
@@ -60,7 +60,7 @@
     </div>
     <div class="row form_line">
         <div class="col-md-4">
-            <label for="">Initial Dep</label>
+            Initial Dep
         </div>
         <div class="col-md-8">
             <div class="input-group">
@@ -73,7 +73,7 @@
     </div>
     <div class="row form_line">
         <div class="col-md-4">
-            <label for="">Rate Plan $</label>
+            Rate Plan $
         </div>
         <div class="col-md-8">
             <div class="row">
@@ -156,7 +156,7 @@
     </div>
     <div class="row form_line">
         <div class="col-md-4">
-            <label for="">Billing Frequency</label>
+            Billing Frequency
         </div>
         <div class="col-md-8">
             <select id="bill_freq" name="bill_freq" data-customer-source="dropdown" class="input_select searchable-dropdown">
@@ -171,7 +171,7 @@
     </div>
     <div class="row form_line">
         <div class="col-md-4">
-            <label for="">Billing Day of Month</label>
+            Billing Day of Month
         </div>
         <div class="col-md-8">
             <select id="bill_day" name="bill_day" data-customer-source="dropdown" class="input_select searchable-dropdown">
@@ -187,7 +187,7 @@
     </div>
     <div class="row form_line">
         <div class="col-md-4">
-            <label for="">Contract Term</label>
+            Contract Term
         </div>
         <div class="col-md-8">
             <select id="contract_term" name="contract_term" data-customer-source="dropdown" class="input_select searchable-dropdown" >
@@ -207,7 +207,7 @@
     </div>
     <div class="row form_line">
         <div class="col-md-4">
-            <label for="">Billing Start Date</label>
+            Billing Start Date
         </div>
         <div class="col-md-8">
             <input type="text" class="form-control " name="bill_start_date" id="bill_start_date" value="<?php if(isset($billing_info)){ echo $billing_info->bill_start_date; } ?>" />
@@ -215,7 +215,7 @@
     </div>
     <div class="row form_line">
         <div class="col-md-4">
-            <label for="">Billing End Date</label>
+            Billing End Date
         </div>
         <div class="col-md-8">
             <input type="text" class="form-control " name="bill_end_date" id="bill_end_date" value="<?php if(isset($billing_info)){ echo $billing_info->bill_end_date; } ?>"/>
@@ -232,7 +232,7 @@
 
     <div class="row form_line">
         <div class="col-md-4">
-            <label for="">Billing Method</label>
+            Billing Method
         </div>
         <div class="col-md-8">
             <select id="bill_method" name="bill_method" data-customer-source="dropdown" class="input_select searchable-dropdown">
@@ -247,6 +247,7 @@
                 <option <?= isset($billing_info) && $billing_info->bill_method == 'WW' ?  'selected' : '';?> value="WW">Warranty Work</option>
                 <option <?= isset($billing_info) && $billing_info->bill_method == 'HOF' ?  'selected' : '';?> value="HOF">Home Owner Financing</option>
                 <option <?= isset($billing_info) && $billing_info->bill_method == 'eT' ?  'selected' : '';?> value="eT">e-Transfer</option>
+                <option <?= isset($billing_info) && $billing_info->bill_method == 'Invoicing' ?  'selected' : '';?> value="Invoicing">Invoicing</option>
                 <option <?= isset($billing_info) && $billing_info->bill_method == 'OCCP' ?  'selected' : '';?> value="OCCP">Other Credit Card Processor</option>
                 <option <?= isset($billing_info) && $billing_info->bill_method == 'OPT' ?  'selected' : '';?> value="OPT">Other Payment Type</option>
             </select>
@@ -255,7 +256,7 @@
 
     <div class="row form_line" id="checkNumber">
         <div class="col-md-4">
-            <label for="">Check Number</label>
+            Check Number
         </div>
         <div class="col-md-8">
             <input type="number" class="form-control" name="check_num" id="check_num" value="<?php if(isset($billing_info)){ echo $billing_info->check_num; } ?>"/>
@@ -263,7 +264,7 @@
     </div>
     <div class="row form_line" id="routingNumber">
         <div class="col-md-4">
-            <label for="">Routing Number</label>
+            Routing Number
         </div>
         <div class="col-md-8">
             <input type="number" class="form-control" name="routing_num" id="routing_num" value="<?php if(isset($billing_info)){ echo $billing_info->routing_num; } ?>"/>
@@ -271,7 +272,7 @@
     </div>
     <div class="row form_line" id="accountNumber">
         <div class="col-md-4">
-            <label for="">Account Number</label>
+            Account Number
         </div>
         <div class="col-md-8">
             <input type="number" class="form-control" name="acct_num" id="acct_num" value="<?php if(isset($billing_info)){ echo $billing_info->acct_num; } ?>"/>
@@ -279,7 +280,7 @@
     </div>
     <div class="row form_line" id="CCN">
         <div class="col-md-4">
-            <label for="">Credit Card Number</label>
+            Credit Card Number
         </div>
         <div class="col-md-8">
             <input type="number" placeholder="0000 0000 0000 0000" class="form-control" name="credit_card_num" id="credit_card_num" value="<?= isset($billing_info) &&  $billing_info->credit_card_num == 0 ? '' :  $billing_info->credit_card_num; ?>"/>
@@ -287,7 +288,7 @@
     </div>
     <div class="row form_line" id="CCE">
         <div class="col-md-4">
-            <label for="">Credit Card Expiration</label>
+            Credit Card Expiration
         </div>
         <div class="col-md-8">
             <div class="row">
@@ -303,7 +304,7 @@
 
     <div class="row form_line account_cred" >
         <div class="col-md-4">
-            <label for="">Account Credential</label>
+            Account Credential
         </div>
         <div class="col-md-8">
             <input type="number" class="form-control" name="account_credential" id="account_credential" value="<?= isset($billing_info) ? $billing_info->account_credential : ''; ?>" />
@@ -311,7 +312,7 @@
     </div>
     <div class="row form_line account_cred" >
         <div class="col-md-4">
-            <label for="">Account Note</label>
+            Account Note
         </div>
         <div class="col-md-8">
             <input type="number" class="form-control" name="account_note" id="account_note" value="<?= isset($billing_info) ? $billing_info->account_note : ''; ?>"/>
@@ -319,7 +320,7 @@
     </div>
     <div class="row form_line account_cred" id="confirmationPD">
         <div class="col-md-4">
-            <label for="">Confirmation</label>
+            Confirmation
         </div>
         <div class="col-md-8">
             <input type="number" class="form-control" name="confirmation" id="confirmation" value="<?= isset($billing_info) ? $billing_info->confirmation : ''; ?>"/>
@@ -334,7 +335,7 @@
 <div class="card-body">
     <div class="row form_line">
         <div class="col-md-4">
-            <label for="">Finance Amount</label>
+            Finance Amount
         </div>
         <div class="col-md-8">
             <div class="input-group">
@@ -347,7 +348,7 @@
     </div>
     <div class="row form_line">
         <div class="col-md-4">
-            <label for="">Recurring Start Date</label>
+            Recurring Start Date
         </div>
         <div class="col-md-8">
             <input type="text" class="form-control datepicker" name="recurring_start_date" id="recurring_start_date" value="<?= isset($billing_info) ? $billing_info->recurring_start_date : ''; ?>" />
@@ -355,7 +356,7 @@
     </div>
     <div class="row form_line">
         <div class="col-md-4">
-            <label for="">Recurring End Date</label>
+            Recurring End Date
         </div>
         <div class="col-md-8">
             <input type="text" class="form-control datepicker" name="recurring_end_date" id="recurring_end_date" value="<?= isset($billing_info) ? $billing_info->recurring_end_date : ''; ?>" />
@@ -363,7 +364,7 @@
     </div>
     <div class="row form_line">
         <div class="col-md-4">
-            <label for="">Transaction Amount</label>
+            Transaction Amount
         </div>
         <div class="col-md-8">
             <div class="input-group">
@@ -376,7 +377,7 @@
     </div>
     <div class="row form_line">
         <div class="col-md-4">
-            <label for="">Transaction Category</label>
+            Transaction Category
         </div>
         <div class="col-md-8">
             <select id="transaction_category" name="transaction_category" data-customer-source="dropdown" class="input_select" >
@@ -395,7 +396,7 @@
     </div>
     <div class="row form_line">
         <div class="col-md-4">
-            <label for="">Frequency</label>
+            Frequency
         </div>
         <div class="col-md-8">
             <select id="frequency" name="frequency" data-customer-source="dropdown" class="input_select" >

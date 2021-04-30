@@ -165,4 +165,52 @@ class Chart_of_accounts_model extends MY_Model {
 		$this->db->where('id', $id);
 		return $this->db->update($this->table, ['active' => 1]);
 	}
+
+	public function get_expense_accounts()
+	{
+		$companyId = logged('company_id');
+		$this->db->where('company_id', $companyId);
+		$this->db->where('account_id', 14);
+		$this->db->where('parent_acc_id', null);
+		$this->db->or_where('parent_acc_id', '');
+		$this->db->where('company_id', $companyId);
+		$this->db->where('account_id', 14);
+		$this->db->or_where('parent_acc_id', 0);
+		$this->db->where('company_id', $companyId);
+		$this->db->where('account_id', 14);
+		$query = $this->db->get('accounting_chart_of_accounts');
+		return $query->result();
+	}
+
+	public function get_other_expense_accounts()
+	{
+		$companyId = logged('company_id');
+		$this->db->where('company_id', $companyId);
+		$this->db->where('account_id', 15);
+		$this->db->where('parent_acc_id', null);
+		$this->db->or_where('parent_acc_id', '');
+		$this->db->where('company_id', $companyId);
+		$this->db->where('account_id', 15);
+		$this->db->or_where('parent_acc_id', 0);
+		$this->db->where('company_id', $companyId);
+		$this->db->where('account_id', 15);
+		$query = $this->db->get('accounting_chart_of_accounts');
+		return $query->result();
+	}
+
+	public function get_cogs_accounts()
+	{
+		$companyId = logged('company_id');
+		$this->db->where('company_id', $companyId);
+		$this->db->where('account_id', 13);
+		$this->db->where('parent_acc_id', null);
+		$this->db->or_where('parent_acc_id', '');
+		$this->db->where('company_id', $companyId);
+		$this->db->where('account_id', 13);
+		$this->db->or_where('parent_acc_id', 0);
+		$this->db->where('company_id', $companyId);
+		$this->db->where('account_id', 13);
+		$query = $this->db->get('accounting_chart_of_accounts');
+		return $query->result();
+	}
 }

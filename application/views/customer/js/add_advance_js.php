@@ -240,14 +240,19 @@
         $("#bill_start_date").datetimepicker({
             format: "l",
             //minDate: new Date(),
+        }).on('dp.change', function (e) {
+            var selected_data = moment(e.date._d).format('L');
+            var contract = $('#contract_term').val();
+            console.log(selected_data);
+            var plus_date = moment.utc(selected_data).add(contract,'months');
+            console.log( moment(plus_date).format('l'));
+            $('#bill_end_date').val(moment(plus_date).format('l'));
         });
+
         $("#bill_end_date").datetimepicker({
             format: "l",
             //minDate: new Date(),
         });
-
-
-
         $(".date_picker").datetimepicker({
             format: "l",
             //'setDate': new Date(),
@@ -260,6 +265,23 @@
         // $(".time_picker").datetimepicker({
         //     format: "LT",
         // });
+
+        $("#rep_paid").keyup(function(){
+            var repPaid=this.value;
+            var techPaid = $('#tech_paid').val();
+            var new_sub_total = Number(repPaid) + Number(techPaid);
+            $('#labor_cost').val(new_sub_total);
+            console.log(new_sub_total);
+        });
+
+        $("#tech_paid").keyup(function(){
+            var repPaid=this.value;
+            var techPaid = $('#rep_paid').val();
+            var new_sub_total = Number(repPaid) + Number(techPaid);
+            $('#labor_cost').val(new_sub_total);
+            console.log(new_sub_total);
+        });
+
 
         $('.timepicker').timepicker('setTime', new Date().toLocaleTimeString());
 
@@ -426,6 +448,8 @@
                 }
             });
         });
+
+
 
     });
 </script>

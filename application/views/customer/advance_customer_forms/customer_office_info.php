@@ -662,7 +662,7 @@
                     <div class="input-group-prepend">
                         <span class="input-group-text" id="basic-addon1">$</span>
                     </div>
-                    <input type="number" class="form-control input_select" name="labor_cost" value="<?php if(isset($office_info)){ echo $office_info->labor_cost; } ?>">
+                    <input type="number" class="form-control input_select" id="labor_cost" name="labor_cost" value="<?php if(isset($office_info)){ echo $office_info->labor_cost; } ?>">
                 </div>
             </div>
         </div>

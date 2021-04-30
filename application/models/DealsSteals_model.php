@@ -96,6 +96,14 @@ class DealsSteals_model extends MY_Model
         return $option;
     }
 
+    public function updateDealsSteals($id, $data)
+    {
+        $this->db->from($this->table);
+        $this->db->set($data);
+        $this->db->where('id', $id);
+        $this->db->update();
+    }
+
 }
 
 /* End of file DealsSteals_model.php */

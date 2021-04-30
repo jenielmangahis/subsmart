@@ -82,7 +82,7 @@ function get_differenct_of_dates($date_start, $date_end)
             $html .= '<p class="name"> ' . $user->FName . '</p>
             </div>
             <div class="col-md-8 details">
-              <p id="last_tract_location_' . $user->user_id . '"><span class="fa fa-map-marker" class="text-center"></span> ';
+              <p id="last_tract_location_' . $user->user_id . '" class="last_tract_location"><span class="fa fa-map-marker" class="text-center"></span> ';
             if ($user->last_tracked_location_address == "") {
               $last_loc =  "Lost connection";
             } else {
@@ -124,7 +124,15 @@ function get_differenct_of_dates($date_start, $date_end)
       </div>
     </div>
     <div class="col-md-8 map-section">
-      <div id="map"></div>
+      <div id="map-loader">
+        <center>
+          <img src="<?=base_url("assets/img/trac360/loader.gif")?>"/>
+        </center>
+        <h1 class="page-title">Initializing...</h1>
+      </div>
+      <div id="map-holder" style="display:none;">
+        <div id="map"></div>
+      </div>
     </div>
   </div>
 </div>
@@ -143,22 +151,112 @@ function get_differenct_of_dates($date_start, $date_end)
   var markers = [];
   var current_user_latitude;
   var current_user_longitude;
-  var popup, Popup;
+  var popup;
   var current_user_profile_img = "<?= $current_user_profile_img ?>";
   var current_user_name = "<?= $current_user_name ?>";
 
+  current_user_getLocation(); 
   function initMap() {
-    current_user_getLocation();
+    set_initmap();
+  }
+  function current_user_getLocation() {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(current_user_showPosition);
+    } else {
+        console.log("Geolocation is not supported by this browser.");
+    }
   }
 
   function set_initmap() {
+    $("#map-loader").hide();
+    $("#map-holder").show();
     map = new google.maps.Map(document.getElementById("map"), {
       center: {
-        lat: current_user_latitude,
-        lng: current_user_longitude
+        lat: 37.0902,
+        lng: 95.7129
       },
-      zoom: 12,
+      zoom: 2,
     });
+    
+    <?php
+        foreach ($user_locations as $user) {
+          if ($user->last_tracked_location != "" ) {
+            $exploded = explode(",", $user->last_tracked_location);
+            echo 'set_popup("map_marker_'.$user->user_id.'",'.$exploded[0].','.$exploded[1].');';
+          
+            if($user->user_id == $user_id){
+              echo 'setMapCenter('.$exploded[0].','.$exploded[1].');';
+            }
+          } 
+        }
+        ?>
+    
+  }
+
+
+function current_user_showPosition(position) {
+    current_user_latitude = position.coords.latitude;
+    current_user_longitude = position.coords.longitude;
+
+    var geocoder = new google.maps.Geocoder();
+    geocoder.geocode({
+            latLng: new google.maps.LatLng(
+                current_user_latitude,
+                current_user_longitude
+            ),
+        },
+        function(results, status) {
+            if (status == google.maps.GeocoderStatus.OK) {
+                if (results[0]) {
+                    var formattedAddress = "";
+                    var lat;
+                    var lng;
+                    if (results[0].formatted_address != null) {
+                        formattedAddress = results[0].formatted_address;
+                    }
+
+                    //debugger;
+
+                    var location = results[0].geometry.location;
+
+                    lat = location.lat;
+                    lng = location.lng;
+                    console.log(formattedAddress);
+                    $.ajax({
+                        url: baseURL + "/trac360/current_user_update_last_tracked_location",
+                        type: "POST",
+                        dataType: "json",
+                        data: {
+                            user_id: user_id,
+                            company_id: company_id,
+                            lat: current_user_latitude,
+                            lng: current_user_longitude,
+                            formatted_address: formattedAddress,
+                        },
+                        success: function(data) {
+                        },
+                    });
+
+                    $("#last_tract_location_" + user_id).html(
+                                `<span class="fa fa-map-marker" class="text-center"></span> ` +
+                                formattedAddress +
+                                ""
+                            );
+                            $("#sec-2-option-"+user_id).attr("onclick","user_selected( "+current_user_latitude+","+current_user_longitude+","+user_id+")")
+                            var marker_parent = $("#map_marker_" + user_id).parent().parent();
+                            set_popup(("map_marker_" + user_id), current_user_latitude, current_user_longitude);
+                            marker_parent.remove();
+                            setMapCenter(current_user_latitude,current_user_longitude);
+                            
+
+                }
+            }
+        }
+    );
+}
+//remove
+
+  function set_popup(selector,lat,lng){
 
     /**
      * A customized popup on the map.
@@ -211,28 +309,12 @@ function get_differenct_of_dates($date_start, $date_end)
       }
     }
 
-    <?php
-    foreach ($user_locations as $user) {
-      if ($user->last_tracked_location != "" && $user->user_id != $user_id) {
-        $exploded = explode(",", $user->last_tracked_location);
-    ?>
-        popup = new Popup(
-          new google.maps.LatLng(<?= $exploded[0] ?>, <?= $exploded[1] ?>),
-          document.getElementById("map_marker_<?= $user->user_id ?>")
+    popup = new Popup(
+          new google.maps.LatLng(lat, lng),
+          document.getElementById(selector)
         );
         popup.setMap(map);
-      <?php
-      } elseif ($user->user_id == $user_id) {
-      ?>
-        popup = new Popup(
-          new google.maps.LatLng(current_user_latitude, current_user_longitude),
-          document.getElementById("map_marker_" + user_id)
-        );
-        popup.setMap(map);
-    <?php
-      }
-    }
-    ?>
+    
   }
   $(document).ready(function() {
     <?php

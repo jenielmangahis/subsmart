@@ -6,6 +6,99 @@ defined('BASEPATH') or exit('No direct script access allowed');
     <?php include viewPath('includes/sidebars/invoice'); ?>
     <link href="<?php echo $url->assets ?>css/jquery.signaturepad.css" rel="stylesheet">
 
+    <style>
+  .custom-signaturepad {
+    padding-left: 0;
+    padding-right: 0;
+  }
+  .custom-signaturepad .sigWrapper canvas {
+      width: 100%;
+  }
+  .custom-signaturepad .sigPad  {
+    width: 100% !important;
+  }
+  #group_area{
+    background-color:#F9F9F9;
+  }
+  #group_area:hover{
+    background-color:#EBFFE2;
+  }
+  .pointer {cursor: pointer;}
+/* 
+  #company_representative_approval_signature1a{
+  border: solid 1px blue;  
+  width: 100%;
+} */
+
+#signature-pad {min-height:200px;}
+#signature-pad canvas {background-color:white;left: 0;top: 0;width: 100%;min-height:250px;height: 100%}
+
+#signature-pad2 {min-height:200px;}
+#signature-pad2 canvas {background-color:white;left: 0;top: 0;width: 100%;min-height:250px;height: 100%}
+
+#signature-pad3 {min-height:200px;}
+#signature-pad3 canvas {background-color:white;left: 0;top: 0;width: 100%;min-height:250px;height: 100%}
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+}
+
+.switch input { 
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #10ab06;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #10ab06;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
+</style>
     <!-- page wrapper start -->
     <div wrapper__section>
         <div class="container-fluid" style="background-color:white;">
@@ -720,7 +813,17 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         <?php foreach($items as $item){ // print_r($item); ?>
                                             <tr>
                                                 <td><?php echo $item->title; ?></td>
-                                                <td><?php echo $item->rebate; ?></td>
+                                                <td><?php if($item->rebate == 1){ ?>
+                                                    <label class="switch">
+                                                    <input type="checkbox" checked>
+                                                    <span class="slider round"></span>
+                                                    </label>
+                                                <?php }else{ ?>
+                                                    <label class="switch">
+                                                    <input type="checkbox">
+                                                    <span class="slider round"></span>
+                                                    </label>
+                                                <?php  } ?></td>
                                                 <td></td>
                                                 <td><?php echo $item->price; ?></td>
                                                 <td><button id="<?= $item->id; ?>" data-quantity="<?= $item->units; ?>" data-itemname="<?= $item->title; ?>" data-price="<?= $item->price; ?>" type="button" data-dismiss="modal" class="btn btn-sm btn-default select_item">

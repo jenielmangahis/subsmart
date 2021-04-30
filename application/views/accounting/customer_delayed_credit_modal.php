@@ -293,16 +293,13 @@
 
 <script>
 
-$(".select_item2").click(function () {
-            $("#addcreditmemoModal").modal('show')
+$(".select_item").click(function () {
             var idd = this.id;
             console.log(idd);
             console.log($(this).data('itemname'));
             var title = $(this).data('itemname');
             var price = $(this).data('price');
             
-            $("#item_list").modal('hide')
-
             if(!$(this).data('quantity')){
               // alert($(this).data('quantity'));
               var qty = 0;
@@ -314,6 +311,8 @@ $(".select_item2").click(function () {
             var count = parseInt($("#count").val()) + 1;
             $("#count").val(count);
             var total_ = price * qty;
+            var tax_ =(parseFloat(total_).toFixed(2) * 7.5) / 100;
+            var taxes_t = parseFloat(tax_).toFixed(2);
             var total = parseFloat(total_).toFixed(2);
             var withCommas = Number(total).toLocaleString('en');
             total = '$' + withCommas + '.00';
@@ -327,14 +326,14 @@ $(".select_item2").click(function () {
                 "<td width=\"10%\"><input id='price_"+idd+"' value='"+price+"'  type=\"number\" name=\"price[]\" class=\"form-control\" placeholder=\"Unit Price\"></td>\n" +
                 // "<td width=\"10%\"><input type=\"number\" class=\"form-control discount\" name=\"discount[]\" data-counter="0" id=\"discount_0\" min="0" value="0" ></td>\n" +
                 // "<td width=\"10%\"><small>Unit Cost</small><input type=\"text\" name=\"item_cost[]\" class=\"form-control\"></td>\n" +
-                "<td width=\"10%\"><input type=\"number\" name=\"discount[]\" class=\"form-control discount\" id='discount_"+idd+"' readonly></td>\n" +
+                "<td width=\"10%\"><input type=\"number\" name=\"discount[]\" class=\"form-control discount\" id='discount_"+idd+"'></td>\n" +
                 // "<td width=\"25%\"><small>Inventory Location</small><input type=\"text\" name=\"item_loc[]\" class=\"form-control\"></td>\n" +
-                "<td width=\"20%\"><input type=\"text\" data-itemid='"+idd+"' class=\"form-control tax_change2\" name=\"tax[]\" data-counter=\"0\" id='tax1_"+idd+"' min=\"0\" value=\"0\"></td>\n" +
+                "<td width=\"20%\"><input type=\"text\" data-itemid='"+idd+"' class=\"form-control tax_change2\" name=\"tax[]\" data-counter=\"0\" id='tax1_"+idd+"' min=\"0\" value='"+taxes_t+"'></td>\n" +
                 "<td style=\"text-align: center\" class=\"d-flex\" width=\"15%\"><span data-subtotal='"+total_+"' id='span_total_"+idd+"' class=\"total_per_item\">"+total+
                 // "</span><a href=\"javascript:void(0)\" class=\"remove_item_row\"><i class=\"fa fa-times-circle\" aria-hidden=\"true\"></i></a>"+
-                "<input type=\"hidden\" name=\"total[]\" id='sub_total_text"+idd+"' value='"+total+"'></td>" +
+                "</span> <input type=\"hidden\" name=\"total[]\" id='sub_total_text"+idd+"' value='"+total+"'></td>" +
                 "</tr>";
-            tableBody = $("#items_table_body");
+            tableBody = $("#jobs_items_table_body");
             tableBody.append(markup);
             markup2 = "<tr id=\"sss\">" +
                 "<td >"+title+"</td>\n" +
@@ -375,6 +374,7 @@ $(".select_item2").click(function () {
   // alert( 'yeah' + total);
 
   $("#span_total_" + in_id).text(total);
+  $("#sub_total_text" + in_id).val(total);
   $("#tax_1_" + in_id).text(tax1);
   $("#tax1_" + in_id).val(tax1);
   $("#discount_" + in_id).val(discount);
@@ -388,6 +388,7 @@ $(".select_item2").click(function () {
   }
 
   var eqpt_cost = 0;
+  // var total_cost = 0;
   var cnt = $("#count").val();
   var total_discount = 0;
   for (var p = 0; p <= cnt; p++) {
@@ -396,6 +397,7 @@ $(".select_item2").click(function () {
     var discount = $("#discount_" + p).val();
     // var discount= $('#discount_' + p).val();
     // eqpt_cost += parseFloat(prc) - parseFloat(discount);
+    // total_cost += parseFloat(prc);
     eqpt_cost += parseFloat(prc) * parseFloat(quantity);
     total_discount += parseFloat(discount);
   }
@@ -404,8 +406,28 @@ $(".select_item2").click(function () {
 //   subtotal += parseFloat( $( this ).val() ) || 0;
 // });
 
+var total_cost = 0;
+  // $("#span_total_0").each(function(){
+    $('*[id^="price_"]').each(function(){
+      total_cost += parseFloat($(this).val());
+  });
+
+var tax_tot = 0;
+$('*[id^="tax1_"]').each(function(){
+  tax_tot += parseFloat($(this).val());
+});
+
+over_tax = parseFloat(tax_tot).toFixed(2);
+// alert(over_tax);
+
+$("#sales_taxs").val(over_tax);
+$("#total_tax_input").val(over_tax);
+$("#total_tax_").text(over_tax);
+
+
   eqpt_cost = parseFloat(eqpt_cost).toFixed(2);
   total_discount = parseFloat(total_discount).toFixed(2);
+  stotal_cost = parseFloat(total_cost).toFixed(2);
   // var test = 5;
 
   var subtotal = 0;
@@ -427,7 +449,8 @@ $(".select_item2").click(function () {
   $("#total_discount").val(total_discount);
   $("#span_sub_total_0").text(total_discount);
   $("#span_sub_total_invoice").text(subtotal.toFixed(2));
-  $("#item_total").val(subtotal.toFixed(2));
+  // $("#item_total").val(subtotal.toFixed(2));
+  $("#item_total").val(stotal_cost);
   
   var s_total = subtotal.toFixed(2);
   var adjustment = $("#adjustment_input").val();
@@ -435,8 +458,10 @@ $(".select_item2").click(function () {
   var markup = $("#markup_input_form").val();
   var grand_total_w = grand_total + parseFloat(markup);
 
-  $("#total_tax_").text(subtotaltax.toFixed(2));
-  $("#total_tax_").val(subtotaltax.toFixed(2));
+  // $("#total_tax_").text(subtotaltax.toFixed(2));
+  // $("#total_tax_").val(subtotaltax.toFixed(2));
+  
+  
   
 
   $("#grand_total").text(grand_total_w.toFixed(2));

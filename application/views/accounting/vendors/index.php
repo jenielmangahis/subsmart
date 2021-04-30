@@ -489,7 +489,58 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                     <div class="col">
                                                         <div class="form-ib">
                                                             <label for="expense_account">Default expense account</label>
-                                                            <input type="text" name="default_expense_amount" id="expense_account" class="form-control" placeholder="Choose Account" required>
+                                                            <select name="default_expense_amount" id="expense_account" class="form-control">
+                                                                <option value="" selected disabled>Choose Account</option>
+                                                                <?php if(count($expenseAccs) > 0) : ?>
+                                                                    <optgroup label="Expenses">
+                                                                    <?php foreach($expenseAccs as $expenseAcc) : ?>
+                                                                        <option value="<?=$expenseAcc->id?>"><?=$expenseAcc->name?></option>
+
+                                                                        <?php $childAccs = $this->chart_of_accounts_model->getChildAccounts($expenseAcc->id); ?>
+                                                                        <?php if(count($childAccs) > 0) : ?>
+                                                                            <optgroup label="&nbsp;&nbsp;&nbsp;&nbsp;Sub-accounts of <?=$expenseAcc->name?>">
+                                                                            <?php foreach($childAccs as $childAcc) : ?>
+                                                                                <option value="<?=$childAcc->id?>">&nbsp;&nbsp;&nbsp;<?=$childAcc->name?></option>
+                                                                            <?php endforeach; ?>
+                                                                            </optgroup>
+                                                                        <?php endif; ?>
+                                                                    <?php endforeach; ?>
+                                                                    </optgroup>
+                                                                <?php endif; ?>
+                                                                <?php if(count($otherExpenseAccs) > 0) : ?>
+                                                                    <optgroup label="Other Expenses">
+                                                                    <?php foreach($otherExpenseAccs as $otherExpenseAcc) : ?>
+                                                                        <option value="<?=$otherExpenseAcc->id?>"><?=$otherExpenseAcc->name?></option>
+
+                                                                        <?php $childAccs = $this->chart_of_accounts_model->getChildAccounts($otherExpenseAcc->id); ?>
+                                                                        <?php if(count($childAccs) > 0) : ?>
+                                                                            <optgroup label="&nbsp;&nbsp;&nbsp;&nbsp;Sub-accounts of <?=$otherExpenseAcc->name?>">
+                                                                            <?php foreach($childAccs as $childAcc) : ?>
+                                                                                <option value="<?=$childAcc->id?>">&nbsp;&nbsp;&nbsp;<?=$childAcc->name?></option>
+                                                                            <?php endforeach; ?>
+                                                                            </optgroup>
+                                                                        <?php endif; ?>
+                                                                    <?php endforeach; ?>
+                                                                    </optgroup>
+                                                                <?php endif; ?>
+                                                                <?php if(count($cogsAccs) > 0) : ?>
+                                                                    <optgroup label="Cost of Goods Sold">
+                                                                    <?php foreach($cogsAccs as $cogsAcc) : ?>
+                                                                        <option value="<?=$cogsAcc->id?>">&nbsp;<?=$cogsAcc->name?></option>
+
+                                                                        <?php $childAccs = $this->chart_of_accounts_model->getChildAccounts($cogsAcc->id); ?>
+                                                                        <?php if(count($childAccs) > 0) : ?>
+                                                                            <optgroup label="&nbsp;&nbsp;&nbsp;&nbsp;Sub-accounts of <?=$cogsAcc->name?>">
+                                                                            <?php foreach($childAccs as $childAcc) : ?>
+                                                                                <option value="<?=$childAcc->id?>">&nbsp;&nbsp;&nbsp;&nbsp;<?=$childAcc->name?></option>
+                                                                            <?php endforeach; ?>
+                                                                            </optgroup>
+                                                                        <?php endif; ?>
+                                                                    <?php endforeach; ?>
+                                                                    </optgroup>
+                                                                <?php endif; ?>
+                                                            </select>
+                                                            <!-- <input type="text" name="default_expense_amount" id="expense_account" class="form-control" placeholder="Choose Account" required> -->
                                                         </div>
                                                     </div>
                                                 </div>
