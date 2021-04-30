@@ -180,13 +180,204 @@ $('.notes-container').on('click', function() {
 
 $('select').select2();
 
+$('.dropdown-menu').on('click', function(e) {
+	e.stopPropagation();
+});
+
 $('#transactions-table').DataTable({
     autoWidth: false,
     searching: false,
     processing: true,
-    serverSide: false,
+    serverSide: true,
     lengthChange: false,
     info: false,
-    pageLength: $('#table_rows').val(),
+    pageLength: 150,
     order: [[0, 'asc']],
+    ajax: {
+        url: `/accounting/vendors/${vendorId}/load-transactions`,
+        dataType: 'json',
+        contentType: 'application/json',
+        type: 'POST',
+        data: function(d) {
+            d.date = $('#date').val();
+            d.type = $('#template-type').val();
+            d.inactive = $('#inc_inactive').prop('checked');
+            return JSON.stringify(d);
+        },
+        pagingType: 'full_numbers'
+    },
+    columns: [
+        {
+			data: null,
+			name: 'checkbox',
+            orderable: false,
+			fnCreatedCell: function(td, cellData, rowData, row, col) {
+                $(td).html(`<input type="checkbox" value="${rowData.id}">`);
+			}
+		},
+        {
+            name: 'date',
+            data: 'date'
+        },
+        {
+            name: 'type',
+            data: 'type',
+            fnCreatedCell: function(td, cellData, rowData, row, col) {
+                if($('#type_chk').prop('checked') === false) {
+                    $(td).addClass('hide');
+                }
+
+                $(td).addClass('type');
+            }
+        },
+        {
+            name: 'number',
+            data: 'number',
+            fnCreatedCell: function(td, cellData, rowData, row, col) {
+                if($('#number_chk').prop('checked') === false) {
+                    $(td).addClass('hide');
+                }
+
+                $(td).addClass('number');
+            }
+        },
+        {
+            name: 'payee',
+            data: 'payee',
+            fnCreatedCell: function(td, cellData, rowData, row, col) {
+                if($('#payee_chk').prop('checked') === false) {
+                    $(td).addClass('hide');
+                }
+
+                $(td).addClass('payee');
+            }
+        },
+        {
+            name: 'method',
+            data: 'method',
+            fnCreatedCell: function(td, cellData, rowData, row, col) {
+                if($('#method_chk').prop('checked') === false) {
+                    $(td).addClass('hide');
+                }
+
+                $(td).addClass('method');
+            }
+        },
+        {
+            name: 'source',
+            data: 'source',
+            fnCreatedCell: function(td, cellData, rowData, row, col) {
+                if($('#source_chk').prop('checked') === false) {
+                    $(td).addClass('hide');
+                }
+
+                $(td).addClass('source');
+            }
+        },
+        {
+            name: 'category',
+            data: 'category',
+            fnCreatedCell: function(td, cellData, rowData, row, col) {
+                if($('#category_chk').prop('checked') === false) {
+                    $(td).addClass('hide');
+                }
+
+                $(td).addClass('category');
+            }
+        },
+        {
+            name: 'memo',
+            data: 'memo',
+            fnCreatedCell: function(td, cellData, rowData, row, col) {
+                if($('#memo_chk').prop('checked') === false) {
+                    $(td).addClass('hide');
+                }
+
+                $(td).addClass('memo');
+            }
+        },
+        {
+            name: 'due_date',
+            data: 'due_date',
+            fnCreatedCell: function(td, cellData, rowData, row, col) {
+                if($('#due_date_chk').prop('checked') === false) {
+                    $(td).addClass('hide');
+                }
+
+                $(td).addClass('due_date');
+            }
+        },
+        {
+            name: 'balance',
+            data: 'balance',
+            fnCreatedCell: function(td, cellData, rowData, row, col) {
+                if($('#balance_chk').prop('checked') === false) {
+                    $(td).addClass('hide');
+                }
+
+                $(td).addClass('balance');
+            }
+        },
+        {
+            name: 'total',
+            data: 'total'
+        },
+        {
+            name: 'status',
+            data: 'status',
+            fnCreatedCell: function(td, cellData, rowData, row, col) {
+                if($('#status_chk').prop('checked') === false) {
+                    $(td).addClass('hide');
+                }
+
+                $(td).addClass('status');
+            }
+        },
+        {
+            name: 'attachments',
+            data: 'attachments',
+            fnCreatedCell: function(td, cellData, rowData, row, col) {
+                if($('#attachments_chk').prop('checked') === false) {
+                    $(td).addClass('hide');
+                }
+
+                $(td).addClass('attachments');
+            }
+        },
+        {
+            orderable: false,
+            name: 'action',
+            data: null,
+            fnCreatedCell: function(td, cellData, rowData, row, col) {
+                $(td).html(`
+                <div class="btn-group float-right">
+                    <button class="btn d-flex align-items-center justify-content-center text-info">
+                        View/Edit
+                    </button>
+
+                    <button type="button" id="statusDropdownButton" class="btn dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <span class="sr-only">Toggle Dropdown</span>
+                    </button>
+
+                    <div class="dropdown-menu" aria-labelledby="statusDropdownButton">
+                        <a class="dropdown-item" href="#">Copy</a>
+                        <a class="dropdown-item" href="#">Delete</a>
+                        <a class="dropdown-item" href="#">Void</a>
+                    </div>
+                </div>
+                `);
+            }
+        }
+    ]
 });
+
+function showCol(el) {
+    var elementId = $(el).attr('id');
+    var column = elementId.replace('_chk', '');
+
+    if($(el).prop('checked')) {
+        $(`#transactions-table .${column}`).removeClass('hide');
+    } else {
+        $(`#transactions-table .${column}`).addClass('hide');
+    }
+}

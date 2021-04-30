@@ -91,7 +91,7 @@ add_css(array(
                                     <td align="center" class="table_body_customer">
                                         <div class="row">
                                             <div class="col-md-2 header_checkbox" >
-                                                <input type="checkbox" name="rep_paper" class="form-controls" value="1"  id="rep_paper" <?= !isset($profile_info) ? 'checked': '';  ?>>
+                                                <input type="checkbox" name="rep_paper" class="form-controls" value="1"  id="rep_paper" >
                                             </div>
                                             <div class="col-md-8">
                                                 <input type="text" class="form-control date_picker" name="sales_date" id="" />
@@ -101,7 +101,7 @@ add_css(array(
                                     <td align="center" class="table_body_customer">
                                         <div class="row">
                                             <div class="col-md-2 header_checkbox" >
-                                                <input type="checkbox" name="rep_paper" class="form-controls" value="1"  id="rep_paper" <?= !isset($profile_info) ? 'checked': '';  ?>>
+                                                <input type="checkbox" name="rep_paper" class="form-controls" value="1"  id="rep_paper" >
                                             </div>
                                             <div class="col-md-8">
                                                 <input type="text" class="form-control date_picker" name="sales_date" id=""/>
@@ -111,7 +111,7 @@ add_css(array(
                                     <td align="center" class="table_body_customer">
                                         <div class="row">
                                             <div class="col-md-2 header_checkbox" >
-                                                <input type="checkbox" name="rep_paper" class="form-controls" value="1"  id="rep_paper" <?= !isset($profile_info) ? 'checked': '';  ?>>
+                                                <input type="checkbox" name="rep_paper" class="form-controls" value="1"  id="rep_paper" >
                                             </div>
                                             <div class="col-md-8">
                                                 <input type="text" class="form-control date_picker" name="sales_date" id="" />
@@ -131,7 +131,7 @@ add_css(array(
                                     <td align="center" class="table_body_customer">
                                         <div class="row">
                                             <div class="col-md-2 header_checkbox">
-                                                <input type="checkbox" name="rep_paper" class="form-controls" value="1"  id="rep_paper" <?= !isset($profile_info) ? 'checked': '';  ?>>
+                                                <input type="checkbox" name="rep_paper" class="form-controls" value="1"  id="rep_paper" >
                                             </div>
                                             <div class="col-md-8">
                                                 <input type="text" class="form-control date_picker" name="sales_date" id="" />
@@ -143,7 +143,7 @@ add_css(array(
                                             <div class="input-group-prepend">
                                                 <span class="input-group-text" id="basic-addon1">$</span>
                                             </div>
-                                            <input type="number" class="form-control input_select" name="rep_charge_back" value="">
+                                            <input type="number" class="form-control input_select" id="rep_paid" name="rep_paid" min="0">
                                         </div>
                                     </td>
                                     <td align="center" class="table_body_customer">
@@ -151,13 +151,13 @@ add_css(array(
                                             <div class="input-group-prepend">
                                                 <span class="input-group-text" id="basic-addon1">$</span>
                                             </div>
-                                            <input type="number" class="form-control input_select" name="rep_charge_back" value="">
+                                            <input type="number" class="form-control input_select" id="tech_paid" name="tech_paid" min="0" >
                                         </div>
                                     </td>
                                     <td align="center" class="table_body_customer">
                                         <div class="row">
                                             <div class="col-md-2 header_checkbox">
-                                                <input type="checkbox" name="rep_paper" class="form-controls" value="1"  id="rep_paper" <?= !isset($profile_info) ? 'checked': '';  ?>>
+                                                <input type="checkbox" name="rep_paper" class="form-controls" value="1"  id="rep_paper" >
                                             </div>
                                             <div class="col-md-8">
                                                 <input type="text" class="form-control date_picker" name="sales_date" id="" />
@@ -167,7 +167,7 @@ add_css(array(
                                     <td align="center" class="table_body_customer">
                                         <div class="row">
                                             <div class="col-md-2 header_checkbox" >
-                                                <input type="checkbox" name="rep_paper" class="form-controls" value="1"  id="rep_paper" <?= !isset($profile_info) ? 'checked': '';  ?>>
+                                                <input type="checkbox" name="rep_paper" class="form-controls" value="1"  id="rep_paper" >
                                             </div>
                                             <div class="col-md-8">
                                                 <input type="text" class="form-control date_picker" name="sales_date" id="" />
@@ -249,7 +249,7 @@ add_css(array(
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-timepicker/0.5.2/js/bootstrap-timepicker.min.js" integrity="sha512-2xXe2z/uA+2SyT/sTSt9Uq4jDKsT0lV4evd3eoE/oxKih8DSAsOF6LUb+ncafMJPAimWAXdu9W+yMXGrCVOzQA==" crossorigin="anonymous"></script>
 <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
 <script async defer src="https://maps.googleapis.com/maps/api/js?key=<?= google_credentials()['api_key'] ?>&callback=initMap&libraries=places&v=weekly&sensor=false"></script>
-
+<script src="https://momentjs.com/downloads/moment-with-locales.js"></script>
 <script >
     var autocomplete;
         function initMap() {

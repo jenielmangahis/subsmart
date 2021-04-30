@@ -2279,6 +2279,8 @@ class Workorder extends MY_Controller
             
                 'payment_method' => $this->input->post('payment_method'),
                 'amount' => $this->input->post('payment_amount'),
+                'billing_date' => $this->input->post('billing_date'),
+                'billing_frequency' => $this->input->post('billing_frequency'),
                 'is_collected' => '1',
                 'work_order_id' => $addQuery,
                 'date_created' => date("Y-m-d H:i:s"),
@@ -2294,6 +2296,8 @@ class Workorder extends MY_Controller
                 'amount' => $this->input->post('payment_amount'),
                 'check_number' => $this->input->post('check_number'),
                 'routing_number' => $this->input->post('routing_number'),
+                'billing_date' => $this->input->post('billing_date'),
+                'billing_frequency' => $this->input->post('billing_frequency'),
                 'work_order_id' => $addQuery,
                 'date_created' => date("Y-m-d H:i:s"),
                 'date_updated' => date("Y-m-d H:i:s")
@@ -2312,6 +2316,8 @@ class Workorder extends MY_Controller
                 'mail_state' => $this->input->post('mail_state'),
                 'mail_postcode' => $this->input->post('mail_postcode'),
                 'mail_cross_street' => $this->input->post('mail_cross_street'),
+                'billing_date' => $this->input->post('billing_date'),
+                'billing_frequency' => $this->input->post('billing_frequency'),
                 'work_order_id' => $addQuery,
                 'date_created' => date("Y-m-d H:i:s"),
                 'date_updated' => date("Y-m-d H:i:s")
@@ -2328,6 +2334,8 @@ class Workorder extends MY_Controller
                 'credit_number' => $this->input->post('credit_number'),
                 'credit_expiry' => $this->input->post('credit_expiry'),
                 'credit_cvc' => $this->input->post('credit_cvc'),
+                'billing_date' => $this->input->post('billing_date'),
+                'billing_frequency' => $this->input->post('billing_frequency'),
                 'work_order_id' => $addQuery,
                 'date_created' => date("Y-m-d H:i:s"),
                 'date_updated' => date("Y-m-d H:i:s")
@@ -2343,6 +2351,8 @@ class Workorder extends MY_Controller
                 'credit_number' => $this->input->post('debit_credit_number'),
                 'credit_expiry' => $this->input->post('debit_credit_expiry'),
                 'credit_cvc' => $this->input->post('debit_credit_cvc'),
+                'billing_date' => $this->input->post('billing_date'),
+                'billing_frequency' => $this->input->post('billing_frequency'),
                 'work_order_id' => $addQuery,
                 'date_created' => date("Y-m-d H:i:s"),
                 'date_updated' => date("Y-m-d H:i:s")
@@ -2357,6 +2367,8 @@ class Workorder extends MY_Controller
                 'amount' => $this->input->post('payment_amount'),
                 'routing_number' => $this->input->post('ach_routing_number'),
                 'account_number' => $this->input->post('ach_account_number'),
+                'billing_date' => $this->input->post('billing_date'),
+                'billing_frequency' => $this->input->post('billing_frequency'),
                 'work_order_id' => $addQuery,
                 'date_created' => date("Y-m-d H:i:s"),
                 'date_updated' => date("Y-m-d H:i:s")
@@ -2372,6 +2384,8 @@ class Workorder extends MY_Controller
                 'account_credentials' => $this->input->post('account_credentials'),
                 'account_note' => $this->input->post('account_note'),
                 'confirmation' => $this->input->post('confirmation'),
+                'billing_date' => $this->input->post('billing_date'),
+                'billing_frequency' => $this->input->post('billing_frequency'),
                 'work_order_id' => $addQuery,
                 'date_created' => date("Y-m-d H:i:s"),
                 'date_updated' => date("Y-m-d H:i:s")
@@ -2387,6 +2401,8 @@ class Workorder extends MY_Controller
                 'account_credentials' => $this->input->post('paypal_account_credentials'),
                 'account_note' => $this->input->post('paypal_account_note'),
                 'confirmation' => $this->input->post('paypal_confirmation'),
+                'billing_date' => $this->input->post('billing_date'),
+                'billing_frequency' => $this->input->post('billing_frequency'),
                 'work_order_id' => $addQuery,
                 'date_created' => date("Y-m-d H:i:s"),
                 'date_updated' => date("Y-m-d H:i:s")
@@ -2402,6 +2418,8 @@ class Workorder extends MY_Controller
                 'account_credentials' => $this->input->post('square_account_credentials'),
                 'account_note' => $this->input->post('square_account_note'),
                 'confirmation' => $this->input->post('square_confirmation'),
+                'billing_date' => $this->input->post('billing_date'),
+                'billing_frequency' => $this->input->post('billing_frequency'),
                 'work_order_id' => $addQuery,
                 'date_created' => date("Y-m-d H:i:s"),
                 'date_updated' => date("Y-m-d H:i:s")
@@ -2416,6 +2434,8 @@ class Workorder extends MY_Controller
                 'amount' => $this->input->post('payment_amount'),
                 'account_credentials' => $this->input->post('warranty_account_credentials'),
                 'account_note' => $this->input->post('warranty_account_note'),
+                'billing_date' => $this->input->post('billing_date'),
+                'billing_frequency' => $this->input->post('billing_frequency'),
                 'work_order_id' => $addQuery,
                 'date_created' => date("Y-m-d H:i:s"),
                 'date_updated' => date("Y-m-d H:i:s")
@@ -2430,6 +2450,8 @@ class Workorder extends MY_Controller
                 'amount' => $this->input->post('payment_amount'),
                 'account_credentials' => $this->input->post('home_account_credentials'),
                 'account_note' => $this->input->post('home_account_note'),
+                'billing_date' => $this->input->post('billing_date'),
+                'billing_frequency' => $this->input->post('billing_frequency'),
                 'work_order_id' => $addQuery,
                 'date_created' => date("Y-m-d H:i:s"),
                 'date_updated' => date("Y-m-d H:i:s")
@@ -2444,6 +2466,8 @@ class Workorder extends MY_Controller
                 'amount' => $this->input->post('payment_amount'),
                 'account_credentials' => $this->input->post('e_account_credentials'),
                 'account_note' => $this->input->post('e_account_note'),
+                'billing_date' => $this->input->post('billing_date'),
+                'billing_frequency' => $this->input->post('billing_frequency'),
                 'work_order_id' => $addQuery,
                 'date_created' => date("Y-m-d H:i:s"),
                 'date_updated' => date("Y-m-d H:i:s")
@@ -2459,6 +2483,8 @@ class Workorder extends MY_Controller
                 'credit_number' => $this->input->post('other_credit_number'),
                 'credit_expiry' => $this->input->post('other_credit_expiry'),
                 'credit_cvc' => $this->input->post('other_credit_cvc'),
+                'billing_date' => $this->input->post('billing_date'),
+                'billing_frequency' => $this->input->post('billing_frequency'),
                 'work_order_id' => $addQuery,
                 'date_created' => date("Y-m-d H:i:s"),
                 'date_updated' => date("Y-m-d H:i:s")
@@ -2473,6 +2499,8 @@ class Workorder extends MY_Controller
                 'amount' => $this->input->post('payment_amount'),
                 'account_credentials' => $this->input->post('other_payment_account_credentials'),
                 'account_note' => $this->input->post('other_payment_account_note'),
+                'billing_date' => $this->input->post('billing_date'),
+                'billing_frequency' => $this->input->post('billing_frequency'),
                 'work_order_id' => $addQuery,
                 'date_created' => date("Y-m-d H:i:s"),
                 'date_updated' => date("Y-m-d H:i:s")

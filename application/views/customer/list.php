@@ -442,31 +442,31 @@ add_css(array(
                                                                 </a>
                                                             </li>
                                                             <li>
-                                                                <a href="#" class="editItemBtn">
+                                                                <a href="mailto:<?= $customer->email; ?>" class="editItemBtn">
                                                                     <span class="fa fa-envelope icon"></span>
                                                                     Email
                                                                 </a>
                                                             </li>
                                                             <li>
-                                                                <a href="#" class="editItemBtn">
+                                                                <a href="javascript:void(0);" id="<?= $customer->phone_m; ?>" onclick='call(this.id);return false;' class="editItemBtn">
                                                                     <span class="fa fa-phone icon"></span>
                                                                     Call
                                                                 </a>
                                                             </li>
                                                             <li>
-                                                                <a href="#" class="editItemBtn">
+                                                                <a href="<?= base_url('invoice/add/'); ?>" class="editItemBtn">
                                                                     <span class="fa fa-file icon"></span>
                                                                     Invoice
                                                                 </a>
                                                             </li>
                                                             <li>
-                                                                <a href="#" class="editItemBtn">
-                                                                    <span class="fa fa-wrench icon"></span>
-                                                                    Work Order
+                                                                <a href="<?= base_url('customer/module/'.$customer->prof_id); ?>" class="editItemBtn">
+                                                                    <span class="fa fa-dashboard icon"></span>
+                                                                   Dashboard
                                                                 </a>
                                                             </li>
                                                             <li>
-                                                                <a href="#" class="editItemBtn">
+                                                                <a href="<?= base_url('job/new_job1/'); ?>" class="editItemBtn">
                                                                     <span class="fa fa-calendar-check-o icon"></span>
                                                                     Schedule
                                                                 </a>
@@ -576,6 +576,12 @@ add_footer_js(array(
 
 <?php include viewPath('customer/adv_cust/css_list'); ?>
 <?php include viewPath('customer/js/js_index'); ?>
+
+<script type="text/javascript">
+    function call(data) {
+        window.open('tel:' + data);
+    }
+</script>
 <style>
     .btn{
         font-size: 12px !important;

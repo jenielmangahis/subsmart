@@ -188,7 +188,7 @@ class Timesheet_model extends MY_Model
         $this->db->insert_batch('user_seen_notif', $seen_notif);
     }
 
-    public function get_company_admins($company_id)
+    public function get_company_users($company_id)
     {
         $query = $this->db->query("SELECT * From users  where company_id = " . $company_id . " ");
         return $query->result();

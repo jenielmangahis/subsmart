@@ -292,9 +292,16 @@ class Vendors_model extends MY_Model {
 		// $this->db->where('company_id', logged('company_id'));
 		$this->db->where('vendor_id', $vendorId);
 		$this->db->where('status', 1);
-		if($filters['start-date']) {
+		if(isset($filters['start-date'])) {
 			$this->db->where('payment_date >=', $filters['start-date']);
 			$this->db->where('payment_date <=', $filters['end-date']);
+		}
+		if(isset($filters['status'])) {
+			if(is_array($filters['status'])) {
+				$this->db->where_in('status', $filters['status']);
+			} else {
+				$this->db->where('status', $filters['status']);
+			}
 		}
 		
 		$query = $this->db->get('accounting_expense');

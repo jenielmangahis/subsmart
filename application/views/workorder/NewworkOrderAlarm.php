@@ -1417,7 +1417,7 @@ input:checked + .slider:before {
                                         <div class="col-md-3">
                                             <div class="form-group">
                                                 <label for="billing_freq"> Billing Frequency:</label>
-                                                <select name="billing_freq"
+                                                <select name="billing_frequency"
                                                         class="form-control"
                                                         id="billing_freq">
                                                     <option>--SELECT--</option>
