@@ -8,6 +8,11 @@ class DealsSteals_model extends MY_Model
     public $is_active = 1;
     public $is_inactive = 0;
 
+    public $status_draft  = 0;
+    public $status_active = 1;
+    public $status_scheduled = 2;
+    public $status_ended = 3;
+
     public function getAll($filters=array())
     {
         $id = logged('id');
@@ -102,6 +107,27 @@ class DealsSteals_model extends MY_Model
         $this->db->set($data);
         $this->db->where('id', $id);
         $this->db->update();
+    }
+
+    public function dealStealPrice()
+    {
+        return 10;
+    }
+
+    public function statusDraft(){
+        return $this->status_draft;
+    }
+
+    public function statusScheduled(){
+        return $this->status_scheduled;
+    }
+
+    public function statusEnded(){
+        return $this->status_ended;
+    }
+
+    public function statusActive(){
+        return $this->status_active;
     }
 
 }

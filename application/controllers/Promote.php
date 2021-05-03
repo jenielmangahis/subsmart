@@ -47,8 +47,11 @@ class Promote extends MY_Controller {
 			'deal_price' => $post['price'],
 			'original_price' => $post['price_original'],
 			'photos' => $photo,			
+			'valid_from' => date("Y-m-d"),
+			'valid_to' => date("Y-m-d"),
 			'date_created' => date("Y-m-d H:i:s"),
-			'date_modified' => date("Y-m-d H:i:s")
+			'date_modified' => date("Y-m-d H:i:s"),
+			'status' => $this->DealsSteals_model->statusDraft()
 		];
 
 		$deals_steals_id = $this->DealsSteals_model->create($data);
@@ -178,7 +181,7 @@ class Promote extends MY_Controller {
             'email_subject' => $post['email_subject'],
             'email_body' => $post['email_body']
         ];
-        $emailBlast= $this->DealsSteals_model->updateDealsSteals($deals_steals_id,$data);
+        $dealsSteals = $this->DealsSteals_model->updateDealsSteals($deals_steals_id,$data);
 
         $json_data = [
                 'is_success' => true,
@@ -199,6 +202,7 @@ class Promote extends MY_Controller {
         $dealsSteals = $this->DealsSteals_model->getById($deals_steals_id);
         
         $this->page_data['dealsSteals'] = $dealsSteals;
+        $this->page_data['deals_price'] = $this->DealsSteals_model->dealStealPrice();
         $this->load->view('promote/preview_email_message', $this->page_data);
     }
 
@@ -215,6 +219,78 @@ class Promote extends MY_Controller {
         $this->page_data['subject'] = $subject;
         $this->page_data['company'] = $company;
         $this->load->view('promote/preview_email', $this->page_data);
+    }
+
+    public function ajax_update_validity(){
+    	$json_data = [
+                'is_success' => false,
+                'err_msg' => 'Cannot save data'
+        ];
+
+
+        $post = $this->input->post(); 
+        $deals_steals_id = $this->session->userdata('dealsStealsId');
+        
+        $data = [
+            'valid_from' => date("Y-m-d",strtotime($post['valid_from'])),
+            'valid_to' => date("Y-m-d",strtotime($post['valid_to']))
+        ];
+
+        $dealsSteals = $this->DealsSteals_model->updateDealsSteals($deals_steals_id,$data);
+
+        $json_data = [
+                'is_success' => true,
+                'err_msg' => ''
+        ];
+
+        echo json_encode($json_data);
+    }
+
+    public function payment(){
+    	$this->load->model('CardsFile_model');
+    	$cid  = logged('company_id');
+        $deals_steals_id = $this->session->userdata('dealsStealsId');
+
+        $dealsSteals = $this->DealsSteals_model->getById($deals_steals_id);
+        $creditCards = $this->CardsFile_model->getAllByCompanyId($cid);
+
+        $this->page_data['creditCards'] = $creditCards;
+        $this->page_data['dealsSteals'] = $dealsSteals;
+        $this->page_data['deals_price'] = $this->DealsSteals_model->dealStealPrice();
+        $this->load->view('promote/payment', $this->page_data);
+    }
+
+    public function ajax_activate_deals(){
+    	$is_success = false;
+        $msg = '';
+
+        $post = $this->input->post();
+
+        if( isset($post['payment_method_token']) ){
+            $deals_steals_id = $this->session->userdata('dealsStealsId');
+
+            $dealsSteals = $this->DealsSteals_model->getById($deals_steals_id);
+            if( $dealsSteals ){
+                $total_cost = $this->DealsSteals_model->dealStealPrice();
+                $is_auto_renew = 0;
+                if( isset($post['is_auto_renew']) ){
+                	$is_auto_renew = 1;
+                }
+
+                $data = ['status' => $this->DealsSteals_model->statusActive(), 'is_auto_renew' => $is_auto_renew, 'total_cost' => $total_cost, 'cards_file_id' => $post['payment_method_token']];
+                $this->DealsSteals_model->updateDealsSteals($deals_steals_id,$data);
+
+                $is_success = true;
+                $msg = 'Deals Steals was successfully updated.';
+            }else{
+                $msg = 'Cannot find data';
+            }  
+        }else{
+            $msg = 'Please select credit card';
+        }
+
+        $json_data = ['is_success' => $is_success, 'msg' => $msg];
+        echo json_encode($json_data);
     }
 
 }

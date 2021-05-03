@@ -847,3 +847,6 @@ $route['promote/build_email'] = 'Promote/build_email';
 $route['promote/create_email_message'] = 'Promote/create_email_message';
 $route['promote/preview_email_message'] = 'Promote/preview_email_message';
 $route['promote/_generate_preview'] = 'Promote/generate_preview';
+$route['promote/update_validity'] = 'Promote/ajax_update_validity';
+$route['promote/payment'] = 'Promote/payment';
+$route['promote/activate_deals'] = 'promote/ajax_activate_deals';
