@@ -3,6 +3,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 ini_set('max_input_vars', 30000);
 
 class Esign extends MY_Controller {
+    const ONE_MB = 1048576;
 
 	public function __construct()
     {
@@ -743,73 +744,63 @@ SQL;
 	}
 
 	public function fileSave(){
+		header('content-type: application/json');
 
-		$this->load->model('User_docflies_model', 'User_docflies_model');
-		//$id = logged('id');
+		if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            echo json_encode(['success' => false]);
+            return;
+        }
 
-		// $extension	 = strtolower(end(explode('.',$_FILES['docFile']['name'])));
-		// $filename = time()."_".rand(1,9999999)."_"."DocFiles".".".$extension;
-		// $location = "../../uploads/DocFiles";
-		// echo move_uploaded_file($filename, $location);
-
-
-		if(isset($_FILES['docFile']) && $_FILES['docFile']['tmp_name'] != '') {
-
-			$tmp_name = $_FILES['docFile']['tmp_name'];
-			$extension	 = strtolower(end(explode('.',$_FILES['docFile']['name'])));
-			// basename() may prevent filesystem traversal attacks;
-			// further validation/sanitation of the filename may be appropriate
-			$name = time()."_".rand(1,9999999)."_".basename($_FILES["docFile"]["name"]);
-			move_uploaded_file($tmp_name, "./uploads/DocFiles/$name");
-			$id = 0;
-
-
-
-			if($_POST['file_id'] > 0)
-			{
-				$this->db->where('id', $_POST['file_id']);
-				$this->db->update($this->User_docflies_model->table, [
-					'name' => $name
-				]);
-
-				$id = $_POST['file_id'];
-			} else {
-
-				$id = $this->User_docflies_model->create([
-					'user_id' => logged('id'),
-					'name' => $name,
-					'company_id' => logged('company_id'),
-				]);
-
-				$filepath = FCPATH . 'uploads/DocFiles/';
-				$documentPath = $filepath . $name;
-				$this->db->insert('user_docfile_documents', [
-					'name' => $name,
-					'path' => str_replace(FCPATH, '/', $documentPath),
-					'docfile_id' => $id,
-				]);
-			}
-
-			if(isset($_POST['next_step']) && $_POST['next_step'] == 0)
-			{
-				redirect('esign/Files?id='.$id);
-			}
-			if(isset($_POST['next_step']) && $_POST['next_step'] == 1)
-			{
-				redirect('esign/Files?id='.$id.'&next_step=2');
-			}
-
-		} else if (isset($_POST['file_id']) && $_POST['file_id'] > 0) {
-
-			if(isset($_POST['next_step']) && $_POST['next_step'] == 0)
-			{
-				redirect('esign/Files?id='.$_POST['file_id']);
-			}
-			if(isset($_POST['next_step']) && $_POST['next_step'] == 1)
-			{
-				redirect('esign/Files?id='.$_POST['file_id'].'&next_step=2');
-			}
+		$filepath = FCPATH . 'uploads/DocFiles/';
+		if (!file_exists($filepath)) {
+			mkdir($filepath, 0777, true);
 		}
+
+		$files = $_FILES['files'];
+        $count = count($files['name']);
+
+        for ($i = 0; $i < $count; $i++) {
+            if ($files['size'][$i] <= self::ONE_MB * 8) {
+                continue;
+            }
+
+            echo json_encode(['success' => false, 'reason' => 'Maximum file size is less than 8MB']);
+            return;
+        }
+
+		['subject' => $subject, 'message' => $message] = $this->input->post();
+
+		$this->db->insert('user_docfile', [
+			'name' => '',
+			'type' => 'Single',
+			'status' => 'Draft',
+			'subject' => $subject,
+			'message' => $message,
+			'user_id' => logged('id'),
+			'company_id' => logged('company_id'),
+			'updated_at' => date('Y-m-d H:i:s'),
+		]);
+
+		$insertedId = $this->db->insert_id();
+
+		for ($i = 0; $i < $count; $i++) {
+			$tempName = $files['tmp_name'][$i];
+			$filename = $files['name'][$i];
+			$filename = time() . "_" . rand(1, 9999999) . "_" . basename($filename);
+			$documentPath = $filepath . $filename;
+
+			$this->db->insert('user_docfile_documents', [
+				'name' => $filename,
+				'path' => str_replace(FCPATH, '/', $documentPath),
+				'docfile_id' => $insertedId,
+			]);
+
+			move_uploaded_file($tempName, $filepath . $filename);
+		}
+
+		$this->db->where('id', $insertedId);
+		$record = $this->db->get('user_docfile')->row();
+		echo json_encode(['data' => $record, 'is_created' => true]);
 	}
 
 	private function _get_datatables_query($postData){

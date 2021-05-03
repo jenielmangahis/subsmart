@@ -109,6 +109,7 @@
                             $.ajax({
                                 type: "POST",
                                 url: "<?= base_url() ?>/dashboard/sendFeed",
+                                dataType: 'json',
                                 data: {
                                     subject : $('#feedSubject').val(),
                                     message : $('#feedMessage').val()
@@ -116,7 +117,9 @@
                                 success: function (data)
                                 {
                                     $('#newFeed').modal('hide')
-                                    alert(data)
+                                    alert(data.msg);
+                                    
+                                    console.log(data.notifyResult);
                                 }
                             });
                         }
@@ -124,6 +127,7 @@
                         function _(el){
                            return document.getElementById(el);
                         }
+                        
                         function sendNewsLetter()
                         {
                             var file = _("file").files[0];

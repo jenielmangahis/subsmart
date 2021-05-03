@@ -10,6 +10,7 @@ class Vendors extends MY_Controller {
         $this->load->model('vendors_model');
         $this->load->model('accounting_attachments_model');
         $this->load->model('chart_of_accounts_model');
+        $this->load->model('accounting_terms_model');
 
         add_css(array(
             "assets/css/accounting/banking.css?v='rand()'",
@@ -63,6 +64,7 @@ class Vendors extends MY_Controller {
             "assets/js/accounting/expenses/vendors.js"
         ));
 
+        $this->page_data['terms'] = $this->accounting_terms_model->getActiveCompanyTerms(logged('company_id'));
         $this->page_data['expenseAccs'] = $this->chart_of_accounts_model->get_expense_accounts();
         $this->page_data['otherExpenseAccs'] = $this->chart_of_accounts_model->get_other_expense_accounts();
         $this->page_data['cogsAccs'] = $this->chart_of_accounts_model->get_cogs_accounts();
@@ -167,8 +169,8 @@ class Vendors extends MY_Controller {
             'opening_balance' => $this->input->post('opening_balance'),
             'opening_balance_as_of_date' => date("Y-m-d", strtotime($this->input->post('opening_balance_as_of_date'))),
             'account_number' => $this->input->post('account_number'),
-            'tax_id' => $this->input->post('business_number'),
-            'default_expense_account' => $this->input->post('default_expense_amount'),
+            'tax_id' => $this->input->post('tax_id'),
+            'default_expense_account' => $this->input->post('default_expense_account'),
             'notes' => $this->input->post('notes'),
             'attachments' => json_encode($this->input->post('attachments')),
             'status' => 1,
@@ -196,6 +198,7 @@ class Vendors extends MY_Controller {
 
         $vendor = $this->vendors_model->get_vendor_by_id($vendorId);
 
+        $this->page_data['terms'] = $this->accounting_terms_model->getActiveCompanyTerms(logged('company_id'));
         $this->page_data['expenseAccs'] = $this->chart_of_accounts_model->get_expense_accounts();
         $this->page_data['otherExpenseAccs'] = $this->chart_of_accounts_model->get_other_expense_accounts();
         $this->page_data['cogsAccs'] = $this->chart_of_accounts_model->get_cogs_accounts();
@@ -232,8 +235,8 @@ class Vendors extends MY_Controller {
             'opening_balance' => $this->input->post('opening_balance'),
             'opening_balance_as_of_date' => date("Y-m-d", strtotime($this->input->post('opening_balance_as_of_date'))),
             'account_number' => $this->input->post('account_number') !== "" ? $this->input->post('account_number') : null,
-            'tax_id' => $this->input->post('business_number'),
-            'default_expense_account' => $this->input->post('default_expense_amount'),
+            'tax_id' => $this->input->post('tax_id'),
+            'default_expense_account' => $this->input->post('default_expense_account'),
             'notes' => $this->input->post('notes'),
             'attachments' => $this->input->post('attachments') !== null ? json_encode($this->input->post('attachments')) : null,
             'updated_at' => date("Y-m-d H:i:s")
@@ -506,8 +509,30 @@ class Vendors extends MY_Controller {
     {
         $vendor = $this->vendors_model->get_vendor_by_id($vendorId);
         switch($filters['type']) {
+            case 'all-bills' :
+                $allBills = $this->vendors_model->get_vendor_bill_transactions($vendorId, $filters);
+            break;
+            case 'expenses' :
+                $expenses = $this->vendors_model->get_vendor_expense_transactions($vendorId, $filters);
+            break;
+            case 'checks' :
+                $checks = $this->vendors_model->get_vendor_check_transactions($vendorId, $filters);
+            break;
+            case 'recently-paid' :
+                $expenses = $this->vendors_model->get_vendor_expense_transactions($vendorId, $filters);
+                $checks = $this->vendors_model->get_vendor_check_transactions($vendorId, $filters);
+                $allBills = $this->vendors_model->get_vendor_bill_transactions($vendorId, $filters);
+                $creditCardPayments = $this->vendors_model->get_vendor_credit_card_payments($vendorId, $filters);
+            break;
+            case 'purchase-orders' :
+                $purchaseOrders = $this->vendors_model->get_vendor_purchase_orders($vendorId, $filters);
+            break;
             default :
                 $expenses = $this->vendors_model->get_vendor_expense_transactions($vendorId, $filters);
+                $checks = $this->vendors_model->get_vendor_check_transactions($vendorId, $filters);
+                $allBills = $this->vendors_model->get_vendor_bill_transactions($vendorId, $filters);
+                $creditCardPayments = $this->vendors_model->get_vendor_credit_card_payments($vendorId, $filters);
+                $purchaseOrders = $this->vendors_model->get_vendor_purchase_orders($vendorId, $filters);
             break;
         }
 
@@ -528,6 +553,90 @@ class Vendors extends MY_Controller {
                     'balance' => '$0.00',
                     'total' => '$'.number_format(floatval($expense->amount), 2, '.', ','),
                     'status' => 'Paid',
+                    'attachments' => ''
+                ];
+            }
+        }
+
+        if(isset($checks) && count($checks) > 0) {
+            foreach($checks as $check) {
+                $transactions[] = [
+                    'id' => $check->id,
+                    'date' => date("m/d/Y", strtotime($check->payment_date)),
+                    'type' => 'Check',
+                    'number' => $check->check_number,
+                    'payee' => $vendor->display_name,
+                    'method' => '',
+                    'source' => '',
+                    'category' => '',
+                    'memo' => $check->memo,
+                    'due_date' => '',
+                    'balance' => '$0.00',
+                    'total' => '$'.number_format(floatval($check->total_amount), 2, '.', ','),
+                    'status' => 'Paid',
+                    'attachments' => ''
+                ];
+            }
+        }
+
+        if(isset($allBills) && count($allBills) > 0) {
+            foreach($allBills as $bill) {
+                $transactions[] = [
+                    'id' => $bill->id,
+                    'date' => date("m/d/Y", strtotime($bill->bill_date)),
+                    'type' => 'Bill',
+                    'number' => $bill->bill_number,
+                    'payee' => $vendor->display_name,
+                    'method' => '',
+                    'source' => '',
+                    'category' => '',
+                    'memo' => $bill->memo,
+                    'due_date' => date("m/d/Y", strtotime($bill->due_date)),
+                    'balance' => '$0.00',
+                    'total' => '$'.number_format(floatval($bill->total_amount), 2, '.', ','),
+                    'status' => 'Paid',
+                    'attachments' => ''
+                ];
+            }
+        }
+
+        if(isset($creditCardPayments) && count($creditCardPayments) > 0) {
+            foreach($creditCardPayments as $cardPayment) {
+                $transactions[] = [
+                    'id' => $cardPayment->id,
+                    'date' => date("m/d/Y", strtotime($cardPayment->date)),
+                    'type' => 'Credit Card Payment',
+                    'number' => '',
+                    'payee' => $vendor->display_name,
+                    'method' => '',
+                    'source' => '',
+                    'category' => '',
+                    'memo' => $cardPayment->memo,
+                    'due_date' => '',
+                    'balance' => '$0.00',
+                    'total' => '$'.number_format(floatval($cardPayment->amount), 2, '.', ','),
+                    'status' => '',
+                    'attachments' => ''
+                ];
+            }
+        }
+
+        if(isset($purchaseOrders) && count($purchaseOrders) > 0) {
+            foreach($purchaseOrders as $purchaseOrder) {
+                $transactions[] = [
+                    'id' => $purchaseOrder->id,
+                    'date' => date("m/d/Y", strtotime($purchaseOrder->purchase_order_date)),
+                    'type' => 'Purchase Order',
+                    'number' => $purchaseOrder->permit_num,
+                    'payee' => $vendor->display_name,
+                    'method' => '',
+                    'source' => '',
+                    'category' => '',
+                    'memo' => $purchaseOrder->memo,
+                    'due_date' => date("m/d/Y", strtotime($purchaseOrder->purchase_order_date)),
+                    'balance' => '$0.00',
+                    'total' => '$'.number_format(floatval($purchaseOrder->amount), 2, '.', ','),
+                    'status' => '',
                     'attachments' => ''
                 ];
             }

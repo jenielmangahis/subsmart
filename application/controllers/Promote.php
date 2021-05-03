@@ -11,6 +11,7 @@ class Promote extends MY_Controller {
 
 		$this->load->model('DealsSteals_model');
 		$this->load->model('Users_model');    
+		$this->load->model('Business_model');
         $this->load->model('Clients_model');          
         $this->load->model('Customer_model');
         $this->load->model('CustomerGroup_model');
@@ -35,15 +36,17 @@ class Promote extends MY_Controller {
 		$is_success = true;
 		$err_msg = '';
 
-		$post = $this->input->post(); 
-		$user = $this->session->userdata('logged');
+		$post  = $this->input->post(); 
+		$user  = $this->session->userdata('logged');
+		$photo = $this->upload_photo();
 		$data = [
 			'user_id' => $user['id'],
 			'title' => $post['title'],
 			'description' => $post['description'],
 			'terms_conditions' => $post['terms'],
 			'deal_price' => $post['price'],
-			'original_price' => $post['price_original'],			
+			'original_price' => $post['price_original'],
+			'photos' => $photo,			
 			'date_created' => date("Y-m-d H:i:s"),
 			'date_modified' => date("Y-m-d H:i:s")
 		];
@@ -53,6 +56,24 @@ class Promote extends MY_Controller {
 
 		$json_data = ['is_success' => $is_success, 'err_msg' => $err_msg];
 		echo json_encode($json_data);
+	}
+
+	public function upload_photo(){
+
+		$comp_id = logged('company_id');
+		$target_dir = "./uploads/deals_steals/$comp_id/";
+		
+		if(!file_exists($target_dir)) {
+			mkdir($target_dir, 0777, true);
+		}
+
+		$tmp_name = $_FILES['image']['tmp_name'];
+		$extension = strtolower(end(explode('.',$_FILES['image']['name'])));
+		// basename() may prevent filesystem traversal attacks;
+		// further validation/sanitation of the filename may be appropriate
+		$name = basename($_FILES["image"]["name"]);
+		move_uploaded_file($tmp_name, "./uploads/deals_steals/$comp_id/$name");
+		return $name;
 	}
 
 	public function add_send_to(){
@@ -135,7 +156,7 @@ class Promote extends MY_Controller {
         $deals_steals_id = $this->session->userdata('dealsStealsId');
 
         $dealsSteals  = $this->DealsSteals_model->getById($deals_steals_id);
-        $company      = $this->Clients_model->getById($cid);
+        $company      = $this->Business_model->getByCompanyId($cid);
 
         $this->page_data['company'] = $company;
         $this->page_data['dealsSteals'] = $dealsSteals;
@@ -170,32 +191,30 @@ class Promote extends MY_Controller {
 
     public function preview_email_message()
     {
-    	echo 4;exit;
         $this->load->helper('functions');
 
         $cid  = logged('company_id');
-        $email_blast_id = $this->session->userdata('emailBlastId');
+        $deals_steals_id = $this->session->userdata('dealsStealsId');
 
-        $emailBlast = $this->EmailBlast_model->getById($email_blast_id);
-        if( $emailBlast->sending_type == $this->EmailBlast_model->sendingTypeAll() ){
-            $customers   = $this->Customer_model->getAllByCompany($cid);  
-            $total_recipients = count($customers);
-        }else{
-            $emailRecipients = $this->EmailBlastSendTo_model->getAllByEmailBlastId($email_blast_id);            
-            $total_recipients = count($emailRecipients);     
-        }
+        $dealsSteals = $this->DealsSteals_model->getById($deals_steals_id);
         
-
-        $price_per_email = $this->EmailBlast_model->getPricePerEmail();
-        $total_email_price = $total_recipients * $price_per_sms;
-        $sendToOptions = $this->EmailBlast_model->sendToOptions();
-
-        $this->page_data['send_to'] = $sendToOptions[$emailBlast->sending_type];
-        $this->page_data['emailCampaign'] = $emailBlast;
-        $this->page_data['total_email_price'] = $total_sms_price;
-        $this->page_data['total_recipients'] = $total_recipients;
-        $this->page_data['price_per_email'] = $price_per_email;
+        $this->page_data['dealsSteals'] = $dealsSteals;
         $this->load->view('promote/preview_email_message', $this->page_data);
+    }
+
+    public function generate_preview(){
+        $post = $this->input->post(); 
+        $cid  = logged('company_id');
+
+        $subject = $post['email_subject'];
+        $message = $post['email_body'];
+
+        $company = $this->Business_model->getByCompanyId($cid);
+
+        $this->page_data['message'] = replaceSmartTags($message);
+        $this->page_data['subject'] = $subject;
+        $this->page_data['company'] = $company;
+        $this->load->view('promote/preview_email', $this->page_data);
     }
 
 }

@@ -484,7 +484,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                         <div class="row" style="padding: 10px 33px 20px 33px;">
                             <div class="col-md-12 banking-tab-container">
                                 <a href="<?php echo url('/timesheet/attendance') ?>" class="banking-tab<?php echo ($this->uri->segment(1) == "attendance") ?: '-active'; ?>" style="text-decoration: none">Attendance</a>
-                                <?php if ($this->session->userdata('logged')['role'] < 5) { ?>
+                                <?php if (logged("role") < 5) { ?>
                                     <a href="<?php echo url('/timesheet/attendance_logs') ?>" class="banking-tab">Time Logs</a>
                                     <a href="<?php echo url('/timesheet/notification') ?>" class="banking-tab">Notification</a>
                                     <a href="<?php echo url('/timesheet/employee') ?>" class="banking-tab">Employee</a>
@@ -500,12 +500,12 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                         <div class="card-body">
                             <div class="today-date">
                                 <?php
-                                date_default_timezone_set($this->session->userdata('usertimezone'));
+                                date_default_timezone_set(logged("role"));
 
                                 ?>
                                 <h6><i class="fa fa-calendar-alt"></i> Today: <span style="color: grey"><?php echo date('M d, Y') . " " ?></span></h6>
                             </div>
-                            <?php if ($this->session->userdata('logged')['role'] < 5) : ?>
+                            <?php if (logged("role") < 5) : ?>
                                 <div class="row" style="margin-bottom: 20px">
                                     <div class="col-md-3">
                                         <div class="tile-container">
@@ -865,8 +865,8 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                                             <center class="loading-img-action" style="display:none;"><img class="ts-loader-img" src="<?= base_url() ?>assets/css/timesheet/images/ring-loader.svg" alt="" style="height:40px;"> </center>
                                                             <a href="javascript:void(0)" title="Lunch in/out" data-toggle="tooltip" class="employee-break" style="<?php if ($break_id == "") {
                                                                                                                                                                         echo "display:none;";
-                                                                                                                                                                    } ?>" id="<?php echo $break_id ?>" data-id="<?php echo $user->id ?>" data-name="<?php echo $user->FName; ?> <?php echo $user->LName; ?>" data-approved="<?php echo $this->session->userdata('logged')['id']; ?>" data-photo="<?php echo $user_photo; ?>" data-company="<?php echo $company_id ?>"><i class="fa fa-coffee fa-lg"></i></a>
-                                                            <a href="javascript:void(0)" title="Clock in/out" data-toggle="tooltip" class="employee-in-out" <?php echo $disabled ?> id="<?php echo $btn_action; ?>" data-attn="<?php echo $attn_id; ?>" data-name="<?php echo $user->FName; ?> <?php echo $user->LName; ?>" data-id="<?php echo $user->id; ?>" data-approved="<?php echo $this->session->userdata('logged')['id']; ?>" data-photo="<?php echo $user_photo; ?>" data-company="<?php echo $company_id ?>"><i class="fa fa-sign-in fa-lg"></i></a>
+                                                                                                                                                                    } ?>" id="<?php echo $break_id ?>" data-id="<?php echo $user->id ?>" data-name="<?php echo $user->FName; ?> <?php echo $user->LName; ?>" data-approved="<?php echo logged("id"); ?>" data-photo="<?php echo $user_photo; ?>" data-company="<?php echo $company_id ?>"><i class="fa fa-coffee fa-lg"></i></a>
+                                                            <a href="javascript:void(0)" title="Clock in/out" data-toggle="tooltip" class="employee-in-out" <?php echo $disabled ?> id="<?php echo $btn_action; ?>" data-attn="<?php echo $attn_id; ?>" data-name="<?php echo $user->FName; ?> <?php echo $user->LName; ?>" data-id="<?php echo $user->id; ?>" data-approved="<?php echo logged("id"); ?>" data-photo="<?php echo $user_photo; ?>" data-company="<?php echo $company_id ?>"><i class="fa fa-sign-in fa-lg"></i></a>
                                                             <i class="fa <?php echo $status; ?> status" title="<?php echo $tooltip_status; ?>" data-toggle="tooltip"></i>
                                                         </td>
                                                         <td></td>
@@ -901,7 +901,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                 </div>
                             <?php endif; ?>
                             <!-- end row -->
-                            <?php if ($this->session->userdata('logged')['role'] > 5) : ?>
+                            <?php if (logged("role") > 5) : ?>
                                 <?php
                                 $lunch_active = null;
                                 $employee_logs = getEmployeeLogs($attendance_id);
@@ -909,7 +909,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                 $lunch_icon = 'static';
                                 $lunch_disabled = 'disabled="disabled"';
                                 foreach ($employee_attn as $attn) {
-                                    if ($attn->user_id == $this->session->userdata('logged')['id'] && $attn->status == 1) {
+                                    if ($attn->user_id == logged("id") && $attn->status == 1) {
                                         foreach ($employee_logs as $log) {
                                             if ($attn->id == $log->attendance_id) {
                                                 $lunch_disabled = null;
@@ -1001,7 +1001,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                                             $task_duration = '-';
                                                             $timezone = '-';
                                                             foreach ($schedules as $scheds) {
-                                                                if ($scheds->user_id == $this->session->userdata('logged')['id']) {
+                                                                if ($scheds->user_id == logged("id")) {
                                                                     $unix_ts = time();
                                                                     $set_date = new DateTime("now", new DateTimeZone($timezone));
                                                                     $set_date->setTimestamp($unix_ts);
@@ -1681,6 +1681,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                 data.company_id,
                                 data.title
                             );
+                            get_user_current_geo_possition(data.timesheet_logs_id, "timesheet_logs");
                         }
                     });
 

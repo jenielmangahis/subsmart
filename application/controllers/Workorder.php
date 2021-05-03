@@ -2143,11 +2143,11 @@ class Workorder extends MY_Controller
         $company_id  = getLoggedCompanyID();
         $user_id  = getLoggedUserID();
 
-        // $data = $this->input->post('output-1');
+        $data = $this->input->post('output-1');
         // $file = md5(uniqid()) . '.png';
 
         // // remove "data:image/png;base64,"
-        // $uri =  substr($data,strpos($data,",")+1);
+        // $dataURI =  substr($data,strpos($data,",")+1);
 
         
         // $decoded=base64_decode($uri);
@@ -2176,6 +2176,32 @@ class Workorder extends MY_Controller
         //         $imgval = array('success' => 'success' ,'data_image' => $data["file_name"]);  
         //         echo json_encode($imgval );
         //     }
+
+        // $folderPath = "./uploads/";
+  
+        // $image_parts = explode(";base64,", $datasig);
+            
+        // $image_type_aux = explode("image/", $image_parts[0]);
+        
+        // $image_type = $image_type_aux[1];
+        
+        // $image_base64 = base64_decode($image_parts[1]);
+        
+        // $file = $folderPath . uniqid() . '.'.$image_type;
+        
+        // file_put_contents($file, $image_base64);
+        // echo "Signature Uploaded Successfully.";
+
+        // $dataURI = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAPCAMAAADarb8dAAAABlBMVEUAAADtHCTeKUOwAAAAF0lEQVR4AWOgAWBE4zISkMbDZQRyaQkABl4ADHmgWUYAAAAASUVORK5CYII=";
+
+        // $img = explode(',',$dataURI,2)[1];
+        // $pic = 'data://text/plain;base64,'. $img;
+
+        // $pdf = new FPDF();
+        // $pdf->AddPage();
+        // $pdf->Image($pic, 10,30,0,0,'png');
+        // $pdf->Output();
+        // echo "Signature Uploaded Successfully.";
 
         $new_data = array(
             

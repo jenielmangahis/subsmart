@@ -73,29 +73,28 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                   <div class="card mt-0">
                     <div class="row">
                       <div class="col-sm-6 left">
-                        <h3 class="page-title">Preview & Confirm</h3>
+                        <h3 class="page-title">Preview & Confirm Deals</h3>
                       </div>
                       <div class="col-sm-6 right dashboard-container-1">
                         <div class="float-right d-none d-md-block">
                             <div class="dropdown">
-                                    <a href="<?php echo url('sms_campaigns') ?>" class="btn btn-primary" aria-expanded="false">
-                                        <i class="mdi mdi-settings mr-2"></i> Go Back to SMS Blast list
+                                    <a href="<?php echo url('promote/deals') ?>" class="btn btn-primary" aria-expanded="false">
+                                        <i class="mdi mdi-settings mr-2"></i> Go Back to Deals Steals list
                                     </a>
                             </div>
                         </div>
                       </div>
                     </div>
                     <div class="alert alert-warning mt-2 mb-3" role="alert">
-                        <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">Preview and select when to send the SMS-es.
-                        </span>
+                        <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">Preview and select the valid period.</span>
                     </div>
                     <div class="tabs-menu">
                         <ul class="clearfix">
-                          <li><a href="<?= base_url('email_campaigns/edit_campaign/' . $emailCampaign->id); ?>">1. Create Campaign</a></li>
-                          <li><a href="<?= base_url('email_campaigns/add_campaign_send_to'); ?>">2. Select Customers</a></li>
-                          <li><a href="<?= base_url('email_campaigns/build_email'); ?>">3. Build Email</a></li>
-                          <li class="active"><a href="<?= base_url('email_campaigns/preview_email_message'); ?>">4. Preview</a></li>
-                          <li><a href="<?= base_url('email_campaigns/payment'); ?>">5. Purchase</a></li>
+                          <li>1. Create Deal</li>
+                          <li>2. Select Customers</li>
+                          <li>3. Build Email</li>
+                          <li class="active">4. Preview</li>
+                          <li>5. Purchase</li>
                         </ul>
                         <hr />
                     </div>
@@ -103,16 +102,25 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                       <div class="col-md-6 pl-0 pr-0 left" style="background-color: #ffffff !important;">
                         <div class="box">
                           <div class="form-group">
-                              <label><b>Campaign Name</b></label>
-                              <div><?= $emailCampaign->campaign_name; ?></div>
+                              <h3 style="font-size: 26px;"><?= $dealsSteals->title; ?></h3>
+                              <h3 style="color:#2ab363;font-size: 24px;">$<?= number_format($dealsSteals->deal_price,2); ?></h3>
                           </div>
-                          <div class="form-group">
-                              <label><b>Send To</b></label>
-                              <div><?= $send_to; ?></div>
+                          <div class="row margin-bottom-sec">
+                              <div class="col-md-6">
+                                  <?php 
+                                    $diff_increase  = $dealsSteals->original_price - $dealsSteals->deal_price;
+                                    $percentage_off = ($diff_increase / $dealsSteals->original_price) * 100;  
+                                  ?>
+                                  <span class="text-ter">was <span style="font-size:18px;">$<?= number_format($dealsSteals->original_price,2); ?></span> you get <span style="font-size: 18px;"><?= number_format($percentage_off,2); ?>%</span> off</span>
+                              </div>
+                              <div class="col-md-6 text-right">
+                                  <span class="text-ter"><i class="fa fa-clock-o"></i> Expires in <span data-shop="valid-days">30</span> days</span>
+                              </div>
                           </div>
-                          <div class="form-group">
-                              <label><b>Subject</b></label>
-                              <div><?= $emailCampaign->email_subject; ?></div>
+                          <div class="row margin-bottom-sec">
+                              <div class="col-md-12">
+                                  <img src="<?= base_url("uploads/deals_steals/" . $dealsSteals->company_id . "/" . $dealsSteals->photos); ?>" style="width: 100%;">
+                              </div>
                           </div>
                         </div>
                       </div>
@@ -121,39 +129,32 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                   <div class="margin-bottom">
                                       <div class="form-msg" style="display: none;"></div>
                                       <div>
-                                          <label><b>Price : $<?= number_format($price_per_email, 2); ?> (up to 1000 emails)</b></label>
+                                          <label>The current package to run the deal:</label><br/><br/>
+                                          <label style="font-weight: bold;">Pay flat fee $10.00 to list your deal for 1 Month.</label>
                                       </div>
-                                      <div style="margin-bottom: 10px;">
-                                        <b>Send to: <?= $total_recipients; ?> customers</b>
-                                      </div>
-                                      <div class="help help-sm help-block">Pay a flat fee to use the service and only $<?= number_format($price_per_email, 2); ?> for every 1000 emails.
-                                      The emails will be sent to your customers upon confirmation.</div>
+                                      <div class="help help-sm help-block">                                        
+                                        <div class="help help-sm">
+                                            The deal will be emailed to your customers upon confirmation.
+                                            You pay a monthly fee to keep the deal valid. No additional commission on customer bookings and transactions.
+                                        </div>
                                   </div>
-                                  <div class="form-group">
-                                      <div class="">
-                                          <?php 
-
-                                            if($emailCampaign->price_variables != ''){ 
-                                              $is_scheduled = 'checked="checked"';
-                                              $send_date = date("m/d/Y",strtotime($emailCampaign->send_date));
-                                            }else{
-                                              $is_scheduled = "";
-                                              $send_date = date("m/d/Y");
-                                            }
-
-                                          ?>
-                                          <label style="font-weight: bold;" for="is_scheduled">Schedule On</label>
-                                      </div>
+                                  <div class="form-group" style="margin-top: 72px;">
                                       <div class="select-date-time">
-                                          <br />
-                                          <div class="help help-sm help-block">Optional, select a date if you would like to schedule this campaign.</div>
                                           <div class="hide" id="scheduled">
                                               <div class="row">
                                                   <div class="col-sm-8">
                                                       <div class="input-group mb-3">
                                                         <div class="input-group-prepend">
-                                                          <span class="input-group-text" id="basic-addon1"><i class="fa fa-calendar"></i></span>
-                                                          <input type="text" name="send_date" value="<?= $send_date; ?>"  class="form-control default-datepicker" autocomplete="off" required />
+                                                          <label style="width: 400px;">Valid From <span class="fa fa-question-circle help-tooltip" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Select the start date. You can schedule a deal if you set this date in future." data-original-title="" title="" style="margin-left: 10px;"></span></label>                                                          
+                                                          <input type="text" name="send_date" value="<?= $send_date; ?>"  class="form-control default-datepicker" autocomplete="off" required /><span class="input-group-text" id="basic-addon1"><i class="fa fa-calendar"></i></span>
+                                                        </div>
+                                                      </div>
+                                                  </div>
+                                                  <div class="col-sm-8">
+                                                      <div class="input-group mb-3">
+                                                        <div class="input-group-prepend">
+                                                          <label style="width: 400px;">Valid To <span style="margin-left: 10px;" class="fa fa-question-circle help-tooltip" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="The date when the deal will expire." data-original-title="" title=""></span></label>                                                          
+                                                          <input type="text" name="send_date" value="<?= $send_date; ?>"  class="form-control default-datepicker" autocomplete="off" required /><span class="input-group-text" id="basic-addon1"><i class="fa fa-calendar"></i></span>
                                                         </div>
                                                       </div>
                                                   </div>

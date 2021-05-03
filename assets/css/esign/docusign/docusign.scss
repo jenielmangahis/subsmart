@@ -84,6 +84,12 @@ body {
       background-color: #cecece;
     }
   }
+
+  &--formula {
+    input {
+      border: none !important;
+    }
+  }
 }
 
 .signing {
@@ -156,6 +162,10 @@ body {
         display: inline-flex;
       }
     }
+  }
+
+  &__documentPDF {
+    overflow: hidden;
   }
 
   &__readonly {

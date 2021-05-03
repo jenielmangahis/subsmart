@@ -61,6 +61,7 @@ class Accounting_modals extends MY_Controller {
                     
                     $this->page_data['dropdown']['accounts'] = $bankAccounts;
                     $this->page_data['dropdown']['vendors'] = $this->vendors_model->getAllByCompany();
+                    $this->page_data['dropdown']['creditCards'] = $this->chart_of_accounts_model->get_credit_card_accounts();
                 break;
                 case 'single_time_activity_modal':
                     $this->page_data['dropdown']['customers'] = $this->accounting_customers_model->getAllByCompany();
@@ -277,6 +278,44 @@ class Accounting_modals extends MY_Controller {
                     $this->page_data['withoutEmail'] = $withoutEmail;
                     $this->page_data['total'] = number_format($totalBalance, 2, '.', ',');
                     $this->page_data['customers'] = $display;
+                break;
+                case 'expense_modal' :
+                    $paymentAccs = [];
+                    $paymentAccsType = $this->account_model->getAccTypeByName(['Bank', 'Credit Card', 'Other Current Assets']);
+
+                    $count = 1;
+                    foreach($paymentAccsType as $accType) {
+                        $accounts = $this->chart_of_accounts_model->getByAccountType($accType->id, null, logged('company_id'));
+
+                        if(count($accounts) > 0) {
+                            foreach($accounts as $account) {
+                                $childAccs = $this->chart_of_accounts_model->getChildAccounts($account->id);
+
+                                $account->childAccs = $childAccs;
+
+                                $paymentAccs[$accType->account_name][] = $account;
+
+                                if($count === 1) {
+                                    $selectedBalance = $account->balance;
+                                }
+
+                                $count++;
+                            }
+                        }
+                    }
+
+                    if(strpos($selectedBalance, '-') !== false) {
+                        $balance = str_replace('-', '', $selectedBalance);
+                        $selectedBalance = '-$'.number_format($balance, 2, '.', ',');
+                    } else {
+                        $selectedBalance = '$'.number_format($selectedBalance, 2, '.', ',');
+                    }
+
+                    $this->page_data['balance'] = $selectedBalance;
+                    $this->page_data['dropdown']['items'] = $this->items_model->getItemsWithFilter(['type' => 'inventory', 'status' => [1]]);
+                    $this->page_data['dropdown']['customers'] = $this->accounting_customers_model->getAllByCompany();
+                    $this->page_data['dropdown']['payment_accounts'] = $paymentAccs;
+                    $this->page_data['dropdown']['payee'] = $this->vendors_model->getAllByCompany();
                 break;
             }
 
@@ -1253,8 +1292,7 @@ class Accounting_modals extends MY_Controller {
                 'payee_id' => $data['payee'],
                 'amount' => $data['amount'],
                 'date' => date('Y-m-d', strtotime($data['payment_date'])),
-                'bank_account_key' => $bankAccount[0],
-                'bank_account_id' => $bankAccount[1],
+                'bank_account_id' => $data['bank_account'],
                 'memo' => $data['memo'],
                 'attachments' => json_encode($filenames),
                 'created_by' => logged('id'),

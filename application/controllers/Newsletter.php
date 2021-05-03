@@ -16,6 +16,9 @@ class Newsletter extends MY_Controller {
     function saveNewsBulletin()
     {
         
+        $this->load->library('notify');
+        $this->load->model('users_model');
+        
         $this->load->helper('file');
         
         $this->load->model('feeds_model');

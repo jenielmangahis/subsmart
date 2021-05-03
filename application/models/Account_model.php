@@ -34,4 +34,21 @@ class Account_model extends MY_Model {
 		$query = $this->db->get($this->table);
 		return $query->row();
 	}
+
+	public function getAccTypeByName($types)
+	{
+		$this->db->where('status', 1);
+		if(is_array($types)) {
+			$this->db->where_in('account_name', $types);
+		} else {
+			$this->db->where('account_name', $types);
+		}
+		$this->db->order_by('account_name', 'asc');
+		$query = $this->db->get($this->table);
+		if(is_array($types)) {
+			return $query->result();
+		} else {
+			return $query->row();
+		}
+	}
 }

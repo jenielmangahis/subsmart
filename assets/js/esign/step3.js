@@ -482,7 +482,7 @@ function Step3() {
       const fieldType = $optionsSidebar.attr("data-field-type");
       const $formulaInput = $optionsSidebar.find("#formulaInput");
       const $noteInput = $optionsSidebar.find("#noteInput");
-      const $optionInputs = $optionsSidebar.find("input");
+      const $optionInputs = $optionsSidebar.find(".esignBuilder__optionInput input"); // prettier-ignore
 
       if (fieldType === "formula") {
         specs = { formula: $formulaInput.val() };

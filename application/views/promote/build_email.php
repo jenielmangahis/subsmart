@@ -161,7 +161,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             <?= $emailCampaign->email_body; ?>
                                           <?php }else{ ?>
                                             <p style="font-size: 28px; color: #222;">Dear {{customer.name}},</p>
-                                            <p><br />Thank you for choosing ADi, we really appreciate you as our customer. <br /><br />We are currently running a promotion <strong>test</strong>. If you would like to take advantage of this limited time offer simply book the deal below. <br /><br /></p>
+                                            <p><br />Thank you for choosing <?= $company->business_name; ?>, we really appreciate you as our customer. <br /><br />We are currently running a promotion <strong>test</strong>. If you would like to take advantage of this limited time offer simply book the deal below. <br /><br /></p>
                                             <table border="0" width="100%" cellspacing="0" cellpadding="0">
                                             <tbody>
                                             <tr>
@@ -175,7 +175,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             <table border="0" width="100%" cellspacing="0" cellpadding="0">
                                             <tbody>
                                             <tr>
-                                            <td width="150"><a href="https://www.markate.com/deal/test/1198"><img src="https://markate.blob.core.windows.net/cdn/20201001/busdeal_1198_f785d250bd_sm.jpg" alt="deal pic" /></a></td>
+                                            <td width="150"><a href="<?= base_url("promote/deal_test/" . $dealsSteals->id); ?>"><img style="width: 200px;" src="<?= base_url('assets/img/default-deals.jpg'); ?>" alt="deal pic" /></a></td>
                                             <td width="20">&nbsp;</td>
                                             <td><strong>test</strong><br /><span style="font-size: 18px; color: #ba001a;">$1.00</span> <span style="text-decoration: line-through;">was $2.00</span></td>
                                             </tr>
@@ -209,7 +209,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             </tr>
                                             </tbody>
                                             </table>
-                                            <p><br /><br />Looking forward to work with you again.<br /><br />Thanks,<br />Alarm Direct,<br />ADi<br />(850) 478-0530<br /><br /><br /><br /></p>                                            
+                                            <p><br /><br />Looking forward to work with you again.<br /><br />Thanks,<br /><?= $company->business_name; ?>,<br />
+                                              <?= $company->business_phone; ?><br /><br /><br /><br /></p>                                            
                                           <?php } ?>
                                         </textarea>
                                     </div>
@@ -236,7 +237,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             <?php echo form_close(); ?>
 
             <div class="modal fade" id="modalPreviewEmail" tabindex="-1" role="dialog" aria-labelledby="modalPreviewEmailTitle" aria-hidden="true">
-                <div class="modal-dialog modal-md" role="document" style="margin-top:5%;">
+                <div class="modal-dialog modal-lg" role="document" style="margin-top:5%;">
                     <div class="modal-content">
                       <div class="modal-header">
                         <h5 class="modal-title" id="exampleModalLongTitle">Preview Email</h5>
@@ -300,7 +301,7 @@ $(function(){
         var email_subject = $("#email_subject").val();
         $("#modalPreviewEmail").modal('show');
 
-        var url = base_url + 'email_campaigns/_generate_preview';
+        var url = base_url + 'promote/_generate_preview';
         $(".email-blast-msg").html('<span class="spinner-border spinner-border-sm m-0"></span>');
 
         setTimeout(function () {

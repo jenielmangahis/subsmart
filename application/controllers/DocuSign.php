@@ -86,6 +86,7 @@ class DocuSign extends MY_Controller
         $this->db->where('id', logged('id'));
         $inviter = $this->db->get('users')->row();
         $inviterName = implode(' ', [$inviter->FName, $inviter->LName]);
+        $errors = [];
 
         foreach ($recipients as $recipient) {
             $message = json_encode(['recipient_id' => $recipient->id, 'document_id' => $documentId]);
@@ -94,15 +95,20 @@ class DocuSign extends MY_Controller
             $data = [
                 '%link%' => $baseUrl . '/signing?hash=' . $hash,
                 '%inviter%' => $inviterName,
+                '%message%' => nl2br(htmlentities($document->message, ENT_QUOTES, 'UTF-8')),
+                '%inviter_email%' => $inviter->email,
             ];
 
-            // $mail->Body = $baseUrl . '/signing?hash=' . $hash;
             $message = strtr($template, $data);
 
             $mail->MsgHTML($message);
             $mail->addAddress($recipient->email);
-            $mail->send();
+            $isSent = $mail->send();
             $mail->ClearAllRecipients();
+
+            if (!$isSent) {
+                $errors[$recipient->email] = $mail->ErrorInfo;
+            }
 
             $this->db->where('id', $recipient->id);
             $this->db->update('user_docfile_recipients', ['sent_at' => date('Y-m-d H:i:s')]);
@@ -112,7 +118,7 @@ class DocuSign extends MY_Controller
         $this->db->update('user_docfile', ['status' => 'Waiting for Others']);
 
         header('content-type: application/json');
-        echo json_encode(['success' => true]);
+        echo json_encode(['success' => empty($errors), 'errors' => $errors]);
     }
 
     public function manage()

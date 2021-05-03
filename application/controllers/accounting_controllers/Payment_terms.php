@@ -198,4 +198,33 @@ class Payment_terms extends MY_Controller {
 
         redirect('/accounting/terms');
     }
+
+    public function ajax_add_term()
+    {
+        $data = [
+            'company_id' => getLoggedCompanyID(),
+            'name' => $this->input->post('name'),
+            'type' => $this->input->post('type'),
+            'net_due_days' => $this->input->post('type') === "1" ? $this->input->post('net_due_days') === "" ? 0 : $this->input->post('net_due_days') : null,
+            'day_of_month_due' => $this->input->post('type') === "2" ? $this->input->post('day_of_month_due') === "" ? 0 : $this->input->post('day_of_month_due') : null,
+            'minimum_days_to_pay' => $this->input->post('type') === "2" ? $this->input->post('minimum_days_to_pay') === "" ? 0 : $this->input->post('minimum_days_to_pay') : null,
+            'discount_days' => 0,
+            'status' => 1,
+            'created_at' => date('Y-m-d h:i:s'),
+            'updated_at' => date('Y-m-d h:i:s')
+        ];
+
+        $termId = $this->accounting_terms_model->create($data);
+        $name = $data['name'];
+
+        $return = [
+            'data' => [
+                'id' => $termId,
+                'name' => $name
+            ],
+            'success' => $termId ? true : false
+        ];
+
+        echo json_encode($return);
+    }
 }

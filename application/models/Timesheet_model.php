@@ -14,13 +14,13 @@ class Timesheet_model extends MY_Model
     public function getNotifyCount()
     {
 
-        $user_id = $this->session->userdata('logged')['id'];
+        $user_id = logged('id');
         $qry = $this->db->get_where('user_notification', array('user_id' => $user_id, 'status' => 1))->num_rows();
         return $qry;
     }
     public function getNewForyouNotifications()
     {
-        $user_id = $this->session->userdata('logged')['id'];
+        $user_id = logged('id');
         $company_id = logged('company_id');
         // $this->db->select('n.*,u.FName,u.LName');
         // $this->db->from('user_notification n');
@@ -88,7 +88,7 @@ class Timesheet_model extends MY_Model
     }
     public function getseennotifications()
     {
-        $user_id = $this->session->userdata('logged')['id'];
+        $user_id = logged('id');
         $company_id = logged('company_id');
         $query = $this->db->query("SELECT user_notification.id, user_seen_notif.user_id,user_seen_notif.seen_status, user_notification.title, user_notification.content, user_notification.date_created , users.FName, users.LName, users.profile_img FROM user_notification JOIN users on users.id=user_notification.user_id JOIN user_seen_notif on user_notification.id=user_seen_notif.notif_id where user_seen_notif.user_id=" . $user_id . " and user_seen_notif.seen_status != 2 and user_notification.company_id = $company_id order by user_notification.date_created DESC");
         return $query->result();
@@ -112,7 +112,7 @@ class Timesheet_model extends MY_Model
     }
     public function get_unreadNotification($current_notif_count, $action)
     {
-        $user_id = $this->session->userdata('logged')['id'];
+        $user_id = logged('id');
         $company_id = logged('company_id');
         // $this->db->select('n.*,u.FName,u.LName');
         // $this->db->from('user_notification n');
@@ -161,7 +161,7 @@ class Timesheet_model extends MY_Model
     }
     public function notif_user_acknowledge()
     {
-        $user_id = $this->session->userdata('logged')['id'];
+        $user_id = logged('id');
         $company_id = logged('company_id');
 
         $this->db->reset_query();
@@ -207,7 +207,7 @@ class Timesheet_model extends MY_Model
     {
         //        $this->db->or_where('date_in',date('Y-m-d'));
         //        $this->db->or_where('date_in',date('Y-m-d',strtotime('yesterday')));
-        $user_id = $this->session->userdata('logged')['id'];
+        $user_id = logged("id");
         $qry = $this->db->query("SELECT * from timesheet_attendance WHERE user_id=" . $user_id . " AND status=1")->result();
         return $qry;
     }
@@ -236,7 +236,7 @@ class Timesheet_model extends MY_Model
     //Employee's End
     public function getUserAttendance()
     {
-        $user_id = $this->session->userdata('logged')['id'];
+        $user_id = logged('id');
         $this->db->order_by('id', "desc")->limit(1);
         $query = $this->db->get_where($this->attn_tbl, array('user_id' => $user_id));
         return $query->result();
@@ -422,7 +422,7 @@ class Timesheet_model extends MY_Model
     {
 
         date_default_timezone_set('UTC');
-        $user_id = $this->session->userdata('logged')['id'];
+        $user_id = logged('id');
         $qry = $this->db->get_where('timesheet_attendance', array('id' => $attn_id));
         foreach ($qry->result() as $att) {
             $user_id = $att->user_id;
@@ -488,7 +488,7 @@ class Timesheet_model extends MY_Model
     {
 
         date_default_timezone_set('UTC');
-        $user_id = $this->session->userdata('logged')['id'];
+        $user_id = logged('id');
 
         $qry = $this->db->query("SELECT * FROM timesheet_logs WHERE attendance_id = " . $attn_id);
         $user_logs = $qry->result();
@@ -657,7 +657,7 @@ class Timesheet_model extends MY_Model
 
     public function getTSLogsByUser()
     {
-        $user_id = $this->session->userdata('logged')['id'];
+        $user_id = logged('id');
         $qry = $this->db->get_where($this->db_table, array('user_id' => $user_id, 'status' => 1))->result();
         return $qry;
     }
@@ -736,13 +736,13 @@ class Timesheet_model extends MY_Model
     }
     public function getTimeSettingsByUser()
     {
-        $user_id = $this->session->userdata('logged')['id'];
+        $user_id = logged('id');
         $qry = $this->db->get_where('timesheet_schedule', array('user_id' => $user_id));
         return $qry->result();
     }
     public function getTimesheetDayByUser()
     {
-        $user_id = $this->session->userdata('logged')['id'];
+        $user_id = logged('id');
         $qry = $this->db->get_where('ts_schedule_day', array('user_id' => $user_id));
         return $qry->result();
     }
@@ -936,7 +936,7 @@ class Timesheet_model extends MY_Model
     //Employee requesting leave
     public function employeeRequestLeave($pto, $date)
     {
-        $user_id = $this->session->userdata('logged')['id'];
+        $user_id = logged('id');
 
         $insert = array(
             'pto_id' => $pto,
@@ -985,7 +985,7 @@ class Timesheet_model extends MY_Model
     //Invite link
     public function inviteLinkEntry($email, $name, $role)
     {
-        $user_id = $this->session->userdata('logged')['id'];
+        $user_id = logged('id');
         $query = $this->db->get_where('timesheet_team_members', array('email' => $email));
         if ($query->num_rows() == 0) {
             $data = array(
@@ -1032,7 +1032,7 @@ class Timesheet_model extends MY_Model
     //Adding department
     public function addDepartment($dept)
     {
-        $user_id = $this->session->userdata('logged')['id'];
+        $user_id = logged('id');
         $return = 1;
         for ($x = 0; $x < count($dept); $x++) {
             $query = $this->db->get_where('timesheet_departments', array('name' => $dept[$x]));
@@ -1530,7 +1530,7 @@ class Timesheet_model extends MY_Model
     public function get_leaves($date_from, $date_to, $user_id)
     {
         $this->db->reset_query();
-        $qry = $this->db->query("SELECT timesheet_leave.*,timesheet_pto.name, users.FName, users.LName FROM timesheet_leave  JOIN timesheet_pto ON timesheet_pto.id=timesheet_leave.pto_id JOIN users ON users.id=timesheet_leave.user_id WHERE users.id = " . $user_id . " AND timesheet_leave.date_created >= '" . $from_date . "' AND timesheet_leave.date_created <= '" . $to_date . "' ORDER BY timesheet_leave.date_created DESC");
+        $qry = $this->db->query("SELECT timesheet_leave.*,timesheet_pto.name, users.FName, users.LName FROM timesheet_leave  JOIN timesheet_pto ON timesheet_pto.id=timesheet_leave.pto_id JOIN users ON users.id=timesheet_leave.user_id WHERE users.id = " . $user_id . " AND timesheet_leave.date_created >= '" . $date_from . "' AND timesheet_leave.date_created <= '" . $date_to . "' ORDER BY timesheet_leave.date_created DESC");
         return $qry->result();
     }
     public function save_est_wage_privacy($est_wage_private, $company_id, $date_time_now, $user_id)
@@ -1627,6 +1627,12 @@ class Timesheet_model extends MY_Model
     public function delete_old_notifications($date_lastweek){
         $this->db->reset_query();
         $this->db->query("DELETE FROM user_notification WHERE date_created < '$date_lastweek'");
+    }
+    public function save_current_geo_location($table_name,$table_id,$update)
+    {
+        $this->db->reset_query();
+        $this->db->where('id', $table_id);
+        $this->db->update($table_name,$update);
     }
 }
 

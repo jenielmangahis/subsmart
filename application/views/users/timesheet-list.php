@@ -265,7 +265,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                 </div>
                                 <div class="col-lg-4">
                                     <div class="action-btn-container">
-                                        <button class="btn btn-success action-btn" id="listClockInOut" data-approved="<?php echo $this->session->userdata('logged')['id'] ?>">Clock In/Out</button>
+                                        <button class="btn btn-success action-btn" id="listClockInOut" data-approved="<?php echo logged("id") ?>">Clock In/Out</button>
                                         <button class="btn btn-info action-btn" id="listAdjustEntry">Adjust Entry</button>
                                     </div>
                                 </div>

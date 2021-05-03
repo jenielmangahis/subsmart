@@ -48,13 +48,36 @@ class Dashboard extends Widgets {
         ));
     }
     
+    public function sendTestNotify()
+    {
+        
+        $this->load->library('notify');
+        $this->load->model('users_model');
+        
+        $ios_tokens = array();
+        //$user_id = logged('id');
+        $userDetails = $this->users_model->getUser(5);
+        //print_r($userDetails);
+        
+        $ios_tokens[] = $userDetails->device_token;
+        $result = $this->notify->send_ios_push($ios_tokens, 'Feeds - Test', 'This is a sample test notify');
+        
+        print_r($result);
+    }
+    
     public function sendFeed()
     {
+        $this->load->library('notify');
         $this->load->model('Feeds_model');
+        $this->load->model('users_model');
+        
         $subject = post('subject');
         $feedMessage = post('message');
         $company_id = logged('company_id');
         $user_id = logged('id');
+        $userDetails = $this->users_model->getUser($user_id);
+        
+        $registrationIds[] = $userDetails->device_token;
         
         $feedDetails = array(
             'sender_id' => $user_id,
@@ -65,7 +88,13 @@ class Dashboard extends Widgets {
         );
         
         if($this->Feeds_model->saveFeeds($feedDetails)):
-            echo 'Feed Successfully Sent';
+            if($userDetails->device_token!="")
+                $notifyResult = $this->notify->send_ios_push($registrationIds, 'Feeds - '.$subject, $feedMessage);
+            
+            $json_response = array('success' => true, 'msg' => 'Successfully Sent');
+            array_push($json_response, json_decode($notifyResult));
+            
+            echo json_encode($json_response);
         endif;
     }
     

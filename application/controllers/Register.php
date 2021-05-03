@@ -936,12 +936,18 @@ class Register extends MY_Controller {
 
     public function ajax_converge_token_request(){
         // Set variables
-        $merchantID = "2159250"; //Converge 6 or 7-Digit Account ID *Not the 10-Digit Elavon Merchant ID*
+        //Production
+        /*$merchantID = "2159250"; //Converge 6 or 7-Digit Account ID *Not the 10-Digit Elavon Merchant ID*
         $merchantUserID = "nsmartapi"; //Converge User ID *MUST FLAG AS HOSTED API USER IN CONVERGE UI*
-        $merchantPinCode = "UJN5ASLON7DJGDET68VF4JQGJILOZ8SDAWXG7SQRDEON0YY8ARXFXS6E19UA1E2X"; //Converge PIN (64 CHAR A/N)
+        $merchantPinCode = "UJN5ASLON7DJGDET68VF4JQGJILOZ8SDAWXG7SQRDEON0YY8ARXFXS6E19UA1E2X"; //Converge PIN (64 CHAR A/N)*/
 
-        //$url = "https://api.demo.convergepay.com/hosted-payments/transaction_token"; // URL to Converge demo session token server
-        $url = "https://api.convergepay.com/hosted-payments/transaction_token"; // URL to Converge production session token server
+        //Demo
+        $merchantID = CONVERGE_MERCHANTID; //Converge 6 or 7-Digit Account ID *Not the 10-Digit Elavon Merchant ID*
+        $merchantUserID = CONVERGE_MERCHANTUSERID; //Converge User ID *MUST FLAG AS HOSTED API USER IN CONVERGE UI*
+        $merchantPinCode = CONVERGE_MERCHANTPIN; //Converge PIN (64 CHAR A/N)
+
+        $url = "https://api.demo.convergepay.com/hosted-payments/transaction_token"; // URL to Converge demo session token server
+        //$url = "https://api.convergepay.com/hosted-payments/transaction_token"; // URL to Converge production session token server
 
         $post = $this->input->post();
         /*Payment Field Variables*/

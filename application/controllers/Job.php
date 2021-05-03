@@ -1931,7 +1931,7 @@ class Job extends MY_Controller
         $this->page_data['jobs_data_items'] = $this->jobs_model->get_specific_job_items($job_id);
         $this->page_data['jobs_data'] = $job;
         //$content = $this->load->view('job/job_customer_invoice_pdf', $this->page_data, TRUE);
-        $content = $this->load->view('job/job_customer_invoice_pdf_test', $this->page_data, TRUE);
+        $content = $this->load->view('job/job_customer_invoice_pdf_template_b', $this->page_data, TRUE);
         //echo $content;exit;
 
         $this->load->library('Reportpdf');

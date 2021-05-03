@@ -261,10 +261,18 @@ class Vendors_model extends MY_Model {
 	{
 		$this->db->where('company_id', logged('company_id'));
 		$this->db->where('vendor_id', $vendorId);
-		$this->db->where('status', 1);
 		if($filters['start-date']) {
 			$this->db->where('bill_date >=', $filters['start-date']);
 			$this->db->where('bill_date <=', $filters['end-date']);
+		}
+		if(isset($filters['status'])) {
+			if(is_array($filters['status'])) {
+				$this->db->where_in('status', $filters['status']);
+			} else {
+				$this->db->where('status', $filters['status']);
+			}
+		} else {
+			$this->db->where('status', 1);
 		}
 
 		$query = $this->db->get('accounting_bill');
@@ -276,10 +284,18 @@ class Vendors_model extends MY_Model {
 	{
 		// $this->db->where('company_id', logged('company_id'));
 		$this->db->where('vendor_id', $vendorId);
-		$this->db->where('status', 1);
 		if($filters['start-date']) {
 			$this->db->where('payment_date >=', $filters['start-date']);
 			$this->db->where('payment_date <=', $filters['end-date']);
+		}
+		if(isset($filters['status'])) {
+			if(is_array($filters['status'])) {
+				$this->db->where_in('status', $filters['status']);
+			} else {
+				$this->db->where('status', $filters['status']);
+			}
+		} else {
+			$this->db->where('status', 1);
 		}
 
 		$query = $this->db->get('accounting_check');
@@ -291,7 +307,6 @@ class Vendors_model extends MY_Model {
 	{
 		// $this->db->where('company_id', logged('company_id'));
 		$this->db->where('vendor_id', $vendorId);
-		$this->db->where('status', 1);
 		if(isset($filters['start-date'])) {
 			$this->db->where('payment_date >=', $filters['start-date']);
 			$this->db->where('payment_date <=', $filters['end-date']);
@@ -302,10 +317,37 @@ class Vendors_model extends MY_Model {
 			} else {
 				$this->db->where('status', $filters['status']);
 			}
+		} else {
+			$this->db->where('status', 1);
 		}
 		
 		$query = $this->db->get('accounting_expense');
 
+		return $query->result();
+	}
+
+	public function get_vendor_credit_card_payments($vendorId, $filters = [])
+	{
+		$this->db->where('company_id', logged('company_id'));
+		$this->db->where('payee_id', $vendorId);
+		if(isset($filters['start-date'])) {
+			$this->db->where('date >=', $filters['start-date']);
+			$this->db->where('date <=', $filters['end-date']);
+		}
+
+		$query = $this->db->get('accounting_pay_down_credit_card');
+
+		return $query->result();
+	}
+
+	public function get_vendor_purchase_orders($vendorId, $filters = [])
+	{
+		$this->db->where('vendor_id', $vendorId);
+		if(isset($filters['start-date'])) {
+			$this->db->where('purchase_order_date >=', $filters['start-date']);
+			$this->db->where('purchase_order_date <=', $filters['end-date']);
+		}
+		$query = $this->db->get('accounting_purchase_order');
 		return $query->result();
 	}
 }

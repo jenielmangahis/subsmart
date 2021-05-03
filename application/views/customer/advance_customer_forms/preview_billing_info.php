@@ -167,7 +167,6 @@
             <?= !empty($billing_info->confirmation) ? $billing_info->confirmation : '---' ?>
         </div>
     </div>
-
 </div>
 
 

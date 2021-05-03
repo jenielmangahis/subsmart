@@ -333,6 +333,7 @@ $route['accounting/terms/load-terms']['post'] = 'accounting_controllers/payment_
 $route['accounting/terms/delete/(:any)']['DELETE'] = "accounting_controllers/payment_terms/delete/$1";
 $route['accounting/terms/activate/(:any)'] = "accounting_controllers/payment_terms/activate/$1";
 $route['accounting/terms/update/(:any)']['post'] = "accounting_controllers/payment_terms/update/$1";
+$route['accounting/terms/ajax-add-term']['post'] = 'accounting_controllers/payment_terms/ajax_add_term';
 
 $route['accounting/sales-overview'] = 'accounting/salesoverview';
 $route['accounting/all-sales'] = 'accounting/allsales';
@@ -843,3 +844,6 @@ $route['promote/_save_deals_steals'] = 'Promote/ajax_save_deals_steals';
 $route['promote/add_send_to'] = 'Promote/add_send_to';
 $route['promote/create_send_to'] = 'Promote/create_send_to';
 $route['promote/build_email'] = 'Promote/build_email';
+$route['promote/create_email_message'] = 'Promote/create_email_message';
+$route['promote/preview_email_message'] = 'Promote/preview_email_message';
+$route['promote/_generate_preview'] = 'Promote/generate_preview';
