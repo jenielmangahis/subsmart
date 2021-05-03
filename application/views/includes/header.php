@@ -50,6 +50,12 @@
 
     <script src="<?php echo $url->assets ?>dashboard/js/jquery.min.js"></script>
     <script src="https://js.pusher.com/7.0/pusher.min.js"></script>
+    <?php
+    if($this->uri->segment(2) != "tracklocation" && $this->uri->segment(1) != "trac360"){
+        echo '<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBg27wLl6BoSPmchyTRgvWuGHQhUUHE5AU" async></script>';
+    }
+    ?>
+
     <!-- dynamic assets goes  -->
     <?php echo put_header_assets(); ?>
     <style type="text/css">
@@ -489,7 +495,7 @@
                             </li>
                             <?php
                             $clock_btn = 'clockIn';
-                            $user_id = $this->session->userdata('logged')['id'];
+                            $user_id = logged('id');
                             $user_clock_in = getClockInSession();
                             $attendance_id = 0;
                             $analog_active = '';

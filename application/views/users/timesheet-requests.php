@@ -324,7 +324,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                                     $name = null;
                                                     $user_role = null;
                                                     foreach ($users as $user) {
-                                                        if ($user->id == $this->session->userdata('logged')['id']) {
+                                                        if ($user->id == logged("id")) {
                                                             $name = $user->FName . " " . $user->LName;
                                                         }
                                                     }

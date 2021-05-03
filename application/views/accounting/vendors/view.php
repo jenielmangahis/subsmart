@@ -607,10 +607,13 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                         <div class="form-ib">
                                                             <label for="terms">Terms</label>
                                                             <select class="form-control" name="terms" id="terms">
-                                                                <option value="1">Due on Receipt</option>
-                                                                <option value="2">Net 15</option>
-                                                                <option value="3">Net 30</option>
-                                                                <option value="4">Net 60</option>
+                                                                <option value="" <?=in_array($vendor->terms, ['', "0", null]) ? 'selected' : ''?> disabled>&nbsp;</option>
+                                                                <option value="add-new">&plus; Add new</option>
+                                                                <?php if(count($terms) > 0) : ?>
+                                                                <?php foreach($terms as $term) : ?>
+                                                                    <option value="<?=$term->id?>" <?=$vendor->terms === $term->id ? 'selected' : ''?>><?=$term->name?></option>
+                                                                <?php endforeach; ?>
+                                                                <?php endif; ?>
                                                             </select>
                                                         </div>
                                                     </div>
@@ -646,8 +649,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                 <div class="form-row">
                                                     <div class="col">
                                                         <div class="form-ib">
-                                                            <label for="">Business ID No.</label>
-                                                            <input type="text" name="business_number" id="account_number" class="form-control" required value="<?=$vendor->tax_id?>">
+                                                            <label for="">Business ID No. / Social Security No.</label>
+                                                            <input type="text" name="tax_id" id="tax_id" class="form-control" required value="<?=$vendor->tax_id?>">
                                                         </div>
                                                     </div>
                                                 </div>
@@ -657,7 +660,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                     <div class="col">
                                                         <div class="form-ib">
                                                             <label for="expense_account">Default expense account</label>
-                                                            <select name="default_expense_amount" id="expense_account" class="form-control">
+                                                            <select name="default_expense_account" id="expense_account" class="form-control">
                                                                 <option value="" selected disabled>Choose Account</option>
                                                                 <?php if(count($expenseAccs) > 0) : ?>
                                                                     <optgroup label="Expenses">
@@ -731,6 +734,87 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         </div>
     </div>
     <!--    end of modal-->
+
+    <!-- Add payment term modal -->
+    <div class="modal fade" id="payment_term_modal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered m-auto w-25" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">New Term</h4>
+                    <button type="button" class="close" data-dismiss="modal"><i class="fa fa-times fa-lg"></i></button>
+                </div>
+                <form id="payment-term-form">
+                <div class="modal-body" style="max-height: 400px;">
+                    <div class="row">
+                        <div class="col-xl-12">
+                            <div class="card p-0 m-0">
+                                <div class="card-body" style="max-height: 650px; padding-bottom: 1.25rem">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <label for="name">Name</label>
+                                                <input type="text" name="name" id="name" class="form-control">
+                                            </div>
+                                            <div class="form-check mb-3">
+                                                <input class="form-check-input" type="radio" name="type" id="type1" value="1" checked>
+                                                <label class="form-check-label" for="type1">
+                                                    Due in fixed number of days
+                                                </label>
+                                            </div>
+                                            <div class="form-group row m-0">
+                                                <div class="col-sm-3">
+                                                    <input type="number" class="form-control" id="net_due_days" name="net_due_days">
+                                                </div>
+                                                <div class="col-sm-9 d-flex align-items-center pl-0">
+                                                    <label for="net_due_days">days</label>
+                                                </div>
+                                            </div>
+                                            <div class="form-check mb-3">
+                                                <input class="form-check-input" type="radio" name="type" id="type2" value="2">
+                                                <label class="form-check-label" for="type2">
+                                                    Due by certain day of the month
+                                                </label>
+                                            </div>
+                                            <div class="form-group row m-0">
+                                                <div class="col-sm-3">
+                                                    <input type="number" class="form-control" id="day_of_month_due" name="day_of_month_due" disabled>
+                                                </div>
+                                                <div class="col-sm-9 d-flex align-items-center pl-0">
+                                                    <label for="day_of_month_due">day of month</label>
+                                                </div>
+                                            </div>
+                                            <div class="form-group row m-0">
+                                                <div class="col-sm-12">
+                                                    <p>Due the next month if issued within</p>
+                                                </div>
+                                                <div class="col-sm-3">
+                                                    <input type="number" class="form-control" id="minimum_days_to_pay" name="minimum_days_to_pay" disabled>
+                                                </div>
+                                                <div class="col-sm-9 d-flex align-items-center pl-0">
+                                                    <label for="minimum_days_to_pay">days of due date</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- end card -->
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="col-sm-6">
+                        <button type="button" class="btn btn-secondary btn-rounded border" data-dismiss="modal">Close</button>
+                    </div>
+                    <div class="col-sm-6">
+                        <button type="submit" class="btn btn-success btn-rounded border float-right">Save</button>
+                    </div>
+                </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- end add payment term modal -->
 </div>
 
 <!-- page wrapper end -->

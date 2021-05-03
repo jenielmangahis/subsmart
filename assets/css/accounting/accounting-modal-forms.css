@@ -10,7 +10,9 @@
 #depositModal div.funds-table-container div.funds-table-footer button.btn,
 #journalEntryModal div.journal-table-container div.journal-table-footer button.btn,
 #inventoryModal div.inventory-table-container div.inventory-table-footer button.btn,
-#weeklyTimesheetModal div.timesheet-table-container div.timesheet-table-footer button.btn {
+#weeklyTimesheetModal div.timesheet-table-container div.timesheet-table-footer button.btn,
+#expenseModal div.category-details-table-container div.category-details-table-footer button.btn,
+#expenseModal div.item-details-table-container div.item-details-table-footer button.btn {
     border-radius: 5px;
     border-color: #6c757d !important;
     padding: 5px 15px;
@@ -20,7 +22,9 @@
 #depositModal div.funds-table-container div.funds-table-footer button.btn:focus,
 #journalEntryModal div.journal-table-container div.journal-table-footer button.btn:focus,
 #inventoryModal div.inventory-table-container div.inventory-table-footer button.btn:focus,
-#weeklyTimesheetModal div.timesheet-table-container div.timesheet-table-footer button.btn:focus {
+#weeklyTimesheetModal div.timesheet-table-container div.timesheet-table-footer button.btn:focus,
+#expenseModal div.category-details-table-container div.category-details-table-footer button.btn:focus,
+#expenseModal div.item-details-table-container div.item-details-table-footer button.btn:focus {
     color: #6c757d !important;
 }
 
@@ -165,4 +169,8 @@ div#payrollModal .graph-color, div#commission-payroll-modal .graph-color, div#bo
     height: 45px;
     width: 1px;
     border: 2px solid black;
+}
+
+.full-screen-modal .modal .btn[data-toggle="collapse"]:hover, .full-screen-modal .modal .btn[data-toggle="collapse"]:focus {
+    color: unset;
 }

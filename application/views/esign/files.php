@@ -77,37 +77,29 @@
                     </span>
                 </div>
 
-                <div class="d-flex">
-                    <div class="custome-fileup">
-
+                <div class="d-flex fileupload">
+                    <div class="custome-fileup ">
                         <div class="upload-btn-wrapper">
                             <button class="btn">
                                 <img src="<?php echo $url->assets ?>esign/images/fileup-ic.png" alt="">
                                 <span>Upload</span>
                             </button>
-                            <input type="file" name="docFile" id="docFile" name="docFile" accept="application/pdf,application/vnd.ms-excel" required/>
+                            <input multiple type="file" name="docFile" id="docFile" name="docFile" accept="application/pdf,application/vnd.ms-excel" required/>
                         </div>
                     </div>
+                </div>
 
-                    <div class="ml-3 esignBuilder__docPreview d-none">
-                        <canvas></canvas>
-                        <div class="esignBuilder__docInfo">
-                            <h5 class="esignBuilder__docTitle"></h5>
-                            <span class="esignBuilder__docPageCount"></span>
-                        </div>
-
-                        <div class="esignBuilder__uploadProgress" width="100%">
-                            <span></span>
-                        </div>
-
-                        <div class="esignBuilder__uploadProgressCheck">
-                            <svg width="54px" height="54px" viewBox="0 0 54 54" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-                                <title>Check</title>
-                                <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                                    <path d="M23.5,31.8431458 L17.5852419,25.9283877 C16.0248253,24.3679711 13.4910294,24.366835 11.9289322,25.9289322 C10.3700136,27.4878508 10.3665912,30.0234455 11.9283877,31.5852419 L20.4147581,40.0716123 C20.5133999,40.1702541 20.6159315,40.2626649 20.7218615,40.3488435 C22.2835669,41.8725651 24.794234,41.8626202 26.3461564,40.3106978 L43.3106978,23.3461564 C44.8771021,21.7797521 44.8758057,19.2483887 43.3137085,17.6862915 C41.7547899,16.1273729 39.2176035,16.1255422 37.6538436,17.6893022 L23.5,31.8431458 Z M27,53 C41.3594035,53 53,41.3594035 53,27 C53,12.6405965 41.3594035,1 27,1 C12.6405965,1 1,12.6405965 1,27 C1,41.3594035 12.6405965,53 27,53 Z" stroke-opacity="0.198794158" stroke="#747474" fill-opacity="0.816519475" fill="#28a745"></path>
-                                </g>
-                            </svg>
-                        </div>
+                <div class="mt-5">
+                    <h2 class="form__title">Message to All Recipients</h2>
+                    <div class="form-group">
+                        <label for="subject">Subject</label>
+                        <input class="form-control" id="subject" placeholder="Please Docusign:" maxlength="100" require>
+                        <small class="form-text text-muted d-none">Characters remaining: <span class="limit">100</span></small>
+                    </div>
+                    <div class="form-group">
+                        <label for="message">Message</label>
+                        <textarea class="form-control" id="message" rows="3" placeholder="Enter Message" maxlength="10000"></textarea>
+                        <small class="form-text text-muted d-none">Characters remaining: <span class="limit">10000</span></small>
                     </div>
                 </div>
             </div>

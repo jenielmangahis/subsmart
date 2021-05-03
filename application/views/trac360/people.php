@@ -159,13 +159,6 @@ function get_differenct_of_dates($date_start, $date_end)
   function initMap() {
     set_initmap();
   }
-  function current_user_getLocation() {
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(current_user_showPosition);
-    } else {
-        console.log("Geolocation is not supported by this browser.");
-    }
-  }
 
   function set_initmap() {
     $("#map-loader").hide();
@@ -194,6 +187,13 @@ function get_differenct_of_dates($date_start, $date_end)
   }
 
 
+  function current_user_getLocation() {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(current_user_showPosition);
+    } else {
+        console.log("Geolocation is not supported by this browser.");
+    }
+  }
 function current_user_showPosition(position) {
     current_user_latitude = position.coords.latitude;
     current_user_longitude = position.coords.longitude;

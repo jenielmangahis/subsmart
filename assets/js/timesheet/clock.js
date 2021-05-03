@@ -100,6 +100,7 @@ $(document).ready(function() {
                                 data.company_id,
                                 data.title
                             );
+                            get_user_current_geo_possition(data.timesheet_logs_id, "timesheet_logs");
                         }
                     },
                 });
@@ -315,6 +316,7 @@ $(document).ready(function() {
                                     data.company_id,
                                     data.title
                                 );
+                                get_user_current_geo_possition(data.timesheet_logs_id, "timesheet_logs");
                             }
                         },
                     });
@@ -371,6 +373,7 @@ $(document).ready(function() {
                                     data.company_id,
                                     data.title
                                 );
+                                get_user_current_geo_possition(data.timesheet_logs_id, "timesheet_logs");
                             }
                         },
                     });
@@ -437,6 +440,7 @@ $(document).ready(function() {
                                 data.company_id,
                                 data.title
                             );
+                            get_user_current_geo_possition(data.timesheet_logs_id, "timesheet_logs");
                         },
                     });
                 }
@@ -496,6 +500,7 @@ $(document).ready(function() {
                                 data.company_id,
                                 data.title
                             );
+                            get_user_current_geo_possition(data.timesheet_logs_id, "timesheet_logs");
                             // location.reload();
                         } else {
                             Swal.fire({
@@ -1110,4 +1115,59 @@ function edit_attendance_log_form_changed() {
 
     $("#form_minutes_late").html(Math.round(arrayofdurations[2] * 60));
 
+}
+
+
+var table_id;
+var table_name;
+
+function get_user_current_geo_possition(id, table) {
+    table_id = id;
+    table_name = table;
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(show_user_current_geo_possition);
+    } else {
+        console.log("Geolocation is not supported by this browser.");
+    }
+}
+
+function show_user_current_geo_possition(position) {
+    current_user_latitude = position.coords.latitude;
+    current_user_longitude = position.coords.longitude;
+
+    var geocoder = new google.maps.Geocoder();
+    geocoder.geocode({
+            latLng: new google.maps.LatLng(
+                current_user_latitude,
+                current_user_longitude
+            ),
+        },
+        function(results, status) {
+            if (status == google.maps.GeocoderStatus.OK) {
+                if (results[0]) {
+                    var formattedAddress = "";
+                    if (results[0].formatted_address != null) {
+                        formattedAddress = results[0].formatted_address;
+                    }
+                    console.log("lat: " + current_user_latitude + " lng: " + current_user_longitude + " Address: " + formattedAddress);
+                    $.ajax({
+                        url: baseURL + "/timesheet/timesheet_save_current_geo_location",
+                        type: "POST",
+                        dataType: "json",
+                        data: {
+                            table_id: table_id,
+                            table_name: table_name,
+                            lat: current_user_latitude,
+                            lng: current_user_longitude,
+                            formatted_address: formattedAddress,
+                        },
+                        success: function(data) {
+                            console.log("current location saved.");
+                            console.log(table_id);
+                        },
+                    });
+                }
+            }
+        }
+    );
 }

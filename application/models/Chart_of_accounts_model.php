@@ -64,6 +64,10 @@ class Chart_of_accounts_model extends MY_Model {
 			$this->db->where('active', 1);
 			$this->db->where('account_id', $accTypeId);
 			$this->db->where('parent_acc_id', 0);
+			$this->db->or_where('company_id', $company_id);
+			$this->db->where('active', 1);
+			$this->db->where('account_id', $accTypeId);
+			$this->db->where('parent_acc_id', '');
 		}
 		$query = $this->db->get($this->table);
 		return $query->result();
@@ -210,6 +214,63 @@ class Chart_of_accounts_model extends MY_Model {
 		$this->db->or_where('parent_acc_id', 0);
 		$this->db->where('company_id', $companyId);
 		$this->db->where('account_id', 13);
+		$query = $this->db->get('accounting_chart_of_accounts');
+		return $query->result();
+	}
+
+	public function get_credit_card_accounts()
+	{
+		$companyId = logged('company_id');
+		$this->db->where('company_id', $companyId);
+		$this->db->where('account_id', 7);
+		$this->db->where('parent_acc_id', null);
+		$this->db->where('active', 1);
+		$this->db->or_where('parent_acc_id', '');
+		$this->db->where('company_id', $companyId);
+		$this->db->where('account_id', 7);
+		$this->db->where('active', 1);
+		$this->db->or_where('parent_acc_id', 0);
+		$this->db->where('company_id', $companyId);
+		$this->db->where('account_id', 7);
+		$this->db->where('active', 1);
+		$query = $this->db->get('accounting_chart_of_accounts');
+		return $query->result();
+	}
+
+	public function get_bank_accounts()
+	{
+		$companyId = logged('company_id');
+		$this->db->where('company_id', $companyId);
+		$this->db->where('account_id', 3);
+		$this->db->where('parent_acc_id', null);
+		$this->db->where('active', 1);
+		$this->db->or_where('parent_acc_id', '');
+		$this->db->where('company_id', $companyId);
+		$this->db->where('account_id', 3);
+		$this->db->where('active', 1);
+		$this->db->or_where('parent_acc_id', 0);
+		$this->db->where('company_id', $companyId);
+		$this->db->where('account_id', 3);
+		$this->db->where('active', 1);
+		$query = $this->db->get('accounting_chart_of_accounts');
+		return $query->result();
+	}
+
+	public function get_other_current_assets_account()
+	{
+		$companyId = logged('company_id');
+		$this->db->where('company_id', $companyId);
+		$this->db->where('account_id', 2);
+		$this->db->where('parent_acc_id', null);
+		$this->db->where('active', 1);
+		$this->db->or_where('parent_acc_id', '');
+		$this->db->where('company_id', $companyId);
+		$this->db->where('account_id', 2);
+		$this->db->where('active', 1);
+		$this->db->or_where('parent_acc_id', 0);
+		$this->db->where('company_id', $companyId);
+		$this->db->where('account_id', 2);
+		$this->db->where('active', 1);
 		$query = $this->db->get('accounting_chart_of_accounts');
 		return $query->result();
 	}

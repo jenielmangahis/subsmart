@@ -308,7 +308,7 @@ input:checked + .slider:before {
 									<div class="row">
 										<div class="col-md-3 form-group">
 											<label for="email">Email</label>
-											<input type="text" class="form-control" name="email"
+											<input type="email" class="form-control" name="email"
 												   id="email" 
 												   value="<?php echo (!empty($workorder->customer['email'])) ? $workorder->customer['email'] : '' ?>"
 												   required placeholder="Enter Email"/>
@@ -353,6 +353,8 @@ input:checked + .slider:before {
 
 								</div>
                             </div>
+
+                            
 
                             <!-- ====== EMERGENCY CALL LIST ====== -->
                             <div class="row" id="group_area">

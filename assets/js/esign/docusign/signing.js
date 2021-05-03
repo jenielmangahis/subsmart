@@ -59,8 +59,9 @@ function Signing(hash) {
     const documentUrl = `${prefixURL}/${filepath}`;
     const document = await PDFJS.getDocument({ url: documentUrl });
 
-    const $container = createElementFromHTML("<div></div>");
-    $container.attr("data-file-id", file.id);
+    const $container = createElementFromHTML(
+      `<div class="signing__documentPDF" data-file-id="${file.id}"></div>`
+    );
 
     for (let index = 1; index <= document.numPages; index++) {
       const currentFields = fields.filter(({ doc_page, doc_id }) => {
@@ -182,25 +183,35 @@ function Signing(hash) {
           let { value: selected } = fieldValue || { value: null };
           selected = JSON.parse(selected) || [];
 
-          const html = `<div class="docusignField"></div>`;
+          const html = `<div class="docusignField docusignField__checkbox"></div>`;
           const $element = createElementFromHTML(html);
-          $element.append(
-            options.map((option) => {
-              const id = guidGenerator();
-              const isSelected = selected.includes(option);
 
-              // prettier-ignore
-              return `
-                <div class="form-check" title="${option}">
-                  <span class="form-check-indicator">x</span>
-                  <input class="form-check-input" type="checkbox" value="${option}" id="${id}" ${isSelected ? "checked" : ""}>
-                  <label class="form-check-label invisible" for="${id}">
-                    ${option}
-                  </label>
-                </div>
-              `;
-            })
-          );
+          if (options && options.length) {
+            $element.append(
+              options.map((option) => {
+                const id = guidGenerator();
+                const isSelected = selected.includes(option);
+
+                // prettier-ignore
+                return `
+                  <div class="form-check" title="${option}">
+                    <span class="form-check-indicator">x</span>
+                    <input class="form-check-input" type="checkbox" value="${option}" id="${id}" ${isSelected ? "checked" : ""}>
+                    <label class="form-check-label invisible" for="${id}">
+                      ${option}
+                    </label>
+                  </div>
+                `;
+              })
+            );
+          } else {
+            $element.append(`
+              <div class="form-check">
+                <span class="form-check-indicator">x</span>
+                <input class="form-check-input" type="checkbox">
+              </div>
+            `);
+          }
 
           $element.find("input:checkbox").on("change", function () {
             const values = [];
@@ -220,25 +231,35 @@ function Signing(hash) {
           const { options = [] } = JSON.parse(field.specs) || {};
           const { value: selected } = fieldValue || { value: null };
 
-          const html = `<div class="docusignField"></div>`;
+          const html = `<div class="docusignField docusignField__radio"></div>`;
           const $element = createElementFromHTML(html);
-          $element.append(
-            options.map((option) => {
-              const id = guidGenerator();
-              const isSelected = selected === option;
 
-              // prettier-ignore
-              return `
-                <div class="form-check" title="${option}">
-                  <span class="form-check-indicator">x</span>
-                  <input class="form-check-input" type="radio" value="${option}" name="radio-${fieldIndex}" id="${id}" ${isSelected ? "checked" : ""}>
-                  <label class="form-check-label invisible" for="${id}">
-                    ${option}
-                  </label>
-                </div>
-              `;
-            })
-          );
+          if (options && options.length) {
+            $element.append(
+              options.map((option) => {
+                const id = guidGenerator();
+                const isSelected = selected === option;
+
+                // prettier-ignore
+                return `
+                  <div class="form-check" title="${option}">
+                    <span class="form-check-indicator">x</span>
+                    <input class="form-check-input" type="radio" value="${option}" name="radio-${fieldIndex}" id="${id}" ${isSelected ? "checked" : ""}>
+                    <label class="form-check-label invisible" for="${id}">
+                      ${option}
+                    </label>
+                  </div>
+                `;
+              })
+            );
+          } else {
+            $element.append(`
+              <div class="form-check">
+                <span class="form-check-indicator">x</span>
+                <input class="form-check-input" type="radio">
+              </div>
+            `);
+          }
 
           $element.find("input:radio").on("change", function () {
             const $selected = $element.find("input:radio:checked");
@@ -283,7 +304,7 @@ function Signing(hash) {
 
         if (field_name === "Formula") {
           const html = `
-            <div class="docusignField" style="position: relative; display: flex; align-items: center;">
+            <div class="docusignField docusignField--formula" style="position: relative; display: flex; align-items: center;">
               <input type="text" data-key="${field.unique_key}" placeholder="${field_name}" readonly />
             </div>
           `;
@@ -325,6 +346,10 @@ function Signing(hash) {
 
           if (isReadOnly) {
             $element.addClass("docusignField--readOnly");
+          }
+
+          if (specs.name) {
+            $input.attr("data-name", specs.name);
           }
 
           let typingTimer;
@@ -398,8 +423,8 @@ function Signing(hash) {
       let match, values = {}; // prettier-ignore
       while ((match = regex.exec(specs.formula))) {
         const { fieldname } = match.groups;
-        const $input = $(`[data-key="${fieldname}"]`);
-        values[fieldname] = $input.val();
+        const $input = $(`[data-name="${fieldname}"]`);
+        values[fieldname] = $input.val() || 0;
 
         $input.on("keyup", function (event) {
           const { value } = event.target;

@@ -381,3 +381,46 @@ function showCol(el) {
         $(`#transactions-table .${column}`).addClass('hide');
     }
 }
+
+const selectedTerm = $('#terms').val();
+
+$('#terms').on('change', function() {
+    if($(this).val() === 'add-new') {
+        $('#payment_term_modal').modal('show');
+    }
+});
+
+$('#payment_term_modal #payment-term-form').on('submit', function(e) {
+    e.preventDefault();
+
+    var data = new FormData(this);
+
+    $.ajax({
+        url: '/accounting/terms/ajax-add-term',
+        data: data,
+        type: 'post',
+        processData: false,
+        contentType: false,
+        success: function(res) {
+            var result = JSON.parse(res);
+
+            $('#terms').append(`<option value="${result.data.id}">${result.data.name}</option>`);
+            var terms = $('#terms option:not([value=""],[value="add-new"])');
+
+            terms.sort(function(a, b) {
+                if (a.text > b.text) return 1;
+                if (a.text < b.text) return -1;
+                return 0;
+            });
+
+            $("#terms").empty().append(`
+                <option value="" disabled selected>&nbsp;</option>
+                <option value="add-new">&plus; Add new</option> 
+            `);
+            $("#terms").append(terms);
+            $("#terms").val(selectedTerm).trigger('change');
+
+            $('#payment_term_modal').modal('hide');
+        }
+    });
+});

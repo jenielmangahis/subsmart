@@ -471,3 +471,15 @@
 .esignBuilder__fieldCheckbox {
   --border-radius: 2px;
 }
+
+.fileupload {
+  --size: 240px;
+  display: grid !important;
+  gap: 10px;
+  grid-template-columns: repeat(auto-fit, minmax(var(--size), auto));
+  justify-content: left;
+
+  .esignBuilder__docPreview {
+    min-height: var(--size);
+  }
+}

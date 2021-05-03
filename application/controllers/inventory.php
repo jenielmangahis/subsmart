@@ -71,6 +71,12 @@ class Inventory extends MY_Controller
 
         $this->load->view('inventory/list', $this->page_data);
     }
+
+    public function add()
+    {
+        $this->page_data['page_title'] = 'Add Inventory Item';
+        $this->load->view('inventory/add', $this->page_data);
+    }
   
     public function saveItemsCategories()
     {

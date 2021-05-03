@@ -47,6 +47,14 @@ class Accounting_terms_model extends MY_Model {
 		return $this->db->where(['company_id' => getLoggedCompanyID(), 'id' => $id])->get($this->table)->row();
 	}
 
+	public function getActiveCompanyTerms($companyId)
+	{
+		$this->db->where('company_id', $companyId);
+		$this->db->where('status', 1);
+		$this->db->order_by('name', 'asc');
+		return $this->db->get($this->table)->result();
+	}
+
 	function getCompanyTerms_a($company_id)
 	{
 		$this->db->select('*');

@@ -13,6 +13,11 @@ var recurringDays = '';
 var monthlyRecurrFields = '';
 var payroll =  {};
 
+var catDetailsInputs = '';
+var catDetailsBlank = '';
+var itemDetailsInputs = '';
+var itemDetailsBlank = '';
+
 $(function() {
     $(document).on('change', '#adjust-starting-value-modal #location', function() {
         var selected = $(this).children('option:selected');
@@ -310,7 +315,7 @@ $(function() {
         checkbox.prop('checked', flag);
     });
 
-    $(document).on('click', 'ul#accounting_order li a[data-toggle="modal"], ul#accounting_employees li a', function(e) {
+    $(document).on('click', 'ul#accounting_order li a[data-toggle="modal"], ul#accounting_employees li a, ul#accounting_vendors li:first-child a', function(e) {
         e.preventDefault();
         var target = e.currentTarget.dataset;
         var view = target.view
@@ -328,7 +333,7 @@ $(function() {
                 `);
             }
 
-            if($('div#modal-container table').length > 0) {
+            if($('div#modal-container table:not(#category-details-table, #item-details-table)').length > 0) {
                 rowCount = $('div#modal-container table tbody tr').length;
                 rowInputs = $('div#modal-container table tbody tr:first-child()').html();
                 blankRow = $('div#modal-container table tbody tr:nth-child(2)').html();
@@ -337,10 +342,24 @@ $(function() {
                 $('div#modal-container table.clickable tbody tr:first-child() td:nth-child(2)').html(1);
             }
 
+            if(modal_element === '#expenseModal') {
+                rowCount = 2;
+                catDetailsInputs = $('#expenseModal table#category-details-table tbody tr:first-child()').html();
+                catDetailsBlank = $('#expenseModal table#category-details-table tbody tr:nth-child(2)').html();
+                itemDetailsInputs = $('#expenseModal table#item-details-table tbody tr:first-child()').html();
+                itemDetailsBlank = $('#expenseModal table#item-details-table tbody tr:nth-child(2)').html();
+
+                $('#expenseModal table#category-details-table tbody tr:first-child()').html(catDetailsBlank);
+                $('#expenseModal table#category-details-table tbody tr:first-child() td:nth-child(2)').html(1);
+
+                $('#expenseModal table#item-details-table tbody tr:first-child()').html(itemDetailsBlank);
+                $('#expenseModal table#item-details-table tbody tr:first-child() td:nth-child(2)').html(1);
+            }
+
             $(`${modal_element} select`).select2();
 
-            if(view === "bank_deposit_modal") {
-                $('div#depositModal select#tags').select2({
+            if($('div#modal-container select#tags').length > 0) {
+                $('div#modal-container select#tags').select2({
                     placeholder: 'Start typing to add a tag',
                     allowClear: true,
                     ajax: {
@@ -348,7 +367,8 @@ $(function() {
                         dataType: 'json'
                     }
                 });
-            } else if(view === "weekly_timesheet_modal") {
+            }
+            if(view === "weekly_timesheet_modal") {
                 tableWeekDate(document.getElementById('weekDates'));
             }
 
@@ -445,8 +465,8 @@ $(function() {
         }
     });
 
-    $(document).on('click', `div#modal-container .full-screen-modal table.clickable tbody tr`, function() {
-        if($(this).children('td:nth-child(3)').children('select').length < 1) {
+    $(document).on('click', `div#modal-container .full-screen-modal .modal:not(#expenseModal) table.clickable tbody tr`, function() {
+        if($(this).find('input').length < 1) {
             var rowNum = $(this).children().next().html();
 
             $(this).html(rowInputs);
@@ -456,10 +476,32 @@ $(function() {
         }
     });
 
-    $(document).on('click', 'div#modal-container table.clickable tbody tr td a.deleteRow', function() {
+    $(document).on('click', 'div#modal-container #expenseModal table#category-details-table tbody tr', function() {
+        if($(this).find('input').length < 1) {
+            var rowNum = $(this).children().next().html();
+
+            $(this).html(catDetailsInputs);
+            $(this).children('td:nth-child(2)').html(rowNum);
+
+            $(this).find('select').select2();
+        }
+    });
+
+    $(document).on('click', 'div#modal-container #expenseModal table#item-details-table tbody tr', function() {
+        if($(this).find('input').length < 1) {
+            var rowNum = $(this).children().next().html();
+
+            $(this).html(itemDetailsInputs);
+            $(this).children('td:nth-child(2)').html(rowNum);
+
+            $(this).find('select').select2();
+        }
+    });
+
+    $(document).on('click', 'div#modal-container .modal:not(#expenseModal) table.clickable tbody tr td a.deleteRow', function() {
         $(this).parent().parent().remove();
         if($('div#modal-container table tbody tr').length < rowCount) {
-            $('div#modal-container table tbody').append(`<tr>${blankRow}</tr>`)
+            $('div#modal-container table tbody').append(`<tr>${blankRow}</tr>`);
         } 
 
         var num = 1;
@@ -472,6 +514,36 @@ $(function() {
         if(modalName === '#depositModal') {
             updateBankDepositTotal();
         }
+    });
+
+    $(document).on('click', '#expenseModal #category-details-table tbody tr td a.deleteRow', function() {
+        $(this).parent().parent().remove();
+
+        if($('#category-details-table tbody tr').length < rowCount) {
+            $('#category-details-table tbody').append(`<tr>${catDetailsBlank}</tr>`);
+        }
+
+        var num = 1;
+    
+        $('#category-details-table tbody tr').each(function() {
+            $(this).children('td:nth-child(2)').html(num);
+            num++;
+        });
+    });
+
+    $(document).on('click', '#expenseModal #item-details-table tbody tr td a.deleteRow', function() {
+        $(this).parent().parent().remove();
+
+        if($('#item-details-table tbody tr').length < rowCount) {
+            $('#item-details-table tbody').append(`<tr>${itemDetailsBlank}</tr>`);
+        }
+
+        var num = 1;
+    
+        $('#item-details-table tbody tr').each(function() {
+            $(this).children('td:nth-child(2)').html(num);
+            num++;
+        });
     });
 
     $(document).on('keyup', '#search-tag', function(){
@@ -1227,6 +1299,15 @@ $(function() {
         } else {
             var newQty = parseInt($(this).parent().prev().prev().html()) + parseInt(value);
             $(this).parent().parent().find('[name="new_qty[]"]').val(newQty);
+        }
+    });
+
+    // Expenses modal
+    $(document).on('click', '.full-screen-modal .modal .btn[data-toggle="collapse"]', function(e) {
+        if($(this).attr('aria-expanded') === 'true') {
+            $(this).children('i').addClass('fa-caret-down').removeClass('fa-caret-right');
+        } else {
+            $(this).children('i').addClass('fa-caret-right').removeClass('fa-caret-down');
         }
     });
 });

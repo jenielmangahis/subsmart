@@ -23,14 +23,18 @@
                                             <div class="form-group">
                                                 <label for="creditCard">Which credit card did you pay?</label>
                                                 <select name="credit_card" id="creditCard" class="form-control" required>
-                                                    <option value="1">Test Credit Card</option>
+                                                    <option value="" disabled selected>&nbsp;</option>
+                                                    <?php foreach($dropdown['creditCards'] as $creditCard) : ?>
+                                                        <option value="<?=$creditCard->id?>"><?=$creditCard->name?></option>
+                                                    <?php endforeach; ?>
                                                 </select>
                                             </div>
                                             <div class="form-group">
                                                 <label for="payee">Payee (optional)</label>
                                                 <select name="payee" id="payee" class="form-control" required>
+                                                    <option value="" disabled selected>&nbsp;</option>
                                                     <?php foreach($dropdown['vendors'] as $vendor) : ?>
-                                                        <option value="<?php echo $vendor->id; ?>"><?php echo $vendor->f_name . ' ' . $vendor->l_name; ?></option>
+                                                        <option value="<?php echo $vendor->id; ?>"><?=$vendor->display_name?></option>
                                                     <?php endforeach; ?>
                                                 </select>
                                             </div>
