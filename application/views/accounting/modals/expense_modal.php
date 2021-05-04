@@ -70,6 +70,9 @@
                                                 <label for="payment_method">Payment method</label>
                                                 <select name="payment_method" id="payment_method" class="form-control">
                                                     <option value="" selected disabled>&nbsp;</option>
+                                                    <?php foreach($dropdown['payment_methods'] as $paymentMethod) : ?>
+                                                        <option value="<?=$paymentMethod['id']?>"><?=$paymentMethod['name']?></option>
+                                                    <?php endforeach; ?>
                                                 </select>
                                             </div>
                                         </div>
@@ -119,6 +122,21 @@
                                                                         <td>
                                                                             <select name="category[]" class="form-control">
                                                                                 <option value="" selected disabled>&nbsp;</option>
+                                                                                <?php foreach($dropdown['categories'] as $accType => $accounts) : ?>
+                                                                                    <optgroup label="<?=$accType?>">
+                                                                                        <?php foreach($accounts as $account) : ?>
+                                                                                            <option value="<?=$account->id?>"><?=$account->name?></option>
+
+                                                                                            <?php if(count($account->childAccs) > 0) : ?>
+                                                                                                <optgroup label="&nbsp;&nbsp;&nbsp;Sub-account of <?=$account->name?>">
+                                                                                                    <?php foreach($account->childAccs as $childAcc) : ?>
+                                                                                                        <option value="<?=$childAcc->id?>">&nbsp;&nbsp;&nbsp;<?=$childAcc->name?></option>
+                                                                                                    <?php endforeach; ?>
+                                                                                                </optgroup>
+                                                                                            <?php endif; ?>
+                                                                                        <?php endforeach; ?>
+                                                                                    </optgroup>
+                                                                                <?php endforeach; ?>
                                                                             </select>
                                                                         </td>
                                                                         <td><input type="text" name="description[]" class="form-control"></td>
@@ -164,8 +182,8 @@
                                                         <div class="category-details-table-footer">
                                                             <div class="row">
                                                                 <div class="col-md-6">
-                                                                    <button type="button" class="btn btn-outline-secondary border" data-target="#bank-deposit-table" onclick="addTableLines(event)">Add lines</button>
-                                                                    <button type="button" class="btn btn-outline-secondary border" data-target="#bank-deposit-table" onclick="clearTableLines(event)">Clear all lines</button>
+                                                                    <button type="button" class="btn btn-outline-secondary border" data-target="#category-details-table" onclick="addTableLines(event)">Add lines</button>
+                                                                    <button type="button" class="btn btn-outline-secondary border" data-target="#category-details-table" onclick="clearTableLines(event)">Clear all lines</button>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -219,10 +237,10 @@
                                                                             </div>
                                                                         </td>
                                                                         <td><input type="number" name="item_markup[]" class="form-control" onchange="convertToDecimal(this)"></td>
-                                                                        <td><input type="number" name="item_sales_amount[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" required></td>
+                                                                        <td><input type="number" name="item_sales_amount[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01"></td>
                                                                         <td>
                                                                             <div class="d-flex align-items-center justify-content-center">
-                                                                                <input type="checkbox" name="item_billable[]" class="form-check" value="1">
+                                                                                <input type="checkbox" name="item_tax[]" class="form-check" value="1">
                                                                             </div>
                                                                         </td>
                                                                         <td>
@@ -258,8 +276,8 @@
                                                         <div class="item-details-table-footer">
                                                             <div class="row">
                                                                 <div class="col-md-6">
-                                                                    <button type="button" class="btn btn-outline-secondary border" data-target="#bank-deposit-table" onclick="addTableLines(event)">Add lines</button>
-                                                                    <button type="button" class="btn btn-outline-secondary border" data-target="#bank-deposit-table" onclick="clearTableLines(event)">Clear all lines</button>
+                                                                    <button type="button" class="btn btn-outline-secondary border" data-target="#item-details-table" onclick="addTableLines(event)">Add lines</button>
+                                                                    <button type="button" class="btn btn-outline-secondary border" data-target="#item-details-table" onclick="clearTableLines(event)">Clear all lines</button>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -280,7 +298,7 @@
                                                     <div class="attachments">
                                                         <label for="attachment" style="margin-right: 15px"><i class="fa fa-paperclip"></i>&nbsp;Attachment</label> 
                                                         <span>Maximum size: 20MB</span>
-                                                        <div id="vendorAttachments" class="dropzone" style="border: 1px solid #e1e2e3;background: #ffffff;width: 100%;">
+                                                        <div id="expense-attachments" class="dropzone" style="border: 1px solid #e1e2e3;background: #ffffff;width: 100%;">
                                                             <div class="dz-message" style="margin: 20px;border">
                                                                 <span style="font-size: 16px;color: rgb(180,132,132);font-style: italic;">Drag and drop files here or</span>
                                                                 <a href="#" style="font-size: 16px;color: #0b97c4">browse to upload</a>

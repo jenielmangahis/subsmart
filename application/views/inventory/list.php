@@ -60,7 +60,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                             </div>
                             <div class="row">
                                 <input type="hidden" id="selectedIds">
-                                <?php if ($type == 'inventory' || empty($type)) : ?>
+                                <?php if ($type == 'product' || empty($type)) : ?>
                                 <div class="col-md-12" id="onHandInventory">
                                     <div class="row pt-4">
                                         <h4 for="exampleFormControlSelect1" class="col-md-4 text-left">Inventory On Hand</h4>

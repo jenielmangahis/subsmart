@@ -15,6 +15,7 @@ class Inventory extends MY_Controller
         $this->load->model('Items_model', 'items_model');
         $this->load->library('form_validation');
         $this->load->helper('file');
+        $this->load->model('General_model', 'general');
 
         add_css(array(
             'https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css',
@@ -40,13 +41,12 @@ class Inventory extends MY_Controller
         $this->page_data['items'] = $this->items_model->get();
         $comp_id = logged('company_id');
         $this->page_data['active_category'] = "Show All";
-        $type    = $this->page_data['type']  = (!empty($get['type'])) ? $get['type'] : "inventory";
+        $type    = $this->page_data['type']  = (!empty($get['type'])) ? $get['type'] : "product";
         $role_id = logged('role');
         if (!empty($get['category'])) {
             if( $role_id == 1 || $role_id == 2 ){
                 $comp_id = 0;
             }
-
             $this->page_data['category'] = $get['category'];
             $this->page_data['active_category'] = $get['category'];
             $items = $this->items_model->filterBy(['category' => $get['category'], 'is_active' => "1"], $comp_id, ucfirst($type));
@@ -60,9 +60,8 @@ class Inventory extends MY_Controller
 
             $items = $this->items_model->getByWhere($arg);
         }
-        //print_r($items);
-        $this->page_data['items'] = $this->categorizeNameAlphabetically($items);
 
+        $this->page_data['items'] = $this->categorizeNameAlphabetically($items);
         $comp = array(
             'company_id' => $comp_id
         );
@@ -74,6 +73,50 @@ class Inventory extends MY_Controller
 
     public function add()
     {
+        $input = $this->input->post();
+        if($input){
+            $config = array(
+                'upload_path' => "./uploads/",
+                'allowed_types' => "gif|jpg|png|jpeg",
+                'overwrite' => TRUE,
+                'max_size' => "2048000",
+                'max_height' => "768",
+                'max_width' => "1024"
+            );
+
+            $this->load->library('upload', $config);
+            if (!$this->upload->do_upload('attach_photo')) {
+                $product_image = '';
+            } else {
+                $data = array('upload_data' => $this->upload->data());
+                $product_image = $data['upload_data']['file_name'];
+            }
+
+            $data = array(
+                'company_id' => logged('company_id'),
+                'title' => $this->input->post('item_name'),
+                'type' => ucfirst($this->input->post('item_type')),
+                'model' => $this->input->post('model_number'),
+                'COGS' => $this->input->post('cost_of_goods'),
+                'cost' => $this->input->post('cost'),
+                'brand' => $this->input->post('brand'),
+                'price' => $this->input->post('retailField'),
+                'rebate' => $this->input->post('rebateField'),
+                // 'cost_per' => $this->input->post('cost_per'),
+                'description' => $this->input->post('description'),
+                'url' => $this->input->post('product_url'),
+                'notes' => '',
+                'item_categories_id' => $this->input->post('item_category'),
+                'is_active' => 1,
+                'vendor_id' => $this->input->post('vendor'),
+                'units' => $this->input->post('unit'),
+                'attached_image' => $product_image
+            );
+            $profile_id = $this->general->add_return_id($data, 'items');
+            redirect(base_url('inventory'));
+        }
+
+
         $this->page_data['page_title'] = 'Add Inventory Item';
         $this->load->view('inventory/add', $this->page_data);
     }

@@ -38,6 +38,7 @@ class Accounting_modals extends MY_Controller {
         $this->load->model('users_model');
         $this->load->model('items_model');
         $this->load->model('accounting_recurring_transactions_model');
+        $this->load->model('accounting_payment_methods_model');
 		$this->load->library('form_validation');
     }
 
@@ -304,6 +305,39 @@ class Accounting_modals extends MY_Controller {
                         }
                     }
 
+                    $categoryAccs = [];
+                    $accTypesName = [
+                        'Expenses',
+                        'Bank',
+                        'Accounts receivable (A/R)',
+                        'Other Current Assets',
+                        'Fixed Assets',
+                        'Accounts payable (A/P)',
+                        'Credit Card',
+                        'Other Current Liabilities',
+                        'Long Term Liabilities',
+                        'Equity',
+                        'Income',
+                        'Cost of Goods Sold',
+                        'Other Income',
+                        'Other Expense'
+                    ];
+                    $categoryAccTypes = $this->account_model->getAccTypeByName($accTypesName);
+
+                    foreach($categoryAccTypes as $catAccType) {
+                        $accounts = $this->chart_of_accounts_model->getByAccountType($catAccType->id, null, logged('company_id'));
+
+                        if(count($accounts) > 0) {
+                            foreach($accounts as $account) {
+                                $childAccs = $this->chart_of_accounts_model->getChildAccounts($account->id);
+
+                                $account->childAccs = $childAccs;
+
+                                $categoryAccs[$catAccType->account_name][] = $account;
+                            }
+                        }
+                    }
+
                     if(strpos($selectedBalance, '-') !== false) {
                         $balance = str_replace('-', '', $selectedBalance);
                         $selectedBalance = '-$'.number_format($balance, 2, '.', ',');
@@ -311,7 +345,9 @@ class Accounting_modals extends MY_Controller {
                         $selectedBalance = '$'.number_format($selectedBalance, 2, '.', ',');
                     }
 
+                    $this->page_data['dropdown']['payment_methods'] = $this->accounting_payment_methods_model->getCompanyPaymentMethods();
                     $this->page_data['balance'] = $selectedBalance;
+                    $this->page_data['dropdown']['categories'] = $categoryAccs;
                     $this->page_data['dropdown']['items'] = $this->items_model->getItemsWithFilter(['type' => 'inventory', 'status' => [1]]);
                     $this->page_data['dropdown']['customers'] = $this->accounting_customers_model->getAllByCompany();
                     $this->page_data['dropdown']['payment_accounts'] = $paymentAccs;
@@ -1140,6 +1176,9 @@ class Accounting_modals extends MY_Controller {
                 break;
                 case 'bonus-payroll-modal' :
                     $this->result = $this->payroll($data, 'bonus');
+                break;
+                case 'expenseModal' :
+                    $this->result = $this->expense($data);
                 break;
             }
         } catch (\Exception $e) {
@@ -2226,5 +2265,75 @@ class Accounting_modals extends MY_Controller {
         $this->pdf->save_pdf("accounting/modals/print_action/statement", ['data' => $post], $filename, 'portrait');
 
         $this->load->view("accounting/modals/send_statement_modal", $this->page_data);
+    }
+
+    private function expense($data)
+    {
+        $this->load->model('expenses_model');
+
+        $expenseData = [
+            'company_id' => logged('company_id'),
+            'vendor_id' => $data['vendor_id'],
+            'payment_account_id' => $data['payment_account'],
+            'payment_date' => date("Y-m-d", strtotime($data['payment_date'])),
+            'payment_method_id' => $data['payment_method'],
+            'ref_no' => $data['ref_no'],
+            'tags' => $data['tags'] !== null ? json_encode($data['tags']) : null,
+            'memo' => $data['memo'],
+            'attachments' => $data['attachments'] !== null ? json_encode($data['attachments']) : null,
+            'status' => 1,
+            'created_at' => date("Y-m-d H:i:s"),
+            'updated_at' => date("Y-m-d H:i:s")
+        ];
+
+        $expenseId = $this->expenses_model->addExpense($expenseData);
+
+        if($expenseId) {
+            if(isset($data['category'])) {
+                $categoryDetails = [];
+                foreach($data['category'] as $index => $value) {
+                    $categoryDetails[] = [
+                        'expense_id' => $expenseId,
+                        'category_account_id' => $value,
+                        'description' => $data['description'][$index],
+                        'amount' => $data['category_amount'][$index],
+                        'billable' => $data['category_billable'][$index],
+                        'markup_percentage' => $data['category_markup'][$index],
+                        'tax' => $data['category_tax'][$index],
+                        'customer_id' => $data['category_customer'][$index],
+                    ];
+                }
+
+                $this->expenses_model->insert_expense_categories($categoryDetails);
+            }
+
+            if(isset($data['item'])) {
+                $itemDetails = [];
+                foreach($data['item'] as $index => $value) {
+                    $itemDetails[] = [
+                        'expense_id' => $expenseId,
+                        'item_id' => $value,
+                        'description' => $data['item_description'][$index],
+                        'quantity' => $data['quantity'][$index],
+                        'rate' => $data['rate'][$index],
+                        'amount' => $data['item_amount'][$index],
+                        'billable' => $data['item_billable'][$index],
+                        'markup_percentage' => $data['item_markup'][$index],
+                        'sales_amount' => $data['item_sales_amount'][$index],
+                        'tax' => $data['item_tax'][$index],
+                        'customer_id' => $data['item_customer'][$index],
+                    ];
+                }
+
+                $this->expenses_model->insert_expense_items($itemDetails);
+            }
+        }
+
+        $return = [];
+        $return['data'] = $expenseId;
+        $return['success'] = $expenseId ? true : false;
+        $return['message'] = $expenseId ? 'Entry Successful!' : 'An unexpected error occured!';
+
+        return $return;
     }
 }

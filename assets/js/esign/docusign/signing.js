@@ -180,8 +180,7 @@ function Signing(hash) {
 
         if (field_name === "Checkbox") {
           const { options = [] } = JSON.parse(field.specs) || {};
-          let { value: selected } = fieldValue || { value: null };
-          selected = JSON.parse(selected) || [];
+          const values = fieldValue && fieldValue.value ? JSON.parse(fieldValue.value) : null; // prettier-ignore
 
           const html = `<div class="docusignField docusignField__checkbox"></div>`;
           const $element = createElementFromHTML(html);
@@ -208,15 +207,27 @@ function Signing(hash) {
             $element.append(`
               <div class="form-check">
                 <span class="form-check-indicator">x</span>
-                <input class="form-check-input" type="checkbox">
+                <input class="form-check-input" type="checkbox" id="${field.unique_key}">
               </div>
             `);
           }
 
+          if (values) {
+            $element.find("input:checkbox").each(function () {
+              const value = values.find((v) => v.id === $(this).attr("id"));
+              if (value) {
+                $(this).prop("checked", value.isChecked);
+              }
+            });
+          }
+
           $element.find("input:checkbox").on("change", function () {
             const values = [];
-            $element.find("input:checkbox:checked").each(function () {
-              values.push($(this).val());
+            $element.find("input:checkbox").each(function () {
+              values.push({
+                id: $(this).attr("id"),
+                isChecked: $(this).is(":checked"),
+              });
             });
 
             const value = JSON.stringify(values);

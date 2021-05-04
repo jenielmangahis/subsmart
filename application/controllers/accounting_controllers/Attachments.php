@@ -71,7 +71,7 @@ class Attachments extends MY_Controller {
         if(count($files['name']) > 0) {
             $insert = $this->uploadFile($files);
 
-            if($insert) {
+            if(count($insert) > 0) {
                 $this->session->set_flashdata('success', "Upload successful!");
             } else {
                 $this->session->set_flashdata('error', "Please try again!");
@@ -114,9 +114,12 @@ class Attachments extends MY_Controller {
             move_uploaded_file($files['tmp_name'][$key], './uploads/accounting/attachments/'.$fileNameToStore);
         }
 
-        $insert = $this->accounting_attachments_model->insertBatch($data);
+        $attachmentIds = [];
+        foreach($data as $attachment) {
+            $attachmentIds[] = $this->accounting_attachments_model->create($attachment);
+        }
 
-        return $insert;
+        return $attachmentIds;
     }
 
     public function load_attachment_files()
@@ -207,6 +210,21 @@ class Attachments extends MY_Controller {
             $this->session->set_flashdata('success', "$name has been successfully deleted!");
         } else {
             $this->session->set_flashdata('error', "Please try again!");
+        }
+    }
+
+    public function attach()
+    {
+        $files = $_FILES['file'];
+
+        if(count($files['name']) > 0) {
+            $insert = $this->uploadFile($files);
+
+            $return = new stdClass();
+            $return->attachment_ids = $insert;
+            echo json_encode($return);
+        } else {
+            echo json_encode('error');
         }
     }
 }

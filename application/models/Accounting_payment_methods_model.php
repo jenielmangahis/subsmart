@@ -16,7 +16,7 @@ class Accounting_payment_methods_model extends MY_Model {
 	    return $this->db->insert_id();
 	}
 
-    function getCompanyPaymentMethods($order, $status)
+    function getCompanyPaymentMethods($order = 'asc', $status = [1])
 	{
 		return $this->db->where('company_id', getLoggedCompanyID())->where_in('status', $status)->order_by('name', $order)->get($this->table)->result_array();
 	}

@@ -57,6 +57,8 @@ class Customer extends MY_Controller
         $input = $this->input->post();
         if($input){
             $this->page_data['profiles'] = $this->customer_ad_model->get_customer_data($input);
+        }else{
+            $this->page_data['profiles'] = $this->customer_ad_model->get_customer_data($input);
         }
 //      $this->page_data['library_templates'] = $this->Esign_model->get_library_template_by_category($user_id);
 //      $this->page_data['library_categories'] = $this->Esign_model->get_library_categories();

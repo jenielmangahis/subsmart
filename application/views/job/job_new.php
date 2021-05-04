@@ -687,8 +687,8 @@ add_css(array(
                                     <small>Job Tags</small>
                                     <input type="text" name="job_tag" class="form-control" value="<?= isset($jobs_data) ? $jobs_data->name : ''; ?>" id="job_tags_right" readonly>
                                 </td>
-                                <td>
-                                </td>
+                                <td></td>
+                                <td></td>
                                 <td>
                                     <!--<button type="button" class="btn btn-sm btn-primary"><span class="fa fa-paper-plane-o"  style=""></span></button>
                                     <button type="button" class="btn btn-sm btn-primary"><span class="fa fa-file"  style="color:"></span></button>
@@ -1110,6 +1110,7 @@ add_css(array(
                                 <td> Name</td>
                                 <td> Qty</td>
                                 <td> Price</td>
+                                <td> Type</td>
                                 <td> Action</td>
                             </tr>
                             </thead>
@@ -1121,8 +1122,9 @@ add_css(array(
                                         <td><?= $item->title; ?></td>
                                         <td><?= $item_qty[0]->total_qty > 0 ? $item_qty[0]->total_qty : 0; ?></td>
                                         <td><?= $item->price; ?></td>
+                                        <td><?=ucfirst($item->type); ?></td>
                                         <td>
-                                            <button id="<?= $item->id; ?>" data-quantity="<?= $item->units; ?>" data-itemname="<?= $item->title; ?>" data-price="<?= $item->price; ?>" type="button" data-dismiss="modal" class="btn btn-sm btn-default select_item">
+                                            <button id="<?= $item->id; ?>" data-item_type="<?= ucfirst($item->type); ?>" data-quantity="<?= $item->units; ?>" data-itemname="<?= $item->title; ?>" data-price="<?= $item->price; ?>" type="button" data-dismiss="modal" class="btn btn-sm btn-default select_item">
                                                 <span class="fa fa-plus"></span>
                                             </button>
                                         </td>
