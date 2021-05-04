@@ -22,7 +22,7 @@ $(document).on('change', '#edit-vendor-modal #use_display_name', function() {
 var attachmentId = [];
 var attachedFiles = [];
 var attachments = new Dropzone('#vendorAttachments', {
-    url: '/accounting/vendors/attachments',
+    url: '/accounting/attachments/attach',
     maxFilesize: 20,
     uploadMultiple: true,
     // maxFiles: 1,

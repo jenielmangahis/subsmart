@@ -138,7 +138,7 @@ function Step1() {
 
     const { data } = await response.json();
     const { id: envelopeId } = data;
-    window.location = `${prefixURL}/esign/Files?id=${envelopeId}&next_step=3`;
+    window.location = `${prefixURL}/esign/Files?id=${envelopeId}&next_step=2`;
   }
 
   async function showDocument(event) {

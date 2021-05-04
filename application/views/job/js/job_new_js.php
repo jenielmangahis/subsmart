@@ -173,6 +173,7 @@ if(isset($jobs_data)){
             var title = $(this).data('itemname');
             var price = $(this).data('price');
             var qty = $(this).data('quantity');
+            var item_type = $(this).data('item_type');
 
             var total_ = price * qty;
             var total = parseFloat(total_).toFixed(2);
@@ -180,9 +181,9 @@ if(isset($jobs_data)){
             console.log(total);
             markup = "<tr id=\"ss\">" +
                 "<td width=\"35%\"><small>Item name</small><input readonly value='"+title+"' type=\"text\" name=\"item_name[]\" class=\"form-control\" ><input type=\"hidden\" value='"+idd+"' name=\"item_id[]\"></td>\n" +
-                "<td width=\"20%\"><small>Qty</small><input data-itemid='"+idd+"' id='"+idd+"' value='"+qty+"' type=\"number\" name=\"item_qty[]\" class=\"form-control qty\"></td>\n" +
+                "<td width=\"10%\"><small>Qty</small><input data-itemid='"+idd+"' id='"+idd+"' value='"+qty+"' type=\"number\" name=\"item_qty[]\" class=\"form-control qty\"></td>\n" +
                 "<td width=\"20%\"><small>Unit Price</small><input readonly id='price"+idd+"' value='"+price+"'  type=\"number\" name=\"item_price[]\" class=\"form-control\" placeholder=\"Unit Price\"></td>\n" +
-                //"<td width=\"10%\"><small>Unit Cost</small><input type=\"text\" name=\"item_cost[]\" class=\"form-control\"></td>\n" +
+                "<td width=\"20%\"><small>Item Type</small><input readonly type=\"text\" class=\"form-control\" value='"+item_type+"'></td>\n" +
                 //"<td width=\"25%\"><small>Inventory Location</small><input type=\"text\" name=\"item_loc[]\" class=\"form-control\"></td>\n" +
                 "<td  style=\"text-align: center;margin-top: 20px;\" class=\"d-flex\" width=\"15%\"><b style=\"font-size: 16px;\" data-subtotal='"+total_+"' id='sub_total"+idd+"' class=\"total_per_item\">"+total+"</b></td>" +
                 "<td width=\"20%\"><button style=\"margin-top: 20px;\" type=\"button\" class=\"btn btn-primary btn-sm items_remove_btn remove_item_row\"><span class=\"fa fa-trash-o\"></span></button></td>\n" +

@@ -56,7 +56,7 @@ class Dashboard extends Widgets {
         
         $ios_tokens = array();
         //$user_id = logged('id');
-        $userDetails = $this->users_model->getUser(5);
+        $userDetails = $this->users_model->getUser(62);
         //print_r($userDetails);
         
         $ios_tokens[] = $userDetails->device_token;

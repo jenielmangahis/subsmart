@@ -187,7 +187,7 @@
                                             <input type="number" name="adjustment_value" id="adjustment_input_cm" value="0" class="form-control adjustment_input_cm_c" style="width:100px; display:inline-block">
                                                 <span class="fa fa-question-circle" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Optional it allows you to adjust the total amount Eg. +10 or -10." data-original-title="" title=""></span>
                                             </td>
-                                            <td><span id="adjustment_area">0.00</span></td>
+                                            <td>$<span id="adjustment_area">0.00</span></td>
                                         </tr>
                                         <!-- <tr>
                                             <td>Markup $<span id="span_markup"></td> -->

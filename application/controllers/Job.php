@@ -135,7 +135,7 @@ class Job extends MY_Controller
 //                'statement' => 'items.id=items_has_storage_loc.item_id',
 //                'join_as' => 'left',
 //            ),
-            'select' => 'items.id,title,price',
+            'select' => 'items.id,title,price,type',
         );
         $this->page_data['items'] = $this->general->get_data_with_param($get_items);
 

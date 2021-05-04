@@ -1,9 +1,9 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
+define("FIREBASE_API_KEY", "AAAA0yE6SAE:APA91bFQOOZnqWcMbdBY9ZfJfc0TWanlN1l6f95QfjpfMhVLWNfHVd63nlfxP69I_snCkaqaY9yuezx65GLyevUmkflRADYdYAZKPY8e8SS5Q_dyPDqQaxxlstamhhUG1BiFr4bC4ABo");
 
 class Cron_Jobs_Controller extends MY_Controller
 {
-
     private $timesheet_report_timezone = "UTC";
     private $timesheet_report_timezone_id = 0;
     public function __construct()
@@ -23,14 +23,29 @@ class Cron_Jobs_Controller extends MY_Controller
         $time_sheet_storage = $this->generate_timelogs($date_from, $date_to, $filename, $company_id);
         return array($filename, $date_from, $time_sheet_storage, $filename_pdf);
     }
-    public function timelogs_csv_email_sender($receiver, $company_name, $filename, $date_from, $FName, $business_name, $file_info, $company_id, $company_logo,$est_wage_privacy)
-    {
+    public function timelogs_csv_email_sender(
+        $receiver,
+        $company_name,
+        $filename,
+        $date_from,
+        $FName,
+        $business_name,
+        $file_info,
+        $company_id,
+        $company_logo,
+        $est_wage_privacy
+    ) {
+        $date_to = date("Y-m-d", strtotime('saturday this week', strtotime(date('Y-m-d'))));
+        $subj_date_to = date("d", strtotime($date_to));
+        if (date("d", strtotime($date_from)) > date("d", strtotime($date_to))) {
+            $subj_date_to = date("M d", strtotime($date_to));
+        }
         $server = MAIL_SERVER;
         $port = MAIL_PORT;
         $username = MAIL_USERNAME;
         $password = MAIL_PASSWORD;
         $from = MAIL_FROM;
-        $subject = 'nSmarTrac: Time logs for Week ' . date("M d",strtotime($date_from));
+        $subject = 'nSmarTrac: Time logs for Week ' . date("M d", strtotime($date_from)).' to '. $subj_date_to;
 
         $mail = new PHPMailer(true);
         $mail->isSMTP();
@@ -63,69 +78,25 @@ class Cron_Jobs_Controller extends MY_Controller
         if (@getimagesize($filePath)) {
             $mail->AddEmbeddedImage(dirname(__DIR__, 2) . '/uploads/users/business_profile/'.$company_id.'/'.$company_logo, 'company_logo', $company_logo);
             $this->page_data['has_logo'] = true;
-            
         }
 
         $mail->Body =  'Timesheet Report.';
-        $content = $this->load->view('users/timesheet/emails/weekly_timelogs_report', $this->page_data, TRUE);
+        $content = $this->load->view('users/timesheet/emails/weekly_timelogs_report', $this->page_data, true);
         $mail->MsgHTML($content);
         $mail->addAddress($receiver);
-        if(!$mail->Send()) {
+        if (!$mail->Send()) {
             echo 'Message could not be sent.';
             echo 'Mailer Error: ' . $mail->ErrorInfo;
             exit;
         }
     }
-    public function tester()
-    {
-        $server = MAIL_SERVER;
-        $port = MAIL_PORT;
-        $username = MAIL_USERNAME;
-        $password = MAIL_PASSWORD;
-        $from = MAIL_FROM;
-        $subject = 'nSmarTrac: Time logs for Week ' . date("M d");
-
-        $mail = new PHPMailer(true);
-        $mail->isSMTP();
-        $mail->getSMTPInstance()->Timelimit = 5;
-        $mail->Host = $server;
-        $mail->SMTPAuth = true;
-        $mail->Username = $username;
-        $mail->Password = $password;
-        $mail->SMTPSecure = 'ssl';
-        $mail->Timeout = 10; // seconds
-        $mail->Port = $port;
-        $mail->From = $from;
-        $mail->FromName = 'nSmarTrac';
-        $mail->Subject = "Sample";
-
-        //get job data
-
-        $mail->IsHTML(true);
-        $mail->AddEmbeddedImage(dirname(__DIR__, 2) . '/assets/dashboard/images/logo.png', 'logo_2u', 'logo.png');
-        $filePath = base_url() . '/uploads/users/business_profile/'.$company_id.'/'.$company_logo;
-        if (@getimagesize($filePath)) {
-            $mail->AddEmbeddedImage(dirname(__DIR__, 2) . '/uploads/users/business_profile/'.$company_id.'/'.$company_logo, 'company_logo', $company_logo);
-            $this->page_data['has_logo'] = true;
-            
-        }
-
-        $mail->Body =  'Timesheet Report.';
-        $mail->MsgHTML("Sample ni");
-        $mail->addAddress("pintonnelfa@gmail.com");    
-        try {
-            $mail->Send();
-        } catch (Exception $e) {
-            echo 'Caught exception: ',  $e->getMessage(), "\n";
-        }
-    }
-
+    
     public function timesheet_report_sender()
     {
-        $this->timesheet_model->save_timesheet_report_file_names(100, "Conjob works");
+        $this->auto_clockout();
         $this->delete_old_timesheet_reports_and_notifications();
         $admins_for_reports = $this->get_admin_for_reports();
-        for($i = 0; $i < count($admins_for_reports); $i++){
+        for ($i = 0; $i < count($admins_for_reports); $i++) {
             $admin = $this->timesheet_model->get_user_and_company_details($admins_for_reports[$i][0]);
             $file_info = $this->get_time_sheet_storage($admin->company_id, $admin->id_of_timezone, $admin->timezone_id);
             $est_wage_privacy = $this->timesheet_model->get_timesheet_report_privacy($admin->company_id)->est_wage_private;
@@ -133,55 +104,67 @@ class Cron_Jobs_Controller extends MY_Controller
                 $date_from = date("Y-m-d", strtotime('sunday last week', strtotime(date('Y-m-d'))));
                 $date_to = date("Y-m-d", strtotime('saturday this week', strtotime(date('Y-m-d'))));
                 $subscribed = false;
-                if($admin->subscribed == 1){
+                if ($admin->subscribed == 1) {
                     $subscribed=true;
                 }
-                if($subscribed){
-                    $this->generate_timelogs_csv($file_info[2], $file_info[0],$est_wage_privacy);
-                    $this->generate_weekly_timesheet_pdf_report($file_info, $admin->business_name,$est_wage_privacy);
+                if ($subscribed) {
+                    $this->generate_timelogs_csv($file_info[2], $file_info[0], $est_wage_privacy);
+                    $this->generate_weekly_timesheet_pdf_report($file_info, $admin->business_name, $est_wage_privacy);
                     
-                    $this->timelogs_csv_email_sender($admin->email_report, $admin->business_name . "", $file_info[0], $date_from, $admin->FName, $admin->business_name, $file_info,$admin->company_id,$admin->business_image,$est_wage_privacy);
+                    $this->timelogs_csv_email_sender(
+                        $admin->email_report,
+                        $admin->business_name . "",
+                        $file_info[0],
+                        $date_from,
+                        $admin->FName,
+                        $admin->business_name,
+                        $file_info,
+                        $admin->company_id,
+                        $admin->business_image,
+                        $est_wage_privacy
+                    );
                     
                     $this->timesheet_model->save_timesheet_report_file_names($admin->user_id, $file_info[0]);
                     $this->timesheet_model->save_timesheet_report_file_names($admin->user_id, $file_info[3]);
                     var_dump($admin->email_report);
                 }
-            }    
+            }
         }
     }
-    public function delete_old_timesheet_reports_and_notifications(){
-
+    public function delete_old_timesheet_reports_and_notifications()
+    {
         $date_lastweek = date("Y-m-d", strtotime("monday last week"));
         //deleting all report from previous month
         $old_timesheet_reports = $this->timesheet_model->get_old_timesheet_reports($date_lastweek);
-        foreach($old_timesheet_reports as $reports){
-            $file_pointer = dirname(__DIR__, 2) . '/timesheet/timelogs/' . $reports->file_name; 
+        foreach ($old_timesheet_reports as $reports) {
+            $file_pointer = dirname(__DIR__, 2) . '/timesheet/timelogs/' . $reports->file_name;
             if (file_exists($file_pointer)) {
-                // Use unlink() function to delete a file 
+                // Use unlink() function to delete a file
                 unlink($file_pointer);
             }
         }
         $this->timesheet_model->delete_old_timesheet_reports($date_lastweek);
         $this->timesheet_model->delete_old_notifications($date_lastweek);
     }
-    public function get_admin_for_reports(){
+    public function get_admin_for_reports()
+    {
         $hour_now = date("H").":00:00";
         $admins_subject_for_report = $this->timesheet_model->get_admins_subject_for_report($hour_now);
         
         $date_hour_now_pst = date('Y-m-d')." ".$hour_now;
         $admins_for_reports=array();
-        foreach($admins_subject_for_report as $admin){
-            $date_hour_now_pst = $this->datetime_zone_converter($date_hour_now_pst,'UTC',$admin->id_of_timezone);
+        foreach ($admins_subject_for_report as $admin) {
+            $date_hour_now_pst = $this->datetime_zone_converter($date_hour_now_pst, 'UTC', $admin->id_of_timezone);
             $week_day = date("D", strtotime($date_hour_now_pst));
-            $schedules = explode(",",$admin->schedule_day);
+            $schedules = explode(",", $admin->schedule_day);
             $found= false;
-            for($i = 0; $i<count($schedules); $i++){
-                if($schedules[$i] == $week_day){
+            for ($i = 0; $i<count($schedules); $i++) {
+                if ($schedules[$i] == $week_day) {
                     $found = true;
                     break;
-                }   
+                }
             }
-            if($found){
+            if ($found) {
                 $admins_for_reports[] = array($admin->user_id, $admin->company_id);
             }
         }
@@ -197,7 +180,7 @@ class Cron_Jobs_Controller extends MY_Controller
         $this->page_data['business_name'] = $business_name;
         $this->page_data['timesheet_report_timezone'] = $this->timesheet_report_timezone;
         $this->page_data['est_wage_privacy'] = $est_wage_privacy;
-        $content = $this->load->view('users/timesheet/emails/html_to_pdf_weekly_report', $this->page_data, TRUE);
+        $content = $this->load->view('users/timesheet/emails/html_to_pdf_weekly_report', $this->page_data, true);
         $this->load->library('Reportpdf');
         $title = 'Timesheet Weekly Report for Pay Period ' . date('M d', strtotime($date_from)) . ' - ' . date('d');
         $obj_pdf = new Reportpdf('L', 'mm', 'A4', true, 'UTF-8', false);
@@ -206,7 +189,7 @@ class Cron_Jobs_Controller extends MY_Controller
         $obj_pdf->setPrintFooter(false);
         $obj_pdf->SetDefaultMonospacedFont('helvetica');
         $obj_pdf->SetMargins(PDF_MARGIN_LEFT, 10, PDF_MARGIN_RIGHT);
-        $obj_pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
+        $obj_pdf->SetAutoPageBreak(true, PDF_MARGIN_BOTTOM);
         $obj_pdf->SetFont('courierI', '', 9);
         $obj_pdf->setFontSubsetting(false);
         $res = copy(dirname(__DIR__, 2) . '/assets/img/timesheet/logojpg.jpg', dirname(__DIR__, 2) . '/assets/img/timesheet/' . 'logojpg2' . ".jpg");
@@ -227,10 +210,10 @@ class Cron_Jobs_Controller extends MY_Controller
         $obj_pdf->Output(dirname(__DIR__, 2) . '/timesheet/timelogs/' . $file_info[3], 'F');
     }
     public function generate_timelogs_csv($timehseet_storage, $filename, $est_wage_privacy)
-    { // file name 
+    { // file name
         $file = fopen(APPPATH . '../timesheet/timelogs/' . $filename, 'wb');
         
-        if($est_wage_privacy == 1){
+        if ($est_wage_privacy == 1) {
             $header = array(
                 "Employee",
                 "Date (" . $this->timesheet_report_timezone . ")",
@@ -244,7 +227,7 @@ class Cron_Jobs_Controller extends MY_Controller
                 "Est. Wages",
                 "Notes",
             );
-        }else{
+        } else {
             $header = array(
                 "Employee",
                 "Date (" . $this->timesheet_report_timezone . ")",
@@ -295,7 +278,7 @@ class Cron_Jobs_Controller extends MY_Controller
                     $data[] = $total_paid;
                     $data[] = $total_regular;
                     $data[] = $total_overtime;
-                    if($est_wage_privacy == 1){
+                    if ($est_wage_privacy == 1) {
                         $data[] = $total_est_wage;
                     }
                     $data[] = '';
@@ -364,7 +347,7 @@ class Cron_Jobs_Controller extends MY_Controller
                 $data[] = $total_paid;
                 $data[] = $total_regular;
                 $data[] = $total_overtime;
-                if($est_wage_privacy == 1){
+                if ($est_wage_privacy == 1) {
                     $data[] = $total_est_wage;
                 }
                 $data[] = '';
@@ -382,7 +365,7 @@ class Cron_Jobs_Controller extends MY_Controller
         $data[] = $overall_total_paid;
         $data[] = $overall_total_regular;
         $data[] = $overall_total_overtime;
-        if($est_wage_privacy == 1){
+        if ($est_wage_privacy == 1) {
             $data[] = $overall_total_est_wage;
         }
         $data[] = '';
@@ -529,7 +512,7 @@ class Cron_Jobs_Controller extends MY_Controller
         $difference += ($interval->h * 60) * 60;
         $difference += ($interval->i) * 60;
         $difference += $interval->s;
-        return ($difference / 60) / 60;
+        return ($difference / 60) / 60; //in hours
     }
     public function datetime_zone_converter($olddate, $from_timezone, $to_timezone)
     {
@@ -593,5 +576,254 @@ class Cron_Jobs_Controller extends MY_Controller
                 }
             }
         }
+    }
+    public function send_android_push($registrationIds, $body, $title)
+    {
+        $notification = array(
+            'body'     => $body,
+            'title'    => $title,
+            'sound'     => 'default'
+        );
+
+        $fields = array(
+            'registration_ids'    => $registrationIds,
+            'data'                => $notification
+        );
+
+
+        $headers = array(
+            'Authorization: key=' . FIREBASE_API_KEY,
+            'Content-Type: application/json'
+        );
+
+
+        //send curl
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, 'https://fcm.googleapis.com/fcm/send');
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($fields));
+        $response = curl_exec($ch);
+        curl_close($ch);
+    }
+
+
+    public function send_ios_push($registrationIds, $title, $body)
+    {
+        $notification = array(
+            'title'     => $title,
+            'body'      => $body,
+            'sound'     => 'default',
+            'badge'     => '1'
+        );
+
+        // registration_ids for multipale tokens array
+        $payload = array(
+            'registration_ids' => $registrationIds,
+            'notification'     => $notification,
+            'priority'            => 'high'
+        );
+        $json = json_encode($payload);
+
+
+        $headers = array(
+            'Authorization: key=' . FIREBASE_API_KEY,
+            'Content-Type: application/json'
+        );
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, "https://fcm.googleapis.com/fcm/send");
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $json);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        $response = curl_exec($ch);
+        curl_close($ch);
+    }
+
+    public function auto_clockout()
+    {
+        $all_timedin = $this->timesheet_model->get_all_timedin();
+        $android_tokens_less_9 = array();
+        $ios_tokens_less_9 = array();
+        $android_tokens_over_9 = array();
+        $ios_tokens_over_9 = array();
+
+        foreach ($all_timedin as $employee_attendance) {
+            $last_aux = $this->timesheet_model->get_latest_aux($employee_attendance->id, "DESC");
+            
+            if ($last_aux->action != "Break in") {
+                $date_start = $employee_attendance->date_created;
+                $date_end = date("Y-m-d H:i:s");
+                $worked_duration = $this->get_differenct_of_dates($date_start, $date_end);
+                if ($last_aux->action == "Break out") {
+                    $worked_duration =$worked_duration-$employee_attendance->break_duration;
+                }
+                var_dump($worked_duration);
+                if ($worked_duration > 8 && $worked_duration < 9) {
+                    //set for app
+                    if ($employee_attendance->device_type == "iOS") {
+                        $ios_tokens_less_9[]=$employee_attendance->device_token;
+                    } elseif ($employee_attendance->device_type == "Android") {
+                        $android_tokens_less_9[]=$employee_attendance->device_token;
+                    }
+                    $data = new stdClass();
+                    $data->notif_action_made = "over8less9";
+                    $data->FName = $employee_attendance->FName;
+                    $data->user_id = $employee_attendance->user_id;
+                    $image = base_url() . '/uploads/users/user-profile/' . $employee_attendance->profile_img;
+                    if (!@getimagesize($image)) {
+                        $image = base_url('uploads/users/default.png');
+                    }
+                    $data->profile_img = $image;
+                    $this->pusher_notification($data);
+                } elseif ($worked_duration > 12) {
+                    //auto clockout
+                    if ($employee_attendance->device_type == "iOS") {
+                        $ios_tokens_over_9[]=$employee_attendance->device_token;
+                    } elseif ($employee_attendance->device_type == "Android") {
+                        $android_tokens_over_9[]=$employee_attendance->device_token;
+                    }
+                    $this->auto_clockOutEmployee($employee_attendance->user_id, $employee_attendance->id, $employee_attendance->company_id, $last_aux->user_location, $last_aux->user_location_address);
+                }
+            }
+        }
+        if (count($android_tokens_less_9) > 0) {
+            $this->send_android_push($android_tokens_less_9, "Time Clock Alert", "Hi! It's time for you to clock out. Do you still need more time?");
+        }
+        if (count($ios_tokens_less_9) > 0) {
+            $this->send_ios_push($ios_tokens_less_9, "Time Clock Alert", "Hi! It's time for you to clock out. Do you still need more time?");
+        }
+
+        if (count($android_tokens_over_9) > 0) {
+            $this->send_android_push($android_tokens_over_9, "Autoclock Out Alert", "Hey! we haven't heard from you since the last time clock notification. Please note that you have been auto clocked out.");
+        }
+        if (count($ios_tokens_over_9) > 0) {
+            $this->send_ios_push($ios_tokens_over_9, "Autoclock Out Alert", "Hey! we haven't heard from you since the last time clock notification. Please note that you have been auto clocked out.");
+        }
+    }
+
+    public function auto_clockOutEmployee($user_id, $attn_id, $company_id, $latlng, $address)
+    {
+        $_SESSION['autoclockout_timer_closed'] = false;
+        date_default_timezone_set('UTC');
+        $clock_out = date('Y-m-d H:i:s');
+
+        $employeeLongnameAddress = $address;
+        $user_id = logged('id');
+        $check_attn = $this->db->get_where('timesheet_attendance', array('id' => $attn_id, 'user_id' => $user_id));
+        
+        if ($check_attn->num_rows() == 1) {
+            $content_notification = "Has been auto clocked out ".date("M d, Y")." GMT+0";
+            $clock_out_notify = array(
+                'user_id' => $user_id,
+                'title' => 'Clock Out',
+                'content' => $content_notification,
+                'date_created' => $clock_out,
+                'status' => 1,
+                'company_id' => $company_id
+            );
+            $this->db->insert('user_notification', $clock_out_notify);
+            $employee_address = $address;
+            $out = array(
+                'attendance_id' => $attn_id,
+                'user_id' => $user_id,
+                'action' => 'Check out',
+                'user_location' => $latlng,
+                'user_location_address' => $address,
+                'entry_type' => 'Normal',
+                'company_id' => $company_id
+            );
+            $this->db->insert('timesheet_logs', $out);
+            $timesheet_logs_id = $this->db->insert_id();
+            
+            $hours_worked = $this->timesheet_model->calculateShiftDuration_and_overtime($attn_id);
+            $shift_duration = round($hours_worked[0], 2);
+            $update = array(
+                'shift_duration' => $shift_duration,
+                //                'break_duration' => $break_duration,
+                'overtime' => round($hours_worked[1], 2),
+                //                'date_out' => date('Y-m-d'),
+                'status' => 0
+            );
+            $this->db->where('id', $attn_id);
+            $this->db->update('timesheet_attendance', $update);
+
+            $update = array(
+                'status' => 0
+            );
+            $this->db->where('user_id', $user_id);
+            $this->db->update('timesheet_attendance', $update);
+
+
+
+            $affected_row = $this->db->affected_rows();
+
+            $this->db->select('FName,LName,profile_img,device_type,device_token');
+            $this->db->from('users');
+            $this->db->where('id', $user_id);
+            $query = $this->db->get();
+            $getUserDetail = $query->row();
+
+            date_default_timezone_set($this->session->userdata('usertimezone'));
+
+            $data = new stdClass();
+            $data->clock_out_time = date('h:i A');
+            $data->attendance_id = $attn_id;
+            $data->shift_duration = gmdate('H:i', floor(($shift_duration + $hours_worked[1]) * 3600));
+            $data->FName = $getUserDetail->FName;
+            $data->LName = $getUserDetail->LName;
+            $data->profile_img = $getUserDetail->profile_img;
+            $data->body = $data->body = $getUserDetail->FName . " " . $getUserDetail->LName . " has Clocked Out today in " . $employeeLongnameAddress . " at " . date('h:i A', time()) . " " . $this->session->userdata('offset_zone');
+            $data->device_type =  $getUserDetail->device_type;
+            $data->company_id = $company_id;
+            $data->token = $getUserDetail->device_token;
+            $data->title = "Time Clock Alert";
+            $data->timesheet_logs_id = $timesheet_logs_id;
+
+            $this->db->select('id');
+            $this->db->from('user_notification');
+            $this->db->where('user_id', $user_id);
+            $this->db->where('date_created', $clock_out);
+            $query = $this->db->get();
+            $notify = $query->row();
+
+            $image = base_url() . '/uploads/users/user-profile/' . $getUserDetail->profile_img;
+            if (!@getimagesize($image)) {
+                $image = base_url('uploads/users/default.png');
+            }
+
+            $html = '<a href="' . site_url() . 'timesheet/attendance" id="notificationDP"
+            data-id="' . $notify->id . '" class="dropdown-item notify-item active"
+            style="background-color:#e6e3e3">
+            <img style="width:40px;height:40px;border-radius: 20px;margin-bottom:-40px" class="profile-user-img img-responsive img-circle" src="' . $image . '" alt="User profile picture" />
+            <p class="notify-details" style="margin-left: 50px;">' . $data->FName . " " . $data->LName . '<span class="text-muted">' . $content_notification . '</span></p>
+            </a>';
+            $data->user_id = $user_id;
+            $data->html = $html;
+            $data->content_notification = $content_notification;
+            $data->profile_img = $image;
+            $data->device_type = "";
+            $data->token = "";
+            $data->notif_action_made = "autoclockout";
+            $this->pusher_notification($data);
+        }
+    }
+    public function pusher_notification($data)
+    {
+        $options = array(
+            'cluster' => 'ap1',
+            'useTLS' => true
+        );
+        $pusher = new Pusher\Pusher(
+            'f3c73bc6ff54c5404cc8',
+            '20b5e1eb05dc73068e61',
+            '1168724',
+            $options
+        );
+        $pusher->trigger('nsmarttrac', 'my-event', $data);
     }
 }

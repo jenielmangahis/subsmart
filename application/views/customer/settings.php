@@ -20,6 +20,9 @@ add_css(array(
     #draggable { width: 150px; height: 150px; padding: 0.5em; }
 </style>
 <style>
+    .card{
+        box-shadow: 0 0 13px 0 rgb(116 116 117 / 44%) !important;
+    }
     .switch {
         position: relative !important;
         display: inline-block !important;
@@ -192,9 +195,11 @@ add_css(array(
                                                             } ?>" data-toggle="tab" href="#custom">Customizable</a>
                                                         </li>
                                                         <li class="nav-item">
-                                                            <a class="h6 mb-0 nav-link banking-sub-tab <?php if ($minitab == 'mt13') {
-                                                                echo "active";
-                                                            } ?>" data-toggle="tab" href="#others">Others</a>
+                                                            <a class="h6 mb-0 nav-link banking-sub-tab " data-toggle="tab" href="#others">Sales Area</a>
+                                                        </li>
+
+                                                        <li class="nav-item">
+                                                            <a class="h6 mb-0 nav-link banking-sub-tab " data-toggle="tab" href="#others">Lead Source</a>
                                                         </li>
                                                     </ul>
                                                 </div>
@@ -521,6 +526,15 @@ add_css(array(
 
                                                                     </tbody>
                                                                 </table>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="tab-pane fade standard-accordion" id="salesArea">
+                                                    <div class="card">
+                                                        <div class="card-body hid-desk" style="padding-bottom:0px;">
+                                                            <div class="col-lg-12">
+                                                                <h6>Sales Area</h6>
                                                             </div>
                                                         </div>
                                                     </div>

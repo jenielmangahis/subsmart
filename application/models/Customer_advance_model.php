@@ -155,6 +155,9 @@ class Customer_advance_model extends MY_Model {
             if($search['contract_term'] != ""){
                 $this->db->where('acs_b.contract_term LIKE', '%' . $search['contract_term'] . '%');
             }
+        }else{
+            $this->db->limit(10);
+            $this->db->order_by('prof_id', "DESC");
         }
         $this->db->where("acs_profile.company_id", $cid);
         //$this->db->limit(20);

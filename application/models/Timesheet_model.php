@@ -13,7 +13,6 @@ class Timesheet_model extends MY_Model
 
     public function getNotifyCount()
     {
-
         $user_id = logged('id');
         $qry = $this->db->get_where('user_notification', array('user_id' => $user_id, 'status' => 1))->num_rows();
         return $qry;
@@ -157,7 +156,6 @@ class Timesheet_model extends MY_Model
         // $query = $this->db->get();
         // var_dump(query);
         // $qry = $query->result();
-
     }
     public function notif_user_acknowledge()
     {
@@ -420,7 +418,6 @@ class Timesheet_model extends MY_Model
 
     public function calculateShiftDuration_and_overtime($attn_id)
     {
-
         date_default_timezone_set('UTC');
         $user_id = logged('id');
         $qry = $this->db->get_where('timesheet_attendance', array('id' => $attn_id));
@@ -486,7 +483,6 @@ class Timesheet_model extends MY_Model
     }
     public function calculateBreakDuration($attn_id)
     {
-
         date_default_timezone_set('UTC');
         $user_id = logged('id');
 
@@ -588,15 +584,15 @@ class Timesheet_model extends MY_Model
         $ipaddress = '';
         if (isset($_SERVER['HTTP_CLIENT_IP'])) {
             $ipaddress = $_SERVER['HTTP_CLIENT_IP'];
-        } else if (isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+        } elseif (isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
             $ipaddress = $_SERVER['HTTP_X_FORWARDED_FOR'];
-        } else if (isset($_SERVER['HTTP_X_FORWARDED'])) {
+        } elseif (isset($_SERVER['HTTP_X_FORWARDED'])) {
             $ipaddress = $_SERVER['HTTP_X_FORWARDED'];
-        } else if (isset($_SERVER['HTTP_FORWARDED_FOR'])) {
+        } elseif (isset($_SERVER['HTTP_FORWARDED_FOR'])) {
             $ipaddress = $_SERVER['HTTP_FORWARDED_FOR'];
-        } else if (isset($_SERVER['HTTP_FORWARDED'])) {
+        } elseif (isset($_SERVER['HTTP_FORWARDED'])) {
             $ipaddress = $_SERVER['HTTP_FORWARDED'];
-        } else if (isset($_SERVER['REMOTE_ADDR'])) {
+        } elseif (isset($_SERVER['REMOTE_ADDR'])) {
             $ipaddress = $_SERVER['REMOTE_ADDR'];
         } else {
             $ipaddress = 'UNKNOWN';
@@ -647,7 +643,7 @@ class Timesheet_model extends MY_Model
         $timeArr = explode(':', $break_diff);
         $decTime = ($timeArr[0] * 60) + ($timeArr[1]) + ($timeArr[2] / 60);
         if ($query->num_rows() == 1) {
-            $this->db->set('break_duration', 'break_duration+' . $decTime, FALSE);
+            $this->db->set('break_duration', 'break_duration+' . $decTime, false);
             $this->db->where('id', $attn_id)->update($this->attn_tbl);
             return true;
         } else {
@@ -690,7 +686,6 @@ class Timesheet_model extends MY_Model
 
     public function getNotLoggedInEmployees($date)
     {
-
         $total_users = $this->users_model->getTotalUsers();
         date_default_timezone_set('UTC');
         $company_id = logged('company_id');
@@ -1241,7 +1236,6 @@ class Timesheet_model extends MY_Model
     }
     public function attendance_logs_update($update, $where, $table)
     {
-
         for ($i = 0; $i < count($where); $i++) {
             $this->db->where($where[$i][0], $where[$i][1]);
         }
@@ -1252,7 +1246,6 @@ class Timesheet_model extends MY_Model
 
     public function attendance_logs_update_timesheet_logs($attn_id, $date_created, $action, $user_id)
     {
-
         $this->db->where('attendance_id', $attn_id);
         $this->db->where('action', $action);
         $qry = $this->db->get('timesheet_logs');
@@ -1489,7 +1482,7 @@ class Timesheet_model extends MY_Model
         $qry = $this->db->query("SELECT * fROM timesheet_timezone_list WHERE id_of_timezone ='" . $current_tz . "'");
         return $qry->result();
     }
-    public function save_timezone_changes($timezone_id, $user_id, $subscribe,$report_series,$sched_day,$sched_time,$email_report)
+    public function save_timezone_changes($timezone_id, $user_id, $subscribe, $report_series, $sched_day, $sched_time, $email_report)
     {
         $current_saved = $this->get_saved_timezone($user_id);
         if (count($current_saved) > 0) {
@@ -1542,36 +1535,34 @@ class Timesheet_model extends MY_Model
         $this->db->reset_query();
 
         $found=false;
-        foreach($saved as $privacy){
+        foreach ($saved as $privacy) {
             $timesheet_report_company_privacy_id = $privacy->id;
             $found=true;
         }
-        if($found){
+        if ($found) {
             $update = array(
                 'est_wage_private' => $est_wage_private,
                 'company_id' => $company_id,
                 'datetime_updated' => $date_time_now
             );
-            $this->db->update('timesheet_report_company_privacy',$update);
-
-        }else{
+            $this->db->update('timesheet_report_company_privacy', $update);
+        } else {
             $insert = array(
                 'est_wage_private' => $est_wage_private,
                 'company_id' => $company_id,
                 'datetime_updated' => $date_time_now
             );
-            $this->db->insert('timesheet_report_company_privacy',$insert);
+            $this->db->insert('timesheet_report_company_privacy', $insert);
             $timesheet_report_company_privacy_id= $this->db->insert_id();
-            
         }
         $insert = array(
             'timesheet_report_company_privacy_id' => $timesheet_report_company_privacy_id,
             'user_id' => $user_id
         );
-        $this->db->insert('timesheet_report_company_privacy_editor',$insert);
-        
+        $this->db->insert('timesheet_report_company_privacy_editor', $insert);
     }
-    public function get_timesheet_report_privacy($company_id){
+    public function get_timesheet_report_privacy($company_id)
+    {
         $this->db->reset_query();
         $qry = $this->db->query("SELECT * from 
         timesheet_report_company_privacy 
@@ -1583,12 +1574,14 @@ class Timesheet_model extends MY_Model
          order by timesheet_report_company_privacy_editor.date_created DESC LIMIT 1");
         return $qry->row();
     }
-    public function get_user_details($user_id){
+    public function get_user_details($user_id)
+    {
         $this->db->reset_query();
         $qry = $this->db->query("SELECT * from users where id = ".$user_id);
         return $qry->row();
     }
-    public function get_admins_subject_for_report($hour_now){
+    public function get_admins_subject_for_report($hour_now)
+    {
         $this->db->reset_query();
         $qry = $this->db->query("SELECT * from timesheet_timezone_admin_report 
         JOIN timesheet_timezone_list ON timesheet_timezone_admin_report.timezone_id=timesheet_timezone_list.id  
@@ -1596,7 +1589,8 @@ class Timesheet_model extends MY_Model
         where timesheet_timezone_admin_report.schedule_time = '".$hour_now."'");
         return $qry->result();
     }
-    public function get_user_and_company_details($user_id){
+    public function get_user_and_company_details($user_id)
+    {
         $this->db->reset_query();
         $qry = $this->db->query("SELECT timesheet_timezone_admin_report.*,timesheet_timezone_list.*,users.FName,users.LName,users.email,users.company_id,business_profile.business_name,business_profile.business_image from timesheet_timezone_admin_report 
         JOIN timesheet_timezone_list ON timesheet_timezone_admin_report.timezone_id=timesheet_timezone_list.id  
@@ -1605,34 +1599,51 @@ class Timesheet_model extends MY_Model
         where timesheet_timezone_admin_report.user_id = ".$user_id);
         return $qry->row();
     }
-    public function save_timesheet_report_file_names($user_id, $file_name){
-
+    public function save_timesheet_report_file_names($user_id, $file_name)
+    {
         $this->db->reset_query();
         $insert = array(
             'user_id' => $user_id,
             'file_name' => $file_name
         );
-        $this->db->insert('timesheet_report_filename_storage',$insert);
+        $this->db->insert('timesheet_report_filename_storage', $insert);
     }
-    public function get_old_timesheet_reports($date_lastweek){
-        
+    public function get_old_timesheet_reports($date_lastweek)
+    {
         $this->db->reset_query();
         $qry = $this->db->query("SELECT * FROM timesheet_report_filename_storage WHERE date_created < '$date_lastweek'");
         return $qry->result();
     }
-    public function delete_old_timesheet_reports($date_lastweek){
+    public function delete_old_timesheet_reports($date_lastweek)
+    {
         $this->db->reset_query();
         $this->db->query("DELETE FROM timesheet_report_filename_storage WHERE date_created < '$date_lastweek'");
     }
-    public function delete_old_notifications($date_lastweek){
+    public function delete_old_notifications($date_lastweek)
+    {
         $this->db->reset_query();
         $this->db->query("DELETE FROM user_notification WHERE date_created < '$date_lastweek'");
     }
-    public function save_current_geo_location($table_name,$table_id,$update)
+    public function save_current_geo_location($table_name, $table_id, $update)
     {
         $this->db->reset_query();
         $this->db->where('id', $table_id);
-        $this->db->update($table_name,$update);
+        $this->db->update($table_name, $update);
+    }
+    public function get_all_timedin()
+    {
+        $this->db->reset_query();
+        $qry = $this->db->query("SELECT timesheet_attendance.*, users.device_token, users.device_type, users.company_id,users.FName,users.profile_img FROM timesheet_attendance 
+        JOIN users ON timesheet_attendance.user_id = users.id 
+        WHERE timesheet_attendance.overtime_status = 0 AND timesheet_attendance.status = 1
+        ");
+        return $qry->result();
+    }
+    public function get_latest_aux($att_id, $sort)
+    {
+        $this->db->reset_query();
+        $qry = $this->db->query("SELECT * FROM timesheet_logs WHERE attendance_id = ".$att_id." order by date_created ".$sort." limit 1");
+        return $qry->row();
     }
 }
 

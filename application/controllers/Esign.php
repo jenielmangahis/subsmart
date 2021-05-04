@@ -285,6 +285,7 @@ class Esign extends MY_Controller {
 				'coordinates' => $coordinates,
 				'doc_page' => $docPage,
 				'docfile_id' => $docId,
+				'doc_id' => $docId,
 				'field_name' => $field,
 				'unique_key' => $uniqueKey,
 				'user_id' => $userId,
@@ -297,6 +298,7 @@ class Esign extends MY_Controller {
 				'coordinates' => $coordinates,
 				'doc_page' => $docPage,
 				'docfile_id' => $docId,
+				'doc_id' => $docId,
 				'field_name' => $field,
 				'unique_key' => $uniqueKey,
 				'user_id' => $userId,
@@ -305,11 +307,14 @@ class Esign extends MY_Controller {
 			]);
 		}
 
+		$query = <<<SQL
+        SELECT `user_docfile_fields`.*, `user_docfile_recipients`.`color` FROM `user_docfile_fields`
+        LEFT JOIN `user_docfile_recipients` ON `user_docfile_recipients`.`id` = `user_docfile_fields`.`user_docfile_recipients_id`
+        WHERE `user_docfile_fields`.`id` = ?
+SQL;
+
 		$recordId = $isCreated ? $this->db->insert_id() : $record->id;
-
-		$this->db->where('id', $recordId);
-		$record = $this->db->get('user_docfile_fields')->row();
-
+		$record = $this->db->query($query, [$recordId])->row();
 		echo json_encode(['record' => $record, 'is_created' => $isCreated]);
 	}
 
@@ -340,6 +345,16 @@ SQL;
         header('content-type: application/json');
         echo json_encode(['success' => true]);
     }
+
+	public function apiDocumentFile($id)
+	{
+		$this->db->where('docfile_id', $id);
+        $this->db->order_by('id', 'ASC');
+        $records = $this->db->get('user_docfile_documents')->result_array();
+
+        header('content-type: application/json');
+        echo json_encode(['data' => $records]);
+	}
 
 	public function changeFavoriteStatus($id,$isFavorite){
 		// $this->load->model('Esign_model', 'Esign_model');

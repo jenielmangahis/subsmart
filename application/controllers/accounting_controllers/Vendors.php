@@ -253,21 +253,6 @@ class Vendors extends MY_Controller {
         redirect("accounting/vendors/view/$vendorId");
     }
 
-    public function attachments()
-    {
-        $files = $_FILES['file'];
-
-        if(count($files['name']) > 0) {
-            $insert = $this->uploadFile($files);
-
-            $return = new stdClass();
-            $return->attachment_ids = $insert;
-            echo json_encode($return);
-        } else {
-            echo json_encode('error');
-        }
-    }
-
     public function update_attachments($vendorId)
     {
         $files = $_FILES['file'];

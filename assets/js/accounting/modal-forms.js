@@ -13,6 +13,9 @@ var recurringDays = '';
 var monthlyRecurrFields = '';
 var payroll =  {};
 
+var modalAttachmentId = [];
+var modalAttachedFiles = [];
+
 var catDetailsInputs = '';
 var catDetailsBlank = '';
 var itemDetailsInputs = '';
@@ -380,6 +383,44 @@ $(function() {
                 });
             }
 
+            if($(`${modal_element} .attachments`).length > 0) {
+                var attachmentContId = $(`${modal_element} .attachments .dropzone`).attr('id');
+                var attachments = new Dropzone(`#${attachmentContId}`, {
+                    url: '/accounting/attachments/attach',
+                    maxFilesize: 20,
+                    uploadMultiple: true,
+                    // maxFiles: 1,
+                    addRemoveLinks: true,
+                    init: function() {
+                        this.on("success", function(file, response) {
+                            var ids = JSON.parse(response)['attachment_ids'];
+                            var modal = $(`${modal_element}`);
+
+                            for(i in ids) {
+                                if(modal.find(`input[name="attachments[]"][value="${ids[i]}"]`).length === 0) {
+                                    modal.find('.attachments').parent().append(`<input type="hidden" name="attachments[]" value="${ids[i]}">`);
+                                }
+
+                                modalAttachmentId.push(ids[i]);
+                            }
+                            modalAttachedFiles.push(file);
+                        });
+                    },
+                    removedfile: function(file) {
+                        var ids = modalAttachmentId;
+                        var index = modalAttachedFiles.map(function(d, index) {
+                            if (d == file) return index;
+                        }).filter(isFinite)[0];
+                
+                        $(`${modal_element} .attachments`).find(`input[name="attachments[]"][value="${ids[index]}"]`).remove();
+                
+                        //remove thumbnail
+                        var previewElement;
+                        return (previewElement = file.previewElement) !== null ? (previewElement.parentNode.removeChild(file.previewElement)) : (void 0);
+                    }
+                });
+            }
+
             $(modal_element).modal('show');
             $(document).off('shown', modal_element);
         });
@@ -428,7 +469,7 @@ $(function() {
         });
     });
 
-    $(document).on('click', 'div#depositModal a#open-tags-modal', function(e) {
+    $(document).on('click', '#modal-container a#open-tags-modal', function(e) {
         e.preventDefault();
         var target = e.currentTarget.dataset;
         var modal_element = target.target;
@@ -1710,7 +1751,15 @@ const addTableLines = (e) => {
 
     for(var i = 0; i < rowCount; i++) {
         lastRowCount++;
-        $(`table${table} tbody`).append(`<tr>${blankRow}</tr>`);
+        if(table !== '#category-details-table' && table !== '#item-details-table') {
+            $(`table${table} tbody`).append(`<tr>${blankRow}</tr>`);
+        } else {
+            if(table === '#category-details-table') {
+                $(`table${table} tbody`).append(`<tr>${catDetailsBlank}</tr>`);
+            } else {
+                $(`table${table} tbody`).append(`<tr>${itemDetailsBlank}</tr>`);
+            }
+        }
         $(`table${table} tbody tr:last-child() td:nth-child(2)`).html(lastRowCount);
     }
 }
@@ -1720,11 +1769,18 @@ const clearTableLines = (e) => {
     var table = e.currentTarget.dataset.target;
 
     $(`table${table} tbody tr`).each(function(index, value) {
+        var count = $(this).find('td:nth-child(2)').html();
         if(index < rowCount) {
-            $(this).children().each(function(){
-                $(this).children('input').remove();
-                $(this).children('select').remove();
-            });
+            if(table !== '#category-details-table' && table !== 'item-details-table') {
+                $(this).html(blankRow);
+            } else {
+                if(table === '#category-details-table') {
+                    $(this).html(catDetailsBlank);
+                } else {
+                    $(this).html(itemDetailsBlank);
+                }
+            }
+            $(this).find('td:nth-child(2)').html(count);
         }
         if(index >= rowCount) {
             $(this).remove();

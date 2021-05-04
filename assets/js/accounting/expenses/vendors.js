@@ -34,7 +34,7 @@ $('select').select2();
 var attachmentId = [];
 var attachedFiles = [];
 var attachments = new Dropzone('#vendorAttachments', {
-    url: '/accounting/vendors/attachments',
+    url: '/accounting/attachments/attach',
     maxFilesize: 20,
     uploadMultiple: true,
     // maxFiles: 1,

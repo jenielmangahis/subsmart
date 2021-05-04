@@ -151,14 +151,14 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                   <div class="row">
                                     <div class="col-md-12 form-group">
                                         <label for="formClient-Name">Subject</label>
-                                        <input type="text" class="form-control" name="email_subject" value="<?= $emailCampaign ? $emailCampaign->email_subject : ''; ?>" id="email_subject" required placeholder="" autofocus/>
+                                        <input type="text" class="form-control" name="email_subject" value="<?= $dealsSteals ? $dealsSteals->email_subject : ''; ?>" id="email_subject" required placeholder="" autofocus/>
                                     </div>
 
                                     <div class="col-md-12 form-group">
                                         <label for="formClient-Name">Email Body</label>
                                         <textarea name="email_body" cols="40" rows="30"  class="form-control" id="mail_body" autocomplete="off">
-                                          <?php if($emailCampaign->email_body != ''){ ?>
-                                            <?= $emailCampaign->email_body; ?>
+                                          <?php if($dealsSteals->email_body != ''){ ?>
+                                            <?= $dealsSteals->email_body; ?>
                                           <?php }else{ ?>
                                             <p style="font-size: 28px; color: #222;">Dear {{customer.name}},</p>
                                             <p><br />Thank you for choosing <?= $company->business_name; ?>, we really appreciate you as our customer. <br /><br />We are currently running a promotion <strong>test</strong>. If you would like to take advantage of this limited time offer simply book the deal below. <br /><br /></p>

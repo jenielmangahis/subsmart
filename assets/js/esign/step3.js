@@ -126,7 +126,7 @@ function Step3() {
       specs,
     };
 
-    let endpoint = `${prefixURL}/esign/apiCreateUserDocfileFields`;
+    let endpoint = `${prefixURL}/Esign/apiCreateUserDocfileFields`;
     if (isTemplate) {
       endpoint = `${prefixURL}/DocuSign/apiCreateTemplateFields`;
       payload.template_id = fileId;
@@ -606,8 +606,12 @@ function Step3() {
     });
   }
 
-  async function getTemplateFile(id) {
-    const endpoint = `${prefixURL}/DocuSign/apiTemplateFile/${id}`;
+  async function getPDFFiles(id) {
+    const endpoint = `${prefixURL}/Esign/apiDocumentFile/${id}`;
+    if (isTemplate) {
+      endpoint = `${prefixURL}/DocuSign/apiTemplateFile/${id}`;
+    }
+
     const response = await fetch(endpoint);
     const data = await response.json();
     return data;
@@ -621,17 +625,7 @@ function Step3() {
     fileId = parseInt($("[name=file_id]").val());
     fileId = isTemplate ? templateId : fileId;
 
-    documentUrl = $form.data("doc-url");
-    if (!isTemplate) {
-      await getFields();
-      await renderPDF();
-      attachEventHandlers();
-
-      $(".esignBuilder--loading").removeClass("esignBuilder--loading");
-      return;
-    }
-
-    const { data } = await getTemplateFile(templateId);
+    const { data } = await getPDFFiles(fileId);
     await getFields();
 
     for (let index = 0; index < data.length; index++) {
@@ -648,7 +642,6 @@ function Step3() {
     }
 
     attachEventHandlers();
-    $(".esignBuilder--loading").removeClass("esignBuilder--loading");
   }
 
   return { init };
