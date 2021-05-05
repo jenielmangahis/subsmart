@@ -2161,7 +2161,10 @@ class Timesheet extends MY_Controller
         $_SESSION['autoclockout_timer_closed'] = false;
         date_default_timezone_set('UTC');
         $attn_id = $this->input->post('attn_id');
-
+        $entry_type = $this->input->post('auto');
+        if($entry_type==""){
+            $entry_type = "Normal";
+        }
         // $current_status = statusChecker($attn_id,date('Y-m-d'));
         // if($lastcurrent_status == "Break in"){
 
@@ -2193,7 +2196,7 @@ class Timesheet extends MY_Controller
                 'action' => 'Check out',
                 'user_location' => $this->timesheet_model->employeeCoordinates(),
                 'user_location_address' => $this->employeeAddress(),
-                'entry_type' => 'Normal',
+                'entry_type' => $entry_type,
                 'company_id' => getLoggedCompanyID()
             );
             $this->db->insert('timesheet_logs', $out);

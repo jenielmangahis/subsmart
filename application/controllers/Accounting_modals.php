@@ -2271,68 +2271,90 @@ class Accounting_modals extends MY_Controller {
     {
         $this->load->model('expenses_model');
 
-        $expenseData = [
-            'company_id' => logged('company_id'),
-            'vendor_id' => $data['vendor_id'],
-            'payment_account_id' => $data['payment_account'],
-            'payment_date' => date("Y-m-d", strtotime($data['payment_date'])),
-            'payment_method_id' => $data['payment_method'],
-            'ref_no' => $data['ref_no'],
-            'tags' => $data['tags'] !== null ? json_encode($data['tags']) : null,
-            'memo' => $data['memo'],
-            'attachments' => $data['attachments'] !== null ? json_encode($data['attachments']) : null,
-            'status' => 1,
-            'created_at' => date("Y-m-d H:i:s"),
-            'updated_at' => date("Y-m-d H:i:s")
-        ];
+        $this->form_validation->set_rules('payment_account', 'Payment account', 'required');
+        $this->form_validation->set_rules('payment_date', 'Payment date', 'required');
 
-        $expenseId = $this->expenses_model->addExpense($expenseData);
+        if(isset($data['category'])) {
+            $this->form_validation->set_rules('category[]', 'Category', 'required');
+        }
 
-        if($expenseId) {
-            if(isset($data['category'])) {
-                $categoryDetails = [];
-                foreach($data['category'] as $index => $value) {
-                    $categoryDetails[] = [
-                        'expense_id' => $expenseId,
-                        'category_account_id' => $value,
-                        'description' => $data['description'][$index],
-                        'amount' => $data['category_amount'][$index],
-                        'billable' => $data['category_billable'][$index],
-                        'markup_percentage' => $data['category_markup'][$index],
-                        'tax' => $data['category_tax'][$index],
-                        'customer_id' => $data['category_customer'][$index],
-                    ];
-                }
-
-                $this->expenses_model->insert_expense_categories($categoryDetails);
-            }
-
-            if(isset($data['item'])) {
-                $itemDetails = [];
-                foreach($data['item'] as $index => $value) {
-                    $itemDetails[] = [
-                        'expense_id' => $expenseId,
-                        'item_id' => $value,
-                        'description' => $data['item_description'][$index],
-                        'quantity' => $data['quantity'][$index],
-                        'rate' => $data['rate'][$index],
-                        'amount' => $data['item_amount'][$index],
-                        'billable' => $data['item_billable'][$index],
-                        'markup_percentage' => $data['item_markup'][$index],
-                        'sales_amount' => $data['item_sales_amount'][$index],
-                        'tax' => $data['item_tax'][$index],
-                        'customer_id' => $data['item_customer'][$index],
-                    ];
-                }
-
-                $this->expenses_model->insert_expense_items($itemDetails);
-            }
+        if(isset($data['item'])) {
+            $this->form_validation->set_rules('item[]', 'Item', 'required');
+            $this->form_validation->set_rules('quantity[]', 'Item quantity', 'required');
         }
 
         $return = [];
-        $return['data'] = $expenseId;
-        $return['success'] = $expenseId ? true : false;
-        $return['message'] = $expenseId ? 'Entry Successful!' : 'An unexpected error occured!';
+        if($this->form_validation->run() === false) {
+            $return['data'] = null;
+            $return['success'] = false;
+            $return['message'] = 'Error';
+        } else if(!isset($data['category']) && !isset($data['item'])) {
+            $return['data'] = null;
+            $return['success'] = false;
+            $return['message'] = 'Please enter at least one line item.';
+        } else {
+            $expenseData = [
+                'company_id' => logged('company_id'),
+                'vendor_id' => $data['vendor_id'],
+                'payment_account_id' => $data['payment_account'],
+                'payment_date' => date("Y-m-d", strtotime($data['payment_date'])),
+                'payment_method_id' => $data['payment_method'],
+                'ref_no' => $data['ref_no'],
+                'tags' => $data['tags'] !== null ? json_encode($data['tags']) : null,
+                'memo' => $data['memo'],
+                'attachments' => $data['attachments'] !== null ? json_encode($data['attachments']) : null,
+                'status' => 1,
+                'created_at' => date("Y-m-d H:i:s"),
+                'updated_at' => date("Y-m-d H:i:s")
+            ];
+    
+            $expenseId = $this->expenses_model->addExpense($expenseData);
+    
+            if($expenseId) {
+                if(isset($data['category'])) {
+                    $categoryDetails = [];
+                    foreach($data['category'] as $index => $value) {
+                        $categoryDetails[] = [
+                            'expense_id' => $expenseId,
+                            'category_account_id' => $value,
+                            'description' => $data['description'][$index],
+                            'amount' => $data['category_amount'][$index],
+                            'billable' => $data['category_billable'][$index],
+                            'markup_percentage' => $data['category_markup'][$index],
+                            'tax' => $data['category_tax'][$index],
+                            'customer_id' => $data['category_customer'][$index],
+                        ];
+                    }
+    
+                    $this->expenses_model->insert_expense_categories($categoryDetails);
+                }
+    
+                if(isset($data['item'])) {
+                    $itemDetails = [];
+                    foreach($data['item'] as $index => $value) {
+                        $itemDetails[] = [
+                            'expense_id' => $expenseId,
+                            'item_id' => $value,
+                            'description' => $data['item_description'][$index],
+                            'quantity' => $data['quantity'][$index],
+                            'rate' => $data['rate'][$index],
+                            'amount' => $data['item_amount'][$index],
+                            'billable' => $data['item_billable'][$index],
+                            'markup_percentage' => $data['item_markup'][$index],
+                            'sales_amount' => $data['item_sales_amount'][$index],
+                            'tax' => $data['item_tax'][$index],
+                            'customer_id' => $data['item_customer'][$index],
+                        ];
+                    }
+    
+                    $this->expenses_model->insert_expense_items($itemDetails);
+                }
+            }
+    
+            $return['data'] = $expenseId;
+            $return['success'] = $expenseId ? true : false;
+            $return['message'] = $expenseId ? 'Entry Successful!' : 'An unexpected error occured!';
+        }
 
         return $return;
     }

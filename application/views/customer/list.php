@@ -421,7 +421,7 @@ add_css(array(
                                                 <td><?php echo $customer->technician; ?></td>
                                                 <td><?php echo $customer->system_type; ?></td>
                                                 <td><?php echo $customer->mmr; ?></td>
-                                                <td><?php echo $customer->phone_h; ?></td>
+                                                <td><?php echo $customer->phone_m; ?></td>
                                                 <td><?php echo $customer->status; ?></td>
                                                 <td>
                                                     <div class="dropdown dropdown-btn text-center">

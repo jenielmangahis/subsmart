@@ -79,22 +79,15 @@
                                                 <textarea name="memo" id="memo" class="form-control"></textarea>
                                             </div>
 
-                                            <div class="pay-down-attachments attachments">
-                                                <div class="attachments-header">
-                                                    <button type="button" onclick="document.getElementById('pay-down-attachments').click();">Attachments</button>
-                                                    <span>Maximum size: 20MB</span>
-                                                </div>
-                                                <div class="attachments-list">
-                                                    <div class="attachments-container border" onclick="document.getElementById('pay-down-attachments').click();">
-                                                        <div class="attachments-container-label">
-                                                            Drag/Drop files here or click the icon
-                                                        </div>
+                                            <div class="attachments">
+                                                <label for="attachment" style="margin-right: 15px"><i class="fa fa-paperclip"></i>&nbsp;Attachment</label> 
+                                                <span>Maximum size: 20MB</span>
+                                                <div id="pay-down-attachments" class="dropzone" style="border: 1px solid #e1e2e3;background: #ffffff;width: 100%;">
+                                                    <div class="dz-message" style="margin: 20px;border">
+                                                        <span style="font-size: 16px;color: rgb(180,132,132);font-style: italic;">Drag and drop files here or</span>
+                                                        <a href="#" style="font-size: 16px;color: #0b97c4">browse to upload</a>
                                                     </div>
                                                 </div>
-                                                <div class="attachments-footer w-100 d-flex">
-                                                    <span class="m-auto"><a href="#" class="text-info">Show existing</a></span>
-                                                </div>
-                                                <input type="file" name="attachments[]" id="pay-down-attachments" class="hide" multiple="multiple">
                                             </div>
                                         </div>
                                     </div>

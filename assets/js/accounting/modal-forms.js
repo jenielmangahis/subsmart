@@ -1351,6 +1351,26 @@ $(function() {
             $(this).children('i').addClass('fa-caret-right').removeClass('fa-caret-down');
         }
     });
+
+    $(document).on('change', '#expenseModal #ref_no', function() {
+        if($(this).val() !== "") {
+            $('#expenseModal .modal-title span').html('#'+$(this).val());
+        } else {
+            $('#expenseModal .modal-title span').html('');
+        }
+    });
+
+    $(document).on('change', '#expenseModal input[name="category_amount[]"], #expenseModal input[name="item_amount[]"]', function() {
+        computeExpenseTotal();
+    });
+
+    $(document).on('change', '#expenseModal input[name="category_billable[]"], #expenseModal input[name="item_billable[]"]', function() {
+        if($(this).prop('checked')) {
+            $(this).parent().parent().parent().find('select[name="category_customer[]"]').prop('required', true);
+        } else {
+            $(this).parent().parent().parent().find('select[name="category_customer[]"]').prop('required', false);
+        }
+    });
 });
 
 const convertToDecimal = (el) => {
@@ -1799,6 +1819,51 @@ const submitModalForm = (event, el) => {
     var data = new FormData(document.getElementById($(el).attr('id')));
     if($(el).children().attr('id') === 'payrollModal' || $(el).children().attr('id') === 'commission-payroll-modal' || $(el).children().attr('id') === 'bonus-payroll-modal') {
         data = payrollFormData;
+    } else if($(el).children().attr('id') === 'expenseModal') {
+
+        var count = 0;
+        $('#expenseModal input[name="category_billable[]"]').each(function() {
+            var value = $(this).prop('checked') ? "1" : "0";
+            if(count === 0) {
+                data.set('category_billable[]', value);
+            } else {
+                data.append('category_billable[]', value);
+            }
+            count++;
+        });
+
+        count = 0;
+        $('#expenseModal input[name="category_tax[]"]').each(function() {
+            var value = $(this).prop('checked') ? "1" : "0";
+            if(count === 0) {
+                data.set('category_tax[]', value);
+            } else {
+                data.append('category_tax[]', value);
+            }
+            count++;
+        });
+
+        count = 0;
+        $('#expenseModal input[name="item_billable[]"]').each(function() {
+            var value = $(this).prop('checked') ? "1" : "0";
+            if(count === 0) {
+                data.set('item_billable[]', value);
+            } else {
+                data.append('item_billable[]', value);
+            }
+            count++;
+        });
+
+        count = 0;
+        $('#expenseModal input[name="item_tax[]"]').each(function() {
+            var value = $(this).prop('checked') ? "1" : "0";
+            if(count === 0) {
+                data.set('item_tax[]', value);
+            } else {
+                data.append('item_tax[]', value);
+            }
+            count++;
+        });
     }
     data.append('modal_name', $(el).children().attr('id'));
 
@@ -2012,4 +2077,22 @@ const computeTotalValue = () => {
     totalValue = totalValue === 0 ? 0.00 : totalValue
 
     $('#adjust-starting-value-modal .total-value').html('$'+parseFloat(totalValue).toFixed(2));
+}
+
+const computeExpenseTotal = () => {
+    var total = 0.00;
+
+    $('#expenseModal input[name="category_amount[]"]').each(function() {
+        var value = $(this).val() === "" ? 0.00 : parseFloat($(this).val()).toFixed(2);
+
+        total = parseFloat(parseFloat(total) + parseFloat(value)).toFixed(2);
+    });
+
+    $('#expenseModal input[name="item_amount[]"]').each(function() {
+        var value = $(this).val() === "" ? 0.00 : parseFloat($(this).val()).toFixed(2);
+
+        total = parseFloat(parseFloat(total) + parseFloat(value)).toFixed(2);
+    });
+
+    $('#expenseModal span.total-expense-amount').html(total);
 }

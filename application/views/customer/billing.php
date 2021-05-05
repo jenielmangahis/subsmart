@@ -175,10 +175,10 @@ add_css(array(
                                                     <div class="col-md-8">
                                                         <div class="row">
                                                             <div class="col-md-6">
-                                                                <input type="text" class="form-control" name="first_name" id="first_name" value="Every 1 month" readonly/>
+                                                                <input type="text" class="form-control" name="first_name" id="first_name" value="<?= $billing_info->bill_freq;  ?>" readonly/>
                                                             </div>
                                                             <div class="col-md-6">
-                                                                <input type="text" class="form-control" name="first_name" id="first_name" value="Every 3rd" readonly/>
+                                                                <input type="text" class="form-control" name="first_name" id="first_name" value="Every <?= $billing_info->bill_day;  ?>" readonly/>
                                                             </div>
                                                         </div>
                                                     </div>

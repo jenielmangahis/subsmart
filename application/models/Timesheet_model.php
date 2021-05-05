@@ -1486,6 +1486,7 @@ class Timesheet_model extends MY_Model
     {
         $current_saved = $this->get_saved_timezone($user_id);
         if (count($current_saved) > 0) {
+            $this->db->where('user_id', $user_id);
             $update = array(
                 'timezone_id' => $timezone_id,
                 'user_id' => $user_id,
@@ -1592,11 +1593,16 @@ class Timesheet_model extends MY_Model
     public function get_user_and_company_details($user_id)
     {
         $this->db->reset_query();
-        $qry = $this->db->query("SELECT timesheet_timezone_admin_report.*,timesheet_timezone_list.*,users.FName,users.LName,users.email,users.company_id,business_profile.business_name,business_profile.business_image from timesheet_timezone_admin_report 
+        $qry = $this->db->query("SELECT timesheet_timezone_admin_report.*,timesheet_timezone_list.*,users.FName,users.LName,users.email,users.company_id,users.device_token,users.device_type,business_profile.business_name,business_profile.business_image from timesheet_timezone_admin_report 
         JOIN timesheet_timezone_list ON timesheet_timezone_admin_report.timezone_id=timesheet_timezone_list.id  
         JOIN users ON timesheet_timezone_admin_report.user_id = users.id
         JOIN business_profile ON users.company_id = business_profile.company_id
         where timesheet_timezone_admin_report.user_id = ".$user_id);
+        echo "SELECT timesheet_timezone_admin_report.*,timesheet_timezone_list.*,users.FName,users.LName,users.email,users.company_id,users.device_token,users.device_type,business_profile.business_name,business_profile.business_image from timesheet_timezone_admin_report 
+        JOIN timesheet_timezone_list ON timesheet_timezone_admin_report.timezone_id=timesheet_timezone_list.id  
+        JOIN users ON timesheet_timezone_admin_report.user_id = users.id
+        JOIN business_profile ON users.company_id = business_profile.company_id
+        where timesheet_timezone_admin_report.user_id = ".$user_id;
         return $qry->row();
     }
     public function save_timesheet_report_file_names($user_id, $file_name)
@@ -1644,6 +1650,16 @@ class Timesheet_model extends MY_Model
         $this->db->reset_query();
         $qry = $this->db->query("SELECT * FROM timesheet_logs WHERE attendance_id = ".$att_id." order by date_created ".$sort." limit 1");
         return $qry->row();
+    }
+    public function get_all_admin_report_settings(){
+        $this->db->reset_query();
+        $qry = $this->db->query("SELECT * FROM timesheet_timezone_admin_report");
+        return $qry->result();
+    }
+    public function get_all_admin_for_default_report($and_query){
+        $this->db->reset_query();
+        $qry = $this->db->query("SELECT id,company_id,email FROM users WHERE role < 5 and ".$and_query);
+        return $qry->result();
     }
 }
 
