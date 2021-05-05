@@ -18,6 +18,10 @@ class Promote extends MY_Controller {
 	}
 
 	public function deals(){
+		$this->page_data['status_active']    = $this->DealsSteals_model->statusActive();                
+        $this->page_data['status_scheduled'] = $this->DealsSteals_model->statusScheduled();
+        $this->page_data['status_ended']     = $this->DealsSteals_model->statusEnded();
+        $this->page_data['status_draft']     = $this->DealsSteals_model->statusDraft();
 		$this->load->view('promote/deals', $this->page_data);
 	}
 
@@ -38,24 +42,47 @@ class Promote extends MY_Controller {
 
 		$post  = $this->input->post(); 
 		$user  = $this->session->userdata('logged');
-		$photo = $this->upload_photo();
-		$data = [
-			'user_id' => $user['id'],
-			'title' => $post['title'],
-			'description' => $post['description'],
-			'terms_conditions' => $post['terms'],
-			'deal_price' => $post['price'],
-			'original_price' => $post['price_original'],
-			'photos' => $photo,			
-			'valid_from' => date("Y-m-d"),
-			'valid_to' => date("Y-m-d"),
-			'date_created' => date("Y-m-d H:i:s"),
-			'date_modified' => date("Y-m-d H:i:s"),
-			'status' => $this->DealsSteals_model->statusDraft()
-		];
 
-		$deals_steals_id = $this->DealsSteals_model->create($data);
-        $this->session->set_userdata('dealsStealsId', $deals_steals_id);
+        if($this->session->userdata('dealsStealsId')){
+            $deals_id    = $this->session->userdata('dealsStealsId');
+            $dealsSteals = $this->DealsSteals_model->getById($deals_id);
+            if( $_FILES['image']['tmp_name'] != '' ){
+                $photo = $this->upload_photo();
+            }else{
+                $photo = $dealsSteals->photos;
+            }
+            
+            $data = [
+                'title' => $post['title'],
+                'description' => $post['description'],
+                'terms_conditions' => $post['terms'],
+                'deal_price' => $post['price'],
+                'original_price' => $post['price_original'],
+                'photos' => $photo,  
+                'date_modified' => date("Y-m-d H:i:s")
+            ];
+            $dealsSteals = $this->DealsSteals_model->updateDealsSteals($deals_id, $data);
+            $is_success = true;
+        }else{
+            $photo = $this->upload_photo();
+            $data = [
+                'user_id' => $user['id'],
+                'title' => $post['title'],
+                'description' => $post['description'],
+                'terms_conditions' => $post['terms'],
+                'deal_price' => $post['price'],
+                'original_price' => $post['price_original'],
+                'photos' => $photo,         
+                'valid_from' => date("Y-m-d"),
+                'valid_to' => date("Y-m-d"),
+                'date_created' => date("Y-m-d H:i:s"),
+                'date_modified' => date("Y-m-d H:i:s"),
+                'status' => $this->DealsSteals_model->statusDraft()
+            ];
+
+            $deals_steals_id = $this->DealsSteals_model->create($data);
+            $is_success = true;
+        }
 
 		$json_data = ['is_success' => $is_success, 'err_msg' => $err_msg];
 		echo json_encode($json_data);
@@ -88,13 +115,10 @@ class Promote extends MY_Controller {
         $customers   = $this->Customer_model->getAllByCompany($cid);            
         $customerGroups = $this->CustomerGroup_model->getAllByCompany($cid);
 
-        $selectedGroups = array();
-        $selectedCustomer = array();
-        $selectedExcludes = array();
         
         $this->page_data['dealsSteals'] = $dealsSteals;
-        $this->page_data['selectedCustomer'] = $selectedCustomer;
-        $this->page_data['selectedGroups']   = $selectedGroups;
+        $this->page_data['selectedCustomer'] = unserialize($dealsSteals->certain_customers);
+        $this->page_data['selectedGroups']   = unserialize($dealsSteals->certain_groups);
         $this->page_data['selectedExcludes'] = $selectedExcludes;
         $this->page_data['emailCampaign'] = $emailCampaign;
         $this->page_data['emailSendTo'] = $emailSendTo;
@@ -291,6 +315,129 @@ class Promote extends MY_Controller {
 
         $json_data = ['is_success' => $is_success, 'msg' => $msg];
         echo json_encode($json_data);
+    }
+
+    public function ajax_load_deals_list($status){
+    	$company_id = logged('company_id');
+        if( $status == 'all' ){
+            $conditions = array();
+        }else{
+            $conditions[] = ['field' => 'deals_steals.status','value' => $status];    
+        }        
+        
+        $dealsSteals   = $this->DealsSteals_model->getAllByCompanyId($company_id, array(), $conditions);
+        $statusOptions = $this->DealsSteals_model->statusOptions();
+        $this->page_data['dealsSteals'] = $dealsSteals;
+        $this->page_data['statusOptions'] = $statusOptions;
+        $this->page_data['status_selected']  = $status; 
+        $this->page_data['status_active']    = $this->DealsSteals_model->statusActive();                
+        $this->page_data['status_scheduled'] = $this->DealsSteals_model->statusScheduled();
+        $this->page_data['status_ended']     = $this->DealsSteals_model->statusEnded();
+        $this->page_data['status_draft']     = $this->DealsSteals_model->statusDraft();
+        $this->load->view('promote/ajax_load_deals_list', $this->page_data);
+    }
+
+    public function ajax_load_status_counter(){
+    	$company_id = logged('company_id');
+
+        $dealsAll = $this->DealsSteals_model->getAllByCompanyId($company_id, array(), array());
+
+        $conditions[0] = ['field' => 'deals_steals.status','value' => $this->DealsSteals_model->statusScheduled()];
+        $dealsScheduled = $this->DealsSteals_model->getAllByCompanyId($company_id, array(), $conditions);
+
+        $conditions[0] = ['field' => 'deals_steals.status','value' => $this->DealsSteals_model->statusActive()];
+        $dealsActive = $this->DealsSteals_model->getAllByCompanyId($company_id, array(), $conditions);
+
+        $conditions[0] = ['field' => 'deals_steals.status','value' => $this->DealsSteals_model->statusEnded()];
+        $dealsEnded = $this->DealsSteals_model->getAllByCompanyId($company_id, array(), $conditions);
+
+        $conditions[0] = ['field' => 'deals_steals.status','value' => $this->DealsSteals_model->statusDraft()];
+        $dealsDraft = $this->DealsSteals_model->getAllByCompanyId($company_id, array(), $conditions);
+
+        $json_data = [
+            'total_email' => count($dealsAll),
+            'total_scheduled' => count($dealsScheduled),
+            'total_active' => count($dealsActive),
+            'total_ended' => count($dealsEnded),
+            'total_draft' => count($dealsDraft)
+        ];
+
+        echo json_encode($json_data);
+    }
+
+    public function ajax_close_deal(){
+        $is_success = 0;
+        $msg = '';
+
+        $company_id = logged('company_id');
+        $post = $this->input->post(); 
+        $dealsSteals = $this->DealsSteals_model->getById($post['deal_id']);
+        if( $dealsSteals ){
+            if($dealsSteals->company_id == $company_id){
+                $data = ['status' => $this->DealsSteals_model->statusEnded()];
+                $this->DealsSteals_model->updateDealsSteals($post['deal_id'], $data);
+
+                $is_success = 1;
+                $msg = 'Deals was successfully updated';
+            }else{
+                $msg = 'Record not found';
+            }            
+        }else{
+            $msg = 'Record not found';
+        }
+        $json_data = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ]; 
+
+        echo json_encode($json_data);
+    }
+
+    public function edit_deals($id){
+        $company_id = logged('company_id');
+        $dealSteals = $this->DealsSteals_model->getById($id);
+        $this->session->unset_userdata('dealsStealsId');
+        if( $dealSteals ){
+            if( $dealSteals->company_id == $company_id ){
+
+                $this->session->set_userdata('dealsStealsId', $dealSteals->id);
+                $this->page_data['dealSteals'] = $dealSteals;
+                $this->load->view('promote/edit_deals', $this->page_data);
+            }else{
+                $this->session->set_flashdata('message', 'Record not found.');
+                $this->session->set_flashdata('alert_class', 'alert-danger');
+                redirect('promote/deals');
+            }
+        }else{
+            $this->session->set_flashdata('message', 'Record not found.');
+            $this->session->set_flashdata('alert_class', 'alert-danger');
+            redirect('promote/deals');
+        }
+    }
+
+    public function ajax_delete_deal(){
+        $is_success = 0;
+        $msg = '';
+
+        $post = $this->input->post(); 
+        $company_id = logged('company_id');
+        $dealSteals = $this->DealsSteals_model->getById($post['deal_id']);
+
+        if( $company_id == $dealSteals->company_id ){
+            $this->DealsSteals_model->deleteById($post['deal_id']);
+            $is_success = 1;    
+        }else{
+            $msg = 'Cannot find data';
+        }
+        
+
+        $json_data = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ]; 
+
+        echo json_encode($json_data);
+
     }
 
 }
