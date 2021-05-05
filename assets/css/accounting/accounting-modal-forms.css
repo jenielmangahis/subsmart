@@ -32,29 +32,6 @@
     height: 46px !important;
 }
 
-div.attachments button {
-    border: none;
-    height:auto;
-    background: none;
-    margin: 0 10px;
-}
-
-div.attachments div.attachments-list div.attachments-container {
-    padding: 14px;
-    margin-top: 5px;
-    text-align: center;
-    cursor: pointer;
-}
-
-div.attachments div.attachments-list div.attachments-container:hover {
-    border: 1px dashed #dee2e6 !important;
-}
-
-div.attachments div.attachments-list div.attachments-container div.attachments-container-label {
-    font-style: italic;
-    padding: 5px;
-}
-
 /* Transfer Modal */
 #transferModal h3 {
     height: 46px;

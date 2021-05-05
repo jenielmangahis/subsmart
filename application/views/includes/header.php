@@ -1010,6 +1010,7 @@
                     });
                 }
             } else {
+
                 if (data.user_id != user_id) {
                     notificationRing();
                     // console.log("posk");

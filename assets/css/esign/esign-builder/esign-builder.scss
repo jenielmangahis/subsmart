@@ -227,7 +227,7 @@
     z-index: 1;
 
     .subData {
-      background-color: var(--color);
+      background-color: var(--color) !important;
       padding: 5px 10px;
       font-family: monospace;
       border-radius: 3px;
@@ -400,12 +400,9 @@
 }
 
 .esignBuilder__field {
-  border-radius: 8px !important;
-
   .subData {
     height: 100%;
     width: 100%;
-    padding: 0 !important;
     min-height: inherit;
     display: flex;
     align-items: center;
@@ -433,8 +430,19 @@
     }
   }
 
+  border: 2px solid transparent !important;
   &--active {
     border-color: blue !important;
+
+    .esignBuilder__fieldCheckboxAdder,
+    .esignBuilder__fieldRadioAdder {
+      display: block;
+    }
+
+    .esignBuilder__fieldCheckbox:empty,
+    .esignBuilder__fieldRadio:empty {
+      border: inherit;
+    }
   }
 }
 
@@ -470,6 +478,20 @@
 
 .esignBuilder__fieldCheckbox {
   --border-radius: 2px;
+}
+
+.esignBuilder__fieldCheckbox,
+.esignBuilder__fieldRadio {
+  &Adder {
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 18px;
+    cursor: pointer;
+    color: blue;
+    display: none;
+  }
 }
 
 .fileupload {

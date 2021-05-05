@@ -62,8 +62,7 @@ class Customer extends MY_Controller
         }
 //      $this->page_data['library_templates'] = $this->Esign_model->get_library_template_by_category($user_id);
 //      $this->page_data['library_categories'] = $this->Esign_model->get_library_categories();
-        $this->page_data['cust_tab'] = $this->uri->segment(3);
-//       $this->page_data['affiliates'] = $this->customer_ad_model->get_all(FALSE,"","","affiliates","id");
+        $this->page_data['affiliates'] = $this->customer_ad_model->get_all(FALSE,"","","affiliates","id");
 //       $this->page_data['furnishers'] = $this->customer_ad_model->get_all(FALSE,"","","acs_furnisher","furn_id");
 //       $this->page_data['reasons'] = $this->customer_ad_model->get_all(FALSE,"","","acs_reasons","reason_id");
 //       $this->page_data['lead_types'] = $this->customer_ad_model->get_all(FALSE,"","","ac_leadtypes","lead_id");

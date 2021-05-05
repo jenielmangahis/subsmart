@@ -465,7 +465,7 @@ $(document).ready(function() {
                     url: baseURL + "/timesheet/clockOutEmployee",
                     type: "POST",
                     dataType: "json",
-                    data: { attn_id: attn_id, time: time },
+                    data: { attn_id: attn_id, time: time, auto: "Auto" },
                     success: function(data) {
                         if (data != null) {
                             $("#unScheduledShift").val(null);

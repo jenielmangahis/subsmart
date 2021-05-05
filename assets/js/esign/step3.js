@@ -249,17 +249,96 @@ function Step3() {
     const $element = createElementFromHTML(html);
     const $subData = $element.find(".subData");
 
-    if (fieldName === "Checkbox") {
+    if (["Checkbox", "Radio"].includes(fieldName)) {
+      const baseClassName =
+        fieldName === "Checkbox"
+          ? "esignBuilder__fieldCheckbox"
+          : "esignBuilder__fieldRadio";
+
+      async function storeSubCheckbox($subCheckbox) {
+        const updatedField = fields.find((f) => f.id === field.id);
+        const specs = updatedField.specs ? JSON.parse(updatedField.specs) : {};
+
+        const { top, left } = getComputedStyle($subCheckbox.get(0));
+        const id = $subCheckbox.attr("data-key");
+
+        let subCheckboxes = specs.subCheckbox ? specs.subCheckbox : [];
+        if (subCheckboxes.find((sc) => sc.id === id)) {
+          subCheckboxes = subCheckboxes.map((sc) => {
+            if (sc.id !== id) return sc;
+            return { ...sc, top, left, isChecked: false };
+          });
+        } else {
+          subCheckboxes = [
+            ...subCheckboxes,
+            { id: $subCheckbox.attr("data-key"), top, left },
+          ];
+        }
+
+        await storeField(coordinates, $element, {
+          ...specs,
+          subCheckbox: subCheckboxes,
+        });
+      }
+
+      if (specs.subCheckbox) {
+        specs.subCheckbox.forEach((subCheckbox) => {
+          const $currElement = createElementFromHTML(
+            `<div class="subData ${baseClassName}"></div>`
+          );
+
+          $currElement.attr("data-key", subCheckbox.id);
+          $currElement.css({
+            minWidth: 28,
+            minHeight: 28,
+            position: "absolute",
+            left: subCheckbox.left,
+            top: subCheckbox.top,
+          });
+
+          $currElement.draggable({
+            containment: $docRenderer,
+            appendTo: $docRenderer,
+            stop: (_, ui) => storeSubCheckbox($(ui.helper)),
+          });
+
+          $element.append($currElement);
+        });
+      }
+
       $element.css({ minWidth: "unset" });
-      $subData.addClass("esignBuilder__fieldCheckbox");
+      $subData.addClass(baseClassName);
+      $element.append(`
+        <div class="${baseClassName}Adder">
+          <i class="fa fa-plus-square"></i>
+        </div>
+      `);
+
+      $adder = $element.find(`.${baseClassName}Adder`);
+      $adder.on("click", async function () {
+        const $currElement = createElementFromHTML(
+          `<div class="subData ${baseClassName}"></div>`
+        );
+
+        $currElement.attr("data-key", Date.now());
+        $currElement.css({
+          minWidth: 28,
+          minHeight: 28,
+          position: "absolute",
+          left: "calc(100% + 10px)",
+        });
+
+        $currElement.draggable({
+          containment: $docRenderer,
+          appendTo: $docRenderer,
+          stop: (_, ui) => storeSubCheckbox($(ui.helper)),
+        });
+
+        $element.append($currElement);
+        await storeSubCheckbox($currElement);
+      });
     }
 
-    if (fieldName === "Radio") {
-      $element.css({ minWidth: "unset" });
-      $subData.addClass("esignBuilder__fieldRadio");
-    }
-
-    $subData.css({ border: `2px solid ${color}` });
     $subData.attr("data-key", uniqueKey);
 
     const activeClass = "esignBuilder__field--active";
@@ -276,9 +355,9 @@ function Step3() {
       });
     }
 
-    $subData.on("click", function () {
+    $element.on("click", function () {
       const $prevActive = $(`.${activeClass}`);
-      const dataKey = $(this).data("key");
+      const dataKey = $(this).find(".subData").data("key");
       const currField = fields.find(({ unique_key }) => unique_key == dataKey);
 
       $prevActive.removeClass(activeClass);
@@ -617,6 +696,10 @@ function Step3() {
     return data;
   }
 
+  function hideLoader() {
+    $(".esignBuilder--loading").removeClass("esignBuilder--loading");
+  }
+
   async function init() {
     const urlParams = new URLSearchParams(window.location.search);
     const templateId = urlParams.get("template_id");
@@ -637,11 +720,12 @@ function Step3() {
       }
 
       if (index === 1) {
-        $(".esignBuilder--loading").removeClass("esignBuilder--loading");
+        hideLoader();
       }
     }
 
     attachEventHandlers();
+    hideLoader();
   }
 
   return { init };

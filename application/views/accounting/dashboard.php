@@ -195,7 +195,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                 </div>
                                             </div>
                                             <div class="addFISection">
-                                                <a href="<?= base_url() ?>job">Connect accounts</a>
+                                                <a href="#" data-toggle="modal" data-target="#addAccountModal">Connect accounts</a>
                                                 <div class="registerLink">
                                                     <div class="dropdown" style="position: relative;float: right;display: inline-block;margin-left: 10px;">
                                                             <span type="button" data-toggle="dropdown" style="border-radius: 0 36px 36px 0;margin-left: -5px;">
@@ -428,6 +428,84 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         <!-- end container-fluid -->
     </div>
     <!-- page wrapper end -->
+
+    <!-- Modal for add account-->
+<div class="full-screen-modal">
+    <div id="addAccountModal" class="modal fade modal-fluid" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content" style="height: 100%;">
+                <div class="modal-header" style="background: #f4f5f8;border-bottom: 0">
+                    <h4 class="modal-title">Connect an account</h4>
+                    <button type="button" class="close" data-dismiss="modal"><i class="fa fa-times fa-lg"></i></button>
+                </div>
+                <div class="modal-body">
+                    <div class="container modal-container">
+                        <div class="header-modal"><h3>Let's get a picture of your profits</h3></div>
+                        <div class="sub-header-modal"><span>Connect your bank or credit card to bring in your transactions.</span></div>
+                        <div class="body-modal">
+                            <input type="text" class="form-control" placeholder="Enter your bank name or URL" style=" margin: 40px 0 50px 0;">
+                            <div class=""><span>Here are some of the most popular ones</span></div>
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <div class="bank-img-container">
+                                        <img class="banks-img" src="<?php echo base_url('assets/img/accounting/citibank.png') ?>" alt="">
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <div class="bank-img-container">
+                                        <img class="banks-img" src="<?php echo base_url('assets/img/accounting/chase-logo.png') ?>" alt="">
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <div class="bank-img-container">
+                                        <img class="banks-img" src="<?php echo base_url('assets/img/accounting/bank-of-america.png') ?>" alt="">
+
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <div class="bank-img-container">
+                                        <img class="banks-img" src="<?php echo base_url('assets/img/accounting/Wells_Fargo.png') ?>" alt="">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <div class="bank-img-container">
+                                        <img class="banks-img" src="<?php echo base_url('assets/img/accounting/co-1200.png') ?>" alt="">
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <div class="bank-img-container">
+                                        <img class="banks-img" src="<?php echo base_url('assets/img/accounting/us-bank-logo-vector.png') ?>" alt="">
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <div class="bank-img-container">
+                                        <img class="banks-img" src="<?php echo base_url('assets/img/accounting/paypal_PNG20.png') ?>" alt="">
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <div class="bank-img-container">
+                                        <img class="banks-img" src="<?php echo base_url('assets/img/accounting/pncbank_pms_c.png') ?>" alt="">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div style="margin: auto;">
+                    <span style="font-size: 14px"><i class="fa fa-lock fa-lg" style="color: rgb(225,226,227);margin-right: 15px"></i>At nSmartrac, the privacy and security of your information are top priorities.</span>
+                </div>
+                <div style="margin: auto">
+                    <a href="" style="text-align: center">Privacy</a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <!--end of modal-->
+    
     <?php include viewPath('includes/sidebars/accounting/accounting'); ?>
 </div>
 <?php include viewPath('includes/footer_accounting'); ?>

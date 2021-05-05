@@ -49,16 +49,34 @@
                                     <input type="text" class="form-control" name="tags">
                                 </div>
                             </div>
+                            <hr>
                             <div class="row">
                                 <div class="col-md-3">
                                     Payment method
-                                    <select class="form-control" name="payment_method"  id="rr_payment_method">
+                                    <!-- <select class="form-control" name="payment_method"  id="rr_payment_method">
                                         <option></option>
                                         <option value="0">Add New</option>
                                         <?php foreach($paymethods as $paymethod) { ?>
                                             <option value="<?php echo $paymethod->payment_method_id ; ?>"> <?php echo $paymethod->quick_name; ?></option>
                                             <?php } ?>
-                                    </select>
+                                    </select> -->
+                                    <select name="payment_method" id="payment_method_Receipt" class="form-control custom-select">
+                                                    <option value="">Choose method</option>
+                                                    <option value="Cash">Cash</option>
+                                                    <option value="Check">Check</option>
+                                                    <option value="Credit Card">Credit Card</option>
+                                                    <option value="Debit Card">Debit Card</option>
+                                                    <option value="ACH">ACH</option>
+                                                    <option value="Venmo">Venmo</option>
+                                                    <option value="Paypal">Paypal</option>
+                                                    <option value="Square">Square</option>
+                                                    <option value="Invoicing">Invoicing</option>
+                                                    <option value="Warranty Work">Warranty Work</option>
+                                                    <option value="Home Owner Financing">Home Owner Financing</option>
+                                                    <option value="e-Transfer">e-Transfer</option>
+                                                    <option value="Other Credit Card Professor">Other Credit Card Professor</option>
+                                                    <option value="Other Payment Type">Other Payment Type</option>
+                                                </select>
                                 </div>
                                 <div class="col-md-3">
                                     Refund From
@@ -73,13 +91,259 @@
                             
                         </div>
                         <div class="col-md-6" align="right">
-                            AMOUNT<h2><span id="grand_total_rr_t">0.00</span></h2><br>
+                            AMOUNT<h2><span id="grand_total_rr_total">0.00</span></h2><br>
                             Location of sale<br>
                             <input type="text" class="form-control" style="width:200px;" name="location_scale">
                         </div>
                     </div>
+                    
                     <hr>
-                    <div class="row">
+                    <div class="col-md-6">
+                                      <div id="check_area_Receipt" style="display:none;">
+                                        <div class="row">                   
+                                            <div class="form-group col-md-4">
+                                                <label for="job_type">Check Number</label>
+                                                <input type="text" class="form-control" name="check_number" id="check_number"/>
+                                            </div>
+                                            <div class="form-group col-md-4">
+                                                <label for="job_type">Routing Number</label>
+                                                <input type="text" class="form-control" name="routing_number" id="routing_number"/>
+                                            </div>                                             
+                                        <!-- </div>
+                                        <div class="row"> -->
+                                            <div class="form-group col-md-4">
+                                                <label for="job_type">Account Number</label>
+                                                <input type="text" class="form-control" name="account_number" id="account_number"/>
+                                            </div>                                  
+                                        </div>
+                                    </div>
+                                    <div id="credit_card_Receipt" style="display:none;">
+                                        <div class="row">
+                                                <div class="col-md-12">
+                                                    Credit Card Type:<br>
+                                                    <div class="checkbox checkbox-sec margin-right mr-4">
+                                                        <input type="radio" name="card[radio_credit_card]" value="Visa"
+                                                            <?php echo (!empty($workorder->card['radio_credit_card']) && $workorder->card['radio_credit_card'] == 'Visa') ? 'checked' : '' ?>
+                                                            id="radio_credit_card">
+                                                        <label for="radio_credit_card"><span>Visa</span></label>
+                                                    </div>
+                                                    <div class="checkbox checkbox-sec margin-right mr-4">
+                                                        <input type="radio" name="card[radio_credit_card]" value="Amex"
+                                                            <?php echo (!empty($workorder->card['radio_credit_card']) && $workorder->card['radio_credit_card'] == 'Amex') ? 'checked' : '' ?>
+                                                            id="radio_credit_cardAmex">
+                                                        <label for="radio_credit_cardAmex"><span>Amex</span></label>
+                                                    </div>
+                                                    <div class="checkbox checkbox-sec margin-right mr-4">
+                                                        <input type="radio" name="card[radio_credit_card]" value="Mastercard"
+                                                            <?php echo (!empty($workorder->card['radio_credit_card']) && $workorder->card['radio_credit_card'] == 'Mastercard') ? 'checked' : '' ?>
+                                                            id="radio_credit_cardMastercard">
+                                                        <label for="radio_credit_cardMastercard"><span>Mastercard</span></label>
+                                                    </div>
+                                                    <div class="checkbox checkbox-sec margin-right mr-4">
+                                                        <input type="radio" name="card[radio_credit_card]" value="Discover"
+                                                            <?php echo (!empty($workorder->card['radio_credit_card']) && $workorder->card['radio_credit_card'] == 'Discover') ? 'checked' : '' ?>
+                                                            id="radio_credit_cardMasterDiscover">
+                                                        <label for="radio_credit_cardMasterDiscover"><span>Discover</span></label>
+                                                    </div>
+                                                </div>
+                                        </div>
+                                        <div class="row">                                            
+                                        </div>
+                                        <br><br>
+                                        <div class="row">                   
+                                            <div class="form-group col-md-4">
+                                                <label for="job_type">Credit Card Number</label>
+                                                <input type="text" class="form-control" name="credit_number" id="credit_number" placeholder="0000 0000 0000 000" />
+                                            </div>
+                                            <div class="form-group col-md-4">
+                                                <label for="job_type">Credit Card Expiration</label>
+                                                <input type="text" class="form-control" name="credit_expiry" id="credit_expiry" placeholder="MM/YYYY"/>
+                                            </div>  
+                                            <div class="form-group col-md-4">
+                                                <label for="job_type">CVC</label>
+                                                <input type="text" class="form-control" name="credit_cvc" id="credit_cvc" placeholder="CVC"/>
+                                            </div>                                             
+                                        </div>
+                                    </div>
+                                    <div id="invoicing_Receipt" style="display:none;">
+                                        
+                                        <!-- <input type="checkbox" id="same_as"> <b>Same as above in Monitoring Address</b> <br> -->
+                                        <br>
+                                        <div class="row">                   
+                                            <div class="col-md-4 form-group">
+                                                <label for="monitored_location">Mail Address</label>
+                                                <input type="text" class="form-control" name="mail-address"
+                                                    id="mail-address" placeholder="Monitored Location"/>
+                                            </div>
+                                            <div class="col-md-4 form-group">
+                                                <label for="city">City</label>
+                                                    <input type="text" class="form-control" name="mail_locality" id="mail_locality" placeholder="Enter Name" />
+                                            </div>
+                                            <div class="col-md-4 form-group">
+                                                <label for="state">State</label>
+                                                <input type="text" class="form-control" name="mail_state"
+                                                    id="mail_state" 
+                                                    placeholder="Enter State"/>
+                                            </div>
+                                        </div>
+                                        <div class="row">  
+                                            <div class="col-md-4 form-group">
+                                                <label for="zip">ZIP</label> 
+                                                    <input type="text" id="mail_postcode" name="mail_postcode" class="form-control"  placeholder="Enter Zip"/>
+                                            </div>
+
+                                            <div class="col-md-4 form-group">
+                                                <label for="cross_street">Cross Street</label>
+                                                <input type="text" class="form-control" name="mail_cross_street"
+                                                    id="mail_cross_street" 
+                                                    placeholder="Cross Street"/>
+                                            </div>                                        
+                                        </div>
+                                    </div>
+                                    <div id="debit_card_Receipt" style="display:none;">
+                                        <div class="row">                   
+                                            <div class="form-group col-md-4">
+                                                <label for="job_type">Credit Card Number</label>
+                                                <input type="text" class="form-control" name="debit_credit_number" id="credit_number" placeholder="0000 0000 0000 000" />
+                                            </div>
+                                            <div class="form-group col-md-4">
+                                                <label for="job_type">Credit Card Expiration</label>
+                                                <input type="text" class="form-control" name="debit_credit_expiry" id="credit_expiry" placeholder="MM/YYYY"/>
+                                            </div>  
+                                            <div class="form-group col-md-4">
+                                                <label for="job_type">CVC</label>
+                                                <input type="text" class="form-control" name="debit_credit_cvc" id="credit_cvc" placeholder="CVC"/>
+                                            </div>                                            
+                                        </div>
+                                    </div>
+                                    <div id="ach_area_Receipt" style="display:none;">
+                                        <div class="row">                   
+                                            <div class="form-group col-md-4">
+                                                <label for="job_type">Routing Number</label>
+                                                <input type="text" class="form-control" name="ach_routing_number" id="ach_routing_number" />
+                                            </div>
+                                            <div class="form-group col-md-4">
+                                                <label for="job_type">Account Number</label>
+                                                <input type="text" class="form-control" name="ach_account_number" id="ach_account_number" />
+                                            </div>  
+                                        </div>
+                                    </div>
+                                    <div id="venmo_area_Receipt" style="display:none;">
+                                        <div class="row">                   
+                                            <div class="form-group col-md-4">
+                                                <label for="job_type">Account Credential</label>
+                                                <input type="text" class="form-control" name="account_credentials" id="account_credentials"/>
+                                            </div>
+                                            <div class="form-group col-md-4">
+                                                <label for="job_type">Account Note</label>
+                                                <input type="text" class="form-control" name="account_note" id="account_note"/>
+                                            </div>  
+                                            <div class="form-group col-md-4">
+                                                <label for="job_type">Confirmation</label>
+                                                <input type="text" class="form-control" name="confirmation" id="confirmation"/>
+                                            </div>                                            
+                                        </div>
+                                    </div>
+                                    <div id="paypal_area_Receipt" style="display:none;">
+                                        <div class="row">                   
+                                            <div class="form-group col-md-4">
+                                                <label for="job_type">Account Credential</label>
+                                                <input type="text" class="form-control" name="paypal_account_credentials" id="paypal_account_credentials"/>
+                                            </div>
+                                            <div class="form-group col-md-4">
+                                                <label for="job_type">Account Note</label>
+                                                <input type="text" class="form-control" name="paypal_account_note" id="paypal_account_note"/>
+                                            </div>  
+                                            <div class="form-group col-md-4">
+                                                <label for="job_type">Confirmation</label>
+                                                <input type="text" class="form-control" name="paypal_confirmation" id="paypal_confirmation"/>
+                                            </div>                                            
+                                        </div>
+                                    </div>
+                                    <div id="square_area_Receipt" style="display:none;">
+                                        <div class="row">                   
+                                            <div class="form-group col-md-4">
+                                                <label for="job_type">Account Credential</label>
+                                                <input type="text" class="form-control" name="square_account_credentials" id="square_account_credentials"/>
+                                            </div>
+                                            <div class="form-group col-md-4">
+                                                <label for="job_type">Account Note</label>
+                                                <input type="text" class="form-control" name="square_account_note" id="square_account_note"/>
+                                            </div>  
+                                            <div class="form-group col-md-4">
+                                                <label for="job_type">Confirmation</label>
+                                                <input type="text" class="form-control" name="square_confirmation" id="square_confirmation"/>
+                                            </div>                                            
+                                        </div>
+                                    </div>
+                                    <div id="warranty_area_Receipt" style="display:none;">
+                                        <div class="row">                   
+                                            <div class="form-group col-md-4">
+                                                <label for="job_type">Account Credential</label>
+                                                <input type="text" class="form-control" name="warranty_account_credentials" id="warranty_account_credentials"/>
+                                            </div>
+                                            <div class="form-group col-md-4">
+                                                <label for="job_type">Account Note</label>
+                                                <input type="text" class="form-control" name="warranty_account_note" id="warranty_account_note"/>
+                                            </div>                                         
+                                        </div>
+                                    </div>
+                                    <div id="home_area_Receipt" style="display:none;">
+                                        <div class="row">                   
+                                            <div class="form-group col-md-4">
+                                                <label for="job_type">Account Credential</label>
+                                                <input type="text" class="form-control" name="home_account_credentials" id="home_account_credentials"/>
+                                            </div>
+                                            <div class="form-group col-md-4">
+                                                <label for="job_type">Account Note</label>
+                                                <input type="text" class="form-control" name="home_account_note" id="home_account_note"/>
+                                            </div>                                         
+                                        </div>
+                                    </div>
+                                    <div id="e_area_Receipt" style="display:none;">
+                                        <div class="row">                   
+                                            <div class="form-group col-md-4">
+                                                <label for="job_type">Account Credential</label>
+                                                <input type="text" class="form-control" name="e_account_credentials" id="e_account_credentials"/>
+                                            </div>
+                                            <div class="form-group col-md-4">
+                                                <label for="job_type">Account Note</label>
+                                                <input type="text" class="form-control" name="e_account_note" id="e_account_note"/>
+                                            </div>                                         
+                                        </div>
+                                    </div>
+                                    <div id="other_credit_card_Receipt" style="display:none;">
+                                        <div class="row">                   
+                                            <div class="form-group col-md-4">
+                                                <label for="job_type">Credit Card Number</label>
+                                                <input type="text" class="form-control" name="other_credit_number" id="other_credit_number" placeholder="0000 0000 0000 000" />
+                                            </div>
+                                            <div class="form-group col-md-4">
+                                                <label for="job_type">Credit Card Expiration</label>
+                                                <input type="text" class="form-control" name="other_credit_expiry" id="other_credit_expiry" placeholder="MM/YYYY"/>
+                                            </div>  
+                                            <div class="form-group col-md-4">
+                                                <label for="job_type">CVC</label>
+                                                <input type="text" class="form-control" name="other_credit_cvc" id="other_credit_cvc" placeholder="CVC"/>
+                                            </div>                                             
+                                        </div>
+                                    </div>
+                                    <div id="other_payment_area_Receipt" style="display:none;">
+                                        <div class="row">                   
+                                            <div class="form-group col-md-4">
+                                                <label for="job_type">Account Credential</label>
+                                                <input type="text" class="form-control" name="other_payment_account_credentials" id="other_payment_account_credentials"/>
+                                            </div>
+                                            <div class="form-group col-md-4">
+                                                <label for="job_type">Account Note</label>
+                                                <input type="text" class="form-control" name="other_payment_account_note" id="other_payment_account_note"/>
+                                            </div>                                         
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                    <!-- <hr> -->
+                    <div class="row" style="margin:5px;">
                         <div class="col-md-12">
                         <table class="table table-bordered" id="reportstable">
                                 <thead>
@@ -105,8 +369,8 @@
                                 <tbody id="items_table_body_refund_receipt">
                                 <tr>
                                             <td>
-                                                <input type="text" class="form-control getItemrr"
-                                                       onKeyup="getItemrr(this)" name="items[]">
+                                                <input type="text" class="form-control getItemReceipt"
+                                                       onKeyup="getItemReceipt_k(this)" name="items[]">
                                                 <ul class="suggestions"></ul>
                                             </td>
                                             <td><select name="item_type[]" class="form-control">
@@ -127,7 +391,7 @@
                                                        </td>
                                             <td width="150px"><input type="hidden" class="form-control " name="total[]"
                                                        data-counter="0" id="item_total_rr_0" min="0" value="0">
-                                                       $<span id="span_total_rr_0">0.00</span></td>
+                                                       $<span id="span_total_receipt_0">0.00</span></td>
                                         </tr>
                                 </tr>
                                 </tbody>
@@ -409,7 +673,7 @@ $(document).on("focusout", ".adjustment_input_rr", function () {
 
   var subtotal = 0;
   // $("#span_total_0").each(function(){
-    $('*[id^="span_total_rr_"]').each(function(){
+    $('*[id^="span_total_receipt_"]').each(function(){
     subtotal += parseFloat($(this).text());
   });
 
@@ -426,8 +690,8 @@ $(document).on("focusout", ".adjustment_input_rr", function () {
   $("#grand_total_input").val(grand_total_w.toFixed(2));
   $("#grand_total_rr").text(grand_total_w.toFixed(2));
   $("#adjustment_area_rr").text(adjustment);
-  $("#grand_total_rr_t").text(grand_total_w.toFixed(2));
-  // alert(adjustment);
+  $("#grand_total_rr_total").text(grand_total_w.toFixed(2));
+  // alert(grand_total_w);
 });
 
 </script>
@@ -462,11 +726,11 @@ $(document).ready(function(){
 
 <script>
 
-function getItemrr(obj) {
+function getItemReceipt_k(obj) {
   var sk = jQuery(obj).val();
   var site_url = jQuery("#siteurl").val();
   jQuery.ajax({
-    url: site_url + "items/getitem_rr",
+    url: site_url + "items/getitem_Receipt",
     data: { sk: sk },
     type: "GET",
     success: function (data) {
@@ -481,10 +745,10 @@ function getItemrr(obj) {
 over_tax = parseFloat(tax_tot).toFixed(2);
 // alert(over_tax);
 
-function setitemrr(obj, title, price, discount, itemid) {
-
+function setitemReceipt(obj, title, price, discount, itemid) {
+  // alert( 'yeah');
 // alert('setitemCM');
-  jQuery(obj).parent().parent().find(".getItemrr").val(title);
+  jQuery(obj).parent().parent().find(".getItemReceipt").val(title);
   jQuery(obj).parent().parent().parent().find(".pricerr").val(price);
   jQuery(obj).parent().parent().parent().find(".discountrr").val(discount);
   jQuery(obj).parent().parent().parent().find(".itemid").val(itemid);
@@ -495,12 +759,12 @@ function setitemrr(obj, title, price, discount, itemid) {
     .find(".pricerr")
     .data("counter");
   jQuery(obj).parent().empty();
-  calculationrr(counter);
+  calculationReceipt(counter);
 }
 
 $(document).on("focusout", ".pricerr", function () {
   var counter = $(this).data("counter");
-  calculationrr(counter);
+  calculationReceipt(counter);
 });
 
 // $(document).on("focusout", ".quantitycm", function () {
@@ -509,7 +773,7 @@ $(document).on("focusout", ".pricerr", function () {
 // });
 $(document).on("focusout", ".discountrr", function () {
   var counter = $(this).data("counter");
-  calculationrr(counter);
+  calculationReceipt(counter);
 });
 
 
@@ -537,7 +801,7 @@ var in_id = idd;
 
 //   alert( 'yeah' + total);
 
-  $("#span_total_rr_" + in_id).text(total);
+  $("#span_total_receipt_" + in_id).text(total);
   $("#tax_1_" + in_id).text(tax1);
   $("#tax1_rr_" + in_id).val(tax1);
   $("#discount_rr_" + in_id).val(discount);
@@ -571,10 +835,10 @@ var in_id = idd;
   total_discount = parseFloat(total_discount).toFixed(2);
   // var test = 5;
 
-  var subtotalsr = 0;
+  var subtotalrr = 0;
   // $("#span_total_0").each(function(){
-    $('*[id^="span_total_rr_"]').each(function(){
-    subtotalsr += parseFloat($(this).text());
+    $('*[id^="span_total_receipt_"]').each(function(){
+    subtotalrr += parseFloat($(this).text());
   });
   // $('#sum').text(subtotal);
 
@@ -603,7 +867,7 @@ var in_id = idd;
 
 
   $("#grand_total_rr").text(grand_total_w.toFixed(2));
-  $("#grand_total_rr_t").text(grand_total_w.toFixed(2));
+  $("#grand_total_rr_total").text(grand_total_w.toFixed(2));
   $("#grand_total_input").val(grand_total_w.toFixed(2));
 
   var sls = (parseFloat(eqpt_cost).toFixed(2) * 7.5) / 100;
@@ -612,7 +876,8 @@ var in_id = idd;
   cal_total_due();
 });
 
-function calculationrr(counter) {
+function calculationReceipt(counter) {
+  // alert( 'yeah');
   var price = $("#price_rr_" + counter).val();
   var quantity = $("#quantity_" + counter).val();
   var discount = $("#discount_rr_" + counter).val();
@@ -629,9 +894,9 @@ function calculationrr(counter) {
     parseFloat(discount)
   ).toFixed(2);
 
-  // alert( 'yeah' + total);
+  // console.log( 'yeah' + total);
 
-  $("#span_total_rr_" + counter).text(total);
+  $("#span_total_receipt_" + counter).text(total);
   $("#tax_1_" + counter).text(tax1);
   $("#tax_111_" + counter).text(tax1);
   $("#tax_1_" + counter).val(tax1);
@@ -674,7 +939,7 @@ function calculationrr(counter) {
 
   var subtotal = 0;
   // $("#span_total_0").each(function(){
-    $('*[id^="span_total_rr_"]').each(function(){
+    $('*[id^="span_total_receipt_"]').each(function(){
     subtotal += parseFloat($(this).text());
   });
   // $('#sum').text(subtotal);
@@ -703,9 +968,10 @@ function calculationrr(counter) {
 
 
   $("#grand_total_rr").text(grand_total_w.toFixed(2));
-  $("#grand_total_rr_t").text(grand_total_w.toFixed(2));
+  $("#grand_total_rr_total").text(grand_total_w.toFixed(2));
   $("#grand_total_input").val(grand_total_w.toFixed(2));
   $("#grandtotal_input").val(grand_total_w.toFixed(2));
+  // alert(grand_total_w);
 
   if($("#grand_total").length && $("#grand_total").val().length)
   {
@@ -769,7 +1035,7 @@ $(".select_item_rr").click(function () {
                 "<td width=\"10%\"><input type=\"number\" name=\"discount[]\" class=\"form-control discount\" id='discount_rr_"+idd+"'></td>\n" +
                 // "<td width=\"25%\"><small>Inventory Location</small><input type=\"text\" name=\"item_loc[]\" class=\"form-control\"></td>\n" +
                 "<td width=\"20%\"><input type=\"text\" data-itemid='"+idd+"' class=\"form-control tax_change2\" name=\"tax[]\" data-counter=\"0\" id='tax1_rr_"+idd+"' min=\"0\" value='"+taxes_t+"'></td>\n" +
-                "<td style=\"text-align: center\" class=\"d-flex\" width=\"15%\"><span data-subtotal='"+total_+"' id='span_total_rr_"+idd+"' class=\"total_per_item\">"+total+
+                "<td style=\"text-align: center\" class=\"d-flex\" width=\"15%\"><span data-subtotal='"+total_+"' id='span_total_receipt_"+idd+"' class=\"total_per_item\">"+total+
                 // "</span><a href=\"javascript:void(0)\" class=\"remove_item_row\"><i class=\"fa fa-times-circle\" aria-hidden=\"true\"></i></a>"+
                 "</span> <input type=\"hidden\" name=\"total[]\" id='sub_total_text"+idd+"' value='"+total+"'></td>" +
                 "</tr>";
@@ -813,7 +1079,7 @@ $(".select_item_rr").click(function () {
 
   // alert( 'yeah' + total);
 
-  $("#span_total_rr_" + in_id).text(total);
+  $("#span_total_receipt_" + in_id).text(total);
   $("#sub_total_text" + in_id).val(total);
   $("#tax_1_" + in_id).text(tax1);
   $("#tax1_rr_" + in_id).val(tax1);
@@ -872,7 +1138,7 @@ $("#total_tax_rr_").text(over_tax);
 
   var subtotal = 0;
   // $("#span_total_0").each(function(){
-    $('*[id^="span_total_rr_"]').each(function(){
+    $('*[id^="span_total_receipt_"]').each(function(){
     subtotal += parseFloat($(this).text());
   });
   // $('#sum').text(subtotal);
@@ -906,7 +1172,7 @@ $("#total_tax_rr_").text(over_tax);
 
   $("#grand_total_rr").text(grand_total_w.toFixed(2));
   $("#grand_total_input").val(grand_total_w.toFixed(2));
-  $("#grand_total_rr_t").text(grand_total_w.toFixed(2));
+  $("#grand_total_rr_total").text(grand_total_w.toFixed(2));
   $("#grand_total_rr").text(grand_total_w.toFixed(2));
   $("#span_sub_total_rr").text(grand_total_w.toFixed(2));
 
@@ -923,4 +1189,249 @@ $('#addcreditmemoModal').modal({
     backdrop: 'static',
     keyboard: false
 })
+</script>
+
+<script>
+document.getElementById("payment_method_Receipt").onchange = function() {
+    if (this.value == 'Cash') {
+        // alert('cash');
+		// $('#exampleModal').modal('toggle');
+        $('#cash_area_Receipt').show();
+        $('#check_area_Receipt').hide();
+        $('#credit_card_Receipt').hide();
+        $('#debit_card_Receipt').hide();
+        $('#ach_area_Receipt').hide();
+        $('#venmo_area_Receipt').hide();
+        $('#paypal_area_Receipt').hide();
+        $('#invoicing_Receipt').hide();
+        $('#square_area_Receipt').hide();
+        $('#warranty_area_Receipt').hide();
+        $('#home_area_Receipt').hide();
+        $('#e_area_Receipt').hide();
+        $('#other_credit_card_Receipt').hide();
+        $('#other_payment_area_Receipt').hide();
+    	}
+    else if(this.value == 'Invoicing'){
+
+        $('#cash_area_Receipt').hide();
+        $('#check_area_Receipt').hide();
+        $('#invoicing_Receipt').show();
+        $('#credit_card_Receipt').hide();
+        $('#debit_card_Receipt').hide();
+        $('#ach_area_Receipt').hide();
+        $('#venmo_area_Receipt').hide();
+        $('#paypal_area_Receipt').hide();
+        $('#square_area_Receipt').hide();
+        $('#warranty_area_Receipt').hide();
+        $('#home_area_Receipt').hide();
+        $('#e_area_Receipt').hide();
+        $('#other_credit_card_Receipt').hide();
+        $('#other_payment_area_Receipt').hide();
+    }
+	
+    else if(this.value == 'Check'){
+        // alert('Check');
+        $('#cash_area_Receipt').hide();
+        $('#check_area_Receipt').show();
+        $('#credit_card_Receipt').hide();
+        $('#debit_card_Receipt').hide();
+        $('#invoicing_Receipt').hide();
+        $('#ach_area_Receipt').hide();
+        $('#venmo_area_Receipt').hide();
+        $('#paypal_area_Receipt').hide();
+        $('#square_area_Receipt').hide();
+        $('#warranty_area_Receipt').hide();
+        $('#home_area_Receipt').hide();
+        $('#e_area_Receipt').hide();
+        $('#other_credit_card_Receipt').hide();
+        $('#other_payment_area_Receipt').hide();
+    }
+    else if(this.value == 'Credit Card'){
+        // alert('Credit card');
+        $('#cash_area_Receipt').hide();
+        $('#check_area_Receipt').hide();
+        $('#credit_card_Receipt').show();
+        $('#debit_card_Receipt').hide();
+        $('#invoicing_Receipt').hide();
+        $('#ach_area_Receipt').hide();
+        $('#venmo_area_Receipt').hide();
+        $('#paypal_area_Receipt').hide();
+        $('#square_area_Receipt').hide();
+        $('#warranty_area_Receipt').hide();
+        $('#home_area_Receipt').hide();
+        $('#e_area_Receipt').hide();
+        $('#other_credit_card_Receipt').hide();
+        $('#other_payment_area_Receipt').hide();
+    }
+    else if(this.value == 'Debit Card'){
+        // alert('Credit card');
+        $('#cash_area_Receipt').hide();
+        $('#check_area_Receipt').hide();
+        $('#credit_card_Receipt').hide();
+        $('#debit_card_Receipt').show();
+        $('#ach_area_Receipt').hide();
+        $('#venmo_area_Receipt').hide();
+        $('#invoicing_Receipt').hide();
+        $('#paypal_area_Receipt').hide();
+        $('#square_area_Receipt').hide();
+        $('#warranty_area_Receipt').hide();
+        $('#home_area_Receipt').hide();
+        $('#e_area_Receipt').hide();
+        $('#other_credit_card_Receipt').hide();
+        $('#other_payment_area_Receipt').hide();
+    }
+    else if(this.value == 'ACH'){
+        // alert('Credit card');
+        $('#cash_area_Receipt').hide();
+        $('#check_area_Receipt').hide();
+        $('#credit_card_Receipt').hide();
+        $('#debit_card_Receipt').hide();
+        $('#invoicing_Receipt').hide();
+        $('#ach_area_Receipt').show();
+        $('#venmo_area_Receipt').hide();
+        $('#paypal_area_Receipt').hide();
+        $('#square_area_Receipt').hide();
+        $('#warranty_area_Receipt').hide();
+        $('#home_area_Receipt').hide();
+        $('#e_area_Receipt').hide();
+        $('#other_credit_card_Receipt').hide();
+        $('#other_payment_area_Receipt').hide();
+    }
+    else if(this.value == 'Venmo'){
+        // alert('Credit card');
+        $('#cash_area_Receipt').hide();
+        $('#check_area_Receipt').hide();
+        $('#credit_card_Receipt').hide();
+        $('#debit_card_Receipt').hide();
+        $('#ach_area_Receipt').hide();
+        $('#invoicing_Receipt').hide();
+        $('#venmo_area_Receipt').show();
+        $('#paypal_area_Receipt').hide();
+        $('#square_area_Receipt').hide();
+        $('#warranty_area_Receipt').hide();
+        $('#home_area_Receipt').hide();
+        $('#e_area_Receipt').hide();
+        $('#other_credit_card_Receipt').hide();
+        $('#other_payment_area_Receipt').hide();
+    }
+    else if(this.value == 'Paypal'){
+        // alert('Credit card');
+        $('#cash_area_Receipt').hide();
+        $('#check_area_Receipt').hide();
+        $('#credit_card_Receipt').hide();
+        $('#debit_card_Receipt').hide();
+        $('#invoicing_Receipt').hide();
+        $('#ach_area_Receipt').hide();
+        $('#venmo_area_Receipt').hide();
+        $('#paypal_area_Receipt').show();
+        $('#square_area_Receipt').hide();
+        $('#warranty_area_Receipt').hide();
+        $('#home_area_Receipt').hide();
+        $('#e_area_Receipt').hide();
+        $('#other_credit_card_Receipt').hide();
+        $('#other_payment_area_Receipt').hide();
+    }
+    else if(this.value == 'Square'){
+        // alert('Credit card');
+        $('#cash_area_Receipt').hide();
+        $('#check_area_Receipt').hide();
+        $('#credit_card_Receipt').hide();
+        $('#invoicing_Receipt').hide();
+        $('#debit_card_Receipt').hide();
+        $('#ach_area_Receipt').hide();
+        $('#venmo_area_Receipt').hide();
+        $('#paypal_area_Receipt').hide();
+        $('#square_area_Receipt').show();
+        $('#warranty_area_Receipt').hide();
+        $('#home_area_Receipt').hide();
+        $('#e_area_Receipt').hide();
+        $('#other_credit_card_Receipt').hide();
+        $('#other_payment_area_Receipt').hide();
+    }
+    else if(this.value == 'Warranty Work'){
+        // alert('Credit card');
+        $('#cash_area_Receipt').hide();
+        $('#check_area_Receipt').hide();
+        $('#credit_card_Receipt').hide();
+        $('#invoicing_Receipt').hide();
+        $('#debit_card_Receipt').hide();
+        $('#ach_area_Receipt').hide();
+        $('#venmo_area_Receipt').hide();
+        $('#paypal_area_Receipt').hide();
+        $('#square_area_Receipt').hide();
+        $('#warranty_area_Receipt').show();
+        $('#home_area_Receipt').hide();
+        $('#e_area_Receipt').hide();
+        $('#other_credit_card_Receipt').hide();
+        $('#other_payment_area_Receipt').hide();
+    }
+    else if(this.value == 'Home Owner Financing'){
+        // alert('Credit card');
+        $('#cash_area_Receipt').hide();
+        $('#check_area_Receipt').hide();
+        $('#credit_card_Receipt').hide();
+        $('#debit_card_Receipt').hide();
+        $('#invoicing_Receipt').hide();
+        $('#ach_area_Receipt').hide();
+        $('#venmo_area_Receipt').hide();
+        $('#paypal_area_Receipt').hide();
+        $('#square_area_Receipt').hide();
+        $('#warranty_area_Receipt').hide();
+        $('#home_area_Receipt').show();
+        $('#e_area_Receipt').hide();
+        $('#other_credit_card_Receipt').hide();
+        $('#other_payment_area_Receipt').hide();
+    }
+    else if(this.value == 'e-Transfer'){
+        // alert('Credit card');
+        $('#cash_area_Receipt').hide();
+        $('#check_area_Receipt').hide();
+        $('#credit_card_Receipt').hide();
+        $('#debit_card_Receipt').hide();
+        $('#invoicing_Receipt').hide();
+        $('#ach_area_Receipt').hide();
+        $('#venmo_area_Receipt').hide();
+        $('#paypal_area_Receipt').hide();
+        $('#square_area_Receipt').hide();
+        $('#warranty_area_Receipt').hide();
+        $('#home_area_Receipt').hide();
+        $('#e_area_Receipt').show();
+        $('#other_credit_card_Receipt').hide();
+        $('#other_payment_area_Receipt').hide();
+    }
+    else if(this.value == 'Other Credit Card Professor'){
+        // alert('Credit card');
+        $('#cash_area_Receipt').hide();
+        $('#check_area_Receipt').hide();
+        $('#credit_card_Receipt').hide();
+        $('#debit_card_Receipt').hide();
+        $('#invoicing_Receipt').hide();
+        $('#ach_area_Receipt').hide();
+        $('#venmo_area_Receipt').hide();
+        $('#paypal_area_Receipt').hide();
+        $('#square_area_Receipt').hide();
+        $('#warranty_area_Receipt').hide();
+        $('#home_area_Receipt').hide();
+        $('#e_area_Receipt').hide();
+        $('#other_credit_card_Receipt').show();
+        $('#other_payment_area_Receipt').hide();
+    }
+    else if(this.value == 'Other Payment Type'){
+        // alert('Credit card');
+        $('#cash_area_Receipt').hide();
+        $('#check_area_Receipt').hide();
+        $('#credit_card_Receipt').hide();
+        $('#debit_card_Receipt').hide();
+        $('#invoicing_Receipt').hide();
+        $('#ach_area_Receipt').hide();
+        $('#venmo_area_Receipt').hide();
+        $('#paypal_area_Receipt').hide();
+        $('#square_area_Receipt').hide();
+        $('#warranty_area_Receipt').hide();
+        $('#home_area_Receipt').hide();
+        $('#e_area_Receipt').hide();
+        $('#other_credit_card_Receipt').hide();
+        $('#other_payment_area_Receipt').show();
+    }
+}
 </script>

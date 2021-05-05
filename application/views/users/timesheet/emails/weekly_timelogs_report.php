@@ -323,7 +323,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                             $actual_vs_expected = $timehseet_storage[$i][10] == '' ?  8 - round($timehseet_storage[$i][18], 2) . "" : "0.00";
                         }
                         $regular_hours = ($timehseet_storage[$i][12] == '' ? 8 : $timehseet_storage[$i][12]);
-                        $paid_hours = ($timehseet_storage[$i][17] == 'Approved' ? $timehseet_storage[$i][18] : round($regular_hours, 2));
+                        $paid_hours = ($timehseet_storage[$i][17] == 'Approved' ? $timehseet_storage[$i][18] : round($timehseet_storage[$i][18], 2));
 
                         $est_wage = 0;
                         if ($timehseet_storage[$i][21] == "hourly") {

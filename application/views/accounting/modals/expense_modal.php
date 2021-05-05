@@ -6,7 +6,7 @@
             <!-- Modal content-->
             <div class="modal-content" style="height: 100%;">
                 <div class="modal-header" style="background: #f4f5f8;border-bottom: 0">
-                    <h4 class="modal-title"><a href="#"><i class="fa fa-history fa-lg" style="margin-right: 10px"></i></a>Expense</h4>
+                    <h4 class="modal-title"><a href="#"><i class="fa fa-history fa-lg" style="margin-right: 10px"></i></a>Expense <span></span></h4>
                     <button type="button" class="close" data-dismiss="modal"><i class="fa fa-times fa-lg"></i></button>
                 </div>
                 <div class="modal-body">
@@ -20,7 +20,7 @@
                                                 <div class="col-md-5">
                                                     <div class="form-group">
                                                         <label for="bankAccount">Payee</label>
-                                                        <select name="vendor_id" id="payee" class="form-control" required>
+                                                        <select name="vendor_id" id="payee" class="form-control">
                                                             <option value="" disabled selected>&nbsp;</option>
                                                             <?php foreach($dropdown['payee'] as $payee) : ?>
                                                                 <option value="<?=$payee->id?>"><?=$payee->display_name?></option>
@@ -57,12 +57,12 @@
                                         </div>
                                         <div class="col-md-4">
                                             <h6 class="text-right">AMOUNT</h6>
-                                            <h2 class="text-right total-deposit-amount">$0.00</h2>
+                                            <h2 class="text-right">$<span class="total-expense-amount">0.00</span></h2>
                                         </div>
                                         <div class="col-md-3">
                                             <div class="form-group">
                                                 <label for="payment_date">Payment date</label>
-                                                <input type="text" name="payment_date" id="payment_date" class="form-control date" value="<?=date("m/d/Y")?>">
+                                                <input type="text" name="payment_date" id="payment_date" class="form-control date" value="<?=date("m/d/Y")?>" required>
                                             </div>
                                         </div>
                                         <div class="col-md-3">
@@ -120,7 +120,7 @@
                                                                         <td></td>
                                                                         <td>1</td>
                                                                         <td>
-                                                                            <select name="category[]" class="form-control">
+                                                                            <select name="category[]" class="form-control" required>
                                                                                 <option value="" selected disabled>&nbsp;</option>
                                                                                 <?php foreach($dropdown['categories'] as $accType => $accounts) : ?>
                                                                                     <optgroup label="<?=$accType?>">
@@ -140,7 +140,7 @@
                                                                             </select>
                                                                         </td>
                                                                         <td><input type="text" name="description[]" class="form-control"></td>
-                                                                        <td><input type="number" name="category_amount[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" required></td>
+                                                                        <td><input type="number" name="category_amount[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01"></td>
                                                                         <td>
                                                                             <div class="d-flex align-items-center justify-content-center">
                                                                                 <input type="checkbox" name="category_billable[]" class="form-check" value="1">
@@ -218,7 +218,7 @@
                                                                         <td></td>
                                                                         <td>1</td>
                                                                         <td>
-                                                                            <select name="item[]" class="form-control">
+                                                                            <select name="item[]" class="form-control" required>
                                                                                 <option value="" selected disabled>&nbsp;</option>
                                                                                 <?php if(count($dropdown['items']) > 0) : ?>
                                                                                     <?php foreach($dropdown['items'] as $item) : ?>
@@ -228,9 +228,9 @@
                                                                             </select>
                                                                         </td>
                                                                         <td><input type="text" name="item_description[]" class="form-control"></td>
-                                                                        <td><input type="number" name="quantity[]" class="form-control"></td>
-                                                                        <td><input type="number" name="rate[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" required></td>
-                                                                        <td><input type="number" name="item_amount[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" required></td>
+                                                                        <td><input type="number" name="quantity[]" class="form-control" required></td>
+                                                                        <td><input type="number" name="rate[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01"></td>
+                                                                        <td><input type="number" name="item_amount[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01"></td>
                                                                         <td>
                                                                             <div class="d-flex align-items-center justify-content-center">
                                                                                 <input type="checkbox" name="item_billable[]" class="form-check" value="1">
@@ -309,7 +309,7 @@
                                             </div>
                                         </div>
                                         <div class="col-md-6">
-                                            <h5 class="m-0 text-right">Total : $<span class="expense-total">0.00</span></h5>
+                                            <h5 class="m-0 text-right">Total : $<span class="total-expense-amount">0.00</span></h5>
                                         </div>
                                     </div>
                                 </div>
