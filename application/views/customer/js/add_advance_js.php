@@ -163,6 +163,9 @@
             }else if(c_type === 'ACH'){
                 hide_all();
                 route_show();
+            }else if(c_type === 'Invoicing'){
+                hide_all();
+                $(".invoicing_field").show("slow");
             }else if(c_type === 'VENMO' || c_type === 'PP' || c_type === 'SQ'){
                 hide_all();
                 $(".account_cred").show('slow');
@@ -187,6 +190,7 @@
             $("#accountNumber").show("slow");
         }
         function hide_all(){
+            $(".invoicing_field").hide("slow");
             $("#checkNumber").hide("slow");
             $("#routingNumber").hide("slow");
             $("#accountNumber").hide("slow");
@@ -265,6 +269,14 @@
         // $(".time_picker").datetimepicker({
         //     format: "LT",
         // });
+
+        $("#rep_comm").keyup(function(){
+            $('#rep_paid').val(this.value);
+        });
+
+        $("#tech_comm").keyup(function(){
+            $('#tech_paid').val(this.value);
+        });
 
         $("#rep_paid").keyup(function(){
             var repPaid=this.value;

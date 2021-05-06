@@ -1,12 +1,12 @@
 <!-- Modal for bank deposit-->
 <div class="full-screen-modal">
 <form onsubmit="submitModalForm(event, this)" id="modal-form">
-    <div id="expenseModal" class="modal fade modal-fluid" role="dialog">
+    <div id="checkModal" class="modal fade modal-fluid" role="dialog">
         <div class="modal-dialog">
             <!-- Modal content-->
             <div class="modal-content" style="height: 100%;">
                 <div class="modal-header" style="background: #f4f5f8;border-bottom: 0">
-                    <h4 class="modal-title"><a href="#"><i class="fa fa-history fa-lg" style="margin-right: 10px"></i></a>Expense <span></span></h4>
+                    <h4 class="modal-title"><a href="#"><i class="fa fa-history fa-lg" style="margin-right: 10px"></i></a>Check <span></span></h4>
                     <button type="button" class="close" data-dismiss="modal"><i class="fa fa-times fa-lg"></i></button>
                 </div>
                 <div class="modal-body">
@@ -30,22 +30,18 @@
                                                 </div>
                                                 <div class="col-md-4">
                                                     <div class="form-group">
-                                                        <label for="payment_account">Payment account</label>
-                                                        <select name="payment_account" id="payment_account" class="form-control" required>
-                                                            <?php foreach($dropdown['payment_accounts'] as $accType => $accounts) : ?>
-                                                                <optgroup label="<?=$accType?>">
-                                                                    <?php foreach($accounts as $account) : ?>
-                                                                        <option value="<?=$account->id?>"><?=$account->name?></option>
+                                                        <label for="bank_account">Bank account</label>
+                                                        <select name="bank_account" id="bank_account" class="form-control" required>
+                                                            <?php foreach($dropdown['bank_accounts'] as $account) : ?>
+                                                                <option value="<?=$account->id?>"><?=$account->name?></option>
 
-                                                                        <?php if(count($account->childAccs) > 0) : ?>
-                                                                            <optgroup label="&nbsp;&nbsp;&nbsp;Sub-account of <?=$account->name?>">
-                                                                                <?php foreach($account->childAccs as $childAcc) : ?>
-                                                                                    <option value="<?=$childAcc->id?>">&nbsp;&nbsp;&nbsp;<?=$childAcc->name?></option>
-                                                                                <?php endforeach; ?>
-                                                                            </optgroup>
-                                                                        <?php endif; ?>
-                                                                    <?php endforeach; ?>
-                                                                </optgroup>
+                                                                <?php if(count($account->childAccs) > 0) : ?>
+                                                                    <optgroup label="&nbsp;&nbsp;&nbsp;Sub-account of <?=$account->name?>">
+                                                                        <?php foreach($account->childAccs as $childAcc) : ?>
+                                                                            <option value="<?=$childAcc->id?>">&nbsp;&nbsp;&nbsp;<?=$childAcc->name?></option>
+                                                                        <?php endforeach; ?>
+                                                                    </optgroup>
+                                                                <?php endif; ?>
                                                             <?php endforeach; ?>
                                                         </select>
                                                     </div>
@@ -57,32 +53,32 @@
                                         </div>
                                         <div class="col-md-4">
                                             <h6 class="text-right">AMOUNT</h6>
-                                            <h2 class="text-right">$<span class="transaction-total-amount">0.00</span></h2>
+                                            <h2 class="text-right transaction-total-amount">$0.00</h2>
                                         </div>
-                                        <div class="col-md-3">
+                                        <div class="col-md-2">
+                                            <div class="form-group">
+                                                <label for="mailing_address">Mailing address</label>
+                                                <textarea name="mailing_address" id="mailing_address" class="form-control"></textarea>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2">
                                             <div class="form-group">
                                                 <label for="payment_date">Payment date</label>
                                                 <input type="text" name="payment_date" id="payment_date" class="form-control date" value="<?=date("m/d/Y")?>" required>
                                             </div>
                                         </div>
-                                        <div class="col-md-3">
-                                            <div class="form-group">
-                                                <label for="payment_method">Payment method</label>
-                                                <select name="payment_method" id="payment_method" class="form-control">
-                                                    <option value="" selected disabled>&nbsp;</option>
-                                                    <?php foreach($dropdown['payment_methods'] as $paymentMethod) : ?>
-                                                        <option value="<?=$paymentMethod['id']?>"><?=$paymentMethod['name']?></option>
-                                                    <?php endforeach; ?>
-                                                </select>
-                                            </div>
-                                        </div>
+                                        <div class="col-md-2"></div>
                                         <div class="col-md-2">
                                             <div class="form-group">
-                                                <label for="ref_no">Ref no.</label>
-                                                <input type="text" name="ref_no" id="ref_no" class="form-control">
+                                                <label for="check_no">Check no.</label>
+                                                <input type="text" name="check_no" id="check_no" class="form-control">
+                                                <div class="form-check">
+                                                    <input type="checkbox" name="print_later" id="print_later" class="form-check-input">
+                                                    <label for="print_later" class="form-check-label">Print later</label>
+                                                </div>
                                             </div>
                                         </div>
-                                        <div class="col-md-8">
+                                        <div class="col-md-6">
                                             <div class="form-group">
                                                 <div id="label">
                                                     <label for="tags">Tags</label>
@@ -228,7 +224,7 @@
                                                                             </select>
                                                                         </td>
                                                                         <td><input type="text" name="item_description[]" class="form-control"></td>
-                                                                        <td><input type="number" name="quantity[]" class="form-control text-right" required></td>
+                                                                        <td><input type="number" name="quantity[]" class="form-control" required></td>
                                                                         <td><input type="number" name="rate[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01"></td>
                                                                         <td><input type="number" name="item_amount[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01"></td>
                                                                         <td>
@@ -309,7 +305,7 @@
                                             </div>
                                         </div>
                                         <div class="col-md-6">
-                                            <h5 class="m-0 text-right">Total : $<span class="transaction-total-amount">0.00</span></h5>
+                                            <h5 class="m-0 text-right">Total : $<span class="expense-total">0.00</span></h5>
                                         </div>
                                     </div>
                                 </div>

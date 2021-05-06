@@ -1651,17 +1651,26 @@ class Timesheet_model extends MY_Model
         $qry = $this->db->query("SELECT * FROM timesheet_logs WHERE attendance_id = ".$att_id." order by date_created ".$sort." limit 1");
         return $qry->row();
     }
-    public function get_all_admin_report_settings(){
+    public function get_all_admin_report_settings()
+    {
         $this->db->reset_query();
         $qry = $this->db->query("SELECT * FROM timesheet_timezone_admin_report");
         return $qry->result();
     }
-    public function get_all_admin_for_default_report($and_query){
+    public function get_all_admin_for_default_report($and_query)
+    {
         $this->db->reset_query();
         $qry = $this->db->query("SELECT id,company_id,email FROM users WHERE role < 5 and ".$and_query);
         return $qry->result();
     }
+    public function get_attendance_overtime_status($att_id)
+    {
+        $this->db->reset_query();
+        $qry = $this->db->query("SELECT * from timesheet_attendance WHERE id = ".$att_id)->row();
+        return $qry->overtime_status;
+    }
 }
+
 
 
 

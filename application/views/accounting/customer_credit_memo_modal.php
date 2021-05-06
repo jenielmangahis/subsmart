@@ -844,7 +844,7 @@ $("#total_tax_").text(over_tax);
   
   
   
-
+  $("#item_total").val(grand_total_w.toFixed(2));
   $("#grand_total").text(grand_total_w.toFixed(2));
   $("#grand_total_input").val(grand_total_w.toFixed(2));
   $("#grand_total_cm_t").text(grand_total_w.toFixed(2));

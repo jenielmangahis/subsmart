@@ -170,7 +170,7 @@
                                                         </tfoot>
                                                     </table>
                                                 </div>
-                                                <div class="journal-table-footer">
+                                                <div class="table-footer">
                                                     <div class="row">
                                                         <div class="col-md-12">
                                                             <button type="button" class="btn btn-outline-secondary border" data-target="#journal-table" onclick="addTableLines(event)">Add lines</button>

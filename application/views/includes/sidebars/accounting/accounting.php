@@ -99,16 +99,15 @@
                             <h4>Vendors</h4>
 
                             <ul id="accounting_vendors">
-                                 <!-- <li><a href="#" data-toggle="modal" data-target="#expense-modal" id="addExpense">Expense</a></li> -->
                                 <li><a href="#" class="ajax-expense_modal" data-view="expense_modal" data-toggle="modal" data-target="#expenseModal">Expense</a></li>
-                                <!-- <li><a href="#" data-toggle="modal" data-target="#expenseModal" id="addExpense">Expense</a></li> -->
-                                <li><a href="#" data-toggle="modal" data-target="#edit-expensesCheck" id="addCheck">Check</a></li>
-                                <li><a href="#" data-toggle="modal" data-target="#bill-modal" id="addBill">Bill</a></li>
+                                <li><a href="#" class="ajax-check_modal" data-view="check_modal" data-toggle="modal" data-target="#checkModal">Check</a></li>
+                                <!-- <li><a href="#" data-toggle="modal" data-target="#edit-expensesCheck" id="addCheck">Check</a></li> -->
+                                <!-- <li><a href="#" data-toggle="modal" data-target="#bill-modal" id="addBill">Bill</a></li>
                                 <li><a href="#" data-toggle="modal" data-target="#pay-bills" id="payBills">Pay bills</a></li>
                                 <li><a href="#" data-toggle="modal" data-target="#purchase-order" id="purchaseorder">Purchase order</a></li>
                                 <li><a href="#" class="ajax-" data-toggle="modal" data-target="#addvendorcreditModal">Vendor credit</a></li>
                                 <li><a href="#" class="ajax-" data-toggle="modal" data-target="#addvendorcreditcardModal">Credit card credit</a></li>
-                                <li><a href="#" class="ajax-" data-toggle="modal" data-target="#addvendorprintchecksModal">Print checks</a></li>
+                                <li><a href="#" class="ajax-" data-toggle="modal" data-target="#addvendorprintchecksModal">Print checks</a></li> -->
                             </ul>
                         </div>
                     </div>

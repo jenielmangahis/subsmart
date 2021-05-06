@@ -1,4 +1,5 @@
 const GET_OTHER_MODAL_URL = "/accounting/get-other-modals/";
+const vendorModals = ['#expenseModal', '#checkModal'];
 var rowCount = 0;
 var rowInputs = '';
 var blankRow = '';
@@ -318,7 +319,7 @@ $(function() {
         checkbox.prop('checked', flag);
     });
 
-    $(document).on('click', 'ul#accounting_order li a[data-toggle="modal"], ul#accounting_employees li a, ul#accounting_vendors li:first-child a', function(e) {
+    $(document).on('click', 'ul#accounting_order li a[data-toggle="modal"], ul#accounting_employees li a, ul#accounting_vendors li a', function(e) {
         e.preventDefault();
         var target = e.currentTarget.dataset;
         var view = target.view
@@ -345,18 +346,18 @@ $(function() {
                 $('div#modal-container table.clickable tbody tr:first-child() td:nth-child(2)').html(1);
             }
 
-            if(modal_element === '#expenseModal') {
+            if(vendorModals.includes(modal_element)) {
                 rowCount = 2;
-                catDetailsInputs = $('#expenseModal table#category-details-table tbody tr:first-child()').html();
-                catDetailsBlank = $('#expenseModal table#category-details-table tbody tr:nth-child(2)').html();
-                itemDetailsInputs = $('#expenseModal table#item-details-table tbody tr:first-child()').html();
-                itemDetailsBlank = $('#expenseModal table#item-details-table tbody tr:nth-child(2)').html();
+                catDetailsInputs = $(`${modal_element} table#category-details-table tbody tr:first-child()`).html();
+                catDetailsBlank = $(`${modal_element} table#category-details-table tbody tr:nth-child(2)`).html();
+                itemDetailsInputs = $(`${modal_element} table#item-details-table tbody tr:first-child()`).html();
+                itemDetailsBlank = $(`${modal_element} table#item-details-table tbody tr:nth-child(2)`).html();
 
-                $('#expenseModal table#category-details-table tbody tr:first-child()').html(catDetailsBlank);
-                $('#expenseModal table#category-details-table tbody tr:first-child() td:nth-child(2)').html(1);
+                $(`${modal_element} table#category-details-table tbody tr:first-child()`).html(catDetailsBlank);
+                $(`${modal_element} table#category-details-table tbody tr:first-child() td:nth-child(2)`).html(1);
 
-                $('#expenseModal table#item-details-table tbody tr:first-child()').html(itemDetailsBlank);
-                $('#expenseModal table#item-details-table tbody tr:first-child() td:nth-child(2)').html(1);
+                $(`${modal_element} table#item-details-table tbody tr:first-child()`).html(itemDetailsBlank);
+                $(`${modal_element} table#item-details-table tbody tr:first-child() td:nth-child(2)`).html(1);
             }
 
             $(`${modal_element} select`).select2();
@@ -506,7 +507,7 @@ $(function() {
         }
     });
 
-    $(document).on('click', `div#modal-container .full-screen-modal .modal:not(#expenseModal) table.clickable tbody tr`, function() {
+    $(document).on('click', `div#modal-container .full-screen-modal table.clickable:not(#category-details-table,#item-details-table) tbody tr`, function() {
         if($(this).find('input').length < 1) {
             var rowNum = $(this).children().next().html();
 
@@ -517,7 +518,7 @@ $(function() {
         }
     });
 
-    $(document).on('click', 'div#modal-container #expenseModal table#category-details-table tbody tr', function() {
+    $(document).on('click', 'div#modal-container table#category-details-table tbody tr', function() {
         if($(this).find('input').length < 1) {
             var rowNum = $(this).children().next().html();
 
@@ -528,7 +529,7 @@ $(function() {
         }
     });
 
-    $(document).on('click', 'div#modal-container #expenseModal table#item-details-table tbody tr', function() {
+    $(document).on('click', 'div#modal-container table#item-details-table tbody tr', function() {
         if($(this).find('input').length < 1) {
             var rowNum = $(this).children().next().html();
 
@@ -539,7 +540,7 @@ $(function() {
         }
     });
 
-    $(document).on('click', 'div#modal-container .modal:not(#expenseModal) table.clickable tbody tr td a.deleteRow', function() {
+    $(document).on('click', 'div#modal-container table.clickable:not(#category-details-table,#item-details-table) tbody tr td a.deleteRow', function() {
         $(this).parent().parent().remove();
         if($('div#modal-container table tbody tr').length < rowCount) {
             $('div#modal-container table tbody').append(`<tr>${blankRow}</tr>`);
@@ -557,7 +558,7 @@ $(function() {
         }
     });
 
-    $(document).on('click', '#expenseModal #category-details-table tbody tr td a.deleteRow', function() {
+    $(document).on('click', '#modal-container #category-details-table tbody tr td a.deleteRow', function() {
         $(this).parent().parent().remove();
 
         if($('#category-details-table tbody tr').length < rowCount) {
@@ -572,7 +573,7 @@ $(function() {
         });
     });
 
-    $(document).on('click', '#expenseModal #item-details-table tbody tr td a.deleteRow', function() {
+    $(document).on('click', '#modal-container #item-details-table tbody tr td a.deleteRow', function() {
         $(this).parent().parent().remove();
 
         if($('#item-details-table tbody tr').length < rowCount) {
@@ -1344,7 +1345,7 @@ $(function() {
     });
 
     // Expenses modal
-    $(document).on('click', '.full-screen-modal .modal .btn[data-toggle="collapse"]', function(e) {
+    $(document).on('click', '#modal-container .modal .btn[data-toggle="collapse"]', function(e) {
         if($(this).attr('aria-expanded') === 'true') {
             $(this).children('i').addClass('fa-caret-down').removeClass('fa-caret-right');
         } else {
@@ -1360,16 +1361,102 @@ $(function() {
         }
     });
 
-    $(document).on('change', '#expenseModal input[name="category_amount[]"], #expenseModal input[name="item_amount[]"]', function() {
-        computeExpenseTotal();
+    $(document).on('change', '#checkModal #print_later', function() {
+        if($(this).prop('checked')) {
+            $('#checkModal #check_no').prop('disabled', true);
+            $('#checkModal #check_no').val('To print').trigger('change');
+        } else {
+            $('#checkModal #check_no').prop('disabled', false);
+            $('#checkModal #check_no').val('').trigger('change');
+        }
     });
 
-    $(document).on('change', '#expenseModal input[name="category_billable[]"], #expenseModal input[name="item_billable[]"]', function() {
+    $(document).on('change', '#checkModal #check_no', function() {
+        if($(this).val() !== "") {
+            $('#checkModal .modal-title span').html('#'+$(this).val());
+        } else {
+            $('#checkModal .modal-title span').html('');
+        }
+    });
+
+    $(document).on('change', '#modal-container table#category-details-table input[name="category_amount[]"], #modal-container table#item-details-table input[name="item_amount[]"]', function() {
+        computeTransactionTotal();
+    });
+
+    $(document).on('change', '#modal-container table#category-details-table input[name="category_billable[]"], #modal-container table#item-details-table input[name="item_billable[]"]', function() {
         if($(this).prop('checked')) {
             $(this).parent().parent().parent().find('select[name="category_customer[]"]').prop('required', true);
+            $(this).parent().parent().parent().find('select[name="item_customer[]"]').prop('required', true);
         } else {
             $(this).parent().parent().parent().find('select[name="category_customer[]"]').prop('required', false);
+            $(this).parent().parent().parent().find('select[name="item_customer[]"]').prop('required', false);
         }
+    });
+
+    $(document).on('change', '#modal-container table#category-details-table input[name="category_tax[]"], #modal-container table#item-details-table input[name="item_tax[]"]', function() {
+        $(this).parent().parent().parent().find('input[name="category_billable[]"]').prop('checked', true).trigger('change');
+        $(this).parent().parent().parent().find('input[name="item_billable[]"]').prop('checked', true).trigger('change');
+    });
+
+    $(document).on('change', '#modal-container table#item-details-table select[name="item[]"]', function() {
+        var el = $(this);
+        if(el.val() !== "") {
+            $.get('/accounting/get-item-details/'+el.val(), function(res) {
+                var result = JSON.parse(res);
+                var item = result.item;
+
+                el.parent().parent().find('input[name="item_description[]"]').val(item.description);
+                el.parent().parent().find('input[name="quantity[]"]').val(1);
+                el.parent().parent().find('input[name="rate[]"]').val(item.cost).trigger('change');
+                el.parent().parent().find('input[name="item_amount[]"]').val(item.cost).trigger('change');
+            });
+        } else {
+            el.parent().parent().find('input[name="item_description[]"]').val('');
+            el.parent().parent().find('input[name="quantity[]"]').val('');
+            el.parent().parent().find('input[name="rate[]"]').val('');
+            el.parent().parent().find('input[name="item_amount[]"]').val('');
+        }
+    });
+
+    $(document).on('change', '#modal-container table#item-details-table input[name="item_markup[]"]', function() {
+        var value = $(this).val();
+        var amount = $(this).parent().parent().find('input[name="item_amount[]"]').val();
+        var billable = $(this).parent().parent().find('input[name="item_billable[]"]').prop('checked');
+
+        if(value !== "0" && value !== "" && billable && amount !== "" && amount !== 0.00) {
+            var percent = parseFloat((parseFloat(amount) / 100) * parseFloat(value));
+            var salesAmount = parseFloat(parseFloat(amount) + percent).toFixed(2);
+        } else {
+            var salesAmount = '';
+        }
+
+        $(this).parent().parent().find('input[name="item_sales_amount[]"]').val(salesAmount);
+    });
+
+    $(document).on('change', '#modal-container table#item-details-table input[name="item_amount[]"]', function() {
+        if($(this).parent().parent().find('input[name="item_billable[]"]').prop('checked')) {
+            $(this).parent().parent().find('input[name="item_markup[]"]').trigger('change');
+        }
+    });
+
+    $(document).on('change', '#expenseModal #payment_account', function() {
+        var id = $(this).val();
+
+        $.get('/accounting/get-account-balance/'+id, function(res) {
+            var result = JSON.parse(res);
+
+            $('#expenseModal span#account-balance').html(result.balance);
+        });
+    });
+
+    $(document).on('change', '#checkModal #bank_account', function() {
+        var id = $(this).val();
+
+        $.get('/accounting/get-account-balance/'+id, function(res) {
+            var result = JSON.parse(res);
+
+            $('#checkModal span#account-balance').html(result.balance);
+        });
     });
 });
 
@@ -1791,7 +1878,7 @@ const clearTableLines = (e) => {
     $(`table${table} tbody tr`).each(function(index, value) {
         var count = $(this).find('td:nth-child(2)').html();
         if(index < rowCount) {
-            if(table !== '#category-details-table' && table !== 'item-details-table') {
+            if(table !== '#category-details-table' && table !== '#item-details-table') {
                 $(this).html(blankRow);
             } else {
                 if(table === '#category-details-table') {
@@ -1817,12 +1904,12 @@ const submitModalForm = (event, el) => {
     event.preventDefault();
 
     var data = new FormData(document.getElementById($(el).attr('id')));
+    var modalId = '#'+$(el).children().attr('id');
     if($(el).children().attr('id') === 'payrollModal' || $(el).children().attr('id') === 'commission-payroll-modal' || $(el).children().attr('id') === 'bonus-payroll-modal') {
         data = payrollFormData;
-    } else if($(el).children().attr('id') === 'expenseModal') {
-
+    } else if(vendorModals.includes(modalId)) {
         var count = 0;
-        $('#expenseModal input[name="category_billable[]"]').each(function() {
+        $(`${modalId} input[name="category_billable[]"]`).each(function() {
             var value = $(this).prop('checked') ? "1" : "0";
             if(count === 0) {
                 data.set('category_billable[]', value);
@@ -1833,7 +1920,7 @@ const submitModalForm = (event, el) => {
         });
 
         count = 0;
-        $('#expenseModal input[name="category_tax[]"]').each(function() {
+        $( `${modalId} input[name="category_tax[]"] `).each(function() {
             var value = $(this).prop('checked') ? "1" : "0";
             if(count === 0) {
                 data.set('category_tax[]', value);
@@ -1844,7 +1931,7 @@ const submitModalForm = (event, el) => {
         });
 
         count = 0;
-        $('#expenseModal input[name="item_billable[]"]').each(function() {
+        $(`${modalId} input[name="item_billable[]"]`).each(function() {
             var value = $(this).prop('checked') ? "1" : "0";
             if(count === 0) {
                 data.set('item_billable[]', value);
@@ -1855,7 +1942,7 @@ const submitModalForm = (event, el) => {
         });
 
         count = 0;
-        $('#expenseModal input[name="item_tax[]"]').each(function() {
+        $(`${modalId} input[name="item_tax[]"]`).each(function() {
             var value = $(this).prop('checked') ? "1" : "0";
             if(count === 0) {
                 data.set('item_tax[]', value);
@@ -2079,20 +2166,20 @@ const computeTotalValue = () => {
     $('#adjust-starting-value-modal .total-value').html('$'+parseFloat(totalValue).toFixed(2));
 }
 
-const computeExpenseTotal = () => {
+const computeTransactionTotal = () => {
     var total = 0.00;
 
-    $('#expenseModal input[name="category_amount[]"]').each(function() {
+    $('#modal-container table#category-details-table input[name="category_amount[]"]').each(function() {
         var value = $(this).val() === "" ? 0.00 : parseFloat($(this).val()).toFixed(2);
 
         total = parseFloat(parseFloat(total) + parseFloat(value)).toFixed(2);
     });
 
-    $('#expenseModal input[name="item_amount[]"]').each(function() {
+    $('#modal-container table#item-details-table input[name="item_amount[]"]').each(function() {
         var value = $(this).val() === "" ? 0.00 : parseFloat($(this).val()).toFixed(2);
 
         total = parseFloat(parseFloat(total) + parseFloat(value)).toFixed(2);
     });
 
-    $('#expenseModal span.total-expense-amount').html(total);
+    $('#modal-container .transaction-total-amount').html(total);
 }

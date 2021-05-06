@@ -267,7 +267,7 @@ class Esign extends MY_Controller {
 		$coordinates = json_encode($payload['coordinates']);
 		$specs = $payload['specs'] ? json_encode($payload['specs']) : null;
 		$docPage = $payload['doc_page'];
-		$field = $payload['field'];
+		$field = $payload['field'] ?? $payload['field_name'];
 		$recipientId = $payload['recipient_id'];
 		$userId = logged('id');
 		$docId = $payload['docfile_id'];

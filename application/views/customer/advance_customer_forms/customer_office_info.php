@@ -433,7 +433,7 @@
                     <div class="input-group-prepend">
                         <span class="input-group-text" id="basic-addon1">$</span>
                     </div>
-                    <input type="number" class="form-control input_select" name="rep_comm" value="<?php if(isset($office_info)){ echo $office_info->rep_comm; } ?>">
+                    <input type="number" class="form-control input_select" id="rep_comm" name="rep_comm" value="<?php if(isset($office_info)){ echo $office_info->rep_comm; } ?>">
                 </div>
             </div>
         </div>
@@ -500,7 +500,7 @@
                     <div class="input-group-prepend">
                         <span class="input-group-text" id="basic-addon1">$</span>
                     </div>
-                    <input type="number" class="form-control input_select" name="tech_comm" value="<?php if(isset($office_info)){ echo $office_info->tech_comm; } ?>">
+                    <input type="number" class="form-control input_select" id="tech_comm" name="tech_comm" value="<?php if(isset($office_info)){ echo $office_info->tech_comm; } ?>">
                 </div>
             </div>
         </div>

@@ -440,7 +440,7 @@
                     <div class="row">
                         <div class="col-md-2">
                             Message displayed on sales receipt<br>
-                            <textarea style="height:100px;width:100%;" name="message_displayed_on_sales_receipt"></textarea><br>
+                            <textarea style="height:100px;width:100%;" name="message"></textarea><br>
                             Message displayed on statement<br>
                             <textarea style="height:100px;width:100%;" name="message_on_statement"></textarea>
                         </div>
@@ -508,7 +508,7 @@
                                             <td><b>Grand Total ($)</b></td>
                                             <td></td>
                                             <td><b><span id="grand_total_sr">0.00</span>
-                                                <input type="hidden" name="grand_total" id="grand_total_sr" value='0'></b></td>
+                                                <input type="hidden" name="grand_total" id="grand_total_sr_g" value='0'></b></td>
                                         </tr>
                             </table>
 
@@ -691,6 +691,7 @@ $(document).on("focusout", ".adjustment_input_sr", function () {
 
   $("#grand_total_input").val(grand_total_w.toFixed(2));
   $("#grand_total_sr").text(grand_total_w.toFixed(2));
+  $("#grand_total_sr_g").val(grand_total_w.toFixed(2));
   $("#adjustment_area_sr").text(adjustment);
   $("#grand_total_sr_t").text(grand_total_w.toFixed(2));
   // alert(adjustment);
@@ -869,6 +870,7 @@ var in_id = idd;
 
 
   $("#grand_total_sr").text(grand_total_w.toFixed(2));
+  $("#grand_total_sr_g").val(grand_total_w.toFixed(2));
   $("#grand_total_sr_t").text(grand_total_w.toFixed(2));
   $("#grand_total_input").val(grand_total_w.toFixed(2));
 
@@ -969,6 +971,7 @@ function calculationsr(counter) {
 
 
   $("#grand_total_sr").text(grand_total_w.toFixed(2));
+  $("#grand_total_sr_g").val(grand_total_w.toFixed(2));
   $("#grand_total_sr_t").text(grand_total_w.toFixed(2));
   $("#grand_total_input").val(grand_total_w.toFixed(2));
   $("#grandtotal_input").val(grand_total_w.toFixed(2));
@@ -979,6 +982,7 @@ function calculationsr(counter) {
     // alert('none');
   }else{
     $("#grand_total_sr").text(grand_total_w.toFixed(2));
+    $("#grand_total_sr_g").val(grand_total_w.toFixed(2));
     $("#grand_total_input").val(grand_total_w.toFixed(2));
 
     var bundle1_total = $("#grand_total").text();
@@ -1173,7 +1177,7 @@ $("#total_tax_sr_").text(over_tax);
   $("#grand_total_sr").text(grand_total_w.toFixed(2));
   $("#grand_total_input").val(grand_total_w.toFixed(2));
   $("#grand_total_sr_t").text(grand_total_w.toFixed(2));
-  $("#grand_total_sr").text(grand_total_w.toFixed(2));
+  $("#grand_total_sr_g").val(grand_total_w.toFixed(2));
   $("#span_sub_total_sr").text(grand_total_w.toFixed(2));
 
   var sls = (parseFloat(eqpt_cost).toFixed(2) * 7.5) / 100;
