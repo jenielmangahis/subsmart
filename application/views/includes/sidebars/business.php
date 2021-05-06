@@ -44,7 +44,7 @@
             <a href="<?= base_url('users/availability') ?>" title="Availability"><span class="fa fa-calendar"></span>Availability</a>
         </li>
         <li class="submenus <?= ($this->uri->uri_string() == 'users/portfolio') ? "active" : "";  ?>">
-            <a href="<?= base_url('users/portfolio') ?>" title="Portfolio"><span class="fa fa-camera-retro"></span>Work Pictures</a>
+            <a href="<?= base_url('users/portfolio') ?>" title="Portfolio"><span class="fa fa-camera-retro"></span>Portfolio</a>
         </li>
         <li class="nav-header header-left">Settings</li>
         <li class="submenus <?= ($this->uri->uri_string() == 'users/profilesetting') ? "active" : "";  ?>">

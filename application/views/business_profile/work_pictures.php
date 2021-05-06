@@ -18,9 +18,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 }
 .option-container {
     position: relative;
-    top: 30px;
+    top: 37px;
     float: right;
-        background-color: #000000;
+    background-color: #000000;
     width: 16%;
     padding: 5px;
 }
@@ -99,9 +99,12 @@ div.picture-container div.img img {
 }
 .image-caption{
   position: relative;
-    top: -25px;
-    left: 16px;
-    color: #ffffff;
+  top: -31px;
+  /*left: 16px;*/
+  color: #ffffff;
+  background-color: #000000;
+  height: 31px;
+  padding: 5px;
 }
 </style>
 <div class="wrapper" role="wrapper">
