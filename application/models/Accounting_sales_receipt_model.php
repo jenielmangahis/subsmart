@@ -41,5 +41,12 @@ class Accounting_sales_receipt_model extends MY_Model {
 	public function getSalesReceiptDetails($id){
 	    $query = $this->db->get_where('accounting_sales_receipt', array('id' => $id));
 	    return $query->result();
+	}
+	
+	public function save_payment($data)
+    {
+        $vendor = $this->db->insert('accounting_payments', $data);
+	    $insert_id = $this->db->insert_id();
+		return  $insert_id;
     }
 }

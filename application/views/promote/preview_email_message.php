@@ -93,11 +93,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     </div>
                     <div class="tabs-menu">
                         <ul class="clearfix">
-                          <li>1. Create Deal</li>
-                          <li>2. Select Customers</li>
-                          <li>3. Build Email</li>
-                          <li class="active">4. Preview</li>
-                          <li>5. Purchase</li>
+                          <li><a href="<?= base_url("promote/edit_deals/" . $dealsSteals->id); ?>">1. Edit Deal</a></li>
+                          <li><a href="<?= base_url("promote/add_send_to"); ?>">2. Select Customers</a></li>
+                          <li><a href="<?= base_url("promote/build_email"); ?>">3. Build Email</a></li>
+                          <li class="active"><a href="<?= base_url("promote/preview_email_message"); ?>">4. Preview</a></li>
+                          <li><a href="<?= base_url("promote/payment"); ?>">5. Purchase</a></li>
                         </ul>
                         <hr />
                     </div>

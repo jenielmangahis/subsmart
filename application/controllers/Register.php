@@ -946,8 +946,8 @@ class Register extends MY_Controller {
         $merchantUserID = CONVERGE_MERCHANTUSERID; //Converge User ID *MUST FLAG AS HOSTED API USER IN CONVERGE UI*
         $merchantPinCode = CONVERGE_MERCHANTPIN; //Converge PIN (64 CHAR A/N)
 
-        $url = "https://api.demo.convergepay.com/hosted-payments/transaction_token"; // URL to Converge demo session token server
-        //$url = "https://api.convergepay.com/hosted-payments/transaction_token"; // URL to Converge production session token server
+        //$url = "https://api.demo.convergepay.com/hosted-payments/transaction_token"; // URL to Converge demo session token server
+        $url = "https://api.convergepay.com/hosted-payments/transaction_token"; // URL to Converge production session token server
 
         $post = $this->input->post();
         /*Payment Field Variables*/

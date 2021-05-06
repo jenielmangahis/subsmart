@@ -91,21 +91,21 @@ table.dataTable tbody tr td {
                         <section class="content">
                             <div class="tabs mt-2">
                                 <ul class="clearfix ul-mobile" id="myTab" role="tablist">
-                                        <li class="nav-item nav-all active">
-                                            <a class="nav-link" id="c-all-tab" data-toggle="tab" href="#all-campaigns" role="tab" aria-controls="One" aria-selected="true">Active Deals <span class="sms-total-all sms-tab-counter"></span></a>
+                                        <li class="nav-item nav-active active">
+                                            <a class="nav-link" id="c-active-tab" href="javascript:void(0);">Active Deals <span class="deals-total-active deals-tab-counter"></span></a>
                                         </li>
                                         <li class="nav-item nav-scheduled">
-                                            <a class="nav-link" id="c-scheduled-tab" data-toggle="tab" href="#scheduled-campaigns" role="tab" aria-controls="Two" aria-selected="false">Scheduled <span class="sms-total-scheduled sms-tab-counter"></span></a>
+                                            <a class="nav-link" id="c-scheduled-tab" href="javascript:void(0);">Scheduled <span class="deals-total-scheduled deals-tab-counter"></span></a>
                                         </li>
-                                        <li class="nav-item nav-closed">
-                                            <a class="nav-link" id="c-closed-tab" data-toggle="tab" href="#closed-campaigns" role="tab" aria-controls="Three" aria-selected="false">Ended <span class="sms-total-closed sms-tab-counter"></span></a>
+                                        <li class="nav-item nav-ended">
+                                            <a class="nav-link" id="c-ended-tab" href="javascript:void(0);">Ended <span class="deals-total-ended deals-tab-counter"></span></a>
                                         </li>
                                         <li class="nav-item nav-draft">
-                                            <a class="nav-link" id="c-draft-tab" data-toggle="tab" href="#draft-campaigns" role="tab" aria-controls="Three" aria-selected="false">Draft <span class="sms-total-draft sms-tab-counter"></span></a>
+                                            <a class="nav-link" id="c-draft-tab" data-toggle="tab" href="#draft-campaigns" role="tab" aria-controls="Three" aria-selected="false">Draft <span class="deals-total-draft deals-tab-counter"></span></a>
                                         </li>
                                 </ul>
                             </div>
-                            <div class="campaign-list-container"></div>
+                            <div class="deals-list-container"></div>
                         </section>
                         <!-- /.content -->
                     </div>
@@ -138,24 +138,48 @@ table.dataTable tbody tr td {
               </div>
             </div>
 
-            <!-- Modal Clone SMS  -->
-            <div class="modal fade bd-example-modal-sm" id="modalCloneCampaign" tabindex="-1" role="dialog" aria-labelledby="modalCloneCampaignTitle" aria-hidden="true">
+            <!-- Modal Close Deals  -->
+            <div class="modal fade bd-example-modal-sm" id="modalCloseDeal" tabindex="-1" role="dialog" aria-labelledby="modalCloseDealTitle" aria-hidden="true">
               <div class="modal-dialog modal-md" role="document">
                 <div class="modal-content">
                   <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLongTitle"><i class="fa fa-files-o icon"></i> Clone</h5>
+                    <h5 class="modal-title" id="exampleModalLongTitle"><i class="fa fa-info"></i> Close Deal</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                       <span aria-hidden="true">&times;</span>
                     </button>
                   </div>
-                  <?php echo form_open_multipart('', ['class' => 'form-validate', 'id' => 'form-clone-campaign', 'autocomplete' => 'off' ]); ?>
-                  <?php echo form_input(array('name' => 'smsid', 'type' => 'hidden', 'value' => '', 'id' => 'clone-smsid'));?>
+                  <?php echo form_open_multipart('', ['class' => 'form-validate', 'id' => 'form-close-deal', 'autocomplete' => 'off' ]); ?>
+                  <?php echo form_input(array('name' => 'deal_id', 'type' => 'hidden', 'value' => '', 'id' => 'deal-id'));?>
                   <div class="modal-body clone-body-container">
                       <p>Are you sure you want clone the campaign <b><span class="clone-campaign-name"></span></b>?</p>
                   </div>
                   <div class="modal-footer clone-modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
-                    <button type="submit" class="btn btn-primary btn-clone-campaign">Yes</button>
+                    <button type="submit" class="btn btn-primary btn-close-deal">Yes</button>
+                  </div>
+                  <?php echo form_close(); ?>
+                </div>
+              </div>
+            </div>
+
+            <!-- Modal Delete Deals  -->
+            <div class="modal fade bd-example-modal-sm" id="modalDeleteDeal" tabindex="-1" role="dialog" aria-labelledby="modalDeleteDealTitle" aria-hidden="true">
+              <div class="modal-dialog modal-md" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle"><i class="fa fa-trash"></i> Delete Deal</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <?php echo form_open_multipart('', ['class' => 'form-validate', 'id' => 'form-delete-deal', 'autocomplete' => 'off' ]); ?>
+                  <?php echo form_input(array('name' => 'deal_id', 'type' => 'hidden', 'value' => '', 'id' => 'delete-deal-id'));?>
+                  <div class="modal-body clone-body-container">
+                      <p>Are you sure you want clone the campaign <b><span class="clone-campaign-name"></span></b>?</p>
+                  </div>
+                  <div class="modal-footer clone-modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                    <button type="submit" class="btn btn-danger btn-delete-deal">Yes</button>
                   </div>
                   <?php echo form_close(); ?>
                 </div>
@@ -170,7 +194,217 @@ table.dataTable tbody tr td {
 <?php include viewPath('includes/footer'); ?>
 <script>
 $(function(){
-    
+    load_active_list();
+    load_status_tab_counter();
+
+    $("#c-active-tab").click(function(){
+        active_tab = 'active';
+        $(".nav-item").removeClass('active');
+        $(".nav-active").addClass('active');
+        load_active_list();
+    });
+
+    $("#c-scheduled-tab").click(function(){
+        active_tab = 'scheduled';
+        $(".nav-item").removeClass('active');
+        $(".nav-scheduled").addClass('active');
+        load_scheduled_list();
+    });
+
+    $("#c-ended-tab").click(function(){
+        active_tab = 'ended';
+        $(".nav-item").removeClass('active');
+        $(".nav-ended").addClass('active');
+        load_ended_list();
+    });
+
+    $("#c-draft-tab").click(function(){
+        active_tab = 'draft';
+        $(".nav-item").removeClass('active');
+        $(".nav-draft").addClass('active');
+        load_draft_list();
+    });
+
+    function load_active_list(){
+        load_deals_steals_list('<?= $status_active; ?>');
+    }
+
+    function load_scheduled_list(){
+        load_deals_steals_list('<?= $status_scheduled; ?>');
+    }
+
+    function load_ended_list(){
+        load_deals_steals_list('<?= $status_ended; ?>');
+    }
+
+    function load_draft_list(){
+        load_deals_steals_list('<?= $status_draft; ?>');
+    }
+
+    function load_deals_steals_list(status){
+        var url = base_url + 'promote/_load_deals_list/'+status;
+        $(".deals-list-container").html('<span class="spinner-border spinner-border-sm m-0"></span>');
+        setTimeout(function () {
+          $.ajax({
+             type: "POST",
+             url: url,
+             //data: ,
+             success: function(o)
+             {
+                $(".deals-list-container").html(o);
+                //table.destroy();
+                var table = $('#dataTableDealsSteals').DataTable({
+                    "searching" : false,
+                    "pageLength": 10,
+                    "order": [],
+                     "aoColumnDefs": [
+                      { "sWidth": "50%", "aTargets": [ 0 ] },
+                      { "sWidth": "10%", "aTargets": [ 1 ] },
+                      { "sWidth": "10%", "aTargets": [ 2 ] },
+                      { "sWidth": "10%", "aTargets": [ 3 ] },
+                      { "sWidth": "10%", "aTargets": [ 4 ] }                      
+                    ]
+                });                
+             }
+          });
+        }, 1000);
+
+        $(document).on('click', '.close-deal', function(){
+          var title   = $(this).attr("data-name");
+          var deal_id = $(this).attr("data-id");
+
+          $("#deal-id").val(deal_id);
+          $(".clone-body-container").html('<p>You are about to close the deal <b><span class="deal-name"></span></b>?</p><p class="text-ter">Please be aware that no money will be refunded for remaining period.</p>');
+          $(".deal-name").html(title);
+          $(".btn-close-deal").html('Yes');
+          $("#modalCloseDeal").modal('show');
+        });
+
+        $(document).on('click', '.delete-deals', function(){
+          var title   = $(this).attr("data-name");
+          var deal_id = $(this).attr("data-id");
+
+          $("#delete-deal-id").val(deal_id);
+          $(".clone-body-container").html('<p>You are about to delete the deal <b>'+title+'</b>?</p>');          
+          $(".btn-delete-deal").html('Yes');
+          $("#modalDeleteDeal").modal('show');
+        });
+    }
+
+    function load_status_tab_counter(){
+        var url = base_url + 'promote/_load_status_counter';
+        $(".deals-tab-counter").html('<span class="spinner-border spinner-border-sm m-0"></span>');
+        setTimeout(function () {
+          $.ajax({
+             type: "POST",
+             url: url,
+             dataType:"json",
+             success: function(o)
+             {               
+               $(".deals-total-scheduled").html("("+o.total_scheduled+")");
+               $(".deals-total-active").html("("+o.total_active+")");
+               $(".deals-total-ended").html("("+o.total_ended+")");
+               $(".deals-total-draft").html("("+o.total_draft+")");
+             }
+          });
+        }, 800);
+    }
+
+    $("#form-close-deal").submit(function(e){
+      e.preventDefault();
+      var url = base_url + 'promote/_close_deal';
+      $(".btn-close-deal").html('<span class="spinner-border spinner-border-sm m-0"></span>');
+      setTimeout(function () {
+        $.ajax({
+           type: "POST",
+           url: url,
+           data : $("#form-close-deal").serialize(),
+           dataType:"json",
+           success: function(o)
+           {
+             $("#modalCloseDeal").modal('hide');
+             if( o.is_success == 1 ){
+              Swal.fire({
+                  title: 'Update Successful!',
+                  text: 'Deals was successfully closed',
+                  icon: 'success',
+                  showCancelButton: false,
+                  confirmButtonColor: '#32243d',
+                  cancelButtonColor: '#d33',
+                  confirmButtonText: 'Ok'
+              }).then((result) => {
+                  if( active_tab == 'ended' ){
+                    load_ended_list();
+                  }else if( active_tab == 'active' ){
+                    load_active_list();
+                  }else if( active_tab == 'draft' ){
+                    load_draft_list();
+                  }else if( active_tab == 'scheduled' ){
+                    load_scheduled_list();
+                  }
+                  load_status_tab_counter();
+              });              
+              
+             }else{
+              Swal.fire({
+                icon: 'error',
+                title: o.msg,
+                text: 'Cannot close deals'
+              });
+             }
+
+           }
+        });                    
+      }, 800);
+    });
+
+    $("#form-delete-deal").submit(function(e){
+      e.preventDefault();
+      var url = base_url + 'promote/_delete_deal';
+      $(".btn-delete-deal").html('<span class="spinner-border spinner-border-sm m-0"></span>');
+      setTimeout(function () {
+        $.ajax({
+           type: "POST",
+           url: url,
+           data : $("#form-delete-deal").serialize(),
+           dataType:"json",
+           success: function(o)
+           {
+             $("#modalDeleteDeal").modal('hide');
+             if( o.is_success == 1 ){
+              Swal.fire({
+                  title: 'Delete Successful!',
+                  text: 'Deals was successfully deleted',
+                  icon: 'success',
+                  showCancelButton: false,
+                  confirmButtonColor: '#32243d',
+                  cancelButtonColor: '#d33',
+                  confirmButtonText: 'Ok'
+              }).then((result) => {
+                  if( active_tab == 'ended' ){
+                    load_ended_list();
+                  }else if( active_tab == 'active' ){
+                    load_active_list();
+                  }else if( active_tab == 'draft' ){
+                    load_draft_list();
+                  }else if( active_tab == 'scheduled' ){
+                    load_scheduled_list();
+                  }
+                  load_status_tab_counter();
+              });              
+              
+             }else{
+              Swal.fire({
+                icon: 'error',
+                title: o.msg,
+                text: 'Cannot delete deals'
+              });
+             }
+
+           }
+        });                    
+      }, 800);
+    });
 });
 
 </script>

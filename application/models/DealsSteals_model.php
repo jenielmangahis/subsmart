@@ -130,6 +130,17 @@ class DealsSteals_model extends MY_Model
         return $this->status_active;
     }
 
+    public function statusOptions(){
+        $options = [
+            $this->status_active => 'Active',
+            $this->status_draft => 'Draft',
+            $this->status_scheduled => 'Scheduled',
+            $this->status_ended => 'Ended'
+        ];
+
+        return $options;
+    }
+
 }
 
 /* End of file DealsSteals_model.php */

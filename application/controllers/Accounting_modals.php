@@ -306,7 +306,7 @@ class Accounting_modals extends MY_Controller {
                     }
 
                     $categoryAccs = [];
-                    $accTypesName = [
+                    $accountTypes = [
                         'Expenses',
                         'Bank',
                         'Accounts receivable (A/R)',
@@ -322,10 +322,11 @@ class Accounting_modals extends MY_Controller {
                         'Other Income',
                         'Other Expense'
                     ];
-                    $categoryAccTypes = $this->account_model->getAccTypeByName($accTypesName);
 
-                    foreach($categoryAccTypes as $catAccType) {
-                        $accounts = $this->chart_of_accounts_model->getByAccountType($catAccType->id, null, logged('company_id'));
+                    foreach($accountTypes as $typeName) {
+                        $accType = $this->account_model->getAccTypeByName($typeName);
+
+                        $accounts = $this->chart_of_accounts_model->getByAccountType($accType->id, null, logged('company_id'));
 
                         if(count($accounts) > 0) {
                             foreach($accounts as $account) {
@@ -333,7 +334,7 @@ class Accounting_modals extends MY_Controller {
 
                                 $account->childAccs = $childAccs;
 
-                                $categoryAccs[$catAccType->account_name][] = $account;
+                                $categoryAccs[$typeName][] = $account;
                             }
                         }
                     }
@@ -352,6 +353,76 @@ class Accounting_modals extends MY_Controller {
                     $this->page_data['dropdown']['customers'] = $this->accounting_customers_model->getAllByCompany();
                     $this->page_data['dropdown']['payment_accounts'] = $paymentAccs;
                     $this->page_data['dropdown']['payee'] = $this->vendors_model->getAllByCompany();
+                break;
+                case 'check_modal' :
+                    $bankAccsType = $this->account_model->getAccTypeByName('Bank');
+
+                    $bankAccs = [];
+                    $accounts = $this->chart_of_accounts_model->getByAccountType($bankAccsType->id, null, logged('company_id'));
+                    $count = 1;
+                    if(count($accounts) > 0) {
+                        foreach($accounts as $account) {
+                            $childAccs = $this->chart_of_accounts_model->getChildAccounts($account->id);
+
+                            $account->childAccs = $childAccs;
+
+                            $bankAccs[] = $account;
+
+                            if($count === 1) {
+                                $selectedBalance = $account->balance;
+                            }
+
+                            $count++;
+                        }
+                    }
+
+                    if(strpos($selectedBalance, '-') !== false) {
+                        $balance = str_replace('-', '', $selectedBalance);
+                        $selectedBalance = '-$'.number_format($balance, 2, '.', ',');
+                    } else {
+                        $selectedBalance = '$'.number_format($selectedBalance, 2, '.', ',');
+                    }
+
+                    $categoryAccs = [];
+                    $accountTypes = [
+                        'Expenses',
+                        'Bank',
+                        'Accounts receivable (A/R)',
+                        'Other Current Assets',
+                        'Fixed Assets',
+                        'Accounts payable (A/P)',
+                        'Credit Card',
+                        'Other Current Liabilities',
+                        'Long Term Liabilities',
+                        'Equity',
+                        'Income',
+                        'Cost of Goods Sold',
+                        'Other Income',
+                        'Other Expense'
+                    ];
+
+                    foreach($accountTypes as $typeName) {
+                        $accType = $this->account_model->getAccTypeByName($typeName);
+
+                        $accounts = $this->chart_of_accounts_model->getByAccountType($accType->id, null, logged('company_id'));
+
+                        if(count($accounts) > 0) {
+                            foreach($accounts as $account) {
+                                $childAccs = $this->chart_of_accounts_model->getChildAccounts($account->id);
+
+                                $account->childAccs = $childAccs;
+
+                                $categoryAccs[$typeName][] = $account;
+                            }
+                        }
+                    }
+
+                    $this->page_data['dropdown']['customers'] = $this->accounting_customers_model->getAllByCompany();
+                    $this->page_data['dropdown']['categories'] = $categoryAccs;
+                    $this->page_data['dropdown']['payee'] = $this->vendors_model->getAllByCompany();
+                    $this->page_data['dropdown']['bank_accounts'] = $bankAccs;
+                    $this->page_data['dropdown']['items'] = $this->items_model->getItemsWithFilter(['type' => 'inventory', 'status' => [1]]);
+                    $this->page_data['balance'] = $selectedBalance;
                 break;
             }
 
@@ -1179,6 +1250,9 @@ class Accounting_modals extends MY_Controller {
                 break;
                 case 'expenseModal' :
                     $this->result = $this->expense($data);
+                break;
+                case 'checkModal' :
+                    $this->result = $this->check($data);
                 break;
             }
         } catch (\Exception $e) {
@@ -2315,7 +2389,8 @@ class Accounting_modals extends MY_Controller {
                     $categoryDetails = [];
                     foreach($data['category'] as $index => $value) {
                         $categoryDetails[] = [
-                            'expense_id' => $expenseId,
+                            'transaction_type' => 'Expense',
+                            'transaction_id' => $expenseId,
                             'category_account_id' => $value,
                             'description' => $data['description'][$index],
                             'amount' => $data['category_amount'][$index],
@@ -2326,14 +2401,15 @@ class Accounting_modals extends MY_Controller {
                         ];
                     }
     
-                    $this->expenses_model->insert_expense_categories($categoryDetails);
+                    $this->expenses_model->insert_vendor_transaction_categories($categoryDetails);
                 }
     
                 if(isset($data['item'])) {
                     $itemDetails = [];
                     foreach($data['item'] as $index => $value) {
                         $itemDetails[] = [
-                            'expense_id' => $expenseId,
+                            'transaction_type' => 'Expense',
+                            'transaction_id' => $expenseId,
                             'item_id' => $value,
                             'description' => $data['item_description'][$index],
                             'quantity' => $data['quantity'][$index],
@@ -2347,7 +2423,7 @@ class Accounting_modals extends MY_Controller {
                         ];
                     }
     
-                    $this->expenses_model->insert_expense_items($itemDetails);
+                    $this->expenses_model->insert_vendor_transaction_items($itemDetails);
                 }
             }
     
@@ -2355,6 +2431,78 @@ class Accounting_modals extends MY_Controller {
             $return['success'] = $expenseId ? true : false;
             $return['message'] = $expenseId ? 'Entry Successful!' : 'An unexpected error occured!';
         }
+
+        return $return;
+    }
+
+    private function check($data)
+    {
+        $this->load->model('expenses_model');
+
+        $return = [];
+        $expenseData = [
+            'company_id' => logged('company_id'),
+            'vendor_id' => $data['vendor_id'],
+            'bank_account_id' => $data['bank_account'],
+            'mailing_address' => $data['mailing_address'],
+            'payment_date' => date("Y-m-d", strtotime($data['payment_date'])),
+            'check_no' => $data['check_no'] === 'To print' ? null : $data['check_no'],
+            'tags' => $data['tags'] !== null ? json_encode($data['tags']) : null,
+            'memo' => $data['memo'],
+            'attachments' => $data['attachments'] !== null ? json_encode($data['attachments']) : null,
+            'status' => 1,
+            'created_at' => date("Y-m-d H:i:s"),
+            'updated_at' => date("Y-m-d H:i:s")
+        ];
+
+        $checkId = $this->expenses_model->addCheck($expenseData);
+
+        if($checkId) {
+            if(isset($data['category'])) {
+                $categoryDetails = [];
+                foreach($data['category'] as $index => $value) {
+                    $categoryDetails[] = [
+                        'transaction_type' => 'Check',
+                        'transaction_id' => $checkId,
+                        'category_account_id' => $value,
+                        'description' => $data['description'][$index],
+                        'amount' => $data['category_amount'][$index],
+                        'billable' => $data['category_billable'][$index],
+                        'markup_percentage' => $data['category_markup'][$index],
+                        'tax' => $data['category_tax'][$index],
+                        'customer_id' => $data['category_customer'][$index],
+                    ];
+                }
+
+                $this->expenses_model->insert_vendor_transaction_categories($categoryDetails);
+            }
+
+            if(isset($data['item'])) {
+                $itemDetails = [];
+                foreach($data['item'] as $index => $value) {
+                    $itemDetails[] = [
+                        'transaction_type' => 'Check',
+                        'transaction_id' => $checkId,
+                        'item_id' => $value,
+                        'description' => $data['item_description'][$index],
+                        'quantity' => $data['quantity'][$index],
+                        'rate' => $data['rate'][$index],
+                        'amount' => $data['item_amount'][$index],
+                        'billable' => $data['item_billable'][$index],
+                        'markup_percentage' => $data['item_markup'][$index],
+                        'sales_amount' => $data['item_sales_amount'][$index],
+                        'tax' => $data['item_tax'][$index],
+                        'customer_id' => $data['item_customer'][$index],
+                    ];
+                }
+
+                $this->expenses_model->insert_vendor_transaction_items($itemDetails);
+            }
+        }
+
+        $return['data'] = $checkId;
+        $return['success'] = $checkId ? true : false;
+        $return['message'] = $checkId ? 'Entry Successful!' : 'An unexpected error occured!';
 
         return $return;
     }

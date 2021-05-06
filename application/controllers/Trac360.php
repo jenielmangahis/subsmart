@@ -3,7 +3,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 class Trac360 extends MY_Controller
 {
-
     public function __construct()
     {
         parent::__construct();
@@ -261,7 +260,7 @@ class Trac360 extends MY_Controller
 
         if ($exists->total <= 0) {
             $return['groups'] = $this->users_geographic_positions_categories_model->getByWhere(array('company_id' => $company_id), [], true);
-        } else if ($used->total > 0) {
+        } elseif ($used->total > 0) {
             $return['error'] = 'Group is currently in used';
         } else {
             if (!$this->users_geographic_positions_categories_model->trans_delete(array(), array('id' => $group_id))) {
@@ -276,28 +275,23 @@ class Trac360 extends MY_Controller
 
     public function places()
     {
+        add_css(array(
+            "assets/css/trac360/places.css"
+        ));
+        add_footer_js(array(
+            "assets/js/trac360/places.js"
+
+        ));
         $company_id = logged('company_id');
-        $config['zoom'] = "auto";
-        $config['apiKey'] = 'AIzaSyCL77vydXglokkXuSZV8cF8aJ3ZxueBhrU';
+        $user_id = logged('id');
 
-        $this->googlemaps->initialize($config);
+        $user_locations = $this->trac360_model->get_current_user_location($company_id);
 
-        $place_locations = $this->trac360_model->get_places($company_id);
-        foreach ($place_locations as $place) {
-            $marker = array();
-            $marker['position'] = $place->coordinates;
-            $marker['animation'] =  'DROP';
-            $image = $image = base_url('assets/img/trac360/mansion.png');
-            $marker['infowindow_content'] = $place->address;
-            $marker['icon'] = $image;
-            $marker['icon_scaledSize'] = '50,50';
 
-            $this->googlemaps->add_marker($marker);
-        }
-        $data = $this->googlemaps->create_map();
+        $this->page_data['user_locations'] = $user_locations;
+        $this->page_data['company_id'] = $company_id;
+        $this->page_data['user_id'] = $user_id;
 
-        $this->page_data['map'] = $data['html'];
-        $this->page_data['map_js'] = $data['js'];
         $this->load->view('trac360/places', $this->page_data);
     }
     public function current_user_update_last_tracked_location()

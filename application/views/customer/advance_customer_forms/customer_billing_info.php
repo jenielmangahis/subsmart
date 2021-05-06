@@ -254,6 +254,33 @@
         </div>
     </div>
 
+    <div class="row form_line invoicing_field">
+        <div class="col-md-4">
+            Term
+        </div>
+        <div class="col-md-8">
+            <input type="number" class="form-control" name="invoice_term" id="invoice_term" />
+        </div>
+    </div>
+
+    <div class="row form_line invoicing_field">
+        <div class="col-md-4">
+            Invoice Date
+        </div>
+        <div class="col-md-8">
+            <input type="number" class="form-control" name="invoice_date" id="invoice_date" />
+        </div>
+    </div>
+
+    <div class="row form_line invoicing_field">
+        <div class="col-md-4">
+           Due Date
+        </div>
+        <div class="col-md-8">
+            <input type="number" class="form-control" name="invoice_due_date" id="invoice_due_date" />
+        </div>
+    </div>
+
     <div class="row form_line" id="checkNumber">
         <div class="col-md-4">
             Check Number

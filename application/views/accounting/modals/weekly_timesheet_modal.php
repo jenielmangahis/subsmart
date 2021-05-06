@@ -221,7 +221,7 @@
                                                     </table>
                                                 </div>
 
-                                                <div class="timesheet-table-footer">
+                                                <div class="table-footer">
                                                     <div class="row">
                                                         <div class="col-md-12">
                                                             <button type="button" id="add-table-line" class="btn btn-outline-secondary border" data-target="#timesheet-table">Add lines</button>

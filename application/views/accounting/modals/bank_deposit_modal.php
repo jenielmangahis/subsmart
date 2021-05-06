@@ -150,7 +150,7 @@
                                                         </tbody>
                                                     </table>
                                                 </div>
-                                                <div class="funds-table-footer">
+                                                <div class="table-footer">
                                                     <div class="row">
                                                         <div class="col-md-6">
                                                             <button type="button" class="btn btn-outline-secondary border" data-target="#bank-deposit-table" onclick="addTableLines(event)">Add lines</button>

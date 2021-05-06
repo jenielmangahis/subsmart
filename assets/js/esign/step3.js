@@ -111,11 +111,18 @@ function Step3() {
 
     const fieldName = $element.text().trim();
 
+    if (specs === null) {
+      const field = fields.find((f) => f.unique_key == key);
+      if (field) {
+        specs = field.specs ? JSON.parse(field.specs) : {};
+      }
+    }
+
     if (fieldName === "Text") {
       specs = { ...specs, width: parseInt($element.css("width"), 10) };
     }
 
-    const payload = {
+    await apiStoreField({
       coordinates: position,
       docfile_id: fileId,
       doc_page: docPage,
@@ -124,8 +131,10 @@ function Step3() {
       field: fieldName,
       recipient_id: recipientId,
       specs,
-    };
+    });
+  }
 
+  async function apiStoreField(payload) {
     let endpoint = `${prefixURL}/Esign/apiCreateUserDocfileFields`;
     if (isTemplate) {
       endpoint = `${prefixURL}/DocuSign/apiCreateTemplateFields`;
@@ -148,7 +157,7 @@ function Step3() {
     } else {
       // updates local fields
       fields = fields.map((field) =>
-        field.unique_key != key ? field : record
+        field.unique_key != payload.unique_key ? field : record
       );
     }
   }
@@ -164,7 +173,7 @@ function Step3() {
     fields = data.fields;
   }
 
-  function showFieldSidebar(field) {
+  function showFieldSidebar(field, event) {
     const { field_name, specs: fieldSpecs } = field;
     const specs = JSON.parse(fieldSpecs || null) || {};
 
@@ -175,7 +184,13 @@ function Step3() {
     const $fieldNameInput = $optionsSidebar.find("#textFieldName");
 
     $fieldId.html("");
-    $fieldId.html(field.unique_key);
+    if (event && $(event.target).hasClass("subData--isSubCheckbox")) {
+      $fieldId.html($(event.target).attr("data-key"));
+      $optionsSidebar.attr("data-subcheckbox", true);
+    } else {
+      $fieldId.html(field.unique_key);
+      $optionsSidebar.removeAttr("data-subcheckbox");
+    }
 
     $formulaInput.val("");
     $noteInput.val("");
@@ -219,6 +234,7 @@ function Step3() {
     $optionsSidebar.find(".esignBuilder__optionInput").remove();
     $(`.${fieldActiveClass}`).removeClass(fieldActiveClass);
     $optionsSidebar.removeClass(optionsSidebarActiveClass);
+    $optionsSidebar.removeAttr("data-subcheckbox");
   }
 
   function createField(field) {
@@ -256,7 +272,7 @@ function Step3() {
           : "esignBuilder__fieldRadio";
 
       async function storeSubCheckbox($subCheckbox) {
-        const updatedField = fields.find((f) => f.id === field.id);
+        const updatedField = fields.find((f) => f.unique_key == field.unique_key); // prettier-ignore
         const specs = updatedField.specs ? JSON.parse(updatedField.specs) : {};
 
         const { top, left } = getComputedStyle($subCheckbox.get(0));
@@ -281,28 +297,34 @@ function Step3() {
         });
       }
 
+      function createSubCheckbox(data = {}) {
+        const { id, top, left } = data;
+
+        const $currElement = createElementFromHTML(
+          `<div class="subData subData--isSubCheckbox ${baseClassName}"></div>`
+        );
+
+        $currElement.attr("data-key", id);
+        $currElement.css({
+          minWidth: 28,
+          minHeight: 28,
+          position: "absolute",
+          left,
+          top,
+        });
+
+        $currElement.draggable({
+          containment: $docRenderer,
+          appendTo: $docRenderer,
+          stop: (_, ui) => storeSubCheckbox($(ui.helper)),
+        });
+
+        return $currElement;
+      }
+
       if (specs.subCheckbox) {
         specs.subCheckbox.forEach((subCheckbox) => {
-          const $currElement = createElementFromHTML(
-            `<div class="subData ${baseClassName}"></div>`
-          );
-
-          $currElement.attr("data-key", subCheckbox.id);
-          $currElement.css({
-            minWidth: 28,
-            minHeight: 28,
-            position: "absolute",
-            left: subCheckbox.left,
-            top: subCheckbox.top,
-          });
-
-          $currElement.draggable({
-            containment: $docRenderer,
-            appendTo: $docRenderer,
-            stop: (_, ui) => storeSubCheckbox($(ui.helper)),
-          });
-
-          $element.append($currElement);
+          $element.append(createSubCheckbox(subCheckbox));
         });
       }
 
@@ -316,22 +338,10 @@ function Step3() {
 
       $adder = $element.find(`.${baseClassName}Adder`);
       $adder.on("click", async function () {
-        const $currElement = createElementFromHTML(
-          `<div class="subData ${baseClassName}"></div>`
-        );
-
-        $currElement.attr("data-key", Date.now());
-        $currElement.css({
-          minWidth: 28,
-          minHeight: 28,
-          position: "absolute",
+        const $currElement = createSubCheckbox({
+          top: 0,
           left: "calc(100% + 10px)",
-        });
-
-        $currElement.draggable({
-          containment: $docRenderer,
-          appendTo: $docRenderer,
-          stop: (_, ui) => storeSubCheckbox($(ui.helper)),
+          id: Date.now(),
         });
 
         $element.append($currElement);
@@ -355,7 +365,7 @@ function Step3() {
       });
     }
 
-    $element.on("click", function () {
+    $element.on("click", function (event) {
       const $prevActive = $(`.${activeClass}`);
       const dataKey = $(this).find(".subData").data("key");
       const currField = fields.find(({ unique_key }) => unique_key == dataKey);
@@ -368,7 +378,7 @@ function Step3() {
         return;
       }
 
-      showFieldSidebar(currField);
+      showFieldSidebar(currField, event);
     });
 
     if (!field.isNew) {
@@ -631,7 +641,6 @@ function Step3() {
     const $deleteOption = $optionsSidebar.find("#deleteOption");
     $deleteOption.on("click", async function () {
       const $active = $(".esignBuilder__field--active");
-
       const $parent = $active.closest(".ui-draggable");
       let uniqueKey = $active.attr("data-key");
       if (!uniqueKey) {
@@ -644,12 +653,33 @@ function Step3() {
       $loader.removeClass("d-none");
       $button.attr("disabled", true);
 
+      if ($optionsSidebar.attr("data-subcheckbox")) {
+        const $subCheckboxId = $(".esignBuilder__optionsSidebarFieldId span");
+        const subCheckboxId = $subCheckboxId.text().trim();
+        const field = fields.find((f) => f.unique_key == uniqueKey);
+        let { subCheckbox } = JSON.parse(field.specs);
+        subCheckbox = subCheckbox.filter((s) => s.id !== subCheckboxId);
+
+        await apiStoreField({
+          ...field,
+          coordinates: JSON.parse(field.coordinates),
+          specs: { subCheckbox },
+        });
+
+        $(`[data-key="${subCheckboxId}"]`).remove();
+        $loader.addClass("d-none");
+        $button.removeAttr("disabled");
+        hideFieldSidebar();
+        return;
+      }
+
       let endpoint = `${prefixURL}/esign/apiDeleteDocfileField/${uniqueKey}`;
       if (isTemplate) {
         endpoint = `${prefixURL}/DocuSign/apiDeleteTemplateField/${uniqueKey}`;
       }
 
       await fetch(endpoint, { method: "DELETE" });
+      fields = fields.filter((f) => f.unique_key !== uniqueKey);
 
       $loader.addClass("d-none");
       $button.removeAttr("disabled");
@@ -686,7 +716,7 @@ function Step3() {
   }
 
   async function getPDFFiles(id) {
-    const endpoint = `${prefixURL}/Esign/apiDocumentFile/${id}`;
+    let endpoint = `${prefixURL}/Esign/apiDocumentFile/${id}`;
     if (isTemplate) {
       endpoint = `${prefixURL}/DocuSign/apiTemplateFile/${id}`;
     }
