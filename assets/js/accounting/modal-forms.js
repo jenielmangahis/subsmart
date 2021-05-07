@@ -1,5 +1,5 @@
 const GET_OTHER_MODAL_URL = "/accounting/get-other-modals/";
-const vendorModals = ['#expenseModal', '#checkModal'];
+const vendorModals = ['#expenseModal', '#checkModal', '#billModal'];
 var rowCount = 0;
 var rowInputs = '';
 var blankRow = '';
@@ -1909,47 +1909,38 @@ const submitModalForm = (event, el) => {
         data = payrollFormData;
     } else if(vendorModals.includes(modalId)) {
         var count = 0;
-        $(`${modalId} input[name="category_billable[]"]`).each(function() {
-            var value = $(this).prop('checked') ? "1" : "0";
-            if(count === 0) {
-                data.set('category_billable[]', value);
-            } else {
-                data.append('category_billable[]', value);
+        var totalAmount = $(`${modalId} span.transaction-total-amount`).html();
+        data.append('total_amount', totalAmount);
+
+        $(`${modalId} table#category-details-table tbody tr`).each(function() {
+            var billable = $(this).find('input[name="category_billable[]"]');
+            var tax = $(this).find('input[name="category_tax[]"]');
+
+            if(billable.length > 0 && tax.length > 0) {
+                if(count === 0) {
+                    data.set('category_billable[]', billable.prop('checked') ? "1" : "0");
+                    data.set('category_tax[]', tax.prop('checked') ? "1" : "0");
+                } else {
+                    data.append('category_billable[]', billable.prop('checked') ? "1" : "0");
+                    data.append('category_tax[]', tax.prop('checked') ? "1" : "0");
+                }
             }
-            count++;
         });
 
         count = 0;
-        $( `${modalId} input[name="category_tax[]"] `).each(function() {
-            var value = $(this).prop('checked') ? "1" : "0";
-            if(count === 0) {
-                data.set('category_tax[]', value);
-            } else {
-                data.append('category_tax[]', value);
-            }
-            count++;
-        });
+        $(`${modalId} table#item-details-table tbody tr`).each(function() {
+            var billable = $(this).find('input[name="item_billable[]"]');
+            var tax = $(this).find('input[name="item_tax[]"]');
 
-        count = 0;
-        $(`${modalId} input[name="item_billable[]"]`).each(function() {
-            var value = $(this).prop('checked') ? "1" : "0";
-            if(count === 0) {
-                data.set('item_billable[]', value);
-            } else {
-                data.append('item_billable[]', value);
+            if(billable.length > 0 && tax.length > 0) {
+                if(count === 0) {
+                    data.set('item_billable[]', billable.prop('checked') ? "1" : "0");
+                    data.set('item_tax[]', tax.prop('checked') ? "1" : "0");
+                } else {
+                    data.append('item_billable[]', billable.prop('checked') ? "1" : "0");
+                    data.append('item_tax[]', tax.prop('checked') ? "1" : "0");
+                }
             }
-            count++;
-        });
-
-        count = 0;
-        $(`${modalId} input[name="item_tax[]"]`).each(function() {
-            var value = $(this).prop('checked') ? "1" : "0";
-            if(count === 0) {
-                data.set('item_tax[]', value);
-            } else {
-                data.append('item_tax[]', value);
-            }
-            count++;
         });
     }
     data.append('modal_name', $(el).children().attr('id'));

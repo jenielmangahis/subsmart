@@ -55,12 +55,26 @@ class Users extends MY_Controller {
 	{	
 		$this->load->model('Business_model');
     	$this->load->model('ServiceCategory_model');
+    	$this->load->model('DealsSteals_model');
+
+    	add_css(array(
+            "assets/css/jquery.fancybox.css"
+        ));
+
+        add_footer_js(array(
+            "assets/js/jquery.fancybox.min.js"
+        ));
+    	
 
 		$user    = (object)$this->session->userdata('logged');
 		$comp_id = logged('company_id');	
 		$profiledata = $this->business_model->getByCompanyId($comp_id);	
 		$selectedCategories = $this->ServiceCategory_model->getAllCategoriesByCompanyID($comp_id);
 
+		$conditions = ['deals_steals.status' => $this->DealsSteals_model->statusActive()];
+		$dealsSteals = $this->DealsSteals_model->getAllByCompanyId($comp_id, array(), $conditions);
+
+		$this->page_data['dealsSteals'] = $dealsSteals;
 		$this->page_data['profiledata'] = $profiledata;
 		$this->page_data['selectedCategories'] = $selectedCategories;
 		$this->load->view('pages/company_business_profile', $this->page_data);        
@@ -68,6 +82,8 @@ class Users extends MY_Controller {
 	
 	public function businessview()
 	{	
+		$this->load->model('DealsSteals_model');
+
 		add_css(array(
             "assets/css/jquery.fancybox.css"
         ));
@@ -83,9 +99,13 @@ class Users extends MY_Controller {
 		$profiledata = $this->business_model->getByCompanyId($comp_id);	
 		$selectedCategories = $this->ServiceCategory_model->getAllCategoriesByCompanyID($comp_id);
 		$schedules   = unserialize($profiledata->working_days);
+
+		$conditions = ['deals_steals.status' => $this->DealsSteals_model->statusActive()];
+		$dealsSteals = $this->DealsSteals_model->getAllByCompanyId($comp_id, array(), $conditions);
 		
 		$this->page_data['selectedCategories'] = $selectedCategories;
 		$this->page_data['profiledata'] = $profiledata;
+		$this->page_data['dealsSteals'] = $dealsSteals;
 		$this->load->view('business_profile/business', $this->page_data);
 
 	}
@@ -1617,7 +1637,7 @@ class Users extends MY_Controller {
 
 			$profiledata = $this->business_model->getByCompanyId($comp_id);	
 			$workImages  = unserialize($profiledata->work_images);
-			$workImages[] = ['file' => $name, 'caption' => ''];
+			$workImages[] = ['file' => $name, 'caption' => 'Work Picture'];
 			$this->business_model->update($profiledata->id, ['work_images' => serialize($workImages)]);
 
 		}

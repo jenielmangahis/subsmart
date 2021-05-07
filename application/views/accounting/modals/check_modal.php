@@ -19,7 +19,7 @@
                                             <div class="row">
                                                 <div class="col-md-5">
                                                     <div class="form-group">
-                                                        <label for="bankAccount">Payee</label>
+                                                        <label for="payee">Payee</label>
                                                         <select name="vendor_id" id="payee" class="form-control">
                                                             <option value="" disabled selected>&nbsp;</option>
                                                             <?php foreach($dropdown['payee'] as $payee) : ?>
@@ -53,7 +53,7 @@
                                         </div>
                                         <div class="col-md-4">
                                             <h6 class="text-right">AMOUNT</h6>
-                                            <h2 class="text-right transaction-total-amount">$0.00</h2>
+                                            <h2 class="text-right">$<span class="transaction-total-amount">0.00</span></h2>
                                         </div>
                                         <div class="col-md-2">
                                             <div class="form-group">

@@ -109,7 +109,7 @@
             </div>
             <div class="col-md-8">
                 <div class="input-group bootstrap-timepicker timepicker">
-                    <input id="tech_depart_time" class="form-control timepicker" value="<?php if(isset($office_info)){ echo  $office_info->tech_depart_time; } ?>" name="tech_depart_time" data-provide="timepicker" data-template="modal" data-minute-step="1" data-modal-backdrop="true" type="text"/>
+                    <input id="tech_depart_time" class="form-control" value="<?php if(isset($office_info)){ echo  $office_info->tech_depart_time; } ?>" name="tech_depart_time" data-provide="timepicker" data-template="modal" data-minute-step="1" data-modal-backdrop="true" type="text"/>
                 </div>
             </div>
         </div>

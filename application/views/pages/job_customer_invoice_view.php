@@ -291,13 +291,13 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         <div class="payment-api-container">
                                           <?php if($onlinePaymentAccount){ ?>
                                             <?php if($onlinePaymentAccount->converge_merchant_user_id != '' && $onlinePaymentAccount->converge_merchant_pin != ''){ ?>
-                                              <a class="btn btn-primary btn-pay-converge btn-pay" href="javascript:void(0);">PAY VIA CONVERGE</a>
+                                              <a class="btn btn-primary btn-pay-converge btn-pay" href="javascript:void(0);">PAY NOW</a>
                                             <?php } ?>
                                             <?php if($onlinePaymentAccount->stripe_publish_key != '' && $onlinePaymentAccount->stripe_secret_key != ''){ ?>
-                                              <a class="btn btn-primary btn-pay-stripe btn-pay" href="javascript:void(0);">PAY VIA STRIPE</a>
+                                              <!-- <a class="btn btn-primary btn-pay-stripe btn-pay" href="javascript:void(0);">PAY VIA STRIPE</a> -->
                                             <?php } ?>
                                             <?php if($onlinePaymentAccount->paypal_client_id != '' && $onlinePaymentAccount->paypal_client_secret != ''){ ?>
-                                              <div id="paypal-button-container" style="display: inline-block;height: 44px;"></div>
+                                              <!-- <div id="paypal-button-container" style="display: inline-block;height: 44px;"></div> -->
                                             <?php } ?>
                                           <?php } ?>
                                         </div>
@@ -370,7 +370,7 @@ $(function(){
                 });
               }
 
-              $(".btn-pay-converge").html('PAY VIA CONVERGE');
+              $(".btn-pay-converge").html('PAY NOW');
            }
         });
       }, 1000);
