@@ -318,6 +318,7 @@ class Job extends MY_Controller
             $customer = $this->AcsProfile_model->getByProfId($job->customer_id);
             
             $converge_data = [
+                'company_id' => $job->company_id,
                 'card_number' => $input['card_number'],
                 'exp_month' => $input['exp_month'],
                 'exp_year' => $input['exp_year'],
@@ -362,28 +363,39 @@ class Job extends MY_Controller
 
     public function converge_send_sale($data){
         include APPPATH . 'libraries/Converge/src/Converge.php';
-        $exp_date = $data['exp_month'] . date("y",strtotime($data['exp_year']));
-        $converge = new \wwwroth\Converge\Converge([
-            'merchant_id' => '2179135',
-            'user_id' => 'adiAPI',
-            'pin' => 'U3L0MSDPDQ254QBJSGTZSN4DQS00FBW5ELIFSR0FZQ3VGBE7PXP07RMKVL024AVR',
-            'demo' => false,
-        ]);
-        $createSale = $converge->request('ccsale', [
-            'ssl_card_number' => $data['card_number'],
-            'ssl_exp_date' => $exp_date,
-            'ssl_cvv2cvc2' => $data['card_cvc'],
-            'ssl_amount' => $data['amount'],
-            'ssl_avs_address' => $data['address'],
-            'ssl_avs_zip' => $data['zip'],
-        ]);
 
-        if( $createSale['success'] == 1 ){
-            $is_success = true;
-            $msg = '';
+        $this->load->model('CompanyOnlinePaymentAccount_model');
+
+        $is_success = false;
+        $msg = '';
+
+        $convergeCred = $this->CompanyOnlinePaymentAccount_model->getByCompanyId();
+        if( $convergeCred ){
+            $exp_date = $data['exp_month'] . date("y",strtotime($data['exp_year']));
+            $converge = new \wwwroth\Converge\Converge([
+                'merchant_id' => $convergeCred->converge_merchant_id,
+                'user_id' => $convergeCred->converge_merchant_user_id,
+                'pin' => $convergeCred->converge_merchant_pin,
+                'demo' => false,
+            ]);
+            $createSale = $converge->request('ccsale', [
+                'ssl_card_number' => $data['card_number'],
+                'ssl_exp_date' => $exp_date,
+                'ssl_cvv2cvc2' => $data['card_cvc'],
+                'ssl_amount' => $data['amount'],
+                'ssl_avs_address' => $data['address'],
+                'ssl_avs_zip' => $data['zip'],
+            ]);
+
+            if( $createSale['success'] == 1 ){
+                $is_success = true;
+                $msg = '';
+            }else{
+                $is_success = false;
+                $msg = $createSale['errorMessage'];
+            }
         }else{
-            $is_success = false;
-            $msg = $createSale['errorMessage'];
+            $msg = 'Converge account not found';
         }
 
         $return = ['is_success' => $is_success, 'msg' => $msg];
