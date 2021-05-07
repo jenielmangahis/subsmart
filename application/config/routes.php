@@ -857,4 +857,4 @@ $route['promote/edit_deals/(:num)'] = 'Promote/edit_deals/$1';
 $route['promote/_delete_deal'] = 'Promote/ajax_delete_deal';
 $route['promote/_converge_send_payment'] = 'Promote/ajax_send_payment';
 $route['promote/payment_details'] = 'Promote/payment_details';
-$route['promote/invoice_pdf/(:any)'] = 'Promote/invoice_pdf/$1';
+$route['promote/invoice_pdf/(:any)'] = 'Promote/deals_invoice_pdf/$1';
