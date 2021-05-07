@@ -2163,14 +2163,20 @@ class Timesheet extends MY_Controller
         // if($lastcurrent_status == "Break in"){
 
         // }
-
+        $execute=true;
+        if ($entry_type == "Auto") {
+            $overtime_status =$this->timesheet_model->get_attendance_overtime_status($attn_id);
+            if ($overtime_status == 1) {
+                $execute=false;
+            }
+        }
         $clock_out = date('Y-m-d H:i:s');
 
         $employeeLongnameAddress = $this->employeeLongNameAddress();
         $user_id = logged('id');
         $check_attn = $this->db->get_where('timesheet_attendance', array('id' => $attn_id, 'user_id' => $user_id));
         // var_dump($check_attn->num_rows());
-        if ($check_attn->num_rows() == 1) {
+        if ($check_attn->num_rows() == 1 && $execute) {
             date_default_timezone_set($this->session->userdata('usertimezone'));
             $content_notification = "Clocked Out in " . $employeeLongnameAddress . " at " . date('m-d-Y h:i A') . " " . $this->session->userdata('offset_zone');
             $clock_out_notify = array(

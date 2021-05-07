@@ -44,6 +44,7 @@
                         </div>
                         <div class="col-md-6" align="right">
                             AMOUNT<h2><span id="grand_total_dch_total">0.00</span></h2><br>
+                            <input type="hidden" name="grand_total_amount" id="grand_total_dc_total_val_dc">
                         </div>
                     </div>
                     <hr>
@@ -324,6 +325,7 @@ $(document).on("focusout", ".adjustment_input_dch", function () {
   $("#grand_total_dch").text(grand_total_w.toFixed(2));
   $("#adjustment_area_dch").text(adjustment);
   $("#grand_total_dch_total").text(grand_total_w.toFixed(2));
+  $("#grand_total_dc_total_val_dc").val(grand_total_w.toFixed(2));
   // alert(grand_total_w);
 });
 
@@ -501,6 +503,7 @@ var in_id = idd;
 
   $("#grand_total_dch").text(grand_total_w.toFixed(2));
   $("#grand_total_dch_total").text(grand_total_w.toFixed(2));
+  $("#grand_total_dc_total_val_dc").val(grand_total_w.toFixed(2));
   $("#grand_total_input").val(grand_total_w.toFixed(2));
 
   var sls = (parseFloat(eqpt_cost).toFixed(2) * 7.5) / 100;
@@ -602,6 +605,7 @@ function calculationCharge(counter) {
 
   $("#grand_total_dch").text(grand_total_w.toFixed(2));
   $("#grand_total_dch_total").text(grand_total_w.toFixed(2));
+  $("#grand_total_dc_total_val_dc").val(grand_total_w.toFixed(2));
   $("#grand_total_input").val(grand_total_w.toFixed(2));
   $("#grandtotal_input").val(grand_total_w.toFixed(2));
   // alert(grand_total_w);
@@ -806,6 +810,7 @@ $("#total_tax_dch_").text(over_tax);
   $("#grand_total_dch").text(grand_total_w.toFixed(2));
   $("#grand_total_input").val(grand_total_w.toFixed(2));
   $("#grand_total_dch_total").text(grand_total_w.toFixed(2));
+  $("#grand_total_dc_total_val_dc").val(grand_total_w.toFixed(2));
   $("#grand_total_dch").text(grand_total_w.toFixed(2));
   $("#span_sub_total_dch").text(grand_total_w.toFixed(2));
 

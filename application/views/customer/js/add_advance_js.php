@@ -247,10 +247,13 @@
         }).on('dp.change', function (e) {
             var selected_data = moment(e.date._d).format('L');
             var contract = $('#contract_term').val();
-            console.log(selected_data);
             var plus_date = moment.utc(selected_data).add(contract,'months');
             console.log( moment(plus_date).format('l'));
+            //console.log( moment(plus_date).format('D'));
             $('#bill_end_date').val(moment(plus_date).format('l'));
+            $('#bill_day ').val(moment(plus_date).format('D'));
+            //$('#bill_day option[value='+moment(plus_date).format('D')+']').prop('selected',true);
+            //var billDay = moment(plus_date).format('D');
         });
 
         $("#bill_end_date").datetimepicker({
@@ -296,6 +299,17 @@
 
 
         $('.timepicker').timepicker('setTime', new Date().toLocaleTimeString());
+        //$('#tech_depart_time').timepicker('setTime', moment.utc(new Date().toLocaleTimeString()).add(2,'hours'));
+        $('#tech_depart_time').timepicker('setTime',  moment.utc(new Date().toLocaleTimeString(),'hh:mm a').add(2,'hour').format('h:mm a'));
+
+        $("#tech_arrive_time").on("keyup change", function(e) {
+            //$('#card_fname').val(this.value);
+            $('#tech_depart_time').timepicker('setTime',  moment.utc(this.value,'hh:mm a').add(2,'hour').format('h:mm a'));
+        });
+
+        $("#monitor_id").on("keyup change", function(e) {
+            $('#alarm_cs_account').val(this.value);
+        });
 
         var table_assign_module = $('#assign_module_table').DataTable({
             "lengthChange": false,

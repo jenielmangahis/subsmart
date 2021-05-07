@@ -90,7 +90,7 @@ class Customer_advance_model extends MY_Model {
         $cid=logged('company_id');
         $this->db->from("acs_profile");
         //$this->db->where("fk_user_id", $user_id);
-        $this->db->select('acs_profile.first_name,acs_profile.last_name,acs_profile.email,acs_profile.phone_m,acs_profile.status,
+        $this->db->select('acs_profile.prof_id,acs_profile.first_name,acs_profile.last_name,acs_profile.email,acs_profile.phone_m,acs_profile.status,
         acs_b.*,acs_alarm.*,acs_office.*,acs_profile.city,acs_profile.state,users.LName,users.FName');
         $this->db->join('users', 'users.id = acs_profile.fk_user_id','left');
         $this->db->join('acs_billing as acs_b', 'acs_b.fk_prof_id = acs_profile.prof_id','left');

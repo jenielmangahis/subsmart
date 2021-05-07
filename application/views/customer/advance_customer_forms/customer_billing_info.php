@@ -169,22 +169,7 @@
             </select>
         </div>
     </div>
-    <div class="row form_line">
-        <div class="col-md-4">
-            Billing Day of Month
-        </div>
-        <div class="col-md-8">
-            <select id="bill_day" name="bill_day" data-customer-source="dropdown" class="input_select searchable-dropdown">
-                <?php
-                for ($days=0;$days<32;$days++){
-                    ?>
-                        <option <?php if(isset($billing_info)){ if($billing_info->bill_day == days_of_month($days)){ echo 'selected'; } } ?> value="<?= days_of_month($days); ?>"><?= days_of_month($days) < 1 ? '' : days_of_month($days) ; ?></option>
-                    <?php
-                }
-                ?>
-            </select>
-        </div>
-    </div>
+
     <div class="row form_line">
         <div class="col-md-4">
             Contract Term
@@ -219,6 +204,23 @@
         </div>
         <div class="col-md-8">
             <input type="text" class="form-control " name="bill_end_date" id="bill_end_date" value="<?php if(isset($billing_info)){ echo $billing_info->bill_end_date; } ?>"/>
+        </div>
+    </div>
+    <div class="row form_line">
+        <div class="col-md-4">
+            Billing Day of Month
+        </div>
+        <div class="col-md-8">
+            <select id="bill_day" name="bill_day" data-customer-source="dropdown" class="input_select searchable-dropdown">
+                <option selected value="0">Select Day</option>
+                <?php
+                for ($days=0;$days<32;$days++){
+                    ?>
+                        <option <?php if(isset($billing_info)){ if($billing_info->bill_day == days_of_month($days)){ echo 'selected'; } } ?> value="<?= days_of_month($days); ?>"><?= days_of_month($days) < 1 ? '' : days_of_month($days) ; ?></option>
+                    <?php
+                }
+                ?>
+            </select>
         </div>
     </div>
 </div>

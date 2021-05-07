@@ -428,9 +428,9 @@
                             Message displayed on statement<br>
                             <textarea style="height:100px;width:100%;" name="mess_statement"></textarea>
                         </div>
-                        <div class="col-md-7">
+                        <div class="col-md-6">
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-4">
                             <!-- Taxable subtotal <b>$0.00</b><br>
                             <table class="table table-borderless" style="text-align:right;">
                                 <tr>
@@ -467,13 +467,21 @@
                                         <tr>
                                             <td>Subtotal</td>
                                             <td></td>
+                                            <td></td>
                                             <td>$ <span id="span_sub_total_rr">0.00</span>
                                                 <input type="hidden" name="subtotal" id="item_total_rr"></td>
                                         </tr>
                                         <tr>
                                             <td>Taxes</td>
                                             <td></td>
+                                            <td></td>
                                             <td>$ <span id="total_tax_rr_">0.00</span><input type="hidden" name="taxes" id="total_tax_input_rr"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Shipping</td>
+                                            <td></td>
+                                            <td align="right">$</td>
+                                            <td align="left" style="width:100px;"><input type="text" name="shipping" id="shipping_value" class="form-control shipping_value" value="0"></td>
                                         </tr>
                                         <tr>
                                             <td style="width:250px;"><input type="text" name="adjustment_name" id="adjustment_name" placeholder="Adjustment Name" class="form-control" style="width:200px; display:inline; border: 1px dashed #d1d1d1"></td>
@@ -481,6 +489,7 @@
                                             <input type="number" name="adjustment_value" id="adjustment_input_rr" value="0" class="form-control adjustment_input_rr" style="width:100px; display:inline-block">
                                                 <span class="fa fa-question-circle" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Optional it allows you to adjust the total amount Eg. +10 or -10." data-original-title="" title=""></span>
                                             </td>
+                                            <td></td>
                                             <td>$<span id="adjustment_area_rr">0.00</span></td>
                                         </tr>
                                         <!-- <tr>
@@ -491,13 +500,15 @@
                                         <tr id="saved" style="color:green;font-weight:bold;display:none;">
                                             <td>Amount Saved</td>
                                             <td></td>
+                                            <td></td>
                                             <td><span id="offer_cost">0.00</span><input type="hidden" name="voucher_value" id="offer_cost_input"></td>
                                         </tr>
                                         <tr style="color:blue;font-weight:bold;font-size:18px;">
                                             <td><b>Grand Total ($)</b></td>
                                             <td></td>
+                                            <td></td>
                                             <td><b><span id="grand_total_rr">0.00</span>
-                                                <input type="hidden" name="grand_total" id="grand_total_rr" value='0'></b></td>
+                                                <input type="hidden" name="grand_total" id="grand_total_rr_val" value='0'></b></td>
                                         </tr>
                             </table>
                         </div>
@@ -635,7 +646,7 @@
 <script>
 $(document).ready(function(){
  
- $('#sel-customer').change(function(){
+ $('#sel-customer3').change(function(){
  var id  = $(this).val();
 //  alert(id);
 
@@ -647,8 +658,8 @@ $(document).ready(function(){
          success: function(response){
             //  alert('success');
              console.log(response);
-         $("#email").val(response['customer'].email);
-         $("#billing_address").html(response['customer'].billing_address);
+         $("#email3").val(response['customer'].email);
+         $("#billing_address3").html(response['customer'].billing_address);
      
          },
              error: function(response){
@@ -668,6 +679,7 @@ $(document).on("focusout", ".adjustment_input_rr", function () {
   // calculationcm(counter);
   var grand_total = $("#grand_total_input").val();
   var adjustment = $("#adjustment_input_rr").val();
+  var shipping = $("#shipping_value").val();
 
   grand_total = parseFloat(grand_total) + parseFloat(adjustment);
 
@@ -680,7 +692,7 @@ $(document).on("focusout", ".adjustment_input_rr", function () {
   // alert(subtotaltax);
   
   var s_total = subtotal.toFixed(2);
-  var grand_total_w = s_total - parseFloat(adjustment);
+  var grand_total_w = (s_total - parseFloat(adjustment)) + parseFloat(shipping);
   // var markup = $("#markup_input_form").val();
   // var grand_total_w = s_total + parseFloat(adjustment);
 
@@ -689,6 +701,45 @@ $(document).on("focusout", ".adjustment_input_rr", function () {
 
   $("#grand_total_input").val(grand_total_w.toFixed(2));
   $("#grand_total_rr").text(grand_total_w.toFixed(2));
+  $("#grand_total_rr_val").val(grand_total_w.toFixed(2));
+  $("#adjustment_area_rr").text(adjustment);
+  $("#grand_total_rr_total").text(grand_total_w.toFixed(2));
+  // alert(grand_total_w); _val
+});
+
+</script>
+
+<script>
+
+$(document).on("focusout", ".shipping_value", function () {
+  // var counter = $(this).data("counter");
+  // alert('yeah');
+  // calculationcm(counter);
+  var grand_total = $("#grand_total_input").val();
+  var adjustment = $("#adjustment_input_rr").val();
+  var shipping = $("#shipping_value").val();
+
+  grand_total = (parseFloat(grand_total) + parseFloat(adjustment)) + parseFloat(shipping);
+
+  var subtotal = 0;
+  // $("#span_total_0").each(function(){
+    $('*[id^="span_total_receipt_"]').each(function(){
+    subtotal += parseFloat($(this).text());
+  });
+
+  // alert(subtotaltax);
+  
+  var s_total = subtotal.toFixed(2);
+  var grand_total_w = (s_total - parseFloat(adjustment)) + parseFloat(shipping);
+  // var markup = $("#markup_input_form").val();
+  // var grand_total_w = s_total + parseFloat(adjustment);
+
+  // $("#total_tax_").text(subtotaltax.toFixed(2));
+  // $("#total_tax_").val(subtotaltax.toFixed(2));
+
+  $("#grand_total_input").val(grand_total_w.toFixed(2));
+  $("#grand_total_rr").text(grand_total_w.toFixed(2));
+  $("#grand_total_rr_val").val(grand_total_w.toFixed(2));
   $("#adjustment_area_rr").text(adjustment);
   $("#grand_total_rr_total").text(grand_total_w.toFixed(2));
   // alert(grand_total_w);
@@ -867,6 +918,7 @@ var in_id = idd;
 
 
   $("#grand_total_rr").text(grand_total_w.toFixed(2));
+  $("#grand_total_rr_val").val(grand_total_w.toFixed(2)); 
   $("#grand_total_rr_total").text(grand_total_w.toFixed(2));
   $("#grand_total_input").val(grand_total_w.toFixed(2));
 
@@ -968,6 +1020,7 @@ function calculationReceipt(counter) {
 
 
   $("#grand_total_rr").text(grand_total_w.toFixed(2));
+  $("#grand_total_rr_val").val(grand_total_w.toFixed(2));
   $("#grand_total_rr_total").text(grand_total_w.toFixed(2));
   $("#grand_total_input").val(grand_total_w.toFixed(2));
   $("#grandtotal_input").val(grand_total_w.toFixed(2));
@@ -979,6 +1032,7 @@ function calculationReceipt(counter) {
     // alert('none');
   }else{
     $("#grand_total_rr").text(grand_total_w.toFixed(2));
+    $("#grand_total_rr_val").val(grand_total_w.toFixed(2));
     $("#grand_total_input").val(grand_total_w.toFixed(2));
 
     var bundle1_total = $("#grand_total").text();
@@ -1173,7 +1227,7 @@ $("#total_tax_rr_").text(over_tax);
   $("#grand_total_rr").text(grand_total_w.toFixed(2));
   $("#grand_total_input").val(grand_total_w.toFixed(2));
   $("#grand_total_rr_total").text(grand_total_w.toFixed(2));
-  $("#grand_total_rr").text(grand_total_w.toFixed(2));
+  $("#grand_total_rr_val").val(grand_total_w.toFixed(2));
   $("#span_sub_total_rr").text(grand_total_w.toFixed(2));
 
   var sls = (parseFloat(eqpt_cost).toFixed(2) * 7.5) / 100;

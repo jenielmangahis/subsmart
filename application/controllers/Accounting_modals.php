@@ -39,6 +39,7 @@ class Accounting_modals extends MY_Controller {
         $this->load->model('items_model');
         $this->load->model('accounting_recurring_transactions_model');
         $this->load->model('accounting_payment_methods_model');
+        $this->load->model('accounting_terms_model');
 		$this->load->library('form_validation');
     }
 
@@ -423,6 +424,49 @@ class Accounting_modals extends MY_Controller {
                     $this->page_data['dropdown']['bank_accounts'] = $bankAccs;
                     $this->page_data['dropdown']['items'] = $this->items_model->getItemsWithFilter(['type' => 'inventory', 'status' => [1]]);
                     $this->page_data['balance'] = $selectedBalance;
+                break;
+                case 'bill_modal' :
+                    $terms = $this->accounting_terms_model->getActiveCompanyTerms(logged('company_id'));
+
+                    $categoryAccs = [];
+                    $accountTypes = [
+                        'Expenses',
+                        'Bank',
+                        'Accounts receivable (A/R)',
+                        'Other Current Assets',
+                        'Fixed Assets',
+                        'Accounts payable (A/P)',
+                        'Credit Card',
+                        'Other Current Liabilities',
+                        'Long Term Liabilities',
+                        'Equity',
+                        'Income',
+                        'Cost of Goods Sold',
+                        'Other Income',
+                        'Other Expense'
+                    ];
+
+                    foreach($accountTypes as $typeName) {
+                        $accType = $this->account_model->getAccTypeByName($typeName);
+
+                        $accounts = $this->chart_of_accounts_model->getByAccountType($accType->id, null, logged('company_id'));
+
+                        if(count($accounts) > 0) {
+                            foreach($accounts as $account) {
+                                $childAccs = $this->chart_of_accounts_model->getChildAccounts($account->id);
+
+                                $account->childAccs = $childAccs;
+
+                                $categoryAccs[$typeName][] = $account;
+                            }
+                        }
+                    }
+
+                    $this->page_data['dropdown']['items'] = $this->items_model->getItemsWithFilter(['type' => 'inventory', 'status' => [1]]);
+                    $this->page_data['dropdown']['customers'] = $this->accounting_customers_model->getAllByCompany();
+                    $this->page_data['dropdown']['vendors'] = $this->vendors_model->getAllByCompany();
+                    $this->page_data['dropdown']['categories'] = $categoryAccs;
+                    $this->page_data['dropdown']['terms'] = $terms;
                 break;
             }
 
@@ -1253,6 +1297,9 @@ class Accounting_modals extends MY_Controller {
                 break;
                 case 'checkModal' :
                     $this->result = $this->check($data);
+                break;
+                case 'billModal' :
+                    $this->result = $this->bill($data);
                 break;
             }
         } catch (\Exception $e) {
@@ -2377,6 +2424,7 @@ class Accounting_modals extends MY_Controller {
                 'tags' => $data['tags'] !== null ? json_encode($data['tags']) : null,
                 'memo' => $data['memo'],
                 'attachments' => $data['attachments'] !== null ? json_encode($data['attachments']) : null,
+                'total_amount' => $data['total_amount'],
                 'status' => 1,
                 'created_at' => date("Y-m-d H:i:s"),
                 'updated_at' => date("Y-m-d H:i:s")
@@ -2439,70 +2487,193 @@ class Accounting_modals extends MY_Controller {
     {
         $this->load->model('expenses_model');
 
-        $return = [];
-        $expenseData = [
-            'company_id' => logged('company_id'),
-            'vendor_id' => $data['vendor_id'],
-            'bank_account_id' => $data['bank_account'],
-            'mailing_address' => $data['mailing_address'],
-            'payment_date' => date("Y-m-d", strtotime($data['payment_date'])),
-            'check_no' => $data['check_no'] === 'To print' ? null : $data['check_no'],
-            'tags' => $data['tags'] !== null ? json_encode($data['tags']) : null,
-            'memo' => $data['memo'],
-            'attachments' => $data['attachments'] !== null ? json_encode($data['attachments']) : null,
-            'status' => 1,
-            'created_at' => date("Y-m-d H:i:s"),
-            'updated_at' => date("Y-m-d H:i:s")
-        ];
+        $this->form_validation->set_rules('bank_account', 'Bank account', 'required');
+        $this->form_validation->set_rules('payment_date', 'Payment date', 'required');
 
-        $checkId = $this->expenses_model->addCheck($expenseData);
-
-        if($checkId) {
-            if(isset($data['category'])) {
-                $categoryDetails = [];
-                foreach($data['category'] as $index => $value) {
-                    $categoryDetails[] = [
-                        'transaction_type' => 'Check',
-                        'transaction_id' => $checkId,
-                        'category_account_id' => $value,
-                        'description' => $data['description'][$index],
-                        'amount' => $data['category_amount'][$index],
-                        'billable' => $data['category_billable'][$index],
-                        'markup_percentage' => $data['category_markup'][$index],
-                        'tax' => $data['category_tax'][$index],
-                        'customer_id' => $data['category_customer'][$index],
-                    ];
-                }
-
-                $this->expenses_model->insert_vendor_transaction_categories($categoryDetails);
-            }
-
-            if(isset($data['item'])) {
-                $itemDetails = [];
-                foreach($data['item'] as $index => $value) {
-                    $itemDetails[] = [
-                        'transaction_type' => 'Check',
-                        'transaction_id' => $checkId,
-                        'item_id' => $value,
-                        'description' => $data['item_description'][$index],
-                        'quantity' => $data['quantity'][$index],
-                        'rate' => $data['rate'][$index],
-                        'amount' => $data['item_amount'][$index],
-                        'billable' => $data['item_billable'][$index],
-                        'markup_percentage' => $data['item_markup'][$index],
-                        'sales_amount' => $data['item_sales_amount'][$index],
-                        'tax' => $data['item_tax'][$index],
-                        'customer_id' => $data['item_customer'][$index],
-                    ];
-                }
-
-                $this->expenses_model->insert_vendor_transaction_items($itemDetails);
-            }
+        if(isset($data['category'])) {
+            $this->form_validation->set_rules('category[]', 'Category', 'required');
         }
 
-        $return['data'] = $checkId;
-        $return['success'] = $checkId ? true : false;
-        $return['message'] = $checkId ? 'Entry Successful!' : 'An unexpected error occured!';
+        if(isset($data['item'])) {
+            $this->form_validation->set_rules('item[]', 'Item', 'required');
+            $this->form_validation->set_rules('quantity[]', 'Item quantity', 'required');
+        }
+
+        $return = [];
+
+        if($this->form_validation->run() === false) {
+            $return['data'] = null;
+            $return['success'] = false;
+            $return['message'] = 'Error';
+        } else if(!isset($data['category']) && !isset($data['item'])) {
+            $return['data'] = null;
+            $return['success'] = false;
+            $return['message'] = 'Please enter at least one line item.';
+        } else {
+            $checkData = [
+                'company_id' => logged('company_id'),
+                'vendor_id' => $data['vendor_id'],
+                'bank_account_id' => $data['bank_account'],
+                'mailing_address' => $data['mailing_address'],
+                'payment_date' => date("Y-m-d", strtotime($data['payment_date'])),
+                'check_no' => $data['check_no'] === 'To print' ? null : $data['check_no'],
+                'tags' => $data['tags'] !== null ? json_encode($data['tags']) : null,
+                'memo' => $data['memo'],
+                'attachments' => $data['attachments'] !== null ? json_encode($data['attachments']) : null,
+                'total_amount' => $data['total_amount'],
+                'status' => 1,
+                'created_at' => date("Y-m-d H:i:s"),
+                'updated_at' => date("Y-m-d H:i:s")
+            ];
+    
+            $checkId = $this->expenses_model->addCheck($checkData);
+    
+            if($checkId) {
+                if(isset($data['category'])) {
+                    $categoryDetails = [];
+                    foreach($data['category'] as $index => $value) {
+                        $categoryDetails[] = [
+                            'transaction_type' => 'Check',
+                            'transaction_id' => $checkId,
+                            'category_account_id' => $value,
+                            'description' => $data['description'][$index],
+                            'amount' => $data['category_amount'][$index],
+                            'billable' => $data['category_billable'][$index],
+                            'markup_percentage' => $data['category_markup'][$index],
+                            'tax' => $data['category_tax'][$index],
+                            'customer_id' => $data['category_customer'][$index],
+                        ];
+                    }
+    
+                    $this->expenses_model->insert_vendor_transaction_categories($categoryDetails);
+                }
+    
+                if(isset($data['item'])) {
+                    $itemDetails = [];
+                    foreach($data['item'] as $index => $value) {
+                        $itemDetails[] = [
+                            'transaction_type' => 'Check',
+                            'transaction_id' => $checkId,
+                            'item_id' => $value,
+                            'description' => $data['item_description'][$index],
+                            'quantity' => $data['quantity'][$index],
+                            'rate' => $data['rate'][$index],
+                            'amount' => $data['item_amount'][$index],
+                            'billable' => $data['item_billable'][$index],
+                            'markup_percentage' => $data['item_markup'][$index],
+                            'sales_amount' => $data['item_sales_amount'][$index],
+                            'tax' => $data['item_tax'][$index],
+                            'customer_id' => $data['item_customer'][$index],
+                        ];
+                    }
+    
+                    $this->expenses_model->insert_vendor_transaction_items($itemDetails);
+                }
+            }
+
+            $return['data'] = $checkId;
+            $return['success'] = $checkId ? true : false;
+            $return['message'] = $checkId ? 'Entry Successful!' : 'An unexpected error occured!';
+        }
+
+
+        return $return;
+    }
+
+    private function bill($data)
+    {
+        $this->load->model('expenses_model');
+
+        $this->form_validation->set_rules('vendor_id', 'Vendor', 'required');
+        $this->form_validation->set_rules('bill_date', 'Bill date', 'required');
+        $this->form_validation->set_rules('due_date', 'Due date', 'required');
+
+        if(isset($data['category'])) {
+            $this->form_validation->set_rules('category[]', 'Category', 'required');
+        }
+
+        if(isset($data['item'])) {
+            $this->form_validation->set_rules('item[]', 'Item', 'required');
+            $this->form_validation->set_rules('quantity[]', 'Item quantity', 'required');
+        }
+
+        $return = [];
+
+        if($this->form_validation->run() === false) {
+            $return['data'] = null;
+            $return['success'] = false;
+            $return['message'] = 'Error';
+        } else if(!isset($data['category']) && !isset($data['item'])) {
+            $return['data'] = null;
+            $return['success'] = false;
+            $return['message'] = 'Please enter at least one line item.';
+        } else {
+            $billData = [
+                'company_id' => logged('company_id'),
+                'vendor_id' => $data['vendor_id'],
+                'mailing_address' => $data['mailing_address'],
+                'term_id' => $data['term_id'],
+                'bill_date' => date("Y-m-d", strtotime($data['bill_date'])),
+                'due_date' => date("Y-m-d", strtotime($data['due_date'])),
+                'bill_no' => $data['bill_no'],
+                'tags' => $data['tags'] !== null ? json_encode($data['tags']) : null,
+                'memo' => $data['memo'],
+                'attachments' => $data['attachments'] !== null ? json_encode($data['attachments']) : null,
+                'total_amount' => $data['total_amount'],
+                'status' => 1,
+                'created_at' => date("Y-m-d H:i:s"),
+                'updated_at' => date("Y-m-d H:i:s")
+            ];
+    
+            $billId = $this->expenses_model->addBill($billData);
+    
+            if($billId) {
+                if(isset($data['category'])) {
+                    $categoryDetails = [];
+                    foreach($data['category'] as $index => $value) {
+                        $categoryDetails[] = [
+                            'transaction_type' => 'Bill',
+                            'transaction_id' => $billId,
+                            'category_account_id' => $value,
+                            'description' => $data['description'][$index],
+                            'amount' => $data['category_amount'][$index],
+                            'billable' => $data['category_billable'][$index],
+                            'markup_percentage' => $data['category_markup'][$index],
+                            'tax' => $data['category_tax'][$index],
+                            'customer_id' => $data['category_customer'][$index],
+                        ];
+                    }
+    
+                    $this->expenses_model->insert_vendor_transaction_categories($categoryDetails);
+                }
+    
+                if(isset($data['item'])) {
+                    $itemDetails = [];
+                    foreach($data['item'] as $index => $value) {
+                        $itemDetails[] = [
+                            'transaction_type' => 'Bill',
+                            'transaction_id' => $billId,
+                            'item_id' => $value,
+                            'description' => $data['item_description'][$index],
+                            'quantity' => $data['quantity'][$index],
+                            'rate' => $data['rate'][$index],
+                            'amount' => $data['item_amount'][$index],
+                            'billable' => $data['item_billable'][$index],
+                            'markup_percentage' => $data['item_markup'][$index],
+                            'sales_amount' => $data['item_sales_amount'][$index],
+                            'tax' => $data['item_tax'][$index],
+                            'customer_id' => $data['item_customer'][$index],
+                        ];
+                    }
+    
+                    $this->expenses_model->insert_vendor_transaction_items($itemDetails);
+                }
+            }
+
+            $return['data'] = $billId;
+            $return['success'] = $billId ? true : false;
+            $return['message'] = $billId ? 'Entry Successful!' : 'An unexpected error occured!';
+        }
 
         return $return;
     }
