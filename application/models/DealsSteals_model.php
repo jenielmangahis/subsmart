@@ -47,8 +47,8 @@ class DealsSteals_model extends MY_Model
         }
 
         if( !empty($conditions) ){
-            foreach( $conditions as $field => $value ){
-                $this->db->where($field, $value);                
+            foreach( $conditions as $key => $value ){
+                $this->db->where($value['field'], $value['value']);                
             }
         }
 

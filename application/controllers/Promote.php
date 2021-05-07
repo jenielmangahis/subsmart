@@ -33,6 +33,7 @@ class Promote extends MY_Controller {
             "assets/plugins/dropzone/dist/dropzone.js",
         ));
 
+        $this->session->unset_userdata('dealsStealsId');
 		$this->load->view('promote/add_deals', $this->page_data);
 	}
 
@@ -74,13 +75,14 @@ class Promote extends MY_Controller {
                 'original_price' => $post['price_original'],
                 'photos' => $photo,         
                 'valid_from' => date("Y-m-d"),
-                'valid_to' => date("Y-m-d"),
+                'valid_to' => date("Y-m-d", strtotime("+1 month")),
                 'date_created' => date("Y-m-d H:i:s"),
                 'date_modified' => date("Y-m-d H:i:s"),
                 'status' => $this->DealsSteals_model->statusDraft()
             ];
 
             $deals_steals_id = $this->DealsSteals_model->create($data);
+            $this->session->set_userdata('dealsStealsId', $deals_steals_id);
             $is_success = true;
         }
 
@@ -109,12 +111,10 @@ class Promote extends MY_Controller {
 	public function add_send_to(){
 		$user = $this->session->userdata('logged');
         $cid  = logged('company_id');
-        $deals_steals_id = $this->session->userdata('dealsStealsId');
-
+        $deals_steals_id = $this->session->userdata('dealsStealsId');        
         $dealsSteals = $this->DealsSteals_model->getById($deals_steals_id);
         $customers   = $this->Customer_model->getAllByCompany($cid);            
         $customerGroups = $this->CustomerGroup_model->getAllByCompany($cid);
-
         
         $this->page_data['dealsSteals'] = $dealsSteals;
         $this->page_data['selectedCustomer'] = unserialize($dealsSteals->certain_customers);
@@ -323,8 +323,7 @@ class Promote extends MY_Controller {
             $conditions = array();
         }else{
             $conditions[] = ['field' => 'deals_steals.status','value' => $status];    
-        }        
-        
+        }      
         $dealsSteals   = $this->DealsSteals_model->getAllByCompanyId($company_id, array(), $conditions);
         $statusOptions = $this->DealsSteals_model->statusOptions();
         $this->page_data['dealsSteals'] = $dealsSteals;

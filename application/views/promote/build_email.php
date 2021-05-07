@@ -175,9 +175,16 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             <table border="0" width="100%" cellspacing="0" cellpadding="0">
                                             <tbody>
                                             <tr>
-                                            <td width="150"><a href="<?= base_url("promote/deal_test/" . $dealsSteals->id); ?>"><img style="width: 200px;" src="<?= base_url('assets/img/default-deals.jpg'); ?>" alt="deal pic" /></a></td>
+                                            <?php 
+                                              if( $dealsSteals->photos != '' ){
+                                                $image = base_url("uploads/deals_steals/" . $dealsSteals->company_id . "/" . $dealsSteals->photos);
+                                              }else{
+                                                $image = base_url('assets/img/default-deals.jpg');
+                                              }
+                                            ?>
+                                            <td width="150"><a href="<?= base_url("promote/deal_test/" . $dealsSteals->id); ?>"><img style="width: 200px;" src="<?= $image; ?>" alt="deal pic" /></a></td>
                                             <td width="20">&nbsp;</td>
-                                            <td><strong>test</strong><br /><span style="font-size: 18px; color: #ba001a;">$1.00</span> <span style="text-decoration: line-through;">was $2.00</span></td>
+                                            <td><strong><?= $dealsSteals->title; ?></strong><br /><span style="font-size: 18px; color: #ba001a;">$<?= number_format($dealsSteals->deal_price,2); ?></span> <span style="text-decoration: line-through;">was $<?= number_format($dealsSteals->original_price,2); ?></span></td>
                                             </tr>
                                             </tbody>
                                             </table>
