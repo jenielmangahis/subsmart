@@ -371,8 +371,8 @@ class Users extends MY_Controller {
 						case 'Thursday':
 							$schedules[] = [
 								'day' => 'Thursday',
-								'time_from' => $pdata['thurHoursFromAvail'],
-								'time_to' => $pdata['thurHoursToAvail']
+								'time_from' => $pdata['thuHoursFromAvail'],
+								'time_to' => $pdata['thuHoursToAvail']
 							];
 							break;
 						case 'Friday':	
