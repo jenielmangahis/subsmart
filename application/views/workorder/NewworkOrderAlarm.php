@@ -2114,7 +2114,7 @@ input:checked + .slider:before {
 
      <!-- Modal -->
      <div class="modal fade" id="item_list" tabindex="-1" role="dialog" aria-labelledby="newcustomerLabel" aria-hidden="true">
-                <div class="modal-dialog modal-lg" role="document" style="width:800px;position: absolute;top: 50%;left: 50%;transform: translate(-50%, -50%);">
+                <div class="modal-dialog modal-lg" role="document" >
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title" id="newcustomerLabel">Item Lists</h5>
@@ -2225,6 +2225,12 @@ input:checked + .slider:before {
             </div>
 
     <?php include viewPath('includes/footer'); ?>
+
+<script>
+    $(function() {
+        $("nav:first").addClass("closed");
+    });
+</script>
 
 <script>
 var wrapper = document.getElementById("signature-pad");

@@ -214,7 +214,7 @@
                                                                             </select>
                                                                         </td>
                                                                         <td><input type="text" name="item_description[]" class="form-control"></td>
-                                                                        <td><input type="number" name="quantity[]" class="form-control" required></td>
+                                                                        <td><input type="number" name="quantity[]" class="form-control text-right" required></td>
                                                                         <td><input type="number" name="rate[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01"></td>
                                                                         <td><input type="number" name="item_amount[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01"></td>
                                                                         <td>
@@ -284,7 +284,7 @@
                                                     <div class="attachments">
                                                         <label for="attachment" style="margin-right: 15px"><i class="fa fa-paperclip"></i>&nbsp;Attachment</label> 
                                                         <span>Maximum size: 20MB</span>
-                                                        <div id="expense-attachments" class="dropzone" style="border: 1px solid #e1e2e3;background: #ffffff;width: 100%;">
+                                                        <div id="bill-attachments" class="dropzone" style="border: 1px solid #e1e2e3;background: #ffffff;width: 100%;">
                                                             <div class="dz-message" style="margin: 20px;border">
                                                                 <span style="font-size: 16px;color: rgb(180,132,132);font-style: italic;">Drag and drop files here or</span>
                                                                 <a href="#" style="font-size: 16px;color: #0b97c4">browse to upload</a>

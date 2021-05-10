@@ -7,6 +7,7 @@ function TemplateCreate() {
   let templateId = undefined;
   let template = {};
   let files = [];
+  let workorder = undefined;
 
   const $form = $("#templateForm");
   const $docModal = $("#documentModal");
@@ -313,7 +314,7 @@ function TemplateCreate() {
     const endpoint = `${prefixURL}/DocuSign/apiTemplateFile/${templateId}`;
     const response = await fetch(endpoint);
     const { data } = await response.json();
-    template.file = data;
+    template.files = data;
   }
 
   async function fetchTemplateRecipients() {
@@ -324,13 +325,19 @@ function TemplateCreate() {
   }
 
   async function setFormValues({ isPreparingTemplate = false }) {
-    await Promise.all([
-      fetchTemplate(),
-      fetchTemplateFile(),
-      fetchTemplateRecipients(),
-    ]);
+    // await Promise.all([
+    //   fetchTemplate(),
+    //   fetchTemplateFile(),
+    //   fetchTemplateRecipients(),
+    // ]);
 
-    const { name, description, subject, message, file, recipients } = template;
+    await fetchTemplate();
+    await fetchTemplateFile();
+    await fetchTemplateRecipients();
+
+    const { name, description, subject, message, files, recipients } = template;
+    const [file] = files;
+
     const { path: filePath, name: fileName } = file;
 
     const fileResponse = await fetch(`${prefixURL}${filePath}`);
@@ -352,7 +359,17 @@ function TemplateCreate() {
     const fakeEvent = { target: { files: [templateFile] } };
     await onChangeFile(fakeEvent);
 
-    recipients.forEach((recipient) =>
+    let customerSet = false;
+    const _recipients = recipients.map((r) => {
+      if (customerSet || r.name || r.email) return r;
+
+      r.name = workorder.first_name;
+      r.email = workorder.email;
+      customerSet = true;
+      return r;
+    });
+
+    _recipients.forEach((recipient) =>
       addRecipient({
         ...recipient,
         isPreparingTemplate,
@@ -362,12 +379,21 @@ function TemplateCreate() {
     $form.find("[type=submit] .text").text("Send");
   }
 
+  async function getWorkorderCustomer(workorderId) {
+    const endpoint = `${prefixURL}/DocuSign/getWorkorderCustomer/${workorderId}`;
+    const response = await fetch(endpoint);
+    const { data } = await response.json();
+    workorder = data;
+  }
+
   async function init() {
     const urlParams = new URLSearchParams(window.location.search);
     templateId = urlParams.get("id");
     const isPreparingTemplate = Boolean(templateId);
 
     if (templateId) {
+      const workorderId = urlParams.get("workorder_id");
+      await getWorkorderCustomer(workorderId);
       await setFormValues({ isPreparingTemplate });
     } else {
       addRecipient();

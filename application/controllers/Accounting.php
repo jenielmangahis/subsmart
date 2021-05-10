@@ -236,6 +236,25 @@ class Accounting extends MY_Controller {
         $this->load->view('accounting/deposits', $this->page_data);
     }
 
+    public function invoice_edit($id)
+    {
+        $comp_id = logged('company_id');
+        $user_id = logged('id');
+        // $parent_id = $this->db->query("select parent_id from users where id=$user_id")->row();
+
+        // if ($parent_id->parent_id == 1) {
+            $this->page_data['users'] = $this->users_model->getAllUsersByCompany($user_id);
+        // } else {
+            // $this->page_data['users'] = $this->users_model->getAllUsersByCompany($parent_id->parent_id, $user_id);
+        // }
+        $this->page_data['customers'] = $this->accounting_invoices_model->getCustomers();
+
+        $this->page_data['invoice'] = $this->invoice_model->getinvoice($id);
+        $this->page_data['items'] = $this->invoice_model->getItems($id);
+
+        $this->load->view('accounting/invoice_edit', $this->page_data);
+    }
+
     public function adjust_starting_value_form($item_id)
     {
         $accounts = $this->chart_of_accounts_model->select();
@@ -4371,6 +4390,7 @@ class Accounting extends MY_Controller {
         $setting = $this->invoice_settings_model->getAllByCompany(logged('company_id'));
 
         $terms = $this->accounting_terms_model->getCompanyTerms_a($company_id);
+        $this->page_data['number'] = $this->invoice_model->getlastInsert();
 
         if (!empty($setting)) {
             foreach ($setting as $key => $value) {
@@ -5209,6 +5229,21 @@ class Accounting extends MY_Controller {
            // $this->page_data['client'] = $client;
 
         echo json_encode($this->page_data);
+    }
+
+    public function changeRebate()
+    {
+        $id = $this->input->post('id');
+        $get_val = $this->input->post('get_val');
+
+        $data = array(
+            'id' => $id,
+            'get_val' => $get_val
+        );
+
+        $this->items_model->changeRebate($data);
+
+        echo json_encode(0);
     }
 
     public function findoffercode()

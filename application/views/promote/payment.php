@@ -108,6 +108,7 @@ label>input {
     <div wrapper__section>
         <div class="container-fluid p-40">
             <?php echo form_open_multipart(null, ['class' => 'form-validate', 'id' => 'activate-deals-steals', 'autocomplete' => 'off']); ?>
+            <input type="hidden" id="order-number" name="order_number" value="">
             <div class="row">
                 <div class="col-xl-12">
                     <div class="card mt-0">
@@ -270,50 +271,72 @@ label>input {
 <?php include viewPath('includes/footer'); ?>
 <script>
 $(function(){
+
+    function activate_deals(){
+      var url = base_url + 'promote/_activate_deals';
+      $(".btn-deals-steals-activate").html('<span class="spinner-border spinner-border-sm m-0"></span>  Saving');
+      setTimeout(function () {
+        $.ajax({
+           type: "POST",
+           url: url,
+           dataType: "json",
+           data: $("#activate-deals-steals").serialize(),
+           success: function(o)
+           {
+              if( o.is_success ){
+                  Swal.fire({
+                      title: 'Update Successful!',
+                      text: 'Deals was successfully activated',
+                      icon: 'success',
+                      showCancelButton: false,
+                      confirmButtonColor: '#32243d',
+                      cancelButtonColor: '#d33',
+                      confirmButtonText: 'Ok'
+                  }).then((result) => {
+                      if (result.value) {
+                          window.location.href= base_url + 'promote/payment_details';
+                      }
+                  });
+              }else{
+                  Swal.fire({
+                    icon: 'error',
+                    title: o.msg,
+                    text: 'Cannot activate deals'
+                  });
+              }
+           }
+        });
+      }, 1000);
+    }
+
     $("#activate-deals-steals").submit(function(e){
         e.preventDefault();
 
-        var url = base_url + 'promote/activate_deals';
-        $(".btn-deals-steals-activate").html('<span class="spinner-border spinner-border-sm m-0"></span>  Saving');
+        var url = base_url + 'promote/_converge_send_payment';
+        $(".btn-deals-steals-activate").html('<span class="spinner-border spinner-border-sm m-0"></span>');
         setTimeout(function () {
-          $.ajax({
-             type: "POST",
-             url: url,
-             dataType: "json",
-             data: $("#activate-deals-steals").serialize(),
-             success: function(o)
-             {
-                if( o.is_success ){
-                    Swal.fire({
-                        title: 'Update Successful!',
-                        text: 'Deals was successfully created',
-                        icon: 'success',
-                        showCancelButton: false,
-                        confirmButtonColor: '#32243d',
-                        cancelButtonColor: '#d33',
-                        confirmButtonText: 'Ok'
-                    }).then((result) => {
-                        if (result.value) {
-                            window.location.href= base_url + 'promote/deals';
-                        }
-                    });
-                    $('.form-msg').hide().html("<p class='alert alert-info'>"+o.msg+"</p>").fadeIn(500);
-                    $(".btn-automation-activate").html('<span class="spinner-border spinner-border-sm m-0"></span>  Redirecting to list');
-                    setTimeout(function() {
-                        location.href = base_url + "promote/deals";
-                    }, 2500);
-                }else{
-                    $(".btn-deals-steals-activate").html('Purchase');
-
-                    Swal.fire({
-                      icon: 'error',
-                      title: o.msg,
-                      text: 'Cannot activate deals'
-                    });
-                }
-             }
-          });
-        }, 1000);
+        $.ajax({
+           type: "POST",
+           url: url,
+           dataType: "json",
+           data: $("#activate-deals-steals").serialize(),
+           success: function(o)
+           {
+              if( o.is_success ){
+                $("#order-number").val(o.order_number);
+                activate_deals();
+              }else{
+                  Swal.fire({
+                    icon: 'error',
+                    title: o.msg,
+                    text: 'Cannot activate deals'
+                  });
+              }
+              $(".btn-deals-steals-activate").html('Purchase');
+           }
+        });
+      }, 1000);
+        
         
     });
 });

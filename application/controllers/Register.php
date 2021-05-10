@@ -142,6 +142,8 @@ class Register extends MY_Controller {
             $ip_exist = false;
         }
 
+        //$ip_exist = false;
+
         $industryTypes = $this->IndustryType_model->getAll();
         $paypal_client_id     = paypal_credential('client_id');
         $paypal_client_secret = paypal_credential('client_secret');     
@@ -272,12 +274,12 @@ class Register extends MY_Controller {
 
         //echo $is_authentic;
         $leads_input = array(
-                        'firstname'     => $post['firstname'],
-                        'lastname'      => $post['lastname'],
-                        'phone_cell'    => $post['phone'],
-                        'email_add'     => $post['a_email'],
-                        'address'       => $post['business_address'],
-                    );
+            'firstname'     => $post['firstname'],
+            'lastname'      => $post['lastname'],
+            'phone_cell'    => $post['phone'],
+            'email_add'     => $post['a_email'],
+            'address'       => $post['business_address'],
+        );
 
         $reg_temp_user_id = $this->session->userdata('reg_temp_user_id');
         if(isset($reg_temp_user_id) && $reg_temp_user_id > 0)
@@ -900,6 +902,7 @@ class Register extends MY_Controller {
                 'phone_number'  => $post['phone'],
                 'business_name' => $post['business_name'],
                 'business_address' => $post['business_address'],
+                'zip_code' => $post['zip_code'],
                 'number_of_employee' => $post['number_of_employee'],
                 'industry_type_id' => $post['industry_type_id'],
                 'password' => $post['password'],
@@ -954,7 +957,10 @@ class Register extends MY_Controller {
         // In this section, we set variables to be captured by the PHP file and passed to Converge in the curl request.
         $firstname = $post['firstname']; //Post first name
         $lastname  = $post['lastname']; //Post first name
+        $address   = $post['business_address'];
+        $zipcode   = $post['zip_code'];
         $amount    = $post['total_amount']; //Post Tran Amount
+        //$amount    = 1;
         //$merchanttxnid = $_POST['ssl_merchant_txn_id']; //Capture user-defined ssl_merchant_txn_id as POST data
         //$invoicenumber = $_POST['ssl_invoice_number']; //Capture user-defined ssl_invoice_number as POST data
 
@@ -973,6 +979,8 @@ class Register extends MY_Controller {
         "&ssl_transaction_type=CCSALE".
         "&ssl_first_name=$firstname".
         "&ssl_last_name=$lastname".
+        "&ssl_avs_address=$address".
+        "&ssl_avs_zip=$zipcode".
         "&ssl_get_token=Y".
         "&ssl_add_token=Y".
         "&ssl_amount=$amount"

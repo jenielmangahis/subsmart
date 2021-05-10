@@ -229,6 +229,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 	    padding: 12px;
 	    background-color: #0070ba;
 	}
+	.has-error{
+		border: 1px solid red;
+	}
 </style>
 <section page="register" message="" class="ng-isolate-scope">
 	<div class="f-height-v2">
@@ -341,91 +344,108 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 								        <div class="col-md-12">
 								          	<h4 class="font-weight-bold pl-0 my-4 sc-pl-2"><strong>Step 2 : Personal Information</strong></h4>
 								          	<div class="step-2-error-msg"></div>
-								          	<div class="col-md-6 float-left z-100">
-												<div class="input-group z-100">
-													<input autocomplete="off" type="text" name="firstname" id="firstname" class="form-control ng-pristine ng-untouched ng-valid ng-empty" placeholder="First Name" required="">
+
+								          	<div class="row">
+									          	<div class="col-md-6 z-100">
+													<div class="input-group z-100">
+														<input autocomplete="off" type="text" name="firstname" id="firstname" class="form-control ng-pristine ng-untouched ng-valid ng-empty" placeholder="First Name" required="">
+													</div>
+												</div>
+
+
+												<div class="col-md-6 z-100">
+													<div class="input-group z-100">
+														<input autocomplete="off" type="text" name="lastname" id="lastname" class="form-control ng-pristine ng-untouched ng-valid ng-empty" placeholder="Last Name" required="">
+													</div>
 												</div>
 											</div>
 
+											<div class="row">
+												<div class="col-md-6">
+													<div class="input-group z-100">
+														<input autocomplete="off" type="email" name="email" id="email_address" class="email_address form-control ng-pristine ng-untouched ng-valid ng-empty" aria-label="Your email address" placeholder="Email address" required="">
+													</div>
+												</div>
 
-											<div class="col-md-6 float-left z-100">
-												<div class="input-group z-100">
-													<input autocomplete="off" type="text" name="lastname" id="lastname" class="form-control ng-pristine ng-untouched ng-valid ng-empty" placeholder="Last Name" required="">
+												<div class="col-md-6">
+													<div class="input-group z-100">
+														<input autocomplete="off" type="text" name="phone" id="phone" class="form-control ng-pristine ng-untouched ng-valid ng-empty" placeholder="Phone number" required="">
+													</div>
 												</div>
 											</div>
 
-											<div class="col-md-6 float-left">
-												<div class="input-group z-100">
-													<input autocomplete="off" type="email" name="email" id="email_address" class="email_address form-control ng-pristine ng-untouched ng-valid ng-empty" aria-label="Your email address" placeholder="Email address" required="">
+											<div class="row">
+												<div class="col-md-6">
+													<div class="input-group z-100">
+														<input id="google_search_place" type="text" name="business_name" class="business_name form-control ng-pristine ng-untouched ng-valid ng-empty" aria-label="Your Business Name" placeholder="Business Name" autocomplete="on" runat="server" required="" />
+													</div>
+												</div>
+
+												<div class="col-md-6">
+													<div class="input-group">
+														<select class="reg-select z-100" id="number_of_employee" name="number_of_employee" required="">
+																<option value="0">Number of Employees</option>
+																<option value="1 (Just Me)">1 (Just Me)</option>
+																<option value="2-3">2-3</option>
+																<option value="4-10">4-10</option>
+																<option value="11-15">11-15</option>
+																<option value="16-20">16-20</option>
+																<option value="20+">20+</option>
+														</select>
+													</div>
 												</div>
 											</div>
 
-											<div class="col-md-6 float-left">
-												<div class="input-group z-100">
-													<input autocomplete="off" type="number" name="phone" class="form-control ng-pristine ng-untouched ng-valid ng-empty" placeholder="Phone number">
+											<div class="row">
+												<div class="col-md-12">
+													<div class="input-group z-100">
+														<input id="business_address" type="text" name="business_address" class="form-control ng-pristine ng-untouched ng-valid ng-empty" aria-label="Your Business Address" placeholder="Business Address" required="" />
+													</div>
 												</div>
 											</div>
 
-											<div class="col-md-6 float-left">
-												<div class="input-group z-100">
-													<input id="google_search_place" type="text" name="business_name" class="business_name form-control ng-pristine ng-untouched ng-valid ng-empty" aria-label="Your Business Name" placeholder="Business Name" autocomplete="on" runat="server" required="" />
+											<div class="row">
+												<div class="col-md-6">
+													<div class="input-group z-100">
+														<input autocomplete="off" type="text" name="zip_code" id="zip_code" class="form-control ng-pristine ng-untouched ng-valid ng-empty" placeholder="Zip Code" required="">
+													</div>
+												</div>
+
+												<div class="col-md-6">
+													<div class="input-group">
+														<select class="reg-select z-100 cmb-industry" id="industry_type_id" name="industry_type_id" required="">
+															<option>--Select your Industry--</option>
+							                                <?php $businessTypeName  = "";
+							                                     foreach($industryTypes  as $industryType ){ ?>
+							                                           <?php if ($businessTypeName!== $industryType->business_type_name ) { ?> 
+							                                           			<optgroup label="<?php echo $industryType->business_type_name; ?>">
+							                                           <?php  $businessTypeName =  $industryType->business_type_name; }      ?>  
+							                                            <option value="<?php echo $industryType->id; ?>"><?php echo $industryType->name; ?></option>
+							                                <?php  }   ?>						                                
+														</select>
+													</div>
 												</div>
 											</div>
 
-											<div class="col-md-6 float-left">
-												<div class="input-group">
-													<select class="reg-select z-100" id="number_of_employee" name="number_of_employee" required="">
-															<option value="0">Number of Employees</option>
-															<option value="1 (Just Me)">1 (Just Me)</option>
-															<option value="2-3">2-3</option>
-															<option value="4-10">4-10</option>
-															<option value="11-15">11-15</option>
-															<option value="16-20">16-20</option>
-															<option value="20+">20+</option>
-													</select>
+											<div class="row">
+												<div class="col-md-6">
+													<div class="input-group z-100">
+														<input autocomplete="off" type="password" name="password" class="form-control ng-pristine ng-untouched ng-valid ng-empty" placeholder="Create your password" required="">
+													</div>
+												</div>
+
+												<div class="col-md-6">&nbsp;</div>
+											</div>
+
+											<div class="row">
+												<div class="col-md-12">
+													<div id="ajax-authentication-alert-container"></div>
 												</div>
 											</div>
 
-											<div class="col-md-12 float-left">
-												<div class="input-group z-100">
-													<input id="business_address" type="text" name="business_address" class="form-control ng-pristine ng-untouched ng-valid ng-empty" aria-label="Your Business Address" placeholder="Business Address" required="" />
-												</div>
-											</div>
-
-											<div class="col-md-6 float-left">
-												<div class="input-group">
-													<select class="reg-select z-100 cmb-industry" id="industry_type_id" name="industry_type_id" required="">
-														<option>--Select your Industry--</option>
-						                                <?php $businessTypeName  = "";
-						                                     foreach($industryTypes  as $industryType ){ ?>
-						                                           <?php if ($businessTypeName!== $industryType->business_type_name ) { ?> 
-						                                           			<optgroup label="<?php echo $industryType->business_type_name; ?>">
-						                                           <?php  $businessTypeName =  $industryType->business_type_name; }      ?>  
-						                                            <option value="<?php echo $industryType->id; ?>"><?php echo $industryType->name; ?></option>
-						                                <?php  }   ?>						                                
-													</select>
-												</div>
-											</div>
-
-											<div class="col-md-6 float-left z-100">
-												<div class="input-group z-100">
-													<input autocomplete="off" type="password" name="password" class="form-control ng-pristine ng-untouched ng-valid ng-empty" placeholder="Create your password" required="">
-												</div>
-											</div>
-
-											<div class="col-md-12">
-												&nbsp;
-												<!-- <div class="input-group">
-													<input autocomplete="off" type="password" name="email" class="form-control ng-pristine ng-untouched ng-valid ng-empty" aria-label="Create your password" placeholder="Create your password">
-												</div> -->
-											</div>
-
-											<div class="col-md-12">
-												<div id="ajax-authentication-alert-container"></div>
-											</div>
-		                      			<div class="pl-3 pr-3">
-		  						          	<button class="reg-wbtn btn btn-indigo btn-rounded prevBtn float-left" data-key="step-1" type="button">Previous</button>
-		  						          	<button class="reg-wbtn btn btn-indigo btn-rounded nextBtn float-right" data-key="step-3" type="button">Next</button>
+		                      			<div class="pl-3 pr-3 float-right">
+		  						          	<button class="reg-wbtn btn btn-indigo btn-rounded prevBtn" data-key="step-1" type="button">Previous</button>
+		  						          	<button class="reg-wbtn btn btn-indigo btn-rounded nextBtn" data-key="step-3" type="button">Next</button>
 		                      			</div>
 								        </div>
 							      	</div>
@@ -697,10 +717,8 @@ $(function(){
 
         var curInputs  = curStep.find("input[type='text'],input[type='email'],input[type='password']");
         var curInputEmail  = curStep.find("input[type='email']");
-        console.log("Test Validation");
-        console.log(curInputs);
-
-
+        //console.log("Test Validation");
+        //console.log(curInputs);
 
         var isValid = true;
         var isValidEmail = true;
@@ -714,7 +732,9 @@ $(function(){
             if (!curInputs[i].validity.valid){
                 isValid = false;
                 req_inc++;
-                $(curInputs[i]).closest(".form-group").addClass("has-error");
+                $(curInputs[i]).closest(".input-group").addClass("has-error");
+            }else{
+            	$(curInputs[i]).closest(".input-group").removeClass("has-error");
             }
         }
 
@@ -725,11 +745,14 @@ $(function(){
             }
         }
 
+        $("#ajax-authentication-alert-container").html('');
+
         if( isValid ){
         	var firstname 			= $("input[name=firstname]").val();
         	var lastname 			= $("input[name=lastname]").val();
         	var phone 				= $("input[name=phone]").val();
         	var business_address 	= $("#business_address").val(); 
+        	var zip_code            = $("#zip_code").val(); 
         	//var number_of_employee 	= $('#number_of_employee').find(":selected").val();
         	//var industry_type_id 	= $('#industry_type_id').find(":selected").val();
         	var a_email = $("#email_address").val(); 
@@ -750,6 +773,7 @@ $(function(){
 	               		lastname:lastname,
 	               		phone:phone,
 	               		business_address:business_address,
+	               		zip_code:zip_code
 	               	},
 	               success: function(o)
 	               {
@@ -940,6 +964,8 @@ $(function(){
 	  var total_amount = $("#plan_price_discounted").val();
 	  var firstname = $("#firstname").val();
 	  var lastname  = $("#lastname").val();
+	  var business_address   = $("#business_address").val();
+	  var zip_code = $("#zip_code").val();
 
 	  var url = base_url + 'registration/_converge_request_token';
 	  $("#converge-button").html('<span class="spinner-border spinner-border-sm m-0"></span>');
@@ -948,7 +974,7 @@ $(function(){
 	       type: "POST",
 	       url: url,
 	       dataType: "json",
-	       data: {firstname:firstname, lastname:lastname, total_amount:total_amount},
+	       data: {firstname:firstname, lastname:lastname, business_address:business_address, zip_code:zip_code, total_amount:total_amount},
 	       success: function(o)
 	       {
 	          if( o.is_success ){
@@ -987,12 +1013,12 @@ $(function(){
 	        Swal.fire({
 	          icon: 'error',
 	          title: 'Declined',
-	          text: JSON.stringify(response, null, '\t')
+	          text: 'Please check your entries and try again'
 	        });
 	        //showResult("declined", JSON.stringify(response, null, '\t'));
 	      },
 	      onApproval: function (response) {	          
-	          $("#payment-method").val('stripe');
+	          $("#payment-method").val('converge');
 	          $("#payment-method-status").val('COMPLETED');
 	          activate_registration();
 	          //showResult("approval", JSON.stringify(response, null, '\t'));

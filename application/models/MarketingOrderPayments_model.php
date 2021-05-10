@@ -1,17 +1,9 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
-class DealsSteals_model extends MY_Model
+class MarketingOrderPayments_model extends MY_Model
 {
-    public $table = 'deals_steals';
-
-    public $is_active = 1;
-    public $is_inactive = 0;
-
-    public $status_draft  = 0;
-    public $status_active = 1;
-    public $status_scheduled = 2;
-    public $status_ended = 3;
+    public $table = 'marketing_order_payments';
 
     public function getAll($filters=array())
     {
@@ -36,9 +28,9 @@ class DealsSteals_model extends MY_Model
     public function getAllByCompanyId($company_id, $filters=array(), $conditions=array())
     {
 
-        $this->db->select('deals_steals.*, users.id AS uid, users.company_id');
+        $this->db->select('marketing_order_payments.*, users.id AS uid, users.company_id');
         $this->db->from($this->table);
-        $this->db->join('users', 'deals_steals.user_id = users.id', 'LEFT');
+        $this->db->join('users', 'marketing_order_payments.user_id = users.id', 'LEFT');
 
         if ( !empty($filters) ) {
             if ( !empty($filters['search']) ) {
@@ -68,40 +60,35 @@ class DealsSteals_model extends MY_Model
         return $query;
     }
 
-    public function deleteById($id){
+    public function deleteById($id)
+    {
         $this->db->delete($this->table, array('id' => $id));
     }
 
 
     public function getById($id)
     {
-        $this->db->select('deals_steals.*, users.id AS uid, users.company_id');
+        $this->db->select('marketing_order_payments.*, users.id AS uid, users.company_id');
         $this->db->from($this->table);
-        $this->db->join('users', 'deals_steals.user_id = users.id', 'LEFT');
+        $this->db->join('users', 'marketing_order_payments.user_id = users.id', 'LEFT');
 
-        $this->db->where('deals_steals.id', $id);
+        $this->db->where('marketing_order_payments.id', $id);
         $query = $this->db->get()->row();
         return $query;
     }
 
-    public function isActive(){
-        return $this->is_active;
+    public function getByOrderNumber($order_number)
+    {
+        $this->db->select('marketing_order_payments.*, users.id AS uid, users.company_id');
+        $this->db->from($this->table);
+        $this->db->join('users', 'marketing_order_payments.user_id = users.id', 'LEFT');
+
+        $this->db->where('marketing_order_payments.order_number', $order_number);
+        $query = $this->db->get()->row();
+        return $query;
     }
 
-    public function isInactive(){
-        return $this->is_inactive;
-    }
-
-    public function optionsIsActive(){
-        $option = [
-            $this->is_active => 'Active',
-            $this->is_inactive => 'Inactive',
-        ];
-
-        return $option;
-    }
-
-    public function updateDealsSteals($id, $data)
+    public function updateOrderPayment($id, $data)
     {
         $this->db->from($this->table);
         $this->db->set($data);
@@ -109,39 +96,22 @@ class DealsSteals_model extends MY_Model
         $this->db->update();
     }
 
-    public function dealStealPrice()
+    public function generateORNumber($id)
     {
-        return 10;
+        $issue_no = 'OR-' . date("Y") . '-' . str_pad($id, 5,"0",STR_PAD_LEFT);
+        return $issue_no; 
     }
 
-    public function statusDraft(){
-        return $this->status_draft;
+    public function paymentMethodCC()
+    {
+        return 'Credit Card';
     }
 
-    public function statusScheduled(){
-        return $this->status_scheduled;
+    public function statusCompleted()
+    {
+        return 'Completed';
     }
-
-    public function statusEnded(){
-        return $this->status_ended;
-    }
-
-    public function statusActive(){
-        return $this->status_active;
-    }
-
-    public function statusOptions(){
-        $options = [
-            $this->status_active => 'Active',
-            $this->status_draft => 'Draft',
-            $this->status_scheduled => 'Scheduled',
-            $this->status_ended => 'Ended'
-        ];
-
-        return $options;
-    }
-
 }
 
-/* End of file DealsSteals_model.php */
-/* Location: ./application/models/DealsSteals_model.php */
+/* End of file MarketingOrderPayments_model.php */
+/* Location: ./application/models/MarketingOrderPayments_model.php */

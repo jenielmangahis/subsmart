@@ -39,6 +39,16 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 var address = place.address_components[0].long_name + ' ' + place.address_components[1].long_name + place.address_components[2].long_name + place.address_components[3].long_name;
                 $("#business_address").val(address);
                 $("#google_search_place").val(place.name); //Use this if return business name only
+
+                for (var i = 0; i < place.address_components.length; i++) {
+			      for (var j = 0; j < place.address_components[i].types.length; j++) {
+			        if (place.address_components[i].types[j] == "postal_code") {
+			        	$("#zip_code").val(place.address_components[i].long_name);
+			        }
+			      }
+			    }
+
+                //$("#zip_code").val(place.address_components[6].long_name);
                 //console.log(place);
             });
         }

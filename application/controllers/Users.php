@@ -100,7 +100,7 @@ class Users extends MY_Controller {
 		$selectedCategories = $this->ServiceCategory_model->getAllCategoriesByCompanyID($comp_id);
 		$schedules   = unserialize($profiledata->working_days);
 
-		$conditions = ['deals_steals.status' => $this->DealsSteals_model->statusActive()];
+		$conditions[] = ['field' => 'deals_steals.status', 'value' => $this->DealsSteals_model->statusActive()];
 		$dealsSteals = $this->DealsSteals_model->getAllByCompanyId($comp_id, array(), $conditions);
 		
 		$this->page_data['selectedCategories'] = $selectedCategories;

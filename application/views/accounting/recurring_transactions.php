@@ -6,12 +6,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     {
         display: none !important;
     }
-    #filterDropdown {
-        padding: 10px 12px !important;
-    }
-    #filterDropdown:after {
-        display: none;
-    }
     #recurring_transactions .btn-group .btn:hover, #recurring_transactions .btn-group .btn:focus {
         color: unset;
     }

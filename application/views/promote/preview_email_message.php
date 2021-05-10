@@ -1,6 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <?php include viewPath('includes/header'); ?>
+<script src="http://momentjs.com/downloads/moment.js"></script>
 <style>
 .tabs-menu {
     margin-bottom: 20px;
@@ -153,9 +154,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                               <div class="row">
                                                   <div class="col-sm-8">
                                                       <div class="input-group mb-3">
-                                                        <div class="input-group-prepend">
-                                                          <label style="width: 400px;">Valid From <span class="fa fa-question-circle help-tooltip" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Select the start date. You can schedule a deal if you set this date in future." data-original-title="" title="" style="margin-left: 10px;"></span></label>                                                          
-                                                          <input type="text" name="valid_from" value="<?= isset($dealsSteals) ? date("m/d/Y",strtotime($dealsSteals->valid_from)) : date("m/d/Y"); ?>"  class="form-control default-datepicker" autocomplete="off" required /><span class="input-group-text" id="basic-addon1"><i class="fa fa-calendar"></i></span>
+                                                        <div class="input-group-prepend">                                                          
+                                                          <label style="width: 400px;">Valid From <span class="fa fa-question-circle help-tooltip" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Select the start date. You can schedule a deal if you set this date in future." data-original-title="" title="" style="margin-left: 10px;"></span></label>                                                           
+                                                          <input type="text" name="valid_from" value="<?= isset($dealsSteals) ? date("m/d/Y",strtotime($dealsSteals->valid_from)) : date("m/d/Y"); ?>"  class="form-control valid-from-datepicker" autocomplete="off" required /><span class="input-group-text" id="basic-addon1"><i class="fa fa-calendar"></i></span>
                                                         </div>
                                                       </div>
                                                   </div>
@@ -163,7 +164,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                       <div class="input-group mb-3">
                                                         <div class="input-group-prepend">
                                                           <label style="width: 400px;">Valid To <span style="margin-left: 10px;" class="fa fa-question-circle help-tooltip" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="The date when the deal will expire." data-original-title="" title=""></span></label>                                                          
-                                                          <input type="text" name="valid_to" value="<?= isset($dealsSteals) ? date("m/d/Y",strtotime($dealsSteals->valid_to)) : date("m/d/Y"); ?>"  class="form-control default-datepicker" autocomplete="off" required /><span class="input-group-text" id="basic-addon1"><i class="fa fa-calendar"></i></span>
+                                                          <input type="text" name="valid_to" value="<?= isset($dealsSteals) ? date("m/d/Y",strtotime($dealsSteals->valid_to)) : date("m/d/Y"); ?>"  class="form-control valid-to" autocomplete="off" required /><span class="input-group-text" id="basic-addon1" style="visibility: hidden;"><i class="fa fa-calendar"></i></span>
                                                         </div>
                                                       </div>
                                                   </div>
@@ -240,25 +241,18 @@ $(function(){
         }, 1000);
     });
 
-    <?php if($smsBlast->price_variables != ''){  ?>
-      $(".select-date-time").fadeIn();
-    <?php } ?>
-
-    $("#is_scheduled").change(function(){
-        if ($(this).is(':checked')) {
-            $(".select-date-time").fadeIn();
-        }else{
-            $(".select-date-time").fadeOut();
-        }
-    });
-
-    $('#smsTimepicker').timepicker({
-        showInputs: false
-    });
-
-    $('.default-datepicker').datepicker({
+    $('.valid-from-datepicker').datepicker({
         format: 'mm/dd/yyyy',
-        autoclose: true
+        autoclose: true        
+    });
+
+    $('.valid-from-datepicker').change(function(){
+      var validFrom = $(this).val();
+      var validFrom = moment(validFrom);
+      var validTo   = moment(validFrom).add(1, 'M');
+
+      $('.valid-to').val(validTo.format("MM/DD/YYYY"));
+      
     });
 });
 </script>

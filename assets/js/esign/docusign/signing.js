@@ -64,9 +64,11 @@ function Signing(hash) {
     );
 
     for (let index = 1; index <= document.numPages; index++) {
-      const currentFields = fields.filter(({ doc_page, doc_id }) => {
-        return doc_page == index && doc_id == file.id;
-      });
+      const currentFields = fields.filter(
+        ({ doc_page, docfile_document_id }) => {
+          return doc_page == index && docfile_document_id == file.id;
+        }
+      );
 
       const params = { page: index, document };
       const $page = await getPage(params);
@@ -178,106 +180,107 @@ function Signing(hash) {
           return $element;
         }
 
-        if (field_name === "Checkbox") {
-          const { options = [] } = JSON.parse(field.specs) || {};
-          const values = fieldValue && fieldValue.value ? JSON.parse(fieldValue.value) : null; // prettier-ignore
+        if (["Checkbox", "Radio"].includes(field_name)) {
+          const { subCheckbox = [] } = JSON.parse(field.specs) || {};
 
-          const html = `<div class="docusignField docusignField__checkbox"></div>`;
+          let { value } = fieldValue || {};
+          value = value ? JSON.parse(value) : {};
+          const { isChecked = false } = value;
+
+          const getSubCheckboxValues = () => {
+            return value.subCheckbox ?? [];
+          };
+
+          const inputType = field_name.toLowerCase();
+          const baseClassName =
+            field_name === "Checkbox"
+              ? "docusignField__checkbox"
+              : "docusignField__radio";
+
+          const html = `<div class="docusignField ${baseClassName}"></div>`;
           const $element = createElementFromHTML(html);
+          $element.css({ top, left, position: "absolute" });
 
-          if (options && options.length) {
+          $element.append(`
+            <div class="form-check">
+              <span class="form-check-indicator">x</span>
+              <input
+                class="form-check-input"
+                type="${inputType}"
+                id="${field.unique_key}"
+                ${isChecked ? "checked" : ""}
+              >
+              <label
+                class="form-check-label invisible"
+                for="${field.unique_key}"
+              ></label>
+            </div>
+          `);
+
+          if (subCheckbox.length) {
             $element.append(
-              options.map((option) => {
-                const id = guidGenerator();
-                const isSelected = selected.includes(option);
+              subCheckbox.map((option) => {
+                const { id, top = 0, left = 0 } = option;
+                const _value = getSubCheckboxValues().find((s) => s.id === id);
+                const isChecked = _value ? _value.isChecked : false;
 
                 // prettier-ignore
-                return `
-                  <div class="form-check" title="${option}">
+                const $currElement = createElementFromHTML( `
+                  <div class="form-check">
                     <span class="form-check-indicator">x</span>
-                    <input class="form-check-input" type="checkbox" value="${option}" id="${id}" ${isSelected ? "checked" : ""}>
-                    <label class="form-check-label invisible" for="${id}">
-                      ${option}
-                    </label>
+                    <input class="form-check-input" type="${inputType}" id="${id}" ${isChecked ? "checked" : ""}>
+                    <label class="form-check-label invisible" for="${id}"></label>
                   </div>
-                `;
+                `);
+
+                $currElement.css({ top, left, position: "absolute" });
+                return $currElement;
               })
             );
-          } else {
-            $element.append(`
-              <div class="form-check">
-                <span class="form-check-indicator">x</span>
-                <input class="form-check-input" type="checkbox" id="${field.unique_key}">
-              </div>
-            `);
           }
 
-          if (values) {
-            $element.find("input:checkbox").each(function () {
-              const value = values.find((v) => v.id === $(this).attr("id"));
-              if (value) {
-                $(this).prop("checked", value.isChecked);
-              }
-            });
-          }
+          $element.find(`input:${inputType}`).on("change", async function () {
+            const $this = $(this);
+            const id = $this.attr("id");
+            const _isChecked = $this.is(":checked");
 
-          $element.find("input:checkbox").on("change", function () {
-            const values = [];
-            $element.find("input:checkbox").each(function () {
-              values.push({
-                id: $(this).attr("id"),
-                isChecked: $(this).is(":checked"),
+            if (id === field.unique_key) {
+              const { data } = await storeFieldValue({
+                id: fieldId,
+                value: JSON.stringify({
+                  subCheckbox: getSubCheckboxValues(),
+                  isChecked: _isChecked,
+                }),
               });
-            });
 
-            const value = JSON.stringify(values);
-            storeFieldValue({ value, id: fieldId });
+              value = JSON.parse(data.value);
+            } else {
+              const subCheckboxValues = getSubCheckboxValues();
+              let newSubCheckbox = [];
+
+              if (subCheckboxValues.find((s) => s.id === id)) {
+                newSubCheckbox = subCheckboxValues.map((s) => {
+                  return s.id !== id ? s : { ...s, isChecked: _isChecked };
+                });
+              } else {
+                newSubCheckbox = [
+                  ...subCheckboxValues,
+                  { id, isChecked: _isChecked },
+                ];
+              }
+
+              const { data } = await storeFieldValue({
+                id: fieldId,
+                value: JSON.stringify({
+                  subCheckbox: newSubCheckbox,
+                  isChecked: Boolean(value.isChecked),
+                }),
+              });
+
+              value = JSON.parse(data.value);
+            }
           });
 
-          $element.css({ top, left, position: "absolute" });
-          return $element;
-        }
-
-        if (field_name === "Radio") {
-          const { options = [] } = JSON.parse(field.specs) || {};
-          const { value: selected } = fieldValue || { value: null };
-
-          const html = `<div class="docusignField docusignField__radio"></div>`;
-          const $element = createElementFromHTML(html);
-
-          if (options && options.length) {
-            $element.append(
-              options.map((option) => {
-                const id = guidGenerator();
-                const isSelected = selected === option;
-
-                // prettier-ignore
-                return `
-                  <div class="form-check" title="${option}">
-                    <span class="form-check-indicator">x</span>
-                    <input class="form-check-input" type="radio" value="${option}" name="radio-${fieldIndex}" id="${id}" ${isSelected ? "checked" : ""}>
-                    <label class="form-check-label invisible" for="${id}">
-                      ${option}
-                    </label>
-                  </div>
-                `;
-              })
-            );
-          } else {
-            $element.append(`
-              <div class="form-check">
-                <span class="form-check-indicator">x</span>
-                <input class="form-check-input" type="radio">
-              </div>
-            `);
-          }
-
-          $element.find("input:radio").on("change", function () {
-            const $selected = $element.find("input:radio:checked");
-            storeFieldValue({ value: $selected.val(), id: fieldId });
-          });
-
-          $element.css({ top, left, position: "absolute" });
           return $element;
         }
 

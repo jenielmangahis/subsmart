@@ -2,6 +2,7 @@
   const $esignButton = $("#esignButton");
   const $templateModal = $("#docusignTemplateModal");
   const $table = $("#templatesTable");
+  const workorderId = $("#workorderId").val();
 
   const urlPrefix = location.hostname === "localhost" ? "/nsmartrac" : "";
 
@@ -38,7 +39,11 @@
         {
           sortable: false,
           render: function (_, _, row) {
-            return `<button class="btn btn-sm btn-primary">Use Template</button>`;
+            return `
+              <a href="${urlPrefix}/DocuSign/templatePrepare?id=${row.id}&workorder_id=${workorderId}" class="btn btn-sm btn-primary">
+                Use Template
+              </a>
+            `;
           },
         },
       ],

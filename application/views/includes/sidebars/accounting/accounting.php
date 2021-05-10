@@ -102,6 +102,8 @@
                                 <li><a href="#" class="ajax-expense_modal" data-view="expense_modal" data-toggle="modal" data-target="#expenseModal">Expense</a></li>
                                 <li><a href="#" class="ajax-check_modal" data-view="check_modal" data-toggle="modal" data-target="#checkModal">Check</a></li>
                                 <li><a href="#" class="ajax-bill_modal" data-view="bill_modal" data-toggle="modal" data-target="#billModal">Bill</a></li>
+                                <li><a href="#" class="ajax-pay_bills_modal" data-view="pay_bills_modal" data-toggle="modal" data-target="#payBillsModal">Pay bills</a></li>
+                                <li><a href="#" class="ajax-vendor_credit_modal" data-view="vendor_credit_modal" data-toggle="modal" data-target="#vendorCreditModal">Vendor Credit</a></li>
                                 <!-- <li><a href="#" data-toggle="modal" data-target="#edit-expensesCheck" id="addCheck">Check</a></li> -->
                                 <!-- <li><a href="#" data-toggle="modal" data-target="#bill-modal" id="addBill">Bill</a></li>
                                 <li><a href="#" data-toggle="modal" data-target="#pay-bills" id="payBills">Pay bills</a></li>

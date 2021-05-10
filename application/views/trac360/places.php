@@ -1,7 +1,6 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 include viewPath('includes/header'); ?>
-
 <div id="main_body" class="container-fluid" style="background-color: #6241A4;">
     <div class="row">
         <div class="col-md-5">
@@ -41,21 +40,43 @@ include viewPath('includes/header'); ?>
                     </div>
                 </div>
                 <div class="col-md-9 overflow-auto trac360_main_sections" style="background-color: #fff;">
-                    <div id="add_new_place_btn" class="sec-2-option add-address"
-                        onclick="user_selected( 8.045953500047293, 123.51302520681782,14)">
+                    <div id="add_new_place_modal_btn" class="sec-2-option add-address">
                         <div class="row ">
-                            <div class="col-md-3 profile">
+                            <div class="col-md-2 profile" style="padding-top: 10px;">
                                 <center><img
                                         src="<?=base_url("assets/img/trac360/map_marker.png")?>"
                                         alt="user" class=""></center>
                             </div>
-                            <div class="col-md-9 details">
+                            <div class="col-md-10 details">
                                 <p class="last_tract_location first-p">Add a new place today!</p>
                                 <p class="last_tract_location second-p">Know when your family and
                                     friends arrive</p>
                             </div>
                         </div>
                     </div>
+                    <?php
+                        foreach ($all_places as $place) {
+                            ?>
+                    <div class="sec-2-option sec-2-address-btn">
+                        <div class="row ">
+                            <div class="col-md-2 profile">
+                                <center><img
+                                        src="<?=base_url("assets/img/trac360/map_marker.png")?>"
+                                        alt="user" class="">
+                                </center>
+                            </div>
+                            <div class="col-md-10 details">
+                                <p class="last_tract_location first-p"><?=$place->place_name?>
+                                </p>
+                                <p class="last_tract_location second-p"><?=$place->address?>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <?php
+                        }
+                    ?>
+
                 </div>
             </div>
         </div>
@@ -77,7 +98,8 @@ include viewPath('includes/header'); ?>
 
 <!--Adding Project Schedule-->
 <div class="modal-right-side">
-    <div class="modal right fade" id="add_new_place" tabindex="" role="dialog" aria-labelledby="edit_attendance_log">
+    <div class="modal right fade" id="add_new_place_modal" tabindex="" role="dialog"
+        aria-labelledby="edit_attendance_log">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -93,24 +115,33 @@ include viewPath('includes/header'); ?>
                         <div class="row">
                             <div class="col-lg-12">
                                 <div class="form-group">
-                                    <input type="text" name="shift_start" id="form_shift_start" class="form-control"
-                                        placeholder="Place name (Home, School, Work, ...)">
+                                    <input type="text" name="place_name" id="new_place_name" class="form-control"
+                                        placeholder="Place name (Home, School, Work, ...)" required>
                                 </div>
                             </div>
                             <div class="col-lg-12">
-                                <div class="form-group hiddenSection">
+                                <div class="form-group">
                                     <label for="">Enter an address or drag the map to find your place</label>
-                                    <input type="text" name="shift_end" class="form-control ts-start-date" value="">
+                                    <input id="new_formatted_address" type="text" name="new_formatted_address"
+                                        class="form-control ts-start-date" value=""
+                                        onchange="new_formatted_address_changed()" required>
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group map-canva" style="position: relative;">
+                            <div class="new_address_radius_container">
+                                <label class="radius_number_view">250 ft zone</label>
+                                <input type="range" class="form-range" min="76.2" max="3218.688" step="0.001"
+                                    id="new_address_radius" value="76.2">
+                            </div>
                             <div id="add_new_address_map"></div>
                         </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-success" id="save_edited_attendance_logs">Save</button>
+                        <button type="button" class="btn btn-success" id="save_new_address">Add new
+                            address</button>
+                        <button type="submit" class="btn btn-success" style="display: none;">save</button>
                     </div>
                 </form>
             </div>
@@ -122,6 +153,8 @@ include viewPath('includes/header'); ?>
     // Initialize and add the map
     var map;
     var new_address_map;
+    var new_map_marker;
+
 
     function initMap() {
         $("#map-loader").hide();
@@ -133,6 +166,20 @@ include viewPath('includes/header'); ?>
             },
             zoom: 9,
         });
+        get_current_user_location();
+    }
+
+    function get_current_user_location() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(show_current_user_position);
+        } else {
+            console.log("Geolocation is not supported by this browser.");
+        }
+    }
+
+    function show_current_user_position(position) {
+        current_lat = position.coords.latitude;
+        current_lng = position.coords.longitude;
         initMap_new_address_map();
     }
 
@@ -312,12 +359,13 @@ include viewPath('includes/header'); ?>
         // Create a map object, and include the MapTypeId to add
         // to the map type control.
 
-        const map = new google.maps.Map(document.getElementById("add_new_address_map"), {
+
+        new_address_map = new google.maps.Map(document.getElementById("add_new_address_map"), {
             center: {
-                lat: 7.3087,
-                lng: 125.6841
+                lat: current_lat,
+                lng: current_lng
             },
-            zoom: 11,
+            zoom: 17,
             mapTypeControlOptions: {
                 mapTypeIds: [
                     "roadmap",
@@ -327,10 +375,143 @@ include viewPath('includes/header'); ?>
                     "styled_map",
                 ],
             },
+            mapTypeControl: false,
+            overviewMapControl: false,
+            zoomControl: true,
+            draggable: true,
+            fullscreenControl: false,
+            streetViewControl: false,
         });
         //Associate the styled map with the MapTypeId and set it to display.
-        map.mapTypes.set("styled_map", styledMapType);
-        map.setMapTypeId("styled_map");
+        new_address_map.mapTypes.set("styled_map", styledMapType);
+        new_address_map.setMapTypeId("styled_map");
+
+        google.maps.event.addListener(new_address_map, 'dragend', function() {
+            $("#new_formatted_address").val("Loading address...");
+            new_address_map_changed();
+        });
+        setMapCenter("add_new", current_lat, current_lng);
+    }
+    var current_lat = 0;
+    var current_lng = 0;
+    var antennasCircle_new_adress;
+    var radius_new_address = 76.2;
+
+    function new_address_map_changed() {
+        var center = new_address_map.getCenter()
+        var lat = center.lat();
+        var lng = center.lng();
+        if (current_lat != lat && current_lng != lng) {
+            current_lat = lat;
+            current_lng = lng;
+
+            if (antennasCircle_new_adress != null) {
+                antennasCircle_new_adress.setMap(null);
+                new_address_map.fitBounds(antennasCircle_new_adress.getBounds());
+            }
+            antennasCircle_new_adress = new google.maps.Circle({
+                strokeColor: "#0275FF",
+                strokeOpacity: 0.8,
+                strokeWeight: 2,
+                fillColor: "#8DC740",
+                fillOpacity: 0.35,
+                map: new_address_map,
+                center: {
+                    lat: current_lat,
+                    lng: current_lng
+                },
+                radius: radius_new_address
+            });
+            new_address_map.fitBounds(antennasCircle_new_adress.getBounds());
+
+            var latlng = new google.maps.LatLng(current_lat, current_lng);
+            // This is making the Geocode request
+            var geocoder = new google.maps.Geocoder();
+            geocoder.geocode({
+                'latLng': latlng
+            }, (results, status) => {
+                if (status !== google.maps.GeocoderStatus.OK) {
+                    // alert(status);
+                }
+                // This is checking to see if the Geoeode Status is OK before proceeding
+                if (status == google.maps.GeocoderStatus.OK) {
+                    var address = (results[0].formatted_address);
+                    $("#new_formatted_address").val(address);
+
+                }
+            });
+        }
+    }
+
+    function new_formatted_address_changed() {
+
+        var geocoder = new google.maps.Geocoder();
+        var address = $("#new_formatted_address").val();
+
+        geocoder.geocode({
+            'address': address
+        }, function(results, status) {
+
+            if (status == google.maps.GeocoderStatus.OK) {
+                var latitude = results[0].geometry.location.lat();
+                var longitude = results[0].geometry.location.lng();
+                current_lat = latitude;
+                current_lng = longitude;
+                setMapCenter("add_new", current_lat, current_lng);
+            }
+        });
+    }
+
+    function setMapCenter(update_the_map, the_lat, the_lng) {
+        var the_map = map;
+        if (update_the_map == "add_new") {
+            the_map = new_address_map;
+        }
+        the_map.setCenter({
+            lat: the_lat,
+            lng: the_lng,
+        });
+        google.maps.event.addListenerOnce(the_map, "bounds_changed", function() {
+            // the_map.setZoom((18) - (radius_new_address / 76.2));
+        });
+        if (update_the_map == "add_new") {
+            if (antennasCircle_new_adress != null) {
+                antennasCircle_new_adress.setMap(null);
+                new_address_map.fitBounds(antennasCircle_new_adress.getBounds());
+            }
+            antennasCircle_new_adress = new google.maps.Circle({
+                strokeColor: "#0275FF",
+                strokeOpacity: 0.8,
+                strokeWeight: 2,
+                fillColor: "#8DC740",
+                fillOpacity: 0.35,
+                map: the_map,
+                center: {
+                    lat: the_lat,
+                    lng: the_lng
+                },
+                radius: radius_new_address
+            });
+            the_map.fitBounds(antennasCircle_new_adress.getBounds());
+
+            new_address_map = the_map;
+            var latlng = new google.maps.LatLng(the_lat, the_lng);
+            // This is making the Geocode request
+            var geocoder = new google.maps.Geocoder();
+            geocoder.geocode({
+                'latLng': latlng
+            }, (results, status) => {
+                if (status !== google.maps.GeocoderStatus.OK) {
+                    // alert(status);
+                }
+                // This is checking to see if the Geoeode Status is OK before proceeding
+                if (status == google.maps.GeocoderStatus.OK) {
+                    var address = (results[0].formatted_address);
+                    $("#new_formatted_address").val(address);
+                }
+            });
+
+        }
     }
 </script>
 <script

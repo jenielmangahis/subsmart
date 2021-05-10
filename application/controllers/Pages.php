@@ -361,6 +361,8 @@ class Pages extends MY_Controller {
 		// In this section, we set variables to be captured by the PHP file and passed to Converge in the curl request.
 		$firstname = $customer->first_name; //Post first name
 		$lastname  = $customer->last_name; //Post first name
+		$address   = $customer->mail_add;
+		$zipcode   = $customer->zip_code;
 		$amount    = $post['total_amount']; //Post Tran Amount
 		//$merchanttxnid = $_POST['ssl_merchant_txn_id']; //Capture user-defined ssl_merchant_txn_id as POST data
 		//$invoicenumber = $_POST['ssl_invoice_number']; //Capture user-defined ssl_invoice_number as POST data
@@ -380,6 +382,8 @@ class Pages extends MY_Controller {
 		"&ssl_transaction_type=CCSALE".
 		"&ssl_first_name=$firstname".
 		"&ssl_last_name=$lastname".
+		"&ssl_avs_address=$address".
+        "&ssl_avs_zip=$zipcode".
 		"&ssl_get_token=Y".
 		"&ssl_add_token=Y".
 		"&ssl_amount=$amount"

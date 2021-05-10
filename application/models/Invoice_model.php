@@ -106,6 +106,31 @@ class Invoice_model extends MY_Model
         return $query->row();
     }
 
+    public function getItems($id)
+    {
+        $this->db->select('*');
+		$this->db->from('invoices');
+		$this->db->where('id', $id);
+        $query = $this->db->get();
+        $cus = $query->row();
+        // // foreach($query as $q){
+        //     $company = $q->company_id;
+        // // }
+
+        $where = array(
+            'type' => 'Invoice',
+            'type_id'   => $cus->id
+          );
+
+        $this->db->select('*');
+		$this->db->from('item_details');
+        // $this->db->where('type', 'Work Order');
+		// $this->db->where('type_id', $cus->id);
+        $this->db->where($where);
+        $query2 = $this->db->get();
+        return $query2->result();
+    }
+
 
     public function saveServiceAddress($data, $invoice_id = 0)
     {

@@ -468,6 +468,89 @@ class Accounting_modals extends MY_Controller {
                     $this->page_data['dropdown']['categories'] = $categoryAccs;
                     $this->page_data['dropdown']['terms'] = $terms;
                 break;
+                case 'pay_bills_modal' :
+                    $paymentAccs = [];
+                    $accountTypes = [
+                        'Bank',
+                        'Credit Card'
+                    ];
+
+                    foreach($accountTypes as $typeName) {
+                        $accType = $this->account_model->getAccTypeByName($typeName);
+
+                        $accounts = $this->chart_of_accounts_model->getByAccountType($accType->id, null, logged('company_id'));
+
+                        $count = 0;
+                        if(count($accounts) > 0) {
+                            foreach($accounts as $account) {
+                                $childAccs = $this->chart_of_accounts_model->getChildAccounts($account->id);
+
+                                $account->childAccs = $childAccs;
+
+                                $paymentAccs[$typeName][] = $account;
+
+                                if($count === 1) {
+                                    $selectedBalance = $account->balance;
+                                }
+    
+                                $count++;
+                            }
+                        }
+                    }
+
+                    if(strpos($selectedBalance, '-') !== false) {
+                        $balance = str_replace('-', '', $selectedBalance);
+                        $selectedBalance = '-$'.number_format($balance, 2, '.', ',');
+                    } else {
+                        $selectedBalance = '$'.number_format($selectedBalance, 2, '.', ',');
+                    }
+
+                    $this->page_data['dropdown']['payment_accounts'] = $paymentAccs;
+                    $this->page_data['balance'] = $selectedBalance;
+                    $this->page_data['dropdown']['payees'] = $this->vendors_model->getAllByCompany();
+                break;
+                case 'vendor_credit_modal' :
+                    $terms = $this->accounting_terms_model->getActiveCompanyTerms(logged('company_id'));
+
+                    $categoryAccs = [];
+                    $accountTypes = [
+                        'Expenses',
+                        'Bank',
+                        'Accounts receivable (A/R)',
+                        'Other Current Assets',
+                        'Fixed Assets',
+                        'Accounts payable (A/P)',
+                        'Credit Card',
+                        'Other Current Liabilities',
+                        'Long Term Liabilities',
+                        'Equity',
+                        'Income',
+                        'Cost of Goods Sold',
+                        'Other Income',
+                        'Other Expense'
+                    ];
+
+                    foreach($accountTypes as $typeName) {
+                        $accType = $this->account_model->getAccTypeByName($typeName);
+
+                        $accounts = $this->chart_of_accounts_model->getByAccountType($accType->id, null, logged('company_id'));
+
+                        if(count($accounts) > 0) {
+                            foreach($accounts as $account) {
+                                $childAccs = $this->chart_of_accounts_model->getChildAccounts($account->id);
+
+                                $account->childAccs = $childAccs;
+
+                                $categoryAccs[$typeName][] = $account;
+                            }
+                        }
+                    }
+
+                    $this->page_data['dropdown']['items'] = $this->items_model->getItemsWithFilter(['type' => 'inventory', 'status' => [1]]);
+                    $this->page_data['dropdown']['customers'] = $this->accounting_customers_model->getAllByCompany();
+                    $this->page_data['dropdown']['vendors'] = $this->vendors_model->getAllByCompany();
+                    $this->page_data['dropdown']['categories'] = $categoryAccs;
+                break;
             }
 
             $this->load->view("accounting/modals/". $view, $this->page_data);
@@ -1300,6 +1383,12 @@ class Accounting_modals extends MY_Controller {
                 break;
                 case 'billModal' :
                     $this->result = $this->bill($data);
+                break;
+                case 'payBillsModal' :
+                    $this->result = $this->pay_bills($data);
+                break;
+                case 'vendorCreditModal' :
+                    $this->result = $this->vendor_credit($data);
                 break;
             }
         } catch (\Exception $e) {
@@ -2673,6 +2762,341 @@ class Accounting_modals extends MY_Controller {
             $return['data'] = $billId;
             $return['success'] = $billId ? true : false;
             $return['message'] = $billId ? 'Entry Successful!' : 'An unexpected error occured!';
+        }
+
+        return $return;
+    }
+
+    public function load_bills()
+    {
+        $this->load->model('expenses_model');
+
+        $post = json_decode(file_get_contents('php://input'), true);
+        $column = $post['order'][0]['column'];
+        $order = $post['order'][0]['dir'];
+        $columnName = $post['columns'][$column]['name'];
+        $start = $post['start'];
+        $limit = $post['length'];
+
+        $filters = [];
+
+        if($post['payee'] !== 'all') {
+            $filters['vendor_id'] = $post['payee'];
+        }
+
+        switch($post['due_date']) {
+            case 'last-365-days' :
+                $filters['start_date'] = date("Y-m-d", strtotime(date("m/d/Y")." -365 days"));
+                $filters['end_date'] = date("Y-m-d");
+            break;
+            case 'custom' :
+                if($post['from_date'] !== '') {
+                    $filters['start_date'] = date("Y-m-d", strtotime($post['from_date']));
+                }
+
+                if($post['to_date'] !== '') {
+                    $filters['end_date'] = date("Y-m-d", strtotime($post['to_date']));
+                }
+            break;
+            case 'today' :
+                $filters['start_date'] = date("Y-m-d");
+                $filters['end_date'] = date("Y-m-d");
+            break;
+            case 'yesterday' :
+                $filters['start_date'] = date("Y-m-d", strtotime(date("m/d/Y")." -1 day"));
+                $filters['end_date'] = date("Y-m-d", strtotime(date("m/d/Y")." -1 day"));
+            break;
+            case 'yesterday' :
+                $filters['start_date'] = date("Y-m-d", strtotime(date("m/d/Y")." -1 day"));
+                $filters['end_date'] = date("Y-m-d", strtotime(date("m/d/Y")." -1 day"));
+            break;
+            case 'this-week' :
+                $filters['start_date'] = date("Y-m-d", strtotime("this week -1 day"));
+                $filters['end_date'] = date("Y-m-d", strtotime("sunday -1 day"));
+            break;
+            case 'this-month' :
+                $filters['start_date'] = date("Y-m-01");
+                $filters['end_date'] = date("Y-m-t");
+            break;
+            case 'this-quarter' :
+                $quarters = [
+                    1 => [
+                        'start' => date("01/01/Y"),
+                        'end' => date("03/t/Y")
+                    ],
+                    2 => [
+                        'start' => date("04/01/Y"),
+                        'end' => date("06/t/Y")
+                    ],
+                    3 => [
+                        'start' => date("07/01/Y"),
+                        'end' => date("09/t/Y")
+                    ],
+                    4 => [
+                        'start' => date("10/01/Y"),
+                        'end' => date("12/t/Y")
+                    ]
+                ];
+                $month = date('n');
+                $quarter = ceil($month / 3);
+
+                $filters['start_date'] = $quarters[$quarter]['start'];
+                $filters['end_date'] = $quarters[$quarter]['end'];
+            break;
+            case 'this-year' :
+                $filters['start_date'] = date("Y-01-01");
+                $filters['end_date'] = date("Y-12-t");
+            break;
+            case 'last-week' :
+                $filters['start_date'] = date("Y-m-d", strtotime("this week -1 week -1 day"));
+                $filters['end_date'] = date("Y-m-d", strtotime("sunday -1 week -1 day"));
+            break;
+            case 'last-month' :
+                $filters['start_date'] = date("Y-m-01", strtotime(date("m/01/Y")." -1 month"));
+                $filters['end_date'] = date("Y-m-t", strtotime(date("m/01/Y")." -1 month"));
+            break;
+            case 'last-quarter' :
+                $quarters = [
+                    1 => [
+                        'start' => date("01/01/Y"),
+                        'end' => date("03/t/Y")
+                    ],
+                    2 => [
+                        'start' => date("04/01/Y"),
+                        'end' => date("06/t/Y")
+                    ],
+                    3 => [
+                        'start' => date("07/01/Y"),
+                        'end' => date("09/t/Y")
+                    ],
+                    4 => [
+                        'start' => date("10/01/Y"),
+                        'end' => date("12/t/Y")
+                    ]
+                ];
+                $month = date('n');
+                $quarter = ceil($month / 3);
+
+                $filters['start_date'] = date("Y-m-d", strtotime($quarters[$quarter]['start']." -3 months"));
+                $filters['end_date'] = date("Y-m-t", strtotime($filters['start-date']." +2 months"));
+            break;
+            case 'last-year' :
+                $filters['start_date'] = date("Y-01-01", strtotime(date("01/01/Y")." -1 year"));
+                $filters['end_date'] = date("Y-12-t", strtotime(date("12/t/Y")." -1 year"));
+            break;
+        }
+
+        $bills = $this->expenses_model->get_open_bills($filters);
+
+        $data = [];
+        foreach($bills as $bill) {
+            $vendor = $this->vendors_model->get_vendor_by_id($bill->vendor_id);
+
+            $data[] = [
+                'id' => $bill->id,
+                'payee' => $vendor->display_name,
+                'ref_no' => $bill->bill_no,
+                'due_date' => date("m/d/Y", strtotime($bill->due_date)),
+                'open_balance' => number_format($bill->total_amount, 2, '.', ','),
+                'vendor_credits' => number_format(floatval($vendor->vendor_credits), 2, '.', ',')
+            ];
+        }
+
+        if($post['overdue_only'] === "1") {
+            $data = array_filter($data, function($v, $k) {
+                return strtotime(date("Y-m-d")) > strtotime($v['due_date']);
+            }, ARRAY_FILTER_USE_BOTH);
+        }
+
+        usort($data, function($a, $b) use ($order, $columnName) {
+            if($columnName !== 'due_date') {
+                if($columnName === 'open_balance') {
+                    if($order === 'asc') {
+                        return floatval($a[$columnName]) > floatval($b[$columnName]);
+                    } else {
+                        return floatval($b[$columnName]) > floatval($a[$columnName]);
+                    }
+                } else {
+                    if($order === 'asc') {
+                        return strcmp($a[$columnName], $b[$columnName]);
+                    } else {
+                        return strcmp($b[$columnName], $a[$columnName]);
+                    }
+                }
+            } else {
+                if($order === 'asc') {
+                    return strtotime($a[$columnName]) > strtotime($b[$columnname]);
+                } else {
+                    return strtotime($a[$columnName]) < strtotime($b[$columnname]);
+                }
+            }
+        });
+
+        $result = [
+            'draw' => $post['draw'],
+            'recordsTotal' => count($bills),
+            'recordsFiltered' => count($data),
+            'data' => array_slice($data, $start, $limit)
+        ];
+
+        echo json_encode($result);
+    }
+
+    private function pay_bills($data)
+    {
+        $this->load->model('expenses_model');
+
+        $this->form_validation->set_rules('payment_account', 'Payment account', 'required');
+        $this->form_validation->set_rules('payment_date', 'Payment date', 'required');
+        $this->form_validation->set_rules('bills[]', 'Bill', 'required');
+        $this->form_validation->set_rules('payment_amount[]', 'Payment amount', 'required');
+
+        if($this->form_validation->run() === false) {
+            $return['data'] = null;
+            $return['success'] = false;
+            $return['message'] = 'Error';
+        } else {
+            $billPayment = [
+                'company_id' => logged('company_id'),
+                'payment_account_id' => $data['payment_account'],
+                'payment_date' => $data['payment_date'],
+                'starting_check_no' => $data['starting_check_no'],
+                'total_amount' => $data['total'],
+                'status' => 1,
+                'created_at' => date("Y-m-d H:i:s"),
+                'updated_at' => date("Y-m-d H:i:s")
+            ];
+    
+            $billPaymentId = $this->expenses_model->insert_bill_payment($billPayment);
+    
+            if($billPaymentId) {
+                $billPaymentItems = [];
+                foreach($data['bills'] as $index => $value) {
+                    $billPaymentItems[] = [
+                        'bill_payment_id' => $billPaymentId,
+                        'bill_id' => $value,
+                        'credit_applied_amount' => $data['credit_applied'][$index],
+                        'payment_amount' => $data['payment_amount'][$index],
+                        'total_amount' => $data['total_amount'][$index]
+                    ];
+                }
+        
+                $this->expenses_model->insert_bill_payment_items($billPaymentItems);
+            }
+    
+            $return = [];
+            $return['data'] = $billPaymentId;
+            $return['success'] = $billPaymentId ? true : false;
+            $return['message'] = $billPaymentId ? 'Entry Successful!' : 'An unexpected error occured!';
+        }
+
+        return $return;
+    }
+
+    private function vendor_credit($data)
+    {
+        $this->load->model('expenses_model');
+
+        $this->form_validation->set_rules('vendor_id', 'Vendor', 'required');
+        $this->form_validation->set_rules('payment_date', 'Payment date', 'required');
+
+        if(isset($data['category'])) {
+            $this->form_validation->set_rules('category[]', 'Category', 'required');
+        }
+
+        if(isset($data['item'])) {
+            $this->form_validation->set_rules('item[]', 'Item', 'required');
+            $this->form_validation->set_rules('quantity[]', 'Item quantity', 'required');
+        }
+
+        $return = [];
+
+        if($this->form_validation->run() === false) {
+            $return['data'] = null;
+            $return['success'] = false;
+            $return['message'] = 'Error';
+        } else if(!isset($data['category']) && !isset($data['item'])) {
+            $return['data'] = null;
+            $return['success'] = false;
+            $return['message'] = 'Please enter at least one line item.';
+        } else {
+            $billData = [
+                'company_id' => logged('company_id'),
+                'vendor_id' => $data['vendor_id'],
+                'mailing_address' => $data['mailing_address'],
+                'payment_date' => date("Y-m-d", strtotime($data['payment_date'])),
+                'ref_no' => $data['ref_no'],
+                'tags' => $data['tags'] !== null ? json_encode($data['tags']) : null,
+                'memo' => $data['memo'],
+                'attachments' => $data['attachments'] !== null ? json_encode($data['attachments']) : null,
+                'total_amount' => $data['total_amount'],
+                'status' => 1,
+                'created_at' => date("Y-m-d H:i:s"),
+                'updated_at' => date("Y-m-d H:i:s")
+            ];
+    
+            $vendorCreditId = $this->expenses_model->add_vendor_credit($billData);
+    
+            if($vendorCreditId) {
+                $vendor = $this->vendors_model->get_vendor_by_id($data['vendor_id']);
+
+                if($vendor->vendor_credits === null & $vendor->vendor_credits === "") {
+                    $vendorCredits = floatval($data['total_amount']);
+                } else {
+                    $vendorCredits = floatval($data['total_amount']) + floatval($vendor->vendor_credits);
+                }
+
+                $vendorData = [
+                    'vendor_credits' => number_format($vendorCredits, 2, '.', ',')
+                ];
+
+                $this->vendors_model->updateVendor($vendor->id, $vendorData);
+
+                if(isset($data['category'])) {
+                    $categoryDetails = [];
+                    foreach($data['category'] as $index => $value) {
+                        $categoryDetails[] = [
+                            'transaction_type' => 'Vendor Credit',
+                            'transaction_id' => $vendorCreditId,
+                            'category_account_id' => $value,
+                            'description' => $data['description'][$index],
+                            'amount' => $data['category_amount'][$index],
+                            'billable' => $data['category_billable'][$index],
+                            'markup_percentage' => $data['category_markup'][$index],
+                            'tax' => $data['category_tax'][$index],
+                            'customer_id' => $data['category_customer'][$index],
+                        ];
+                    }
+    
+                    $this->expenses_model->insert_vendor_transaction_categories($categoryDetails);
+                }
+    
+                if(isset($data['item'])) {
+                    $itemDetails = [];
+                    foreach($data['item'] as $index => $value) {
+                        $itemDetails[] = [
+                            'transaction_type' => 'Vendor Credit',
+                            'transaction_id' => $vendorCreditId,
+                            'item_id' => $value,
+                            'description' => $data['item_description'][$index],
+                            'quantity' => $data['quantity'][$index],
+                            'rate' => $data['rate'][$index],
+                            'amount' => $data['item_amount'][$index],
+                            'billable' => $data['item_billable'][$index],
+                            'markup_percentage' => $data['item_markup'][$index],
+                            'sales_amount' => $data['item_sales_amount'][$index],
+                            'tax' => $data['item_tax'][$index],
+                            'customer_id' => $data['item_customer'][$index],
+                        ];
+                    }
+    
+                    $this->expenses_model->insert_vendor_transaction_items($itemDetails);
+                }
+            }
+
+            $return['data'] = $vendorCreditId;
+            $return['success'] = $vendorCreditId ? true : false;
+            $return['message'] = $vendorCreditId ? 'Entry Successful!' : 'An unexpected error occured!';
         }
 
         return $return;

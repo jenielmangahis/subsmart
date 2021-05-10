@@ -171,8 +171,16 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <ul class="group-list">
                                         <?php foreach($customerGroups as $cg){ ?>
                                             <li>
+                                                <?php
+                                                    $is_checked - ''; 
+                                                    if($selectedExcludes){
+                                                        if( array_key_exists($cg->id, $selectedExcludes) ){
+                                                            $is_checked - 'checked="checked"'; 
+                                                        }
+                                                    }
+                                                ?>
                                                 <div class="checkbox checkbox-sm">
-                                                    <input class="checkbox-select chk-exclude-contact-group" type="checkbox" name="optionA[exclude_customer_group_id][]" value="<?= $cg->id; ?>" id="chk-exclude-customer-group-<?= $cg->id; ?>" <?= array_key_exists($cg->id, $selectedExcludes) ? 'checked="checked"' : ''; ?>>
+                                                    <input class="checkbox-select chk-exclude-contact-group" type="checkbox" name="optionA[exclude_customer_group_id][]" value="<?= $cg->id; ?>" id="chk-exclude-customer-group-<?= $cg->id; ?>" <?= $is_checked; ?>>
                                                     <label for="chk-exclude-customer-group-<?= $cg->id; ?>"><?= $cg->title; ?></label>
                                                 </div>
                                             </li>
@@ -183,7 +191,13 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                             <div class="sending-option-2" style="display: none;margin-bottom:20px ​!important;">
                                 <div class="margin-bottom-ter">
-                                    <span class="contact-selected-count" style="font-weight: bold;"><?= count($selectedCustomer); ?></span> customer selected.
+                                    <?php 
+                                        $customer_selected = 0;
+                                        if( $selectedCustomer ){
+                                            $groups_selected = count($selectedCustomer);
+                                        }
+                                    ?>
+                                    <span class="contact-selected-count" style="font-weight: bold;"><?= $customer_selected; ?></span> customer selected.
                                 </div>
                                 <div class="margin-bottom-sec">
                                     <table id="dataTable1" class="table table-bordered table-striped">
@@ -200,7 +214,15 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                 <tr>
                                                     <td>
                                                         <div class="checkbox checkbox-sm">
-                                                            <input class="checkbox-select chk-contact" type="checkbox" name="optionB[customer_id][<?= $c->prof_id; ?>]" value="<?= $c->prof_id; ?>" id="chk-customer-<?= $c->prof_id; ?>" <?= array_key_exists($c->prof_id, $selectedCustomer) ? 'checked="checked"' : ''; ?>>
+                                                            <?php
+                                                                $is_checked - ''; 
+                                                                if($selectedCustomer){
+                                                                    if( array_key_exists($c->prof_id, $selectedCustomer) ){
+                                                                        $is_checked - 'checked="checked"'; 
+                                                                    }
+                                                                }
+                                                            ?>
+                                                            <input class="checkbox-select chk-contact" type="checkbox" name="optionB[customer_id][<?= $c->prof_id; ?>]" value="<?= $c->prof_id; ?>" id="chk-customer-<?= $c->prof_id; ?>" <?= $is_checked; ?>>
                                                             <label for="chk-customer-<?= $c->prof_id; ?>"></label>
                                                         </div>
                                                     </td>
@@ -218,14 +240,28 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                             <div class="sending-option-3" style="display: none;">
                                 <div class="margin-bottom-ter">
-                                    <span class="contact-group-selected-count" style="font-weight: bold;"><?= count($selectedGroups); ?></span> customer group selected.
+                                    <?php 
+                                        $groups_selected = 0;
+                                        if( $selectedGroups ){
+                                            $groups_selected = count($selectedGroups);
+                                        }
+                                    ?>
+                                    <span class="contact-group-selected-count" style="font-weight: bold;"><?= $groups_selected; ?></span> customer group selected.
                                 </div>
                                 <div class="margin-bottom-sec">
                                     <ul class="group-list">
                                         <?php foreach($customerGroups as $cg){ ?>
                                             <li>
+                                                <?php
+                                                    $is_checked - ''; 
+                                                    if($selectedGroups){
+                                                        if( array_key_exists($cg->id, $selectedGroups) ){
+                                                            $is_checked - 'checked="checked"'; 
+                                                        }
+                                                    }
+                                                ?>
                                                 <div class="checkbox checkbox-sm">
-                                                    <input class="checkbox-select chk-contact-group" type="checkbox" <?= in_array($cg->id, $selectedGroups) ? 'checked="checked"' : ''; ?> name="optionC[customer_group_id][]" value="<?= $cg->id; ?>" id="chk-customer-group-<?= $cg->id; ?>">
+                                                    <input class="checkbox-select chk-contact-group" type="checkbox" <?= $is_checked; ?> name="optionC[customer_group_id][]" value="<?= $cg->id; ?>" id="chk-customer-group-<?= $cg->id; ?>">
                                                     <label for="chk-customer-group-<?= $cg->id; ?>"><?= $cg->title; ?></label>
                                                 </div>
                                             </li>

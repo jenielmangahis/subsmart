@@ -33,6 +33,7 @@ class Promote extends MY_Controller {
             "assets/plugins/dropzone/dist/dropzone.js",
         ));
 
+        $this->session->unset_userdata('dealsStealsId');
 		$this->load->view('promote/add_deals', $this->page_data);
 	}
 
@@ -74,13 +75,14 @@ class Promote extends MY_Controller {
                 'original_price' => $post['price_original'],
                 'photos' => $photo,         
                 'valid_from' => date("Y-m-d"),
-                'valid_to' => date("Y-m-d"),
+                'valid_to' => date("Y-m-d", strtotime("+1 month")),
                 'date_created' => date("Y-m-d H:i:s"),
                 'date_modified' => date("Y-m-d H:i:s"),
                 'status' => $this->DealsSteals_model->statusDraft()
             ];
 
             $deals_steals_id = $this->DealsSteals_model->create($data);
+            $this->session->set_userdata('dealsStealsId', $deals_steals_id);
             $is_success = true;
         }
 
@@ -109,12 +111,10 @@ class Promote extends MY_Controller {
 	public function add_send_to(){
 		$user = $this->session->userdata('logged');
         $cid  = logged('company_id');
-        $deals_steals_id = $this->session->userdata('dealsStealsId');
-
+        $deals_steals_id = $this->session->userdata('dealsStealsId');        
         $dealsSteals = $this->DealsSteals_model->getById($deals_steals_id);
         $customers   = $this->Customer_model->getAllByCompany($cid);            
         $customerGroups = $this->CustomerGroup_model->getAllByCompany($cid);
-
         
         $this->page_data['dealsSteals'] = $dealsSteals;
         $this->page_data['selectedCustomer'] = unserialize($dealsSteals->certain_customers);
@@ -301,7 +301,7 @@ class Promote extends MY_Controller {
                 	$is_auto_renew = 1;
                 }
 
-                $data = ['status' => $this->DealsSteals_model->statusActive(), 'is_auto_renew' => $is_auto_renew, 'total_cost' => $total_cost, 'cards_file_id' => $post['payment_method_token']];
+                $data = ['status' => $this->DealsSteals_model->statusActive(), 'is_auto_renew' => $is_auto_renew, 'total_cost' => $total_cost, 'cards_file_id' => $post['payment_method_token'], 'order_number' => $post['order_number']];
                 $this->DealsSteals_model->updateDealsSteals($deals_steals_id,$data);
 
                 $is_success = true;
@@ -323,8 +323,7 @@ class Promote extends MY_Controller {
             $conditions = array();
         }else{
             $conditions[] = ['field' => 'deals_steals.status','value' => $status];    
-        }        
-        
+        }      
         $dealsSteals   = $this->DealsSteals_model->getAllByCompanyId($company_id, array(), $conditions);
         $statusOptions = $this->DealsSteals_model->statusOptions();
         $this->page_data['dealsSteals'] = $dealsSteals;
@@ -437,9 +436,155 @@ class Promote extends MY_Controller {
         ]; 
 
         echo json_encode($json_data);
-
     }
 
+    public function ajax_send_payment(){
+        include APPPATH . 'libraries/Converge/src/Converge.php';
+
+        $this->load->model('MarketingOrderPayments_model');
+        $this->load->model('CardsFile_model');        
+        $this->load->model('CompanyOnlinePaymentAccount_model');
+
+        $is_success = false;
+        $msg = '';
+        $order_number = '';
+
+        $post  = $this->input->post(); 
+        $user  = $this->session->userdata('logged');
+        $company_id = logged('company_id');        
+        $deals_steals_id = $this->session->userdata('dealsStealsId');
+
+        $ccFile = $this->CardsFile_model->getById($post['payment_method_token']);
+        if( $ccFile->company_id === $company_id ){
+
+            $dealsSteals = $this->DealsSteals_model->getById($deals_steals_id);
+            $company     = $this->Business_model->getByCompanyId($company_id);
+
+            //$exp_date =  $data['exp_month'] . date("y",strtotime($data['exp_year']));
+            $company_address  = $company->street . " " . $company->city . " " . $company->state;
+            $company_zip      = $company->postal_code;
+            $expiration_month =  str_pad($ccFile->expiration_month, 2, '0', STR_PAD_LEFT);             
+            $exp_date =  $expiration_month . $ccFile->expiration_year;
+
+            $converge = new \wwwroth\Converge\Converge([
+                'merchant_id' => '2179135',
+                'user_id' => 'adiAPI',
+                'pin' => 'U3L0MSDPDQ254QBJSGTZSN4DQS00FBW5ELIFSR0FZQ3VGBE7PXP07RMKVL024AVR',
+                'demo' => false,
+            ]);
+
+            /*$converge = new \wwwroth\Converge\Converge([
+                'merchant_id' => CONVERGE_MERCHANTID,
+                'user_id' => CONVERGE_MERCHANTUSERID,
+                'pin' => CONVERGE_MERCHANTPIN,
+                'demo' => false,
+            ]);*/
+
+            $createSale = $converge->request('ccsale', [
+                'ssl_card_number' => $ccFile->card_number,
+                'ssl_exp_date' => $exp_date,
+                'ssl_cvv2cvc2' => $ccFile->card_cvv,
+                'ssl_amount' => 1,
+                'ssl_avs_address' => $company_address,
+                'ssl_avs_zip' => $company_zip,
+            ]);
+
+            if( $createSale['success'] == 1 ){
+                //Create payment data
+                $data = [
+                    'user_id' => $user['id'],
+                    'order_number' => '',
+                    'payment_method' => $this->MarketingOrderPayments_model->paymentMethodCC(),
+                    'date_paid' => date("Y-m-d H:i:s"),
+                    'status' => $this->MarketingOrderPayments_model->statusCompleted(),
+                ];
+
+                $order_id     = $this->MarketingOrderPayments_model->create($data);
+                $order_number = $this->MarketingOrderPayments_model->generateORNumber($order_id);
+                
+                $data = ['order_number' => $order_number];
+                $this->MarketingOrderPayments_model->updateOrderPayment($order_id, $data);
+
+                $is_success = true;
+                $msg = '';
+            }else{
+                $msg = $createSale['errorMessage'];
+            }
+        }else{
+            $msg = 'Invalid credit card number';
+        }
+
+        $return = ['is_success' => $is_success, 'order_number' => $order_number, 'msg' => $msg];
+        
+        echo json_encode($return);
+    }
+
+    public function payment_details(){
+
+        $this->load->model('MarketingOrderPayments_model');
+
+        $company_id = logged('company_id');   
+
+        $deals_steals_id = $this->session->userdata('dealsStealsId');
+        $dealsSteals     = $this->DealsSteals_model->getById($deals_steals_id);
+        $company         = $this->Business_model->getByCompanyId($company_id);
+        if( $dealsSteals ){
+            if( $dealsSteals->order_number != '' ){
+                $orderPayments   = $this->MarketingOrderPayments_model->getByOrderNumber($dealsSteals->order_number);
+
+                $this->page_data['dealsSteals']   = $dealsSteals;
+                $this->page_data['orderPayments'] = $orderPayments;
+                $this->page_data['company'] = $company;
+                $this->load->view('promote/payment_details', $this->page_data);        
+            }else{
+                redirect('promote/deals');
+            }
+        }else{
+            redirect('promote/deals');
+        }
+    }
+
+    public function invoice_pdf($id){
+
+        $dealsSteals = $this->DealsSteals_model->getById($id);
+        $company     = $this->Business_model->getByCompanyId($dealsSteals->company_id);
+        $orderPayments   = $this->MarketingOrderPayments_model->getByOrderNumber($dealsSteals->order_number);
+
+
+
+        $this->page_data['dealsSteals']   = $dealsSteals;
+        $this->page_data['orderPayments'] = $orderPayments;
+        $this->page_data['company'] = $company;
+        $content = $this->load->view('promote/deals_customer_invoice_pdf_template_a.php', $this->page_data, TRUE);        
+        $this->load->library('Reportpdf');
+        $title = 'deals_invoice';
+
+        $obj_pdf = new Reportpdf('P', 'mm', 'A4', true, 'UTF-8', false);
+        $obj_pdf->SetTitle($title);
+        $obj_pdf->setPrintHeader(false);
+        $obj_pdf->setPrintFooter(false);
+        //$obj_pdf->SetDefaultMonospacedFont('helvetica');
+        $obj_pdf->SetMargins(10, 5, 10, 0, true);
+        $obj_pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
+        //$obj_pdf->SetFont('courierI', '', 9);
+        $obj_pdf->setFontSubsetting(false);
+        // set some language-dependent strings (optional)
+        if (@file_exists(dirname(__FILE__) . '/lang/eng.php')) {
+            require_once(dirname(__FILE__) . '/lang/eng.php');
+            $pdf->setLanguageArray($l);
+        }
+        $obj_pdf->AddPage('P');
+        $html = '';
+        $obj_pdf->writeHTML($html . $content, true, false, true, false, '');
+        ob_clean();
+        $obj_pdf->lastPage();
+        // $obj_pdf->Output($title, 'I');
+        $filename = strtolower($job->job_number) . ".pdf";
+        $file     = dirname(__DIR__, 2) . '/uploads/deals_invoice_pdf/' . $filename;
+        $obj_pdf->Output($file, 'F');        
+        //$obj_pdf->Output($file, 'F');
+        return $file;
+    }
 }
 
 /* End of file Promote.php */

@@ -4,6 +4,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
 <?php include viewPath('includes/header'); ?>
 <div class="wrapper" role="wrapper">
 <?php include viewPath('includes/sidebars/workorder'); ?>
+<link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
+<script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
     <style>
    .but:hover {
     font-weight: 900;
@@ -867,8 +869,8 @@ input:checked + .slider:before {
                             <!-- ====== TERMS AND CONDITIONS ====== -->
                             <br><br><br>
                             <div class="row">
-                                <div class=" col-md-12">
-                                <label style="font-weight:bold;font-size:18px;">TERMS AND CONDITIONS</label><label style="float:right;color:green;"><a href="#" style="color:green;" data-toggle="modal" data-target="#terms_conditions_modal">Update Terms and Condition</a></label>
+                                <div class=" col-md-12"><label style="float:right;color:green;"><a href="#" style="color:green;" data-toggle="modal" data-target="#terms_conditions_modal">Update Terms and Condition</a></label>
+                                <label style="font-weight:bold;font-size:18px;">TERMS AND CONDITIONS</label>
                                     <div style="height:200px; overflow:auto; background:#FFFFFF;"
                                          id="thisdiv2">
                                             <p><?php echo $terms_conditions->content; ?></p>
@@ -1055,7 +1057,6 @@ input:checked + .slider:before {
                                 <button type="submit" class="btn btn-flat btn-success">Submit</button>
                                 <button type="submit" class="btn btn-flat btn-success">Preview</button>
                                 <button type="submit" class="btn btn-flat btn-success" style="background-color: #32243d !important"><b>Save Template</b></button>
-                                <button type="submit" class="btn btn-flat btn-success" id="esignButton">eSign</button>
                                 <a href="<?php echo url('workorder') ?>" class="btn ">Cancel this</a>
                     </div>
                 </div>
@@ -1214,7 +1215,7 @@ input:checked + .slider:before {
 
             <!-- Modal -->
             <div class="modal fade" id="item_list" tabindex="-1" role="dialog" aria-labelledby="newcustomerLabel" aria-hidden="true">
-                <div class="modal-dialog modal-lg" role="document" style="width:800px;position: absolute;top: 50%;left: 50%;transform: translate(-50%, -50%);">
+                <div class="modal-dialog modal-lg" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title" id="newcustomerLabel">Item Lists</h5>
@@ -1240,15 +1241,20 @@ input:checked + .slider:before {
                                             <tr>
                                                 <td><?php echo $item->title; ?></td>
                                                 <td><?php if($item->rebate == 1){ ?>
-                                                    <label class="switch">
-                                                    <input type="checkbox" checked>
-                                                    <span class="slider round"></span>
+                                                    <!-- <label class="switch">
+                                                    <input type="checkbox" id="rebatable_toggle" checked>
+                                                    <span class="slider round"></span> -->
+                                                    <input type="checkbox" class="toggle_checkbox" id="rebatable_toggle" item-id="<?php echo $item->id; ?>"  value="1"  data-toggle="toggle" data-size="xs" checked >
                                                     </label>
                                                 <?php }else{ ?>
-                                                    <label class="switch">
+                                                    <!-- <label class="switch">
                                                     <input type="checkbox">
                                                     <span class="slider round"></span>
-                                                    </label>
+                                                    </label> -->
+
+                                                    <!-- <input type="checkbox" data-toggle="toggle" data-size="xs"> -->
+                                                    <input type="checkbox" class="toggle_checkbox" id="rebatable_toggle" item-id="<?php echo $item->id; ?>" value="0" data-toggle="toggle" data-size="xs">
+
                                                 <?php  } ?></td>
                                                 <td></td>
                                                 <td><?php echo $item->price; ?></td>
@@ -1344,34 +1350,152 @@ input:checked + .slider:before {
                 </div>
             </div>
 
-            <div class="modal fade" id="docusignTemplateModal" tabindex="-1" role="dialog" aria-labelledby="docusignTemplateModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-lg" role="document">
-                    <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="docusignTemplateModalLabel">Select Template</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <table id="templatesTable" class="table" style="width: 100%;">
-                            <thead>
-                                <tr>
-                                    <th>Name</th>
-                                    <th>Created Date</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                        </table>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                    </div>
-                    </div>
-                </div>
-            </div>
-
 <?php include viewPath('includes/footer'); ?>
+
+
+<script>
+//   $(function() {
+//     $("#rebatable_toggle").each(function(){
+//     $(this).change(function() {
+//     //   $('#console-event').html('Toggle: ' + $(this).prop('checked'))
+//     alert('yeah');
+//     })
+//   })
+$(document).ready(function () {
+
+//iterate through all the divs - get their ids, hide them, then call the on click
+$(".toggle").each(function () {
+    var $context = $(this);
+    var $button = $context.find("#rebatable_toggle");
+    //            $currentId = $button.attr('id');
+    // var $divOptions = $context.find('div').last();
+
+    //$($divOptions).hide();
+    $($button).on('change', function (event) {
+        // alert('yeah');
+        // $(this).click(function() {        
+        var id = $($button).attr("item-id");
+        var get_val = $($button).val();
+        // alert(id);
+
+        $.ajax({
+            type: 'POST',
+            url:"<?php echo base_url(); ?>accounting/changeRebate",
+            data: {id : id, get_val : get_val },
+            dataType: 'json',
+            success: function(response){
+                // alert('Successfully Change');
+                sucess("Rebate Updated Successfully!");
+                // $('.lamesa').load(window.location.href +  ' .lamesa');
+                // location.reload();
+                $('#item_list').modal('toggle');
+                // $("#item_list .modal-body").load(target, function() { 
+                // $("#item_list").modal("show"); 
+                // });
+                $('#item_list').on('hidden.bs.modal', function (e) {
+                    location.reload();
+                    });
+            },
+                error: function(response){
+                alert('Error'+response);
+       
+                }
+        });
+
+        function sucess(information,$id){
+            Swal.fire({
+                title: 'Good job!',
+                text: information,
+                icon: 'success',
+                showCancelButton: false,
+                confirmButtonColor: '#32243d',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ok'
+            }).then((result) => {
+                if (result.value) {
+                    window.location.href="<?= base_url(); ?>customer/preview/"+$id;
+                }
+            });
+        }
+
+    // });
+    });
+});
+});
+</script>
+
+<script>
+// $(document).ready(function(){
+//     // $('#rebatable_toggle').click(function () {
+//     //     alert('yeah');
+//     // });
+//     // $("#rebatable_toggle").change(function() {
+//     // if(this.checked) {
+//     //     alert('yeah');
+//     // }
+// // });
+// // $("#rebatable_toggle").change(function(){
+// //     if($(this).prop("checked") == true){
+// //         alert('yeah');
+// //     }else{
+// //         alert('no');
+// //     }
+// // });
+
+// // $('.toggle_checkbox').each(function() {
+
+// // // $parent = $( el ).closest( '.toggle_checkbox' );
+// // $( this ).click(function() {
+// //     var yeah = $(this).attr("item-id");
+// //     alert(yeah);
+// // });
+
+// // });
+
+
+
+// });
+// function myFunctionChecked() {
+//     var yeah = $(this).attr("item-id");
+
+//     alert(yeah);
+// }
+
+// $(".toggle_checkbox").each(function(){
+//     // alert($(this).attr("item-id"));
+//     $( this ).click(function() {        
+//         var id = $(this).attr("item-id");
+//         var get_val = $(this).val();
+//         // alert(yeah);
+
+//         $.ajax({
+//             type: 'POST',
+//             url:"<?php echo base_url(); ?>accounting/changeRebate",
+//             data: {id : id, get_val : get_val },
+//             dataType: 'json',
+//             success: function(response){
+//                 alert('Successfully Change');
+//                 // $('.lamesa').load(window.location.href +  ' .lamesa');
+//                 location.reload();
+//                 $('#item_list').modal('toggle');
+//             },
+//                 error: function(response){
+//                 alert('Error'+response);
+       
+//                 }
+//         });
+
+//     });
+// });
+
+</script>
+
+
+<script>
+    $(function() {
+        $("nav:first").addClass("closed");
+    });
+</script>
 
 <script>
 var wrapper = document.getElementById("signature-pad");

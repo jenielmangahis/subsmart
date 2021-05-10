@@ -351,7 +351,7 @@
                     </div>
                     <div class="menu-extras topbar-custom col-lg-3 justify-content-end">
                         <ul class="navbar-right list-inline float-right mb-0"
-                            style="position:absolute; top:25%; margin-top:-10px; right:10px;">
+                            style="position:absolute; top:25%; margin-top:-10px; right:10px;left:0%;">
                             <li class="menu-item list-inline-item">
                                 <a class="navbar-toggle nav-link">
                                     <div class="lines"><span></span> <span></span> <span></span></div>

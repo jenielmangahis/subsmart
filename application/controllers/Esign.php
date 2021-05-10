@@ -270,10 +270,11 @@ class Esign extends MY_Controller {
 		$field = $payload['field'] ?? $payload['field_name'];
 		$recipientId = $payload['recipient_id'];
 		$userId = logged('id');
-		$docId = $payload['docfile_id'];
+		$docfileDocumentId = $payload['docfile_document_id'];
+		$docfileId = $payload['docfile_id'];
 		$uniqueKey = $payload['unique_key'];
 
-		$this->db->where('docfile_id', $docId);
+		$this->db->where('docfile_id', $docfileId);
 		$this->db->where('user_id', $userId);
 		$this->db->where('unique_key', $uniqueKey);
 		$record = $this->db->get('user_docfile_fields')->row();
@@ -284,8 +285,8 @@ class Esign extends MY_Controller {
 			$this->db->insert('user_docfile_fields', [
 				'coordinates' => $coordinates,
 				'doc_page' => $docPage,
-				'docfile_id' => $docId,
-				'doc_id' => $docId,
+				'docfile_id' => $docfileId,
+				'docfile_document_id' => $docfileDocumentId,
 				'field_name' => $field,
 				'unique_key' => $uniqueKey,
 				'user_id' => $userId,
@@ -297,8 +298,8 @@ class Esign extends MY_Controller {
 			$this->db->update('user_docfile_fields', [
 				'coordinates' => $coordinates,
 				'doc_page' => $docPage,
-				'docfile_id' => $docId,
-				'doc_id' => $docId,
+				'docfile_id' => $docfileId,
+				'docfile_document_id' => $docfileDocumentId,
 				'field_name' => $field,
 				'unique_key' => $uniqueKey,
 				'user_id' => $userId,

@@ -44,9 +44,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     #myTabContent #details .card:hover h5.edit-icon {
         display: block;
     }
-    span.select2-selection.select2-selection--single {
-        min-width: unset !important;
-    }
 </style>
 <?php include viewPath('includes/header'); ?>
 <div class="wrapper" role="wrapper">

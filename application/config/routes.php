@@ -300,6 +300,7 @@ $route['accounting/generate-payroll']['post'] = 'accounting_modals/generate_payr
 $route['accounting/get-customers']['post'] = 'accounting_modals/get_statement_customers';
 $route['accounting/get-recurring-form-fields/(:any)'] = 'accounting_modals/get_recurring_modal_fields/$1';
 $route['accounting/get-item-details/(:any)'] = 'accounting_modals/getItemDetails/$1';
+$route['accounting/load-bills']['post'] = 'accounting_modals/load_bills';
 
 $route['accounting/lists'] = 'accounting/lists';
 
@@ -849,9 +850,12 @@ $route['promote/preview_email_message'] = 'Promote/preview_email_message';
 $route['promote/_generate_preview'] = 'Promote/generate_preview';
 $route['promote/update_validity'] = 'Promote/ajax_update_validity';
 $route['promote/payment'] = 'Promote/payment';
-$route['promote/activate_deals'] = 'Promote/ajax_activate_deals';
+$route['promote/_activate_deals'] = 'Promote/ajax_activate_deals';
 $route['promote/_load_deals_list/(:any)'] = 'Promote/ajax_load_deals_list/$1';
 $route['promote/_load_status_counter'] = 'Promote/ajax_load_status_counter';
 $route['promote/_close_deal'] = 'Promote/ajax_close_deal';
 $route['promote/edit_deals/(:num)'] = 'Promote/edit_deals/$1';
 $route['promote/_delete_deal'] = 'Promote/ajax_delete_deal';
+$route['promote/_converge_send_payment'] = 'Promote/ajax_send_payment';
+$route['promote/payment_details'] = 'Promote/payment_details';
+$route['promote/invoice_pdf/(:any)'] = 'Promote/deals_invoice_pdf/$1';

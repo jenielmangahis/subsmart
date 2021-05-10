@@ -665,10 +665,10 @@ SQL;
         $coordinates = json_encode($payload['coordinates']);
         $specs = $payload['specs'] ? json_encode($payload['specs']) : null;
         $docPage = $payload['doc_page'];
-        $docId = $payload['doc_id'];
         $field = $payload['field'];
         $recipientId = $payload['recipient_id'];
         $userId = logged('id');
+        $docfileDocumentId = $payload['docfile_document_id'];
         $templateId = $payload['template_id'];
         $uniqueKey = $payload['unique_key'];
 
@@ -683,7 +683,7 @@ SQL;
             $this->db->insert('user_docfile_templates_fields', [
                 'coordinates' => $coordinates,
                 'doc_page' => $docPage,
-                'doc_id' => $docId,
+                'docfile_document_id' => $docfileDocumentId,
                 'template_id' => $templateId,
                 'field_name' => $field,
                 'unique_key' => $uniqueKey,
@@ -696,7 +696,7 @@ SQL;
             $this->db->update('user_docfile_templates_fields', [
                 'coordinates' => $coordinates,
                 'doc_page' => $docPage,
-                'doc_id' => $docId,
+                'docfile_document_id' => $docfileDocumentId,
                 'template_id' => $templateId,
                 'field_name' => $field,
                 'unique_key' => $uniqueKey,
@@ -820,7 +820,7 @@ SQL;
 
             foreach ($recipientFields as $field) {
                 $this->db->where('docfile_id', $docfileId);
-                $this->db->where('template_id', $field['doc_id']);
+                $this->db->where('template_id', $field['docfile_document_id']);
                 $file = $this->db->get('user_docfile_documents')->row(); // the file where the field belongs
 
                 $this->db->insert('user_docfile_fields', [
@@ -828,7 +828,7 @@ SQL;
                     'docfile_id' => $docfileId,
                     'field_name' => $field['field_name'],
                     'doc_page' => $field['doc_page'],
-                    'doc_id' => $file->id,
+                    'docfile_document_id' => $file->id,
                     'unique_key ' => uniqid(),
                     'user_id' => logged('id'),
                     'user_docfile_recipients_id' => $recipientId,
@@ -880,6 +880,18 @@ SQL;
 
         header('content-type: application/json');
         echo json_encode(['success' => true]);
+    }
+
+    public function getWorkorderCustomer($workorderId)
+    {
+        $query = <<<SQL
+        SELECT * FROM `work_orders`
+        LEFT JOIN acs_profile ON work_orders.customer_id = acs_profile.prof_id WHERE work_orders.id = ?
+SQL;
+
+        $record = $this->db->query($query, [$workorderId])->row();
+        header('content-type: application/json');
+        echo json_encode(['data' => $record]);
     }
 }
 

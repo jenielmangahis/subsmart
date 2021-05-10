@@ -354,6 +354,19 @@ class Items_model extends MY_Model
         $query = $this->db->get();
         return $query->row();
     }
+
+    public function changeRebate($data)
+    {
+        extract($data);
+        if($get_val == '1'){
+            $item_val = '0';
+        }else{
+            $item_val = '1';
+        }
+        $this->db->where('id', $id);
+        $this->db->update('items', array('rebate' => $item_val));
+        return true;
+    }
     
 }
 
