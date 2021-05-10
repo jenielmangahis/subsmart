@@ -71,7 +71,7 @@ class Users extends MY_Controller {
 		$profiledata = $this->business_model->getByCompanyId($comp_id);	
 		$selectedCategories = $this->ServiceCategory_model->getAllCategoriesByCompanyID($comp_id);
 
-		$conditions = ['deals_steals.status' => $this->DealsSteals_model->statusActive()];
+		$conditions[] = ['field' => 'deals_steals.status', 'value' => $this->DealsSteals_model->statusActive()];
 		$dealsSteals = $this->DealsSteals_model->getAllByCompanyId($comp_id, array(), $conditions);
 
 		$this->page_data['dealsSteals'] = $dealsSteals;

@@ -544,29 +544,28 @@ class Promote extends MY_Controller {
         }
     }
 
-    public function invoice_pdf($id){
+    public function deals_invoice_pdf($id){
 
+        $this->load->model('MarketingOrderPayments_model');
+        
         $dealsSteals = $this->DealsSteals_model->getById($id);
         $company     = $this->Business_model->getByCompanyId($dealsSteals->company_id);
         $orderPayments   = $this->MarketingOrderPayments_model->getByOrderNumber($dealsSteals->order_number);
-
-
-
         $this->page_data['dealsSteals']   = $dealsSteals;
         $this->page_data['orderPayments'] = $orderPayments;
         $this->page_data['company'] = $company;
-        $content = $this->load->view('promote/deals_customer_invoice_pdf_template_a.php', $this->page_data, TRUE);        
+        $content = $this->load->view('promote/deals_customer_invoice_pdf_template_a.php', $this->page_data, TRUE);  
+            
         $this->load->library('Reportpdf');
+
         $title = 'deals_invoice';
 
         $obj_pdf = new Reportpdf('P', 'mm', 'A4', true, 'UTF-8', false);
         $obj_pdf->SetTitle($title);
         $obj_pdf->setPrintHeader(false);
         $obj_pdf->setPrintFooter(false);
-        //$obj_pdf->SetDefaultMonospacedFont('helvetica');
-        $obj_pdf->SetMargins(10, 5, 10, 0, true);
+        $obj_pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);        
         $obj_pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
-        //$obj_pdf->SetFont('courierI', '', 9);
         $obj_pdf->setFontSubsetting(false);
         // set some language-dependent strings (optional)
         if (@file_exists(dirname(__FILE__) . '/lang/eng.php')) {
@@ -576,14 +575,11 @@ class Promote extends MY_Controller {
         $obj_pdf->AddPage('P');
         $html = '';
         $obj_pdf->writeHTML($html . $content, true, false, true, false, '');
-        ob_clean();
-        $obj_pdf->lastPage();
-        // $obj_pdf->Output($title, 'I');
-        $filename = strtolower($job->job_number) . ".pdf";
-        $file     = dirname(__DIR__, 2) . '/uploads/deals_invoice_pdf/' . $filename;
-        $obj_pdf->Output($file, 'F');        
-        //$obj_pdf->Output($file, 'F');
-        return $file;
+        //echo $display;
+        $content = ob_get_contents();
+        ob_end_clean();
+        $obj_pdf->writeHTML($content, true, false, true, false, '');
+        $obj_pdf->Output($title, 'I');
     }
 }
 
