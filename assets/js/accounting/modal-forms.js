@@ -1,5 +1,5 @@
 const GET_OTHER_MODAL_URL = "/accounting/get-other-modals/";
-const vendorModals = ['#expenseModal', '#checkModal', '#billModal'];
+const vendorModals = ['#expenseModal', '#checkModal', '#billModal', '#vendorCreditModal'];
 var rowCount = 0;
 var rowInputs = '';
 var blankRow = '';
@@ -420,6 +420,16 @@ $(function() {
                         return (previewElement = file.previewElement) !== null ? (previewElement.parentNode.removeChild(file.previewElement)) : (void 0);
                     }
                 });
+            }
+
+            if($(`${modal_element} .dropdown`).length > 0) {
+                $(`${modal_element} .dropdown-menu`).on('click', function(e) {
+                    e.stopPropagation();
+                });
+            }
+
+            if(modal_element === '#payBillsModal') {
+                loadBills();
             }
 
             $(modal_element).modal('show');
@@ -1458,6 +1468,19 @@ $(function() {
             $('#checkModal span#account-balance').html(result.balance);
         });
     });
+
+    $(document).on('change', '#payBillsModal #table_rows', function() {
+        applybillsfilter();
+    });
+
+    $(document).on('change', '#modal-container table#item-details-table input[name="quantity[]"], #modal-container table#item-details-table input[name="rate[]"]', function() {
+        var quantity = $(this).parent().parent().find('input[name="quantity[]"]').val();
+        var rate = $(this).parent().parent().find('input[name="rate[]"]').val();
+
+        var amount = parseFloat(parseFloat(rate) * parseInt(quantity)).toFixed(2);
+
+        $(this).parent().parent().find('input[name="item_amount[]"]').val(amount).trigger('change');
+    });
 });
 
 const convertToDecimal = (el) => {
@@ -1942,6 +1965,30 @@ const submitModalForm = (event, el) => {
                 }
             }
         });
+    } else if(modalId === '#payBillsModal') {
+        var totalAmount = $(`${modalId} span.transaction-total-amount`).html();
+        data.append('total', totalAmount);
+
+        $(`${modalId} #bills-table tbody tr`).each(function() {
+            var checkbox = $(this).find('td:first-child input');
+            var credit_applied =  $(this).find('input.credit-applied').length > 0 ? $(this).find('input.credit-applied').val() : 0.00;
+            var payment_amount =  $(this).find('input.payment-amount').val();
+            var total_amount = parseFloat(parseFloat(credit_applied) + parseFloat(payment_amount)).toFixed(2);
+
+            if(checkbox.prop('checked')) {
+                if(data.has('bills[]') === false) {
+                    data.set('bills[]', checkbox.val());
+                    data.set('credit_applied[]', credit_applied);
+                    data.set('payment_amount[]', payment_amount);
+                    data.set('total_amount[]', total_amount);
+                } else {
+                    data.append('bills[]', checkbox.val());
+                    data.append('credit_applied[]', credit_applied);
+                    data.append('payment_amount[]', payment_amount);
+                    data.append('total_amount[]', total_amount);
+                }
+            }
+        });
     }
     data.append('modal_name', $(el).children().attr('id'));
 
@@ -2173,4 +2220,115 @@ const computeTransactionTotal = () => {
     });
 
     $('#modal-container .transaction-total-amount').html(total);
+}
+
+const loadBills = () => {
+    $('#payBillsModal table#bills-table').DataTable({
+        autoWidth: false,
+        searching: false,
+        processing: true,
+        serverSide: true,
+        lengthChange: false,
+        info: false,
+        pageLength: $('#table_rows').val(),
+        order: [[3, 'asc']],
+        ajax: {
+            url: 'load-bills/',
+            dataType: 'json',
+            contentType: 'application/json',
+            type: 'POST',
+            data: function(d) {
+                d.due_date = $(`${modalName} #due_date`).val();
+                d.from_date = $(`${modalName} #from`).val();
+                d.to_date = $(`${modalName} #to`).val();
+                d.payee = $(`${modalName} #payee`).val();
+                d.overdue_only = $(`${modalName} #overdue_only`).prop('checked') ? "1" : "0";
+                d.length = $(`${modalName} #table_rows`).val();
+                return JSON.stringify(d);
+            },
+            pagingType: 'full_numbers'
+        },
+        columns: [
+            {
+                data: null,
+                name: 'checkbox',
+                orderable: false,
+                fnCreatedCell: function(td, cellData, rowData, row, col) {
+                    $(td).html(`
+                    <div class="d-flex align-items-center justify-content-center">
+                        <input type="checkbox" value="${rowData.id}">
+                    </div>
+                    `);
+                }
+            },
+            {
+                data: 'payee',
+                name: 'payee'
+            },
+            {
+                data: 'ref_no',
+                name: 'ref_no'
+            },
+            {
+                data: 'due_date',
+                name: 'due_date'
+            },
+            {
+                data: 'open_balance',
+                name: 'open_balance',
+            },
+            {
+                orderable: false,
+                data: null,
+                name: 'credit_applied',
+                orderable: false,
+                fnCreatedCell: function(td, cellData, rowData, row, col) {
+                    if(rowData.vendor_credits !== null && rowData.vendor_credits !== "" && rowData.vendor_credits !== "0.00") {
+                        $(td).html(`
+                        <div class="row">
+                            <div class="col-sm-9">
+                                <input type="number" class="form-control text-right credit-applied" step=".01" max="${rowData.vendor_credits}" onchange="convertToDecimal(this)">
+                            </div>
+                            <div class="col-sm-3 d-flex align-items-center">
+                                <span class="available-credit">${rowData.vendor_credits}</span> &nbsp;available
+                            </div>
+                        </div>
+                        `);
+                    } else {
+                        $(td).addClass('text-right');
+                        $(td).html('Not available');
+                    }
+                }
+            },
+            {
+                orderable: false,
+                data: null,
+                name: 'payment',
+                fnCreatedCell: function(td, cellData, rowData, row, col) {
+                    $(td).html('<input type="number" class="form-control text-right payment-amount" onchange="convertToDecimal(this)">');
+                }
+            },
+            {
+                orderable: false,
+                data: null,
+                name: 'total_amount',
+                fnCreatedCell: function(td, cellData, rowData,row, col) {
+                    $(td).html(`$<span>0.00</span>`);
+                }
+            }
+        ]
+    });
+}
+
+const resetbillsfilter = () => {
+    $('#payBillsModal #due_date').val('last-365-days').trigger('change');
+    $('#payBillsModal #from').val('');
+    $('#payBillsModal #to').val('');
+    $('#payBillsModal #payee').val('all').trigger('change');
+    $('#payBillsModal #overdue_only').prop('checked', false);
+    applybillsfilter();
+}
+
+const applybillsfilter = () => {
+    $('#payBillsModal table#bills-table').DataTable().ajax.reload();
 }

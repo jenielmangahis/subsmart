@@ -55,7 +55,7 @@ class Invoice extends MY_Controller {
 
         $role = logged('role');
         $type = 0;
-        if ($role == 2 || $role == 3) {
+        if ($role == 2 || $role == 3 || $role == 6) {
             $comp_id = logged('company_id');
 
             if (!empty($tab)) {
@@ -105,7 +105,7 @@ class Invoice extends MY_Controller {
         }
 
 
-        $this->load->view('invoice/invoice', $this->page_data);
+        $this->load->view('invoice/invoice_new', $this->page_data);
     }
 
     public function recurring($tab = '')

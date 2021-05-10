@@ -129,7 +129,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 }
 </style>
     <!-- page wrapper start -->
-     
+    <input type="hidden" value="<?= $workorder->id; ?>" id="workorderId"/>
 	<div class="wrapper" role="wrapper">
     <?php include viewPath('includes/sidebars/workorder'); ?>
     <div wrapper__section>
@@ -168,7 +168,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 	                                       <li ><a  href=""><span class="fa fa-envelope-o icon"></span> Send to Customer</a></li>
 	                                       <li class="divider"></li>
 	              						  <li ><a   href="#" ><span class="fa fa-trash-o icon"></span> Delete Work Order</a></li>
-                           		 </ul>
+	              						  <li ><a   href="#" id="esignButton"><span class="fa fa-envelope-o icon"></span> eSign</a></li>
+									</ul>
         </div>
 									</div>
 
@@ -510,6 +511,33 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         </span>
       </nav>
     </div> 
+</div>
+
+<div class="modal fade" id="docusignTemplateModal" tabindex="-1" role="dialog" aria-labelledby="docusignTemplateModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-lg" role="document">
+		<div class="modal-content">
+		<div class="modal-header">
+			<h5 class="modal-title" id="docusignTemplateModalLabel">Select Template</h5>
+			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+			<span aria-hidden="true">&times;</span>
+			</button>
+		</div>
+		<div class="modal-body">
+			<table id="templatesTable" class="table" style="width: 100%;">
+				<thead>
+					<tr>
+						<th>Name</th>
+						<th>Created Date</th>
+						<th>Action</th>
+					</tr>
+				</thead>
+			</table>
+		</div>
+		<div class="modal-footer">
+			<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+		</div>
+		</div>
+	</div>
 </div>
 <?php include viewPath('includes/footer'); ?>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>

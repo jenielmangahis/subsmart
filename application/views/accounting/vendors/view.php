@@ -32,9 +32,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     #myTabContent #details .card:hover h5.edit-icon {
         display: block;
     }
-    span.select2-selection.select2-selection--single {
-        min-width: unset !important;
-    }
     .btn-transparent:hover {
         background: #d4d7dc !important;
         border-color: #6B6C72 !important;

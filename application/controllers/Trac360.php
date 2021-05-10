@@ -285,10 +285,9 @@ class Trac360 extends MY_Controller
         $company_id = logged('company_id');
         $user_id = logged('id');
 
-        $user_locations = $this->trac360_model->get_current_user_location($company_id);
-
-
-        $this->page_data['user_locations'] = $user_locations;
+        $all_places = $this->trac360_model->get_places($company_id);
+        
+        $this->page_data['all_places'] = $all_places;
         $this->page_data['company_id'] = $company_id;
         $this->page_data['user_id'] = $user_id;
 
@@ -309,5 +308,26 @@ class Trac360 extends MY_Controller
         $data->lng = $lng;
         $data->formatted_address = $formatted_address;
         echo json_encode($data);
+    }
+    public function add_new_address()
+    {
+        $new_place_name =$this->input->post("new_place_name");
+        $new_formatted_address=$this->input->post("new_formatted_address");
+        $new_address_radius=$this->input->post("new_address_radius");
+        $lat=$this->input->post("lat");
+        $lng=$this->input->post("lng");
+        $user_id = logged('id');
+        $company_id = logged("company_id");
+        $insert = array(
+            "coordinates" => $lat.",".$lng,
+            "address"=>$new_formatted_address,
+            "zone_radius"=>$new_address_radius,
+            "created_by"=>$user_id,
+            "company_id"=>$company_id,
+            "place_name"=>$new_place_name
+        );
+        $this->trac360_model->insert_to("trac360_places", $insert);
+        
+        echo json_encode("Success");
     }
 }

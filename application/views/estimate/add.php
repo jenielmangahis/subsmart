@@ -4,6 +4,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
 <?php include viewPath('includes/header'); ?>
 <div class="wrapper" role="wrapper">
 <?php include viewPath('includes/sidebars/estimate'); ?>
+<link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
+<script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
    <style>
    .but:hover {
     font-weight: 900;
@@ -510,6 +512,7 @@ input:checked + .slider:before {
                                         <thead>
                                         <tr>
                                             <td> Name</td>
+                                            <td>Rebate</td>
                                             <td> Qty</td>
                                             <td> Price</td>
                                             <td> Action</td>
@@ -519,6 +522,22 @@ input:checked + .slider:before {
                                         <?php foreach($items as $item){ // print_r($item); ?>
                                             <tr>
                                                 <td><?php echo $item->title; ?></td>
+                                                <td><?php if($item->rebate == 1){ ?>
+                                                    <!-- <label class="switch">
+                                                    <input type="checkbox" id="rebatable_toggle" checked>
+                                                    <span class="slider round"></span> -->
+                                                    <input type="checkbox" class="toggle_checkbox" id="rebatable_toggle" item-id="<?php echo $item->id; ?>"  value="1"  data-toggle="toggle" data-size="xs" checked >
+                                                    </label>
+                                                <?php }else{ ?>
+                                                    <!-- <label class="switch">
+                                                    <input type="checkbox">
+                                                    <span class="slider round"></span>
+                                                    </label> -->
+
+                                                    <!-- <input type="checkbox" data-toggle="toggle" data-size="xs"> -->
+                                                    <input type="checkbox" class="toggle_checkbox" id="rebatable_toggle" item-id="<?php echo $item->id; ?>" value="0" data-toggle="toggle" data-size="xs">
+
+                                                <?php  } ?></td>
                                                 <td></td>
                                                 <td><?php echo $item->price; ?></td>
                                                 <td><button id="<?= $item->id; ?>" data-quantity="<?= $item->units; ?>" data-itemname="<?= $item->title; ?>" data-price="<?= $item->price; ?>" type="button" data-dismiss="modal" class="btn btn-sm btn-default select_item">
@@ -603,6 +622,77 @@ input:checked + .slider:before {
     var base_url = "<?php echo base_url();?>";
 </script>
 <script src="<?php echo $url->assets ?>js/add.js"></script>
+
+<script>
+//   $(function() {
+//     $("#rebatable_toggle").each(function(){
+//     $(this).change(function() {
+//     //   $('#console-event').html('Toggle: ' + $(this).prop('checked'))
+//     alert('yeah');
+//     })
+//   })
+$(document).ready(function () {
+
+//iterate through all the divs - get their ids, hide them, then call the on click
+$(".toggle").each(function () {
+    var $context = $(this);
+    var $button = $context.find("#rebatable_toggle");
+    //            $currentId = $button.attr('id');
+    // var $divOptions = $context.find('div').last();
+
+    //$($divOptions).hide();
+    $($button).on('change', function (event) {
+        // alert('yeah');
+        // $(this).click(function() {        
+        var id = $($button).attr("item-id");
+        var get_val = $($button).val();
+        // alert(id);
+
+        $.ajax({
+            type: 'POST',
+            url:"<?php echo base_url(); ?>accounting/changeRebate",
+            data: {id : id, get_val : get_val },
+            dataType: 'json',
+            success: function(response){
+                // alert('Successfully Change');
+                sucess("Rebate Updated Successfully!");
+                // $('.lamesa').load(window.location.href +  ' .lamesa');
+                // location.reload();
+                $('#item_list').modal('toggle');
+                // $("#item_list .modal-body").load(target, function() { 
+                // $("#item_list").modal("show"); 
+                // });
+                $('#item_list').on('hidden.bs.modal', function (e) {
+                    location.reload();
+                    });
+            },
+                error: function(response){
+                alert('Error'+response);
+       
+                }
+        });
+
+        function sucess(information,$id){
+            Swal.fire({
+                title: 'Good job!',
+                text: information,
+                icon: 'success',
+                showCancelButton: false,
+                confirmButtonColor: '#32243d',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ok'
+            }).then((result) => {
+                if (result.value) {
+                    window.location.href="<?= base_url(); ?>customer/preview/"+$id;
+                }
+            });
+        }
+
+    // });
+    });
+});
+});
+</script>
 
 <script>
     function validatecard() {

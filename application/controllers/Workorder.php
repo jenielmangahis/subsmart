@@ -556,6 +556,7 @@ class Workorder extends MY_Controller
         // $this->page_data['Workorder']->activity = $this->activity_model->getByWhere(['user' => $id], ['order' => ['id', 'desc']]);
 
         // print_r($this->page_data['items']);
+        add_footer_js('assets/js/esign/docusign/workorder.js');
         $this->load->view('workorder/view', $this->page_data);
     }
 
@@ -1647,7 +1648,6 @@ class Workorder extends MY_Controller
         $this->page_data['page_title'] = "Work Order";
         // print_r($this->page_data['customers']);
 
-        add_footer_js('assets/js/esign/docusign/workorder.js');
         $this->load->view('workorder/addNewworkOrder', $this->page_data);
     }
     

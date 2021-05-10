@@ -190,8 +190,17 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                            id="invoice_number" value="<?php echo "INV-".date("YmdHis"); ?>" required placeholder="Enter Invoice#"
                                            autofocus onChange="jQuery('#customer_name').text(jQuery(this).val());"/> -->
                                     <input type="text" class="form-control" name="invoice_number"
-                                           id="invoice_number" value="<?php echo "INV-".date("YmdHis"); ?>" required placeholder="Enter Invoice#"
-                                           onChange="jQuery('#customer_id').text(jQuery(this).val());"/>
+                                           id="invoice_number"  value="<?php echo "INV-"; 
+                                           foreach ($number as $num):
+                                                $next = $num->invoice_number;
+                                                $arr = explode("-", $next);
+                                                $date_start = $arr[0];
+                                                $nextNum = $arr[1];
+                                            //    echo $number;
+                                           endforeach;
+                                           $val = $nextNum + 1;
+                                           echo str_pad($val,9,"0",STR_PAD_LEFT);
+                                           ?>" required placeholder="Enter Invoice#"/>
                                 </div>
 
                                 <div class="col-md-3 form-group">

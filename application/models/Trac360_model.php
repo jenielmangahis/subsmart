@@ -31,7 +31,7 @@ class Trac360_model extends MY_Model
     }
     public function get_places($company_id)
     {
-        $query = $this->db->query("SELECT *FROM trac360_places WHERE company_id = " . $company_id);
+        $query = $this->db->query("SELECT * FROM trac360_places WHERE company_id = " . $company_id);
         return $query->result();
     }
     public function current_user_update_last_tracked_location($user_id, $company_id, $lat, $lng, $formatted_address)
@@ -49,5 +49,9 @@ class Trac360_model extends MY_Model
         $this->db->reset_query();
         $query = $this->db->query("SELECT trac360_people.*,users.FName,users.LName, users.profile_img FROM trac360_people JOIN users ON trac360_people.user_id = users.id WHERE trac360_people.company_id = " . $company_id . " AND trac360_people.user_id=" . $user_id);
         return $query->row();
+    }
+    public function insert_to($table, $data)
+    {
+        $this->db->insert($table, $data);
     }
 }

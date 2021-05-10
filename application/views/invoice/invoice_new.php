@@ -1,82 +1,45 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed'); ?>
+
 <?php include viewPath('includes/header'); ?>
-    <div class="wrapper" role="wrapper" >
-        <!-- page wrapper start -->
-           <div wrapper__section style="margin-top:1.8%;padding-left:1.4%;">
-        <div class="container-fluid" style="background-color:white;">
-			<div class="page-title-box mx-4">
-					<div class="col-lg-6 px-0">
-						<h3>Invoice</h3>
-					</div>
-					<div style="background-color:#fdeac3; width:100%;padding:.5%;margin-bottom:5px;margin-top:5px;">
-					When an invoice is created in our CRM,  a statement summary of your customer's account listing recent invoices will display here for you to view.  The statement shows per invoice not per items. 
-                    </div>
-					<br>
-				<div class="row pb-2">
-					<div class="col-md-12 banking-tab-container">
-						<a href="<?php echo url('/accounting/sales-overview')?>" class="banking-tab">Overview</a>
-						<a href="<?php echo url('/accounting/all-sales')?>" class="banking-tab">All Sales</a>
-						<a href="<?php echo url('/accounting/invoices')?>" class="banking-tab-active text-decoration-none">Invoices</a>
-						<a href="<?php echo url('/accounting/customers')?>" class="banking-tab">Customers</a>
-						<a href="<?php echo url('/accounting/deposits')?>" class="banking-tab">Deposits</a>
-						<a href="<?php echo url('/accounting/products-and-services')?>" class="banking-tab">Products and Services</a>
-					</div>
-				</div>
-				<div class="row mt-3">
-					<div class="col-sm-6 px-0">
-						<div class="row px-4">
-							<div class="col-sm-12">
-								<h6 class="font-weight-normal"><strong>$4 Unpaid</strong><span class="pl-3">Last 365 days</span></h6>
-							</div>
-							<div class="col-sm-12 mt-0">
-								<div class="pull-left">
-									<h3 class="mb-0"><strong>$0.00</strong></h3>
-									<h6 class="font-weight-normal text-dark mt-1">Overdue</h6>
-								</div>
-								<div class="pull-right">
-									<h3 class="mb-0"><strong>$4.00</strong></h3>
-									<h6 class="font-weight-normal text-dark mt-1">Not due yet</h6>
-								</div>
-							</div>
-							<div class="col-sm-12 mt-1">
-								<div class="progress" style="height:30px">
-									<div class="progress-bar bg-secondary w-50"></div>
-									<div class="progress-bar bg-dark  w-50"></div>
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="col-sm-6 px-0">
-						<div class="row px-4">
-							<div class="col-sm-12">
-								<h6 class="font-weight-normal"><strong>$0 Paid</strong><span class="pl-3">Last 30 days</span></h6>
-							</div>
-							<div class="col-sm-12 mt-0">
-								<div class="pull-left">
-									<h3 class="mb-0"><strong>$0</strong></h3>
-									<h6 class="font-weight-normal text-secondary mt-1">Not deposited</h6>
-								</div>
-								<div class="pull-right">
-									<h3 class="mb-0"><strong>$0</strong></h3>
-									<h6 class="font-weight-normal text-secondary mt-1">Deposited</h6>
-								</div>
-							</div>
-							<div class="col-sm-12 mt-1">
-								<div class="progress" style="height:30px">
-									<div class="progress-bar bg-success w-50"></div>
-									<div class="progress-bar bg-info  w-50"></div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="row mt-5">
-					<div class="col-lg-12 px-0">
-						<div class="bg-white p-4">
-						<div class="row" style="margin-top:-50px;">
+<div class="wrapper" role="wrapper">
+    <?php include viewPath('includes/sidebars/invoice'); ?>
+    <!-- page wrapper start -->
+    <div wrapper__section>
+        <?php include viewPath('includes/notifications'); ?>
+        <div class="container-fluid">
+            <div class="page-title-box">
+            </div>
+            <!-- end row -->
+            <div class="row">
+                <div class="col-xl-12">
+                    <div class="card">
+                        <div class="card-body hid-desk" style="padding-bottom:0px;">
+                            <div class="row align-items-center">
+                                <div class="col-sm-6">
+                                    <h3 class="page-title">Invoices & Payments</h3>
+
+                                </div>
+                                <!-- <div class="col-sm-6">
+                                    <div class="float-right d-md-block">
+                                        <div class="dropdown">
+                                            <?php if (hasPermissions('WORKORDER_MASTER')): ?>
+                                                <a class="btn btn-primary btn-md"
+                                                   href="<?php echo url('invoice/add') ?>"><span
+                                                            class="fa fa-plus"></span> New Invoice</a>
+                                            <?php endif ?>
+                                        </div>
+                                    </div>
+                                </div> -->
+                            </div>
+                            
+                            <div style="background-color:#fdeac3; width:100%;padding:.5%;margin-bottom:5px;margin-top:5px;margin-bottom:10px;">
+                            An invoice provides customers with a detailed description and cost of the products or services that you have provided. Invoices are required for sales where the customers do not pay you immediately.  Our invoices are tracked so that you know how much each customer owes you and when payment is due.  This listing and our dashboard widget will help you keep your eyes on your money. 
+                            </div>
+                            
+                            <div class="row">
                                 <div class="col-md-12" style="text-align:right;padding-bottom:10px;">
-                                    <a class="btn btn-primary" href="<?php echo base_url('accounting/addnewInvoice') ?>"><span class="fa fa-plus fa-margin-right"></span> Add New Invoice</a>
+                                    <a class="btn btn-primary" href="<?php echo base_url('invoice/add') ?>"><span class="fa fa-plus fa-margin-right"></span> Add New Invoice</a>
                                 </div>
                             </div>
                             
@@ -149,7 +112,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             </div>
                         </div>
 
-                        <!-- <div class="card-body" style="padding-bottom:0px;">
+                        <div class="card-body" style="padding-bottom:0px;">
                             <div class="row align-items-center">
                                 <div class="col-md-12 summary">
                                     <div class="summary-item">
@@ -166,7 +129,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     </div>
                                 </div>
                             </div>
-                        </div> -->
+                        </div>
 
                         <div class="tabs">
                             <ul class="clearfix work__order mobile-invoice-ul" id="myTab" role="tablist">
@@ -297,7 +260,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                 </td>
                                                 <td>
                                                     <div class="table-nowrap">
-                                                       <label for="">$<?php echo ($invoice->grand_total); ?> </label>
+                                                       <label for="">$<?php echo ($invoice->invoice_totals) ? number_format(unserialize($invoice->invoice_totals)['grand_total'], 2, '.', ',') : '' ?> </label>
                                                     </div>
                                                 </td>
                                                 <td class="text-right">
@@ -316,7 +279,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                 <span class="fa fa-envelope-o icon"></span> Send Invoice</a>
                                                             </li>
                                                             <li role="presentation">
-                                                                <a role="menuitem" tabindex="-1" href="<?php echo base_url('accounting/invoice_edit/' . $invoice->id) ?>">
+                                                                <a role="menuitem" tabindex="-1" href="<?php echo base_url('invoice/edit/' . $invoice->id) ?>">
                                                                 <span class="fa fa-pencil-square-o icon"></span>
                                                                     Edit
                                                                 </a>
@@ -447,20 +410,56 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     </div>
                                 <?php } ?>
                             </div>
-                        <!-- </div> -->
-                    <!-- </div> -->
-						</div>
-					</div>
-				</div>
-				<!-- end row -->
-				<div class="row ml-2"></div>
+                        </div>
+                    </div>
+                    <!-- end card -->
+                </div>
+            </div>
             <!-- end row -->
-			</div>
         </div>
         <!-- end container-fluid -->
     </div>
-	  <!-- page wrapper end -->
-	  <?php include viewPath('includes/sidebars/accounting/accounting'); ?>
-    </div>
+</div>
 
-<?php include viewPath('includes/footer_accounting'); ?>
+<style>
+    .hid-deskx {
+        display: none !important;
+    }
+
+
+    @media only screen and (max-width: 600px) {
+        .hid-desk {
+            display: none !important;
+        }
+
+        .hid-deskx {
+            display: block !important;
+        }
+    }
+</style>
+<!-- page wrapper end -->
+<?php include viewPath('includes/footer'); ?>
+<script>
+    $('#dataTable1').DataTable({
+
+        columnDefs: [{
+            orderable: true,
+            className: 'select-checkbox',
+            targets: 0,
+            checkboxes: {
+                selectRow: true
+            }
+        }],
+        select: {
+            'style': 'multi'
+        },
+        order: [[1, 'asc']],
+    });
+
+    var elems = Array.prototype.slice.call(document.querySelectorAll('.js-switch'));
+
+    elems.forEach(function (html) {
+        var switchery = new Switchery(html, {size: 'small'});
+    });
+
+</script>

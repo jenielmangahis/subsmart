@@ -24,6 +24,7 @@ $(document).ready(function() {
                 $("#timeLogTable").html(data);
                 $("#timeLogTable").show();
                 $("#timeLogTable").DataTable({
+
                     initComplete: function(settings, json) {
                         $("body").find(".dataTables_scrollBody").addClass("scrollbar");
                     },
@@ -143,7 +144,9 @@ $(document).ready(function() {
                         );
                     },
                     scrollX: true,
-                    ordering: false,
+                    order: [
+                        [2, "desc"]
+                    ]
                 });
                 $(".table-ts-loader").hide();
             },
@@ -227,7 +230,7 @@ $(document).ready(function() {
         let form_break_duration = $("#form_break_duration").html();
         let form_over_time = $("#form_over_time").html();
         let form_attendance_notes = $("#form_attendance_notes").val();
-        let form_ot_status = $("#form_ot_status").html(); 
+        let form_ot_status = $("#form_ot_status").html();
         Swal.fire({
             title: "Save changes?",
             html: "Are you sure you want to update this attendance log of <b>" +

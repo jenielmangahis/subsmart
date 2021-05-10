@@ -427,13 +427,7 @@ $(document).ready(function() {
                             get_user_current_geo_possition(data.timesheet_logs_id, "timesheet_logs");
                             // location.reload();
                         } else {
-                            Swal.fire({
-                                showConfirmButton: false,
-                                timer: 2000,
-                                title: "Failed",
-                                html: "Something is wrong in the process",
-                                icon: "warning",
-                            });
+                            console.log("Autoc lockout: Something is wrong!");
                         }
                     },
                 });
@@ -840,149 +834,148 @@ $(document).ready(function() {
             data: { attn_id: attn_id },
             success: function(data) {
                 $("#overtime_status_acknowledgement").val(data.overtime_status);
+                console.log(data.overtime_status);
+                let startdate = $("#clockedin_date_time").val();
+                let anntendance_status = $("#attendance_status").val();
+                let overtime_status = $("#overtime_status_acknowledgement").val();
+                if (anntendance_status == 1 && data.overtime_status == 0) {
+                    // alert("pasok");
+                    $.ajax({
+                        url: baseURL + "/timesheet/get_shift_duration",
+                        type: "POST",
+                        dataType: "json",
+                        data: { attn_id: attn_id },
+                        success: function(data) {
+                            let was_closed = data.autoclockout_timer_closed;
+                            if (data.over_lunch) {
+                                clearInterval(autoclockout_checker_loop);
+                                $.ajax({
+                                    url: baseURL + "/timesheet/lunchOutEmployee",
+                                    type: "POST",
+                                    dataType: "json",
+                                    data: { attn_id: attn_id, pause_time: pause_time },
+                                    success: function(data) {
+                                        clearTimeout(counter);
+                                    },
+                                });
+                                autoClockOut();
+                            }
+                            if (data.difference > 8) {
+                                was_closed = false;
+                            }
+                            if (was_closed != true) {
+
+                                if (data.difference >= 8 && !auto_popup_executed) {
+
+                                    auto_popup_executed = true;
+                                    notificationRing();
+                                    if (data.difference < 8.08333333) {
+                                        $difference = (8.08333333 - data.difference) * 60 * 60;
+                                    } else {
+                                        $difference = 10;
+                                    }
+                                    Swal.fire({
+                                        title: "Do you need more time?",
+                                        // icon:'question',
+                                        html: 'Please select "Continue" to keep working, or select "End Session" to end session now <br> Will close in <strong></strong>',
+                                        imageUrl: baseURL + "/assets/img/timesheet/clock-out.png",
+                                        showDenyButton: true,
+                                        confirmButtonText: `Continue`,
+                                        denyButtonText: `End Session`,
+                                        allowOutsideClick: false,
+                                        timer: $difference * 1000,
+                                        timerProgressBar: true,
+                                        willOpen: () => {
+                                            const content = Swal.getContent();
+                                            const $ = content.querySelector.bind(content);
+                                            timerInterval = setInterval(() => {
+                                                if ((Swal.getTimerLeft() / 1000).toFixed(0) >= 0) {
+                                                    var coundown = Swal.getTimerLeft() / 1000 / 60;
+                                                    var intV = parseInt(coundown);
+
+                                                    var text_countdown = "";
+                                                    if (intV != 0) {
+                                                        text_countdown =
+                                                            intV + ":" + parseInt((coundown - intV) * 60);
+                                                    } else {
+                                                        text_countdown = parseInt((coundown - intV) * 60);
+                                                    }
+
+                                                    Swal.getContent().querySelector(
+                                                        "strong"
+                                                    ).textContent = text_countdown;
+                                                } else {
+                                                    clearInterval(timerInterval);
+                                                }
+                                            }, 100);
+                                        },
+                                        willClose: () => {
+                                            clearInterval(timerInterval);
+                                        },
+                                    }).then((result) => {
+                                        let status = 0;
+                                        if (result.isConfirmed) {
+                                            $("#overtime_status_acknowledgement").val(1);
+                                            status = 1;
+                                            $.ajax({
+                                                url: baseURL + "/timesheet/overtimeApproval",
+                                                type: "POST",
+                                                dataType: "json",
+                                                data: { attn_id: attn_id, status: status },
+                                                success: function(data) {
+                                                    if (data == 1) {
+                                                        $("#autoClockOut").val(1);
+                                                        Swal.fire({
+                                                            showConfirmButton: false,
+                                                            timer: 2000,
+                                                            title: "Success",
+                                                            html: "You can now work more without auto Clock-out.",
+                                                            icon: "success",
+                                                        });
+                                                    }
+                                                },
+                                            });
+                                        } else if (result.isDenied) {
+                                            clearInterval(autoclockout_checker_loop);
+                                            autoClockOut();
+                                        }
+                                        if (result.dismiss === Swal.DismissReason.timer) {
+                                            clearInterval(autoclockout_checker_loop);
+                                            autoClockOut();
+                                        }
+                                        var di = result.dismiss;
+                                        if (di == "close") {
+                                            $.ajax({
+                                                url: baseURL + "/timesheet/get_shift_duration",
+                                                type: "POST",
+                                                dataType: "json",
+                                                data: { attn_id: attn_id },
+                                                success: function(data) {
+                                                    if (data.difference > 8.08333333) {
+                                                        clearInterval(autoclockout_checker_loop);
+                                                        autoClockOut();
+                                                    } else {
+                                                        $.ajax({
+                                                            url: baseURL + "/timesheet/autoclockout_timer_closed",
+                                                            type: "POST",
+                                                            dataType: "json",
+                                                            data: { attn_id: attn_id },
+                                                            success: function(data) {},
+                                                        });
+                                                    }
+                                                },
+                                            });
+                                        }
+                                    });
+                                }
+                            }
+                        },
+                    });
+                } else {
+                    clearInterval(autoclockout_checker_loop);
+                }
             },
         });
-
-
-        let startdate = $("#clockedin_date_time").val();
-        let anntendance_status = $("#attendance_status").val();
-        let overtime_status = $("#overtime_status_acknowledgement").val();
-        if (anntendance_status == 1 && overtime_status == 0) {
-            // alert("pasok");
-            $.ajax({
-                url: baseURL + "/timesheet/get_shift_duration",
-                type: "POST",
-                dataType: "json",
-                data: { attn_id: attn_id },
-                success: function(data) {
-                    let was_closed = data.autoclockout_timer_closed;
-                    if (data.over_lunch) {
-                        clearInterval(autoclockout_checker_loop);
-                        $.ajax({
-                            url: baseURL + "/timesheet/lunchOutEmployee",
-                            type: "POST",
-                            dataType: "json",
-                            data: { attn_id: attn_id, pause_time: pause_time },
-                            success: function(data) {
-                                clearTimeout(counter);
-                            },
-                        });
-                        autoClockOut();
-                    }
-                    if (data.difference > 8) {
-                        was_closed = false;
-                    }
-                    if (was_closed != true) {
-
-                        if (data.difference >= 8 && !auto_popup_executed) {
-
-                            auto_popup_executed = true;
-                            notificationRing();
-                            if (data.difference < 8.08333333) {
-                                $difference = (8.08333333 - data.difference) * 60 * 60;
-                            } else {
-                                $difference = 10;
-                            }
-                            Swal.fire({
-                                title: "Do you need more time?",
-                                // icon:'question',
-                                html: 'Please select "Continue" to keep working, or select "End Session" to end session now <br> Will close in <strong></strong>',
-                                imageUrl: baseURL + "/assets/img/timesheet/clock-out.png",
-                                showDenyButton: true,
-                                confirmButtonText: `Continue`,
-                                denyButtonText: `End Session`,
-                                allowOutsideClick: false,
-                                timer: $difference * 1000,
-                                timerProgressBar: true,
-                                willOpen: () => {
-                                    const content = Swal.getContent();
-                                    const $ = content.querySelector.bind(content);
-                                    timerInterval = setInterval(() => {
-                                        if ((Swal.getTimerLeft() / 1000).toFixed(0) >= 0) {
-                                            var coundown = Swal.getTimerLeft() / 1000 / 60;
-                                            var intV = parseInt(coundown);
-
-                                            var text_countdown = "";
-                                            if (intV != 0) {
-                                                text_countdown =
-                                                    intV + ":" + parseInt((coundown - intV) * 60);
-                                            } else {
-                                                text_countdown = parseInt((coundown - intV) * 60);
-                                            }
-
-                                            Swal.getContent().querySelector(
-                                                "strong"
-                                            ).textContent = text_countdown;
-                                        } else {
-                                            clearInterval(timerInterval);
-                                        }
-                                    }, 100);
-                                },
-                                willClose: () => {
-                                    clearInterval(timerInterval);
-                                },
-                            }).then((result) => {
-                                let status = 0;
-                                if (result.isConfirmed) {
-                                    $("#overtime_status_acknowledgement").val(1);
-                                    status = 1;
-                                    $.ajax({
-                                        url: baseURL + "/timesheet/overtimeApproval",
-                                        type: "POST",
-                                        dataType: "json",
-                                        data: { attn_id: attn_id, status: status },
-                                        success: function(data) {
-                                            if (data == 1) {
-                                                $("#autoClockOut").val(1);
-                                                Swal.fire({
-                                                    showConfirmButton: false,
-                                                    timer: 2000,
-                                                    title: "Success",
-                                                    html: "You can now work more without auto Clock-out.",
-                                                    icon: "success",
-                                                });
-                                            }
-                                        },
-                                    });
-                                } else if (result.isDenied) {
-                                    clearInterval(autoclockout_checker_loop);
-                                    autoClockOut();
-                                }
-                                if (result.dismiss === Swal.DismissReason.timer) {
-                                    clearInterval(autoclockout_checker_loop);
-                                    autoClockOut();
-                                }
-                                var di = result.dismiss;
-                                if (di == "close") {
-                                    $.ajax({
-                                        url: baseURL + "/timesheet/get_shift_duration",
-                                        type: "POST",
-                                        dataType: "json",
-                                        data: { attn_id: attn_id },
-                                        success: function(data) {
-                                            if (data.difference > 8.08333333) {
-                                                clearInterval(autoclockout_checker_loop);
-                                                autoClockOut();
-                                            } else {
-                                                $.ajax({
-                                                    url: baseURL + "/timesheet/autoclockout_timer_closed",
-                                                    type: "POST",
-                                                    dataType: "json",
-                                                    data: { attn_id: attn_id },
-                                                    success: function(data) {},
-                                                });
-                                            }
-                                        },
-                                    });
-                                }
-                            });
-                        }
-                    }
-                },
-            });
-        } else {
-            clearInterval(autoclockout_checker_loop);
-        }
     }
 });
 

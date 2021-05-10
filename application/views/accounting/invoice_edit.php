@@ -3,10 +3,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
 ?>
 <?php include viewPath('includes/header'); ?>
 <div class="wrapper" role="wrapper">
-    <?php include viewPath('includes/sidebars/invoice'); ?>
+<?php include viewPath('includes/sidebars/accounting/accounting'); ?>
     <link href="<?php echo $url->assets ?>css/jquery.signaturepad.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/css/bootstrap4-toggle.min.css" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/js/bootstrap4-toggle.min.js"></script>
 
     <style>
   .custom-signaturepad {
@@ -107,9 +105,9 @@ input:checked + .slider:before {
             <div class="page-title-box">
                 <div class="row align-items-center">
                     <div class="col-sm-6">
-                        <h3 style="font-family: Sarabun, sans-serif"> &nbsp; New Invoice</h3>
+                        <h3 style="font-family: Sarabun, sans-serif">New Invoice</h3>
                         <ol class="breadcrumb">
-                            <li class="breadcrumb-item active">&emsp; &emsp; Complete the fields below to create a new invoice.</li>
+                            <li class="breadcrumb-item active">Complete the fields below to create a new invoice.</li>
                         </ol>
                     </div>
                     <div class="col-sm-6">
@@ -132,9 +130,9 @@ input:checked + .slider:before {
             <!-- end row -->
             <?php echo form_open_multipart('Invoice/addNewInvoice', ['class' => 'form-validate require-validation', 'id' => 'invoice_form', 'autocomplete' => 'off']); ?>
 
-            <div class="row ">
+            <div class="row custom__border">
                 <div class="col-xl-12">
-                    <div class="card2">
+                    <div class="card">
                         <div class="card-body">
                             <div class="row" style="background-color:white;">
                                 <div class="col-md-5 form-group">
@@ -159,7 +157,7 @@ input:checked + .slider:before {
                                 <div class="col-md-5 form-group">
                                     <label for="job_location">Job Location <small class="help help-sm">(optional)</small></label>
                                     
-                                    <input type="text" class="form-control" name="jobs_location" id="invoice_jobs_location" />
+                                    <input type="text" class="form-control" name="jobs_location" id="invoice_jobs_location" value="<?php echo $invoice->job_location; ?>"/>
                                 </div>
                                 <div class="col-md-5 form-group">
                                     <!-- <p>&nbsp;</p>
@@ -169,7 +167,7 @@ input:checked + .slider:before {
                                 </div>
                                 <div class="col-md-5 form-group">
                                     <label for="job_name">Job Name <small class="help help-sm">(optional)</small></label>
-                                    <input type="text" class="form-control" name="job_name" id="job_name" />
+                                    <input type="text" class="form-control" name="job_name" id="job_name"  value="<?php echo $invoice->job_name; ?>"/>
                                 </div>
                             </div>
 
@@ -188,36 +186,36 @@ input:checked + .slider:before {
                                         </div>
                                         <div class="col-md-3">
                                             <label>Customer email</label>
-                                            <input type="email" class="form-control" name="customer_email" id="customer_email">
+                                            <input type="email" class="form-control" name="customer_email" id="customer_email" value="<?php echo $invoice->customer_email; ?>">
                                             <p><input type="checkbox"> Send later </p>
                                         </div>
                                         <div class="col-md-3">
                                             <label>Location of sale</label>
-                                            <input type="text" class="form-control" name="location_scale">
+                                            <input type="text" class="form-control" name="location_scale" value="<?php echo $invoice->location_scale; ?>">
                                         </div>
                                         <div class="col-md-3">
                                             <label>Tracking no.</label>
-                                            <input type="text" class="form-control" name="tracking_number">
+                                            <input type="text" class="form-control" name="tracking_number" value="<?php echo $invoice->tracking_number; ?>">
                                         </div>
                                     </div>
                                     <div class="row form-group">
                                         <div class="col-md-3">
                                             <label>Ship via</label>
-                                            <input type="text" class="form-control" name="ship_via">
+                                            <input type="text" class="form-control" name="ship_via" value="<?php echo $invoice->ship_via; ?>">
                                         </div>
                                         <div class="col-md-3">
                                             <label>Shipping date</label>
-                                            <input type="date" class="form-control" name="shipping_date">
+                                            <input type="date" class="form-control" name="shipping_date" value="<?php echo $invoice->shipping_date; ?>">
                                         </div>
                                         <div class="col-md-3">
                                         <label>Tags</label> <span class="float-right"><a href="#" class="text-info" data-toggle="modal" data-target="#tags-modal" id="open-tags-modal">Manage tags</a></span>
-                                            <input type="text" class="form-control" name="tags">
+                                            <input type="text" class="form-control" name="tags" value="<?php echo $invoice->tags; ?>">
                                         </div>
                                     <!-- </div>
                                     <div class="row form-group"> -->
                                         <div class="col-md-3">
                                             <label>Billing address</label>
-                                            <textarea class="form-control" style="width:100%;" name="billing_address" id="billing_address"></textarea>
+                                            <textarea class="form-control" style="width:100%;" name="billing_address" id="billing_address" value="<?php echo $invoice->billing_address; ?>"></textarea>
                                         </div>
                                     </div>
 
@@ -246,12 +244,12 @@ input:checked + .slider:before {
                                     <label for="purchase_order">Purchase Order# <small class="help help-sm">(optional)</small></label>
                                     <span class="fa fa-question-circle text-ter" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Optional if you want to display the purchase order number on invoice." data-original-title="" title=""></span>
                                     <div class="input-group">
-                                        <input type="text" class="form-control" name="purchase_order" id="purchase_order">
+                                        <input type="text" class="form-control" name="purchase_order" id="purchase_order" value="<?php echo $invoice->purchase_order; ?>">
                                     </div>
                                 </div>
                                 <div class="col-md-3">
                                             <label>Shipping to</label>
-                                            <textarea class="form-control" style="width:100%;" name="shipping_to_address" id="shipping_address"></textarea>
+                                            <textarea class="form-control" style="width:100%;" name="shipping_to_address" id="shipping_address" value="<?php echo $invoice->shipping_to_address; ?>"></textarea>
                                         </div>
 
                                 <!-- <div class="col-md-3 form-group">
@@ -265,27 +263,17 @@ input:checked + .slider:before {
                                     <!-- <input type="text" class="form-control" name="invoice_number"
                                            id="invoice_number" value="<?php echo "INV-".date("YmdHis"); ?>" required placeholder="Enter Invoice#"
                                            onChange="jQuery('#customer_id').text(jQuery(this).val());"/> -->
-                                    <input type="text" class="form-control" name="invoice_number" id="invoice_number" value="<?php echo "INV-"; 
-                                           foreach ($number as $num):
-                                                $next = $num->invoice_number;
-                                                $arr = explode("-", $next);
-                                                $date_start = $arr[0];
-                                                $nextNum = $arr[1];
-                                            //    echo $number;
-                                           endforeach;
-                                           $val = $nextNum + 1;
-                                           echo str_pad($val,9,"0",STR_PAD_LEFT);
-                                           ?>" required />
+                                    <input type="text" class="form-control" name="invoice_number" id="invoice_number" value="<?php echo $invoice->invoice_number; ?>" readonly/>
                                 </div>
 
                                 <div class="col-md-3 form-group">
                                     <label for="date_issued">Date Issued <span style="color:red;">*</span></label>
-                                    <input type="date" class="form-control" id="start_date_" name="date_issued" required/>
+                                    <input type="date" class="form-control" id="" name="date_issued"  value="<?php echo $invoice->date_issued; ?>"/>
                                 </div>
 
                                 <div class="col-md-3 form-group">
                                     <label for="due_date">Due Date <span style="color:red;">*</span></label>
-                                    <input type="date" class="form-control" id="end_date_" name="due_date" required/>
+                                    <input type="date" class="form-control" id="" name="due_date" value="<?php echo $invoice->due_date; ?>"/>
                                 </div>
 
                                 <div class="col-md-3 form-group">
@@ -329,41 +317,32 @@ input:checked + .slider:before {
                                         </tr>
                                         </thead>
                                         <tbody id="jobs_items_table_body">
-                                        <tr>
-                                            <td><input type="text" class="form-control getItems"
-                                                       onKeyup="getItems(this)" name="item[]">
-                                                <ul class="suggestions"></ul>
-                                            </td>
-                                            <td><select name="item_type[]" class="form-control">
-                                                    <option value="service">Service</option>
-                                                    <option value="material">Material</option>
-                                                    <option value="product">Product</option>
-                                                </select></td>
-                                            <td><input type="text" class="form-control quantity" name="quantity[]"
-                                                       data-counter="0" id="quantity_0" value="1"></td>
-                                            <td><input type="number" class="form-control price" name="price[]"
-                                                       data-counter="0" id="price_0" min="0" value="0"></td>
-                                            <!-- <td><input type="hidden" class="form-control discount" name="discount[]"
-                                                       data-counter="0" id="discount_0" min="0" value="0">
-                                                       <span id="span_discount_0">0</span></td> -->
-                                            <td><input type="number" class="form-control discount" name="discount[]"
-                                                       data-counter="0" id="discount_0" min="0" value="0" ></td>
-                                            <td><input type="hidden" class="form-control tax" name="tax[]"
-                                                       data-counter="0" id="tax_0" min="0" value="0">
-                                                       <span id="span_tax_0">0.00 (7.5%)</span></td>
-                                            <td><input type="hidden" class="form-control " name="total[]"
-                                                       data-counter="0" id="item_total_0" min="0" value="0">
-                                                       $<span id="span_total_0">0.00</span></td>
-                                        </tr>
+                                                                <?php foreach($items as $item){ ?>
+													                <tr class="table-items__tr">
+													                    <td style="width: 30px; text-align: center;" valign="top">  # </td>
+													                    <td valign="top"> <?php echo $item->item ?>   </td>
+													                    <td style="width: 50px; text-align: right;" valign="top"> <?php echo $item->qty ?>  </td>
+													                    <td style="width: 80px; text-align: right;" valign="top">$<?php echo $item->cost ?></td>
+													                    <td style="width: 80px; text-align: right;" valign="top">
+													                        <!-- $99.99<br>(62.89%)                     -->
+																			$<?php echo $item->discount ?>
+																			</td>
+													                    <td style="width: 80px; text-align: right;" valign="top">
+													                        <!-- $4.43<br>(7.5%)                     -->
+																			$<?php echo $item->tax ?>
+																			</td>
+													                    <td style="width: 90px; padding: 8px 8px 8px 0; text-align: right;" valign="top">$<?php echo $item->total ?></td>
+													                </tr>
+																	<?php } ?>
                                         </tbody>
                                     </table>
-                                    <div class="row lamesa">
+                                    <div class="row">
                                         <!-- <a class="link-modal-open pt-1 pl-2" href="#" id="add_another_new_invoice" style="color:#02A32C;"><span
                                                     class="fa fa-plus-square fa-margin-right" style="color:#02A32C;"></span>Add Items</a> -->
                                         <a href="#" id="add_another_new_invoice2" style="color:#02A32C;" data-toggle="modal" data-target="#item_list"><i class="fa fa-plus-square" aria-hidden="true"></i> Add another line </a>
                                         <hr style="display:inline-block; width:91%">
                                     </div>
-                                    <!-- <div class="row">
+                                    <div class="row">
                                         <div class="col-md-7">
                                         &nbsp;
                                         </div>
@@ -372,21 +351,22 @@ input:checked + .slider:before {
                                                 <label style="padding: 0 .75rem;">Subtotal</label>
                                             </div>
                                             <div class="col-sm-6 text-right pr-3">
-                                                $ <span id="item_total_text">0.00</span>
-                                                <input type="hidden" name="sub_total" id="item_total">
+                                                $ <span id="item_total_text"> <?php echo $invoice->sub_total; ?></span>
+                                                <input type="hidden" name="sub_total" id="item_total" value="<?php echo $invoice->sub_total; ?>">
                                             </div>
                                             <div class="col-sm-12">
                                                 <hr>
                                             </div>
                                             <div class="col-sm-5">
-                                                <input type="text" name="adjustment_name" id="adjustment_name" placeholder="Adjustment Name" class="form-control" style="width:100%; display:inline; border: 1px dashed #d1d1d1">
+                                                <input type="text" name="adjustment_name" id="adjustment_name" placeholder="Adjustment Name" class="form-control" style="width:200px; display:inline; border: 1px dashed #d1d1d1" value="<?php echo $invoice->adjustment_name; ?>">
                                             </div>
                                             <div class="col-sm-3">
-                                                <input type="number" name="adjustment_input" id="adjustment_input" value="0" class="form-control adjustment_input" style="width:100px; display:inline-block">
+                                                <input type="number" name="adjustment_input" id="adjustment_input"  value="<?php echo $invoice->adjustment_value; ?>" class="form-control adjustment_input" style="width:100px; display:inline-block">
                                                 <span class="fa fa-question-circle" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Optional it allows you to adjust the total amount Eg. +10 or -10." data-original-title="" title=""></span>
                                             </div>
                                             <div class="col-sm-3 text-right pt-2">
-                                                <label id="adjustment_amount">0.00</label>
+                                                <label id="adjustment_amount"><?php echo $invoice->adjustment_value; ?></label>
+                                                <!-- <input type="hidden" name="adjustment_amount" id="adjustment_amount_form_input" value='0'> -->
                                             </div>
                                             <div class="col-sm-12">
                                                 <hr>
@@ -396,46 +376,12 @@ input:checked + .slider:before {
                                             </div>
                                             <div class="col-sm-6 text-right pr-3">
                                             <input type="hidden" name="adjustment_value" id="adjustment_input" value="0" class="form-control adjustment_input" style="width:100px; display:inline-block"><input type="hidden" name="markup_input_form" id="markup_input_form" class="markup_input" value="0">
-                                                <span id="grand_total">0.00</span>
-                                                <input type="hidden" name="grand_total" id="grand_total_input" value='0'>
+                                                <span id="grand_total"><?php echo $invoice->grand_total; ?></span>
+                                                <input type="hidden" name="grand_total" id="grand_total_input"  value="<?php echo $invoice->grand_total; ?>">
                                             </div>
                                             <div class="col-sm-12">
                                                 <hr>
                                             </div>
-                                        </div>
-                                    </div> -->
-                                    <div class="row" style="background-color:white;font-size:16px;">
-                                        <div class="col-md-7">
-                                        </div>
-                                        <div class="col-md-5">
-                                            <table class="table" style="text-align:left;">
-                                                <tr>
-                                                    <td>Subtotal</td>
-                                                    <td></td>
-                                                    <td>$ <span id="item_total_text">0.00</span>
-                                                        <input type="hidden" name="sub_total" id="item_total"></td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Taxes</td>
-                                                    <td></td>
-                                                    <td>$ <span id="total_tax_">0.00</span><input type="hidden" name="taxes" id="total_tax_input"></td>
-                                                </tr>
-                                                <tr>
-                                                    <td style="width:250px;"><input type="text" name="adjustment_name" id="adjustment_name" placeholder="Adjustment Name" class="form-control" style="width:200px; display:inline; border: 1px dashed #d1d1d1"></td>
-                                                    <td style="width:150px;">
-                                                    <input type="number" name="adjustment_value" id="adjustment_input" value="0" class="form-control adjustment_input" style="width:100px; display:inline-block">
-                                                        <span class="fa fa-question-circle" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Optional it allows you to adjust the total amount Eg. +10 or -10." data-original-title="" title=""></span>
-                                                    </td>
-                                                    <td>0.00</td>
-                                                </tr>
-                                                    <input type="hidden" name="markup_input_form" id="markup_input_form" class="markup_input" value="0">
-                                                <tr style="color:blue;font-weight:bold;font-size:18px;">
-                                                    <td><b>Grand Total ($)</b></td>
-                                                    <td></td>
-                                                    <td><b><span id="grand_total">0.00</span>
-                                                        <input type="hidden" name="grand_total" id="grand_total_input" value='0'></b></td>
-                                                </tr>
-                                            </table>
                                         </div>
                                     </div>
                                 </div>
@@ -455,7 +401,7 @@ input:checked + .slider:before {
                                 </div>
                                 <div class="col-md-4 form-group">
                                     <div class="input-group">
-                                        <input type="text" name="deposit_amount" value="0" class="form-control"
+                                        <input type="text" name="deposit_amount"  value="<?php echo $invoice->deposit_request; ?>" class="form-control"
                                                autocomplete="off">
                                     </div>
                                 </div>
@@ -528,13 +474,13 @@ input:checked + .slider:before {
                                 <div class="col-md-12">
                                     <h5>Message to Customer</h5>
                                     <span class="help help-sm help-block">Add a message that will be displayed on the invoice.</span>
-                                    <textarea name="message_to_customer" cols="40" rows="2" class="form-control">Thank you for your business.</textarea>
+                                    <textarea name="message_to_customer" cols="40" rows="2" class="form-control"><?php echo $invoice->message_to_customer; ?></textarea>
                                 </div>
                                 <br>
                                 <div class="col-md-12">
                                     <h5>Terms &amp; Conditions</h5>
                                     <span class="help help-sm help-block">Mention your company's T&amp;C that will appear on the invoice.</span>
-                                    <textarea name="terms_and_conditions" cols="40" rows="2" class="form-control"></textarea>
+                                    <textarea name="terms_and_conditions" cols="40" rows="2" class="form-control"><?php echo $invoice->terms_and_conditions; ?></textarea>
                                 </div>
                             </div>
                             </div>
@@ -822,8 +768,8 @@ input:checked + .slider:before {
 </div>
 
 <!-- Modal -->
-<div class="modal fade lamesa" id="item_list" tabindex="-1" role="dialog" aria-labelledby="newcustomerLabel" aria-hidden="true">
-                <div class="modal-dialog modal-lg" role="document">
+<div class="modal fade" id="item_list" tabindex="-1" role="dialog" aria-labelledby="newcustomerLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg" role="document" style="width:800px;position: absolute;top: 50%;left: 50%;transform: translate(-50%, -50%);">
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title" id="newcustomerLabel">Item Lists</h5>
@@ -844,25 +790,20 @@ input:checked + .slider:before {
                                             <td> Action</td>
                                         </tr>
                                         </thead>
-                                        <tbody class="">
+                                        <tbody>
                                         <?php foreach($items as $item){ // print_r($item); ?>
                                             <tr>
                                                 <td><?php echo $item->title; ?></td>
                                                 <td><?php if($item->rebate == 1){ ?>
-                                                    <!-- <label class="switch">
-                                                    <input type="checkbox" id="rebatable_toggle" checked>
-                                                    <span class="slider round"></span> -->
-                                                    <input type="checkbox" class="toggle_checkbox" id="rebatable_toggle" item-id="<?php echo $item->id; ?>"  value="1"  data-toggle="toggle" data-size="xs" checked >
+                                                    <label class="switch">
+                                                    <input type="checkbox" checked>
+                                                    <span class="slider round"></span>
                                                     </label>
                                                 <?php }else{ ?>
-                                                    <!-- <label class="switch">
+                                                    <label class="switch">
                                                     <input type="checkbox">
                                                     <span class="slider round"></span>
-                                                    </label> -->
-
-                                                    <!-- <input type="checkbox" data-toggle="toggle" data-size="xs"> -->
-                                                    <input type="checkbox" class="toggle_checkbox" id="rebatable_toggle" item-id="<?php echo $item->id; ?>" value="0" data-toggle="toggle" data-size="xs">
-
+                                                    </label>
                                                 <?php  } ?></td>
                                                 <td></td>
                                                 <td><?php echo $item->price; ?></td>
@@ -886,7 +827,7 @@ input:checked + .slider:before {
                 </div>
             </div>
 <?php include viewPath('accounting/add_new_term'); ?>
-<?php include viewPath('includes/footer'); ?>
+<?php include viewPath('includes/footer_accounting'); ?>
 
 <script>
     $(document).ready(function () {
@@ -895,150 +836,6 @@ input:checked + .slider:before {
     });
 });
 
-</script>
-
-<script>
-//   $(function() {
-//     $("#rebatable_toggle").each(function(){
-//     $(this).change(function() {
-//     //   $('#console-event').html('Toggle: ' + $(this).prop('checked'))
-//     alert('yeah');
-//     })
-//   })
-$(document).ready(function () {
-
-//iterate through all the divs - get their ids, hide them, then call the on click
-$(".toggle").each(function () {
-    var $context = $(this);
-    var $button = $context.find("#rebatable_toggle");
-    //            $currentId = $button.attr('id');
-    // var $divOptions = $context.find('div').last();
-
-    //$($divOptions).hide();
-    $($button).on('change', function (event) {
-        // alert('yeah');
-        // $(this).click(function() {        
-        var id = $($button).attr("item-id");
-        var get_val = $($button).val();
-        // alert(id);
-
-        $.ajax({
-            type: 'POST',
-            url:"<?php echo base_url(); ?>accounting/changeRebate",
-            data: {id : id, get_val : get_val },
-            dataType: 'json',
-            success: function(response){
-                // alert('Successfully Change');
-                sucess("Rebate Updated Successfully!");
-                // $('.lamesa').load(window.location.href +  ' .lamesa');
-                // location.reload();
-                $('#item_list').modal('toggle');
-                // $("#item_list .modal-body").load(target, function() { 
-                // $("#item_list").modal("show"); 
-                // });
-                $('#item_list').on('hidden.bs.modal', function (e) {
-                    location.reload();
-                    });
-            },
-                error: function(response){
-                alert('Error'+response);
-       
-                }
-        });
-
-        function sucess(information,$id){
-            Swal.fire({
-                title: 'Good job!',
-                text: information,
-                icon: 'success',
-                showCancelButton: false,
-                confirmButtonColor: '#32243d',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Ok'
-            }).then((result) => {
-                if (result.value) {
-                    window.location.href="<?= base_url(); ?>customer/preview/"+$id;
-                }
-            });
-        }
-
-    // });
-    });
-});
-});
-</script>
-
-<script>
-// $(document).ready(function(){
-//     // $('#rebatable_toggle').click(function () {
-//     //     alert('yeah');
-//     // });
-//     // $("#rebatable_toggle").change(function() {
-//     // if(this.checked) {
-//     //     alert('yeah');
-//     // }
-// // });
-// // $("#rebatable_toggle").change(function(){
-// //     if($(this).prop("checked") == true){
-// //         alert('yeah');
-// //     }else{
-// //         alert('no');
-// //     }
-// // });
-
-// // $('.toggle_checkbox').each(function() {
-
-// // // $parent = $( el ).closest( '.toggle_checkbox' );
-// // $( this ).click(function() {
-// //     var yeah = $(this).attr("item-id");
-// //     alert(yeah);
-// // });
-
-// // });
-
-
-
-// });
-// function myFunctionChecked() {
-//     var yeah = $(this).attr("item-id");
-
-//     alert(yeah);
-// }
-
-// $(".toggle_checkbox").each(function(){
-//     // alert($(this).attr("item-id"));
-//     $( this ).click(function() {        
-//         var id = $(this).attr("item-id");
-//         var get_val = $(this).val();
-//         // alert(yeah);
-
-//         $.ajax({
-//             type: 'POST',
-//             url:"<?php echo base_url(); ?>accounting/changeRebate",
-//             data: {id : id, get_val : get_val },
-//             dataType: 'json',
-//             success: function(response){
-//                 alert('Successfully Change');
-//                 // $('.lamesa').load(window.location.href +  ' .lamesa');
-//                 location.reload();
-//                 $('#item_list').modal('toggle');
-//             },
-//                 error: function(response){
-//                 alert('Error'+response);
-       
-//                 }
-//         });
-
-//     });
-// });
-
-</script>
-
-
-<script>
-    $(function() {
-        $("nav:first").addClass("closed");
-    });
 </script>
 
 <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAlMWhWMHlxQzuolWb2RrfUeb0JyhhPO9c&libraries=places"></script>

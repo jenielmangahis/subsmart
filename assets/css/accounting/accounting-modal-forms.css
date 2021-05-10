@@ -2,6 +2,21 @@
     background: #f4f5f8;
 }
 
+span.select2-selection.select2-selection--single {
+    min-width: unset !important;
+}
+
+#modal-container .btn-transparent:hover {
+    background: #d4d7dc !important;
+    border-color: #6B6C72 !important;
+}
+#modal-container .btn-transparent {
+    color: #6B6C72 !important;
+}
+#modal-container .btn-transparent:focus {
+    border-color: #6B6C72 !important;
+}
+
 /* Bank Deposit Modal */
 .modal textarea[name="memo"], .modal textarea[name="description"] {
     height: auto !important;

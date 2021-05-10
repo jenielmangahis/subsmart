@@ -35,9 +35,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     #vendors-table thead tr th:first-child {
         width: 1;
     }
-    span.select2-selection.select2-selection--single, #edit-pay-schedule-modal span.select2-selection.select2-selection--single {
-        min-width: unset !important;
-    }
 </style>
 <?php include viewPath('includes/header'); ?>
 <div class="wrapper" role="wrapper">

@@ -543,4 +543,39 @@ class Expenses_model extends MY_Model
         $this->db->insert_batch('accounting_vendor_transaction_items', $data);
         return $this->db->insert_id();
     }
+
+    public function get_open_bills($filters = [])
+    {
+        $this->db->where('company_id', logged('company_id'));
+        $this->db->where('status', 1);
+        if(isset($filters['start_date'])) {
+            $this->db->where('due_date >=', $filters['start_date']);
+        }
+        if(isset($filters['end_date'])) {
+            $this->db->where('due_date <=', $filters['end_date']);
+        }
+        if(isset($filters['vendor_id'])) {
+            $this->db->where('vendor_id', $filters['vendor_id']);
+        }
+        $query = $this->db->get('accounting_bill');
+        return $query->result();
+    }
+
+    public function insert_bill_payment($data)
+    {
+        $this->db->insert('accounting_bill_payments', $data);
+        return $this->db->insert_id();
+    }
+
+    public function insert_bill_payment_items($data)
+    {
+        $this->db->insert_batch('accounting_bill_payment_items', $data);
+        return $this->db->insert_id();
+    }
+
+    public function add_vendor_credit($data)
+    {
+        $this->db->insert('accounting_vendor_credit', $data);
+        return $this->db->insert_id();
+    }
 }

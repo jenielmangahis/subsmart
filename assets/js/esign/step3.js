@@ -126,7 +126,7 @@ function Step3() {
       coordinates: position,
       docfile_id: fileId,
       doc_page: docPage,
-      doc_id: docId,
+      docfile_document_id: docId,
       unique_key: key,
       field: fieldName,
       recipient_id: recipientId,

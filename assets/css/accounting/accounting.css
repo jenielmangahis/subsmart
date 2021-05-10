@@ -1093,3 +1093,9 @@ button {
     margin-bottom: 28px;
     margin-top: 13px;
 }
+#filterDropdown {
+    padding: 10px 12px !important;
+}
+#filterDropdown:after {
+    display: none;
+}

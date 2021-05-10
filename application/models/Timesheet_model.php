@@ -1629,6 +1629,8 @@ class Timesheet_model extends MY_Model
     {
         $this->db->reset_query();
         $this->db->query("DELETE FROM user_notification WHERE date_created < '$date_lastweek'");
+        $this->db->reset_query();
+        $this->db->query("DELETE FROM user_seen_notif WHERE date_created < '$date_lastweek'");
     }
     public function save_current_geo_location($table_name, $table_id, $update)
     {

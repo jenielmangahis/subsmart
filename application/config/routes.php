@@ -300,6 +300,7 @@ $route['accounting/generate-payroll']['post'] = 'accounting_modals/generate_payr
 $route['accounting/get-customers']['post'] = 'accounting_modals/get_statement_customers';
 $route['accounting/get-recurring-form-fields/(:any)'] = 'accounting_modals/get_recurring_modal_fields/$1';
 $route['accounting/get-item-details/(:any)'] = 'accounting_modals/getItemDetails/$1';
+$route['accounting/load-bills']['post'] = 'accounting_modals/load_bills';
 
 $route['accounting/lists'] = 'accounting/lists';
 

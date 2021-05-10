@@ -1,12 +1,12 @@
 <!-- Modal for bank deposit-->
 <div class="full-screen-modal">
 <form onsubmit="submitModalForm(event, this)" id="modal-form">
-    <div id="checkModal" class="modal fade modal-fluid" role="dialog">
+    <div id="vendorCreditModal" class="modal fade modal-fluid" role="dialog">
         <div class="modal-dialog">
             <!-- Modal content-->
             <div class="modal-content" style="height: 100%;">
                 <div class="modal-header" style="background: #f4f5f8;border-bottom: 0">
-                    <h4 class="modal-title"><a href="#"><i class="fa fa-history fa-lg" style="margin-right: 10px"></i></a>Check <span></span></h4>
+                    <h4 class="modal-title"><a href="#"><i class="fa fa-history fa-lg" style="margin-right: 10px"></i></a>Vendor Credit <span></span></h4>
                     <button type="button" class="close" data-dismiss="modal"><i class="fa fa-times fa-lg"></i></button>
                 </div>
                 <div class="modal-body">
@@ -19,35 +19,14 @@
                                             <div class="row">
                                                 <div class="col-md-5">
                                                     <div class="form-group">
-                                                        <label for="payee">Payee</label>
-                                                        <select name="vendor_id" id="payee" class="form-control">
+                                                        <label for="vendor">Vendor</label>
+                                                        <select name="vendor_id" id="vendor" class="form-control" required>
                                                             <option value="" disabled selected>&nbsp;</option>
-                                                            <?php foreach($dropdown['payee'] as $payee) : ?>
-                                                                <option value="<?=$payee->id?>"><?=$payee->display_name?></option>
+                                                            <?php foreach($dropdown['vendors'] as $vendor) : ?>
+                                                                <option value="<?=$vendor->id?>"><?=$vendor->display_name?></option>
                                                             <?php endforeach; ?>
                                                         </select>
                                                     </div>
-                                                </div>
-                                                <div class="col-md-4">
-                                                    <div class="form-group">
-                                                        <label for="bank_account">Bank account</label>
-                                                        <select name="bank_account" id="bank_account" class="form-control" required>
-                                                            <?php foreach($dropdown['bank_accounts'] as $account) : ?>
-                                                                <option value="<?=$account->id?>"><?=$account->name?></option>
-
-                                                                <?php if(count($account->childAccs) > 0) : ?>
-                                                                    <optgroup label="&nbsp;&nbsp;&nbsp;Sub-account of <?=$account->name?>">
-                                                                        <?php foreach($account->childAccs as $childAcc) : ?>
-                                                                            <option value="<?=$childAcc->id?>">&nbsp;&nbsp;&nbsp;<?=$childAcc->name?></option>
-                                                                        <?php endforeach; ?>
-                                                                    </optgroup>
-                                                                <?php endif; ?>
-                                                            <?php endforeach; ?>
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-3 d-flex ">
-                                                    <p style="align-self: flex-end; margin-bottom: 30px">Balance <span id="account-balance"><?= $balance ?></span></p>
                                                 </div>
                                             </div>
                                         </div>
@@ -70,12 +49,8 @@
                                         <div class="col-md-2"></div>
                                         <div class="col-md-2">
                                             <div class="form-group">
-                                                <label for="check_no">Check no.</label>
-                                                <input type="text" name="check_no" id="check_no" class="form-control">
-                                                <div class="form-check">
-                                                    <input type="checkbox" name="print_later" id="print_later" class="form-check-input">
-                                                    <label for="print_later" class="form-check-label">Print later</label>
-                                                </div>
+                                                <label for="ref_no">Ref no.</label>
+                                                <input type="text" name="ref_no" id="ref_no" class="form-control">
                                             </div>
                                         </div>
                                         <div class="col-md-6">
@@ -294,7 +269,7 @@
                                                     <div class="attachments">
                                                         <label for="attachment" style="margin-right: 15px"><i class="fa fa-paperclip"></i>&nbsp;Attachment</label> 
                                                         <span>Maximum size: 20MB</span>
-                                                        <div id="check-attachments" class="dropzone" style="border: 1px solid #e1e2e3;background: #ffffff;width: 100%;">
+                                                        <div id="vendor-credit-attachments" class="dropzone" style="border: 1px solid #e1e2e3;background: #ffffff;width: 100%;">
                                                             <div class="dz-message" style="margin: 20px;border">
                                                                 <span style="font-size: 16px;color: rgb(180,132,132);font-style: italic;">Drag and drop files here or</span>
                                                                 <a href="#" style="font-size: 16px;color: #0b97c4">browse to upload</a>
@@ -305,7 +280,7 @@
                                             </div>
                                         </div>
                                         <div class="col-md-6">
-                                            <h5 class="m-0 text-right">Total : $<span class="expense-total">0.00</span></h5>
+                                            <h5 class="m-0 text-right">Total : $<span class="transaction-total-amount">0.00</span></h5>
                                         </div>
                                     </div>
                                 </div>
