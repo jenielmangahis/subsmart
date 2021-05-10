@@ -581,6 +581,18 @@ class Promote extends MY_Controller {
         $obj_pdf->writeHTML($content, true, false, true, false, '');
         $obj_pdf->Output($title, 'I');
     }
+
+    public function view_deals($id){
+        $this->load->model('MarketingOrderPayments_model');
+        
+        $dealsSteals = $this->DealsSteals_model->getById($id);
+        $company     = $this->Business_model->getByCompanyId($dealsSteals->company_id);
+        $orderPayments   = $this->MarketingOrderPayments_model->getByOrderNumber($dealsSteals->order_number);
+        $this->page_data['dealsSteals']   = $dealsSteals;
+        $this->page_data['orderPayments'] = $orderPayments;
+        $this->page_data['company'] = $company;
+        $this->load->view('promote/view_deals', $this->page_data);    
+    }
 }
 
 /* End of file Promote.php */
