@@ -34,10 +34,15 @@
 header.header-section.clearfix {
     background: white;
 }
+.column-e {
+  position: relative;
+  top: 9px;
+}
  .header-top {
    padding: 6px 40px;
    background: #34134d;
-   font-weight:bold
+   font-weight:bold;
+   display:flex;
  }
 
  .header-top p {
