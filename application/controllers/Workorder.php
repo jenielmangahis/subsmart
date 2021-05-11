@@ -578,6 +578,7 @@ class Workorder extends MY_Controller
         $this->page_data['plans'] = $this->plans_model->getByWhere(['company_id' => $company_id]);
         $this->page_data['customer'] = $this->workorder_model->getcustomerCompanyId($id);
         $this->page_data['job_types'] = $this->workorder_model->getjob_types();
+        $this->page_data['items'] = $this->items_model->getItemlist();
 
         foreach ($this->page_data['workorder'] as $key => $workorder) {
 

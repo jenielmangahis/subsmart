@@ -3,339 +3,334 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 class Login extends CI_Controller
 {
+    public $data;
 
-	public $data;
+    public function __construct()
+    {
+        parent::__construct();
 
-	public function __construct()
-	{
-		parent::__construct();
+        date_default_timezone_set(setting('timezone'));
 
-		date_default_timezone_set(setting('timezone'));
+        if (!empty($this->db->username) && !empty($this->db->hostname) && !empty($this->db->database)) {
+        } else {
+            die('Database is not configured');
+        }
 
-		if (!empty($this->db->username) && !empty($this->db->hostname) && !empty($this->db->database)) {
-		} else {
-			die('Database is not configured');
-		}
+        if (is_logged()) {
+            redirect('dashboard', 'refresh');
+        }
 
-		if (is_logged()) {
-			redirect('dashboard', 'refresh');
-		}
+        $this->data = [
+            'assets' => assets_url(),
+            'body_classes'	=> setting('login_theme') == '1' ? 'login-page login-background' : 'login-page-side login-background'
+        ];
+    }
 
-		$this->data = [
-			'assets' => assets_url(),
-			'body_classes'	=> setting('login_theme') == '1' ? 'login-page login-background' : 'login-page-side login-background'
-		];
-	}
+    public function index()
+    {
+        $this->load->view('account/login', $this->data, false);
+    }
 
-	public function index()
-	{
-		$this->load->view('account/login', $this->data, FALSE);
-	}
+    public function timezonesetter()
+    {
+        $date_before = date('Y-m-d h:i:s A');
+        $usertimezone = $this->input->post("usertimezone");
+        date_default_timezone_set($usertimezone);
+        $date_after = date('Y-m-d h:i:s A');
+        $_SESSION['usertimezone'] = $usertimezone;
+        $_SESSION['offset_zone'] = $this->input->post("offset_zone");
+        $display = array(
+            "usertimezone" => $usertimezone,
+            "newphptimezone" => date_default_timezone_get(),
+            "date_before" => $date_before,
+            "date_after" => $date_after,
+            "session_timezone" => $this->session->userdata('usertimezone'),
+            "offset_zone" => $this->session->userdata('offset_zone')
 
-	public function timezonesetter()
-	{
-		$date_before = date('Y-m-d h:i:s A');
-		$usertimezone = $this->input->post("usertimezone");
-		date_default_timezone_set($usertimezone);
-		$date_after = date('Y-m-d h:i:s A');
-		$_SESSION['usertimezone'] = $usertimezone;
-		$_SESSION['offset_zone'] = $this->input->post("offset_zone");;
-		$display = array(
-			"usertimezone" => $usertimezone,
-			"newphptimezone" => date_default_timezone_get(),
-			"date_before" => $date_before,
-			"date_after" => $date_after,
-			"session_timezone" => $this->session->userdata('usertimezone'),
-			"offset_zone" => $this->session->userdata('offset_zone')
+        );
+        echo json_encode($display);
+    }
+    public function check()
+    {
+        $this->load->library('form_validation');
 
-		);
-		echo json_encode($display);
-	}
-	public function check()
-	{
+        $this->form_validation->set_rules('username', 'Username', 'trim|required|min_length[5]|xss_clean|callback_validate_username');
+        $this->form_validation->set_rules('password', 'Password', 'required|min_length[6]|xss_clean');
 
-		$this->load->library('form_validation');
+        $is_recaptcha_enabled = (setting('google_recaptcha_enabled') == '1');
 
-		$this->form_validation->set_rules('username', 'Username', 'trim|required|min_length[5]|xss_clean|callback_validate_username');
-		$this->form_validation->set_rules('password', 'Password', 'required|min_length[6]|xss_clean');
+        if ($is_recaptcha_enabled) {
+            $this->form_validation->set_rules('g-recaptcha-response', 'Google Recaptcha', 'callback_validate_recaptcha');
+        }
 
-		$is_recaptcha_enabled = (setting('google_recaptcha_enabled') == '1');
+        if ($this->form_validation->run() == false) {
+            $this->index();
+            return;
+        }
 
-		if ($is_recaptcha_enabled)
-			$this->form_validation->set_rules('g-recaptcha-response', 'Google Recaptcha', 'callback_validate_recaptcha');
+        $username = post('username');
+        $password = post('password');
+        $is_startup = 0;
 
-		if ($this->form_validation->run() == FALSE) {
-			$this->index();
-			return;
-		}
+        $attempt = $this->users_model->attempt(compact('username', 'password'));
 
-		$username = post('username');
-		$password = post('password');
-		$is_startup = 0;
+        if ($attempt == 'valid') {
 
-		$attempt = $this->users_model->attempt(compact('username', 'password'));
+            // If Allowed, then retreive user row and login the user
+            $user = $this->db->where('username', $username)->or_where('email', $username)->get($this->users_model->table)->row();
+            $this->users_model->login($user, post('remember_me'));
 
-		if ($attempt == 'valid') {
+            // Get all access modules
+            if ($user->role == 1 || $user->role == 2) { //Admin and nsmart tech
+                $access_modules = array(0 => 'all');
+            } else {
+                $this->load->model('Clients_model');
+                $this->load->model('IndustryType_model');
+                $this->load->model('IndustryTemplateModules_model');
 
-			// If Allowed, then retreive user row and login the user
-			$user = $this->db->where('username', $username)->or_where('email', $username)->get($this->users_model->table)->row();
-			$this->users_model->login($user, post('remember_me'));
+                $client = $this->Clients_model->getById($user->company_id);
 
-			// Get all access modules
-			if ($user->role == 1 || $user->role == 2) { //Admin and nsmart tech
-				$access_modules = array(0 => 'all');
-			} else {
-				$this->load->model('Clients_model');
-				$this->load->model('IndustryType_model');
-				$this->load->model('IndustryTemplateModules_model');
+                if ($client) {
+                    if ($client->is_startup == 1) {
+                        $is_startup = 1;
+                    }
 
-				$client = $this->Clients_model->getById($user->company_id);
+                    $industryType = $this->IndustryType_model->getById($client->industry_type_id);
+                    if ($industryType) {
+                        $industryModules = $this->IndustryTemplateModules_model->getAllByTemplateId($industryType->id);
+                        foreach ($industryModules as $im) {
+                            $access_modules[] = $im->industry_module_id;
+                        }
 
-				if ($client) {
-					if ($client->is_startup == 1) {
-						$is_startup = 1;
-					}
+                        $this->session->set_userdata('userAccessModules', $access_modules);
+                    }
+                }
+            }
+        } elseif ($attempt == 'invalid_password') {
 
-					$industryType = $this->IndustryType_model->getById($client->industry_type_id);
-					if ($industryType) {
-						$industryModules = $this->IndustryTemplateModules_model->getAllByTemplateId($industryType->id);
-						foreach ($industryModules as $im) {
-							$access_modules[] = $im->industry_module_id;
-						}
+            // Show Message if invalid password
 
-						$this->session->set_userdata('userAccessModules', $access_modules);
-					}
-				}
-			}
-		} elseif ($attempt == 'invalid_password') {
+            $this->data['message'] = 'Invalid Password';
+            $this->data['message_type'] = 'danger';
 
-			// Show Message if invalid password
+            $this->index();
+            return;
+        } elseif ($attempt == 'not_allowed') {
 
-			$this->data['message'] = 'Invalid Password';
-			$this->data['message_type'] = 'danger';
+            // Show Message if invalid password
 
-			$this->index();
-			return;
-		} elseif ($attempt == 'not_allowed') {
+            $this->data['message'] = 'You are not allowed to Login ! Contact Admin';
+            $this->data['message_type'] = 'danger';
 
-			// Show Message if invalid password
+            $this->index();
+            return;
+        } else {
 
-			$this->data['message'] = 'You are not allowed to Login ! Contact Admin';
-			$this->data['message_type'] = 'danger';
+            // if invalid value or false returned by $attempt
 
-			$this->index();
-			return;
-		} else {
+            $this->data['message'] = 'Something Went Wrong !';
+            $this->data['message_type'] = 'danger';
 
-			// if invalid value or false returned by $attempt
+            $this->index();
+            return;
+        }
 
-			$this->data['message'] = 'Something Went Wrong !';
-			$this->data['message_type'] = 'danger';
+        /*$ipaddress = $this->timesheet_model->gtMyIpGlobal();
 
-			$this->index();
-			return;
-		}
-
-		/*$ipaddress = $this->timesheet_model->gtMyIpGlobal();
-	   
-        $get_location = json_decode(file_get_contents('http://ip-api.com/json/'.$ipaddress)); 
+        $get_location = json_decode(file_get_contents('http://ip-api.com/json/'.$ipaddress));
         $lat = $get_location->lat;
         $lng = $get_location->lon;
 
         $utimezone = $get_location->timezone;
-         
-        date_default_timezone_set($utimezone); 
-        
+
+        date_default_timezone_set($utimezone);
+
         $this->users_model->update($user->id, [
-			'user_time_zone'	=>	$utimezone,
-			'time_zone_update'	=>	date('Y-m-d H:m:i'),
-		]);*/
+            'user_time_zone'	=>	$utimezone,
+            'time_zone_update'	=>	date('Y-m-d H:m:i'),
+        ]);*/
 
-		$this->load->model('Activity_model', 'activity');
-		$activity['activityName'] = "User Login";
-		$activity['activity'] = " User " . logged('username') . " is loggedin";
-		$activity['user_id'] = logged('id');
+        $this->load->model('Activity_model', 'activity');
+        $activity['activityName'] = "User Login";
+        $activity['activity'] = " User " . logged('username') . " is loggedin";
+        $activity['user_id'] = logged('id');
 
-		$isUserInserted = $this->activity->addEsignActivity($activity);
-		if ($is_startup == 1) {
-			redirect('onboarding/business_info');
-		} else {
-			redirect('dashboard');
-		}
-	}
+        $isUserInserted = $this->activity->addEsignActivity($activity);
+        if ($is_startup == 1) {
+            redirect('onboarding/business_info');
+        } else {
+            redirect('dashboard');
+        }
+    }
 
-	public function validate_recaptcha($recaptchaResponse)
-	{
+    public function validate_recaptcha($recaptchaResponse)
+    {
+        $userIp = $this->input->ip_address();
+        $secret = setting('google_recaptcha_secretkey');
 
-		$userIp = $this->input->ip_address();
-		$secret = setting('google_recaptcha_secretkey');
+        $url = "https://www.google.com/recaptcha/api/siteverify?secret=" . $secret . "&response=" . $recaptchaResponse . "&remoteip=" . $userIp;
 
-		$url = "https://www.google.com/recaptcha/api/siteverify?secret=" . $secret . "&response=" . $recaptchaResponse . "&remoteip=" . $userIp;
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        $output = curl_exec($ch);
+        curl_close($ch);
 
-		$ch = curl_init();
-		curl_setopt($ch, CURLOPT_URL, $url);
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-		$output = curl_exec($ch);
-		curl_close($ch);
+        $status = json_decode($output, true);
 
-		$status = json_decode($output, true);
+        if ($status['success']) {
+            return true;
+        } else {
+            $this->form_validation->set_message('validate_recaptcha', 'Google Recaptcha not valid !');
+            return false;
+        }
+    }
 
-		if ($status['success']) {
-			return true;
-		} else {
-			$this->form_validation->set_message('validate_recaptcha', 'Google Recaptcha not valid !');
-			return false;
-		}
-	}
+    public function validate_username($username)
+    {
+        $table = $this->users_model->table;
+        $this->db->where('username', $username);
+        $this->db->or_where('email', $username);
 
-	public function validate_username($username)
-	{
-		$table = $this->users_model->table;
-		$this->db->where('username', $username);
-		$this->db->or_where('email', $username);
+        $exists = $this->db->get($table)->num_rows();
 
-		$exists = $this->db->get($table)->num_rows();
+        if ($exists > 0) {
+            return true;
+        } else {
+            $this->form_validation->set_message('validate_username', 'Invalid Username/Email');
+            return false;
+        }
+    }
 
-		if ($exists > 0) {
-			return true;
-		} else {
-			$this->form_validation->set_message('validate_username', 'Invalid Username/Email');
-			return false;
-		}
-	}
+    public function forget()
+    {
+        $this->load->view('account/forget_new', $this->data, false);
+        //$this->load->view('account/forget', $this->data, FALSE);
+    }
 
-	public function forget()
-	{
-		$this->load->view('account/forget_new', $this->data, FALSE);
-		//$this->load->view('account/forget', $this->data, FALSE);
-	}
+    public function reset_password()
+    {
+        postAllowed();
 
-	public function reset_password()
-	{
+        $this->form_validation->set_rules('username', 'Username', 'trim|required|min_length[5]|xss_clean|callback_validate_username');
 
-		postAllowed();
+        if ($this->form_validation->run() == false) {
+            $this->forget();
+            return;
+        }
 
-		$this->form_validation->set_rules('username', 'Username', 'trim|required|min_length[5]|xss_clean|callback_validate_username');
+        $reset = $this->users_model->resetPassword(['username' => post('username')]);
 
-		if ($this->form_validation->run() == FALSE) {
-			$this->forget();
-			return;
-		}
+        $this->data['message']	=	'Reset Link Sent to <a href="#">' . obfuscate_email($reset) . '</a> ! Please check your email';
+        $this->data['message_type']	=	'info';
 
-		$reset = $this->users_model->resetPassword(['username' => post('username')]);
+        if ($reset === 'invalid') {
+            $this->data['message']	=	'Invalid Email/Username';
+            $this->data['message_type']	=	'danger';
+        }
 
-		$this->data['message']	=	'Reset Link Sent to <a href="#">' . obfuscate_email($reset) . '</a> ! Please check your email';
-		$this->data['message_type']	=	'info';
+        $this->forget();
+    }
 
-		if ($reset === 'invalid') {
-			$this->data['message']	=	'Invalid Email/Username';
-			$this->data['message_type']	=	'danger';
-		}
+    public function reset_password_new()
+    {
+        $this->load->view('account/forget_new', $this->data, false);
+    }
 
-		$this->forget();
-	}
+    public function new_password()
+    {
+        $reset_token = !empty(get('token')) ? get('token') : false;
 
-	public function reset_password_new()
-	{
+        $user = $this->users_model->getByWhere(['reset_token' => $reset_token]);
 
-		$this->load->view('account/forget_new', $this->data, FALSE);
-	}
+        if (!$reset_token || !$user || empty($user)) {
+            echo 'Invalid Request';
+            redirect('login/forget', 'refresh');
+            return;
+        }
 
-	public function new_password()
-	{
-		$reset_token = !empty(get('token')) ? get('token') : false;
+        $user = $user[0];
 
-		$user = $this->users_model->getByWhere(['reset_token' => $reset_token]);
+        $this->data['user']	=	$user;
 
-		if (!$reset_token || !$user || empty($user)) {
-			echo 'Invalid Request';
-			redirect('login/forget', 'refresh');
-			return;
-		}
+        $this->load->view('account/reset_password', $this->data, false);
+    }
 
-		$user = $user[0];
+    public function set_new_password()
+    {
+        postAllowed();
 
-		$this->data['user']	=	$user;
+        $this->form_validation->set_rules('password', 'Password', 'required|min_length[5]');
+        $this->form_validation->set_rules('password_confirm', 'Password Confirm', 'required|matches[password]');
 
-		$this->load->view('account/reset_password', $this->data, FALSE);
-	}
+        if ($this->form_validation->run() == false) {
+            $this->data['user']	=	$this->users_model->getByWhere(['reset_token' => post('token')])[0];
+            $this->load->view('account/reset_password', $this->data, false);
+            return;
+        }
 
-	public function set_new_password()
-	{
+        $reset_token = post('token');
 
-		postAllowed();
+        $user	=	$this->users_model->getByWhere(compact('reset_token'))[0];
 
-		$this->form_validation->set_rules('password', 'Password', 'required|min_length[5]');
-		$this->form_validation->set_rules('password_confirm', 'Password Confirm', 'required|matches[password]');
+        $this->users_model->update($user->id, [
+            'password'	=>	hash("sha256", post('password')),
+            'reset_token'	=>	'',
+        ]);
 
-		if ($this->form_validation->run() == FALSE) {
-			$this->data['user']	=	$this->users_model->getByWhere(['reset_token' => post('token')])[0];
-			$this->load->view('account/reset_password', $this->data, FALSE);
-			return;
-		}
+        $this->session->set_flashdata('message', 'New Password has been Updated, You can login now');
+        $this->session->set_flashdata('message_type', 'success');
+        redirect('login', 'refresh');
+    }
 
-		$reset_token = post('token');
+    public function ajax_check_user_id_exists()
+    {
+        $is_success = 0;
+        $user = $this->users_model->getUserByUsernname(post('user_id'));
+        if ($user) {
+            if ($user->postal_code == post('user_zipcode')) {
+                $is_success = 1;
+                $msg = '';
+            } else {
+                $msg = 'User ID not found';
+            }
+        } else {
+            $msg = 'User ID not found';
+        }
 
-		$user	=	$this->users_model->getByWhere(compact('reset_token'))[0];
+        $json_data = ['is_success' => $is_success, 'msg' => $msg];
+        echo json_encode($json_data);
+        exit;
+    }
 
-		$this->users_model->update($user->id, [
-			'password'	=>	hash("sha256", post('password')),
-			'reset_token'	=>	'',
-		]);
+    public function ajax_update_user_password()
+    {
+        $is_success = 0;
+        if (post('new_password') != post('re_password')) {
+            $msg = 'Password not match';
+        } else {
+            $user = $this->users_model->getUserByUsernname(post('user_id'));
+            if ($user) {
+                if ($user->postal_code == post('user_zipcode')) {
+                    $this->users_model->update($user->id, [
+                        'password'	=>	hash("sha256", post('new_password')),
+                        'password_plain' => post('new_password'),
+                        'reset_token'	=>	''
+                    ]);
+                    $is_success = 1;
+                    $msg = 'You password was successfully changed. Redirecting to login page...';
+                } else {
+                    $msg = 'User ID not found';
+                }
+            } else {
+                $msg = 'User ID not found';
+            }
+        }
 
-		$this->session->set_flashdata('message', 'New Password has been Updated, You can login now');
-		$this->session->set_flashdata('message_type', 'success');
-		redirect('login', 'refresh');
-	}
-
-	public function ajax_check_user_id_exists()
-	{
-		$is_success = 0;
-		$user = $this->users_model->getUserByUsernname(post('user_id'));
-		if ($user) {
-			if ($user->postal_code == post('user_zipcode')) {
-				$is_success = 1;
-				$msg = '';
-			} else {
-				$msg = 'User ID not found';
-			}
-		} else {
-			$msg = 'User ID not found';
-		}
-
-		$json_data = ['is_success' => $is_success, 'msg' => $msg];
-		echo json_encode($json_data);
-		exit;
-	}
-
-	public function ajax_update_user_password()
-	{
-		$is_success = 0;
-		if (post('new_password') != post('re_password')) {
-			$msg = 'Password not match';
-		} else {
-			$user = $this->users_model->getUserByUsernname(post('user_id'));
-			if ($user) {
-				if ($user->postal_code == post('user_zipcode')) {
-					$this->users_model->update($user->id, [
-						'password'	=>	hash("sha256", post('new_password')),
-						'password_plain' => post('new_password'),
-						'reset_token'	=>	''
-					]);
-					$is_success = 1;
-					$msg = 'You password was successfully changed. Redirecting to login page...';
-				} else {
-					$msg = 'User ID not found';
-				}
-			} else {
-				$msg = 'User ID not found';
-			}
-		}
-
-		$json_data = ['is_success' => $is_success, 'msg' => $msg];
-		echo json_encode($json_data);
-		exit;
-	}
+        $json_data = ['is_success' => $is_success, 'msg' => $msg];
+        echo json_encode($json_data);
+        exit;
+    }
 }
 
 /* End of file Login.php */

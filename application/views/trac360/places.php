@@ -1,6 +1,9 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 include viewPath('includes/header'); ?>
+<link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/css/bootstrap4-toggle.min.css"
+    rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/js/bootstrap4-toggle.min.js"></script>
 <div id="main_body" class="container-fluid" style="background-color: #6241A4;">
     <div class="row">
         <div class="col-md-5">
@@ -57,7 +60,8 @@ include viewPath('includes/header'); ?>
                     <?php
                         foreach ($all_places as $place) {
                             ?>
-                    <div class="sec-2-option sec-2-address-btn">
+                    <div class="sec-2-option sec-2-address-btn"
+                        onclick="selected_place(<?=$place->coordinates?>,'<?=$place->place_name?>','<?=$place->address?>',<?=$place->zone_radius?>)">
                         <div class="row ">
                             <div class="col-md-2 profile">
                                 <center><img
@@ -70,6 +74,14 @@ include viewPath('includes/header'); ?>
                                 </p>
                                 <p class="last_tract_location second-p"><?=$place->address?>
                                 </p>
+                                <div class="places-actions-btn">
+                                    <button href="#" class="place-notif-action" id="place_notif_modal_btn">
+                                        <i class="fa fa-bell-o" aria-hidden="true"></i>
+                                    </button>
+                                    <button href="#" class="place-edit-action">
+                                        <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -97,6 +109,57 @@ include viewPath('includes/header'); ?>
 
 
 <!--Adding Project Schedule-->
+<div class="popup-modal">
+    <div class="modal fade" id="place_notif_modal" tabindex="" role="dialog" aria-labelledby="place_notif">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title" id="place_notif_modal_title">
+                        <label>School</label>
+                        <p>Institute of Arts and Sciences, Panabo, Davao del Norte, Philippines</p>
+                    </h3>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label>Alert me when...</label>
+                        </div>
+                    </div>
+                    <?php foreach ($user_locations as $user) {
+                        ?>
+                    <div class="row">
+                        <div class="col-md-4 profile">
+                            <center>
+                                <img src="https://localhost/nsmartrac/uploads/users/default.png" alt="user"
+                                    class="user-profile active">
+                                <p class="name"> <?=$user->FName?>
+                                </p>
+                            </center>
+                        </div>
+                        <div class="col-md-4">
+                            <div><label>Arrives:</label></div>
+                            <input type="checkbox" checked data-toggle="toggle" data-onstyle="success">
+                        </div>
+                        <div class="col-md-4">
+                            <div><label>Leaves:</label></div>
+                            <input type="checkbox" checked data-toggle="toggle" data-onstyle="success">
+                        </div>
+                    </div>
+                    <?php
+                    }?>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-success" id="save_new_address">Add new
+                        address</button>
+                    <button type="submit" class="btn btn-success" style="display: none;">save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 <div class="modal-right-side">
     <div class="modal right fade" id="add_new_place_modal" tabindex="" role="dialog"
         aria-labelledby="edit_attendance_log">
@@ -154,7 +217,8 @@ include viewPath('includes/header'); ?>
     var map;
     var new_address_map;
     var new_map_marker;
-
+    var antennasCircle_main_map;
+    var main_map_marker;
 
     function initMap() {
         $("#map-loader").hide();

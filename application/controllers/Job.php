@@ -947,39 +947,7 @@ class Job extends MY_Controller
         );
         $this->general->add_($jobs_approval_data, 'jobs_approval');
 
-        $method = $input['method'];
-        $jobs_payments_data = array();
-        $jobs_payments_data['jobs_id'] =  $jobs_id;
-        $jobs_payments_data['method'] =  $method;
-        $jobs_payments_data['amount'] =  $input['total_amount'];
 
-        if($method == 'CHECK'){
-            $jobs_payments_data['route_num'] = $input['route_number'];
-            $jobs_payments_data['account_num'] = $input['account_number'];
-        }else if($method == 'CC'|| $method == 'OCCP'){
-            $jobs_payments_data['account_name'] = $input['account_holder_name'];
-            $jobs_payments_data['card_number'] = $input['card_number'];
-            $jobs_payments_data['card_mmyy'] = $input['card_expiry'];
-            $jobs_payments_data['card_cvc'] = $input['card_cvc'];
-            $jobs_payments_data['is_save_file'] = $input['onoffswitch'];
-        }else if($method === 'CASH'){
-            $jobs_payments_data['is_collected'] = $input['is_collected'];
-        }else if($method === 'ACH'){
-            $jobs_payments_data['route_num'] = $input['route_number'];
-            $jobs_payments_data['account_num'] = $input['account_number'];
-            $jobs_payments_data['day_of_month'] = $input['day_of_month'];
-        }else if($method === 'OPT' || $method === 'WW'){
-            $jobs_payments_data['acct_credential'] = $input['acct_credential'];
-            $jobs_payments_data['acct_note'] = $input['acct_note'];
-            $jobs_payments_data['is_signed'] = $input['is_signed'];
-        }else if($method === 'SQ' || $method === 'PP' || $method === 'VENMO'){
-            $jobs_payments_data['acct_credential'] = $input['acct_credential'];
-            $jobs_payments_data['acct_note'] = $input['acct_note'];
-            $jobs_payments_data['acct_confirm'] = $input['acct_confirm'];
-        }else{
-
-        }
-        $this->general->add_($jobs_payments_data, 'jobs_pay_details');
         $jobs_settings_data = array(
             'job_num_next' => $job_settings[0]->job_num_next + 1
         );
@@ -987,13 +955,15 @@ class Job extends MY_Controller
         echo $jobs_id;
     }
 
-    public function delete () {
+    public function delete ()
+    {
         $get = $this->input->get();
         $this->jobs_model->deleteJob($get['id']);
         redirect('job');
     }
 
-    public function getItems() {
+    public function getItems()
+    {
         $get = $this->input->get();
 
         $result = $this->jobs_model->getItems($get['index']);
@@ -1001,7 +971,8 @@ class Job extends MY_Controller
         echo json_encode($result);
     }
 
-    public function saveInvoice() {
+    public function saveInvoice()
+    {
         postAllowed();
 
         $comp_id = logged('company_id');

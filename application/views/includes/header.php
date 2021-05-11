@@ -1,3 +1,9 @@
+<?php
+if ($this->session->userdata('usertimezone') == "") {
+    $_SESSION['usertimezone'] = json_decode(get_cookie('logged'))->usertimezone;
+    $_SESSION['offset_zone'] = json_decode(get_cookie('logged'))->offset_zone;
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 

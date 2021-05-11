@@ -1598,11 +1598,6 @@ class Timesheet_model extends MY_Model
         JOIN users ON timesheet_timezone_admin_report.user_id = users.id
         JOIN business_profile ON users.company_id = business_profile.company_id
         where timesheet_timezone_admin_report.user_id = ".$user_id);
-        echo "SELECT timesheet_timezone_admin_report.*,timesheet_timezone_list.*,users.FName,users.LName,users.email,users.company_id,users.device_token,users.device_type,business_profile.business_name,business_profile.business_image from timesheet_timezone_admin_report 
-        JOIN timesheet_timezone_list ON timesheet_timezone_admin_report.timezone_id=timesheet_timezone_list.id  
-        JOIN users ON timesheet_timezone_admin_report.user_id = users.id
-        JOIN business_profile ON users.company_id = business_profile.company_id
-        where timesheet_timezone_admin_report.user_id = ".$user_id;
         return $qry->row();
     }
     public function save_timesheet_report_file_names($user_id, $file_name)

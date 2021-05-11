@@ -117,6 +117,9 @@
         $("#equipment").select2({
             placeholder: "Select"
         });
+        $("#invoice_term").select2({
+            placeholder: ""
+        });
     });
     $(function() {
         $("nav:first").addClass("closed");

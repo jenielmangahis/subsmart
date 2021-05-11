@@ -34,7 +34,7 @@
                     </td>
                     <td id="presenter-col-right" class="presenter-col-right" style="width: 50%; text-align: right;" valign="top">
                         <div id="presenter-title-container" class="presenter-title-container" style="margin-top: 10px; margin-bottom: 20px;">
-                            <span class="presenter-title" style="font-size: 30pt;">INVOICE</span><br>
+                            <span class="presenter-title" style="font-size: 30pt;color:#8c97c0;">INVOICE</span><br>
                             <span># <?php echo $invoice->invoice_number ?></span>
                         </div>
                         <div id="presenter-summary" class="presenter-summary">
@@ -75,25 +75,34 @@
                 </tr>
             </tbody>
         </table>
+        <br><br>
         <table class="table-print" style="width: 100%">
             <tbody>
                 <tr>
                 <td style="width: 50%" valign="top">
                     <b>TO:</b><br>
-                    <b><?php echo get_customer_by_id($invoice->customer_id)->contact_name ?></b>
+                    <b><?php //echo get_customer_by_id($invoice->customer_id)->contact_name 
+                        echo $users->contact_name .''. $users->first_name .' '. $users->middle_name .' '. $users->last_name;
+                    ?></b>
                     <span class="middot">·</span><br>
-                    <?php echo get_customer_by_id($invoice->customer_id)->suite_unit ?>
-                    <?php echo get_customer_by_id($invoice->customer_id)->street_address ?><br>
-                    <?php echo get_customer_by_id($invoice->customer_id)->city . ',' ?>
-                    <?php echo get_customer_by_id($invoice->customer_id)->state . ',' ?>
-                    <?php echo get_customer_by_id($invoice->customer_id)->postal_code?><br>
+                    <?php //echo get_customer_by_id($invoice->customer_id)->suite_unit ?>
+                    <?php //echo get_customer_by_id($invoice->customer_id)->street_address 
+                    echo $users->cross_street ?><br>
+                    <?php //echo get_customer_by_id($invoice->customer_id)->city . ',' 
+                    echo $users->city  . ','?>
+                    <?php //echo get_customer_by_id($invoice->customer_id)->state . ',' 
+                    echo $users->state  . ','?>
+                    <?php //echo get_customer_by_id($invoice->customer_id)->postal_code
+                    echo $users->zip_code ?><br>
                         <table>
                         <tbody>
                             <tr>
                                 <td style="vertical-align: top;" valign="top">Phone:&nbsp;</td>
                                 <td>
-                                    <?php echo get_customer_by_id($invoice->customer_id)->mobile?><br>
-                                    <?php echo get_customer_by_id($invoice->customer_id)->phone?><br>                        
+                                    <?php //echo get_customer_by_id($invoice->customer_id)->mobile
+                                     echo $users->phone_m ?><br>
+                                    <?php //echo get_customer_by_id($invoice->customer_id)->phone
+                                    echo $users->phone_h ?><br>                        
                                 </td>
                             </tr>
                         </tbody>
@@ -101,13 +110,19 @@
                 </td>
                 <td style="width: 50%" valign="top">
                     <b>JOB LOCATION:</b><br>
-                    <b><?php echo get_customer_by_id($invoice->customer_id)->contact_name ?></b><br>
-                    <?php echo get_customer_by_id($invoice->customer_id)->suite_unit ?>
-                    <?php echo get_customer_by_id($invoice->customer_id)->street_address ?><br>
-                    <?php echo get_customer_by_id($invoice->customer_id)->city . ',' ?>
-                    <?php echo get_customer_by_id($invoice->customer_id)->state . ',' ?>
-                    <?php echo get_customer_by_id($invoice->customer_id)->postal_code?><br>
-                    Phone:&nbsp; <?php echo get_customer_by_id($invoice->customer_id)->phone?>                
+                    <b><?php //echo get_customer_by_id($invoice->customer_id)->contact_name 
+                    echo $users->first_name .' '. $users->middle_name .' '. $users->last_name; ?></b><br>
+                    <?php //echo get_customer_by_id($invoice->customer_id)->suite_unit ?>
+                    <?php //echo get_customer_by_id($invoice->customer_id)->street_address 
+                    echo $users->cross_street ?><br>
+                    <?php //echo get_customer_by_id($invoice->customer_id)->city . ',' 
+                    echo $users->city  . ','?>
+                    <?php //echo get_customer_by_id($invoice->customer_id)->state . ',' 
+                    echo $users->state  . ','?>
+                    <?php //echo get_customer_by_id($invoice->customer_id)->postal_code
+                    echo $users->zip_code ?><br>
+                    Phone:&nbsp; <?php //echo get_customer_by_id($invoice->customer_id)->phone
+                    echo $users->phone_m ?>                
                 </td>
             </tr>
         </tbody></table>
@@ -120,8 +135,8 @@
         <br>
         <div class="table-items-container">
             <?php $total_tax = 0; ?>
-            <?php if (false) : ?>
-            <?php// if ($invoice->invoice_items[0]['item'] != '') : ?>
+            <?php //if (false) : ?>
+            <?php // if ($invoice->invoice_items[0]['item'] != '') : ?>
             <table class="table-print table-items" style="width: 100%; border-collapse: collapse;">
                 <thead>
                     <tr>
@@ -135,39 +150,45 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <?php foreach ($invoice->invoice_items as $key => $value ) : ?>
+                    <?php foreach ($items as $item ) { ?>
                     <tr class="table-items__tr">
                         <td style="width:30px; text-align:center;" valign="top">
                             <?php echo intval($key) + 1 ?>
                         </td>
                         <td valign="top">
-                            <?php echo $value['item'] ?>
+                            <?php //echo $value['item'] 
+                            echo $item->item; ?>
                         </td>
                         <td style="width: 50px; text-align: right;" valign="top">
-                            <?php echo $value['quantity'] ?>                    
+                            <?php //echo $value['quantity'] 
+                            echo $item->qty;?>                    
                         </td>
                         <td style="width: 80px; text-align: right;" valign="top">
-                            $<?php echo number_format($value['price'], 2, '.', ',') ?>                    
+                            $<?php //echo number_format($value['price'], 2, '.', ',') 
+                            echo $item->cost; ?>                    
                         </td>
                         <td style="width: 80px; text-align: right;" valign="top">
-                            $0.00                    
+                            <!-- $0.00                     -->
+                            $<?php echo $item->discount; ?>
                         </td>
                         <td style="width: 80px; text-align: right;" valign="top">
-                            $<?php echo number_format($value['tax'], 2, '.', ',') ?> <br>(7.5%) 
-                            <?php $total_tax += floatval($value['tax']); ?>                   
+                            <!-- $<?php //echo number_format($value['tax'], 2, '.', ',') ?> <br> (7.5%)  -->
+                            <?php //$total_tax += floatval($value['tax']); ?>      
+                            <?php echo $item->tax; ?>             
                         </td>
                         <td style="width: 90px; padding: 8px 8px 8px 0; text-align: right;" valign="top">
-                            $<?php echo number_format($value['total'], 2, '.', ',') ?>                    
+                            $<?php //echo number_format($value['total'], 2, '.', ',') ?>   
+                            <?php echo $item->total; ?>                 
                         </td>
                     </tr>
                     <tr class="table-items__tr-last">
                         <td></td>
                         <td colspan="6"></td>
                     </tr>
-                    <?php endforeach; ?>
+                    <?php } ?>
                 </tbody>
             </table>
-            <?php endif; ?>
+            <?php // endif; ?>
             <table class="table-print table-totals" style="width: 100%; margin-top: 10px;">
                 <tbody>
                     <tr>
@@ -177,15 +198,18 @@
                                 <tbody>
                                     <tr>
                                         <td style="padding: 8px 0; text-align: right;" class="text-right">Subtotal (without tax)</td>
-                                        <td style="padding: 8px 8px 8px 0; text-align: right;" class="text-right">$<?php echo (false) ? number_format(floatval($invoice->invoice_totals['sub_total'] - $total_tax), 2, '.', ',') : '' ?></td>
+                                        <td style="padding: 8px 8px 8px 0; text-align: right;" class="text-right">$<?php //echo (false) ? number_format(floatval($invoice->invoice_totals['sub_total'] - $total_tax), 2, '.', ',') : '' 
+                                         echo $invoice->sub_total;?></td>
                                     </tr>
                                     <tr>
                                         <td style="padding: 8px 0; text-align: right;" class="text-right">Taxes</td>
-                                        <td style="padding: 8px 8px 8px 0; text-align: right;" class="text-right">$<?php echo (false) ? number_format($total_tax, 2, '.', ',') : '' ?></td>
+                                        <td style="padding: 8px 8px 8px 0; text-align: right;" class="text-right">$<?php //echo (false) ? number_format($total_tax, 2, '.', ',') : '' 
+                                         echo "to be follow" ?></td>
                                     </tr>
                                     <tr>
                                         <td style="padding: 8px 0; text-align: right; background: #f4f4f4;" class="text-right"><b>Grand Total ($)</b></td>
-                                        <td style="width: 120px; padding: 8px 8px 8px 0; text-align: right; background: #f4f4f4;" class="text-right"><b>$<?php echo (false) ? number_format($invoice->invoice_totals['grand_total'], 2, '.', ',') : '' ?></b></td>
+                                        <td style="width: 120px; padding: 8px 8px 8px 0; text-align: right; background: #f4f4f4;" class="text-right"><b>$<?php //echo (false) ? number_format($invoice->invoice_totals['grand_total'], 2, '.', ',') : '' 
+                                        echo $invoice->grand_total; ?></b></td>
                                     </tr>
                                 </tbody>
                             </table>

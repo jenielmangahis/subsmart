@@ -66,6 +66,9 @@ add_css(array(
                                 <input type="radio" name="method" class="payment_method" value="SQ" id="SQ">
                                 <span >Square</span> &nbsp;&nbsp;
 
+                                <input type="radio" name="method" class="payment_method" value="Invoicing" id="Invoicing">
+                                <span >Invoicing</span> &nbsp;&nbsp;
+
                                 <input type="radio" name="method" class="payment_method" value="WW" id="WW">
                                 <span >Warranty Work</span> &nbsp;&nbsp;
 
@@ -270,6 +273,38 @@ add_css(array(
                                                         </div>
                                                     </div>
                                                 </div>
+                                                <div class="row form_line invoicing_field">
+                                                    <div class="col-md-4">
+                                                        Term
+                                                    </div>
+                                                    <div class="col-md-8">
+                                                        <select id="invoice_term" name="invoice_term" data-customer-source="dropdown" class="input_select" >
+                                                            <option  value="Due On Receipt">Due On Receipt</option>
+                                                            <option  value="Net 5">Net 5</option>
+                                                            <option  value="Net 10">Net 10</option>
+                                                            <option  value="Net 15">Net 15</option>
+                                                            <option  value="Net 30">Net 30</option>
+                                                            <option  value="Net 60">Net 60</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="row form_line invoicing_field">
+                                                    <div class="col-md-4">
+                                                        Invoice Date
+                                                    </div>
+                                                    <div class="col-md-8">
+                                                        <input type="number" class="form-control" name="invoice_date" id="invoice_date" />
+                                                    </div>
+                                                </div>
+                                                <div class="row form_line invoicing_field">
+                                                    <div class="col-md-4">
+                                                        Due Date
+                                                    </div>
+                                                    <div class="col-md-8">
+                                                        <input type="number" class="form-control" name="invoice_due_date" id="invoice_due_date" />
+                                                    </div>
+                                                </div>
+
                                                 <div class="row form_line" id="payment_collected">
                                                     <div class="col-md-4"></div>
                                                     <div class="col-md-8">

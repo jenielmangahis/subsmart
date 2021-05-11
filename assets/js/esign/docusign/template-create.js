@@ -176,6 +176,7 @@ function TemplateCreate() {
           recipients: recipients.map((r) => r.getData()),
           subject: $subject.val(),
           message: $message.val(),
+          workorder_id: workorder.id || null,
         };
 
         const endpoint = `${prefixURL}/DocuSign/apiSendTemplate/${templateIdParam}`;
@@ -361,6 +362,7 @@ function TemplateCreate() {
 
     let customerSet = false;
     const _recipients = recipients.map((r) => {
+      if (!workorder) return r;
       if (customerSet || r.name || r.email) return r;
 
       r.name = workorder.first_name;

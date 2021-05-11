@@ -453,15 +453,15 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                     <div class="col-sm-6">
                         <!--                        <div class="float-right d-none d-md-block">-->
                         <!--                            <div class="dropdown">-->
-                        <!--                                --><?php //if (hasPermissions('users_add')): 
+                        <!--                                --><?php //if (hasPermissions('users_add')):
                                                                 ?>
-                        <!--                                    <a href="--><?php //echo url('users/add_timesheet_entry') 
+                        <!--                                    <a href="--><?php //echo url('users/add_timesheet_entry')
                                                                             ?>
                         <!--" class="btn btn-primary"-->
                         <!--                                       aria-expanded="false">-->
                         <!--                                        <i class="mdi mdi-settings mr-2"></i> New Timesheet Entry-->
                         <!--                                    </a>-->
-                        <!--                                --><?php //endif 
+                        <!--                                --><?php //endif
                                                                 ?>
                         <!--                            </div>-->
                         <!--                        </div>-->
@@ -469,7 +469,8 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                 </div>
             </div>
             <!-- end row -->
-            <input type="hidden" id="employeeTotal" value="<?php echo  $total_users; ?>">
+            <input type="hidden" id="employeeTotal"
+                value="<?php echo  $total_users; ?>">
             <div class="row">
                 <div class="col-xl-12">
                     <div class="card">
@@ -483,17 +484,27 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                       </div>-->
                         <div class="row" style="padding: 10px 33px 20px 33px;">
                             <div class="col-md-12 banking-tab-container">
-                                <a href="<?php echo url('/timesheet/attendance') ?>" class="banking-tab<?php echo ($this->uri->segment(1) == "attendance") ?: '-active'; ?>" style="text-decoration: none">Attendance</a>
+                                <a href="<?php echo url('/timesheet/attendance') ?>"
+                                    class="banking-tab<?php echo ($this->uri->segment(1) == "attendance") ?: '-active'; ?>"
+                                    style="text-decoration: none">Attendance</a>
                                 <?php if (logged("role") < 5) { ?>
-                                    <a href="<?php echo url('/timesheet/attendance_logs') ?>" class="banking-tab">Time Logs</a>
-                                    <a href="<?php echo url('/timesheet/notification') ?>" class="banking-tab">Notification</a>
-                                    <a href="<?php echo url('/timesheet/employee') ?>" class="banking-tab">Employee</a>
-                                    <a href="<?php echo url('/timesheet/schedule') ?>" class="banking-tab">Schedule</a>
-                                    <a href="<?php echo url('/timesheet/requests') ?>" class="banking-tab">Requests</a>
-                                    <a href="<?php echo url('/timesheet/my_schedule') ?>" class="banking-tab">My Schedule</a>
-                                    <a href="<?php echo url('/timesheet/settings') ?>" class="banking-tab">Settings</a>
+                                <a href="<?php echo url('/timesheet/attendance_logs') ?>"
+                                    class="banking-tab">Time Logs</a>
+                                <a href="<?php echo url('/timesheet/notification') ?>"
+                                    class="banking-tab">Notification</a>
+                                <a href="<?php echo url('/timesheet/employee') ?>"
+                                    class="banking-tab">Employee</a>
+                                <a href="<?php echo url('/timesheet/schedule') ?>"
+                                    class="banking-tab">Schedule</a>
+                                <a href="<?php echo url('/timesheet/requests') ?>"
+                                    class="banking-tab">Requests</a>
+                                <a href="<?php echo url('/timesheet/my_schedule') ?>"
+                                    class="banking-tab">My Schedule</a>
+                                <a href="<?php echo url('/timesheet/settings') ?>"
+                                    class="banking-tab">Settings</a>
                                 <?php } else { ?>
-                                    <a href="<?php echo url('/timesheet/my_schedule') ?>" class="banking-tab">My Schedule</a>
+                                <a href="<?php echo url('/timesheet/my_schedule') ?>"
+                                    class="banking-tab">My Schedule</a>
                                 <?php } ?>
                             </div>
                         </div>
@@ -503,95 +514,31 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                 date_default_timezone_set(logged("role"));
 
                                 ?>
-                                <h6><i class="fa fa-calendar-alt"></i> Today: <span style="color: grey"><?php echo date('M d, Y') . " " ?></span></h6>
+                                <h6><i class="fa fa-calendar-alt"></i> Today: <span style="color: grey"><?php echo date('M d, Y') . " " ?></span>
+                                </h6>
                             </div>
                             <?php if (logged("role") < 5) : ?>
-                                <div class="row" style="margin-bottom: 20px">
-                                    <div class="col-md-3">
-                                        <div class="tile-container">
-                                            <div class="inner-container">
-                                                <div class="tileContent">
-                                                    <div class="clear">
-                                                        <div class="inner-content">
-                                                            <div class="card-title">
-                                                                <span>In Now</span>
-                                                            </div>
-                                                            <div class="card-data">
-                                                                <span id="employee-in-now"><?php echo $in_now; ?></span>
-                                                            </div>
-                                                            <div class="progress" id="progressClockIn">
-                                                                <div id="progressNotLoggedIn" class="progress-bar progress-bar-default progress-bar-striped progress-bar-green active" role="progressbar" aria-valuenow="<?php echo $in_now; ?>" aria-valuemin="0" aria-valuemax="100" style="width:<?php echo round(100 * ($in_now / $total_users), 2) . '%'; ?>;">
-                                                                    <?php echo round(100 * ($in_now / $total_users), 2) . '%'; ?>
-                                                                </div>
-                                                            </div>
+                            <div class="row" style="margin-bottom: 20px">
+                                <div class="col-md-3">
+                                    <div class="tile-container">
+                                        <div class="inner-container">
+                                            <div class="tileContent">
+                                                <div class="clear">
+                                                    <div class="inner-content">
+                                                        <div class="card-title">
+                                                            <span>In Now</span>
                                                         </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="tile-container">
-                                            <div class="inner-container">
-                                                <div class="tileContent">
-                                                    <div class="clear">
-                                                        <div class="inner-content">
-                                                            <div class="card-title">
-                                                                <span>On Lunch</span>
-                                                            </div>
-                                                            <div class="card-data">
-                                                                <span id="employee-out-now"><?= $on_lunch ?></span>
-                                                            </div>
-                                                            <div class="progress" id="progressOutNow">
-                                                                <div id="progressNotLoggedIn" class="progress-bar progress-bar-default progress-bar-striped progress-bar-gray active" role="progressbar" aria-valuenow="<?php echo $on_lunch; ?>" aria-valuemin="0" aria-valuemax="100" style="width:<?php echo round(100 * ($on_lunch / $total_users), 2) . '%'; ?>;">
-                                                                    <?php echo round(100 * ($on_lunch / $total_users), 2) . '%'; ?>
-                                                                </div>
-                                                            </div>
+                                                        <div class="card-data">
+                                                            <span id="employee-in-now"><?php echo $in_now; ?></span>
                                                         </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="tile-container">
-                                            <div class="inner-container">
-                                                <div class="tileContent">
-                                                    <div class="clear">
-                                                        <div class="inner-content">
-                                                            <div class="card-title">
-                                                                <span>Not Logged-in</span>
-                                                            </div>
-                                                            <div class="card-data">
-                                                                <span id="employee-not-loggedin"><?php echo $no_logged_in; ?></span>
-                                                            </div>
-                                                            <div class="progress">
-                                                                <div id="progressNotLoggedIn" class="progress-bar progress-bar-warning progress-bar-striped active" role="progressbar" aria-valuenow="<?php echo $no_logged_in; ?>" aria-valuemin="0" aria-valuemax="100" style="width:<?php echo round(100 - ((($total_users - $no_logged_in) / $total_users) * 100), 2) . '%'; ?>;">
-                                                                    <?php echo round(100 - ((($total_users - $no_logged_in) / $total_users) * 100), 2) . '%'; ?>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="tile-container">
-                                            <div class="inner-container">
-                                                <div class="tileContent">
-                                                    <div class="clear">
-                                                        <div class="inner-content">
-                                                            <div class="card-title">
-                                                                <span>Employees</span>
-                                                            </div>
-                                                            <div class="card-data">
-                                                                <span><?php echo $total_users; ?></span>
-                                                            </div>
-                                                            <div class="progress">
-                                                                <div class="progress-bar progress-bar-danger progress-bar-striped active" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width:100%;">
-                                                                    100%
-                                                                </div>
+                                                        <div class="progress" id="progressClockIn">
+                                                            <div id="progressNotLoggedIn"
+                                                                class="progress-bar progress-bar-default progress-bar-striped progress-bar-green active"
+                                                                role="progressbar"
+                                                                aria-valuenow="<?php echo $in_now; ?>"
+                                                                aria-valuemin="0" aria-valuemax="100"
+                                                                style="width:<?php echo round(100 * ($in_now / $total_users), 2) . '%'; ?>;">
+                                                                <?php echo round(100 * ($in_now / $total_users), 2) . '%'; ?>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -600,23 +547,26 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="row" style="margin-bottom: 50px">
-                                    <div class="col-md-3">
-                                        <div class="tile-container">
-                                            <div class="inner-container">
-                                                <div class="tileContent">
-                                                    <div class="clear">
-                                                        <div class="inner-content">
-                                                            <div class="card-title">
-                                                                <span>Manual Check ins</span>
-                                                            </div>
-                                                            <div class="card-data">
-                                                                <span><?= $manual_checkins ?></span>
-                                                            </div>
-                                                            <div class="progress">
-                                                                <div id="progressNotLoggedIn" class="progress-bar progress-bar-gray progress-bar-striped active" role="progressbar" aria-valuenow="<?php echo $manual_checkins; ?>" aria-valuemin="0" aria-valuemax="100" style="width:<?php echo round(($manual_checkins / $total_users) * 100, 2) . '%'; ?>;">
-                                                                    <?php echo round(100 * ($manual_checkins / $total_users), 2) . '%'; ?>
-                                                                </div>
+                                <div class="col-md-3">
+                                    <div class="tile-container">
+                                        <div class="inner-container">
+                                            <div class="tileContent">
+                                                <div class="clear">
+                                                    <div class="inner-content">
+                                                        <div class="card-title">
+                                                            <span>On Lunch</span>
+                                                        </div>
+                                                        <div class="card-data">
+                                                            <span id="employee-out-now"><?= $on_lunch ?></span>
+                                                        </div>
+                                                        <div class="progress" id="progressOutNow">
+                                                            <div id="progressNotLoggedIn"
+                                                                class="progress-bar progress-bar-default progress-bar-striped progress-bar-gray active"
+                                                                role="progressbar"
+                                                                aria-valuenow="<?php echo $on_lunch; ?>"
+                                                                aria-valuemin="0" aria-valuemax="100"
+                                                                style="width:<?php echo round(100 * ($on_lunch / $total_users), 2) . '%'; ?>;">
+                                                                <?php echo round(100 * ($on_lunch / $total_users), 2) . '%'; ?>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -624,22 +574,27 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-md-3">
-                                        <div class="tile-container">
-                                            <div class="inner-container">
-                                                <div class="tileContent">
-                                                    <div class="clear">
-                                                        <div class="inner-content">
-                                                            <div class="card-title">
-                                                                <span>Late Check ins</span>
-                                                            </div>
-                                                            <div class="card-data">
-                                                                <span><?= count($on_leave) ?></span>
-                                                            </div>
-                                                            <div class="progress">
-                                                                <div id="progressNotLoggedIn" class="progress-bar progress-bar-green progress-bar-striped active" role="progressbar" aria-valuenow="<?php echo count($on_leave); ?>" aria-valuemin="0" aria-valuemax="100" style="width:<?php echo round((count($on_leave) / $total_users) * 100, 2) . '%'; ?>;">
-                                                                    <?php echo round(100 * (count($on_leave) / $total_users), 2) . '%'; ?>
-                                                                </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="tile-container">
+                                        <div class="inner-container">
+                                            <div class="tileContent">
+                                                <div class="clear">
+                                                    <div class="inner-content">
+                                                        <div class="card-title">
+                                                            <span>Not Logged-in</span>
+                                                        </div>
+                                                        <div class="card-data">
+                                                            <span id="employee-not-loggedin"><?php echo $no_logged_in; ?></span>
+                                                        </div>
+                                                        <div class="progress">
+                                                            <div id="progressNotLoggedIn"
+                                                                class="progress-bar progress-bar-warning progress-bar-striped active"
+                                                                role="progressbar"
+                                                                aria-valuenow="<?php echo $no_logged_in; ?>"
+                                                                aria-valuemin="0" aria-valuemax="100"
+                                                                style="width:<?php echo round(100 - ((($total_users - $no_logged_in) / $total_users) * 100), 2) . '%'; ?>;">
+                                                                <?php echo round(100 - ((($total_users - $no_logged_in) / $total_users) * 100), 2) . '%'; ?>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -647,22 +602,24 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-md-3">
-                                        <div class="tile-container">
-                                            <div class="inner-container">
-                                                <div class="tileContent">
-                                                    <div class="clear">
-                                                        <div class="inner-content">
-                                                            <div class="card-title">
-                                                                <span>On Leave</span>
-                                                            </div>
-                                                            <div class="card-data">
-                                                                <span><?= count($on_leave) ?></span>
-                                                            </div>
-                                                            <div class="progress">
-                                                                <div id="progressNotLoggedIn" class="progress-bar progress-bar-green progress-bar-striped active" role="progressbar" aria-valuenow="<?php echo count($on_leave); ?>" aria-valuemin="0" aria-valuemax="100" style="width:<?php echo round((count($on_leave) / $total_users) * 100, 2) . '%'; ?>;">
-                                                                    <?php echo round(100 * (count($on_leave) / $total_users), 2) . '%'; ?>
-                                                                </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="tile-container">
+                                        <div class="inner-container">
+                                            <div class="tileContent">
+                                                <div class="clear">
+                                                    <div class="inner-content">
+                                                        <div class="card-title">
+                                                            <span>Employees</span>
+                                                        </div>
+                                                        <div class="card-data">
+                                                            <span><?php echo $total_users; ?></span>
+                                                        </div>
+                                                        <div class="progress">
+                                                            <div class="progress-bar progress-bar-danger progress-bar-striped active"
+                                                                role="progressbar" aria-valuenow="100" aria-valuemin="0"
+                                                                aria-valuemax="100" style="width:100%;">
+                                                                100%
                                                             </div>
                                                         </div>
                                                     </div>
@@ -670,23 +627,111 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                             </div>
                                         </div>
                                     </div>
+                                </div>
+                            </div>
+                            <div class="row" style="margin-bottom: 50px">
+                                <div class="col-md-3">
+                                    <div class="tile-container">
+                                        <div class="inner-container">
+                                            <div class="tileContent">
+                                                <div class="clear">
+                                                    <div class="inner-content">
+                                                        <div class="card-title">
+                                                            <span>Manual Check ins</span>
+                                                        </div>
+                                                        <div class="card-data">
+                                                            <span><?= $manual_checkins ?></span>
+                                                        </div>
+                                                        <div class="progress">
+                                                            <div id="progressNotLoggedIn"
+                                                                class="progress-bar progress-bar-gray progress-bar-striped active"
+                                                                role="progressbar"
+                                                                aria-valuenow="<?php echo $manual_checkins; ?>"
+                                                                aria-valuemin="0" aria-valuemax="100"
+                                                                style="width:<?php echo round(($manual_checkins / $total_users) * 100, 2) . '%'; ?>;">
+                                                                <?php echo round(100 * ($manual_checkins / $total_users), 2) . '%'; ?>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="tile-container">
+                                        <div class="inner-container">
+                                            <div class="tileContent">
+                                                <div class="clear">
+                                                    <div class="inner-content">
+                                                        <div class="card-title">
+                                                            <span>Late Check ins</span>
+                                                        </div>
+                                                        <div class="card-data">
+                                                            <span><?= count($on_leave) ?></span>
+                                                        </div>
+                                                        <div class="progress">
+                                                            <div id="progressNotLoggedIn"
+                                                                class="progress-bar progress-bar-green progress-bar-striped active"
+                                                                role="progressbar"
+                                                                aria-valuenow="<?php echo count($on_leave); ?>"
+                                                                aria-valuemin="0" aria-valuemax="100"
+                                                                style="width:<?php echo round((count($on_leave) / $total_users) * 100, 2) . '%'; ?>;">
+                                                                <?php echo round(100 * (count($on_leave) / $total_users), 2) . '%'; ?>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="tile-container">
+                                        <div class="inner-container">
+                                            <div class="tileContent">
+                                                <div class="clear">
+                                                    <div class="inner-content">
+                                                        <div class="card-title">
+                                                            <span>On Leave</span>
+                                                        </div>
+                                                        <div class="card-data">
+                                                            <span><?= count($on_leave) ?></span>
+                                                        </div>
+                                                        <div class="progress">
+                                                            <div id="progressNotLoggedIn"
+                                                                class="progress-bar progress-bar-green progress-bar-striped active"
+                                                                role="progressbar"
+                                                                aria-valuenow="<?php echo count($on_leave); ?>"
+                                                                aria-valuemin="0" aria-valuemax="100"
+                                                                style="width:<?php echo round((count($on_leave) / $total_users) * 100, 2) . '%'; ?>;">
+                                                                <?php echo round(100 * (count($on_leave) / $total_users), 2) . '%'; ?>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
 
-                                    <div class="col-md-3">
-                                        <div class="tile-container">
-                                            <div class="inner-container">
-                                                <div class="tileContent">
-                                                    <div class="clear">
-                                                        <div class="inner-content">
-                                                            <div class="card-title">
-                                                                <span>Contractors</span>
-                                                            </div>
-                                                            <div class="card-data" style="vertical-align: top">
-                                                                <span>0</span>
-                                                            </div>
-                                                            <div class="progress" style="margin-top: 0">
-                                                                <div class="progress-bar progress-bar-danger progress-bar-striped active" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width:0;">
-                                                                    0%
-                                                                </div>
+                                <div class="col-md-3">
+                                    <div class="tile-container">
+                                        <div class="inner-container">
+                                            <div class="tileContent">
+                                                <div class="clear">
+                                                    <div class="inner-content">
+                                                        <div class="card-title">
+                                                            <span>Contractors</span>
+                                                        </div>
+                                                        <div class="card-data" style="vertical-align: top">
+                                                            <span>0</span>
+                                                        </div>
+                                                        <div class="progress" style="margin-top: 0">
+                                                            <div class="progress-bar progress-bar-danger progress-bar-striped active"
+                                                                role="progressbar" aria-valuenow="0" aria-valuemin="0"
+                                                                aria-valuemax="100" style="width:0;">
+                                                                0%
                                                             </div>
                                                         </div>
                                                     </div>
@@ -695,27 +740,29 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="row">
-                                    <div class="col-lg-12 table-responsive">
-                                        <!--tbl-employee-attendance-->
-                                        <table id="ts-attendance" class="table table-hover table-to-list tbl-employee-attendance">
-                                            <thead>
-                                                <tr>
-                                                    <th rowspan="2">ID</th>
-                                                    <th rowspan="2">Employee Name</th>
-                                                    <th rowspan="2">In</th>
-                                                    <th rowspan="2">Out</th>
-                                                    <th colspan="2">Lunch</th>
-                                                    <th rowspan="2">Action</th>
-                                                    <th rowspan="2">Comments/Location</th>
-                                                </tr>
-                                                <tr>
-                                                    <th>In</th>
-                                                    <th>Out</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <?php
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-12 table-responsive">
+                                    <!--tbl-employee-attendance-->
+                                    <table id="ts-attendance"
+                                        class="table table-hover table-to-list tbl-employee-attendance">
+                                        <thead>
+                                            <tr>
+                                                <th rowspan="2">ID</th>
+                                                <th rowspan="2">Employee Name</th>
+                                                <th rowspan="2">In</th>
+                                                <th rowspan="2">Out</th>
+                                                <th colspan="2">Lunch</th>
+                                                <th rowspan="2">Action</th>
+                                                <th rowspan="2">Comments/Location</th>
+                                            </tr>
+                                            <tr>
+                                                <th>In</th>
+                                                <th>Out</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <?php
                                                 $u_role = null;
                                                 $status = 'fa-times-circle-none';
                                                 $tooltip_status = 'Not logged in';
@@ -744,8 +791,8 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                                 $UserTimeZone = new DateTimeZone($this->session->userdata('usertimezone'));
                                                 ?>
 
-                                                <?php foreach ($users as $cnt => $user) : ?>
-                                                    <?php
+                                            <?php foreach ($users as $cnt => $user) : ?>
+                                            <?php
                                                     $user_photo = userProfileImage($user->id);
                                                     $company_id = $user->company_id;
                                                     foreach ($user_roles as $role) {
@@ -835,43 +882,79 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                                         $out_count++;
                                                     }
                                                     ?>
-                                                    <tr>
-                                                        <td class="tbl-id-number"><?php echo $user->id ?></td>
-                                                        <td>
-                                                            <span class="tbl-employee-name"><?php echo $user->FName; ?></span> <span class="tbl-employee-name"><?php echo $user->LName; ?></span>
-                                                            <span class="tbl-emp-role"><?php echo $u_role; ?></span>
-                                                        </td>
-                                                        <td class="tbl-chk-in" data-count="<?php echo $in_count ?>">
-                                                            <div class="in-indicator" style="<?php echo $indicator_in ?>"></div> <span class="clock-in-time <?php if ($time_in != "") {
-                                                                                                                                                                echo "gray";
-                                                                                                                                                            } ?>"><?php echo $time_in ?></span> <span class="clock-in-yesterday" style="display: block;"><?php echo $yesterday_in; ?></span>
-                                                        </td>
-                                                        <td class="tbl-chk-out" data-count="<?php echo $time_out ?>">
-                                                            <div class="out-indicator" style="<?php echo $indicator_out ?>"></div> <span class="clock-out-time <?php if ($time_out != "") {
-                                                                                                                                                                    echo "gray";
-                                                                                                                                                                } ?>"><?php echo $time_out ?></span>
-                                                        </td>
-                                                        <td class="tbl-lunch-in">
-                                                            <div class="lunch-indicator" style="<?php echo $indicator_in_break ?>"></div> <span class="break-in-time <?php if ($break_in != "") {
-                                                                                                                                                                            echo "gray";
-                                                                                                                                                                        } ?>"><?php echo $break_in; ?></span>
-                                                        </td>
-                                                        <td class="tbl-lunch-out">
-                                                            <div class="in-indicator" style="<?php echo $indicator_out_break ?>"></div> <span class="break-out-time <?php if ($break_out != "") {
-                                                                                                                                                                        echo "gray";
-                                                                                                                                                                    } ?>"><?php echo $break_out; ?></span>
-                                                        </td>
-                                                        <td class="tbl-emp-action">
-                                                            <center class="loading-img-action" style="display:none;"><img class="ts-loader-img" src="<?= base_url() ?>assets/css/timesheet/images/ring-loader.svg" alt="" style="height:40px;"> </center>
-                                                            <a href="javascript:void(0)" title="Lunch in/out" data-toggle="tooltip" class="employee-break" style="<?php if ($break_id == "") {
-                                                                                                                                                                        echo "display:none;";
-                                                                                                                                                                    } ?>" id="<?php echo $break_id ?>" data-id="<?php echo $user->id ?>" data-name="<?php echo $user->FName; ?> <?php echo $user->LName; ?>" data-approved="<?php echo logged("id"); ?>" data-photo="<?php echo $user_photo; ?>" data-company="<?php echo $company_id ?>"><i class="fa fa-coffee fa-lg"></i></a>
-                                                            <a href="javascript:void(0)" title="Clock in/out" data-toggle="tooltip" class="employee-in-out" <?php echo $disabled ?> id="<?php echo $btn_action; ?>" data-attn="<?php echo $attn_id; ?>" data-name="<?php echo $user->FName; ?> <?php echo $user->LName; ?>" data-id="<?php echo $user->id; ?>" data-approved="<?php echo logged("id"); ?>" data-photo="<?php echo $user_photo; ?>" data-company="<?php echo $company_id ?>"><i class="fa fa-sign-in fa-lg"></i></a>
-                                                            <i class="fa <?php echo $status; ?> status" title="<?php echo $tooltip_status; ?>" data-toggle="tooltip"></i>
-                                                        </td>
-                                                        <td></td>
-                                                    </tr>
-                                                    <?php
+                                            <tr>
+                                                <td class="tbl-id-number"><?php echo $user->id ?>
+                                                </td>
+                                                <td>
+                                                    <span class="tbl-employee-name"><?php echo $user->FName; ?></span>
+                                                    <span class="tbl-employee-name"><?php echo $user->LName; ?></span>
+                                                    <span class="tbl-emp-role"><?php echo $u_role; ?></span>
+                                                </td>
+                                                <td class="tbl-chk-in"
+                                                    data-count="<?php echo $in_count ?>">
+                                                    <div class="in-indicator"
+                                                        style="<?php echo $indicator_in ?>">
+                                                    </div> <span class="clock-in-time <?php if ($time_in != "") {
+                                                        echo "gray";
+                                                    } ?>"><?php echo $time_in ?></span>
+                                                    <span class="clock-in-yesterday" style="display: block;"><?php echo $yesterday_in; ?></span>
+                                                </td>
+                                                <td class="tbl-chk-out"
+                                                    data-count="<?php echo $time_out ?>">
+                                                    <div class="out-indicator"
+                                                        style="<?php echo $indicator_out ?>">
+                                                    </div> <span class="clock-out-time <?php if ($time_out != "") {
+                                                        echo "gray";
+                                                    } ?>"><?php echo $time_out ?></span>
+                                                </td>
+                                                <td class="tbl-lunch-in">
+                                                    <div class="lunch-indicator"
+                                                        style="<?php echo $indicator_in_break ?>">
+                                                    </div> <span class="break-in-time <?php if ($break_in != "") {
+                                                        echo "gray";
+                                                    } ?>"><?php echo $break_in; ?></span>
+                                                </td>
+                                                <td class="tbl-lunch-out">
+                                                    <div class="in-indicator"
+                                                        style="<?php echo $indicator_out_break ?>">
+                                                    </div> <span class="break-out-time <?php if ($break_out != "") {
+                                                        echo "gray";
+                                                    } ?>"><?php echo $break_out; ?></span>
+                                                </td>
+                                                <td class="tbl-emp-action">
+                                                    <center class="loading-img-action" style="display:none;"><img
+                                                            class="ts-loader-img"
+                                                            src="<?= base_url() ?>assets/css/timesheet/images/ring-loader.svg"
+                                                            alt="" style="height:40px;"> </center>
+                                                    <a href="javascript:void(0)" title="Lunch in/out"
+                                                        data-toggle="tooltip" class="employee-break" style="<?php if ($break_id == "") {
+                                                        echo "display:none;";
+                                                    } ?>"
+                                                        id="<?php echo $break_id ?>"
+                                                        data-id="<?php echo $user->id ?>"
+                                                        data-name="<?php echo $user->FName; ?> <?php echo $user->LName; ?>"
+                                                        data-approved="<?php echo logged("id"); ?>"
+                                                        data-photo="<?php echo $user_photo; ?>"
+                                                        data-company="<?php echo $company_id ?>"><i
+                                                            class="fa fa-coffee fa-lg"></i></a>
+                                                    <a href="javascript:void(0)" title="Clock in/out"
+                                                        data-toggle="tooltip" class="employee-in-out" <?php echo $disabled ?>
+                                                        id="<?php echo $btn_action; ?>"
+                                                        data-attn="<?php echo $attn_id; ?>"
+                                                        data-name="<?php echo $user->FName; ?>
+                                                        <?php echo $user->LName; ?>"
+                                                        data-id="<?php echo $user->id; ?>"
+                                                        data-approved="<?php echo logged("id"); ?>"
+                                                        data-photo="<?php echo $user_photo; ?>"
+                                                        data-company="<?php echo $company_id ?>"><i
+                                                            class="fa fa-sign-in fa-lg"></i></a>
+                                                    <i class="fa <?php echo $status; ?> status"
+                                                        title="<?php echo $tooltip_status; ?>"
+                                                        data-toggle="tooltip"></i>
+                                                </td>
+                                                <td></td>
+                                            </tr>
+                                            <?php
                                                     $u_role = null;
                                                     $status = 'fa-times-circle-none';
                                                     $tooltip_status = 'Not logged in';
@@ -892,17 +975,19 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                                     $yesterday_in = null;
                                                     $yesterday_out = null;
                                                     ?>
-                                                <?php endforeach; ?>
-                                            </tbody>
-                                        </table>
-                                        <input type="hidden" id="outCounter" value="<?php echo $out_count ?>">
-                                        <input type="hidden" id="inCounter" value="<?php echo $in_count ?>">
-                                    </div>
+                                            <?php endforeach; ?>
+                                        </tbody>
+                                    </table>
+                                    <input type="hidden" id="outCounter"
+                                        value="<?php echo $out_count ?>">
+                                    <input type="hidden" id="inCounter"
+                                        value="<?php echo $in_count ?>">
                                 </div>
+                            </div>
                             <?php endif; ?>
                             <!-- end row -->
                             <?php if (logged("role") > 5) : ?>
-                                <?php
+                            <?php
                                 $lunch_active = null;
                                 $employee_logs = getEmployeeLogs($attendance_id);
                                 $employee_attn = getClockInSession();
@@ -926,14 +1011,14 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                 }
 
                                 ?>
-                                <div class="row">
-                                    <div class="col-md-4">
-                                        <div class="tile-container user-logs-container">
-                                            <div class="inner-container">
-                                                <div class="tileContent">
-                                                    <div class="clear">
-                                                        <div class="inner-content">
-                                                            <?php
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="tile-container user-logs-container">
+                                        <div class="inner-container">
+                                            <div class="tileContent">
+                                                <div class="clear">
+                                                    <div class="inner-content">
+                                                        <?php
                                                             $clock_in = '-';
                                                             $clock_out = '-';
                                                             $lunch_in = '-';
@@ -1018,96 +1103,55 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                                             }
 
                                                             ?>
-                                                            <div class="card-title user-card-title">
-                                                                <div class="row">
-                                                                    <div class="col-md-7" style="display: flex;">
-                                                                        <span class="user-logs-title" style=" align-self: flex-end;"><?php if ($yesterday_note != null) {
-                                                                                                                                            echo "Most recent logs";
-                                                                                                                                        } else {
-                                                                                                                                            echo "Today's logs";
-                                                                                                                                        } ?></span>
-                                                                    </div>
-                                                                    <div class="col-md-5">
-                                                                        <span class="user-logs-title right employeeLunchBtn" style="">
-                                                                            <a href="javascript:void(0)" class="employeeLunch" id="<?php echo $lunch_active; ?>" <?php echo $lunch_disabled; ?>>
-                                                                                <img src="<?= base_url() ?>/assets/css/timesheet/images/coffee-<?php echo $lunch_icon; ?>.svg" alt="" class="btn-lunch">
-                                                                                <img src="<?= base_url() ?>/assets/css/timesheet/images/coffee-hover.svg" alt="" class="btn-lunch-hover">
-                                                                            </a>
-                                                                            <span class="employeeLunchTooltip">Lunch in/out</span>
-                                                                        </span>
-                                                                    </div>
+                                                        <div class="card-title user-card-title">
+                                                            <div class="row">
+                                                                <div class="col-md-7" style="display: flex;">
+                                                                    <span class="user-logs-title"
+                                                                        style=" align-self: flex-end;"><?php if ($yesterday_note != null) {
+                                                                echo "Most recent logs";
+                                                            } else {
+                                                                echo "Today's logs";
+                                                            } ?>
+                                                                    </span>
                                                                 </div>
-                                                            </div>
-                                                            <div class="user-logs">
-                                                                <div class="user-logs-section">
-                                                                    <div class="user-clock-in-title">Clock-in: </div>
-                                                                    <div class="user-clock-out-title">Clock-out: </div>
-                                                                    <div class="user-lunch-in-title">Lunch-in: </div>
-                                                                    <div class="user-lunch-out-title">Lunch-out: </div>
-                                                                    <div class="user-lunch-out-title">Shift Duration: </div>
-                                                                </div>
-                                                                <div class="user-logs-section">
-                                                                    <div class="user-clock-in" id="userClockIn"><?php echo $clock_in; ?> <span style="color: grey"><?php echo $yesterday_note ?></span></div>
-                                                                    <div class="user-clock-out" id="userClockOut"><?php echo $clock_out ?></div>
-                                                                    <div class="user-lunch-in" id="userLunchIn"><?php echo $lunch_in ?></div>
-                                                                    <div class="user-lunch-out" id="userLunchOut"><?php echo $lunch_out ?></div>
-                                                                    <div class="user-shift-duration" id="userShiftDuration"><?php echo $shift ?></div>
+                                                                <div class="col-md-5">
+                                                                    <span class="user-logs-title right employeeLunchBtn"
+                                                                        style="">
+                                                                        <a href="javascript:void(0)"
+                                                                            class="employeeLunch"
+                                                                            id="<?php echo $lunch_active; ?>"
+                                                                            <?php echo $lunch_disabled; ?>>
+                                                                            <img src="<?= base_url() ?>/assets/css/timesheet/images/coffee-<?php echo $lunch_icon; ?>.svg"
+                                                                                alt="" class="btn-lunch">
+                                                                            <img src="<?= base_url() ?>/assets/css/timesheet/images/coffee-hover.svg"
+                                                                                alt="" class="btn-lunch-hover">
+                                                                        </a>
+                                                                        <span class="employeeLunchTooltip">Lunch
+                                                                            in/out</span>
+                                                                    </span>
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-8">
-                                        <div class="tile-container user-logs-container">
-                                            <div class="inner-container">
-                                                <div class="tileContent">
-                                                    <div class="clear">
-                                                        <div class="inner-content">
-                                                            <div class="card-title user-card-title">
-                                                                <span>Remarks</span>
+                                                        <div class="user-logs">
+                                                            <div class="user-logs-section">
+                                                                <div class="user-clock-in-title">Clock-in: </div>
+                                                                <div class="user-clock-out-title">Clock-out: </div>
+                                                                <div class="user-lunch-in-title">Lunch-in: </div>
+                                                                <div class="user-lunch-out-title">Lunch-out: </div>
+                                                                <div class="user-lunch-out-title">Shift Duration: </div>
                                                             </div>
-                                                            <div class="user-logs">
-                                                                <div class="row">
-                                                                    <div class="col-md-12">
-                                                                        <form action="#" target="_blank" method="POST">
-                                                                            <div class="row">
-                                                                                <div class="col-lg-6" style="margin-bottom: 12px">
-                                                                                    <label for="from_date_correction_requests" class="week-label">Week Date:</label>
-                                                                                    <input type="text" name="date_from" id="week_attendance_remarks" class="form-control ts_schedule" value="<?= date('m/d/Y', strtotime('monday this week')) ?>">
-                                                                                </div>
-                                                                            </div>
-                                                                        </form>
-                                                                        <table id="show_my_attendance_remarks" class="table table-bordered table-striped no-footer dataTable" role="grid" aria-describedby="otrequest-table-list_info" style="display:none;">
-                                                                            <thead>
-                                                                                <tr role="row">
-                                                                                    <th class="sorting_disabled" rowspan="1" colspan="1" style="width: 0px;">March 21</th>
-                                                                                    <th class="sorting_disabled" rowspan="1" colspan="1" style="width: 0px;">March 22</th>
-                                                                                    <th class="sorting_disabled" rowspan="1" colspan="1" style="width: 0px;">March 23</th>
-                                                                                    <th class="sorting_disabled" rowspan="1" colspan="1" style="width: 0px;">March 24</th>
-                                                                                    <th class="sorting_disabled" rowspan="1" colspan="1" style="width: 0px;">March 25</th>
-                                                                                    <th class="sorting_disabled" rowspan="1" colspan="1" style="width: 0px;">March 26</th>
-                                                                                    <th class="sorting_disabled" rowspan="1" colspan="1" style="width: 0px;">March 27</th>
-                                                                                </tr>
-                                                                            </thead>
-                                                                            <tbody>
-                                                                                <tr>
-                                                                                    <td class="center">A</td>
-                                                                                    <td class="center">A</td>
-                                                                                    <td class="center">A</td>
-                                                                                    <td class="center">A</td>
-                                                                                    <td class="center">A</td>
-                                                                                    <td class="center">A</td>
-                                                                                    <td class="center">A</td>
-                                                                                </tr>
-                                                                            </tbody>
-                                                                        </table>
-                                                                        <div class="table-ts-loader">
-                                                                            <center><img class="my-attendance-remarks-loader" src="<?= base_url() ?>/assets/css/timesheet/images/ring-loader.svg" alt=""></center>
-                                                                        </div>
-                                                                    </div>
+                                                            <div class="user-logs-section">
+                                                                <div class="user-clock-in" id="userClockIn"><?php echo $clock_in; ?>
+                                                                    <span style="color: grey"><?php echo $yesterday_note ?></span>
+                                                                </div>
+                                                                <div class="user-clock-out" id="userClockOut"><?php echo $clock_out ?>
+                                                                </div>
+                                                                <div class="user-lunch-in" id="userLunchIn"><?php echo $lunch_in ?>
+                                                                </div>
+                                                                <div class="user-lunch-out" id="userLunchOut"><?php echo $lunch_out ?>
+                                                                </div>
+                                                                <div class="user-shift-duration" id="userShiftDuration">
+                                                                    <?php echo $shift ?>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -1117,124 +1161,80 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="row" style="margin-top: 20px">
-                                    <div class="col-md-4">
-                                        <div class="tile-container user-logs-container">
-                                            <div class="inner-container">
-                                                <div class="tileContent">
-                                                    <div class="clear">
-                                                        <div class="inner-content">
-                                                            <div class="card-title user-card-title">
-                                                                <span>Leave requests</span>
-                                                            </div>
-                                                            <div class="user-logs">
-                                                                <div class="row">
-                                                                    <div class="col-md-12">
-                                                                        <form action="#" target="_blank" method="POST">
-                                                                            <div class="row">
-                                                                                <div class="col-lg-6" style="margin-bottom: 12px">
-                                                                                    <label for="from_date_correction_requests" class="week-label">From:</label>
-                                                                                    <input type="text" name="date_from" id="from_date_leave_requests" class="form-control ts_schedule" value="<?= date('m/d/Y', strtotime('monday this week')) ?>">
-                                                                                </div>
-                                                                                <div class="col-lg-6" style="margin-bottom: 12px">
-                                                                                    <a href="javascript:void (0)" class="employeeLeaveBtn" id="btn-leave-emp" style="float: right;margin-top: -12px">
-                                                                                        <img src="<?= base_url() ?>assets/css/timesheet/images/calendar-static.svg" alt="sick icon" class="btn-leave-static">
-                                                                                        <img src="<?= base_url() ?>assets/css/timesheet/images/calendar-hover.svg" alt="sick icon" class="btn-leave-hover">
-                                                                                    </a><span class="employeeLeaveTooltip">Request for leave</span>
-                                                                                    <label for="to_date_correction_requests" class="week-label">To:</label>
-                                                                                    <input type="text" name="date_to" id="to_date_leave_requests" class="form-control ts_schedule" value="<?= date("m/d/Y") ?>">
-
-                                                                                </div>
-                                                                            </div>
-                                                                        </form>
-                                                                        <table id="my_leave_requests" class="table table-bordered table-striped no-footer dataTable" role="grid" aria-describedby="otrequest-table-list_info">
-                                                                            <thead>
-                                                                                <tr role="row">
-                                                                                    <th class="sorting_disabled" rowspan="1" colspan="1" style="width: 0px;">Date Filed</th>
-                                                                                    <th class="sorting_disabled" rowspan="1" colspan="1" style="width: 50px;">Leave Date</th>
-                                                                                    <th class="sorting_disabled" rowspan="1" colspan="1" style="width: 0px;">Status</th>
-                                                                                    <th class="sorting_disabled leave_request_action_td" rowspan="1" colspan="1" style="width: 0px;">Action</th>
-                                                                                </tr>
-                                                                            </thead>
-                                                                            <tbody id="my_leave_requests_body">
-
-                                                                            </tbody>
-                                                                        </table>
-                                                                        <div class="table-ts-loader">
-                                                                            <center><img class="my-leave-requests-loader" src="<?= base_url() ?>/assets/css/timesheet/images/ring-loader.svg" alt=""></center>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
+                                <div class="col-md-8">
+                                    <div class="tile-container user-logs-container">
+                                        <div class="inner-container">
+                                            <div class="tileContent">
+                                                <div class="clear">
+                                                    <div class="inner-content">
+                                                        <div class="card-title user-card-title">
+                                                            <span>Remarks</span>
                                                         </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-8">
-                                        <div class="tile-container user-logs-container">
-                                            <div class="inner-container">
-                                                <div class="tileContent">
-                                                    <div class="clear">
-                                                        <div class="inner-content">
-                                                            <div class="card-title user-card-title">
-                                                                <span>Attendance Correction Requests</span>
-                                                            </div>
+                                                        <div class="user-logs">
                                                             <div class="row">
                                                                 <div class="col-md-12">
                                                                     <form action="#" target="_blank" method="POST">
                                                                         <div class="row">
-                                                                            <div class="col-lg-2" style="margin-bottom: 12px">
-                                                                                <label for="from_date_correction_requests" class="week-label">From:</label>
-                                                                                <input type="text" name="date_from" id="from_date_correction_requests" class="form-control ts_schedule" value="<?= date('m/d/Y', strtotime('monday this week')) ?>">
-                                                                            </div>
-                                                                            <div class="col-lg-2" style="margin-bottom: 12px">
-                                                                                <label for="to_date_correction_requests" class="week-label">To:</label>
-                                                                                <input type="text" name="date_to" id="to_date_correction_requests" class="form-control ts_schedule" value="<?= date("m/d/Y") ?>">
+                                                                            <div class="col-lg-6"
+                                                                                style="margin-bottom: 12px">
+                                                                                <label
+                                                                                    for="from_date_correction_requests"
+                                                                                    class="week-label">Week
+                                                                                    Date:</label>
+                                                                                <input type="text" name="date_from"
+                                                                                    id="week_attendance_remarks"
+                                                                                    class="form-control ts_schedule"
+                                                                                    value="<?= date('m/d/Y', strtotime('monday this week')) ?>">
                                                                             </div>
                                                                         </div>
                                                                     </form>
-                                                                    <table id="my_correction_requests" class="table table-bordered table-striped no-footer dataTable" role="grid" aria-describedby="otrequest-table-list_info" style="display:none;">
+                                                                    <table id="show_my_attendance_remarks"
+                                                                        class="table table-bordered table-striped no-footer dataTable"
+                                                                        role="grid"
+                                                                        aria-describedby="otrequest-table-list_info"
+                                                                        style="display:none;">
                                                                         <thead>
                                                                             <tr role="row">
-                                                                                <th class="sorting_disabled" rowspan="1" colspan="1" style="width: 0px;">Shift Date</th>
-                                                                                <th class="sorting_disabled" rowspan="1" colspan="1" style="width: 0px;">Login</th>
-                                                                                <th class="sorting_disabled" rowspan="1" colspan="1" style="width: 0px;">Break</th>
-                                                                                <th class="sorting_disabled" rowspan="1" colspan="1" style="width: 0px;">Worked Hours</th>
-                                                                                <th class="sorting_disabled" rowspan="1" colspan="1" style="width: 0px;">Break Duration</th>
-                                                                                <th class="sorting_disabled" rowspan="1" colspan="1" style="width: 0px;">Overtime</th>
-                                                                                <th class="sorting_disabled" rowspan="1" colspan="1" style="width: 0px;">Request Status</th>
-                                                                                <th class="sorting_disabled" rowspan="1" colspan="1" style="width: 0px;">Action</th>
+                                                                                <th class="sorting_disabled" rowspan="1"
+                                                                                    colspan="1" style="width: 0px;">
+                                                                                    March 21</th>
+                                                                                <th class="sorting_disabled" rowspan="1"
+                                                                                    colspan="1" style="width: 0px;">
+                                                                                    March 22</th>
+                                                                                <th class="sorting_disabled" rowspan="1"
+                                                                                    colspan="1" style="width: 0px;">
+                                                                                    March 23</th>
+                                                                                <th class="sorting_disabled" rowspan="1"
+                                                                                    colspan="1" style="width: 0px;">
+                                                                                    March 24</th>
+                                                                                <th class="sorting_disabled" rowspan="1"
+                                                                                    colspan="1" style="width: 0px;">
+                                                                                    March 25</th>
+                                                                                <th class="sorting_disabled" rowspan="1"
+                                                                                    colspan="1" style="width: 0px;">
+                                                                                    March 26</th>
+                                                                                <th class="sorting_disabled" rowspan="1"
+                                                                                    colspan="1" style="width: 0px;">
+                                                                                    March 27</th>
                                                                             </tr>
                                                                         </thead>
                                                                         <tbody>
-                                                                            <tr role="row" class="odd">
-                                                                                <td><label class="gray">03-21-2021</label></td>
-                                                                                <td>
-                                                                                    <center>
-                                                                                        <label class="gray"><strong>Clock in: &nbsp;</strong> 03-21-2021 12:20 PM</label>
-                                                                                        <label class="gray"><strong>Clock out: &nbsp;</strong> 03-21-2021 12:20 PM</label>
-                                                                                    </center>
-                                                                                </td>
-                                                                                <td>
-                                                                                    <center>
-                                                                                        <label class="gray"><strong>Break in: &nbsp;</strong> 03-21-2021 12:20 PM</label>
-                                                                                        <label class="gray"><strong>Break out:&nbsp;</strong> 03-21-2021 12:20 PM</label>
-                                                                                    </center>
-                                                                                </td>
-                                                                                <td style="text-align:center;">9.3</td>
-                                                                                <td style="text-align:center;">1.30</td>
-                                                                                <td style="text-align:center;">1.30</td>
-                                                                                <td style="text-align:center;">Pending</td>
-                                                                                <td style="text-align:center;">
-                                                                                    <a href="#" title="" data-name="Jonah  Pacas-Abanil" data-user-id="14" data-attn-id="143" data-toggle="tooltip" class="approve-ot-request btn btn-danger btn-sm" data-original-title="Cancel Request"><i class="fa fa-times fa-lg"></i> Cancel</a>
-                                                                                </td>
+                                                                            <tr>
+                                                                                <td class="center">A</td>
+                                                                                <td class="center">A</td>
+                                                                                <td class="center">A</td>
+                                                                                <td class="center">A</td>
+                                                                                <td class="center">A</td>
+                                                                                <td class="center">A</td>
+                                                                                <td class="center">A</td>
                                                                             </tr>
                                                                         </tbody>
                                                                     </table>
                                                                     <div class="table-ts-loader">
-                                                                        <center><img class="my-correction-requests-loader" src="<?= base_url() ?>/assets/css/timesheet/images/ring-loader.svg" alt=""></center>
+                                                                        <center><img
+                                                                                class="my-attendance-remarks-loader"
+                                                                                src="<?= base_url() ?>/assets/css/timesheet/images/ring-loader.svg"
+                                                                                alt=""></center>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -1245,67 +1245,85 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="row" style="margin-top: 20px">
-                                    <div class="col-md-12">
-                                        <div class="tile-container user-logs-container">
-                                            <div class="inner-container">
-                                                <div class="tileContent">
-                                                    <div class="clear">
-                                                        <div class="inner-content">
-                                                            <div class="card-title user-card-title">
-                                                                <span>Attendance Logs</span>
-                                                            </div>
+                            </div>
+                            <div class="row" style="margin-top: 20px">
+                                <div class="col-md-4">
+                                    <div class="tile-container user-logs-container">
+                                        <div class="inner-container">
+                                            <div class="tileContent">
+                                                <div class="clear">
+                                                    <div class="inner-content">
+                                                        <div class="card-title user-card-title">
+                                                            <span>Leave requests</span>
+                                                        </div>
+                                                        <div class="user-logs">
                                                             <div class="row">
                                                                 <div class="col-md-12">
                                                                     <form action="#" target="_blank" method="POST">
                                                                         <div class="row">
-                                                                            <div class="col-lg-2" style="margin-bottom: 12px">
-                                                                                <label for="from_date_logs" class="week-label">From:</label>
-                                                                                <input type="text" name="date_from" id="from_date_logs" class="form-control ts_schedule" value="<?= date('m/d/Y', strtotime('monday this week')) ?>">
+                                                                            <div class="col-lg-6"
+                                                                                style="margin-bottom: 12px">
+                                                                                <label
+                                                                                    for="from_date_correction_requests"
+                                                                                    class="week-label">From:</label>
+                                                                                <input type="text" name="date_from"
+                                                                                    id="from_date_leave_requests"
+                                                                                    class="form-control ts_schedule"
+                                                                                    value="<?= date('m/d/Y', strtotime('monday this week')) ?>">
                                                                             </div>
-                                                                            <div class="col-lg-2" style="margin-bottom: 12px">
-                                                                                <label for="to_date_logs" class="week-label">To:</label>
-                                                                                <input type="text" name="date_to" id="to_date_logs" class="form-control ts_schedule" value="<?= date("m/d/Y") ?>">
+                                                                            <div class="col-lg-6"
+                                                                                style="margin-bottom: 12px">
+                                                                                <a href="javascript:void (0)"
+                                                                                    class="employeeLeaveBtn"
+                                                                                    id="btn-leave-emp"
+                                                                                    style="float: right;margin-top: -12px">
+                                                                                    <img src="<?= base_url() ?>assets/css/timesheet/images/calendar-static.svg"
+                                                                                        alt="sick icon"
+                                                                                        class="btn-leave-static">
+                                                                                    <img src="<?= base_url() ?>assets/css/timesheet/images/calendar-hover.svg"
+                                                                                        alt="sick icon"
+                                                                                        class="btn-leave-hover">
+                                                                                </a><span
+                                                                                    class="employeeLeaveTooltip">Request
+                                                                                    for leave</span>
+                                                                                <label for="to_date_correction_requests"
+                                                                                    class="week-label">To:</label>
+                                                                                <input type="text" name="date_to"
+                                                                                    id="to_date_leave_requests"
+                                                                                    class="form-control ts_schedule"
+                                                                                    value="<?= date("m/d/Y") ?>">
+
                                                                             </div>
                                                                         </div>
                                                                     </form>
-                                                                    <table id="my-attendance-logs" class="table table-bordered table-striped no-footer dataTable" role="grid" aria-describedby="otrequest-table-list_info" style="display:none;">
+                                                                    <table id="my_leave_requests"
+                                                                        class="table table-bordered table-striped no-footer dataTable"
+                                                                        role="grid"
+                                                                        aria-describedby="otrequest-table-list_info">
                                                                         <thead>
                                                                             <tr role="row">
-                                                                                <th class="sorting_disabled" rowspan="1" colspan="1" style="width: 0px;">Shift Date</th>
-                                                                                <th class="sorting_disabled" rowspan="1" colspan="1" style="width: 0px;">Shift Start</th>
-                                                                                <th class="sorting_disabled" rowspan="1" colspan="1" style="width: 0px;">Shift End</th>
-                                                                                <th class="sorting_disabled" rowspan="1" colspan="1" style="width: 0px;">Expected Work Hours</th>
-                                                                                <th class="sorting_disabled" rowspan="1" colspan="1" style="width: 0px;">Clock in</th>
-                                                                                <th class="sorting_disabled" rowspan="1" colspan="1" style="width: 0px;">Clock out</th>
-                                                                                <th class="sorting_disabled" rowspan="1" colspan="1" style="width: 0px;">Worked Hours</th>
-                                                                                <th class="sorting_disabled" rowspan="1" colspan="1" style="width: 0px;">Late in minutes</th>
-                                                                                <th class="sorting_disabled" rowspan="1" colspan="1" style="width: 0px;">Overtime</th>
-                                                                                <th class="sorting_disabled" rowspan="1" colspan="1" style="width: 0px;">OT Status</th>
-                                                                                <th class="sorting_disabled" rowspan="1" colspan="1" style="width: 0px;">Action</th>
+                                                                                <th class="sorting_disabled" rowspan="1"
+                                                                                    colspan="1" style="width: 0px;">Date
+                                                                                    Filed</th>
+                                                                                <th class="sorting_disabled" rowspan="1"
+                                                                                    colspan="1" style="width: 50px;">
+                                                                                    Leave Date</th>
+                                                                                <th class="sorting_disabled" rowspan="1"
+                                                                                    colspan="1" style="width: 0px;">
+                                                                                    Status</th>
+                                                                                <th class="sorting_disabled leave_request_action_td"
+                                                                                    rowspan="1" colspan="1"
+                                                                                    style="width: 0px;">Action</th>
                                                                             </tr>
                                                                         </thead>
-                                                                        <tbody>
-                                                                            <tr role="row" class="odd">
-                                                                                <td>03-21-2021</td>
-                                                                                <td>03-21-2021 12:20 PM</td>
-                                                                                <td>03-21-2021 09:38 PM</td>
-                                                                                <td style="text-align:center;">9.3</td>
-                                                                                <td style="text-align:center;">1.30</td>
-                                                                                <td style="text-align:center;">Pending</td>
-                                                                                <td style="text-align:center;"></td>
-                                                                                <td style="text-align:center;"></td>
-                                                                                <td style="text-align:center;"></td>
-                                                                                <td style="text-align:center;"></td>
-                                                                                <td style="text-align:center;">
-                                                                                    <a href="#" title="" data-name="Jonah  Pacas-Abanil" data-user-id="14" data-attn-id="143" data-toggle="tooltip" class="approve-ot-request btn btn-primary btn-sm" data-original-title="Approve"><i class="fa fa-adjust fa-lg"></i> Request Adjustment</a>
-                                                                                    <a href="#" title="" data-name="Jonah  Pacas-Abanil" data-user-id="14" data-attn-id="143" data-toggle="tooltip" class="deny-ot-request btn btn-warning btn-sm" data-original-title="Deny"><i class="fa fa-clock-o fa-lg"></i> Request OT Approval</a>
-                                                                                </td>
-                                                                            </tr>
+                                                                        <tbody id="my_leave_requests_body">
+
                                                                         </tbody>
                                                                     </table>
                                                                     <div class="table-ts-loader">
-                                                                        <center><img class="ts-loader-img" src="<?= base_url() ?>/assets/css/timesheet/images/ring-loader.svg" alt=""></center>
+                                                                        <center><img class="my-leave-requests-loader"
+                                                                                src="<?= base_url() ?>/assets/css/timesheet/images/ring-loader.svg"
+                                                                                alt=""></center>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -1316,6 +1334,250 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                         </div>
                                     </div>
                                 </div>
+                                <div class="col-md-8">
+                                    <div class="tile-container user-logs-container">
+                                        <div class="inner-container">
+                                            <div class="tileContent">
+                                                <div class="clear">
+                                                    <div class="inner-content">
+                                                        <div class="card-title user-card-title">
+                                                            <span>Attendance Correction Requests</span>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                <form action="#" target="_blank" method="POST">
+                                                                    <div class="row">
+                                                                        <div class="col-lg-2"
+                                                                            style="margin-bottom: 12px">
+                                                                            <label for="from_date_correction_requests"
+                                                                                class="week-label">From:</label>
+                                                                            <input type="text" name="date_from"
+                                                                                id="from_date_correction_requests"
+                                                                                class="form-control ts_schedule"
+                                                                                value="<?= date('m/d/Y', strtotime('monday this week')) ?>">
+                                                                        </div>
+                                                                        <div class="col-lg-2"
+                                                                            style="margin-bottom: 12px">
+                                                                            <label for="to_date_correction_requests"
+                                                                                class="week-label">To:</label>
+                                                                            <input type="text" name="date_to"
+                                                                                id="to_date_correction_requests"
+                                                                                class="form-control ts_schedule"
+                                                                                value="<?= date("m/d/Y") ?>">
+                                                                        </div>
+                                                                    </div>
+                                                                </form>
+                                                                <table id="my_correction_requests"
+                                                                    class="table table-bordered table-striped no-footer dataTable"
+                                                                    role="grid"
+                                                                    aria-describedby="otrequest-table-list_info"
+                                                                    style="display:none;">
+                                                                    <thead>
+                                                                        <tr role="row">
+                                                                            <th class="sorting_disabled" rowspan="1"
+                                                                                colspan="1" style="width: 0px;">Shift
+                                                                                Date</th>
+                                                                            <th class="sorting_disabled" rowspan="1"
+                                                                                colspan="1" style="width: 0px;">Login
+                                                                            </th>
+                                                                            <th class="sorting_disabled" rowspan="1"
+                                                                                colspan="1" style="width: 0px;">Break
+                                                                            </th>
+                                                                            <th class="sorting_disabled" rowspan="1"
+                                                                                colspan="1" style="width: 0px;">Worked
+                                                                                Hours</th>
+                                                                            <th class="sorting_disabled" rowspan="1"
+                                                                                colspan="1" style="width: 0px;">Break
+                                                                                Duration</th>
+                                                                            <th class="sorting_disabled" rowspan="1"
+                                                                                colspan="1" style="width: 0px;">Overtime
+                                                                            </th>
+                                                                            <th class="sorting_disabled" rowspan="1"
+                                                                                colspan="1" style="width: 0px;">Request
+                                                                                Status</th>
+                                                                            <th class="sorting_disabled" rowspan="1"
+                                                                                colspan="1" style="width: 0px;">Action
+                                                                            </th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody>
+                                                                        <tr role="row" class="odd">
+                                                                            <td><label class="gray">03-21-2021</label>
+                                                                            </td>
+                                                                            <td>
+                                                                                <center>
+                                                                                    <label class="gray"><strong>Clock
+                                                                                            in: &nbsp;</strong>
+                                                                                        03-21-2021 12:20 PM</label>
+                                                                                    <label class="gray"><strong>Clock
+                                                                                            out: &nbsp;</strong>
+                                                                                        03-21-2021 12:20 PM</label>
+                                                                                </center>
+                                                                            </td>
+                                                                            <td>
+                                                                                <center>
+                                                                                    <label class="gray"><strong>Break
+                                                                                            in: &nbsp;</strong>
+                                                                                        03-21-2021 12:20 PM</label>
+                                                                                    <label class="gray"><strong>Break
+                                                                                            out:&nbsp;</strong>
+                                                                                        03-21-2021 12:20 PM</label>
+                                                                                </center>
+                                                                            </td>
+                                                                            <td style="text-align:center;">9.3</td>
+                                                                            <td style="text-align:center;">1.30</td>
+                                                                            <td style="text-align:center;">1.30</td>
+                                                                            <td style="text-align:center;">Pending</td>
+                                                                            <td style="text-align:center;">
+                                                                                <a href="#" title=""
+                                                                                    data-name="Jonah  Pacas-Abanil"
+                                                                                    data-user-id="14" data-attn-id="143"
+                                                                                    data-toggle="tooltip"
+                                                                                    class="approve-ot-request btn btn-danger btn-sm"
+                                                                                    data-original-title="Cancel Request"><i
+                                                                                        class="fa fa-times fa-lg"></i>
+                                                                                    Cancel</a>
+                                                                            </td>
+                                                                        </tr>
+                                                                    </tbody>
+                                                                </table>
+                                                                <div class="table-ts-loader">
+                                                                    <center><img class="my-correction-requests-loader"
+                                                                            src="<?= base_url() ?>/assets/css/timesheet/images/ring-loader.svg"
+                                                                            alt=""></center>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row" style="margin-top: 20px">
+                                <div class="col-md-12">
+                                    <div class="tile-container user-logs-container">
+                                        <div class="inner-container">
+                                            <div class="tileContent">
+                                                <div class="clear">
+                                                    <div class="inner-content">
+                                                        <div class="card-title user-card-title">
+                                                            <span>Attendance Logs</span>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                <form action="#" target="_blank" method="POST">
+                                                                    <div class="row">
+                                                                        <div class="col-lg-2"
+                                                                            style="margin-bottom: 12px">
+                                                                            <label for="from_date_logs"
+                                                                                class="week-label">From:</label>
+                                                                            <input type="text" name="date_from"
+                                                                                id="from_date_logs"
+                                                                                class="form-control ts_schedule"
+                                                                                value="<?= date('m/d/Y', strtotime('monday this week')) ?>">
+                                                                        </div>
+                                                                        <div class="col-lg-2"
+                                                                            style="margin-bottom: 12px">
+                                                                            <label for="to_date_logs"
+                                                                                class="week-label">To:</label>
+                                                                            <input type="text" name="date_to"
+                                                                                id="to_date_logs"
+                                                                                class="form-control ts_schedule"
+                                                                                value="<?= date("m/d/Y") ?>">
+                                                                        </div>
+                                                                    </div>
+                                                                </form>
+                                                                <table id="my-attendance-logs"
+                                                                    class="table table-bordered table-striped no-footer dataTable"
+                                                                    role="grid"
+                                                                    aria-describedby="otrequest-table-list_info"
+                                                                    style="display:none;">
+                                                                    <thead>
+                                                                        <tr role="row">
+                                                                            <th class="sorting_disabled" rowspan="1"
+                                                                                colspan="1" style="width: 0px;">Shift
+                                                                                Date</th>
+                                                                            <th class="sorting_disabled" rowspan="1"
+                                                                                colspan="1" style="width: 0px;">Shift
+                                                                                Start</th>
+                                                                            <th class="sorting_disabled" rowspan="1"
+                                                                                colspan="1" style="width: 0px;">Shift
+                                                                                End</th>
+                                                                            <th class="sorting_disabled" rowspan="1"
+                                                                                colspan="1" style="width: 0px;">Expected
+                                                                                Work Hours</th>
+                                                                            <th class="sorting_disabled" rowspan="1"
+                                                                                colspan="1" style="width: 0px;">Clock in
+                                                                            </th>
+                                                                            <th class="sorting_disabled" rowspan="1"
+                                                                                colspan="1" style="width: 0px;">Clock
+                                                                                out</th>
+                                                                            <th class="sorting_disabled" rowspan="1"
+                                                                                colspan="1" style="width: 0px;">Worked
+                                                                                Hours</th>
+                                                                            <th class="sorting_disabled" rowspan="1"
+                                                                                colspan="1" style="width: 0px;">Late in
+                                                                                minutes</th>
+                                                                            <th class="sorting_disabled" rowspan="1"
+                                                                                colspan="1" style="width: 0px;">Overtime
+                                                                            </th>
+                                                                            <th class="sorting_disabled" rowspan="1"
+                                                                                colspan="1" style="width: 0px;">OT
+                                                                                Status</th>
+                                                                            <th class="sorting_disabled" rowspan="1"
+                                                                                colspan="1" style="width: 0px;">Action
+                                                                            </th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody>
+                                                                        <tr role="row" class="odd">
+                                                                            <td>03-21-2021</td>
+                                                                            <td>03-21-2021 12:20 PM</td>
+                                                                            <td>03-21-2021 09:38 PM</td>
+                                                                            <td style="text-align:center;">9.3</td>
+                                                                            <td style="text-align:center;">1.30</td>
+                                                                            <td style="text-align:center;">Pending</td>
+                                                                            <td style="text-align:center;"></td>
+                                                                            <td style="text-align:center;"></td>
+                                                                            <td style="text-align:center;"></td>
+                                                                            <td style="text-align:center;"></td>
+                                                                            <td style="text-align:center;">
+                                                                                <a href="#" title=""
+                                                                                    data-name="Jonah  Pacas-Abanil"
+                                                                                    data-user-id="14" data-attn-id="143"
+                                                                                    data-toggle="tooltip"
+                                                                                    class="approve-ot-request btn btn-primary btn-sm"
+                                                                                    data-original-title="Approve"><i
+                                                                                        class="fa fa-adjust fa-lg"></i>
+                                                                                    Request Adjustment</a>
+                                                                                <a href="#" title=""
+                                                                                    data-name="Jonah  Pacas-Abanil"
+                                                                                    data-user-id="14" data-attn-id="143"
+                                                                                    data-toggle="tooltip"
+                                                                                    class="deny-ot-request btn btn-warning btn-sm"
+                                                                                    data-original-title="Deny"><i
+                                                                                        class="fa fa-clock-o fa-lg"></i>
+                                                                                    Request OT Approval</a>
+                                                                            </td>
+                                                                        </tr>
+                                                                    </tbody>
+                                                                </table>
+                                                                <div class="table-ts-loader">
+                                                                    <center><img class="ts-loader-img"
+                                                                            src="<?= base_url() ?>/assets/css/timesheet/images/ring-loader.svg"
+                                                                            alt=""></center>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                             <?php endif; ?>
                         </div>
                     </div>
@@ -1350,7 +1612,8 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                         <div class="col-md-12">
                             <div class="form-group">
                                 <label for="startDateLeave">Leave date</label>
-                                <input type="text" name="leave_date" class="form-control" id="startDateLeave" data-role="tagsinput">
+                                <input type="text" name="leave_date" class="form-control" id="startDateLeave"
+                                    data-role="tagsinput">
                             </div>
                         </div>
                     </div>
@@ -1369,12 +1632,15 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 
 
 <div class="modal-right-side">
-    <div class="modal right fade" id="request_attendance_correct_from" tabindex="" role="dialog" aria-labelledby="edit_attendance_log">
+    <div class="modal right fade" id="request_attendance_correct_from" tabindex="" role="dialog"
+        aria-labelledby="edit_attendance_log">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h3 class="modal-title" id="edit_attendance_log"><i class="fa fa-pencil-square-o"></i> <span>Request Attendance Correcttion</span><label id="edit_attendance_name">Lou Pinton</label></h3>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h3 class="modal-title" id="edit_attendance_log"><i class="fa fa-pencil-square-o"></i> <span>Request
+                            Attendance Correcttion</span><label id="edit_attendance_name">Lou Pinton</label></h3>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
                 </div>
                 <form action="" method="post" id="formNewProject">
                     <div class="modal-body">
@@ -1385,13 +1651,15 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                             <div class="col-lg-6">
                                 <div class="form-group">
                                     <label for="">Shift Start</label>
-                                    <input type="text" name="shift_start" id="form_shift_start" class="form-control" disabled>
+                                    <input type="text" name="shift_start" id="form_shift_start" class="form-control"
+                                        disabled>
                                 </div>
                             </div>
                             <div class="col-lg-6">
                                 <div class="form-group hiddenSection">
                                     <label for="">Shift End</label>
-                                    <input type="text" name="shift_end" id="form_shift_end" class="form-control ts-start-date" value="" disabled>
+                                    <input type="text" name="shift_end" id="form_shift_end"
+                                        class="form-control ts-start-date" value="" disabled>
                                 </div>
                             </div>
                         </div>
@@ -1399,13 +1667,16 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                             <div class="col-lg-6">
                                 <div class="form-group">
                                     <label for="">Clock In</label>
-                                    <input type="date" name="shift_start" id="form_clockin_date" class="form-control" disabled>
+                                    <input type="date" name="shift_start" id="form_clockin_date" class="form-control"
+                                        disabled>
                                 </div>
                             </div>
                             <div class="col-lg-6">
                                 <div class="form-group hiddenSection">
                                     <label for="">&nbsp;</label>
-                                    <input type="time" name="shift_end" id="form_clockin_time" class="form-control ts-start-date" value="" onchange="edit_attendance_log_form_changed()">
+                                    <input type="time" name="shift_end" id="form_clockin_time"
+                                        class="form-control ts-start-date" value=""
+                                        onchange="edit_attendance_log_form_changed()">
                                 </div>
                             </div>
                         </div>
@@ -1413,13 +1684,16 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                             <div class="col-lg-6">
                                 <div class="form-group">
                                     <label for="">Clock Out</label>
-                                    <input type="date" name="shift_start" id="form_clockout_date" class="form-control" onchange="edit_attendance_log_form_changed()">
+                                    <input type="date" name="shift_start" id="form_clockout_date" class="form-control"
+                                        onchange="edit_attendance_log_form_changed()">
                                 </div>
                             </div>
                             <div class="col-lg-6">
                                 <div class="form-group hiddenSection">
                                     <label for="">&nbsp;</label>
-                                    <input type="time" name="shift_end" id="form_clockout_time" class="form-control ts-start-date" value="" onchange="edit_attendance_log_form_changed()">
+                                    <input type="time" name="shift_end" id="form_clockout_time"
+                                        class="form-control ts-start-date" value=""
+                                        onchange="edit_attendance_log_form_changed()">
                                 </div>
                             </div>
                         </div>
@@ -1427,13 +1701,16 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                             <div class="col-lg-6">
                                 <div class="form-group">
                                     <label for="">Break In</label>
-                                    <input type="date" name="shift_start" id="form_breakin_date" class="form-control" onchange="edit_attendance_log_form_changed()">
+                                    <input type="date" name="shift_start" id="form_breakin_date" class="form-control"
+                                        onchange="edit_attendance_log_form_changed()">
                                 </div>
                             </div>
                             <div class="col-lg-6">
                                 <div class="form-group hiddenSection">
                                     <label for="">&nbsp;</label>
-                                    <input type="time" name="shift_end" id="form_breakin_time" class="form-control ts-start-date" value="" onchange="edit_attendance_log_form_changed()">
+                                    <input type="time" name="shift_end" id="form_breakin_time"
+                                        class="form-control ts-start-date" value=""
+                                        onchange="edit_attendance_log_form_changed()">
                                 </div>
                             </div>
                         </div>
@@ -1441,29 +1718,43 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                             <div class="col-lg-6">
                                 <div class="form-group">
                                     <label for="">Break Out</label>
-                                    <input type="date" name="shift_start" id="form_breakout_date" class="form-control" onchange="edit_attendance_log_form_changed()">
+                                    <input type="date" name="shift_start" id="form_breakout_date" class="form-control"
+                                        onchange="edit_attendance_log_form_changed()">
                                 </div>
                             </div>
                             <div class="col-lg-6">
                                 <div class="form-group hiddenSection">
                                     <label for="">&nbsp;</label>
-                                    <input type="time" name="shift_end" id="form_breakout_time" class="form-control ts-start-date" value="" onchange="edit_attendance_log_form_changed()">
+                                    <input type="time" name="shift_end" id="form_breakout_time"
+                                        class="form-control ts-start-date" value=""
+                                        onchange="edit_attendance_log_form_changed()">
                                 </div>
                             </div>
                         </div>
                         <div class="alert alert-info" role="alert">
-                            Overtime status of this attendance is <span id="form_ot_status" style="font-weight: bold;">Approved</span>
+                            Overtime status of this attendance is <span id="form_ot_status"
+                                style="font-weight: bold;">Approved</span>
                         </div>
 
                         <div class="row">
                             <div class="col-lg-12">
                                 <div class="form-group hiddenSection">
-                                    <table class="table table-bordered table-striped no-footer dataTable" style="width: auto;" role="grid" aria-describedby="timeLogTable_info">
+                                    <table class="table table-bordered table-striped no-footer dataTable"
+                                        style="width: auto;" role="grid" aria-describedby="timeLogTable_info">
                                         <thead>
                                             <tr role="row">
-                                                <td class="sorting" tabindex="0" aria-controls="timeLogTable" rowspan="1" colspan="1" aria-label="Expected Hours: activate to sort column ascending" style="width: 25%;">Expected Shift Duration</td>
-                                                <td class="sorting" tabindex="0" aria-controls="timeLogTable" rowspan="1" colspan="1" aria-label="Expected Hours: activate to sort column ascending" style="width: 25%;">Expected Break Duration</td>
-                                                <td class="sorting" tabindex="0" aria-controls="timeLogTable" rowspan="1" colspan="1" aria-label="Worked Hours: activate to sort column ascending" style="width: 25%;">Expected Work Hours</td>
+                                                <td class="sorting" tabindex="0" aria-controls="timeLogTable"
+                                                    rowspan="1" colspan="1"
+                                                    aria-label="Expected Hours: activate to sort column ascending"
+                                                    style="width: 25%;">Expected Shift Duration</td>
+                                                <td class="sorting" tabindex="0" aria-controls="timeLogTable"
+                                                    rowspan="1" colspan="1"
+                                                    aria-label="Expected Hours: activate to sort column ascending"
+                                                    style="width: 25%;">Expected Break Duration</td>
+                                                <td class="sorting" tabindex="0" aria-controls="timeLogTable"
+                                                    rowspan="1" colspan="1"
+                                                    aria-label="Worked Hours: activate to sort column ascending"
+                                                    style="width: 25%;">Expected Work Hours</td>
                                             </tr>
                                         </thead>
                                         <tbody class="employee-tbody">
@@ -1475,9 +1766,18 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                         </tbody>
                                         <thead>
                                             <tr role="row">
-                                                <td class="sorting" tabindex="0" aria-controls="timeLogTable" rowspan="1" colspan="1" aria-label="Worked Hours: activate to sort column ascending" style="width: 25%;">Late in Minutes</td>
-                                                <td class="sorting" tabindex="0" aria-controls="timeLogTable" rowspan="1" colspan="1" aria-label="Worked Hours: activate to sort column ascending" style="width: 25%;">Worked Hours</td>
-                                                <td class="sorting" tabindex="0" aria-controls="timeLogTable" rowspan="1" colspan="1" aria-label="Break Duration: activate to sort column ascending" style="width: 25%;">Break Duration</td>
+                                                <td class="sorting" tabindex="0" aria-controls="timeLogTable"
+                                                    rowspan="1" colspan="1"
+                                                    aria-label="Worked Hours: activate to sort column ascending"
+                                                    style="width: 25%;">Late in Minutes</td>
+                                                <td class="sorting" tabindex="0" aria-controls="timeLogTable"
+                                                    rowspan="1" colspan="1"
+                                                    aria-label="Worked Hours: activate to sort column ascending"
+                                                    style="width: 25%;">Worked Hours</td>
+                                                <td class="sorting" tabindex="0" aria-controls="timeLogTable"
+                                                    rowspan="1" colspan="1"
+                                                    aria-label="Break Duration: activate to sort column ascending"
+                                                    style="width: 25%;">Break Duration</td>
                                             </tr>
                                         </thead>
                                         <tbody class="employee-tbody">
@@ -1490,14 +1790,21 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                         </tbody>
                                         <thead>
                                             <tr role="row">
-                                                <td class="sorting" tabindex="0" aria-controls="timeLogTable" rowspan="1" colspan="1" aria-label="Break Duration: activate to sort column ascending" style="width: 25%;">Overtime</td>
-                                                <td class="sorting" tabindex="0" colspan="2" aria-controls="timeLogTable" rowspan="1" colspan="1" aria-label="Over Time: activate to sort column ascending" style="text-align:center;">Payable Hours</td>
+                                                <td class="sorting" tabindex="0" aria-controls="timeLogTable"
+                                                    rowspan="1" colspan="1"
+                                                    aria-label="Break Duration: activate to sort column ascending"
+                                                    style="width: 25%;">Overtime</td>
+                                                <td class="sorting" tabindex="0" colspan="2"
+                                                    aria-controls="timeLogTable" rowspan="1" colspan="1"
+                                                    aria-label="Over Time: activate to sort column ascending"
+                                                    style="text-align:center;">Payable Hours</td>
                                             </tr>
                                         </thead>
                                         <tbody class="employee-tbody">
                                             <tr role="row" class="odd">
                                                 <td class="center num_only time-log" id="form_over_time">0.00</td>
-                                                <td class="center num_only time-log" colspan="2" id="form_payable_hours"></td>
+                                                <td class="center num_only time-log" colspan="2"
+                                                    id="form_payable_hours"></td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -1507,7 +1814,8 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                        <button type="button" class="btn btn-success" id="submit_attendance_correction_request">Submit</button>
+                        <button type="button" class="btn btn-success"
+                            id="submit_attendance_correction_request">Submit</button>
                     </div>
                 </form>
             </div>
@@ -1568,7 +1876,8 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                 success: function(data) {
                     $('#employee-in-now').text(data);
                     let percentage = (data / total_user) * 100;
-                    $('#progressInNow').attr('aria-valuenow', percentage.toFixed(2)).css('width', percentage.toFixed(2) + '%').text(percentage.toFixed(2) + '%');
+                    $('#progressInNow').attr('aria-valuenow', percentage.toFixed(2)).css('width',
+                        percentage.toFixed(2) + '%').text(percentage.toFixed(2) + '%');
                 }
             });
         }
@@ -1580,7 +1889,8 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                 success: function(data) {
                     $('#employee-out-now').text(data);
                     let percentage = (data / total_user) * 100;
-                    $('#progressOutNow').attr('aria-valuenow', percentage.toFixed(2)).css('width', percentage.toFixed(2) + '%').text(percentage.toFixed(2) + '%');
+                    $('#progressOutNow').attr('aria-valuenow', percentage.toFixed(2)).css('width',
+                        percentage.toFixed(2) + '%').text(percentage.toFixed(2) + '%');
                 }
             });
         }
@@ -1592,7 +1902,8 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                 success: function(data) {
                     $('#employee-not-loggedin').text(data);
                     let percentage = (100 - (((total_user - data) / total_user) * 100));
-                    $('#progressNotLoggedIn').attr('aria-valuenow', percentage.toFixed(2)).css('width', percentage.toFixed(2) + '%').text(percentage.toFixed(2) + '%');
+                    $('#progressNotLoggedIn').attr('aria-valuenow', percentage.toFixed(2)).css(
+                        'width', percentage.toFixed(2) + '%').text(percentage.toFixed(2) + '%');
                 }
             });
         }
@@ -1607,7 +1918,8 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             let company_id = $(this).attr('data-company');
             Swal.fire({
                 title: 'Clock in?',
-                html: "Are you sure you want to Clock-in this person?<br> <strong>" + emp_name + "</strong>",
+                html: "Are you sure you want to Clock-in this person?<br> <strong>" + emp_name +
+                    "</strong>",
                 imageUrl: photo,
                 showCancelButton: true,
                 confirmButtonColor: '#2ca01c',
@@ -1635,29 +1947,47 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                 let time = serverTime();
                                 $(selected).attr('data-attn', data.attendance_id);
                                 $(selected).prev('a').show();
-                                $(selected).next('i').removeClass('fa-times-circle-none');
+                                $(selected).next('i').removeClass(
+                                    'fa-times-circle-none');
                                 $(selected).next('i').addClass('fa-check');
-                                $(selected).parent('td').prev('td').prev('td').prev('td').prev('td').children('.clock-in-time').text(time);
-                                $(selected).parent('td').prev('td').prev('td').prev('td').prev('td').children('.clock-in-time').removeClass("gray").addClass('gray');
-                                $(selected).parent('td').prev('td').prev('td').prev('td').prev('td').children('.clock-in-yesterday').text(null);
-                                $(selected).parent('td').prev('td').prev('td').prev('td').prev('td').children('.in-indicator').show();
+                                $(selected).parent('td').prev('td').prev('td').prev(
+                                        'td').prev('td').children('.clock-in-time')
+                                    .text(time);
+                                $(selected).parent('td').prev('td').prev('td').prev(
+                                        'td').prev('td').children('.clock-in-time')
+                                    .removeClass("gray").addClass('gray');
+                                $(selected).parent('td').prev('td').prev('td').prev(
+                                    'td').prev('td').children(
+                                    '.clock-in-yesterday').text(null);
+                                $(selected).parent('td').prev('td').prev('td').prev(
+                                        'td').prev('td').children('.in-indicator')
+                                    .show();
                                 $(selected).attr('id', 'employeeCheckOut');
                                 $(selected).attr('data-company', data.company_id);
                                 $(selected).prev('a').attr('disabled', null);
                                 $(selected).prev('a').attr('id', 'employeeBreakIn');
-                                $(selected).parent('td').prev('td').prev('td').children('.break-in-time').text(null);
-                                $(selected).parent('td').prev('td').prev('td').children('.break-in-time').removeClass("gray");
-                                $(selected).parent('td').prev('td').children('.break-out-time').text(null);
-                                $(selected).parent('td').prev('td').children('.break-out-time').removeClass("gray");
-                                $(selected).parent('td').prev('td').prev('td').prev('td').children('.clock-out-time').text(null);
-                                $(selected).parent('td').prev('td').prev('td').prev('td').children('.clock-out-time').removeClass("gray");
-                                $(selected).parent('td').prev('td').prev('td').prev('td').children('.out-indicator').hide();
+                                $(selected).parent('td').prev('td').prev('td')
+                                    .children('.break-in-time').text(null);
+                                $(selected).parent('td').prev('td').prev('td')
+                                    .children('.break-in-time').removeClass("gray");
+                                $(selected).parent('td').prev('td').children(
+                                    '.break-out-time').text(null);
+                                $(selected).parent('td').prev('td').children(
+                                    '.break-out-time').removeClass("gray");
+                                $(selected).parent('td').prev('td').prev('td').prev(
+                                    'td').children('.clock-out-time').text(null);
+                                $(selected).parent('td').prev('td').prev('td').prev(
+                                        'td').children('.clock-out-time')
+                                    .removeClass("gray");
+                                $(selected).parent('td').prev('td').prev('td').prev(
+                                    'td').children('.out-indicator').hide();
                                 clearTimeout(real_time);
                                 Swal.fire({
                                     showConfirmButton: false,
                                     timer: 2000,
                                     title: 'Success',
-                                    html: '<strong>' + emp_name + "</strong> has been Clock-in",
+                                    html: '<strong>' + emp_name +
+                                        "</strong> has been Clock-in",
                                     icon: 'success'
                                 });
                             } else if (data == false) {
@@ -1671,7 +2001,8 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                             }
 
                             //hide loading
-                            $(selected).parent('td').children('.loading-img-action').hide();
+                            $(selected).parent('td').children('.loading-img-action')
+                                .hide();
                             $(selected).parent('td').children('a').show();
                             $(selected).parent('td').children('i').show();
                             app_notification(
@@ -1681,7 +2012,8 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                 data.company_id,
                                 data.title
                             );
-                            get_user_current_geo_possition(data.timesheet_logs_id, "timesheet_logs");
+                            get_user_current_geo_possition(data.timesheet_logs_id,
+                                "timesheet_logs");
                         }
                     });
 
@@ -1702,7 +2034,8 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             let company_id = $(this).attr('data-company');
             Swal.fire({
                 title: 'Clock out?',
-                html: "Are you sure you want to Clock-out this person?<br> <strong>" + emp_name + "</strong>",
+                html: "Are you sure you want to Clock-out this person?<br> <strong>" +
+                    emp_name + "</strong>",
                 imageUrl: photo,
                 showCancelButton: true,
                 confirmButtonColor: '#2ca01c',
@@ -1729,7 +2062,8 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                             console.log(data);
                             if (data != 0) {
 
-                                $(selected).parent('td').children('.loading-img-action').hide();
+                                $(selected).parent('td').children(
+                                    '.loading-img-action').hide();
                                 $(selected).parent('td').children('a').show();
                                 $(selected).parent('td').children('i').show();
 
@@ -1738,20 +2072,34 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                 $(selected).attr('id', 'employeeCheckIn');
                                 $(selected).next('i').removeClass('fa-check');
                                 $(selected).next('i').removeClass('fa-cutlery');
-                                $(selected).next('i').addClass('fa-times-circle-none');
-                                $(selected).parent('td').prev('td').prev('td').prev('td').children('.clock-out-time').text(time);
-                                $(selected).parent('td').prev('td').prev('td').prev('td').children('.out-indicator').show();
-                                $(selected).parent('td').prev('td').prev('td').prev('td').children('.clock-out-time').addClass('gray');
-                                $(selected).parent('tr').prev('td').prev('td').children('.lunch-indicator').hide();
+                                $(selected).next('i').addClass(
+                                    'fa-times-circle-none');
+                                $(selected).parent('td').prev('td').prev('td').prev(
+                                    'td').children('.clock-out-time').text(time);
+                                $(selected).parent('td').prev('td').prev('td').prev(
+                                    'td').children('.out-indicator').show();
+                                $(selected).parent('td').prev('td').prev('td').prev(
+                                    'td').children('.clock-out-time').addClass(
+                                    'gray');
+                                $(selected).parent('tr').prev('td').prev('td')
+                                    .children('.lunch-indicator').hide();
                                 if (data.current_status == "on_lunch") {
-                                    $(selected).parent('td').prev('td').children('.break-out-time').text(data.lunch_out);
-                                    $(selected).parent('td').prev('td').children('.break-out-time').addClass("gray");
-                                    $(selected).parent('td').prev('td').children('.break-out-time').show();
+                                    $(selected).parent('td').prev('td').children(
+                                        '.break-out-time').text(data.lunch_out);
+                                    $(selected).parent('td').prev('td').children(
+                                        '.break-out-time').addClass("gray");
+                                    $(selected).parent('td').prev('td').children(
+                                        '.break-out-time').show();
                                 }
-                                $(selected).parent('td').prev('td').children('.in-indicator').hide();
-                                $(selected).parent('td').prev('td').prev('td').prev('td').prev('td').children('.in-indicator').hide();
-                                $(selected).parent('td').prev('td').prev('td').children('.lunch-indicator').hide();
-                                $(selected).parent('td').prev('td').children('#employeeBreakIn').hide();
+                                $(selected).parent('td').prev('td').children(
+                                    '.in-indicator').hide();
+                                $(selected).parent('td').prev('td').prev('td').prev(
+                                        'td').prev('td').children('.in-indicator')
+                                    .hide();
+                                $(selected).parent('td').prev('td').prev('td')
+                                    .children('.lunch-indicator').hide();
+                                $(selected).parent('td').prev('td').children(
+                                    '#employeeBreakIn').hide();
 
                                 clearTimeout(real_time);
 
@@ -1759,7 +2107,8 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                     showConfirmButton: false,
                                     timer: 2000,
                                     title: 'Success',
-                                    html: '<strong>' + emp_name + "</strong> has been Clock-out",
+                                    html: '<strong>' + emp_name +
+                                        "</strong> has been Clock-out",
                                     icon: 'success'
                                 });
                             } else {
@@ -1795,7 +2144,8 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             let company_id = $(this).attr('data-company');
             Swal.fire({
                 title: 'Lunch break?',
-                html: "Are you sure you want this person to be on lunch?<br> <strong>" + emp_name + "</strong>",
+                html: "Are you sure you want this person to be on lunch?<br> <strong>" +
+                    emp_name + "</strong>",
                 imageUrl: photo,
                 showCancelButton: true,
                 confirmButtonColor: '#2ca01c',
@@ -1821,22 +2171,33 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                             console.log(data);
                             if (data != null) {
                                 // let time = serverTime();
-                                $(selected).next('a').next('i').removeClass('fa-check');
-                                $(selected).next('a').next('i').addClass('fa-cutlery');
-                                $(selected).parent('td').prev('td').prev('td').children('.break-in-time').text(data.time);
-                                $(selected).parent('td').prev('td').prev('td').children('.break-in-time').addClass("gray");
-                                $(selected).parent('td').prev('td').prev('td').prev('td').prev('td').children('.in-indicator').hide();
-                                $(selected).parent('td').prev('td').prev('td').children('.lunch-indicator').show();
-                                $(selected).parent('td').prev('td').children('.in-indicator').hide();
-                                $(selected).parent('td').prev('td').children('.out-indicator').hide();
-                                $(selected).parent('td').prev('td').children('.break-out-time').hide();
+                                $(selected).next('a').next('i').removeClass(
+                                    'fa-check');
+                                $(selected).next('a').next('i').addClass(
+                                    'fa-cutlery');
+                                $(selected).parent('td').prev('td').prev('td')
+                                    .children('.break-in-time').text(data.time);
+                                $(selected).parent('td').prev('td').prev('td')
+                                    .children('.break-in-time').addClass("gray");
+                                $(selected).parent('td').prev('td').prev('td').prev(
+                                        'td').prev('td').children('.in-indicator')
+                                    .hide();
+                                $(selected).parent('td').prev('td').prev('td')
+                                    .children('.lunch-indicator').show();
+                                $(selected).parent('td').prev('td').children(
+                                    '.in-indicator').hide();
+                                $(selected).parent('td').prev('td').children(
+                                    '.out-indicator').hide();
+                                $(selected).parent('td').prev('td').children(
+                                    '.break-out-time').hide();
                                 $(selected).attr('id', 'employeeBreakOut');
                                 // clearTimeout(real_time);
                                 Swal.fire({
                                     showConfirmButton: false,
                                     timer: 2000,
                                     title: 'Success',
-                                    html: '<strong>' + emp_name + "</strong> is taking a break.",
+                                    html: '<strong>' + emp_name +
+                                        "</strong> is taking a break.",
                                     icon: 'success'
                                 });
                                 app_notification(
@@ -1855,7 +2216,8 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                     icon: 'warning'
                                 });
                             }
-                            $(selected).parent('td').children('.loading-img-action').hide();
+                            $(selected).parent('td').children('.loading-img-action')
+                                .hide();
                             $(selected).parent('td').children('a').show();
                             $(selected).parent('td').children('i').show();
 
@@ -1900,14 +2262,21 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                         success: function(data) {
                             if (data != 0) {
                                 // let time = serverTime();
-                                $(selected).next('a').next('i').removeClass('fa-cutlery');
+                                $(selected).next('a').next('i').removeClass(
+                                    'fa-cutlery');
                                 $(selected).prev('a').hide();
-                                $(selected).next('a').next('i').addClass('fa-check');
-                                $(selected).parent('td').prev('td').children('.break-out-time').text(data.time);
-                                $(selected).parent('td').prev('td').children('.break-out-time').addClass("gray");
-                                $(selected).parent('td').prev('td').prev('td').children('.lunch-indicator').hide();
-                                $(selected).parent('td').prev('td').children('.in-indicator').show();
-                                $(selected).parent('td').prev('td').children('.break-out-time').show();
+                                $(selected).next('a').next('i').addClass(
+                                    'fa-check');
+                                $(selected).parent('td').prev('td').children(
+                                    '.break-out-time').text(data.time);
+                                $(selected).parent('td').prev('td').children(
+                                    '.break-out-time').addClass("gray");
+                                $(selected).parent('td').prev('td').prev('td')
+                                    .children('.lunch-indicator').hide();
+                                $(selected).parent('td').prev('td').children(
+                                    '.in-indicator').show();
+                                $(selected).parent('td').prev('td').children(
+                                    '.break-out-time').show();
                                 $(selected).attr('id', 'employeeBreakIn');
                                 // $(selected).attr('disabled','disabled');
                                 // clearTimeout(real_time);
@@ -1915,7 +2284,8 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                     showConfirmButton: false,
                                     timer: 2000,
                                     title: 'Success',
-                                    html: '<strong>' + emp_name + "</strong> is now back to work.",
+                                    html: '<strong>' + emp_name +
+                                        "</strong> is now back to work.",
                                     icon: 'success'
                                 });
 
@@ -1935,7 +2305,8 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                     icon: 'warning'
                                 });
                             }
-                            $(selected).parent('td').children('.loading-img-action').hide();
+                            $(selected).parent('td').children('.loading-img-action')
+                                .hide();
                             $(selected).parent('td').children('a').show();
                             $(selected).parent('td').children('i').show();
 
@@ -2043,8 +2414,16 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                     var out1 = Math.round((currentElem.ClockOut / total_users) * 100, 0) + '%';
                     var out2 = Math.round((currentElem.ClockOut / total_users) * 100, 2) + '%';
 
-                    $("#progressClockIn").html('<div id="progressInNow" class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar" aria-valuenow="' + currentElem.ClockIn + '" aria-valuemin="0" aria-valuemax="100" style="width:' + in1 + '">' + in2 + '</div>');
-                    $("#progressOutNow").html('<div id="progressOutNow" class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar" aria-valuenow="' + currentElem.ClockOut + '" aria-valuemin="0" aria-valuemax="100" style="width:' + out1 + '">' + out2 + '</div>');
+                    $("#progressClockIn").html(
+                        '<div id="progressInNow" class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar" aria-valuenow="' +
+                        currentElem.ClockIn +
+                        '" aria-valuemin="0" aria-valuemax="100" style="width:' + in1 + '">' +
+                        in2 + '</div>');
+                    $("#progressOutNow").html(
+                        '<div id="progressOutNow" class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar" aria-valuenow="' +
+                        currentElem.ClockOut +
+                        '" aria-valuemin="0" aria-valuemax="100" style="width:' + out1 + '">' +
+                        out2 + '</div>');
                 });
                 setTimeout(waitForClockInOutattendance, 2000);
             },
