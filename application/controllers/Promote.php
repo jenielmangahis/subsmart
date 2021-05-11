@@ -554,7 +554,7 @@ class Promote extends MY_Controller {
         $this->page_data['dealsSteals']   = $dealsSteals;
         $this->page_data['orderPayments'] = $orderPayments;
         $this->page_data['company'] = $company;
-        $content = $this->load->view('promote/deals_customer_invoice_pdf_template_a.php', $this->page_data, TRUE);  
+        $content = $this->load->view('promote/deals_customer_invoice_pdf_template_a', $this->page_data, TRUE);  
             
         $this->load->library('Reportpdf');
 
@@ -587,11 +587,78 @@ class Promote extends MY_Controller {
         
         $dealsSteals = $this->DealsSteals_model->getById($id);
         $company     = $this->Business_model->getByCompanyId($dealsSteals->company_id);
-        $orderPayments   = $this->MarketingOrderPayments_model->getByOrderNumber($dealsSteals->order_number);
+        $orderPayments = $this->MarketingOrderPayments_model->getByOrderNumber($dealsSteals->order_number);
+        $statusOptions = $this->DealsSteals_model->statusOptions();
+
+        $this->page_data['statusOptions'] = $statusOptions;
         $this->page_data['dealsSteals']   = $dealsSteals;
         $this->page_data['orderPayments'] = $orderPayments;
         $this->page_data['company'] = $company;
         $this->load->view('promote/view_deals', $this->page_data);    
+    }
+
+    public function bookings($id){
+        $this->load->model('DealsBookings_model');
+
+        $bookings    = $this->DealsBookings_model->getAllByDealsId($id);
+        $dealsSteals = $this->DealsSteals_model->getById($id);
+
+        $this->page_data['dealsSteals'] = $dealsSteals;
+        $this->page_data['bookings'] = $bookings;
+        $this->load->view('promote/bookings', $this->page_data); 
+    }
+
+    public function view_deals_payment($id){
+        $this->load->model('MarketingOrderPayments_model');
+
+        $orderPayments = $this->MarketingOrderPayments_model->getById($id);
+        $dealsSteals   = $this->DealsSteals_model->getByOrderNumber($orderPayments->order_number);
+        $company       = $this->Business_model->getByCompanyId($dealsSteals->company_id);
+        $statusOptions = $this->DealsSteals_model->statusOptions();
+
+        $this->page_data['statusOptions'] = $statusOptions;
+        $this->page_data['dealsSteals']   = $dealsSteals;
+        $this->page_data['orderPayments'] = $orderPayments;
+        $this->page_data['company'] = $company;
+        $this->load->view('promote/view_payment_details', $this->page_data);     
+    }
+
+    public function deals_order_pdf($id){
+
+        $this->load->model('MarketingOrderPayments_model');
+        
+        $dealsSteals = $this->DealsSteals_model->getById($id);
+        $company     = $this->Business_model->getByCompanyId($dealsSteals->company_id);
+        $orderPayments   = $this->MarketingOrderPayments_model->getByOrderNumber($dealsSteals->order_number);
+        $this->page_data['dealsSteals']   = $dealsSteals;
+        $this->page_data['orderPayments'] = $orderPayments;
+        $this->page_data['company'] = $company;
+        $content = $this->load->view('promote/deals_customer_order_pdf_template_a', $this->page_data, TRUE);  
+            
+        $this->load->library('Reportpdf');
+
+        $title = 'deals_invoice';
+
+        $obj_pdf = new Reportpdf('P', 'mm', 'A4', true, 'UTF-8', false);
+        $obj_pdf->SetTitle($title);
+        $obj_pdf->setPrintHeader(false);
+        $obj_pdf->setPrintFooter(false);
+        $obj_pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);        
+        $obj_pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
+        $obj_pdf->setFontSubsetting(false);
+        // set some language-dependent strings (optional)
+        if (@file_exists(dirname(__FILE__) . '/lang/eng.php')) {
+            require_once(dirname(__FILE__) . '/lang/eng.php');
+            $pdf->setLanguageArray($l);
+        }
+        $obj_pdf->AddPage('P');
+        $html = '';
+        $obj_pdf->writeHTML($html . $content, true, false, true, false, '');
+        //echo $display;
+        $content = ob_get_contents();
+        ob_end_clean();
+        $obj_pdf->writeHTML($content, true, false, true, false, '');
+        $obj_pdf->Output($title, 'I');
     }
 }
 

@@ -87,29 +87,17 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 <div class="col-xl-12">
                     <div class="card mt-0">
                         <div class="card-body">
-                            <div class="row">                              
-                              <div class="row">
-                                <div class="col-md-12" style="margin-bottom: 18px;"><h3>Payment was successful, thank you for your order</h3></div>
-                                <div class="col-md-2">
-                                  <img src="<?= base_url("uploads/deals_steals/" . $dealsSteals->company_id . "/" . $dealsSteals->photos); ?>" style="width: 100%;">
+                            <div class="row margin-top" style="bottom: 55px;">
+                                <div class="col-sm-12"></div>
+                                <div class="col-sm-12 text-right">
+                                    <a class="btn btn-primary" href="<?php echo url('promote/order_pdf/' . $dealsSteals->id) ?>" target="_new" style="margin-right: 10px;">PDF Order</a>
+                                    <a class="btn btn-primary" href="<?php echo url('promote/invoice_pdf/' . $dealsSteals->id) ?>" target="_new" style="margin-right: 10px;">PDF Invoice</a>
+                                    <a class="btn btn-primary" href="<?php echo url('promote/deals') ?>" style="margin-right: 10px;">Go Back to Deals list</a>
                                 </div>
-                                <div class="col-md-7" style="font-size: 19px;padding: 17px;">
-                                  <span>The deal is now live!</span><br />
-                                  <?php
-                                    $slug = createSlug($dealsSteals->title,'-');
-                                    $deal_url = url('deal/' . $slug . '/' . $dealsSteals->id);
-                                  ?> 
-                                  <a href="<?= $deal_url; ?>" style="color:#2ab363;">View Deal on Live Website</a>
-                                </div>
-                              </div>
                             </div>
-                            <br />
-                            <hr />
-                            <br />
-                            <p style="font-size: 17px;">Please find below the order details</p>
                             <table class="table table-no-border table-payment-details">
                               <tr>
-                                <td colspan="2"><h4>Order # <?= $dealsSteals->order_number; ?></h4></td>
+                                <td colspan="2"><h4 style="font-size: 31px;margin-bottom: 37px;">Order # <?= $dealsSteals->order_number; ?></h4></td>
                               </tr>
                               <tr>
                                 <td style="width:200px;">Date:</td>
@@ -128,7 +116,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 <td><?= $company->business_name; ?></td>
                               </tr>
                             </table>
-                            <hr />
                             <table class="table table-payment-details">
                               <tr>
                                 <td style="width:100px;font-weight: bold;">Item</td>
@@ -152,14 +139,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 <td colspan="3" style="text-align: right;"><b>TOTAL</b></td>
                                 <td colspan="3" style="text-align: right;"><b>$<?= number_format($dealsSteals->total_cost, 2); ?></b></td>
                               </tr>
-                            </table>                            
-                            <div style="margin-top: 81px;">
-                                <div class="col-md-12 form-group">
-                                    <a class="btn btn-primary" href="<?php echo url('promote/invoice_pdf/' . $dealsSteals->id) ?>" target="_new" style="margin-right: 10px;">
-                                      Download Invoice #<?= $dealsSteals->order_number; ?> as PDF</a>
-                                    <a class="btn btn-primary" href="<?php echo url('promote/deals') ?>" style="margin-right: 10px;">Go Back to Deals Steals list</a>                                    
-                                </div>
-                            </div>
+                            </table>    
                         </div>
                     </div>
                     <!-- end card -->

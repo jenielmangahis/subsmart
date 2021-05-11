@@ -84,6 +84,17 @@ class DealsSteals_model extends MY_Model
         return $query;
     }
 
+    public function getByOrderNumber($order_number)
+    {
+        $this->db->select('deals_steals.*, users.id AS uid, users.company_id');
+        $this->db->from($this->table);
+        $this->db->join('users', 'deals_steals.user_id = users.id', 'LEFT');
+
+        $this->db->where('deals_steals.order_number', $order_number);
+        $query = $this->db->get()->row();
+        return $query;
+    }
+
     public function isActive(){
         return $this->is_active;
     }

@@ -471,7 +471,11 @@ section.mr-23 {
                       <li class="col-image-<?= $key ?>" style="width:28%;margin-right: 15px;text-align: center;height: auto;margin-bottom:38px;">
                         <div class="">
                           <div class="img">
-                            <a href="javascript:void(0);">
+                            <?php
+                              $slug = createSlug($ds->title,'-');
+                              $deal_url = url('deal/' . $slug . '/' . $ds->id);
+                            ?>
+                            <a href="<?= $deal_url; ?>">
                               <?php 
                                 if( $ds->photos != '' ){
                                   $deals_image = base_url("uploads/deals_steals/" . $ds->company_id . "/" . $ds->photos);
