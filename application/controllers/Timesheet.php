@@ -1046,6 +1046,27 @@ class Timesheet extends MY_Controller
     }
     public function attendance()
     {
+        if (count($this->session->userdata('logged')) == 0) {
+            $_SESSION['usertimezone'] = json_decode(get_cookie('logged'))->usertimezone;
+            $_SESSION['offset_zone'] = json_decode(get_cookie('logged'))->offset_zone;
+            $array = [
+
+                'login' => true,
+
+                // saving encrypted userid and password as token in session
+
+                'login_token' => get_cookie('login_token'),
+                'logged' => [
+                    'id' => json_decode(get_cookie('logged'))->id,
+                    'time' => json_decode(get_cookie('logged'))->time,
+                    'role' => json_decode(get_cookie('logged'))->role,
+                    'company_id' => json_decode(get_cookie('logged'))->company_id
+                ]
+
+            ];
+
+            $this->session->set_userdata($array);
+        }
         date_default_timezone_set('UTC');
         $this->load->model('timesheet_model');
         $this->load->model('users_model');

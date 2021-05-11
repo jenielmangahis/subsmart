@@ -10,16 +10,19 @@ class Customer extends MY_Controller
 
         $this->page_data['page']->title = 'My Customers';
         $this->page_data['page']->menu = 'customers';
-        //$this->load->model('Customer_model', 'customer_model');
-        //$this->load->model('CustomerAddress_model', 'customeraddress_model');
+
+        // load Models
         $this->load->model('Customer_advance_model', 'customer_ad_model');
         $this->load->model('Esign_model', 'Esign_model');
         $this->load->model('Activity_model','activity');
-
         $this->load->model('General_model', 'general');
 
         $this->checkLogin();
+
+        //load library
         $this->load->library('session');
+
+        // load helper
         $this->load->helper('functions');
         // concept
         $uid = $this->session->userdata('uid');
@@ -30,8 +33,6 @@ class Customer extends MY_Controller
             $uid = $this->session->userdata('uid');
             $this->page_data['uid'] = $uid;
         }
-
-        //error_reporting(0);
     }
 
 
@@ -60,17 +61,7 @@ class Customer extends MY_Controller
         }else{
             $this->page_data['profiles'] = $this->customer_ad_model->get_customer_data();
         }
-//      $this->page_data['library_templates'] = $this->Esign_model->get_library_template_by_category($user_id);
-//      $this->page_data['library_categories'] = $this->Esign_model->get_library_categories();
         $this->page_data['affiliates'] = $this->customer_ad_model->get_all(FALSE,"","","affiliates","id");
-//       $this->page_data['furnishers'] = $this->customer_ad_model->get_all(FALSE,"","","acs_furnisher","furn_id");
-//       $this->page_data['reasons'] = $this->customer_ad_model->get_all(FALSE,"","","acs_reasons","reason_id");
-//       $this->page_data['lead_types'] = $this->customer_ad_model->get_all(FALSE,"","","ac_leadtypes","lead_id");
-//       $this->page_data['sales_area'] = $this->customer_ad_model->get_all(FALSE,"","","ac_salesarea","sa_id");
-        //$this->page_data['users'] = $this->users_model->getUsers();
-        // $this->load->model('Activity_model','activity');
-        //$this->page_data['activity_list'] = $this->activity->getActivity($user_id, [], 0);
-        //$this->page_data['history_activity_list'] = $this->activity->getActivity($user_id, [6,0], 1);
         $this->load->view('customer/list', $this->page_data);
     }
 
@@ -131,6 +122,16 @@ class Customer extends MY_Controller
             $this->page_data['profile_info'] = $this->customer_ad_model->get_data_by_id('prof_id',$userid,"acs_profile");
             $this->page_data['billing_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_billing");
 
+            // get customer transaction details
+            $transaction_details_query = array(
+                'where' => array(
+                    'customer_id' => $userid
+                ),
+                'table' => 'acs_transaction_history',
+                'select' => '*',
+            );
+            $this->page_data['transaction_details'] = $this->general->get_data_with_param($transaction_details_query);
+
             $get_login_user = array(
                 'where' => array(
                     'id' => $user_id
@@ -140,8 +141,32 @@ class Customer extends MY_Controller
             );
             $this->page_data['logged_in_user'] = $this->general->get_data_with_param($get_login_user,FALSE);
         }
+        print_r($this->page_data['transaction_details']);
 
         $this->load->view('customer/billing', $this->page_data);
+    }
+
+    public function save_billing(){
+        $input = $this->input->post();
+        if($input){
+            $transaction_details = array();
+            $transaction_details['customer_id'] = $input['customer_id'];
+            $transaction_details['subtotal'] = $input['subtotal'];
+            $transaction_details['tax'] = $input['tax'];
+            $transaction_details['category'] = $input['transaction_category'];
+            $transaction_details['method'] = $input['method'];
+            $transaction_details['transaction_type'] = 'Pre-Auth and Capture';
+            $transaction_details['frequency'] = $input['frequency'];
+            $transaction_details['notes'] = $input['notes'];
+            $transaction_details['status'] = 'Approved';
+            $transaction_details['datetime'] = date("m-d-Y h:i A");
+
+            if($this->general->add_($transaction_details, 'acs_transaction_history')){
+                echo '0';
+            }else{
+                echo 'Database Error!';
+            }
+        }
     }
 
     public function subscription($id=null){

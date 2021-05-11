@@ -3135,9 +3135,17 @@ function createDocusignTemplate(file, options = {}) {
                       ${svgIcon}
                     </span>
 
-                    <a class="btn btn-sm btn-secondary btn-action" style="position: absolute;" href="${templateUrl}">
-                      Use Template
-                    </a>
+                    <div class="btn-group btn-action" style="position: absolute;">
+                      <a type="button" class="btn btn-sm btn-secondary" href="${templateUrl}">Use Template</a>
+                      <button type="button" class="btn btn-sm btn-secondary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <span class="sr-only">Toggle Dropdown</span>
+                      </button>
+                      <div class="dropdown-menu dropdown-menu-right">
+                        <a class="dropdown-item" href="#">Share with users</a>
+                        <a class="dropdown-item" href="#">Copy</a>
+                      </div>
+                    </div>
+
                   </td>
                   <td style="width: 85%" class="pl-2">
                     <div>

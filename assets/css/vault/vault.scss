@@ -245,8 +245,12 @@ $colorPreviewFooter: #fff;
   &__docusignTemplate {
     &:hover {
       .btn-action {
-        display: block;
+        display: flex;
       }
+    }
+
+    .dropdown-item {
+      font-size: 13px;
     }
 
     .btn-action {

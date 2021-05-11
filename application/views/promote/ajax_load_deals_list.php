@@ -45,6 +45,9 @@
                                     <span class="btn-label">Manage</span><span class="caret-holder"><span class="caret"></span></span>
                                 </button>
                                 <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="dropdown-edit"> 
+                                    <li role="presentation">
+                                        <a role="menuitem" tabindex="-1" href="<?php echo base_url('promote/view_deals/' . $ds->id) ?>"><span class="fa fa-file-text-o icon"></span> View</a>
+                                    </li>
                                     <?php if($ds->status != 3){ ?>      
                                     <li role="presentation">
                                         <a role="menuitem" tabindex="-1" href="<?php echo base_url('promote/edit_deals/' . $ds->id) ?>"><span class="fa fa-pencil-square-o icon"></span> Edit</a>
@@ -52,11 +55,14 @@
                                     <li role="presentation">
                                         <a role="menuitem" class="close-deal" data-name="<?= $ds->title; ?>" data-id="<?= $ds->id; ?>" href="javascript:void(0);"><span class="fa fa-trash-o icon"></span> Close Deal</a>
                                     </li> 
-                                    <li role="presentation">
-                                        <a role="menuitem" tabindex="-1" class="delete-deals" href="javascript:void(0);" data-name="<?= $ds->title; ?>" data-id="<?= $ds->id; ?>"><span class="fa fa-trash icon"></span> Delete</a>
-                                    </li>                  
+                                        <?php if($ds->status != 1){ ?>      
+                                            <li role="presentation">
+                                                <a role="menuitem" tabindex="-1" class="delete-deals" href="javascript:void(0);" data-name="<?= $ds->title; ?>" data-id="<?= $ds->id; ?>"><span class="fa fa-trash icon"></span> Delete</a>
+                                            </li>                  
+                                        <?php } ?>
                                     <?php } ?>
-                                    <?php if($ds->status == $status_ended){ ?>      
+                                    <?php if($ds->status == $status_ended){ ?> 
+                                    <li role="separator" class="divider"></li>     
                                     <li role="presentation">
                                         <a role="menuitem" tabindex="-1" class="delete-deals" href="javascript:void(0);" data-name="<?= $ds->title; ?>" data-id="<?= $ds->id; ?>"><span class="fa fa-trash icon"></span> Delete</a>
                                     </li>                

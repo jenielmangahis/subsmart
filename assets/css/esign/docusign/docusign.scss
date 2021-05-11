@@ -132,6 +132,11 @@ body {
       }
     }
 
+    input[value=""],
+    input:not([value]) {
+      display: none;
+    }
+
     select {
       -webkit-appearance: none;
       -moz-appearance: none;

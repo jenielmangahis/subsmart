@@ -261,7 +261,14 @@
             Term
         </div>
         <div class="col-md-8">
-            <input type="number" class="form-control" name="invoice_term" id="invoice_term" />
+            <select id="invoice_term" name="invoice_term" data-customer-source="dropdown" class="input_select" >
+                <option  value="Due On Receipt">Due On Receipt</option>
+                <option  value="Net 5">Net 5</option>
+                <option  value="Net 10">Net 10</option>
+                <option  value="Net 15">Net 15</option>
+                <option  value="Net 30">Net 30</option>
+                <option  value="Net 60">Net 60</option>
+            </select>
         </div>
     </div>
 

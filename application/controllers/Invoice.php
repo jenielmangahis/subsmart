@@ -1124,6 +1124,9 @@ class Invoice extends MY_Controller {
         $user = get_user_by_id(logged('id'));
         $this->page_data['invoice'] = $invoice;
         $this->page_data['user'] = $user;
+        // $this->page_data['items'] = $user;
+        $this->page_data['items'] = $this->invoice_model->getItems($id);
+        $this->page_data['users'] = $this->invoice_model->getInvoiceCustomer($id);
 
         if (!empty($invoice)) {
             foreach ($invoice as $key => $value) {
@@ -1136,6 +1139,7 @@ class Invoice extends MY_Controller {
         }
         $format = $this->input->get('format');
         $this->page_data['format'] = $format;
+        // print_r($this->page_data['users']);
 
         if ($format === "pdf") {
             $img = explode("/", parse_url((companyProfileImage(logged('company_id'))) ? companyProfileImage(logged('company_id')) : $url->assets)['path']);

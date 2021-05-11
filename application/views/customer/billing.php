@@ -57,6 +57,9 @@ add_css(array(
                                 <input type="radio" name="method" class="payment_method" value="ACH" id="ACH">
                                 <span >ACH</span> &nbsp;&nbsp;
 
+                                <input type="radio" name="method" class="payment_method" value="Invoicing" id="Invoicing">
+                                <span >Invoicing</span> &nbsp;&nbsp;
+
                                 <input type="radio" name="method" class="payment_method" value="VENMO" id="VENMO">
                                 <span >Venmo</span> &nbsp;&nbsp;
 
@@ -70,7 +73,7 @@ add_css(array(
                                 <span>Others</span>
                             </div>
                             <br>
-                            <form id="customer_form">
+
                                 <div class="row pl-0 pr-0">
                                     <div class="col-md-6">
                                         <div class="card">
@@ -81,7 +84,7 @@ add_css(array(
                                             <div class="card-body">
                                                 <div class="row form_line">
                                                     <div class="col-md-2">
-                                                        <label>First Name</label>
+                                                        First Name
                                                     </div>
                                                     <div class="col-md-10">
                                                         <input type="text" class="form-control" name="first_name" id="first_name" value="<?php if(isset($profile_info->first_name)){ echo $profile_info->first_name; } ?>" required/>
@@ -89,7 +92,7 @@ add_css(array(
                                                 </div>
                                                 <div class="row form_line">
                                                     <div class="col-md-2">
-                                                        <label for="">Last Name </label>
+                                                        <label for="">Last Name 
                                                     </div>
                                                     <div class="col-md-10">
                                                         <input type="text" class="form-control" name="last_name" id="last_name" value="<?php if(isset($profile_info)){ echo $profile_info->last_name; } ?>" required/>
@@ -97,7 +100,7 @@ add_css(array(
                                                 </div>
                                                <div class="row form_line">
                                                     <div class="col-md-2">
-                                                        <label for="">Address </label>
+                                                        <label for="">Address 
                                                     </div>
                                                     <div class="col-md-10">
                                                         <input type="text" class="form-control" name="mail_add" id="mail_add" value="<?php if(isset($profile_info->mail_add)){ echo $profile_info->mail_add; } ?>" required/>
@@ -105,14 +108,14 @@ add_css(array(
                                                 </div>
                                                 <div class="row form_line">
                                                     <div class="col-md-2">
-                                                        <label for="">City </label>
+                                                        <label for="">City 
                                                     </div>
                                                     <div class="col-md-4">
                                                         <input type="text" class="form-control" name="city" id="city" value="<?php if(isset($profile_info->city)){ echo $profile_info->city; } ?>" />
                                                     </div>
 
                                                     <div class="col-md-2">
-                                                        <label for="">State </label>
+                                                        <label for="">State 
                                                     </div>
                                                     <div class="col-md-4">
                                                         <input type="text" class="form-control" name="city" id="city" value="<?php if(isset($profile_info->city)){ echo $profile_info->state; } ?>" />
@@ -120,7 +123,7 @@ add_css(array(
                                                 </div>
                                                 <div class="row form_line">
                                                     <div class="col-md-2">
-                                                        <label for="">Zip </label>
+                                                        <label for="">Zip 
                                                     </div>
                                                     <div class="col-md-4">
                                                         <input type="text" class="form-control" name="state" id="state" value="<?php if(isset($profile_info->state)){ echo $profile_info->zip_code; } ?>" />
@@ -128,7 +131,7 @@ add_css(array(
                                                 </div>
                                                 <div class="row form_line">
                                                     <div class="col-md-2">
-                                                        <label for="">Email </label>
+                                                        <label for="">Email 
                                                     </div>
                                                     <div class="col-md-10">
                                                         <input type="email" class="form-control" name="email" id="email" value="<?php if(isset($profile_info)){ echo $profile_info->email; } ?>" />
@@ -136,7 +139,7 @@ add_css(array(
                                                 </div>
                                                 <div class="row form_line">
                                                     <div class="col-md-2">
-                                                        <label for="">Phone </label>
+                                                        <label for="">Phone 
                                                     </div>
                                                     <div class="col-md-10">
                                                         <input type="email" class="form-control" name="email" id="email" value="<?php if(isset($profile_info)){ echo $profile_info->phone_m; } ?>" />
@@ -144,7 +147,7 @@ add_css(array(
                                                 </div>
                                                 <div class="row form_line">
                                                     <div class="col-md-2">
-                                                        <label for="">Date of Birth </label>
+                                                        <label for="">Date of Birth 
                                                     </div>
                                                     <div class="col-md-10">
                                                         <input type="text" disabled class="form-control" name="email" id="email" value="<?php if(isset($profile_info)){ echo $profile_info->date_of_birth; } ?>" />
@@ -152,7 +155,7 @@ add_css(array(
                                                 </div>
                                                 <div class="row form_line">
                                                     <div class="col-md-2">
-                                                        <label for="">Customer Type </label>
+                                                        <label for="">Customer Type 
                                                     </div>
                                                     <div class="col-md-10">
                                                         <input  disabled class="form-control" name="email" id="email" value="<?php if(isset($profile_info)){ echo $profile_info->customer_type; } ?>" />
@@ -168,33 +171,65 @@ add_css(array(
                                                 <h6 ><span class="fa fa-user"></span>&nbsp; &nbsp;Payment Information</h6>
                                             </div>
                                             <div class="card-body">
+                                                <form id="pay_billing" method="post">
                                                 <div class="row form_line">
                                                     <div class="col-md-4">
-                                                        <label>Billing Frequency</label>
+                                                        Billing Frequency
                                                     </div>
                                                     <div class="col-md-8">
                                                         <div class="row">
                                                             <div class="col-md-6">
-                                                                <input type="text" class="form-control" name="first_name" id="first_name" value="<?= $billing_info->bill_freq;  ?>" readonly/>
+                                                                <input type="text" class="form-control" name="frequency" id="frequency" value="<?= $billing_info->bill_freq;  ?>" readonly/>
                                                             </div>
                                                             <div class="col-md-6">
-                                                                <input type="text" class="form-control" name="first_name" id="first_name" value="Every <?= $billing_info->bill_day;  ?>" readonly/>
+                                                                <input type="text" class="form-control" name="bill_day" id="bill_day" value="Every <?= $billing_info->bill_day;  ?>" readonly/>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
+                                                    <div class="row form_line invoicing_field">
+                                                        <div class="col-md-4">
+                                                            Term
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            <select id="invoice_term" name="invoice_term" data-customer-source="dropdown" class="input_select" >
+                                                                <option  value="Due On Receipt">Due On Receipt</option>
+                                                                <option  value="Net 5">Net 5</option>
+                                                                <option  value="Net 10">Net 10</option>
+                                                                <option  value="Net 15">Net 15</option>
+                                                                <option  value="Net 30">Net 30</option>
+                                                                <option  value="Net 60">Net 60</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row form_line invoicing_field">
+                                                        <div class="col-md-4">
+                                                            Invoice Date
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            <input type="number" class="form-control" name="invoice_date" id="invoice_date" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="row form_line invoicing_field">
+                                                        <div class="col-md-4">
+                                                            Due Date
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            <input type="number" class="form-control" name="invoice_due_date" id="invoice_due_date" />
+                                                        </div>
+                                                    </div>
                                                 <div id="credit_card">
                                                     <div class="row form_line">
                                                         <div class="col-md-4">
-                                                            <label>Card Number</label>
+                                                            Card Number
                                                         </div>
                                                         <div class="col-md-8">
-                                                            <input type="text" class="form-control" name="first_name" id="first_name" value="<?php if(isset($billing_info ) && $billing_info->credit_card_num != 0){ echo $billing_info->credit_card_num; } ?>" required/>
+                                                            <input type="text" class="form-control" name="card_number" id="first_name" value="<?php if(isset($billing_info ) && $billing_info->credit_card_num != 0){ echo $billing_info->credit_card_num; } ?>" required/>
                                                         </div>
                                                     </div>
                                                     <div class="row form_line">
                                                         <div class="col-md-4">
-                                                            <label for="">Expiration </label>
+                                                            <label for="">Expiration 
                                                         </div>
                                                         <div class="col-md-8">
                                                             <div class="row">
@@ -232,7 +267,7 @@ add_css(array(
                                                                     </select>
                                                                 </div>
                                                                 <div class="col-md-4">
-                                                                    <input type="text" class="form-control" name="first_name" id="first_name" value="" placeholder="CVC"/>
+                                                                    <input type="text" maxlength="3" class="form-control" name="cvc" id="cvc" value="" placeholder="CVC"/>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -241,39 +276,39 @@ add_css(array(
                                                 <div class="row form_line" id="payment_collected">
                                                     <div class="col-md-4"></div>
                                                     <div class="col-md-8">
-                                                        <input type="checkbox" name="notify_by" value="collected">
+                                                        <input type="checkbox" name="is_collected" value="collected">
                                                         <span >Payment has been collected.</span>
                                                     </div>
                                                 </div>
 
                                                 <div class="row form_line" id="check_number">
                                                     <div class="col-md-4">
-                                                        <label>Check Number</label>
+                                                        Check Number
                                                     </div>
                                                     <div class="col-md-8">
-                                                        <input type="text" class="form-control" name="first_name" id="first_name" value="<?php if(isset($billing_info ) && $billing_info->credit_card_num != 0){ echo $billing_info->credit_card_num; } ?>" required/>
+                                                        <input type="text" class="form-control" name="check_number" id="check_number" value="" />
                                                     </div>
                                                 </div>
                                                 <div class="row form_line CNRN">
                                                     <div class="col-md-4">
-                                                        <label>Routing Number</label>
+                                                        Routing Number
                                                     </div>
                                                     <div class="col-md-8">
-                                                        <input type="text" class="form-control" name="first_name" id="first_name" value="<?php if(isset($billing_info ) && $billing_info->credit_card_num != 0){ echo $billing_info->credit_card_num; } ?>" required/>
+                                                        <input type="text" class="form-control" name="routing_number" id="routing_number" value="" />
                                                     </div>
                                                 </div>
 
                                                 <div class="row form_line CNRN">
                                                     <div class="col-md-4">
-                                                        <label>Account Number</label>
+                                                        Account Number
                                                     </div>
                                                     <div class="col-md-8">
-                                                        <input type="text" class="form-control" name="first_name" id="first_name" value="<?php if(isset($billing_info ) && $billing_info->credit_card_num != 0){ echo $billing_info->credit_card_num; } ?>" required/>
+                                                        <input type="text" class="form-control" name="account_numbers" id="account_numbers"/>
                                                     </div>
                                                 </div>
                                                 <div class="row form_line" id="day_of_month">
                                                     <div class="col-md-4">
-                                                        <label for="">Day of Month</label>
+                                                        <label for="">Day of Month
                                                     </div>
                                                     <div class="col-md-8">
                                                         <select id="day_of_month_ach" name="day_of_month" class="form-control">
@@ -287,7 +322,7 @@ add_css(array(
 
                                                 <div class="row form_line account_cred" >
                                                     <div class="col-md-4">
-                                                        <label for="">Account Credential</label>
+                                                        <label for="">Account Credential
                                                     </div>
                                                     <div class="col-md-8">
                                                         <input type="number" class="form-control" name="account_credential" id="account_credential" value="<?= isset($billing_info) ? $billing_info->account_credential : ''; ?>" />
@@ -295,7 +330,7 @@ add_css(array(
                                                 </div>
                                                 <div class="row form_line account_cred" >
                                                     <div class="col-md-4">
-                                                        <label for="">Account Note</label>
+                                                        <label for="">Account Note
                                                     </div>
                                                     <div class="col-md-8">
                                                         <input type="number" class="form-control" name="account_note" id="account_note" value="<?= isset($billing_info) ? $billing_info->account_note : ''; ?>"/>
@@ -303,7 +338,7 @@ add_css(array(
                                                 </div>
                                                 <div class="row form_line account_cred" id="confirmationPD">
                                                     <div class="col-md-4">
-                                                        <label for="">Confirmation</label>
+                                                        <label for="">Confirmation
                                                     </div>
                                                     <div class="col-md-8">
                                                         <input type="number" class="form-control" name="confirmation" id="confirmation" value="<?= isset($billing_info) ? $billing_info->confirmation : ''; ?>"/>
@@ -313,40 +348,37 @@ add_css(array(
                                                 <div class="row form_line" id="docu_signed">
                                                     <div class="col-md-4"></div>
                                                     <div class="col-md-8">
-                                                        <input type="checkbox" name="notify_by" value="collected">
+                                                        <input type="checkbox" name="docu_signed" value="collected">
                                                         <span >Document Signed.</span>
                                                     </div>
                                                 </div>
-
-
-
                                                 <div class="row form_line">
                                                     <div class="col-md-4">
-                                                        <label for="">Transaction Subtotal </label>
+                                                        <label for="">Transaction Subtotal 
                                                     </div>
                                                     <div class="col-md-8">
-                                                        <input type="text" class="form-control" name="mail_add" id="mail_add"  required/>
+                                                        <input type="text" class="form-control" name="subtotal" id="subtotal"  required/>
                                                     </div>
                                                 </div>
                                                 <div class="row form_line">
                                                     <div class="col-md-4">
-                                                        <label for="">Tax Amount </label>
+                                                        <label for="">Tax Amount 
                                                     </div>
                                                     <div class="col-md-8">
-                                                        <input type="text" class="form-control" name="city" id="city"  required/>
+                                                        <input type="text" class="form-control" name="tax" id="tax"/>
                                                     </div>
                                                 </div>
                                                 <div class="row form_line">
                                                     <div class="col-md-4">
-                                                        <label for="">Transaction Amount </label>
+                                                        <label for="">Total Amount 
                                                     </div>
                                                     <div class="col-md-8">
-                                                        <input type="text" class="form-control" name="state" id="state"  required/>
+                                                        <input type="text" class="form-control" name="transaction_amount" id="transaction_amount" />
                                                     </div>
                                                 </div>
                                                 <div class="row form_line">
                                                     <div class="col-md-4">
-                                                        <label for="">Transaction Category</label>
+                                                        <label for="">Transaction Category
                                                     </div>
                                                     <div class="col-md-8">
                                                         <select id="transaction_category" name="transaction_category" data-customer-source="dropdown" class="input_select" >
@@ -365,14 +397,17 @@ add_css(array(
                                                 </div>
                                                 <div class="row form_line">
                                                     <div class="col-md-4">
-                                                        <label for="">Notes</label>
+                                                        <label for="">Notes
                                                     </div>
                                                     <div class="col-md-8">
-                                                        <textarea type="text" style="background-color: #fdeac3;" class="form-controls" rows="5" cols="50" name="country" id="country" ></textarea>
+                                                        <textarea type="text" style="background-color: #fdeac3;" class="form-controls" rows="5" cols="50" name="notes" id="notes" ></textarea>
                                                     </div>
                                                 </div>
                                                 <button type="submit" class="btn btn-primary">Pre Auth Now</button>
                                                 <button type="submit" class="btn btn-primary">Capture Now</button>
+                                                <input type="hidden" name="customer_id" id="customer_id" value="<?= $this->uri->segment(3); ?>"/>
+                                                <input type="hidden" name="method" id="method" value="Credit Card"/>
+                                                </form>
                                             </div>
                                         </div>
                                     </div>
@@ -384,14 +419,47 @@ add_css(array(
                                                 <h6 ><span class="fa fa-user"></span>&nbsp; &nbsp;Transaction History</h6>
                                             </div>
                                             <div class="card-body">
-
+                                                <table class="table">
+                                                    <thead>
+                                                    <tr>
+                                                        <td>ID</td>
+                                                        <td>Date</td>
+                                                        <td>Subtotal</td>
+                                                        <td>Tax</td>
+                                                        <td>Total Amount</td>
+                                                        <td>Category</td>
+                                                        <td>Method</td>
+                                                        <td>Type</td>
+                                                        <td>Frequency</td>
+                                                        <td>Status</td>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    <?php
+                                                        foreach ($transaction_details as $detail):
+                                                           ?>
+                                                            <tr>
+                                                                <td><?= $detail->id; ?></td>
+                                                                <td><?= $detail->datetime; ?></td>
+                                                                <td>$<?= number_format((float)$detail->subtotal,2,'.',','); ?></td>
+                                                                <td>$<?= number_format((float)$detail->tax,2,'.',','); ?></td>
+                                                                <td>$<?= number_format((float)$detail->subtotal + $detail->tax,2,'.',','); ?></td>
+                                                                <td><?php $tt = transaction_categories($detail->category); echo $tt['description']; ?></td>
+                                                                <td><?= $detail->method; ?></td>
+                                                                <td><?= $detail->transaction_type; ?></td>
+                                                                <td><?= $detail->frequency; ?></td>
+                                                                <td><?= $detail->status; ?></td>
+                                                            </tr>
+                                                            <?php
+                                                        endforeach;
+                                                    ?>
+                                                    </tbody>
+                                                </table>
                                             </div>
                                         </div>
                                     </div>
-
-
                                 </div>
-                            </form>
+
                         </div>
 
                     </div>
@@ -412,7 +480,7 @@ add_css(array(
         ));
         ?>
         <?php include viewPath('includes/footer'); ?>
-        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-timepicker/0.5.2/js/bootstrap-timepicker.min.js" integrity="sha512-2xXe2z/uA+2SyT/sTSt9Uq4jDKsT0lV4evd3eoE/oxKih8DSAsOF6LUb+ncafMJPAimWAXdu9W+yMXGrCVOzQA==" crossorigin="anonymous"></script>
 
+        <!-- Load Billing Page JS -->
         <?php include viewPath('customer/js/billing_js'); ?>

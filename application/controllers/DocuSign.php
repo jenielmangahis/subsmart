@@ -43,12 +43,20 @@ class DocuSign extends MY_Controller
         $this->db->order_by('id', 'ASC');
         $files = $this->db->get('user_docfile_documents')->result_array();
 
+        $this->db->where('user_docfile_recipient_id', $recipientId);
+        $workorderRecipient = $this->db->get('user_docfile_workorder_recipients')->row();
+
+        if ($workorderRecipient) {
+            $workorderRecipient = $this->_getWorkorderCustomer($workorderRecipient->workorder_id);
+        }
+
         header('content-type: application/json');
         echo json_encode([
             'document' => $document,
             'recipient' => $recipient,
             'fields' => $fields,
             'files' => $files,
+            'workorder_recipient' => $workorderRecipient,
         ]);
     }
 
@@ -752,6 +760,7 @@ SQL;
         $message = $payload['message'];
         $subject = $payload['subject'];
         $recipients = $payload['recipients'];
+        $workorderId = $payload['workorder_id'] ?? null;
 
         // copy template to user_docfile
 
@@ -835,6 +844,13 @@ SQL;
                     'specs' => $field['specs'],
                 ]);
             }
+
+            if (!is_null($workorderId)) {
+                $this->db->insert('user_docfile_workorder_recipients', [
+                    'user_docfile_recipient_id' => $recipientId,
+                    'workorder_id' => $workorderId,
+                ]);
+            }
         }
 
         $mail = getMailInstance(['subject' => $payload['subject']]);
@@ -852,6 +868,7 @@ SQL;
         $this->db->where('role', 'Needs to Sign');
         $this->db->where('completed_at is NULL', null, false);
         $recipients = $this->db->get('user_docfile_recipients')->result();
+        $errors = [];
 
         foreach ($recipients as $recipient) {
             $message = json_encode(['recipient_id' => $recipient->id, 'document_id' => $docfileId]);
@@ -868,8 +885,12 @@ SQL;
 
             $mail->MsgHTML($message);
             $mail->addAddress($recipient->email);
-            $mail->send();
+            $isSent = $mail->send();
             $mail->ClearAllRecipients();
+
+            if (!$isSent) {
+                $errors[$recipient->email] = $mail->ErrorInfo;
+            }
 
             $this->db->where('id', $recipient->id);
             $this->db->update('user_docfile_recipients', ['sent_at' => date('Y-m-d H:i:s')]);
@@ -879,19 +900,23 @@ SQL;
         $this->db->update('user_docfile', ['status' => 'Waiting for Others']);
 
         header('content-type: application/json');
-        echo json_encode(['success' => true]);
+        echo json_encode(['success' => empty($errors), 'errors' => $errors]);
     }
 
     public function getWorkorderCustomer($workorderId)
+    {
+        header('content-type: application/json');
+        echo json_encode(['data' => $this->_getWorkorderCustomer($workorderId)]);
+    }
+
+    private function _getWorkorderCustomer($workorderId)
     {
         $query = <<<SQL
         SELECT * FROM `work_orders`
         LEFT JOIN acs_profile ON work_orders.customer_id = acs_profile.prof_id WHERE work_orders.id = ?
 SQL;
 
-        $record = $this->db->query($query, [$workorderId])->row();
-        header('content-type: application/json');
-        echo json_encode(['data' => $record]);
+        return $this->db->query($query, [$workorderId])->row();
     }
 }
 

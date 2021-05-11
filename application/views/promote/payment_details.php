@@ -145,7 +145,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                             </table>                            
                             <div style="margin-top: 81px;">
                                 <div class="col-md-12 form-group">
-                                    <a class="btn btn-primary" href="<?php echo url('promote/invoice_pdf/' . $dealsSteals->id) ?>" style="margin-right: 10px;">
+                                    <a class="btn btn-primary" href="<?php echo url('promote/invoice_pdf/' . $dealsSteals->id) ?>" target="_new" style="margin-right: 10px;">
                                       Download Invoice #<?= $dealsSteals->order_number; ?> as PDF</a>
                                     <a class="btn btn-primary" href="<?php echo url('promote/deals') ?>" style="margin-right: 10px;">Go Back to Deals Steals list</a>                                    
                                 </div>

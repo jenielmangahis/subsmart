@@ -79,10 +79,14 @@ class Trac360 extends MY_Controller
     }
     public function tester()
     {
-        $pizza  = "8.045953500047293,123.51302520681782";
-        $pieces = explode(",", $pizza);
-        echo "lat:" . $pieces[0]; // piece1
-        echo "lng:" . $pieces[1]; // piece2
+        if ($this->session->userdata('usertimezone') == "") {
+            var_dump(json_decode(get_cookie('logged'))->usertimezone);
+        } else {
+            var_dump($this->session->userdata('usertimezone'));
+            var_dump(json_decode(get_cookie('logged'))->usertimezone);
+            var_dump(json_decode(get_cookie('logged'))->offset_zone);
+            echo count($this->session->userdata('logged'));
+        }
     }
 
     public function getUserGeoPosition($uid)
@@ -286,11 +290,13 @@ class Trac360 extends MY_Controller
         $user_id = logged('id');
 
         $all_places = $this->trac360_model->get_places($company_id);
-        
+        $user_locations = $this->trac360_model->get_current_user_location($company_id);
+
+
         $this->page_data['all_places'] = $all_places;
         $this->page_data['company_id'] = $company_id;
         $this->page_data['user_id'] = $user_id;
-
+        $this->page_data['user_locations'] = $user_locations;
         $this->load->view('trac360/places', $this->page_data);
     }
     public function current_user_update_last_tracked_location()

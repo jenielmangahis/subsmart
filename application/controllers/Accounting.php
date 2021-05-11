@@ -251,6 +251,7 @@ class Accounting extends MY_Controller {
 
         $this->page_data['invoice'] = $this->invoice_model->getinvoice($id);
         $this->page_data['items'] = $this->invoice_model->getItems($id);
+        // print_r($this->page_data['invoice']);
 
         $this->load->view('accounting/invoice_edit', $this->page_data);
     }

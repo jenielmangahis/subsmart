@@ -105,7 +105,7 @@ input:checked + .slider:before {
             <div class="page-title-box">
                 <div class="row align-items-center">
                     <div class="col-sm-6">
-                        <h3 style="font-family: Sarabun, sans-serif">New Invoice</h3>
+                        <h3 style="font-family: Sarabun, sans-serif">Update Invoice</h3>
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item active">Complete the fields below to create a new invoice.</li>
                         </ol>
@@ -215,7 +215,7 @@ input:checked + .slider:before {
                                     <div class="row form-group"> -->
                                         <div class="col-md-3">
                                             <label>Billing address</label>
-                                            <textarea class="form-control" style="width:100%;" name="billing_address" id="billing_address" value="<?php echo $invoice->billing_address; ?>"></textarea>
+                                            <textarea class="form-control" style="width:100%;" name="billing_address" id="billing_address"><?php echo $invoice->billing_address; ?></textarea>
                                         </div>
                                     </div>
 
@@ -249,7 +249,7 @@ input:checked + .slider:before {
                                 </div>
                                 <div class="col-md-3">
                                             <label>Shipping to</label>
-                                            <textarea class="form-control" style="width:100%;" name="shipping_to_address" id="shipping_address" value="<?php echo $invoice->shipping_to_address; ?>"></textarea>
+                                            <textarea class="form-control" style="width:100%;" name="shipping_to_address" id="shipping_address"><?php echo $invoice->shipping_to_address; ?></textarea>
                                         </div>
 
                                 <!-- <div class="col-md-3 form-group">

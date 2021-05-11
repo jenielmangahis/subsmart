@@ -276,12 +276,43 @@ div.popup-map-marker:hover h3 {
     padding-top: 10px;
 }
 
+.sec-2-address-btn .details {
+    position: relative;
+}
+
 .sec-2-address-btn .details p.first-p {
     font-weight: bold;
 }
 
 .sec-2-address-btn .details p.second-p {
     font-size: 12px;
+}
+
+.sec-2-address-btn .details .places-actions-btn {
+    position: absolute;
+    top: 0;
+    right: 0;
+    display: none;
+    z-index: 1;
+}
+
+.sec-2-address-btn .details .places-actions-btn button {
+    border: solid 1px #6B7584;
+    margin-right: 3px;
+    padding: 3px;
+    border-radius: 7px;
+    width: 30px;
+    color: #6B7584;
+    background-color: transparent;
+}
+
+.sec-2-address-btn .details .places-actions-btn button:hover {
+    background-color: #535C69;
+    color: #FFFFFF;
+}
+
+.sec-2-address-btn:hover .places-actions-btn {
+    display: block;
 }
 
 #add_new_address_map {
@@ -339,4 +370,31 @@ label.radius_number_view {
     border-radius: 10px;
     color: #666666;
     float: right;
+}
+
+#place_notif_modal_title label {
+    font-size: 20px;
+    font-weight: 700;
+}
+
+#place_notif_modal_title p {
+    font-size: 13px;
+    font-weight: normal;
+}
+
+#place_notif_modal .modal-dialog {
+    max-width: 600px;
+}
+
+#place_notif_modal .profile img {
+    max-width: 100px;
+}
+
+#place_notif_modal .modal-body .btn {
+    padding: .375rem .75rem;
+}
+
+#place_notif_modal .modal-body label,
+#place_notif_modal .modal-body p {
+    font-size: 13px;
 }

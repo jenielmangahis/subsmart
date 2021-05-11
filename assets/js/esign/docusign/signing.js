@@ -329,16 +329,24 @@ function Signing(hash) {
         }
 
         if (field_name === "Text" || text === undefined) {
-          const { value } = fieldValue || { value: "" };
+          let { value } = fieldValue || { value: "" };
           const { specs: fieldSpecs, unique_key } = field;
           const specs = fieldSpecs ? JSON.parse(fieldSpecs) : {};
           const { width, is_required = false, is_read_only = false } = specs;
           const isRequired = is_required.toLocaleString() === "true";
           const isReadOnly = is_read_only.toLocaleString() === "true";
 
+          const { workorder_recipient: customer } = data;
+
+          if (customer && specs.name && !value) {
+            value = customer[specs.name] || "";
+          }
+
+          const placeholder = specs.name || field_name;
+
           const html = `
             <div class="docusignField" style="position: relative; display: flex; align-items: center;">
-              <input type="text" placeholder="${field_name}" value="${value}" data-key="${unique_key}" />
+              <input type="text" placeholder="${placeholder}" value="${value}" data-key="${unique_key}" />
               <div class="spinner-border spinner-border-sm d-none" role="status" style="position: absolute; right: 4px;">
                 <span class="sr-only">Loading...</span>
               </div>
