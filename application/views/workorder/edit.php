@@ -171,7 +171,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                             <div class="col-md-4 form-group">
                                 <label for="contact_phone">Password</label> 
                                 <!-- <i class="fa fa-pencil" aria-hidden="true" ></i> -->
-                                <input type="text" class="form-control" name="password" id="password" placeholder="Password" />
+                                <input type="text" class="form-control" name="password" id="password" placeholder="Password" value="<?php echo $workorder->password; ?>"/>
                             </div>
                             <!-- <div class="col-md-4 form-group">
                                 <label for="suit" class="mytxt">Custom Field</label> <i class="fa fa-pencil" aria-hidden="true"></i>
@@ -272,10 +272,11 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         </tr>
                                         </thead>
                                         <tbody id="jobs_items_table_body">
+                                        <?php foreach($items_data as $data){ ?>
                                         <tr>
                                             <td>
                                                 <input type="text" class="form-control getItems"
-                                                       onKeyup="getItems(this)" name="items[]">
+                                                       onKeyup="getItems(this)" name="items[]" value="<?php echo $data->item; ?>">
                                                 <ul class="suggestions"></ul>
                                             </td>
                                             <td><select name="item_type[]" class="form-control">
@@ -285,19 +286,20 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                     <option value="fee">Fee</option>
                                                 </select></td>
                                             <td width="150px"><input type="number" class="form-control quantity" name="quantity[]"
-                                                       data-counter="0" id="quantity_0" value="1"></td>
+                                                       data-counter="0" id="quantity_<?php echo $data->id; ?>" value="<?php echo $data->qty; ?>"></td>
                                             <td width="150px"><input type="number" class="form-control price" name="price[]"
-                                                       data-counter="0" id="price_0" min="0" value="0"></td>
+                                                       data-counter="0" id="price_<?php echo $data->id; ?>" min="0" value="<?php echo $data->cost; ?>"></td>
                                             <td width="150px"><input type="number" class="form-control discount" name="discount[]"
-                                                       data-counter="0" id="discount_0" min="0" value="0" ></td>
+                                                       data-counter="0" id="discount_<?php echo $data->id; ?>" min="0" value="<?php echo $data->discount; ?>" ></td>
                                             <td width="150px"><input type="text" class="form-control tax_change" name="tax[]"
-                                                       data-counter="0" id="tax1_0" min="0" value="0">
+                                                       data-counter="0" id="tax1_<?php echo $data->id; ?>" min="0" value="<?php echo $data->tax; ?>">
                                                        <!-- <span id="span_tax_0">0.0</span> -->
                                                        </td>
                                             <td width="150px"><input type="hidden" class="form-control " name="total[]"
-                                                       data-counter="0" id="item_total_0" min="0" value="0">
-                                                       $<span id="span_total_0">0.00</span></td>
+                                                       data-counter="0" id="item_total_<?php echo $data->id; ?>" min="0" value="<?php echo $data->total; ?>">
+                                                       $<span id="span_total_<?php echo $data->id; ?>"><?php echo $data->total; ?></span></td>
                                         </tr>
+                                        <?php } ?>
                                         </tbody>
                                     </table>
                                     <!-- <a href="#" id="add_another_estimate" style="color:#02A32C;"><i class="fa fa-plus-square" aria-hidden="true"></i> Add another line</a> &emsp; -->
@@ -347,37 +349,45 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         <tr>
                                             <td>Subtotal</td>
                                             <td></td>
-                                            <td>$ <span id="span_sub_total_invoice">0.00</span>
-                                                <input type="hidden" name="subtotal" id="item_total"></td>
+                                            <td>$ <span id="span_sub_total_invoice"><?php echo $workorder->subtotal; ?></span>
+                                                <input type="hidden" name="subtotal" id="item_total" value="<?php echo $workorder->subtotal; ?>"></td>
                                         </tr>
                                         <tr>
                                             <td>Taxes</td>
                                             <td></td>
-                                            <td>$ <span id="total_tax_">0.00</span><input type="hidden" name="taxes" id="total_tax_input"></td>
+                                            <td>$ <span id="total_tax_"><?php echo $workorder->taxes; ?></span><input type="hidden" name="taxes" id="total_tax_input" value="<?php echo $workorder->taxes; ?>"></td>
                                         </tr>
                                         <tr>
-                                            <td style="width:250px;"><input type="text" name="adjustment_name" id="adjustment_name" placeholder="Adjustment Name" class="form-control" style="width:200px; display:inline; border: 1px dashed #d1d1d1"></td>
+                                            <td style="width:250px;"><input type="text" name="adjustment_name" id="adjustment_name" placeholder="Adjustment Name" class="form-control" style="width:200px; display:inline; border: 1px dashed #d1d1d1" value="<?php echo $workorder->adjustment_name; ?>"></td>
                                             <td style="width:150px;">
-                                            <input type="number" name="adjustment_value" id="adjustment_input" value="0" class="form-control adjustment_input" style="width:100px; display:inline-block">
+                                            <input type="number" name="adjustment_value" id="adjustment_input" value="<?php echo $workorder->adjustment_value; ?>" class="form-control adjustment_input" style="width:100px; display:inline-block">
                                                 <span class="fa fa-question-circle" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Optional it allows you to adjust the total amount Eg. +10 or -10." data-original-title="" title=""></span>
                                             </td>
-                                            <td>0.00</td>
+                                            <td><?php echo $workorder->adjustment_value; ?></td>
                                         </tr>
                                         <!-- <tr>
                                             <td>Markup $<span id="span_markup"></td> -->
                                             <!-- <td><a href="#" data-toggle="modal" data-target="#modalSetMarkup" style="color:#02A32C;">set markup</a></td> -->
                                             <input type="hidden" name="markup_input_form" id="markup_input_form" class="markup_input" value="0">
                                         <!-- </tr> -->
+                                        <?php if(empty($workorder->voucher_value)){ ?>
                                         <tr id="saved" style="color:green;font-weight:bold;display:none;">
                                             <td>Amount Saved</td>
                                             <td></td>
                                             <td><span id="offer_cost">0.00</span><input type="hidden" name="voucher_value" id="offer_cost_input"></td>
                                         </tr>
+                                        <?php }else{ ?>
+                                            <tr id="saved" style="color:green;font-weight:bold;">
+                                            <td>Amount Saved</td>
+                                            <td></td>
+                                            <td><span id="offer_cost"><?php echo $workorder->voucher_value; ?></span><input type="hidden" name="voucher_value" id="offer_cost_input" value="<?php echo $workorder->voucher_value; ?>"></td>
+                                        </tr>
+                                        <?php } ?>
                                         <tr style="color:blue;font-weight:bold;font-size:18px;">
                                             <td><b>Grand Total ($)</b></td>
                                             <td></td>
-                                            <td><b><span id="grand_total">0.00</span>
-                                                <input type="hidden" name="grand_total" id="grand_total_input" value='0'></b></td>
+                                            <td><b><span id="grand_total"><?php echo $workorder->grand_total; ?></span>
+                                                <input type="hidden" name="grand_total" id="grand_total_input" value='<?php echo $workorder->grand_total; ?>'></b></td>
                                         </tr>
                                     </table>
                                 </div>
@@ -518,7 +528,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                             <div class="row">                        
                                 <div class="form-group col-md-4">
                                     <label for="contact_name">Schedule Date Given</label>
-                                    <input type="date" class="form-control" name="schedule_date_given" id="schedule_date_given" />
+                                    <input type="date" class="form-control" name="schedule_date_given" id="schedule_date_given" value="<?php echo $workorder->schedule_date_given; ?>" />
                                 </div>      
                                 <div class="form-group col-md-4">
                                     <label for="workorder_priority">Priority</label>
@@ -533,11 +543,11 @@ defined('BASEPATH') or exit('No direct script access allowed');
                             <div class="row">                        
                                 <div class="form-group col-md-4">
                                     <label for="job_name">Job Name</label>
-                                    <input type="text" class="form-control" name="job_name" id="job_name" required />
+                                    <input type="text" class="form-control" name="job_name" id="job_name" value="<?php echo $workorder->job_name; ?>" />
                                 </div>
                                 <div class="form-group col-md-4">
                                     <label for="job_desc">Job Description</label>
-                                    <textarea name="job_description" id="job_desc" cols="5" rows="2" class="form-control"></textarea> 
+                                    <textarea name="job_description" id="job_desc" cols="5" rows="2" class="form-control"><?php echo $workorder->job_description; ?></textarea> 
                                 </div>                                           
                             </div>
 
@@ -565,7 +575,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 </div>      
                                 <div class="form-group col-md-4">
                                     <label for="job_type">Amount</label><small class="help help-sm"> ( $ )</small>
-                                    <input type="text" class="form-control" name="payment_amount" id="payment_amount"  />
+                                    <input type="text" class="form-control" name="payment_amount" id="payment_amount" value="<?php echo $workorder->payment_amount; ?>" />
                                 </div>
                                 <div class="form-group col-md-4" id="cash_area" style="display:none;">
                                                 <br><br>
@@ -754,10 +764,10 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <label style="font-weight:bold;font-size:18px;">TERMS AND CONDITIONS</label><label style="float:right;color:green;"><a href="#" style="color:green;" data-toggle="modal" data-target="#terms_conditions_modal">Update Terms and Condition</a></label>
                                     <div style="height:200px; overflow:auto; background:#FFFFFF;"
                                          id="thisdiv2">
-                                            <p><?php echo $terms_conditions->content; ?></p>
+                                            <p><?php echo $workorder->terms_and_conditions; ?></p>
                                             <input type="hidden" id="company_id" value="<?php echo getLoggedCompanyID(); ?>">
                                     </div>
-                                    <input type="hidden" class="form-control" name="terms_conditions" id="terms_conditions" value="<?php echo $terms_conditions->content; ?>" />
+                                    <input type="hidden" class="form-control" name="terms_conditions" id="terms_conditions" value="<?php echo $workorder->terms_and_conditions; ?>" />
                                 </div>
                             </div>
                             <br><br>
@@ -791,7 +801,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                             <div class="row">                        
                                 <div class="form-group col-md-4">
                                     <label for="purchase_order">Purchase Order# (optional)</label>
-                                    <input type="text" class="form-control" name="purchase_order_number" id="purchase_order" /> 
+                                    <input type="text" class="form-control" name="purchase_order_number" id="purchase_order" value="<?php echo $workorder->purchase_order_number; ?>" /> 
                                 </div>                                        
                             </div>
 
@@ -801,17 +811,17 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                     <label style="font-weight:bold;font-size:18px;">TERMS OF USE</label><label style="float:right;color:green;"><a href="#" style="color:green;" data-toggle="modal" data-target="#terms_use_modal">Update Terms of Use</a></label>
                                     <div style="height:100px; overflow:auto; background:#FFFFFF; padding-left:10px;"
                                          id="thisdiv3">
-                                            <p><?php echo $terms_uses->content; ?></p>
+                                            <p><?php echo $workorder->terms_of_use; ?></p>
                                             <input type="hidden" id="company_id" value="<?php echo getLoggedCompanyID(); ?>">
                                     </div>
-                                    <input type="hidden" class="form-control" name="terms_of_use" id="terms_of_use"  value="<?php echo $terms_uses->content; ?>"/>
+                                    <input type="hidden" class="form-control" name="terms_of_use" id="terms_of_use"  value="<?php echo $workorder->terms_of_use; ?>"/>
                                 </div>
                             </div>
                             <br><br>
                             <div class="row">        
                                 <div class="form-group col-md-4">
                                     <label for="instructions">Instructions</label>
-                                    <textarea name="instructions" id="instructions" cols="5" rows="2" class="form-control"></textarea>
+                                    <textarea name="instructions" id="instructions" cols="5" rows="2" class="form-control"><?php echo $workorder->instructions; ?></textarea>
                                 </div>                                           
                             </div>
 
@@ -850,7 +860,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                     <label for="comp_rep_approval">Printed Name</label>
                                     <input type="text6" class="form-control mb-3"
                                            name="company_representative_printed_name"
-                                           id="comp_rep_approval" placeholder=""/>
+                                           id="comp_rep_approval" value="<?php echo $workorder->company_representative_name; ?>" />
 
                                 </div>
                                 <div class="col-md-4">
@@ -876,7 +886,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
                                     <label for="comp_rep_approval">Printed Name</label>
                                     <input type="text6" class="form-control mb-3" name="primary_account_holder_name"
-                                           id="comp_rep_approval" placeholder=""/>
+                                           id="comp_rep_approval" placeholder="" value="<?php echo $workorder->primary_account_holder_name; ?>"/>
 
                                 </div>
                                 <div class="col-md-4">
@@ -902,7 +912,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
                                     <label for="comp_rep_approval">Printed Name</label>
                                     <input type="text6" class="form-control mb-3" name="secondery_account_holder_name"
-                                           id="comp_rep_approval" placeholder=""/>
+                                           id="comp_rep_approval" placeholder="" value="<?php echo $workorder->secondary_account_holder_name; ?>"/>
 
                                 </div>
                             </div>

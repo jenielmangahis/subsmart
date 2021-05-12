@@ -527,4 +527,14 @@ class Pages extends MY_Controller {
     	echo json_encode($json_data);
     }
 
+    public function deals_view($slug, $id){
+    	$this->load->model('DealsSteals_model');
+
+    	$dealsSteals   = $this->DealsSteals_model->getById($id);
+
+    	$this->page_data['page']->title = 'Deals';	
+    	$this->page_data['dealsSteals'] = $dealsSteals;
+    	$this->load->view('pages/deals_view', $this->page_data);       
+    }
+
 }

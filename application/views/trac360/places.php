@@ -59,9 +59,10 @@ include viewPath('includes/header'); ?>
                     </div>
                     <?php
                         foreach ($all_places as $place) {
-                            ?>
-                    <div class="sec-2-option sec-2-address-btn"
-                        onclick="selected_place(<?=$place->coordinates?>,'<?=$place->place_name?>','<?=$place->address?>',<?=$place->zone_radius?>)">
+                            $exploded_coordinated=explode(",", $place->coordinates); ?>
+                    <div id="sec-2-address-btn-<?=$place->id?>"
+                        class="sec-2-option sec-2-address-btn"
+                        onclick="selected_place(<?=$place->coordinates?>,'<?=$place->place_name?>','<?=$place->address?>',<?=$place->zone_radius?>,<?=$place->id?>)">
                         <div class="row ">
                             <div class="col-md-2 profile">
                                 <center><img
@@ -78,9 +79,21 @@ include viewPath('includes/header'); ?>
                                     <button href="#" class="place-notif-action" id="place_notif_modal_btn">
                                         <i class="fa fa-bell-o" aria-hidden="true"></i>
                                     </button>
-                                    <button href="#" class="place-edit-action">
+                                    <?php
+                                    if ($place->created_by == $user_id) {
+                                        ?>
+                                    <button href="#" class="place-edit-action edit_address_modal_btn"
+                                        data-lat="<?=$exploded_coordinated[0]?>"
+                                        data-lng="<?=$exploded_coordinated[1]?>"
+                                        data-place-name="<?=$place->place_name?>"
+                                        data-address="<?=$place->address?>"
+                                        data-radius="<?=$place->zone_radius?>"
+                                        data-user-id="<?=$place->created_by?>"
+                                        data-place-id="<?=$place->id?>">
                                         <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
                                     </button>
+                                    <?php
+                                    } ?>
                                 </div>
                             </div>
                         </div>
@@ -128,7 +141,8 @@ include viewPath('includes/header'); ?>
                         </div>
                     </div>
                     <?php foreach ($user_locations as $user) {
-                        ?>
+                        if ($user->user_id != $user_id) {
+                            ?>
                     <div class="row">
                         <div class="col-md-4 profile">
                             <center>
@@ -148,6 +162,7 @@ include viewPath('includes/header'); ?>
                         </div>
                     </div>
                     <?php
+                        }
                     }?>
                 </div>
                 <div class="modal-footer">
@@ -156,6 +171,53 @@ include viewPath('includes/header'); ?>
                         address</button>
                     <button type="submit" class="btn btn-success" style="display: none;">save</button>
                 </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="edit_address_modal" tabindex="" role="dialog" aria-labelledby="place_notif">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title">
+                        <label><i class="fa fa-map-o fa-2x"></i> Edit Place Info </label>
+                    </h3>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                </div>
+                <form method="post" id="form_editaddress">
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="form-group">
+                                    <input type="text" name="place_name" id="edit_place_name" class="form-control"
+                                        placeholder="Place name (Home, School, Work, ...)" required>
+                                </div>
+                            </div>
+                            <div class="col-lg-12">
+                                <div class="form-group">
+                                    <label for="">Enter an address or drag the map to find your place</label>
+                                    <input id="edit_formatted_address" type="text" name="edit_formatted_address"
+                                        class="form-control ts-start-date" value=""
+                                        onchange="edit_formatted_address_changed()" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group map-canva" style="position: relative;">
+                            <div class="edit_address_radius_container">
+                                <label class="edit_radius_number_view">250 ft zone</label>
+                                <input type="range" class="form-range" min="76.2" max="3218.688" step="0.001"
+                                    id="edit_address_radius" value="76.2">
+                            </div>
+                            <div id="edit_address_map"></div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="button" id="delete_place" class="btn btn-danger">Delete</button>
+                        <button type="button" class="btn btn-success" id="save_edited_address">Save</button>
+                        <button type="submit" class="btn btn-success" style="display: none;">save</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
@@ -173,7 +235,7 @@ include viewPath('includes/header'); ?>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
                             aria-hidden="true">&times;</span></button>
                 </div>
-                <form action="" method="post" id="form_new_address">
+                <form method="post" id="form_new_address">
                     <div class="modal-body">
                         <div class="row">
                             <div class="col-lg-12">
@@ -214,22 +276,26 @@ include viewPath('includes/header'); ?>
 <?php include viewPath('includes/footer'); ?>
 <script>
     // Initialize and add the map
+    var user_id = <?=$user_id?> ;
     var map;
     var new_address_map;
     var new_map_marker;
     var antennasCircle_main_map;
     var main_map_marker;
 
+    var antennasCircle_edit_map;
+    var edit_address_map;
+    var edit_lat;
+    var edit_lng;
+    var radius_edit_address = 76.2;
+    var edit_created_by;
+
+    var current_lat = 0;
+    var current_lng = 0;
+    var antennasCircle_new_adress;
+    var radius_new_address = 76.2;
+
     function initMap() {
-        $("#map-loader").hide();
-        $("#map-holder").show();
-        map = new google.maps.Map(document.getElementById("map"), {
-            center: {
-                lat: 7.3087,
-                lng: 125.6841
-            },
-            zoom: 9,
-        });
         get_current_user_location();
     }
 
@@ -250,6 +316,23 @@ include viewPath('includes/header'); ?>
     function initMap_new_address_map() {
         // Create a new StyledMapType object, passing it an array of styles,
         // and the name to be displayed on the map type control.
+        $("#map-loader").hide();
+        $("#map-holder").show();
+        map = new google.maps.Map(document.getElementById("map"), {
+            center: {
+                lat: current_lat,
+                lng: current_lng
+            },
+            zoom: 9,
+        });
+        edit_address_map = new google.maps.Map(document.getElementById("edit_address_map"), {
+            center: {
+                lat: current_lat,
+                lng: current_lng
+            },
+            zoom: 18,
+        });
+
         const styledMapType = new google.maps.StyledMapType(
             [{
                     elementType: "geometry",
@@ -454,12 +537,12 @@ include viewPath('includes/header'); ?>
             $("#new_formatted_address").val("Loading address...");
             new_address_map_changed();
         });
-        setMapCenter("add_new", current_lat, current_lng);
+        google.maps.event.addListener(edit_address_map, 'dragend', function() {
+            $("#edit_formatted_address").val("Loading address...");
+            edit_address_map_changed();
+        });
+        setMapCenter("add_new", current_lat, current_lng, true);
     }
-    var current_lat = 0;
-    var current_lng = 0;
-    var antennasCircle_new_adress;
-    var radius_new_address = 76.2;
 
     function new_address_map_changed() {
         var center = new_address_map.getCenter()
@@ -526,18 +609,32 @@ include viewPath('includes/header'); ?>
         });
     }
 
-    function setMapCenter(update_the_map, the_lat, the_lng) {
+    function edit_formatted_address_changed() {
+
+        var geocoder = new google.maps.Geocoder();
+        var address = $("#edit_formatted_address").val();
+
+        geocoder.geocode({
+            'address': address
+        }, function(results, status) {
+
+            if (status == google.maps.GeocoderStatus.OK) {
+                var latitude = results[0].geometry.location.lat();
+                var longitude = results[0].geometry.location.lng();
+                edit_lat = latitude;
+                edit_lng = longitude;
+                setMapCenter("edit_map", edit_lat, edit_lng);
+            }
+        });
+    }
+
+    function setMapCenter(update_the_map, the_lat, the_lng, first = false) {
         var the_map = map;
         if (update_the_map == "add_new") {
             the_map = new_address_map;
+        } else if (update_the_map == "edit_map") {
+            the_map = edit_address_map;
         }
-        the_map.setCenter({
-            lat: the_lat,
-            lng: the_lng,
-        });
-        google.maps.event.addListenerOnce(the_map, "bounds_changed", function() {
-            // the_map.setZoom((18) - (radius_new_address / 76.2));
-        });
         if (update_the_map == "add_new") {
             if (antennasCircle_new_adress != null) {
                 antennasCircle_new_adress.setMap(null);
@@ -558,6 +655,9 @@ include viewPath('includes/header'); ?>
             });
             the_map.fitBounds(antennasCircle_new_adress.getBounds());
 
+            if (first) {
+                the_map.setZoom(13);
+            }
             new_address_map = the_map;
             var latlng = new google.maps.LatLng(the_lat, the_lng);
             // This is making the Geocode request
@@ -575,7 +675,67 @@ include viewPath('includes/header'); ?>
                 }
             });
 
+        } else if (update_the_map == "edit_map") {
+            if (antennasCircle_edit_map != null) {
+                antennasCircle_edit_map.setMap(null);
+                edit_address_map.fitBounds(antennasCircle_edit_map.getBounds());
+            }
+            antennasCircle_edit_map = new google.maps.Circle({
+                strokeColor: "#0275FF",
+                strokeOpacity: 0.8,
+                strokeWeight: 2,
+                fillColor: "#8DC740",
+                fillOpacity: 0.35,
+                map: edit_address_map,
+                center: {
+                    lat: edit_lat,
+                    lng: edit_lng
+                },
+                radius: radius_edit_address
+            });
+            edit_address_map.fitBounds(antennasCircle_edit_map.getBounds());
+
+            var latlng = new google.maps.LatLng(the_lat, the_lng);
+            // This is making the Geocode request
+            var geocoder = new google.maps.Geocoder();
+            geocoder.geocode({
+                'latLng': latlng
+            }, (results, status) => {
+                if (status !== google.maps.GeocoderStatus.OK) {
+                    // alert(status);
+                }
+                // This is checking to see if the Geoeode Status is OK before proceeding
+                if (status == google.maps.GeocoderStatus.OK) {
+                    var address = (results[0].formatted_address);
+                    $("#edit_formatted_address").val(address);
+                }
+            });
+
+            if (antennasCircle_edit_map != null) {
+                antennasCircle_edit_map.setMap(null);
+                edit_address_map.fitBounds(antennasCircle_edit_map.getBounds());
+            }
+            antennasCircle_edit_map = new google.maps.Circle({
+                strokeColor: "#0275FF",
+                strokeOpacity: 0.8,
+                strokeWeight: 2,
+                fillColor: "#8DC740",
+                fillOpacity: 0.35,
+                map: edit_address_map,
+                center: {
+                    lat: the_lat,
+                    lng: the_lng
+                },
+                radius: radius_edit_address
+            });
+            edit_address_map.fitBounds(antennasCircle_edit_map.getBounds());
+            // edit_address_map.setZoom(18);
         }
+
+        the_map.setCenter({
+            lat: the_lat,
+            lng: the_lng,
+        });
     }
 </script>
 <script

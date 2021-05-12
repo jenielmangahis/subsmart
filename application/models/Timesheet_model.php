@@ -1666,6 +1666,12 @@ class Timesheet_model extends MY_Model
         $qry = $this->db->query("SELECT * from timesheet_attendance WHERE id = ".$att_id)->row();
         return $qry->overtime_status;
     }
+    public function get_attendance_for_clockout($att_id)
+    {
+        $this->db->reset_query();
+        $qry = $this->db->query("SELECT * from timesheet_attendance WHERE id = ".$att_id)->row();
+        return $qry;
+    }
 }
 
 

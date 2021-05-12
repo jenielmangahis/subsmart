@@ -139,7 +139,7 @@ add_css(array(
                                             <div class="banking-tab-container">
                                                 <div class="rb-01">
                                                     <ul class="nav nav-tabs border-0">
-                                                        <li class="nav-item">
+                                                        <!--<li class="nav-item">
                                                             <a class="h6 mb-0 nav-link banking-sub-tab <?php if ($minitab == 'mt2' || $minitab == '') {
                                                                 echo "active";
                                                             } ?>" data-toggle="tab" href="#widget1">Import/Audit</a>
@@ -188,24 +188,32 @@ add_css(array(
                                                             <a class="h6 mb-0 nav-link banking-sub-tab <?php if ($minitab == 'mt11') {
                                                                 echo "active";
                                                             } ?>" data-toggle="tab" href="#details">Detail Sheet</a>
-                                                        </li>
+                                                        </li>-->
                                                         <li class="nav-item">
-                                                            <a class="h6 mb-0 nav-link banking-sub-tab <?php if ($minitab == 'mt12') {
+                                                            <a class="h6 mb-0 nav-link banking-sub-tab <?php if ($minitab == 'mt12' || $minitab == '' ) {
                                                                 echo "active";
                                                             } ?>" data-toggle="tab" href="#custom">Customizable</a>
                                                         </li>
                                                         <li class="nav-item">
                                                             <a class="h6 mb-0 nav-link banking-sub-tab " data-toggle="tab" href="#others">Sales Area</a>
                                                         </li>
-
                                                         <li class="nav-item">
                                                             <a class="h6 mb-0 nav-link banking-sub-tab " data-toggle="tab" href="#others">Lead Source</a>
+                                                        </li>
+                                                        <li class="nav-item">
+                                                            <a class="h6 mb-0 nav-link banking-sub-tab " data-toggle="tab" href="#others">Rate Plan</a>
+                                                        </li>
+                                                        <li class="nav-item">
+                                                            <a class="h6 mb-0 nav-link banking-sub-tab " data-toggle="tab" href="#others">Activation Fee</a>
+                                                        </li>
+                                                        <li class="nav-item">
+                                                            <a class="h6 mb-0 nav-link banking-sub-tab " data-toggle="tab" href="#others">System Package Type</a>
                                                         </li>
                                                     </ul>
                                                 </div>
                                             </div>
                                             <div class="tab-content mt-4" >
-                                                <div class="tab-pane <?php if ($minitab == 'mt2' || $minitab == '') {
+                                                <div class="tab-pane <?php if ($minitab == 'mt2') {
                                                     echo "active";
                                                 } else {
                                                     echo "fade";
@@ -365,7 +373,7 @@ add_css(array(
                                                     </div>
                                                 </div>
 
-                                                <div class="tab-pane <?php if ($minitab == 'mt12') {
+                                                <div class="tab-pane <?php if ($minitab == 'mt12' || $minitab == '') {
                                                     echo "active";
                                                 } else {
                                                     echo "fade";

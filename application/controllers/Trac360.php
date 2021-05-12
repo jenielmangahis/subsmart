@@ -336,4 +336,30 @@ class Trac360 extends MY_Controller
         
         echo json_encode("Success");
     }
+    public function delete_place()
+    {
+        $place_id = $this->input->post("place_id");
+        $this->trac360_model->delete_place($place_id);
+        
+        echo json_encode("Success");
+    }
+    public function update_place()
+    {
+        $place_id = $this->input->post("place_id");
+        $place_name = $this->input->post("place_name");
+        $address = $this->input->post("address");
+        $zone_radius = $this->input->post("zone_radius");
+        $lat = $this->input->post("lat");
+        $lng = $this->input->post("lng");
+        $update = array(
+            "coordinates" => $lat.",".$lng,
+            "place_name" => $place_name,
+            "address" => $address,
+            "zone_radius" => $zone_radius
+        );
+        
+        $this->trac360_model->update_place($update, $place_id);
+        
+        echo json_encode("Success");
+    }
 }

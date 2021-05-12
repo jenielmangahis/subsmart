@@ -350,14 +350,14 @@ $(function() {
                 rowCount = 2;
                 catDetailsInputs = $(`${modal_element} table#category-details-table tbody tr:first-child()`).html();
                 catDetailsBlank = $(`${modal_element} table#category-details-table tbody tr:nth-child(2)`).html();
-                itemDetailsInputs = $(`${modal_element} table#item-details-table tbody tr:first-child()`).html();
-                itemDetailsBlank = $(`${modal_element} table#item-details-table tbody tr:nth-child(2)`).html();
+                // itemDetailsInputs = $(`${modal_element} table#item-details-table tbody tr:first-child()`).html();
+                // itemDetailsBlank = $(`${modal_element} table#item-details-table tbody tr:nth-child(2)`).html();
 
                 $(`${modal_element} table#category-details-table tbody tr:first-child()`).html(catDetailsBlank);
                 $(`${modal_element} table#category-details-table tbody tr:first-child() td:nth-child(2)`).html(1);
 
-                $(`${modal_element} table#item-details-table tbody tr:first-child()`).html(itemDetailsBlank);
-                $(`${modal_element} table#item-details-table tbody tr:first-child() td:nth-child(2)`).html(1);
+                // $(`${modal_element} table#item-details-table tbody tr:first-child()`).html(itemDetailsBlank);
+                // $(`${modal_element} table#item-details-table tbody tr:first-child() td:nth-child(2)`).html(1);
             }
 
             $(`${modal_element} select`).select2();
@@ -539,16 +539,16 @@ $(function() {
         }
     });
 
-    $(document).on('click', 'div#modal-container table#item-details-table tbody tr', function() {
-        if($(this).find('input').length < 1) {
-            var rowNum = $(this).children().next().html();
+    // $(document).on('click', 'div#modal-container table#item-details-table tbody tr', function() {
+    //     if($(this).find('input').length < 1) {
+    //         var rowNum = $(this).children().next().html();
 
-            $(this).html(itemDetailsInputs);
-            $(this).children('td:nth-child(2)').html(rowNum);
+    //         $(this).html(itemDetailsInputs);
+    //         $(this).children('td:nth-child(2)').html(rowNum);
 
-            $(this).find('select').select2();
-        }
-    });
+    //         $(this).find('select').select2();
+    //     }
+    // });
 
     $(document).on('click', 'div#modal-container table.clickable:not(#category-details-table,#item-details-table) tbody tr td a.deleteRow', function() {
         $(this).parent().parent().remove();
@@ -1393,61 +1393,73 @@ $(function() {
         computeTransactionTotal();
     });
 
-    $(document).on('change', '#modal-container table#category-details-table input[name="category_billable[]"], #modal-container table#item-details-table input[name="item_billable[]"]', function() {
+    // $(document).on('change', '#modal-container table#category-details-table input[name="category_billable[]"], #modal-container table#item-details-table input[name="item_billable[]"]', function() {
+    //     if($(this).prop('checked')) {
+    //         $(this).parent().parent().parent().find('select[name="category_customer[]"]').prop('required', true);
+    //         $(this).parent().parent().parent().find('select[name="item_customer[]"]').prop('required', true);
+    //     } else {
+    //         $(this).parent().parent().parent().find('select[name="category_customer[]"]').prop('required', false);
+    //         $(this).parent().parent().parent().find('select[name="item_customer[]"]').prop('required', false);
+    //     }
+    // });
+
+    $(document).on('change', '#modal-container table#category-details-table input[name="category_billable[]"]', function() {
         if($(this).prop('checked')) {
             $(this).parent().parent().parent().find('select[name="category_customer[]"]').prop('required', true);
-            $(this).parent().parent().parent().find('select[name="item_customer[]"]').prop('required', true);
         } else {
             $(this).parent().parent().parent().find('select[name="category_customer[]"]').prop('required', false);
-            $(this).parent().parent().parent().find('select[name="item_customer[]"]').prop('required', false);
         }
     });
 
-    $(document).on('change', '#modal-container table#category-details-table input[name="category_tax[]"], #modal-container table#item-details-table input[name="item_tax[]"]', function() {
+    // $(document).on('change', '#modal-container table#category-details-table input[name="category_tax[]"], #modal-container table#item-details-table input[name="item_tax[]"]', function() {
+    //     $(this).parent().parent().parent().find('input[name="category_billable[]"]').prop('checked', true).trigger('change');
+    //     $(this).parent().parent().parent().find('input[name="item_billable[]"]').prop('checked', true).trigger('change');
+    // });
+
+    $(document).on('change', '#modal-container table#category-details-table input[name="category_tax[]"]', function() {
         $(this).parent().parent().parent().find('input[name="category_billable[]"]').prop('checked', true).trigger('change');
-        $(this).parent().parent().parent().find('input[name="item_billable[]"]').prop('checked', true).trigger('change');
     });
 
-    $(document).on('change', '#modal-container table#item-details-table select[name="item[]"]', function() {
-        var el = $(this);
-        if(el.val() !== "") {
-            $.get('/accounting/get-item-details/'+el.val(), function(res) {
-                var result = JSON.parse(res);
-                var item = result.item;
+    // $(document).on('change', '#modal-container table#item-details-table select[name="item[]"]', function() {
+    //     var el = $(this);
+    //     if(el.val() !== "") {
+    //         $.get('/accounting/get-item-details/'+el.val(), function(res) {
+    //             var result = JSON.parse(res);
+    //             var item = result.item;
 
-                el.parent().parent().find('input[name="item_description[]"]').val(item.description);
-                el.parent().parent().find('input[name="quantity[]"]').val(1);
-                el.parent().parent().find('input[name="rate[]"]').val(item.cost).trigger('change');
-                el.parent().parent().find('input[name="item_amount[]"]').val(item.cost).trigger('change');
-            });
-        } else {
-            el.parent().parent().find('input[name="item_description[]"]').val('');
-            el.parent().parent().find('input[name="quantity[]"]').val('');
-            el.parent().parent().find('input[name="rate[]"]').val('');
-            el.parent().parent().find('input[name="item_amount[]"]').val('');
-        }
-    });
+    //             el.parent().parent().find('input[name="item_description[]"]').val(item.description);
+    //             el.parent().parent().find('input[name="quantity[]"]').val(1);
+    //             el.parent().parent().find('input[name="rate[]"]').val(item.cost).trigger('change');
+    //             el.parent().parent().find('input[name="item_amount[]"]').val(item.cost).trigger('change');
+    //         });
+    //     } else {
+    //         el.parent().parent().find('input[name="item_description[]"]').val('');
+    //         el.parent().parent().find('input[name="quantity[]"]').val('');
+    //         el.parent().parent().find('input[name="rate[]"]').val('');
+    //         el.parent().parent().find('input[name="item_amount[]"]').val('');
+    //     }
+    // });
 
-    $(document).on('change', '#modal-container table#item-details-table input[name="item_markup[]"]', function() {
-        var value = $(this).val();
-        var amount = $(this).parent().parent().find('input[name="item_amount[]"]').val();
-        var billable = $(this).parent().parent().find('input[name="item_billable[]"]').prop('checked');
+    // $(document).on('change', '#modal-container table#item-details-table input[name="item_markup[]"]', function() {
+    //     var value = $(this).val();
+    //     var amount = $(this).parent().parent().find('input[name="item_amount[]"]').val();
+    //     var billable = $(this).parent().parent().find('input[name="item_billable[]"]').prop('checked');
 
-        if(value !== "0" && value !== "" && billable && amount !== "" && amount !== 0.00) {
-            var percent = parseFloat((parseFloat(amount) / 100) * parseFloat(value));
-            var salesAmount = parseFloat(parseFloat(amount) + percent).toFixed(2);
-        } else {
-            var salesAmount = '';
-        }
+    //     if(value !== "0" && value !== "" && billable && amount !== "" && amount !== 0.00) {
+    //         var percent = parseFloat((parseFloat(amount) / 100) * parseFloat(value));
+    //         var salesAmount = parseFloat(parseFloat(amount) + percent).toFixed(2);
+    //     } else {
+    //         var salesAmount = '';
+    //     }
 
-        $(this).parent().parent().find('input[name="item_sales_amount[]"]').val(salesAmount);
-    });
+    //     $(this).parent().parent().find('input[name="item_sales_amount[]"]').val(salesAmount);
+    // });
 
-    $(document).on('change', '#modal-container table#item-details-table input[name="item_amount[]"]', function() {
-        if($(this).parent().parent().find('input[name="item_billable[]"]').prop('checked')) {
-            $(this).parent().parent().find('input[name="item_markup[]"]').trigger('change');
-        }
-    });
+    // $(document).on('change', '#modal-container table#item-details-table input[name="item_amount[]"]', function() {
+    //     if($(this).parent().parent().find('input[name="item_billable[]"]').prop('checked')) {
+    //         $(this).parent().parent().find('input[name="item_markup[]"]').trigger('change');
+    //     }
+    // });
 
     $(document).on('change', '#expenseModal #payment_account', function() {
         var id = $(this).val();
@@ -1473,13 +1485,69 @@ $(function() {
         applybillsfilter();
     });
 
-    $(document).on('change', '#modal-container table#item-details-table input[name="quantity[]"], #modal-container table#item-details-table input[name="rate[]"]', function() {
+    // $(document).on('change', '#modal-container table#item-details-table input[name="quantity[]"], #modal-container table#item-details-table input[name="rate[]"]', function() {
+    //     var quantity = $(this).parent().parent().find('input[name="quantity[]"]').val();
+    //     var rate = $(this).parent().parent().find('input[name="rate[]"]').val();
+
+    //     var amount = parseFloat(parseFloat(rate) * parseInt(quantity)).toFixed(2);
+
+    //     $(this).parent().parent().find('input[name="item_amount[]"]').val(amount).trigger('change');
+    // });
+
+    $(document).on('change', '#modal-container table#item-details-table input[name="quantity[]"], #modal-container table#item-details-table input[name="item_amount[]"]', function() {
         var quantity = $(this).parent().parent().find('input[name="quantity[]"]').val();
-        var rate = $(this).parent().parent().find('input[name="rate[]"]').val();
+        var price = $(this).parent().parent().find('input[name="item_amount[]"]').val();
+        var amount = parseFloat(parseFloat(price) * parseInt(quantity)).toFixed(2);
 
-        var amount = parseFloat(parseFloat(rate) * parseInt(quantity)).toFixed(2);
+        $(this).parent().parent().find('td:nth-child(7) span').html(amount);
+    });
 
-        $(this).parent().parent().find('input[name="item_amount[]"]').val(amount).trigger('change');
+    $(document).on('click', '#modal-container a#add_another_items', function(e) {
+        e.preventDefault();
+
+        if($('#modal-container #item_list.modal').length === 0) {
+            $.get('/accounting/get-items-list-modal', function(res) {
+                $('#modal-container').append(res);
+
+                $('#modal-container #item_list table').DataTable({
+                    autoWidth: false,
+                    searching: false,
+                    processing: true,
+                    lengthChange: false,
+                    info: false,
+                    pageLength: 10,
+                    ordering: false
+                });
+
+                $('#modal-container #item_list').modal('show');
+            });
+        } else {
+            $('#modal-container #item_list').modal('show');
+        }
+    });
+
+    $(document).on('click', '#modal-container #item_list table button', function(e) {
+        e.preventDefault();
+        var id = e.currentTarget.dataset.id;
+
+        $.get('/accounting/get-item-details/'+id, function(res) {
+            var result = JSON.parse(res);
+            var item = result.item;
+
+            var fields = `
+                <td>${item.title}<input type="hidden" name="item[]" value="${item.id}"></td>
+                <td>Product</td>
+                <td><input type="number" name="quantity[]" class="form-control text-right" required value="0"></td>
+                <td><input type="number" name="item_amount[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" value="${item.price}"></td>
+                <td><input type="number" name="discount[]" class="form-control text-right"></td>
+                <td><input type="number" name="tax[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01"></td>
+                <td>$<span>0.00</span></td>
+                <td><a href="#" class="deleteRow"><i class="fa fa-trash"></i></a></td>
+            `;
+
+            $('#modal-container form#modal-form .modal #item-details-table tbody').append(`<tr></tr>`);
+            $('#modal-container form#modal-form .modal #item-details-table tbody tr:last-child').append(fields);
+        });
     });
 });
 
@@ -1950,21 +2018,21 @@ const submitModalForm = (event, el) => {
             }
         });
 
-        count = 0;
-        $(`${modalId} table#item-details-table tbody tr`).each(function() {
-            var billable = $(this).find('input[name="item_billable[]"]');
-            var tax = $(this).find('input[name="item_tax[]"]');
+        // count = 0;
+        // $(`${modalId} table#item-details-table tbody tr`).each(function() {
+        //     var billable = $(this).find('input[name="item_billable[]"]');
+        //     var tax = $(this).find('input[name="item_tax[]"]');
 
-            if(billable.length > 0 && tax.length > 0) {
-                if(count === 0) {
-                    data.set('item_billable[]', billable.prop('checked') ? "1" : "0");
-                    data.set('item_tax[]', tax.prop('checked') ? "1" : "0");
-                } else {
-                    data.append('item_billable[]', billable.prop('checked') ? "1" : "0");
-                    data.append('item_tax[]', tax.prop('checked') ? "1" : "0");
-                }
-            }
-        });
+        //     if(billable.length > 0 && tax.length > 0) {
+        //         if(count === 0) {
+        //             data.set('item_billable[]', billable.prop('checked') ? "1" : "0");
+        //             data.set('item_tax[]', tax.prop('checked') ? "1" : "0");
+        //         } else {
+        //             data.append('item_billable[]', billable.prop('checked') ? "1" : "0");
+        //             data.append('item_tax[]', tax.prop('checked') ? "1" : "0");
+        //         }
+        //     }
+        // });
     } else if(modalId === '#payBillsModal') {
         var totalAmount = $(`${modalId} span.transaction-total-amount`).html();
         data.append('total', totalAmount);

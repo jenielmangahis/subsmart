@@ -21,7 +21,7 @@ function get_differenct_of_dates($date_start, $date_end)
 <!--<div wrapper__section>-->
 <div id="main_body" class="container-fluid" style="background-color: #6241A4; margin-bottom:-20px;">
   <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-5">
       <div class="row">
         <div class="col-md-4"></div>
         <div class="col-md-8 page-title-box align-items-center">
@@ -85,11 +85,11 @@ function get_differenct_of_dates($date_start, $date_end)
               }
               $html = '<div id="sec-2-option-' . $user->user_id . '" class="sec-2-option ' . $current_view . '" ' . $onclick . '>';
               $html .= '<div class="row ">
-                      <div class="col-md-4 profile">';
+                      <div class="col-md-3 profile">';
               $html .= '<center><img src="' . $image . '" alt="user" class="rounded-circle user-profile ' . $profile_status . '"></center>';
               $html .= '<p class="name"> ' . $user->FName . '</p>
             </div>
-            <div class="col-md-8 details">
+            <div class="col-md-9 details">
               <p id="last_tract_location_' . $user->user_id . '" class="last_tract_location"><span class="fa fa-map-marker" class="text-center"></span> ';
               if ($user->last_tracked_location_address == "") {
                   $last_loc =  "Lost connection";
@@ -131,7 +131,7 @@ function get_differenct_of_dates($date_start, $date_end)
 
       </div>
     </div>
-    <div class="col-md-8 map-section">
+    <div class="col-md-7 map-section">
       <div id="map-loader">
         <center>
           <img

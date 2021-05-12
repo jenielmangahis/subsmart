@@ -918,6 +918,100 @@ SQL;
 
         return $this->db->query($query, [$workorderId])->row();
     }
+
+    public function apiCopyTemplate($templateId)
+    {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            echo json_encode(['success' => false]);
+            return;
+        }
+
+        $filepath = FCPATH . 'uploads/docusigntemplates/';
+        if (!file_exists($filepath)) {
+            mkdir($filepath, 0777, true);
+        }
+
+        $this->db->where('id', $templateId);
+        $baseTemplate = $this->db->get('user_docfile_templates')->row_array();
+        unset($baseTemplate['id']);
+        unset($baseTemplate['created_at']);
+        $baseTemplate['name'] = $baseTemplate['name'] . ' - Copy';
+
+        // copy template
+        $this->db->insert('user_docfile_templates', $baseTemplate);
+
+        // get new template
+        $this->db->where('id', $this->db->insert_id());
+        $newTemplate = $this->db->get('user_docfile_templates')->row();
+
+        // get base template files
+        $this->db->where('template_id', $templateId);
+        $this->db->order_by('id', 'ASC');
+        $baseTemplateFiles = $this->db->get('user_docfile_templates_documents')->result();
+
+        foreach ($baseTemplateFiles as $baseFile) {
+
+            // copy template file
+            $documentPath = $filepath . $baseFile->name;
+            $this->db->insert('user_docfile_templates_documents', [
+                'name' => $baseFile->name,
+                'path' => str_replace(FCPATH, '/', $documentPath),
+                'template_id' => $newTemplate->id,
+            ]);
+
+            $newTemplateDocumentFileId = $this->db->insert_id();
+
+            $this->db->where('template_id', $templateId);
+            $this->db->where('docfile_document_id', $baseFile->id);
+            $recipientFields = $this->db->get('user_docfile_templates_fields')->result_array();
+
+            // group fields with recipient id as key
+            $groupedFields = [];
+            foreach ($recipientFields as $field) {
+                $groupedFields[$field['recipients_id']][] = $field;
+            }
+
+            foreach ($groupedFields as $recipientId => $fields) {
+                $this->db->where('id', $recipientId);
+                $baseTemplateRecipient = $this->db->get('user_docfile_templates_recipients')->row_array();
+                unset($baseTemplateRecipient['id']);
+                unset($baseTemplateRecipient['template_id']);
+
+                // copy recipient
+                $baseTemplateRecipient['template_id'] = $newTemplate->id;
+                $this->db->insert('user_docfile_templates_recipients', $baseTemplateRecipient);
+
+                // copy recipient fields
+                $newFields = array_map(function ($field) use ($newTemplate, $recipientId, $newTemplateDocumentFileId) {
+                    unset($field['id']);
+                    unset($field['template_id']);
+                    unset($field['recipients_id']);
+                    unset($field['unique_key']);
+                    unset($field['docfile_document_id']);
+
+                    $field['template_id'] = $newTemplate->id;
+                    $field['recipients_id'] = $recipientId;
+                    $field['unique_key'] = uniqid();
+                    $field['docfile_document_id'] = $newTemplateDocumentFileId;
+                    return $field;
+                }, $fields);
+
+                $this->db->insert_batch('user_docfile_templates_fields', $newFields);
+            }
+        }
+
+        header('content-type: application/json');
+        echo json_encode(['data' => $newTemplate]);
+    }
+
+    public function apiGetUsers()
+    {
+        $this->db->where('company_id', logged('company_id'));
+        $users = $this->db->get('users')->result_array();
+
+        header('content-type: application/json');
+        echo json_encode(['data' => $users]);
+    }
 }
 
 // https://stackoverflow.com/a/50373095/8062659

@@ -367,6 +367,19 @@ class Items_model extends MY_Model
         $this->db->update('items', array('rebate' => $item_val));
         return true;
     }
+
+    public function getItemData($id){
+        $where = array(
+            'type' => 'Work Order',
+            'type_id'   => $id
+          );
+
+        $this->db->select('*');
+        $this->db->from('item_details');
+        $this->db->where($where);
+        $query = $this->db->get();
+        return $query->result();
+    }
     
 }
 

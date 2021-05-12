@@ -577,9 +577,7 @@ class Customer extends MY_Controller
     public function save_billing_information($input,$id){
         $input_billing = array();
         // billing data
-        if(!isset($input['customer_id'])){
-            $input_billing['fk_prof_id'] = $id;
-        }
+        $input_billing['fk_prof_id'] = $id;
         $input_billing['card_fname'] = $input['card_fname'];
         $input_billing['card_lname'] = $input['card_lname'];
         $input_billing['card_address'] = $input['card_address'];
@@ -632,9 +630,7 @@ class Customer extends MY_Controller
         $input_office = array();
 
         // office data
-        if(!isset($input['customer_id'])){
-            $input_office['fk_prof_id'] = $id;
-        }
+        $input_office['fk_prof_id'] = $id;
         $input_office['welcome_sent'] = 0;
         $input_office['entered_by'] = $input['entered_by'];
         $input_office['time_entered'] = $input['time_entered'];
@@ -721,9 +717,7 @@ class Customer extends MY_Controller
         $input_alarm = array();
 
         // alarm data
-        if(!isset($input['customer_id'])){
-            $input_alarm['fk_prof_id'] = $id;
-        }
+        $input_alarm['fk_prof_id'] = $id;
         $input_alarm['monitor_comp'] = $input['monitor_comp'];
         $input_alarm['monitor_id'] = $input['monitor_id'];
         //$input_alarm['install_date'] = $input['install_date'];

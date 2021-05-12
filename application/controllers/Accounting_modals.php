@@ -2528,7 +2528,8 @@ class Accounting_modals extends MY_Controller {
                         $categoryDetails[] = [
                             'transaction_type' => 'Expense',
                             'transaction_id' => $expenseId,
-                            'category_account_id' => $value,
+                            'expense_account_id' => $value,
+                            'category' => $data['category'][$index],
                             'description' => $data['description'][$index],
                             'amount' => $data['category_amount'][$index],
                             'billable' => $data['category_billable'][$index],
@@ -2624,7 +2625,8 @@ class Accounting_modals extends MY_Controller {
                         $categoryDetails[] = [
                             'transaction_type' => 'Check',
                             'transaction_id' => $checkId,
-                            'category_account_id' => $value,
+                            'expense_account_id' => $value,
+                            'category' => $data['category'][$index],
                             'description' => $data['description'][$index],
                             'amount' => $data['category_amount'][$index],
                             'billable' => $data['category_billable'][$index],
@@ -2723,7 +2725,8 @@ class Accounting_modals extends MY_Controller {
                         $categoryDetails[] = [
                             'transaction_type' => 'Bill',
                             'transaction_id' => $billId,
-                            'category_account_id' => $value,
+                            'expense_account_id' => $value,
+                            'category' => $data['category'][$index],
                             'description' => $data['description'][$index],
                             'amount' => $data['category_amount'][$index],
                             'billable' => $data['category_billable'][$index],
@@ -3058,7 +3061,8 @@ class Accounting_modals extends MY_Controller {
                         $categoryDetails[] = [
                             'transaction_type' => 'Vendor Credit',
                             'transaction_id' => $vendorCreditId,
-                            'category_account_id' => $value,
+                            'expense_account_id' => $value,
+                            'category' => $data['category'][$index],
                             'description' => $data['description'][$index],
                             'amount' => $data['category_amount'][$index],
                             'billable' => $data['category_billable'][$index],
@@ -3100,5 +3104,11 @@ class Accounting_modals extends MY_Controller {
         }
 
         return $return;
+    }
+
+    public function item_list_modal()
+    {
+        $this->page_data['items'] = $this->items_model->getItemsWithFilter(['type' => ['inventory', 'product'], 'status' => [1]]);
+        $this->load->view('accounting/modals/item_list_modal', $this->page_data);
     }
 }

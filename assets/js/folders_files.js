@@ -3141,8 +3141,8 @@ function createDocusignTemplate(file, options = {}) {
                         <span class="sr-only">Toggle Dropdown</span>
                       </button>
                       <div class="dropdown-menu dropdown-menu-right">
-                        <a class="dropdown-item" href="#">Share with users</a>
-                        <a class="dropdown-item" href="#">Copy</a>
+                        <a class="dropdown-item" href="#" data-action="share">Share with users</a>
+                        <a class="dropdown-item" href="#" data-action="copy">Copy</a>
                       </div>
                     </div>
 
@@ -3178,6 +3178,33 @@ function createDocusignTemplate(file, options = {}) {
   
     $element.dblclick(function() {
       if (onDoubleClick) onDoubleClick(file);
+    });
+
+    const actions = {
+      copy: async function () {
+        const response = await fetch(`${prefixURL}/DocuSign/apiCopyTemplate/${id}`, {
+          method: "POST",
+          headers: {
+            accepts: "application/json",
+            "content-type": "application/json",
+          },
+        });
+
+        const { data } = await response.json();
+        window.location = `${prefixURL}/DocuSign/templatePrepare?id=${data.id}`;
+      },
+      share: function () {
+        $("#usersModal").modal("show");
+      }
+    }
+
+    $element.find(".dropdown-item").click(async function (event) {
+      event.preventDefault();
+
+      const action = $(this).attr("data-action");
+      if (actions[action]) {
+        await actions[action]();
+      }
     });
   
     return element;
@@ -3402,3 +3429,47 @@ function setTrashRecords(folders, files) {
     fileElements.length > 0 ? fileElements : emptyMessage()
   );
 }
+
+
+(() => {
+  const $table = $("#usersTable");
+  const urlPrefix = location.hostname === "localhost" ? "/nsmartrac" : "";
+
+  function initTable() {
+    return $table.DataTable({
+      searching: false,
+      ajax: `${urlPrefix}/DocuSign/apiGetUsers`,
+      columns: [
+        {
+          data: "id",
+          checkboxes: {
+            selectRow: true
+          }
+        },
+        {
+          sortable: false,
+          render: function (_, _, row) {
+            return `${row.FName} ${row.LName}`;
+          },
+        },
+        {
+          sortable: false,
+          data: "email",
+        },
+      ],
+      rowId: function (row) {
+        return `row${row.id}`;
+      },
+      createdRow: function (row, data) {
+        $(row).attr("data-id", data.id);
+      },
+      order: [[1, "asc"]]
+    });
+  }
+
+  function init() {
+    initTable();
+  }
+
+  init();
+})();
