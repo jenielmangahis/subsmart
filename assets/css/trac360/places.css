@@ -117,6 +117,11 @@ button.trac360_side_controls:active:hover {
 .sec-2-address-btn:hover {
     background-color: #F7F6EF;
     cursor: pointer;
+    border-left: solid 5px #6241a4;
+}
+
+.sec-2-address-btn[active=""] {
+    border-left: solid 7px #6241a4;
 }
 
 .sec-2-option>.row {
@@ -323,7 +328,16 @@ div.popup-map-marker:hover h3 {
     background-color: #E8EAED;
 }
 
-#add_new_address_map:after {
+#edit_address_map {
+    width: 100%;
+    height: 350px;
+    border: none;
+    position: relative;
+    background-color: #E8EAED;
+}
+
+#add_new_address_map:after,
+#edit_address_map:after {
     width: 22px;
     height: 40px;
     display: block;
@@ -347,21 +361,24 @@ div.popup-map-marker:hover h3 {
     margin-bottom: 0!important;
 }
 
-input#new_address_radius {
-    width: 300px;
+input#new_address_radius,
+input#edit_address_radius {
+    width: 200px;
     height: 2px;
     float: right;
     margin-top: 15px;
 }
 
-.new_address_radius_container {
+.new_address_radius_container,
+.edit_address_radius_container {
     position: absolute;
     z-index: 1;
     padding: 20px 10px;
     width: 100%;
 }
 
-label.radius_number_view {
+label.radius_number_view,
+label.edit_radius_number_view {
     background-color: #FFFFFF;
     padding: 5px 30px;
     font-size: 13px;
@@ -396,5 +413,22 @@ label.radius_number_view {
 
 #place_notif_modal .modal-body label,
 #place_notif_modal .modal-body p {
+    font-size: 13px;
+}
+
+#edit_address_modal .form-group {
+    margin-bottom: 10px!important;
+}
+
+#edit_address_modal .modal-body {
+    padding-bottom: 10px;
+}
+
+#edit_address_modal .modal-dialog {
+    max-width: 600px;
+}
+
+.form-group label {
+    color: #002638;
     font-size: 13px;
 }

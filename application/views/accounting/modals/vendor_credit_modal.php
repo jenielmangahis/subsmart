@@ -77,21 +77,22 @@
                                                                 <thead>
                                                                     <th></th>
                                                                     <th class="text-right">#</th>
-                                                                    <th>CATEGORY</th>
+                                                                    <th width="15%">EXPENSE NAME</th>
+                                                                    <th width="10%">CATEGORY</th>
                                                                     <th>DESCRIPTION</th>
-                                                                    <th>AMOUNT</th>
-                                                                    <th>BILLABLE</th>
-                                                                    <th>MARKUP %</th>
-                                                                    <th>TAX</th>
-                                                                    <th>CUSTOMER</th>
+                                                                    <th width="10%">AMOUNT</th>
+                                                                    <th width="3%">BILLABLE</th>
+                                                                    <th width="10%">MARKUP %</th>
+                                                                    <th width="3%">TAX</th>
+                                                                    <th width="15%">CUSTOMER</th>
                                                                     <th></th>
                                                                 </thead>
                                                                 <tbody class="cursor-pointer">
                                                                     <tr>
-                                                                        <td></td>
+                                                                    <td></td>
                                                                         <td>1</td>
                                                                         <td>
-                                                                            <select name="category[]" class="form-control" required>
+                                                                            <select name="expense_name[]" class="form-control" required>
                                                                                 <option value="" selected disabled>&nbsp;</option>
                                                                                 <?php foreach($dropdown['categories'] as $accType => $accounts) : ?>
                                                                                     <optgroup label="<?=$accType?>">
@@ -108,6 +109,14 @@
                                                                                         <?php endforeach; ?>
                                                                                     </optgroup>
                                                                                 <?php endforeach; ?>
+                                                                            </select>
+                                                                        </td>
+                                                                        <td>
+                                                                            <select name="category[]" class="form-control">
+                                                                                <option disabled selected>&nbsp;</option>
+                                                                                <option value="fixed">Fixed Cost</option>
+                                                                                <option value="variable">Variable Cost</option>
+                                                                                <option value="periodic">Periodic Cost</option>
                                                                             </select>
                                                                         </td>
                                                                         <td><input type="text" name="description[]" class="form-control"></td>
@@ -145,6 +154,7 @@
                                                                         <td></td>
                                                                         <td></td>
                                                                         <td></td>
+                                                                        <td></td>
                                                                         <td><a href="#" class="deleteRow"><i class="fa fa-trash"></i></a></td>
                                                                     </tr>
                                                                 </tbody>
@@ -170,85 +180,22 @@
                                                         <div class="item-details-table">
                                                             <table class="table table-bordered table-hover clickable" id="item-details-table">
                                                                 <thead>
-                                                                    <th></th>
-                                                                    <th class="text-right">#</th>
-                                                                    <th>PRODUCT/SERVICE</th>
-                                                                    <th>DESCRIPTION</th>
-                                                                    <th>QTY</th>
-                                                                    <th>RATE</th>
-                                                                    <th>AMOUNT</th>
-                                                                    <th>BILLABLE</th>
-                                                                    <th>MARKUP %</th>
-                                                                    <th>SALES AMT</th>
-                                                                    <th>TAX</th>
-                                                                    <th>CUSTOMER</th>
-                                                                    <th></th>
+                                                                    <th width="20%">PRODUCT/SERVICE</th>
+                                                                    <th>TYPE</th>
+                                                                    <th width="10%">QUANTITY</th>
+                                                                    <th width="10%">PRICE</th>
+                                                                    <th width="10%">DISCOUNT</th>
+                                                                    <th width="10%">TAX (CHANGE IN %)</th>
+                                                                    <th>TOTAL</th>
+                                                                    <th width="3%"></th>
                                                                 </thead>
-                                                                <tbody class="cursor-pointer">
-                                                                    <tr>
-                                                                        <td></td>
-                                                                        <td>1</td>
-                                                                        <td>
-                                                                            <select name="item[]" class="form-control" required>
-                                                                                <option value="" selected disabled>&nbsp;</option>
-                                                                                <?php if(count($dropdown['items']) > 0) : ?>
-                                                                                    <?php foreach($dropdown['items'] as $item) : ?>
-                                                                                        <option value="<?=$item->id?>"><?=$item->title?></option>
-                                                                                    <?php endforeach; ?>
-                                                                                <?php endif; ?>
-                                                                            </select>
-                                                                        </td>
-                                                                        <td><input type="text" name="item_description[]" class="form-control"></td>
-                                                                        <td><input type="number" name="quantity[]" class="form-control text-right" required></td>
-                                                                        <td><input type="number" name="rate[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01"></td>
-                                                                        <td><input type="number" name="item_amount[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01"></td>
-                                                                        <td>
-                                                                            <div class="d-flex align-items-center justify-content-center">
-                                                                                <input type="checkbox" name="item_billable[]" class="form-check" value="1">
-                                                                            </div>
-                                                                        </td>
-                                                                        <td><input type="number" name="item_markup[]" class="form-control" onchange="convertToDecimal(this)"></td>
-                                                                        <td><input type="number" name="item_sales_amount[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" disabled></td>
-                                                                        <td>
-                                                                            <div class="d-flex align-items-center justify-content-center">
-                                                                                <input type="checkbox" name="item_tax[]" class="form-check" value="1">
-                                                                            </div>
-                                                                        </td>
-                                                                        <td>
-                                                                            <select name="item_customer[]" class="form-control">
-                                                                                <option value="" selected disabled>&nbsp;</option>
-                                                                                <?php if(count($dropdown['customers']) > 0) : ?>
-                                                                                    <?php foreach($dropdown['customers'] as $customer) :?>
-                                                                                        <option value="<?=$customer->prof_id?>"><?=$customer->first_name . ' ' . $customer->last_name?></option>
-                                                                                    <?php endforeach; ?>
-                                                                                <?php endif; ?>
-                                                                            </select>
-                                                                        </td>
-                                                                        <td><a href="#" class="deleteRow"><i class="fa fa-trash"></i></a></td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td></td>
-                                                                        <td>2</td>
-                                                                        <td></td>
-                                                                        <td></td>
-                                                                        <td></td>
-                                                                        <td></td>
-                                                                        <td></td>
-                                                                        <td></td>
-                                                                        <td></td>
-                                                                        <td></td>
-                                                                        <td></td>
-                                                                        <td></td>
-                                                                        <td><a href="#" class="deleteRow"><i class="fa fa-trash"></i></a></td>
-                                                                    </tr>
-                                                                </tbody>
+                                                                <tbody></tbody>
                                                             </table>
                                                         </div>
                                                         <div class="table-footer">
                                                             <div class="row">
                                                                 <div class="col-md-6">
-                                                                    <button type="button" class="btn btn-outline-secondary border" data-target="#item-details-table" onclick="addTableLines(event)">Add lines</button>
-                                                                    <button type="button" class="btn btn-outline-secondary border" data-target="#item-details-table" onclick="clearTableLines(event)">Clear all lines</button>
+                                                                    <a class="link-modal-open" href="#" id="add_another_items" data-target="#item_list"><span class="fa fa-plus-square fa-margin-right"></span>Add Items</a>
                                                                 </div>
                                                             </div>
                                                         </div>

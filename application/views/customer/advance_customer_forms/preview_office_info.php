@@ -135,7 +135,7 @@
                 Collection Amount
             </div>
             <div class="col-md-6">
-                $<?= isset($office_info) && !empty($office_info->collect_amount) ?  number_format((float)$office_info->collect_amount,2,'.',',') : '$0.00' ?>
+                $<?= isset($office_info) && !empty($office_info->collect_amount) ?  number_format((float)$office_info->collect_amount,2,'.',',') : '0.00' ?>
             </div>
         </div>
         <div class="row form_line">

@@ -2186,8 +2186,10 @@ class Timesheet extends MY_Controller
         // }
         $execute=true;
         if ($entry_type == "Auto") {
-            $overtime_status =$this->timesheet_model->get_attendance_overtime_status($attn_id);
-            if ($overtime_status == 1) {
+            $attendance =$this->timesheet_model->get_attendance_for_clockout($attn_id);
+            if ($attendance->overtime_status == 1) {
+                $execute=false;
+            } elseif ($attendance->status == 0) {
                 $execute=false;
             }
         }

@@ -54,4 +54,14 @@ class Trac360_model extends MY_Model
     {
         $this->db->insert($table, $data);
     }
+    public function delete_place($place_id)
+    {
+        $this->db->reset_query();
+        $query = $this->db->query("DELETE FROM trac360_places WHERE id = ".$place_id);
+    }
+    public function update_place($update, $place_id)
+    {
+        $this->db->where("id", $place_id);
+        $this->db->update("trac360_places", $update);
+    }
 }

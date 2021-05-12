@@ -301,6 +301,7 @@ $route['accounting/get-customers']['post'] = 'accounting_modals/get_statement_cu
 $route['accounting/get-recurring-form-fields/(:any)'] = 'accounting_modals/get_recurring_modal_fields/$1';
 $route['accounting/get-item-details/(:any)'] = 'accounting_modals/getItemDetails/$1';
 $route['accounting/load-bills']['post'] = 'accounting_modals/load_bills';
+$route['accounting/get-items-list-modal'] = 'accounting_modals/item_list_modal';
 
 $route['accounting/lists'] = 'accounting/lists';
 
