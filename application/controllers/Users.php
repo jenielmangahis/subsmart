@@ -97,6 +97,13 @@ class Users extends MY_Controller {
 		$cid=logged('id');
 		$comp_id = logged('company_id');
 		$profiledata = $this->business_model->getByCompanyId($comp_id);	
+
+		if( $profiledata->profile_slug == '' ){
+			$profile_slug = createSlug($profiledata->business_name,'-');
+			$profile_slug = $profile_slug ."-0";
+			$this->business_model->update($profiledata->id, ['profile_slug' => $profile_slug]);
+		}
+
 		$selectedCategories = $this->ServiceCategory_model->getAllCategoriesByCompanyID($comp_id);
 		$schedules   = unserialize($profiledata->working_days);
 
