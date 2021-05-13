@@ -1046,7 +1046,8 @@ class Timesheet extends MY_Controller
     }
     public function attendance()
     {
-        if (count($this->session->userdata('logged')) == 0) {
+        $session = $this->session->userdata('logged');
+        if (count($session) == 0) {
             $_SESSION['usertimezone'] = json_decode(get_cookie('logged'))->usertimezone;
             $_SESSION['offset_zone'] = json_decode(get_cookie('logged'))->offset_zone;
             $array = [

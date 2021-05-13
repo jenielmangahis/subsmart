@@ -1,22 +1,5 @@
 <script>
         $(document).ready(function () {
-        var table_lt = $('#leadtype').DataTable({
-            "lengthChange": false,
-            "searching" : false,
-            "pageLength": 5
-        });
-        var table_sa =$('#salesarea').DataTable({
-            "lengthChange": false,
-            "searching" : false,
-            "pageLength": 5
-        });
-
-        var table_ls =$('#leadsource').DataTable({
-            "lengthChange": false,
-            "searching" : false,
-            "pageLength": 5
-        });
-
         var table_dispute_items =$('#dispute_table').DataTable({
             "lengthChange": false,
             "searching" : false,
@@ -511,103 +494,6 @@
             });
         });
 
-        $("#leadTypeForm").submit(function(e) {
-                e.preventDefault(); // avoid to execute the actual submit of the form.
-                var form = $(this);
-            //var url = form.attr('action');
-            $.ajax({
-                type: "POST",
-                url: "/customer/add_leadtype_ajax",
-                data: form.serialize(), // serializes the form's elements.
-                success: function(data)
-                {
-                    if(data === "Updated"){
-                        alert("Updated Succesfully");
-                    }else{
-                        document.getElementById('alert_box').style.display = "block";
-                        setTimeout(function () {
-                            document.getElementById('alert_box').style.display = 'none'
-                        }, 5000);
-                        display_leadtype_data();
-                    }
-                    $('#modal_lead_type').modal('hide');
-                    $('[id="lead_name"]').val("");
-                    $('[id="lead_id"]').val("");
-                }
-            });
-        });
-
-        $("#leadSourceForm").submit(function(e) {
-            e.preventDefault(); // avoid to execute the actual submit of the form.
-            var form = $(this);
-            //var url = form.attr('action');
-            $.ajax({
-                type: "POST",
-                url: "/customer/add_leadsource_ajax",
-                data: form.serialize(), // serializes the form's elements.
-                success: function(data)
-                {
-                    console.log(data);
-                    if(data === "Updated"){
-                        document.getElementById('alert_box').style.display = "block";
-                        setTimeout(function () {
-                            document.getElementById('alert_box').style.display = 'none'
-                        }, 5000);
-                        display_salesarea_data();
-                    }else{
-                        $('#alert_box').removeClass('invisible');
-                        if(data === "Sales Area Added!"){
-                            document.getElementById('alert_box').style.display = "block";
-                            setTimeout(function () {
-                                document.getElementById('alert_box').style.display = 'none'
-                            }, 5000);
-                            display_salesarea_data();
-                        }
-                        // $('.toast').toast('show');
-                    }
-                    $('#modal_lead_source').modal('hide');
-                    $('#leadSourceForm')[0].reset();
-                    //$('[id="lead_name"]').val("");
-                    //$('[id="lead_id"]').val("");
-                }
-            });
-        });
-
-        $("#salesAreaForm").submit(function(e) {
-            e.preventDefault(); // avoid to execute the actual submit of the form.
-            var form = $(this);
-            //var url = form.attr('action');
-            $.ajax({
-                type: "POST",
-                url: "/customer/add_salesarea_ajax",
-                data: form.serialize(), // serializes the form's elements.
-                success: function(data)
-                {
-                    console.log(data);
-                    if(data === "Updated"){
-                        document.getElementById('alert_box').style.display = "block";
-                        setTimeout(function () {
-                            document.getElementById('alert_box').style.display = 'none'
-                        }, 5000);
-                        display_salesarea_data();
-                    }else{
-                        $('#alert_box').removeClass('invisible');
-                        if(data === "Sales Area Added!"){
-                            document.getElementById('alert_box').style.display = "block";
-                            setTimeout(function () {
-                                document.getElementById('alert_box').style.display = 'none'
-                            }, 5000);
-                            display_salesarea_data();
-                        }
-                        // $('.toast').toast('show');
-                    }
-                    $('#modal_sales_area').modal('hide');
-                    $('#salesAreaForm')[0].reset();
-                    //$('[id="lead_name"]').val("");
-                    //$('[id="lead_id"]').val("");
-                }
-            });
-        });
 
         $(".edit_leadtype").on( "click", function( event ) {
             var ID=this.id;

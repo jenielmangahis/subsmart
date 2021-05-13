@@ -291,6 +291,7 @@ div.popup-map-marker:hover h3 {
 
 .sec-2-address-btn .details p.second-p {
     font-size: 12px;
+    height: 40px;
 }
 
 .sec-2-address-btn .details .places-actions-btn {
@@ -322,10 +323,14 @@ div.popup-map-marker:hover h3 {
 
 #add_new_address_map {
     width: 100%;
-    height: 50vh;
+    height: 350px;
     border: none;
     position: relative;
     background-color: #E8EAED;
+}
+
+#add_new_place_modal .form-group {
+    margin-bottom: 10px!important;
 }
 
 #edit_address_map {
@@ -351,10 +356,6 @@ div.popup-map-marker:hover h3 {
     /* Since I used the HiDPI marker version this compensates for the 2x size */
     pointer-events: none;
     /* This disables clicks on the marker. Not fully supported by all major browsers, though */
-}
-
-.modal-right-side #add_new_place_modal .modal-dialog {
-    min-width: 50%;
 }
 
 .map-canva {

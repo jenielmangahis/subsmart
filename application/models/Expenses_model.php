@@ -578,4 +578,10 @@ class Expenses_model extends MY_Model
         $this->db->insert('accounting_vendor_credit', $data);
         return $this->db->insert_id();
     }
+
+    public function add_purchase_order($data)
+    {
+        $this->db->insert('accounting_purchase_order', $data);
+        return $this->db->insert_id();
+    }
 }

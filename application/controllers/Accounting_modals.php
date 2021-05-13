@@ -428,6 +428,29 @@ class Accounting_modals extends MY_Controller {
                 case 'bill_modal' :
                     $terms = $this->accounting_terms_model->getActiveCompanyTerms(logged('company_id'));
 
+                    $selectedTerm = $terms[0];
+
+                    if($selectedTerm->type === "1") {
+                        $dueDate = date("m/d/Y", strtotime(date("m/d/Y")." +$selectedTerm->net_due_days days"));
+                    } else {
+                        if($selectedTerm->minimum_days_to_pay === null ||
+                            $selectedTerm->minimum_days_to_pay === "" ||
+                            $selectedTerm->minimum_days_to_pay === "0")
+                        {
+                            if(intval(date("d")) > intval($selectedTerm->day_of_month_due)) {
+                                $dueDate = date("m/d/Y", strtotime(date("m/$selectedTerm->day_of_month_due/Y")." +1 month"));
+                            } else {
+                                $dueDate = date("m/$selectedTerm->day_of_month_due/Y");
+                            }
+                        } else {
+                            if(intval(date("d") > intval(date("d", strtotime(date("m/$selectedTerm->day_of_month_due/Y")." -$selectedTerm->minimum_days_to_pay days"))))) {
+                                $dueDate = date("m/d/Y", strtotime(date("m/$selectedTerm->day_of_month_due/Y")." +1 month"));
+                            } else {
+                                $dueDate = date("m/$selectedTerm->day_of_month_due/Y");
+                            }
+                        }
+                    }
+
                     $categoryAccs = [];
                     $accountTypes = [
                         'Expenses',
@@ -462,6 +485,7 @@ class Accounting_modals extends MY_Controller {
                         }
                     }
 
+                    $this->page_data['due_date'] = $dueDate;
                     $this->page_data['dropdown']['items'] = $this->items_model->getItemsWithFilter(['type' => 'inventory', 'status' => [1]]);
                     $this->page_data['dropdown']['customers'] = $this->accounting_customers_model->getAllByCompany();
                     $this->page_data['dropdown']['vendors'] = $this->vendors_model->getAllByCompany();
@@ -549,6 +573,45 @@ class Accounting_modals extends MY_Controller {
                     $this->page_data['dropdown']['items'] = $this->items_model->getItemsWithFilter(['type' => 'inventory', 'status' => [1]]);
                     $this->page_data['dropdown']['customers'] = $this->accounting_customers_model->getAllByCompany();
                     $this->page_data['dropdown']['vendors'] = $this->vendors_model->getAllByCompany();
+                    $this->page_data['dropdown']['categories'] = $categoryAccs;
+                break;
+                case 'purchase_order_modal' :
+                    $categoryAccs = [];
+                    $accountTypes = [
+                        'Expenses',
+                        'Bank',
+                        'Accounts receivable (A/R)',
+                        'Other Current Assets',
+                        'Fixed Assets',
+                        'Accounts payable (A/P)',
+                        'Credit Card',
+                        'Other Current Liabilities',
+                        'Long Term Liabilities',
+                        'Equity',
+                        'Income',
+                        'Cost of Goods Sold',
+                        'Other Income',
+                        'Other Expense'
+                    ];
+
+                    foreach($accountTypes as $typeName) {
+                        $accType = $this->account_model->getAccTypeByName($typeName);
+
+                        $accounts = $this->chart_of_accounts_model->getByAccountType($accType->id, null, logged('company_id'));
+
+                        if(count($accounts) > 0) {
+                            foreach($accounts as $account) {
+                                $childAccs = $this->chart_of_accounts_model->getChildAccounts($account->id);
+
+                                $account->childAccs = $childAccs;
+
+                                $categoryAccs[$typeName][] = $account;
+                            }
+                        }
+                    }
+
+                    $this->page_data['dropdown']['vendors'] = $this->vendors_model->getAllByCompany();
+                    $this->page_data['dropdown']['customers'] = $this->accounting_customers_model->getAllByCompany();
                     $this->page_data['dropdown']['categories'] = $categoryAccs;
                 break;
             }
@@ -1389,6 +1452,9 @@ class Accounting_modals extends MY_Controller {
                 break;
                 case 'vendorCreditModal' :
                     $this->result = $this->vendor_credit($data);
+                break;
+                case 'purchaseOrderModal' :
+                    $this->result = $this->purchase_order($data);
                 break;
             }
         } catch (\Exception $e) {
@@ -2484,13 +2550,14 @@ class Accounting_modals extends MY_Controller {
         $this->form_validation->set_rules('payment_account', 'Payment account', 'required');
         $this->form_validation->set_rules('payment_date', 'Payment date', 'required');
 
-        if(isset($data['category'])) {
-            $this->form_validation->set_rules('category[]', 'Category', 'required');
+        if(isset($data['expense_name'])) {
+            $this->form_validation->set_rules('expense_name[]', 'Expense name', 'required');
         }
 
         if(isset($data['item'])) {
             $this->form_validation->set_rules('item[]', 'Item', 'required');
             $this->form_validation->set_rules('quantity[]', 'Item quantity', 'required');
+            $this->form_validation->set_rules('item_amount[]', 'Item quantity', 'required');
         }
 
         $return = [];
@@ -2518,13 +2585,13 @@ class Accounting_modals extends MY_Controller {
                 'created_at' => date("Y-m-d H:i:s"),
                 'updated_at' => date("Y-m-d H:i:s")
             ];
-    
+
             $expenseId = $this->expenses_model->addExpense($expenseData);
     
             if($expenseId) {
-                if(isset($data['category'])) {
+                if(isset($data['expense_name'])) {
                     $categoryDetails = [];
-                    foreach($data['category'] as $index => $value) {
+                    foreach($data['expense_name'] as $index => $value) {
                         $categoryDetails[] = [
                             'transaction_type' => 'Expense',
                             'transaction_id' => $expenseId,
@@ -2549,15 +2616,11 @@ class Accounting_modals extends MY_Controller {
                             'transaction_type' => 'Expense',
                             'transaction_id' => $expenseId,
                             'item_id' => $value,
-                            'description' => $data['item_description'][$index],
                             'quantity' => $data['quantity'][$index],
-                            'rate' => $data['rate'][$index],
-                            'amount' => $data['item_amount'][$index],
-                            'billable' => $data['item_billable'][$index],
-                            'markup_percentage' => $data['item_markup'][$index],
-                            'sales_amount' => $data['item_sales_amount'][$index],
+                            'rate' => $data['item_amount'][$index],
+                            'discount' => $data['discount'][$index],
                             'tax' => $data['item_tax'][$index],
-                            'customer_id' => $data['item_customer'][$index],
+                            'total' => $data['item_total'][$index]
                         ];
                     }
     
@@ -2580,13 +2643,14 @@ class Accounting_modals extends MY_Controller {
         $this->form_validation->set_rules('bank_account', 'Bank account', 'required');
         $this->form_validation->set_rules('payment_date', 'Payment date', 'required');
 
-        if(isset($data['category'])) {
-            $this->form_validation->set_rules('category[]', 'Category', 'required');
+        if(isset($data['expense_name'])) {
+            $this->form_validation->set_rules('expense_name[]', 'Expense name', 'required');
         }
 
         if(isset($data['item'])) {
             $this->form_validation->set_rules('item[]', 'Item', 'required');
             $this->form_validation->set_rules('quantity[]', 'Item quantity', 'required');
+            $this->form_validation->set_rules('item_amount[]', 'Item quantity', 'required');
         }
 
         $return = [];
@@ -2619,9 +2683,9 @@ class Accounting_modals extends MY_Controller {
             $checkId = $this->expenses_model->addCheck($checkData);
     
             if($checkId) {
-                if(isset($data['category'])) {
+                if(isset($data['expense_name'])) {
                     $categoryDetails = [];
-                    foreach($data['category'] as $index => $value) {
+                    foreach($data['expense_name'] as $index => $value) {
                         $categoryDetails[] = [
                             'transaction_type' => 'Check',
                             'transaction_id' => $checkId,
@@ -2646,15 +2710,11 @@ class Accounting_modals extends MY_Controller {
                             'transaction_type' => 'Check',
                             'transaction_id' => $checkId,
                             'item_id' => $value,
-                            'description' => $data['item_description'][$index],
                             'quantity' => $data['quantity'][$index],
-                            'rate' => $data['rate'][$index],
-                            'amount' => $data['item_amount'][$index],
-                            'billable' => $data['item_billable'][$index],
-                            'markup_percentage' => $data['item_markup'][$index],
-                            'sales_amount' => $data['item_sales_amount'][$index],
+                            'rate' => $data['item_amount'][$index],
+                            'discount' => $data['discount'][$index],
                             'tax' => $data['item_tax'][$index],
-                            'customer_id' => $data['item_customer'][$index],
+                            'total' => $data['item_total'][$index]
                         ];
                     }
     
@@ -2679,13 +2739,14 @@ class Accounting_modals extends MY_Controller {
         $this->form_validation->set_rules('bill_date', 'Bill date', 'required');
         $this->form_validation->set_rules('due_date', 'Due date', 'required');
 
-        if(isset($data['category'])) {
-            $this->form_validation->set_rules('category[]', 'Category', 'required');
+        if(isset($data['expense_name'])) {
+            $this->form_validation->set_rules('expense_name[]', 'Expense name', 'required');
         }
 
         if(isset($data['item'])) {
             $this->form_validation->set_rules('item[]', 'Item', 'required');
             $this->form_validation->set_rules('quantity[]', 'Item quantity', 'required');
+            $this->form_validation->set_rules('item_amount[]', 'Item quantity', 'required');
         }
 
         $return = [];
@@ -2719,9 +2780,9 @@ class Accounting_modals extends MY_Controller {
             $billId = $this->expenses_model->addBill($billData);
     
             if($billId) {
-                if(isset($data['category'])) {
+                if(isset($data['expense_name'])) {
                     $categoryDetails = [];
-                    foreach($data['category'] as $index => $value) {
+                    foreach($data['expense_name'] as $index => $value) {
                         $categoryDetails[] = [
                             'transaction_type' => 'Bill',
                             'transaction_id' => $billId,
@@ -2746,15 +2807,11 @@ class Accounting_modals extends MY_Controller {
                             'transaction_type' => 'Bill',
                             'transaction_id' => $billId,
                             'item_id' => $value,
-                            'description' => $data['item_description'][$index],
                             'quantity' => $data['quantity'][$index],
-                            'rate' => $data['rate'][$index],
-                            'amount' => $data['item_amount'][$index],
-                            'billable' => $data['item_billable'][$index],
-                            'markup_percentage' => $data['item_markup'][$index],
-                            'sales_amount' => $data['item_sales_amount'][$index],
+                            'rate' => $data['item_amount'][$index],
+                            'discount' => $data['discount'][$index],
                             'tax' => $data['item_tax'][$index],
-                            'customer_id' => $data['item_customer'][$index],
+                            'total' => $data['item_total'][$index]
                         ];
                     }
     
@@ -3003,13 +3060,14 @@ class Accounting_modals extends MY_Controller {
         $this->form_validation->set_rules('vendor_id', 'Vendor', 'required');
         $this->form_validation->set_rules('payment_date', 'Payment date', 'required');
 
-        if(isset($data['category'])) {
-            $this->form_validation->set_rules('category[]', 'Category', 'required');
+        if(isset($data['expense_name'])) {
+            $this->form_validation->set_rules('expense_name[]', 'Expense name', 'required');
         }
 
         if(isset($data['item'])) {
             $this->form_validation->set_rules('item[]', 'Item', 'required');
             $this->form_validation->set_rules('quantity[]', 'Item quantity', 'required');
+            $this->form_validation->set_rules('item_amount[]', 'Item quantity', 'required');
         }
 
         $return = [];
@@ -3023,7 +3081,7 @@ class Accounting_modals extends MY_Controller {
             $return['success'] = false;
             $return['message'] = 'Please enter at least one line item.';
         } else {
-            $billData = [
+            $vendorCredit = [
                 'company_id' => logged('company_id'),
                 'vendor_id' => $data['vendor_id'],
                 'mailing_address' => $data['mailing_address'],
@@ -3038,7 +3096,7 @@ class Accounting_modals extends MY_Controller {
                 'updated_at' => date("Y-m-d H:i:s")
             ];
     
-            $vendorCreditId = $this->expenses_model->add_vendor_credit($billData);
+            $vendorCreditId = $this->expenses_model->add_vendor_credit($vendorCredit);
     
             if($vendorCreditId) {
                 $vendor = $this->vendors_model->get_vendor_by_id($data['vendor_id']);
@@ -3055,9 +3113,9 @@ class Accounting_modals extends MY_Controller {
 
                 $this->vendors_model->updateVendor($vendor->id, $vendorData);
 
-                if(isset($data['category'])) {
+                if(isset($data['expense_name'])) {
                     $categoryDetails = [];
-                    foreach($data['category'] as $index => $value) {
+                    foreach($data['expense_name'] as $index => $value) {
                         $categoryDetails[] = [
                             'transaction_type' => 'Vendor Credit',
                             'transaction_id' => $vendorCreditId,
@@ -3082,15 +3140,11 @@ class Accounting_modals extends MY_Controller {
                             'transaction_type' => 'Vendor Credit',
                             'transaction_id' => $vendorCreditId,
                             'item_id' => $value,
-                            'description' => $data['item_description'][$index],
                             'quantity' => $data['quantity'][$index],
-                            'rate' => $data['rate'][$index],
-                            'amount' => $data['item_amount'][$index],
-                            'billable' => $data['item_billable'][$index],
-                            'markup_percentage' => $data['item_markup'][$index],
-                            'sales_amount' => $data['item_sales_amount'][$index],
+                            'rate' => $data['item_amount'][$index],
+                            'discount' => $data['discount'][$index],
                             'tax' => $data['item_tax'][$index],
-                            'customer_id' => $data['item_customer'][$index],
+                            'total' => $data['item_total'][$index]
                         ];
                     }
     
@@ -3110,5 +3164,124 @@ class Accounting_modals extends MY_Controller {
     {
         $this->page_data['items'] = $this->items_model->getItemsWithFilter(['type' => ['inventory', 'product'], 'status' => [1]]);
         $this->load->view('accounting/modals/item_list_modal', $this->page_data);
+    }
+
+    public function get_term_details($termId)
+    {
+        $term = $this->accounting_terms_model->getById($termId);
+
+        echo json_encode($term);
+    }
+
+    private function purchase_order($data)
+    {
+        $this->load->model('expenses_model');
+
+        $this->form_validation->set_rules('vendor_id', 'Vendor', 'required');
+        $this->form_validation->set_rules('email', 'Email', 'required');
+        $this->form_validation->set_rules('purchase_order_date', 'Purchase order date', 'required');
+
+        if(isset($data['expense_name'])) {
+            $this->form_validation->set_rules('expense_name[]', 'Expense name', 'required');
+        }
+
+        if(isset($data['item'])) {
+            $this->form_validation->set_rules('item[]', 'Item', 'required');
+            $this->form_validation->set_rules('quantity[]', 'Item quantity', 'required');
+            $this->form_validation->set_rules('item_amount[]', 'Item quantity', 'required');
+        }
+
+        $return = [];
+
+        if($this->form_validation->run() === false) {
+            $return['data'] = null;
+            $return['success'] = false;
+            $return['message'] = 'Error';
+        } else if(!isset($data['category']) && !isset($data['item'])) {
+            $return['data'] = null;
+            $return['success'] = false;
+            $return['message'] = 'Please enter at least one line item.';
+        } else {
+            $purchaseOrder = [
+                'company_id' => logged('company_id'),
+                'vendor_id' => $data['vendor_id'],
+                'email' => $data['email'],
+                'mailing_address' => $data['mailing_address'],
+                'customer_id' => $data['customer'],
+                'shipping_address' => $data['shipping_address'],
+                'purchase_order_date' => date("Y-m-d", strtotime($data['purchase_order_date'])),
+                'ship_via' => $data['ship_via'],
+                'tags' => $data['tags'] !== null ? json_encode($data['tags']) : null,
+                'message_to_vendor' => $data['message_to_vendor'],
+                'memo' => $data['memo'],
+                'attachments' => $data['attachments'] !== null ? json_encode($data['attachments']) : null,
+                'total_amount' => $data['total_amount'],
+                'status' => 1,
+                'created_at' => date("Y-m-d H:i:s"),
+                'updated_at' => date("Y-m-d H:i:s")
+            ];
+    
+            $purchaseOrderId = $this->expenses_model->add_purchase_order($purchaseOrder);
+    
+            if($purchaseOrderId) {
+                $vendor = $this->vendors_model->get_vendor_by_id($data['vendor_id']);
+
+                if($vendor->vendor_credits === null & $vendor->vendor_credits === "") {
+                    $vendorCredits = floatval($data['total_amount']);
+                } else {
+                    $vendorCredits = floatval($data['total_amount']) + floatval($vendor->vendor_credits);
+                }
+
+                $vendorData = [
+                    'vendor_credits' => number_format($vendorCredits, 2, '.', ',')
+                ];
+
+                $this->vendors_model->updateVendor($vendor->id, $vendorData);
+
+                if(isset($data['expense_name'])) {
+                    $categoryDetails = [];
+                    foreach($data['expense_name'] as $index => $value) {
+                        $categoryDetails[] = [
+                            'transaction_type' => 'Purchase Order',
+                            'transaction_id' => $purchaseOrderId,
+                            'expense_account_id' => $value,
+                            'category' => $data['category'][$index],
+                            'description' => $data['description'][$index],
+                            'amount' => $data['category_amount'][$index],
+                            'billable' => $data['category_billable'][$index],
+                            'markup_percentage' => $data['category_markup'][$index],
+                            'tax' => $data['category_tax'][$index],
+                            'customer_id' => $data['category_customer'][$index],
+                        ];
+                    }
+    
+                    $this->expenses_model->insert_vendor_transaction_categories($categoryDetails);
+                }
+    
+                if(isset($data['item'])) {
+                    $itemDetails = [];
+                    foreach($data['item'] as $index => $value) {
+                        $itemDetails[] = [
+                            'transaction_type' => 'Purchase Order',
+                            'transaction_id' => $purchaseOrderId,
+                            'item_id' => $value,
+                            'quantity' => $data['quantity'][$index],
+                            'rate' => $data['item_amount'][$index],
+                            'discount' => $data['discount'][$index],
+                            'tax' => $data['item_tax'][$index],
+                            'total' => $data['item_total'][$index]
+                        ];
+                    }
+    
+                    $this->expenses_model->insert_vendor_transaction_items($itemDetails);
+                }
+            }
+
+            $return['data'] = $purchaseOrderId;
+            $return['success'] = $purchaseOrderId ? true : false;
+            $return['message'] = $purchaseOrderId ? 'Entry Successful!' : 'An unexpected error occured!';
+        }
+
+        return $return;
     }
 }

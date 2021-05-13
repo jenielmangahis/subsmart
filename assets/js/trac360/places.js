@@ -151,6 +151,7 @@ $(document).ready(function() {
                     },
                     success: function(data) {
                         if (data != null) {
+                            $("#added-places-section").html(data.places);
                             Swal.fire({
                                 showConfirmButton: false,
                                 timer: 2000,
@@ -158,6 +159,14 @@ $(document).ready(function() {
                                 html: "New address has been added.",
                                 icon: "success",
                             });
+                            $("#add_new_place_modal").modal('hide');
+                            selected_place(
+                                current_lat,
+                                current_lng,
+                                $("#new_place_name").val(),
+                                $("#new_formatted_address").val(),
+                                parseFloat($("#new_address_radius").val()),
+                                data.place_id);
                         }
 
                     },
@@ -197,6 +206,7 @@ $(document).ready(function() {
                     },
                     success: function(data) {
                         if (data != null) {
+                            $("#added-places-section").html(data.places);
                             Swal.fire({
                                 showConfirmButton: false,
                                 timer: 2000,
@@ -204,6 +214,11 @@ $(document).ready(function() {
                                 html: "Address has been deleted",
                                 icon: "success",
                             });
+                            $("#edit_address_modal").modal('hide');
+                            antennasCircle_main_map.setMap(null);
+                            map.fitBounds(antennasCircle_main_map.getBounds());
+                            main_map_marker.setMap(null);
+                            map.setZoom(12);
                         }
 
                     },
@@ -222,12 +237,13 @@ $(document).ready(function() {
             confirmButtonText: "Save changes",
         }).then((result) => {
             if (result.value) {
+                var place_id = $(this).attr('data-place-id');
                 $.ajax({
                     url: baseURL + "/trac360/update_place",
                     type: "POST",
                     dataType: "json",
                     data: {
-                        place_id: $(this).attr('data-place-id'),
+                        place_id: place_id,
                         lat: edit_lat,
                         lng: edit_lng,
                         address: $("#edit_formatted_address").val(),
@@ -236,6 +252,7 @@ $(document).ready(function() {
                     },
                     success: function(data) {
                         if (data != null) {
+                            $("#added-places-section").html(data.places);
                             Swal.fire({
                                 showConfirmButton: false,
                                 timer: 2000,
@@ -243,6 +260,8 @@ $(document).ready(function() {
                                 html: "Address has been updated",
                                 icon: "success",
                             });
+                            $("#edit_address_modal").modal('hide');
+                            selected_place(edit_lat, edit_lng, $("#edit_place_name").val(), $("#edit_formatted_address").val(), parseFloat($("#edit_address_radius").val()), place_id);
                         }
 
                     },
@@ -293,7 +312,7 @@ $(document).ready(function() {
             lng: edit_lng,
         });
         console.log(radius_edit_address);
-        if (radius_edit_address >= 2062.904) {
+        if (radius_edit_address >= 1246.360) {
             edit_address_map.setZoom(13);
         } else {
             edit_address_map.setZoom(15);

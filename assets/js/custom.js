@@ -2143,3 +2143,75 @@ $("#secondary_account_holder_signature3a").on("click touchstart", function () {
 //   }
 // });
 
+//mobile
+
+$("#smoothed1am").signaturePad({
+  drawOnly: true,
+  drawBezierCurves: true,
+  lineTop: 200,
+});
+$("#company_representative_approval_signature1aM").on("click touchstart",
+  function () {
+    var canvas = document.getElementById(
+      "company_representative_approval_signature1aM"
+    );    
+    var dataURL = canvas.toDataURL("image/png");
+    $("#saveCompanySignatureDB1aM").val(dataURL);
+  }
+);
+
+$("#smoothed2am").signaturePad({
+  drawOnly: true,
+  drawBezierCurves: true,
+  lineTop: 200,
+});
+$("#primary_account_holder_signature2aM").on("click touchstart", function () {
+  var canvas = document.getElementById("primary_account_holder_signature2aM");
+  var dataURL = canvas.toDataURL("image/png");
+  $("#savePrimaryAccountSignatureDB2aM").val(dataURL);
+});
+
+$("#smoothed3am").signaturePad({
+  drawOnly: true,
+  drawBezierCurves: true,
+  lineTop: 200,
+});
+$("#secondary_account_holder_signature3aM").on("click touchstart", function () {
+  var canvas = document.getElementById("secondary_account_holder_signature3aM");
+  var dataURL = canvas.toDataURL("image/png");
+  $("#saveSecondaryAccountSignatureDB3aM").val(dataURL);
+});
+
+function myFunctionM() {
+  // alert('yeah');
+  var x = document.getElementById("signM");
+  if (x.style.pointerEvents === "auto") {
+    x.style.pointerEvents = "none";
+    // alert('none');
+  } else {
+    x.style.pointerEvents = "auto";
+    x.style.cursor = "alias";
+    // alert('auto');
+  }
+}
+
+function myFunctiontwoM() {
+  var x = document.getElementById("sign2M");
+  if (x.style.pointerEvents === "auto") {
+    x.style.pointerEvents = "none";
+  } else {
+    x.style.pointerEvents = "auto";
+    x.style.cursor = "alias";
+  }
+}
+
+function myFunctionthreeM() {
+  var x = document.getElementById("sign3M");
+  if (x.style.pointerEvents === "auto") {
+    x.style.pointerEvents = "none";
+  } else {
+    x.style.pointerEvents = "auto";
+    x.style.cursor = "alias";
+  }
+}
+

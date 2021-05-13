@@ -332,16 +332,20 @@ class Trac360 extends MY_Controller
             "company_id"=>$company_id,
             "place_name"=>$new_place_name
         );
-        $this->trac360_model->insert_to("trac360_places", $insert);
+        $place_id = $this->trac360_model->insert_to("trac360_places", $insert);
         
-        echo json_encode("Success");
+        $data = new stdClass();
+        $data->places = $this->get_all_places($company_id, $user_id);
+        $data->place_id = $place_id;
+        echo json_encode($data);
     }
     public function delete_place()
     {
         $place_id = $this->input->post("place_id");
         $this->trac360_model->delete_place($place_id);
-        
-        echo json_encode("Success");
+        $data = new stdClass();
+        $data->places = $this->get_all_places(logged("company_id"), logged("id"));
+        echo json_encode($data);
     }
     public function update_place()
     {
@@ -359,7 +363,52 @@ class Trac360 extends MY_Controller
         );
         
         $this->trac360_model->update_place($update, $place_id);
-        
-        echo json_encode("Success");
+        $data = new stdClass();
+        $data->places = $this->get_all_places(logged("company_id"), logged("id"));
+        echo json_encode($data);
+    }
+    public function get_all_places($company_id, $user_id)
+    {
+        $all_places = $this->trac360_model->get_places($company_id);
+        $places = '';
+        foreach ($all_places as $place) {
+            $exploded_coordinated=explode(",", $place->coordinates);
+            $places .='<div id="sec-2-address-btn-'.$place->id.'"
+            class="sec-2-option sec-2-address-btn"
+            onclick="selected_place('.$place->coordinates.',\''.$place->place_name.'\',\''.$place->address.'\','.$place->zone_radius.','.$place->id.')">
+    <div class="row ">
+    <div class="col-md-2 profile">
+        <center><img
+                src="'.base_url("assets/img/trac360/map_marker.png").'"
+                alt="user" class="">
+        </center>
+    </div>
+    <div class="col-md-10 details">
+        <p class="last_tract_location first-p">'.$place->place_name.'
+        </p>
+        <p class="last_tract_location second-p">'.$place->address.'
+        </p>
+        <div class="places-actions-btn">
+            <button href="#" class="place-notif-action" id="place_notif_modal_btn">
+                <i class="fa fa-bell-o" aria-hidden="true"></i>
+            </button>';
+            if ($place->created_by == $user_id) {
+                $places .='<button href="#" class="place-edit-action edit_address_modal_btn"
+                data-lat="'.$exploded_coordinated[0].'"
+                data-lng="'.$exploded_coordinated[1].'"
+                data-place-name="'.$place->place_name.'"
+                data-address="'.$place->address.'"
+                data-radius="'.$place->zone_radius.'"
+                data-user-id="'.$place->created_by.'"
+                data-place-id="'.$place->id.'">
+                <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+            </button>';
+            }
+            $places .='</div>
+                </div>
+            </div>
+        </div>';
+        }
+        return $places;
     }
 }

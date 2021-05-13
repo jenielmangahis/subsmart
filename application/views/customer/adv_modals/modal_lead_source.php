@@ -10,10 +10,14 @@
             <form id="leadSourceForm">
                 <div class="modal-body">
                     <div class="col-md-12">
-                        <div class="form-group" id="customer_type_group">
-                            <label for="">Lead Source</label><br/>
-                            <input type="text" class="form-control" name="ls_name" id="ls_name" required/>
-                            <input type="hidden" class="form-control" name="ls_id" id="ls_id" required/>
+                        <div class="row form_line" id="customer_type_group">
+                            <div class="col-md-4">
+                                Lead Source Name
+                            </div>
+                            <div class="col-md-8">
+                                <input type="text" class="form-control" name="ls_name" id="ls_name"  required/>
+                                <input type="hidden" class="form-control" name="ls_id" id="ls_id"/>
+                            </div>
                         </div>
                     </div>
                 </div>

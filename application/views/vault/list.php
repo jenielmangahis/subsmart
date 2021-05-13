@@ -41,7 +41,12 @@
 		</div>
 		<div class="modal-footer">
 			<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-			<button type="button" class="btn btn-primary" data-dismiss="modal">Share</button>
+			<button type="button" class="btn btn-primary d-flex align-items-center">
+				<div class="spinner-border spinner-border-sm m-0 d-none" role="status">
+					<span class="sr-only">Loading...</span>
+				</div>
+				<span class="ml-1">Share</span>
+			</button>
 		</div>
 		</div>
 	</div>

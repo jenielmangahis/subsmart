@@ -146,7 +146,7 @@ $(document).ready(function() {
                     scrollX: true,
                     order: [
                         [2, "desc"]
-                    ]   
+                    ]
                 });
                 $(".table-ts-loader").hide();
             },
@@ -234,7 +234,7 @@ $(document).ready(function() {
         Swal.fire({
             title: "Save changes?",
             html: "Are you sure you want to update this attendance log of <b>" +
-                edit_attendance_name +
+                $("#edit_attendance_name").html() +
                 "</b>?",
             icon: "info",
             showCancelButton: true,

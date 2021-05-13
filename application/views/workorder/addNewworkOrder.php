@@ -39,6 +39,15 @@ defined('BASEPATH') or exit('No direct script access allowed');
 #signature-pad3 {min-height:200px;}
 #signature-pad3 canvas {background-color:white;left: 0;top: 0;width: 100%;min-height:250px;height: 100%}
 
+#signature-padM {min-height:200px;}
+#signature-padM canvas {background-color:white;left: 0;top: 0;width: 100%;min-height:250px;height: 100%}
+
+#signature-pad2M {min-height:200px;}
+#signature-pad2M canvas {background-color:white;left: 0;top: 0;width: 100%;min-height:250px;height: 100%}
+
+#signature-pad3M {min-height:200px;}
+#signature-pad3M canvas {background-color:white;left: 0;top: 0;width: 100%;min-height:250px;height: 100%}
+
 .switch {
   position: relative;
   display: inline-block;
@@ -98,6 +107,135 @@ input:checked + .slider:before {
 .slider.round:before {
   border-radius: 50%;
 }
+
+.tr_qty{
+    width:150px;
+}
+
+
+nav > .nav.nav-tabs{
+
+border: none;
+  color:#fff;
+  background:#272e38;
+  border-radius:0;
+
+}
+nav > div a.nav-item.nav-link,
+nav > div a.nav-item.nav-link.active
+{
+border: none;
+  padding: 18px 25px;
+  color:#fff;
+  background:#272e38;
+  border-radius:0;
+}
+
+/* nav > div a.nav-item.nav-link.active:after
+{
+content: "";
+position: relative;
+bottom: -60px;
+left: -10%;
+border: 15px solid transparent;
+border-top-color: #e74c3c ;
+} */
+.tab-content{
+background: #fdfdfd;
+  line-height: 25px;
+  border: 1px solid #ddd;
+  border-top:5px solid #e74c3c;
+  border-bottom:5px solid #e74c3c;
+  padding:30px 25px;
+}
+
+nav > div a.nav-item.nav-link:hover,
+nav > div a.nav-item.nav-link:focus
+{
+border: none;
+  background: #e74c3c;
+  color:#fff;
+  border-radius:0;
+  transition:background 0.20s linear;
+}
+
+.signature_mobile
+{
+    display: none;
+}
+
+@media only screen and (max-device-width: 600px) {
+    .label-element{
+        position:absolute;
+        top:-8px;
+        left:25px;
+        font-size:12px;
+        color:#666;
+        }
+    .input-element{
+        padding:30px 5px 10px 8px;
+        width:100%;
+        height:55px;
+        /* border:1px solid #CCC; */
+        font-weight: bold;
+        margin-top: -15px;
+        }
+
+    .select-wrap 
+    {
+    border: 2px solid #e0e0e0;
+    /* border-radius: 4px; */
+    margin-top: -10px;
+    /* margin-bottom: 10px; */
+    padding: 0 5px 5px;
+    width:100%;
+    /* background-color:#ebebeb; */
+    }
+
+    .select-wrap label
+    {
+    font-size:10px;
+    text-transform: uppercase;
+    color: #777;
+    padding: 2px 8px 0;
+    }
+
+    .m_select
+    {
+    /* background-color: #ebebeb;
+    border:0px; */
+    border-color: white !important;
+    border:0px !important;
+    outline:0px !important;
+    }
+    .select2 .select2-container .select2-container--default{
+        /* background-color: #ebebeb;
+    border:0px; */
+    border-color: white !important;
+    border:0px !important;
+    outline:0px !important;
+    }
+
+    .select2-container--default .select2-selection--single {
+    background-color: #fff;
+    border: 1px solid #fff !important;
+    border-radius: 4px;
+    }
+
+    .sub_label{
+        font-size:12px !important;
+    }
+
+    .signature_web
+    {
+        display: none;
+    }
+
+    .signature_mobile
+    {
+        display: block;
+    }
+}
    </style>
     <!-- page wrapper start -->
     <div wrapper__section>
@@ -154,8 +292,8 @@ input:checked + .slider:before {
                     </div>
                     <div class="row">                   
                             <div class="col-md-3 form-group">
-                                <label for="contact_name">Work Order #</label>
-                                <input type="text" class="form-control" name="workorder_number" id="contact_name" value="<?php echo "WO-"; 
+                                <label for="contact_name" class="label-element">Work Order #</label>
+                                <input type="text" class="form-control input-element" name="workorder_number" id="contact_name" value="<?php echo "WO-"; 
                                            foreach ($number as $num):
                                                 $next = $num->work_order_number;
                                                 $arr = explode("-", $next);
@@ -168,73 +306,75 @@ input:checked + .slider:before {
                                            ?>" required />
                             </div>
                             <div class="col-md-3 form-group">
-                                <label for="contact_email">Select Customer</label><label style="float:right;color:green;"><a class="link-modal-open" href="javascript:void(0)" data-toggle="modal"
+                            <div class="select-wrap">
+                                <label for="contact_email">Select Customer</label><label style="float:right;color:green;" class="sub_label"><a class="link-modal-open sub_label" href="javascript:void(0)" data-toggle="modal"
                                        data-target="#modalNewCustomer" style="color:#02A32C;"><span
                                                 class="fa fa-plus fa-margin-right" style="color:#02A32C;"></span>New Customer</a></label>
-                                <div id="sel-customerdiv">               
-                                <select id="sel-customer" name="customer_id" data-customer-source="dropdown" class="form-control searchable-dropdown" placeholder="Select">
+                                <!-- <div id="sel-customerdiv">                -->
+                                <select id="sel-customer" name="customer_id" class="form-control m_select">
                                         <option value="0">- none -</option>
                                         <?php foreach($customers as $c){ ?>
                                             <option value="<?= $c->prof_id; ?>"><?= $c->contact_name . '' . $c->first_name . ' ' . $c->last_name; ?></option>
                                         <?php } ?>
                                     </select>
-                                    </div>
+                                    <!-- </div> -->
+                            </div>      
                             </div>
                             <div class="col-md-3 form-group">
-                                <label for="security_number">Security Number</label>
-                                <input type="text" class="form-control" name="security_number" id="security_number" placeholder="xxx-xx-xxxx" required/>
+                                <label for="security_number" class="label-element">Security Number</label>
+                                <input type="text" class="form-control input-element" name="security_number" id="security_number" placeholder="xxx-xx-xxxx" required/>
                             </div>
                             <div class="col-md-3 form-group">
-                                <label for="birthdate">Birth Date</label>
-                                <input type="date" class="form-control" name="birthdate" id="date_of_birth" required/>
+                                <label for="birthdate" class="label-element">Birth Date</label>
+                                <input type="date" class="form-control input-element" name="birthdate" id="date_of_birth" required/>
                             </div>
                         </div>
                         <div class="row">                   
                             <div class="col-md-3 form-group">
-                                <label for="phone_no">Phone Number</label>
-                                <input type="text" class="form-control" name="phone_number" id="phone_no"  />
+                                <label for="phone_no" class="label-element">Phone Number</label>
+                                <input type="text" class="form-control input-element" name="phone_number" id="phone_no"  />
                             </div>
                             <div class="col-md-3 form-group">
-                                <label for="mobile_no">Mobile Number</label>
-                                <input type="text" class="form-control" name="mobile_number" id="mobile_no"  />
+                                <label for="mobile_no" class="label-element">Mobile Number</label>
+                                <input type="text" class="form-control input-element" name="mobile_number" id="mobile_no"  />
                             </div>
                             <div class="col-md-3 form-group">
-                                <label for="email">Email</label>
-                                <input type="email" class="form-control" name="email" id="email" required  />
+                                <label for="email" class="label-element">Email</label>
+                                <input type="email" class="form-control input-element" name="email" id="email" required  />
                             </div>
                         </div>
                         
                         <!-- end row -->
                         <div class="row" id="sel-cul">                    
                             <div class="col-md-4 form-group">
-                                <label for="job_location">Job Location</label>
+                                <label for="job_location" class="label-element">Job Location</label>
                                 <!-- <label style="float:right;color:green;"><i class="fa fa-plus-square" aria-hidden="true"></i> New Location</label> -->
-                                <input type="text" class="form-control" name="job_location" id="job_location" required/>
+                                <input type="text" class="form-control input-element" name="job_location" id="job_location" required/>
                             </div>
                             <div class="col-md-2 form-group">
-                                <label for="city">
+                                <label for="city" class="label-element">
                                     City
                                 </label>
-                                    <input type="text" class="form-control" name="city" id="city" />
+                                    <input type="text" class="form-control input-element" name="city" id="city" />
                             </div>
                             <div class="col-md-2 form-group">
-                                <label for="state">
+                                <label for="state" class="label-element">
                                     State
                                 </label>
-                                    <input type="text" class="form-control" name="state" id="state" />
+                                    <input type="text" class="form-control input-element" name="state" id="state" />
                             </div>
                             <div class="col-md-1 form-group">
-                                <label for="zip">
+                                <label for="zip" class="label-element">
                                     Zip code
                                 </label>
-                                    <input type="text" class="form-control" name="zip_code" id="zip" />
+                                    <input type="text" class="form-control input-element" name="zip_code" id="zip" />
                             </div>
                             
                             <div class="col-md-3 form-group">
-                                <label for="cross_street">
+                                <label for="cross_street" class="label-element">
                                     Cross Street
                                 </label>
-                                    <input type="text" class="form-control" name="cross_street" id="cross_street" />
+                                    <input type="text" class="form-control input-element" name="cross_street" id="cross_street" />
                             </div>
                         </div>
                         <!-- <div class="row">
@@ -253,9 +393,9 @@ input:checked + .slider:before {
 
                         <div class="row">                   
                             <div class="col-md-4 form-group">
-                                <label for="contact_phone">Password</label> 
+                                <label for="contact_phone" class="label-element">Password</label> 
                                 <!-- <i class="fa fa-pencil" aria-hidden="true" ></i> -->
-                                <input type="text" class="form-control" name="password" id="password" placeholder="Password" />
+                                <input type="text" class="form-control input-element" name="password" id="password" placeholder="Password" />
                             </div>
                             <!-- <div class="col-md-4 form-group">
                                 <label for="suit" class="mytxt">Custom Field</label> <i class="fa fa-pencil" aria-hidden="true"></i>
@@ -267,8 +407,8 @@ input:checked + .slider:before {
                         <div class="row" id="thisdiv">
                         <?php foreach($fields as $field){ ?>
                             <div class="col-md-3 form-group">
-                                <label for="suit" data-toggle="modal" data-target="#modalupdateCustom" class="mytxtc" label-id="<?php echo $field->id; ?>"  label-name="<?php echo $field->name; ?>"><?php echo $field->name; ?></label> <i class="fa fa-pencil" aria-hidden="true"></i>
-                                <input type="text" class="form-control" name="custom_value[]" id="custom1_value"/>
+                                <label for="suit" data-toggle="modal" data-target="#modalupdateCustom" class="mytxtc label-element" label-id="<?php echo $field->id; ?>"  label-name="<?php echo $field->name; ?>"><?php echo $field->name; ?></label> <i class="fa fa-pencil" aria-hidden="true"></i><br>
+                                <input type="text" class="form-control input-element" name="custom_value[]" id="custom1_value"/>
                                 <input type="hidden" class="custom_<?php echo $field->id; ?>" value="<?php echo $field->name; ?>" name="custom_field[]">
                             </div>     
                             <!-- <div class="col-md-4 form-group">
@@ -357,28 +497,28 @@ input:checked + .slider:before {
                                         </thead>
                                         <tbody id="jobs_items_table_body">
                                         <tr>
-                                            <td>
+                                            <td width="30%">
                                                 <input type="text" class="form-control getItems"
                                                        onKeyup="getItems(this)" name="items[]">
                                                 <ul class="suggestions"></ul>
                                             </td>
-                                            <td><select name="item_type[]" class="form-control">
+                                            <td width="20%"><select name="item_type[]" class="form-control">
                                                     <option value="product">Product</option>
                                                     <option value="material">Material</option>
                                                     <option value="service">Service</option>
                                                     <option value="fee">Fee</option>
                                                 </select></td>
-                                            <td width="150px"><input type="number" class="form-control quantity" name="quantity[]"
+                                            <td width="10%"><input type="number" class="form-control quantity" name="quantity[]"
                                                        data-counter="0" id="quantity_0" value="1"></td>
-                                            <td width="150px"><input type="number" class="form-control price" name="price[]"
+                                            <td width="10%"><input type="number" class="form-control price" name="price[]"
                                                        data-counter="0" id="price_0" min="0" value="0"></td>
-                                            <td width="150px"><input type="number" class="form-control discount" name="discount[]"
+                                            <td width="10%"><input type="number" class="form-control discount" name="discount[]"
                                                        data-counter="0" id="discount_0" min="0" value="0" ></td>
-                                            <td width="150px"><input type="text" class="form-control tax_change" name="tax[]"
+                                            <td width="10%"><input type="text" class="form-control tax_change" name="tax[]"
                                                        data-counter="0" id="tax1_0" min="0" value="0">
                                                        <!-- <span id="span_tax_0">0.0</span> -->
                                                        </td>
-                                            <td width="150px"><input type="hidden" class="form-control " name="total[]"
+                                            <td width="10%"><input type="hidden" class="form-control " name="total[]"
                                                        data-counter="0" id="item_total_0" min="0" value="0">
                                                        $<span id="span_total_0">0.00</span></td>
                                         </tr>
@@ -440,9 +580,9 @@ input:checked + .slider:before {
                                             <td>$ <span id="total_tax_">0.00</span><input type="hidden" name="taxes" id="total_tax_input"></td>
                                         </tr>
                                         <tr>
-                                            <td style="width:250px;"><input type="text" name="adjustment_name" id="adjustment_name" placeholder="Adjustment Name" class="form-control" style="width:200px; display:inline; border: 1px dashed #d1d1d1"></td>
-                                            <td style="width:150px;">
-                                            <input type="number" name="adjustment_value" id="adjustment_input" value="0" class="form-control adjustment_input" style="width:100px; display:inline-block">
+                                            <td style="width:;"><input type="text" name="adjustment_name" id="adjustment_name" placeholder="Adjustment Name" class="form-control" style="width:; display:inline; border: 1px dashed #d1d1d1"></td>
+                                            <td align="center">
+                                            <input type="number" name="adjustment_value" id="adjustment_input" value="0" class="form-control adjustment_input" style="width:50%;display:inline;">
                                                 <span class="fa fa-question-circle" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Optional it allows you to adjust the total amount Eg. +10 or -10." data-original-title="" title=""></span>
                                             </td>
                                             <td>0.00</td>
@@ -496,8 +636,8 @@ input:checked + .slider:before {
                             <br><br>
                             <div class="row">                        
                                 <div class="form-group col-md-4">
-                                    <label for="start_date">Enter an offer code</label>
-                                    <input type="text" class="form-control" name="offer_code" id="offer_code" />
+                                    <label for="start_date" class="label-element">Enter an offer code</label>
+                                    <input type="text" class="form-control input-element" name="offer_code" id="offer_code" />
                                     
                                     <div class="invalid_code" style="display:none;">
                                         <b style="color:red;">Invalid Code. Please check your code.</b>
@@ -524,9 +664,10 @@ input:checked + .slider:before {
                             <h6>JOB DETAIL</h6><br>
                             
                         <div class="row">
-                                <div class="form-group col-md-4">
-                                    <label for="job_type">Job Type</label>
-                                    <select name="job_type" id="job_type" class="form-control custom-select">
+                                <div class="form-group col-md-4 ">
+                                <div class="select-wrap">
+                                    <label for="job_type" class="sub_label">Job Type</label>
+                                    <select name="job_type" id="job_type" class="form-control custom-select m_select">
                                     <?php foreach($job_types as $jt){ ?>
                                         <option value="<?php echo $jt->title ?>"><?php echo $jt->title ?></option>
 
@@ -538,16 +679,19 @@ input:checked + .slider:before {
                                         <option value="Replace">Replace</option> -->
                                     </select>
                                 </div>  
+                                </div>
                             <div class="col-md-4 form-group">
+                            <div class="select-wrap">
                                 <label for="Job Tag">Job Tag</label>
                                 <!-- <label style="float:right;color:green;">Manage Tag</label> -->
                                 <!-- <input type="text" class="form-control" name="job_tag" id="job_tag" /> -->
-                                <select class="form-control" name="job_tag" id="job_tag">
+                                <select class="form-control m_select" name="job_tag" id="job_tag">
                                             <!-- <option>---</option> -->
                                             <?php foreach($job_tags as $tags){ ?>
-                                                <option value="<?php echo $tags->name; ?>"><?php echo $tags->name; ?><option>
+                                                <option value="<?php echo $tags->name; ?>"><?php echo $tags->name; ?></option>
                                             <?php } ?>
                                 </select>
+                            </div>
                             </div>
                         </div>
                             <!-- <div class="row">                        
@@ -601,27 +745,29 @@ input:checked + .slider:before {
                             </div> -->
                             <div class="row">                        
                                 <div class="form-group col-md-4">
-                                    <label for="contact_name">Schedule Date Given</label>
-                                    <input type="date" class="form-control" name="schedule_date_given" id="schedule_date_given" />
+                                    <label for="contact_name" class="label-element">Schedule Date Given</label>
+                                    <input type="date" class="form-control input-element" name="schedule_date_given" id="schedule_date_given" />
                                 </div>      
                                 <div class="form-group col-md-4">
+                                <div class="select-wrap">
                                     <label for="workorder_priority">Priority</label>
-                                    <select name="priority" id="workorder_priority" class="form-control custom-select">
+                                    <select name="priority" id="workorder_priority" class="form-control custom-select m_select">
                                         <option value="Emergency">Emergency</option>
                                         <option value="Low">Low</option>
                                         <option value="Standard">Standard</option>
                                         <option value="Urgent">Urgent</option>                
                                     </select>
-                                </div>                                      
+                                </div>   
+                                </div>                                   
                             </div>
                             <div class="row">                        
                                 <div class="form-group col-md-4">
-                                    <label for="job_name">Job Name</label>
-                                    <input type="text" class="form-control" name="job_name" id="job_name" required />
+                                    <label for="job_name" class="label-element">Job Name</label>
+                                    <input type="text" class="form-control input-element" name="job_name" id="job_name" required />
                                 </div>
                                 <div class="form-group col-md-4">
-                                    <label for="job_desc">Job Description</label>
-                                    <textarea name="job_description" id="job_desc" cols="5" rows="2" class="form-control"></textarea> 
+                                    <label for="job_desc" class="label-element">Job Description</label>
+                                    <textarea name="job_description" id="job_desc" cols="5" rows="2" class="form-control input-element"></textarea> 
                                 </div>                                           
                             </div>
 
@@ -629,8 +775,9 @@ input:checked + .slider:before {
                             <h6>PAYMENT DETAIL</h6><br>
                             <div class="row">                   
                                 <div class="form-group col-md-4">
+                                <div class="select-wrap">
                                     <label for="job_type">Payment Method</label>
-                                    <select name="payment_method" id="payment_method" class="form-control custom-select">
+                                    <select name="payment_method" id="payment_method" class="form-control custom-select m_select">
                                         <option value="">Choose method</option>
                                         <option value="Cash">Cash</option>
                                         <option value="Check">Check</option>
@@ -647,10 +794,11 @@ input:checked + .slider:before {
                                         <option value="Other Credit Card Professor">Other Credit Card Professor</option>
                                         <option value="Other Payment Type">Other Payment Type</option>
                                     </select>
-                                </div>      
+                                </div> 
+                                </div>     
                                 <div class="form-group col-md-4">
-                                    <label for="job_type">Amount</label><small class="help help-sm"> ( $ )</small>
-                                    <input type="text" class="form-control" name="payment_amount" id="payment_amount"  />
+                                    <label for="job_type" class="label-element">Amount<small class="help help-sm"> ( $ )</small></label>
+                                    <input type="text" class="form-control input-element" name="payment_amount" id="payment_amount"  />
                                 </div>
                                 <div class="form-group col-md-4" id="cash_area" style="display:none;">
                                                 <br><br>
@@ -882,8 +1030,9 @@ input:checked + .slider:before {
                             <br><br>
                             <div class="row">                        
                                 <div class="form-group col-md-4">
+                                <div class="select-wrap">
                                     <label for="workorder_status">Status</label>
-                                    <select name="status" id="workorder_status" class="form-control custom-select">
+                                    <select name="status" id="workorder_status" class="form-control custom-select m_select">
                                         <option value="New">New</option>
                                         <option value="Draft">Draft</option>
                                         <option value="Scheduled">Scheduled</option>
@@ -894,6 +1043,7 @@ input:checked + .slider:before {
                                         <option value="Withdrawn">Withdrawn</option>
                                         <option value="Closed">Closed</option>
                                     </select>
+                                </div>
                                 </div>
                                 <!-- <div class="form-group col-md-4">
                                     <label for="workorder_priority">Priority</label>
@@ -909,8 +1059,8 @@ input:checked + .slider:before {
 
                             <div class="row">                        
                                 <div class="form-group col-md-4">
-                                    <label for="purchase_order">Purchase Order# (optional)</label>
-                                    <input type="text" class="form-control" name="purchase_order_number" id="purchase_order" /> 
+                                    <label for="purchase_order" class="label-element">Purchase Order# (optional)</label>
+                                    <input type="text" class="form-control input-element" name="purchase_order_number" id="purchase_order" /> 
                                 </div>                                        
                             </div>
 
@@ -929,8 +1079,8 @@ input:checked + .slider:before {
                             <br><br>
                             <div class="row">        
                                 <div class="form-group col-md-4">
-                                    <label for="instructions">Instructions</label>
-                                    <textarea name="instructions" id="instructions" cols="5" rows="2" class="form-control"></textarea>
+                                    <label for="instructions" class="label-element">Instructions</label>
+                                    <textarea name="instructions" id="instructions" cols="5" rows="2" class="form-control input-element"></textarea>
                                 </div>                                           
                             </div>
 
@@ -944,11 +1094,10 @@ input:checked + .slider:before {
                                     </div>
                                 </div>
                             </div>
-                            <div class="row">
+                            <div class="row signature_web">
                                 <div class="col-md-4">
                                     <h6>Company Representative Approval</h6>
                                     <div class="sigPad" id="smoothed1a" style="width:100%;border:solid gray 1px;background-color:#00b300;">
-                                    <!-- <a href="#" style="float:right;margin-right:10px;" class="smoothed1a_pencil" id="smoothed1a_pencil"><i class="fa fa-pencil" aria-hidden="true"></i></a> -->
                                         <ul class="sigNav" style="">
                                             <li class="drawIt"><a href="#draw-it">Draw It</a></li>
                                             <li class="clearButton"><a href="#clear">Clear</a></li>
@@ -958,7 +1107,6 @@ input:checked + .slider:before {
                                         </ul>
                                         <div class="sig sigWrapper" id="smoothed1a_pencil" style="height:auto;pointer-events: none;">
                                             <div class="typed"></div>
-                                            <!-- <canvas class="pad" id="company_representative_approval_signature1a" style="width:100%;"></canvas> -->
                                             <div id="signature-pad">
                                             <canvas style="border:1px solid #000" id="sign"></canvas>
                                             </div>
@@ -978,7 +1126,6 @@ input:checked + .slider:before {
                                 <div class="col-md-4">
                                     <h6>Primary Account Holder</h6>
                                     <div class="sigPad" id="smoothed2a" style="width:100%;border:solid gray 1px;background-color:#f7b900;">
-                                    <!-- <p style="float:right;margin-right:10px;"><i class="fa fa-pencil" aria-hidden="true"></i></p> -->
                                         <ul class="sigNav">
                                             <li class="drawIt"><a href="#draw-it">Draw It</a></li>
                                             <li class="clearButton"><a href="#clear">Clear</a></li>
@@ -988,7 +1135,6 @@ input:checked + .slider:before {
                                         </ul>
                                         <div class="sig sigWrapper" style="height:auto;pointer-events: none;">
                                             <div class="typed"></div>
-                                            <!-- <canvas class="pad" id="primary_account_holder_signature2a" style="width:100%;"></canvas> -->
                                             <div id="signature-pad2">
                                             <canvas style="border:1px solid #000" id="sign2"></canvas>
                                             </div>
@@ -1007,7 +1153,6 @@ input:checked + .slider:before {
                                 <div class="col-md-4">
                                     <h6>Secondary Account Holder</h6>
                                     <div class="sigPad" id="smoothed3a" style="width:100%;border:solid gray 1px;background-color:#f75c1e;">
-                                    <!-- <p style="float:right;margin-right:10px;"><i class="fa fa-pencil" aria-hidden="true"></i></p> -->
                                         <ul class="sigNav">
                                             <li class="drawIt"><a href="#draw-it">Draw It</a></li>
                                             <li class="clearButton"><a href="#clear">Clear</a></li>
@@ -1017,7 +1162,6 @@ input:checked + .slider:before {
                                         </ul>
                                         <div class="sig sigWrapper" style="height:auto;pointer-events: none;">
                                             <div class="typed"></div>
-                                            <!-- <canvas class="pad" id="secondary_account_holder_signature3a" style="width:100%;"></canvas> -->
                                             <div id="signature-pad3">
                                             <canvas style="border:1px solid #000" id="sign3"></canvas>
                                             </div>
@@ -1034,6 +1178,11 @@ input:checked + .slider:before {
 
                                 </div>
                             </div>
+
+                            <div class="signature_mobile">
+                                    <br><br>
+                                    <a href="#" class="btn btn-success" data-toggle="modal" data-target="#signature_mobile">Signature</a>
+                            </div>
                 
                             <div class="row" style="margin-top:80px;">                        
                                 <div class="form-group col-md-4">
@@ -1049,6 +1198,13 @@ input:checked + .slider:before {
                                     <input type="file" class="form-control" name="attachment" id="attachment">
                                 </div>                                                                
                             </div>
+
+                            
+              
+        </div>
+      <!-- </div> -->
+
+
 
                 <br><br><br><br><br>
                 <div>
@@ -1131,6 +1287,129 @@ input:checked + .slider:before {
                             </textarea>
                             <input type="hidden" id="company_id_modal" value="<?php echo getLoggedCompanyID(); ?>">
                             <input type="hidden" id="update_tc_id" value="<?php echo $terms_conditions->id; ?>">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary save_terms_and_conditions">Save changes</button>
+                    </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal -->
+            <div class="modal fade" id="signature_mobile" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                    <div class="modal-header">
+                        <!-- <h5 class="modal-title" id="exampleModalLongTitle">Update Terms and Conditions</h5> -->
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                            <div class="row signature_mobile">
+                                <div class="col-md-12">
+                                
+                                <div class="tab-content py-3 px-3 px-sm-0" id="nav-tabContent">
+                                    <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab" style="padding:1%;">
+                                                <!-- <div class="col-md-4"> -->
+                                                    <!-- <h6>Company Representative Approval</h6> -->
+                                                    <div class="sigPad" id="smoothed1am" style="width:100%;border:solid gray 1px;background-color:#00b300;">
+                                                        <ul class="sigNav" style="">
+                                                            <li class="drawIt"><a href="#draw-it">Draw It</a></li>
+                                                            <li class="clearButton"><a href="#clear">Clear</a></li>
+                                                        </ul>
+                                                        <ul class="edit">
+                                                            <li class="smoothed1a_pencil pointer"><a onclick="myFunctionM()" style="float:right;margin-right:10px;" class="smoothed1a_pencil"><i class="fa fa-pencil" aria-hidden="true"></i></a></li>
+                                                        </ul>
+                                                        <div class="sig sigWrapper" id="smoothed1a_pencil" style="height:auto;pointer-events: none;">
+                                                            <div class="typed"></div>
+                                                            <div id="signature-padM">
+                                                            <canvas style="border:1px solid #000" id="signM"></canvas>
+                                                            </div>
+                                                            <input type="hidden" name="output-2" class="output">
+                                                        </div>
+                                                    </div>
+                                                    <input type="hidden" id="saveCompanySignatureDB1aM"
+                                                        name="company_representative_approval_signature1aM">
+                                                    <br>
+
+                                                    <label for="comp_rep_approval">Printed Name</label>
+                                                    <input type="text6" class="form-control mb-3"
+                                                        name="company_representative_printed_name"
+                                                        id="comp_rep_approval" placeholder=""/>
+
+                                                <!-- </div> -->
+                                    </div>
+                                    <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab" style="padding:1%;">
+                                                <!-- <div class="col-md-4"> -->
+                                                    <!-- <h6>Primary Account Holder</h6> -->
+                                                    <div class="sigPad" id="smoothed2am" style="width:100%;border:solid gray 1px;background-color:#f7b900;">
+                                                        <ul class="sigNav">
+                                                            <li class="drawIt"><a href="#draw-it">Draw It</a></li>
+                                                            <li class="clearButton"><a href="#clear">Clear</a></li>
+                                                        </ul>
+                                                        <ul class="edit">
+                                                            <li class="smoothed1a_pencil pointer"><a onclick="myFunctiontwoM()" style="float:right;margin-right:10px;" class="smoothed1a_pencil"><i class="fa fa-pencil" aria-hidden="true"></i></a></li>
+                                                        </ul>
+                                                        <div class="sig sigWrapper" style="height:auto;pointer-events: none;">
+                                                            <div class="typed"></div>
+                                                            <div id="signature-pad2M">
+                                                            <canvas style="border:1px solid #000" id="sign2M"></canvas>
+                                                            </div>
+                                                            <input type="hidden" name="output-2" class="output">
+                                                        </div>
+                                                    </div>
+                                                    <input type="hidden" id="savePrimaryAccountSignatureDB2aM"
+                                                        name="primary_account_holder_signature2aM">
+                                                    <br>
+
+                                                    <label for="comp_rep_approval">Printed Name</label>
+                                                    <input type="text6" class="form-control mb-3" name="primary_account_holder_name"
+                                                        id="comp_rep_approval" placeholder=""/>
+
+                                                <!-- </div> -->
+                                    </div>
+                                    <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab" style="padding:1%;">
+                                                <!-- <div class="col-md-4"> -->
+                                                    <!-- <h6>Secondary Account Holder</h6> -->
+                                                    <div class="sigPad" id="smoothed3am" style="width:100%;border:solid gray 1px;background-color:#f75c1e;">
+                                                        <ul class="sigNav">
+                                                            <li class="drawIt"><a href="#draw-it">Draw It</a></li>
+                                                            <li class="clearButton"><a href="#clear">Clear</a></li>
+                                                        </ul>
+                                                        <ul class="edit">
+                                                            <li class="smoothed1a_pencil pointer"><a onclick="myFunctionthreeM()" style="float:right;margin-right:10px;" class="smoothed1a_pencil"><i class="fa fa-pencil" aria-hidden="true"></i></a></li>
+                                                        </ul>
+                                                        <div class="sig sigWrapper" style="height:auto;pointer-events: none;">
+                                                            <div class="typed"></div>
+                                                            <div id="signature-pad3M">
+                                                            <canvas style="border:1px solid #000" id="sign3M"></canvas>
+                                                            </div>
+                                                            <input type="hidden" name="output-2" class="output">
+                                                        </div>
+                                                    </div>
+                                                    <input type="hidden" id="saveSecondaryAccountSignatureDB3aM"
+                                                        name="secondary_account_holder_signature3aM">
+                                                    <br>
+
+                                                    <label for="comp_rep_approval">Printed Name</label>
+                                                    <input type="text6" class="form-control mb-3" name="secondery_account_holder_name"
+                                                        id="comp_rep_approval" placeholder=""/>
+
+                                                <!-- </div> -->
+                                    </div>
+                                </div>
+                                <nav>
+                                    <div class="nav nav-tabs nav-fill" id="nav-tab" role="tablist">
+                                    <a class="nav-item nav-link" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">Company Representative Approval</a>
+                                    <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-profile" role="tab" aria-controls="nav-profile" aria-selected="false">Primary Account Holder</a>
+                                    <a class="nav-item nav-link" id="nav-contact-tab" data-toggle="tab" href="#nav-contact" role="tab" aria-controls="nav-contact" aria-selected="false">Secondary Account Holder</a>
+                                    </div>
+                                </nav>
+                                
+                                </div>
+                            </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -1559,6 +1838,74 @@ function resizeCanvas() {
 window.onresize = resizeCanvas;
 resizeCanvas();
 </script>
+
+
+
+<!-- MOBILE AREA -->
+<!-- <script>
+var wrapper = document.getElementById("signature-padM");
+var canvas = wrapper.querySelector("canvas");
+
+var sign = new SignaturePad(document.getElementById('signM'), {
+  backgroundColor: 'rgba(255, 255, 255, 0)',
+  penColor: 'rgb(0, 0, 0)'
+});
+
+function resizeCanvas() {
+     var ratio =  Math.max(window.devicePixelRatio || 1, 1);
+
+     canvas.width = canvas.offsetWidth * ratio;
+     canvas.height = canvas.offsetHeight * ratio;
+     canvas.getContext("2d").scale(ratio, ratio);
+}
+
+window.onresize = resizeCanvas;
+resizeCanvas();
+</script>
+
+<script>
+var wrapper = document.getElementById("signature-pad2M");
+var canvas = wrapper.querySelector("canvas");
+
+var sign = new SignaturePad(document.getElementById('sign2M'), {
+  backgroundColor: 'rgba(255, 255, 255, 0)',
+  penColor: 'rgb(0, 0, 0)'
+});
+
+function resizeCanvas() {
+     var ratio =  Math.max(window.devicePixelRatio || 1, 1);
+
+     canvas.width = canvas.offsetWidth * ratio;
+     canvas.height = canvas.offsetHeight * ratio;
+     canvas.getContext("2d").scale(ratio, ratio);
+}
+
+window.onresize = resizeCanvas;
+resizeCanvas();
+</script>
+
+<script>
+var wrapper = document.getElementById("signature-pad3M");
+var canvas = wrapper.querySelector("canvas");
+
+var sign = new SignaturePad(document.getElementById('sign3M'), {
+  backgroundColor: 'rgba(255, 255, 255, 0)',
+  penColor: 'rgb(0, 0, 0)'
+});
+
+function resizeCanvas() {
+     var ratio =  Math.max(window.devicePixelRatio || 1, 1);
+
+     canvas.width = canvas.offsetWidth * ratio;
+     canvas.height = canvas.offsetHeight * ratio;
+     canvas.getContext("2d").scale(ratio, ratio);
+}
+
+window.onresize = resizeCanvas;
+resizeCanvas();
+</script> -->
+
+
 
 <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAlMWhWMHlxQzuolWb2RrfUeb0JyhhPO9c&libraries=places"></script>
 <script>

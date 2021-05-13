@@ -1,5 +1,5 @@
 const GET_OTHER_MODAL_URL = "/accounting/get-other-modals/";
-const vendorModals = ['#expenseModal', '#checkModal', '#billModal', '#vendorCreditModal'];
+const vendorModals = ['#expenseModal', '#checkModal', '#billModal', '#vendorCreditModal', '#purchaseOrderModal'];
 var rowCount = 0;
 var rowInputs = '';
 var blankRow = '';
@@ -1389,7 +1389,7 @@ $(function() {
         }
     });
 
-    $(document).on('change', '#modal-container table#category-details-table input[name="category_amount[]"], #modal-container table#item-details-table input[name="item_amount[]"]', function() {
+    $(document).on('change', '#modal-container table#category-details-table input[name="category_amount[]"]', function() {
         computeTransactionTotal();
     });
 
@@ -1494,12 +1494,17 @@ $(function() {
     //     $(this).parent().parent().find('input[name="item_amount[]"]').val(amount).trigger('change');
     // });
 
-    $(document).on('change', '#modal-container table#item-details-table input[name="quantity[]"], #modal-container table#item-details-table input[name="item_amount[]"]', function() {
+    $(document).on('change', '#modal-container table#item-details-table tbody tr input', function() {
         var quantity = $(this).parent().parent().find('input[name="quantity[]"]').val();
         var price = $(this).parent().parent().find('input[name="item_amount[]"]').val();
+        var taxPercentage = $(this).parent().parent().find('input[name="item_tax[]"]').val();
+        var discount = $(this).parent().parent().find('input[name="discount[]"]').val();
         var amount = parseFloat(parseFloat(price) * parseInt(quantity)).toFixed(2);
+        var taxAmount = parseFloat(taxPercentage) * amount / 100;
+        var total = parseFloat(parseFloat(amount) + parseFloat(taxAmount) - parseFloat(discount)).toFixed(2);
 
-        $(this).parent().parent().find('td:nth-child(7) span').html(amount);
+        $(this).parent().parent().find('td:nth-child(7) span').html(total);
+        computeTransactionTotal();
     });
 
     $(document).on('click', '#modal-container a#add_another_items', function(e) {
@@ -1539,14 +1544,50 @@ $(function() {
                 <td>Product</td>
                 <td><input type="number" name="quantity[]" class="form-control text-right" required value="0"></td>
                 <td><input type="number" name="item_amount[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" value="${item.price}"></td>
-                <td><input type="number" name="discount[]" class="form-control text-right"></td>
-                <td><input type="number" name="tax[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01"></td>
+                <td><input type="number" name="discount[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" value="0.00"></td>
+                <td><input type="number" name="item_tax[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" value="7.50"></td>
                 <td>$<span>0.00</span></td>
                 <td><a href="#" class="deleteRow"><i class="fa fa-trash"></i></a></td>
             `;
 
             $('#modal-container form#modal-form .modal #item-details-table tbody').append(`<tr></tr>`);
             $('#modal-container form#modal-form .modal #item-details-table tbody tr:last-child').append(fields);
+        });
+    });
+
+    $(document).on('change', '#billModal #terms', function() {
+        var billDate = new Date($('#billModal #bill_date').val());
+        var dueDate = new Date(`${billDate.getMonth()+1}/${billDate.getDate()}/${billDate.getFullYear()}`);
+        $.get('/accounting/get-term-details/'+$(this).val(), function(res) {
+            var term = JSON.parse(res);
+
+            if(term.type === "1") {
+                dueDate.setDate(dueDate.getDate() + parseInt(term.net_due_days));
+            } else {
+                if(
+                    term.minimum_days_to_pay === null ||
+                    term.minimum_days_to_pay === "" ||
+                    term.minimum_days_to_pay === "0"
+                ) {
+                    dueDate.setDate(term.day_of_month_due);
+                    if(billDate.getDate() > parseInt(term.day_of_month_due)) {
+                        dueDate.setMonth(dueDate.getMonth() + 1);
+                    }
+                } else {
+                    var expectedDue = new Date(`${dueDate.getMonth()+1}/${dueDate.getDate()}/${dueDate.getFullYear()}`);
+                    expectedDue.setDate(parseInt(term.day_of_month_due));
+                    expectedDue.setDate(expectedDue.getDate() - parseInt(term.minimum_days_to_pay));
+                    if(billDate.getDate() > expectedDue.getDate()) {
+                        dueDate = new Date(`${dueDate.getMonth() + 2}/${term.day_of_month_due}/${dueDate.getFullYear()}`);
+                    } else {
+                        dueDate.setDate(parseInt(term.day_of_month_due));
+                    }
+                }
+            }
+
+            dueDate = String(dueDate.getMonth() + 1).padStart(2, '0')+'/'+String(dueDate.getDate()).padStart(2, '0')+'/'+dueDate.getFullYear();
+
+            $('#billModal #due_date').val(dueDate);
         });
     });
 });
@@ -2016,23 +2057,20 @@ const submitModalForm = (event, el) => {
                     data.append('category_tax[]', tax.prop('checked') ? "1" : "0");
                 }
             }
+
+            count++;
         });
 
-        // count = 0;
-        // $(`${modalId} table#item-details-table tbody tr`).each(function() {
-        //     var billable = $(this).find('input[name="item_billable[]"]');
-        //     var tax = $(this).find('input[name="item_tax[]"]');
+        count = 0;
+        $(`${modalId} table#item-details-table tbody tr`).each(function() {
+            if(count === 0) {
+                data.set('item_total[]', $(this).find('td:nth-child(7) span').html());
+            } else {
+                data.append('item_total[]', $(this).find('td:nth-child(7) span').html());
+            }
 
-        //     if(billable.length > 0 && tax.length > 0) {
-        //         if(count === 0) {
-        //             data.set('item_billable[]', billable.prop('checked') ? "1" : "0");
-        //             data.set('item_tax[]', tax.prop('checked') ? "1" : "0");
-        //         } else {
-        //             data.append('item_billable[]', billable.prop('checked') ? "1" : "0");
-        //             data.append('item_tax[]', tax.prop('checked') ? "1" : "0");
-        //         }
-        //     }
-        // });
+            count++;
+        });
     } else if(modalId === '#payBillsModal') {
         var totalAmount = $(`${modalId} span.transaction-total-amount`).html();
         data.append('total', totalAmount);
@@ -2281,8 +2319,8 @@ const computeTransactionTotal = () => {
         total = parseFloat(parseFloat(total) + parseFloat(value)).toFixed(2);
     });
 
-    $('#modal-container table#item-details-table input[name="item_amount[]"]').each(function() {
-        var value = $(this).val() === "" ? 0.00 : parseFloat($(this).val()).toFixed(2);
+    $('#modal-container table#item-details-table tbody tr td:nth-child(7) span').each(function() {
+        var value = $(this).html() === "" ? 0.00 : parseFloat($(this).html()).toFixed(2);
 
         total = parseFloat(parseFloat(total) + parseFloat(value)).toFixed(2);
     });

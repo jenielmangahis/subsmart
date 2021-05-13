@@ -1004,13 +1004,59 @@ SQL;
         echo json_encode(['data' => $newTemplate]);
     }
 
-    public function apiGetUsers()
+    public function apiGetUsers($templateId)
     {
-        $this->db->where('company_id', logged('company_id'));
-        $users = $this->db->get('users')->result_array();
+        $query = <<<SQL
+        SELECT * FROM `users` WHERE company_id = ? AND id != ?
+SQL;
+
+        $users = $this->db->query($query, [logged('company_id'), logged('id')])->result_array();
+
+        $this->db->where('template_id', $templateId);
+        $sharedUsers = $this->db->get('user_docfile_templates_shared')->result_array();
+        $sharedUserIds = array_column($sharedUsers, 'user_id');
+
+        $users = array_map(function ($user) use ($sharedUserIds) {
+            $user['is_selected'] = in_array($user['id'], $sharedUserIds);
+            return $user;
+        }, $users);
 
         header('content-type: application/json');
         echo json_encode(['data' => $users]);
+    }
+
+    public function apiShareTemplate()
+    {
+        header('content-type: application/json');
+
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            echo json_encode(['data' => null]);
+            return;
+        }
+
+        $payload = json_decode(file_get_contents('php://input'), true);
+        $userIds = $payload['user_ids'] ?? [];
+        $templateId = $payload['template_id'];
+
+        $this->db->where('template_id', $templateId);
+        $sharedUsers = $this->db->get('user_docfile_templates_shared')->result_array();
+
+        if (!empty($sharedUsers)) {
+            $this->db->where('template_id', $templateId);
+            $this->db->delete('user_docfile_templates_shared');
+        }
+
+        if (empty($userIds)) {
+            echo json_encode(['data' => null]);
+            return;
+        }
+
+        $fields = array_map(function ($id) use ($templateId) {
+            return ['user_id' => $id, 'template_id' => $templateId];
+        }, $userIds);
+
+        $this->db->insert_batch('user_docfile_templates_shared', $fields);
+        echo json_encode(['data' => $fields]);
     }
 }
 

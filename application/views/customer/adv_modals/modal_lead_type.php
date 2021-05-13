@@ -9,15 +9,17 @@
             </div>
             <form id="leadTypeForm">
                 <div class="modal-body">
-
                     <div class="col-md-12">
-                        <div class="form-group" id="customer_type_group">
-                            <label for="">Lead Type Name</label><br/>
-                            <input type="text" class="form-control" name="lead_name" id="lead_name" required/>
-                            <input type="hidden" class="form-control" name="lead_id" id="lead_id" required/>
+                        <div class="row form_line" id="customer_type_group">
+                            <div class="col-md-4">
+                                Lead Type Name
+                            </div>
+                            <div class="col-md-8">
+                                <input type="text" class="form-control" name="lead_name" id="lead_name"  required/>
+                                <input type="hidden" class="form-control" name="lead_id" id="lead_id"/>
+                            </div>
                         </div>
                     </div>
-
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
