@@ -302,6 +302,7 @@ $route['accounting/get-recurring-form-fields/(:any)'] = 'accounting_modals/get_r
 $route['accounting/get-item-details/(:any)'] = 'accounting_modals/getItemDetails/$1';
 $route['accounting/load-bills']['post'] = 'accounting_modals/load_bills';
 $route['accounting/get-items-list-modal'] = 'accounting_modals/item_list_modal';
+$route['accounting/get-term-details/(:any)'] = 'accounting_modals/get_term_details/$1';
 
 $route['accounting/lists'] = 'accounting/lists';
 
@@ -864,4 +865,5 @@ $route['promote/view_deals/(:any)'] = 'Promote/view_deals/$1';
 $route['promote/bookings/(:any)'] = 'Promote/bookings/$1';
 $route['promote/view_deals_payment/(:any)'] = 'Promote/view_deals_payment/$1';
 $route['promote/order_pdf/(:any)'] = 'Promote/deals_order_pdf/$1';
-$route['deal/(:any)/(:num)'] = 'Pages/deals_view/$1/$2';
+$route['deal/booking/(:num)'] = 'Pages/deals_booking/$1';
+$route['deal/(:any)/(:num)']  = 'Pages/deals_view/$1/$2';

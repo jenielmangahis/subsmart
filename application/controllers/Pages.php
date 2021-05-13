@@ -411,6 +411,7 @@ class Pages extends MY_Controller {
     public function front_company_business_profile( $slug ){
     	$this->load->model('Business_model');
     	$this->load->model('ServiceCategory_model');
+    	$this->load->model('DealsSteals_model');
     	
     	add_css(array(
             "assets/css/jquery.fancybox.css"
@@ -424,6 +425,10 @@ class Pages extends MY_Controller {
         $profiledata = $this->Business_model->getBySlug($slug);
         $selectedCategories = $this->ServiceCategory_model->getAllCategoriesByCompanyID($comp_id);
 
+        $conditions[] = ['field' => 'deals_steals.status', 'value' => $this->DealsSteals_model->statusActive()];
+        $dealsSteals  = $this->DealsSteals_model->getAllByCompanyId($comp_id, array(), $conditions);
+
+        $this->page_data['dealsSteals'] = $dealsSteals;
         $this->page_data['profiledata'] = $profiledata;
         $this->page_data['selectedCategories'] = $selectedCategories;
         $this->load->view('pages/company_business_profile', $this->page_data);        
@@ -529,12 +534,28 @@ class Pages extends MY_Controller {
 
     public function deals_view($slug, $id){
     	$this->load->model('DealsSteals_model');
+    	$this->load->model('Business_model');
 
-    	$dealsSteals   = $this->DealsSteals_model->getById($id);
+    	$dealsSteals = $this->DealsSteals_model->getById($id);
+    	$company     = $this->Business_model->getByCompanyId($dealsSteals->company_id);
 
     	$this->page_data['page']->title = 'Deals';	
     	$this->page_data['dealsSteals'] = $dealsSteals;
+    	$this->page_data['company']     = $company;
     	$this->load->view('pages/deals_view', $this->page_data);       
+    }
+
+    public function deals_booking($id){
+    	$this->load->model('DealsSteals_model');
+    	$this->load->model('Business_model');
+
+    	$dealsSteals   = $this->DealsSteals_model->getById($id);
+    	$company       = $this->Business_model->getByCompanyId($dealsSteals->company_id);
+
+    	$this->page_data['page']->title = 'Deals : Booking';	
+    	$this->page_data['company']     = $company;
+    	$this->page_data['dealsSteals'] = $dealsSteals;
+    	$this->load->view('pages/deals_booking', $this->page_data);       
     }
 
 }

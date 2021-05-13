@@ -57,51 +57,52 @@ include viewPath('includes/header'); ?>
                             </div>
                         </div>
                     </div>
-                    <?php
+                    <div id="added-places-section">
+                        <?php
                         foreach ($all_places as $place) {
                             $exploded_coordinated=explode(",", $place->coordinates); ?>
-                    <div id="sec-2-address-btn-<?=$place->id?>"
-                        class="sec-2-option sec-2-address-btn"
-                        onclick="selected_place(<?=$place->coordinates?>,'<?=$place->place_name?>','<?=$place->address?>',<?=$place->zone_radius?>,<?=$place->id?>)">
-                        <div class="row ">
-                            <div class="col-md-2 profile">
-                                <center><img
-                                        src="<?=base_url("assets/img/trac360/map_marker.png")?>"
-                                        alt="user" class="">
-                                </center>
-                            </div>
-                            <div class="col-md-10 details">
-                                <p class="last_tract_location first-p"><?=$place->place_name?>
-                                </p>
-                                <p class="last_tract_location second-p"><?=$place->address?>
-                                </p>
-                                <div class="places-actions-btn">
-                                    <button href="#" class="place-notif-action" id="place_notif_modal_btn">
-                                        <i class="fa fa-bell-o" aria-hidden="true"></i>
-                                    </button>
-                                    <?php
+                        <div id="sec-2-address-btn-<?=$place->id?>"
+                            class="sec-2-option sec-2-address-btn"
+                            onclick="selected_place(<?=$place->coordinates?>,'<?=$place->place_name?>','<?=$place->address?>',<?=$place->zone_radius?>,<?=$place->id?>)">
+                            <div class="row ">
+                                <div class="col-md-2 profile">
+                                    <center><img
+                                            src="<?=base_url("assets/img/trac360/map_marker.png")?>"
+                                            alt="user" class="">
+                                    </center>
+                                </div>
+                                <div class="col-md-10 details">
+                                    <p class="last_tract_location first-p"><?=$place->place_name?>
+                                    </p>
+                                    <p class="last_tract_location second-p"><?=$place->address?>
+                                    </p>
+                                    <div class="places-actions-btn">
+                                        <button href="#" class="place-notif-action" id="place_notif_modal_btn">
+                                            <i class="fa fa-bell-o" aria-hidden="true"></i>
+                                        </button>
+                                        <?php
                                     if ($place->created_by == $user_id) {
                                         ?>
-                                    <button href="#" class="place-edit-action edit_address_modal_btn"
-                                        data-lat="<?=$exploded_coordinated[0]?>"
-                                        data-lng="<?=$exploded_coordinated[1]?>"
-                                        data-place-name="<?=$place->place_name?>"
-                                        data-address="<?=$place->address?>"
-                                        data-radius="<?=$place->zone_radius?>"
-                                        data-user-id="<?=$place->created_by?>"
-                                        data-place-id="<?=$place->id?>">
-                                        <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
-                                    </button>
-                                    <?php
+                                        <button href="#" class="place-edit-action edit_address_modal_btn"
+                                            data-lat="<?=$exploded_coordinated[0]?>"
+                                            data-lng="<?=$exploded_coordinated[1]?>"
+                                            data-place-name="<?=$place->place_name?>"
+                                            data-address="<?=$place->address?>"
+                                            data-radius="<?=$place->zone_radius?>"
+                                            data-user-id="<?=$place->created_by?>"
+                                            data-place-id="<?=$place->id?>">
+                                            <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                                        </button>
+                                        <?php
                                     } ?>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <?php
+                        <?php
                         }
                     ?>
-
+                    </div>
                 </div>
             </div>
         </div>
@@ -142,11 +143,14 @@ include viewPath('includes/header'); ?>
                     </div>
                     <?php foreach ($user_locations as $user) {
                         if ($user->user_id != $user_id) {
-                            ?>
+                            $image = base_url() . '/uploads/users/user-profile/' . $user->profile_img;
+                            if (!@getimagesize($image)) {
+                                $image = base_url('uploads/users/default.png');
+                            } ?>
                     <div class="row">
                         <div class="col-md-4 profile">
                             <center>
-                                <img src="https://localhost/nsmartrac/uploads/users/default.png" alt="user"
+                                <img src="<?=$image?>" alt="user"
                                     class="user-profile active">
                                 <p class="name"> <?=$user->FName?>
                                 </p>

@@ -1,22 +1,22 @@
-<div class="modal fade" id="modal_sales_area" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="modal_rate_plan" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="sales_area_header">Add Sales Area</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Add Rate Plan</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form id="salesAreaForm">
+            <form id="ratePlanForm">
                 <div class="modal-body">
                     <div class="col-md-12">
                         <div class="row form_line" id="customer_type_group">
                             <div class="col-md-4">
-                                Sales Area Name
+                                Rate Amount
                             </div>
                             <div class="col-md-8">
-                                <input type="text" class="form-control" name="sa_name" id="sa_name"  required/>
-                                <input type="hidden" class="form-control" name="sa_id" id="sa_id"/>
+                                <input type="number" step=".01" class="form-control" name="amount" id="amount"  required/>
+                                <input type="hidden" class="form-control" name="id" id="id"/>
                             </div>
                         </div>
                     </div>

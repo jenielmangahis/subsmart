@@ -21,6 +21,24 @@ svg#svg-sprite-menu-close {
   position: relative;
   bottom: 112px !important;
 }
+.label {
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+}
+.label-success {
+    background-color: #5cb85c;
+}
+.label {
+    display: inline;
+    padding: .2em .6em .3em;
+    font-size: 75%;
+    font-weight: 700;
+    line-height: 1;
+    color: #fff;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    border-radius: .25em;
+}
 </style>
 <?php defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <?php include viewPath('includes/header'); ?>
@@ -435,26 +453,51 @@ svg#svg-sprite-menu-close {
                                         <div class="addon__img" style="margin: 23px 0; height: 100px;">
                                             <img class="img-responsive" style="max-width: 200px;position: relative;top: 15px;" data-fileupload="image-logo" src="<?php echo $url->assets ?>img/converge-logo.png">
                                         </div>
-                                        <div class="addon__name">Converge</div>
+                                        <div class="addon__name">
+                                            Converge
+                                            <?php if($onlinePaymentAccount->converge_merchant_id != ''){ ?>
+                                                <span class="pull-right"><label class="label label-success">Active</label></span>
+                                            <?php } ?>
+                                        </div>
                                         <div class="addon__description text-ter">
                                           Accept payments in any way your business requires with Converge.<br>
                                             <a class="a-sec" data-toggle="popover" title="Converge" data-content="Converge is a payment platform that enables you to grow your business the way you want. Over the phone, by mail, by invoice, online, or on-the-go." href="javascript:void(0)">more...</a>
                                         </div>
                                         <div class="row">
-                                          <div class="col-sm-6">
-                                            <div class="apply-container" role="group" aria-label="...">
+                                          <?php if($onlinePaymentAccount){ ?>
+                                                <?php if($onlinePaymentAccount->converge_merchant_id == ''){ ?>
+                                                <div class="col-sm-6">
+                                                    <div class="apply-container" role="group" aria-label="...">
+                                                       <a class="btn-md" href="<?php echo base_url('customer/merchant'); ?>">
+                                                          <span class="fa fa-check fa-margin-right"></span> Apply Now
+                                                      </a>
+                                                    </div>                                                
+                                                </div>
+                                                <?php } ?>
+                                                <div class="col-sm-6">
+                                                    <div class="apply-container" role="group" aria-label="...">
+                                                      <a class="btn-md btn-converge-form" href="javascript:void(0);">
+                                                        <?= $onlinePaymentAccount->converge_merchant_id != ''  ? '<span class="fa fa-check fa-margin-right"></span> Connected' : '<span class="fa fa-gear fa-margin-right"></span> Setup'; ?>
+                                                      </a>
+                                                  </div>
+                                                </div>
+                                          <?php }else{ ?>
+                                            <div class="col-sm-6">
+                                                <div class="apply-container" role="group" aria-label="...">
                                                    <a class="btn-md" href="<?php echo base_url('customer/merchant'); ?>">
                                                       <span class="fa fa-check fa-margin-right"></span> Apply Now
                                                   </a>
-                                              </div>
+                                                </div>
                                           </div>
                                           <div class="col-sm-6">
-                                            <div class="apply-container" role="group" aria-label="...">
+                                                <div class="apply-container" role="group" aria-label="...">
                                                   <a class="btn-md btn-converge-form" href="javascript:void(0);">
                                                       <span class="fa fa-gear fa-margin-right"></span> Setup
                                                   </a>
                                               </div>
                                           </div>
+                                          <?php } ?>
+                                          
                                         </div>
                                     </div>
                                 </li>

@@ -3005,7 +3005,7 @@ function getDocusingTemplates(shared=false) {
   $('#docusign_templates').append(`
     <div class="row vault" id="docusigntTemplates">
       <div class="vault__files">
-          <h6 class="vault__title">Docusign Templates</h6>
+          <h6 class="vault__title">eSign Templates</h6>
           <div class="vault__spacer"></div>
           <div class="vault__filesGrid"></div>
       </div>
@@ -3193,8 +3193,8 @@ function createDocusignTemplate(file, options = {}) {
         const { data } = await response.json();
         window.location = `${prefixURL}/DocuSign/templatePrepare?id=${data.id}`;
       },
-      share: function () {
-        $("#usersModal").modal("show");
+      share: async function () {
+        showUsersModal(id);
       }
     }
 
@@ -3430,46 +3430,90 @@ function setTrashRecords(folders, files) {
   );
 }
 
-
-(() => {
+function showUsersModal(templateId) {
   const $table = $("#usersTable");
   const urlPrefix = location.hostname === "localhost" ? "/nsmartrac" : "";
 
-  function initTable() {
-    return $table.DataTable({
-      searching: false,
-      ajax: `${urlPrefix}/DocuSign/apiGetUsers`,
-      columns: [
-        {
-          data: "id",
-          checkboxes: {
-            selectRow: true
-          }
+  const table = $table.DataTable({
+    searching: false,
+    destroy: true,
+    ajax: `${urlPrefix}/DocuSign/apiGetUsers/${templateId}`,
+    columns: [
+      {
+        data: "id",
+        checkboxes: {
+          selectRow: true,
+          select: true
         },
-        {
-          sortable: false,
-          render: function (_, _, row) {
-            return `${row.FName} ${row.LName}`;
-          },
-        },
-        {
-          sortable: false,
-          data: "email",
-        },
-      ],
-      rowId: function (row) {
-        return `row${row.id}`;
       },
-      createdRow: function (row, data) {
-        $(row).attr("data-id", data.id);
+      {
+        sortable: false,
+        render: function (_, _, row) {
+          return `${row.FName} ${row.LName}`;
+        },
       },
-      order: [[1, "asc"]]
+      {
+        sortable: false,
+        data: "email",
+      },
+    ],
+    rowId: function (row) {
+      return `row${row.id}`;
+    },
+    createdRow: function (row, data) {
+      $(row).attr("data-id", data.id);
+    },
+    order: [[1, "asc"]],
+    initComplete: function(_, { data }) {
+      table.rows().every(function () {
+        const $node = $(this.node());
+        const id = $node.attr("data-id");
+        const { is_selected } = data.find(d => d.id == id);
+        $node.find(".dt-checkboxes").attr("checked", is_selected);
+      });
+    }
+  });
+
+  const $modal = $("#usersModal");
+  const $submit = $modal.find(".btn-primary");
+
+  $modal.modal("show");
+  $submit.off("click");
+
+  $submit.on("click", async function () {
+    $this = $(this);
+    $spinner = $this.find(".spinner-border");
+
+    $spinner.removeClass("d-none");
+    $this.prop("disabled", true);
+
+    let selectedIds = [];
+    table.rows().every(function () {
+      const $node = $(this.node());
+      if ($node.find(".dt-checkboxes").is(":checked")) {
+        selectedIds.push($node.attr("data-id"));
+      }
     });
-  }
 
-  function init() {
-    initTable();
-  }
+    const payload = {
+      user_ids: selectedIds,
+      template_id: templateId
+    };
 
-  init();
-})();
+    const response = await fetch(`${urlPrefix}/DocuSign/apiShareTemplate`, {
+      method: "POST",
+      body: JSON.stringify(payload),
+      headers: {
+        accepts: "application/json",
+        "content-type": "application/json",
+      },
+    });
+
+    const { data } = await response.json();
+    console.log(data);
+
+    $spinner.addClass("d-none");
+    $this.prop("disabled", false);
+    $modal.modal("hide");
+  });
+}

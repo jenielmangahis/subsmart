@@ -44,7 +44,7 @@
             <img src="<?=getCompanyBusinessProfileImage();?>" class="company-logo"/>
         </li>
 
-        <li class="nav-header" style="padding-top: 0px;margin-top: 0px;">DOCUSIGN</li>
+        <li class="nav-header" style="padding-top: 0px;margin-top: 0px;">eSign</li>
 
         <li class="submenus">
             <a href="<?=base_url('esign/Files')?>" title="New">

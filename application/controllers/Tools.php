@@ -21,10 +21,13 @@ class Tools extends MY_Controller {
     public function api_connectors() {
         $this->load->model('SettingOnlinePayment_model');
         $this->load->model('users_model');
-
+        $this->load->model('CompanyOnlinePaymentAccount_model');
+        
+        $company_id = logged('company_id');    
         $user = $this->session->userdata('logged');
 
         $settingOnlinePayment = $this->SettingOnlinePayment_model->findByUserId($user['id']);
+        $onlinePaymentAccount = $this->CompanyOnlinePaymentAccount_model->getByCompanyId($company_id);
 
         if( $settingOnlinePayment ){
             $setting = [
@@ -38,6 +41,7 @@ class Tools extends MY_Controller {
             ];
         }
 
+        $this->page_data['onlinePaymentAccount'] = $onlinePaymentAccount;
         $this->page_data['setting'] = $setting;
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->load->view('tools/api_connectors', $this->page_data);
