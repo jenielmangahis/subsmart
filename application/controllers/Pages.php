@@ -559,12 +559,17 @@ class Pages extends MY_Controller {
 
     public function create_deals_booking(){
     	$this->load->model('DealsBookings_model');
+    	$this->load->model('Business_model');
 
     	$is_success = 0;
     	$msg  = 'Check form inputs and try again.';
     	$post = $this->input->post();  
 
     	if( $post['name'] != '' && $post['email'] != '' && $post['phone'] != '' ){
+
+    		$dealsSteals   = $this->DealsSteals_model->getById($post['did']);
+    		$company       = $this->Business_model->getByCompanyId($dealsSteals->company_id);
+
     		$data = [
     			'deals_id' => $post['did'],
     			'name' => $post['name'],
@@ -575,6 +580,62 @@ class Pages extends MY_Controller {
     			'date_created' => date("Y-m-d H:i:s")
     		];
     		$this->DealsBookings_model->create($data);	
+
+    		$this->page_data['dealsSteals']  = $dealsSteals;
+    		$this->page_data['company']      = $company;
+    		$this->page_data['booking_data'] = $post;
+
+    		$server    = MAIL_SERVER;
+            $port      = MAIL_PORT ;
+            $username  = MAIL_USERNAME;
+            $password  = MAIL_PASSWORD;
+            $from      = MAIL_FROM;
+
+    		//Email customer
+    		$subject_customer = "Deal Booked with " . $company->business_name . " " . date("d-M-Y H:i");
+    		$msg_customer     = $this->load->view('pages/deals_email_template_customer', $this->page_data, TRUE);
+    		$recipient = $post['email'];
+
+    		$mail = new PHPMailer;
+            $mail->isSMTP();
+            $mail->Host = $server;
+            $mail->SMTPAuth = true;
+            $mail->Username   = $username;
+            $mail->Password   = $password;
+            $mail->getSMTPInstance()->Timelimit = 5;
+            $mail->SMTPSecure = 'ssl';
+            $mail->Timeout    =   10; // set the timeout (seconds)
+            $mail->Port = $port;
+            $mail->From = $from;
+            $mail->FromName = 'nSmarTrac';
+            $mail->addAddress($recipient, $recipient);
+            $mail->isHTML(true);
+            $mail->Subject = $subject_customer;
+            $mail->Body    = $msg_customer;
+            $mail->Send();
+
+    		//Email company
+    		$subject_company  = "New inquiry on " . date("d-M-Y H:i");
+    		$msg_company      = $this->load->view('pages/deals_email_template_company', $this->page_data, TRUE);
+    		$recipient = $company->business_email;
+
+    		$mail = new PHPMailer;
+            $mail->isSMTP();
+            $mail->Host = $server;
+            $mail->SMTPAuth = true;
+            $mail->Username   = $username;
+            $mail->Password   = $password;
+            $mail->getSMTPInstance()->Timelimit = 5;
+            $mail->SMTPSecure = 'ssl';
+            $mail->Timeout    =   10; // set the timeout (seconds)
+            $mail->Port = $port;
+            $mail->From = $from;
+            $mail->FromName = 'nSmarTrac';
+            $mail->addAddress($recipient, $recipient);
+            $mail->isHTML(true);
+            $mail->Subject = $subject_company;
+            $mail->Body    = $msg_company;
+            $mail->Send();
 
     		$is_success = 1;
     	}
