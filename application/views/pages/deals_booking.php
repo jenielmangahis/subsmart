@@ -26,46 +26,41 @@
         <div class="col-md-8">
             <div class="text-h">One more step left to book this deal</div>
             <div class="deal-preview">
-                <img src="https://markate.blob.core.windows.net/cdn/20200925/busdeal_1195_ad03392f23_sm.jpg">
+                <img src="<?= base_url("uploads/deals_steals/" . $dealsSteals->company_id . "/" . $dealsSteals->photos); ?>">
                 <div class="deal-preview-cnt">
                     <?= $dealsSteals->title; ?><br>
                     $<?= number_format($dealsSteals->deal_price,2); ?> <span class="text-ter"><span style="text-decoration: line-through;">$<?= number_format($dealsSteals->original_price,2); ?></span></span>
                 </div>
             </div>
 
-            <form data-book="form" method="post" action="#">
+            <form id="frm-booking" method="post" action="#">
+                <input type="hidden" name="did" value="<?= $dealsSteals->id; ?>" id="did">
                 <div class="card">
                     <p class="margin-bottom">
                         The business <b><?= $company->business_name; ?></b> needs your contact information, please fill in the form below.
                     </p>
                     <div class="form-group">
                         <label>Name</label> <span class="form-required">*</span>
-                        <input name="name" type="text" class="form-control" autocomplete="off">
+                        <input name="name" required="" type="text" class="form-control" autocomplete="off">
                     </div>
                     <div class="form-group">
                         <label>Phone</label> <span class="form-required">*</span>
-                        <input name="phone" id="phone" type="text" class="form-control" autocomplete="off">
+                        <input name="phone" required="" id="phone" type="text" class="form-control" autocomplete="off">
                     </div>
                     <div class="form-group">
                         <label>Email</label>
-                        <input name="email" type="text" class="form-control" autocomplete="off">
+                        <input name="email" required="" type="text" class="form-control" autocomplete="off">
                     </div>
                     <div class="form-group">
                         <label>Address</label> <span class="help help-sm">(type in to search for address)</span>
-                        <input name="address_full" id="address_full" type="text" class="form-control pac-target-input" autocomplete="off" placeholder="Enter a location">
-                        <input type="hidden" name="address" id="address" value="">
-                        <input type="hidden" name="city" value="">
-                        <input type="hidden" name="zip" value="">
-                        <input type="hidden" name="state" value="">
-                        <input type="hidden" name="country" value="us">
-                        <input type="hidden" name="latlng" value="">
+                        <input name="address_full" id="address_full" type="text" required="" class="form-control" autocomplete="off" placeholder="Enter a location">
                     </div>
                     <div class="form-group margin-bottom">
                         <label>Message</label>
-                        <div class="help help-sm help-block">Write a message for the PRO to describe your project shortly.</div>
-                        <textarea name="message" rows="3" class="form-control"></textarea>
+                        <div class="help help-sm help-block">Write a message to describe your project shortly.</div>
+                        <textarea name="message" required="" rows="3" class="form-control"></textarea>
                     </div>
-                    <button class="btn btn-primary btn-lg" data-book="submit" data-on-click-label="Confirm...">Confirm</button>
+                    <button class="btn btn-primary btn-lg btn-confirm-booking" type="submit" style="width:30%;">Confirm</button>
                 </div>
 
                 <br>
@@ -77,7 +72,7 @@
             <div class="side-box">
                 <div class="bold margin-bottom">Business Contact Details</div>
                 <div class="avatar margin-bottom-sec">
-                    <img class="img-circle margin-right-sec" src="https://markate.blob.core.windows.net/cdn/20200131/avatar_14356_2efeea8595_xs.jpg">
+                    <img class="img-circle margin-right-sec" src="<?= getCompanyCoverPhoto($dealsSteals->company_id); ?>" style="height: 36px;">
                     <div class="avatar-cnt">
                        <span class="avatar-name"><?= $company->business_name; ?></span>
                        <span class="text-ter avatar-title"><span class="business-name"><?= $company->contact_name; ?></span></span>
@@ -91,6 +86,46 @@
 <?php include viewPath('includes/footer_pages'); ?>
 <script>
 $(function(){
+    $("#frm-booking").submit(function(e){
+        e.preventDefault();
+
+        var url = base_url + 'deal/save_booking';
+        $(".btn-confirm-booking").html('<span class="spinner-border spinner-border-sm m-0"></span>  Saving');
+        setTimeout(function () {
+          $.ajax({
+             type: "POST",
+             url: url,
+             dataType: "json",
+             data: $("#frm-booking").serialize(),
+             success: function(o)
+             {
+                if( o.is_success == 1 ){
+                    Swal.fire({
+                        title: 'Congratulations!',
+                        text: 'The deal is successfully booked, we will contact you shortly to schedule an appointment',
+                        icon: 'success',
+                        showCancelButton: false,
+                        confirmButtonColor: '#32243d',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'View more deals'
+                    }).then((result) => {
+                        if (result.value) {
+                            location.reload();
+                        }
+                    });
+                }else{
+                    $(".btn-confirm-booking").html('Confirm');
+
+                    Swal.fire({
+                      icon: 'error',
+                      title: o.msg,
+                      text: 'Cannot save booking.'
+                    });
+                }
+             }
+          });
+        }, 1000);
+    });
 });
 </script>
 

@@ -420,13 +420,12 @@ class Pages extends MY_Controller {
         add_footer_js(array(
             "assets/js/jquery.fancybox.min.js"
         ));
-
-    	$comp_id = logged('company_id');
-        $profiledata = $this->Business_model->getBySlug($slug);
-        $selectedCategories = $this->ServiceCategory_model->getAllCategoriesByCompanyID($comp_id);
+    	
+        $profiledata = $this->Business_model->getBySlug($slug);        
+        $selectedCategories = $this->ServiceCategory_model->getAllCategoriesByCompanyID($profiledata->company_id);
 
         $conditions[] = ['field' => 'deals_steals.status', 'value' => $this->DealsSteals_model->statusActive()];
-        $dealsSteals  = $this->DealsSteals_model->getAllByCompanyId($comp_id, array(), $conditions);
+        $dealsSteals  = $this->DealsSteals_model->getAllByCompanyId($profiledata->company_id, array(), $conditions);
 
         $this->page_data['dealsSteals'] = $dealsSteals;
         $this->page_data['profiledata'] = $profiledata;
@@ -556,6 +555,32 @@ class Pages extends MY_Controller {
     	$this->page_data['company']     = $company;
     	$this->page_data['dealsSteals'] = $dealsSteals;
     	$this->load->view('pages/deals_booking', $this->page_data);       
+    }
+
+    public function create_deals_booking(){
+    	$this->load->model('DealsBookings_model');
+
+    	$is_success = 0;
+    	$msg  = 'Check form inputs and try again.';
+    	$post = $this->input->post();  
+
+    	if( $post['name'] != '' && $post['email'] != '' && $post['phone'] != '' ){
+    		$data = [
+    			'deals_id' => $post['did'],
+    			'name' => $post['name'],
+    			'phone' => $post['phone'],
+    			'email' => $post['email'],
+    			'address' => $post['address_full'],
+    			'message' => $post['message'],
+    			'date_created' => date("Y-m-d H:i:s")
+    		];
+    		$this->DealsBookings_model->create($data);	
+
+    		$is_success = 1;
+    	}
+
+    	$json_data = ['is_success' => $is_success, 'msg' => $msg];
+    	echo json_encode($json_data);
     }
 
 }

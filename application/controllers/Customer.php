@@ -149,24 +149,84 @@ class Customer extends MY_Controller
     public function save_billing(){
         $input = $this->input->post();
         if($input){
-            $transaction_details = array();
-            $transaction_details['customer_id'] = $input['customer_id'];
-            $transaction_details['subtotal'] = $input['subtotal'];
-            $transaction_details['tax'] = $input['tax'];
-            $transaction_details['category'] = $input['transaction_category'];
-            $transaction_details['method'] = $input['method'];
-            $transaction_details['transaction_type'] = 'Pre-Auth and Capture';
-            $transaction_details['frequency'] = $input['frequency'];
-            $transaction_details['notes'] = $input['notes'];
-            $transaction_details['status'] = 'Approved';
-            $transaction_details['datetime'] = date("m-d-Y h:i A");
-
-            if($this->general->add_($transaction_details, 'acs_transaction_history')){
-                echo '0';
-            }else{
-                echo 'Database Error!';
+            $is_valid = true;
+            $err_msg  = '';            
+            if( $input['method'] == 'CC' ){
+                $customer = $this->customer_ad_model->get_data_by_id('prof_id',$input['customer_id'],"acs_profile");
+                $converge_data = [
+                    'amount' => $input['transaction_amount'],
+                    'card_number' => $input['card_number'],
+                    'exp_month' => $input['exp_month'],
+                    'exp_year' => $input['exp_year'],
+                    'card_cvc' => $input['card_cvc'],
+                    'address' => $customer->mail_add,
+                    'zip' => $customer->zip_code
+                ];
+                $result   = $this->converge_send_sale($converge_data);
+                $is_valid = $result['is_success'];
+                $err_msg  = $result['msg'];
             }
+
+            if( $is_valid ){
+                $transaction_details = array();
+                $transaction_details['customer_id'] = $input['customer_id'];
+                $transaction_details['subtotal'] = $input['subtotal'];
+                $transaction_details['tax'] = $input['tax'];
+                $transaction_details['category'] = $input['transaction_category'];
+                $transaction_details['method'] = $input['method'];
+                $transaction_details['transaction_type'] = 'Pre-Auth and Capture';
+                $transaction_details['frequency'] = $input['frequency'];
+                $transaction_details['notes'] = $input['notes'];
+                $transaction_details['status'] = 'Approved';
+                $transaction_details['datetime'] = date("m-d-Y h:i A");
+
+                if($this->general->add_($transaction_details, 'acs_transaction_history')){
+                    echo '0';
+                }else{
+                    echo 'Database Error!';
+                }    
+            }else{
+                echo $err_msg;
+            }
+            
         }
+    }
+
+    public function converge_send_sale($data){
+        include APPPATH . 'libraries/Converge/src/Converge.php';
+
+        $this->load->model('CompanyOnlinePaymentAccount_model');
+
+        $is_success = false;
+        $msg = '';
+
+        $exp_date = $data['exp_month'] . date("y",strtotime($data['exp_year']));
+        $converge = new \wwwroth\Converge\Converge([
+            'merchant_id' => CONVERGE_MERCHANTID,
+            'user_id' => CONVERGE_MERCHANTUSERID,
+            'pin' => CONVERGE_MERCHANTPIN,
+            'demo' => false,
+        ]);
+        
+        $createSale = $converge->request('ccsale', [
+            'ssl_card_number' => $data['card_number'],
+            'ssl_exp_date' => $exp_date,
+            'ssl_cvv2cvc2' => $data['card_cvc'],
+            'ssl_amount' => $data['amount'],
+            'ssl_avs_address' => $data['address'],
+            'ssl_avs_zip' => $data['zip'],
+        ]);
+
+        if( $createSale['success'] == 1 ){
+            $is_success = true;
+            $msg = '';
+        }else{
+            $is_success = false;
+            $msg = $createSale['errorMessage'];
+        }
+        
+        $return = ['is_success' => $is_success, 'msg' => $msg];
+        return $return;
     }
 
     public function subscription($id=null){
