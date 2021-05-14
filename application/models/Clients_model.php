@@ -104,6 +104,34 @@ class Clients_model extends MY_Model
         $this->db->delete($this->table, array('id' => $id));
     } 
 
+    public function getAllByPlanDateExpiration($date, $fields = ''){
+        if( $fields != '' ){
+            $this->db->select($fields);
+        }else{
+            $this->db->select('*');
+        }
+        
+        $this->db->where('plan_date_expiration', $date);
+        $this->db->from($this->table);
+
+        $query = $this->db->get();
+        return $query->result();
+    }
+
+    public function getAllExpiredSubscription($date, $fields = ''){
+        if( $fields != '' ){
+            $this->db->select($fields);
+        }else{
+            $this->db->select('*');
+        }
+        
+        $this->db->where('plan_date_expiration <=', $date);
+        $this->db->from($this->table);
+
+        $query = $this->db->get();
+        return $query->result();
+    }
+
     
 }
 

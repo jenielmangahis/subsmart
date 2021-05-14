@@ -319,6 +319,7 @@ class Job extends MY_Controller
             
             $converge_data = [
                 'company_id' => $job->company_id,
+                'amount' => $input['amount'],
                 'card_number' => $input['card_number'],
                 'exp_month' => $input['exp_month'],
                 'exp_year' => $input['exp_year'],

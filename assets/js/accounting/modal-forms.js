@@ -1,5 +1,5 @@
 const GET_OTHER_MODAL_URL = "/accounting/get-other-modals/";
-const vendorModals = ['#expenseModal', '#checkModal', '#billModal', '#vendorCreditModal', '#purchaseOrderModal'];
+const vendorModals = ['#expenseModal', '#checkModal', '#billModal', '#vendorCreditModal', '#purchaseOrderModal', '#creditCardCreditModal'];
 var rowCount = 0;
 var rowInputs = '';
 var blankRow = '';
@@ -1371,6 +1371,14 @@ $(function() {
         }
     });
 
+    $(document).on('change', '#creditCardCreditModal #ref_no', function() {
+        if($(this).val() !== "") {
+            $('#creditCardCreditModal .modal-title span').html('#'+$(this).val());
+        } else {
+            $('#creditCardCreditModal .modal-title span').html('');
+        }
+    });
+
     $(document).on('change', '#checkModal #print_later', function() {
         if($(this).prop('checked')) {
             $('#checkModal #check_no').prop('disabled', true);
@@ -1468,6 +1476,16 @@ $(function() {
             var result = JSON.parse(res);
 
             $('#expenseModal span#account-balance').html(result.balance);
+        });
+    });
+
+    $(document).on('change', '#creditCardCreditModal #bank_credit_account', function() {
+        var id = $(this).val();
+
+        $.get('/accounting/get-account-balance/'+id, function(res) {
+            var result = JSON.parse(res);
+
+            $('#creditCardCreditModal span#account-balance').html(result.balance);
         });
     });
 
@@ -1588,6 +1606,42 @@ $(function() {
             dueDate = String(dueDate.getMonth() + 1).padStart(2, '0')+'/'+String(dueDate.getDate()).padStart(2, '0')+'/'+dueDate.getFullYear();
 
             $('#billModal #due_date').val(dueDate);
+        });
+    });
+
+    $(document).on('change', '#purchaseOrderModal #vendor', function() {
+        $.get('/accounting/get-vendor-details/'+$(this).val(), function(res) {
+            var vendor = JSON.parse(res);
+
+            $('#purchaseOrderModal #email').val(vendor.email);
+
+            var vendorName = '';
+            vendorName += vendor.title !== "" ? vendor.title+" " : "";
+            vendorName += vendor.f_name !== "" ? vendor.f_name+" " : "";
+            vendorName += vendor.m_name !== "" ? vendor.m_name+" " : "";
+            vendorName += vendor.l_name !== "" ? vendor.l_name+" " : "";
+            vendorName += vendor.suffix !== "" ? vendor.suffix : "";
+            $('#purchaseOrderModal #mailing_address').html(vendorName.trim());
+            $('#purchaseOrderModal #mailing_address').append('\n');
+            $('#purchaseOrderModal #mailing_address').append(vendor.street+'\n'+vendor.city+', '+vendor.state+' '+vendor.zip);
+        });
+    });
+
+    $(document).on('change', '#purchaseOrderModal #customer', function() {
+        $.get('/accounting/get-customer-details/'+$(this).val(), function(res) {
+            var customer = JSON.parse(res);
+
+            var customerName = '';
+            customerName += customer.first_name !== "" ? customer.first_name+" " : "";
+            customerName += customer.middle_name !== "" ? customer.middle_name+" " : "";
+            customerName += customer.last_name !== "" ? customer.last_name+" " : "";
+            $('#purchaseOrderModal #shipping_address').html(customerName.trim());
+            $('#purchaseOrderModal #shipping_address').append('\n');
+            if(customer.business_name !== "" && customer.business_name !== null) {
+                $('#purchaseOrderModal #shipping_address').append(customer.business_name);
+                $('#purchaseOrderModal #shipping_address').append('\n');
+            }
+            $('#purchaseOrderModal #shipping_address').append(customer.mail_add+'\n'+customer.city+', '+customer.state+' '+customer.zip_code+' '+customer.country);
         });
     });
 });

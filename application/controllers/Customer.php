@@ -149,24 +149,84 @@ class Customer extends MY_Controller
     public function save_billing(){
         $input = $this->input->post();
         if($input){
-            $transaction_details = array();
-            $transaction_details['customer_id'] = $input['customer_id'];
-            $transaction_details['subtotal'] = $input['subtotal'];
-            $transaction_details['tax'] = $input['tax'];
-            $transaction_details['category'] = $input['transaction_category'];
-            $transaction_details['method'] = $input['method'];
-            $transaction_details['transaction_type'] = 'Pre-Auth and Capture';
-            $transaction_details['frequency'] = $input['frequency'];
-            $transaction_details['notes'] = $input['notes'];
-            $transaction_details['status'] = 'Approved';
-            $transaction_details['datetime'] = date("m-d-Y h:i A");
-
-            if($this->general->add_($transaction_details, 'acs_transaction_history')){
-                echo '0';
-            }else{
-                echo 'Database Error!';
+            $is_valid = true;
+            $err_msg  = '';            
+            if( $input['method'] == 'CC' ){
+                $customer = $this->customer_ad_model->get_data_by_id('prof_id',$input['customer_id'],"acs_profile");
+                $converge_data = [
+                    'amount' => $input['transaction_amount'],
+                    'card_number' => $input['card_number'],
+                    'exp_month' => $input['exp_month'],
+                    'exp_year' => $input['exp_year'],
+                    'card_cvc' => $input['card_cvc'],
+                    'address' => $customer->mail_add,
+                    'zip' => $customer->zip_code
+                ];
+                $result   = $this->converge_send_sale($converge_data);
+                $is_valid = $result['is_success'];
+                $err_msg  = $result['msg'];
             }
+
+            if( $is_valid ){
+                $transaction_details = array();
+                $transaction_details['customer_id'] = $input['customer_id'];
+                $transaction_details['subtotal'] = $input['subtotal'];
+                $transaction_details['tax'] = $input['tax'];
+                $transaction_details['category'] = $input['transaction_category'];
+                $transaction_details['method'] = $input['method'];
+                $transaction_details['transaction_type'] = 'Pre-Auth and Capture';
+                $transaction_details['frequency'] = $input['frequency'];
+                $transaction_details['notes'] = $input['notes'];
+                $transaction_details['status'] = 'Approved';
+                $transaction_details['datetime'] = date("m-d-Y h:i A");
+
+                if($this->general->add_($transaction_details, 'acs_transaction_history')){
+                    echo '0';
+                }else{
+                    echo 'Database Error!';
+                }    
+            }else{
+                echo $err_msg;
+            }
+            
         }
+    }
+
+    public function converge_send_sale($data){
+        include APPPATH . 'libraries/Converge/src/Converge.php';
+
+        $this->load->model('CompanyOnlinePaymentAccount_model');
+
+        $is_success = false;
+        $msg = '';
+
+        $exp_date = $data['exp_month'] . date("y",strtotime($data['exp_year']));
+        $converge = new \wwwroth\Converge\Converge([
+            'merchant_id' => CONVERGE_MERCHANTID,
+            'user_id' => CONVERGE_MERCHANTUSERID,
+            'pin' => CONVERGE_MERCHANTPIN,
+            'demo' => false,
+        ]);
+        
+        $createSale = $converge->request('ccsale', [
+            'ssl_card_number' => $data['card_number'],
+            'ssl_exp_date' => $exp_date,
+            'ssl_cvv2cvc2' => $data['card_cvc'],
+            'ssl_amount' => $data['amount'],
+            'ssl_avs_address' => $data['address'],
+            'ssl_avs_zip' => $data['zip'],
+        ]);
+
+        if( $createSale['success'] == 1 ){
+            $is_success = true;
+            $msg = '';
+        }else{
+            $is_success = false;
+            $msg = $createSale['errorMessage'];
+        }
+        
+        $return = ['is_success' => $is_success, 'msg' => $msg];
+        return $return;
     }
 
     public function subscription($id=null){
@@ -297,6 +357,28 @@ class Customer extends MY_Controller
         $this->page_data['lead_types'] = $this->customer_ad_model->get_all(FALSE,"","","ac_leadtypes","lead_id");
         $this->page_data['sales_area'] = $this->customer_ad_model->get_all(FALSE,"","","ac_salesarea","sa_id");
         $this->page_data['rate_plans'] = $this->customer_ad_model->get_all(FALSE,"","","ac_rateplan","id");
+
+
+        // get activation fee
+        $activation_fee_query = array(
+            'table' => 'ac_activationfee',
+            'order' => array(
+                'order_by' => 'id',
+            ),
+            'select' => '*',
+        );
+        $this->page_data['activation_fee'] = $this->general->get_data_with_param($activation_fee_query);
+
+
+        // get system package type
+        $spt_query = array(
+            'table' => 'ac_system_package_type',
+            'order' => array(
+                'order_by' => 'id',
+            ),
+            'select' => '*',
+        );
+        $this->page_data['system_package_type'] = $this->general->get_data_with_param($spt_query);
 
 
         $this->page_data['profiles'] = $this->customer_ad_model->get_customer_data_settings($user_id);
@@ -1136,6 +1218,46 @@ class Customer extends MY_Controller
         }
     }
 
+    public function add_activation_fee_ajax(){
+        $input = $this->input->post();
+        // customer_ad_model
+        if(empty($input['id'])){
+            unset($input['id']);
+            $input['company_id'] = logged('company_id');
+            if($this->customer_ad_model->add($input,"ac_activationfee")){
+                echo 1;
+            }else{
+                echo 0;
+            }
+        }else{
+            if($this->customer_ad_model->update_data($input,"ac_activationfee","id")){
+                echo "Updated";
+            }else{
+                echo "Error";
+            }
+        }
+    }
+
+    public function add_spt_ajax(){
+        $input = $this->input->post();
+        // customer_ad_model
+        if(empty($input['id'])){
+            unset($input['id']);
+            $input['company_id'] = logged('company_id');
+            if($this->customer_ad_model->add($input,"ac_system_package_type")){
+                echo 1;
+            }else{
+                echo 0;
+            }
+        }else{
+            if($this->customer_ad_model->update_data($input,"ac_system_package_type","id")){
+                echo "Updated";
+            }else{
+                echo "Error";
+            }
+        }
+    }
+
     public function update_customer_profile(){
         $input = array();
         $input['notes'] = $_POST['notes'];
@@ -1237,6 +1359,34 @@ class Customer extends MY_Controller
                 'id' => $_POST['id']
             ),
             'table' => 'ac_rateplan'
+        );
+        if($this->general->delete_($deletion_query)){
+            echo 1;
+        }else{
+            echo 0;
+        }
+    }
+
+    public function delete_activation_fee(){
+        $deletion_query = array(
+            'where' => array(
+                'id' => $_POST['id']
+            ),
+            'table' => 'ac_activationfee'
+        );
+        if($this->general->delete_($deletion_query)){
+            echo 1;
+        }else{
+            echo 0;
+        }
+    }
+
+    public function delete_spt(){
+        $deletion_query = array(
+            'where' => array(
+                'id' => $_POST['id']
+            ),
+            'table' => 'ac_system_package_type'
         );
         if($this->general->delete_($deletion_query)){
             echo 1;

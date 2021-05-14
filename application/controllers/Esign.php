@@ -787,7 +787,7 @@ SQL;
 		['subject' => $subject, 'message' => $message] = $this->input->post();
 
 		$this->db->insert('user_docfile', [
-			'name' => '',
+			'name' => $subject,
 			'type' => 'Single',
 			'status' => 'Draft',
 			'subject' => $subject,

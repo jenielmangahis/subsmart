@@ -411,4 +411,45 @@ class Trac360 extends MY_Controller
         }
         return $places;
     }
+    public function get_notify_settings()
+    {
+        $place_id = $this->input->post("place_id");
+        $user_id = $this->input->post("user_id");
+        $or_query = "";
+        $all_users = $this->trac360_model->get_employees(logged('company_id'));
+        foreach ($all_users as $user) {
+            if ($user->id != $user_id) {
+                $setting = $this->trac360_model->initial_settings_setter($place_id, $user->id, logged('id'));
+                if ($or_query == "") {
+                    $or_query = $user->id;
+                } else {
+                    $or_query .= " or ".$user->id;
+                }
+            }
+        }
+        $notify_settings = $this->trac360_model->get_notify_settings($place_id, logged('id'), $or_query);
+        $data = new stdClass();
+        $data->notify_settings =$notify_settings;
+        echo json_encode($data);
+    }
+    public function save_notif_changes()
+    {
+        $all_users = $this->trac360_model->get_employees(logged('company_id'));
+        foreach ($all_users as $user) {
+            $arrives = 0;
+            if ($this->input->post("arrives_".$user->id) == "on") {
+                $arrives =1;
+            }
+            $leaves = 0;
+            if ($this->input->post("leaves_".$user->id) == "on") {
+                $leaves =1;
+            }
+            $update = array(
+                "notify_when_arrive" => $arrives,
+                "notify_when_leave" => $leaves
+            );
+            $this->trac360_model->update_notification(logged("id"), $update, $this->input->post("place_id"), $user->id);
+        }
+        echo json_encode("success");
+    }
 }

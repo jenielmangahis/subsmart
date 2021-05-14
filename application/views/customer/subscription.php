@@ -142,7 +142,7 @@ add_css(array(
                                                         <label for="">Phone </label>
                                                     </div>
                                                     <div class="col-md-10">
-                                                        <input type="email" class="form-control" name="email" id="email" value="<?php if(isset($profile_info)){ echo $profile_info->phone_m; } ?>" />
+                                                        <input type="text" class="form-control" name="phone" id="phone" value="<?php if(isset($profile_info)){ echo $profile_info->phone_m; } ?>" />
                                                     </div>
                                                 </div>
                                                 <div class="row form_line">
@@ -150,7 +150,7 @@ add_css(array(
                                                         <label for="">Date of Birth </label>
                                                     </div>
                                                     <div class="col-md-10">
-                                                        <input type="text" disabled class="form-control" name="email" id="email" value="<?php if(isset($profile_info)){ echo $profile_info->date_of_birth; } ?>" />
+                                                        <input type="text" disabled class="form-control" name="date_of_birth" id="date_of_birth" value="<?php if(isset($profile_info)){ echo $profile_info->date_of_birth; } ?>" />
                                                     </div>
                                                 </div>
                                                 <div class="row form_line">
@@ -158,7 +158,7 @@ add_css(array(
                                                         <label for="">Customer Type </label>
                                                     </div>
                                                     <div class="col-md-10">
-                                                        <input  disabled class="form-control" name="email" id="email" value="<?php if(isset($profile_info)){ echo $profile_info->customer_type; } ?>" />
+                                                        <input  disabled class="form-control" name="customer_type" id="customer_type" value="<?php if(isset($profile_info)){ echo $profile_info->customer_type; } ?>" />
                                                     </div>
                                                 </div>
                                             </div>

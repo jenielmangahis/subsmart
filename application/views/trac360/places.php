@@ -77,7 +77,9 @@ include viewPath('includes/header'); ?>
                                     <p class="last_tract_location second-p"><?=$place->address?>
                                     </p>
                                     <div class="places-actions-btn">
-                                        <button href="#" class="place-notif-action" id="place_notif_modal_btn">
+                                        <button href="#" class="place-notif-action" id="place_notif_modal_btn"
+                                            data-user-id="<?=$place->created_by?>"
+                                            data-place-id="<?=$place->id?>">
                                             <i class="fa fa-bell-o" aria-hidden="true"></i>
                                         </button>
                                         <?php
@@ -141,39 +143,55 @@ include viewPath('includes/header'); ?>
                             <label>Alert me when...</label>
                         </div>
                     </div>
-                    <?php foreach ($user_locations as $user) {
+
+                    <form action="#" method="POST" id="notify_settings_form">
+                        <div id="users-notify-settings">
+                            <?php foreach ($user_locations as $user) {
                         if ($user->user_id != $user_id) {
                             $image = base_url() . '/uploads/users/user-profile/' . $user->profile_img;
                             if (!@getimagesize($image)) {
                                 $image = base_url('uploads/users/default.png');
                             } ?>
-                    <div class="row">
-                        <div class="col-md-4 profile">
-                            <center>
-                                <img src="<?=$image?>" alt="user"
-                                    class="user-profile active">
-                                <p class="name"> <?=$user->FName?>
-                                </p>
-                            </center>
-                        </div>
-                        <div class="col-md-4">
-                            <div><label>Arrives:</label></div>
-                            <input type="checkbox" checked data-toggle="toggle" data-onstyle="success">
-                        </div>
-                        <div class="col-md-4">
-                            <div><label>Leaves:</label></div>
-                            <input type="checkbox" checked data-toggle="toggle" data-onstyle="success">
-                        </div>
-                    </div>
-                    <?php
+                            <div class="row">
+                                <div class="col-md-4 profile">
+                                    <center>
+                                        <img src="<?=$image?>"
+                                            alt="user" class="user-profile active">
+                                        <p class="name"> <?=$user->FName?>
+                                        </p>
+                                    </center>
+                                </div>
+                                <div class="col-md-4">
+                                    <div><label>Arrives:</label></div>
+                                    <input type="checkbox" checked
+                                        name="arrives_<?=$user->user_id?>"
+                                        id="arrives_<?=$user->user_id?>"
+                                        data-toggle="toggle" data-onstyle="success">
+                                </div>
+                                <div class="col-md-4">
+                                    <div><label>Leaves:</label></div>
+                                    <input type="checkbox" checked
+                                        name="leaves_<?=$user->user_id?>"
+                                        id="leaves_<?=$user->user_id?>"
+                                        data-toggle="toggle" data-onstyle="success">
+                                </div>
+                            </div>
+                            <?php
                         }
                     }?>
+                        </div>
+                        <input type="text" id="notify_place_id" name="place_id" value="" style="display: none;">
+                    </form>
+                    <div class="notify-settings-loader" style="display: none;">
+                        <center>
+                            <img src="<?=base_url('assets/img/trac360/loader1.gif')?>"
+                                alt="">
+                        </center>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-success" id="save_new_address">Add new
-                        address</button>
-                    <button type="submit" class="btn btn-success" style="display: none;">save</button>
+                    <button type="submit" class="btn btn-success" id="save_notification_settings">Save</button>
                 </div>
             </div>
         </div>
@@ -277,6 +295,7 @@ include viewPath('includes/header'); ?>
         </div>
     </div>
 </div>
+
 <?php include viewPath('includes/footer'); ?>
 <script>
     // Initialize and add the map
@@ -298,6 +317,7 @@ include viewPath('includes/header'); ?>
     var current_lng = 0;
     var antennasCircle_new_adress;
     var radius_new_address = 76.2;
+    var current_notify_settings;
 
     function initMap() {
         get_current_user_location();

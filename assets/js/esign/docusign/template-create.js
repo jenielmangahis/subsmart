@@ -176,7 +176,7 @@ function TemplateCreate() {
           recipients: recipients.map((r) => r.getData()),
           subject: $subject.val(),
           message: $message.val(),
-          workorder_id: workorder.id || null,
+          workorder_id: workorder ? workorder.id : null,
         };
 
         const endpoint = `${prefixURL}/DocuSign/apiSendTemplate/${templateIdParam}`;
@@ -609,7 +609,8 @@ const sleep = (ms) => new Promise((res) => setTimeout(res, ms));
 
 // https://stackoverflow.com/a/46181/8062659
 function isValidEmail(string) {
-  const regex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  const regex =
+    /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   return regex.test(String(string).toLowerCase());
 }
 

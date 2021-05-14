@@ -94,7 +94,7 @@ add_css(array(
                                                     <?php include viewPath('customer/settings/activation_fee'); ?>
                                                 </div>
 
-                                                <div class="tab-pane <?= $active_tab == 'activationFee' ? "active" : "fade"; ?> standard-accordion" id="spt">
+                                                <div class="tab-pane <?= $active_tab == 'spt' ? "active" : "fade"; ?> standard-accordion" id="spt">
                                                     <?php include viewPath('customer/settings/system_package_type'); ?>
                                                 </div>
 
@@ -202,8 +202,12 @@ add_css(array(
 <!-- Rate PLan Modal -->
 <?php include viewPath('customer/adv_modals/modal_rate_plan'); ?>
 
-<!-- End Modals -->
+<!-- Activation Fee Modal -->
+<?php include viewPath('customer/adv_modals/modal_activation_fee'); ?>
 
+<!-- Activation Fee Modal -->
+<?php include viewPath('customer/adv_modals/modal_system_package_type'); ?>
+<!-- End Modals -->
 
 <?php
 // JS to add only Customer module

@@ -584,4 +584,10 @@ class Expenses_model extends MY_Model
         $this->db->insert('accounting_purchase_order', $data);
         return $this->db->insert_id();
     }
+
+    public function add_credit_card_credit($data)
+    {
+        $this->db->insert('accounting_credit_card_credits', $data);
+        return $this->db->insert_id();
+    }
 }
