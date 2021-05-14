@@ -106,6 +106,9 @@ add_css(array(
         align-items: center;
         justify-content: center;
     }
+    .card{
+        box-shadow: 0 0 13px 0 rgb(116 116 117 / 44%) !important;
+    }
 </style>
 
 <div class="wrapper" role="wrapper">
@@ -136,7 +139,7 @@ add_css(array(
                                 </div>
                             </div>
                         </div>
-                    </div>
+
                     <style>
                         .btn{
                             font-size: 12px !important;
@@ -178,6 +181,7 @@ add_css(array(
                         </div>
                     </div>
 
+                    </div>
                 </div>
             </div>
         </div>

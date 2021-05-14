@@ -149,7 +149,7 @@
             </select>
         </div>
                 <div class="col-md-4">
-                    <a href="<?= base_url() ?>customer/settings" target="_blank"  style="color:#58bc4f;margin-top:10px;font-size: 10px;position: absolute;"><span class="fa fa-plus"></span>Manage Rate Plan </a>&nbsp;&nbsp;
+                    <a href="<?= base_url() ?>customer/settings/ratePlan" target="_blank"  style="color:#58bc4f;margin-top:10px;font-size: 10px;position: absolute;"><span class="fa fa-plus"></span>Manage Rate Plan </a>&nbsp;&nbsp;
                 </div>
             </div>
         </div>

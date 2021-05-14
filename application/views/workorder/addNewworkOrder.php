@@ -164,6 +164,11 @@ border: none;
     display: none;
 }
 
+.show_mobile_view
+{
+    display: none;
+}
+
 @media only screen and (max-device-width: 600px) {
     .label-element{
         position:absolute;
@@ -234,6 +239,20 @@ border: none;
     .signature_mobile
     {
         display: block;
+    }
+
+    .hidden_mobile_view{
+        display: none;
+    }
+
+    .show_mobile_view
+    {
+        display: block;
+    }
+
+    .table_mobile
+    {
+        font-size:14px;
     }
 }
    </style>
@@ -490,9 +509,9 @@ border: none;
                                             <th width="150px">Quantity</th>
                                             <!-- <th>Location</th> -->
                                             <th width="150px">Price</th>
-                                            <th width="150px">Discount</th>
-                                            <th width="150px">Tax (Change in %)</th>
-                                            <th>Total</th>
+                                            <th class="hidden_mobile_view" width="150px">Discount</th>
+                                            <th class="hidden_mobile_view" width="150px">Tax (Change in %)</th>
+                                            <th class="hidden_mobile_view">Total</th>
                                         </tr>
                                         </thead>
                                         <tbody id="jobs_items_table_body">
@@ -501,24 +520,32 @@ border: none;
                                                 <input type="text" class="form-control getItems"
                                                        onKeyup="getItems(this)" name="items[]">
                                                 <ul class="suggestions"></ul>
+                                                <div class="show_mobile_view"><span class="getItems_hidden"></span></div>
                                             </td>
-                                            <td width="20%"><select name="item_type[]" class="form-control">
+                                            <td width="20%">
+                                            <div class="hidden_mobile_view">
+                                                <select name="item_type[]" class="form-control">
                                                     <option value="product">Product</option>
                                                     <option value="material">Material</option>
                                                     <option value="service">Service</option>
                                                     <option value="fee">Fee</option>
-                                                </select></td>
-                                            <td width="10%"><input type="number" class="form-control quantity" name="quantity[]"
-                                                       data-counter="0" id="quantity_0" value="1"></td>
-                                            <td width="10%"><input type="number" class="form-control price" name="price[]"
-                                                       data-counter="0" id="price_0" min="0" value="0"></td>
-                                            <td width="10%"><input type="number" class="form-control discount" name="discount[]"
+                                                </select>
+                                            </div>
+
+                                            <div class="show_mobile_view"><span>Product</span></div>
+                                                </td>
+                                            <td width="10%"><input type="number" class="form-control quantity hidden_mobile_view" name="quantity[]"
+                                                       data-counter="0" id="quantity_0" value="1"> <div class="show_mobile_view"><span>1</span><input type="hidden" class="form-control quantity" name="quantity[]"
+                                                       data-counter="0" id="quantity_0" value="1"></div> </td>
+                                            <td width="10%"><input type="number" class="form-control price hidden_mobile_view" name="price[]"
+                                                       data-counter="0" id="price_0" min="0" value="0"><div class="show_mobile_view"><span class="price">0</span><input type="hidden" class="form-control price" name="price[]" data-counter="0" id="priceM_0" min="0" value="0"></div><input id="priceM_qty0" value=""  type="hidden" name="price_qty[]" class="form-control hidden_mobile_view price_qty"></td>
+                                            <td width="10%" class="hidden_mobile_view"><input type="number" class="form-control discount" name="discount[]"
                                                        data-counter="0" id="discount_0" min="0" value="0" ></td>
-                                            <td width="10%"><input type="text" class="form-control tax_change" name="tax[]"
+                                            <td width="10%" class="hidden_mobile_view"><input type="text" class="form-control tax_change" name="tax[]"
                                                        data-counter="0" id="tax1_0" min="0" value="0">
                                                        <!-- <span id="span_tax_0">0.0</span> -->
                                                        </td>
-                                            <td width="10%"><input type="hidden" class="form-control " name="total[]"
+                                            <td width="10%" class="hidden_mobile_view"><input type="hidden" class="form-control " name="total[]"
                                                        data-counter="0" id="item_total_0" min="0" value="0">
                                                        $<span id="span_total_0">0.00</span></td>
                                         </tr>
@@ -567,17 +594,17 @@ border: none;
                                 <div class="col-md-7">
                                 </div>
                                 <div class="col-md-5">
-                                    <table class="table" style="text-align:left;">
+                                    <table class="table table_mobile" style="text-align:left;">
                                         <tr>
                                             <td>Subtotal</td>
-                                            <td></td>
-                                            <td>$ <span id="span_sub_total_invoice">0.00</span>
+                                            <!-- <td></td> -->
+                                            <td colspan="2" align="right">$ <span id="span_sub_total_invoice">0.00</span>
                                                 <input type="hidden" name="subtotal" id="item_total"></td>
                                         </tr>
                                         <tr>
                                             <td>Taxes</td>
-                                            <td></td>
-                                            <td>$ <span id="total_tax_">0.00</span><input type="hidden" name="taxes" id="total_tax_input"></td>
+                                            <!-- <td></td> -->
+                                            <td colspan="2" align="right">$ <span id="total_tax_">0.00</span><input type="hidden" name="taxes" id="total_tax_input"></td>
                                         </tr>
                                         <tr>
                                             <td style="width:;"><input type="text" name="adjustment_name" id="adjustment_name" placeholder="Adjustment Name" class="form-control" style="width:; display:inline; border: 1px dashed #d1d1d1"></td>
@@ -597,7 +624,7 @@ border: none;
                                             <td></td>
                                             <td><span id="offer_cost">0.00</span><input type="hidden" name="voucher_value" id="offer_cost_input"></td>
                                         </tr>
-                                        <tr style="color:blue;font-weight:bold;font-size:18px;">
+                                        <tr style="color:blue;font-weight:bold;font-size:16px;">
                                             <td><b>Grand Total ($)</b></td>
                                             <td></td>
                                             <td><b><span id="grand_total">0.00</span>
@@ -1631,6 +1658,22 @@ border: none;
 
 <?php include viewPath('includes/footer'); ?>
 
+<script>
+$(document).ready(function(){
+    if(window.matchMedia("(max-width: 600px)").matches){
+        // alert("This is a mobile device.");
+        $(document).on("click", ".testing", function () {
+            $('.getItems').hide();
+        });
+        $(document).on("click", ".select_item", function () {
+            $('.getItems').hide();
+        });
+    } 
+    // else{
+    //     $('.getItems_hidden').hide();
+    // }
+});
+</script>
 
 <script>
 //   $(function() {
@@ -1842,7 +1885,7 @@ resizeCanvas();
 
 
 <!-- MOBILE AREA -->
-<!-- <script>
+<script>
 var wrapper = document.getElementById("signature-padM");
 var canvas = wrapper.querySelector("canvas");
 
@@ -1903,7 +1946,7 @@ function resizeCanvas() {
 
 window.onresize = resizeCanvas;
 resizeCanvas();
-</script> -->
+</script>
 
 
 

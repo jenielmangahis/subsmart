@@ -3143,6 +3143,7 @@ function createDocusignTemplate(file, options = {}) {
                       <div class="dropdown-menu dropdown-menu-right">
                         <a class="dropdown-item" href="#" data-action="share">Share with users</a>
                         <a class="dropdown-item" href="#" data-action="copy">Copy</a>
+                        <a class="dropdown-item" href="#" data-action="delete">Delete</a>
                       </div>
                     </div>
 
@@ -3193,8 +3194,11 @@ function createDocusignTemplate(file, options = {}) {
         const { data } = await response.json();
         window.location = `${prefixURL}/DocuSign/templatePrepare?id=${data.id}`;
       },
-      share: async function () {
+      share: function () {
         showUsersModal(id);
+      },
+      delete: function () {
+        showDeleteTemplateModal(id);
       }
     }
 
@@ -3515,5 +3519,47 @@ function showUsersModal(templateId) {
     $spinner.addClass("d-none");
     $this.prop("disabled", false);
     $modal.modal("hide");
+  });
+}
+
+
+function showDeleteTemplateModal(templateId) {
+  const urlPrefix = location.hostname === "localhost" ? "/nsmartrac" : "";
+
+  const $modal = $("#deleteTemplateModal");
+  const $submit = $modal.find(".btn-primary");
+
+  $modal.modal("show");
+  $submit.off("click");
+
+  $submit.on("click", async function () {
+    $this = $(this);
+    $spinner = $this.find(".spinner-border");
+
+    $spinner.removeClass("d-none");
+    $this.prop("disabled", true);
+
+    const response = await fetch(`${urlPrefix}/DocuSign/apiDeleteTemplate/${templateId}`, {
+      method: "DELETE",
+      headers: {
+        accepts: "application/json",
+        "content-type": "application/json",
+      },
+    });
+
+    const { data } = await response.json();
+    console.log(data);
+
+    $spinner.addClass("d-none");
+    $this.prop("disabled", false);
+    $modal.modal("hide");
+
+    if (vType === 'mylibrary') {
+      getDocusingTemplates();
+    }
+  
+    if (vType === 'sharedlibrary') {
+      getDocusingTemplates(shared=true);
+    }
   });
 }

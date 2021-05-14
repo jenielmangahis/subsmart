@@ -614,6 +614,76 @@ class Accounting_modals extends MY_Controller {
                     $this->page_data['dropdown']['customers'] = $this->accounting_customers_model->getAllByCompany();
                     $this->page_data['dropdown']['categories'] = $categoryAccs;
                 break;
+                case 'credit_card_credit_modal' :
+                    $creditCardAccs = [];
+                    $accType = $this->account_model->getAccTypeByName('Credit Card');
+
+                    $count = 1;
+                    $accounts = $this->chart_of_accounts_model->getByAccountType($accType->id, null, logged('company_id'));
+
+                    if(count($accounts) > 0) {
+                        foreach($accounts as $account) {
+                            $childAccs = $this->chart_of_accounts_model->getChildAccounts($account->id);
+
+                            $account->childAccs = $childAccs;
+
+                            $creditCardAccs[] = $account;
+
+                            if($count === 1) {
+                                $selectedBalance = $account->balance;
+                            }
+
+                            $count++;
+                        }
+                    }
+
+                    $categoryAccs = [];
+                    $accountTypes = [
+                        'Expenses',
+                        'Bank',
+                        'Accounts receivable (A/R)',
+                        'Other Current Assets',
+                        'Fixed Assets',
+                        'Accounts payable (A/P)',
+                        'Credit Card',
+                        'Other Current Liabilities',
+                        'Long Term Liabilities',
+                        'Equity',
+                        'Income',
+                        'Cost of Goods Sold',
+                        'Other Income',
+                        'Other Expense'
+                    ];
+
+                    foreach($accountTypes as $typeName) {
+                        $accType = $this->account_model->getAccTypeByName($typeName);
+
+                        $accounts = $this->chart_of_accounts_model->getByAccountType($accType->id, null, logged('company_id'));
+
+                        if(count($accounts) > 0) {
+                            foreach($accounts as $account) {
+                                $childAccs = $this->chart_of_accounts_model->getChildAccounts($account->id);
+
+                                $account->childAccs = $childAccs;
+
+                                $categoryAccs[$typeName][] = $account;
+                            }
+                        }
+                    }
+
+                    if(strpos($selectedBalance, '-') !== false) {
+                        $balance = str_replace('-', '', $selectedBalance);
+                        $selectedBalance = '-$'.number_format($balance, 2, '.', ',');
+                    } else {
+                        $selectedBalance = '$'.number_format($selectedBalance, 2, '.', ',');
+                    }
+
+                    $this->page_data['balance'] = $selectedBalance;
+                    $this->page_data['dropdown']['categories'] = $categoryAccs;
+                    $this->page_data['dropdown']['customers'] = $this->accounting_customers_model->getAllByCompany();
+                    $this->page_data['dropdown']['bank_credit_accounts'] = $creditCardAccs;
+                    $this->page_data['dropdown']['payee'] = $this->vendors_model->getAllByCompany();
+                break;
             }
 
             $this->load->view("accounting/modals/". $view, $this->page_data);
@@ -1455,6 +1525,9 @@ class Accounting_modals extends MY_Controller {
                 break;
                 case 'purchaseOrderModal' :
                     $this->result = $this->purchase_order($data);
+                break;
+                case 'creditCardCreditModal' :
+                    $this->result = $this->credit_card_credit($data);
                 break;
             }
         } catch (\Exception $e) {
@@ -3271,6 +3344,12 @@ class Accounting_modals extends MY_Controller {
                             'tax' => $data['item_tax'][$index],
                             'total' => $data['item_total'][$index]
                         ];
+
+                        $itemAccDetails = $this->items_model->getItemAccountingDetails($value);
+
+                        $newQtyPO = intval($itemAccDetails->qty_po) + intval($data['quantity'][$index]);
+
+                        $this->items_model->updateItemAccountingDetails(['qty_po' => $newQtyPO], $value);
                     }
     
                     $this->expenses_model->insert_vendor_transaction_items($itemDetails);
@@ -3280,6 +3359,112 @@ class Accounting_modals extends MY_Controller {
             $return['data'] = $purchaseOrderId;
             $return['success'] = $purchaseOrderId ? true : false;
             $return['message'] = $purchaseOrderId ? 'Entry Successful!' : 'An unexpected error occured!';
+        }
+
+        return $return;
+    }
+
+    public function get_vendor_details($vendorId)
+    {
+        $vendor = $this->vendors_model->get_vendor_by_id($vendorId);
+
+        echo json_encode($vendor);
+    }
+
+    public function get_customer_details($customerId)
+    {
+        $customer = $this->accounting_customers_model->get_customer_by_id($customerId);
+
+        echo json_encode($customer);
+    }
+
+    private function credit_card_credit($data)
+    {
+        $this->load->model('expenses_model');
+
+        $this->form_validation->set_rules('bank_credit_account', 'Bank/Credit account', 'required');
+        $this->form_validation->set_rules('payment_date', 'Payment date', 'required');
+
+        if(isset($data['expense_name'])) {
+            $this->form_validation->set_rules('expense_name[]', 'Expense name', 'required');
+        }
+
+        if(isset($data['item'])) {
+            $this->form_validation->set_rules('item[]', 'Item', 'required');
+            $this->form_validation->set_rules('quantity[]', 'Item quantity', 'required');
+            $this->form_validation->set_rules('item_amount[]', 'Item quantity', 'required');
+        }
+
+        $return = [];
+        if($this->form_validation->run() === false) {
+            $return['data'] = null;
+            $return['success'] = false;
+            $return['message'] = 'Error';
+        } else if(!isset($data['category']) && !isset($data['item'])) {
+            $return['data'] = null;
+            $return['success'] = false;
+            $return['message'] = 'Please enter at least one line item.';
+        } else {
+            $creditData = [
+                'company_id' => logged('company_id'),
+                'vendor_id' => $data['vendor_id'],
+                'bank_credit_account_id' => $data['bank_credit_account'],
+                'payment_date' => date("Y-m-d", strtotime($data['payment_date'])),
+                'ref_no' => $data['ref_no'],
+                'tags' => $data['tags'] !== null ? json_encode($data['tags']) : null,
+                'memo' => $data['memo'],
+                'attachments' => $data['attachments'] !== null ? json_encode($data['attachments']) : null,
+                'total_amount' => $data['total_amount'],
+                'status' => 1,
+                'created_at' => date("Y-m-d H:i:s"),
+                'updated_at' => date("Y-m-d H:i:s")
+            ];
+
+            $creditId = $this->expenses_model->add_credit_card_credit($creditData);
+    
+            if($creditId) {
+                if(isset($data['expense_name'])) {
+                    $categoryDetails = [];
+                    foreach($data['expense_name'] as $index => $value) {
+                        $categoryDetails[] = [
+                            'transaction_type' => 'Credit Card Credit',
+                            'transaction_id' => $creditId,
+                            'expense_account_id' => $value,
+                            'category' => $data['category'][$index],
+                            'description' => $data['description'][$index],
+                            'amount' => $data['category_amount'][$index],
+                            'billable' => $data['category_billable'][$index],
+                            'markup_percentage' => $data['category_markup'][$index],
+                            'tax' => $data['category_tax'][$index],
+                            'customer_id' => $data['category_customer'][$index],
+                        ];
+                    }
+    
+                    $this->expenses_model->insert_vendor_transaction_categories($categoryDetails);
+                }
+    
+                if(isset($data['item'])) {
+                    $itemDetails = [];
+                    foreach($data['item'] as $index => $value) {
+                        $itemDetails[] = [
+                            'transaction_type' => 'Credit Card Credit',
+                            'transaction_id' => $creditId,
+                            'item_id' => $value,
+                            'quantity' => $data['quantity'][$index],
+                            'rate' => $data['item_amount'][$index],
+                            'discount' => $data['discount'][$index],
+                            'tax' => $data['item_tax'][$index],
+                            'total' => $data['item_total'][$index]
+                        ];
+                    }
+    
+                    $this->expenses_model->insert_vendor_transaction_items($itemDetails);
+                }
+            }
+    
+            $return['data'] = $creditId;
+            $return['success'] = $creditId ? true : false;
+            $return['message'] = $creditId ? 'Entry Successful!' : 'An unexpected error occured!';
         }
 
         return $return;

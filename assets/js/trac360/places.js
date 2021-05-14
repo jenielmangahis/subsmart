@@ -117,7 +117,7 @@ $(document).ready(function() {
             keyboard: false,
         });
         $(".hiddenSection").show();
-
+        get_notify_settings($(this).attr("data-place-id"), $(this).attr("data-user-id"));
     });
     $("#form_new_address").submit(function(event) {
 
@@ -269,9 +269,6 @@ $(document).ready(function() {
             }
         });
     });
-
-
-
     $(document).on("click", ".edit_address_modal_btn", function() {
         $("#edit_address_modal").modal({
             backdrop: "static",
@@ -317,6 +314,77 @@ $(document).ready(function() {
         } else {
             edit_address_map.setZoom(15);
         }
+    });
 
+    $(document).on("click", "#save_notification_settings", function() {
+        Swal.fire({
+            title: "Save Changes?",
+            html: "Are you sure you want to save this changes?",
+            imageUrl: baseURL + "/assets/img/trac360/save.png",
+            showCancelButton: true,
+            confirmButtonColor: "#01A599",
+            cancelButtonColor: "#919191",
+            confirmButtonText: "Save changes",
+        }).then((result) => {
+            if (result.value) {
+                var place_id = $(this).attr('data-place-id');
+                $.ajax({
+                    url: baseURL + "/trac360/save_notif_changes",
+                    type: "POST",
+                    dataType: "json",
+                    data: $("#notify_settings_form").serializeArray(),
+                    success: function(data) {
+                        if (data != null) {
+                            Swal.fire({
+                                showConfirmButton: false,
+                                timer: 2000,
+                                title: "UPDATED",
+                                html: "Notification settings has been updated.",
+                                icon: "success",
+                            });
+                            $("#place_notif_modal").modal('hide');
+                        }
+
+                    },
+                });
+            }
+        });
     });
 });
+
+function get_notify_settings(place_id, user_id) {
+    $('.notify-settings-loader').show();
+    $('#users-notify-settings').hide();
+    $.ajax({
+        url: baseURL + "/trac360/get_notify_settings",
+        type: "POST",
+        dataType: "json",
+        data: {
+            place_id: place_id,
+            user_id: user_id
+        },
+        success: function(data) {
+            if (data != null) {
+                $('.notify-settings-loader').hide();
+                $('#users-notify-settings').show();
+                $("#notify_place_id").val(place_id);
+                var notify_settings = data.notify_settings;
+                current_notify_settings = notify_settings;
+                for (var i = 0; i < notify_settings.length; i++) {
+                    var item = notify_settings[i];
+                    if (item.notify_when_arrive == 1) {
+                        $("#arrives_" + item.user_id).bootstrapToggle('on');
+                    } else {
+                        $("#arrives_" + item.user_id).bootstrapToggle('off');
+                    }
+                    if (item.notify_when_leave == 1) {
+                        $("#leaves_" + item.user_id).bootstrapToggle('on');
+                    } else {
+                        $("#leaves_" + item.user_id).bootstrapToggle('off');
+                    }
+                }
+
+            }
+        },
+    });
+}

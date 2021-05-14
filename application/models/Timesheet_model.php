@@ -1158,10 +1158,6 @@ class Timesheet_model extends MY_Model
         $query = $this->db->get();
         return $query->result();
     }
-
-    public function get_employees($user_id, $company_id)
-    {
-    }
     public function get_employee_shift_schedule($user_id, $week)
     {
         $or_query = "";

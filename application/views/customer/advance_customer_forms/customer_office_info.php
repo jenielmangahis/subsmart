@@ -396,7 +396,7 @@
                     <option value="647.99">647.99</option>
                     <option value="699.00">699.00</option>
                 </select>
-                <a href="<?= base_url() ?>customer/settings" target="_blank"  style="color:#58bc4f;font-size: 10px;"><span class="fa fa-plus"></span> Manage Fee</a>&nbsp;&nbsp;
+                <a href="<?= base_url() ?>customer/settings/activationFee" target="_blank"  style="color:#58bc4f;font-size: 10px;"><span class="fa fa-plus"></span> Manage Fee</a>&nbsp;&nbsp;
             </div>
             <div class="col-md-12">
                 <input type="radio" class="form-controls" name="way_of_pay" value="None" <?php if(isset($office_info)){ echo $office_info->way_of_pay == 'None' || $office_info->way_of_pay == '' || $office_info->way_of_pay == 'Email' ? 'checked': ''; }else {echo 'checked'; } ?>  id="way_of_pay_none">

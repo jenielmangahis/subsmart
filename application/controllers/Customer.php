@@ -359,6 +359,28 @@ class Customer extends MY_Controller
         $this->page_data['rate_plans'] = $this->customer_ad_model->get_all(FALSE,"","","ac_rateplan","id");
 
 
+        // get activation fee
+        $activation_fee_query = array(
+            'table' => 'ac_activationfee',
+            'order' => array(
+                'order_by' => 'id',
+            ),
+            'select' => '*',
+        );
+        $this->page_data['activation_fee'] = $this->general->get_data_with_param($activation_fee_query);
+
+
+        // get system package type
+        $spt_query = array(
+            'table' => 'ac_system_package_type',
+            'order' => array(
+                'order_by' => 'id',
+            ),
+            'select' => '*',
+        );
+        $this->page_data['system_package_type'] = $this->general->get_data_with_param($spt_query);
+
+
         $this->page_data['profiles'] = $this->customer_ad_model->get_customer_data_settings($user_id);
         //$this->load->model('Activity_model','activity');
        // $this->page_data['activity_list'] = $this->activity->getActivity($user_id, [], 0);
@@ -1196,6 +1218,46 @@ class Customer extends MY_Controller
         }
     }
 
+    public function add_activation_fee_ajax(){
+        $input = $this->input->post();
+        // customer_ad_model
+        if(empty($input['id'])){
+            unset($input['id']);
+            $input['company_id'] = logged('company_id');
+            if($this->customer_ad_model->add($input,"ac_activationfee")){
+                echo 1;
+            }else{
+                echo 0;
+            }
+        }else{
+            if($this->customer_ad_model->update_data($input,"ac_activationfee","id")){
+                echo "Updated";
+            }else{
+                echo "Error";
+            }
+        }
+    }
+
+    public function add_spt_ajax(){
+        $input = $this->input->post();
+        // customer_ad_model
+        if(empty($input['id'])){
+            unset($input['id']);
+            $input['company_id'] = logged('company_id');
+            if($this->customer_ad_model->add($input,"ac_system_package_type")){
+                echo 1;
+            }else{
+                echo 0;
+            }
+        }else{
+            if($this->customer_ad_model->update_data($input,"ac_system_package_type","id")){
+                echo "Updated";
+            }else{
+                echo "Error";
+            }
+        }
+    }
+
     public function update_customer_profile(){
         $input = array();
         $input['notes'] = $_POST['notes'];
@@ -1297,6 +1359,34 @@ class Customer extends MY_Controller
                 'id' => $_POST['id']
             ),
             'table' => 'ac_rateplan'
+        );
+        if($this->general->delete_($deletion_query)){
+            echo 1;
+        }else{
+            echo 0;
+        }
+    }
+
+    public function delete_activation_fee(){
+        $deletion_query = array(
+            'where' => array(
+                'id' => $_POST['id']
+            ),
+            'table' => 'ac_activationfee'
+        );
+        if($this->general->delete_($deletion_query)){
+            echo 1;
+        }else{
+            echo 0;
+        }
+    }
+
+    public function delete_spt(){
+        $deletion_query = array(
+            'where' => array(
+                'id' => $_POST['id']
+            ),
+            'table' => 'ac_system_package_type'
         );
         if($this->general->delete_($deletion_query)){
             echo 1;

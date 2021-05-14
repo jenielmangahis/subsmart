@@ -1058,6 +1058,15 @@ SQL;
         $this->db->insert_batch('user_docfile_templates_shared', $fields);
         echo json_encode(['data' => $fields]);
     }
+
+    public function apiDeleteTemplate($templateId)
+    {
+        $this->db->where('id', $templateId);
+        $this->db->delete('user_docfile_templates');
+
+        header('content-type: application/json');
+        echo json_encode(['success' => true]);
+    }
 }
 
 // https://stackoverflow.com/a/50373095/8062659

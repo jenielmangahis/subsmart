@@ -27,7 +27,7 @@ class Items extends MY_Controller
             }
             $gh = "'" . $row->title . "'," . $row->price . "," . $discount . "," . $row->id;
 
-            echo '<li onClick="setitem(this,' . $gh . ')">' . $row->title . '</li>';
+            echo '<li class="testing" onClick="setitem(this,' . $gh . ')">' . $row->title . '</li>';
         }
         exit();
     }

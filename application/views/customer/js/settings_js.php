@@ -186,6 +186,49 @@
         });
     });
 
+    $("#activationFeeForm").submit(function(e) {
+        e.preventDefault(); // avoid to execute the actual submit of the form.
+        var form = $(this);
+        //var url = form.attr('action');
+        $.ajax({
+            type: "POST",
+            url: "/customer/add_activation_fee_ajax",
+            data: form.serialize(), // serializes the form's elements.
+            success: function(data)
+            {
+                if(data === "Updated"){
+
+                }else{
+                    sucess_add('Good Job!','Successfully Added!','activationFee');
+                }
+                $('#modal_lead_type').modal('hide');
+                $('[id="lead_name"]').val("");
+                $('[id="lead_id"]').val("");
+            }
+        });
+    });
+
+    $("#sptForm").submit(function(e) {
+        e.preventDefault(); // avoid to execute the actual submit of the form.
+        var form = $(this);
+        $.ajax({
+            type: "POST",
+            url: "/customer/add_spt_ajax",
+            data: form.serialize(), // serializes the form's elements.
+            success: function(data)
+            {
+                if(data === "Updated"){
+
+                }else{
+                    sucess_add('Good Job!','Successfully Added!','spt');
+                }
+                $('#modal_lead_type').modal('hide');
+                $('[id="lead_name"]').val("");
+                $('[id="lead_id"]').val("");
+            }
+        });
+    });
+
     $("body").delegate(".delete_rate_plan", "click", function(){
         var ID=this.id;
         Swal.fire({
@@ -207,6 +250,35 @@
                         console.log(data);
                         if(data === '1'){
                             sucess_add('Nice!','Successfully Removed!','ratePlan');
+                        }
+                    }
+                });
+            }
+        });
+    });
+
+
+    $("body").delegate(".delete_spt", "click", function(){
+        var ID=this.id;
+        Swal.fire({
+            title: 'Are you sure you want to remove this package type?',
+            text: "",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#32243d',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes',
+            cancelButtonText: 'No',
+        }).then((result) => {
+            if (result.value) {
+                $.ajax({
+                    type: "POST",
+                    url: "/customer/delete_spt",
+                    data: { id:ID }, // serializes the form's elements.
+                    success: function(data){
+                        console.log(data);
+                        if(data === '1'){
+                            sucess_add('Nice!','Successfully Removed!','spt');
                         }
                     }
                 });
@@ -240,6 +312,36 @@
                 });
             }
         });
+    });
+
+
+    $("body").delegate(".delete_activation_fee", "click", function(){
+        var ID=this.id;
+        Swal.fire({
+            title: 'Are you sure you want to DELETE this Fee?',
+            text: "",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#32243d',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes',
+            cancelButtonText: 'No',
+        }).then((result) => {
+            if (result.value) {
+                $.ajax({
+                    type: "POST",
+                    url: "/customer/delete_activation_fee",
+                    data: { id:ID }, // serializes the form's elements.
+                    success: function(data){
+                        console.log(data);
+                        if(data === '1'){
+                            sucess_add('Nice!','Successfully Removed!','activationFee');
+                        }
+                    }
+                });
+            }
+        });
+
     });
 
     function sucess_add($title,information,is_reload){

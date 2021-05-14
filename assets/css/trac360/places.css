@@ -433,3 +433,13 @@ label.edit_radius_number_view {
     color: #002638;
     font-size: 13px;
 }
+
+#place_notif_modal img.user-profile {
+    height: 90px;
+    width: 90px;
+}
+
+.notify-settings-loader img {
+    height: 100px;
+    width: 100px;
+}

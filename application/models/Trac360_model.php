@@ -66,4 +66,46 @@ class Trac360_model extends MY_Model
         $this->db->where("id", $place_id);
         $this->db->update("trac360_places", $update);
     }
+
+    public function get_employees($company_id)
+    {
+        $this->db->reset_query();
+        $qry = $this->db->query("SELECT id,FName,LName,profile_img from users WHERE company_id = ".$company_id);
+        return $qry->result();
+    }
+    public function initial_settings_setter($place_id, $user_id, $created_by)
+    {
+        $this->db->reset_query();
+        $qry = $this->db->query("SELECT * FROM trac360_notify_people WHERE place_id = ".$place_id." AND user_id = ".$user_id." AND created_by = ".$created_by);
+        $settings = $qry->row();
+        if ($settings != null) {
+            return true;
+        } else {
+            $this->db->reset_query();
+            $insert = array(
+                'created_by' => $created_by,
+                'place_id' => $place_id,
+                'user_id' => $user_id,
+                'notify_when_arrive' => 1,
+                'notify_when_leave' => 1
+            );
+            $this->db->insert('trac360_notify_people', $insert);
+            $qry = $this->db->query("SELECT * FROM trac360_notify_people WHERE place_id = ".$place_id." AND user_id = ".$user_id." AND created_by = ".$created_by);
+            return true;
+        }
+    }
+    public function get_notify_settings($place_id, $created_by, $or_query)
+    {
+        $this->db->reset_query();
+        $qry = $this->db->query("SELECT * FROM trac360_notify_people WHERE place_id = ".$place_id." AND created_by = ".$created_by ." AND (".$or_query.")");
+        return $qry->result();
+    }
+    public function update_notification($created_by, $update, $place_id, $user_id)
+    {
+        $this->db->reset_query();
+        $this->db->where('user_id', $user_id);
+        $this->db->where('place_id', $place_id);
+        $this->db->where('created_by', $created_by);
+        $this->db->update("trac360_notify_people", $update);
+    }
 }

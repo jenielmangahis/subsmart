@@ -14,16 +14,16 @@
                 </tr>
                 </thead>
                 <tbody>
-                <?php if(isset($rate_plans)): ?>
-                    <?php foreach ($rate_plans as $rate) : ?>
+                <?php if(isset($activation_fee)): ?>
+                    <?php foreach ($activation_fee as $fee) : ?>
                         <tr>
-                            <td>$<?= $rate->amount; ?></td>
-                            <td><?= date("d-m-Y h:i A",strtotime($rate->date_created)); ?></td>
+                            <td>$<?= $fee->amount; ?></td>
+                            <td><?= date("d-m-Y h:i A",strtotime($fee->date_created)); ?></td>
                             <td>
                                 <a href="#" class="btn btn-sm btn-default" title="Edit Sales Area" data-toggle="tooltip">
                                     <i class="fa fa-pencil"></i> Edit
                                 </a>
-                                <button id="<?= $rate->id; ?>" class="btn btn-sm btn-default delete_rate_plan">
+                                <button id="<?= $fee->id; ?>" class="btn btn-sm btn-default delete_activation_fee">
                                     <i class="fa fa-trash"></i> Delete
                                 </button>
                             </td>

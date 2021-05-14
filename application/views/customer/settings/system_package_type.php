@@ -2,10 +2,10 @@
     <div class="card-body hid-desk" style="padding-bottom:0px;">
         <div class="col-lg-12 table-responsive">
             <h6>System Package Type</h6>
-            <button data-toggle="modal" data-target="#modal_activation_fee" class="btn btn-sm btn-default pull-right sa" title="Add Sales Area" style="margin-bottom: 10px;">
-                <i class="fa fa-plus"></i> New System Package Type
+            <button data-toggle="modal" data-target="#modal_spt" class="btn btn-sm btn-default pull-right sa" title="Add Sales Area" style="margin-bottom: 10px;">
+                <i class="fa fa-plus"></i> New Package Type
             </button>
-            <table id="system_package_type" class="table table-bordered table-striped">
+            <table id="rate_plan" class="table table-bordered table-striped">
                 <thead>
                 <tr>
                     <th>Name</th>
@@ -14,16 +14,16 @@
                 </tr>
                 </thead>
                 <tbody>
-                <?php if(isset($rate_plans)): ?>
-                    <?php foreach ($rate_plans as $rate) : ?>
+                <?php if(isset($system_package_type)): ?>
+                    <?php foreach ($system_package_type as $type) : ?>
                         <tr>
-                            <td>$<?= $rate->amount; ?></td>
-                            <td><?= date("d-m-Y h:i A",strtotime($rate->date_created)); ?></td>
+                            <td><?= $type->name; ?></td>
+                            <td><?= date("d-m-Y h:i A",strtotime($type->date_created)); ?></td>
                             <td>
                                 <a href="#" class="btn btn-sm btn-default" title="Edit Sales Area" data-toggle="tooltip">
                                     <i class="fa fa-pencil"></i> Edit
                                 </a>
-                                <button id="<?= $rate->id; ?>" class="btn btn-sm btn-default delete_rate_plan">
+                                <button id="<?= $type->id; ?>" class="btn btn-sm btn-default delete_spt">
                                     <i class="fa fa-trash"></i> Delete
                                 </button>
                             </td>
