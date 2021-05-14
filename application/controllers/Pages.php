@@ -558,6 +558,7 @@ class Pages extends MY_Controller {
     }
 
     public function create_deals_booking(){
+    	$this->load->model('DealsSteals_model');
     	$this->load->model('DealsBookings_model');
     	$this->load->model('Business_model');
 
@@ -592,7 +593,7 @@ class Pages extends MY_Controller {
             $from      = MAIL_FROM;
 
     		//Email customer
-    		$subject_customer = "Deal Booked with " . $company->business_name . " " . date("d-M-Y H:i");
+    		$subject_customer = "Deal Booked with " . $company->business_name . " " . date("d-M-Y g:i a");
     		$msg_customer     = $this->load->view('pages/deals_email_template_customer', $this->page_data, TRUE);
     		$recipient = $post['email'];
 
@@ -607,7 +608,7 @@ class Pages extends MY_Controller {
             $mail->Timeout    =   10; // set the timeout (seconds)
             $mail->Port = $port;
             $mail->From = $from;
-            $mail->FromName = 'nSmarTrac';
+            $mail->FromName = $company->business_name;
             $mail->addAddress($recipient, $recipient);
             $mail->isHTML(true);
             $mail->Subject = $subject_customer;
@@ -615,9 +616,9 @@ class Pages extends MY_Controller {
             $mail->Send();
 
     		//Email company
-    		$subject_company  = "New inquiry on " . date("d-M-Y H:i");
+    		$subject_company  = "New inquiry on " . date("d-M-Y g:i A");
     		$msg_company      = $this->load->view('pages/deals_email_template_company', $this->page_data, TRUE);
-    		$recipient = $company->business_email;
+    		$recipient        = $company->business_email;
 
     		$mail = new PHPMailer;
             $mail->isSMTP();
@@ -638,6 +639,7 @@ class Pages extends MY_Controller {
             $mail->Send();
 
     		$is_success = 1;
+    		$msg = '';
     	}
 
     	$json_data = ['is_success' => $is_success, 'msg' => $msg];

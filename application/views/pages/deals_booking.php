@@ -122,6 +122,8 @@ $(function(){
                       text: 'Cannot save booking.'
                     });
                 }
+
+                $(".btn-confirm-booking").html('Confirm');
              }
           });
         }, 1000);
