@@ -10,6 +10,7 @@ class Trac360 extends MY_Controller
         $this->checkLogin();
         $this->page_data['page']->title = 'Trac360';
         $this->load->model('trac360_model');
+        $this->load->model('jobs_model');
     }
 
     public function getUsersCategories()
@@ -74,6 +75,21 @@ class Trac360 extends MY_Controller
         $this->page_data['user_locations'] = $user_locations;
         $this->page_data['company_id'] = $company_id;
         $this->page_data['user_id'] = $user_id;
+
+        $role    = logged('role');
+
+        $settings = $this->settings_model->getValueByKey(DB_SETTINGS_TABLE_KEY_SCHEDULE);
+        $this->page_data['settings'] = unserialize($settings);
+
+        if ($role == 1 || $role == 2) {
+            $upcomingJobs = $this->jobs_model->getAllUpcomingJobs();
+        } else {
+            $upcomingJobs = $this->jobs_model->getAllUpcomingJobsByCompanyId($company_id);
+        }
+
+        $this->page_data['upcomingJobs'] = $upcomingJobs;
+
+
         $this->load->view('trac360/people', $this->page_data);
         // var_dump($data);
     }
@@ -334,6 +350,14 @@ class Trac360 extends MY_Controller
         );
         $place_id = $this->trac360_model->insert_to("trac360_places", $insert);
         
+        $all_users = $this->trac360_model->get_employees(logged('company_id'));
+        foreach ($all_users as $user) {
+            if ($user->id != $user_id) {
+                $setting = $this->trac360_model->initial_settings_setter($place_id, $user->id, logged('id'));
+            }
+        }
+
+
         $data = new stdClass();
         $data->places = $this->get_all_places($company_id, $user_id);
         $data->place_id = $place_id;
@@ -389,10 +413,12 @@ class Trac360 extends MY_Controller
         <p class="last_tract_location second-p">'.$place->address.'
         </p>
         <div class="places-actions-btn">
-            <button href="#" class="place-notif-action" id="place_notif_modal_btn">
+            <button href="#" class="place-notif-action" id="place_notif_modal_btn"
+            data-user-id="'.$place->created_by.'"
+            data-place-id="'.$place->id.'">
                 <i class="fa fa-bell-o" aria-hidden="true"></i>
             </button>';
-            if ($place->created_by == $user_id) {
+            if ($place->created_by == $user_id || logged("role") < 5) {
                 $places .='<button href="#" class="place-edit-action edit_address_modal_btn"
                 data-lat="'.$exploded_coordinated[0].'"
                 data-lng="'.$exploded_coordinated[1].'"

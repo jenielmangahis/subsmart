@@ -1,17 +1,5 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
-<?php
-// CSS to add only Customer module
-add_css(array(
-    'assets/css/jquery.signaturepad.css',
-    'https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css',
-    'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css',
-    'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css',
-    'https://cdn.datatables.net/select/1.3.1/css/select.dataTables.min.css',
-    'assets/css/accounting/sales.css',
-    'assets/textEditor/summernote-bs4.css',
-));
-?>
 <?php include viewPath('includes/header'); ?>
 
 <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
@@ -118,7 +106,6 @@ add_css(array(
         <?php include viewPath('includes/notifications'); ?>
         <div class="container-fluid">
             <div class="page-title-box">
-
             </div>
             <!-- end row -->
             <div class="row">
@@ -126,20 +113,18 @@ add_css(array(
                     <div class="card">
                         <div class="card-body hid-desk" >
                             <div class="row margin-bottom-ter align-items-center">
-
                                 <!-- Nav tabs -->
                                 <div class="col-auto">
                                     <h2 class="page-title">Customer Dashboard</h2>
                                 </div>
                                 <div class="alert alert-warning col-md-12 mt-4 mb-4" role="alert">
-                                        <span style="color:black;">
-                                             Our customer dashboard is Visual and Easy-To-Use. Simply add a widget and quickly see the information you need to help better assist and maintain a well organized business.
-                                            Need us to create a customize widget with the table geared around your business.  Send us a request and our support team will be glad to get you a quote.
-                                         </span>
+                                    <span style="color:black;">
+                                        Our customer dashboard is Visual and Easy-To-Use. Simply add a widget and quickly see the information you need to help better assist and maintain a well organized business.
+                                        Need us to create a customize widget with the table geared around your business.  Send us a request and our support team will be glad to get you a quote.
+                                    </span>
                                 </div>
                             </div>
                         </div>
-
                     <style>
                         .btn{
                             font-size: 12px !important;
@@ -187,47 +172,24 @@ add_css(array(
         </div>
     </div>
 </div>
+<style>
+    .individual-module-big h6 {
+        transform: rotate(-90deg);
+        width: 380px;
+        text-align: center;
+        background: #34203f;
+        padding: 5px;
+        position: absolute;
+        float: left;
+        left: -215px;
+        top: 155px;
+        color: white;
+        border-radius: 10px 10px 0 0;
+        cursor: pointer;
+    }
+</style>
 
 
-<!-- Modals -->
-
-<!-- Lead Type Modal -->
-<?php include viewPath('customer/adv_modals/modal_lead_type'); ?>
-
-<!-- Sales Area Modal -->
-<?php include viewPath('customer/adv_modals/modal_sales_area'); ?>
-
-<!-- Lead Source Modal -->
-<?php include viewPath('customer/adv_modals/modal_lead_source'); ?>
-
-<!-- Task Modal -->
-<?php include viewPath('customer/adv_modals/modal_task'); ?>
-
-<!-- Impoer Credit Modal -->
-<?php include viewPath('customer/adv_modals/modal_import_credit'); ?>
-
-<!-- Fusnishers Modal -->
-<?php include viewPath('customer/adv_modals/modal_furnishers'); ?>
-
-<!-- Reasons Modal -->
-<?php include viewPath('customer/adv_modals/modal_reasons'); ?>
-<!-- End Modals -->
-
-
-<?php
-// JS to add only Customer module
-add_footer_js(array(
-    'https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js',
-    'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js',
-    'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js',
-    'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js',
-    'https://cdn.datatables.net/select/1.3.1/js/dataTables.select.min.js',
-    'https://code.jquery.com/ui/1.12.1/jquery-ui.js',
-    'assets/textEditor/summernote-bs4.js'
-    // 'assets/frontend/js/creditcard.js',
-    // 'assets/frontend/js/customer/add.js',
-));
-?>
 <!-- page wrapper end -->
 <?php include viewPath('includes/footer'); ?>
 
@@ -236,7 +198,6 @@ add_footer_js(array(
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
 <?php include viewPath('customer/adv_cust/css_list'); ?>
-<?php include viewPath('customer/adv_cust/js_list'); ?>
 
 <style>
     #sortable { list-style-type: none; margin: 0; padding: 0; width: 450px; }
@@ -263,13 +224,6 @@ add_footer_js(array(
 <script>
     $(document).ready(function () {
 
-        $(".date_picker").datetimepicker({
-            format: "l",
-            //'setDate': new Date(),
-            //minDate: new Date(),
-        });
-        $('.date_picker').val(new Date().toLocaleDateString());
-
         //$(".module").draggable({axis:"y"});
         ///$( ".sortable2" ).sortable("disable");
         $('#onoff-customize').change(function () {
@@ -286,9 +240,6 @@ add_footer_js(array(
             }
 
         });
-
-
-
         $(".sortable2").sortable({
             start: function (e, ui) {
                 // creates a temporary attribute on the element with the old index
@@ -323,29 +274,5 @@ add_footer_js(array(
 
         $(".sortable2").sortable("disable");
 
-        $(".remove_task").on("click", function (event) {
-            var ID = this.id;
-            //alert(ID);
-            $.ajax({
-                type: "POST",
-                url: "/customer/remove_task",
-                data: {id: ID}, // serializes the form's elements.
-                success: function (data) {
-                    if (data === "Done") {
-                        window.location.reload();
-                    } else {
-                        console.log(data);
-                    }
-                }
-            });
-        });
-
-
-
-
     });
-
-
-
-
 </script>

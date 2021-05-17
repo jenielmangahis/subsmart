@@ -101,9 +101,6 @@
                                                                     <th width="10%">CATEGORY</th>
                                                                     <th>DESCRIPTION</th>
                                                                     <th width="10%">AMOUNT</th>
-                                                                    <th width="3%">BILLABLE</th>
-                                                                    <th width="10%">MARKUP %</th>
-                                                                    <th width="3%">TAX</th>
                                                                     <th width="15%">CUSTOMER</th>
                                                                     <th></th>
                                                                 </thead>
@@ -142,17 +139,6 @@
                                                                         <td><input type="text" name="description[]" class="form-control"></td>
                                                                         <td><input type="number" name="category_amount[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01"></td>
                                                                         <td>
-                                                                            <div class="d-flex align-items-center justify-content-center">
-                                                                                <input type="checkbox" name="category_billable[]" class="form-check" value="1">
-                                                                            </div>
-                                                                        </td>
-                                                                        <td><input type="number" name="category_markup[]" class="form-control" onchange="convertToDecimal(this)"></td>
-                                                                        <td>
-                                                                            <div class="d-flex align-items-center justify-content-center">
-                                                                                <input type="checkbox" name="category_tax[]" class="form-check" value="1">
-                                                                            </div>
-                                                                        </td>
-                                                                        <td>
                                                                             <select name="category_customer[]" class="form-control">
                                                                                 <option value="" selected disabled>&nbsp;</option>
                                                                                 <?php if(count($dropdown['customers']) > 0) : ?>
@@ -167,9 +153,6 @@
                                                                     <tr>
                                                                         <td></td>
                                                                         <td>2</td>
-                                                                        <td></td>
-                                                                        <td></td>
-                                                                        <td></td>
                                                                         <td></td>
                                                                         <td></td>
                                                                         <td></td>
@@ -202,6 +185,7 @@
                                                                 <thead>
                                                                     <th width="20%">PRODUCT/SERVICE</th>
                                                                     <th>TYPE</th>
+                                                                    <th width="10%">LOCATION</th>
                                                                     <th width="10%">QUANTITY</th>
                                                                     <th width="10%">PRICE</th>
                                                                     <th width="10%">DISCOUNT</th>

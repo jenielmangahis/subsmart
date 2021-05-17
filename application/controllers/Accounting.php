@@ -5378,4 +5378,65 @@ class Accounting extends MY_Controller {
         $this->load->view('accounting/work_order_templates', $this->page_data);
     }
 
+    public function testSave()
+    {
+        //print_r($_POST);
+        // $folderPath = './uploads/';
+        // // $this->input->post('get_val');
+        
+        // $image_parts = explode(";base64,", $this->input->post('signature_image'));
+        
+        // $image_type_aux = explode("image/", $image_parts[0]);
+        
+        // $image_type = $image_type_aux[1];
+        
+        // $image_base64 = base64_decode($image_parts[1]);
+        
+        // $file = $folderPath . uniqid() . '.'.$image_type;
+        
+        // file_put_contents($file, $image_base64);
+        // echo "1";
+
+        // $config['remove_spaces']=TRUE;
+        // $config['encrypt_name'] = TRUE; // for encrypting the name
+        // $config['upload_path'] = './uploads/';
+        // $config['allowed_types'] = 'jpg|png|gif';
+        // $config['max_size']    = '78000';
+
+        // //load upload class library
+        // $this->load->library('upload', $config);
+
+        // //$this->upload->do_upload('filename') will upload selected file to destiny folder
+        // if (!$this->upload->do_upload('signature_image'))
+        // {
+        //     // case - failure
+        //     $upload_error = array('error' => $this->upload->display_errors());
+        //     print_r($upload_error);
+        // }
+        // else
+        // {
+        //     echo "1";
+        // }
+        $dataURL = $this->input->post('dataURL');
+        $dataURL2 = $this->input->post('dataURL2');
+        $dataURL3 = $this->input->post('dataURL3');
+
+        echo $dataURL .'<br>'. $dataURL2 .'<br>'. $dataURL3;
+
+        // $list = json_decode($pixels, true);
+
+        // $image->importImagePixels(0, 0, $width, $height, "RGB", Imagick::PIXEL_CHAR, $pixels);
+        // $image->setImageFormat('jpg');
+        // $image->writeImage("image.jpg");  
+
+
+        // $data = $this->input->post('output-2a');
+        // list($type, $data) = explode(';', $data);
+        // list(, $data)      = explode(',', $data);
+        // $data = base64_decode($data);
+
+        // file_put_contents('./uploads/image.png', $data);
+        // echo "1";
+    }
+
 }

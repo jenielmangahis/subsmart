@@ -1521,7 +1521,7 @@ $(function() {
         var taxAmount = parseFloat(taxPercentage) * amount / 100;
         var total = parseFloat(parseFloat(amount) + parseFloat(taxAmount) - parseFloat(discount)).toFixed(2);
 
-        $(this).parent().parent().find('td:nth-child(7) span').html(total);
+        $(this).parent().parent().find('td span.row-total').html(total);
         computeTransactionTotal();
     });
 
@@ -1556,21 +1556,41 @@ $(function() {
         $.get('/accounting/get-item-details/'+id, function(res) {
             var result = JSON.parse(res);
             var item = result.item;
+            var locations = result.locations;
+            var locs = '';
+
+            for(var i in locations) {
+                locs += `<option value="${locations[i].id}" data-quantity="${locations[i].qty === "null" ? 0 : locations[i].qty}">${locations[i].name}</option>`;
+            }
+
+            if($('#modal-container form#modal-form .modal').attr('id') === 'creditCardCreditModal') {
+                var qtyField = `<input type="number" name="quantity[]" class="form-control text-right" required value="0" max="${locations[0].qty}">`;
+            } else {
+                var qtyField = `<input type="number" name="quantity[]" class="form-control text-right" required value="0">`;
+            }
 
             var fields = `
                 <td>${item.title}<input type="hidden" name="item[]" value="${item.id}"></td>
                 <td>Product</td>
-                <td><input type="number" name="quantity[]" class="form-control text-right" required value="0"></td>
+                <td><select name="location[]" class="form-control" required>${locs}</select></td>
+                <td>${qtyField}</td>
                 <td><input type="number" name="item_amount[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" value="${item.price}"></td>
                 <td><input type="number" name="discount[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" value="0.00"></td>
                 <td><input type="number" name="item_tax[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" value="7.50"></td>
-                <td>$<span>0.00</span></td>
+                <td>$<span class="row-total">0.00</span></td>
                 <td><a href="#" class="deleteRow"><i class="fa fa-trash"></i></a></td>
             `;
 
             $('#modal-container form#modal-form .modal #item-details-table tbody').append(`<tr></tr>`);
             $('#modal-container form#modal-form .modal #item-details-table tbody tr:last-child').append(fields);
+            $('#modal-container form#modal-form .modal #item-details-table tbody tr:last-child select').select2();
         });
+    });
+
+    $(document).on('change', '#creditCardCreditModal #item-details-table select[name="location[]"]', function() {
+        var quantity = $(this).find('option:selected')[0].dataset.quantity;
+
+        $(this).parent().parent().find('input[name="quantity[]"]').attr('max', quantity);
     });
 
     $(document).on('change', '#billModal #terms', function() {
@@ -1609,11 +1629,82 @@ $(function() {
         });
     });
 
-    $(document).on('change', '#purchaseOrderModal #vendor', function() {
+    $(document).on('change', '#checkModal #payee', function() {
+        var split = $(this).val().split('-');
+
+        switch(split[0]) {
+            case 'vendor' :
+                $.get('/accounting/get-vendor-details/'+split[1], function(res) {
+                    var vendor = JSON.parse(res);
+
+                    var vendorName = '';
+                    vendorName += vendor.title !== "" ? vendor.title+" " : "";
+                    vendorName += vendor.f_name !== "" ? vendor.f_name+" " : "";
+                    vendorName += vendor.m_name !== "" ? vendor.m_name+" " : "";
+                    vendorName += vendor.l_name !== "" ? vendor.l_name+" " : "";
+                    vendorName += vendor.suffix !== "" ? vendor.suffix : "";
+                    $('#checkModal #mailing_address').html(vendorName.trim());
+                    $('#checkModal #mailing_address').append('\n');
+                    var address = '';
+                    address += vendor.street !== "" ? vendor.street : "";
+                    address += vendor.city !== "" ? '\n'+vendor.city : "";
+                    address += vendor.state !== "" ? ', '+vendor.state : "";
+                    address += vendor.zip !== "" ? ' '+vendor.zip : "";
+
+                    $('#checkModal #mailing_address').append(address.trim());
+                });
+            break;
+            case 'customer' :
+                $.get('/accounting/get-customer-details/'+split[1], function(res) {
+                    var customer = JSON.parse(res);
+
+                    var customerName = '';
+                    customerName += customer.first_name !== "" ? customer.first_name+" " : "";
+                    customerName += customer.middle_name !== "" ? customer.middle_name+" " : "";
+                    customerName += customer.last_name !== "" ? customer.last_name : "";
+                    $('#checkModal #mailing_address').html(customerName.trim());
+                    $('#checkModal #mailing_address').append('\n');
+                    if(customer.business_name !== "" && customer.business_name !== null) {
+                        $('#checkModal #mailing_address').append(customer.business_name);
+                        $('#checkModal #mailing_address').append('\n');
+                    }
+                    var address = '';
+                    address += customer.mail_add !== "" ? customer.mail_add : "";
+                    address += customer.city !== "" ? '\n'+customer.city : "";
+                    address += customer.state !== "" ? ', '+customer.state : "";
+                    address += customer.zip_code !== "" ? ' '+customer.zip_code : "";
+                    address += customer.country !== "" ? ' '+customer.country : "";
+
+                    $('#checkModal #mailing_address').append(address.trim());
+                });
+            break;
+            case 'employee' :
+                $.get('/accounting/get-employee-details/'+split[1], function(res) {
+                    var employee = JSON.parse(res);
+
+                    var employeeName = '';
+                    employeeName += employee.FName !== "" ? employee.FName+" " : "";
+                    employeeName += employee.LName !== "" ? employee.LName : "";
+                    $('#checkModal #mailing_address').html(employeeName.trim());
+                    $('#checkModal #mailing_address').append('\n');
+                    var address = '';
+                    address += employee.address !== "" ? employee.address : "";
+                    address += employee.city !== "" ? '\n'+employee.city : "";
+                    address += employee.state !== "" ? ', '+employee.state : "";
+                    address += employee.postal_code !== "" ? ' '+employee.postal_code : "";
+
+                    $('#checkModal #mailing_address').append(address.trim());
+                });
+            break;
+        }
+    });
+
+    $(document).on('change', '#purchaseOrderModal #vendor, #billModal #vendor, #vendorCreditModal #vendor', function() {
+        var modalId = $('#modal-container form#modal-form .modal').attr('id');
         $.get('/accounting/get-vendor-details/'+$(this).val(), function(res) {
             var vendor = JSON.parse(res);
 
-            $('#purchaseOrderModal #email').val(vendor.email);
+            $(`#${modalId} #email`).val(vendor.email);
 
             var vendorName = '';
             vendorName += vendor.title !== "" ? vendor.title+" " : "";
@@ -1621,9 +1712,15 @@ $(function() {
             vendorName += vendor.m_name !== "" ? vendor.m_name+" " : "";
             vendorName += vendor.l_name !== "" ? vendor.l_name+" " : "";
             vendorName += vendor.suffix !== "" ? vendor.suffix : "";
-            $('#purchaseOrderModal #mailing_address').html(vendorName.trim());
-            $('#purchaseOrderModal #mailing_address').append('\n');
-            $('#purchaseOrderModal #mailing_address').append(vendor.street+'\n'+vendor.city+', '+vendor.state+' '+vendor.zip);
+            $(`#${modalId} #mailing_address`).html(vendorName.trim());
+            $(`#${modalId} #mailing_address`).append('\n');
+            var address = '';
+            address += vendor.street !== "" ? vendor.street : "";
+            address += vendor.city !== "" ? '\n'+vendor.city : "";
+            address += vendor.state !== "" ? ', '+vendor.state : "";
+            address += vendor.zip !== "" ? ' '+vendor.zip : "";
+
+            $(`#${modalId} #mailing_address`).append(address.trim());
         });
     });
 
@@ -1634,7 +1731,7 @@ $(function() {
             var customerName = '';
             customerName += customer.first_name !== "" ? customer.first_name+" " : "";
             customerName += customer.middle_name !== "" ? customer.middle_name+" " : "";
-            customerName += customer.last_name !== "" ? customer.last_name+" " : "";
+            customerName += customer.last_name !== "" ? customer.last_name : "";
             $('#purchaseOrderModal #shipping_address').html(customerName.trim());
             $('#purchaseOrderModal #shipping_address').append('\n');
             if(customer.business_name !== "" && customer.business_name !== null) {
@@ -2118,9 +2215,9 @@ const submitModalForm = (event, el) => {
         count = 0;
         $(`${modalId} table#item-details-table tbody tr`).each(function() {
             if(count === 0) {
-                data.set('item_total[]', $(this).find('td:nth-child(7) span').html());
+                data.set('item_total[]', $(this).find('td span.row-total').html());
             } else {
-                data.append('item_total[]', $(this).find('td:nth-child(7) span').html());
+                data.append('item_total[]', $(this).find('td span.row-total').html());
             }
 
             count++;
@@ -2373,7 +2470,7 @@ const computeTransactionTotal = () => {
         total = parseFloat(parseFloat(total) + parseFloat(value)).toFixed(2);
     });
 
-    $('#modal-container table#item-details-table tbody tr td:nth-child(7) span').each(function() {
+    $('#modal-container table#item-details-table tbody tr td span.row-total').each(function() {
         var value = $(this).html() === "" ? 0.00 : parseFloat($(this).html()).toFixed(2);
 
         total = parseFloat(parseFloat(total) + parseFloat(value)).toFixed(2);

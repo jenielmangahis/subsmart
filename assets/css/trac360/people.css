@@ -112,6 +112,7 @@ button.trac360_side_controls:active:hover {
 .sec-2-option img.user-profile {
     border-radius: 50%;
     width: 60px;
+    height: 60px;
 }
 
 .sec-2-option img.active {
@@ -126,6 +127,8 @@ button.trac360_side_controls:active:hover {
     font-size: 15px;
     padding-top: 10px;
     margin: 0;
+    height: 31px;
+    overflow: hidden;
 }
 
 .sec-2-option .profile {
@@ -246,4 +249,120 @@ div.popup-map-marker:hover h3 {
 .sec-2-option .details p,
 .sec-2-option .profile p {
     font-size: 13px;
+}
+
+.sec-2-option .details .people-job-btns button {
+    border: solid 1px #6B7584;
+    margin-right: 3px;
+    padding: 3px;
+    border-radius: 7px;
+    width: 30px;
+    color: #6B7584;
+    background-color: transparent;
+}
+
+.sec-2-option .details .people-job-btns {
+    position: absolute;
+    bottom: 15px;
+    right: 0;
+    display: none;
+    z-index: 1;
+}
+
+.sec-2-option .details .people-job-btns button:hover {
+    background-color: #535C69;
+    color: #FFFFFF;
+}
+
+.sec-2-option:hover .people-job-btns {
+    display: block;
+}
+
+.job-list-section {
+    width: 100%;
+    background-color: #fff;
+}
+
+.job-list-section .job-status {
+    width: 100%;
+    background: #32243d;
+    color: #ffffff;
+    text-align: center;
+    font-size: 12px;
+    line-height: 1.5;
+    margin-top: 10px;
+}
+
+.jobs-list-section .jobs-list-item .job-sched {
+    border-right: solid 1px #CCCCCC;
+}
+
+.jobs-list-section .jobs-list-item {
+    border-bottom: solid 1px #CCCCCC;
+    cursor: pointer;
+}
+
+.jobs-list-section .jobs-list-item:hover {
+    background-color: #F7F6EF;
+}
+
+.jobs-list-section .jobs-list-item .job-sched,
+.jobs-list-section .jobs-list-item .job-details {
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.jobs-list-section .jobs-list-item .job-sched .job-caption {
+    font-weight: 700;
+    color: #616161;
+    font-family: Sarabun, sans-serif !important;
+    font-size: 12px
+}
+
+.jobs-list-section .jobs-list-item .job-sched .job-status {
+    background: #4cb052;
+    color: #ffffff;
+}
+
+.jobs-list-section .jobs-list-item .job-sched .after-status {
+    font-family: Sarabun, sans-serif !important;
+    color: #9d9e9d;
+    font-weight: 700;
+    font-size: 10px;
+}
+
+.jobs-list-section .employee-name {
+    background-color: #616161;
+}
+
+.jobs-list-section .employee-name p {
+    font-size: 15px;
+    font-weight: bold;
+    text-transform: uppercase;
+    text-align: center;
+    margin: 0;
+    color: #FFFFFF;
+}
+
+.jobs-list-section .employee-name p span.back-btn {
+    padding: 0 10px;
+    position: absolute;
+    right: 0;
+    border-left: solid 1px #736f6f;
+    cursor: pointer;
+}
+
+.jobs-list-section .loader {
+    width: 100%;
+}
+
+.jobs-list-section .loader img {
+    width: 100px;
+}
+
+.jobs-list-section .no-data {
+    padding: 10px;
+    color: #616161;
+    text-align: center;
+    font-size: 12px;
 }

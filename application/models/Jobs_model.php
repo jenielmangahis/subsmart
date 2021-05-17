@@ -32,10 +32,10 @@ class Jobs_model extends MY_Model
         $cid=logged('company_id');
         $this->db->from($this->table);
         $this->db->select('jobs.*,LName,FName,acs_profile.first_name,acs_profile.last_name,job_tags.name,jobs_pay_details.amount,acs_profile.mail_add,acs_profile.city as cust_city,acs_profile.state as cust_state');
-        $this->db->join('acs_profile', 'acs_profile.prof_id = jobs.customer_id','left');
-        $this->db->join('users', 'users.id = jobs.employee_id','left');
-        $this->db->join('job_tags', 'job_tags.id = jobs.tags','left');
-        $this->db->join('jobs_pay_details', 'jobs.id = jobs_pay_details.jobs_id','left');
+        $this->db->join('acs_profile', 'acs_profile.prof_id = jobs.customer_id', 'left');
+        $this->db->join('users', 'users.id = jobs.employee_id', 'left');
+        $this->db->join('job_tags', 'job_tags.id = jobs.tags', 'left');
+        $this->db->join('jobs_pay_details', 'jobs.id = jobs_pay_details.jobs_id', 'left');
         $this->db->where("jobs.company_id", $cid);
         $this->db->order_by('id', "DESC");
         $query = $this->db->get();
@@ -53,12 +53,12 @@ class Jobs_model extends MY_Model
         acs_profile.first_name,acs_profile.last_name,acs_profile.mail_add,acs_profile.city as cust_city,acs_profile.state as cust_state,
         acs_profile.zip_code as cust_zip_code,acs_profile.phone_h,acs_profile.phone_m,acs_profile.email as cust_email,
         job_tags.name,job_url_links.link,ja.signature_link,ja.authorize_name,ja.datetime_signed,jpd.*');
-        $this->db->join('acs_profile', 'acs_profile.prof_id = jobs.customer_id','left');
-        $this->db->join('users', 'users.id = jobs.employee_id','left');
-        $this->db->join('job_tags', 'job_tags.id = jobs.tags','left');
-        $this->db->join('job_url_links', 'jobs.id = job_url_links.job_id','left');
-        $this->db->join('jobs_approval as ja', 'jobs.id = ja.jobs_id','left');
-        $this->db->join('jobs_pay_details as jpd', 'jobs.id = jpd.jobs_id','left');
+        $this->db->join('acs_profile', 'acs_profile.prof_id = jobs.customer_id', 'left');
+        $this->db->join('users', 'users.id = jobs.employee_id', 'left');
+        $this->db->join('job_tags', 'job_tags.id = jobs.tags', 'left');
+        $this->db->join('job_url_links', 'jobs.id = job_url_links.job_id', 'left');
+        $this->db->join('jobs_approval as ja', 'jobs.id = ja.jobs_id', 'left');
+        $this->db->join('jobs_pay_details as jpd', 'jobs.id = jpd.jobs_id', 'left');
         $this->db->where("jobs.id", $id);
         $query = $this->db->get();
         return $query->row();
@@ -68,7 +68,7 @@ class Jobs_model extends MY_Model
     {
         $this->db->from($this->table_items);
         $this->db->select('items.id,items.title,items.price,items.type,job_items.qty,job_items.location,job_items.points');
-        $this->db->join('items', 'items.id = job_items.items_id','left');
+        $this->db->join('items', 'items.id = job_items.items_id', 'left');
         $this->db->where("job_items.job_id", $id);
         $query = $this->db->get();
         return $query->result();
@@ -78,8 +78,8 @@ class Jobs_model extends MY_Model
     {
         $this->db->from($this->table_items);
         $this->db->select('items.id,items.title,items.price,items.type,job_items.qty,job_items.location,job_items.points');
-        $this->db->join('items', 'items.id = job_items.items_id','left');
-        $this->db->join('jobs', 'jobs.id = job_items.job_id','left');
+        $this->db->join('items', 'items.id = job_items.items_id', 'left');
+        $this->db->join('jobs', 'jobs.id = job_items.job_id', 'left');
         $this->db->where("jobs.customer_id", $id);
         $query = $this->db->get();
         return $query->result();
@@ -179,7 +179,7 @@ class Jobs_model extends MY_Model
         return $query->row();
     }
 
-        /**
+    /**
      * @return mixed
      */
     public function getJobInvoiceItems($job_id)
@@ -199,8 +199,8 @@ class Jobs_model extends MY_Model
      */
     public function updateJob($id, $data)
     {
-        $this->db->where('jobs_id',$id);
-        $this->db->update('jobs',$data);
+        $this->db->where('jobs_id', $id);
+        $this->db->update('jobs', $data);
     }
 
     /**
@@ -234,18 +234,18 @@ class Jobs_model extends MY_Model
      */
     public function updateJobItemQty($id, $value, $type)
     {
-        if($type == "add") {
+        if ($type == "add") {
             $newVal = intval($value) + 1;
         } else {
             $newVal = intval($value) - 1;
         }
 
         $data = array(
-            "qty" => $newVal 
+            "qty" => $newVal
         );
 
-        $this->db->where('ihi_id',$id);
-        $this->db->update('invoice_has_items',$data);
+        $this->db->where('ihi_id', $id);
+        $this->db->update('invoice_has_items', $data);
     }
 
     /**
@@ -266,7 +266,7 @@ class Jobs_model extends MY_Model
      */
     public function updateJobType($id, $data)
     {
-        $this->db->where('job_settings_id',$id);
+        $this->db->where('job_settings_id', $id);
         $this->db->update($this->table_job_settings, $data);
     }
 
@@ -283,7 +283,8 @@ class Jobs_model extends MY_Model
         return $query->result();
     }
 
-    function getEstimateNumber($jobId, $jobNum) {
+    public function getEstimateNumber($jobId, $jobNum)
+    {
         $this->db->select("*");
         $this->db->from($this->table_estimates);
         $this->db->where('job_id', $jobId);
@@ -313,7 +314,7 @@ class Jobs_model extends MY_Model
         $this->db->from($this->table);
         $this->db->join('acs_profile', 'jobs.customer_id = acs_profile.prof_id');
         $this->db->join('job_url_links', 'jobs.id = job_url_links.job_id');
-        $this->db->join('jobs_pay_details as jpd', 'jobs.id = jpd.jobs_id','left');
+        $this->db->join('jobs_pay_details as jpd', 'jobs.id = jpd.jobs_id', 'left');
         $start_date = date('Y-m-d');
         $end_date   = date('Y-m-d', strtotime($start_date . ' +5 day'));
         $this->db->join('job_tags', 'job_tags.id = jobs.tags', 'left');
@@ -337,7 +338,7 @@ class Jobs_model extends MY_Model
         $this->db->from($this->table);
         $this->db->join('acs_profile', 'jobs.customer_id = acs_profile.prof_id');
         $this->db->join('job_url_links', 'jobs.id = job_url_links.job_id', 'left');
-        $this->db->join('jobs_pay_details as jpd', 'jobs.id = jpd.jobs_id','left');
+        $this->db->join('jobs_pay_details as jpd', 'jobs.id = jpd.jobs_id', 'left');
         $start_date = date('Y-m-d');
         $this->db->join('job_tags', 'job_tags.id = jobs.tags', 'left');
         $this->db->join('acs_profile as cust', 'cust.prof_id = jobs.customer_id', 'left');
@@ -373,17 +374,17 @@ class Jobs_model extends MY_Model
         $cid=logged('company_id');
         $this->db->from($this->table);
         $this->db->select('jobs.*,acs_profile.*');
-        $this->db->join('acs_profile', 'acs_profile.prof_id = jobs.customer_id','left');
+        $this->db->join('acs_profile', 'acs_profile.prof_id = jobs.customer_id', 'left');
         $this->db->where("jobs.employee_id", $user_id);
 
-        if( !empty($date_range) ){
+        if (!empty($date_range)) {
             $start_date = $date_range['date_from'];
             $end_date   = $date_range['date_to'];
             $this->db->where('start_date BETWEEN "'. $start_date . '" and "'. $end_date .'"');
         }
 
-        if( !empty($filter) ){
-            foreach($filter as $key => $value){
+        if (!empty($filter)) {
+            foreach ($filter as $key => $value) {
                 $this->db->where($key, $value);
             }
         }

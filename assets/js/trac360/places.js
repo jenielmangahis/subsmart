@@ -101,7 +101,6 @@ function edit_address_map_changed() {
 
 $(document).ready(function() {
     $(document).on("click", "#add_new_place_modal_btn", function() {
-        console.log("yes");
         $("#add_new_place_modal").modal({
             backdrop: "static",
             keyboard: false,
@@ -111,7 +110,6 @@ $(document).ready(function() {
     });
 
     $(document).on("click", "#place_notif_modal_btn", function() {
-        console.log("yes");
         $("#place_notif_modal").modal({
             backdrop: "static",
             keyboard: false,
@@ -308,7 +306,6 @@ $(document).ready(function() {
             lat: edit_lat,
             lng: edit_lng,
         });
-        console.log(radius_edit_address);
         if (radius_edit_address >= 1246.360) {
             edit_address_map.setZoom(13);
         } else {
@@ -349,6 +346,20 @@ $(document).ready(function() {
                 });
             }
         });
+    });
+
+    $(document).on("click", ".select-circler", function() {
+        $(".circle-options").show();
+    });
+    $(document).on('keyup', function(e) {
+        if (e.key == "Escape") {
+            $(".circle-options").hide();
+        }
+    });
+    $(document).mouseup(function(e) {
+        if (!$(".circle-options").is(e.target) && $(".circle-options").has(e.target).length === 0) {
+            $(".circle-options").hide();
+        }
     });
 });
 

@@ -56,9 +56,7 @@
         //     "searching" : true,
         //     "pageLength": 20
         // });
-        display_leadtype_data();
-        display_salesarea_data();
-        display_leadsource_data();
+
         function display_leadtype_data(){
             table_lt.clear();
             $.ajax({

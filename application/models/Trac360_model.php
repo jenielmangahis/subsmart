@@ -60,6 +60,8 @@ class Trac360_model extends MY_Model
     {
         $this->db->reset_query();
         $query = $this->db->query("DELETE FROM trac360_places WHERE id = ".$place_id);
+        $this->db->reset_query();
+        $query = $this->db->query("DELETE FROM trac360_notify_people WHERE place_id = ".$place_id);
     }
     public function update_place($update, $place_id)
     {

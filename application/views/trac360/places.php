@@ -10,7 +10,7 @@ include viewPath('includes/header'); ?>
             <div class="row">
                 <div class="col-md-4"></div>
                 <div class="col-md-8 page-title-box align-items-center">
-                    <h1 class="page-title text-white">Trac360</h1>
+                    <h1 class="page-title text-white">Trac360 </h1>
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item active text-white">Search the globe online</li>
                     </ol>
@@ -23,12 +23,17 @@ include viewPath('includes/header'); ?>
                             <li>
                                 <a href="<?= base_url() ?>trac360"
                                     class="btn btn-primary  trac360_side_controls " id=""><span
-                                        class="fa fa-users fa-2x" class="text-center"></span><br>Group</a>
+                                        class="fa fa-users fa-2x" class="text-center"></span><br>People</a>
                             </li>
                             <li>
-                                <a href="<?= base_url() ?>trac360/"
+                                <a href="<?= base_url() ?>trac360/places"
                                     class="btn btn-primary  trac360_side_controls" id=""><span
-                                        class="fa fa-commenting-o fa-2x" class="text-center"></span><br>Messages</a>
+                                        class="fa fa-calendar-plus-o fa-2x" class="text-center"></span><br>Calendar</a>
+                            </li>
+                            <li>
+                                <a href="<?= base_url() ?>trac360/places"
+                                    class="btn btn-primary  trac360_side_controls" id=""><span
+                                        class="fa fa-briefcase fa-2x" class="text-center"></span><br>Jobs</a>
                             </li>
                             <li>
                                 <a href="<?= base_url() ?>trac360/places"
@@ -83,7 +88,7 @@ include viewPath('includes/header'); ?>
                                             <i class="fa fa-bell-o" aria-hidden="true"></i>
                                         </button>
                                         <?php
-                                    if ($place->created_by == $user_id) {
+                                    if ($place->created_by == $user_id || logged("role") < 5) {
                                         ?>
                                         <button href="#" class="place-edit-action edit_address_modal_btn"
                                             data-lat="<?=$exploded_coordinated[0]?>"

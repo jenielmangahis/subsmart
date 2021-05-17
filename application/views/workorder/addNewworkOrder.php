@@ -254,6 +254,37 @@ border: none;
     {
         font-size:14px;
     }
+
+    div.dropdown-wrapper select { 
+    width:115% /* This hides the arrow icon */; 
+    background-color:transparent /* This hides the background */; 
+    background-image:none; 
+    -webkit-appearance: none /* Webkit Fix */; 
+    border:none; 
+    box-shadow:none; 
+    padding:0.3em 0.5em; 
+    font-size:13px;
+    }
+    .signature-pad-canvas-wrapper {
+    margin: 15px 0 0;
+    border: 1px solid #cbcbcb;
+    border-radius: 3px;
+    overflow: hidden;
+    position: relative;
+}
+
+    .signature-pad-canvas-wrapper::after {
+        content: 'Name';
+        border-top: 1px solid #cbcbcb;
+        color: #cbcbcb;
+        width: 100%;
+        margin: 0 15px;
+        display: inline-flex;
+        position: absolute;
+        bottom: 10px;
+        font-size: 13px;
+        z-index: -1;
+    }
 }
    </style>
     <!-- page wrapper start -->
@@ -523,8 +554,8 @@ border: none;
                                                 <div class="show_mobile_view"><span class="getItems_hidden"></span></div>
                                             </td>
                                             <td width="20%">
-                                            <div class="hidden_mobile_view">
-                                                <select name="item_type[]" class="form-control">
+                                            <div class="dropdown-wrapper">
+                                                <select name="item_type[]" id="item_typeid" class="form-control">
                                                     <option value="product">Product</option>
                                                     <option value="material">Material</option>
                                                     <option value="service">Service</option>
@@ -532,13 +563,13 @@ border: none;
                                                 </select>
                                             </div>
 
-                                            <div class="show_mobile_view"><span>Product</span></div>
+                                            <!-- <div class="show_mobile_view" style="color:green;"><span>Product</span></div> -->
                                                 </td>
                                             <td width="10%"><input type="number" class="form-control quantity hidden_mobile_view" name="quantity[]"
                                                        data-counter="0" id="quantity_0" value="1"> <div class="show_mobile_view"><span>1</span><input type="hidden" class="form-control quantity" name="quantity[]"
                                                        data-counter="0" id="quantity_0" value="1"></div> </td>
                                             <td width="10%"><input type="number" class="form-control price hidden_mobile_view" name="price[]"
-                                                       data-counter="0" id="price_0" min="0" value="0"><div class="show_mobile_view"><span class="price">0</span><input type="hidden" class="form-control price" name="price[]" data-counter="0" id="priceM_0" min="0" value="0"></div><input id="priceM_qty0" value=""  type="hidden" name="price_qty[]" class="form-control hidden_mobile_view price_qty"></td>
+                                                       data-counter="0" id="price_0" min="0" value="0"> <input type="hidden" class="priceqty" id="priceqty_0"> <div class="show_mobile_view"><span class="price">0</span><input type="hidden" class="form-control price" name="price[]" data-counter="0" id="priceM_0" min="0" value="0"></div><input id="priceM_qty0" value=""  type="hidden" name="price_qty[]" class="form-control hidden_mobile_view price_qty"></td>
                                             <td width="10%" class="hidden_mobile_view"><input type="number" class="form-control discount" name="discount[]"
                                                        data-counter="0" id="discount_0" min="0" value="0" ></td>
                                             <td width="10%" class="hidden_mobile_view"><input type="text" class="form-control tax_change" name="tax[]"
@@ -797,6 +828,19 @@ border: none;
                                     <textarea name="job_description" id="job_desc" cols="5" rows="2" class="form-control input-element"></textarea> 
                                 </div>                                           
                             </div>
+                            <div class="row">                        
+                                <div class="form-group col-md-4">
+                                <div class="select-wrap">
+                                    <label for="lead_source">Lead Source</label>
+                                    <select id="lead_source" name="lead_source" class="form-control custom-select m_select">
+                                        <option value="0">- none -</option>
+                                        <?php foreach($lead_source as $lead){ ?>
+                                            <option value="<?php echo $lead->ls_id; ?>"><?php echo $lead->ls_name; ?></option>
+                                        <?php } ?>
+                                    </select>
+                                </div>    
+                                </div>                                     
+                            </div>
 
                             
                             <h6>PAYMENT DETAIL</h6><br>
@@ -837,30 +881,30 @@ border: none;
                                         <input type="checkbox" id="same_as"> <b>Same as above Address</b> <br><br>
                                         <div class="row">                   
                                             <div class="col-md-4 form-group">
-                                                <label for="monitored_location">Mail Address</label>
-                                                <input type="text" class="form-control" name="mail-address"
+                                                <label for="monitored_location" class="label-element">Mail Address</label>
+                                                <input type="text" class="form-control input-element" name="mail-address"
                                                     id="mail-address" placeholder="Monitored Location"/>
                                             </div>
                                             <div class="col-md-4 form-group">
-                                                <label for="city">City</label>
-                                                    <input type="text" class="form-control" name="mail_locality" id="mail_locality" placeholder="Enter Name" />
+                                                <label for="city" class="label-element">City</label>
+                                                    <input type="text" class="form-control input-element" name="mail_locality" id="mail_locality" placeholder="Enter Name" />
                                             </div>
                                             <div class="col-md-4 form-group">
-                                                <label for="state">State</label>
-                                                <input type="text" class="form-control" name="mail_state"
+                                                <label for="state" class="label-element">State</label>
+                                                <input type="text" class="form-control input-element" name="mail_state"
                                                     id="mail_state" 
                                                     placeholder="Enter State"/>
                                             </div>
                                         </div>
                                         <div class="row">  
                                             <div class="col-md-4 form-group">
-                                                <label for="zip">ZIP</label> 
-                                                    <input type="text" id="mail_postcode" name="mail_postcode" class="form-control"  placeholder="Enter Zip"/>
+                                                <label for="zip" class="label-element">ZIP</label> 
+                                                    <input type="text" id="mail_postcode" name="mail_postcode" class="form-control input-element"  placeholder="Enter Zip"/>
                                             </div>
 
                                             <div class="col-md-4 form-group">
-                                                <label for="cross_street">Cross Street</label>
-                                                <input type="text" class="form-control" name="mail_cross_street"
+                                                <label for="cross_street" class="label-element">Cross Street</label>
+                                                <input type="text" class="form-control input-element" name="mail_cross_street"
                                                     id="mail_cross_street" 
                                                     placeholder="Cross Street"/>
                                             </div>                                        
@@ -869,162 +913,162 @@ border: none;
                             <div id="check_area" style="display:none;">
                                 <div class="row">                   
                                     <div class="form-group col-md-4">
-                                        <label for="job_type">Check Number</label>
-                                        <input type="text" class="form-control" name="check_number" id="check_number"/>
+                                        <label for="job_type" class="label-element">Check Number</label>
+                                        <input type="text" class="form-control input-element" name="check_number" id="check_number"/>
                                     </div>
                                     <div class="form-group col-md-4">
-                                        <label for="job_type">Routing Number</label>
-                                        <input type="text" class="form-control" name="routing_number" id="routing_number"/>
+                                        <label for="job_type" class="label-element">Routing Number</label>
+                                        <input type="text" class="form-control input-element" name="routing_number" id="routing_number"/>
                                     </div>                                             
                                 </div>
                                 <div class="row">
                                     <div class="form-group col-md-4">
-                                        <label for="job_type">Account Number</label>
-                                        <input type="text" class="form-control" name="account_number" id="account_number"/>
+                                        <label for="job_type" class="label-element">Account Number</label>
+                                        <input type="text" class="form-control input-element" name="account_number" id="account_number"/>
                                     </div>                                       
                                 </div>
                             </div>
                             <div id="credit_card" style="display:none;">
                                 <div class="row">                   
                                     <div class="form-group col-md-4">
-                                        <label for="job_type">Credit Card Number</label>
-                                        <input type="text" class="form-control" name="credit_number" id="credit_number" placeholder="0000 0000 0000 000" />
+                                        <label for="job_type" class="label-element">Credit Card Number</label>
+                                        <input type="text" class="form-control input-element" name="credit_number" id="credit_number" placeholder="0000 0000 0000 000" />
                                     </div>
                                     <div class="form-group col-md-3">
-                                        <label for="job_type">Credit Card Expiration</label>
-                                        <input type="text" class="form-control" name="credit_expiry" id="credit_expiry" placeholder="MM/YYYY"/>
+                                        <label for="job_type" class="label-element">Credit Card Expiration</label>
+                                        <input type="text" class="form-control input-element" name="credit_expiry" id="credit_expiry" placeholder="MM/YYYY"/>
                                     </div>  
                                     <div class="form-group col-md-3">
-                                        <label for="job_type">CVC</label>
-                                        <input type="text" class="form-control" name="credit_cvc" id="credit_cvc" placeholder="CVC"/>
+                                        <label for="job_type" class="label-element">CVC</label>
+                                        <input type="text" class="form-control input-element" name="credit_cvc" id="credit_cvc" placeholder="CVC"/>
                                     </div>                                             
                                 </div>
                             </div>
                             <div id="debit_card" style="display:none;">
                                 <div class="row">                   
                                     <div class="form-group col-md-4">
-                                        <label for="job_type">Credit Card Number</label>
-                                        <input type="text" class="form-control" name="debit_credit_number" id="credit_number" placeholder="0000 0000 0000 000" />
+                                        <label for="job_type" class="label-element">Credit Card Number</label>
+                                        <input type="text" class="form-control input-element" name="debit_credit_number" id="credit_number" placeholder="0000 0000 0000 000" />
                                     </div>
                                     <div class="form-group col-md-3">
-                                        <label for="job_type">Credit Card Expiration</label>
-                                        <input type="text" class="form-control" name="debit_credit_expiry" id="credit_expiry" placeholder="MM/YYYY"/>
+                                        <label for="job_type" class="label-element">Credit Card Expiration</label>
+                                        <input type="text" class="form-control input-element" name="debit_credit_expiry" id="credit_expiry" placeholder="MM/YYYY"/>
                                     </div>  
                                     <div class="form-group col-md-3">
-                                        <label for="job_type">CVC</label>
-                                        <input type="text" class="form-control" name="debit_credit_cvc" id="credit_cvc" placeholder="CVC"/>
+                                        <label for="job_type" class="label-element">CVC</label>
+                                        <input type="text" class="form-control input-element" name="debit_credit_cvc" id="credit_cvc" placeholder="CVC"/>
                                     </div>                                            
                                 </div>
                             </div>
                             <div id="ach_area" style="display:none;">
                                 <div class="row">                   
                                     <div class="form-group col-md-4">
-                                        <label for="job_type">Routing Number</label>
-                                        <input type="text" class="form-control" name="ach_routing_number" id="ach_routing_number" />
+                                        <label for="job_type" class="label-element">Routing Number</label>
+                                        <input type="text" class="form-control input-element" name="ach_routing_number" id="ach_routing_number" />
                                     </div>
                                     <div class="form-group col-md-3">
-                                        <label for="job_type">Account Number</label>
-                                        <input type="text" class="form-control" name="ach_account_number" id="ach_account_number" />
+                                        <label for="job_type" class="label-element">Account Number</label>
+                                        <input type="text" class="form-control input-element" name="ach_account_number" id="ach_account_number" />
                                     </div>  
                                 </div>
                             </div>
                             <div id="venmo_area" style="display:none;">
                                 <div class="row">                   
                                     <div class="form-group col-md-4">
-                                        <label for="job_type">Account Credential</label>
-                                        <input type="text" class="form-control" name="account_credentials" id="account_credentials"/>
+                                        <label for="job_type" class="label-element">Account Credential</label>
+                                        <input type="text" class="form-control input-element" name="account_credentials" id="account_credentials"/>
                                     </div>
                                     <div class="form-group col-md-3">
-                                        <label for="job_type">Account Note</label>
-                                        <input type="text" class="form-control" name="account_note" id="account_note"/>
+                                        <label for="job_type" class="label-element">Account Note</label>
+                                        <input type="text" class="form-control input-element" name="account_note" id="account_note"/>
                                     </div>  
                                     <div class="form-group col-md-3">
-                                        <label for="job_type">Confirmation</label>
-                                        <input type="text" class="form-control" name="confirmation" id="confirmation"/>
+                                        <label for="job_type" class="label-element">Confirmation</label>
+                                        <input type="text" class="form-control input-element" name="confirmation" id="confirmation"/>
                                     </div>                                            
                                 </div>
                             </div>
                             <div id="paypal_area" style="display:none;">
                                 <div class="row">                   
                                     <div class="form-group col-md-4">
-                                        <label for="job_type">Account Credential</label>
-                                        <input type="text" class="form-control" name="paypal_account_credentials" id="paypal_account_credentials"/>
+                                        <label for="job_type" class="label-element">Account Credential</label>
+                                        <input type="text" class="form-control input-element" name="paypal_account_credentials" id="paypal_account_credentials"/>
                                     </div>
                                     <div class="form-group col-md-3">
-                                        <label for="job_type">Account Note</label>
-                                        <input type="text" class="form-control" name="paypal_account_note" id="paypal_account_note"/>
+                                        <label for="job_type" class="label-element">Account Note</label>
+                                        <input type="text" class="form-control input-element" name="paypal_account_note" id="paypal_account_note"/>
                                     </div>  
                                     <div class="form-group col-md-3">
-                                        <label for="job_type">Confirmation</label>
-                                        <input type="text" class="form-control" name="paypal_confirmation" id="paypal_confirmation"/>
+                                        <label for="job_type" class="label-element">Confirmation</label>
+                                        <input type="text" class="form-control input-element" name="paypal_confirmation" id="paypal_confirmation"/>
                                     </div>                                            
                                 </div>
                             </div>
                             <div id="square_area" style="display:none;">
                                 <div class="row">                   
                                     <div class="form-group col-md-4">
-                                        <label for="job_type">Account Credential</label>
-                                        <input type="text" class="form-control" name="square_account_credentials" id="square_account_credentials"/>
+                                        <label for="job_type" class="label-element">Account Credential</label>
+                                        <input type="text" class="form-control input-element" name="square_account_credentials" id="square_account_credentials"/>
                                     </div>
                                     <div class="form-group col-md-3">
-                                        <label for="job_type">Account Note</label>
-                                        <input type="text" class="form-control" name="square_account_note" id="square_account_note"/>
+                                        <label for="job_type" class="label-element">Account Note</label>
+                                        <input type="text" class="form-control input-element" name="square_account_note" id="square_account_note"/>
                                     </div>  
                                     <div class="form-group col-md-3">
-                                        <label for="job_type">Confirmation</label>
-                                        <input type="text" class="form-control" name="square_confirmation" id="square_confirmation"/>
+                                        <label for="job_type" class="label-element">Confirmation</label>
+                                        <input type="text" class="form-control input-element" name="square_confirmation" id="square_confirmation"/>
                                     </div>                                            
                                 </div>
                             </div>
                             <div id="warranty_area" style="display:none;">
                                 <div class="row">                   
                                     <div class="form-group col-md-4">
-                                        <label for="job_type">Account Credential</label>
-                                        <input type="text" class="form-control" name="warranty_account_credentials" id="warranty_account_credentials"/>
+                                        <label for="job_type" class="label-element">Account Credential</label>
+                                        <input type="text" class="form-control input-element" name="warranty_account_credentials" id="warranty_account_credentials"/>
                                     </div>
                                     <div class="form-group col-md-3">
-                                        <label for="job_type">Account Note</label>
-                                        <input type="text" class="form-control" name="warranty_account_note" id="warranty_account_note"/>
+                                        <label for="job_type" class="label-element">Account Note</label>
+                                        <input type="text" class="form-control input-element" name="warranty_account_note" id="warranty_account_note"/>
                                     </div>                                         
                                 </div>
                             </div>
                             <div id="home_area" style="display:none;">
                                 <div class="row">                   
                                     <div class="form-group col-md-4">
-                                        <label for="job_type">Account Credential</label>
-                                        <input type="text" class="form-control" name="home_account_credentials" id="home_account_credentials"/>
+                                        <label for="job_type" class="label-element">Account Credential</label>
+                                        <input type="text" class="form-control input-element" name="home_account_credentials" id="home_account_credentials"/>
                                     </div>
                                     <div class="form-group col-md-3">
-                                        <label for="job_type">Account Note</label>
-                                        <input type="text" class="form-control" name="home_account_note" id="home_account_note"/>
+                                        <label for="job_type" class="label-element">Account Note</label>
+                                        <input type="text" class="form-control input-element" name="home_account_note" id="home_account_note"/>
                                     </div>                                         
                                 </div>
                             </div>
                             <div id="e_area" style="display:none;">
                                 <div class="row">                   
                                     <div class="form-group col-md-4">
-                                        <label for="job_type">Account Credential</label>
-                                        <input type="text" class="form-control" name="e_account_credentials" id="e_account_credentials"/>
+                                        <label for="job_type" class="label-element">Account Credential</label>
+                                        <input type="text" class="form-control input-element" name="e_account_credentials" id="e_account_credentials"/>
                                     </div>
                                     <div class="form-group col-md-3">
-                                        <label for="job_type">Account Note</label>
-                                        <input type="text" class="form-control" name="e_account_note" id="e_account_note"/>
+                                        <label for="job_type" class="label-element">Account Note</label>
+                                        <input type="text" class="form-control input-element" name="e_account_note" id="e_account_note"/>
                                     </div>                                         
                                 </div>
                             </div>
                             <div id="other_credit_card" style="display:none;">
                                 <div class="row">                   
                                     <div class="form-group col-md-4">
-                                        <label for="job_type">Credit Card Number</label>
-                                        <input type="text" class="form-control" name="other_credit_number" id="other_credit_number" placeholder="0000 0000 0000 000" />
+                                        <label for="job_type" class="label-element">Credit Card Number</label>
+                                        <input type="text" class="form-control input-element" name="other_credit_number" id="other_credit_number" placeholder="0000 0000 0000 000" />
                                     </div>
                                     <div class="form-group col-md-3">
-                                        <label for="job_type">Credit Card Expiration</label>
-                                        <input type="text" class="form-control" name="other_credit_expiry" id="other_credit_expiry" placeholder="MM/YYYY"/>
+                                        <label for="job_type" class="label-element">Credit Card Expiration</label>
+                                        <input type="text" class="form-control input-element" name="other_credit_expiry" id="other_credit_expiry" placeholder="MM/YYYY"/>
                                     </div>  
                                     <div class="form-group col-md-3">
-                                        <label for="job_type">CVC</label>
-                                        <input type="text" class="form-control" name="other_credit_cvc" id="other_credit_cvc" placeholder="CVC"/>
+                                        <label for="job_type" class="label-element">CVC</label>
+                                        <input type="text" class="form-control input-element" name="other_credit_cvc" id="other_credit_cvc" placeholder="CVC"/>
                                     </div>                                             
                                 </div>
                             </div>
@@ -1032,11 +1076,11 @@ border: none;
                                 <div class="row">                   
                                     <div class="form-group col-md-4">
                                         <label for="job_type">Account Credential</label>
-                                        <input type="text" class="form-control" name="other_payment_account_credentials" id="other_payment_account_credentials"/>
+                                        <input type="text" class="form-control input-element" name="other_payment_account_credentials" id="other_payment_account_credentials"/>
                                     </div>
                                     <div class="form-group col-md-3">
                                         <label for="job_type">Account Note</label>
-                                        <input type="text" class="form-control" name="other_payment_account_note" id="other_payment_account_note"/>
+                                        <input type="text" class="form-control input-element" name="other_payment_account_note" id="other_payment_account_note"/>
                                     </div>                                         
                                 </div>
                             </div>
@@ -1210,6 +1254,9 @@ border: none;
                                     <br><br>
                                     <a href="#" class="btn btn-success" data-toggle="modal" data-target="#signature_mobile">Signature</a>
                             </div>
+
+                            <div class="signature_mobile signatureArea">
+                            </div>
                 
                             <div class="row" style="margin-top:80px;">                        
                                 <div class="form-group col-md-4">
@@ -1327,21 +1374,21 @@ border: none;
             <div class="modal fade" id="signature_mobile" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
                 <div class="modal-dialog modal-lg" role="document">
                     <div class="modal-content">
-                    <div class="modal-header">
+                    <!-- <div class="modal-header"> -->
                         <!-- <h5 class="modal-title" id="exampleModalLongTitle">Update Terms and Conditions</h5> -->
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <!-- <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                         </button>
-                    </div>
+                    </div> -->
                     <div class="modal-body">
                             <div class="row signature_mobile">
                                 <div class="col-md-12">
-                                
-                                <div class="tab-content py-3 px-3 px-sm-0" id="nav-tabContent">
+                                <?php //echo form_open_multipart('accounting/testSave', [ 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?> 
+                                <div class="tab-content" id="nav-tabContent" style="width:;">
                                     <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab" style="padding:1%;">
                                                 <!-- <div class="col-md-4"> -->
                                                     <!-- <h6>Company Representative Approval</h6> -->
-                                                    <div class="sigPad" id="smoothed1am" style="width:100%;border:solid gray 1px;background-color:#00b300;">
+                                                    <!-- <div class="sigPad" id="smoothed1am" style="width:100%;border:solid gray 1px;background-color:#00b300;">
                                                         <ul class="sigNav" style="">
                                                             <li class="drawIt"><a href="#draw-it">Draw It</a></li>
                                                             <li class="clearButton"><a href="#clear">Clear</a></li>
@@ -1354,7 +1401,7 @@ border: none;
                                                             <div id="signature-padM">
                                                             <canvas style="border:1px solid #000" id="signM"></canvas>
                                                             </div>
-                                                            <input type="hidden" name="output-2" class="output">
+                                                            <input type="hidden" name="output-2a"  id="output-2a" class="output">
                                                         </div>
                                                     </div>
                                                     <input type="hidden" id="saveCompanySignatureDB1aM"
@@ -1364,14 +1411,18 @@ border: none;
                                                     <label for="comp_rep_approval">Printed Name</label>
                                                     <input type="text6" class="form-control mb-3"
                                                         name="company_representative_printed_name"
-                                                        id="comp_rep_approval" placeholder=""/>
+                                                        id="comp_rep_approval" placeholder=""/> -->
+                                                        <!-- <canvas id="canvas" width="5" height="5"></canvas> -->
+                                                        <canvas id="canvas" height="150" style="border: 1px solid #ddd;"></canvas>
+                                                        <input type="text" class="form-control mb-3" name="company_representative_printed_name" id="comp_rep_approval1" placeholder="Printed Name"/>
+                                                        <input type="hidden" id="saveCompanySignatureDB1aM" name="company_representative_approval_signature1aM">
 
                                                 <!-- </div> -->
                                     </div>
                                     <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab" style="padding:1%;">
                                                 <!-- <div class="col-md-4"> -->
                                                     <!-- <h6>Primary Account Holder</h6> -->
-                                                    <div class="sigPad" id="smoothed2am" style="width:100%;border:solid gray 1px;background-color:#f7b900;">
+                                                    <!-- <div class="sigPad" id="smoothed2am" style="width:100%;border:solid gray 1px;background-color:#f7b900;">
                                                         <ul class="sigNav">
                                                             <li class="drawIt"><a href="#draw-it">Draw It</a></li>
                                                             <li class="clearButton"><a href="#clear">Clear</a></li>
@@ -1393,14 +1444,18 @@ border: none;
 
                                                     <label for="comp_rep_approval">Printed Name</label>
                                                     <input type="text6" class="form-control mb-3" name="primary_account_holder_name"
-                                                        id="comp_rep_approval" placeholder=""/>
+                                                        id="comp_rep_approval" placeholder=""/> -->
+
+                                                        <canvas id="canvas2" height="150" style="border: 1px solid #ddd;"></canvas>
+                                                        <input type="text" class="form-control mb-3" name="company_representative_printed_name" id="comp_rep_approval2" placeholder="Printed Name"/>
+                                                        <input type="hidden" id="savePrimaryAccountSignatureDB2aM" name="primary_account_holder_signature2aM">
 
                                                 <!-- </div> -->
                                     </div>
                                     <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab" style="padding:1%;">
                                                 <!-- <div class="col-md-4"> -->
                                                     <!-- <h6>Secondary Account Holder</h6> -->
-                                                    <div class="sigPad" id="smoothed3am" style="width:100%;border:solid gray 1px;background-color:#f75c1e;">
+                                                    <!-- <div class="sigPad" id="smoothed3am" style="width:100%;border:solid gray 1px;background-color:#f75c1e;">
                                                         <ul class="sigNav">
                                                             <li class="drawIt"><a href="#draw-it">Draw It</a></li>
                                                             <li class="clearButton"><a href="#clear">Clear</a></li>
@@ -1422,7 +1477,11 @@ border: none;
 
                                                     <label for="comp_rep_approval">Printed Name</label>
                                                     <input type="text6" class="form-control mb-3" name="secondery_account_holder_name"
-                                                        id="comp_rep_approval" placeholder=""/>
+                                                        id="comp_rep_approval" placeholder=""/> -->
+                                                    
+                                                        <canvas id="canvas3" height="150" style="border: 1px solid #ddd;"></canvas>
+                                                        <input type="text" class="form-control mb-3" name="company_representative_printed_name" id="comp_rep_approval3" placeholder="Printed Name"/>
+                                                        <input type="hidden" id="saveSecondaryAccountSignatureDB3aM" name="secondary_account_holder_signature3aM">
 
                                                 <!-- </div> -->
                                     </div>
@@ -1439,9 +1498,11 @@ border: none;
                             </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary save_terms_and_conditions">Save changes</button>
+                        <!-- <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> -->
+                        <button type="button" onClick="submit()" class="btn btn-primary enter_signature">Save changes</button>
+                        <!-- <input type="submit" value="save" id="btnSaveSign"> -->
                     </div>
+                    <?php //echo form_close(); ?>
                     </div>
                 </div>
             </div>
@@ -1628,6 +1689,34 @@ border: none;
                 </div>
             </div>
 
+            <!-- Modal update item group -->
+            <div class="modal fade" id="update_group" tabindex="-1" role="dialog"
+                 aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                                <select name="item_group_type" class="form-control">
+                                    <option value="Product">Product</option>
+                                    <option value="Material">Material</option>
+                                    <option value="Service">Service</option>
+                                    <option value="Fee">Fee</option>
+                                </select>
+                                <input type="hidden" id="item_id">
+                        </div>
+                        <div class="modal-body pt-0 pl-3 pb-3"></div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-success groupChange">Update Change</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div class="modal fade" id="modalAddNewSource" tabindex="-1" role="dialog"
                  aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-lg" role="document">
@@ -1659,11 +1748,197 @@ border: none;
 <?php include viewPath('includes/footer'); ?>
 
 <script>
+// $("#company_representative_approval_signature1aM").on("click touchstart",
+//   function () {
+//     alert('yeah');
+//     var canvas = document.getElementById(
+//       "signM"
+//     );    
+//     var dataURL = canvas.toDataURL("image/png");
+//     $("#saveCompanySignatureDB1aM").val(dataURL);
+//     // console.log(dataURL);
+//   }
+// );
+
+// $(document).on('click','#signature-padM',function(){
+//        alert('yeah');
+//     // $('#item_group_type').val();
+// });
+// var canvas = document.getElementById('canvas');
+// var dataURL = canvas.toDataURL("image/png");
+// test = $("#saveCompanySignatureDB1aM").val(dataURL);
+// // var dataURL = canvas.toDataURL();
+// console.log(test);
+// jQuery(document).ready(function($){
+    
+//     var canvas = document.getElementById("canvas");
+//     var signaturePad = new SignaturePad(canvas);
+//     var dataURL = canvas.toDataURL("image/png");
+//     test = $("#saveCompanySignatureDB1aM").val(dataURL);
+
+//     onsole.log(test);
+    
+//     // $('#clear-signature').on('click', function(){
+//     //     signaturePad.clear();
+//     // });
+    
+// });
+
+            $(document).ready(function() {
+				// $('#canvas').signaturePad({drawOnly:true, drawBezierCurves:true, lineTop:90});
+                var canvas = document.getElementById("canvas");    
+                var signaturePad = new SignaturePad(canvas);
+
+                var canvas2 = document.getElementById("canvas2");    
+                var signaturePad2 = new SignaturePad(canvas2);
+
+                var canvas3 = document.getElementById("canvas3");    
+                var signaturePad3 = new SignaturePad(canvas3);
+
+			});
+
+// $("#canvas").on("click touchstart",
+//   function () {
+//     // alert('yeah');
+//     var canvas = document.getElementById(
+//       "canvas"
+//     );    
+//     var signaturePad = new SignaturePad(canvas);
+//     var dataURL = canvas.toDataURL("image/png");
+//     $("#saveCompanySignatureDB1aM").val(dataURL);
+//     // console.log(dataURL);
+//   }
+// );
+
+$("#btnSaveSign").click(function(e){
+    var canvas = document.getElementById("canvas");    
+    var dataURL = canvas.toDataURL("image/png");
+    $("#saveCompanySignatureDB1aM").val(dataURL);
+                        // console.log(dataURL);
+						//ajax call to save image inside folder
+						// $.ajax({
+						// 	url: "<?php echo base_url(); ?>accounting/testSave",
+						// 	data: { dataURL : dataURL },
+						// 	type: 'post',
+						// 	dataType: 'json',
+						// 	success: function (response) {
+						// 	   alert('success');
+						// 	}
+						// });
+
+$.ajax({
+    type : 'POST',
+    url : "<?php echo base_url(); ?>accounting/testSave",
+    data : {dataURL: dataURL},
+    success: function(result){
+    // $('#res').html('Signature Uploaded successfully');
+    console.log(dataURL)
+    // location.reload();
+    
+    },
+    });
+					
+			});
+
+
+</script>
+
+<script>
+// $('.enter_signature').click(function(){
+//     // alert("nisulod");
+//         if(signaturePad.isEmpty()){
+//             console.log('it is empty');
+//             return false;            
+//         }
+//     });
+
+var signaturePad;
+jQuery(document).ready(function () {
+  var signaturePadCanvas = document.querySelector('#canvas');
+//   var parentWidth = jQuery(signaturePadCanvas).parent().outerWidth();
+//   signaturePadCanvas.setAttribute("width", parentWidth);
+  signaturePad = new SignaturePad(signaturePadCanvas);
+});
+
+var signaturePad2;
+jQuery(document).ready(function () {
+  var signaturePadCanvas2 = document.querySelector('#canvas2');
+//   var parentWidth = jQuery(signaturePadCanvas).parent().outerWidth();
+//   signaturePadCanvas.setAttribute("width", parentWidth);
+  signaturePad2 = new SignaturePad(signaturePadCanvas2);
+});
+
+var signaturePad3;
+jQuery(document).ready(function () {
+  var signaturePadCanvas3 = document.querySelector('#canvas3');
+//   var parentWidth = jQuery(signaturePadCanvas).parent().outerWidth();
+//   signaturePadCanvas.setAttribute("width", parentWidth);
+  signaturePad3 = new SignaturePad(signaturePadCanvas3);
+});
+
+function submit() {
+  if (signaturePad.isEmpty() || signaturePad2.isEmpty() || signaturePad3.isEmpty()) {
+    // console.log("Empty!");
+    alert('Please check, you must sign all tab.')
+  }
+  else{
+    // sigpad= $("#output-2a").val();
+    var canvas = document.getElementById("canvas");    
+    var dataURL = canvas.toDataURL("image/png");
+    $("#saveCompanySignatureDB1aM").val(dataURL);
+
+    var canvas2 = document.getElementById("canvas2");    
+    var dataURL2 = canvas2.toDataURL("image/png");
+    $("#savePrimaryAccountSignatureDB2aM").val(dataURL2);
+
+    var canvas3 = document.getElementById("canvas3");    
+    var dataURL3 = canvas3.toDataURL("image/png");
+    $("#saveSecondaryAccountSignatureDB3aM").val(dataURL3);
+
+    var input1 = $("#comp_rep_approval1").val();
+    var input2 = $("#comp_rep_approval2").val();
+    var input3 = $("#comp_rep_approval3").val();
+    
+    $.ajax({
+    type : 'POST',
+    url : "<?php echo base_url(); ?>accounting/testSave",
+    data : {dataURL: dataURL, dataURL2: dataURL2, dataURL3: dataURL3},
+    success: function(result){
+        // $('#res').html('Signature Uploaded successfully');
+        alert('Signature Uploaded successfully');
+        console.log(dataURL);
+        console.log(dataURL2);
+        console.log(dataURL3);
+
+        // var image = new Image();
+        // image.src = '"' + dataURL + '"';
+        // document.body.appendChild(image);
+
+        var input_conf = '<br><div style="border:solid gray 1px;padding:2%;"><img id="image1" src="'+dataURL+'"></img><input type="hidden" class="form-control" name="signature1" id="signature1" value="'+ dataURL +'"><br><input type="text" class="form-control" name="name1" id="name1" value="'+ input1 +'"></div><br><div style="border:solid gray 1px;padding:2%;"><img id="image1" src="'+dataURL2+'"></img><input type="hidden" class="form-control" name="signature2" id="signature2" value="'+ dataURL2 +'"><br><input type="text" class="form-control" name="name2" id="name2" value="'+ input2 +'"></div><br><div style="border:solid gray 1px;padding:2%;"><img id="image1" src="'+dataURL3+'"></img><input type="hidden" class="form-control" name="signature3" id="signature3" value="'+ dataURL3 +'"><br><input type="text" class="form-control" name="name3" id="name3" value="'+ input3 +'"></div>';
+
+        $('.signatureArea').html(input_conf);
+
+        $('#signature_mobile').modal('toggle');
+        // if (confirm('Some message')) {
+        //     alert('Thanks for confirming');
+        // } else {
+        //     alert('Why did you press cancel? You should have confirmed');
+        // }
+
+        // location.reload();
+    },
+    });
+  }
+}
+</script>
+
+<script>
 $(document).ready(function(){
     if(window.matchMedia("(max-width: 600px)").matches){
         // alert("This is a mobile device.");
         $(document).on("click", ".testing", function () {
             $('.getItems').hide();
+            $('#item_typeid').removeClass('form-control');
         });
         $(document).on("click", ".select_item", function () {
             $('.getItems').hide();
@@ -1672,6 +1947,17 @@ $(document).ready(function(){
     // else{
     //     $('.getItems_hidden').hide();
     // }
+});
+</script>
+
+<script>
+// $(document).on('click','.show_mobile_view',function(){
+//     //    alert('yeah');
+//     $('#update_group').modal('show');
+// });
+$(document).on('click','.groupChange',function(){
+    //    alert('yeah');
+    $('#item_group_type').val();
 });
 </script>
 
@@ -1885,7 +2171,7 @@ resizeCanvas();
 
 
 <!-- MOBILE AREA -->
-<script>
+<!-- <script>
 var wrapper = document.getElementById("signature-padM");
 var canvas = wrapper.querySelector("canvas");
 
@@ -1946,7 +2232,7 @@ function resizeCanvas() {
 
 window.onresize = resizeCanvas;
 resizeCanvas();
-</script>
+</script> -->
 
 
 

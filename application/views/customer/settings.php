@@ -74,9 +74,9 @@ add_css(array(
                                                 </div>
                                             </div>
                                             <div class="tab-content mt-4" >
-                                                <div class="tab-pane <?= $active_tab == 'salesArea' || $active_tab == '' ? "active" : "fade"; ?> standard-accordion" id="salesArea">
-                                                    <?php include viewPath('customer/settings/sales_area'); ?>
-                                                </div>
+                                                    <div class="tab-pane <?= $active_tab == 'salesArea' || $active_tab == '' ? "active" : "fade"; ?> standard-accordion" id="salesArea">
+                                                        <?php include viewPath('customer/settings/sales_area'); ?>
+                                                    </div>
 
                                                 <div class="tab-pane <?= $active_tab == 'leadSource' ? "active" : "fade"; ?> standard-accordion" id="leadSource">
                                                     <?php include viewPath('customer/settings/lead_source'); ?>
