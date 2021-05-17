@@ -182,6 +182,7 @@
                                                                 <thead>
                                                                     <th width="20%">PRODUCT/SERVICE</th>
                                                                     <th>TYPE</th>
+                                                                    <th width="10%">LOCATION</th>
                                                                     <th width="10%">QUANTITY</th>
                                                                     <th width="10%">PRICE</th>
                                                                     <th width="10%">DISCOUNT</th>

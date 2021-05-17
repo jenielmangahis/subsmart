@@ -2,7 +2,8 @@
 defined('BASEPATH') or exit('No direct script access allowed');
 ?>
 <div class="billings module_med ui-state-default"  data-id="<?= $id ?>" id="<?= $id ?>">
-    <div class="col-sm-12">
+    <div class="col-sm-12 individual-module-big">
+        <h6>Billing</h6>
         <div class="row">
             <div class="col-sm-6">
                 <div class="contacttext">
@@ -14,7 +15,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
                             </td>
                             <td width="50%" align="right" valign="top">
                                 <label class="alarm_answer"><b> <?php if(isset($billing_info)){ echo $billing_info->mmr; }; ?></b> </label>
-
                             </td>
                         </tr>
                         <tr>
@@ -195,7 +195,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 </div>
             </div>
 
-            <div style="margin-left:30px;  padding-top:160px;" align="left" class="normaltext1">
+            <div style="margin-left:30px;  padding-top:140px;" align="left" class="normaltext1">
                 <a href="#" style="color:#58bc4f;">View/Edit Module</a>&nbsp;&nbsp;
                 <!--  <a href="javascript:void(0);">Action/Notes</a>-->
             </div>

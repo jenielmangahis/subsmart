@@ -253,6 +253,10 @@ div.popup-map-marker:hover h3 {
     padding: 10px 0;
 }
 
+.page-title-box i {
+    font-size: 15px;
+}
+
 .last_tract_location {
     overflow: hidden;
     margin-bottom: 5px;
@@ -442,4 +446,28 @@ label.edit_radius_number_view {
 .notify-settings-loader img {
     height: 100px;
     width: 100px;
+}
+
+.select-circler .circle-options {
+    background-color: #fff;
+    position: absolute;
+    width: 500px;
+    left: -150px;
+    z-index: 1;
+    max-height: 500px;
+    box-shadow: 0px 40px 80px #000;
+}
+
+.select-circler .circle-options .item {
+    padding: 20px;
+    cursor: pointer;
+    border-top: solid 1px #F1F1F1;
+    color: #6B7585;
+}
+
+.select-circler .circle-options .item:hover {
+    background-color: #F7F6EF;
+    font-weight: bold;
+    border-left: solid 5px #6241a4;
+    border-top: 0;
 }

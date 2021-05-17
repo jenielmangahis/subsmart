@@ -380,7 +380,21 @@ class Items_model extends MY_Model
         $query = $this->db->get();
         return $query->result();
     }
+
+    public function getItemLocation($locationId, $itemId)
+    {
+        $this->db->where('item_id', $itemId);
+        $this->db->where('id', $locationId);
+        $query = $this->db->get($this->table_has_location);
+        return $query->row();
+    }
     
+    public function updateLocationQty($locationId, $itemId, $newQty)
+    {
+        $this->db->where('item_id', $itemId);
+        $this->db->where('id', $locationId);
+        return $this->db->update($this->table_has_location, ["qty" => $newQty]);
+    }
 }
 
 

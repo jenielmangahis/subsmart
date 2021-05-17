@@ -590,4 +590,19 @@ class Expenses_model extends MY_Model
         $this->db->insert('accounting_credit_card_credits', $data);
         return $this->db->insert_id();
     }
+
+    public function update_bill_data($billId, $data)
+    {
+        $this->db->where('company_id', logged('company_id'));
+        $this->db->where('id', $billId);
+        return $this->db->update('accounting_bill', $data);
+    }
+
+    public function get_bill_data($billId)
+    {
+        $this->db->where('company_id', logged('company_id'));
+        $this->db->where('id', $billId);
+        $query = $this->db->get('accounting_bill');
+        return $query->row();
+    }
 }

@@ -282,8 +282,9 @@ class Vendors_model extends MY_Model {
 
 	public function get_vendor_check_transactions($vendorId, $filters = [])
 	{
-		// $this->db->where('company_id', logged('company_id'));
-		$this->db->where('vendor_id', $vendorId);
+		$this->db->where('company_id', logged('company_id'));
+		$this->db->where('payee_type', 'vendor');
+		$this->db->where('payee_id', $vendorId);
 		if($filters['start-date']) {
 			$this->db->where('payment_date >=', $filters['start-date']);
 			$this->db->where('payment_date <=', $filters['end-date']);
@@ -305,8 +306,9 @@ class Vendors_model extends MY_Model {
 
 	public function get_vendor_expense_transactions($vendorId, $filters = [])
 	{
-		// $this->db->where('company_id', logged('company_id'));
-		$this->db->where('vendor_id', $vendorId);
+		$this->db->where('company_id', logged('company_id'));
+		$this->db->where('payee_type', 'vendor');
+		$this->db->where('payee_id', $vendorId);
 		if(isset($filters['start-date'])) {
 			$this->db->where('payment_date >=', $filters['start-date']);
 			$this->db->where('payment_date <=', $filters['end-date']);

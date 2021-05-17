@@ -1,28 +1,34 @@
+<?php
+defined('BASEPATH') or exit('No direct script access allowed');
+?>
 <?php include viewPath('includes/header'); ?>
+<div class="wrapper" role="wrapper">
+<?php include viewPath('includes/sidebars/workorder'); ?>
+<link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
+<script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
+    <style>
+   .but:hover {
+    font-weight: 900;
+    color:black;
+    }
+    .but-red:hover {
+    font-weight: 900;
+    color:red;
+    }
+    .required:after {
+    content:" *";
+    color: red;
+    }
+    .navbar-side.closed{
+        padding-top:100px !important;
+    }
+    .pointer {cursor: pointer;}
 
-<style>
-  .custom-signaturepad {
-    padding-left: 0;
-    padding-right: 0;
-  }
-  .custom-signaturepad .sigWrapper canvas {
-      width: 100%;
-  }
-  .custom-signaturepad .sigPad  {
-    width: 100% !important;
-  }
-  #group_area{
-    background-color:#F9F9F9;
-  }
-  #group_area:hover{
-    background-color:#EBFFE2;
-  }
-  .pointer {cursor: pointer;}
-/* 
-  #company_representative_approval_signature1a{
-  border: solid 1px blue;  
-  width: 100%;
-} */
+    .highlight{
+    background-color:#CAA1FC;
+    color:red;
+    padding:12px;
+}
 
 #signature-pad {min-height:200px;}
 #signature-pad canvas {background-color:white;left: 0;top: 0;width: 100%;min-height:250px;height: 100%}
@@ -32,6 +38,15 @@
 
 #signature-pad3 {min-height:200px;}
 #signature-pad3 canvas {background-color:white;left: 0;top: 0;width: 100%;min-height:250px;height: 100%}
+
+#signature-padM {min-height:200px;}
+#signature-padM canvas {background-color:white;left: 0;top: 0;width: 100%;min-height:250px;height: 100%}
+
+#signature-pad2M {min-height:200px;}
+#signature-pad2M canvas {background-color:white;left: 0;top: 0;width: 100%;min-height:250px;height: 100%}
+
+#signature-pad3M {min-height:200px;}
+#signature-pad3M canvas {background-color:white;left: 0;top: 0;width: 100%;min-height:250px;height: 100%}
 
 .switch {
   position: relative;
@@ -92,11 +107,188 @@ input:checked + .slider:before {
 .slider.round:before {
   border-radius: 50%;
 }
-</style>
-<div class="wrapper" role="wrapper">
-    <?php include viewPath('includes/sidebars/workorder'); ?>
+
+.tr_qty{
+    width:150px;
+}
+
+
+nav > .nav.nav-tabs{
+
+border: none;
+  color:#fff;
+  background:#272e38;
+  border-radius:0;
+
+}
+nav > div a.nav-item.nav-link,
+nav > div a.nav-item.nav-link.active
+{
+border: none;
+  padding: 18px 25px;
+  color:#fff;
+  background:#272e38;
+  border-radius:0;
+}
+
+/* nav > div a.nav-item.nav-link.active:after
+{
+content: "";
+position: relative;
+bottom: -60px;
+left: -10%;
+border: 15px solid transparent;
+border-top-color: #e74c3c ;
+} */
+.tab-content{
+background: #fdfdfd;
+  line-height: 25px;
+  border: 1px solid #ddd;
+  border-top:5px solid #e74c3c;
+  border-bottom:5px solid #e74c3c;
+  padding:30px 25px;
+}
+
+nav > div a.nav-item.nav-link:hover,
+nav > div a.nav-item.nav-link:focus
+{
+border: none;
+  background: #e74c3c;
+  color:#fff;
+  border-radius:0;
+  transition:background 0.20s linear;
+}
+
+.signature_mobile
+{
+    display: none;
+}
+
+.show_mobile_view
+{
+    display: none;
+}
+
+@media only screen and (max-device-width: 600px) {
+    .label-element{
+        position:absolute;
+        top:-8px;
+        left:25px;
+        font-size:12px;
+        color:#666;
+        }
+    .input-element{
+        padding:30px 5px 10px 8px;
+        width:100%;
+        height:55px;
+        /* border:1px solid #CCC; */
+        font-weight: bold;
+        margin-top: -15px;
+        }
+
+    .select-wrap 
+    {
+    border: 2px solid #e0e0e0;
+    /* border-radius: 4px; */
+    margin-top: -10px;
+    /* margin-bottom: 10px; */
+    padding: 0 5px 5px;
+    width:100%;
+    /* background-color:#ebebeb; */
+    }
+
+    .select-wrap label
+    {
+    font-size:10px;
+    text-transform: uppercase;
+    color: #777;
+    padding: 2px 8px 0;
+    }
+
+    .m_select
+    {
+    /* background-color: #ebebeb;
+    border:0px; */
+    border-color: white !important;
+    border:0px !important;
+    outline:0px !important;
+    }
+    .select2 .select2-container .select2-container--default{
+        /* background-color: #ebebeb;
+    border:0px; */
+    border-color: white !important;
+    border:0px !important;
+    outline:0px !important;
+    }
+
+    .select2-container--default .select2-selection--single {
+    background-color: #fff;
+    border: 1px solid #fff !important;
+    border-radius: 4px;
+    }
+
+    .sub_label{
+        font-size:12px !important;
+    }
+
+    .signature_web
+    {
+        display: none;
+    }
+
+    .signature_mobile
+    {
+        display: block;
+    }
+
+    .hidden_mobile_view{
+        display: none;
+    }
+
+    .show_mobile_view
+    {
+        display: block;
+    }
+
+    .table_mobile
+    {
+        font-size:14px;
+    }
+
+    div.dropdown-wrapper select { 
+    width:115% /* This hides the arrow icon */; 
+    background-color:transparent /* This hides the background */; 
+    background-image:none; 
+    -webkit-appearance: none /* Webkit Fix */; 
+    border:none; 
+    box-shadow:none; 
+    padding:0.3em 0.5em; 
+    font-size:13px;
+    }
+    .signature-pad-canvas-wrapper {
+    margin: 15px 0 0;
+    border: 1px solid #cbcbcb;
+    border-radius: 3px;
+    overflow: hidden;
+    position: relative;
+}
+
+    .signature-pad-canvas-wrapper::after {
+        content: 'Name';
+        border-top: 1px solid #cbcbcb;
+        color: #cbcbcb;
+        width: 100%;
+        margin: 0 15px;
+        display: inline-flex;
+        position: absolute;
+        bottom: 10px;
+        font-size: 13px;
+        z-index: -1;
+    }
+}
+   </style>
     <!-- page wrapper start -->
-    <div wrapper__section>
+    <div wrapper__section class="m_view">
         <div class="container-fluid">
             <div class="page-title-box">
                 <div class="row align-items-center">
@@ -124,7 +316,7 @@ input:checked + .slider:before {
             <?php echo form_open_multipart('workorder/savenewWorkorderAlarm', [ 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?> 
 
 
-            <div class="row custom__border">
+            <div class="row">
                 <div class="col-xl-12">
                     <div class="card">
                         <div class="card-body">

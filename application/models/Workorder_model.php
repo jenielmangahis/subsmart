@@ -499,6 +499,15 @@ class Workorder_model extends MY_Model
         return true;
     }
 
+    public function  getlead_source($company_id)
+    {
+        $this->db->select('*');
+		$this->db->from('ac_leadsource');
+		$this->db->where('fk_company_id', $company_id);
+        $query = $this->db->get();
+        return $query->result();
+    }
+
     public function getcompany_work_order_used($company_id)
     {
         $this->db->select('*');

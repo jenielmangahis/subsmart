@@ -305,6 +305,7 @@ $route['accounting/get-items-list-modal'] = 'accounting_modals/item_list_modal';
 $route['accounting/get-term-details/(:any)'] = 'accounting_modals/get_term_details/$1';
 $route['accounting/get-vendor-details/(:any)'] = 'accounting_modals/get_vendor_details/$1';
 $route['accounting/get-customer-details/(:any)'] = 'accounting_modals/get_customer_details/$1';
+$route['accounting/get-employee-details/(:any)'] = 'accounting_modals/get_employee_details/$1';
 
 $route['accounting/lists'] = 'accounting/lists';
 

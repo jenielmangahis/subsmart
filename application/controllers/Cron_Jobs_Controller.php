@@ -98,11 +98,13 @@ class Cron_Jobs_Controller extends MY_Controller
         $admins_for_reports = $this->get_admin_for_reports();
         $android_tokens = array();
         $ios_tokens = array();
-        for ($i = 0; $i < count($admins_for_reports); $i++) {   
+        for ($i = 0; $i < count($admins_for_reports); $i++) {
             $admin = $this->timesheet_model->get_user_and_company_details($admins_for_reports[$i][0]);
-            if(count($admin) > 0){
+            
+            if ($admin != null) {
                 $file_info = $this->get_time_sheet_storage($admin->company_id, $admin->id_of_timezone, $admin->timezone_id);
                 $est_wage_privacy = $this->timesheet_model->get_timesheet_report_privacy($admin->company_id)->est_wage_private;
+                
                 if (count($file_info[2]) > 0) {
                     $date_from = date("Y-m-d", strtotime('sunday last week', strtotime(date('Y-m-d'))));
                     $date_to = date("Y-m-d", strtotime('saturday this week', strtotime(date('Y-m-d'))));
@@ -130,9 +132,9 @@ class Cron_Jobs_Controller extends MY_Controller
                         $this->timesheet_model->save_timesheet_report_file_names($admin->user_id, $file_info[0]);
                         $this->timesheet_model->save_timesheet_report_file_names($admin->user_id, $file_info[3]);
                         var_dump($admin->email_report);
-                        if($admin->device_type == "Android"){
+                        if ($admin->device_type == "Android") {
                             $android_tokens[] = $admin->device_token;
-                        }elseif($admin->device_type == "iOS"){
+                        } elseif ($admin->device_type == "iOS") {
                             $ios_tokens[] = $admin->device_token;
                         }
                     }
@@ -140,10 +142,11 @@ class Cron_Jobs_Controller extends MY_Controller
             }
         }
         $title = "Timesheet Report";
-        $body ="Timesheet report for week ".date("M d",strtotime($date_from))." to ".date("M d",strtotime($date_to))." has been sent to your email. If you don't see it in your inbox, kindly check your spam."; 
-        if(count($android_tokens) > 0){
+        $body ="Timesheet report for week ".date("M d", strtotime($date_from))." to ".date("M d", strtotime($date_to))." has been sent to your email. If you don't see it in your inbox, kindly check your spam.";
+        if (count($android_tokens) > 0) {
             $this->send_android_push($android_tokens, $title, $body);
-        }if(count($ios_tokens) > 0){
+        }
+        if (count($ios_tokens) > 0) {
             $this->send_ios_push($ios_tokens, $title, $body);
         }
     }
@@ -164,22 +167,20 @@ class Cron_Jobs_Controller extends MY_Controller
     }
     public function get_admin_for_reports()
     {
-
-
         date_default_timezone_set('UTC');
         $hour_now = date("H").":00:00";
-        if(date("Y-m-d", strtotime('sunday this week', strtotime(date('Y-m-d')))) == date("Y-m-d")){
+        if (date("Y-m-d", strtotime('sunday this week', strtotime(date('Y-m-d')))) == date("Y-m-d")) {
             $all_admin_report_settings = $this->timesheet_model->get_all_admin_report_settings();
             $and_query ="";
-            foreach($all_admin_report_settings as $setting){
-                if($and_query==""){
+            foreach ($all_admin_report_settings as $setting) {
+                if ($and_query=="") {
                     $and_query = " id != ".$setting->user_id;
-                }else{
+                } else {
                     $and_query .= " and id !=".$setting->user_id;
                 }
             }
             $all_admin_for_default_report = $this->timesheet_model->get_all_admin_for_default_report($and_query);
-            foreach($all_admin_for_default_report as $admin){
+            foreach ($all_admin_for_default_report as $admin) {
                 $this->timesheet_model->save_timezone_changes("36", $admin->id, 1, 3, "Sun", "00:00:00", $admin->email);
             }
         }
@@ -727,7 +728,6 @@ class Cron_Jobs_Controller extends MY_Controller
                         $android_tokens_over_9[]=$employee_attendance->device_token;
                     }
                     $this->auto_clockOutEmployee($employee_attendance->user_id, $employee_attendance->id, $employee_attendance->company_id, $last_aux->user_location, $last_aux->user_location_address);
-
                 }
             }
         }
@@ -848,11 +848,11 @@ class Cron_Jobs_Controller extends MY_Controller
             $data->device_type = "";
             $data->token = "";
             $data->notif_action_made = "autoclockout";
-            $this->autoclockout_app_notification($data->body,$data->title,$data->device_type,$data->company_id);
+            $this->autoclockout_app_notification($data->body, $data->title, $data->device_type, $data->company_id);
             $this->pusher_notification($data);
         }
     }
-    public function autoclockout_app_notification($body,$title,$device_type,$under_company_id)
+    public function autoclockout_app_notification($body, $title, $device_type, $under_company_id)
     {
         //User App notification
         
@@ -880,7 +880,7 @@ class Cron_Jobs_Controller extends MY_Controller
             $this->send_android_push($android_tokens, $title, $body);
         }
         if ($ios_token_ctr > 0) {
-            $this->send_ios_push($ios_tokens, $title,  $body);
+            $this->send_ios_push($ios_tokens, $title, $body);
         }
     }
     public function pusher_notification($data)

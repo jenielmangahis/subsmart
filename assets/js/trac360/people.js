@@ -75,7 +75,21 @@ function getLatLongDetail(myLatlng, user_id) {
     );
 }
 
+$(document).on("click", ".people-job-btn", function() {
+    $(".peoples-lists-section").hide();
+    $(".jobs-list-section").fadeIn();
+    $(".loader").show();
+    $(".jobs-list-section .employee-name .name").html($(this).attr('data-name'));
+    get_employee_jobs($(this).attr('data-user-id'))
+});
+$(document).on("click", ".back-btn", function() {
+    $(".jobs-list-section").hide();
+    $(".peoples-lists-section").fadeIn();
+    $(".loader").hide();
+});
 
-
+function get_employee_jobs(user_id) {
+    $(".loader").hide();
+}
 
 // Setting popup marker

@@ -1643,12 +1643,12 @@ class Workorder extends MY_Controller
 
         $this->page_data['job_tags'] = $this->workorder_model->getjob_tagsById();
         $this->page_data['clients'] = $this->workorder_model->getclientsById();
-        
+        $this->page_data['lead_source'] = $this->workorder_model->getlead_source($company_id);
 
 
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->page_data['page_title'] = "Work Order";
-        // print_r($this->page_data['customers']);
+        // print_r($this->page_data['lead_source']);
 
         $this->load->view('workorder/addNewworkOrder', $this->page_data);
     }
@@ -1706,6 +1706,7 @@ class Workorder extends MY_Controller
             'job_description' => $this->input->post('job_description'),
             'payment_method' => $this->input->post('payment_method'),
             'payment_amount' => $this->input->post('payment_amount'),
+            'lead_source_id' => $this->input->post('lead_source'),
             // 'account_holder_name' => $this->input->post('account_holder_name'),
             // 'account_number' => $this->input->post('account_number'),
             // 'expiry' => $this->input->post('expiry'),
