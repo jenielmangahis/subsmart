@@ -30,7 +30,8 @@ button.trac360_side_controls:active:hover {
 }
 
 #map,
-#map-holder {
+#map-holder,
+#jobs-map {
     height: 100%;
     /* The height is 400 pixels */
     width: 100%;
@@ -365,4 +366,8 @@ div.popup-map-marker:hover h3 {
     color: #616161;
     text-align: center;
     font-size: 12px;
+}
+
+.jobs-list-item.job-item-selected {
+    background-color: #F7F6EF;
 }

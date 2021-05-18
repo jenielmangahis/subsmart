@@ -239,6 +239,7 @@ border: none;
     .signature_mobile
     {
         display: block;
+        margin-bottom:10px;
     }
 
     .hidden_mobile_view{
@@ -285,41 +286,49 @@ border: none;
         font-size: 13px;
         z-index: -1;
     }
+
+    .mobile_view
+    {
+        font-size:12px;
+    }
 }
    </style>
     <!-- page wrapper start -->
-    <div wrapper__section class="m_view">
-        <div class="container-fluid">
-            <div class="page-title-box">
-                <div class="row align-items-center">
-                    <div class="col-sm-6">
-                        <h1 class="page-title">Workorder</h1>
-                        <ol class="breadcrumb">
-                            <li class="breadcrumb-item active">ALARM SYSTEM WORKORDER AGREEMENT</li>
-                        </ol>
-                    </div>
-                    <div class="col-sm-6">
-                        <div class="float-right d-none d-md-block">
-                            <div class="dropdown">
-                                <?php //if (hasPermissions('WORKORDER_MASTER')) : ?>
-                                    <a href="<?php echo url('workorder') ?>" class="btn btn-primary"
-                                       aria-expanded="false">
-                                        <i class="mdi mdi-settings mr-2"></i> Go Back to Workorder
-                                    </a>
-                                <?php //endif ?>
+    <div wrapper__section>
+        <div class="container-fluid p-40">
+          <div class="card">
+              <div class="page-title-box pt-1 pb-0">
+                  <div class="row align-items-center">
+                      <div class="col-sm-12">
+                          </div>
+                          <!-- <h3 class="page-title mt-0">New Lead</h3> -->
+                          <h3 style="font-family: Sarabun, sans-serif">ALARM SYSTEM WORKORDER AGREEMENT</h3>
+                          <!-- <div class="pl-3 pr-3 mt-1 row">
+                            <div class="col mb-4 left alert alert-warning mt-0 mb-2">
+                                <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">
+                                    To create new lead go to Lead TAB and Select new. Enter all the Lead information as shown below.
+                                    Enter Address information.  Enter Additional Information and Description
+                                    and Finally click Save Button.  All required fields must have information.
+                                </span>
                             </div>
-                        </div>
-                    </div>
+                          </div> -->
+                      </div>
+                  </div>
+              </div>
+            <!-- end row -->
+            <!-- <div class="row">
+                <div class="col-md-12" style="background-color:#32243d;padding:1px;text-align:center;color:white;">
+                    <h5>General Information</h5>
                 </div>
             </div>
-            <!-- end row -->
+            <br> -->
             <?php echo form_open_multipart('workorder/savenewWorkorderAlarm', [ 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?> 
 
 
             <div class="row">
-                <div class="col-xl-12">
-                    <div class="card">
-                        <div class="card-body">
+                <div class="col-md-12">
+                    <!-- <div class="card"> -->
+                        <!-- <div class="card-body"> -->
                         <div id="header_area">
                                 <ol class="breadcrumb" style="margin-top:-30px;"> <i class="fa fa-pencil" aria-hidden="true"></i>
                                             <li class="breadcrumb-item active">
@@ -341,9 +350,10 @@ border: none;
 											<h5 class="box-title">Customer</h5>
 										</div>
 										<div class="col-md-4 form-group">
+                                        <div class="select-wrap">
 											<label for="">Customer Type</label><br/>
 											<select name="customer_type"
-													class="form-control"
+													class="form-control custom-select m_select"
 													id="customer_type">
 												<?php foreach (get_config_item('customer_types') as $key => $customer_type) { ?>
 													<option value="<?php echo $customer_type ?>" <?php echo (!empty($workorder->customer['customer_type']) && $workorder->customer['customer_type'] == $customer_type) ? "selected" : "" ?>>
@@ -352,16 +362,18 @@ border: none;
 												<?php } ?>
 											</select>
 										</div>
+                                        </div>
 
-                                        <div class="col-md-4 form-group" style="display:none;" id="business_name_area">
-											<label for="customer_install_type">Business Name</label><br/>
-											<input type="text" class="form-control" name="business_name" id="business_name" placeholder="Enter Name" />
+                                        <div class="col-md-4" style="display:none;" id="business_name_area">
+											<label for="customer_install_type" class="label-element">Business Name</label><br/>
+											<input type="text" class="form-control input-element" name="business_name" id="business_name" placeholder="Enter Name" />
 										</div>
 
 										<div class="col-md-4 form-group">
+                                        <div class="select-wrap">
 											<label for="customer_install_type">Install Type</label><br/>
 											<select name="install_type"
-													class="form-control"
+													class="form-control custom-select m_select"
 													id="customer_install_type">
 												<?php foreach (get_config_item('install_types') as $key => $install_type) { ?>
 													<option value="<?php echo $install_type ?>" <?php echo (!empty($workorder->customer['install_type']) && $workorder->customer['install_type'] == $install_type) ? "selected" : "" ?>>
@@ -369,12 +381,13 @@ border: none;
 													</option>
 												<?php } ?>
 											</select>
+                                        </div>
 										</div>
 										<div class="col-md-4 form-group"
 											 style="display: <?php echo (!empty($workorder->customer['install_type']) && $workorder->customer['install_type'] == 'Takeover') ? 'block' : 'none' ?>">
-											<label for="customer_company_name">
+											<label for="customer_company_name" class="label-element">
 												Company Name </label>
-											<input type="text" class="form-control" name="customer[company_name]"
+											<input type="text" class="form-control input-element" name="customer[company_name]"
 												   id="customer_company_name"
 												   value="<?php echo (!empty($workorder->customer['company_name'])) ? $workorder->customer['company_name'] : '' ?>" 
 												   placeholder="Enter Company Name" <?php echo (!empty($workorder->customer['install_type']) && $workorder->customer['install_type'] == 'Takeover') ? "" : 'disabled' ?> />
@@ -383,36 +396,36 @@ border: none;
 
 									<div class="row">
 										<div class="col-md-3 form-group">
-											<label for="last_name">Last Name</label>
-											<input type="text" class="form-control" name="last_name"
+											<label for="last_name" class="label-element">Last Name</label>
+											<input type="text" class="form-control input-element" name="last_name"
 												   id="last_name"
 												   required placeholder="Enter Last Name"
 												   value="<?php echo (!empty($workorder->customer['last_name'])) ? $workorder->customer['last_name'] : '' ?>"/>
 										</div>
 										<div class="col-md-3 form-group">
-											<label for="first_name">First Name</label>
-											<input type="text" class="form-control" name="first_name"
+											<label for="first_name" class="label-element">First Name</label>
+											<input type="text" class="form-control input-element" name="first_name"
 												   id="first_name" required
 												   required placeholder="Enter First Name" />
 										</div>
 										<div class="col-md-2 form-group">
-											<label for="contact_mobile">Mobile</label>
-											<input type="text" class="form-control" name="mobile_number" required
+											<label for="contact_mobile" class="label-element">Mobile</label>
+											<input type="text" class="form-control input-element" name="mobile_number" required
 												   id="contact_mobile" />
 
 										</div>
 
 										<div class="col-md-2 form-group">
-											<label for="contact_dob">DOB</label>
-											<input type="text" class="form-control" name="dob"
+											<label for="contact_dob" class="label-element">DOB</label>
+											<input type="text" class="form-control input-element" name="dob"
 												   id="customer_contact_dob" required
 												   value="<?php echo (!empty($workorder->customer['contact_dob'])) ? date('m/d/Y', strtotime($workorder->customer['contact_dob'])) : '' ?>"
 												   placeholder="Enter DOB"/>
 										</div>
 
 										<div class="col-md-2 form-group">
-											<label for="contact_ssn">SSN</label>
-											<input type="text" class="form-control" name="security_number"
+											<label for="contact_ssn" class="label-element">SSN</label>
+											<input type="text" class="form-control input-element" name="security_number"
 												   id="contact_ssn"
 												   value="<?php echo (!empty($workorder->customer['contact_ssn'])) ? $workorder->customer['contact_ssn'] : '' ?>"
 												   required
@@ -425,21 +438,21 @@ border: none;
 											<span class="help help-sm">Spouse</span>
 										</div>
 										<div class="col-md-3 form-group">
-											<label for="spouse_last_name">Last Name</label>
-											<input type="text" class="form-control" name="s_last_name"
+											<label for="spouse_last_name" class="label-element">Last Name</label>
+											<input type="text" class="form-control input-element" name="s_last_name"
 												   id="spouse_last_name"
 												     placeholder="Enter Last Name" />
 										</div>
 										<div class="col-md-3 form-group">
-											<label for="spouse_first_name">First Name</label>
-											<input type="text" class="form-control" name="s_first_name"
+											<label for="spouse_first_name" class="label-element">First Name</label>
+											<input type="text" class="form-control input-element" name="s_first_name"
 												   id="spouse_first_name"
 												     placeholder="Enter First Name"
 												   value="<?php echo (!empty($workorder->customer['spouse_first_name'])) ? $workorder->customer['spouse_first_name'] : '' ?>"/>
 										</div>
 										<div class="col-md-2 form-group">
-											<label for="spouse_contact_mobile">Mobile</label>
-											<input type="text" class="form-control" name="s_mobile"
+											<label for="spouse_contact_mobile" class="label-element">Mobile</label>
+											<input type="text" class="form-control input-element" name="s_mobile"
 												   id="spouse_contact_mobile"
 												   value="<?php echo (!empty($workorder->customer['spouse_contact_mobile'])) ? $workorder->customer['spouse_contact_mobile'] : '' ?>"
 												   placeholder="Enter Mobile"/>
@@ -447,16 +460,16 @@ border: none;
 										</div>
 
 										<div class="col-md-2 form-group">
-											<label for="contact_dob">DOB</label>
-											<input type="text" class="form-control" name="s_dob"
+											<label for="contact_dob" class="label-element">DOB</label>
+											<input type="text" class="form-control input-element" name="s_dob"
 												   id="customer_spouse_contact_dob"
 												   value="<?php echo (!empty($workorder->customer['spouse_contact_dob'])) ? date('m/d/Y', strtotime($workorder->customer['spouse_contact_dob'])) : '' ?>"
 												   placeholder="Enter DOB"/>
 										</div>
 
 										<div class="col-md-2 form-group">
-											<label for="spouse_contact_ssn">SSN</label>
-											<input type="text" class="form-control" name="s_ssn"
+											<label for="spouse_contact_ssn" class="label-element">SSN</label>
+											<input type="text" class="form-control input-element" name="s_ssn"
 												   id="spouse_contact_ssn"
 												   value="<?php echo (!empty($workorder->customer['spouse_contact_ssn'])) ? $workorder->customer['spouse_contact_ssn'] : '' ?>"
 												   placeholder="Enter SSN"/>
@@ -465,31 +478,31 @@ border: none;
 
 									<div class="row">
 										<div class="col-md-3 form-group">
-											<label for="monitored_location">Monitored Location</label>
-											<input type="text" class="form-control" name="monitored_location"
+											<label for="monitored_location" class="label-element">Monitored Location</label>
+											<input type="text" class="form-control input-element" name="monitored_location"
 												   id="ship-address"
 												   value="<?php echo (!empty($workorder->customer['monitored_location'])) ? $workorder->customer['monitored_location'] : '' ?>"
 												   required placeholder="Monitored Location"/>
 										</div>
 										<div class="col-md-3 form-group">
-											<label for="city">City</label> 
-                                                   <input type="text" class="form-control" name="city" id="locality" placeholder="Enter Name" />
+											<label for="city" class="label-element">City</label> 
+                                                   <input type="text" class="form-control input-element" name="city" id="locality" placeholder="Enter City" />
 										</div>
 										<div class="col-md-2 form-group">
-											<label for="state">State</label>
-											<input type="text" class="form-control" name="state"
-												   id="state" />
+											<label for="state" class="label-element">State</label>
+											<input type="text" class="form-control input-element" name="state"
+												   id="state"  placeholder="Enter State"/>
 
 										</div>
 
 										<div class="col-md-2 form-group">
-											<label for="zip">ZIP</label> 
-                                                   <input type="text" id="postcode" name="zip_code" class="form-control"  placeholder="Enter Zip"/>
+											<label for="zip" class="label-element">ZIP</label> 
+                                                   <input type="text" id="postcode" name="zip_code" class="form-control input-element"  placeholder="Enter Zip"/>
 										</div>
 
 										<div class="col-md-2 form-group">
-											<label for="cross_street">Cross Street</label>
-											<input type="text" class="form-control" name="cross_street"
+											<label for="cross_street" class="label-element">Cross Street</label>
+											<input type="text" class="form-control input-element" name="cross_street"
 												   id="cross_street"
 												   value="<?php echo (!empty($workorder->customer['cross_street'])) ? $workorder->customer['cross_street'] : '' ?>"
 												   required
@@ -499,27 +512,29 @@ border: none;
 
 									<div class="row">
 										<div class="col-md-3 form-group">
-											<label for="email">Email</label>
-											<input type="email" class="form-control" name="email"
+											<label for="email" class="label-element">Email</label>
+											<input type="email" class="form-control input-element" name="email"
 												   id="email" 
 												   value="<?php echo (!empty($workorder->customer['email'])) ? $workorder->customer['email'] : '' ?>"
 												   required placeholder="Enter Email"/>
 										</div>
 										<div class="col-md-2 form-group">
-											<label for="password">Password</label>
-											<input type="text" class="form-control" name="password" required
+											<label for="password" class="label-element">Password</label>
+											<input type="text" class="form-control input-element" name="password" required
 												   id="password" >
 										</div>
                                         
                                         <div class="col-md-3 form-group">
+                                        <div class="select-wrap">
                                             <label for="">Notification Type</label><br/>
-                                                <select name="notification_type" id="customer_notification_type_email" class="form-control" required>
+                                                <select name="notification_type" id="customer_notification_type_email" class="form-control custom-select m_select" required>
                                                     <option>Notification Type</option>
                                                     <option value="Text">Text</option>
                                                     <option value="Email">Email</option>
                                                     <option value="Text and Email">Text and Email</option>
                                                     <option value="None">None</option>
                                                 </select>
+                                        </div>
                                         </div>
 										<!--
 										<div class="col-auto form-group">
@@ -553,19 +568,19 @@ border: none;
                                 <div class="form-group col-md-12">
                                     <h5 class="box-title">Emergency Call List</h5>
                                 </div>
-                                <div class="col-md-4">
-                                    <div class="form-group">
-                                        <label for="1st_call_verification_name">1st Call Verification Name</label>
-                                        <input type="text" class="form-control"
+                                <div class="col-md-4 form-group">
+                                    <!-- <div class=""> -->
+                                        <label for="1st_call_verification_name" class="label-element">1st Call Verification Name</label>
+                                        <input type="text" class="form-control input-element"
                                                name="1st_verification_name"
                                                value="<?php echo (!empty($workorder->emergency_call_list['1st_call_verification_name'])) ? $workorder->emergency_call_list['1st_call_verification_name'] : '' ?>"
                                                id="1st_call_verification_name"
                                                required placeholder="Enter 1st Call Verification Name"/>
-                                    </div>
+                                    <!-- </div> -->
                                 </div>
                                 <div class="col-md-4">
                                     <div class="form-group">
-                                        <label for="contact_phone">Phone Number</label>
+                                        <label for="contact_phone" class="mobile_view">Phone Number</label>
                                         <div class="input-group phone-input">
                                             <span class="input-group-btn">
                                                 <button type="button" class="btn btn-default dropdown-toggle"
@@ -593,14 +608,14 @@ border: none;
 
                                     </div>
                                 </div>
-                                <div class="col-md-4">
-                                    <div class="form-group">
-                                        <label for="emergency_call_relation">Relation</label>
-                                        <input type="text" class="form-control" name="1st_relation"
+                                <div class="col-md-4 form-group">
+                                    <!-- <div class=""> -->
+                                        <label for="emergency_call_relation" class="label-element">Relation</label>
+                                        <input type="text" class="form-control input-element" name="1st_relation"
                                                id="emergency_call_relation"
                                                value="<?php echo (!empty($workorder->emergency_call_list['relation'][0])) ? $workorder->emergency_call_list['relation'][0] : '' ?>"
                                                required placeholder="Enter Relation"/>
-                                    </div>
+                                    <!-- </div> -->
                                 </div>
                                 <!-- <div class="col-md-3">
                                     <div class="form-group">
@@ -613,19 +628,19 @@ border: none;
                                     </div>
                                 </div> -->
 
-                                <div class="col-md-4">
-                                    <div class="form-group">
-                                        <label for="2nd_call_verification_name">2nd Call Verification Name</label>
-                                        <input type="text" class="form-control"
+                                <div class="col-md-4 form-group">
+                                    <!-- <div class="form-group"> -->
+                                        <label for="2nd_call_verification_name" class="label-element">2nd Call Verification Name</label>
+                                        <input type="text" class="form-control input-element"
                                                name="2nd_verification_name"
                                                id="2nd_call_verification_name"
                                                value="<?php echo (!empty($workorder->emergency_call_list['2nd_call_verification_name'])) ? $workorder->emergency_call_list['2nd_call_verification_name'] : '' ?>"
                                                required placeholder="Enter 2nd Call Verification Name"/>
-                                    </div>
+                                    <!-- </div> -->
                                 </div>
                                 <div class="col-md-4">
                                     <div class="form-group">
-                                        <label for="contact_phone">Phone Number</label>
+                                        <label for="contact_phone" class="mobile_view">Phone Number</label>
                                         <div class="input-group phone-input">
                                             <span class="input-group-btn">
                                                 <button type="button" class="btn btn-default dropdown-toggle"
@@ -653,14 +668,14 @@ border: none;
 
                                     </div>
                                 </div>
-                                <div class="col-md-4">
-                                    <div class="form-group">
-                                        <label for="emergency_call_relation">Relation</label>
-                                        <input type="text" class="form-control" name="2nd_relation"
+                                <div class="col-md-4 form-group">
+                                    <!-- <div class="form-group"> -->
+                                        <label for="emergency_call_relation" class="label-element">Relation</label>
+                                        <input type="text" class="form-control input-element" name="2nd_relation"
                                                id="emergency_call_relation"
                                                value="<?php echo (!empty($workorder->emergency_call_list['relation'][1])) ? $workorder->emergency_call_list['relation'][1] : '' ?>"
                                                required placeholder="Enter Relation"/>
-                                    </div>
+                                    <!-- </div> -->
                                 </div>
                                 <!-- <div class="col-md-3">
                                     <div class="form-group">
@@ -673,19 +688,19 @@ border: none;
                                     </div>
                                 </div> -->
 
-                                <div class="col-md-4">
-                                    <div class="form-group">
-                                        <label for="emergency_call_emergency_contact_1">3rd Call Verification Name</label>
-                                        <input type="text" class="form-control"
+                                <div class="col-md-4 form-group">
+                                    <!-- <div class=""> -->
+                                        <label for="emergency_call_emergency_contact_1" class="label-element">3rd Call Verification Name</label>
+                                        <input type="text" class="form-control input-element"
                                                name="3rd_verification_name"
                                                id="emergency_call_emergency_contact_1"
                                                value="<?php echo (!empty($workorder->emergency_call_list['emergency_contact_1'])) ? $workorder->emergency_call_list['emergency_contact_1'] : '' ?>"
                                                required placeholder="Enter Emergency Contact"/>
-                                    </div>
+                                    <!-- </div> -->
                                 </div>
                                 <div class="col-md-4">
                                     <div class="form-group">
-                                        <label for="contact_phone">Phone Number</label>
+                                        <label for="contact_phone" class="mobile_view">Phone Number</label>
                                         <div class="input-group phone-input">
                                             <span class="input-group-btn">
                                                 <button type="button" class="btn btn-default dropdown-toggle"
@@ -713,31 +728,31 @@ border: none;
 
                                     </div>
                                 </div>
-                                <div class="col-md-4">
-                                    <div class="form-group">
-                                        <label for="emergency_call_relation">Relation</label>
-                                        <input type="text" class="form-control" name="3rd_relation"
+                                <div class="col-md-4 form-group">
+                                    <!-- <div class="form-group"> -->
+                                        <label for="emergency_call_relation" class="label-element">Relation</label>
+                                        <input type="text" class="form-control input-element" name="3rd_relation"
                                                id="emergency_call_relation"
                                                value="<?php echo (!empty($workorder->emergency_call_list['relation'][2])) ? $workorder->emergency_call_list['relation'][2] : '' ?>"
                                                required placeholder="Enter Relation"/>
-                                    </div>
+                                    <!-- </div> -->
                                 </div>
 
                                 <!-- <div class="col-md-3">
 								</div> -->
-                                <div class="col-md-4">
-                                    <div class="form-group">
-                                        <label for="emergency_call_emergency_contact_2">4th Call Verification Name</label>
-                                        <input type="text" class="form-control"
+                                <div class="col-md-4 form-group">
+                                    <!-- <div class=""> -->
+                                        <label for="emergency_call_emergency_contact_2" class="label-element">4th Call Verification Name</label>
+                                        <input type="text" class="form-control input-element"
                                                name="4th_verification_name"
                                                id="emergency_call_emergency_contact_2"
                                                value="<?php echo (!empty($workorder->emergency_call_list['emergency_contact_2'])) ? $workorder->emergency_call_list['emergency_contact_2'] : '' ?>"
                                                required placeholder="Enter Emergency Contact"/>
-                                    </div>
+                                    <!-- </div> -->
                                 </div>
                                 <div class="col-md-4">
                                     <div class="form-group">
-                                        <label for="contact_phone">Phone Number</label>
+                                        <label for="contact_phone" class="mobile_view">Phone Number</label>
                                         <div class="input-group phone-input">
                                             <span class="input-group-btn">
                                                 <button type="button" class="btn btn-default dropdown-toggle"
@@ -765,14 +780,14 @@ border: none;
 
                                     </div>
                                 </div>
-                                <div class="col-md-4">
-                                    <div class="form-group">
-                                        <label for="emergency_call_relation">Relation</label>
-                                        <input type="text" class="form-control" name="4th_relation"
+                                <div class="col-md-4 form-group">
+                                    <!-- <div class=""> -->
+                                        <label for="emergency_call_relation" class="label-element">Relation</label>
+                                        <input type="text" class="form-control input-element" name="4th_relation"
                                                id="emergency_call_relation"
                                                value="<?php echo (!empty($workorder->emergency_call_list['relation'][3])) ? $workorder->emergency_call_list['relation'][3] : '' ?>"
                                                required placeholder="Enter Relation"/>
-                                    </div>
+                                    <!-- </div> -->
                                 </div>
                             </div>
 
@@ -782,6 +797,7 @@ border: none;
                                     <h5 class="box-title">Customer System Information</h5>
                                 </div>
                                 <div class="col-md-6 form-group">
+                                <div class="select-wrap">
                                     <label for="street_address"> Plan Type:</label>
                                         <!-- <select
                                                 name="plan_type"
@@ -789,7 +805,7 @@ border: none;
                                                 class="form-control">
                                             <option>Select Plan Type</option>
                                         </select> -->
-                                        <select name="plan_type" id="plan_types" class="form-control" required>
+                                        <select name="plan_type" id="plan_types" class="form-control custom-select m_select" required>
                                             <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == ''){echo "selected";} } ?> value=""></option>
                                             <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == 'DIGI'){echo "selected";} } ?> value="DIGI">Landline</option>
                                             <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == 'DW2W'){echo "selected";} } ?> value="DW2W">Landline W/ 2-Way</option>
@@ -814,13 +830,15 @@ border: none;
                                             <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == 'IwACwA'){echo "selected";} } ?> value="IwACwA">Interactive w/Access Control w/Automn</option>
                                         </select>
                                 </div>
+                                </div>
                                 <div class="form-group col-md-6">
-                                    <div class="col-md-12">
+                                <div class="select-wrap">
+                                    <!-- <div class="col-md-12"> -->
                                         <label>Account Type</label>
-                                    </div>
-                                    <div class="col-md-12">
+                                    <!-- </div> -->
+                                    <!-- <div class="col-md-12"> -->
                                         <select name="account_type"
-                                                class="form-control"
+                                                class="form-control custom-select m_select"
                                                 id="account_type" required>
                                             <option>--SELECT--</option>
                                             <?php foreach (get_config_item('account_types') as $key => $account_type) { ?>
@@ -840,15 +858,17 @@ border: none;
                                                        $workorder->account_type['other'] : '' ?>"
                                                    placeholder="Write it here..." required>
                                         </div>
-                                    </div>
+                                    <!-- </div> -->
 
+                                </div>
                                 </div>
 
                                     <!-- ====== EQUIPMENT ====== -->
                                 <!-- <div class="row"> -->
                                     <div class="col-md-4">
+                                    <div class="select-wrap">
                                         <label>Panel Type</label>
-                                        <select name="panel_type" id="panel_type" class="form-control" required>
+                                        <select name="panel_type" id="panel_type" class="form-control custom-select m_select" required>
                                             <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == ''){echo "selected";} } ?> value=""></option>
                                             <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'AERIONICS'){echo "selected";} } ?> value="AERIONICS">AERIONICS</option>
                                             <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'AlarmNet'){echo "selected";} } ?> value="AlarmNet">AlarmNet</option>
@@ -880,20 +900,22 @@ border: none;
                                         </select>
 
                                     </div>
+                                    </div>
 
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            <label for="panel_location"> Panel Location:</label>
-                                            <input type="text" class="form-control" name="panel_location"
+                                    <div class="col-md-4 form-group">
+                                        <!-- <div class="form-group"> -->
+                                            <label for="panel_location" class="label-element"> Panel Location:</label>
+                                            <input type="text" class="form-control input-element" name="panel_location"
                                                 value="<?php echo (!empty($workorder->panel_location)) ? $workorder->panel_location : '' ?>"
                                                 id="panel_location" placeholder=""/>
-                                        </div>
+                                        <!-- </div> -->
                                     </div>
-                                    <div class="col-md-4">
-                                        <div class="form-group">
+                                    <div class="col-md-4 form-group">
+                                    <div class="select-wrap">
+                                        <!-- <div class="form-group"> -->
                                             <label for="panel_communication"> Panel Communication:</label>
                                             <select name="panel_communication"
-                                                    class="form-control"
+                                                    class="form-control custom-select m_select"
                                                     id="panel_communication">
                                                 <option>--SELECT--</option>
                                                 <?php foreach (get_config_item('panel_communications') as $key => $panel_communication) { ?>
@@ -902,7 +924,7 @@ border: none;
                                                     </option>
                                                 <?php } ?>
                                             </select>
-                                        </div>
+                                        <!-- </div> -->
                                     </div>
 
                                 <!-- </div> -->
@@ -917,24 +939,23 @@ border: none;
                                 <div class="form-group col-md-12">
                                     <h5 class="box-title">Job</h5>
                                 </div>
-                                <div class="col-md-4">
-                                    <div class="form-group">
-                                        <label for="date_w_issued"> Requested Date:</label>
-                                        <div class='input-group date datepicker'>
-                                            <input type='text'
-                                                   value="<?php echo (!empty($workorder->date_issued)) ?
-                                                       date('m/d/Y', strtotime($workorder->date_issued)) : '' ?>"
+                                <div class="col-md-4 form-group">
+                                    <!-- <div class=""> -->
+                                        <label for="date_w_issued" class="label-element"> Requested Date:</label>
+                                        <!-- <div class='input-group date datepicker'> -->
+                                            <input type="date"
                                                    name="date_issued"
-                                                   class="form-control"
-                                                   id="date_w_issued"/>
-                                        </div>
-                                    </div>
+                                                   class="form-control input-element"
+                                                   id=""/>
+                                        <!-- </div> -->
+                                    <!-- </div> -->
                                 </div>
 
-                                <div class="col-md-4">
-                                    <div class="form-group">
+                                <div class="col-md-4 form-group">
+                                <div class="select-wrap">
+                                    <!-- <div class=""> -->
                                         <label for="job_type_id"> Job Type:</label>
-                                        <select name="job_type" id="job_type" class="form-control custom-select">
+                                        <select name="job_type" id="job_type" class="form-control custom-select m_select">
                                     <?php foreach($job_types as $jt){ ?>
                                         <option value="<?php echo $jt->title ?>"><?php echo $jt->title ?></option>
 
@@ -945,25 +966,29 @@ border: none;
                                         <option value="Repair">Repair</option>
                                         <option value="Replace">Replace</option> -->
                                     </select>
-                                    </div>
+                                    <!-- </div> -->
+                                </div>
                                 </div>
                                 
-                                <div class="col-md-4">
-                                    <div class="form-group">
+                                <div class="col-md-4 form-group">
+                                <div class="select-wrap">
+                                    <!-- <div class="form-group"> -->
                                         <label for="job_type_id">Job Tag</label>
-                                        <select name="job_tag" id="job_tag" class="form-control custom-select">
+                                        <select name="job_tag" id="job_tag" class="form-control custom-select m_select">
                                         <?php foreach($job_tags as $tags){ ?>
                                                 <option value="<?php echo $tags->name; ?>"><?php echo $tags->name; ?><option>
                                             <?php } ?>
                                     </select>
-                                    </div>
+                                    <!-- </div> -->
+                                </div>
                                 </div>
                                 
 
-                                <div class="col-md-6">
-                                    <div class="form-group">
+                                <div class="col-md-6 form-group">
+                                <div class="select-wrap">
+                                    <!-- <div class=""> -->
                                         <label for="status_id"> Status:</label>
-                                        <select name="status" id="workorder_status" class="form-control custom-select">
+                                        <select name="status" id="workorder_status" class="form-control custom-select m_select">
                                         <option value="New">New</option>
                                         <option value="Draft">Draft</option>
                                         <option value="Scheduled">Scheduled</option>
@@ -974,19 +999,22 @@ border: none;
                                         <option value="Withdrawn">Withdrawn</option>
                                         <option value="Closed">Closed</option>
                                     </select>
-                                    </div>
+                                    <!-- </div> -->
+                                </div>
                                 </div>
 
-                                <div class="col-md-6">
-                                    <div class="form-group">
+                                <div class="col-md-6 form-group">
+                                <div class="select-wrap">
+                                    <!-- <div class=""> -->
                                         <label for="job_priority"> Priority:</label> 
-                                        <select name="priority" id="workorder_priority" class="form-control custom-select">
+                                        <select name="priority" id="workorder_priority" class="form-control custom-select m_select">
                                         <option value="Standard">Standard</option>
                                         <option value="Emergency">Emergency</option>
                                         <option value="Low">Low</option>
                                         <option value="Urgent">Urgent</option>                
                                     </select>
-                                    </div>
+                                    <!-- </div> -->
+                                </div>
                                 </div>
 
                             </div>
@@ -1000,11 +1028,11 @@ border: none;
                                     <div class="panel-group">
                                         <div class="panels panel-default">
                                             <div class="panel-heading">
-                                                <h4 class="panel-title">
+                                                <h6 class="panel-title">
                                                     <a data-toggle="collapse" href="#collapse1">Cameras <i
-                                                                class="fa fa-angle-down"
+                                                                class="fa fa-angle-down mobile_view"
                                                                 style="font-size: 31px;top: 4px;position: relative;font-weight: bolder;"></i></a>
-                                                </h4>
+                                                </h6>
                                             </div>
                                             <div id="collapse1" class="panel-collapse collapse">
                                                 <table class="table" style="width:50%;">
@@ -1073,11 +1101,11 @@ border: none;
                                     <div class="panel-group">
                                         <div class="panels panel-default">
                                             <div class="panel-heading">
-                                                <h4 class="panel-title">
+                                                <h6 class="panel-title">
                                                     <a data-toggle="collapse" href="#collapse2">Doorlocks: <i
-                                                                class="fa fa-angle-down"
+                                                                class="fa fa-angle-down mobile_view"
                                                                 style="font-size: 31px;top: 4px;position: relative;font-weight: bolder;"></i></a>
-                                                </h4>
+                                                </h6>
                                             </div>
                                             <div id="collapse2" class="panel-collapse collapse">
                                                 <div class="panel-body">
@@ -1132,11 +1160,11 @@ border: none;
                                     <div class="panel-group">
                                         <div class="panels panel-default">
                                             <div class="panel-heading">
-                                                <h4 class="panel-title">
+                                                <h6 class="panel-title">
                                                     <a data-toggle="collapse" href="#collapse3">DVR <i
-                                                                class="fa fa-angle-down"
+                                                                class="fa fa-angle-down mobile_view"
                                                                 style="font-size: 31px;top: 4px;position: relative;font-weight: bolder;"></i></a>
-                                                </h4>
+                                                </h6>
                                             </div>
                                             <div id="collapse3" class="panel-collapse collapse">
                                                 <table class="table" style="width:50%;">
@@ -1202,11 +1230,11 @@ border: none;
                                     <div class="panel-group">
                                         <div class="panels panel-default">
                                             <div class="panel-heading">
-                                                <h4 class="panel-title">
+                                                <h6 class="panel-title">
                                                     <a data-toggle="collapse" href="#collapse4">AUTOMATION <i
-                                                                class="fa fa-angle-down"
+                                                                class="fa fa-angle-down mobile_view"
                                                                 style="font-size: 31px;top: 4px;position: relative;font-weight: bolder;"></i></a>
-                                                </h4>
+                                                </h6>
                                             </div>
                                             <div id="collapse4" class="panel-collapse collapse">
                                                 <table class="table" style="width:30%;">
@@ -1258,11 +1286,11 @@ border: none;
                                     <div class="panel-group">
                                         <div class="panels panel-default">
                                             <div class="panel-heading">
-                                                <h4 class="panel-title">
+                                                <h6 class="panel-title">
                                                     <a data-toggle="collapse" href="#collapse5">PERS <i
-                                                                class="fa fa-angle-down"
+                                                                class="fa fa-angle-down mobile_view"
                                                                 style="font-size: 31px;top: 4px;position: relative;font-weight: bolder;"></i></a>
-                                                </h4>
+                                                </h6>
                                             </div>
                                             <div id="collapse5" class="panel-collapse collapse">
                                                 <table class="table" style="width:50%;">
@@ -1570,9 +1598,10 @@ border: none;
                                     </div>
                                     <div class="row">
                                         <div class="col-md-3">
+                                        <div class="select-wrap form-group">
                                             <label for="billing_date">Billing Date</label>
-                                            <div class="form-group">
-                                                <select name="billing_date" id="billing_date" class="form-control">
+                                            <!-- <div class=""> -->
+                                                <select name="billing_date" id="billing_date" class="form-control custom-select m_select">
                                                     <option>--SELECT--</option>
                                                     <?php foreach (range(1, 31) as $date) { ?>
                                                         <option value="<?php echo $date ?>" <?php echo (!empty($workorder->billing_date) && $workorder->billing_date == $date) ? 'selected' : '' ?>>
@@ -1580,12 +1609,14 @@ border: none;
                                                         </option>
                                                     <?php } ?>
                                                 </select>
-                                            </div>
+                                            <!-- </div> -->
+                                        </div>
                                         </div>
                                         <div class="col-md-3">
-                                            <div class="form-group">
+                                            <div class="select-wrap form-group">
+                                            <!-- <div class="form-group"> -->
                                                 <label for="payment_type"> Payment Type:</label> 
-                                                <select name="payment_method" id="payment_method" class="form-control custom-select">
+                                                <select name="payment_method" id="payment_method" class="form-control custom-select m_select">
                                                     <option value="">Choose method</option>
                                                     <option value="Cash">Cash</option>
                                                     <option value="Check">Check</option>
@@ -1609,10 +1640,10 @@ border: none;
                                             </div>
                                         </div>
                                         <div class="col-md-3">
-                                            <div class="form-group">
+                                            <div class="select-wrap form-group">
                                                 <label for="billing_freq"> Billing Frequency:</label>
                                                 <select name="billing_frequency"
-                                                        class="form-control"
+                                                        class="form-control custom-select m_select"
                                                         id="billing_freq">
                                                     <option>--SELECT--</option>
                                                     <?php foreach (get_config_item('billing_frequency') as $key => $billing_frequency) { ?>
@@ -1629,7 +1660,7 @@ border: none;
                                         </div>
                                         <div class="col-md-3">
                                             <div class="form-group">
-                                                <label for="job_type">Amount</label><small class="help help-sm"> ( $ )</small>
+                                                <label for="job_type">Amount<small class="help help-sm"> ( $ )</small></label>
                                                 <input type="text" class="form-control" name="payment_amount" id="payment_amount"  />
                                             </div>
                                             <div id="cash_area" style="display:none;margin-top:-20px;">
@@ -1725,18 +1756,18 @@ border: none;
                                     <div id="check_area" style="display:none;">
                                         <div class="row">                   
                                             <div class="form-group col-md-4">
-                                                <label for="job_type">Check Number</label>
-                                                <input type="text" class="form-control" name="check_number" id="check_number"/>
+                                                <label for="job_type" class="label-element">Check Number</label>
+                                                <input type="text" class="form-control input-element" name="check_number" id="check_number"/>
                                             </div>
                                             <div class="form-group col-md-4">
-                                                <label for="job_type">Routing Number</label>
-                                                <input type="text" class="form-control" name="routing_number" id="routing_number"/>
+                                                <label for="job_type" class="label-element">Routing Number</label>
+                                                <input type="text" class="form-control input-element" name="routing_number" id="routing_number"/>
                                             </div>                                             
                                         <!-- </div>
                                         <div class="row"> -->
                                             <div class="form-group col-md-4">
-                                                <label for="job_type">Account Number</label>
-                                                <input type="text" class="form-control" name="account_number" id="account_number"/>
+                                                <label for="job_type" class="label-element">Account Number</label>
+                                                <input type="text" class="form-control input-element" name="account_number" id="account_number"/>
                                             </div>                                       
                                         </div>
                                     </div>
@@ -1775,16 +1806,16 @@ border: none;
                                         <br><br>
                                         <div class="row">                   
                                             <div class="form-group col-md-4">
-                                                <label for="job_type">Credit Card Number</label>
-                                                <input type="text" class="form-control" name="credit_number" id="credit_number" placeholder="0000 0000 0000 000" />
+                                                <label for="job_type" class="label-element">Credit Card Number</label>
+                                                <input type="text" class="form-control input-element" name="credit_number" id="credit_number" placeholder="0000 0000 0000 000" />
                                             </div>
                                             <div class="form-group col-md-4">
-                                                <label for="job_type">Credit Card Expiration</label>
-                                                <input type="text" class="form-control" name="credit_expiry" id="credit_expiry" placeholder="MM/YYYY"/>
+                                                <label for="job_type" class="label-element">Credit Card Expiration</label>
+                                                <input type="text" class="form-control input-element" name="credit_expiry" id="credit_expiry" placeholder="MM/YYYY"/>
                                             </div>  
                                             <div class="form-group col-md-4">
-                                                <label for="job_type">CVC</label>
-                                                <input type="text" class="form-control" name="credit_cvc" id="credit_cvc" placeholder="CVC"/>
+                                                <label for="job_type" class="label-element">CVC</label>
+                                                <input type="text" class="form-control input-element" name="credit_cvc" id="credit_cvc" placeholder="CVC"/>
                                             </div>                                             
                                         </div>
                                     </div>
@@ -1793,30 +1824,30 @@ border: none;
                                         <input type="checkbox" id="same_as"> <b>Same as above in Monitoring Address</b> <br><br>
                                         <div class="row">                   
                                             <div class="col-md-4 form-group">
-                                                <label for="monitored_location">Mail Address</label>
-                                                <input type="text" class="form-control" name="mail-address"
+                                                <label for="monitored_location" class="label-element">Mail Address</label>
+                                                <input type="text" class="form-control input-element" name="mail-address"
                                                     id="mail-address" placeholder="Monitored Location"/>
                                             </div>
                                             <div class="col-md-4 form-group">
-                                                <label for="city">City</label>
-                                                    <input type="text" class="form-control" name="mail_locality" id="mail_locality" placeholder="Enter Name" />
+                                                <label for="city" class="label-element">City</label>
+                                                    <input type="text" class="form-control input-element" name="mail_locality" id="mail_locality" placeholder="Enter Name" />
                                             </div>
                                             <div class="col-md-4 form-group">
-                                                <label for="state">State</label>
-                                                <input type="text" class="form-control" name="mail_state"
+                                                <label for="state" class="label-element">State</label>
+                                                <input type="text" class="form-control input-element" name="mail_state"
                                                     id="mail_state" 
                                                     placeholder="Enter State"/>
                                             </div>
                                         </div>
                                         <div class="row">  
                                             <div class="col-md-4 form-group">
-                                                <label for="zip">ZIP</label> 
-                                                    <input type="text" id="mail_postcode" name="mail_postcode" class="form-control"  placeholder="Enter Zip"/>
+                                                <label for="zip" class="label-element">ZIP</label> 
+                                                    <input type="text" id="mail_postcode" name="mail_postcode" class="form-control input-element"  placeholder="Enter Zip"/>
                                             </div>
 
                                             <div class="col-md-4 form-group">
-                                                <label for="cross_street">Cross Street</label>
-                                                <input type="text" class="form-control" name="mail_cross_street"
+                                                <label for="cross_street" class="label-element">Cross Street</label>
+                                                <input type="text" class="form-control input-element" name="mail_cross_street"
                                                     id="mail_cross_street" 
                                                     placeholder="Cross Street"/>
                                             </div>                                        
@@ -1825,140 +1856,140 @@ border: none;
                                     <div id="debit_card" style="display:none;">
                                         <div class="row">                   
                                             <div class="form-group col-md-4">
-                                                <label for="job_type">Credit Card Number</label>
-                                                <input type="text" class="form-control" name="debit_credit_number" id="credit_number" placeholder="0000 0000 0000 000" />
+                                                <label for="job_type" class="label-element">Credit Card Number</label>
+                                                <input type="text" class="form-control input-element" name="debit_credit_number" id="credit_number" placeholder="0000 0000 0000 000" />
                                             </div>
                                             <div class="form-group col-md-4">
-                                                <label for="job_type">Credit Card Expiration</label>
-                                                <input type="text" class="form-control" name="debit_credit_expiry" id="credit_expiry" placeholder="MM/YYYY"/>
+                                                <label for="job_type" class="label-element">Credit Card Expiration</label>
+                                                <input type="text" class="form-control input-element" name="debit_credit_expiry" id="credit_expiry" placeholder="MM/YYYY"/>
                                             </div>  
                                             <div class="form-group col-md-4">
-                                                <label for="job_type">CVC</label>
-                                                <input type="text" class="form-control" name="debit_credit_cvc" id="credit_cvc" placeholder="CVC"/>
+                                                <label for="job_type" class="label-element">CVC</label>
+                                                <input type="text" class="form-control input-element" name="debit_credit_cvc" id="credit_cvc" placeholder="CVC"/>
                                             </div>                                            
                                         </div>
                                     </div>
                                     <div id="ach_area" style="display:none;">
                                         <div class="row">                   
                                             <div class="form-group col-md-4">
-                                                <label for="job_type">Routing Number</label>
-                                                <input type="text" class="form-control" name="ach_routing_number" id="ach_routing_number" />
+                                                <label for="job_type" class="label-element">Routing Number</label>
+                                                <input type="text" class="form-control input-element" name="ach_routing_number" id="ach_routing_number" />
                                             </div>
                                             <div class="form-group col-md-4">
-                                                <label for="job_type">Account Number</label>
-                                                <input type="text" class="form-control" name="ach_account_number" id="ach_account_number" />
+                                                <label for="job_type" class="label-element">Account Number</label>
+                                                <input type="text" class="form-control input-element" name="ach_account_number" id="ach_account_number" />
                                             </div>  
                                         </div>
                                     </div>
                                     <div id="venmo_area" style="display:none;">
                                         <div class="row">                   
                                             <div class="form-group col-md-4">
-                                                <label for="job_type">Account Credential</label>
-                                                <input type="text" class="form-control" name="account_credentials" id="account_credentials"/>
+                                                <label for="job_type" class="label-element">Account Credential</label>
+                                                <input type="text" class="form-control input-element" name="account_credentials" id="account_credentials"/>
                                             </div>
                                             <div class="form-group col-md-4">
-                                                <label for="job_type">Account Note</label>
-                                                <input type="text" class="form-control" name="account_note" id="account_note"/>
+                                                <label for="job_type" class="label-element">Account Note</label>
+                                                <input type="text" class="form-control input-element" name="account_note" id="account_note"/>
                                             </div>  
                                             <div class="form-group col-md-4">
-                                                <label for="job_type">Confirmation</label>
-                                                <input type="text" class="form-control" name="confirmation" id="confirmation"/>
+                                                <label for="job_type" class="label-element">Confirmation</label>
+                                                <input type="text" class="form-control input-element" name="confirmation" id="confirmation"/>
                                             </div>                                            
                                         </div>
                                     </div>
                                     <div id="paypal_area" style="display:none;">
                                         <div class="row">                   
                                             <div class="form-group col-md-4">
-                                                <label for="job_type">Account Credential</label>
-                                                <input type="text" class="form-control" name="paypal_account_credentials" id="paypal_account_credentials"/>
+                                                <label for="job_type" class="label-element">Account Credential</label>
+                                                <input type="text" class="form-control input-element" name="paypal_account_credentials" id="paypal_account_credentials"/>
                                             </div>
                                             <div class="form-group col-md-4">
-                                                <label for="job_type">Account Note</label>
-                                                <input type="text" class="form-control" name="paypal_account_note" id="paypal_account_note"/>
+                                                <label for="job_type" class="label-element">Account Note</label>
+                                                <input type="text" class="form-control input-element" name="paypal_account_note" id="paypal_account_note"/>
                                             </div>  
                                             <div class="form-group col-md-4">
-                                                <label for="job_type">Confirmation</label>
-                                                <input type="text" class="form-control" name="paypal_confirmation" id="paypal_confirmation"/>
+                                                <label for="job_type" class="label-element">Confirmation</label>
+                                                <input type="text" class="form-control input-element" name="paypal_confirmation" id="paypal_confirmation"/>
                                             </div>                                            
                                         </div>
                                     </div>
                                     <div id="square_area" style="display:none;">
                                         <div class="row">                   
                                             <div class="form-group col-md-4">
-                                                <label for="job_type">Account Credential</label>
-                                                <input type="text" class="form-control" name="square_account_credentials" id="square_account_credentials"/>
+                                                <label for="job_type" class="label-element">Account Credential</label>
+                                                <input type="text" class="form-control input-element" name="square_account_credentials" id="square_account_credentials"/>
                                             </div>
                                             <div class="form-group col-md-4">
-                                                <label for="job_type">Account Note</label>
-                                                <input type="text" class="form-control" name="square_account_note" id="square_account_note"/>
+                                                <label for="job_type" class="label-element">Account Note</label>
+                                                <input type="text" class="form-control input-element" name="square_account_note" id="square_account_note"/>
                                             </div>  
                                             <div class="form-group col-md-4">
-                                                <label for="job_type">Confirmation</label>
-                                                <input type="text" class="form-control" name="square_confirmation" id="square_confirmation"/>
+                                                <label for="job_type" class="label-element">Confirmation</label>
+                                                <input type="text" class="form-control input-element" name="square_confirmation" id="square_confirmation"/>
                                             </div>                                            
                                         </div>
                                     </div>
                                     <div id="warranty_area" style="display:none;">
                                         <div class="row">                   
                                             <div class="form-group col-md-4">
-                                                <label for="job_type">Account Credential</label>
-                                                <input type="text" class="form-control" name="warranty_account_credentials" id="warranty_account_credentials"/>
+                                                <label for="job_type" class="label-element">Account Credential</label>
+                                                <input type="text" class="form-control input-element" name="warranty_account_credentials" id="warranty_account_credentials"/>
                                             </div>
                                             <div class="form-group col-md-4">
-                                                <label for="job_type">Account Note</label>
-                                                <input type="text" class="form-control" name="warranty_account_note" id="warranty_account_note"/>
+                                                <label for="job_type" class="label-element">Account Note</label>
+                                                <input type="text" class="form-control input-element" name="warranty_account_note" id="warranty_account_note"/>
                                             </div>                                         
                                         </div>
                                     </div>
                                     <div id="home_area" style="display:none;">
                                         <div class="row">                   
                                             <div class="form-group col-md-4">
-                                                <label for="job_type">Account Credential</label>
-                                                <input type="text" class="form-control" name="home_account_credentials" id="home_account_credentials"/>
+                                                <label for="job_type" class="label-element">Account Credential</label>
+                                                <input type="text" class="form-control input-element" name="home_account_credentials" id="home_account_credentials"/>
                                             </div>
                                             <div class="form-group col-md-4">
-                                                <label for="job_type">Account Note</label>
-                                                <input type="text" class="form-control" name="home_account_note" id="home_account_note"/>
+                                                <label for="job_type" class="label-element">Account Note</label>
+                                                <input type="text" class="form-control input-element" name="home_account_note" id="home_account_note"/>
                                             </div>                                         
                                         </div>
                                     </div>
                                     <div id="e_area" style="display:none;">
                                         <div class="row">                   
                                             <div class="form-group col-md-4">
-                                                <label for="job_type">Account Credential</label>
-                                                <input type="text" class="form-control" name="e_account_credentials" id="e_account_credentials"/>
+                                                <label for="job_type" class="label-element">Account Credential</label>
+                                                <input type="text" class="form-control input-element" name="e_account_credentials" id="e_account_credentials"/>
                                             </div>
                                             <div class="form-group col-md-4">
-                                                <label for="job_type">Account Note</label>
-                                                <input type="text" class="form-control" name="e_account_note" id="e_account_note"/>
+                                                <label for="job_type" class="label-element">Account Note</label>
+                                                <input type="text" class="form-control input-element" name="e_account_note" id="e_account_note"/>
                                             </div>                                         
                                         </div>
                                     </div>
                                     <div id="other_credit_card" style="display:none;">
                                         <div class="row">                   
                                             <div class="form-group col-md-4">
-                                                <label for="job_type">Credit Card Number</label>
-                                                <input type="text" class="form-control" name="other_credit_number" id="other_credit_number" placeholder="0000 0000 0000 000" />
+                                                <label for="job_type" class="label-element">Credit Card Number</label>
+                                                <input type="text" class="form-control input-element" name="other_credit_number" id="other_credit_number" placeholder="0000 0000 0000 000" />
                                             </div>
                                             <div class="form-group col-md-4">
-                                                <label for="job_type">Credit Card Expiration</label>
-                                                <input type="text" class="form-control" name="other_credit_expiry" id="other_credit_expiry" placeholder="MM/YYYY"/>
+                                                <label for="job_type" class="label-element">Credit Card Expiration</label>
+                                                <input type="text" class="form-control input-element" name="other_credit_expiry" id="other_credit_expiry" placeholder="MM/YYYY"/>
                                             </div>  
                                             <div class="form-group col-md-4">
-                                                <label for="job_type">CVC</label>
-                                                <input type="text" class="form-control" name="other_credit_cvc" id="other_credit_cvc" placeholder="CVC"/>
+                                                <label for="job_type" class="label-element">CVC</label>
+                                                <input type="text" class="form-control input-element" name="other_credit_cvc" id="other_credit_cvc" placeholder="CVC"/>
                                             </div>                                             
                                         </div>
                                     </div>
                                     <div id="other_payment_area" style="display:none;">
                                         <div class="row">                   
                                             <div class="form-group col-md-4">
-                                                <label for="job_type">Account Credential</label>
-                                                <input type="text" class="form-control" name="other_payment_account_credentials" id="other_payment_account_credentials"/>
+                                                <label for="job_type" class="label-element">Account Credential</label>
+                                                <input type="text" class="form-control input-element" name="other_payment_account_credentials" id="other_payment_account_credentials"/>
                                             </div>
                                             <div class="form-group col-md-4">
-                                                <label for="job_type">Account Note</label>
-                                                <input type="text" class="form-control" name="other_payment_account_note" id="other_payment_account_note"/>
+                                                <label for="job_type" class="label-element">Account Note</label>
+                                                <input type="text" class="form-control input-element" name="other_payment_account_note" id="other_payment_account_note"/>
                                             </div>                                         
                                         </div>
                                     </div>
@@ -1987,7 +2018,7 @@ border: none;
                                     </div>
                                 </div>
                             </div>
-                            <div class="row" id="group_area">
+                            <div class="row  signature_web" id="group_area">
                                 <div class="col-md-4">
                                     <h6>Company Representative Approval</h6>
                                     <div class="sigPad" id="smoothed1a" style="width:100%;border:solid gray 1px;background-color:#00b300;">
@@ -2078,8 +2109,20 @@ border: none;
                                 </div>
                             </div>
 
+                            <div class="signature_mobile">
+                                    <br><br>
+                                    <a href="#" class="btn btn-success" data-toggle="modal" data-target="#signature_mobile">Signature</a>
+                                    <br><br>
+                            </div>
+
+                            <div class="signature_mobile signatureArea">
+                            </div>
+
                             <!-- ====== TERMS OF USE ====== -->
                             <div class="row" id="group_area">
+                            
+                            <br><br>
+
                                 <div class=" col-md-12"><label style="float:right;color:green;"><a href="#" style="color:green;" data-toggle="modal" data-target="#terms_use_modal">Update Terms of Use</a></label>
                                     <h6>Agreement</h6>
                                     <div style="height:200px; overflow:auto; background:#FFFFFF; padding-left:10px;" id="thisdiv3">
@@ -2090,7 +2133,8 @@ border: none;
                                 </div>
 
                                 <div class="col-md-6">
-                                    <div class="form-group">
+                                    <div class="form-group"> 
+                                        <br><br>
                                         <label for="initials">**INITIALS**</label>
                                         <input type="text" class="form-control"
                                                name="initials"
@@ -2247,9 +2291,9 @@ border: none;
                                 </div>
                             </div>
 
-                        </div>
+                        <!-- </div> -->
                         <!-- end card -->
-                    </div>
+                    <!-- </div> -->
                 </div>
 
 
@@ -2392,6 +2436,143 @@ border: none;
             </div>
 
             <!-- Modal -->
+            <div class="modal fade" id="signature_mobile" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                    <!-- <div class="modal-header"> -->
+                        <!-- <h5 class="modal-title" id="exampleModalLongTitle">Update Terms and Conditions</h5> -->
+                        <!-- <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div> -->
+                    <div class="modal-body">
+                            <div class="row signature_mobile">
+                                <div class="col-md-12">
+                                <?php //echo form_open_multipart('accounting/testSave', [ 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?> 
+                                <div class="tab-content" id="nav-tabContent" style="width:;">
+                                    <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab" style="padding:1%;">
+                                                <!-- <div class="col-md-4"> -->
+                                                    <!-- <h6>Company Representative Approval</h6> -->
+                                                    <!-- <div class="sigPad" id="smoothed1am" style="width:100%;border:solid gray 1px;background-color:#00b300;">
+                                                        <ul class="sigNav" style="">
+                                                            <li class="drawIt"><a href="#draw-it">Draw It</a></li>
+                                                            <li class="clearButton"><a href="#clear">Clear</a></li>
+                                                        </ul>
+                                                        <ul class="edit">
+                                                            <li class="smoothed1a_pencil pointer"><a onclick="myFunctionM()" style="float:right;margin-right:10px;" class="smoothed1a_pencil"><i class="fa fa-pencil" aria-hidden="true"></i></a></li>
+                                                        </ul>
+                                                        <div class="sig sigWrapper" id="smoothed1a_pencil" style="height:auto;pointer-events: none;">
+                                                            <div class="typed"></div>
+                                                            <div id="signature-padM">
+                                                            <canvas style="border:1px solid #000" id="signM"></canvas>
+                                                            </div>
+                                                            <input type="hidden" name="output-2a"  id="output-2a" class="output">
+                                                        </div>
+                                                    </div>
+                                                    <input type="hidden" id="saveCompanySignatureDB1aM"
+                                                        name="company_representative_approval_signature1aM">
+                                                    <br>
+
+                                                    <label for="comp_rep_approval">Printed Name</label>
+                                                    <input type="text6" class="form-control mb-3"
+                                                        name="company_representative_printed_name"
+                                                        id="comp_rep_approval" placeholder=""/> -->
+                                                        <!-- <canvas id="canvas" width="5" height="5"></canvas> -->
+                                                        <canvas id="canvas" height="150" style="border: 1px solid #ddd;"></canvas>
+                                                        <input type="text" class="form-control mb-3" name="company_representative_printed_name" id="comp_rep_approval1" placeholder="Printed Name"/>
+                                                        <input type="hidden" id="saveCompanySignatureDB1aM" name="company_representative_approval_signature1aM">
+
+                                                <!-- </div> -->
+                                    </div>
+                                    <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab" style="padding:1%;">
+                                                <!-- <div class="col-md-4"> -->
+                                                    <!-- <h6>Primary Account Holder</h6> -->
+                                                    <!-- <div class="sigPad" id="smoothed2am" style="width:100%;border:solid gray 1px;background-color:#f7b900;">
+                                                        <ul class="sigNav">
+                                                            <li class="drawIt"><a href="#draw-it">Draw It</a></li>
+                                                            <li class="clearButton"><a href="#clear">Clear</a></li>
+                                                        </ul>
+                                                        <ul class="edit">
+                                                            <li class="smoothed1a_pencil pointer"><a onclick="myFunctiontwoM()" style="float:right;margin-right:10px;" class="smoothed1a_pencil"><i class="fa fa-pencil" aria-hidden="true"></i></a></li>
+                                                        </ul>
+                                                        <div class="sig sigWrapper" style="height:auto;pointer-events: none;">
+                                                            <div class="typed"></div>
+                                                            <div id="signature-pad2M">
+                                                            <canvas style="border:1px solid #000" id="sign2M"></canvas>
+                                                            </div>
+                                                            <input type="hidden" name="output-2" class="output">
+                                                        </div>
+                                                    </div>
+                                                    <input type="hidden" id="savePrimaryAccountSignatureDB2aM"
+                                                        name="primary_account_holder_signature2aM">
+                                                    <br>
+
+                                                    <label for="comp_rep_approval">Printed Name</label>
+                                                    <input type="text6" class="form-control mb-3" name="primary_account_holder_name"
+                                                        id="comp_rep_approval" placeholder=""/> -->
+
+                                                        <canvas id="canvas2" height="150" style="border: 1px solid #ddd;"></canvas>
+                                                        <input type="text" class="form-control mb-3" name="company_representative_printed_name" id="comp_rep_approval2" placeholder="Printed Name"/>
+                                                        <input type="hidden" id="savePrimaryAccountSignatureDB2aM" name="primary_account_holder_signature2aM">
+
+                                                <!-- </div> -->
+                                    </div>
+                                    <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab" style="padding:1%;">
+                                                <!-- <div class="col-md-4"> -->
+                                                    <!-- <h6>Secondary Account Holder</h6> -->
+                                                    <!-- <div class="sigPad" id="smoothed3am" style="width:100%;border:solid gray 1px;background-color:#f75c1e;">
+                                                        <ul class="sigNav">
+                                                            <li class="drawIt"><a href="#draw-it">Draw It</a></li>
+                                                            <li class="clearButton"><a href="#clear">Clear</a></li>
+                                                        </ul>
+                                                        <ul class="edit">
+                                                            <li class="smoothed1a_pencil pointer"><a onclick="myFunctionthreeM()" style="float:right;margin-right:10px;" class="smoothed1a_pencil"><i class="fa fa-pencil" aria-hidden="true"></i></a></li>
+                                                        </ul>
+                                                        <div class="sig sigWrapper" style="height:auto;pointer-events: none;">
+                                                            <div class="typed"></div>
+                                                            <div id="signature-pad3M">
+                                                            <canvas style="border:1px solid #000" id="sign3M"></canvas>
+                                                            </div>
+                                                            <input type="hidden" name="output-2" class="output">
+                                                        </div>
+                                                    </div>
+                                                    <input type="hidden" id="saveSecondaryAccountSignatureDB3aM"
+                                                        name="secondary_account_holder_signature3aM">
+                                                    <br>
+
+                                                    <label for="comp_rep_approval">Printed Name</label>
+                                                    <input type="text6" class="form-control mb-3" name="secondery_account_holder_name"
+                                                        id="comp_rep_approval" placeholder=""/> -->
+                                                    
+                                                        <canvas id="canvas3" height="150" style="border: 1px solid #ddd;"></canvas>
+                                                        <input type="text" class="form-control mb-3" name="company_representative_printed_name" id="comp_rep_approval3" placeholder="Printed Name"/>
+                                                        <input type="hidden" id="saveSecondaryAccountSignatureDB3aM" name="secondary_account_holder_signature3aM">
+
+                                                <!-- </div> -->
+                                    </div>
+                                </div>
+                                <nav>
+                                    <div class="nav nav-tabs nav-fill" id="nav-tab" role="tablist">
+                                    <a class="nav-item nav-link" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">Company Representative Approval</a>
+                                    <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-profile" role="tab" aria-controls="nav-profile" aria-selected="false">Primary Account Holder</a>
+                                    <a class="nav-item nav-link" id="nav-contact-tab" data-toggle="tab" href="#nav-contact" role="tab" aria-controls="nav-contact" aria-selected="false">Secondary Account Holder</a>
+                                    </div>
+                                </nav>
+                                
+                                </div>
+                            </div>
+                    </div>
+                    <div class="modal-footer">
+                        <!-- <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> -->
+                        <button type="button" onClick="submit()" class="btn btn-primary enter_signature">Save changes</button>
+                        <!-- <input type="submit" value="save" id="btnSaveSign"> -->
+                    </div>
+                    <?php //echo form_close(); ?>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal -->
             <div class="modal fade" id="terms_use_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
                 <div class="modal-dialog modal-lg" role="document">
                     <div class="modal-content">
@@ -2417,6 +2598,220 @@ border: none;
             </div>
 
     <?php include viewPath('includes/footer'); ?>
+
+    <script>
+// $("#company_representative_approval_signature1aM").on("click touchstart",
+//   function () {
+//     alert('yeah');
+//     var canvas = document.getElementById(
+//       "signM"
+//     );    
+//     var dataURL = canvas.toDataURL("image/png");
+//     $("#saveCompanySignatureDB1aM").val(dataURL);
+//     // console.log(dataURL);
+//   }
+// );
+
+// $(document).on('click','#signature-padM',function(){
+//        alert('yeah');
+//     // $('#item_group_type').val();
+// });
+// var canvas = document.getElementById('canvas');
+// var dataURL = canvas.toDataURL("image/png");
+// test = $("#saveCompanySignatureDB1aM").val(dataURL);
+// // var dataURL = canvas.toDataURL();
+// console.log(test);
+// jQuery(document).ready(function($){
+    
+//     var canvas = document.getElementById("canvas");
+//     var signaturePad = new SignaturePad(canvas);
+//     var dataURL = canvas.toDataURL("image/png");
+//     test = $("#saveCompanySignatureDB1aM").val(dataURL);
+
+//     onsole.log(test);
+    
+//     // $('#clear-signature').on('click', function(){
+//     //     signaturePad.clear();
+//     // });
+    
+// });
+
+            $(document).ready(function() {
+				// $('#canvas').signaturePad({drawOnly:true, drawBezierCurves:true, lineTop:90});
+                var canvas = document.getElementById("canvas");    
+                var signaturePad = new SignaturePad(canvas);
+
+                var canvas2 = document.getElementById("canvas2");    
+                var signaturePad2 = new SignaturePad(canvas2);
+
+                var canvas3 = document.getElementById("canvas3");    
+                var signaturePad3 = new SignaturePad(canvas3);
+
+			});
+
+// $("#canvas").on("click touchstart",
+//   function () {
+//     // alert('yeah');
+//     var canvas = document.getElementById(
+//       "canvas"
+//     );    
+//     var signaturePad = new SignaturePad(canvas);
+//     var dataURL = canvas.toDataURL("image/png");
+//     $("#saveCompanySignatureDB1aM").val(dataURL);
+//     // console.log(dataURL);
+//   }
+// );
+
+$("#btnSaveSign").click(function(e){
+    var canvas = document.getElementById("canvas");    
+    var dataURL = canvas.toDataURL("image/png");
+    $("#saveCompanySignatureDB1aM").val(dataURL);
+                        // console.log(dataURL);
+						//ajax call to save image inside folder
+						// $.ajax({
+						// 	url: "<?php echo base_url(); ?>accounting/testSave",
+						// 	data: { dataURL : dataURL },
+						// 	type: 'post',
+						// 	dataType: 'json',
+						// 	success: function (response) {
+						// 	   alert('success');
+						// 	}
+						// });
+
+$.ajax({
+    type : 'POST',
+    url : "<?php echo base_url(); ?>accounting/testSave",
+    data : {dataURL: dataURL},
+    success: function(result){
+    // $('#res').html('Signature Uploaded successfully');
+    console.log(dataURL)
+    // location.reload();
+    
+    },
+    });
+					
+			});
+
+
+</script>
+
+<script>
+// $('.enter_signature').click(function(){
+//     // alert("nisulod");
+//         if(signaturePad.isEmpty()){
+//             console.log('it is empty');
+//             return false;            
+//         }
+//     });
+
+var signaturePad;
+jQuery(document).ready(function () {
+  var signaturePadCanvas = document.querySelector('#canvas');
+//   var parentWidth = jQuery(signaturePadCanvas).parent().outerWidth();
+//   signaturePadCanvas.setAttribute("width", parentWidth);
+  signaturePad = new SignaturePad(signaturePadCanvas);
+});
+
+var signaturePad2;
+jQuery(document).ready(function () {
+  var signaturePadCanvas2 = document.querySelector('#canvas2');
+//   var parentWidth = jQuery(signaturePadCanvas).parent().outerWidth();
+//   signaturePadCanvas.setAttribute("width", parentWidth);
+  signaturePad2 = new SignaturePad(signaturePadCanvas2);
+});
+
+var signaturePad3;
+jQuery(document).ready(function () {
+  var signaturePadCanvas3 = document.querySelector('#canvas3');
+//   var parentWidth = jQuery(signaturePadCanvas).parent().outerWidth();
+//   signaturePadCanvas.setAttribute("width", parentWidth);
+  signaturePad3 = new SignaturePad(signaturePadCanvas3);
+});
+
+function submit() {
+  if (signaturePad.isEmpty() || signaturePad2.isEmpty() || signaturePad3.isEmpty()) {
+    // console.log("Empty!");
+    alert('Please check, you must sign all tab.')
+  }
+  else{
+    // sigpad= $("#output-2a").val();
+    var canvas = document.getElementById("canvas");    
+    var dataURL = canvas.toDataURL("image/png");
+    $("#saveCompanySignatureDB1aM").val(dataURL);
+
+    var canvas2 = document.getElementById("canvas2");    
+    var dataURL2 = canvas2.toDataURL("image/png");
+    $("#savePrimaryAccountSignatureDB2aM").val(dataURL2);
+
+    var canvas3 = document.getElementById("canvas3");    
+    var dataURL3 = canvas3.toDataURL("image/png");
+    $("#saveSecondaryAccountSignatureDB3aM").val(dataURL3);
+
+    var input1 = $("#comp_rep_approval1").val();
+    var input2 = $("#comp_rep_approval2").val();
+    var input3 = $("#comp_rep_approval3").val();
+    
+    $.ajax({
+    type : 'POST',
+    url : "<?php echo base_url(); ?>accounting/testSave",
+    data : {dataURL: dataURL, dataURL2: dataURL2, dataURL3: dataURL3},
+    success: function(result){
+        // $('#res').html('Signature Uploaded successfully');
+        alert('Signature Uploaded successfully');
+        console.log(dataURL);
+        console.log(dataURL2);
+        console.log(dataURL3);
+
+        // var image = new Image();
+        // image.src = '"' + dataURL + '"';
+        // document.body.appendChild(image);
+
+        var input_conf = '<br><div style="border:solid gray 1px;padding:2%;"><img id="image1" src="'+dataURL+'"></img><input type="hidden" class="form-control" name="signature1" id="signature1" value="'+ dataURL +'"><br><input type="text" class="form-control" name="name1" id="name1" value="'+ input1 +'"></div><br><div style="border:solid gray 1px;padding:2%;"><img id="image1" src="'+dataURL2+'"></img><input type="hidden" class="form-control" name="signature2" id="signature2" value="'+ dataURL2 +'"><br><input type="text" class="form-control" name="name2" id="name2" value="'+ input2 +'"></div><br><div style="border:solid gray 1px;padding:2%;"><img id="image1" src="'+dataURL3+'"></img><input type="hidden" class="form-control" name="signature3" id="signature3" value="'+ dataURL3 +'"><br><input type="text" class="form-control" name="name3" id="name3" value="'+ input3 +'"></div>';
+
+        $('.signatureArea').html(input_conf);
+
+        $('#signature_mobile').modal('toggle');
+        // if (confirm('Some message')) {
+        //     alert('Thanks for confirming');
+        // } else {
+        //     alert('Why did you press cancel? You should have confirmed');
+        // }
+
+        // location.reload();
+    },
+    });
+  }
+}
+</script>
+
+<script>
+$(document).ready(function(){
+    if(window.matchMedia("(max-width: 600px)").matches){
+        // alert("This is a mobile device.");
+        $(document).on("click", ".testing", function () {
+            $('.getItems').hide();
+            $('#item_typeid').removeClass('form-control');
+        });
+        $(document).on("click", ".select_item", function () {
+            $('.getItems').hide();
+        });
+    } 
+    // else{
+    //     $('.getItems_hidden').hide();
+    // }
+});
+</script>
+
+<script>
+// $(document).on('click','.show_mobile_view',function(){
+//     //    alert('yeah');
+//     $('#update_group').modal('show');
+// });
+$(document).on('click','.groupChange',function(){
+    //    alert('yeah');
+    $('#item_group_type').val();
+});
+</script>
 
 <script>
     $(function() {

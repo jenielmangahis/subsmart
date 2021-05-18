@@ -8,6 +8,7 @@ class Vendors extends MY_Controller {
 		parent::__construct();
         $this->checkLogin();
         $this->load->model('vendors_model');
+        $this->load->model('account_model');
         $this->load->model('accounting_attachments_model');
         $this->load->model('chart_of_accounts_model');
         $this->load->model('accounting_terms_model');
@@ -364,14 +365,14 @@ class Vendors extends MY_Controller {
         $inactive = $post['inactive'];
 
         $filters = [
-            'type' => $type,
-            'status' => [
-                1
-            ]
+            'type' => $type
         ];
 
         if($inactive) {
-            array_push($filters['status'], 0);
+            $filters['status'] = [
+                0,
+                1
+            ];
         }
 
         switch($date) {
@@ -495,7 +496,13 @@ class Vendors extends MY_Controller {
         $vendor = $this->vendors_model->get_vendor_by_id($vendorId);
         switch($filters['type']) {
             case 'all-bills' :
-                $allBills = $this->vendors_model->get_vendor_bill_transactions($vendorId, $filters);
+                $bills = $this->vendors_model->get_vendor_bill_transactions($vendorId, $filters);
+            break;
+            case 'open-bills' :
+                $bills = $this->vendors_model->get_vendor_open_bills($vendorId);
+            break;
+            case 'overdue-bills' :
+                $bills = $this->vendors_model->get_vendor_overdue_bills($vendorId);
             break;
             case 'expenses' :
                 $expenses = $this->vendors_model->get_vendor_expense_transactions($vendorId, $filters);
@@ -503,21 +510,29 @@ class Vendors extends MY_Controller {
             case 'checks' :
                 $checks = $this->vendors_model->get_vendor_check_transactions($vendorId, $filters);
             break;
+            case 'bill-payments' :
+                $billPayments = $this->vendors_model->get_vendor_bill_payments($vendorId, $filters);
+            break;
             case 'recently-paid' :
                 $expenses = $this->vendors_model->get_vendor_expense_transactions($vendorId, $filters);
                 $checks = $this->vendors_model->get_vendor_check_transactions($vendorId, $filters);
-                $allBills = $this->vendors_model->get_vendor_bill_transactions($vendorId, $filters);
+                $bills = $this->vendors_model->get_vendor_paid_bills($vendorId, $filters);
                 $creditCardPayments = $this->vendors_model->get_vendor_credit_card_payments($vendorId, $filters);
             break;
             case 'purchase-orders' :
                 $purchaseOrders = $this->vendors_model->get_vendor_purchase_orders($vendorId, $filters);
             break;
+            case 'vendor-credits' :
+                $vendorCredits = $this->vendors_model->get_vendor_credit_transactions($vendorId, $filters);
+            break;
             default :
                 $expenses = $this->vendors_model->get_vendor_expense_transactions($vendorId, $filters);
                 $checks = $this->vendors_model->get_vendor_check_transactions($vendorId, $filters);
-                $allBills = $this->vendors_model->get_vendor_bill_transactions($vendorId, $filters);
+                $bills = $this->vendors_model->get_vendor_bill_transactions($vendorId, $filters);
                 $creditCardPayments = $this->vendors_model->get_vendor_credit_card_payments($vendorId, $filters);
                 $purchaseOrders = $this->vendors_model->get_vendor_purchase_orders($vendorId, $filters);
+                $billPayments = $this->vendors_model->get_vendor_bill_payments($vendorId, $filters);
+                $vendorCredits = $this->vendors_model->get_vendor_credit_transactions($vendorId, $filters);
             break;
         }
 
@@ -564,8 +579,8 @@ class Vendors extends MY_Controller {
             }
         }
 
-        if(isset($allBills) && count($allBills) > 0) {
-            foreach($allBills as $bill) {
+        if(isset($bills) && count($bills) > 0) {
+            foreach($bills as $bill) {
                 $transactions[] = [
                     'id' => $bill->id,
                     'date' => date("m/d/Y", strtotime($bill->bill_date)),
@@ -579,7 +594,7 @@ class Vendors extends MY_Controller {
                     'due_date' => date("m/d/Y", strtotime($bill->due_date)),
                     'balance' => '$0.00',
                     'total' => '$'.number_format(floatval($bill->total_amount), 2, '.', ','),
-                    'status' => 'Paid',
+                    'status' => $bill->status === "2" ? "Paid" : "Open",
                     'attachments' => ''
                 ];
             }
@@ -621,7 +636,53 @@ class Vendors extends MY_Controller {
                     'due_date' => date("m/d/Y", strtotime($purchaseOrder->purchase_order_date)),
                     'balance' => '$0.00',
                     'total' => '$'.number_format(floatval($purchaseOrder->amount), 2, '.', ','),
-                    'status' => '',
+                    'status' => $purchaseOrder->status === "1" ? "Open" : "Closed",
+                    'attachments' => ''
+                ];
+            }
+        }
+
+        if(isset($billPayments) && count($billPayments) > 0) {
+            foreach($billPayments as $payment) {
+                $paymentAcc = $this->chart_of_accounts_model->getById($payment->payment_account_id);
+                $paymentAccType = $this->account_model->getById($paymentAcc->account_id);
+                $paymentType = $paymentAccType->account_name === 'Bank' ? 'Check' : 'Credit Card';
+
+                $transactions[] = [
+                    'id' => $payment->id,
+                    'date' => date("m/d/Y", strtotime($payment->payment_date)),
+                    'type' => "Bill Payment ($paymentType)",
+                    'number' => $payment->starting_check_no,
+                    'payee' => $vendor->display_name,
+                    'method' => '',
+                    'source' => '',
+                    'category' => '',
+                    'memo' => '',
+                    'due_date' => date("m/d/Y", strtotime($payment->payment_date)),
+                    'balance' => '$0.00',
+                    'total' => '-$'.number_format(floatval($payment->total_amount), 2, '.', ','),
+                    'status' => 'Applied',
+                    'attachments' => ''
+                ];
+            }
+        }
+
+        if(isset($vendorCredits) && count($vendorCredits) > 0) {
+            foreach($vendorCredits as $vendorCredit) {
+                $transactions[] = [
+                    'id' => $vendorCredit->id,
+                    'date' => date("m/d/Y", strtotime($vendorCredit->payment_date)),
+                    'type' => "Vendor Credit",
+                    'number' => $vendorCredit->ref_no,
+                    'payee' => $vendor->display_name,
+                    'method' => '',
+                    'source' => '',
+                    'category' => '',
+                    'memo' => $vendorCredits->memo,
+                    'due_date' => date("m/d/Y", strtotime($vendorCredit->payment_date)),
+                    'balance' => '$'.number_format(floatval($vendorCredit->total_amount), 2, '.', ','),
+                    'total' => '-$'.number_format(floatval($vendorCredit->total_amount), 2, '.', ','),
+                    'status' => $vendorCredit->status === "1" ? "Unapplied" : "Applied",
                     'attachments' => ''
                 ];
             }

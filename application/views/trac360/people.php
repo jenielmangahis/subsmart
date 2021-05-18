@@ -19,7 +19,7 @@ function get_differenct_of_dates($date_start, $date_end)
 <!-- page wrapper start -->
 <!-- <div class="wrapper" role="wrapper"> -->
 <!--<div wrapper__section>-->
-<div id="main_body" class="container-fluid" style="background-color: #6241A4; margin-bottom:-20px;">
+<div id="main_body" class="container-fluid" style="background-color: #6241A4; margin-bottom: -5px;">
   <div class="row">
     <div class="col-md-5">
       <div class="row">
@@ -62,8 +62,7 @@ function get_differenct_of_dates($date_start, $date_end)
             </ul>
           </div>
         </div>
-        <div class="col-md-9 overflow-auto trac360_main_sections jobs-list-section"
-          style="background-color: #fff; display:none;">
+        <div class="col-md-9  trac360_main_sections jobs-list-section" style="background-color: #fff; display:none;">
           <div class="employee-name">
             <p><span class="name">Ample sample </span> <span class="back-btn"><i class="fa fa-chevron-left"
                   aria-hidden="true"></i> </span> </p>
@@ -75,54 +74,56 @@ function get_differenct_of_dates($date_start, $date_end)
                 alt="">
             </center>
           </div>
-
-          <?php if (!empty($upcomingJobs)) { ?>
-          <?php foreach ($upcomingJobs as $jb) { ?>
-          <div class="row no-margin jobs-list-item">
-            <div class="col-md-4 job-sched text-center">
-              <a href="#">
-                <time style="font-size: 10px; text-align: left;" datetime="2021-02-09" class="icon-calendar-live">
-                  <em><?= date('D', strtotime($jb->start_date)) ?></em>
-                  <strong style="background-color: #58c04e;"><?= date('M', strtotime($jb->start_date)) ?></strong>
-                  <span><?= date('d', strtotime($jb->start_date)) ?></span>
-                </time>
-              </a>
-              <div class="job-status text-center mb-2"
-                style="background:<?= $jb->event_color?>; color:#ffffff;">
-                <b><?php echo strtoupper($jb->status); ?></b>
+          <div id="employee-upcoming-jobs" class="overflow-auto" style="height: 100%;">
+            <?php if (!empty($upcomingJobs)) { ?>
+            <?php foreach ($upcomingJobs as $jb) { ?>
+            <div class="row no-margin jobs-list-item">
+              <div class="col-md-4 job-sched text-center">
+                <a href="#">
+                  <time style="font-size: 10px; text-align: left;" datetime="2021-02-09" class="icon-calendar-live">
+                    <em><?= date('D', strtotime($jb->start_date)) ?></em>
+                    <strong style="background-color: #58c04e;"><?= date('M', strtotime($jb->start_date)) ?></strong>
+                    <span><?= date('d', strtotime($jb->start_date)) ?></span>
+                  </time>
+                </a>
+                <div class="job-status text-center mb-2"
+                  style="background:<?= $jb->event_color?>; color:#ffffff;">
+                  <b><?php echo strtoupper($jb->status); ?></b>
+                </div>
+                <span class="text-center after-status">ARRIVAL TIME</span><br>
+                <span class="job-caption text-center">
+                  <?php echo get_format_time($jb->start_time); ?>-<?php echo get_format_time_plus_hours($jb->end_time); ?>
+                </span>
               </div>
-              <span class="text-center after-status">ARRIVAL TIME</span><br>
-              <span class="job-caption text-center">
-                <?php echo get_format_time($jb->start_time); ?>-<?php echo get_format_time_plus_hours($jb->end_time); ?>
-              </span>
+              <div class="col-md-8 job-details">
+                <a style="color: #000!important;" href="#">
+                  <h6 style="font-weight:600; margin:0;font-size: 14px;text-transform: uppercase; color:#616161;">
+                    <?php echo $jb->job_number . ' : ' . $jb->job_type. ' - ' . $jb->tags_name; ?>
+                  </h6>
+                  <?php if (empty($settings['work_order_show_customer']) && $settings['work_order_show_customer'] == 1): ?>
+                  <b style="color:#45a73c;">
+                    <?= $jb->first_name. ' '. $jb->last_name; ?>
+                  </b><br>
+                  <?php endif; ?>
+                  <?php if (!empty($settings['work_order_show_details']) && $settings['work_order_show_details'] == 1): ?>
+                  <small class="text-muted"><?= $jb->mail_add .' '. $jb->cust_city.' '.$jb->cust_state.' '.$jb->cust_zip_code; ?></small><br>
+                  <i> <small class="text-muted"><?= $jb->job_description; ?></small></i><br>
+                  <?php endif; ?>
+                  <?php if (!empty($settings['work_order_show_price']) && $settings['work_order_show_price'] == 1): ?>
+                  <small>Amount : $ <?= $jb->amount!="" ? number_format((float)$jb->amount, 2, '.', ',') : '0.00' ; ?></small>
+                  <br>
+                  <?php endif; ?>
+                  <?php if (!empty($settings['work_order_show_link']) && $settings['work_order_show_link'] == 1): ?>
+                  <a href="<?=$jb->link; ?>" target=""><small
+                      style="color: darkred;"><?=$jb->link; ?></small></a>
+                  <?php endif; ?>
+              </div>
             </div>
-            <div class="col-md-8 job-details">
-              <a style="color: #000!important;" href="#">
-                <h6 style="font-weight:600; margin:0;font-size: 14px;text-transform: uppercase; color:#616161;"><?php echo $jb->job_number . ' : ' . $jb->job_type. ' - ' . $jb->tags_name; ?>
-                </h6>
-                <?php if (empty($settings['work_order_show_customer']) && $settings['work_order_show_customer'] == 1): ?>
-                <b style="color:#45a73c;">
-                  <?= $jb->first_name. ' '. $jb->last_name; ?>
-                </b><br>
-                <?php endif; ?>
-                <?php if (!empty($settings['work_order_show_details']) && $settings['work_order_show_details'] == 1): ?>
-                <small class="text-muted"><?= $jb->mail_add .' '. $jb->cust_city.' '.$jb->cust_state.' '.$jb->cust_zip_code; ?></small><br>
-                <i> <small class="text-muted"><?= $jb->job_description; ?></small></i><br>
-                <?php endif; ?>
-                <?php if (!empty($settings['work_order_show_price']) && $settings['work_order_show_price'] == 1): ?>
-                <small>Amount : $ <?= $jb->amount!="" ? number_format((float)$jb->amount, 2, '.', ',') : '0.00' ; ?></small>
-                <br>
-                <?php endif; ?>
-                <?php if (!empty($settings['work_order_show_link']) && $settings['work_order_show_link'] == 1): ?>
-                <a href="<?=$jb->link; ?>" target=""><small
-                    style="color: darkred;"><?=$jb->link; ?></small></a>
-                <?php endif; ?>
-            </div>
+            <?php } ?>
+            <?php } else { ?>
+            <div class="cue-event-name no-data">No upcoming jobs.</div>
+            <?php } ?>
           </div>
-          <?php } ?>
-          <?php } else { ?>
-          <div class="cue-event-name no-data">No upcoming jobs.</div>
-          <?php } ?>
         </div>
         <div class="col-md-9 overflow-auto trac360_main_sections peoples-lists-section" style="background-color: #fff;">
 
@@ -180,7 +181,7 @@ function get_differenct_of_dates($date_start, $date_end)
               }
               $html .= $time_display . '</p>
                 <div class="people-job-btns">
-                  <button href="#" class="people-job-btn" data-user-id="'.$user->user_id .'" data-name="'.$user->FName.' '.$user->LName.'" data-toggle="tooltip" title="View Jobs">
+                  <button href="#" class="people-job-btn" data-user-id="'.$user->user_id .'" data-name="'.$user->FName.' '.$user->LName.'" data-toggle="tooltip" title="View Upcoming Jobs">
                     <i class="fa fa-briefcase" aria-hidden="true"></i>
                   </button>
                 </div>
@@ -197,10 +198,7 @@ function get_differenct_of_dates($date_start, $date_end)
           echo $active_html . "" . $inactive_html;
           ?>
 
-          <div class="people-informaton-btn">
-            <img src="<?=base_url()?>" />
-            </divs>
-          </div>
+
         </div>
 
       </div>
@@ -214,6 +212,7 @@ function get_differenct_of_dates($date_start, $date_end)
         <h1 class="page-title">Initializing...</h1>
       </div>
       <div id="map-holder" style="display:none;">
+        <div id="jobs-map" style="display:none;"></div>
         <div id="map"></div>
       </div>
     </div>
@@ -231,6 +230,8 @@ function get_differenct_of_dates($date_start, $date_end)
   var company_id = <?= $company_id ?> ;
 
   var map;
+  var jobs_map;
+  var jobs_map_marker;
   var markers = [];
   var current_user_latitude;
   var current_user_longitude;
@@ -254,7 +255,13 @@ function get_differenct_of_dates($date_start, $date_end)
       },
       zoom: 2,
     });
-
+    jobs_map = new google.maps.Map(document.getElementById("jobs-map"), {
+      center: {
+        lat: 37.0902,
+        lng: 95.7129
+      },
+      zoom: 2,
+    });
     <?php
         foreach ($user_locations as $user) {
             if ($user->last_tracked_location != "") {

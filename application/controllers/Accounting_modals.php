@@ -2945,7 +2945,7 @@ class Accounting_modals extends MY_Controller {
                 'tags' => $data['tags'] !== null ? json_encode($data['tags']) : null,
                 'memo' => $data['memo'],
                 'attachments' => $data['attachments'] !== null ? json_encode($data['attachments']) : null,
-                'balance_remaining' => $data['total_amount'],
+                'remaining_balance' => $data['total_amount'],
                 'total_amount' => $data['total_amount'],
                 'status' => 1,
                 'created_at' => date("Y-m-d H:i:s"),
@@ -3228,7 +3228,7 @@ class Accounting_modals extends MY_Controller {
             $billPayment = [
                 'company_id' => logged('company_id'),
                 'payment_account_id' => $data['payment_account'],
-                'payment_date' => $data['payment_date'],
+                'payment_date' => date("Y-m-d", strtotime($data['payment_date'])),
                 'starting_check_no' => $data['starting_check_no'],
                 'total_amount' => $data['total'],
                 'status' => 1,
@@ -3237,6 +3237,18 @@ class Accounting_modals extends MY_Controller {
             ];
     
             $billPaymentId = $this->expenses_model->insert_bill_payment($billPayment);
+
+            $paymentAcc = $this->chart_of_accounts_model->getById($data['payment_account']);
+            $newBalance = floatval($paymentAcc->balance) - floatval($data['total_amount']);
+            $newBalance = number_format($newBalance, 2, '.', ',');
+
+            $paymentAccData = [
+                'id' => $paymentAcc->id,
+                'company_id' => logged('company_id'),
+                'balance' => $newBalance
+            ];
+
+            $this->chart_of_accounts_model->updateBalance($paymentAccData);
     
             if($billPaymentId) {
                 $billPaymentItems = [];
