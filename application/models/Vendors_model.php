@@ -271,8 +271,6 @@ class Vendors_model extends MY_Model {
 			} else {
 				$this->db->where('status', $filters['status']);
 			}
-		} else {
-			$this->db->where('status', 1);
 		}
 
 		$query = $this->db->get('accounting_bill');
@@ -350,6 +348,64 @@ class Vendors_model extends MY_Model {
 			$this->db->where('purchase_order_date <=', $filters['end-date']);
 		}
 		$query = $this->db->get('accounting_purchase_order');
+		return $query->result();
+	}
+
+	public function get_vendor_bill_payments($vendorId, $filters = [])
+	{
+		$this->db->select('accounting_bill_payments.*');
+		$this->db->where('accounting_bill.vendor_id', $vendorId);
+		$this->db->from('accounting_bill_payments');
+		$this->db->join('accounting_bill_payment_items', 'accounting_bill_payment_items.bill_payment_id = accounting_bill_payments.id');
+		$this->db->join('accounting_bill', 'accounting_bill.id = accounting_bill_payment_items.bill_id');
+		return $this->db->get()->result();
+	}
+
+	public function get_vendor_paid_bills($vendorId)
+	{
+		$this->db->where('company_id', logged('company_id'));
+		$this->db->where('vendor_id', $vendorId);
+		$this->db->where('status', 2);
+
+		$query = $this->db->get('accounting_bill');
+
+		return $query->result();
+	}
+
+	public function get_vendor_open_bills($vendorId, $filters = [])
+	{
+		$this->db->where('company_id', logged('company_id'));
+		$this->db->where('vendor_id', $vendorId);
+		$this->db->where('status', 1);
+
+		$query = $this->db->get('accounting_bill');
+
+		return $query->result();
+	}
+
+	public function get_vendor_overdue_bills($vendorId, $filters = [])
+	{
+		$this->db->where('company_id', logged('company_id'));
+		$this->db->where('vendor_id', $vendorId);
+		$this->db->where('status', 1);
+		$this->db->where('due_date <', date("Y-m-d"));
+
+		$query = $this->db->get('accounting_bill');
+
+		return $query->result();
+	}
+
+	public function get_vendor_credit_transactions($vendorId, $filters = [])
+	{
+		$this->db->where('company_id', logged('company_id'));
+		$this->db->where('vendor_id', $vendorId);
+		if(isset($filters['start-date'])) {
+			$this->db->where('payment_date >=', $filters['start-date']);
+			$this->db->where('payment_date <=', $filters['end-date']);
+		}
+
+		$query = $this->db->get('accounting_vendor_credit');
+
 		return $query->result();
 	}
 }

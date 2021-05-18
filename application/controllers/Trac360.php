@@ -478,4 +478,61 @@ class Trac360 extends MY_Controller
         }
         echo json_encode("success");
     }
+    public function get_employee_upcoming_jobs()
+    {
+        $user_id = $this->input->post('user_id');
+        $role    = logged('role');
+        $settings = $this->settings_model->getValueByKey(DB_SETTINGS_TABLE_KEY_SCHEDULE);
+        $this->page_data['settings'] = unserialize($settings);
+        $upcomingJobs = $this->trac360_model->getAllUpcomingJobsByUser_id($user_id);
+        $html='';
+        if (!empty($upcomingJobs)) {
+            foreach ($upcomingJobs as $jb) {
+                $html .= '<div class="row no-margin jobs-list-item" data-address="'.$jb->mail_add .' '. $jb->cust_city.' '.$jb->cust_state.' '.$jb->cust_zip_code.'" data-job-title="'.$jb->job_number . ' : ' . $jb->job_type. ' - ' . $jb->tags_name.'">
+              <div class="col-md-4 job-sched text-center">
+                <a href="#">
+                  <time style="font-size: 10px; text-align: left;" datetime="2021-02-09" class="icon-calendar-live">
+                    <em>'.date('D', strtotime($jb->start_date)) .'</em>
+                    <strong style="background-color: #58c04e;">'.date('M', strtotime($jb->start_date)) .'</strong>
+                    <span>'. date('d', strtotime($jb->start_date)) .'</span>
+                  </time>
+                </a>
+                <div class="job-status text-center mb-2"
+                  style="background:'.$jb->event_color.'; color:#ffffff;">
+                  <b>'.strtoupper($jb->status) .'</b>
+                </div>
+                <span class="text-center after-status">ARRIVAL TIME</span><br>
+                <span class="job-caption text-center">
+                  '.get_format_time($jb->start_time).' - '.get_format_time_plus_hours($jb->end_time).'
+                </span>
+              </div>
+              <div class="col-md-8 job-details">
+                <a style="color: #000!important;" href="#">
+                  <h6 style="font-weight:600; margin:0;font-size: 14px;text-transform: uppercase; color:#616161;">
+                    '.$jb->job_number . ' : ' . $jb->job_type. ' - ' . $jb->tags_name.'
+                  </h6>';
+                $html.='<b style="color:#45a73c;">'.$jb->first_name. ' '. $jb->last_name.'
+                  </b><br>';
+                
+                $html.='<small class="text-muted">'.$jb->mail_add .' '. $jb->cust_city.' '.$jb->cust_state.' '.$jb->cust_zip_code.'</small><br>
+                  <i> <small class="text-muted">'.$jb->job_description.'</small></i><br>';
+                
+                $html .='<small>Amount : $ '.$jb->amount!="" ? number_format((float)$jb->amount, 2, '.', ',') : '0.00' .'</small>
+                  <br>';
+                
+                $html .='<a href="<?=$jb->link; ?>" target=""><small
+                      style="color: darkred;">'.$jb->link.'</small></a>';
+                
+                $html .='</div>
+            </div>';
+            }
+        } else {
+            $html .='<div class="cue-event-name no-data">No upcoming jobs.</div>';
+        }
+
+        $data = new stdClass();
+        $data->upcomingJobs =$upcomingJobs;
+        $data->html =$html;
+        echo json_encode($data);
+    }
 }

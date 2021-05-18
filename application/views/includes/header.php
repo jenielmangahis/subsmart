@@ -881,6 +881,8 @@ if ($this->session->userdata('usertimezone') == "") {
 
     <script type="text/javascript">
         var user_id = <?= $user_id ?> ;
+        var
+            current_user_company_id = <?=logged('company_id')?> ;
         var all_notifications_html = '';
         var notification_badge_value = 0;
         var notification_html_holder_ctr = 0;
@@ -1018,7 +1020,7 @@ if ($this->session->userdata('usertimezone') == "") {
                 }
             } else {
 
-                if (data.user_id != user_id) {
+                if (data.user_id != user_id && data.company_id == current_user_company_id) {
                     notificationRing();
                     // console.log("posk");
 
@@ -1034,14 +1036,15 @@ if ($this->session->userdata('usertimezone') == "") {
                         }
                     });
                 }
-                if (data.notif_action_made != "Lunchin" && data.notif_action_made != "Lunchout") {
+                if (data.notif_action_made != "Lunchin" && data.notif_action_made != "Lunchout" && data
+                    .company_id == current_user_company_id) {
                     notification_badge_value++;
                     $('#notifyBadge').html(notification_badge_value);
                     $('#notifyBadge').show();
                     var current_notifs = $('#autoNotifications').html();
                     $('#autoNotifications').html(data.html + current_notifs);
                 }
-                if (data.notif_action_made == "autoclockout") {
+                if (data.notif_action_made == "autoclockout" && data.company_id == current_user_company_id) {
                     if (data.user_id == user_id) {
                         notificationRing();
                         Push.Permission.GRANTED;

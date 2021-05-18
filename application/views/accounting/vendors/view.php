@@ -67,7 +67,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <div class="card-body hid-desk" style="padding-bottom:0px;">
                             <div class="row">
                                 <div class="col-sm-6">
-                                    <h3 class="page-title" style="margin: 0 !important">Vendors</h3>
+                                    <h3 class="page-title" style="margin: 0 !important"><?=$vendor->display_name?></h3>
                                 </div>
                                 <!-- <div class="col-sm-12">
                                     <div class="alert alert-warning mt-4 mb-4" role="alert">
@@ -189,7 +189,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                             <div class="dropdown-menu p-3" aria-labelledby="filterDropdown">
                                                                 <div class="inner-filter-list">
                                                                     <div class="row">
-                                                                        <div class="col-md-6">
+                                                                        <div class="col-md-8">
                                                                             <div class="form-group">
                                                                                 <label for="type">Type</label>
                                                                                 <select name="template_type" id="template-type" class="form-control">

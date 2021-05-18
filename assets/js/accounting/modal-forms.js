@@ -1741,6 +1741,33 @@ $(function() {
             $('#purchaseOrderModal #shipping_address').append(customer.mail_add+'\n'+customer.city+', '+customer.state+' '+customer.zip_code+' '+customer.country);
         });
     });
+
+    $(document).on('change', '#payBillsModal #bills-table .payment-amount, #payBillsModal #bills-table .credit-applied', function() {
+        if($(this).hasClass('payment-amount')) {
+            var row = $(this).parent().parent();
+            var paymentAmount = $(this).val();
+            var creditApplied = row.find('input.credit-applied');
+            creditApplied = creditApplied.length > 0 ? creditApplied.val() : 0.00;
+        } else {
+            var row = $(this).parent().parent().parent().parent();
+            var paymentAmount = row.find('input.payment-amount').val();
+            var creditApplied = $(this).val();
+        }
+
+        var total = parseFloat(paymentAmount) + parseFloat(creditApplied);
+
+        row.find('td:last-child span').html(parseFloat(total).toFixed(2));
+
+        if(row.find('input[type="checkbox"]').prop('checked') === false) {
+            row.find('input[type="checkbox"]').prop('checked', true);
+        }
+
+        computeBillsPaymentTotal();
+    });
+
+    $(document).on('change', '#payBillsModal #bills-table input[type="checkbox"]', function() {
+        computeBillsPaymentTotal();
+    });
 });
 
 const convertToDecimal = (el) => {
@@ -2490,7 +2517,7 @@ const loadBills = () => {
         pageLength: $('#table_rows').val(),
         order: [[3, 'asc']],
         ajax: {
-            url: 'load-bills/',
+            url: '/accounting/load-bills/',
             dataType: 'json',
             contentType: 'application/json',
             type: 'POST',
@@ -2588,4 +2615,15 @@ const resetbillsfilter = () => {
 
 const applybillsfilter = () => {
     $('#payBillsModal table#bills-table').DataTable().ajax.reload();
+}
+
+const computeBillsPaymentTotal = () => {
+    var total = 0.00;
+    $('#payBillsModal #bills-table tbody tr').each(function() {
+        if($(this).find('input[type="checkbox"]').prop('checked')) {
+            total += parseFloat($(this).find('td:last-child span').html())
+        }
+    });
+
+    $('#payBillsModal span.transaction-total-amount').html(parseFloat(total).toFixed(2));
 }

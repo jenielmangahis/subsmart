@@ -424,3 +424,7 @@ $('#payment_term_modal #payment-term-form').on('submit', function(e) {
         }
     });
 });
+
+function applybtn() {
+    $('#transactions-table').DataTable().ajax.reload();
+}
