@@ -11,7 +11,7 @@ class Cron_Payment extends MY_Controller {
 		parent::__construct();
 	}
 
-    public function recurring_subscription(){
+    public function nsmart_recurring_subscription(){
         include APPPATH . 'libraries/Converge/src/Converge.php';
         $this->load->model('Clients_model');
         $this->load->model('NsmartPlan_model');
@@ -36,6 +36,8 @@ class Cron_Payment extends MY_Controller {
                     'pin' => CONVERGE_MERCHANTPIN,
                     'demo' => false,
                 ]);
+
+                echo $card_number;exit;
 
                 $createSale = $converge->request('ccsale', [
                     'ssl_card_number' => $card_number,
@@ -69,6 +71,167 @@ class Cron_Payment extends MY_Controller {
                 }    
             }
         }
+    }
+
+    public function sms_campaigns(){
+        $this->load->library('RingCentral');
+        $this->load->model('SmsBlast_model');
+
+        $smsBlast = $this->SmsBlast_model->getAllIsPaidAndNotSent();
+        foreach($smsBlast as $sms){
+
+        }
+    }
+
+    public function test_sms(){
+        $this->load->library('RingCentral');
+        $message  = 'Sample Text Message';
+        $platform = $this->ringcentral->getPlatform();
+        $platform->login('+18504780530', '', 'Ringmybell2021');
+        $apiResponse = $platform->post('/account/~/extension/~/sms', array(
+            'from' => array('phoneNumber' => '+18504780530'),
+            'to' => array(
+                array('phoneNumber' => '+639179082622'),
+            ),
+            'text' => $message,
+        ));
+        echo "<pre>";
+        print_r($apiResponse);
+        exit;
+    }
+
+    public function customer_recurring_subscription(){
+        include APPPATH . 'libraries/Converge/src/Converge.php';
+        $this->load->model('General_model', 'general');
+        $date = date("M/d/Y");
+        $get_employee = array(
+            'where' => array(
+                'recurring_start_date <=' => $date,
+                'total_payments < frequency' => '',
+                'credit_card_num !=' => null
+            ),
+            'table' => 'acs_billing',
+            'select' => 'acs_billing.*',
+        );
+        $data = $this->general->get_data_with_param($get_employee);
+
+        $converge = new \wwwroth\Converge\Converge([
+            'merchant_id' => CONVERGE_MERCHANTID,
+            'user_id' => CONVERGE_MERCHANTUSERID,
+            'pin' => CONVERGE_MERCHANTPIN,
+            'demo' => false,
+        ]);
+
+        $total_updated = 0;
+        foreach( $data as $d ){
+            if( $d->transaction_amount > 0 ){
+                $exp_date = str_replace("/", "", $d->credit_card_exp);
+                $createSale = $converge->request('ccsale', [
+                    'ssl_card_number' => $d->credit_card_num,
+                    'ssl_exp_date' => $exp_date,
+                    'ssl_cvv2cvc2' => $d->credit_card_exp_mm_yyyy,
+                    'ssl_first_name' => $d->card_fname,
+                    'ssl_last_name' => $d->card_lname,
+                    'ssl_amount' => $d->transaction_amount,
+                    'ssl_avs_address' => $d->card_address,
+                    'ssl_avs_zip' => $d->zip,
+                ]);
+
+                if( $createSale['success'] == 1 ){
+                    //Update total payments made
+                    $transaction_data = array();
+                    $transaction_data['total_payments'] = $d->total_payments + 1;
+                    $this->general->update_with_key_field($transaction_data, $d->bill_id, 'acs_billing', 'bill_id');
+
+                    //Add to payments table
+                    $transaction_details = array();
+                    $transaction_details['customer_id'] = $d->fk_prof_id;
+                    $transaction_details['subtotal'] = $d->transaction_amount;
+                    $transaction_details['tax'] = 0;
+                    $transaction_details['category'] = $d->transaction_category;
+                    $transaction_details['method'] = 'CC';
+                    $transaction_details['transaction_type'] = 'Recurring';
+                    $transaction_details['frequency'] = $d->frequency;
+                    $transaction_details['notes'] = 'Payment for ' .$d->transaction_category. ' for the month of ' . date("M/Y");
+                    $transaction_details['status'] = 'Approved';
+                    $transaction_details['datetime'] = date("m-d-Y h:i A");
+                    $this->general->add_($transaction_details, 'acs_transaction_history');
+
+                    $total_updated++;
+                }
+            }
+            
+        }
+        
+        echo "Total updated " . $total_updated . " record(s)";
+        exit;
+    }
+
+    public function customer_recurring_billing(){
+        include APPPATH . 'libraries/Converge/src/Converge.php';
+        $this->load->model('General_model', 'general');
+        $date = date("M/d/Y");
+        $get_employee = array(
+            'where' => array(
+                'recurring_start_date <=' => $date,
+                'total_payments < frequency' => '',
+                'credit_card_num !=' => null
+            ),
+            'table' => 'acs_billing',
+            'select' => 'acs_billing.*',
+        );
+        $data = $this->general->get_data_with_param($get_employee);
+
+        $converge = new \wwwroth\Converge\Converge([
+            'merchant_id' => CONVERGE_MERCHANTID,
+            'user_id' => CONVERGE_MERCHANTUSERID,
+            'pin' => CONVERGE_MERCHANTPIN,
+            'demo' => false,
+        ]);
+
+        $total_updated = 0;
+        foreach( $data as $d ){
+            if( $d->transaction_amount > 0 ){
+                $exp_date = str_replace("/", "", $d->credit_card_exp);
+                $createSale = $converge->request('ccsale', [
+                    'ssl_card_number' => $d->credit_card_num,
+                    'ssl_exp_date' => $exp_date,
+                    'ssl_cvv2cvc2' => $d->credit_card_exp_mm_yyyy,
+                    'ssl_first_name' => $d->card_fname,
+                    'ssl_last_name' => $d->card_lname,
+                    'ssl_amount' => $d->transaction_amount,
+                    'ssl_avs_address' => $d->card_address,
+                    'ssl_avs_zip' => $d->zip,
+                ]);
+
+                if( $createSale['success'] == 1 ){
+                    //Update total payments made
+                    $transaction_data = array();
+                    $transaction_data['total_payments'] = $d->total_payments + 1;
+                    $this->general->update_with_key_field($transaction_data, $d->bill_id, 'acs_billing', 'bill_id');
+
+                    //Add to payments table
+                    $transaction_details = array();
+                    $transaction_details['customer_id'] = $d->fk_prof_id;
+                    $transaction_details['subtotal'] = $d->transaction_amount;
+                    $transaction_details['tax'] = 0;
+                    $transaction_details['category'] = $d->transaction_category;
+                    $transaction_details['method'] = 'CC';
+                    $transaction_details['transaction_type'] = 'Recurring';
+                    $transaction_details['frequency'] = $d->frequency;
+                    $transaction_details['notes'] = 'Payment for ' .$d->transaction_category. ' for the month of ' . date("M/Y");
+                    $transaction_details['status'] = 'Approved';
+                    $transaction_details['datetime'] = date("m-d-Y h:i A");
+                    $this->general->add_($transaction_details, 'acs_transaction_history');
+
+                    $total_updated++;
+                }
+            }
+            
+        }
+        
+        echo "Total updated " . $total_updated . " record(s)";
+        exit;
     }
 }
 

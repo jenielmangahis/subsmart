@@ -1,7 +1,6 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <?php include viewPath('includes/header'); ?>
-<script src="https://js.stripe.com/v3/"></script>
 <style>
 .page-title {
   font-family: Sarabun, sans-serif !important;

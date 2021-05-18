@@ -205,11 +205,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                               </div>
                                           </div>
                                       </div>
-                                  </div><!-- 
+                                  </div>
                                   <hr>
                                   <div class="margin-bottom">
-                                      <span class="bold margin-right">Total: $<?= number_format($grand_total, 2); ?></span>
-                                  </div> -->
+                                      <span class="bold margin-right" style="font-size: 19px;">Total: $<?= number_format($grand_total, 2); ?></span>
+                                  </div>
                           </div>
                         </div>
                           <div class="row margin-top" style="bottom: 55px;">
