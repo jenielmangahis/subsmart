@@ -291,6 +291,11 @@ border: none;
     {
         font-size:12px;
     }
+
+    .sigWrapper
+    {
+        overflow: hidden; 
+    }
 }
    </style>
     <!-- page wrapper start -->
@@ -341,6 +346,13 @@ border: none;
                                 <input type="hidden" id="current_date" value="<?php echo @date('m-d-Y'); ?>">
 
                                 <input type="hidden" id="content_input" class="form-control" name="header" value="<?php echo $headers->content; ?>">
+                                <input type="hidden" name="wo_id" value="<?php 
+                                foreach($ids as $id)
+                                {
+                                    $add = $id->id + 1;
+                                    echo $add;
+                                }
+                                ?>">
                             </div>
                             <!-- ====== CUSTOMER ====== -->
 							 <div class="row" id="group_area">
@@ -1488,41 +1500,46 @@ border: none;
                                                         <th width="100px">Quantity</th>
                                                         <!-- <th>LOCATION</th> -->
                                                         <th width="140px">COST</th>
-                                                        <th width="100px">Discount</th>
-                                                        <th>Tax(%)</th>
-                                                        <th>Total</th>
+                                                        <th class="hidden_mobile_view" width="100px">Discount</th>
+                                                        <th class="hidden_mobile_view">Tax(%)</th>
+                                                        <th class="hidden_mobile_view">Total</th>
                                                     </tr>
                                                     </thead>
                                                     <tbody id="jobs_items_table_body">
                                                     <tr>
-                                                        <td><input type="text" class="form-control getItems"
-                                                                   onKeyup="getItems(this)" name="item[]">
-                                                            <ul class="suggestions"></ul>
-                                                        </td>
-                                                        <td><select name="item_type[]" class="form-control">
-                                                                <option value="Product">Product</option>
-                                                                <option value="Service">Service</option>
-                                                                <option value="QSP">QSP</option>
-                                                            </select></td>
-                                                        <td><input type="text" class="form-control quantity"
-                                                                   name="quantity[]"
-                                                                   data-counter="0" id="quantity_0" value="1"></td>
-                                                        <!-- <td><input type="text" class="form-control" name="location[]"> </td> -->
-                                                        <td><input type="number" class="form-control price"
-                                                                   name="price[]"
-                                                                   data-counter="0" id="price_0" min="0" value="0"></td>
-                                                        <td><input type="number" class="form-control discount"
-                                                                   name="discount[]"
-                                                                   data-counter="0" id="discount_0" min="0" value="0"
-                                                                   readonly>
-                                                        </td>
-                                                        <!-- <td><span id="span_tax_0">0.00 (7.5%)</span></td> -->
-                                                        <td style="width:85px;"><input type="text" class="form-control tax_change" name="tax[]"
+                                            <td width="30%">
+                                                <input type="text" class="form-control getItems"
+                                                       onKeyup="getItems(this)" name="items[]">
+                                                <ul class="suggestions"></ul>
+                                                <div class="show_mobile_view"><span class="getItems_hidden"></span></div>
+                                            </td>
+                                            <td width="20%">
+                                            <div class="dropdown-wrapper">
+                                                <select name="item_type[]" id="item_typeid" class="form-control">
+                                                    <option value="product">Product</option>
+                                                    <option value="material">Material</option>
+                                                    <option value="service">Service</option>
+                                                    <option value="fee">Fee</option>
+                                                </select>
+                                            </div>
+
+                                            <!-- <div class="show_mobile_view" style="color:green;"><span>Product</span></div> -->
+                                                </td>
+                                            <td width="10%"><input type="number" class="form-control quantity hidden_mobile_view" name="quantity[]"
+                                                       data-counter="0" id="quantity_0" value="1"> <div class="show_mobile_view"><span>1</span><input type="hidden" class="form-control quantity" name="quantity[]"
+                                                       data-counter="0" id="quantity_0" value="1"></div> </td>
+                                            <td width="10%"><input type="number" class="form-control price hidden_mobile_view" name="price[]"
+                                                       data-counter="0" id="price_0" min="0" value="0"> <input type="hidden" class="priceqty" id="priceqty_0"> <div class="show_mobile_view"><span class="price">0</span><input type="hidden" class="form-control price" name="price[]" data-counter="0" id="priceM_0" min="0" value="0"></div><input id="priceM_qty0" value=""  type="hidden" name="price_qty[]" class="form-control hidden_mobile_view price_qty"></td>
+                                            <td width="10%" class="hidden_mobile_view"><input type="number" class="form-control discount" name="discount[]"
+                                                       data-counter="0" id="discount_0" min="0" value="0" ></td>
+                                            <td width="10%" class="hidden_mobile_view"><input type="text" class="form-control tax_change" name="tax[]"
                                                        data-counter="0" id="tax1_0" min="0" value="0">
                                                        <!-- <span id="span_tax_0">0.0</span> -->
                                                        </td>
-                                                        <td><span id="span_total_0">0.00</span></td>
-                                                    </tr>
+                                            <td width="10%" class="hidden_mobile_view"><input type="hidden" class="form-control " name="total[]"
+                                                       data-counter="0" id="item_total_0" min="0" value="0">
+                                                       $<span id="span_total_0">0.00</span></td>
+                                        </tr>
                                                     </tbody>
                                                 </table>
                                                 <!-- <a href="#" class="btn btn-primary" id="add_another">Add Items</a> -->
@@ -2018,11 +2035,10 @@ border: none;
                                     </div>
                                 </div>
                             </div>
-                            <div class="row  signature_web" id="group_area">
+                            <div class="row signature_web">
                                 <div class="col-md-4">
                                     <h6>Company Representative Approval</h6>
                                     <div class="sigPad" id="smoothed1a" style="width:100%;border:solid gray 1px;background-color:#00b300;">
-                                    <!-- <a href="#" style="float:right;margin-right:10px;" class="smoothed1a_pencil" id="smoothed1a_pencil"><i class="fa fa-pencil" aria-hidden="true"></i></a> -->
                                         <ul class="sigNav" style="">
                                             <li class="drawIt"><a href="#draw-it">Draw It</a></li>
                                             <li class="clearButton"><a href="#clear">Clear</a></li>
@@ -2030,13 +2046,12 @@ border: none;
                                         <ul class="edit">
                                             <li class="smoothed1a_pencil pointer"><a onclick="myFunction()" style="float:right;margin-right:10px;" class="smoothed1a_pencil"><i class="fa fa-pencil" aria-hidden="true"></i></a></li>
                                         </ul>
-                                        <div class="sig sigWrapper" id="smoothed1a_pencil" style="height:auto;pointer-events: none;">
+                                        <div class="sig sigWrapper sigWrapper1" id="smoothed1a_pencil" style="height:auto;pointer-events: none;">
                                             <div class="typed"></div>
-                                            <!-- <canvas class="pad" id="company_representative_approval_signature1a"  style="width:100%;"></canvas> -->
                                             <div id="signature-pad">
                                             <canvas style="border:1px solid #000" id="sign"></canvas>
                                             </div>
-                                            <input type="hidden" name="output-1" class="output">
+                                            <input type="hidden" name="output-2" class="output output1">
                                         </div>
                                     </div>
                                     <input type="hidden" id="saveCompanySignatureDB1a"
@@ -2046,13 +2061,15 @@ border: none;
                                     <label for="comp_rep_approval">Printed Name</label>
                                     <input type="text6" class="form-control mb-3"
                                            name="company_representative_printed_name"
-                                           id="comp_rep_approval" placeholder=""/>
+                                           id="company_representative_printed_name" placeholder=""/>
+                                           <!-- <canvas id="canvas_web" style="border: 1px solid #ddd;"></canvas>
+                                            <input type="text" class="form-control mb-3" name="company_representative_printed_name" id="comp_rep_approval1" placeholder="Printed Name"/> -->
+                                            <input type="hidden" id="saveCompanySignatureDB1aM_web" name="company_representative_approval_signature1aM_web">
 
                                 </div>
                                 <div class="col-md-4">
                                     <h6>Primary Account Holder</h6>
                                     <div class="sigPad" id="smoothed2a" style="width:100%;border:solid gray 1px;background-color:#f7b900;">
-                                    <!-- <p style="float:right;margin-right:10px;"><i class="fa fa-pencil" aria-hidden="true"></i></p> -->
                                         <ul class="sigNav">
                                             <li class="drawIt"><a href="#draw-it">Draw It</a></li>
                                             <li class="clearButton"><a href="#clear">Clear</a></li>
@@ -2060,13 +2077,12 @@ border: none;
                                         <ul class="edit">
                                             <li class="smoothed1a_pencil pointer"><a onclick="myFunctiontwo()" style="float:right;margin-right:10px;" class="smoothed1a_pencil"><i class="fa fa-pencil" aria-hidden="true"></i></a></li>
                                         </ul>
-                                        <div class="sig sigWrapper" style="height:auto;pointer-events: none;">
+                                        <div class="sig sigWrapper sigWrapper2" id="smoothed1a_pencil" style="height:auto;pointer-events: none;">
                                             <div class="typed"></div>
-                                            <!-- <canvas class="pad" id="primary_account_holder_signature2a" style="width:100%;"></canvas> -->
                                             <div id="signature-pad2">
                                             <canvas style="border:1px solid #000" id="sign2"></canvas>
                                             </div>
-                                            <input type="hidden" name="output-2" class="output">
+                                            <input type="hidden" name="output-2" class="output output2">
                                         </div>
                                     </div>
                                     <input type="hidden" id="savePrimaryAccountSignatureDB2a"
@@ -2075,13 +2091,14 @@ border: none;
 
                                     <label for="comp_rep_approval">Printed Name</label>
                                     <input type="text6" class="form-control mb-3" name="primary_account_holder_name"
-                                           id="comp_rep_approval" placeholder=""/>
+                                           id="primary_account_holder_name" placeholder=""/>
+                                    
+                                           <input type="hidden" id="saveCompanySignatureDB1aM_web2" name="primary_representative_approval_signature1aM_web">
 
                                 </div>
                                 <div class="col-md-4">
                                     <h6>Secondary Account Holder</h6>
                                     <div class="sigPad" id="smoothed3a" style="width:100%;border:solid gray 1px;background-color:#f75c1e;">
-                                    <!-- <p style="float:right;margin-right:10px;"><i class="fa fa-pencil" aria-hidden="true"></i></p> -->
                                         <ul class="sigNav">
                                             <li class="drawIt"><a href="#draw-it">Draw It</a></li>
                                             <li class="clearButton"><a href="#clear">Clear</a></li>
@@ -2089,13 +2106,12 @@ border: none;
                                         <ul class="edit">
                                             <li class="smoothed1a_pencil pointer"><a onclick="myFunctionthree()" style="float:right;margin-right:10px;" class="smoothed1a_pencil"><i class="fa fa-pencil" aria-hidden="true"></i></a></li>
                                         </ul>
-                                        <div class="sig sigWrapper" style="height:auto;pointer-events: none;">
+                                        <div class="sig sigWrapper sigWrapper3" id="smoothed1a_pencil" style="height:auto;pointer-events: none;">
                                             <div class="typed"></div>
-                                            <!-- <canvas class="pad" id="secondary_account_holder_signature3a" style="width:100%;"></canvas> -->
                                             <div id="signature-pad3">
                                             <canvas style="border:1px solid #000" id="sign3"></canvas>
                                             </div>
-                                            <input type="hidden" name="output-3" class="output">
+                                            <input type="hidden" name="output-2" class="output output3">
                                         </div>
                                     </div>
                                     <input type="hidden" id="saveSecondaryAccountSignatureDB3a"
@@ -2104,10 +2120,13 @@ border: none;
 
                                     <label for="comp_rep_approval">Printed Name</label>
                                     <input type="text6" class="form-control mb-3" name="secondery_account_holder_name"
-                                           id="comp_rep_approval" placeholder=""/>
+                                           id="secondery_account_holder_name" placeholder=""/>
+
+                                           <input type="hidden" id="saveCompanySignatureDB1aM_web3" name="secondary_representative_approval_signature1aM_web">
 
                                 </div>
                             </div>
+
 
                             <div class="signature_mobile">
                                     <br><br>
@@ -2375,19 +2394,22 @@ border: none;
                                         <?php foreach($items as $item){ // print_r($item); ?>
                                             <tr>
                                                 <td><?php echo $item->title; ?></td>
-                                                <td>
-                                                <?php if($item->rebate == 1){ ?>
-                                                    <label class="switch">
-                                                    <input type="checkbox" checked>
-                                                    <span class="slider round"></span>
+                                                <td><?php if($item->rebate == 1){ ?>
+                                                    <!-- <label class="switch">
+                                                    <input type="checkbox" id="rebatable_toggle" checked>
+                                                    <span class="slider round"></span> -->
+                                                    <input type="checkbox" class="toggle_checkbox" id="rebatable_toggle" item-id="<?php echo $item->id; ?>"  value="1"  data-toggle="toggle" data-size="xs" checked >
                                                     </label>
                                                 <?php }else{ ?>
-                                                    <label class="switch">
+                                                    <!-- <label class="switch">
                                                     <input type="checkbox">
                                                     <span class="slider round"></span>
-                                                    </label>
-                                                <?php  } ?>
-                                                    </td>
+                                                    </label> -->
+
+                                                    <!-- <input type="checkbox" data-toggle="toggle" data-size="xs"> -->
+                                                    <input type="checkbox" class="toggle_checkbox" id="rebatable_toggle" item-id="<?php echo $item->id; ?>" value="0" data-toggle="toggle" data-size="xs">
+
+                                                <?php  } ?></td>
                                                 <td></td>
                                                 <td><?php echo $item->price; ?></td>
                                                 <td><button id="<?= $item->id; ?>" data-quantity="<?= $item->units; ?>" data-itemname="<?= $item->title; ?>" data-price="<?= $item->price; ?>" type="button" data-dismiss="modal" class="btn btn-sm btn-default select_item">
@@ -2564,7 +2586,7 @@ border: none;
                     </div>
                     <div class="modal-footer">
                         <!-- <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> -->
-                        <button type="button" onClick="submit()" class="btn btn-primary enter_signature">Save changes</button>
+                        <button type="button" onClick="submit()" class="btn btn-primary enter_signature" id="enter_signature">Save changes</button>
                         <!-- <input type="submit" value="save" id="btnSaveSign"> -->
                     </div>
                     <?php //echo form_close(); ?>
@@ -2728,7 +2750,44 @@ jQuery(document).ready(function () {
   signaturePad3 = new SignaturePad(signaturePadCanvas3);
 });
 
+$(document).on('click touchstart','#sign',function(){
+    // alert('test');
+    var canvas_web = document.getElementById("sign");    
+    var dataURL = canvas_web.toDataURL("image/png");
+    $("#saveCompanySignatureDB1aM_web").val(dataURL);
+});
+
+$(document).on('click touchstart','#sign2',function(){
+    // alert('test');
+    var canvas_web2 = document.getElementById("sign2");    
+    var dataURL = canvas_web2.toDataURL("image/png");
+    $("#saveCompanySignatureDB1aM_web2").val(dataURL);
+});
+
+$(document).on('click touchstart','#sign3',function(){
+    // alert('test');
+    var canvas_web3 = document.getElementById("sign3");    
+    var dataURL = canvas_web3.toDataURL("image/png");
+    $("#saveCompanySignatureDB1aM_web3").val(dataURL);
+});
+
+// var btn = document.getElementById('enter_signature');
+// btn.onclick = function () {
+//     document.getElementById('smoothed1a_pencil').remove();
+//     this.remove();
+// };
+
 function submit() {
+    
+    // document.getElementById('smoothed1a_pencil').remove();
+    // this.remove();
+
+    // $("#smoothed1a").remove();
+    // $("#smoothed2a").remove();
+    // $("#smoothed3a").remove();
+
+    // $(".signature_web").remove();
+
   if (signaturePad.isEmpty() || signaturePad2.isEmpty() || signaturePad3.isEmpty()) {
     // console.log("Empty!");
     alert('Please check, you must sign all tab.')
@@ -2770,6 +2829,20 @@ function submit() {
 
         $('.signatureArea').html(input_conf);
 
+        // $(".sigWrapper").remove();
+
+        $("#saveCompanySignatureDB1aM_web").val(dataURL);
+        $("#saveCompanySignatureDB1aM_web2").val(dataURL2);
+        $("#saveCompanySignatureDB1aM_web3").val(dataURL3);
+
+        $(".output1").val(dataURL);
+        $(".output2").val(dataURL2);
+        $(".output3").val(dataURL3);
+
+        $("#company_representative_printed_name").val(input1);
+        $("#primary_account_holder_name").val(input2);
+        $("#secondery_account_holder_name").val(input3);
+
         $('#signature_mobile').modal('toggle');
         // if (confirm('Some message')) {
         //     alert('Thanks for confirming');
@@ -2791,6 +2864,9 @@ $(document).ready(function(){
         $(document).on("click", ".testing", function () {
             $('.getItems').hide();
             $('#item_typeid').removeClass('form-control');
+            $(".sigWrapper").remove();
+            // $(".output2").remove();
+            // $(".output3").remove();
         });
         $(document).on("click", ".select_item", function () {
             $('.getItems').hide();

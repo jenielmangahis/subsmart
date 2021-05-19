@@ -15,6 +15,7 @@ function TemplateCreate() {
   const $addRecipientButton = $("#add-recipient-button");
 
   async function createFilePreview(event, file) {
+    await sleep(1000);
     const fileId = Date.now();
     const fileExtension = file.name.split(".").pop().toLowerCase();
 
@@ -34,10 +35,31 @@ function TemplateCreate() {
 
     const html = `
       <div class="esignBuilder__docPreview h-100" data-id="${fileId}">
+        <div class="esignBuilder__docPreviewHover"></div>
+
         <canvas></canvas>
         <div class="esignBuilder__docInfo">
-            <h5 class="esignBuilder__docTitle"></h5>
-            <span class="esignBuilder__docPageCount"></span>
+            <div class="esignBuilder__docInfoText">
+              <h5 class="esignBuilder__docTitle"></h5>
+              <span class="esignBuilder__docPageCount"></span>
+            </div>
+
+            <div class="dropdown">
+              <button
+                class="btn dropdown-toggle esignBuilder__docInfoActions"
+                type="button"
+                data-toggle="dropdown"
+                aria-haspopup="true"
+                aria-expanded="false"
+              >
+                <i class="fa fa-ellipsis-v"></i>
+              </button>
+
+              <div class="dropdown-menu dropdown-menu-right">
+                <a class="dropdown-item" data-action="preview" href="#">Preview</a>
+                <a class="dropdown-item" data-action="delete" href="#">Delete</a>
+              </div>
+            </div>
         </div>
 
         <div class="esignBuilder__uploadProgress" width="100%">
@@ -99,7 +121,24 @@ function TemplateCreate() {
     $progressCheck.addClass("esignBuilder__uploadProgressCheck--completed");
 
     files.push({ file, documentUrl, id: fileId });
-    $docPreview.on("click", showDocument);
+    $docPreview
+      .find(".esignBuilder__docPreviewHover")
+      .on("click", showDocument);
+
+    const actions = {
+      preview: showDocument,
+      delete: function (event) {
+        files = files.filter((f) => f.id != fileId);
+        const $parent = $(event.target).closest(".esignBuilder__docPreview");
+        $parent.remove();
+      },
+    };
+
+    $docPreview.find(".dropdown-item").on("click", function (event) {
+      event.preventDefault();
+      const action = $(this).attr("data-action");
+      actions[action](event);
+    });
 
     const $target = $(event.target);
     $target.val("");

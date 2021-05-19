@@ -488,7 +488,7 @@ class Trac360 extends MY_Controller
         $html='';
         if (!empty($upcomingJobs)) {
             foreach ($upcomingJobs as $jb) {
-                $html .= '<div class="row no-margin jobs-list-item" data-address="'.$jb->mail_add .' '. $jb->cust_city.' '.$jb->cust_state.' '.$jb->cust_zip_code.'" data-job-title="'.$jb->job_number . ' : ' . $jb->job_type. ' - ' . $jb->tags_name.'">
+                $html .= '<div class="row no-margin jobs-list-item" data-address="'.$jb->mail_add .' '. $jb->cust_city.' '.$jb->cust_state.' '.$jb->cust_zip_code.'" data-job-title="'.$jb->job_number . ' : ' . $jb->job_type. ' - ' . $jb->tags_name.'" data-office-address = "'.$jb->office_address.', '.$jb->office_city.', '.$jb->office_state.', '.$jb->office_postal_code.'" data-business-name="'.$jb->business_name.'">
               <div class="col-md-4 job-sched text-center">
                 <a href="#">
                   <time style="font-size: 10px; text-align: left;" datetime="2021-02-09" class="icon-calendar-live">
@@ -515,12 +515,12 @@ class Trac360 extends MY_Controller
                   </b><br>';
                 
                 $html.='<small class="text-muted">'.$jb->mail_add .' '. $jb->cust_city.' '.$jb->cust_state.' '.$jb->cust_zip_code.'</small><br>
-                  <i> <small class="text-muted">'.$jb->job_description.'</small></i><br>';
+                    <i> <small class="text-muted">'.$jb->job_description.'</small></i><br>';
                 
                 $html .='<small>Amount : $ '.$jb->amount!="" ? number_format((float)$jb->amount, 2, '.', ',') : '0.00' .'</small>
                   <br>';
                 
-                $html .='<a href="<?=$jb->link; ?>" target=""><small
+                $html .='<a  target=""><small
                       style="color: darkred;">'.$jb->link.'</small></a>';
                 
                 $html .='</div>

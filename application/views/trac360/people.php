@@ -63,8 +63,15 @@ function get_differenct_of_dates($date_start, $date_end)
           </div>
         </div>
         <div class="col-md-9  trac360_main_sections jobs-list-section" style="background-color: #fff; display:none;">
+          <div id="single-job-view-directionsRenderer-panel" class="overflow-auto close">
+            <div class="close-btn"><i class="fa fa-chevron-left" aria-hidden="true"></i></div>
+            <div id="job-item-selected-view" class="row no-margin">
+              sapmle
+            </div>
+            <div id="single-job-view-directionsRenderer-panel-view"></div>
+          </div>
           <div class="employee-name">
-            <p><span class="name">Ample sample </span> <span class="back-btn"><i class="fa fa-chevron-left"
+            <p><span class="name">Ample sample </span> <span class="back-btn"><i class="fa fa-times"
                   aria-hidden="true"></i> </span> </p>
           </div>
           <div class="loader" style="display: none;">
@@ -212,6 +219,7 @@ function get_differenct_of_dates($date_start, $date_end)
         <h1 class="page-title">Initializing...</h1>
       </div>
       <div id="map-holder" style="display:none;">
+        <div class="map-error-message">This is a danger alert—check it out!</div>
         <div id="jobs-map" style="display:none;"></div>
         <div id="map"></div>
       </div>
@@ -230,14 +238,18 @@ function get_differenct_of_dates($date_start, $date_end)
   var company_id = <?= $company_id ?> ;
 
   var map;
-  var jobs_map;
-  var jobs_map_marker;
   var markers = [];
   var current_user_latitude;
   var current_user_longitude;
   var popup;
   var current_user_profile_img = "<?= $current_user_profile_img ?>";
   var current_user_name = "<?= $current_user_name ?>";
+  var infoWindow;
+
+  var jobs_map;
+  var jobs_map_marker = [];
+  var directionsService;
+  var directionsRenderer;
 
   current_user_getLocation();
 

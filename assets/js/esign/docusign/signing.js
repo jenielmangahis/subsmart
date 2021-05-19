@@ -52,54 +52,26 @@ function Signing(hash) {
     return $element;
   }
 
-  async function renderPDF(file) {
-    const { fields, recipient } = data;
-    const filepath = file.path.replace(/^\/|\/$/g, "");
+  function getRenderField({ field, recipient }) {
+    const { field_name, coordinates, id: fieldId, value: fieldValue } = field;
+    let text = recipient[field_name.toLowerCase()];
+    const { pageTop: top, left } = JSON.parse(coordinates);
 
-    const documentUrl = `${prefixURL}/${filepath}`;
-    const document = await PDFJS.getDocument({ url: documentUrl });
+    if (field_name === "Date Signed") {
+      return moment().format("MM/DD/YYYY");
+    }
 
-    const $container = createElementFromHTML(
-      `<div class="signing__documentPDF" data-file-id="${file.id}"></div>`
-    );
+    if (["Approve", "Decline"].includes(field_name)) {
+      const html = `<button class="btn btn-secondary btn-sm docusignField">${field_name}</button>`;
+      const $element = createElementFromHTML(html);
+      $element.css({ top, left, position: "absolute" });
+      return $element;
+    }
 
-    for (let index = 1; index <= document.numPages; index++) {
-      const currentFields = fields.filter(
-        ({ doc_page, docfile_document_id }) => {
-          return doc_page == index && docfile_document_id == file.id;
-        }
-      );
+    if (field_name === "Attachment") {
+      const { value } = fieldValue || { value: null };
 
-      const params = { page: index, document };
-      const $page = await getPage(params);
-      $container.append($page);
-
-      const canvas = $page.find("canvas").get(0);
-      const context = canvas.getContext("2d");
-
-      const $fields = currentFields.map((field, fieldIndex) => {
-        const { field_name, coordinates, id: fieldId, value: fieldValue } = field; // prettier-ignore
-        let text = recipient[field_name.toLowerCase()];
-        const { pageTop: top, left } = JSON.parse(coordinates);
-
-        if (field_name === "Date Signed") {
-          text = moment().format("MM/DD/YYYY");
-          const html = `<span class="d-none" data-field-type="dateSigned" data-field-id="${fieldId}">${text}</span>`;
-          const $element = createElementFromHTML(html);
-          $page.append($element);
-        }
-
-        if (["Approve", "Decline"].includes(field_name)) {
-          const html = `<button class="btn btn-secondary btn-sm docusignField">${field_name}</button>`;
-          const $element = createElementFromHTML(html);
-          $element.css({ top, left, position: "absolute" });
-          return $element;
-        }
-
-        if (field_name === "Attachment") {
-          const { value } = fieldValue || { value: null };
-
-          const html = `
+      const html = `
             <div class="signing__fieldAttachment docusignField" title="Attachment" data-field-type="attachment">
               <input type="file" />
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
@@ -108,48 +80,48 @@ function Signing(hash) {
             </div>
           `;
 
-          const $element = createElementFromHTML(html);
-          $element.css({ top, left, position: "absolute" });
+      const $element = createElementFromHTML(html);
+      $element.css({ top, left, position: "absolute" });
 
-          if (value) {
-            $element.find("input").addClass("d-none");
-            $element.attr("data-value", `${prefixURL}/uploads/docusign/${value}`); // prettier-ignore
-          }
+      if (value) {
+        $element.find("input").addClass("d-none");
+        $element.attr("data-value", `${prefixURL}/uploads/docusign/${value}`); // prettier-ignore
+      }
 
-          const $input = $element.find("input");
-          $input.on("change", async function () {
-            const [file] = this.files;
-            const ONE_MB = 1048576;
+      const $input = $element.find("input");
+      $input.on("change", async function () {
+        const [file] = this.files;
+        const ONE_MB = 1048576;
 
-            if (file.size > ONE_MB * 8) {
-              alert("Maximum file size is less than 8MB");
-              return;
-            }
-
-            const { data } = await storeFieldValue({
-              id: fieldId,
-              value: this.files[0],
-            });
-
-            $(this).addClass("d-none");
-            $element.attr("data-value", `${prefixURL}/uploads/docusign/${data.value}`); // prettier-ignore
-            $element.attr("title", $(this).val());
-          });
-
-          $element.on("click", function () {
-            const filepath = $(this).attr("data-value");
-            if (filepath) {
-              window.open(filepath, "_blank").focus();
-            }
-          });
-
-          return $element;
+        if (file.size > ONE_MB * 8) {
+          alert("Maximum file size is less than 8MB");
+          return;
         }
 
-        if (field_name === "Signature") {
-          const { value } = fieldValue || { value: null };
+        const { data } = await storeFieldValue({
+          id: fieldId,
+          value: this.files[0],
+        });
 
-          let html = `
+        $(this).addClass("d-none");
+        $element.attr("data-value", `${prefixURL}/uploads/docusign/${data.value}`); // prettier-ignore
+        $element.attr("title", $(this).val());
+      });
+
+      $element.on("click", function () {
+        const filepath = $(this).attr("data-value");
+        if (filepath) {
+          window.open(filepath, "_blank").focus();
+        }
+      });
+
+      return $element;
+    }
+
+    if (field_name === "Signature") {
+      const { value } = fieldValue || { value: null };
+
+      let html = `
             <div class="signing__fieldSignature docusignField" title="Signature" data-field-type="signature" id="signature${fieldId}">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512">
                 <path fill="currentColor" d="M623.2 192c-51.8 3.5-125.7 54.7-163.1 71.5-29.1 13.1-54.2 24.4-76.1 24.4-22.6 0-26-16.2-21.3-51.9 1.1-8 11.7-79.2-42.7-76.1-25.1 1.5-64.3 24.8-169.5 126L192 182.2c30.4-75.9-53.2-151.5-129.7-102.8L7.4 116.3C0 121-2.2 130.9 2.5 138.4l17.2 27c4.7 7.5 14.6 9.7 22.1 4.9l58-38.9c18.4-11.7 40.7 7.2 32.7 27.1L34.3 404.1C27.5 421 37 448 64 448c8.3 0 16.5-3.2 22.6-9.4 42.2-42.2 154.7-150.7 211.2-195.8-2.2 28.5-2.1 58.9 20.6 83.8 15.3 16.8 37.3 25.3 65.5 25.3 35.6 0 68-14.6 102.3-30 33-14.8 99-62.6 138.4-65.8 8.5-.7 15.2-7.3 15.2-15.8v-32.1c.2-9.1-7.5-16.8-16.6-16.2z"/>
@@ -157,51 +129,52 @@ function Signing(hash) {
             </div>
           `;
 
-          const $element = createElementFromHTML(html);
+      const $element = createElementFromHTML(html);
 
-          if (value) {
-            const valueHtml = `
+      if (value) {
+        const valueHtml = `
               <div class="fillAndSign__signatureContainer">
                 <img class="fillAndSign__signatureDraw" src="${value}"/>
               </div>
             `;
 
-            $element.html(createElementFromHTML(valueHtml));
-          }
+        $element.html(createElementFromHTML(valueHtml));
+      }
 
-          $element.css({ top, left, position: "absolute" });
-          $element.on("click", () => {
-            signaturePad.clear();
-            $(".signing__signatureInput").val("");
+      $element.css({ top, left, position: "absolute" });
 
-            $signatureModal.attr("data-field-id", fieldId);
-            $signatureModal.modal("show");
-          });
-          return $element;
-        }
+      $element.on("click", () => {
+        signaturePad.clear();
+        $(".signing__signatureInput").val("");
 
-        if (["Checkbox", "Radio"].includes(field_name)) {
-          const { subCheckbox = [] } = JSON.parse(field.specs) || {};
+        $signatureModal.attr("data-field-id", fieldId);
+        $signatureModal.modal("show");
+      });
+      return $element;
+    }
 
-          let { value } = fieldValue || {};
-          value = value ? JSON.parse(value) : {};
-          const { isChecked = false } = value;
+    if (["Checkbox", "Radio"].includes(field_name)) {
+      const { subCheckbox = [] } = JSON.parse(field.specs) || {};
 
-          const getSubCheckboxValues = () => {
-            return value.subCheckbox ?? [];
-          };
+      let { value } = fieldValue || {};
+      value = value ? JSON.parse(value) : {};
+      const { isChecked = false } = value;
 
-          const inputType = field_name.toLowerCase();
-          const baseClassName =
-            field_name === "Checkbox"
-              ? "docusignField__checkbox"
-              : "docusignField__radio";
+      const getSubCheckboxValues = () => {
+        return value.subCheckbox ?? [];
+      };
 
-          const html = `<div class="docusignField ${baseClassName}"></div>`;
-          const $element = createElementFromHTML(html);
-          $element.css({ top, left, position: "absolute" });
+      const inputType = field_name.toLowerCase();
+      const baseClassName =
+        field_name === "Checkbox"
+          ? "docusignField__checkbox"
+          : "docusignField__radio";
 
-          $element.append(`
+      const html = `<div class="docusignField ${baseClassName}"></div>`;
+      const $element = createElementFromHTML(html);
+      $element.css({ top, left, position: "absolute" });
+
+      $element.append(`
             <div class="form-check">
               <span class="form-check-indicator">x</span>
               <input
@@ -217,15 +190,15 @@ function Signing(hash) {
             </div>
           `);
 
-          if (subCheckbox.length) {
-            $element.append(
-              subCheckbox.map((option) => {
-                const { id, top = 0, left = 0 } = option;
-                const _value = getSubCheckboxValues().find((s) => s.id === id);
-                const isChecked = _value ? _value.isChecked : false;
+      if (subCheckbox.length) {
+        $element.append(
+          subCheckbox.map((option) => {
+            const { id, top = 0, left = 0 } = option;
+            const _value = getSubCheckboxValues().find((s) => s.id === id);
+            const isChecked = _value ? _value.isChecked : false;
 
-                // prettier-ignore
-                const $currElement = createElementFromHTML( `
+            // prettier-ignore
+            const $currElement = createElementFromHTML( `
                   <div class="form-check">
                     <span class="form-check-indicator">x</span>
                     <input class="form-check-input" type="${inputType}" id="${id}" ${isChecked ? "checked" : ""}>
@@ -233,118 +206,118 @@ function Signing(hash) {
                   </div>
                 `);
 
-                $currElement.css({ top, left, position: "absolute" });
-                return $currElement;
-              })
-            );
-          }
+            $currElement.css({ top, left, position: "absolute" });
+            return $currElement;
+          })
+        );
+      }
 
-          $element.find(`input:${inputType}`).on("change", async function () {
-            const $this = $(this);
-            const id = $this.attr("id");
-            const _isChecked = $this.is(":checked");
+      $element.find(`input:${inputType}`).on("change", async function () {
+        const $this = $(this);
+        const id = $this.attr("id");
+        const _isChecked = $this.is(":checked");
 
-            if (id === field.unique_key) {
-              const { data } = await storeFieldValue({
-                id: fieldId,
-                value: JSON.stringify({
-                  subCheckbox: getSubCheckboxValues(),
-                  isChecked: _isChecked,
-                }),
-              });
-
-              value = JSON.parse(data.value);
-            } else {
-              const subCheckboxValues = getSubCheckboxValues();
-              let newSubCheckbox = [];
-
-              if (subCheckboxValues.find((s) => s.id === id)) {
-                newSubCheckbox = subCheckboxValues.map((s) => {
-                  return s.id !== id ? s : { ...s, isChecked: _isChecked };
-                });
-              } else {
-                newSubCheckbox = [
-                  ...subCheckboxValues,
-                  { id, isChecked: _isChecked },
-                ];
-              }
-
-              const { data } = await storeFieldValue({
-                id: fieldId,
-                value: JSON.stringify({
-                  subCheckbox: newSubCheckbox,
-                  isChecked: Boolean(value.isChecked),
-                }),
-              });
-
-              value = JSON.parse(data.value);
-            }
+        if (id === field.unique_key) {
+          const { data } = await storeFieldValue({
+            id: fieldId,
+            value: JSON.stringify({
+              subCheckbox: getSubCheckboxValues(),
+              isChecked: _isChecked,
+            }),
           });
 
-          return $element;
+          value = JSON.parse(data.value);
+        } else {
+          const subCheckboxValues = getSubCheckboxValues();
+          let newSubCheckbox = [];
+
+          if (subCheckboxValues.find((s) => s.id === id)) {
+            newSubCheckbox = subCheckboxValues.map((s) => {
+              return s.id !== id ? s : { ...s, isChecked: _isChecked };
+            });
+          } else {
+            newSubCheckbox = [
+              ...subCheckboxValues,
+              { id, isChecked: _isChecked },
+            ];
+          }
+
+          const { data } = await storeFieldValue({
+            id: fieldId,
+            value: JSON.stringify({
+              subCheckbox: newSubCheckbox,
+              isChecked: Boolean(value.isChecked),
+            }),
+          });
+
+          value = JSON.parse(data.value);
         }
+      });
 
-        if (field_name === "Dropdown") {
-          const { options = [], selected: defaultValue } = JSON.parse(field.specs) || {}; // prettier-ignore
-          const { value: selected } = fieldValue || { value: defaultValue };
+      return $element;
+    }
 
-          const optionsArray = options.map((option) => {
-            const isSelected = selected === option;
-            return `
+    if (field_name === "Dropdown") {
+      const { options = [], selected: defaultValue } = JSON.parse(field.specs) || {}; // prettier-ignore
+      const { value: selected } = fieldValue || { value: defaultValue };
+
+      const optionsArray = options.map((option) => {
+        const isSelected = selected === option;
+        return `
               <option value="${option}" ${isSelected ? "selected" : ""}>
                 ${option}
               </option>
             `;
-          });
+      });
 
-          if (!optionsArray.length) {
-            return "";
-          }
+      if (!optionsArray.length) {
+        return "";
+      }
 
-          const html = `
+      const html = `
             <select class="docusignField">
               ${optionsArray.join("")}
             </select>
           `;
 
-          const $element = createElementFromHTML(html);
-          $element.on("change", function () {
-            storeFieldValue({ value: this.value, id: fieldId });
-          });
+      const $element = createElementFromHTML(html);
+      $element.on("change", function () {
+        storeFieldValue({ value: this.value, id: fieldId });
+      });
 
-          $element.css({ top, left, position: "absolute" });
-          return $element;
-        }
+      $element.css({ top, left, position: "absolute" });
+      return $element;
+    }
 
-        if (field_name === "Formula") {
-          const html = `
+    if (field_name === "Formula") {
+      const html = `
             <div class="docusignField docusignField--formula" style="position: relative; display: flex; align-items: center;">
               <input type="text" data-key="${field.unique_key}" placeholder="${field_name}" readonly />
             </div>
           `;
 
-          const $element = createElementFromHTML(html);
-          $element.css({ top, left, position: "absolute" });
-          return $element;
-        }
+      const $element = createElementFromHTML(html);
+      $element.css({ top, left, position: "absolute" });
+      return $element;
+    }
 
-        if (field_name === "Text" || text === undefined) {
-          let { value } = fieldValue || { value: "" };
-          const { specs: fieldSpecs, unique_key } = field;
-          const specs = fieldSpecs ? JSON.parse(fieldSpecs) : {};
-          const { width, is_required = false, is_read_only = false } = specs;
-          const isRequired = is_required.toLocaleString() === "true";
-          const isReadOnly = is_read_only.toLocaleString() === "true";
+    if (field_name === "Text" || text === undefined) {
+      let { value } = fieldValue || { value: "" };
+      const { specs: fieldSpecs, unique_key } = field;
+      const specs = fieldSpecs ? JSON.parse(fieldSpecs) : {};
+      const { width, is_required = false, is_read_only = false } = specs;
+      const isRequired = is_required.toLocaleString() === "true";
+      const isReadOnly = is_read_only.toLocaleString() === "true";
 
-          const { workorder_recipient: customer } = data;
+      const { workorder_recipient: customer } = data;
 
-          if (customer && specs.name && !value) {
-            value = customer[specs.name] || "";
-          }
+      if (customer && specs.name && !value) {
+        value = customer[specs.name] || "";
+      }
 
-          const placeholder = specs.name || field_name;
+      const placeholder = specs.name || field_name;
 
-          const html = `
+      const html = `
             <div class="docusignField" style="position: relative; display: flex; align-items: center;">
               <input type="text" placeholder="${placeholder}" value="${value}" data-key="${unique_key}" />
               <div class="spinner-border spinner-border-sm d-none" role="status" style="position: absolute; right: 4px;">
@@ -353,62 +326,115 @@ function Signing(hash) {
             </div>
           `;
 
-          const $element = createElementFromHTML(html);
-          const $input = $element.find("input");
+      const $element = createElementFromHTML(html);
+      const $input = $element.find("input");
 
-          // requires assets/js/esign/docusign/input.autoresize.js
-          $input.autoresize({ minWidth: width ? width : 100 });
+      // requires assets/js/esign/docusign/input.autoresize.js
+      $input.autoresize({ minWidth: width ? width : 100 });
 
-          $input.prop("required", isRequired);
-          $input.prop("readonly", isReadOnly);
+      $input.prop("required", isRequired);
+      $input.prop("readonly", isReadOnly);
 
-          if (!isRequired) {
-            $element.addClass("docusignField--notRequired");
-          }
+      if (!isRequired) {
+        $element.addClass("docusignField--notRequired");
+      }
 
-          if (isReadOnly) {
-            $element.addClass("docusignField--readOnly");
-          }
+      if (isReadOnly) {
+        $element.addClass("docusignField--readOnly");
+      }
 
-          if (specs.name) {
-            $input.attr("data-name", specs.name);
-          }
+      if (specs.name) {
+        $input.attr("data-name", specs.name);
+      }
 
-          let typingTimer;
-          let doneTypingInterval = 1000;
-          const doneTyping = async (input) => {
-            const $input = $(input);
-            const $spinner = $input.next(".spinner-border");
+      let typingTimer;
+      let doneTypingInterval = 1000;
+      const doneTyping = async (input) => {
+        const $input = $(input);
+        const $spinner = $input.next(".spinner-border");
 
-            $input.attr("readonly", true);
-            $spinner.removeClass("d-none");
+        $input.attr("readonly", true);
+        $spinner.removeClass("d-none");
 
-            const value = $input.val().trim();
-            await storeFieldValue({ value, id: fieldId });
+        const value = $input.val().trim();
+        await storeFieldValue({ value, id: fieldId });
 
-            $input.attr("readonly", false);
-            $spinner.addClass("d-none");
-          };
+        $input.attr("readonly", false);
+        $spinner.addClass("d-none");
+      };
 
-          $element.find("input").keyup(function () {
-            clearTimeout(typingTimer);
-            if ($(this).val()) {
-              typingTimer = setTimeout(
-                () => doneTyping(this),
-                doneTypingInterval
-              );
-            }
-          });
-
-          $element.css({ top, left, position: "absolute" });
-          return $element;
+      $element.find("input").keyup(function () {
+        clearTimeout(typingTimer);
+        if ($(this).val()) {
+          typingTimer = setTimeout(() => doneTyping(this), doneTypingInterval);
         }
-
-        context.font = "12px monospace";
-        context.fillText(text, left, top);
       });
 
-      $page.append($fields);
+      $element.css({ top, left, position: "absolute" });
+      return $element;
+    }
+
+    return null;
+  }
+
+  function renderField({ fields, recipient, context, $page }) {
+    const isOwner = recipient.id === data.recipient.id;
+
+    const $fields = fields.map((field) => {
+      const $element = getRenderField({ field, recipient, $page });
+      const isString = typeof $element === "string";
+
+      if ($element === null || isString) {
+        const { field_name, coordinates } = field;
+        const text = recipient[field_name.toLowerCase()];
+        const { pageTop: top, left } = JSON.parse(coordinates);
+
+        context.font = "12px monospace";
+        context.fillText(isString ? $element : text, left, top);
+        return;
+      }
+
+      if ($element instanceof jQuery && !isOwner) {
+        $element.addClass("completed");
+        $element.addClass("not-owned");
+      }
+
+      return $element;
+    });
+
+    $page.append($fields);
+  }
+
+  async function renderPDF(file) {
+    const { fields, recipient, co_recipients } = data;
+    const filepath = file.path.replace(/^\/|\/$/g, "");
+
+    const documentUrl = `${prefixURL}/${filepath}`;
+    const document = await PDFJS.getDocument({ url: documentUrl });
+
+    const $container = createElementFromHTML(
+      `<div class="signing__documentPDF" data-file-id="${file.id}"></div>`
+    );
+
+    for (let index = 1; index <= document.numPages; index++) {
+      const isDocumentField = ({ doc_page, docfile_document_id }) => {
+        return doc_page == index && docfile_document_id == file.id;
+      };
+
+      const currentFields = fields.filter(isDocumentField);
+      const params = { page: index, document };
+      const $page = await getPage(params);
+      $container.append($page);
+
+      const canvas = $page.find("canvas").get(0);
+      const context = canvas.getContext("2d");
+      renderField({ fields: currentFields, recipient, context, $page });
+
+      co_recipients.forEach((coRecipient) => {
+        const fields = coRecipient.fields.filter(isDocumentField);
+        renderField({ ...coRecipient, fields, context, $page });
+      });
+
       $documentContainer.append($container);
     }
 
@@ -576,7 +602,7 @@ function Signing(hash) {
       `;
 
       $element = createElementFromHTML(html);
-      $("[data-field-type=signature]").html($element);
+      $("[data-field-type=signature]:not(.not-owned)").html($element);
       // $(`#signature${fieldId}`).html($element);
 
       $signatureModal.modal("hide");

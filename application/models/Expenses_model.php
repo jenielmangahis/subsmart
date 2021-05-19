@@ -605,4 +605,20 @@ class Expenses_model extends MY_Model
         $query = $this->db->get('accounting_bill');
         return $query->row();
     }
+
+    public function get_transaction_categories($transactionId, $transactionType)
+    {
+        $this->db->where('transaction_type', $transactionType);
+        $this->db->where('transaction_id', $transactionId);
+        $query = $this->db->get('accounting_vendor_transaction_categories');
+        return $query->row();
+    }
+
+    public function get_transaction_items($transactionId, $transactionType)
+    {
+        $this->db->where('transaction_type', $transactionType);
+        $this->db->where('transaction_id', $transactionId);
+        $query = $this->db->get('accounting_vendor_transaction_categories');
+        return $query->row();
+    }
 }

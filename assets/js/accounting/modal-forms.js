@@ -585,17 +585,6 @@ $(function() {
 
     $(document).on('click', '#modal-container #item-details-table tbody tr td a.deleteRow', function() {
         $(this).parent().parent().remove();
-
-        if($('#item-details-table tbody tr').length < rowCount) {
-            $('#item-details-table tbody').append(`<tr>${itemDetailsBlank}</tr>`);
-        }
-
-        var num = 1;
-    
-        $('#item-details-table tbody tr').each(function() {
-            $(this).children('td:nth-child(2)').html(num);
-            num++;
-        });
     });
 
     $(document).on('keyup', '#search-tag', function(){

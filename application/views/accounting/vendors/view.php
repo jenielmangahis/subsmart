@@ -67,7 +67,12 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <div class="card-body hid-desk" style="padding-bottom:0px;">
                             <div class="row">
                                 <div class="col-sm-6">
-                                    <h3 class="page-title" style="margin: 0 !important"><?=$vendor->display_name?></h3>
+                                    <h3 class="page-title" style="margin: 0 !important">
+                                        <?=$vendor->display_name?>
+                                        <?php if($vendor->email !== "" && $vendor->email !== null) : ?>
+                                            <small><a href="mailto: <?=$vendor->email?>"><i class="fa fa-envelope-o"></i></a></small>
+                                        <?php endif; ?>
+                                    </h3>
                                 </div>
                                 <!-- <div class="col-sm-12">
                                     <div class="alert alert-warning mt-4 mb-4" role="alert">
@@ -97,13 +102,13 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                     New transaction &nbsp;&nbsp;&nbsp;<i class="fa fa-caret-down"></i>
                                                 </button>
                                                 <div class="dropdown-menu">
-                                                    <a class="dropdown-item" href="#">Time activity</a>
-                                                    <a class="dropdown-item" href="#">Bill</a>
-                                                    <a class="dropdown-item" href="#">Expense</a>
-                                                    <a class="dropdown-item" href="#">Check</a>
-                                                    <a class="dropdown-item" href="#">Purchase order</a>
-                                                    <a class="dropdown-item" href="#">Vendor credit</a>
-                                                    <a class="dropdown-item" href="#">Pay down credit card</a>
+                                                    <a class="dropdown-item" href="#" id="new-time-activity">Time activity</a>
+                                                    <a class="dropdown-item" href="#" id="new-bill-transaction">Bill</a>
+                                                    <a class="dropdown-item" href="#" id="new-expense-transaction">Expense</a>
+                                                    <a class="dropdown-item" href="#" id="new-check-transaction">Check</a>
+                                                    <a class="dropdown-item" href="#" id="new-purchase-order-transaction">Purchase order</a>
+                                                    <a class="dropdown-item" href="#" id="new-vendor-credit-transaction">Vendor credit</a>
+                                                    <a class="dropdown-item" href="#" id="new-credit-card-pmt">Pay down credit card</a>
                                                 </div>
                                             </div>
                                         </div>
@@ -114,7 +119,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         <div class="col-sm-6">
                                             <div class="row h-100">
                                                 <div class="col-md-6">
-                                                    <div class="cursor-pointer h-100 p-3 notes-container">
+                                                    <p><?=$vendorAddress?></p>
+                                                    <div class="cursor-pointer h-75 p-3 notes-container">
                                                         <?=$vendor->notes !== null && $vendor->notes !== "" ? $vendor->notes : "No notes available. Please click to add note"?>
                                                     </div>
                                                 </div>

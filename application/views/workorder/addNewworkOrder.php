@@ -1191,7 +1191,10 @@ border: none;
                                     <label for="comp_rep_approval">Printed Name</label>
                                     <input type="text6" class="form-control mb-3"
                                            name="company_representative_printed_name"
-                                           id="comp_rep_approval" placeholder=""/>
+                                           id="company_representative_printed_name" placeholder=""/>
+                                           <!-- <canvas id="canvas_web" style="border: 1px solid #ddd;"></canvas>
+                                            <input type="text" class="form-control mb-3" name="company_representative_printed_name" id="comp_rep_approval1" placeholder="Printed Name"/> -->
+                                            <input type="hidden" id="saveCompanySignatureDB1aM_web" name="company_representative_approval_signature1aM_web">
 
                                 </div>
                                 <div class="col-md-4">
@@ -1218,7 +1221,9 @@ border: none;
 
                                     <label for="comp_rep_approval">Printed Name</label>
                                     <input type="text6" class="form-control mb-3" name="primary_account_holder_name"
-                                           id="comp_rep_approval" placeholder=""/>
+                                           id="primary_account_holder_name" placeholder=""/>
+                                    
+                                           <input type="hidden" id="saveCompanySignatureDB1aM_web2" name="primary_representative_approval_signature1aM_web">
 
                                 </div>
                                 <div class="col-md-4">
@@ -1245,7 +1250,9 @@ border: none;
 
                                     <label for="comp_rep_approval">Printed Name</label>
                                     <input type="text6" class="form-control mb-3" name="secondery_account_holder_name"
-                                           id="comp_rep_approval" placeholder=""/>
+                                           id="secondery_account_holder_name" placeholder=""/>
+
+                                           <input type="hidden" id="saveCompanySignatureDB1aM_web3" name="secondary_representative_approval_signature1aM_web">
 
                                 </div>
                             </div>
@@ -1795,6 +1802,9 @@ border: none;
                 var canvas3 = document.getElementById("canvas3");    
                 var signaturePad3 = new SignaturePad(canvas3);
 
+                var canvas_web = document.getElementById("canvas_web");    
+                var signaturePad4 = new SignaturePad(canvas_web);
+
 			});
 
 // $("#canvas").on("click touchstart",
@@ -1876,6 +1886,40 @@ jQuery(document).ready(function () {
   signaturePad3 = new SignaturePad(signaturePadCanvas3);
 });
 
+// web
+var signaturePad3;
+jQuery(document).ready(function () {
+  var signaturePadCanvas4 = document.querySelector('#canvas_web');
+//   var parentWidth = jQuery(signaturePadCanvas).parent().outerWidth();
+//   signaturePadCanvas.setAttribute("width", parentWidth);
+  signaturePad4 = new SignaturePad(signaturePadCanvas4);
+});
+
+// $( "#canvas_web" ).keypress(function() {
+//   alert('test');
+// });
+
+$(document).on('click touchstart','#sign',function(){
+    // alert('test');
+    var canvas_web = document.getElementById("sign");    
+    var dataURL = canvas_web.toDataURL("image/png");
+    $("#saveCompanySignatureDB1aM_web").val(dataURL);
+});
+
+$(document).on('click touchstart','#sign2',function(){
+    // alert('test');
+    var canvas_web2 = document.getElementById("sign2");    
+    var dataURL = canvas_web2.toDataURL("image/png");
+    $("#saveCompanySignatureDB1aM_web2").val(dataURL);
+});
+
+$(document).on('click touchstart','#sign3',function(){
+    // alert('test');
+    var canvas_web3 = document.getElementById("sign3");    
+    var dataURL = canvas_web3.toDataURL("image/png");
+    $("#saveCompanySignatureDB1aM_web3").val(dataURL);
+});
+
 function submit() {
   if (signaturePad.isEmpty() || signaturePad2.isEmpty() || signaturePad3.isEmpty()) {
     // console.log("Empty!");
@@ -1915,6 +1959,14 @@ function submit() {
         // document.body.appendChild(image);
 
         var input_conf = '<br><div style="border:solid gray 1px;padding:2%;"><img id="image1" src="'+dataURL+'"></img><input type="hidden" class="form-control" name="signature1" id="signature1" value="'+ dataURL +'"><br><input type="text" class="form-control" name="name1" id="name1" value="'+ input1 +'"></div><br><div style="border:solid gray 1px;padding:2%;"><img id="image1" src="'+dataURL2+'"></img><input type="hidden" class="form-control" name="signature2" id="signature2" value="'+ dataURL2 +'"><br><input type="text" class="form-control" name="name2" id="name2" value="'+ input2 +'"></div><br><div style="border:solid gray 1px;padding:2%;"><img id="image1" src="'+dataURL3+'"></img><input type="hidden" class="form-control" name="signature3" id="signature3" value="'+ dataURL3 +'"><br><input type="text" class="form-control" name="name3" id="name3" value="'+ input3 +'"></div>';
+
+        $("#saveCompanySignatureDB1aM_web").val(dataURL);
+        $("#saveCompanySignatureDB1aM_web2").val(dataURL2);
+        $("#saveCompanySignatureDB1aM_web3").val(dataURL3);
+
+        $("#company_representative_printed_name").val(input1);
+        $("#primary_account_holder_name").val(input2);
+        $("#secondery_account_holder_name").val(input3);
 
         $('.signatureArea').html(input_conf);
 

@@ -363,7 +363,20 @@ class Workorder_model extends MY_Model
         return $query->result();
     }
 
-    public function getlastInsert(){
+    public function getlastInsert($company_id){
+
+        $this->db->select('*');
+        $this->db->from('work_orders');
+        $this->db->where('company_id', $company_id);
+        $this->db->order_by('work_order_number', 'DESC');
+        $this->db->limit(1);
+
+        // $query = $this->db->query("SELECT * FROM date_data ORDER BY id DESC LIMIT 1");
+        $result = $this->db->get();
+        return $result->result();
+    }
+
+    public function getlastInsertID(){
 
         $this->db->select('*');
         $this->db->from('work_orders');
