@@ -198,7 +198,38 @@ class Vendors extends MY_Controller {
         ));
 
         $vendor = $this->vendors_model->get_vendor_by_id($vendorId);
+        $not = ['', null];
+        $vendorAddress = '';
+        $vendorAddress .= in_array($vendor->street, $not) ? "" : $vendor->street;
+        if(!in_array($vendor->city, $not)) {
+            if($vendorAddress !== '') {
+                $vendorAddress .= ', ';
+            }
+            $vendorAddress .= $vendor->city;
+        }
 
+        if(!in_array($vendor->state, $not)) {
+            if($vendorAddress !== '') {
+                $vendorAddress .= ', ';
+            }
+            $vendorAddress .= $vendor->state;
+        }
+
+        if(!in_array($vendor->zip, $not)) {
+            if($vendorAddress !== '') {
+                $vendorAddress .= ' ';
+            }
+            $vendorAddress .= $vendor->zip;
+        }
+
+        if(!in_array($vendor->country, $not)) {
+            if($vendorAddress !== '') {
+                $vendorAddress .= ' ';
+            }
+            $vendorAddress .= $vendor->country;
+        }
+
+        $this->page_data['vendorAddress'] = $vendorAddress;
         $this->page_data['terms'] = $this->accounting_terms_model->getActiveCompanyTerms(logged('company_id'));
         $this->page_data['expenseAccs'] = $this->chart_of_accounts_model->get_expense_accounts();
         $this->page_data['otherExpenseAccs'] = $this->chart_of_accounts_model->get_other_expense_accounts();
@@ -539,6 +570,17 @@ class Vendors extends MY_Controller {
         $transactions = [];
         if(isset($expenses) && count($expenses) > 0) {
             foreach($expenses as $expense) {
+                $categories = $this->expenses_model->get_transaction_categories($expense->id, 'Expenses');
+                $items = $this->expenses_model->get_transaction_items($expense->id, 'Expenses');
+
+                $totalCount = count($categories) + count($items);
+
+                if($totalCount > 1) {
+                    $category = '-Split-';
+                } else {
+                    $category = '';
+                }
+
                 $transactions[] = [
                     'id' => $expense->id,
                     'date' => date("m/d/Y", strtotime($expense->payment_date)),
@@ -547,7 +589,7 @@ class Vendors extends MY_Controller {
                     'payee' => $vendor->display_name,
                     'method' => $expense->payment_method,
                     'source' => '',
-                    'category' => '',
+                    'category' => $category,
                     'memo' => $expense->memo,
                     'due_date' => '',
                     'balance' => '$0.00',

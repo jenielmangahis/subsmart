@@ -318,7 +318,7 @@ class Sms_Campaigns extends MY_Controller {
             'price_variables' => serialize($price_variables),
             'send_date' => $send_date,
             'send_time' => $send_time,
-            'total_price' => $total_price,
+            'total_price' => $grand_total,
             'status' => $this->SmsBlast_model->statusScheduled(),
             'is_paid' => 0,
             'is_sent' => 0
@@ -470,7 +470,10 @@ class Sms_Campaigns extends MY_Controller {
     }
 
     public function payment(){
-        $this->load->helper('functions');
+        $this->load->model('CardsFile_model');
+        $this->load->helper('functions');     
+
+        $cid  = logged('company_id');   
         $sms_blast_id = $this->session->userdata('smsBlastId');
 
         $smsBlast = $this->SmsBlast_model->getById($sms_blast_id);
@@ -483,7 +486,9 @@ class Sms_Campaigns extends MY_Controller {
         $price_per_sms = $this->SmsBlast_model->getPricePerSms();
         $total_sms_price = $total_recipients * $price_per_sms;
         $grand_total     = $total_sms_price + $service_price;
+        $creditCards = $this->CardsFile_model->getAllByCompanyId($cid);
 
+        $this->page_data['creditCards'] = $creditCards;
         $this->page_data['smsBlast'] = $smsBlast;
         $this->page_data['grand_total'] = $grand_total;
         $this->page_data['total_sms_price'] = $total_sms_price;
@@ -812,6 +817,93 @@ class Sms_Campaigns extends MY_Controller {
         ];
 
         echo json_encode($json_data);
+    }
+
+    public function activate_campaign(){
+        $this->load->model('CardsFile_model');
+        $this->load->model('Clients_model');
+
+        $is_success = false;
+        $msg = '';
+
+        $cid  = logged('company_id');
+        $post = $this->input->post();
+
+        if( isset($post['payment_method_token']) ){
+            $sms_blast_id = $this->session->userdata('smsBlastId');
+            $smsBlast     = $this->SmsBlast_model->getById($sms_blast_id);
+            if( $smsBlast ){
+                $creditCard = $this->CardsFile_model->getById($post['payment_method_token']);
+                if( $creditCard && $creditCard->company_id == $cid ){
+                    $company = $this->Clients_model->getById($creditCard->company_id);
+                    $data_cc = [
+                        'card_number' => $creditCard->card_number,
+                        'exp_date' => $creditCard->expiration_month . $creditCard->expiration_year,
+                        'cvc' => $creditCard->card_cvv,
+                        'ssl_first_name' => $company->first_name,
+                        'ssl_last_name' => $company->last_name,
+                        'ssl_amount' => $smsBlast->total_price,
+                        'ssl_address' => $company->business_address,
+                        'ssl_zip' => $company->zip_code
+                    ];
+
+                    $result_payment = $this->convergePayment($data);
+                    if( $result_payment['is_success'] === 1 ){
+                        $data = ['status' => $this->SmsBlast_model->statusActive(), 'is_paid' => $this->SmsBlast_model->isPaid(), 'cards_file_id' => $post['payment_method_token']];
+                        $this->SmsBlast_model->updateSmsBlast($sms_blast_id,$data);
+
+                        $is_success = true;
+                        $msg = 'Sms automation was successfully activated.';
+                    }else{
+                        $msg = $result_payment['msg'];
+                    }
+                }else{
+                    $msg = 'Cannot find data';
+                }
+            }else{
+                $msg = 'Cannot find data';
+            }  
+        }else{
+            $msg = 'Please select credit card';
+        }
+
+        $json_data = ['is_success' => $is_success, 'msg' => $msg];
+        echo json_encode($json_data);
+    }
+
+    public function convergePayment( $data ){
+        include APPPATH . 'libraries/Converge/src/Converge.php';
+
+        $msg = '';
+        $is_success = 0;
+
+        $converge = new \wwwroth\Converge\Converge([
+            'merchant_id' => CONVERGE_MERCHANTID,
+            'user_id' => CONVERGE_MERCHANTUSERID,
+            'pin' => CONVERGE_MERCHANTPIN,
+            'demo' => false,
+        ]);
+
+        $createSale = $converge->request('ccsale', [
+            'ssl_card_number' => $data['card_number'],
+            'ssl_exp_date' => $data['exp_date'],
+            'ssl_cvv2cvc2' => $data['cvc'],
+            'ssl_first_name' => $data['ssl_first_name'],
+            'ssl_last_name' => $data['ssl_last_name'],
+            'ssl_amount' => $data['ssl_amount'],
+            'ssl_avs_address' => $data['ssl_address'],
+            'ssl_avs_zip' => $data['ssl_zip'],
+        ]);
+
+        if( $createSale['success'] == 1 ){
+            $is_success = 1;
+        }else{
+            $msg = $createSale['errorMessage'];
+        }
+        
+        $return = ['is_success' => $is_success, 'msg' => $msg];
+        return $return;
+
     }
 }
 

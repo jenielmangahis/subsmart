@@ -1144,7 +1144,7 @@ $("#total_tax_").text(over_tax);
   $("#span_sub_total_0").text(total_discount);
   // $("#span_sub_total_invoice").text(stotal_cost);
   // $("#item_total").val(subtotal.toFixed(2));
-  $("#item_total").val(stotal_cost);
+  $("#item_total").val(priceqty2.toFixed(2));
   
   var s_total = subtotal.toFixed(2);
   var adjustment = $("#adjustment_input").val();

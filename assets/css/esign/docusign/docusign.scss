@@ -111,9 +111,12 @@ body {
     outline: 2px var(--border-style) #bf1e2e;
   }
 
-  &--finished {
+  &--finished,
+  .completed {
     user-select: none;
     pointer-events: none;
+    border-color: transparent;
+    background-color: transparent;
 
     input,
     select,
@@ -121,6 +124,7 @@ body {
     .signing__fieldAttachment {
       border: 0;
       cursor: initial;
+      background-color: inherit;
     }
 
     input[type="checkbox"],

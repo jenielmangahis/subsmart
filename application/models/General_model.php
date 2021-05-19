@@ -35,7 +35,12 @@ class General_model extends MY_Model {
 
         if(array_key_exists("where", $params)){
             foreach($params['where'] as $key => $val){
-                $this->db->where($key, $val);
+                if( $val != '' ){
+                    $this->db->where($key, $val);    
+                }else{
+                    $this->db->where($key);
+                }
+                
             }
         }
 

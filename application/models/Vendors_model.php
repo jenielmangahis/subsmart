@@ -377,6 +377,10 @@ class Vendors_model extends MY_Model {
 		$this->db->where('company_id', logged('company_id'));
 		$this->db->where('vendor_id', $vendorId);
 		$this->db->where('status', 1);
+		if(isset($filters['start-date'])) {
+			$this->db->where('bill_date >=', $filters['start-date']);
+			$this->db->where('bill_date <=', $filters['end-date']);
+		}
 
 		$query = $this->db->get('accounting_bill');
 
@@ -388,7 +392,11 @@ class Vendors_model extends MY_Model {
 		$this->db->where('company_id', logged('company_id'));
 		$this->db->where('vendor_id', $vendorId);
 		$this->db->where('status', 1);
-		$this->db->where('due_date <', date("Y-m-d"));
+		if(isset($filters['start-date'])) {
+			$this->db->where('due_date >=', $filters['start-date']);
+			$this->db->where('due_date <=', $filters['end-date']);
+		}
+		// $this->db->where('due_date <', date("Y-m-d"));
 
 		$query = $this->db->get('accounting_bill');
 

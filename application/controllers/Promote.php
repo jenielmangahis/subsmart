@@ -59,7 +59,8 @@ class Promote extends MY_Controller {
                 'terms_conditions' => $post['terms'],
                 'deal_price' => $post['price'],
                 'original_price' => $post['price_original'],
-                'photos' => $photo,  
+                'photos' => $photo,
+                'views_count' => 0,
                 'date_modified' => date("Y-m-d H:i:s")
             ];
             $dealsSteals = $this->DealsSteals_model->updateDealsSteals($deals_id, $data);

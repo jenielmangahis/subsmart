@@ -67,6 +67,16 @@ class SmsBlast_model extends MY_Model
         return $query->result();
     }
 
+    public function getAllIsPaidAndNotSent()
+    {
+
+        $this->db->select('sms_blast.*');
+        $this->db->from($this->table);
+        $this->db->where('sms_blast.is_paid', $this->isPaid(), 'sms_blast.is_sent' => 0);
+        $query = $this->db->get();
+        return $query->result();
+    }
+
     public function getById($id)
     {
         $this->db->select('sms_blast.*, users.id AS uid, users.company_id');

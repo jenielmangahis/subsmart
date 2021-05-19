@@ -76,6 +76,7 @@ function getLatLongDetail(myLatlng, user_id) {
 }
 
 function get_employee_jobs(user_id) {
+    $("#employee-upcoming-jobs").hide();
     $.ajax({
         url: baseURL + "/trac360/get_employee_upcoming_jobs",
         type: "POST",
@@ -87,22 +88,27 @@ function get_employee_jobs(user_id) {
             if (data != null) {
                 $("#employee-upcoming-jobs").html(data.html);
                 $(".loader").hide();
+                $("#employee-upcoming-jobs").show();
             }
 
         },
     });
 }
 
-function toggleBounce() {
-    if (jobs_map_marker.getAnimation() !== null) {
-        jobs_map_marker.setAnimation(null);
-    } else {
-        jobs_map_marker.setAnimation(google.maps.Animation.BOUNCE);
-        const infoWindow = new google.maps.InfoWindow()
-        infoWindow.close();
-        infoWindow.setContent(jobs_map_marker.getTitle());
-        infoWindow.open(jobs_map_marker.getMap(), jobs_map_marker);
+function toggleBounce(the_marker) {
+    // if (the_marker.getAnimation() !== null) {
+    //     the_marker.setAnimation(null);
+    // } else {
+    //     the_marker.setAnimation(google.maps.Animation.BOUNCE);
+    // }
+    if (infoWindow != null) {
+        if (infoWindow) {
+            infoWindow.close();
+        }
     }
+    infoWindow = new google.maps.InfoWindow();
+    infoWindow.setContent(the_marker.getTitle());
+    infoWindow.open(the_marker.getMap(), the_marker);
 }
 
 $(document).on("click", ".people-job-btn", function() {
@@ -118,13 +124,28 @@ $(document).on("click", ".back-btn", function() {
     $(".loader").hide();
     $('#jobs-map').hide();
     $('#map').show();
+    $(".map-error-message").hide();
+    $("#single-job-view-directionsRenderer-panel").removeClass("open");
+    $("#single-job-view-directionsRenderer-panel").addClass('close');
+});
+
+$(document).on("click", "#single-job-view-directionsRenderer-panel .close-btn", function() {
+    $("#single-job-view-directionsRenderer-panel").removeClass("open");
+    $("#single-job-view-directionsRenderer-panel").addClass('close');
 });
 
 $(document).on("click", ".jobs-list-item", function() {
     var item_address = $(this).attr('data-address');
     var item_job_title = $(this).attr('data-job-title');
+    var item_office_address = $(this).attr('data-office-address');
+    var item_business_name = $(this).attr('data-business-name');
     $(".job-item-selected").removeClass('job-item-selected');
     $(this).addClass('job-item-selected');
+
+    $("#single-job-view-directionsRenderer-panel").removeClass("close");
+    $("#single-job-view-directionsRenderer-panel").addClass('open');
+    $("#job-item-selected-view").html($(this).html());
+    $('#single-job-view-directionsRenderer-panel-view').html('');
 
     $('#map').hide();
     if (!$("#jobs-map").is(":visible")) {
@@ -139,30 +160,97 @@ $(document).on("click", ".jobs-list-item", function() {
         if (status == google.maps.GeocoderStatus.OK) {
             var latitude = results[0].geometry.location.lat();
             var longitude = results[0].geometry.location.lng();
-            if (jobs_map_marker != null) {
-                jobs_map_marker.setMap(null);
+
+            if (directionsRenderer != null) {
+                directionsRenderer.setMap(null);
+                directionsService = null;
             }
-            const image =
-                base_url + "/assets/img/trac360/house-map-marker1.png";
-            jobs_map_marker = new google.maps.Marker({
-                map: jobs_map,
-                draggable: false,
-                animation: google.maps.Animation.DROP,
-                position: {
-                    lat: latitude,
-                    lng: longitude
+            directionsService = new google.maps.DirectionsService();
+            directionsRenderer = new google.maps.DirectionsRenderer({
+                suppressMarkers: true
+            });
+            directionsRenderer.setMap(jobs_map);
+            directionsRenderer.setPanel(document.getElementById("single-job-view-directionsRenderer-panel-view"));
+            directionsService.route({
+                    origin: {
+                        query: item_office_address,
+                    },
+                    destination: new google.maps.LatLng(latitude, longitude),
+                    travelMode: google.maps.TravelMode.DRIVING,
+                    avoidTolls: true,
+                    avoidHighways: true
                 },
-                title: item_job_title,
-                icon: image
-            });
-            jobs_map_marker.addListener("click", toggleBounce);
-            // console.log(beachMarker);
-            jobs_map.setZoom(18);
-            jobs_map.setCenter({
-                lat: latitude,
-                lng: longitude,
-            });
-            console.log(item_address + "~:" + latitude + "," + longitude);
+                (response, status) => {
+                    if (status === "OK") {
+                        directionsRenderer.setDirections(response);
+
+                        if (jobs_map_marker.length > 0) {
+                            for (var i = 0; i < jobs_map_marker.length; i++) {
+                                jobs_map_marker[i].setMap(null);
+                            }
+                            jobs_map_marker = [];
+                        }
+                        var my_route = response.routes[0];
+                        const map_icon = {
+                            url: base_url + "/assets/img/trac360/office.png", // url
+                            scaledSize: new google.maps.Size(50, 50), // scaled size
+                        };
+                        jobs_map_marker.push(new google.maps.Marker({
+                            position: my_route.legs[0].start_location,
+                            map: jobs_map,
+                            icon: map_icon,
+                            title: item_business_name,
+                        }));
+                        jobs_map_marker[0].addListener("click", function() {
+                            toggleBounce(jobs_map_marker[0]);
+                        });
+                        jobs_map_marker.push(new google.maps.Marker({
+                            position: my_route.legs[my_route.legs.length - 1].end_location,
+                            map: jobs_map,
+                            icon: {
+                                url: base_url + "/assets/img/trac360/home_address.png",
+                                scaledSize: new google.maps.Size(50, 50),
+                            },
+                            title: item_job_title,
+                        }));
+                        jobs_map_marker[1].addListener("click", function() {
+                            toggleBounce(jobs_map_marker[1]);
+                        });
+                        $(".map-error-message").hide();
+                    } else {
+                        if (jobs_map_marker.length > 0) {
+                            for (var i = 0; i < jobs_map_marker.length; i++) {
+                                jobs_map_marker[i].setMap(null);
+                            }
+                            jobs_map_marker = [];
+                        }
+                        jobs_map_marker.push(new google.maps.Marker({
+                            position: {
+                                lat: latitude,
+                                lng: longitude
+                            },
+                            map: jobs_map,
+                            icon: {
+                                url: base_url + "/assets/img/trac360/house-map-marker1.png",
+                                scaledSize: new google.maps.Size(50, 50),
+                            },
+                            title: item_job_title,
+                        }));
+                        jobs_map_marker[0].addListener("click", function() {
+                            toggleBounce(jobs_map_marker[0]);
+                        });
+                        jobs_map.setCenter({
+                            lat: latitude,
+                            lng: longitude,
+                        });
+                        jobs_map.setZoom(13);
+                        $(".map-error-message").html("Directions request failed due to " + status);
+                        $(".map-error-message").show();
+                    }
+                }
+            );
+
+
 
         }
     });
