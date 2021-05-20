@@ -67,7 +67,7 @@ class SmsBlast_model extends MY_Model
         return $query->result();
     }
 
-    public function getAllIsPaidAndNotSent()
+    public function getAllIsPaidAndNotSent($conditions=array())
     {
 
         $this->db->select('sms_blast.*, users.id AS uid, users.company_id');
@@ -76,6 +76,13 @@ class SmsBlast_model extends MY_Model
 
         $this->db->where('sms_blast.is_paid', $this->isPaid());
         $this->db->where('sms_blast.is_sent', 0);
+
+        if( !empty($conditions) ){
+            foreach( $conditions as $c ){
+                $this->db->where($c['field'], $c['value']);                
+            }
+        }
+
         $query = $this->db->get();
         return $query->result();
     }
@@ -139,6 +146,10 @@ class SmsBlast_model extends MY_Model
 
     public function customerTypeResidential(){
         return $this->ctype_residential;
+    }
+
+    public function customerTypeCommercial(){
+        return $this->ctype_commercial;
     }
 
     public function updateSmsBlast($sms_blast_id, $data)

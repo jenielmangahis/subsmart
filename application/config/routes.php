@@ -614,6 +614,7 @@ $route['sms_campaigns/process_payment'] = 'Sms_Campaigns/process_payment';
 $route['sms_campaigns/_load_paypal'] = 'Sms_Campaigns/get_paypal';
 $route['sms_campaigns/process_paypal_payment'] = 'Sms_Campaigns/process_paypal_payment';
 $route['sms_campaigns/process_stripe_payment'] = 'Sms_Campaigns/ajax_process_stripe_payment';
+$route['sms_campaigns/invoice_pdf/(:any)'] = 'Sms_Campaigns/campaign_invoice_pdf/$1';
 
 //sms automation
 $route['sms_automation/_load_automation_list/(:any)'] = 'Sms_Automation/ajax_load_automation_list/$1';
