@@ -376,6 +376,16 @@ class Workorder_model extends MY_Model
         return $result->result();
     }
 
+    public function getCustomFields($id)
+    {
+        $this->db->select('*');
+        $this->db->from('custom_fields_lists');
+        $this->db->where('form_id', $id);
+
+        $query = $this->db->get();
+        return $query->result();
+    }
+
     public function getlastInsertID(){
 
         $this->db->select('*');
@@ -605,7 +615,14 @@ class Workorder_model extends MY_Model
 		return  $insert_id;
     }
 
-    
+    public function get_workorder_details($id)
+    {
+        $this->db->from($this->table);
+        $this->db->select('*');
+       $this->db->where("id", $id);
+        $query = $this->db->get();
+        return $query->row();
+    }
 }
 
 /* End of file Workorder_model.php */

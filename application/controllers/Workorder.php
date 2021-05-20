@@ -550,6 +550,7 @@ class Workorder extends MY_Controller
         $this->page_data['company'] = $this->workorder_model->getCompanyCompanyId($id);
         $this->page_data['customer'] = $this->workorder_model->getcustomerCompanyId($id);
         $this->page_data['items'] = $this->workorder_model->getItems($id);
+        $this->page_data['custom_fields'] = $this->workorder_model->getCustomFields($id);
 
         // $this->page_data['Workorder']->role = $this->roles_model->getByWhere(['id' => $this->page_data['Workorder']->role])[0];
 

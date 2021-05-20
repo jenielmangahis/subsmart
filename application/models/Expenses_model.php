@@ -611,14 +611,14 @@ class Expenses_model extends MY_Model
         $this->db->where('transaction_type', $transactionType);
         $this->db->where('transaction_id', $transactionId);
         $query = $this->db->get('accounting_vendor_transaction_categories');
-        return $query->row();
+        return $query->result();
     }
 
     public function get_transaction_items($transactionId, $transactionType)
     {
         $this->db->where('transaction_type', $transactionType);
         $this->db->where('transaction_id', $transactionId);
-        $query = $this->db->get('accounting_vendor_transaction_categories');
-        return $query->row();
+        $query = $this->db->get('accounting_vendor_transaction_items');
+        return $query->result();
     }
 }

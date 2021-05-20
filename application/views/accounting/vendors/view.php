@@ -168,7 +168,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <div class="tab-content" id="myTabContent">
                             <div class="tab-pane fade" id="transaction-list" role="tabpanel" aria-labelledby="transaction-list-tab">
                                 <input type="hidden" name="vendor_id" id="vendor-id" value="<?=$vendor->id?>">
-                                <div class="card">
+                                <div class="card p-0">
                                     <div class="card-body p-0">
                                         <div class="row">
                                             <div class="col-sm-6">
@@ -278,7 +278,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                 <table id="transactions-table" class="table table-bordered table-hover" style="width:100%">
                                                     <thead>
                                                         <tr>
-                                                            <th width="3"><input type="checkbox"></th>
+                                                            <th width="3%"><input type="checkbox"></th>
                                                             <th>Date</th>
                                                             <th class="type">Type</th>
                                                             <th class="number">No.</th>
@@ -291,7 +291,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                             <th class="balance hide">Balance</th>
                                                             <th>Total</th>
                                                             <th class="status hide">Status</th>
-                                                            <th class="attachments hide">Attachments</th>
+                                                            <th width="3%" class="attachments hide"><i class="fa fa-paperclip"></i></th>
                                                             <th width="5%">Action</th>
                                                         </tr>
                                                     </thead>

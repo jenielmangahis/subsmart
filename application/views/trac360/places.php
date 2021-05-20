@@ -31,7 +31,7 @@ include viewPath('includes/header'); ?>
                                         class="fa fa-calendar-plus-o fa-2x" class="text-center"></span><br>Calendar</a>
                             </li>
                             <li>
-                                <a href="<?= base_url() ?>trac360/places"
+                                <a href="<?= base_url() ?>trac360/jobs"
                                     class="btn btn-primary  trac360_side_controls" id=""><span
                                         class="fa fa-briefcase fa-2x" class="text-center"></span><br>Jobs</a>
                             </li>

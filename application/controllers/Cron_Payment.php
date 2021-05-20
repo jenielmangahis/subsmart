@@ -72,34 +72,7 @@ class Cron_Payment extends MY_Controller {
             }
         }
     }
-
-    public function sms_campaigns(){
-        $this->load->library('RingCentral');
-        $this->load->model('SmsBlast_model');
-
-        $smsBlast = $this->SmsBlast_model->getAllIsPaidAndNotSent();
-        foreach($smsBlast as $sms){
-
-        }
-    }
-
-    public function test_sms(){
-        $this->load->library('RingCentral');
-        $message  = 'Sample Text Message';
-        $platform = $this->ringcentral->getPlatform();
-        $platform->login('+18504780530', '', 'Ringmybell2021');
-        $apiResponse = $platform->post('/account/~/extension/~/sms', array(
-            'from' => array('phoneNumber' => '+18504780530'),
-            'to' => array(
-                array('phoneNumber' => '+639179082622'),
-            ),
-            'text' => $message,
-        ));
-        echo "<pre>";
-        print_r($apiResponse);
-        exit;
-    }
-
+        
     public function customer_recurring_subscription(){
         include APPPATH . 'libraries/Converge/src/Converge.php';
         $this->load->model('General_model', 'general');

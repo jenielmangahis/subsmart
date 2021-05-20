@@ -70,9 +70,12 @@ class SmsBlast_model extends MY_Model
     public function getAllIsPaidAndNotSent()
     {
 
-        $this->db->select('sms_blast.*');
+        $this->db->select('sms_blast.*, users.id AS uid, users.company_id');
         $this->db->from($this->table);
-        $this->db->where('sms_blast.is_paid', $this->isPaid(), 'sms_blast.is_sent' => 0);
+        $this->db->join('users', 'sms_blast.user_id = users.id', 'LEFT');
+
+        $this->db->where('sms_blast.is_paid', $this->isPaid());
+        $this->db->where('sms_blast.is_sent', 0);
         $query = $this->db->get();
         return $query->result();
     }
@@ -124,6 +127,14 @@ class SmsBlast_model extends MY_Model
 
     public function sendingTypeAll(){
         return $this->stype_all_contacts;
+    }
+
+    public function sendingTypeContactGroups(){
+        return $this->stype_contact_group;
+    }
+
+    public function sendingTypeCertainContact(){
+        return $this->stype_certain_contact;
     }
 
     public function customerTypeResidential(){

@@ -163,9 +163,14 @@ function TemplateCreate() {
 
     if (templateId) {
       $("#pageTitle").text(template.name);
-      $("#templateInfo").hide();
-      $("#templateDocument").hide();
-      $addRecipientButton.hide();
+      // $("#templateInfo").hide();
+      // $("#templateDocument").hide();
+
+      const $saveAndClose = $("#saveandclose");
+      $saveAndClose.removeClass("d-none");
+      $saveAndClose.addClass("d-flex");
+
+      // $addRecipientButton.hide();
     }
   }
 
@@ -521,6 +526,10 @@ function Recipient({
       {
         icon: "fa-pencil",
         value: "Needs to Sign",
+      },
+      {
+        icon: "fa-user",
+        value: "In Person Signer",
       },
       {
         icon: "fa-clone",

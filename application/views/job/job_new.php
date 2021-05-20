@@ -143,6 +143,16 @@ add_css(array(
                                     <?php } ?>
                                 </select>
                             </div>
+
+                            <h6>Select Priority</h6>
+                            <select id="priority" name="priority" class="form-control">
+                                <option value="Standard">Standard</option>
+                                <option value="Low">Low</option>
+                                <option value="Emergency">Emergency</option>
+                                <option value="Urgent">Urgent</option>
+                            </select>
+
+                            <h6>Select Employee</h6>
                             <select id="employee_id" name="employee_id" class="form-control" required>
                                 <option value="">Select Employee</option>
                                 <option value="10001">Select All Employees</option>
@@ -1446,6 +1456,9 @@ include viewPath('includes/footer');
         });
         $("#sales_rep").select2({
             placeholder: "Sales Rep"
+        });
+        $("#priority").select2({
+            placeholder: ""
         });
     });
 </script>

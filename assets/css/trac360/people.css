@@ -401,7 +401,7 @@ div.popup-map-marker:hover h3 {
     transition: width 0.8s, height 1s, transform 1s;
 }
 
-#single-job-view-directionsRenderer-panel.close {
+#single-job-view-directionsRenderer-panel.panel-closed {
     width: 0;
 }
 
@@ -424,4 +424,8 @@ div.popup-map-marker:hover h3 {
 
 #single-job-view-directionsRenderer-panel-view {
     padding: 10px 10px;
+}
+
+#single-job-view-directionsRenderer-panel .panel-content {
+    width: 440px;
 }
