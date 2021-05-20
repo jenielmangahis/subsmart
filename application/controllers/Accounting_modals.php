@@ -2941,7 +2941,7 @@ class Accounting_modals extends MY_Controller {
                 'term_id' => $data['term_id'],
                 'bill_date' => date("Y-m-d", strtotime($data['bill_date'])),
                 'due_date' => date("Y-m-d", strtotime($data['due_date'])),
-                'bill_no' => $data['bill_no'],
+                'bill_no' => $data['bill_no'] !== "" ? $data['bill_no'] : null,
                 'tags' => $data['tags'] !== null ? json_encode($data['tags']) : null,
                 'memo' => $data['memo'],
                 'attachments' => $data['attachments'] !== null ? json_encode($data['attachments']) : null,
@@ -3056,7 +3056,7 @@ class Accounting_modals extends MY_Controller {
         switch($post['due_date']) {
             case 'last-365-days' :
                 $filters['start_date'] = date("Y-m-d", strtotime(date("m/d/Y")." -365 days"));
-                $filters['end_date'] = date("Y-m-d");
+                // $filters['end_date'] = date("Y-m-d");
             break;
             case 'custom' :
                 if($post['from_date'] !== '') {
@@ -3164,7 +3164,7 @@ class Accounting_modals extends MY_Controller {
             $data[] = [
                 'id' => $bill->id,
                 'payee' => $vendor->display_name,
-                'ref_no' => $bill->bill_no,
+                'ref_no' => $bill->bill_no !== null && $bill->bill_no !== "" ? $bill->bill_no : "",
                 'due_date' => date("m/d/Y", strtotime($bill->due_date)),
                 'open_balance' => number_format($bill->remaining_balance, 2, '.', ','),
                 'vendor_credits' => number_format(floatval($vendor->vendor_credits), 2, '.', ',')
@@ -3229,7 +3229,7 @@ class Accounting_modals extends MY_Controller {
                 'company_id' => logged('company_id'),
                 'payment_account_id' => $data['payment_account'],
                 'payment_date' => date("Y-m-d", strtotime($data['payment_date'])),
-                'starting_check_no' => $data['starting_check_no'],
+                'starting_check_no' => $data['starting_check_no'] === "" ? null : $data['starting_check_no'],
                 'total_amount' => $data['total'],
                 'status' => 1,
                 'created_at' => date("Y-m-d H:i:s"),
@@ -3626,7 +3626,7 @@ class Accounting_modals extends MY_Controller {
                 'payee_id' => $payee[1],
                 'bank_credit_account_id' => $data['bank_credit_account'],
                 'payment_date' => date("Y-m-d", strtotime($data['payment_date'])),
-                'ref_no' => $data['ref_no'],
+                'ref_no' => $data['ref_no'] === "" ? null : $data['ref_no'],
                 'tags' => $data['tags'] !== null ? json_encode($data['tags']) : null,
                 'memo' => $data['memo'],
                 'attachments' => $data['attachments'] !== null ? json_encode($data['attachments']) : null,

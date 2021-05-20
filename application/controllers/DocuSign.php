@@ -1126,6 +1126,18 @@ SQL;
         $this->db->where('id', $templateId);
         $this->db->delete('user_docfile_templates');
 
+        $this->db->where('template_id', $templateId);
+        $this->db->delete('user_docfile_templates_documents');
+
+        $this->db->where('template_id', $templateId);
+        $this->db->delete('user_docfile_templates_fields');
+
+        $this->db->where('template_id', $templateId);
+        $this->db->delete('user_docfile_templates_recipients');
+
+        $this->db->where('template_id', $templateId);
+        $this->db->delete('user_docfile_templates_shared');
+
         header('content-type: application/json');
         echo json_encode(['success' => true]);
     }

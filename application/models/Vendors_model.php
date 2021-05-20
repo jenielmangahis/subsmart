@@ -416,4 +416,28 @@ class Vendors_model extends MY_Model {
 
 		return $query->result();
 	}
+
+	public function get_vendor_cc_credit_transactions($vendorId, $filters = [])
+	{
+		$this->db->where('company_id', logged('company_id'));
+		$this->db->where('payee_type', 'vendor');
+		$this->db->where('payee_id', $vendorId);
+		if(isset($filters['start-date'])) {
+			$this->db->where('payment_date >=', $filters['start-date']);
+			$this->db->where('payment_date <=', $filters['end-date']);
+		}
+
+		$query = $this->db->get('accounting_credit_card_credits');
+
+		return $query->result();
+	}
+
+	public function update_transaction_category($data)
+	{
+		$this->db->where('transaction_type', $data['transaction_type']);
+		$this->db->where('transaction_id', $data['transaction_id']);
+		$update = $this->db->update('accounting_vendor_transaction_categories', ['expense_account_id' => $data['new_category']]);
+
+		return $update;
+	}
 }

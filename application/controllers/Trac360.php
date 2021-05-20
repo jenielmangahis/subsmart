@@ -516,8 +516,8 @@ class Trac360 extends MY_Controller
                 
                 $html.='<small class="text-muted">'.$jb->mail_add .' '. $jb->cust_city.' '.$jb->cust_state.' '.$jb->cust_zip_code.'</small><br>
                     <i> <small class="text-muted">'.$jb->job_description.'</small></i><br>';
-                
-                $html .='<small>Amount : $ '.$jb->amount!="" ? number_format((float)$jb->amount, 2, '.', ',') : '0.00' .'</small>
+                $amount = $jb->amount!="" ? number_format((float)$jb->amount, 2, '.', ',') : '0.00' ;
+                $html .='<small>Amount : $ '.$amount.'</small>
                   <br>';
                 
                 $html .='<a  target=""><small
@@ -534,5 +534,42 @@ class Trac360 extends MY_Controller
         $data->upcomingJobs =$upcomingJobs;
         $data->html =$html;
         echo json_encode($data);
+    }
+    public function jobs()
+    {
+        add_css(array(
+            "assets/css/trac360/people.css",
+            "assets/css/trac360/jobs.css"
+        ));
+        add_footer_js(array(
+            "assets/js/trac360/jobs.js"
+
+        ));
+        $company_id = logged('company_id');
+        $user_id = logged('id');
+        $role    = logged('role');
+
+        $settings = $this->settings_model->getValueByKey(DB_SETTINGS_TABLE_KEY_SCHEDULE);
+        $this->page_data['settings'] = unserialize($settings);
+        if ($role == 1 || $role == 2) {
+            $upcomingJobs = $this->trac360_model->getAllUpcomingJobs();
+        } else {
+            $upcomingJobs = $this->trac360_model->getAllUpcomingJobsByCompanyId($company_id);
+        }
+        
+        if ($role == 1 || $role == 2) {
+            $previousJobs = $this->trac360_model->getAllpreviousJobs();
+        } else {
+            $previousJobs = $this->trac360_model->getAllpreviousJobsByCompanyID($company_id);
+        }
+
+        $this->page_data['upcomingJobs'] = $upcomingJobs;
+        $this->page_data['previousJobs'] = $previousJobs;
+        $this->page_data['company_id'] = $company_id;
+        $this->page_data['user_id'] = $user_id;
+
+
+        $this->load->view('trac360/jobs', $this->page_data);
+        // var_dump($data);
     }
 }

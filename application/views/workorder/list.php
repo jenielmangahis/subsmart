@@ -296,7 +296,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                                data-name="WO-00433"><span
                                                                     class="fa fa-trash-o icon"></span> Delete</a></li>
                                                     <li role="presentation">
-                                                        <a role="menuitem" tabindex="-1" href="<?php echo base_url('job/new_job1') ?>">
+                                                        <a role="menuitem" tabindex="-1" href="<?php echo base_url('job/work_order_job/'. $workorder->id) ?>">
                                                             <span class="fa fa-briefcase icon"></span> Convert To Jobs
                                                         </a>
                                                     </li>

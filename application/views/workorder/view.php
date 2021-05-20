@@ -5,8 +5,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <style>
 /* common */
 .ribbon {
-  width: 150px;
-  height: 150px;
+  width: 120px;
+  height: 120px;
   overflow: hidden;
   position: absolute;
 }
@@ -127,6 +127,290 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
   bottom: 30px;
   transform: rotate(-225deg);
 }
+
+#signature-pad {min-height:200px;}
+#signature-pad canvas {background-color:white;left: 0;top: 0;width: 100%;min-height:250px;height: 100%}
+
+#signature-pad2 {min-height:200px;}
+#signature-pad2 canvas {background-color:white;left: 0;top: 0;width: 100%;min-height:250px;height: 100%}
+
+#signature-pad3 {min-height:200px;}
+#signature-pad3 canvas {background-color:white;left: 0;top: 0;width: 100%;min-height:250px;height: 100%}
+
+#signature-padM {min-height:200px;}
+#signature-padM canvas {background-color:white;left: 0;top: 0;width: 100%;min-height:250px;height: 100%}
+
+#signature-pad2M {min-height:200px;}
+#signature-pad2M canvas {background-color:white;left: 0;top: 0;width: 100%;min-height:250px;height: 100%}
+
+#signature-pad3M {min-height:200px;}
+#signature-pad3M canvas {background-color:white;left: 0;top: 0;width: 100%;min-height:250px;height: 100%}
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+}
+
+.switch input { 
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #10ab06;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #10ab06;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
+
+.tr_qty{
+    width:150px;
+}
+
+
+nav > .nav.nav-tabs{
+
+border: none;
+  color:#fff;
+  background:#272e38;
+  border-radius:0;
+
+}
+nav > div a.nav-item.nav-link,
+nav > div a.nav-item.nav-link.active
+{
+border: none;
+  padding: 18px 25px;
+  color:#fff;
+  background:#272e38;
+  border-radius:0;
+}
+
+/* nav > div a.nav-item.nav-link.active:after
+{
+content: "";
+position: relative;
+bottom: -60px;
+left: -10%;
+border: 15px solid transparent;
+border-top-color: #e74c3c ;
+} */
+.tab-content{
+background: #fdfdfd;
+  line-height: 25px;
+  border: 1px solid #ddd;
+  border-top:5px solid #e74c3c;
+  border-bottom:5px solid #e74c3c;
+  padding:30px 25px;
+}
+
+nav > div a.nav-item.nav-link:hover,
+nav > div a.nav-item.nav-link:focus
+{
+border: none;
+  background: #e74c3c;
+  color:#fff;
+  border-radius:0;
+  transition:background 0.20s linear;
+}
+
+.signature_mobile
+{
+    display: none;
+}
+
+.show_mobile_view
+{
+    display: none;
+}
+
+@media only screen and (max-device-width: 600px) {
+    .label-element{
+        position:absolute;
+        top:-8px;
+        left:25px;
+        font-size:12px;
+        color:#666;
+        }
+    .input-element{
+        padding:30px 5px 10px 8px;
+        width:100%;
+        height:55px;
+        /* border:1px solid #CCC; */
+        font-weight: bold;
+        margin-top: -15px;
+        }
+
+    .select-wrap 
+    {
+    border: 2px solid #e0e0e0;
+    /* border-radius: 4px; */
+    margin-top: -10px;
+    /* margin-bottom: 10px; */
+    padding: 0 5px 5px;
+    width:100%;
+    /* background-color:#ebebeb; */
+    }
+
+    .select-wrap label
+    {
+    font-size:10px;
+    text-transform: uppercase;
+    color: #777;
+    padding: 2px 8px 0;
+    }
+
+    .m_select
+    {
+    /* background-color: #ebebeb;
+    border:0px; */
+    border-color: white !important;
+    border:0px !important;
+    outline:0px !important;
+    }
+    .select2 .select2-container .select2-container--default{
+        /* background-color: #ebebeb;
+    border:0px; */
+    border-color: white !important;
+    border:0px !important;
+    outline:0px !important;
+    }
+
+    .select2-container--default .select2-selection--single {
+    background-color: #fff;
+    border: 1px solid #fff !important;
+    border-radius: 4px;
+    }
+
+    .sub_label{
+        font-size:12px !important;
+    }
+
+    .signature_web
+    {
+        display: none;
+    }
+
+    .signature_mobile
+    {
+        display: block;
+    }
+
+    .hidden_mobile_view{
+        display: none;
+    }
+
+    .show_mobile_view
+    {
+        display: block;
+    }
+
+    .table_mobile
+    {
+        font-size:14px;
+    }
+
+    div.dropdown-wrapper select { 
+    width:115% /* This hides the arrow icon */; 
+    background-color:transparent /* This hides the background */; 
+    background-image:none; 
+    -webkit-appearance: none /* Webkit Fix */; 
+    border:none; 
+    box-shadow:none; 
+    padding:0.3em 0.5em; 
+    font-size:13px;
+    }
+    .signature-pad-canvas-wrapper {
+    margin: 15px 0 0;
+    border: 1px solid #cbcbcb;
+    border-radius: 3px;
+    overflow: hidden;
+    position: relative;
+}
+
+    .signature-pad-canvas-wrapper::after {
+        content: 'Name';
+        border-top: 1px solid #cbcbcb;
+        color: #cbcbcb;
+        width: 100%;
+        margin: 0 15px;
+        display: inline-flex;
+        position: absolute;
+        bottom: 10px;
+        font-size: 13px;
+        z-index: -1;
+    }
+
+	.mobile_size
+	{
+		font-size:14px !important;
+		margin-left:50% !important;
+	}
+
+	.mobile_div
+	{
+		margin-left:0px !important;
+	}
+
+	.map_area_mobile
+	{
+		width:400px !important;
+	}
+
+	/* .mobile_btn a
+	{
+		width:100px !important;
+		height:20px !important;
+	} */
+
+	.user-menu
+	{
+		margin-right:0px !important;
+	}
+}
 </style>
     <!-- page wrapper start -->
     <input type="hidden" value="<?= $workorder->id; ?>" id="workorderId"/>
@@ -150,33 +434,33 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 									<div class="user-menu">
 										<a class="btn sand-btn margin-right-sec" href="#"><span class="fa fa-money fa-margin-right"></span> Create Invoice</a>
 									</div> 
-									<div class="user-menu">
-										 <a class="btn btn-sec" href=""><span class="fa fa-edit"></span> Edit</a>
-                       						 <a class="btn btn-sec" data-print-modal="open" href="#" target="_blank"><span class="fa fa-file-pdf-o"></span> PDF</a>
-          										  <a class="btn btn-sec" data-print-modal="open" href="#" target="_blank"><span class="fa fa-print"></span> Print</a>
-									</div> 
-							<div class="user-menu">
-								<div class="dropdown dropdown-btn dropdown-inline margin-left-sec">
-	           						 <button class="btn btn-sec btn-regular dropdown-toggle" type="button" id="dropdown-edit" data-toggle="dropdown" aria-expanded="false">
-	               						 <span class="btn-label">More</span><span class="caret-holder"><span class="caret"></span></span>
-	          						  </button>
-           						 <ul class="dropdown-menu dropdown-menu-right usermenu-dropdown" role="menu" aria-labelledby="dropdown-edit">
-	             				   		<li ><a  href="#" ><span class="fa fa-flag-o icon"></span> Change Status</a></li>
-	               						 <li class="divider"></li>
-	                               		 <li ><a  href="#" ><span class="fa fa-files-o icon"></span> Clone Work Order</a></li>
-	                                       <li ><a href="#" ><span class="fa fa-file-text-o icon"></span> Convert to Estimate</a></li>
-	                                       <li ><a  href=""><span class="fa fa-envelope-o icon"></span> Send to Customer</a></li>
-	                                       <li class="divider"></li>
-	              						  <li ><a   href="#" ><span class="fa fa-trash-o icon"></span> Delete Work Order</a></li>
-	              						  <li ><a   href="#" id="esignButton"><span class="fa fa-envelope-o icon"></span> eSign</a></li>
-									</ul>
-        </div>
+									
+									<div class="user-menu mobile_btn"><br>
+										<a class="btn btn-sec" href=""><span class="fa fa-edit"></span> Edit</a>
+                       					<a class="btn btn-sec" data-print-modal="open" href="#" target="_blank"><span class="fa fa-file-pdf-o"></span> PDF</a>
+          								<a class="btn btn-sec" data-print-modal="open" href="#" target="_blank"><span class="fa fa-print"></span> Print</a>
+										  <div class="user-menu">
+									<div class="dropdown dropdown-btn dropdown-inline margin-left-sec"><br>
+											<button class="btn btn-sec btn-regular dropdown-toggle" type="button" id="dropdown-edit" data-toggle="dropdown" aria-expanded="false">
+												<span class="btn-label">More</span><span class="caret-holder"><span class="caret"></span></span>
+											</button>
+											<ul class="dropdown-menu dropdown-menu-right usermenu-dropdown" role="menu" aria-labelledby="dropdown-edit">
+												<li ><a  href="#" ><span class="fa fa-flag-o icon"></span> Change Status</a></li>
+												<li class="divider"></li>
+												<li ><a  href="#" ><span class="fa fa-files-o icon"></span> Clone Work Order</a></li>
+												<li ><a href="#" ><span class="fa fa-file-text-o icon"></span> Convert to Estimate</a></li>
+												<li ><a  href=""><span class="fa fa-envelope-o icon"></span> Send to Customer</a></li>
+												<li class="divider"></li>
+												<li ><a   href="#" ><span class="fa fa-trash-o icon"></span> Delete Work Order</a></li>
+												<li ><a   href="#" id="esignButton"><span class="fa fa-envelope-o icon"></span> eSign</a></li>
+											</ul>
+										</div>
 									</div>
-
 								</div>
 						</div>
 					</div>
 				</div>
+			</div>
 
 
 			<div class="row" style="padding:1%;">
@@ -194,24 +478,24 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 											</div>
 											<div class="col-md-6">
 											<div class="workorder-text" style="margin-top: 10px; margin-bottom: 20px;">
-											    <span class="presenter-title">WORK ORDER</span><br>
+											    <span class="presenter-title mobile_size">WORK ORDER</span><br>
 											    
 												<!-- </div>	-->
-												<div align="right"> 
+												<div align="right" class="mobile_size"> 
 													<table>
 														<tbody>
 														<tr>
 															<td colspan="2"><span># <?php echo $workorder->work_order_number ?></span></td>
 														</tr>
 														<tr>
-															<td align="left"><div style="margin-right: 10px;">Date:</div></td>
+															<td align="left"><div style="">Date:</div></td>
 															<td align="left"><?php echo $workorder->date_created ?></td>
 														</tr>
 														<tr>
-															<td align="left"><div style="margin-right: 10px;">Type:</div></td>
+															<td align="left"><div style="">Type:</div></td>
 															<td align="left"><?php echo $workorder->job_type ?></td>
 														</tr>
-															<td align="left"><div style="margin-right: 10px;">Priority:</div></td>
+															<td align="left"><div style="">Priority:</div></td>
 															<td align="left"><?php echo $workorder->priority ?></td>
 														</tr>
 														</tbody>
@@ -240,6 +524,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 		         							   		<div class="ul-info">
 		         							   			<ul>
 		         							   				<li><a href="" class="ul-head"> FROM:</a></li>
+															<li class="show_mobile_view"><hr></li>
 		         							   				<li><a href="" class="ul-head"><?php echo $company->business_name ?></a></li>
 		         							   				<li><a href="" class="ul-text">License: EF, AL, MS</a></li>
 		         							   				<li><a href="" class="ul-text"><?php echo $company->business_address ?></a></li>
@@ -250,7 +535,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 		         							   		</div><br>
 		         							   		<div class="ul-info">
 		         							   			<ul>
-		         							   				<li><a href="" class="ul-head">Customer:</a></li>
+		         							   				<li><a href="" class="ul-head">TO:</a></li>
+															<li class="show_mobile_view"><hr></li>
 		         							   				<li><span class="ul-head line"><?php echo $customer->contact_name .''. $customer->first_name .' '. $customer->middle_name .' '. $customer->last_name ?></span><a href="" class="line ul-btns-text" style="color:green;">view</a></li>
 															<li><a href="" class="ul-text"><?php echo $customer->mail_add .' '. $customer->city .' '. $customer->state .', '. $customer->country .', '. $customer->zip_code ?></a></li>
 															<li><a href="" class="ul-text">Phone: <?php echo $customer->phone_h ?></a></li>
@@ -260,12 +546,26 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
 		         							   		<div class="ul-info">
 		         							   			<ul>
-		         							   				<li><a href="" class="ul-head">Job:</a></li>
+		         							   				<li><a href="" class="ul-head">JOB:</a></li>
 		         							   				<li><a href="" class="ul-text">Job for Estimate #EST-000010</a></li>
 		         							   				<li><a href="" class="ul-text">Estimate #EST-000010 </a></li>	
 		         							   			
 		         							   			</ul>
 		         							   		</div>
+
+														<br>
+
+														<div class="ul-info">
+		         							   			<ul>
+		         							   				<li><b>CUSTOM FIELDS</b></li>
+																<li class="show_mobile_view"><hr></li>
+															<?php foreach($custom_fields as $custom){ ?>
+		         							   				<li><a href="" class="ul-text"><?php echo $custom->name; ?>&emsp; <?php echo $custom->value; ?></a></li>
+															<?php } ?>
+		         							   			
+		         							   			</ul>
+		         							   		</div>
+														
 
 		         							   		<!-- <div class="ul-info">
 		         							   			<ul>
@@ -278,6 +578,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 		         							   			<div class="ul-info">
 			         							   			<ul>
 			         							   				<li><a href="#" class="ul-head">Location </a></li>
+																<li class="show_mobile_view"><hr></li>
 																<li><?php echo $workorder->job_location .' '. $workorder->city .' '. $workorder->state .', '. $workorder->zip_code .', '. $workorder->cross_street  ?> &emsp; <a href="#" style="color:green;">Show Map</a></li>	
 			         							   				<!-- <li></li>	 -->
 			         							   			
@@ -295,8 +596,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 											                    <th style="background: #f4f4f4; text-align: left; padding: 5px 0;">Services</th>
 											                    <th style="background: #f4f4f4; text-align: right; padding: 5px 0;">Qty</th>
 											                    <th style="background: #f4f4f4; text-align: right; padding: 5px 0;">Price</th>
-											                    <th style="background: #f4f4f4; text-align: right; padding: 5px 0;">Discount</th>
-											                    <th style="background: #f4f4f4; text-align: right; padding: 5px 0;">Tax (%)</th>
+											                    <th class="hidden_mobile_view" style="background: #f4f4f4; text-align: right; padding: 5px 0;">Discount</th>
+											                    <th class="hidden_mobile_view" style="background: #f4f4f4; text-align: right; padding: 5px 0;">Tax (%)</th>
 											                    <th style="background: #f4f4f4; text-align: right; padding: 5px 8px 5px 0;" class="text-right">Total</th>
 											                </tr>
 											            </thead>
@@ -307,11 +608,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 													                    <td valign="top"> <?php echo $item->item ?>   </td>
 													                    <td style="width: 50px; text-align: right;" valign="top"> <?php echo $item->qty ?>  </td>
 													                    <td style="width: 80px; text-align: right;" valign="top">$<?php echo $item->cost ?></td>
-													                    <td style="width: 80px; text-align: right;" valign="top">
+													                    <td class="hidden_mobile_view" style="width: 80px; text-align: right;" valign="top">
 													                        <!-- $99.99<br>(62.89%)                     -->
 																			$<?php echo $item->discount ?>
 																			</td>
-													                    <td style="width: 80px; text-align: right;" valign="top">
+													                    <td class="hidden_mobile_view" style="width: 80px; text-align: right;" valign="top">
 													                        <!-- $4.43<br>(7.5%)                     -->
 																			$<?php echo $item->tax ?>
 																			</td>
@@ -333,25 +634,25 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
 		         							     <div class="table-inner">
 		         							     	<table class="table-print" style="width: 100%; margin-top: 10px;">
-													        <tbody>
+													        <!-- <tbody>
 													            <tr>
 													                <td style="width: 50%; text-align: right;"></td>
 													                <td>
-													                    <table style="width: 100%; border-collapse: collapse;">
+													                    <table style="width: 100%; border-collapse: collapse;"> -->
 													                        <tbody>
 													                            <tr>
 													                                <td style="padding: 8px 0; text-align: right; border-bottom: 1px solid #eaeaea;" class="text-right">Subtotal</td>
 													                                <td style="padding: 8px 8px 8px 0; text-align: right; border-bottom: 1px solid #eaeaea;" class="text-right">$<?php echo $workorder->subtotal ?></td>
 													                            </tr>
 													                                                        <tr>
-													                                <td style="padding: 8px 0; text-align: right; background: #f4f4f4;" class="text-right"><b>Grand Total ($)</b></td>
+													                                <td style="padding: 8px 0; text-align: right; background: #f4f4f4;" class="text-right mobile_size"><b>Grand Total ($)</b></td>
 													                                <td style="width: 90px; padding: 8px 8px 8px 0; text-align: right; background: #f4f4f4;" class="text-right"><b>$<?php echo $workorder->grand_total ?></b></td>
 													                            </tr>
 													                          </tbody>
-													                    </table>
+													                    <!-- </table>
 													                </td>
 													            </tr>
-													        </tbody>
+													        </tbody> -->
 													    </table>
 
 		         							     </div>
@@ -475,7 +776,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 					<h6>Location on Map</h6>
 					<hr>
 					<!-- aaa<div id="googleMap"></div> -->
-					<div class="mapouter"><div class="gmap_canvas"><iframe width="100%" height="500" id="gmap_canvas" src="https://maps.google.com/maps?q=2880%20Broadway,%20New%20York&t=&z=13&ie=UTF8&iwloc=&output=embed" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"></iframe><a href="https://123movies-to.org"></a><br><style>.mapouter{position:relative;text-align:right;height:500px;width:600px;}</style><a href="https://www.embedgooglemap.net"></a><style>.gmap_canvas {overflow:hidden;background:none!important;height:500px;width:600px;}</style></div></div>
+					<div class="mapouter"><div class="gmap_canvas map_area_mobile"><iframe width="100%" height="500" id="gmap_canvas" src="https://maps.google.com/maps?q=2880%20Broadway,%20New%20York&t=&z=13&ie=UTF8&iwloc=&output=embed" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"></iframe><a href="https://123movies-to.org"></a><br><style>.mapouter{position:relative;text-align:right;height:500px;width:600px;}</style><a href="https://www.embedgooglemap.net"></a><style>.gmap_canvas {overflow:hidden;background:none!important;height:500px;width:600px;}</style></div></div>
 				</div>
 			</div>
 			<br>

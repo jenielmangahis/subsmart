@@ -1,0 +1,15 @@
+.jobs-collapse-btn {
+    padding: 20px;
+    font-size: 15px;
+    color: #616161;
+    border-bottom: solid 1px #CCCCCC;
+    text-align: center;
+}
+
+.jobs-collapse-btn:hover {
+    background-color: #F7F6EF;
+}
+
+.jobs-collapse-btn.collapse-active {
+    background-color: #F7F6EF;
+}

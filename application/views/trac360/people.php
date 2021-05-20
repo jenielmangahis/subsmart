@@ -46,7 +46,7 @@ function get_differenct_of_dates($date_start, $date_end)
                     class="text-center"></span><br>Calendar</a>
               </li>
               <li>
-                <a href="<?= base_url() ?>trac360/places"
+                <a href="<?= base_url() ?>trac360/jobs"
                   class="btn btn-primary  trac360_side_controls" id=""><span class="fa fa-briefcase fa-2x"
                     class="text-center"></span><br>Jobs</a>
               </li>
@@ -63,12 +63,14 @@ function get_differenct_of_dates($date_start, $date_end)
           </div>
         </div>
         <div class="col-md-9  trac360_main_sections jobs-list-section" style="background-color: #fff; display:none;">
-          <div id="single-job-view-directionsRenderer-panel" class="overflow-auto close">
+          <div id="single-job-view-directionsRenderer-panel" class="overflow-auto panel-closed">
             <div class="close-btn"><i class="fa fa-chevron-left" aria-hidden="true"></i></div>
-            <div id="job-item-selected-view" class="row no-margin">
-              sapmle
+            <div class="panel-content">
+              <div id="job-item-selected-view" class="row no-margin">
+                sapmle
+              </div>
+              <div id="single-job-view-directionsRenderer-panel-view"></div>
             </div>
-            <div id="single-job-view-directionsRenderer-panel-view"></div>
           </div>
           <div class="employee-name">
             <p><span class="name">Ample sample </span> <span class="back-btn"><i class="fa fa-times"

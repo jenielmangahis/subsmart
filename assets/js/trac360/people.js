@@ -126,12 +126,12 @@ $(document).on("click", ".back-btn", function() {
     $('#map').show();
     $(".map-error-message").hide();
     $("#single-job-view-directionsRenderer-panel").removeClass("open");
-    $("#single-job-view-directionsRenderer-panel").addClass('close');
+    $("#single-job-view-directionsRenderer-panel").addClass('panel-closed');
 });
 
 $(document).on("click", "#single-job-view-directionsRenderer-panel .close-btn", function() {
     $("#single-job-view-directionsRenderer-panel").removeClass("open");
-    $("#single-job-view-directionsRenderer-panel").addClass('close');
+    $("#single-job-view-directionsRenderer-panel").addClass('panel-closed');
 });
 
 $(document).on("click", ".jobs-list-item", function() {

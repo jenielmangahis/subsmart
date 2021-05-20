@@ -192,7 +192,7 @@ $('#transactions-table').DataTable({
     lengthChange: false,
     info: false,
     pageLength: 150,
-    order: [[0, 'asc']],
+    order: [[1, 'asc']],
     ajax: {
         url: `/accounting/vendors/${vendorId}/load-transactions`,
         dataType: 'json',
@@ -283,6 +283,12 @@ $('#transactions-table').DataTable({
                 }
 
                 $(td).addClass('category');
+
+                $(td).html(cellData);
+
+                if($(td).find('select').length > 0) {
+                    $(td).find('select').select2();
+                }
             }
         },
         {
@@ -364,7 +370,7 @@ $('#transactions-table').DataTable({
                             <div class="dropdown-menu" aria-labelledby="statusDropdownButton">
                                 <a class="dropdown-item" href="#">Print</a>
                                 <a class="dropdown-item" href="#">Copy</a>
-                                <a class="dropdown-item" href="#">Delete</a>
+                                <a class="dropdown-item delete-transaction" href="#">Delete</a>
                                 <a class="dropdown-item" href="#">Void</a>
                             </div>
                         </div>
@@ -383,7 +389,7 @@ $('#transactions-table').DataTable({
 
                             <div class="dropdown-menu" aria-labelledby="statusDropdownButton">
                                 <a class="dropdown-item" href="#">Copy</a>
-                                <a class="dropdown-item" href="#">Delete</a>
+                                <a class="dropdown-item delete-transaction" href="#">Delete</a>
                                 <a class="dropdown-item" href="#">Void</a>
                             </div>
                         </div>
@@ -405,7 +411,7 @@ $('#transactions-table').DataTable({
                                     <a class="dropdown-item" href="#">Mark as paid</a>
                                     <a class="dropdown-item" href="#">View/Edit</a>
                                     <a class="dropdown-item" href="#">Copy</a>
-                                    <a class="dropdown-item" href="#">Delete</a>
+                                    <a class="dropdown-item delete-transaction" href="#">Delete</a>
                                 </div>
                             </div>
                             `);
@@ -422,7 +428,7 @@ $('#transactions-table').DataTable({
 
                                 <div class="dropdown-menu" aria-labelledby="statusDropdownButton">
                                     <a class="dropdown-item" href="#">Copy</a>
-                                    <a class="dropdown-item" href="#">Delete</a>
+                                    <a class="dropdown-item delete-transaction" href="#">Delete</a>
                                 </div>
                             </div>
                             `);
@@ -445,7 +451,7 @@ $('#transactions-table').DataTable({
                                     <a class="dropdown-item" href="#">Print</a>
                                     <a class="dropdown-item" href="#">View/Edit</a>
                                     <a class="dropdown-item" href="#">Copy</a>
-                                    <a class="dropdown-item" href="#">Delete</a>
+                                    <a class="dropdown-item delete-transaction" href="#">Delete</a>
                                 </div>
                             </div>
                             `);
@@ -463,7 +469,7 @@ $('#transactions-table').DataTable({
                                 <div class="dropdown-menu" aria-labelledby="statusDropdownButton">
                                     <a class="dropdown-item" href="#">View/Edit</a>
                                     <a class="dropdown-item" href="#">Copy</a>
-                                    <a class="dropdown-item" href="#">Delete</a>
+                                    <a class="dropdown-item delete-transaction" href="#">Delete</a>
                                 </div>
                             </div>
                             `);
@@ -482,7 +488,7 @@ $('#transactions-table').DataTable({
 
                             <div class="dropdown-menu" aria-labelledby="statusDropdownButton">
                                 <a class="dropdown-item" href="#">Copy</a>
-                                <a class="dropdown-item" href="#">Delete</a>
+                                <a class="dropdown-item delete-transaction" href="#">Delete</a>
                             </div>
                         </div>
                         `);
@@ -499,7 +505,7 @@ $('#transactions-table').DataTable({
                             </button>
 
                             <div class="dropdown-menu" aria-labelledby="statusDropdownButton">
-                                <a class="dropdown-item" href="#">Delete</a>
+                                <a class="dropdown-item delete-transaction" href="#">Delete</a>
                                 <a class="dropdown-item" href="#">Void</a>
                             </div>
                         </div>
@@ -1034,5 +1040,30 @@ $('a#new-credit-card-pmt').on('click', function(e) {
         });
 
         $('#payDownCreditModal').modal('show');
+    });
+});
+
+$(document).on('change', '#transactions-table select[name="category[]"]', function(e) {
+    e.preventDefault();
+    var row = $(this).parent().parent();
+    var rowData = $('#transactions-table').DataTable().row(row).data();
+    var account = $(this).val();
+
+    var data = new FormData();
+    data.set('transaction_type', rowData.type);
+    data.set('transaction_id', rowData.id);
+    data.set('new_category', account);
+
+    $.ajax({
+        url: '/accounting/vendors/update-transaction-category',
+        data: data,
+        type: 'post',
+        processData: false,
+        contentType: false,
+        success: function(result) {
+            var res = JSON.parse(result);
+
+            toast(res.success, res.message);
+        }
     });
 });

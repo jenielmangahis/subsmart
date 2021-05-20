@@ -120,7 +120,7 @@ class Trac360_model extends MY_Model
         $this->db->from('jobs');
         $this->db->join('acs_profile', 'jobs.customer_id = acs_profile.prof_id');
         $this->db->join('job_url_links', 'jobs.id = job_url_links.job_id');
-        $this->db->join('jobs_pay_details as jpd', 'jobs.id = jpd.jobs_id', 'left');
+        $this->db->join('job_payments as jpd', 'jobs.id = jpd.job_id', 'left');
         $start_date = date('Y-m-d');
         $end_date   = date('Y-m-d', strtotime($start_date . ' +5 day'));
         $this->db->join('job_tags', 'job_tags.id = jobs.tags', 'left');
@@ -133,6 +133,103 @@ class Trac360_model extends MY_Model
         $this->db->order_by('jobs.start_date', 'ASC');
         $query = $this->db->get();
         //print_r($this->db->last_query());  exit;
+        return $query->result();
+    }
+    public function getAllpreviousJobs()
+    {
+        $this->db->select('jobs.id, jobs.job_number, jobs.job_name, jobs.event_color, jobs.job_description, jobs.job_location, jobs.job_type, jobs.tags, jobs.start_date, 
+        jobs.end_date, jobs.company_id, jobs.start_time, jobs.end_time, jobs.status, jobs.priority, acs_profile.prof_id, acs_profile.first_name, acs_profile.last_name,
+        job_tags.name as tags_name,cust.first_name,cust.last_name,cust.mail_add,cust.city as cust_city,cust.state as cust_state,cust.zip_code as cust_zip_code,job_url_links.link,users.profile_img,jpd.amount,users.FName,users.LName');
+
+        $this->db->from("jobs");
+        $this->db->join('acs_profile', 'jobs.customer_id = acs_profile.prof_id');
+        $this->db->join('job_url_links', 'jobs.id = job_url_links.job_id', 'left');
+        $this->db->join('job_payments as jpd', 'jobs.id = jpd.job_id', 'left');
+        $start_date = date('Y-m-d');
+        $this->db->join('job_tags', 'job_tags.id = jobs.tags', 'left');
+        $this->db->join('acs_profile as cust', 'cust.prof_id = jobs.customer_id', 'left');
+        $this->db->join('users', 'users.id = jobs.employee_id', 'left');
+
+        $start_date = date('Y-m-d', strtotime(date('Y-m-d') . ' -30 day'));
+        $end_date   = date('Y-m-d', strtotime(date('Y-m-d') . ' -1 day'));
+        
+        $this->db->where('jobs.start_date BETWEEN "'. $start_date . '" and "'. $end_date .'"');
+        $this->db->order_by('jobs.start_date', 'DESC');
+
+        $query = $this->db->get();
+        return $query->result();
+    }
+    public function getAllpreviousJobsByCompanyID($company_id = 0)
+    {
+        $this->db->select('jobs.id, jobs.job_number, jobs.job_name, jobs.event_color, jobs.job_description, jobs.job_location, jobs.job_type, jobs.tags, jobs.start_date, 
+        jobs.end_date, jobs.company_id, jobs.start_time, jobs.end_time, jobs.status, jobs.priority, acs_profile.prof_id, acs_profile.first_name, acs_profile.last_name,
+        job_tags.name as tags_name,cust.first_name,cust.last_name,cust.mail_add,cust.city as cust_city,cust.state as cust_state,cust.zip_code as cust_zip_code,job_url_links.link,users.profile_img,jpd.amount,users.FName,users.LName');
+
+        $this->db->from("jobs");
+        $this->db->join('acs_profile', 'jobs.customer_id = acs_profile.prof_id');
+        $this->db->join('job_url_links', 'jobs.id = job_url_links.job_id');
+        $this->db->join('job_payments as jpd', 'jobs.id = jpd.job_id', 'left');
+        $start_date = date('Y-m-d', strtotime(date('Y-m-d') . ' -30 day'));
+        $end_date   = date('Y-m-d', strtotime(date('Y-m-d') . ' -1 day'));
+        $this->db->join('job_tags', 'job_tags.id = jobs.tags', 'left');
+        $this->db->join('acs_profile as cust', 'cust.prof_id = jobs.customer_id', 'left');
+        $this->db->join('users', 'users.id = jobs.employee_id', 'left');
+        
+        $this->db->where('jobs.start_date BETWEEN "'. $start_date . '" and "'. $end_date .'"');
+        $this->db->where('jobs.company_id', $company_id);
+        $this->db->order_by('jobs.start_date', 'ASC');
+        $query = $this->db->get();
+        //print_r($this->db->last_query());  exit;
+        return $query->result();
+    }
+
+    public function getAllUpcomingJobsByCompanyId($company_id = 0)
+    {
+        $this->db->select('jobs.id, jobs.job_number, jobs.job_name, jobs.event_color, jobs.job_description, jobs.job_location, jobs.job_type, jobs.tags, jobs.start_date, 
+        jobs.end_date, jobs.company_id, jobs.start_time, jobs.end_time, jobs.status, jobs.priority, acs_profile.prof_id, acs_profile.first_name, acs_profile.last_name,
+        job_tags.name as tags_name,cust.first_name,cust.last_name,cust.mail_add,cust.city as cust_city,cust.state as cust_state,cust.zip_code as cust_zip_code,job_url_links.link,users.profile_img,jpd.amount,users.FName,users.LName');
+
+        $this->db->from("jobs");
+        $this->db->join('acs_profile', 'jobs.customer_id = acs_profile.prof_id');
+        $this->db->join('job_url_links', 'jobs.id = job_url_links.job_id');
+        $this->db->join('job_payments as jpd', 'jobs.id = jpd.job_id', 'left');
+        $start_date = date('Y-m-d');
+        $end_date   = date('Y-m-d', strtotime($start_date . ' +30 day'));
+        $this->db->join('job_tags', 'job_tags.id = jobs.tags', 'left');
+        $this->db->join('acs_profile as cust', 'cust.prof_id = jobs.customer_id', 'left');
+        $this->db->join('users', 'users.id = jobs.employee_id', 'left');
+        
+        $this->db->where('jobs.start_date BETWEEN "'. $start_date . '" and "'. $end_date .'"');
+        $this->db->where('jobs.company_id', $company_id);
+        $this->db->order_by('jobs.start_date', 'ASC');
+        $query = $this->db->get();
+        //print_r($this->db->last_query());  exit;
+        return $query->result();
+    }
+    public function getAllUpcomingJobs()
+    {
+        $this->db->select('jobs.id, jobs.job_number, jobs.job_name, jobs.event_color, jobs.job_description, jobs.job_location, jobs.job_type, jobs.tags, jobs.start_date, 
+        jobs.end_date, jobs.company_id, jobs.start_time, jobs.end_time, jobs.status, jobs.priority, acs_profile.prof_id, acs_profile.first_name, acs_profile.last_name,
+        job_tags.name as tags_name,cust.first_name,cust.last_name,cust.mail_add,cust.city as cust_city,cust.state as cust_state,cust.zip_code as cust_zip_code,job_url_links.link,users.profile_img,jpd.amount,users.FName,users.LName');
+
+        $this->db->from('jobs');
+        $this->db->join('acs_profile', 'jobs.customer_id = acs_profile.prof_id');
+        $this->db->join('job_url_links', 'jobs.id = job_url_links.job_id', 'left');
+        $this->db->join('job_payments as jpd', 'jobs.id = jpd.job_id', 'left');
+        $start_date = date('Y-m-d');
+        $this->db->join('job_tags', 'job_tags.id = jobs.tags', 'left');
+        $this->db->join('acs_profile as cust', 'cust.prof_id = jobs.customer_id', 'left');
+        $this->db->join('users', 'users.id = jobs.employee_id', 'left');
+
+        $start_date = date('Y-m-d');
+        $end_date   = date('Y-m-d', strtotime($start_date . ' +30 day'));
+
+        //echo $start_date . "/" . $end_date;exit;
+        
+        $this->db->where('jobs.start_date BETWEEN "'. $start_date . '" and "'. $end_date .'"');
+        $this->db->order_by('jobs.start_date', 'ASC');
+
+        $query = $this->db->get();
         return $query->result();
     }
 }

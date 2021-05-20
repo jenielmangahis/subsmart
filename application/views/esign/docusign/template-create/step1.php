@@ -66,6 +66,13 @@
     </div>
 
     <div class="d-flex justify-content-end">
+        <button id="saveandclose" type="button" class="btn btn-secondary align-items-center mr-1 d-none">
+            <div class="spinner-border spinner-border-sm mt-0 mr-1 d-none" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+            <span class="text">Save And Close</span>
+        </button>
+
         <button type="submit" class="btn btn-primary d-flex align-items-center">
             <div class="spinner-border spinner-border-sm mt-0 mr-1 d-none" role="status">
                 <span class="sr-only">Loading...</span>
