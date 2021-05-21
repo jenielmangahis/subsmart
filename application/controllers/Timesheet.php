@@ -2265,7 +2265,7 @@ class Timesheet extends MY_Controller
             $data->profile_img = $getUserDetail->profile_img;
             $data->body = $data->body = $getUserDetail->FName . " " . $getUserDetail->LName . " has Clocked Out today in " . $employeeLongnameAddress . " at " . date('h:i A', time()) . " " . $this->session->userdata('offset_zone');
             $data->device_type =  $getUserDetail->device_type;
-            $data->company_id = getLoggedCompanyID();
+            $data->company_id = logged('company_id');
             $data->token = $getUserDetail->device_token;
             $data->title = "Time Clock Alert";
             $data->timesheet_logs_id = $timesheet_logs_id;
@@ -2292,10 +2292,10 @@ class Timesheet extends MY_Controller
             $data->html = $html;
             $data->content_notification = $content_notification;
             $data->profile_img = $image;
-            echo json_encode($data);
             $data->device_type = "";
             $data->token = "";
             $this->pusher_notification($data);
+            echo json_encode($data);
         }
     }
 

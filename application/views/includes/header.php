@@ -1044,7 +1044,7 @@ if ($this->session->userdata('usertimezone') == "") {
                     var current_notifs = $('#autoNotifications').html();
                     $('#autoNotifications').html(data.html + current_notifs);
                 }
-                if (data.notif_action_made == "autoclockout" && data.company_id == current_user_company_id) {
+                if (data.notif_action_made == "autoclockout") {
                     if (data.user_id == user_id) {
                         notificationRing();
                         Push.Permission.GRANTED;

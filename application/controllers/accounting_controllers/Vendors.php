@@ -1207,4 +1207,304 @@ class Vendors extends MY_Controller {
             'message' => $update ? "Successfully updated!" : "Unexpected Error"
         ]);
     }
+
+    public function delete_transaction($transactionType, $transactionId)
+    {
+        switch ($transactionType) {
+            case 'expense' :
+                $delete = $this->delete_expense($transactionId);
+            break;
+            case 'check' :
+                $delete = $this->delete_check($transactionId);
+            break;
+            case 'bill' :
+                $delete = $this->delete_bill($transactionId);
+            break;
+            case 'purchase-order' :
+                $delete = $this->delete_purchase_order($transactionId);
+            break;
+            case 'vendor-credit' :
+                $delete = $this->delete_vendor_credit($transactionId);
+            break;
+            case 'credit-card-payment' :
+                $delete = $this->delete_cc_payment($transactionId);
+            break;
+        }
+
+        if($delete) {
+            $this->session->set_flashdata("success", "Transaction successfully deleted!");
+        } else {
+            $this->session->set_flashdata("error", "Unexpected error occured!");
+        }
+    }
+
+    private function delete_expense($expenseId)
+    {
+        $expense = $this->vendors_model->get_expense_by_id($expenseId);
+
+        $paymentAcc = $this->chart_of_accounts_model->getById($expense->payment_account_id);
+        $newBalance = floatval($paymentAcc->balance) - floatval($expense->total_amount);
+        $newBalance = number_format($newBalance, 2, '.', ',');
+
+        $paymentAccData = [
+            'id' => $paymentAcc->id,
+            'company_id' => logged('company_id'),
+            'balance' => $newBalance
+        ];
+
+        $this->chart_of_accounts_model->updateBalance($paymentAccData);
+
+        $categories = $this->expenses_model->get_transaction_categories($expenseId, 'Expense');
+        $items = $this->expenses_model->get_transaction_items($expenseId, 'Expense');
+
+        if(count($categories) > 0) {
+            foreach($categories as $category) {
+                $expenseAcc = $this->chart_of_accounts_model->getById($category->expense_account_id);
+                $newBalance = floatval($expenseAcc->balance) - floatval($category->amount);
+                $newBalance = number_format($newBalance, 2, '.', ',');
+
+                $expenseAccData = [
+                    'id' => $expenseAcc->id,
+                    'company_id' => logged('company_id'),
+                    'balance' => $newBalance
+                ];
+
+                $this->chart_of_accounts_model->updateBalance($expenseAccData);
+            }
+        }
+
+        if(count($items) > 0) {
+            foreach($items as $item) {
+                $location = $this->items_model->getItemLocation($item->location_id, $item->item_id);
+
+                $newQty = intval($location->qty) - intval($item->quantity);
+
+                $this->items_model->updateLocationQty($item->location_id, $item->item_id, $newQty);
+
+                $itemAccDetails = $this->items_model->getItemAccountingDetails($item->item_id);
+
+                if($itemAccDetails) {
+                    $invAssetAcc = $this->chart_of_accounts_model->getById($itemAccDetails->inv_asset_acc_id);
+                    $newBalance = floatval($invAssetAcc->balance) - floatval($item->total);
+                    $newBalance = number_format($newBalance, 2, '.', ',');
+
+                    $invAssetAccData = [
+                        'id' => $invAssetAcc->id,
+                        'company_id' => logged('company_id'),
+                        'balance' => $newBalance
+                    ];
+
+                    $this->chart_of_accounts_model->updateBalance($invAssetAccData);
+                }
+            }
+        }
+
+        $update = $this->vendors_model->update_expense($expenseId, ['status' => 0]);
+
+        return $update;
+    }
+
+    private function delete_check($checkId)
+    {
+        $check = $this->vendors_model->get_check_by_id($checkId);
+
+        $paymentAcc = $this->chart_of_accounts_model->getById($check->payment_account_id);
+        $newBalance = floatval($paymentAcc->balance) + floatval($check->total_amount);
+        $newBalance = number_format($newBalance, 2, '.', ',');
+
+        $paymentAccData = [
+            'id' => $paymentAcc->id,
+            'company_id' => logged('company_id'),
+            'balance' => $newBalance
+        ];
+
+        $this->chart_of_accounts_model->updateBalance($paymentAccData);
+
+        $categories = $this->expenses_model->get_transaction_categories($checkId, 'Check');
+        $items = $this->expenses_model->get_transaction_items($checkId, 'Check');
+
+        if(count($categories) > 0) {
+            foreach($categories as $category) {
+                $expenseAcc = $this->chart_of_accounts_model->getById($category->expense_account_id);
+                $newBalance = floatval($expenseAcc->balance) - floatval($category->amount);
+                $newBalance = number_format($newBalance, 2, '.', ',');
+
+                $expenseAccData = [
+                    'id' => $expenseAcc->id,
+                    'company_id' => logged('company_id'),
+                    'balance' => $newBalance
+                ];
+
+                $this->chart_of_accounts_model->updateBalance($expenseAccData);
+            }
+        }
+
+        if(count($items) > 0) {
+            foreach($items as $item) {
+                $location = $this->items_model->getItemLocation($item->location_id, $item->item_id);
+
+                $newQty = intval($location->qty) - intval($item->quantity);
+
+                $this->items_model->updateLocationQty($item->location_id, $item->item_id, $newQty);
+
+                $itemAccDetails = $this->items_model->getItemAccountingDetails($item->item_id);
+
+                if($itemAccDetails) {
+                    $invAssetAcc = $this->chart_of_accounts_model->getById($itemAccDetails->inv_asset_acc_id);
+                    $newBalance = floatval($invAssetAcc->balance) - floatval($item->total);
+                    $newBalance = number_format($newBalance, 2, '.', ',');
+
+                    $invAssetAccData = [
+                        'id' => $invAssetAcc->id,
+                        'company_id' => logged('company_id'),
+                        'balance' => $newBalance
+                    ];
+
+                    $this->chart_of_accounts_model->updateBalance($invAssetAccData);
+                }
+            }
+        }
+
+        $update = $this->vendors_model->update_check($checkId, ['status' => 0]);
+
+        return $update;
+    }
+
+    private function delete_bill($billId)
+    {
+        $categories = $this->expenses_model->get_transaction_categories($billId, 'Bill');
+        $items = $this->expenses_model->get_transaction_items($billId, 'Bill');
+
+        if(count($categories) > 0) {
+            foreach($categories as $category) {
+                $expenseAcc = $this->chart_of_accounts_model->getById($category->expense_account_id);
+                $newBalance = floatval($expenseAcc->balance) - floatval($category->amount);
+                $newBalance = number_format($newBalance, 2, '.', ',');
+
+                $expenseAccData = [
+                    'id' => $expenseAcc->id,
+                    'company_id' => logged('company_id'),
+                    'balance' => $newBalance
+                ];
+
+                $this->chart_of_accounts_model->updateBalance($expenseAccData);
+            }
+        }
+
+        if(count($items) > 0) {
+            foreach($items as $item) {
+                $location = $this->items_model->getItemLocation($item->location_id, $item->item_id);
+
+                $newQty = intval($location->qty) - intval($item->quantity);
+
+                $this->items_model->updateLocationQty($item->location_id, $item->item_id, $newQty);
+
+                $itemAccDetails = $this->items_model->getItemAccountingDetails($item->item_id);
+
+                if($itemAccDetails) {
+                    $invAssetAcc = $this->chart_of_accounts_model->getById($itemAccDetails->inv_asset_acc_id);
+                    $newBalance = floatval($invAssetAcc->balance) - floatval($item->total);
+                    $newBalance = number_format($newBalance, 2, '.', ',');
+
+                    $invAssetAccData = [
+                        'id' => $invAssetAcc->id,
+                        'company_id' => logged('company_id'),
+                        'balance' => $newBalance
+                    ];
+
+                    $this->chart_of_accounts_model->updateBalance($invAssetAccData);
+                }
+            }
+        }
+
+        $update = $this->vendors_model->update_bill($billId, ['status' => 0]);
+
+        return $update;
+    }
+
+    private function delete_purchase_order($purchaseOrderId)
+    {
+        $items = $this->expenses_model->get_transaction_items($purchaseOrderId, 'Check');
+
+        if(count($items) > 0) {
+            foreach($items as $item) {
+                $location = $this->items_model->getItemLocation($item->location_id, $item->item_id);
+
+                $newQty = intval($location->qty) - intval($item->quantity);
+
+                $this->items_model->updateLocationQty($item->location_id, $item->item_id, $newQty);
+            }
+        }
+
+        $update = $this->vendors_model->update_purchase_order($purchaseOrderId, ['status' => 0]);
+
+        return $update;
+    }
+
+    private function delete_vendor_credit($vendorCreditId)
+    {
+        $vendorCredit = $this->vendors_model->get_vendor_credit_by_id($vendorCreditId);
+        $vendor = $this->vendors_model->get_vendor_by_id($vendorCredit->vendor_id);
+
+        if($vendor->vendor_credits === null & $vendor->vendor_credits === "") {
+            $vendorCredits = floatval($vendorCredit->total_amount);
+        } else {
+            $vendorCredits = floatval($vendor->vendor_credits) - floatval($vendorCredit->total_amount);
+        }
+
+        $vendorData = [
+            'vendor_credits' => number_format($vendorCredits, 2, '.', ',')
+        ];
+
+        $this->vendors_model->updateVendor($vendor->id, $vendorData);
+
+        $categories = $this->expenses_model->get_transaction_categories($vendorCreditId, 'Vendor Credit');
+        $items = $this->expenses_model->get_transaction_items($vendorCreditId, 'Vendor Credit');
+
+        if(count($categories) > 0) {
+            foreach($categories as $category) {
+                $expenseAcc = $this->chart_of_accounts_model->getById($category->expense_account_id);
+                $newBalance = floatval($expenseAcc->balance) + floatval($category->amount);
+                $newBalance = number_format($newBalance, 2, '.', ',');
+
+                $expenseAccData = [
+                    'id' => $expenseAcc->id,
+                    'company_id' => logged('company_id'),
+                    'balance' => $newBalance
+                ];
+
+                $this->chart_of_accounts_model->updateBalance($expenseAccData);
+            }
+        }
+
+        if(count($items) > 0) {
+            foreach($items as $item) {
+                $location = $this->items_model->getItemLocation($item->location_id, $item->item_id);
+
+                $newQty = intval($location->qty) + intval($item->quantity);
+
+                $this->items_model->updateLocationQty($item->location_id, $item->item_id, $newQty);
+
+                $itemAccDetails = $this->items_model->getItemAccountingDetails($item->item_id);
+
+                if($itemAccDetails) {
+                    $invAssetAcc = $this->chart_of_accounts_model->getById($itemAccDetails->inv_asset_acc_id);
+                    $newBalance = floatval($invAssetAcc->balance) + floatval($item->total);
+                    $newBalance = number_format($newBalance, 2, '.', ',');
+
+                    $invAssetAccData = [
+                        'id' => $invAssetAcc->id,
+                        'company_id' => logged('company_id'),
+                        'balance' => $newBalance
+                    ];
+
+                    $this->chart_of_accounts_model->updateBalance($invAssetAccData);
+                }
+            }
+        }
+
+        $update = $this->vendors_model->update_vendor_credit($vendorCreditId, ['status' => 0]);
+
+        return $update;
+    }
 }

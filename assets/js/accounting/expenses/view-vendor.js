@@ -213,6 +213,7 @@ $('#transactions-table').DataTable({
             orderable: false,
 			fnCreatedCell: function(td, cellData, rowData, row, col) {
                 $(td).html(`<input type="checkbox" value="${rowData.id}">`);
+                $(td).css('padding', '10px 18px');
 			}
 		},
         {
@@ -1043,8 +1044,7 @@ $('a#new-credit-card-pmt').on('click', function(e) {
     });
 });
 
-$(document).on('change', '#transactions-table select[name="category[]"]', function(e) {
-    e.preventDefault();
+$(document).on('change', '#transactions-table select[name="category[]"]', function() {
     var row = $(this).parent().parent();
     var rowData = $('#transactions-table').DataTable().row(row).data();
     var account = $(this).val();
@@ -1064,6 +1064,23 @@ $(document).on('change', '#transactions-table select[name="category[]"]', functi
             var res = JSON.parse(result);
 
             toast(res.success, res.message);
+        }
+    });
+});
+
+$(document).on('click', '#transactions-table a.delete-transaction', function(e) {
+    e.preventDefault();
+    var row = $(this).parent().parent().parent().parent();
+    var data = $('#transactions-table').DataTable().row(row).data();
+    var transactionType = data.type;
+    transactionType = transactionType.replace(' ', '-');
+    transactionType = transactionType.toLowerCase();
+
+    $.ajax({
+        url: `/accounting/vendors/delete-transaction/${transactionType}/${data.id}`,
+        type: 'DELETE',
+        success: function(result) {
+            location.reload();
         }
     });
 });

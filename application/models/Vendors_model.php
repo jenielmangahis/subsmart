@@ -271,6 +271,8 @@ class Vendors_model extends MY_Model {
 			} else {
 				$this->db->where('status', $filters['status']);
 			}
+		} else {
+			$this->db->where('status', 1);
 		}
 
 		$query = $this->db->get('accounting_bill');
@@ -347,6 +349,7 @@ class Vendors_model extends MY_Model {
 			$this->db->where('purchase_order_date >=', $filters['start-date']);
 			$this->db->where('purchase_order_date <=', $filters['end-date']);
 		}
+		$this->db->where('status', 1);
 		$query = $this->db->get('accounting_purchase_order');
 		return $query->result();
 	}
@@ -411,6 +414,7 @@ class Vendors_model extends MY_Model {
 			$this->db->where('payment_date >=', $filters['start-date']);
 			$this->db->where('payment_date <=', $filters['end-date']);
 		}
+		$this->db->where('status', 1);
 
 		$query = $this->db->get('accounting_vendor_credit');
 
@@ -438,6 +442,70 @@ class Vendors_model extends MY_Model {
 		$this->db->where('transaction_id', $data['transaction_id']);
 		$update = $this->db->update('accounting_vendor_transaction_categories', ['expense_account_id' => $data['new_category']]);
 
+		return $update;
+	}
+
+	public function get_expense_by_id($expenseId)
+	{
+		$this->db->where('company_id', logged('company_id'));
+		$this->db->where('id', $expenseId);
+		$query = $this->db->get('accounting_expense');
+		return $query->row();
+	}
+
+	public function update_expense($expenseId, $data)
+	{
+		$this->db->where('company_id', logged('company_id'));
+		$this->db->where('id', $expenseId);
+		$update = $this->db->update('accounting_expense', $data);
+		return $update;
+	}
+
+	public function get_check_by_id($checkId)
+	{
+		$this->db->where('company_id', logged('company_id'));
+		$this->db->where('id', $checkId);
+		$query = $this->db->get('accounting_check');
+		return $query->row();
+	}
+
+	public function update_check($checkId, $data)
+	{
+		$this->db->where('company_id', logged('company_id'));
+		$this->db->where('id', $checkId);
+		$update = $this->db->update('accounting_check', $data);
+		return $update;
+	}
+
+	public function update_bill($billId, $data)
+	{
+		$this->db->where('company_id', logged('company_id'));
+		$this->db->where('id', $billId);
+		$update = $this->db->update('accounting_bill', $data);
+		return $update;
+	}
+
+	public function update_purchase_order($purchaseOrderId, $data)
+	{
+		$this->db->where('company_id', logged('company_id'));
+		$this->db->where('id', $purchaseOrderId);
+		$update = $this->db->update('accounting_purchase_order', $data);
+		return $update;
+	}
+
+	public function get_vendor_credit_by_id($vendorCreditId)
+	{
+		$this->db->where('company_id', logged('company_id'));
+		$this->db->where('id', $vendorCreditId);
+		$query = $this->db->get('accounting_vendor_credit');
+		return $query->row();
+	}
+
+	public function update_vendor_credit($vendorCreditId, $data)
+	{
+		$this->db->where('company_id', logged('company_id'));
+		$this->db->where('id', $vendorCreditId);
+		$update = $this->db->update('accounting_vendor_credit', $data);
 		return $update;
 	}
 }

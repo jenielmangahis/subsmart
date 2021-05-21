@@ -539,6 +539,8 @@ class DocuSign extends MY_Controller
 
     public function apiStoreTemplate()
     {
+        header('content-type: application/json');
+
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             echo json_encode(['success' => false]);
             return;
@@ -569,7 +571,7 @@ class DocuSign extends MY_Controller
             'recipients' => $recipients,
         ] = $this->input->post();
 
-        $id = $this->input->post('id');
+        $id = (int) $this->input->post('id');
         $recipients = json_decode($recipients, true);
 
         $payload = [
@@ -581,51 +583,92 @@ class DocuSign extends MY_Controller
             'company_id' => logged('company_id'),
         ];
 
-        if (is_null($id)) { // not created yet
+        $isCreated = false;
+        if (!$id) { // not created yet
             $this->db->insert('user_docfile_templates', $payload);
-            $insertedId = $this->db->insert_id();
+            $id = $this->db->insert_id();
 
-            for ($i = 0; $i < $count; $i++) {
-                $tempName = $files['tmp_name'][$i];
-                $filename = $files['name'][$i];
-                $filename = time() . "_" . rand(1, 9999999) . "_" . basename($filename);
-
-                $payload = [
-                    'name' => $filename,
-                    'path' => str_replace(FCPATH, '/', $filepath . $filename),
-                    'template_id' => $insertedId,
-                ];
-
-                $this->db->insert('user_docfile_templates_documents', $payload);
-                move_uploaded_file($tempName, $filepath . $filename);
-            }
-
-            if (!empty($recipients)) {
-                foreach ($recipients as $recipient) {
-                    $payload = [
-                        'user_id' => logged('id'),
-                        'template_id' => $insertedId,
-                        'name' => $recipient['name'],
-                        'email' => $recipient['email'],
-                        'role' => $recipient['role'],
-                        'color' => $recipient['color'],
-                        'role_name' => $recipient['role_name'],
-                    ];
-
-                    $this->db->insert('user_docfile_templates_recipients', $payload);
-                }
-            }
-
-            $this->db->where('id', $insertedId);
+            $this->db->where('id', $id);
             $record = $this->db->get('user_docfile_templates')->row();
-
-            header('content-type: application/json');
-            echo json_encode(['data' => $record, 'is_created' => true]);
-            return;
+            $isCreated = true;
+        } else {
+            $this->db->where('id', $id);
+            $this->db->update('user_docfile_templates', $payload);
         }
 
-        header('content-type: application/json');
-        echo json_encode(['data' => null]);
+        $this->db->where('template_id', $id);
+        $documents = $this->db->get('user_docfile_templates_documents')->result_array();
+
+        foreach ($documents as $document) {
+            if (in_array($document['name'], $files['name'])) {
+                continue;
+            }
+
+            $this->db->where('id', $document['id']);
+            $this->db->delete('user_docfile_templates_documents');
+            unlink($filepath . $document['name']);
+
+            $this->db->where('docfile_document_id', $document['id']);
+            $this->db->delete('user_docfile_templates_fields');
+        }
+
+        for ($i = 0; $i < $count; $i++) {
+            $tempName = $files['tmp_name'][$i];
+            $filename = $files['name'][$i];
+
+            $this->db->where('name', $filename);
+            $document = $this->db->get('user_docfile_templates_documents')->row_array();
+
+            if ($document) {
+                continue;
+            }
+
+            $filename = time() . "_" . rand(1, 9999999) . "_" . basename($filename);
+            $payload = [
+                'name' => $filename,
+                'path' => str_replace(FCPATH, '/', $filepath . $filename),
+                'template_id' => $id,
+            ];
+
+            $this->db->insert('user_docfile_templates_documents', $payload);
+            move_uploaded_file($tempName, $filepath . $filename);
+        }
+
+        $this->db->where('template_id', $id);
+        $currRecipients = $this->db->get('user_docfile_templates_recipients')->result_array();
+        $newRecipientIds = array_column($recipients, 'id');
+
+        foreach ($currRecipients as $recipient) {
+            if (!in_array($recipient['id'], $newRecipientIds)) {
+                $this->db->where('id', $recipient['id']);
+                $this->db->delete('user_docfile_templates_recipients');
+            }
+        }
+
+        if (!empty($recipients)) {
+            foreach ($recipients as $recipient) {
+                $payload = [
+                    'user_id' => logged('id'),
+                    'template_id' => $id,
+                    'name' => $recipient['name'],
+                    'email' => $recipient['email'],
+                    'role' => $recipient['role'],
+                    'color' => $recipient['color'],
+                    'role_name' => $recipient['role_name'],
+                ];
+
+                if (strpos($recipient['id'], 'temp') === 0) {
+                    $this->db->insert('user_docfile_templates_recipients', $payload);
+                } else {
+                    $this->db->where('id', $recipient['id']);
+                    $this->db->update('user_docfile_templates_recipients', $payload);
+                }
+            }
+        }
+
+        $this->db->where('id', $id);
+        $record = $this->db->get('user_docfile_templates')->row();
+        echo json_encode(['data' => $record, 'is_created' => $isCreated]);
     }
 
     public function apiTemplates()
@@ -1125,6 +1168,13 @@ SQL;
     {
         $this->db->where('id', $templateId);
         $this->db->delete('user_docfile_templates');
+
+        $this->db->where('template_id', $templateId);
+        $documents = $this->db->get('user_docfile_templates_documents')->result_array();
+
+        foreach ($documents as $document) {
+            unlink(FCPATH . 'uploads/docusigntemplates/' . $document['name']);
+        }
 
         $this->db->where('template_id', $templateId);
         $this->db->delete('user_docfile_templates_documents');

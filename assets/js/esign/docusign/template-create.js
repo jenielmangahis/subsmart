@@ -202,81 +202,93 @@ function TemplateCreate() {
   }
 
   function attachEventHandlers({ templateId: templateIdParam = null }) {
-    $form.on("submit", async function (event) {
-      event.preventDefault();
-
-      const $this = $(this);
-      const $name = $this.find("#name");
-      const $description = $this.find("#description");
-      const $file = $this.find("#docFile");
-      const $subject = $this.find("#subject");
-      const $message = $this.find("#message");
-
-      if (templateIdParam) {
-        $(this).attr("disabled", true);
-        $(this).find(".spinner-border").removeClass("d-none");
-
-        const payload = {
-          recipients: recipients.map((r) => r.getData()),
-          subject: $subject.val(),
-          message: $message.val(),
-          workorder_id: workorder ? workorder.id : null,
-        };
-
-        const endpoint = `${prefixURL}/DocuSign/apiSendTemplate/${templateIdParam}`;
-        const response = await fetch(endpoint, {
-          method: "POST",
-          body: JSON.stringify(payload),
-          headers: {
-            accepts: "application/json",
-            "content-type": "application/json",
-          },
-        });
-
-        const data = await response.json();
-        window.location = `${prefixURL}/DocuSign/manage?view=sent`;
-        return;
-      }
-
-      const payload = {
-        name: $name.val() || $name.prop("placeholder"),
-        description: $description.val(),
-        // file: $file.get(0).files[0],
-        subject: $subject.val(),
-        message: $message.val(),
-        recipients: JSON.stringify(recipients.map((r) => r.getData())), // :v
-      };
-
-      const formData = new FormData();
-      for (const key in payload) {
-        formData.append(key, payload[key]);
-      }
-
-      files.forEach(({ file }) => {
-        formData.append("files[]", file);
-      });
-
-      $(this).attr("disabled", true);
-      $(this).find(".spinner-border").removeClass("d-none");
-
-      const response = await fetch(`${prefixURL}/DocuSign/apiStoreTemplate`, {
-        method: "POST",
-        body: formData,
-      });
-
-      const { data } = await response.json();
-      const { id: templateId } = data;
-
-      $(this).attr("disabled", false);
-      $(this).find(".spinner-border").addClass("d-none");
-
-      window.location = `${prefixURL}/esign/Files?template_id=${templateId}&next_step=3`;
-    });
-
     $form.find("#docFile").on("change", onChangeFile);
     // $docPreview.on("click", showDocument);
 
     $addRecipientButton.on("click", () => addRecipient());
+
+    $form.on("submit", (e) => sendForm(e, templateIdParam));
+    $("#saveandclose").on("click", (e) => sendForm(e, templateIdParam));
+  }
+
+  async function sendForm(event, templateIdParam) {
+    event.preventDefault();
+
+    const shouldUpdate =
+      templateIdParam && $(event.currentTarget).prop("id") === "saveandclose";
+
+    const $name = $form.find("#name");
+    const $description = $form.find("#description");
+    const $subject = $form.find("#subject");
+    const $message = $form.find("#message");
+
+    if (templateIdParam && !shouldUpdate) {
+      $button = $form.find(".btn-primary");
+      $button.attr("disabled", true);
+      $button.find(".spinner-border").removeClass("d-none");
+
+      const payload = {
+        recipients: recipients.map((r) => r.getData()),
+        subject: $subject.val(),
+        message: $message.val(),
+        workorder_id: workorder ? workorder.id : null,
+      };
+
+      const endpoint = `${prefixURL}/DocuSign/apiSendTemplate/${templateIdParam}`;
+      const response = await fetch(endpoint, {
+        method: "POST",
+        body: JSON.stringify(payload),
+        headers: {
+          accepts: "application/json",
+          "content-type": "application/json",
+        },
+      });
+
+      await response.json();
+      window.location = `${prefixURL}/DocuSign/manage?view=sent`;
+      return;
+    }
+
+    const payload = {
+      name: $name.val() || $name.prop("placeholder"),
+      description: $description.val(),
+      subject: $subject.val(),
+      message: $message.val(),
+      recipients: JSON.stringify(recipients.map((r) => r.getData())), // :v
+      id: templateIdParam,
+    };
+
+    const formData = new FormData();
+    for (const key in payload) {
+      formData.append(key, payload[key]);
+    }
+
+    files.forEach(({ file }) => {
+      formData.append("files[]", file);
+    });
+
+    $button = shouldUpdate ? $(event.target) : $form.find(".btn-primary");
+
+    $button.attr("disabled", true);
+    $button.find(".spinner-border").removeClass("d-none");
+
+    const response = await fetch(`${prefixURL}/DocuSign/apiStoreTemplate`, {
+      method: "POST",
+      body: formData,
+    });
+
+    const { data } = await response.json();
+    const { id: templateId } = data;
+
+    $button.attr("disabled", false);
+    $button.find(".spinner-border").addClass("d-none");
+
+    if (shouldUpdate) {
+      window.location = `${prefixURL}/vault/mylibrary`;
+      return;
+    }
+
+    window.location = `${prefixURL}/esign/Files?template_id=${templateId}&next_step=3`;
   }
 
   function removeRecipient(id) {
@@ -305,11 +317,11 @@ function TemplateCreate() {
     ];
 
     if ($.isEmptyObject(data)) {
-      data.id = new Date().getTime();
+      data.id = `temp_${new Date().getTime()}`;
       data.role_name = "";
       data.name = "";
       data.email = "";
-      data.role = "Needs to Sign";
+      data.role = "Signs in Person";
 
       const takenColors = recipients.map((recipient) => {
         return recipient.getData().color;
@@ -381,13 +393,16 @@ function TemplateCreate() {
     await fetchTemplateRecipients();
 
     const { name, description, subject, message, files, recipients } = template;
-    const [file] = files;
 
-    const { path: filePath, name: fileName } = file;
+    let templateFiles = files.map(async (file) => {
+      const { path: filePath, name: fileName } = file;
 
-    const fileResponse = await fetch(`${prefixURL}${filePath}`);
-    const blob = await fileResponse.blob();
-    const templateFile = new File([blob], fileName);
+      const fileResponse = await fetch(`${prefixURL}${filePath}`);
+      const blob = await fileResponse.blob();
+      return new File([blob], fileName);
+    });
+
+    templateFiles = await Promise.all(templateFiles);
 
     const $name = $form.find("#name");
     const $description = $form.find("#description");
@@ -401,7 +416,7 @@ function TemplateCreate() {
     $message.val(message);
     $file.removeAttr("required");
 
-    const fakeEvent = { target: { files: [templateFile] } };
+    const fakeEvent = { target: { files: templateFiles } };
     await onChangeFile(fakeEvent);
 
     let customerSet = false;
@@ -529,7 +544,7 @@ function Recipient({
       },
       {
         icon: "fa-user",
-        value: "In Person Signer",
+        value: "Signs in Person",
       },
       {
         icon: "fa-clone",
