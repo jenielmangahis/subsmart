@@ -445,6 +445,7 @@ class Promote extends MY_Controller {
         $this->load->model('MarketingOrderPayments_model');
         $this->load->model('CardsFile_model');        
         $this->load->model('CompanyOnlinePaymentAccount_model');
+        $this->load->model('Clients_model');  
 
         $is_success = false;
         $msg = '';
@@ -460,6 +461,7 @@ class Promote extends MY_Controller {
 
             $dealsSteals = $this->DealsSteals_model->getById($deals_steals_id);
             $company     = $this->Business_model->getByCompanyId($company_id);
+            $client      = $this->Clients_model->getById($company_id);
 
             //$exp_date =  $data['exp_month'] . date("y",strtotime($data['exp_year']));
             $company_address  = $company->street . " " . $company->city . " " . $company->state;
@@ -485,7 +487,9 @@ class Promote extends MY_Controller {
                 'ssl_card_number' => $ccFile->card_number,
                 'ssl_exp_date' => $exp_date,
                 'ssl_cvv2cvc2' => $ccFile->card_cvv,
-                'ssl_amount' => 1,
+                'ssl_first_name' => $client->first_name,
+                'ssl_last_name' => $client->last_name,
+                'ssl_amount' => $this->DealsSteals_model->dealStealPrice(),
                 'ssl_avs_address' => $company_address,
                 'ssl_avs_zip' => $company_zip,
             ]);

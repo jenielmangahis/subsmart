@@ -297,15 +297,15 @@ $(function(){
                         confirmButtonText: 'Ok'
                     }).then((result) => {
                         if (result.value) {
-                            window.location.href= base_url + 'sms_campaigns';
+                            window.location.href= base_url + 'sms_campaigns/payment_details';
                         }
                     });
                     
                 }else{
                     Swal.fire({
                       icon: 'error',
-                      title: o.msg,
-                      text: 'Cannot activate campaign.'
+                      title: 'Cannot activate campaign.',
+                      text: o.msg
                     });
                 }
 

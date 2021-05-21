@@ -822,11 +822,13 @@ class Sms_Campaigns extends MY_Controller {
     public function activate_campaign(){
         $this->load->model('CardsFile_model');
         $this->load->model('Clients_model');
+        $this->load->model('MarketingOrderPayments_model');
 
         $is_success = false;
         $msg = '';
 
         $cid  = logged('company_id');
+        $user = $this->session->userdata('logged');
         $post = $this->input->post();
 
         if( isset($post['payment_method_token']) ){
@@ -836,9 +838,12 @@ class Sms_Campaigns extends MY_Controller {
                 $creditCard = $this->CardsFile_model->getById($post['payment_method_token']);
                 if( $creditCard && $creditCard->company_id == $cid ){
                     $company = $this->Clients_model->getById($creditCard->company_id);
+
+                    $expiration_month =  str_pad($creditCard->expiration_month, 2, '0', STR_PAD_LEFT);             
+                    $exp_date         =  $expiration_month . $creditCard->expiration_year;
                     $data_cc = [
                         'card_number' => $creditCard->card_number,
-                        'exp_date' => $creditCard->expiration_month . $creditCard->expiration_year,
+                        'exp_date' => $exp_date,
                         'cvc' => $creditCard->card_cvv,
                         'ssl_first_name' => $company->first_name,
                         'ssl_last_name' => $company->last_name,
@@ -847,9 +852,28 @@ class Sms_Campaigns extends MY_Controller {
                         'ssl_zip' => $company->zip_code
                     ];
 
-                    $result_payment = $this->convergePayment($data);
+                    $result_payment = $this->convergePayment($data_cc);
                     if( $result_payment['is_success'] === 1 ){
                         $data = ['status' => $this->SmsBlast_model->statusActive(), 'is_paid' => $this->SmsBlast_model->isPaid(), 'cards_file_id' => $post['payment_method_token']];
+                        $this->SmsBlast_model->updateSmsBlast($sms_blast_id,$data);
+                        $date_paid = date("Y-m-d H:i:s");
+                        //Create payment data
+                        $data = [
+                            'user_id' => $user['id'],
+                            'order_number' => '',
+                            'payment_method' => $this->MarketingOrderPayments_model->paymentMethodCC(),
+                            'date_paid' => $date_paid,
+                            'status' => $this->MarketingOrderPayments_model->statusCompleted(),
+                        ];
+
+                        $order_id     = $this->MarketingOrderPayments_model->create($data);
+                        $order_number = $this->MarketingOrderPayments_model->generateORNumber($order_id);
+                        
+                        $data = ['order_number' => $order_number];
+                        $this->MarketingOrderPayments_model->updateOrderPayment($order_id, $data);
+
+                        //Attach order number
+                        $data = ['order_number' => $order_number, 'date_paid' => $date_paid];
                         $this->SmsBlast_model->updateSmsBlast($sms_blast_id,$data);
 
                         $is_success = true;
@@ -903,7 +927,71 @@ class Sms_Campaigns extends MY_Controller {
         
         $return = ['is_success' => $is_success, 'msg' => $msg];
         return $return;
+    }
 
+    public function payment_details(){
+
+        $this->load->model('MarketingOrderPayments_model');
+        $this->load->model('Business_model');
+
+        $company_id = logged('company_id');   
+
+        $sms_blast_id = $this->session->userdata('smsBlastId');
+        $smsBlast     = $this->SmsBlast_model->getById($sms_blast_id);
+        $company         = $this->Business_model->getByCompanyId($company_id);
+        if( $smsBlast ){
+            if( $smsBlast->order_number != '' ){
+                $orderPayments   = $this->MarketingOrderPayments_model->getByOrderNumber($smsBlast->order_number);
+
+                $this->page_data['smsBlast']   = $smsBlast;
+                $this->page_data['orderPayments'] = $orderPayments;
+                $this->page_data['company'] = $company;
+                $this->load->view('sms_campaigns/payment_details', $this->page_data);        
+            }else{
+                redirect('sms_automation');
+            }
+        }else{
+            redirect('sms_automation');
+        }
+    }
+
+    public function campaign_invoice_pdf($id){
+
+        $this->load->model('MarketingOrderPayments_model');
+        $this->load->model('Business_model');
+        
+        $smsBlast = $this->SmsBlast_model->getById($id);
+        $company  = $this->Business_model->getByCompanyId($smsBlast->company_id);
+        $orderPayments   = $this->MarketingOrderPayments_model->getByOrderNumber($smsBlast->order_number);
+        $this->page_data['smsBlast']   = $smsBlast;
+        $this->page_data['orderPayments'] = $orderPayments;
+        $this->page_data['company'] = $company;
+        $content = $this->load->view('sms_campaigns/campaign_customer_invoice_pdf_template_a', $this->page_data, TRUE);  
+            
+        $this->load->library('Reportpdf');
+
+        $title = 'sms_campaign_invoice';
+
+        $obj_pdf = new Reportpdf('P', 'mm', 'A4', true, 'UTF-8', false);
+        $obj_pdf->SetTitle($title);
+        $obj_pdf->setPrintHeader(false);
+        $obj_pdf->setPrintFooter(false);
+        $obj_pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);        
+        $obj_pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
+        $obj_pdf->setFontSubsetting(false);
+        // set some language-dependent strings (optional)
+        if (@file_exists(dirname(__FILE__) . '/lang/eng.php')) {
+            require_once(dirname(__FILE__) . '/lang/eng.php');
+            $pdf->setLanguageArray($l);
+        }
+        $obj_pdf->AddPage('P');
+        $html = '';
+        $obj_pdf->writeHTML($html . $content, true, false, true, false, '');
+        //echo $display;
+        $content = ob_get_contents();
+        ob_end_clean();
+        $obj_pdf->writeHTML($content, true, false, true, false, '');
+        $obj_pdf->Output($title, 'I');
     }
 }
 

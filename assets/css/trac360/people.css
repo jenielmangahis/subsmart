@@ -427,5 +427,5 @@ div.popup-map-marker:hover h3 {
 }
 
 #single-job-view-directionsRenderer-panel .panel-content {
-    width: 440px;
+    min-width: 439px;
 }

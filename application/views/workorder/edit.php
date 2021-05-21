@@ -27,6 +27,263 @@ defined('BASEPATH') or exit('No direct script access allowed');
     color:red;
     padding:12px;
 }
+
+#signature-pad {min-height:200px;}
+#signature-pad canvas {background-color:white;left: 0;top: 0;width: 100%;min-height:250px;height: 100%}
+
+#signature-pad2 {min-height:200px;}
+#signature-pad2 canvas {background-color:white;left: 0;top: 0;width: 100%;min-height:250px;height: 100%}
+
+#signature-pad3 {min-height:200px;}
+#signature-pad3 canvas {background-color:white;left: 0;top: 0;width: 100%;min-height:250px;height: 100%}
+
+#signature-padM {min-height:200px;}
+#signature-padM canvas {background-color:white;left: 0;top: 0;width: 100%;min-height:250px;height: 100%}
+
+#signature-pad2M {min-height:200px;}
+#signature-pad2M canvas {background-color:white;left: 0;top: 0;width: 100%;min-height:250px;height: 100%}
+
+#signature-pad3M {min-height:200px;}
+#signature-pad3M canvas {background-color:white;left: 0;top: 0;width: 100%;min-height:250px;height: 100%}
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+}
+
+.switch input { 
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #10ab06;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #10ab06;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
+
+.tr_qty{
+    width:150px;
+}
+
+
+nav > .nav.nav-tabs{
+
+border: none;
+  color:#fff;
+  background:#272e38;
+  border-radius:0;
+
+}
+nav > div a.nav-item.nav-link,
+nav > div a.nav-item.nav-link.active
+{
+border: none;
+  padding: 18px 25px;
+  color:#fff;
+  background:#272e38;
+  border-radius:0;
+}
+
+/* nav > div a.nav-item.nav-link.active:after
+{
+content: "";
+position: relative;
+bottom: -60px;
+left: -10%;
+border: 15px solid transparent;
+border-top-color: #e74c3c ;
+} */
+.tab-content{
+background: #fdfdfd;
+  line-height: 25px;
+  border: 1px solid #ddd;
+  border-top:5px solid #e74c3c;
+  border-bottom:5px solid #e74c3c;
+  padding:30px 25px;
+}
+
+nav > div a.nav-item.nav-link:hover,
+nav > div a.nav-item.nav-link:focus
+{
+border: none;
+  background: #e74c3c;
+  color:#fff;
+  border-radius:0;
+  transition:background 0.20s linear;
+}
+
+.signature_mobile
+{
+    display: none;
+}
+
+.show_mobile_view
+{
+    display: none;
+}
+
+@media only screen and (max-device-width: 600px) {
+    .label-element{
+        position:absolute;
+        top:-8px;
+        left:25px;
+        font-size:12px;
+        color:#666;
+        }
+    .input-element{
+        padding:30px 5px 10px 8px;
+        width:100%;
+        height:55px;
+        /* border:1px solid #CCC; */
+        font-weight: bold;
+        margin-top: -15px;
+        }
+
+    .select-wrap 
+    {
+    border: 2px solid #e0e0e0;
+    /* border-radius: 4px; */
+    margin-top: -10px;
+    /* margin-bottom: 10px; */
+    padding: 0 5px 5px;
+    width:100%;
+    /* background-color:#ebebeb; */
+    }
+
+    .select-wrap label
+    {
+    font-size:10px;
+    text-transform: uppercase;
+    color: #777;
+    padding: 2px 8px 0;
+    }
+
+    .m_select
+    {
+    /* background-color: #ebebeb;
+    border:0px; */
+    border-color: white !important;
+    border:0px !important;
+    outline:0px !important;
+    }
+    .select2 .select2-container .select2-container--default{
+        /* background-color: #ebebeb;
+    border:0px; */
+    border-color: white !important;
+    border:0px !important;
+    outline:0px !important;
+    }
+
+    .select2-container--default .select2-selection--single {
+    background-color: #fff;
+    border: 1px solid #fff !important;
+    border-radius: 4px;
+    }
+
+    .sub_label{
+        font-size:12px !important;
+    }
+
+    .signature_web
+    {
+        display: none;
+    }
+
+    .signature_mobile
+    {
+        display: block;
+    }
+
+    .hidden_mobile_view{
+        display: none;
+    }
+
+    .show_mobile_view
+    {
+        display: block;
+    }
+
+    .table_mobile
+    {
+        font-size:14px;
+    }
+
+    div.dropdown-wrapper select { 
+    width:115% /* This hides the arrow icon */; 
+    background-color:transparent /* This hides the background */; 
+    background-image:none; 
+    -webkit-appearance: none /* Webkit Fix */; 
+    border:none; 
+    box-shadow:none; 
+    padding:0.3em 0.5em; 
+    font-size:13px;
+    }
+    .signature-pad-canvas-wrapper {
+    margin: 15px 0 0;
+    border: 1px solid #cbcbcb;
+    border-radius: 3px;
+    overflow: hidden;
+    position: relative;
+}
+
+    .signature-pad-canvas-wrapper::after {
+        content: 'Name';
+        border-top: 1px solid #cbcbcb;
+        color: #cbcbcb;
+        width: 100%;
+        margin: 0 15px;
+        display: inline-flex;
+        position: absolute;
+        bottom: 10px;
+        font-size: 13px;
+        z-index: -1;
+    }
+}
    </style>
     <!-- page wrapper start -->
     <div wrapper__section>
@@ -57,7 +314,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 </div>
             </div>
             <br> -->
-            <?php echo form_open_multipart('workorder/savenewWorkorder', [ 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?> 
+            <?php echo form_open_multipart('workorder/UpdateWorkorder', [ 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?> 
                     <div class="row">
                         <div class="col-md-12">
                             <div id="header_area">
@@ -88,11 +345,11 @@ defined('BASEPATH') or exit('No direct script access allowed');
                             </div>
                             <div class="col-md-3 form-group">
 								<label for="last_name">Last Name</label>
-								<input type="text" class="form-control" name="customer[last_name]" id="last_name" required placeholder="Enter Last Name" value="<?php echo $customer->last_name; ?>"/>
+								<input type="text" class="form-control" name="customer[last_name]" id="last_name" required placeholder="Enter Last Name" value="<?php echo $customer->last_name; ?>" readonly/>
 							</div>
 							<div class="col-md-3 form-group">
 								<label for="first_name">First Name</label>
-								<input type="text" class="form-control" name="customer[first_name]" id="first_name" required placeholder="Enter First Name" value="<?php echo $customer->first_name; ?>"/>
+								<input type="text" class="form-control" name="customer[first_name]" id="first_name" required placeholder="Enter First Name" value="<?php echo $customer->first_name; ?>" readonly/>
 							</div>
                         </div>
                         <div class="row">
@@ -180,13 +437,12 @@ defined('BASEPATH') or exit('No direct script access allowed');
                             </div> -->
                         </div>
                         
-                        <!-- <div class="row" id="thisdiv">
-                        <?php foreach($fields as $field){ ?>
+                        <div class="row" id="thisdiv">
+                        <?php foreach($custom_fields as $field){ ?>
                             <div class="col-md-3 form-group">
-                                <label for="suit" data-toggle="modal" data-target="#modalupdateCustom" class="mytxtc" label-id="<?php echo $field->id; ?>"  label-name="<?php echo $field->name; ?>"><?php echo $field->name; ?></label> <i class="fa fa-pencil" aria-hidden="true"></i>
-                                <input type="text" class="form-control" name="custom_value[]" id="custom1_value"/>
-                                <input type="hidden" class="custom_<?php echo $field->id; ?>" value="<?php echo $field->name; ?>" name="custom_field[]">
-                            </div>      -->
+                                <label><?php echo $field->name; ?></label> <i class="fa fa-pencil" aria-hidden="true"></i>
+                                <input type="text" class="form-control" name="custom_value[]" id="custom1_value" value="<?php echo $field->value; ?>"/>
+                            </div>     
                             <!-- <div class="col-md-4 form-group">
                                 <label for="suit" class="mytxt2">Custom Field</label> <i class="fa fa-pencil" aria-hidden="true"></i>
                                 <input type="text" class="form-control" name="custom2_value" id="custom2_value"/>
@@ -209,8 +465,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <input type="text" class="form-control" name="custom5_value" id="custom5_value"/>
                                 <input type="hidden" class="custom5" name="custom5_field">
                             </div> -->
-                            <!-- <?php } ?>
-                        </div> -->
+                            <?php } ?>
+                        </div>
                         
                         <div class="row" style="background-color:white;font-size:16px;">
                                 <div class="col-md-3">
@@ -266,36 +522,49 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                             <th width="150px">Quantity</th>
                                             <!-- <th>Location</th> -->
                                             <th width="150px">Price</th>
-                                            <th width="150px">Discount</th>
-                                            <th width="150px">Tax (Change in %)</th>
-                                            <th>Total</th>
+                                            <th class="hidden_mobile_view" width="150px">Discount</th>
+                                            <th class="hidden_mobile_view" width="150px">Tax (Change in %)</th>
+                                            <th class="hidden_mobile_view">Total</th>
                                         </tr>
                                         </thead>
                                         <tbody id="jobs_items_table_body">
                                         <?php foreach($items_data as $data){ ?>
                                         <tr>
-                                            <td>
+                                            <td width="30%">
+                                            <div class="hidden_mobile_view">
                                                 <input type="text" class="form-control getItems"
                                                        onKeyup="getItems(this)" name="items[]" value="<?php echo $data->item; ?>">
                                                 <ul class="suggestions"></ul>
+                                            </div>
+                                            <div class="show_mobile_view">
+                                            <?php echo $data->item; ?>
+                                            </div>
                                             </td>
-                                            <td><select name="item_type[]" class="form-control">
+                                            <td width="20%">
+                                            <div class="hidden_mobile_view">
+                                            <select name="item_type[]" class="form-control">
                                                     <option value="product">Product</option>
                                                     <option value="material">Material</option>
                                                     <option value="service">Service</option>
                                                     <option value="fee">Fee</option>
-                                                </select></td>
-                                            <td width="150px"><input type="number" class="form-control quantity" name="quantity[]"
-                                                       data-counter="0" id="quantity_<?php echo $data->id; ?>" value="<?php echo $data->qty; ?>"></td>
-                                            <td width="150px"><input type="number" class="form-control price" name="price[]"
-                                                       data-counter="0" id="price_<?php echo $data->id; ?>" min="0" value="<?php echo $data->cost; ?>"></td>
-                                            <td width="150px"><input type="number" class="form-control discount" name="discount[]"
+                                                </select>
+                                            </div>
+                                            <div class="show_mobile_view">
+                                            <?php echo $data->item_type; ?>
+                                            </div>
+                                            </td>
+                                            <td width="10%"><input type="number" class="form-control quantity hidden_mobile_view" name="quantity[]"
+                                                       data-counter="0" id="quantity_<?php echo $data->id; ?>" value="<?php echo $data->qty; ?>"><div class="show_mobile_view"><span><?php echo $data->qty; ?></span><input type="hidden" class="form-control quantity" name="quantity[]"
+                                                       data-counter="0" id="quantity_0" value="<?php echo $data->qty; ?>"></div></td>
+                                            <td width="10%"><input type="number" class="form-control price hidden_mobile_view" name="price[]"
+                                                       data-counter="0" id="price_<?php echo $data->id; ?>" min="0" value="<?php echo $data->cost; ?>"><div class="show_mobile_view"><?php echo $data->cost; ?></div></td>
+                                            <td class="hidden_mobile_view" width="10%"><input type="number" class="form-control discount" name="discount[]"
                                                        data-counter="0" id="discount_<?php echo $data->id; ?>" min="0" value="<?php echo $data->discount; ?>" ></td>
-                                            <td width="150px"><input type="text" class="form-control tax_change" name="tax[]"
+                                            <td class="hidden_mobile_view" width="10%"><input type="text" class="form-control tax_change" name="tax[]"
                                                        data-counter="0" id="tax1_<?php echo $data->id; ?>" min="0" value="<?php echo $data->tax; ?>">
                                                        <!-- <span id="span_tax_0">0.0</span> -->
                                                        </td>
-                                            <td width="150px"><input type="hidden" class="form-control " name="total[]"
+                                            <td class="hidden_mobile_view" width="10%"><input type="hidden" class="form-control " name="total[]"
                                                        data-counter="0" id="item_total_<?php echo $data->id; ?>" min="0" value="<?php echo $data->total; ?>">
                                                        $<span id="span_total_<?php echo $data->id; ?>"><?php echo $data->total; ?></span></td>
                                         </tr>
@@ -348,18 +617,18 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                     <table class="table" style="text-align:left;">
                                         <tr>
                                             <td>Subtotal</td>
-                                            <td></td>
-                                            <td>$ <span id="span_sub_total_invoice"><?php echo $workorder->subtotal; ?></span>
+                                            <!-- <td></td> -->
+                                            <td colspan="2" align="center">$ <span id="span_sub_total_invoice"><?php echo $workorder->subtotal; ?></span>
                                                 <input type="hidden" name="subtotal" id="item_total" value="<?php echo $workorder->subtotal; ?>"></td>
                                         </tr>
                                         <tr>
                                             <td>Taxes</td>
-                                            <td></td>
-                                            <td>$ <span id="total_tax_"><?php echo $workorder->taxes; ?></span><input type="hidden" name="taxes" id="total_tax_input" value="<?php echo $workorder->taxes; ?>"></td>
+                                            <!-- <td></td> -->
+                                            <td colspan="2" align="center">$ <span id="total_tax_"><?php echo $workorder->taxes; ?></span><input type="hidden" name="taxes" id="total_tax_input" value="<?php echo $workorder->taxes; ?>"></td>
                                         </tr>
                                         <tr>
-                                            <td style="width:250px;"><input type="text" name="adjustment_name" id="adjustment_name" placeholder="Adjustment Name" class="form-control" style="width:200px; display:inline; border: 1px dashed #d1d1d1" value="<?php echo $workorder->adjustment_name; ?>"></td>
-                                            <td style="width:150px;">
+                                            <td style="width:;"><input type="text" name="adjustment_name" id="adjustment_name" placeholder="Adjustment Name" class="form-control" style="width:; display:inline; border: 1px dashed #d1d1d1" value="<?php echo $workorder->adjustment_name; ?>"></td>
+                                            <td style="width:;">
                                             <input type="number" name="adjustment_value" id="adjustment_input" value="<?php echo $workorder->adjustment_value; ?>" class="form-control adjustment_input" style="width:100px; display:inline-block">
                                                 <span class="fa fa-question-circle" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Optional it allows you to adjust the total amount Eg. +10 or -10." data-original-title="" title=""></span>
                                             </td>
@@ -385,8 +654,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         <?php } ?>
                                         <tr style="color:blue;font-weight:bold;font-size:18px;">
                                             <td><b>Grand Total ($)</b></td>
-                                            <td></td>
-                                            <td><b><span id="grand_total"><?php echo $workorder->grand_total; ?></span>
+                                            <!-- <td></td> -->
+                                            <td colspan="2" align="center"><b><span id="grand_total"><?php echo $workorder->grand_total; ?></span>
                                                 <input type="hidden" name="grand_total" id="grand_total_input" value='<?php echo $workorder->grand_total; ?>'></b></td>
                                         </tr>
                                     </table>
@@ -549,6 +818,19 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                     <label for="job_desc">Job Description</label>
                                     <textarea name="job_description" id="job_desc" cols="5" rows="2" class="form-control"><?php echo $workorder->job_description; ?></textarea> 
                                 </div>                                           
+                            </div>
+                            <div class="row">                        
+                                <div class="form-group col-md-4">
+                                <div class="select-wrap">
+                                    <label for="lead_source">Lead Source</label>
+                                    <select id="lead_source" name="lead_source" class="form-control custom-select m_select">
+                                        <option value="0">- none -</option>
+                                        <?php foreach($lead_source as $lead){ ?>
+                                            <option value="<?php echo $lead->ls_id; ?>"><?php echo $lead->ls_name; ?></option>
+                                        <?php } ?>
+                                    </select>
+                                </div>    
+                                </div>                                     
                             </div>
 
                             
@@ -760,8 +1042,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
                             <!-- ====== TERMS AND CONDITIONS ====== -->
                             <br><br><br>
                             <div class="row">
-                                <div class=" col-md-12">
-                                <label style="font-weight:bold;font-size:18px;">TERMS AND CONDITIONS</label><label style="float:right;color:green;"><a href="#" style="color:green;" data-toggle="modal" data-target="#terms_conditions_modal">Update Terms and Condition</a></label>
+                                <div class=" col-md-12"><label style="float:right;color:green;"><a href="#" style="color:green;" data-toggle="modal" data-target="#terms_conditions_modal">Update Terms and Condition</a></label>
+                                <label style="font-weight:bold;font-size:18px;">TERMS AND CONDITIONS</label>
                                     <div style="height:200px; overflow:auto; background:#FFFFFF;"
                                          id="thisdiv2">
                                             <p><?php echo $workorder->terms_and_conditions; ?></p>
@@ -838,8 +1120,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
                             <div class="row">
                                 <div class="col-md-4">
                                     <h6>Company Representative Approval</h6>
-                                    <div class="sigPad" id="smoothed1a" style="width:100%;border:solid gray 1px;background-color:#00b300;">
-                                    <!-- <a href="#" style="float:right;margin-right:10px;" class="smoothed1a_pencil" id="smoothed1a_pencil"><i class="fa fa-pencil" aria-hidden="true"></i></a> -->
+                                    <img src="<?php echo $workorder->company_representative_signature; ?>">
+                                    <!-- <div class="sigPad" id="smoothed1a" style="width:100%;border:solid gray 1px;background-color:#00b300;">
                                         <ul class="sigNav" style="">
                                             <li class="drawIt"><a href="#draw-it">Draw It</a></li>
                                             <li class="clearButton"><a href="#clear">Clear</a></li>
@@ -854,7 +1136,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         </div>
                                     </div>
                                     <input type="hidden" id="saveCompanySignatureDB1a"
-                                           name="company_representative_approval_signature1a">
+                                           name="company_representative_approval_signature1a"> -->
                                     <br>
 
                                     <label for="comp_rep_approval">Printed Name</label>
@@ -865,8 +1147,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 </div>
                                 <div class="col-md-4">
                                     <h6>Primary Account Holder</h6>
-                                    <div class="sigPad" id="smoothed2a" style="width:100%;border:solid gray 1px;background-color:#f7b900;">
-                                    <!-- <p style="float:right;margin-right:10px;"><i class="fa fa-pencil" aria-hidden="true"></i></p> -->
+                                    <img src="<?php echo $workorder->primary_account_holder_signature; ?>">
+                                    <!-- <div class="sigPad" id="smoothed2a" style="width:100%;border:solid gray 1px;background-color:#f7b900;">
                                         <ul class="sigNav">
                                             <li class="drawIt"><a href="#draw-it">Draw It</a></li>
                                             <li class="clearButton"><a href="#clear">Clear</a></li>
@@ -881,7 +1163,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         </div>
                                     </div>
                                     <input type="hidden" id="savePrimaryAccountSignatureDB2a"
-                                           name="primary_account_holder_signature2a">
+                                           name="primary_account_holder_signature2a"> -->
                                     <br>
 
                                     <label for="comp_rep_approval">Printed Name</label>
@@ -891,8 +1173,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 </div>
                                 <div class="col-md-4">
                                     <h6>Secondary Account Holder</h6>
-                                    <div class="sigPad" id="smoothed3a" style="width:100%;border:solid gray 1px;background-color:#f75c1e;">
-                                    <!-- <p style="float:right;margin-right:10px;"><i class="fa fa-pencil" aria-hidden="true"></i></p> -->
+                                    <img src="<?php echo $workorder->secondary_account_holder_signature; ?>">
+                                    <!-- <div class="sigPad" id="smoothed3a" style="width:100%;border:solid gray 1px;background-color:#f75c1e;">
                                         <ul class="sigNav">
                                             <li class="drawIt"><a href="#draw-it">Draw It</a></li>
                                             <li class="clearButton"><a href="#clear">Clear</a></li>
@@ -907,7 +1189,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         </div>
                                     </div>
                                     <input type="hidden" id="saveSecondaryAccountSignatureDB3a"
-                                           name="secondary_account_holder_signature3a">
+                                           name="secondary_account_holder_signature3a"> -->
                                     <br>
 
                                     <label for="comp_rep_approval">Printed Name</label>

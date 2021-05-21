@@ -63,7 +63,12 @@ function get_differenct_of_dates($date_start, $date_end)
                     </div>
                 </div>
                 <div class="col-md-9  trac360_main_sections jobs-list-section" style="background-color: #fff;">
-                    <div id="single-job-view-directionsRenderer-panel" class="overflow-auto panel-closed">
+                    <div id="single-job-view-directionsRenderer-panel" class="overflow-auto panel-closed"
+                        style="top:0;">
+                        <div class="employee-name" style="min-width:439px;">
+                            <p><span class="name"><?=$jb->FName .' '.$jb->LName?></span>
+                            </p>
+                        </div>
                         <div class="close-btn"><i class="fa fa-chevron-left" aria-hidden="true"></i></div>
                         <div class="panel-content">
                             <div id="job-item-selected-view" class="row no-margin">
@@ -82,7 +87,7 @@ function get_differenct_of_dates($date_start, $date_end)
                         <div class="row no-margin">
                             <div class="col-md-6 no-padding">
                                 <a data-toggle="collapse" href="#upcomingjobs-collapse-panel" role="button"
-                                    aria-expanded="true" aria-controls="collapseExample">
+                                    aria-expanded="true" aria-controls="upcomingjobs-collapse-panel">
                                     <div class="upcoming jobs-collapse-btn collapse-active">Upcoming Jobs</div>
                                 </a>
                             </div>
@@ -102,7 +107,12 @@ function get_differenct_of_dates($date_start, $date_end)
                                     <p><span class="name"><?=$jb->FName .' '.$jb->LName?></span>
                                     </p>
                                 </div>
-                                <div class="row no-margin jobs-list-item">
+                                <div class="row no-margin jobs-list-item"
+                                    data-address="<?=$jb->mail_add .' '. $jb->cust_city.' '.$jb->cust_state.' '.$jb->cust_zip_code?>"
+                                    data-job-title="<?=$jb->job_number . ' : ' . $jb->job_type. ' - ' . $jb->tags_name?>"
+                                    data-office-address="<?=$jb->office_address.', '.$jb->office_city.', '.$jb->office_state.', '.$jb->office_postal_code?>"
+                                    data-business-name="<?=$jb->business_name?>"
+                                    data-group="upcoming">
                                     <div class="col-md-4 job-sched text-center">
                                         <a href="#">
                                             <time style="font-size: 10px; text-align: left;" datetime="2021-02-09"
@@ -127,11 +137,9 @@ function get_differenct_of_dates($date_start, $date_end)
                                                 style="font-weight:600; margin:0;font-size: 14px;text-transform: uppercase; color:#616161;">
                                                 <?php echo $jb->job_number . ' : ' . $jb->job_type. ' - ' . $jb->tags_name; ?>
                                             </h6>
-                                            <?php if (empty($settings['work_order_show_customer']) && $settings['work_order_show_customer'] == 1): ?>
                                             <b style="color:#45a73c;">
                                                 <?= $jb->first_name. ' '. $jb->last_name; ?>
                                             </b><br>
-                                            <?php endif; ?>
                                             <?php if (!empty($settings['work_order_show_details']) && $settings['work_order_show_details'] == 1): ?>
                                             <small class="text-muted"><?= $jb->mail_add .' '. $jb->cust_city.' '.$jb->cust_state.' '.$jb->cust_zip_code; ?></small><br>
                                             <i> <small class="text-muted"><?= $jb->job_description; ?></small></i><br>
@@ -186,11 +194,9 @@ function get_differenct_of_dates($date_start, $date_end)
                                                 style="font-weight:600; margin:0;font-size: 14px;text-transform: uppercase; color:#616161;">
                                                 <?php echo $jb->job_number . ' : ' . $jb->job_type. ' - ' . $jb->tags_name; ?>
                                             </h6>
-                                            <?php if (empty($settings['work_order_show_customer']) && $settings['work_order_show_customer'] == 1): ?>
                                             <b style="color:#45a73c;">
                                                 <?= $jb->first_name. ' '. $jb->last_name; ?>
                                             </b><br>
-                                            <?php endif; ?>
                                             <?php if (!empty($settings['work_order_show_details']) && $settings['work_order_show_details'] == 1): ?>
                                             <small class="text-muted"><?= $jb->mail_add .' '. $jb->cust_city.' '.$jb->cust_state.' '.$jb->cust_zip_code; ?></small><br>
                                             <i> <small class="text-muted"><?= $jb->job_description; ?></small></i><br>
@@ -228,7 +234,6 @@ function get_differenct_of_dates($date_start, $date_end)
             <div id="map-holder" style="display:none;">
                 <div class="map-error-message">This is a danger alert—check it out!</div>
                 <div id="jobs-map" style="display:none;"></div>
-                <div id="map"></div>
             </div>
         </div>
     </div>
@@ -240,7 +245,27 @@ function get_differenct_of_dates($date_start, $date_end)
 <!-- </div> -->
 <!-- page wrapper end -->
 <?php include viewPath('includes/footer'); ?>
+<script>
+    var jobs_map;
+    var jobs_map_marker = [];
+    var directionsService;
+    var directionsRenderer;
+    var infoWindow;
 
+    function initMap() {
+        $("#map-loader").hide();
+        $("#map-holder").show();
+        jobs_map = new google.maps.Map(document.getElementById("jobs-map"), {
+            center: {
+                lat: 37.0902,
+                lng: 95.7129
+            },
+            zoom: 2,
+        });
+
+        $("#jobs-map").show();
+    }
+</script>
 <script
     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBg27wLl6BoSPmchyTRgvWuGHQhUUHE5AU&callback=initMap&libraries=&v=weekly"
     async></script>

@@ -581,6 +581,9 @@ class Workorder extends MY_Controller
         $this->page_data['job_types'] = $this->workorder_model->getjob_types();
         $this->page_data['items'] = $this->items_model->getItemlist();
         $this->page_data['items_data'] = $this->items_model->getItemData($id);
+        $this->page_data['custom_fields'] = $this->workorder_model->getCustomFields($id);
+        $this->page_data['job_tags'] = $this->workorder_model->getjob_tagsById();
+        $this->page_data['lead_source'] = $this->workorder_model->getlead_source($company_id);
 
         foreach ($this->page_data['workorder'] as $key => $workorder) {
 
@@ -1693,6 +1696,7 @@ class Workorder extends MY_Controller
         $image_type = $image_type_aux[1];
         $image_base64 = base64_decode($image_parts[1]);
         $file = $folderPath . $wo_id . '_company' . '.'.$image_type;
+        $file_save = '../../uploads/Signatures/1/' . $wo_id . '_company' . '.'.$image_type;
         file_put_contents($file, $image_base64);
 
         $datasig2 = $this->input->post('primary_representative_approval_signature1aM_web');
@@ -1702,6 +1706,7 @@ class Workorder extends MY_Controller
         $image_type2 = $image_type_aux2[1];
         $image_base642 = base64_decode($image_parts2[1]);
         $file2 = $folderPath2 . $wo_id . '_primary' . '.'.$image_type2;
+        $file2_save = '../../uploads/Signatures/1/' . $wo_id . '_primary' . '.'.$image_type2;
         file_put_contents($file2, $image_base642);
 
         $datasig3 = $this->input->post('secondary_representative_approval_signature1aM_web');
@@ -1711,6 +1716,7 @@ class Workorder extends MY_Controller
         $image_type3 = $image_type_aux3[1];
         $image_base643 = base64_decode($image_parts3[1]);
         $file3 = $folderPath3 . $wo_id . '_secondary' . '.'.$image_type3;
+        $file3_save = '../../uploads/Signatures/1/' . $wo_id . '_secondary' . '.'.$image_type3;
         file_put_contents($file3, $image_base643);
 
         $new_data = array(
@@ -1750,11 +1756,11 @@ class Workorder extends MY_Controller
             'header' => $this->input->post('header'),
 
             //signature
-            'company_representative_signature' => $file,
+            'company_representative_signature' => $file_save,
             'company_representative_name' => $this->input->post('company_representative_printed_name'),
-            'primary_account_holder_signature' => $file2,
+            'primary_account_holder_signature' => $file2_save,
             'primary_account_holder_name' => $this->input->post('primary_account_holder_name'),
-            'secondary_account_holder_signature' => $file3,
+            'secondary_account_holder_signature' => $file3_save,
             'secondary_account_holder_name' => $this->input->post('secondery_account_holder_name'),
 
             // 'company_representative_signature' => 'company_representative_signature',
@@ -2520,6 +2526,7 @@ class Workorder extends MY_Controller
         $image_type = $image_type_aux[1];
         $image_base64 = base64_decode($image_parts[1]);
         $file = $folderPath . $wo_id . '_alarm_company' . '.'.$image_type;
+        $file_save = '../../uploads/Signatures/1/' . $wo_id . '_alarm_company' . '.'.$image_type;
         file_put_contents($file, $image_base64);
 
         $datasig2 = $this->input->post('primary_representative_approval_signature1aM_web');
@@ -2529,6 +2536,7 @@ class Workorder extends MY_Controller
         $image_type2 = $image_type_aux2[1];
         $image_base642 = base64_decode($image_parts2[1]);
         $file2 = $folderPath2 . $wo_id . '_alarm_primary' . '.'.$image_type2;
+        $file2_save = '../../uploads/Signatures/1/' . $wo_id . '_alarm_primary' . '.'.$image_type2;
         file_put_contents($file2, $image_base642);
 
         $datasig3 = $this->input->post('secondary_representative_approval_signature1aM_web');
@@ -2538,7 +2546,41 @@ class Workorder extends MY_Controller
         $image_type3 = $image_type_aux3[1];
         $image_base643 = base64_decode($image_parts3[1]);
         $file3 = $folderPath3 . $wo_id . '_alarm_secondary' . '.'.$image_type3;
+        $file3_save = '../../uploads/Signatures/1/' . $wo_id . '_alarm_secondary' . '.'.$image_type3;
         file_put_contents($file3, $image_base643);
+
+        ///////////////////////////////////////////////////////////////////////////////////////////
+        // $datasig = $this->input->post('company_representative_approval_signature1aM_web');
+        // $folderPath = "./uploads/Signatures/1/";
+        // $image_parts = explode(";base64,", $datasig);
+        // $image_type_aux = explode("image/", $image_parts[0]);
+        // $image_type = $image_type_aux[1];
+        // $image_base64 = base64_decode($image_parts[1]);
+        // $file = $folderPath . $wo_id . '_company' . '.'.$image_type;
+        // $file_save = '../../uploads/Signatures/1/' . $wo_id . '_company' . '.'.$image_type;
+        // file_put_contents($file, $image_base64);
+        //
+        // $datasig2 = $this->input->post('primary_representative_approval_signature1aM_web');
+        // $folderPath2 = "./uploads/Signatures/1/";
+        // $image_parts2 = explode(";base64,", $datasig2);
+        // $image_type_aux2 = explode("image/", $image_parts2[0]);
+        // $image_type2 = $image_type_aux2[1];
+        // $image_base642 = base64_decode($image_parts2[1]);
+        // $file2 = $folderPath2 . $wo_id . '_primary' . '.'.$image_type2;
+        // $file2_save = '../../uploads/Signatures/1/' . $wo_id . '_primary' . '.'.$image_type2;
+        // file_put_contents($file2, $image_base642);
+        //
+        // $datasig3 = $this->input->post('secondary_representative_approval_signature1aM_web');
+        // $folderPath3 = "./uploads/Signatures/1/";
+        // $image_parts3 = explode(";base64,", $datasig3);
+        // $image_type_aux3 = explode("image/", $image_parts3[0]);
+        // $image_type3 = $image_type_aux3[1];
+        // $image_base643 = base64_decode($image_parts3[1]);
+        // $file3 = $folderPath3 . $wo_id . '_secondary' . '.'.$image_type3;
+        // $file3_save = '../../uploads/Signatures/1/' . $wo_id . '_secondary' . '.'.$image_type3;
+        // file_put_contents($file3, $image_base643);
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        
 
         $new_data = array(
             
@@ -2563,11 +2605,11 @@ class Workorder extends MY_Controller
             'date_issued' => $this->input->post('date_issued'),
 
              //signature
-             'company_representative_signature' => $file,
+             'company_representative_signature' => $file_save,
              'company_representative_name' => $this->input->post('company_representative_printed_name'),
-             'primary_account_holder_signature' => $file2,
+             'primary_account_holder_signature' => $file2_save,
              'primary_account_holder_name' => $this->input->post('primary_account_holder_name'),
-             'secondary_account_holder_signature' => $file3,
+             'secondary_account_holder_signature' => $file3_save,
              'secondary_account_holder_name' => $this->input->post('secondery_account_holder_name'),
 
             // 'company_representative_signature' => 'company_representative_signature',

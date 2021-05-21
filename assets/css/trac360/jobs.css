@@ -12,4 +12,5 @@
 
 .jobs-collapse-btn.collapse-active {
     background-color: #F7F6EF;
+    font-weight: bold;
 }
