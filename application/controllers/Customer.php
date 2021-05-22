@@ -469,6 +469,15 @@ class Customer extends MY_Controller
             $this->page_data['customer_notes'] = $this->general->get_data_with_param($get_customer_notes);
             //$this->page_data['device_info'] = $this->customer_ad_model->get_all_by_id('fk_prof_id',$userid,"acs_devices");
         }
+
+        $get_customer_groups = array(
+                'where' => array(
+                    'company_id' => logged('company_id')
+                ),
+                'table' => 'customer_groups',
+                'select' => '*',
+            );
+
         $get_login_user = array(
             'where' => array(
                 'id' => $user_id
@@ -476,6 +485,8 @@ class Customer extends MY_Controller
             'table' => 'users',
             'select' => 'id,FName,LName',
         );
+
+        $this->page_data['customerGroups'] = $this->general->get_data_with_param($get_customer_groups);
         $this->page_data['logged_in_user'] = $this->general->get_data_with_param($get_login_user,FALSE);
         $this->page_data['sales_area'] = $this->customer_ad_model->get_all(FALSE,"","ASC","ac_salesarea","sa_id");
         $this->page_data['employees'] = $this->customer_ad_model->get_all(FALSE,"","ASC","users","id");
@@ -563,6 +574,7 @@ class Customer extends MY_Controller
             $input_profile['company_id'] = logged('company_id');
             $input_profile['status'] = $input['status'];
             $input_profile['customer_type'] = $input['customer_type'];
+            $input_profile['customer_group_id'] = $input['customer_group'];
             $input_profile['business_name'] = $input['business_name'];
             $input_profile['first_name'] = $input['first_name'];
             $input_profile['last_name'] = $input['last_name'];
