@@ -192,6 +192,50 @@ class Customer extends MY_Controller
         }
     }
 
+    public function save_subscription(){
+        $input = $this->input->post();
+        if($input){
+            $is_valid = true;
+            $err_msg  = '';            
+            if( $input['method'] == 'CC' ){
+                $customer = $this->customer_ad_model->get_data_by_id('prof_id',$input['customer_id'],"acs_profile");
+                $converge_data = [
+                    'amount' => $input['transaction_amount'],
+                    'card_number' => $input['card_number'],
+                    'exp_month' => $input['exp_month'],
+                    'exp_year' => $input['exp_year'],
+                    'card_cvc' => $input['card_cvc'],
+                    'address' => $customer->mail_add,
+                    'zip' => $customer->zip_code
+                ];
+                $result   = $this->converge_send_sale($converge_data);
+                $is_valid = $result['is_success'];
+                $err_msg  = $result['msg'];
+            }
+
+            if( $is_valid ){
+                $subscription_details = array();
+                $subscription_details['customer_id'] = $input['customer_id'];
+                $subscription_details['category'] = $input['transaction_category'];
+                $subscription_details['total_amount'] = $input['transaction_amount'];
+                $subscription_details['method'] = $input['method'];
+                $subscription_details['transaction_type'] = 'Pre-Auth and Capture';
+                $subscription_details['frequency'] = $input['frequency'];
+                $subscription_details['notes'] = $input['notes'];
+                $subscription_details['status'] = 'Approved';
+
+                if($this->general->add_($subscription_details, 'acs_subscriptions')){
+                    echo '0';
+                }else{
+                    echo 'Database Error!';
+                }    
+            }else{
+                echo $err_msg;
+            }
+            
+        }
+    }
+
     public function converge_send_sale($data){
         include APPPATH . 'libraries/Converge/src/Converge.php';
 
@@ -252,6 +296,16 @@ class Customer extends MY_Controller
                 'select' => 'id,FName,LName',
             );
             $this->page_data['logged_in_user'] = $this->general->get_data_with_param($get_login_user,FALSE);
+
+            // get customer subscription history
+            $subscriptions_query = array(
+                'where' => array(
+                    'customer_id' => $userid
+                ),
+                'table' => 'acs_subscriptions',
+                'select' => '*',
+            );
+            $this->page_data['subscriptions'] = $this->general->get_data_with_param($subscriptions_query);
         }
 
         $this->load->view('customer/subscription', $this->page_data);
@@ -469,6 +523,15 @@ class Customer extends MY_Controller
             $this->page_data['customer_notes'] = $this->general->get_data_with_param($get_customer_notes);
             //$this->page_data['device_info'] = $this->customer_ad_model->get_all_by_id('fk_prof_id',$userid,"acs_devices");
         }
+
+        $get_customer_groups = array(
+                'where' => array(
+                    'company_id' => logged('company_id')
+                ),
+                'table' => 'customer_groups',
+                'select' => '*',
+            );
+
         $get_login_user = array(
             'where' => array(
                 'id' => $user_id
@@ -476,6 +539,8 @@ class Customer extends MY_Controller
             'table' => 'users',
             'select' => 'id,FName,LName',
         );
+
+        $this->page_data['customerGroups'] = $this->general->get_data_with_param($get_customer_groups);
         $this->page_data['logged_in_user'] = $this->general->get_data_with_param($get_login_user,FALSE);
         $this->page_data['sales_area'] = $this->customer_ad_model->get_all(FALSE,"","ASC","ac_salesarea","sa_id");
         $this->page_data['employees'] = $this->customer_ad_model->get_all(FALSE,"","ASC","users","id");
@@ -563,6 +628,7 @@ class Customer extends MY_Controller
             $input_profile['company_id'] = logged('company_id');
             $input_profile['status'] = $input['status'];
             $input_profile['customer_type'] = $input['customer_type'];
+            $input_profile['customer_group_id'] = $input['customer_group'];
             $input_profile['business_name'] = $input['business_name'];
             $input_profile['first_name'] = $input['first_name'];
             $input_profile['last_name'] = $input['last_name'];

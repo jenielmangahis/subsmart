@@ -125,10 +125,10 @@ table.dataTable tbody tr td {
                                   </div>
                                   <div style="font-size:18px; font-weight: bold;">What You'll Get</div>
                                   <hr>
-                                  <p style="font-size: 16px;">SAMPLE DEALS STEALS</p>
+                                  <p style="font-size: 16px;"><?= $dealsSteals->description; ?></p>
                                   <div style="font-size:18px; font-weight: bold; margin-top: 30px;">Terms &amp; Conditions</div>
                                   <hr>
-                                  <p style="font-size: 16px;">TEST</p>
+                                  <p style="font-size: 16px;"><?= $dealsSteals->terms_conditions; ?></p>
                                 </div>
                               </div>
                               <div class="col-md-6 pl-0 pr-0 left">

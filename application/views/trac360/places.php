@@ -26,8 +26,7 @@ include viewPath('includes/header'); ?>
                                         class="fa fa-users fa-2x" class="text-center"></span><br>People</a>
                             </li>
                             <li>
-                                <a href="<?= base_url() ?>trac360/places"
-                                    class="btn btn-primary  trac360_side_controls" id=""><span
+                                <a href="#" class="btn btn-primary  trac360_side_controls" id="calendar-menu-btn"><span
                                         class="fa fa-calendar-plus-o fa-2x" class="text-center"></span><br>Calendar</a>
                             </li>
                             <li>
@@ -300,6 +299,8 @@ include viewPath('includes/header'); ?>
         </div>
     </div>
 </div>
+
+<?php include viewPath('trac360/calendar'); ?>
 
 <?php include viewPath('includes/footer'); ?>
 <script>

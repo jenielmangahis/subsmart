@@ -406,12 +406,11 @@ add_css(array(
                                                 <button type="submit" class="btn btn-primary">Pre Auth Now</button>
                                                 <button type="submit" class="btn btn-primary">Capture Now</button>
                                                 <input type="hidden" name="customer_id" id="customer_id" value="<?= $this->uri->segment(3); ?>"/>
-                                                <input type="hidden" name="method" id="method" value="Credit Card"/>
+                                                <input type="hidden" name="method" id="method" value="CC"/>
                                                 </form>
                                             </div>
                                         </div>
                                     </div>
-
                                     <div class="col-md-12">
                                         <div class="card">
                                             <div class="card-header">

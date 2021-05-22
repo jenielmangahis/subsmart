@@ -360,7 +360,7 @@ $('#transactions-table').DataTable({
                     case 'Expense' :
                         $(td).html(`
                         <div class="btn-group float-right">
-                            <button class="btn d-flex align-items-center justify-content-center text-info">
+                            <button class="btn d-flex align-items-center justify-content-center text-info view-edit-expense">
                                 View/Edit
                             </button>
 
@@ -380,7 +380,7 @@ $('#transactions-table').DataTable({
                     case 'Check' :
                         $(td).html(`
                         <div class="btn-group float-right">
-                            <button class="btn d-flex align-items-center justify-content-center text-info">
+                            <button class="btn d-flex align-items-center justify-content-center text-info view-edit-check">
                                 View/Edit
                             </button>
 
@@ -410,7 +410,7 @@ $('#transactions-table').DataTable({
 
                                 <div class="dropdown-menu" aria-labelledby="statusDropdownButton">
                                     <a class="dropdown-item" href="#">Mark as paid</a>
-                                    <a class="dropdown-item" href="#">View/Edit</a>
+                                    <a class="dropdown-item view-edit-bill" href="#">View/Edit</a>
                                     <a class="dropdown-item" href="#">Copy</a>
                                     <a class="dropdown-item delete-transaction" href="#">Delete</a>
                                 </div>
@@ -419,7 +419,7 @@ $('#transactions-table').DataTable({
                         } else {
                             $(td).html(`
                             <div class="btn-group float-right">
-                                <button class="btn d-flex align-items-center justify-content-center text-info">
+                                <button class="btn d-flex align-items-center justify-content-center text-info view-edit-bill">
                                     View/Edit
                                 </button>
 
@@ -450,7 +450,7 @@ $('#transactions-table').DataTable({
                                 <div class="dropdown-menu" aria-labelledby="statusDropdownButton">
                                     <a class="dropdown-item" href="#">Copy to bill</a>
                                     <a class="dropdown-item" href="#">Print</a>
-                                    <a class="dropdown-item" href="#">View/Edit</a>
+                                    <a class="dropdown-item view-edit-purch-order" href="#">View/Edit</a>
                                     <a class="dropdown-item" href="#">Copy</a>
                                     <a class="dropdown-item delete-transaction" href="#">Delete</a>
                                 </div>
@@ -468,7 +468,7 @@ $('#transactions-table').DataTable({
                                 </button>
 
                                 <div class="dropdown-menu" aria-labelledby="statusDropdownButton">
-                                    <a class="dropdown-item" href="#">View/Edit</a>
+                                    <a class="dropdown-item view-edit-purch-order" href="#">View/Edit</a>
                                     <a class="dropdown-item" href="#">Copy</a>
                                     <a class="dropdown-item delete-transaction" href="#">Delete</a>
                                 </div>
@@ -479,7 +479,7 @@ $('#transactions-table').DataTable({
                     case 'Vendor Credit' :
                         $(td).html(`
                         <div class="btn-group float-right">
-                            <button class="btn d-flex align-items-center justify-content-center text-info">
+                            <button class="btn d-flex align-items-center justify-content-center text-info view-edit-vendor-credit">
                                 View/Edit
                             </button>
 
@@ -497,7 +497,7 @@ $('#transactions-table').DataTable({
                     case 'Credit Card Payment' :
                         $(td).html(`
                         <div class="btn-group float-right">
-                            <button class="btn d-flex align-items-center justify-content-center text-info">
+                            <button class="btn d-flex align-items-center justify-content-center text-info view-edit-cc-payment">
                                 View/Edit
                             </button>
 
@@ -625,7 +625,7 @@ $('a#new-bill-transaction').on('click', function(e) {
         });
 
         var attachmentContId = $(`#billModal .attachments .dropzone`).attr('id');
-        var attachments = new Dropzone(`#${attachmentContId}`, {
+        var billAttachments = new Dropzone(`#${attachmentContId}`, {
             url: '/accounting/attachments/attach',
             maxFilesize: 20,
             uploadMultiple: true,
@@ -704,7 +704,7 @@ $('a#new-expense-transaction').on('click', function(e) {
         });
 
         var attachmentContId = $(`#expenseModal .attachments .dropzone`).attr('id');
-        var attachments = new Dropzone(`#${attachmentContId}`, {
+        var expenseAttachments = new Dropzone(`#${attachmentContId}`, {
             url: '/accounting/attachments/attach',
             maxFilesize: 20,
             uploadMultiple: true,
@@ -783,7 +783,7 @@ $('a#new-check-transaction').on('click', function(e) {
         });
 
         var attachmentContId = $(`#checkModal .attachments .dropzone`).attr('id');
-        var attachments = new Dropzone(`#${attachmentContId}`, {
+        var checkAttachments = new Dropzone(`#${attachmentContId}`, {
             url: '/accounting/attachments/attach',
             maxFilesize: 20,
             uploadMultiple: true,
@@ -862,7 +862,7 @@ $('a#new-purchase-order-transaction').on('click', function(e) {
         });
 
         var attachmentContId = $(`#purchaseOrderModal .attachments .dropzone`).attr('id');
-        var attachments = new Dropzone(`#${attachmentContId}`, {
+        var poAttachments = new Dropzone(`#${attachmentContId}`, {
             url: '/accounting/attachments/attach',
             maxFilesize: 20,
             uploadMultiple: true,
@@ -941,7 +941,7 @@ $('a#new-vendor-credit-transaction').on('click', function(e) {
         });
 
         var attachmentContId = $(`#vendorCreditModal .attachments .dropzone`).attr('id');
-        var attachments = new Dropzone(`#${attachmentContId}`, {
+        var vcAttachments = new Dropzone(`#${attachmentContId}`, {
             url: '/accounting/attachments/attach',
             maxFilesize: 20,
             uploadMultiple: true,
@@ -1005,7 +1005,7 @@ $('a#new-credit-card-pmt').on('click', function(e) {
         });
 
         var attachmentContId = $(`#payDownCreditModal .attachments .dropzone`).attr('id');
-        var attachments = new Dropzone(`#${attachmentContId}`, {
+        var ccpAttachments = new Dropzone(`#${attachmentContId}`, {
             url: '/accounting/attachments/attach',
             maxFilesize: 20,
             uploadMultiple: true,
@@ -1073,7 +1073,7 @@ $(document).on('click', '#transactions-table a.delete-transaction', function(e) 
     var row = $(this).parent().parent().parent().parent();
     var data = $('#transactions-table').DataTable().row(row).data();
     var transactionType = data.type;
-    transactionType = transactionType.replace(' ', '-');
+    transactionType = transactionType.replaceAll(' ', '-');
     transactionType = transactionType.toLowerCase();
 
     $.ajax({
@@ -1082,5 +1082,255 @@ $(document).on('click', '#transactions-table a.delete-transaction', function(e) 
         success: function(result) {
             location.reload();
         }
+    });
+});
+
+$(document).on('click', '#transactions-table .view-edit-expense', function() {
+    var row = $(this).parent().parent().parent();
+    var data = $('#transactions-table').DataTable().row(row).data();
+    var transactionType = data.type;
+    transactionType = transactionType.replaceAll(' ', '-');
+    transactionType = transactionType.toLowerCase();
+
+    $.get('/accounting/vendors/view-expense/'+data.id, function(res) {
+        if ($('div#modal-container').length > 0) {
+            $('div#modal-container').html(res);
+        } else {
+            $('body').append(`
+                <div id="modal-container"> 
+                    ${res}
+                </div>
+            `);
+        }
+
+        rowCount = 2;
+        catDetailsInputs = $(`#expenseModal table#category-details-table tbody tr:first-child()`).html();
+        catDetailsBlank = $(`#expenseModal table#category-details-table tbody tr:last-child`).html();
+
+        $(`#expenseModal table#category-details-table tbody tr:first-child()`).remove();
+
+        $(`#expenseModal select`).select2();
+
+        $('div#expenseModal select#tags').select2({
+            placeholder: 'Start typing to add a tag',
+            allowClear: true,
+            ajax: {
+                url: '/accounting/get-job-tags',
+                dataType: 'json'
+            }
+        });
+
+        $(`div#expenseModal .date`).each(function(){
+            $(this).datepicker({
+                uiLibrary: 'bootstrap'
+            });
+        });
+
+        var attachmentContId = $(`#expenseModal .attachments .dropzone`).attr('id');
+        var viewExpenseAtta = new Dropzone(`#${attachmentContId}`, {
+            url: '/accounting/attachments/attach',
+            maxFilesize: 20,
+            uploadMultiple: true,
+            // maxFiles: 1,
+            addRemoveLinks: true,
+            init: function() {
+                $.getJSON('/accounting/vendors/get-transaction-attachments/'+transactionType+'/'+data.id, function(data) {
+                    if(data.length > 0) {
+                        $.each(data, function(index, val) {
+                            $('#expenseModal').find('.attachments').parent().append(`<input type="hidden" name="attachments[]" value="${val.id}">`);
+
+                            attachmentId.push(val.id);
+                            var mockFile = {
+                                name: `${val.uploaded_name}.${val.file_extension}`,
+                                size: parseInt(val.size),
+                                dataURL: base_url+"uploads/accounting/attachments/" + val.stored_name,
+                                // size: val.size / 1000000,
+                                accepted: true
+                            };
+                            viewExpenseAtta.emit("addedfile", mockFile);
+                            modalAttachedFiles.push(mockFile);
+        
+                            viewExpenseAtta.createThumbnailFromUrl(mockFile, viewExpenseAtta.options.thumbnailWidth, viewExpenseAtta.options.thumbnailHeight, viewExpenseAtta.options.thumbnailMethod, true, function(thumbnail) {
+                                viewExpenseAtta.emit('thumbnail', mockFile, thumbnail);
+                            });
+                            viewExpenseAtta.emit("complete", mockFile);
+                        });
+                    }
+                });
+
+                this.on("success", function(file, response) {
+                    var ids = JSON.parse(response)['attachment_ids'];
+                    var modal = $(`#expenseModal`);
+
+                    for(i in ids) {
+                        if(modal.find(`input[name="attachments[]"][value="${ids[i]}"]`).length === 0) {
+                            modal.find('.attachments').parent().append(`<input type="hidden" name="attachments[]" value="${ids[i]}">`);
+                        }
+
+                        modalAttachmentId.push(ids[i]);
+                    }
+                    modalAttachedFiles.push(file);
+                });
+            },
+            removedfile: function(file) {
+                var ids = modalAttachmentId;
+                var index = modalAttachedFiles.map(function(d, index) {
+                    if (d == file) return index;
+                }).filter(isFinite)[0];
+        
+                $(`#expenseModal .attachments`).find(`input[name="attachments[]"][value="${ids[index]}"]`).remove();
+
+                //remove thumbnail
+                var previewElement;
+
+                if((previewElement = file.previewElement) !== null) {
+                    var remove = (previewElement.parentNode.removeChild(file.previewElement));
+        
+                    if($(`#${attachmentContId} .dz-preview`).length > 0) {
+                        $(`#${attachmentContId} .dz-message`).hide();
+                    } else {
+                        $(`#${attachmentContId} .dz-message`).show();
+                    }
+        
+                    return remove;
+                } else {
+                    return (void 0);
+                }
+            }
+        });
+
+        $('#expenseModal').modal('show');
+    });
+});
+
+$(document).on('click', '#transactions-table tbody tr td:not(:first-child, :last-child, :nth-child(8))', function() {
+    var row = $(this).parent();
+    var data = $('#transactions-table').DataTable().row(row).data();
+    
+    switch(data.type) {
+        case 'Expense' :
+            $(this).parent().find('.view-edit-expense').trigger('click');
+        break;
+        case 'Check' :
+            $(this).parent().find('.view-edit-check').trigger('click');
+        break;
+    }
+});
+
+$(document).on('click', '#transactions-table .view-edit-check', function() {
+    var row = $(this).parent().parent().parent();
+    var data = $('#transactions-table').DataTable().row(row).data();
+    var transactionType = data.type;
+    transactionType = transactionType.replaceAll(' ', '-');
+    transactionType = transactionType.toLowerCase();
+
+    $.get('/accounting/vendors/view-check/'+data.id, function(res) {
+        if ($('div#modal-container').length > 0) {
+            $('div#modal-container').html(res);
+        } else {
+            $('body').append(`
+                <div id="modal-container"> 
+                    ${res}
+                </div>
+            `);
+        }
+
+        rowCount = 2;
+        catDetailsInputs = $(`#checkModal table#category-details-table tbody tr:first-child()`).html();
+        catDetailsBlank = $(`#checkModal table#category-details-table tbody tr:nth-child(2)`).html();
+
+        $(`#checkModal table#category-details-table tbody tr:first-child()`).remove();
+
+        $(`#checkModal select`).select2();
+
+        $('div#checkModal select#tags').select2({
+            placeholder: 'Start typing to add a tag',
+            allowClear: true,
+            ajax: {
+                url: '/accounting/get-job-tags',
+                dataType: 'json'
+            }
+        });
+
+        $(`div#checkModal .date`).each(function(){
+            $(this).datepicker({
+                uiLibrary: 'bootstrap'
+            });
+        });
+
+        var attachmentContId = $(`#checkModal .attachments .dropzone`).attr('id');
+        var viewcheckAtta = new Dropzone(`#${attachmentContId}`, {
+            url: '/accounting/attachments/attach',
+            maxFilesize: 20,
+            uploadMultiple: true,
+            // maxFiles: 1,
+            addRemoveLinks: true,
+            init: function() {
+                $.getJSON('/accounting/vendors/get-transaction-attachments/'+transactionType+'/'+data.id, function(data) {
+                    if(data.length > 0) {
+                        $.each(data, function(index, val) {
+                            $('#checkModal').find('.attachments').parent().append(`<input type="hidden" name="attachments[]" value="${val.id}">`);
+
+                            attachmentId.push(val.id);
+                            var mockFile = {
+                                name: `${val.uploaded_name}.${val.file_extension}`,
+                                size: parseInt(val.size),
+                                dataURL: base_url+"uploads/accounting/attachments/" + val.stored_name,
+                                // size: val.size / 1000000,
+                                accepted: true
+                            };
+                            viewcheckAtta.emit("addedfile", mockFile);
+                            modalAttachedFiles.push(mockFile);
+        
+                            viewcheckAtta.createThumbnailFromUrl(mockFile, viewcheckAtta.options.thumbnailWidth, viewcheckAtta.options.thumbnailHeight, viewcheckAtta.options.thumbnailMethod, true, function(thumbnail) {
+                                viewcheckAtta.emit('thumbnail', mockFile, thumbnail);
+                            });
+                            viewcheckAtta.emit("complete", mockFile);
+                        });
+                    }
+                });
+
+                this.on("success", function(file, response) {
+                    var ids = JSON.parse(response)['attachment_ids'];
+                    var modal = $(`#checkModal`);
+
+                    for(i in ids) {
+                        if(modal.find(`input[name="attachments[]"][value="${ids[i]}"]`).length === 0) {
+                            modal.find('.attachments').parent().append(`<input type="hidden" name="attachments[]" value="${ids[i]}">`);
+                        }
+
+                        modalAttachmentId.push(ids[i]);
+                    }
+                    modalAttachedFiles.push(file);
+                });
+            },
+            removedfile: function(file) {
+                var ids = modalAttachmentId;
+                var index = modalAttachedFiles.map(function(d, index) {
+                    if (d == file) return index;
+                }).filter(isFinite)[0];
+        
+                $(`#checkModal .attachments`).find(`input[name="attachments[]"][value="${ids[index]}"]`).remove();
+
+                //remove thumbnail
+                var previewElement;
+
+                if((previewElement = file.previewElement) !== null) {
+                    var remove = (previewElement.parentNode.removeChild(file.previewElement));
+        
+                    if($(`#${attachmentContId} .dz-preview`).length > 0) {
+                        $(`#${attachmentContId} .dz-message`).hide();
+                    } else {
+                        $(`#${attachmentContId} .dz-message`).show();
+                    }
+        
+                    return remove;
+                } else {
+                    return (void 0);
+                }
+            }
+        });
+
+        $('#checkModal').modal('show');
     });
 });

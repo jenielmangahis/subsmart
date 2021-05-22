@@ -41,6 +41,18 @@
         </div>
         <div class="row form_line">
             <div class="col-md-4">
+                <label>Customer Group</label>
+            </div>
+            <div class="col-md-8">
+                <select id="customer_group" name="customer_group" data-customer-source="dropdown" class="form-controls input_select">
+                    <?php foreach($customerGroups as $cg){ ?>
+                        <option value="<?= $cg->id; ?>"><?= $cg->title; ?></option>
+                    <?php } ?>
+                </select>
+            </div>
+        </div>
+        <div class="row form_line">
+            <div class="col-md-4">
                 <label>Sales Area <span class="required"> *</span></label>
             </div>
             <div class="col-md-8">

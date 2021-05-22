@@ -4,8 +4,6 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Cron_Marketing extends MY_Controller {
 
-
-
 	public function __construct()
 	{
 		parent::__construct();
@@ -17,10 +15,11 @@ class Cron_Marketing extends MY_Controller {
         $this->load->model('SmsLogs_model');
         $this->load->model('SmsBlastSendTo_model');
 
-        $condition  = ['field' => 'send_date <=', 'value' => date("Y-m-d")];
+        $condition[] = ['field' => 'send_date <=', 'value' => date("Y-m-d")];
         $smsBlast   = $this->SmsBlast_model->getAllIsPaidAndNotSent($condition);
         $total_sent = 0;
         foreach($smsBlast as $sms){
+            $sms_sent = 0;
             switch ($sms->sending_type) {
                 case $this->SmsBlast_model->sendingTypeAll():
                     $condition = array();
@@ -30,13 +29,14 @@ class Cron_Marketing extends MY_Controller {
                         $condition[] = ['customer_type' => 'Commercial'];                        
                     }
 
-                    $contacts = $this->AcsProfile_model->getAllByCompanyId($condition);
+                    $contacts = $this->AcsProfile_model->getAllByCompanyId($sms->company_id, $condition);
                     
                     foreach($contacts as $c){
                         $to_number = $this->cleanMobileNumber($c->phone_m);
-                        $result    = $this->sendSms($to_number, $c->sms_text);
+                        $result    = $this->sendSms($to_number, $sms->sms_text);
                         if( $result['is_sent'] ){
-                            $total_sent++;    
+                            $sms_sent++; 
+                            $total_sent++;   
                         }
 
                         //Log to sms_sent
@@ -44,7 +44,7 @@ class Cron_Marketing extends MY_Controller {
                             'user_id' => $sms->user_id,
                             'from_number' => RINGCENTRAL_USER,
                             'to_number' => $to_number,
-                            'message' => $c->sms_text,
+                            'sms_message' => $sms->sms_text,
                             'is_sent' => $result['is_sent'],
                             'error_message' => $result['msg'],
                             'date_created' => date("Y-m-d H:i:s")
@@ -54,28 +54,79 @@ class Cron_Marketing extends MY_Controller {
                     }
                     break;
                 case $this->SmsBlast_model->sendingTypeContactGroups():
+                    $sendTo = $this->SmsBlastSendTo_model->getAllBySmsBlastId($sms->id);
+                    foreach( $sendTo as $st ){
+                        $condition[] = ['customer_group_id' => $st->customer_group_id];     
+                        $contact = $this->AcsProfile_model->getAllByCompanyId($st->customer_id, $condition);
+                        foreach( $contact as $c ){
+                            $to_number = $this->cleanMobileNumber($c->phone_m);
+                            $result    = $this->sendSms($to_number, $sms->sms_text);
+                            if( $result['is_sent'] ){
+                                $sms_sent++;    
+                                $total_sent++;
+                            }
+
+                            //Log to sms_sent
+                            $data_logs = [
+                                'user_id' => $sms->user_id,
+                                'from_number' => RINGCENTRAL_USER,
+                                'to_number' => $to_number,
+                                'sms_message' => $sms->sms_text,
+                                'is_sent' => $result['is_sent'],
+                                'error_message' => $result['msg'],
+                                'date_created' => date("Y-m-d H:i:s")
+                            ];
+                            $this->SmsLogs_model->create($data_logs);
+                        }
+                    }
                     break;
 
                 case $this->SmsBlast_model->sendingTypeCertainContact():
-                    $contacts = $this->SmsBlastSendTo_model->
+                    $sendTo = $this->SmsBlastSendTo_model->getAllBySmsBlastId($sms->id);
+                    foreach( $sendTo as $st ){
+                        $condition[] = ['phone_m !=' => ''];  
+                        $contact = $this->AcsProfile_model->getByProfId($st->customer_id, $condition);
+                        if( $contact ){
+                            $to_number = $this->cleanMobileNumber($contact->phone_m);
+                            $result    = $this->sendSms($to_number, $sms->sms_text);
+                            if( $result['is_sent'] ){
+                                $sms_sent++;    
+                                $total_sent++;
+                            }
+
+                            //Log to sms_sent
+                            $data_logs = [
+                                'user_id' => $sms->user_id,
+                                'from_number' => RINGCENTRAL_USER,
+                                'to_number' => $to_number,
+                                'sms_message' => $sms->sms_text,
+                                'is_sent' => $result['is_sent'],
+                                'error_message' => $result['msg'],
+                                'date_created' => date("Y-m-d H:i:s")
+                            ];
+                            $this->SmsLogs_model->create($data_logs);
+                        }
+                    }
 
                     break;
                 default:
-                    # code...
                     break;
-            }
 
-            if( $total_sent > 0 ){
+                sleep(1);
+            }
+            exit;
+            if( $sms_sent > 0 ){
                 $sms_data = ['is_sent' => 1, 'date_sent' => date("Y-m-d")];
                 $this->SmsBlast_model->updateSmsBlast($sms->id, $sms_data);
             }
         }
 
         echo "Total sent sms " . $total_sent;
+        exit;
     }
 
-    public function sendSms($to_number, $message){
-        include APPPATH . 'libraries/ringcentral_lite/src/ringcentrallite.php';
+    public function sendSms($to_number, $message){        
+        include_once APPPATH . 'libraries/ringcentral_lite/src/ringcentrallite.php';
 
         $rc = new RingCentralLite(
             RINGCENTRAL_CLIENT_ID, //Client id
@@ -97,7 +148,6 @@ class Cron_Marketing extends MY_Controller {
         );
 
         $res = $rc->post('/restapi/v1.0/account/~/extension/~/sms', $params);
-
         $is_sent = false;
         $msg     = '';
 

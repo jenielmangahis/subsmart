@@ -296,11 +296,31 @@ border: none;
     {
         overflow: hidden; 
     }
+
+    .mobile_view_table
+    {
+        min-width: 350px !important;
+        margin-left: -20px !important;
+    }
+
+    .add_mobile
+    {
+        margin-left: -22px !important;
+    }
+
+    .mobile_qty
+    {
+        background: transparent !important;
+        border: none !important;
+        outline: none !important;
+        padding: 0px 0px 0px 0px !important;
+        text-align: center;
+    }
 }
    </style>
     <!-- page wrapper start -->
     <div wrapper__section>
-        <div class="container-fluid p-40">
+        <div class="container-fluid p-40 add_mobile">
           <div class="card">
               <div class="page-title-box pt-1 pb-0">
                   <div class="row align-items-center">
@@ -453,13 +473,13 @@ border: none;
 											<label for="spouse_last_name" class="label-element">Last Name</label>
 											<input type="text" class="form-control input-element" name="s_last_name"
 												   id="spouse_last_name"
-												     placeholder="Enter Last Name" />
+												     placeholder="Enter Spouse Last Name" />
 										</div>
 										<div class="col-md-3 form-group">
 											<label for="spouse_first_name" class="label-element">First Name</label>
 											<input type="text" class="form-control input-element" name="s_first_name"
 												   id="spouse_first_name"
-												     placeholder="Enter First Name"
+												     placeholder="Enter Spouse First Name"
 												   value="<?php echo (!empty($workorder->customer['spouse_first_name'])) ? $workorder->customer['spouse_first_name'] : '' ?>"/>
 										</div>
 										<div class="col-md-2 form-group">
@@ -1491,7 +1511,7 @@ border: none;
                                         <div class="row" id="plansItemDiv">
 
                                             <div class="col-md-12 table-responsive">
-                                                <table class="table table-hover">
+                                                <table class="table table-hover mobile_view_table" >
                                                     <input type="hidden" name="count" value="0" id="count">
                                                     <thead>
                                                     <tr>
@@ -1525,9 +1545,10 @@ border: none;
 
                                             <!-- <div class="show_mobile_view" style="color:green;"><span>Product</span></div> -->
                                                 </td>
-                                            <td width="10%"><input type="number" class="form-control quantity hidden_mobile_view" name="quantity[]"
-                                                       data-counter="0" id="quantity_0" value="1"> <div class="show_mobile_view"><span>1</span><input type="hidden" class="form-control quantity" name="quantity[]"
-                                                       data-counter="0" id="quantity_0" value="1"></div> </td>
+                                            <td width="10%"><input type="number" class="form-control quantity mobile_qty" name="quantity[]"
+                                                       data-counter="0" id="quantity_0" value="1"> 
+                                                       <!-- <div class="show_mobile_view_test"><span>1</span><input type="hidden" class="form-control quantity" name="quantity[]" data-counter="0" id="quantity_0" value="1"></div>  -->
+                                            </td>
                                             <td width="10%"><input type="number" class="form-control price hidden_mobile_view" name="price[]"
                                                        data-counter="0" id="price_0" min="0" value="0"> <input type="hidden" class="priceqty" id="priceqty_0"> <div class="show_mobile_view"><span class="price">0</span><input type="hidden" class="form-control price" name="price[]" data-counter="0" id="priceM_0" min="0" value="0"></div><input id="priceM_qty0" value=""  type="hidden" name="price_qty[]" class="form-control hidden_mobile_view price_qty"></td>
                                             <td width="10%" class="hidden_mobile_view"><input type="number" class="form-control discount" name="discount[]"
@@ -1561,7 +1582,7 @@ border: none;
                                         <table class="table table-bordered" style="width:80%;">
                                             <tr>
                                                 <td>Equipment Cost</td>
-                                                 <td class="d-flex align-items-center">$  <input type="text" name="subtotal" id="item_total" name="eqpt_cost" class="form-control" >
+                                                 <td class="d-flex align-items-center">$  <input type="text" name="subtotal" id="item_total" class="form-control" >
                                                 </td>
                                             </tr>
                                             <tr>
@@ -2788,11 +2809,11 @@ function submit() {
 
     // $(".signature_web").remove();
 
-  if (signaturePad.isEmpty() || signaturePad2.isEmpty() || signaturePad3.isEmpty()) {
-    // console.log("Empty!");
-    alert('Please check, you must sign all tab.')
-  }
-  else{
+//   if (signaturePad.isEmpty() || signaturePad2.isEmpty() || signaturePad3.isEmpty()) {
+//     // console.log("Empty!");
+//     alert('Please check, you must sign all tab.')
+//   }
+//   else{
     // sigpad= $("#output-2a").val();
     var canvas = document.getElementById("canvas");    
     var dataURL = canvas.toDataURL("image/png");
@@ -2853,7 +2874,7 @@ function submit() {
         // location.reload();
     },
     });
-  }
+//   }
 }
 </script>
 

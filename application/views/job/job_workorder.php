@@ -157,7 +157,7 @@ add_css(array(
                                 <option value="">Select Tags</option>
                                 <?php if(!empty($tags)): ?>
                                     <?php foreach ($tags as $tag): ?>
-                                        <option <?php if(isset($jobs_data) && $jobs_data->tags == $tag->id) {echo 'selected'; } ?> value="<?= $tag->id; ?>"><?= $tag->name; ?></option>
+                                        <option <?php if(isset($jobs_data) && $jobs_data->tags == $tag->name) {echo 'selected'; } ?> value="<?= $tag->id; ?>"><?= $tag->name; ?></option>
                                     <?php endforeach; ?>
                                 <?php endif; ?>
                             </select>
@@ -341,7 +341,7 @@ add_css(array(
                                 <td></td>
                                 <td>
                                     <small>Job Tags</small>
-                                    <input type="text" name="job_tag" class="form-control" value="<?= isset($jobs_data) ? $jobs_data->name : ''; ?>" id="job_tags_right" readonly>
+                                    <input type="text" name="job_tag" class="form-control" value="<?= isset($jobs_data) ? $jobs_data->tags : ''; ?>" id="job_tags_right" readonly>
                                 </td>
                                 <td></td>
                                 <td></td>

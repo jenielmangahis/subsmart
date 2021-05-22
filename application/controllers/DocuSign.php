@@ -81,6 +81,7 @@ class DocuSign extends MY_Controller
             'files' => $files,
             'workorder_recipient' => $workorderRecipient,
             'co_recipients' => $coRecipientFields,
+            'decrypted' => $decrypted,
         ]);
     }
 
@@ -391,6 +392,8 @@ class DocuSign extends MY_Controller
 
     public function apiComplete()
     {
+        header('content-type: application/json');
+
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             echo json_encode(['success' => false]);
             return;
@@ -417,7 +420,6 @@ class DocuSign extends MY_Controller
         $record = $this->db->get('user_docfile_recipients')->row();
 
         $this->db->where('docfile_id', $documentId);
-        $this->db->where('role', 'Needs to Sign');
         $this->db->where('completed_at is NULL', null, false);
         $this->db->where('id !=', $recipientId);
         $this->db->order_by('id', 'asc');
@@ -432,13 +434,22 @@ class DocuSign extends MY_Controller
             }
         }
 
+        $this->db->where('id', $documentId);
+        $envelope = $this->db->get('user_docfile')->row_array();
+
         if (!is_null($nextRecipient)) {
-            $this->db->where('id', $documentId);
-            $envelope = $this->db->get('user_docfile')->row_array();
-            $this->sendEnvelope($envelope, $nextRecipient);
+            if ($nextRecipient['role'] === 'Signs in Person') {
+                $message = json_encode(['recipient_id' => $nextRecipient['id'], 'document_id' => $envelope['id']]);
+                $hash = encrypt($message, $this->password);
+                echo json_encode(['hash' => $hash]);
+                return;
+            }
+
+            if ($nextRecipient['role'] === 'Needs to Sign') {
+                $this->sendEnvelope($envelope, $nextRecipient);
+            }
         }
 
-        header('content-type: application/json');
         echo json_encode(['data' => $record, 'next_recipient' => $nextRecipient]);
     }
 
@@ -835,6 +846,8 @@ SQL;
 
     public function apiSendTemplate($templateId)
     {
+        header('content-type: application/json');
+
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             echo json_encode(['success' => false]);
             return;
@@ -946,16 +959,25 @@ SQL;
         $envelope = $this->db->get('user_docfile')->row_array();
 
         $this->db->where('docfile_id', $docfileId);
-        $this->db->where('role', 'Needs to Sign');
         $this->db->where('completed_at is NULL', null, false);
         $this->db->order_by('id', 'asc');
         $this->db->limit(1);
         $recipient = $this->db->get('user_docfile_recipients')->row_array();
 
-        ['error' => $error] = $this->sendEnvelope($envelope, $recipient);
+        if ($recipient['role'] === 'Needs to Sign') {
+            ['error' => $error] = $this->sendEnvelope($envelope, $recipient);
+            echo json_encode(['success' => is_null($error), 'error' => $error]);
+            return;
+        }
 
-        header('content-type: application/json');
-        echo json_encode(['success' => is_null($error), 'error' => $error]);
+        if ($recipient['role'] === 'Signs in Person') {
+            $message = json_encode(['recipient_id' => $recipient['id'], 'document_id' => $envelope['id']]);
+            $hash = encrypt($message, $this->password);
+            echo json_encode(['hash' => $hash]);
+            return;
+        }
+
+        echo json_encode(['data' => null]);
     }
 
     private function getSigningUrl()

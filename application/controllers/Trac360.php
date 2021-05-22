@@ -60,10 +60,14 @@ class Trac360 extends MY_Controller
     public function index()
     {
         add_css(array(
-            "assets/css/trac360/people.css"
+            "assets/css/trac360/people.css",
+            "assets/css/timesheet/calendar/main.css",
+            "assets/css/trac360/calendar.css"
         ));
         add_footer_js(array(
-            "assets/js/trac360/people.js"
+            "assets/js/trac360/people.js",
+            "assets/js/trac360/calendar.js",
+            "assets/js/timesheet/calendar/main.js",
 
         ));
         $company_id = logged('company_id');
@@ -296,10 +300,14 @@ class Trac360 extends MY_Controller
     public function places()
     {
         add_css(array(
-            "assets/css/trac360/places.css"
+            "assets/css/trac360/places.css",
+            "assets/css/trac360/calendar.css",
+            "assets/css/timesheet/calendar/main.css",
         ));
         add_footer_js(array(
-            "assets/js/trac360/places.js"
+            "assets/js/trac360/places.js",
+            "assets/js/trac360/calendar.js",
+            "assets/js/timesheet/calendar/main.js",
 
         ));
         $company_id = logged('company_id');
@@ -539,10 +547,14 @@ class Trac360 extends MY_Controller
     {
         add_css(array(
             "assets/css/trac360/people.css",
-            "assets/css/trac360/jobs.css"
+            "assets/css/trac360/jobs.css",
+            "assets/css/trac360/calendar.css",
+            "assets/css/timesheet/calendar/main.css",
         ));
         add_footer_js(array(
-            "assets/js/trac360/jobs.js"
+            "assets/js/trac360/jobs.js",
+            "assets/js/trac360/calendar.js",
+            "assets/js/timesheet/calendar/main.js",
 
         ));
         $company_id = logged('company_id');
@@ -571,5 +583,9 @@ class Trac360 extends MY_Controller
 
         $this->load->view('trac360/jobs', $this->page_data);
         // var_dump($data);
+    }
+    public function get_events_for_calendar()
+    {
+        echo json_encode('');
     }
 }

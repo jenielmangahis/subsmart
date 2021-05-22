@@ -99,6 +99,17 @@ class SmsBlast_model extends MY_Model
         return $query;
     }
 
+    public function getByOrderNumber($order_number)
+    {
+        $this->db->select('sms_blast.*, users.id AS uid, users.company_id');
+        $this->db->from($this->table);
+        $this->db->join('users', 'sms_blast.user_id = users.id', 'LEFT');
+
+        $this->db->where('sms_blast.order_number', $order_number);
+
+        $query = $this->db->get()->row();
+        return $query;
+    }
     
     public function deleteSmsBlast($id){
         $user_id = logged('id');

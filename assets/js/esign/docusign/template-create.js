@@ -244,8 +244,13 @@ function TemplateCreate() {
         },
       });
 
-      await response.json();
-      window.location = `${prefixURL}/DocuSign/manage?view=sent`;
+      const data = await response.json();
+      let nextUrl = `${prefixURL}/DocuSign/manage?view=sent`;
+      if (data.hash) {
+        nextUrl = `${prefixURL}/DocuSign/signing?hash=${data.hash}`;
+      }
+
+      window.location = nextUrl;
       return;
     }
 

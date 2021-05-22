@@ -272,7 +272,7 @@ class Vendors_model extends MY_Model {
 				$this->db->where('status', $filters['status']);
 			}
 		} else {
-			$this->db->where('status', 1);
+			$this->db->where('status !=', 0);
 		}
 
 		$query = $this->db->get('accounting_bill');
@@ -336,6 +336,7 @@ class Vendors_model extends MY_Model {
 			$this->db->where('date >=', $filters['start-date']);
 			$this->db->where('date <=', $filters['end-date']);
 		}
+		$this->db->where('status !=', 0);
 
 		$query = $this->db->get('accounting_pay_down_credit_card');
 
@@ -506,6 +507,22 @@ class Vendors_model extends MY_Model {
 		$this->db->where('company_id', logged('company_id'));
 		$this->db->where('id', $vendorCreditId);
 		$update = $this->db->update('accounting_vendor_credit', $data);
+		return $update;
+	}
+
+	public function get_credit_card_payment_by_id($ccPaymentId)
+	{
+		$this->db->where('company_id', logged('company_id'));
+		$this->db->where('id', $ccPaymentId);
+		$query = $this->db->get('accounting_pay_down_credit_card');
+		return $query->row();
+	}
+
+	public function update_credit_card_payment($ccPaymentId, $data)
+	{
+		$this->db->where('company_id', logged('company_id'));
+		$this->db->where('id', $ccPaymentId);
+		$update = $this->db->update('accounting_pay_down_credit_card', $data);
 		return $update;
 	}
 }

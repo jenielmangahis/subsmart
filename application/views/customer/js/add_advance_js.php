@@ -81,6 +81,9 @@
         $("#customer_type").select2({
             placeholder: "Select Customer Type"
         });
+        $("#customer_group").select2({
+            placeholder: "Select Customer Group"
+        });
         $("#pay_method").select2({
             placeholder: "Select Payment Type"
         });
@@ -247,17 +250,18 @@
         $("#bill_start_date").datetimepicker({
             format: "l",
             //minDate: new Date(),
-        }).on('dp.change', function (e) {
-            var selected_data = moment(e.date._d).format('L');
-            var contract = $('#contract_term').val();
-            var plus_date = moment.utc(selected_data).add(contract,'months');
-            console.log( moment(plus_date).format('l'));
-            //console.log( moment(plus_date).format('D'));
-            $('#bill_end_date').val(moment(plus_date).format('l'));
-            $('#bill_day ').val(moment(plus_date).format('D'));
-            //$('#bill_day option[value='+moment(plus_date).format('D')+']').prop('selected',true);
-            //var billDay = moment(plus_date).format('D');
-        });
+        }); 
+        // .on('dp.change', function (e) {
+        //     var selected_data = moment(e.date._d).format('L');
+        //     var contract = $('#contract_term').val();
+        //     var plus_date = moment.utc(selected_data).add(contract,'months');
+        //     console.log( moment(plus_date).format('l'));
+        //     //console.log( moment(plus_date).format('D'));
+        //     $('#bill_end_date').val(moment(plus_date).format('l'));
+        //     $('#bill_day ').val(moment(plus_date).format('D'));
+        //     //$('#bill_day option[value='+moment(plus_date).format('D')+']').prop('selected',true);
+        //     //var billDay = moment(plus_date).format('D');
+        // });
 
         $("#bill_end_date").datetimepicker({
             format: "l",

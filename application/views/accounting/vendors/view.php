@@ -295,7 +295,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                             <th width="5%">Action</th>
                                                         </tr>
                                                     </thead>
-                                                    <tbody></tbody>
+                                                    <tbody class="cursor-pointer"></tbody>
                                                 </table>
                                             </div>
                                         </div>

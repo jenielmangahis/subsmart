@@ -25,7 +25,7 @@ class AcsProfile_model extends MY_Model
         return $query->result();
     }
 
-    public function getByProfId($prof_id)
+    public function getByProfId($prof_id, $conditions=array())
     {
 
         $this->db->select('*');
