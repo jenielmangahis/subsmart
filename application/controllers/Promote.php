@@ -642,7 +642,7 @@ class Promote extends MY_Controller {
             
         $this->load->library('Reportpdf');
 
-        $title = 'deals_invoice';
+        $title = 'deals_order';
 
         $obj_pdf = new Reportpdf('P', 'mm', 'A4', true, 'UTF-8', false);
         $obj_pdf->SetTitle($title);
