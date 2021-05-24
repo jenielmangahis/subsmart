@@ -478,6 +478,31 @@ class Vendors_model extends MY_Model {
 		return $update;
 	}
 
+	public function get_bill_by_id($billId)
+	{
+		$this->db->where('company_id', logged('company_id'));
+		$this->db->where('id', $billId);
+		$query = $this->db->get('accounting_bill');
+		return $query->row();
+	}
+
+	public function get_bill_payments_by_bill_id($billId)
+	{
+		$this->db->select('*');
+		$this->db->where('accounting_bill_payments.company_id', logged('company_id'));
+		$this->db->where('accounting_bill_payment_items.bill_id', $billId);
+		$this->db->from('accounting_bill_payments');
+		$this->db->join('accounting_bill_payment_items', 'accounting_bill_payment_items.bill_payment_id = accounting_bill_payments.id');
+		return $this->db->get()->result();
+	}
+
+	public function get_bill_payment_items($billPaymentId)
+	{
+		$this->db->where('bill_payment_id', $billPaymentId);
+		$query = $this->db->get('accounting_bill_payment_items');
+		return $query->result();
+	}
+
 	public function update_bill($billId, $data)
 	{
 		$this->db->where('company_id', logged('company_id'));

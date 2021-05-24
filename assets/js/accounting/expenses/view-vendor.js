@@ -1214,6 +1214,9 @@ $(document).on('click', '#transactions-table tbody tr td:not(:first-child, :last
         case 'Check' :
             $(this).parent().find('.view-edit-check').trigger('click');
         break;
+        case 'Bill' :
+            $(this).parent().find('.view-edit-bill').trigger('click');
+        break;
     }
 });
 
@@ -1237,7 +1240,7 @@ $(document).on('click', '#transactions-table .view-edit-check', function() {
 
         rowCount = 2;
         catDetailsInputs = $(`#checkModal table#category-details-table tbody tr:first-child()`).html();
-        catDetailsBlank = $(`#checkModal table#category-details-table tbody tr:nth-child(2)`).html();
+        catDetailsBlank = $(`#checkModal table#category-details-table tbody tr:last-child`).html();
 
         $(`#checkModal table#category-details-table tbody tr:first-child()`).remove();
 
@@ -1332,5 +1335,123 @@ $(document).on('click', '#transactions-table .view-edit-check', function() {
         });
 
         $('#checkModal').modal('show');
+    });
+});
+
+$(document).on('click', '#transactions-table .view-edit-bill', function() {
+    var row = $(this).parent().parent().parent();
+    var data = $('#transactions-table').DataTable().row(row).data();
+    var transactionType = data.type;
+    transactionType = transactionType.replaceAll(' ', '-');
+    transactionType = transactionType.toLowerCase();
+
+    $.get('/accounting/vendors/view-bill/'+data.id, function(res) {
+        if ($('div#modal-container').length > 0) {
+            $('div#modal-container').html(res);
+        } else {
+            $('body').append(`
+                <div id="modal-container"> 
+                    ${res}
+                </div>
+            `);
+        }
+
+        rowCount = 2;
+        catDetailsInputs = $(`#billModal table#category-details-table tbody tr:first-child()`).html();
+        catDetailsBlank = $(`#billModal table#category-details-table tbody tr:last-child`).html();
+
+        $(`#billModal table#category-details-table tbody tr:first-child()`).remove();
+
+        $(`#billModal select`).select2();
+
+        $('div#billModal select#tags').select2({
+            placeholder: 'Start typing to add a tag',
+            allowClear: true,
+            ajax: {
+                url: '/accounting/get-job-tags',
+                dataType: 'json'
+            }
+        });
+
+        $(`div#billModal .date`).each(function(){
+            $(this).datepicker({
+                uiLibrary: 'bootstrap'
+            });
+        });
+
+        var attachmentContId = $(`#billModal .attachments .dropzone`).attr('id');
+        var viewBillAtta = new Dropzone(`#${attachmentContId}`, {
+            url: '/accounting/attachments/attach',
+            maxFilesize: 20,
+            uploadMultiple: true,
+            // maxFiles: 1,
+            addRemoveLinks: true,
+            init: function() {
+                $.getJSON('/accounting/vendors/get-transaction-attachments/'+transactionType+'/'+data.id, function(data) {
+                    if(data.length > 0) {
+                        $.each(data, function(index, val) {
+                            $('#billModal').find('.attachments').parent().append(`<input type="hidden" name="attachments[]" value="${val.id}">`);
+
+                            attachmentId.push(val.id);
+                            var mockFile = {
+                                name: `${val.uploaded_name}.${val.file_extension}`,
+                                size: parseInt(val.size),
+                                dataURL: base_url+"uploads/accounting/attachments/" + val.stored_name,
+                                // size: val.size / 1000000,
+                                accepted: true
+                            };
+                            viewBillAtta.emit("addedfile", mockFile);
+                            modalAttachedFiles.push(mockFile);
+        
+                            viewBillAtta.createThumbnailFromUrl(mockFile, viewBillAtta.options.thumbnailWidth, viewBillAtta.options.thumbnailHeight, viewBillAtta.options.thumbnailMethod, true, function(thumbnail) {
+                                viewBillAtta.emit('thumbnail', mockFile, thumbnail);
+                            });
+                            viewBillAtta.emit("complete", mockFile);
+                        });
+                    }
+                });
+
+                this.on("success", function(file, response) {
+                    var ids = JSON.parse(response)['attachment_ids'];
+                    var modal = $(`#billModal`);
+
+                    for(i in ids) {
+                        if(modal.find(`input[name="attachments[]"][value="${ids[i]}"]`).length === 0) {
+                            modal.find('.attachments').parent().append(`<input type="hidden" name="attachments[]" value="${ids[i]}">`);
+                        }
+
+                        modalAttachmentId.push(ids[i]);
+                    }
+                    modalAttachedFiles.push(file);
+                });
+            },
+            removedfile: function(file) {
+                var ids = modalAttachmentId;
+                var index = modalAttachedFiles.map(function(d, index) {
+                    if (d == file) return index;
+                }).filter(isFinite)[0];
+        
+                $(`#billModal .attachments`).find(`input[name="attachments[]"][value="${ids[index]}"]`).remove();
+
+                //remove thumbnail
+                var previewElement;
+
+                if((previewElement = file.previewElement) !== null) {
+                    var remove = (previewElement.parentNode.removeChild(file.previewElement));
+        
+                    if($(`#${attachmentContId} .dz-preview`).length > 0) {
+                        $(`#${attachmentContId} .dz-message`).hide();
+                    } else {
+                        $(`#${attachmentContId} .dz-message`).show();
+                    }
+        
+                    return remove;
+                } else {
+                    return (void 0);
+                }
+            }
+        });
+
+        $('#billModal').modal('show');
     });
 });

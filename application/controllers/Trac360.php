@@ -584,8 +584,60 @@ class Trac360 extends MY_Controller
         $this->load->view('trac360/jobs', $this->page_data);
         // var_dump($data);
     }
-    public function get_events_for_calendar()
+    public function get_jobs_for_calendar()
     {
-        echo json_encode('');
+        $date_from =date('Y-m-d', strtotime('first day of last month', strtotime($this->input->post("date_viewed"))));
+        $date_to = date("Y-m-t", strtotime($this->input->post("date_viewed")));
+        $all_jobs=$this->trac360_model->get_all_jobs($date_from, $date_to);
+        $scredules = array();
+        foreach ($all_jobs as $job) {
+            $scredules[]=array(
+                "title" => $job->FName .' '.$job->LName.' : '.$job->job_number . ' : ' . $job->job_type. ' - ' . $job->tags_name,
+                "start" => $job->start_date.'T'.date('H:i:s', $job->start_time),
+                "end" => $job->end_date.'T'.date('H:i:s', $job->end_time),
+                "url" => $job->job_number . ' : ' . $job->job_type. ' - ' . $job->tags_name
+            );
+        }
+        $data = new stdClass();
+        $data->scredules = $scredules;
+        $data->all_jobs= $all_jobs;
+        $data->date_from=$date_from;
+        $data->date_to=$date_to;
+        echo json_encode($data);
+    }
+    public function history()
+    {
+        add_css(array(
+            "assets/css/timesheet/calendar/main.css",
+            "assets/css/trac360/people.css",
+            "assets/css/trac360/jobs.css",
+            "assets/css/trac360/calendar.css",
+            "assets/css/trac360/history.css",
+        ));
+        add_footer_js(array(
+            "assets/js/timesheet/calendar/main.js",
+            "assets/js/trac360/calendar.js",
+            "assets/js/trac360/history.js",
+
+        ));
+        $company_id = logged('company_id');
+        $user_id = logged('id');
+        $role    = logged('role');
+
+        $settings = $this->settings_model->getValueByKey(DB_SETTINGS_TABLE_KEY_SCHEDULE);
+        $this->page_data['settings'] = unserialize($settings);
+        if ($role == 1 || $role == 2) {
+            $previousJobs = $this->trac360_model->getAllpreviousJobs();
+        } else {
+            $previousJobs = $this->trac360_model->getAllpreviousJobsByCompanyID($company_id);
+        }
+
+        $this->page_data['previousJobs'] = $previousJobs;
+        $this->page_data['company_id'] = $company_id;
+        $this->page_data['user_id'] = $user_id;
+
+
+        $this->load->view('trac360/history', $this->page_data);
+        // var_dump($data);
     }
 }

@@ -854,7 +854,7 @@ class Vendors extends MY_Controller {
                     'category' => $category,
                     'memo' => $bill->memo,
                     'due_date' => date("m/d/Y", strtotime($bill->due_date)),
-                    'balance' => '$0.00',
+                    'balance' => '$'.number_format(floatval($bill->remaining_balance), 2, '.', ','),
                     'total' => '$'.number_format(floatval($bill->total_amount), 2, '.', ','),
                     'status' => $bill->status === "2" ? "Paid" : "Open",
                     'attachments' => ''
@@ -1634,6 +1634,9 @@ class Vendors extends MY_Controller {
             case 'check' :
                 $transaction = $this->vendors_model->get_check_by_id($transactionId);
             break;
+            case 'bill' :
+                $transaction = $this->vendors_model->get_bill_by_id($transactionId);
+            break;
         }
 
         $attachments = json_decode($transaction->attachments, true);
@@ -1733,5 +1736,78 @@ class Vendors extends MY_Controller {
         $this->page_data['dropdown']['items'] = $this->items_model->getItemsWithFilter(['type' => 'inventory', 'status' => [1]]);
 
         $this->load->view('accounting/vendors/view_check', $this->page_data);
+    }
+
+    public function view_bill($billId)
+    {
+        $bill = $this->vendors_model->get_bill_by_id($billId);
+        $terms = $this->accounting_terms_model->getActiveCompanyTerms(logged('company_id'));
+
+        $selectedTerm = $terms[0];
+
+        $categoryAccs = [];
+        $accountTypes = [
+            'Expenses',
+            'Bank',
+            'Accounts receivable (A/R)',
+            'Other Current Assets',
+            'Fixed Assets',
+            'Accounts payable (A/P)',
+            'Credit Card',
+            'Other Current Liabilities',
+            'Long Term Liabilities',
+            'Equity',
+            'Income',
+            'Cost of Goods Sold',
+            'Other Income',
+            'Other Expense'
+        ];
+
+        foreach($accountTypes as $typeName) {
+            $accType = $this->account_model->getAccTypeByName($typeName);
+
+            $accounts = $this->chart_of_accounts_model->getByAccountType($accType->id, null, logged('company_id'));
+
+            if(count($accounts) > 0) {
+                foreach($accounts as $account) {
+                    $childAccs = $this->chart_of_accounts_model->getChildAccounts($account->id);
+
+                    $account->childAccs = $childAccs;
+
+                    $categoryAccs[$typeName][] = $account;
+                }
+            }
+        }
+
+        $billPayments = $this->vendors_model->get_bill_payments_by_bill_id($billId);
+
+        $totalPayment = 0.00;
+        foreach($billPayments as $billPayment) {
+            $paymentItems = $this->vendors_model->get_bill_payment_items($billPayment->id);
+
+            foreach($paymentItems as $paymentItem) {
+                if($paymentItem->bill_id === $billId) {
+                    $totalPayment += floatval($paymentItem->total_amount);
+                }
+            }
+        }
+
+        $categories = $this->expenses_model->get_transaction_categories($billId, 'Bill');
+        $items = $this->expenses_model->get_transaction_items($billId, 'Bill');
+
+        $this->page_data['bill_payments'] = $billPayments;
+        $this->page_data['total_payment'] = number_format(floatval($totalPayment), 2, '.', ',');
+        $this->page_data['due_date'] = date("m/d/Y", strtotime($bill->due_date));
+        $this->page_data['bill'] = $bill;
+        $this->page_data['categories'] = $categories;
+        $this->page_data['items'] = $items;
+        $this->page_data['dropdown']['categories'] = $categoryAccs;
+        $this->page_data['dropdown']['items'] = $this->items_model->getItemsWithFilter(['type' => 'inventory', 'status' => [1]]);
+        $this->page_data['dropdown']['customers'] = $this->accounting_customers_model->getAllByCompany();
+        $this->page_data['dropdown']['vendors'] = $this->vendors_model->getAllByCompany();
+        $this->page_data['dropdown']['items'] = $this->items_model->getItemsWithFilter(['type' => 'inventory', 'status' => [1]]);
+        $this->page_data['dropdown']['terms'] = $terms;
+
+        $this->load->view('accounting/vendors/view_bill', $this->page_data);
     }
 }

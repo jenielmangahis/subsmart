@@ -39,7 +39,7 @@ include viewPath('includes/header'); ?>
                                     class="btn btn-primary  trac360_side_controls current-page" id=""><span
                                         class="fa fa-map-marker fa-2x" class="text-center"></span><br>Places</a>
                             </li>
-                            <li><a href="<?= base_url() ?>trac360/"
+                            <li><a href="<?= base_url() ?>trac360/history"
                                     class="btn btn-primary  trac360_side_controls" id=""><span class="fa fa-map fa-2x"
                                         class="text-center"></span><br>History</a>
                             </li>

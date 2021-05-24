@@ -66,6 +66,10 @@
     </div>
 
     <div class="d-flex justify-content-end">
+        <a id="discardChanges" href="<?php echo base_url('vault/mylibrary') ?>" class="btn btn-secondary align-items-center mr-1 d-none">
+            Discard Changes
+        </a>
+
         <button id="saveandclose" type="button" class="btn btn-secondary align-items-center mr-1 d-none">
             <div class="spinner-border spinner-border-sm mt-0 mr-1 d-none" role="status">
                 <span class="sr-only">Loading...</span>

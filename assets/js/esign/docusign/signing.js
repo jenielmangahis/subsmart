@@ -703,6 +703,10 @@ function Signing(hash) {
         return;
       }
 
+      if (data.has_user) {
+        window.location = `${prefixURL}/DocuSign/manage?view=sent`;
+      }
+
       $(this).attr("disabled", false);
       $(this).find(".spinner-border").addClass("d-none");
       markAsFinished();

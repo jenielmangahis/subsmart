@@ -1203,6 +1203,8 @@ $(document).on("focusout", ".qtyest2", function () {
   // alert(subtotaltax);
 
   $("#sales_taxs").val(subtotaltax.toFixed(2));
+  $("#total_tax_").text(subtotaltax.toFixed(2));
+  $("#total_tax_input").val(subtotaltax.toFixed(2));
   $("#span_total_" + in_id).text(o_total);
   $("#sub_total_text" + in_id).text(o_total);
   $("#span_sub_total_invoice").text(priceqty.toFixed(2));
@@ -1214,6 +1216,13 @@ $(document).on("focusout", ".qtyest2", function () {
   var grandtotal = priceqty + subtotaltax + one_time + m_monitoring;
 
   $("#grand_total_input").val(grandtotal);
+  // alert(grandtotal);
+  // standard form
+  var taxtotal  = $("#total_tax_input").val();
+  var pricetotal  = $("#item_total").val();
+  var s_grandtotal = subtotaltax + priceqty;
+  $("#grand_total").text(s_grandtotal.toFixed(2));
+  $("#grand_total_input").val(s_grandtotal.toFixed(2));
   
 });
 

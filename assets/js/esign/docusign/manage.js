@@ -136,6 +136,7 @@ const columns = {
     const RESEND = "resend";
     const COPY = "copy";
     const HISTORY = "history";
+    const SAVE_AS_TEMPLATE = "save as template";
 
     switch (true) {
       case isVoided:
@@ -155,11 +156,12 @@ const columns = {
 
       case isSent:
         menu.primary = RESEND;
-        menu.secondary = [COPY, DELETE, VOID, HISTORY];
+        menu.secondary = [COPY, DELETE, VOID, HISTORY, SAVE_AS_TEMPLATE];
         break;
 
       case isCompleted:
         menu.primary = HISTORY;
+        menu.secondary = [SAVE_AS_TEMPLATE];
         break;
     }
 
@@ -354,6 +356,12 @@ const actions = {
     $("[data-property-name=updated_at]").text(formatDate(updated_at));
     $("[data-property-name=recipients]").text(recipientNames);
     $("[data-property-name=id]").text(id);
+  },
+  "save as template": async function (row) {
+    const endpoint = `${prefixURL}/DocuSign/apiSaveEnvelopeAsTemplate/${row.id}`;
+    const response = await fetch(endpoint);
+    const { data } = await response.json();
+    window.location = `${prefixURL}/DocuSign/templatePrepare?id=${data.id}`;
   },
 };
 

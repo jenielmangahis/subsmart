@@ -452,6 +452,7 @@ $route['accounting/vendors/delete-transaction/(:any)/(:any)']['DELETE'] = 'accou
 $route['accounting/vendors/view-expense/(:any)'] = 'accounting_controllers/vendors/view_expense/$1';
 $route['accounting/vendors/get-transaction-attachments/(:any)/(:any)'] = 'accounting_controllers/vendors/get_transaction_attachments/$1/$2';
 $route['accounting/vendors/view-check/(:any)'] = 'accounting_controllers/vendors/view_check/$1';
+$route['accounting/vendors/view-bill/(:any)'] = 'accounting_controllers/vendors/view_bill/$1';
 
 $route['accounting/vendor-details/(:any)'] = 'accounting/vendordetails/$1';
 $route['accounting/taxes/edit-settings'] = 'taxes/edit_settings';

@@ -316,6 +316,69 @@ border: none;
         padding: 0px 0px 0px 0px !important;
         text-align: center;
     }
+
+
+.tabs { list-style: none; }
+.tabs li { display: inline; }
+.tabs li a 
+{ 
+    color: black; 
+    float: left; 
+    display: block; 
+    /* padding: 4px 10px;  */
+    /* margin-left: -1px;  */
+    position: relative; 
+    /* left: 1px;  */
+    background: #a2a5a3; 
+    text-decoration: none; 
+}
+.tabs li a:hover 
+{ 
+    background: #ccc; 
+}
+.group:after 
+{ 
+    visibility: hidden; 
+    display: block; 
+    font-size: 0; 
+    content: " "; 
+    clear: both; 
+    height: 0; 
+}
+
+.box-wrap 
+{ 
+    position: relative; 
+    min-height: 250px; 
+}
+.tabbed-area div div 
+{ 
+    background: white; 
+    padding: 20px; 
+    min-height: 250px; 
+    position: absolute; 
+    top: -1px; 
+    left: 0; 
+    width: 100%; 
+}
+
+.tabbed-area div div, .tabs li a 
+{ 
+    border: 1px solid #ccc; 
+}
+
+#box-one:target, #box-two:target, #box-three:target {
+  z-index: 1;
+}
+
+.group li.active a,
+.group li a:hover,
+.group li.active a:focus,
+.group li.active a:hover{
+  background-color: #52cc6e;
+  color: black; 
+}
+
 }
    </style>
     <!-- page wrapper start -->
@@ -2488,121 +2551,88 @@ border: none;
                         <span aria-hidden="true">&times;</span>
                         </button>
                     </div> -->
+                    <div align="center"><p style="padding:2%;background-color:#d2d2d2;width:380px;"> By Signing below you verify that the above information is true and complete,
+                                            and you authorize payment and confirmation with nSmarTrac. </p></div>
                     <div class="modal-body">
                             <div class="row signature_mobile">
-                                <div class="col-md-12">
-                                <?php //echo form_open_multipart('accounting/testSave', [ 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?> 
-                                <div class="tab-content" id="nav-tabContent" style="width:;">
-                                    <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab" style="padding:1%;">
-                                                <!-- <div class="col-md-4"> -->
-                                                    <!-- <h6>Company Representative Approval</h6> -->
-                                                    <!-- <div class="sigPad" id="smoothed1am" style="width:100%;border:solid gray 1px;background-color:#00b300;">
-                                                        <ul class="sigNav" style="">
-                                                            <li class="drawIt"><a href="#draw-it">Draw It</a></li>
-                                                            <li class="clearButton"><a href="#clear">Clear</a></li>
-                                                        </ul>
-                                                        <ul class="edit">
-                                                            <li class="smoothed1a_pencil pointer"><a onclick="myFunctionM()" style="float:right;margin-right:10px;" class="smoothed1a_pencil"><i class="fa fa-pencil" aria-hidden="true"></i></a></li>
-                                                        </ul>
-                                                        <div class="sig sigWrapper" id="smoothed1a_pencil" style="height:auto;pointer-events: none;">
-                                                            <div class="typed"></div>
-                                                            <div id="signature-padM">
-                                                            <canvas style="border:1px solid #000" id="signM"></canvas>
-                                                            </div>
-                                                            <input type="hidden" name="output-2a"  id="output-2a" class="output">
-                                                        </div>
-                                                    </div>
-                                                    <input type="hidden" id="saveCompanySignatureDB1aM"
-                                                        name="company_representative_approval_signature1aM">
-                                                    <br>
+                            
+                            <div class="tabbed-area">
 
-                                                    <label for="comp_rep_approval">Printed Name</label>
-                                                    <input type="text6" class="form-control mb-3"
-                                                        name="company_representative_printed_name"
-                                                        id="comp_rep_approval" placeholder=""/> -->
-                                                        <!-- <canvas id="canvas" width="5" height="5"></canvas> -->
+                                    <div class="box-wrap">
+                                    
+                                        <div id="box-one">
+                                            <canvas id="canvas" height="250px" style=""></canvas>
+                                            <input type="hidden" class="form-control mb-3" name="company_representative_printed_name" id="comp_rep_approval1" value="Company Representative"/>
+                                            <input type="hidden" id="saveCompanySignatureDB1aM" name="company_representative_approval_signature1aM">
+                                        </div>
+                                        
+                                        <div id="box-two">
+                                            <canvas id="canvas2" height="250px" style=""></canvas>
+                                            <input type="hidden" class="form-control mb-3" name="company_representative_printed_name" id="comp_rep_approval2" value="Primary Account Holder"/>
+                                            <input type="hidden" id="savePrimaryAccountSignatureDB2aM" name="primary_account_holder_signature2aM">
+                                        </div>
+                                        
+                                        <div id="box-three">
+                                            <canvas id="canvas3" height="250px" style=""></canvas>
+                                            <input type="hidden" class="form-control mb-3" name="company_representative_printed_name" id="comp_rep_approval3" value="Secondary Account Holder"/>
+                                            <input type="hidden" id="saveSecondaryAccountSignatureDB3aM" name="secondary_account_holder_signature3aM">
+                                        </div>
+                                    
+                                    </div>
+                                    <br><br><br><br>
+                                    <ul class="tabs group" style="width:100% !important;">
+                                        <li class="active"><a href="#box-one" class="btn" style="width:100%;font-size:8px;">Company Representative</a></li>
+                                        <li><a href="#box-two" class="btn" style="width:100%;font-size:8px;">Primary Account Holder</a></li>
+                                        <li><a href="#box-three" class="btn" style="width:100%;font-size:8px;">Secondary Account Holder</a></li>
+                                    </ul>
+
+                                </div>
+                        
+                        <!-- Tab panes -->
+                        <!-- <div class="tab-content">
+                            <div class="tab-pane fade active in" id="home">
                                                         <canvas id="canvas" height="150" style="border: 1px solid #ddd;"></canvas>
                                                         <input type="text" class="form-control mb-3" name="company_representative_printed_name" id="comp_rep_approval1" placeholder="Printed Name"/>
                                                         <input type="hidden" id="saveCompanySignatureDB1aM" name="company_representative_approval_signature1aM">
-
-                                                <!-- </div> -->
-                                    </div>
-                                    <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab" style="padding:1%;">
-                                                <!-- <div class="col-md-4"> -->
-                                                    <!-- <h6>Primary Account Holder</h6> -->
-                                                    <!-- <div class="sigPad" id="smoothed2am" style="width:100%;border:solid gray 1px;background-color:#f7b900;">
-                                                        <ul class="sigNav">
-                                                            <li class="drawIt"><a href="#draw-it">Draw It</a></li>
-                                                            <li class="clearButton"><a href="#clear">Clear</a></li>
-                                                        </ul>
-                                                        <ul class="edit">
-                                                            <li class="smoothed1a_pencil pointer"><a onclick="myFunctiontwoM()" style="float:right;margin-right:10px;" class="smoothed1a_pencil"><i class="fa fa-pencil" aria-hidden="true"></i></a></li>
-                                                        </ul>
-                                                        <div class="sig sigWrapper" style="height:auto;pointer-events: none;">
-                                                            <div class="typed"></div>
-                                                            <div id="signature-pad2M">
-                                                            <canvas style="border:1px solid #000" id="sign2M"></canvas>
-                                                            </div>
-                                                            <input type="hidden" name="output-2" class="output">
-                                                        </div>
-                                                    </div>
-                                                    <input type="hidden" id="savePrimaryAccountSignatureDB2aM"
-                                                        name="primary_account_holder_signature2aM">
-                                                    <br>
-
-                                                    <label for="comp_rep_approval">Printed Name</label>
-                                                    <input type="text6" class="form-control mb-3" name="primary_account_holder_name"
-                                                        id="comp_rep_approval" placeholder=""/> -->
-
+                            </div>
+                            <div class="tab-pane fade" id="profile">
                                                         <canvas id="canvas2" height="150" style="border: 1px solid #ddd;"></canvas>
                                                         <input type="text" class="form-control mb-3" name="company_representative_printed_name" id="comp_rep_approval2" placeholder="Printed Name"/>
                                                         <input type="hidden" id="savePrimaryAccountSignatureDB2aM" name="primary_account_holder_signature2aM">
-
-                                                <!-- </div> -->
-                                    </div>
-                                    <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab" style="padding:1%;">
-                                                <!-- <div class="col-md-4"> -->
-                                                    <!-- <h6>Secondary Account Holder</h6> -->
-                                                    <!-- <div class="sigPad" id="smoothed3am" style="width:100%;border:solid gray 1px;background-color:#f75c1e;">
-                                                        <ul class="sigNav">
-                                                            <li class="drawIt"><a href="#draw-it">Draw It</a></li>
-                                                            <li class="clearButton"><a href="#clear">Clear</a></li>
-                                                        </ul>
-                                                        <ul class="edit">
-                                                            <li class="smoothed1a_pencil pointer"><a onclick="myFunctionthreeM()" style="float:right;margin-right:10px;" class="smoothed1a_pencil"><i class="fa fa-pencil" aria-hidden="true"></i></a></li>
-                                                        </ul>
-                                                        <div class="sig sigWrapper" style="height:auto;pointer-events: none;">
-                                                            <div class="typed"></div>
-                                                            <div id="signature-pad3M">
-                                                            <canvas style="border:1px solid #000" id="sign3M"></canvas>
-                                                            </div>
-                                                            <input type="hidden" name="output-2" class="output">
-                                                        </div>
-                                                    </div>
-                                                    <input type="hidden" id="saveSecondaryAccountSignatureDB3aM"
-                                                        name="secondary_account_holder_signature3aM">
-                                                    <br>
-
-                                                    <label for="comp_rep_approval">Printed Name</label>
-                                                    <input type="text6" class="form-control mb-3" name="secondery_account_holder_name"
-                                                        id="comp_rep_approval" placeholder=""/> -->
-                                                    
+                            </div>
+                            <div class="tab-pane fade" id="messages">
                                                         <canvas id="canvas3" height="150" style="border: 1px solid #ddd;"></canvas>
                                                         <input type="text" class="form-control mb-3" name="company_representative_printed_name" id="comp_rep_approval3" placeholder="Printed Name"/>
                                                         <input type="hidden" id="saveSecondaryAccountSignatureDB3aM" name="secondary_account_holder_signature3aM">
-
-                                                <!-- </div> -->
+                            </div>
+                        </div> -->
+                                <!-- <div class="col-md-12">
+                                    <div class="tab-content" id="nav-tabContent" style="width:;">
+                                        <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab" style="padding:1%;">
+                                                            <canvas id="canvas" height="150" style="border: 1px solid #ddd;"></canvas>
+                                                            <input type="text" class="form-control mb-3" name="company_representative_printed_name" id="comp_rep_approval1" placeholder="Printed Name"/>
+                                                            <input type="hidden" id="saveCompanySignatureDB1aM" name="company_representative_approval_signature1aM">
+                                        </div>
+                                        <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab" style="padding:1%;">
+                                                            <canvas id="canvas2" height="150" style="border: 1px solid #ddd;"></canvas>
+                                                            <input type="text" class="form-control mb-3" name="company_representative_printed_name" id="comp_rep_approval2" placeholder="Printed Name"/>
+                                                            <input type="hidden" id="savePrimaryAccountSignatureDB2aM" name="primary_account_holder_signature2aM">
+                                        </div>
+                                        <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab" style="padding:1%;">
+                                                            <canvas id="canvas3" height="150" style="border: 1px solid #ddd;"></canvas>
+                                                            <input type="text" class="form-control mb-3" name="company_representative_printed_name" id="comp_rep_approval3" placeholder="Printed Name"/>
+                                                            <input type="hidden" id="saveSecondaryAccountSignatureDB3aM" name="secondary_account_holder_signature3aM">
+                                        </div>
                                     </div>
-                                </div>
-                                <nav>
-                                    <div class="nav nav-tabs nav-fill" id="nav-tab" role="tablist">
-                                    <a class="nav-item nav-link" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">Company Representative Approval</a>
-                                    <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-profile" role="tab" aria-controls="nav-profile" aria-selected="false">Primary Account Holder</a>
-                                    <a class="nav-item nav-link" id="nav-contact-tab" data-toggle="tab" href="#nav-contact" role="tab" aria-controls="nav-contact" aria-selected="false">Secondary Account Holder</a>
-                                    </div>
-                                </nav>
+                                    <nav>
+                                        <div class="nav nav-tabs nav-fill" id="nav-tab" role="tablist">
+                                        <a class="nav-item nav-link" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">Company Representative Approval</a>
+                                        <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-profile" role="tab" aria-controls="nav-profile" aria-selected="false">Primary Account Holder</a>
+                                        <a class="nav-item nav-link" id="nav-contact-tab" data-toggle="tab" href="#nav-contact" role="tab" aria-controls="nav-contact" aria-selected="false">Secondary Account Holder</a>
+                                        </div>
+                                    </nav>
                                 
-                                </div>
+                                </div> -->
                             </div>
                     </div>
                     <div class="modal-footer">
@@ -2846,7 +2876,7 @@ function submit() {
         // image.src = '"' + dataURL + '"';
         // document.body.appendChild(image);
 
-        var input_conf = '<br><div style="border:solid gray 1px;padding:2%;"><img id="image1" src="'+dataURL+'"></img><input type="hidden" class="form-control" name="signature1" id="signature1" value="'+ dataURL +'"><br><input type="text" class="form-control" name="name1" id="name1" value="'+ input1 +'"></div><br><div style="border:solid gray 1px;padding:2%;"><img id="image1" src="'+dataURL2+'"></img><input type="hidden" class="form-control" name="signature2" id="signature2" value="'+ dataURL2 +'"><br><input type="text" class="form-control" name="name2" id="name2" value="'+ input2 +'"></div><br><div style="border:solid gray 1px;padding:2%;"><img id="image1" src="'+dataURL3+'"></img><input type="hidden" class="form-control" name="signature3" id="signature3" value="'+ dataURL3 +'"><br><input type="text" class="form-control" name="name3" id="name3" value="'+ input3 +'"></div>';
+        var input_conf = '<br><div style="border:solid gray 1px;padding:2%;"><img id="image1" src="'+dataURL+'"></img><input type="hidden" class="form-control" name="signature1" id="signature1" value="'+ dataURL +'"><br><input type="text" class="form-control" name="name1" id="name1" value="'+ input1 +'" readonly></div><br><div style="border:solid gray 1px;padding:2%;"><img id="image1" src="'+dataURL2+'"></img><input type="hidden" class="form-control" name="signature2" id="signature2" value="'+ dataURL2 +'"><br><input type="text" class="form-control" name="name2" id="name2" value="'+ input2 +'" readonly></div><br><div style="border:solid gray 1px;padding:2%;"><img id="image1" src="'+dataURL3+'"></img><input type="hidden" class="form-control" name="signature3" id="signature3" value="'+ dataURL3 +'"><br><input type="text" class="form-control" name="name3" id="name3" value="'+ input3 +'" readonly></div>';
 
         $('.signatureArea').html(input_conf);
 
@@ -3067,7 +3097,7 @@ resizeCanvas();
         // addresses in the US and Canada.
         autocomplete = new google.maps.places.Autocomplete(address1Field, {
           componentRestrictions: { country: ["us", "ca"] },
-          fields: ["address_components", "geometry"],
+          fields: ["address_components"],
           types: ["address"],
         });
         address1Field.focus();
@@ -3105,10 +3135,10 @@ resizeCanvas();
               break;
             }
 
-            case "postal_code_suffix": {
-              postcode = `${postcode}-${component.long_name}`;
-              break;
-            }
+            // case "postal_code_suffix": {
+            //   postcode = `${postcode}-${component.long_name}`;
+            //   break;
+            // }
             case "locality":
               document.querySelector("#locality").value = component.long_name;
               break;
@@ -3117,9 +3147,9 @@ resizeCanvas();
               document.querySelector("#state").value = component.short_name;
               break;
             }
-            case "country":
-              document.querySelector("#country").value = component.long_name;
-              break;
+            // case "country":
+            //   document.querySelector("#country").value = component.long_name;
+            //   break;
           }
         }
         address1Field.value = address1;

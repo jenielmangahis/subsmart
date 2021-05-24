@@ -7,7 +7,8 @@ function createElementFromHTML(htmlString) {
 
 // https://stackoverflow.com/a/46181/8062659
 function isValidEmail(string) {
-  const regex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  const regex =
+    /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   return regex.test(String(string).toLowerCase());
 }
 
@@ -85,10 +86,10 @@ function Recipient({ data: dataParam, onRemove: onRemoveParam }) {
         icon: "fa-pencil",
         value: "Needs to Sign",
       },
-      // {
-      //   icon: "fa-pencil",
-      //   value: "Signs in Person",
-      // },
+      {
+        icon: "fa-pencil",
+        value: "Signs in Person",
+      },
       {
         icon: "fa-clone",
         value: "Receives a copy",
@@ -232,7 +233,7 @@ function Step2() {
       data.id = new Date().getTime();
       data.name = "";
       data.email = "";
-      data.role = "Needs to Sign";
+      data.role = "Signs in Person";
 
       const takenColors = recipients.map((recipient) => {
         return recipient.getData().color;
