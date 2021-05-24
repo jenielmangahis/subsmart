@@ -125,6 +125,28 @@ class Cron_Marketing extends MY_Controller {
         exit;
     }
 
+    public function sms_automation(){
+        $this->load->model('SmsAutomation_model');
+
+        $conditions[] = ['field' => 'sms_automation.is_paid', 'value' => 0];
+        $smsAutomation = $this->SmsAutomation_model->getAllActive($conditions);
+        foreach( $smsAutomation as $sms ){
+            switch ($sms->rule_event) {
+                case $this->SmsAutomation_model->ruleEstimateSubmitted():
+                    
+                    break;
+                case $this->SmsAutomation_model->ruleInvoicePaid():
+                    break;
+                case $this->SmsAutomation_model->ruleInvoiceDue():
+                    break;
+                case $this->SmsAutomation_model->ruleWorkOrderCompleted():
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+
     public function sendSms($to_number, $message){        
         include_once APPPATH . 'libraries/ringcentral_lite/src/ringcentrallite.php';
 

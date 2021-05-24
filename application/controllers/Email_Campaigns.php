@@ -378,23 +378,71 @@ class Email_Campaigns extends MY_Controller {
     }
 
     public function activate_automation(){
+        $this->load->model('CardsFile_model');
+        $this->load->model('Clients_model');
+        $this->load->model('MarketingOrderPayments_model');
+
         $is_success = false;
         $msg = '';
 
+        $cid  = logged('company_id');
+        $user = $this->session->userdata('logged');
         $post = $this->input->post();
 
         if( isset($post['payment_method_token']) ){
             $email_blast_id = $this->session->userdata('emailBlastId');
-
             $emailBlast = $this->EmailBlast_model->getById($email_blast_id);
             if( $emailBlast ){
-                $price_per_email = $this->EmailBlast_model->getPricePerEmail();
+                $creditCard = $this->CardsFile_model->getById($post['payment_method_token']);
+                if( $creditCard && $creditCard->company_id == $cid ){
+                    $company = $this->Clients_model->getById($creditCard->company_id);
 
-                $data = ['status' => $this->EmailBlast_model->statusActive(), 'total_cost' => $price_per_email, 'is_paid' => 1, 'cards_file_id' => $post['payment_method_token']];
-                $this->EmailBlast_model->updateEmailBlast($email_blast_id,$data);
+                    $total_cost       = $this->EmailBlast_model->getPricePerEmail();
+                    $expiration_month =  str_pad($creditCard->expiration_month, 2, '0', STR_PAD_LEFT);             
+                    $exp_date         =  $expiration_month . $creditCard->expiration_year;
+                    $data_cc = [
+                        'card_number' => $creditCard->card_number,
+                        'exp_date' => $exp_date,
+                        'cvc' => $creditCard->card_cvv,
+                        'ssl_first_name' => $company->first_name,
+                        'ssl_last_name' => $company->last_name,
+                        'ssl_amount' => $total_cost,
+                        'ssl_address' => $company->business_address,
+                        'ssl_zip' => $company->zip_code
+                    ];
+                    $result_payment = $this->convergePayment($data_cc);
+                    if( $result_payment['is_success'] === 1 ){
+                        $data = ['status' => $this->EmailBlast_model->statusActive(), 'total_cost' => $total_cost, 'is_paid' => 1, 'cards_file_id' => $post['payment_method_token']];
+                        $this->EmailBlast_model->updateEmailBlast($email_blast_id,$data);
 
-                $is_success = true;
-                $msg = 'Email automation was successfully updated.';
+                        $date_paid = date("Y-m-d H:i:s");
+                        //Create payment data
+                        $data = [
+                            'user_id' => $user['id'],
+                            'order_number' => '',
+                            'payment_method' => $this->MarketingOrderPayments_model->paymentMethodCC(),
+                            'date_paid' => $date_paid,
+                            'status' => $this->MarketingOrderPayments_model->statusCompleted(),
+                        ];
+
+                        $order_id     = $this->MarketingOrderPayments_model->create($data);
+                        $order_number = $this->MarketingOrderPayments_model->generateORNumber($order_id);
+                        
+                        $data = ['order_number' => $order_number];
+                        $this->MarketingOrderPayments_model->updateOrderPayment($order_id, $data);
+
+                        //Attach order number
+                        $data = ['order_number' => $order_number, 'date_paid' => $date_paid];
+                        $this->EmailBlast_model->updateEmailBlast($email_blast_id,$data);
+
+                        $is_success = true;
+                        $msg = 'Email automation was successfully activated.';
+                    }else{
+                        $msg = $result_payment['msg'];
+                    }
+                }else{
+                    $msg = 'Cannot find data';
+                }
             }else{
                 $msg = 'Cannot find data';
             }  
@@ -537,6 +585,104 @@ class Email_Campaigns extends MY_Controller {
         ]; 
 
         echo json_encode($json_data);
+    }
+
+    public function convergePayment( $data ){
+        include APPPATH . 'libraries/Converge/src/Converge.php';
+
+        $msg = '';
+        $is_success = 0;
+
+        $converge = new \wwwroth\Converge\Converge([
+            'merchant_id' => CONVERGE_MERCHANTID,
+            'user_id' => CONVERGE_MERCHANTUSERID,
+            'pin' => CONVERGE_MERCHANTPIN,
+            'demo' => false,
+        ]);
+
+        $createSale = $converge->request('ccsale', [
+            'ssl_card_number' => $data['card_number'],
+            'ssl_exp_date' => $data['exp_date'],
+            'ssl_cvv2cvc2' => $data['cvc'],
+            'ssl_first_name' => $data['ssl_first_name'],
+            'ssl_last_name' => $data['ssl_last_name'],
+            'ssl_amount' => $data['ssl_amount'],
+            'ssl_avs_address' => $data['ssl_address'],
+            'ssl_avs_zip' => $data['ssl_zip'],
+        ]);
+
+        if( $createSale['success'] == 1 ){
+            $is_success = 1;
+        }else{
+            $msg = $createSale['errorMessage'];
+        }
+        
+        $return = ['is_success' => $is_success, 'msg' => $msg];
+        return $return;
+    }
+
+    public function payment_details(){
+
+        $this->load->model('MarketingOrderPayments_model');
+        $this->load->model('Business_model');
+
+        $company_id      = logged('company_id');
+        $email_blast_id  = $this->session->userdata('emailBlastId');
+        $emailBlast      = $this->EmailBlast_model->getById($email_blast_id);
+        $company         = $this->Business_model->getByCompanyId($company_id);
+        if( $emailBlast ){
+            if( $emailBlast->order_number != '' ){
+                $orderPayments   = $this->MarketingOrderPayments_model->getByOrderNumber($emailBlast->order_number);
+
+                $this->page_data['emailBlast']   = $emailBlast;
+                $this->page_data['orderPayments'] = $orderPayments;
+                $this->page_data['company'] = $company;
+                $this->load->view('email_campaigns/payment_details', $this->page_data);        
+            }else{
+                redirect('email_campaigns');
+            }
+        }else{
+            redirect('email_campaigns');
+        }
+    }
+
+    public function invoice_pdf($id){
+
+        $this->load->model('MarketingOrderPayments_model');
+        $this->load->model('Business_model');
+        
+        $emailBlast = $this->EmailBlast_model->getById($id);
+        $company  = $this->Business_model->getByCompanyId($emailBlast->company_id);
+        $orderPayments   = $this->MarketingOrderPayments_model->getByOrderNumber($emailBlast->order_number);
+        $this->page_data['emailBlast']   = $emailBlast;
+        $this->page_data['orderPayments'] = $orderPayments;
+        $this->page_data['company'] = $company;
+        $content = $this->load->view('email_campaigns/campaign_customer_invoice_pdf_template_a', $this->page_data, TRUE);  
+            
+        $this->load->library('Reportpdf');
+
+        $title = 'email_campaign_invoice';
+
+        $obj_pdf = new Reportpdf('P', 'mm', 'A4', true, 'UTF-8', false);
+        $obj_pdf->SetTitle($title);
+        $obj_pdf->setPrintHeader(false);
+        $obj_pdf->setPrintFooter(false);
+        $obj_pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);        
+        $obj_pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
+        $obj_pdf->setFontSubsetting(false);
+        // set some language-dependent strings (optional)
+        if (@file_exists(dirname(__FILE__) . '/lang/eng.php')) {
+            require_once(dirname(__FILE__) . '/lang/eng.php');
+            $pdf->setLanguageArray($l);
+        }
+        $obj_pdf->AddPage('P');
+        $html = '';
+        $obj_pdf->writeHTML($html . $content, true, false, true, false, '');
+        //echo $display;
+        $content = ob_get_contents();
+        ob_end_clean();
+        $obj_pdf->writeHTML($content, true, false, true, false, '');
+        $obj_pdf->Output($title, 'I');
     }
 }
 

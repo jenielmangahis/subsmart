@@ -106,7 +106,8 @@ class Sms_Automation extends MY_Controller {
 	        $post['exclude_customer_groups'] = serialize($excludeGroups);
 	        $post['user_id'] = $user['id'];
 	        $post['status']  = $this->SmsAutomation_model->isDraft();
-	        $post['total_cost']  = 0;
+	        $post['total_cost']     = 0;
+            $post['price_per_sms']  = 0;
 	        $post['sms_text'] = '';
 	        $post['is_paid']  = 0;
 	        $post['created']  = date("Y-m-d H:i:s");
@@ -202,10 +203,8 @@ class Sms_Automation extends MY_Controller {
     	$smsAutomation = $this->SmsAutomation_model->getById($sms_automation_id);
     	if( $smsAutomation ){
     		$price_per_sms = $this->SmsAutomation_model->getPricePerSms();
-	        $total_sms_price = $price_per_sms;
-	        $grand_total     = $total_sms_price;
 
-    		$data = ['status' => $this->SmsAutomation_model->isActive(), 'total_cost' => $grand_total, 'is_paid' => 1];
+    		$data = ['status' => $this->SmsAutomation_model->isActive(), 'price_per_sms' => $price_per_sms, 'total_cost' => 0, 'is_paid' => 1];
 	        $smsAutomation = $this->SmsAutomation_model->updateSmsAutomation($sms_automation_id,$data);
 
 	        $is_success = true;
