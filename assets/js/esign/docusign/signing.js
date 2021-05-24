@@ -697,8 +697,15 @@ function Signing(hash) {
         },
       });
 
-      const json = await response.json();
-      console.log(json);
+      const data = await response.json();
+      if (data.hash) {
+        window.location = `${prefixURL}/DocuSign/signing?hash=${data.hash}`;
+        return;
+      }
+
+      if (data.has_user) {
+        window.location = `${prefixURL}/DocuSign/manage?view=sent`;
+      }
 
       $(this).attr("disabled", false);
       $(this).find(".spinner-border").addClass("d-none");

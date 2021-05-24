@@ -1750,7 +1750,7 @@ class Workorder extends MY_Controller
             'terms_and_conditions' => $this->input->post('terms_conditions'),
             'status' => $this->input->post('status'),
             'priority' => $this->input->post('priority'),
-            'purchase_order_number' => $this->input->post('purchase_order_number'),
+            'po_number' => $this->input->post('purchase_order_number'),
             'terms_of_use' => $this->input->post('terms_of_use'),
             'instructions' => $this->input->post('instructions'),
             'header' => $this->input->post('header'),
@@ -2603,6 +2603,7 @@ class Workorder extends MY_Controller
             'terms_of_use' => $this->input->post('terms_of_use'),
             'header' => $this->input->post('header'),
             'date_issued' => $this->input->post('date_issued'),
+            'system_type' => $this->input->post('plan_type'),
 
              //signature
              'company_representative_signature' => $file_save,

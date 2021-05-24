@@ -192,6 +192,50 @@ class Customer extends MY_Controller
         }
     }
 
+    public function save_subscription(){
+        $input = $this->input->post();
+        if($input){
+            $is_valid = true;
+            $err_msg  = '';            
+            if( $input['method'] == 'CC' ){
+                $customer = $this->customer_ad_model->get_data_by_id('prof_id',$input['customer_id'],"acs_profile");
+                $converge_data = [
+                    'amount' => $input['transaction_amount'],
+                    'card_number' => $input['card_number'],
+                    'exp_month' => $input['exp_month'],
+                    'exp_year' => $input['exp_year'],
+                    'card_cvc' => $input['card_cvc'],
+                    'address' => $customer->mail_add,
+                    'zip' => $customer->zip_code
+                ];
+                $result   = $this->converge_send_sale($converge_data);
+                $is_valid = $result['is_success'];
+                $err_msg  = $result['msg'];
+            }
+
+            if( $is_valid ){
+                $subscription_details = array();
+                $subscription_details['customer_id'] = $input['customer_id'];
+                $subscription_details['category'] = $input['transaction_category'];
+                $subscription_details['total_amount'] = $input['transaction_amount'];
+                $subscription_details['method'] = $input['method'];
+                $subscription_details['transaction_type'] = 'Pre-Auth and Capture';
+                $subscription_details['frequency'] = $input['frequency'];
+                $subscription_details['notes'] = $input['notes'];
+                $subscription_details['status'] = 'Approved';
+
+                if($this->general->add_($subscription_details, 'acs_subscriptions')){
+                    echo '0';
+                }else{
+                    echo 'Database Error!';
+                }    
+            }else{
+                echo $err_msg;
+            }
+            
+        }
+    }
+
     public function converge_send_sale($data){
         include APPPATH . 'libraries/Converge/src/Converge.php';
 
@@ -252,6 +296,16 @@ class Customer extends MY_Controller
                 'select' => 'id,FName,LName',
             );
             $this->page_data['logged_in_user'] = $this->general->get_data_with_param($get_login_user,FALSE);
+
+            // get customer subscription history
+            $subscriptions_query = array(
+                'where' => array(
+                    'customer_id' => $userid
+                ),
+                'table' => 'acs_subscriptions',
+                'select' => '*',
+            );
+            $this->page_data['subscriptions'] = $this->general->get_data_with_param($subscriptions_query);
         }
 
         $this->load->view('customer/subscription', $this->page_data);

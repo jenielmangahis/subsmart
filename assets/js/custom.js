@@ -375,9 +375,14 @@ var price = $("#price_" + counter).val();
       subtotaltax += parseFloat($(this).text());
   });
 
-  // alert(subtotaltax);
+  var priceqty2 = 0;
+    $('*[id^="priceqty_"]').each(function(){
+      priceqty2 += parseFloat($(this).val());
+  });
 
-  $("#item_total").val(stotal_cost);
+  // alert(priceqty2);
+
+  $("#item_total").val(priceqty2);
   $("#item_total_text").html(stotal_cost);
   
   $("#eqpt_cost").val(eqpt_cost);
@@ -992,7 +997,7 @@ $(".select_item").click(function () {
             markup = "<tr id=\"ss\">" +
                 "<td width=\"35%\"><input value='"+title+"' type=\"text\" name=\"items[]\" class=\"form-control getItems\" ><input type=\"hidden\" value='"+idd+"' name=\"item_id[]\"><div class=\"show_mobile_view\"><span class=\"getItems_hidden\">"+title+"</span></div></td>\n" +
                 "<td width=\"20%\"><div class=\"dropdown-wrapper\"><select name=\"item_type[]\" class=\"form-control\"><option value=\"product\">Product</option><option value=\"material\">Material</option><option value=\"service\">Service</option><option value=\"fee\">Fee</option></select></div></td>\n" +
-                "<td width=\"10%\"><input data-itemid='"+idd+"' id='quantity_"+idd+"' value='"+qty+"' type=\"number\" name=\"quantity[]\" data-counter=\"0\"  min=\"0\" class=\"form-control qtyest2 hidden_mobile_view \"><div class=\"show_mobile_view\"><span>"+qty+"</span><input type=\"hidden\" class=\"form-control quantity\" name=\"quantity[]\" data-counter=\"0\" id=\"quantity_0\" value=\"1\"></div></td>\n" +
+                "<td width=\"10%\"><input data-itemid='"+idd+"' id='quantity_"+idd+"' value='"+qty+"' type=\"number\" name=\"quantity[]\" data-counter=\"0\"  min=\"0\" class=\"form-control qtyest2 mobile_qty \"></td>\n" +
                 // "<td>\n" + '<input type="number" class="form-control qtyest" name="quantity[]" data-counter="' + count + '" id="quantity_' + count + '" min="1" value="1">\n' + "</td>\n" +
                 "<td width=\"10%\"><input id='price_"+idd+"' value='"+price+"'  type=\"number\" name=\"price[]\" class=\"form-control hidden_mobile_view \" placeholder=\"Unit Price\"><input type=\"hidden\" class=\"priceqty\" id='priceqty_"+idd+"'><div class=\"show_mobile_view\"><span class=\"price\">"+price+"</span><input type=\"hidden\" class=\"form-control price\" name=\"price[]\" data-counter=\"0\" id=\"priceM_0\" min=\"0\" value=\"0\"></div></td>\n" +
                 // "<td width=\"10%\"><input type=\"number\" class=\"form-control discount\" name=\"discount[]\" data-counter="0" id=\"discount_0\" min="0" value="0" ></td>\n" +
@@ -1168,9 +1173,17 @@ $("#total_tax_").text(over_tax);
 });
 
 $(document).on("focusout", ".qtyest2", function () {
+  // alert('yeah');
   var in_id = $(this).attr('data-itemid');
   var price = $("#price_" + in_id).val();
   var quantity = $("#quantity_" + in_id).val();
+  var taxes = (parseFloat(price) * 7.5) / 100;
+  var o_total = (
+    (parseFloat(price) + parseFloat(taxes)) * parseFloat(quantity)
+  ).toFixed(2);
+  var tax1 = (((parseFloat(price) * 7.5) / 100) * parseFloat(quantity)).toFixed(2);
+  $("#tax1_" + in_id).val(tax1);
+  // var o_total = ;
 
   var total = price * quantity;
 
@@ -1181,7 +1194,35 @@ $(document).on("focusout", ".qtyest2", function () {
       priceqty += parseFloat($(this).val());
   });
 
+  var subtotaltax = 0;
+  // $("#span_total_0").each(function(){
+    $('*[id^="tax1_"]').each(function(){
+      subtotaltax += parseFloat($(this).val());
+  });
+
+  // alert(subtotaltax);
+
+  $("#sales_taxs").val(subtotaltax.toFixed(2));
+  $("#total_tax_").text(subtotaltax.toFixed(2));
+  $("#total_tax_input").val(subtotaltax.toFixed(2));
+  $("#span_total_" + in_id).text(o_total);
+  $("#sub_total_text" + in_id).text(o_total);
   $("#span_sub_total_invoice").text(priceqty.toFixed(2));
+  $("#item_total").val(priceqty.toFixed(2));
+
+  var one_time  = $("#one_time").val();
+  var m_monitoring  = $("#m_monitoring").val();
+
+  var grandtotal = priceqty + subtotaltax + one_time + m_monitoring;
+
+  $("#grand_total_input").val(grandtotal);
+  // alert(grandtotal);
+  // standard form
+  var taxtotal  = $("#total_tax_input").val();
+  var pricetotal  = $("#item_total").val();
+  var s_grandtotal = subtotaltax + priceqty;
+  $("#grand_total").text(s_grandtotal.toFixed(2));
+  $("#grand_total_input").val(s_grandtotal.toFixed(2));
   
 });
 
@@ -1589,9 +1630,16 @@ $(document).on("focusout", ".quantity", function () {
       priceqty += parseFloat($(this).val());
   });
 
+  var priceqty2 = 0;
+    $('*[id^="priceqty_"]').each(function(){
+      priceqty2 += parseFloat($(this).val());
+  });
+
+  // alert(priceqty2);
+
   $("#span_sub_total_invoice").text(priceqty.toFixed(2));
 
-  $("#item_total").val(stotal_cost);
+  $("#item_total").val(priceqty2.toFixed(2));
   $("#item_total_text").html(stotal_cost);
   
   $("#eqpt_cost").val(eqpt_cost);

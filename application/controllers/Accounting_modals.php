@@ -1674,7 +1674,6 @@ class Accounting_modals extends MY_Controller {
             $return['success'] = false;
             $return['message'] = 'Error';
         } else {
-            $filenames = $this->move_files($files, 'pay_down_credit_card');
             $bankAccount = explode('-', $data['bank_account']);
 
             $insertData = [
@@ -1685,7 +1684,7 @@ class Accounting_modals extends MY_Controller {
                 'date' => date('Y-m-d', strtotime($data['payment_date'])),
                 'bank_account_id' => $data['bank_account'],
                 'memo' => $data['memo'],
-                'attachments' => json_encode($filenames),
+                'attachments' => $data['attachments'] !== null ? json_encode($data['attachments']) : null,
                 'created_by' => logged('id'),
                 'status' => 1,
                 'created_at' => date('Y-m-d h:i:s'),
@@ -1693,6 +1692,20 @@ class Accounting_modals extends MY_Controller {
             ];
 
             $payDownId = $this->accounting_pay_down_credit_card_model->create($insertData);
+
+            $creditAcc = $this->chart_of_accounts_model->getById($data['credit_card']);
+
+            $newBalance = floatval($creditAcc->balance) - floatval($data['amount']);
+            $newBalance = number_format($newBalance, 2, '.', ',');
+
+            $this->chart_of_accounts_model->updateBalance(['id' => $creditAcc->id, 'company_id' => logged('company_id'), 'balance' => $newBalance]);
+
+            $bankAcc = $this->chart_of_accounts_model->getById($data['bank_account']);
+
+            $newBalance = floatval($bankAcc->balance) - floatval($data['amount']);
+            $newBalance = number_format($newBalance, 2, '.', ',');
+
+            $this->chart_of_accounts_model->updateBalance(['id' => $bankAcc->id, 'company_id' => logged('company_id'), 'balance' => $newBalance]);
 
             $return['data'] = $payDownId;
             $return['success'] = $payDownId ? true : false;

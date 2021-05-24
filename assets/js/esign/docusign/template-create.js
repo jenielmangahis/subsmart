@@ -131,6 +131,7 @@ function TemplateCreate() {
         files = files.filter((f) => f.id != fileId);
         const $parent = $(event.target).closest(".esignBuilder__docPreview");
         $parent.remove();
+        setSubjectFromFiles();
       },
     };
 
@@ -144,9 +145,23 @@ function TemplateCreate() {
     $target.val("");
     $target.removeAttr("required");
 
+    setSubjectFromFiles();
+  }
+
+  function setSubjectFromFiles() {
+    if (template.subject) {
+      return;
+    }
+
     const $subject = $form.find("#subject");
     const filenames = files.map(({ file }) => file.name);
-    $subject.val(`${$subject.prop("placeholder")} ${filenames.join(", ")}`);
+
+    let value = "";
+    if (filenames.length) {
+      value = `${$subject.prop("placeholder")} ${filenames.join(", ")}`;
+    }
+
+    $subject.val(value);
   }
 
   async function onChangeFile(event) {
@@ -169,6 +184,7 @@ function TemplateCreate() {
       const $saveAndClose = $("#saveandclose");
       $saveAndClose.removeClass("d-none");
       $saveAndClose.addClass("d-flex");
+      $("#discardChanges").removeClass("d-none");
 
       // $addRecipientButton.hide();
     }
@@ -244,8 +260,13 @@ function TemplateCreate() {
         },
       });
 
-      await response.json();
-      window.location = `${prefixURL}/DocuSign/manage?view=sent`;
+      const data = await response.json();
+      let nextUrl = `${prefixURL}/DocuSign/manage?view=sent`;
+      if (data.hash) {
+        nextUrl = `${prefixURL}/DocuSign/signing?hash=${data.hash}`;
+      }
+
+      window.location = nextUrl;
       return;
     }
 

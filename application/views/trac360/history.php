@@ -46,7 +46,7 @@ function get_differenct_of_dates($date_start, $date_end)
                             </li>
                             <li>
                                 <a href="<?= base_url() ?>trac360/jobs"
-                                    class="btn btn-primary  trac360_side_controls current-page" id=""><span
+                                    class="btn btn-primary  trac360_side_controls " id=""><span
                                         class="fa fa-briefcase fa-2x" class="text-center"></span><br>Jobs</a>
                             </li>
                             <li>
@@ -54,9 +54,9 @@ function get_differenct_of_dates($date_start, $date_end)
                                     class="btn btn-primary  trac360_side_controls" id=""><span
                                         class="fa fa-map-marker fa-2x" class="text-center"></span><br>Places</a>
                             </li>
-                            <li><a href="<?= base_url() ?>trac360/"
-                                    class="btn btn-primary  trac360_side_controls" id=""><span class="fa fa-map fa-2x"
-                                        class="text-center"></span><br>History</a>
+                            <li><a href="<?= base_url() ?>trac360/history"
+                                    class="btn btn-primary  trac360_side_controls current-page" id=""><span
+                                        class="fa fa-map fa-2x" class="text-center"></span><br>History</a>
                             </li>
                         </ul>
                     </div>
@@ -85,81 +85,13 @@ function get_differenct_of_dates($date_start, $date_end)
                     <div id="employee-upcoming-jobs" class="overflow-auto" style="height: 100%;">
                         <div class="row no-margin">
                             <div class="col-md-6 no-padding">
-                                <a data-toggle="collapse" href="#upcomingjobs-collapse-panel" role="button"
-                                    aria-expanded="true" aria-controls="upcomingjobs-collapse-panel">
-                                    <div class="upcoming jobs-collapse-btn collapse-active">Upcoming Jobs</div>
-                                </a>
-                            </div>
-                            <div class="col-md-6 no-padding">
                                 <a data-toggle="collapse" href="#previousjobs-collapse-panel" role="button"
                                     aria-expanded="true" aria-controls="collapseExample" class="">
                                     <div class="previous jobs-collapse-btn">Previous Jobs</div>
                                 </a>
                             </div>
                         </div>
-                        <div id="upcomingjobs-collapse-panel" class="collapse show">
-                            <?php
-                            if (!empty($upcomingJobs)) { ?>
-                            <?php foreach ($upcomingJobs as $jb) { ?>
-                            <div class="job-item-panel">
-                                <div class="employee-name">
-                                    <p><span class="name"><?=$jb->FName .' '.$jb->LName?></span>
-                                    </p>
-                                </div>
-                                <div class="row no-margin jobs-list-item"
-                                    data-address="<?=$jb->mail_add .' '. $jb->cust_city.' '.$jb->cust_state.' '.$jb->cust_zip_code?>"
-                                    data-job-title="<?=$jb->job_number . ' : ' . $jb->job_type. ' - ' . $jb->tags_name?>"
-                                    data-office-address="<?=$jb->office_address.', '.$jb->office_city.', '.$jb->office_state.', '.$jb->office_postal_code?>"
-                                    data-business-name="<?=$jb->business_name?>"
-                                    data-group="upcoming">
-                                    <div class="col-md-4 job-sched text-center">
-                                        <a href="#">
-                                            <time style="font-size: 10px; text-align: left;" datetime="2021-02-09"
-                                                class="icon-calendar-live">
-                                                <em><?= date('D', strtotime($jb->start_date)) ?></em>
-                                                <strong style="background-color: #58c04e;"><?= date('M', strtotime($jb->start_date)) ?></strong>
-                                                <span><?= date('d', strtotime($jb->start_date)) ?></span>
-                                            </time>
-                                        </a>
-                                        <div class="job-status text-center mb-2"
-                                            style="background:<?= $jb->event_color?>; color:#ffffff;">
-                                            <b><?php echo strtoupper($jb->status); ?></b>
-                                        </div>
-                                        <span class="text-center after-status">ARRIVAL TIME</span><br>
-                                        <span class="job-caption text-center">
-                                            <?php echo get_format_time($jb->start_time); ?>-<?php echo get_format_time_plus_hours($jb->end_time); ?>
-                                        </span>
-                                    </div>
-                                    <div class="col-md-8 job-details">
-                                        <a style="color: #000!important;" href="#">
-                                            <h6
-                                                style="font-weight:600; margin:0;font-size: 14px;text-transform: uppercase; color:#616161;">
-                                                <?php echo $jb->job_number . ' : ' . $jb->job_type. ' - ' . $jb->tags_name; ?>
-                                            </h6>
-                                            <b style="color:#45a73c;">
-                                                <?= $jb->first_name. ' '. $jb->last_name; ?>
-                                            </b><br>
-                                            <?php if (!empty($settings['work_order_show_details']) && $settings['work_order_show_details'] == 1): ?>
-                                            <small class="text-muted"><?= $jb->mail_add .' '. $jb->cust_city.' '.$jb->cust_state.' '.$jb->cust_zip_code; ?></small><br>
-                                            <i> <small class="text-muted"><?= $jb->job_description; ?></small></i><br>
-                                            <?php endif; ?>
-                                            <?php if (!empty($settings['work_order_show_price']) && $settings['work_order_show_price'] == 1): ?>
-                                            <small>Amount : $ <?= $jb->amount!="" ? number_format((float)$jb->amount, 2, '.', ',') : '0.00' ; ?></small>
-                                            <br>
-                                            <?php endif; ?>
-                                            <?php if (!empty($settings['work_order_show_link']) && $settings['work_order_show_link'] == 1): ?>
-                                            <a href="<?=$jb->link; ?>"
-                                                target=""><small style="color: darkred;"><?=$jb->link; ?></small></a>
-                                            <?php endif; ?>
-                                    </div>
-                                </div>
-                            </div>
-                            <?php } ?>
-                            <?php } else { ?>
-                            <div class="cue-event-name no-data">No upcoming jobs.</div>
-                            <?php } ?>
-                        </div>
-                        <div id="previousjobs-collapse-panel" class="collapse">
+                        <div id="previousjobs-collapse-panel" class="collapse show">
                             <?php
                             if (!empty($previousJobs)) { ?>
                             <?php foreach ($previousJobs as $jb) { ?>

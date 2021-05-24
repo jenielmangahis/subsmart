@@ -81,11 +81,14 @@ class DocuSign extends MY_Controller
             'files' => $files,
             'workorder_recipient' => $workorderRecipient,
             'co_recipients' => $coRecipientFields,
+            'decrypted' => $decrypted,
         ]);
     }
 
     public function send()
     {
+        header('content-type: application/json');
+
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             echo json_encode(['success' => false]);
             return;
@@ -95,7 +98,7 @@ class DocuSign extends MY_Controller
         $documentId = $payload['document_id'] ?? null;
 
         $this->db->where('id', $documentId);
-        $document = $this->db->get('user_docfile')->row();
+        $document = $this->db->get('user_docfile')->row_array();
 
         if (!$document) {
             set_status_header(404);
@@ -104,53 +107,24 @@ class DocuSign extends MY_Controller
         }
 
         $this->db->where('docfile_id', $documentId);
-        $this->db->where('role', 'Needs to Sign');
         $this->db->where('completed_at is NULL', null, false);
-        $recipients = $this->db->get('user_docfile_recipients')->result();
+        $this->db->order_by('id', 'asc');
+        $this->db->limit(1);
+        $recipient = $this->db->get('user_docfile_recipients')->row_array();
 
-        $mail = getMailInstance(['subject' => $document->subject]);
-        $templatePath = VIEWPATH . 'esign/docusign/email/invitation.html';
-        $template = file_get_contents($templatePath);
-
-        $baseUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
-        $baseUrl = str_replace('/send', '', $baseUrl);
-
-        $this->db->where('id', logged('id'));
-        $inviter = $this->db->get('users')->row();
-        $inviterName = implode(' ', [$inviter->FName, $inviter->LName]);
-        $errors = [];
-
-        foreach ($recipients as $recipient) {
-            $message = json_encode(['recipient_id' => $recipient->id, 'document_id' => $documentId]);
+        $response = json_encode(['data' => $document]);
+        if ($recipient['role'] === 'Needs to Sign') {
+            ['error' => $error] = $this->sendEnvelope($document, $recipient);
+            $response = json_encode(['success' => is_null($error), 'error' => $error]);
+        } else if ($recipient['role'] === 'Signs in Person') {
+            $message = json_encode(['recipient_id' => $recipient['id'], 'document_id' => $document['id']]);
             $hash = encrypt($message, $this->password);
-
-            $data = [
-                '%link%' => $baseUrl . '/signing?hash=' . $hash,
-                '%inviter%' => $inviterName,
-                '%message%' => nl2br(htmlentities($document->message, ENT_QUOTES, 'UTF-8')),
-                '%inviter_email%' => $inviter->email,
-            ];
-
-            $message = strtr($template, $data);
-
-            $mail->MsgHTML($message);
-            $mail->addAddress($recipient->email);
-            $isSent = $mail->send();
-            $mail->ClearAllRecipients();
-
-            if (!$isSent) {
-                $errors[$recipient->email] = $mail->ErrorInfo;
-            }
-
-            $this->db->where('id', $recipient->id);
-            $this->db->update('user_docfile_recipients', ['sent_at' => date('Y-m-d H:i:s')]);
+            $response = json_encode(['hash' => $hash]);
         }
 
         $this->db->where('id', $documentId);
         $this->db->update('user_docfile', ['status' => 'Waiting for Others']);
-
-        header('content-type: application/json');
-        echo json_encode(['success' => empty($errors), 'errors' => $errors]);
+        echo $response;
     }
 
     public function manage()
@@ -391,6 +365,8 @@ class DocuSign extends MY_Controller
 
     public function apiComplete()
     {
+        header('content-type: application/json');
+
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             echo json_encode(['success' => false]);
             return;
@@ -417,7 +393,6 @@ class DocuSign extends MY_Controller
         $record = $this->db->get('user_docfile_recipients')->row();
 
         $this->db->where('docfile_id', $documentId);
-        $this->db->where('role', 'Needs to Sign');
         $this->db->where('completed_at is NULL', null, false);
         $this->db->where('id !=', $recipientId);
         $this->db->order_by('id', 'asc');
@@ -432,14 +407,27 @@ class DocuSign extends MY_Controller
             }
         }
 
+        $this->db->where('id', $documentId);
+        $envelope = $this->db->get('user_docfile')->row_array();
+
         if (!is_null($nextRecipient)) {
-            $this->db->where('id', $documentId);
-            $envelope = $this->db->get('user_docfile')->row_array();
-            $this->sendEnvelope($envelope, $nextRecipient);
+            if ($nextRecipient['role'] === 'Signs in Person') {
+                $message = json_encode(['recipient_id' => $nextRecipient['id'], 'document_id' => $envelope['id']]);
+                $hash = encrypt($message, $this->password);
+                echo json_encode(['hash' => $hash]);
+                return;
+            }
+
+            if ($nextRecipient['role'] === 'Needs to Sign') {
+                $this->sendEnvelope($envelope, $nextRecipient);
+            }
         }
 
-        header('content-type: application/json');
-        echo json_encode(['data' => $record, 'next_recipient' => $nextRecipient]);
+        echo json_encode([
+            'data' => $record,
+            'next_recipient' => $nextRecipient,
+            'has_user' => $this->session->userdata('login'),
+        ]);
     }
 
     public function apiUploadAttachment()
@@ -835,6 +823,8 @@ SQL;
 
     public function apiSendTemplate($templateId)
     {
+        header('content-type: application/json');
+
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             echo json_encode(['success' => false]);
             return;
@@ -946,16 +936,24 @@ SQL;
         $envelope = $this->db->get('user_docfile')->row_array();
 
         $this->db->where('docfile_id', $docfileId);
-        $this->db->where('role', 'Needs to Sign');
         $this->db->where('completed_at is NULL', null, false);
         $this->db->order_by('id', 'asc');
         $this->db->limit(1);
         $recipient = $this->db->get('user_docfile_recipients')->row_array();
 
-        ['error' => $error] = $this->sendEnvelope($envelope, $recipient);
+        $response = json_encode(['data' => $envelope]);
+        if ($recipient['role'] === 'Needs to Sign') {
+            ['error' => $error] = $this->sendEnvelope($envelope, $recipient);
+            $response = json_encode(['success' => is_null($error), 'error' => $error]);
+        } else if ($recipient['role'] === 'Signs in Person') {
+            $message = json_encode(['recipient_id' => $recipient['id'], 'document_id' => $envelope['id']]);
+            $hash = encrypt($message, $this->password);
+            $response = json_encode(['hash' => $hash]);
+        }
 
-        header('content-type: application/json');
-        echo json_encode(['success' => is_null($error), 'error' => $error]);
+        $this->db->where('id', $envelope['id']);
+        $this->db->update('user_docfile', ['status' => 'Waiting for Others']);
+        echo $response;
     }
 
     private function getSigningUrl()
@@ -1190,6 +1188,92 @@ SQL;
 
         header('content-type: application/json');
         echo json_encode(['success' => true]);
+    }
+
+    public function apiSaveEnvelopeAsTemplate($envelopeId)
+    {
+
+        $filepath = FCPATH . 'uploads/docusigntemplates/';
+        if (!file_exists($filepath)) {
+            mkdir($filepath, 0777, true);
+        }
+
+        $this->db->where('id', $envelopeId);
+        $envelope = $this->db->get('user_docfile')->row_array();
+
+        $this->db->insert('user_docfile_templates', [
+            'user_id' => logged('id'),
+            'company_id' => logged('company_id'),
+            'name' => $envelope['name'],
+            'description' => '',
+            'subject' => $envelope['subject'],
+            'message' => $envelope['message'],
+        ]);
+        $templateId = $this->db->insert_id();
+
+        $this->db->where('docfile_id', $envelopeId);
+        $recipients = $this->db->get('user_docfile_recipients')->result_array();
+
+        foreach ($recipients as $index => $recipient) {
+            $index += 1;
+            $this->db->insert('user_docfile_templates_recipients', [
+                'user_id' => logged('id'),
+                'template_id' => $templateId,
+                'name' => $recipient['name'],
+                'email' => $recipient['email'],
+                'role' => $recipient['role'],
+                'color' => $recipient['color'],
+                'role_name' => 'Recipient ' . $index,
+            ]);
+
+            $recipientId = $this->db->insert_id();
+
+            $this->db->where('user_docfile_recipients_id', $recipient['id']);
+            $fields = $this->db->get('user_docfile_fields')->result_array();
+
+            $documents = []; // document_id => document
+            $templateDocuments = []; // document_name => document_id
+
+            foreach ($fields as $field) {
+                if (!array_key_exists($field['docfile_document_id'], $documents)) {
+                    $this->db->where('id', $field['docfile_document_id']);
+                    $documents[$field['docfile_document_id']] = $this->db->get('user_docfile_documents')->row_array();
+                }
+
+                $document = $documents[$field['docfile_document_id']];
+                $documentPath = $filepath . $document['name'];
+
+                if (!array_key_exists($document['name'], $templateDocuments)) {
+                    copy(FCPATH . $document['path'], $documentPath);
+                    $this->db->insert('user_docfile_templates_documents', [
+                        'name' => $document['name'],
+                        'path' => str_replace(FCPATH, '/', $filepath . $document['name']),
+                        'template_id' => $templateId,
+                    ]);
+
+                    $templateDocuments[$document['name']] = $this->db->insert_id();
+                }
+
+                $docfileDocumentId = $templateDocuments[$document['name']];
+                $this->db->insert('user_docfile_templates_fields', [
+                    'coordinates' => $field['coordinates'],
+                    'doc_page' => $field['doc_page'],
+                    'docfile_document_id' => $docfileDocumentId,
+                    'template_id' => $templateId,
+                    'field_name' => $field['field_name'],
+                    'unique_key' => uniqid(),
+                    'user_id' => logged('id'),
+                    'recipients_id' => $recipientId,
+                    'specs' => $field['specs'],
+                ]);
+            }
+        }
+
+        $this->db->where('id', $templateId);
+        $template = $this->db->get('user_docfile_templates')->row();
+
+        header('content-type: application/json');
+        echo json_encode(['data' => $template]);
     }
 }
 

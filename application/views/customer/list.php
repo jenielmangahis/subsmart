@@ -569,7 +569,7 @@ add_css(array(
                                             </td>
                                             <td><?php echo $customer->state; ?>
                                             </td>
-                                            <td><?php echo $customer->lead_source; ?>
+                                            <td><?= $customer->lead_source != "" ? $customer->lead_source : 'n/a'; ?>
                                             </td>
                                             <td><?php echo $customer->email; ?>
                                             </td>
@@ -577,15 +577,15 @@ add_css(array(
                                             </td>
                                             <td><?php echo ($customer) ? $customer->FName . ' ' . $customer->LName : ''; ?>
                                             </td>
-                                            <td><?php echo $customer->technician; ?>
+                                            <td><?= $customer->technician != null ? $customer->technician : 'Not Assigned'; ?>
                                             </td>
                                             <td><?php echo $customer->system_type; ?>
                                             </td>
-                                            <td><?php echo $customer->mmr; ?>
+                                            <td>$<?= $customer->mmr; ?>
                                             </td>
                                             <td><?php echo $customer->phone_m; ?>
                                             </td>
-                                            <td><?php echo $customer->status; ?>
+                                            <td><?= $customer->status != null ? $customer->status : 'Pending'; ?>
                                             </td>
                                             <td>
                                                 <div class="dropdown dropdown-btn text-center">

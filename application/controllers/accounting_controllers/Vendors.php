@@ -13,6 +13,10 @@ class Vendors extends MY_Controller {
         $this->load->model('chart_of_accounts_model');
         $this->load->model('accounting_terms_model');
         $this->load->model('expenses_model');
+        $this->load->model('items_model');
+        $this->load->model('accounting_customers_model');
+        $this->load->model('accounting_payment_methods_model');
+        $this->load->model('tags_model');
 
         add_css(array(
             "assets/css/accounting/banking.css?v='rand()'",
@@ -850,7 +854,7 @@ class Vendors extends MY_Controller {
                     'category' => $category,
                     'memo' => $bill->memo,
                     'due_date' => date("m/d/Y", strtotime($bill->due_date)),
-                    'balance' => '$0.00',
+                    'balance' => '$'.number_format(floatval($bill->remaining_balance), 2, '.', ','),
                     'total' => '$'.number_format(floatval($bill->total_amount), 2, '.', ','),
                     'status' => $bill->status === "2" ? "Paid" : "Open",
                     'attachments' => ''
@@ -1506,5 +1510,304 @@ class Vendors extends MY_Controller {
         $update = $this->vendors_model->update_vendor_credit($vendorCreditId, ['status' => 0]);
 
         return $update;
+    }
+
+    private function delete_cc_payment($ccPaymentId)
+    {
+        $ccPayment = $this->vendors_model->get_credit_card_payment_by_id($ccPaymentId);
+
+        $creditAcc = $this->chart_of_accounts_model->getById($ccPayment->credit_card_id);
+
+        $creditAccBal = floatval($creditAcc->balance) + floatval($ccPayment->amount);
+        $creditAccBal = number_format($creditAccBal, 2, '.', ',');
+
+        $this->chart_of_accounts_model->updateBalance(['id' => $creditAcc->id, 'company_id' => logged('company_id'), 'balance' => $creditAccBal]);
+
+        $bankAcc = $this->chart_of_accounts_model->getById($ccPayment->bank_account_id);
+
+        $bankAccBal = floatval($bankAcc->balance) + floatval($ccPayment->amount);
+        $bankAccBal = number_format($bankAccBal, 2, '.', ',');
+
+        $this->chart_of_accounts_model->updateBalance(['id' => $bankAcc->id, 'company_id' => logged('company_id'), 'balance' => $bankAccBal]);
+
+
+        $update = $this->vendors_model->update_credit_card_payment($ccPaymentId, ['status' => 0]);
+
+        return $update;
+    }
+
+    public function view_expense($expenseId)
+    {
+        $expense = $this->vendors_model->get_expense_by_id($expenseId);
+        $paymentAccs = [];
+        $paymentAccsType = $this->account_model->getAccTypeByName(['Bank', 'Credit Card', 'Other Current Assets']);
+
+        foreach($paymentAccsType as $accType) {
+            $accounts = $this->chart_of_accounts_model->getByAccountType($accType->id, null, logged('company_id'));
+
+            if(count($accounts) > 0) {
+                foreach($accounts as $account) {
+                    $childAccs = $this->chart_of_accounts_model->getChildAccounts($account->id);
+
+                    $account->childAccs = $childAccs;
+
+                    $paymentAccs[$accType->account_name][] = $account;
+
+                    if($account->id === $expense->payment_account_id) {
+                        $selectedBalance = $account->balance;
+                    }
+
+                    foreach($childAccs as $childAcc) {
+                        if($childAcc->id === $expense->payment_account_id) {
+                            $selectedBalance = $childAcc->balance;
+                        }
+                    }
+                }
+            }
+        }
+
+        $categoryAccs = [];
+        $accountTypes = [
+            'Expenses',
+            'Bank',
+            'Accounts receivable (A/R)',
+            'Other Current Assets',
+            'Fixed Assets',
+            'Accounts payable (A/P)',
+            'Credit Card',
+            'Other Current Liabilities',
+            'Long Term Liabilities',
+            'Equity',
+            'Income',
+            'Cost of Goods Sold',
+            'Other Income',
+            'Other Expense'
+        ];
+
+        foreach($accountTypes as $typeName) {
+            $accType = $this->account_model->getAccTypeByName($typeName);
+
+            $accounts = $this->chart_of_accounts_model->getByAccountType($accType->id, null, logged('company_id'));
+
+            if(count($accounts) > 0) {
+                foreach($accounts as $account) {
+                    $childAccs = $this->chart_of_accounts_model->getChildAccounts($account->id);
+
+                    $account->childAccs = $childAccs;
+
+                    $categoryAccs[$typeName][] = $account;
+                }
+            }
+        }
+
+        if(strpos($selectedBalance, '-') !== false) {
+            $balance = str_replace('-', '', $selectedBalance);
+            $selectedBalance = '-$'.number_format($balance, 2, '.', ',');
+        } else {
+            $selectedBalance = '$'.number_format($selectedBalance, 2, '.', ',');
+        }
+
+        $categories = $this->expenses_model->get_transaction_categories($expenseId, 'Expense');
+        $items = $this->expenses_model->get_transaction_items($expenseId, 'Expense');
+
+        $this->page_data['expense'] = $expense;
+        $this->page_data['categories'] = $categories;
+        $this->page_data['items'] = $items;
+        $this->page_data['dropdown']['payment_methods'] = $this->accounting_payment_methods_model->getCompanyPaymentMethods();
+        $this->page_data['balance'] = $selectedBalance;
+        $this->page_data['dropdown']['employees'] = $this->users_model->getCompanyUsers(logged('company_id'));
+        $this->page_data['dropdown']['categories'] = $categoryAccs;
+        $this->page_data['dropdown']['items'] = $this->items_model->getItemsWithFilter(['type' => 'inventory', 'status' => [1]]);
+        $this->page_data['dropdown']['customers'] = $this->accounting_customers_model->getAllByCompany();
+        $this->page_data['dropdown']['payment_accounts'] = $paymentAccs;
+        $this->page_data['dropdown']['vendors'] = $this->vendors_model->getAllByCompany();
+
+        $this->load->view('accounting/vendors/view_expense', $this->page_data);
+    }
+
+    public function get_transaction_attachments($transactionType, $transactionId)
+    {
+        switch($transactionType) {
+            case 'expense' :
+                $transaction = $this->vendors_model->get_expense_by_id($transactionId);
+            break;
+            case 'check' :
+                $transaction = $this->vendors_model->get_check_by_id($transactionId);
+            break;
+            case 'bill' :
+                $transaction = $this->vendors_model->get_bill_by_id($transactionId);
+            break;
+        }
+
+        $attachments = json_decode($transaction->attachments, true);
+
+        $attached = [];
+        if($attachments !== null && count($attachments) > 0) {
+            foreach($attachments as $attachment) {
+                $attached[] = $this->accounting_attachments_model->getById($attachment);
+            }
+        }
+
+        echo json_encode($attached);
+    }
+
+    public function view_check($checkId)
+    {
+        $check = $this->vendors_model->get_check_by_id($checkId);
+        $bankAccsType = $this->account_model->getAccTypeByName('Bank');
+
+        $bankAccs = [];
+        $accounts = $this->chart_of_accounts_model->getByAccountType($bankAccsType->id, null, logged('company_id'));
+        if(count($accounts) > 0) {
+            foreach($accounts as $account) {
+                $childAccs = $this->chart_of_accounts_model->getChildAccounts($account->id);
+
+                $account->childAccs = $childAccs;
+
+                $bankAccs[] = $account;
+
+                if($account->id === $check->bank_account_id) {
+                    $selectedBalance = $account->balance;
+                }
+
+                foreach($childAccs as $childAcc) {
+                    if($childAcc->id === $check->bank_account_id) {
+                        $selectedBalance = $childAcc->balance;
+                    }
+                }
+            }
+        }
+
+        if(strpos($selectedBalance, '-') !== false) {
+            $balance = str_replace('-', '', $selectedBalance);
+            $selectedBalance = '-$'.number_format($balance, 2, '.', ',');
+        } else {
+            $selectedBalance = '$'.number_format($selectedBalance, 2, '.', ',');
+        }
+
+        $categoryAccs = [];
+        $accountTypes = [
+            'Expenses',
+            'Bank',
+            'Accounts receivable (A/R)',
+            'Other Current Assets',
+            'Fixed Assets',
+            'Accounts payable (A/P)',
+            'Credit Card',
+            'Other Current Liabilities',
+            'Long Term Liabilities',
+            'Equity',
+            'Income',
+            'Cost of Goods Sold',
+            'Other Income',
+            'Other Expense'
+        ];
+
+        foreach($accountTypes as $typeName) {
+            $accType = $this->account_model->getAccTypeByName($typeName);
+
+            $accounts = $this->chart_of_accounts_model->getByAccountType($accType->id, null, logged('company_id'));
+
+            if(count($accounts) > 0) {
+                foreach($accounts as $account) {
+                    $childAccs = $this->chart_of_accounts_model->getChildAccounts($account->id);
+
+                    $account->childAccs = $childAccs;
+
+                    $categoryAccs[$typeName][] = $account;
+                }
+            }
+        }
+
+        $categories = $this->expenses_model->get_transaction_categories($checkId, 'Check');
+        $items = $this->expenses_model->get_transaction_items($checkId, 'Check');
+
+        $this->page_data['check'] = $check;
+        $this->page_data['categories'] = $categories;
+        $this->page_data['items'] = $items;
+        $this->page_data['dropdown']['payment_methods'] = $this->accounting_payment_methods_model->getCompanyPaymentMethods();
+        $this->page_data['balance'] = $selectedBalance;
+        $this->page_data['dropdown']['employees'] = $this->users_model->getCompanyUsers(logged('company_id'));
+        $this->page_data['dropdown']['categories'] = $categoryAccs;
+        $this->page_data['dropdown']['items'] = $this->items_model->getItemsWithFilter(['type' => 'inventory', 'status' => [1]]);
+        $this->page_data['dropdown']['customers'] = $this->accounting_customers_model->getAllByCompany();
+        $this->page_data['dropdown']['bank_accounts'] = $bankAccs;
+        $this->page_data['dropdown']['vendors'] = $this->vendors_model->getAllByCompany();
+        $this->page_data['dropdown']['items'] = $this->items_model->getItemsWithFilter(['type' => 'inventory', 'status' => [1]]);
+
+        $this->load->view('accounting/vendors/view_check', $this->page_data);
+    }
+
+    public function view_bill($billId)
+    {
+        $bill = $this->vendors_model->get_bill_by_id($billId);
+        $terms = $this->accounting_terms_model->getActiveCompanyTerms(logged('company_id'));
+
+        $selectedTerm = $terms[0];
+
+        $categoryAccs = [];
+        $accountTypes = [
+            'Expenses',
+            'Bank',
+            'Accounts receivable (A/R)',
+            'Other Current Assets',
+            'Fixed Assets',
+            'Accounts payable (A/P)',
+            'Credit Card',
+            'Other Current Liabilities',
+            'Long Term Liabilities',
+            'Equity',
+            'Income',
+            'Cost of Goods Sold',
+            'Other Income',
+            'Other Expense'
+        ];
+
+        foreach($accountTypes as $typeName) {
+            $accType = $this->account_model->getAccTypeByName($typeName);
+
+            $accounts = $this->chart_of_accounts_model->getByAccountType($accType->id, null, logged('company_id'));
+
+            if(count($accounts) > 0) {
+                foreach($accounts as $account) {
+                    $childAccs = $this->chart_of_accounts_model->getChildAccounts($account->id);
+
+                    $account->childAccs = $childAccs;
+
+                    $categoryAccs[$typeName][] = $account;
+                }
+            }
+        }
+
+        $billPayments = $this->vendors_model->get_bill_payments_by_bill_id($billId);
+
+        $totalPayment = 0.00;
+        foreach($billPayments as $billPayment) {
+            $paymentItems = $this->vendors_model->get_bill_payment_items($billPayment->id);
+
+            foreach($paymentItems as $paymentItem) {
+                if($paymentItem->bill_id === $billId) {
+                    $totalPayment += floatval($paymentItem->total_amount);
+                }
+            }
+        }
+
+        $categories = $this->expenses_model->get_transaction_categories($billId, 'Bill');
+        $items = $this->expenses_model->get_transaction_items($billId, 'Bill');
+
+        $this->page_data['bill_payments'] = $billPayments;
+        $this->page_data['total_payment'] = number_format(floatval($totalPayment), 2, '.', ',');
+        $this->page_data['due_date'] = date("m/d/Y", strtotime($bill->due_date));
+        $this->page_data['bill'] = $bill;
+        $this->page_data['categories'] = $categories;
+        $this->page_data['items'] = $items;
+        $this->page_data['dropdown']['categories'] = $categoryAccs;
+        $this->page_data['dropdown']['items'] = $this->items_model->getItemsWithFilter(['type' => 'inventory', 'status' => [1]]);
+        $this->page_data['dropdown']['customers'] = $this->accounting_customers_model->getAllByCompany();
+        $this->page_data['dropdown']['vendors'] = $this->vendors_model->getAllByCompany();
+        $this->page_data['dropdown']['items'] = $this->items_model->getItemsWithFilter(['type' => 'inventory', 'status' => [1]]);
+        $this->page_data['dropdown']['terms'] = $terms;
+
+        $this->load->view('accounting/vendors/view_bill', $this->page_data);
     }
 }

@@ -449,6 +449,10 @@ $route['accounting/vendors/get-vendor-attachments/(:any)'] = 'accounting_control
 $route['accounting/vendors/(:any)/load-transactions']['post'] = 'accounting_controllers/vendors/load_transactions/$1';
 $route['accounting/vendors/update-transaction-category']['post'] = 'accounting_controllers/vendors/update_transaction_category';
 $route['accounting/vendors/delete-transaction/(:any)/(:any)']['DELETE'] = 'accounting_controllers/vendors/delete_transaction/$1/$2';
+$route['accounting/vendors/view-expense/(:any)'] = 'accounting_controllers/vendors/view_expense/$1';
+$route['accounting/vendors/get-transaction-attachments/(:any)/(:any)'] = 'accounting_controllers/vendors/get_transaction_attachments/$1/$2';
+$route['accounting/vendors/view-check/(:any)'] = 'accounting_controllers/vendors/view_check/$1';
+$route['accounting/vendors/view-bill/(:any)'] = 'accounting_controllers/vendors/view_bill/$1';
 
 $route['accounting/vendor-details/(:any)'] = 'accounting/vendordetails/$1';
 $route['accounting/taxes/edit-settings'] = 'taxes/edit_settings';

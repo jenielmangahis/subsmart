@@ -45,36 +45,35 @@ add_css(array(
                                 </div>
                             </div>
                             <div class="col-md-12">
-                                <input type="radio" name="commision_scheme[]" class="form-controls" value="1" checked id="commision_scheme1" <?php if(isset($office_info)){ echo $office_info->commision_scheme == 1 ? 'checked': ''; } ?> >
+                                <input type="radio" name="method" class="payment_method" value="CC" checked id="CC">
                                 <span >Credit Card</span> &nbsp;&nbsp;
 
-                                <input type="radio" name="commision_scheme[]" class="form-controls" value="1" id="commision_scheme1" <?php if(isset($office_info)){ echo $office_info->commision_scheme == 1 ? 'checked': ''; } ?> >
-                                <span >Debit Card</span> &nbsp;&nbsp;
-
-                                <input type="radio" name="commision_scheme[]" class="form-controls" value="1" id="commision_scheme1" <?php if(isset($office_info)){ echo $office_info->commision_scheme == 1 ? 'checked': ''; } ?> >
+                                <input type="radio" name="method" class="payment_method" value="CASH" id="CASH">
                                 <span >Cash</span> &nbsp;&nbsp;
 
-                                <input type="radio" name="commision_scheme[]" class="form-controls" value="1" id="commision_scheme1" <?php if(isset($office_info)){ echo $office_info->commision_scheme == 1 ? 'checked': ''; } ?> >
+                                <input type="radio" name="method"  class="payment_method" value="CHECK" id="CHECK">
+                                <span >Check</span> &nbsp;&nbsp;
+
+                                <input type="radio" name="method" class="payment_method" value="ACH" id="ACH">
                                 <span >ACH</span> &nbsp;&nbsp;
 
-                                <input type="radio" name="commision_scheme[]" class="form-controls" value="1" id="commision_scheme1" <?php if(isset($office_info)){ echo $office_info->commision_scheme == 1 ? 'checked': ''; } ?> >
+                                <input type="radio" name="method" class="payment_method" value="Invoicing" id="Invoicing">
+                                <span >Invoicing</span> &nbsp;&nbsp;
+
+                                <input type="radio" name="method" class="payment_method" value="VENMO" id="VENMO">
                                 <span >Venmo</span> &nbsp;&nbsp;
 
-                                <input type="radio" name="commision_scheme[]" class="form-controls" value="1" id="commision_scheme1" <?php if(isset($office_info)){ echo $office_info->commision_scheme == 1 ? 'checked': ''; } ?> >
+                                <input type="radio" name="method" class="payment_method" value="PP" id="PP">
                                 <span >Paypal</span> &nbsp;&nbsp;
 
-                                <input type="radio" name="commision_scheme[]" class="form-controls" value="1" id="commision_scheme1" <?php if(isset($office_info)){ echo $office_info->commision_scheme == 1 ? 'checked': ''; } ?> >
+                                <input type="radio" name="method" class="payment_method" value="SQ" id="SQ">
                                 <span >Square</span> &nbsp;&nbsp;
 
-                                <input type="radio" name="commision_scheme[]" class="form-controls" value="1" id="commision_scheme1" <?php if(isset($office_info)){ echo $office_info->commision_scheme == 1 ? 'checked': ''; } ?> >
-                                <span >eCheck</span> &nbsp;&nbsp;
-
-                                <input type="radio" name="commision_scheme[]" class="form-controls" value="0" id="commision_scheme" <?php if(isset($office_info)){ echo $office_info->commision_scheme == 0 ? 'checked': ''; } ?>>
+                                <input type="radio" name="method" class="payment_method" value="OPT" id="OPT">
                                 <span>Others</span>
                             </div>
                             <br>
-                            <form id="customer_form">
-                                <div class="row pl-0 pr-0">
+                            <div class="row pl-0 pr-0">
                                     <div class="col-md-6">
                                         <div class="card">
                                             <div class="card-header">
@@ -164,123 +163,285 @@ add_css(array(
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-md-6">
-                                        <div class="card">
-                                            <div class="card-header">
-                                                <span style="position: absolute;right: 0;margin-right: 25px;font-size: 20px;padding-top:10px;" class="fa fa-ellipsis-v"></span>
-                                                <h6 ><span class="fa fa-user"></span>&nbsp; &nbsp;Payment Information</h6>
-                                            </div>
-                                            <div class="card-body">
+                                <div class="col-md-6">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <span style="position: absolute;right: 0;margin-right: 25px;font-size: 20px;padding-top:10px;" class="fa fa-ellipsis-v"></span>
+                                            <h6 ><span class="fa fa-user"></span>&nbsp; &nbsp;Payment Information</h6>
+                                        </div>
+                                        <div class="card-body">
+                                            <form id="pay_billing" method="post">
                                                 <div class="row form_line">
                                                     <div class="col-md-4">
-                                                        <label>Card Number</label>
-                                                    </div>
-                                                    <div class="col-md-8">
-                                                        <input type="text" class="form-control" name="first_name" id="first_name" value="<?php if(isset($billing_info ) && $billing_info->credit_card_num != 0){ echo $billing_info->credit_card_num; } ?>" required/>
-                                                    </div>
-                                                </div>
-                                                <div class="row form_line">
-                                                    <div class="col-md-4">
-                                                        <label for="">Expiration </label>
+                                                        Billing Frequency
                                                     </div>
                                                     <div class="col-md-8">
                                                         <div class="row">
-                                                            <div class="col-md-6">
-                                                                <select id="exp_month" name="exp_month" data-customer-source="dropdown" class="input_select" >
-                                                                    <option  value=""></option>
-                                                                    <option  value="1">01</option>
-                                                                    <option  value="2">02</option>
-                                                                    <option  value="3">03</option>
-                                                                    <option  value="4">04</option>
-                                                                    <option  value="5">05</option>
-                                                                    <option  value="6">06</option>
-                                                                    <option  value="7">07</option>
-                                                                    <option  value="8">08</option>
-                                                                    <option  value="9">09</option>
-                                                                    <option  value="10">10</option>
-                                                                    <option  value="11">11</option>
-                                                                    <option  value="12">12</option>
-                                                                </select>
-                                                            </div>
-                                                            <div class="col-md-6">
-                                                                <select id="exp_year" name="exp_year" data-customer-source="dropdown" class="input_select" >
-                                                                    <option  value=""></option>
-                                                                    <option  value="2021">2021</option>
-                                                                    <option  value="2022">2022</option>
-                                                                    <option  value="2023">2023</option>
-                                                                    <option  value="2024">2024</option>
-                                                                    <option  value="2025">2025</option>
-                                                                    <option  value="2026">2026</option>
-                                                                    <option  value="2027">2027</option>
-                                                                    <option  value="2028">2028</option>
-                                                                    <option  value="2029">2029</option>
-                                                                    <option  value="2030">2030</option>
-                                                                    <option  value="2031">2031</option>
-                                                                </select>
+                                                            <div class="col-md-12">
+                                                                <input type="text" class="form-control" name="frequency" id="frequency" value="<?= 'Every '.$billing_info->frequency.' month(s)';  ?>" readonly/>
                                                             </div>
                                                         </div>
+                                                    </div>
+                                                </div>
+                                                    <div class="row form_line invoicing_field">
+                                                        <div class="col-md-4">
+                                                            Term
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            <select id="invoice_term" name="invoice_term" data-customer-source="dropdown" class="input_select" >
+                                                                <option  value="Due On Receipt">Due On Receipt</option>
+                                                                <option  value="Net 5">Net 5</option>
+                                                                <option  value="Net 10">Net 10</option>
+                                                                <option  value="Net 15">Net 15</option>
+                                                                <option  value="Net 30">Net 30</option>
+                                                                <option  value="Net 60">Net 60</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row form_line invoicing_field">
+                                                        <div class="col-md-4">
+                                                            Invoice Date
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            <input type="number" class="form-control" name="invoice_date" id="invoice_date" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="row form_line invoicing_field">
+                                                        <div class="col-md-4">
+                                                            Due Date
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            <input type="number" class="form-control" name="invoice_due_date" id="invoice_due_date" />
+                                                        </div>
+                                                    </div>
+                                                <div id="credit_card">
+                                                    <div class="row form_line">
+                                                        <div class="col-md-4">
+                                                            Card Number
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            <input type="text" class="form-control" name="card_number" id="first_name" value="<?php if(isset($billing_info ) && $billing_info->credit_card_num != 0){ echo $billing_info->credit_card_num; } ?>" required/>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row form_line">
+                                                        <div class="col-md-4">
+                                                            <label for="">Expiration 
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            <div class="row">
+                                                                <div class="col-md-4">
+                                                                    <select id="exp_month" name="exp_month" data-customer-source="dropdown" class="input_select" >
+                                                                        <option  value=""></option>
+                                                                        <option  value="1">01</option>
+                                                                        <option  value="2">02</option>
+                                                                        <option  value="3">03</option>
+                                                                        <option  value="4">04</option>
+                                                                        <option  value="5">05</option>
+                                                                        <option  value="6">06</option>
+                                                                        <option  value="7">07</option>
+                                                                        <option  value="8">08</option>
+                                                                        <option  value="9">09</option>
+                                                                        <option  value="10">10</option>
+                                                                        <option  value="11">11</option>
+                                                                        <option  value="12">12</option>
+                                                                    </select>
+                                                                </div>
+                                                                <div class="col-md-4">
+                                                                    <select id="exp_year" name="exp_year" data-customer-source="dropdown" class="input_select" >
+                                                                        <option  value=""></option>
+                                                                        <option  value="2021">2021</option>
+                                                                        <option  value="2022">2022</option>
+                                                                        <option  value="2023">2023</option>
+                                                                        <option  value="2024">2024</option>
+                                                                        <option  value="2025">2025</option>
+                                                                        <option  value="2026">2026</option>
+                                                                        <option  value="2027">2027</option>
+                                                                        <option  value="2028">2028</option>
+                                                                        <option  value="2029">2029</option>
+                                                                        <option  value="2030">2030</option>
+                                                                        <option  value="2031">2031</option>
+                                                                    </select>
+                                                                </div>
+                                                                <div class="col-md-4">
+                                                                    <input type="text" maxlength="3" class="form-control" name="cvc" id="cvc" value="" placeholder="CVC"/>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row form_line" id="payment_collected">
+                                                    <div class="col-md-4"></div>
+                                                    <div class="col-md-8">
+                                                        <input type="checkbox" name="is_collected" value="collected">
+                                                        <span >Payment has been collected.</span>
+                                                    </div>
+                                                </div>
 
-                                                    </div>
-                                                </div>
-                                                <div class="row form_line">
+                                                <div class="row form_line" id="check_number">
                                                     <div class="col-md-4">
-                                                        <label for="">Transaction Subtotal </label>
+                                                        Check Number
                                                     </div>
                                                     <div class="col-md-8">
-                                                        <input type="text" class="form-control" name="mail_add" id="mail_add"  required/>
+                                                        <input type="text" class="form-control" name="check_number" id="check_number" value="" />
                                                     </div>
                                                 </div>
-                                                <div class="row form_line">
+                                                <div class="row form_line CNRN">
                                                     <div class="col-md-4">
-                                                        <label for="">Tax Amount </label>
+                                                        Routing Number
                                                     </div>
                                                     <div class="col-md-8">
-                                                        <input type="text" class="form-control" name="city" id="city"  required/>
-                                                    </div>
-                                                </div>
-                                                <div class="row form_line">
-                                                    <div class="col-md-4">
-                                                        <label for="">Transaction Amount </label>
-                                                    </div>
-                                                    <div class="col-md-8">
-                                                        <input type="text" class="form-control" name="state" id="state"  required/>
+                                                        <input type="text" class="form-control" name="routing_number" id="routing_number" value="" />
                                                     </div>
                                                 </div>
 
+                                                <div class="row form_line CNRN">
+                                                    <div class="col-md-4">
+                                                        Account Number
+                                                    </div>
+                                                    <div class="col-md-8">
+                                                        <input type="text" class="form-control" name="account_numbers" id="account_numbers"/>
+                                                    </div>
+                                                </div>
+                                                <div class="row form_line" id="day_of_month">
+                                                    <div class="col-md-4">
+                                                        <label for="">Day of Month
+                                                    </div>
+                                                    <div class="col-md-8">
+                                                        <select id="day_of_month_ach" name="day_of_month" class="form-control">
+                                                            <option value="">Select Day of Month</option>
+                                                            <?php for($x=1;$x<=31;$x++){ ?>
+                                                                <option value="<?= $x; ?>"><?= $x; ?></option>
+                                                            <?php } ?>
+                                                        </select>
+                                                    </div>
+                                                </div>
+
+                                                <div class="row form_line account_cred" >
+                                                    <div class="col-md-4">
+                                                        <label for="">Account Credential
+                                                    </div>
+                                                    <div class="col-md-8">
+                                                        <input type="number" class="form-control" name="account_credential" id="account_credential" value="<?= isset($billing_info) ? $billing_info->account_credential : ''; ?>" />
+                                                    </div>
+                                                </div>
+                                                <div class="row form_line account_cred" >
+                                                    <div class="col-md-4">
+                                                        <label for="">Account Note
+                                                    </div>
+                                                    <div class="col-md-8">
+                                                        <input type="number" class="form-control" name="account_note" id="account_note" value="<?= isset($billing_info) ? $billing_info->account_note : ''; ?>"/>
+                                                    </div>
+                                                </div>
+                                                <div class="row form_line account_cred" id="confirmationPD">
+                                                    <div class="col-md-4">
+                                                        <label for="">Confirmation
+                                                    </div>
+                                                    <div class="col-md-8">
+                                                        <input type="number" class="form-control" name="confirmation" id="confirmation" value="<?= isset($billing_info) ? $billing_info->confirmation : ''; ?>"/>
+                                                    </div>
+                                                </div>
+
+                                                <div class="row form_line" id="docu_signed">
+                                                    <div class="col-md-4"></div>
+                                                    <div class="col-md-8">
+                                                        <input type="checkbox" name="docu_signed" value="collected">
+                                                        <span >Document Signed.</span>
+                                                    </div>
+                                                </div>
                                                 <div class="row form_line">
                                                     <div class="col-md-4">
-                                                        <label for="">Transaction Category</label>
+                                                        <label for="">Total Amount 
+                                                    </div>
+                                                    <div class="col-md-8">
+                                                        <div class="input-group">
+                                                            <div class="input-group-prepend">
+                                                                <span class="input-group-text" id="basic-addon1">$</span>
+                                                            </div>
+                                                            <input type="number" step="0.01" class="form-control input_select" name="transaction_amount" value="<?= $billing_info->transaction_amount != null ? number_format((float)$billing_info->transaction_amount ,2,'.',',') : '0.00'; ?>">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row form_line">
+                                                    <div class="col-md-4">
+                                                        <label for="">Transaction Category
                                                     </div>
                                                     <div class="col-md-8">
                                                         <select id="transaction_category" name="transaction_category" data-customer-source="dropdown" class="input_select" >
-                                                            <option  value=""></option>
-                                                            <option  value="E">Equipment</option>
-                                                            <option  value="MMR">MMR</option>
-                                                            <option  value="RMR">RMR</option>
-                                                            <option  value="MS">Monthly Subscription</option>
-                                                            <option  value="AF">Activation Fee</option>
-                                                            <option  value="FM">First Month</option>
-                                                            <option  value="AFM">Activation + First Month</option>
-                                                            <option  value="D">Deposit</option>
-                                                            <option  value="O">Other</option>
+                                                        <option  value=""></option>
+                                                        <?php
+                                                            $transaction_category = transaction_categories();
+                                                            foreach($transaction_category as $category):
+                                                                ?>
+                                                                    <option <?= $category['name'] == $billing_info->transaction_category ? 'selected' : ''; ?> value="<?= $category['name']; ?>"><?= $category['description']; ?></option>
+                                                                <?php
+                                                            endforeach;
+                                                        ?>
                                                         </select>
                                                     </div>
                                                 </div>
                                                 <div class="row form_line">
                                                     <div class="col-md-4">
-                                                        <label for="">Notes</label>
+                                                        <label for="">Notes
                                                     </div>
                                                     <div class="col-md-8">
-                                                        <textarea type="text" style="background-color: #fdeac3;" class="form-controls" rows="5" cols="50" name="country" id="country" ></textarea>
+                                                        <textarea type="text" style="background-color: #fdeac3;width: 100%;" class="form-controls" rows="5" cols="50" name="notes" id="notes" ></textarea>
                                                     </div>
                                                 </div>
                                                 <button type="submit" class="btn btn-primary">Pre Auth Now</button>
                                                 <button type="submit" class="btn btn-primary">Capture Now</button>
-                                            </div>
+                                                <input type="hidden" name="customer_id" id="customer_id" value="<?= $this->uri->segment(3); ?>"/>
+                                                <input type="hidden" name="method" id="method" value="CC"/>
+                                                <button style="right:0;" type="button" class="btn btn-primary">Add New Subcription Plan</button>
+                                                </form>
                                         </div>
                                     </div>
                                 </div>
-                            </form>
+                            </div>
+
+                            <div class="col-md-12">
+                                        <div class="card">
+                                            <div class="card-header">
+                                                <span style="position: absolute;right: 0;margin-right: 25px;font-size: 20px;padding-top:10px;" class="fa fa-ellipsis-v"></span>
+                                                <h6 ><span class="fa fa-user"></span>&nbsp; &nbsp;Subscription History</h6>
+                                            </div>
+                                            <div class="card-body">
+                                                <table class="table">
+                                                    <thead>
+                                                    <tr>
+                                                        <td>ID</td>
+                                                        <td>Date</td>
+                                                        <td>Total Amount</td>
+                                                        <td>Category</td>
+                                                        <td>Method</td>
+                                                        <td>Type</td>
+                                                        <td>Frequency</td>
+                                                        <td>Status</td>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    <?php
+                                                        if(isset($subscriptions)) :
+                                                        foreach ($subscriptions as $detail):
+                                                           ?>
+                                                            <tr>
+                                                                <td><?= $detail->id; ?></td>
+                                                                <td><?= $detail->datetime; ?></td>
+                                                                <td>$<?= number_format((float)$detail->subtotal + $detail->tax,2,'.',','); ?></td>
+                                                                <td><?php $tt = transaction_categories($detail->category); echo $tt['description']; ?></td>
+                                                                <td><?= $detail->method; ?></td>
+                                                                <td><?= $detail->transaction_type; ?></td>
+                                                                <td><?= $detail->frequency; ?></td>
+                                                                <td><?= $detail->status; ?></td>
+                                                            </tr>
+                                                            <?php
+                                                        endforeach;
+                                                        endif;
+                                                    ?>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
                         </div>
                     </div>
                 </div>
@@ -301,4 +462,4 @@ add_css(array(
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-timepicker/0.5.2/js/bootstrap-timepicker.min.js" integrity="sha512-2xXe2z/uA+2SyT/sTSt9Uq4jDKsT0lV4evd3eoE/oxKih8DSAsOF6LUb+ncafMJPAimWAXdu9W+yMXGrCVOzQA==" crossorigin="anonymous"></script>
 
-        <?php include viewPath('customer/js/billing_js'); ?>
+        <?php include viewPath('customer/js/subscription_js'); ?>

@@ -41,9 +41,8 @@ function get_differenct_of_dates($date_start, $date_end)
                     class="text-center"></span><br>People</a>
               </li>
               <li>
-                <a href="<?= base_url() ?>trac360/places"
-                  class="btn btn-primary  trac360_side_controls" id=""><span class="fa fa-calendar-plus-o fa-2x"
-                    class="text-center"></span><br>Calendar</a>
+                <a href="#" class="btn btn-primary  trac360_side_controls" id="calendar-menu-btn"><span
+                    class="fa fa-calendar-plus-o fa-2x" class="text-center"></span><br>Calendar</a>
               </li>
               <li>
                 <a href="<?= base_url() ?>trac360/jobs"
@@ -55,7 +54,7 @@ function get_differenct_of_dates($date_start, $date_end)
                   class="btn btn-primary  trac360_side_controls" id=""><span class="fa fa-map-marker fa-2x"
                     class="text-center"></span><br>Places</a>
               </li>
-              <li><a href="<?= base_url() ?>trac360/"
+              <li><a href="<?= base_url() ?>trac360/history"
                   class="btn btn-primary  trac360_side_controls" id=""><span class="fa fa-map fa-2x"
                     class="text-center"></span><br>History</a>
               </li>
@@ -230,6 +229,7 @@ function get_differenct_of_dates($date_start, $date_end)
 </div>
 
 
+<?php include viewPath('trac360/calendar'); ?>
 <!--</div>-->
 <!-- end container-fluid -->
 <!-- </div> -->
