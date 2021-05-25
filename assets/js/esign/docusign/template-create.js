@@ -128,6 +128,26 @@ function TemplateCreate() {
     const actions = {
       preview: showDocument,
       delete: function (event) {
+        const _file = template.files.find((f) => f.name == file.name);
+
+        if (!_file || !_file.total_fields) {
+          actions._delete(event);
+          return;
+        }
+
+        const $modal = $("#deleteDocument");
+        const $buttonPrimary = $modal.find(".btn-primary");
+
+        $modal.find(".total-fields").html(_file.total_fields);
+        $modal.modal("show");
+
+        $buttonPrimary.off();
+        $buttonPrimary.on("click", () => {
+          actions._delete(event);
+          $modal.modal("hide");
+        });
+      },
+      _delete: function (event) {
         files = files.filter((f) => f.id != fileId);
         const $parent = $(event.target).closest(".esignBuilder__docPreview");
         $parent.remove();
@@ -313,6 +333,28 @@ function TemplateCreate() {
   }
 
   function removeRecipient(id) {
+    let recipient = recipients.find((r) => r.getData().id == id);
+    recipient = recipient.getData();
+
+    if (!recipient.total_fields) {
+      _removeRecipient(id);
+      return;
+    }
+
+    const $modal = $("#deleteRecipient");
+    const $buttonPrimary = $modal.find(".btn-primary");
+
+    $modal.find(".total-fields").html(recipient.total_fields);
+    $modal.modal("show");
+
+    $buttonPrimary.off();
+    $buttonPrimary.on("click", () => {
+      _removeRecipient(id);
+      $modal.modal("hide");
+    });
+  }
+
+  function _removeRecipient(id) {
     recipients = recipients.filter((recipient) => {
       return recipient.getData().id !== id;
     });

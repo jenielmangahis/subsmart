@@ -536,8 +536,6 @@ class Accounting_modals extends MY_Controller {
                     $this->page_data['dropdown']['payees'] = $this->vendors_model->getAllByCompany();
                 break;
                 case 'vendor_credit_modal' :
-                    $terms = $this->accounting_terms_model->getActiveCompanyTerms(logged('company_id'));
-
                     $categoryAccs = [];
                     $accountTypes = [
                         'Expenses',

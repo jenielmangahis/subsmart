@@ -332,6 +332,7 @@ border: none;
                                 <br>
 
                                 <input type="hidden" id="company_name" value="<?php echo $clients->business_name; ?>">
+                                <input type="hidden" name="wo_id" value="<?php echo $workorder->id; ?>">
                                 <input type="hidden" id="current_date" value="<?php echo @date('m-d-Y'); ?>">
 
                                 <input type="hidden" id="content_input" class="form-control" name="header" value="<?php echo $headers->content; ?>">
@@ -359,7 +360,7 @@ border: none;
                             </div>
                             <div class="col-md-3 form-group">
                                 <label for="birthdate">Birth Date</label>
-                                <input type="text" class="form-control" name="birthdate" id="date_of_birth" value="<?php echo $workorder->birthdate; ?>"/>
+                                <input type="date" class="form-control" name="birthdate" id="date_of_birth" value="<?php echo $workorder->birthdate; ?>"/>
                             </div>
                             </div>
                         <div class="row">                   
@@ -722,6 +723,7 @@ border: none;
                                 <div class="form-group col-md-4">
                                     <label for="job_type">Job Type</label>
                                     <select name="job_type" id="job_type" class="form-control custom-select">
+                                        <option value="<?php echo $workorder->job_type ?>"><?php echo $workorder->job_type ?></option>
                                     <?php foreach($job_types as $jt){ ?>
                                         <option value="<?php echo $jt->title ?>"><?php echo $jt->title ?></option>
 
@@ -738,9 +740,10 @@ border: none;
                                 <!-- <label style="float:right;color:green;">Manage Tag</label> -->
                                 <!-- <input type="text" class="form-control" name="job_tag" id="job_tag" /> -->
                                 <select class="form-control" name="job_tag" id="job_tag">
+                                            <option value="<?php echo $workorder->tags ?>"><?php echo $workorder->tags ?></option>
                                             <!-- <option>---</option> -->
                                             <?php foreach($job_tags as $tags){ ?>
-                                                <option value="<?php echo $tags->name; ?>"><?php echo $tags->name; ?><option>
+                                                <option value="<?php echo $tags->name; ?>"><?php echo $tags->name; ?></option>
                                             <?php } ?>
                                 </select>
                             </div>
@@ -802,6 +805,7 @@ border: none;
                                 <div class="form-group col-md-4">
                                     <label for="workorder_priority">Priority</label>
                                     <select name="priority" id="workorder_priority" class="form-control custom-select">
+                                        <option value="<?php echo $workorder->priority ?>"><?php echo $workorder->priority ?></option>
                                         <option value="Emergency">Emergency</option>
                                         <option value="Low">Low</option>
                                         <option value="Standard">Standard</option>

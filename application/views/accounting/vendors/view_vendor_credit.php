@@ -1,12 +1,12 @@
 <!-- Modal for bank deposit-->
 <div class="full-screen-modal">
 <form onsubmit="submitModalForm(event, this)" id="modal-form">
-    <div id="billModal" class="modal fade modal-fluid" role="dialog">
+    <div id="vendorCreditModal" class="modal fade modal-fluid" role="dialog">
         <div class="modal-dialog">
             <!-- Modal content-->
             <div class="modal-content" style="height: 100%;">
                 <div class="modal-header" style="background: #f4f5f8;border-bottom: 0">
-                    <h4 class="modal-title"><a href="#"><i class="fa fa-history fa-lg" style="margin-right: 10px"></i></a>Bill <span></span></h4>
+                    <h4 class="modal-title"><a href="#"><i class="fa fa-history fa-lg" style="margin-right: 10px"></i></a>Vendor Credit <span></span></h4>
                     <button type="button" class="close" data-dismiss="modal"><i class="fa fa-times fa-lg"></i></button>
                 </div>
                 <div class="modal-body">
@@ -23,7 +23,7 @@
                                                         <select name="vendor_id" id="vendor" class="form-control" required>
                                                             <option value="" disabled selected>&nbsp;</option>
                                                             <?php foreach($dropdown['vendors'] as $vendor) : ?>
-                                                                <option value="<?=$vendor->id?>" <?=$vendor->id === $bill->vendor_id ? 'selected' : ''?>><?=$vendor->display_name?></option>
+                                                                <option value="<?=$vendor->id?>" <?=$vendor->id === $vendorCredit->vendor_id ? 'selected' : ''?>><?=$vendor->display_name?></option>
                                                             <?php endforeach; ?>
                                                         </select>
                                                     </div>
@@ -31,85 +31,26 @@
                                             </div>
                                         </div>
                                         <div class="col-md-4">
-                                            <h6 class="text-right"><?=$bill->status === "1" ? "BALANCE DUE" : "PAYMENT STATUS"?></h6>
-                                            <h2 class="text-right">
-                                                <?php if($bill->status === "1") : ?>
-                                                    $<span class="transaction-total-amount"><?=number_format(floatval($bill->remaining_balance), 2, '.', ',')?></span>
-                                                <?php else : ?>
-                                                    PAID
-                                                <?php endif; ?>
-                                            </h2>
-                                            <?php if($bill->status === "1") : ?>
-                                                <div class="d-flex justify-content-end">
-                                                    <button class="btn btn-secondary mr-3" type="button">
-                                                        Schedule online payment
-                                                    </button>
-                                                    <button class="btn btn-transparent" type="button">
-                                                        Mark as paid
-                                                    </button>                                                    
-                                                </div>
-                                                <?php if(count($bill_payments) > 0) : ?>
-                                                <div class="btn-group dropleft d-inline-block float-right">
-                                                    <button type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="btn text-info p-0">
-                                                        <?=count($bill_payments)?> payment made ($<?=$total_payment?>)
-                                                    </button>
-                                                    <div class="dropdown-menu p-3" id="payments-dropdown" style="min-width: 275px">
-                                                        <table class="table bg-white m-0">
-                                                            <thead>
-                                                                <tr>
-                                                                    <th>Date</th>
-                                                                    <th>Amount applied</th>
-                                                                </tr>
-                                                            </thead>
-                                                            <tbody>
-                                                                <?php foreach($bill_payments as $payment) : ?>
-                                                                    <?php $paymentDetails = $this->vendors_model->get_bill_payment_item_by_bill_id($payment->id, $bill->id); ?>
-                                                                    <tr>
-                                                                        <td><a href="#" class="text-info"><?=date("m/d/Y", strtotime($payment->payment_date))?></a></td>
-                                                                        <td class="text-right">$<?=number_format(floatval($paymentDetails->total_amount), 2, '.', ',')?></td>
-                                                                    </tr>
-                                                                <?php endforeach; ?>
-                                                            </tbody>
-                                                        </table>
-                                                    </div>
-                                                </div>
-                                                <?php endif; ?>
-                                            <?php endif; ?>
+                                            <h6 class="text-right">AMOUNT</h6>
+                                            <h2 class="text-right">$<span class="transaction-total-amount"><?=number_format(floatval($vendorCredit->total_amount), 2, '.', ',')?></span></h2>
                                         </div>
                                         <div class="col-md-2">
                                             <div class="form-group">
                                                 <label for="mailing_address">Mailing address</label>
-                                                <textarea name="mailing_address" id="mailing_address" class="form-control">
-                                                    <?=$bill->mailing_address?>
-                                                </textarea>
+                                                <textarea name="mailing_address" id="mailing_address" class="form-control"><?=$vendorCredit->mailing_address?></textarea>
                                             </div>
                                         </div>
                                         <div class="col-md-2">
                                             <div class="form-group">
-                                                <label for="terms">Terms</label>
-                                                <select name="term_id" id="terms" class="form-control">
-                                                    <?php foreach($dropdown['terms'] as $term) : ?>
-                                                        <option value="<?=$term->id?>" <?=$term->id === $bill->term_id ? 'selected' : ''?>><?=$term->name?></option>
-                                                    <?php endforeach; ?>
-                                                </select>
+                                                <label for="payment_date">Payment date</label>
+                                                <input type="text" name="payment_date" id="payment_date" class="form-control date" value="<?=date("m/d/Y", strtotime($vendorCredit->payment_date))?>" required>
                                             </div>
                                         </div>
+                                        <div class="col-md-2"></div>
                                         <div class="col-md-2">
                                             <div class="form-group">
-                                                <label for="bill_date">Bill date</label>
-                                                <input type="text" name="bill_date" id="bill_date" class="form-control date" value="<?=date("m/d/Y", strtotime($bill->bill_date))?>" required>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-2">
-                                            <div class="form-group">
-                                                <label for="due_date">Due date</label>
-                                                <input type="text" name="due_date" id="due_date" class="form-control date" value="<?=$due_date?>" required>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-2">
-                                            <div class="form-group">
-                                                <label for="bill_no">Bill no.</label>
-                                                <input type="text" name="bill_no" id="bill_no" class="form-control" value="<?=$bill->bill_no?>">
+                                                <label for="ref_no">Ref no.</label>
+                                                <input type="text" name="ref_no" id="ref_no" class="form-control" value="<?=$vendorCredit->ref_no?>">
                                             </div>
                                         </div>
                                         <div class="col-md-6">
@@ -119,8 +60,8 @@
                                                     <span class="float-right"><a href="#" class="text-info" data-toggle="modal" data-target="#tags-modal" id="open-tags-modal">Manage tags</a></span>
                                                 </div>
                                                 <select name="tags[]" id="tags" class="form-control" multiple="multiple">
-                                                    <?php if($bill->tags !== null && $bill->tags !== "") : ?>
-                                                        <?php foreach(json_decode($bill->tags, true) as $tagId) : ?>
+                                                    <?php if($vendorCredit->tags !== null && $vendorCredit->tags !== "") : ?>
+                                                        <?php foreach(json_decode($vendorCredit->tags, true) as $tagId) : ?>
                                                             <?php 
                                                                 $tag = $this->tags_model->getTagById($tagId);
                                                                 $name = $tag->name;
@@ -366,14 +307,14 @@
                                                 <div class="col-md-6">
                                                     <div class="form-group">
                                                         <label for="memo">Memo</label>
-                                                        <textarea name="memo" id="memo" class="form-control"><?=$bill->memo?></textarea>
+                                                        <textarea name="memo" id="memo" class="form-control"><?=$vendorCredit->memo?></textarea>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-8">
                                                     <div class="attachments">
                                                         <label for="attachment" style="margin-right: 15px"><i class="fa fa-paperclip"></i>&nbsp;Attachment</label> 
                                                         <span>Maximum size: 20MB</span>
-                                                        <div id="bill-attachments" class="dropzone" style="border: 1px solid #e1e2e3;background: #ffffff;width: 100%;">
+                                                        <div id="vendor-credit-attachments" class="dropzone" style="border: 1px solid #e1e2e3;background: #ffffff;width: 100%;">
                                                             <div class="dz-message" style="margin: 20px;border">
                                                                 <span style="font-size: 16px;color: rgb(180,132,132);font-style: italic;">Drag and drop files here or</span>
                                                                 <a href="#" style="font-size: 16px;color: #0b97c4">browse to upload</a>
@@ -384,7 +325,7 @@
                                             </div>
                                         </div>
                                         <div class="col-md-6">
-                                            <h5 class="m-0 text-right">Total : $<span class="transaction-total-amount">0.00</span></h5>
+                                            <h5 class="m-0 text-right">Total : $<span class="transaction-total-amount"><?=number_format(floatval($vendorCredit->total_amount), 2, '.', ',')?></span></h5>
                                         </div>
                                     </div>
                                 </div>

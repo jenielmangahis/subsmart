@@ -99,3 +99,43 @@
         </div>
     </div>
 </div>
+
+<div class="modal fade" id="deleteRecipient" tabindex="-1" role="dialog" aria-labelledby="deleteRecipientLabel" aria-hidden="true">
+	<div class="modal-dialog modal-lg" role="document">
+		<div class="modal-content">
+		<div class="modal-header">
+			<h5 class="modal-title" id="deleteRecipientLabel">Delete Recipient</h5>
+			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+			<span aria-hidden="true">&times;</span>
+			</button>
+		</div>
+		<div class="modal-body">
+         <p>This recipient has <span class="total-fields">0</span> assigned fields. By deleting this recipient, you will also delete their fields. Would you like to delete the recipient and fields?</p>
+		</div>
+		<div class="modal-footer">
+			<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+			<button type="button" class="btn btn-primary">Delete</button>
+		</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="deleteDocument" tabindex="-1" role="dialog" aria-labelledby="deleteDocumentLabel" aria-hidden="true">
+	<div class="modal-dialog modal-lg" role="document">
+		<div class="modal-content">
+		<div class="modal-header">
+			<h5 class="modal-title" id="deleteDocumentLabel">Delete Document</h5>
+			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+			<span aria-hidden="true">&times;</span>
+			</button>
+		</div>
+		<div class="modal-body">
+         <p>Are you sure you want to delete this document? All <span class="total-fields">0</span> fields will be lost.</p>
+		</div>
+		<div class="modal-footer">
+			<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+			<button type="button" class="btn btn-primary">Delete</button>
+		</div>
+		</div>
+	</div>
+</div>

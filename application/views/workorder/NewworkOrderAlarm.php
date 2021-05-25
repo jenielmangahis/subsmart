@@ -3021,7 +3021,7 @@ resizeCanvas();
 
         grand_tot = parseFloat(counter) + parseFloat(subtotal) + parseFloat(m_monitoring);
         //  alert(grand_tot);
-        var grand = $("#grand_total_input").val(grand_tot);
+        var grand = $("#grand_total_input").val(grand_tot.toFixed(2));
     });
 
     $(document).on("focusout", "#m_monitoring", function () {
@@ -3036,7 +3036,7 @@ resizeCanvas();
 
         grand_tot = parseFloat(counter) + parseFloat(subtotal) + parseFloat(one_time);
         //  alert(grand_tot);
-        var grand = $("#grand_total_input").val(grand_tot);
+        var grand = $("#grand_total_input").val(grand_tot.toFixed(2));
     });
 
     // $(document).on("checked", "#same_as", function () {

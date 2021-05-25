@@ -1,7 +1,12 @@
 <?php
-if ($this->session->userdata('usertimezone') == "") {
+if ($this->session->userdata('usertimezone') == null) {
     $_SESSION['usertimezone'] = json_decode(get_cookie('logged'))->usertimezone;
     $_SESSION['offset_zone'] = json_decode(get_cookie('logged'))->offset_zone;
+    echo "<script>console.log('timezone is null');</script>";
+    if ($this->session->userdata('usertimezone') == null) {
+        $_SESSION['usertimezone'] = "UTC";
+        $_SESSION['offset_zone'] = "GMT";
+    }
 }
 ?>
 <!DOCTYPE html>

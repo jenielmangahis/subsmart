@@ -131,7 +131,6 @@ class Cron_Jobs_Controller extends MY_Controller
                         
                         $this->timesheet_model->save_timesheet_report_file_names($admin->user_id, $file_info[0]);
                         $this->timesheet_model->save_timesheet_report_file_names($admin->user_id, $file_info[3]);
-                        var_dump($admin->email_report);
                         if ($admin->device_type == "Android") {
                             $android_tokens[] = $admin->device_token;
                         } elseif ($admin->device_type == "iOS") {
@@ -204,7 +203,6 @@ class Cron_Jobs_Controller extends MY_Controller
                 $admins_for_reports[] = array($admin->user_id, $admin->company_id);
             }
         }
-        var_dump($admins_for_reports);
         return $admins_for_reports;
     }
     public function generate_weekly_timesheet_pdf_report($file_info, $business_name, $est_wage_privacy)
@@ -699,8 +697,6 @@ class Cron_Jobs_Controller extends MY_Controller
                 if ($last_aux->action == "Break out") {
                     $worked_duration =$worked_duration-$employee_attendance->break_duration;
                 }
-                var_dump($worked_duration);
-                var_dump($employee_attendance->FName);
                 echo "<br><br>";
                 
                 if ($worked_duration > 8 && $worked_duration < 9) {
