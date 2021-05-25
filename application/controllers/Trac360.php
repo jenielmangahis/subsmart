@@ -635,7 +635,9 @@ class Trac360 extends MY_Controller
         $this->page_data['previousJobs'] = $previousJobs;
         $this->page_data['company_id'] = $company_id;
         $this->page_data['user_id'] = $user_id;
-
+        
+        $user_locations = $this->trac360_model->get_current_user_location($company_id);
+        $this->page_data['user_locations'] = $user_locations;
 
         $this->load->view('trac360/history', $this->page_data);
         // var_dump($data);

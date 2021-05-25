@@ -425,7 +425,7 @@ add_css(array(
                                                            ?>
                                                             <tr>
                                                                 <td><?= $detail->id; ?></td>
-                                                                <td><?= $detail->datetime; ?></td>
+                                                                <td><?= date("d-m-Y h:i A",strtotime($detail->datetime)); ?></td>
                                                                 <td>$<?= number_format((float)$detail->subtotal + $detail->tax,2,'.',','); ?></td>
                                                                 <td><?php $tt = transaction_categories($detail->category); echo $tt['description']; ?></td>
                                                                 <td><?= $detail->method; ?></td>

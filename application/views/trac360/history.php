@@ -85,13 +85,95 @@ function get_differenct_of_dates($date_start, $date_end)
                     <div id="employee-upcoming-jobs" class="overflow-auto" style="height: 100%;">
                         <div class="row no-margin">
                             <div class="col-md-6 no-padding">
+                                <a data-toggle="collapse" href="#people-collapse-panel" role="button"
+                                    aria-expanded="true" aria-controls="collapseExample" class="">
+                                    <div class="people collapse-btn collapse-active">People</div>
+                                </a>
+                            </div>
+                            <div class="col-md-6 no-padding">
                                 <a data-toggle="collapse" href="#previousjobs-collapse-panel" role="button"
                                     aria-expanded="true" aria-controls="collapseExample" class="">
-                                    <div class="previous jobs-collapse-btn">Previous Jobs</div>
+                                    <div class="previous collapse-btn">Previous Jobs</div>
                                 </a>
                             </div>
                         </div>
-                        <div id="previousjobs-collapse-panel" class="collapse show">
+                        <div id="people-collapse-panel" class="collapse show">
+
+                            <?php
+                                $active_html = "";
+                                $inactive_html = "";
+                                foreach ($user_locations as $user) {
+                                    $exploded = explode(",", $user->last_tracked_location);
+                                    if ($user->last_tracked_location == "") {
+                                        $profile_status = "inactive";
+                                        $onclick = "";
+                                    } else {
+                                        $profile_status = "active";
+                                        $onclick = 'onclick="user_selected( ' . $exploded[0] . ', ' . $exploded[1] . ',' . $user->user_id . ')"';
+                                    }
+
+                                    $image = base_url() . '/uploads/users/user-profile/' . $user->profile_img;
+                                    if (!@getimagesize($image)) {
+                                        $image = base_url('uploads/users/default.png');
+                                    }
+
+                                    if ($user_id == $user->user_id) {
+                                        $current_view = "current_view";
+                                        $current_user_profile_img = $image;
+                                        $current_user_name = $user->FName . ' ' . $user->LName;
+                                    } else {
+                                        $current_view = "";
+                                    }
+                                    $html = '<div id="sec-2-option-' . $user->user_id . '" class="sec-2-option ' . $current_view . '" ' . $onclick . '>';
+                                    $html .= '<div class="row ">
+                                            <div class="col-md-3 profile">';
+                                    $html .= '<center><img src="' . $image . '" alt="user" class="rounded-circle user-profile ' . $profile_status . '"></center>';
+                                    $html .= '<p class="name"> ' . $user->FName . '</p>
+                                    </div>
+                                    <div class="col-md-9 details">
+                                    <p id="last_tract_location_' . $user->user_id . '" class="last_tract_location"><span class="fa fa-map-marker" class="text-center"></span> ';
+                                    if ($user->last_tracked_location_address == "") {
+                                        $last_loc =  "Lost connection";
+                                    } else {
+                                        $last_loc = $user->last_tracked_location_address;
+                                    }
+                                    $html .= $last_loc;
+                                    $html .= '<p><span class="fa fa-clock-o" class="text-center"></span> ';
+                                    $hours_diff = get_differenct_of_dates($user->last_tracked_location_date, date('Y-m-d H:i:s'));
+                                    if ($hours_diff >= 24) {
+                                        $time_display = round($hours_diff / 24, 0) . " Days ago";
+                                    } elseif ($hours_diff >= 1) {
+                                        $time_display = round($hours_diff, 0) . " Hours ago";
+                                    } else {
+                                        if (round($hours_diff * 60, 2) < 1) {
+                                            $time_display = " Few seconds ago";
+                                        } else {
+                                            $time_display = round($hours_diff * 60, 0) . " Minutes ago";
+                                        }
+                                    }
+                                    $html .= $time_display . '</p>
+                                        <div class="people-job-btns">
+                                        <button href="#" class="people-job-btn" data-user-id="'.$user->user_id .'" data-name="'.$user->FName.' '.$user->LName.'" data-toggle="tooltip" title="View history">
+                                            <i class="fa fa-street-view" aria-hidden="true"></i>
+                                        </button>
+                                        <button href="#" class="people-job-btn" data-user-id="'.$user->user_id .'" data-name="'.$user->FName.' '.$user->LName.'" data-toggle="tooltip" title="View previous jobs">
+                                            <i class="fa fa-briefcase" aria-hidden="true"></i>
+                                        </button>
+                                        </div>
+                                    </div>
+                                    </div>
+                                </div>';
+                                    if ($profile_status == "inactive") {
+                                        $inactive_html .= $html;
+                                    } else {
+                                        $html .= '<div style="display:none;"><div id="map_marker_' . $user->user_id . '" class="popup-map-marker"><img src="' . $image . '" class="popup-map-marker" title="' . $user->FName . ' ' . $user->LName . '" /></div></div>';
+                                        $active_html .= $html;
+                                    }
+                                }
+                                echo $active_html . "" . $inactive_html;
+                                ?>
+                        </div>
+                        <div id="previousjobs-collapse-panel" class="collapse">
                             <?php
                             if (!empty($previousJobs)) { ?>
                             <?php foreach ($previousJobs as $jb) { ?>

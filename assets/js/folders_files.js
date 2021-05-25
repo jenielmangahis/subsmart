@@ -3144,6 +3144,7 @@ function createDocusignTemplate(file, options = {}) {
                         <a class="dropdown-item" href="#" data-action="share">Share with users</a>
                         <a class="dropdown-item" href="#" data-action="copy">Copy</a>
                         <a class="dropdown-item" href="#" data-action="delete">Delete</a>
+                        <a class="dropdown-item" href="#" data-action="uploadThumbnail">Change thumbnail</a>
                       </div>
                     </div>
 
@@ -3199,6 +3200,34 @@ function createDocusignTemplate(file, options = {}) {
       },
       delete: function () {
         showDeleteTemplateModal(id);
+      },
+      uploadThumbnail: function () {
+        const $modal = $("#uploadTemplateThumbnail");
+        const $input = $modal.find("#uploadTemplateThumbnailFile");
+        const $button = $modal.find(".btn-primary");
+
+        $modal.modal("show");
+        $button.off();
+        $button.on("click", async function () {
+          $button.attr("disabled", true);
+          $button.find(".spinner-border").removeClass("d-none");
+
+          const formData = new FormData();
+          formData.append("thumbnail", $input.get(0).files[0]);
+          formData.append("template_id", id);
+
+          const response = await fetch(`${prefixURL}/DocuSign/apiUploadTemplateThumbnail`, {
+            method: "POST",
+            body: formData,
+          });
+
+          const { data } = await response.json();
+          $button.attr("disabled", false);
+          $button.find(".spinner-border").addClass("d-none");
+          $input.val("");
+
+          $modal.modal("hide");
+        });
       }
     }
 

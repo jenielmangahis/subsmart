@@ -408,7 +408,7 @@ class Job extends MY_Controller
                 'company_id' => logged('company_id'),
             ),
             'table' => 'business_profile',
-            'select' => 'id,business_phone,business_name,business_logo,business_email,street,city,postal_code,state,business_image',
+            'select' => 'id,business_phone,business_name,business_email,street,city,postal_code,state,business_image',
         );
         $this->page_data['company_info'] = $this->general->get_data_with_param($get_company_info, false);
 

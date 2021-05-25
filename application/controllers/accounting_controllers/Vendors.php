@@ -1637,6 +1637,12 @@ class Vendors extends MY_Controller {
             case 'bill' :
                 $transaction = $this->vendors_model->get_bill_by_id($transactionId);
             break;
+            case 'purchase-order' :
+                $transaction = $this->vendors_model->get_purchase_order_by_id($transactionId);
+            break;
+            case 'vendor-credit' :
+                $transaction = $this->vendors_model->get_vendor_credit_by_id($transactionId);
+            break;
         }
 
         $attachments = json_decode($transaction->attachments, true);
@@ -1809,5 +1815,108 @@ class Vendors extends MY_Controller {
         $this->page_data['dropdown']['terms'] = $terms;
 
         $this->load->view('accounting/vendors/view_bill', $this->page_data);
+    }
+
+    public function view_puchase_order($purchOrderId)
+    {
+        $purchaseOrder = $this->vendors_model->get_purchase_order_by_id($purchOrderId);
+
+        $categoryAccs = [];
+        $accountTypes = [
+            'Expenses',
+            'Bank',
+            'Accounts receivable (A/R)',
+            'Other Current Assets',
+            'Fixed Assets',
+            'Accounts payable (A/P)',
+            'Credit Card',
+            'Other Current Liabilities',
+            'Long Term Liabilities',
+            'Equity',
+            'Income',
+            'Cost of Goods Sold',
+            'Other Income',
+            'Other Expense'
+        ];
+
+        foreach($accountTypes as $typeName) {
+            $accType = $this->account_model->getAccTypeByName($typeName);
+
+            $accounts = $this->chart_of_accounts_model->getByAccountType($accType->id, null, logged('company_id'));
+
+            if(count($accounts) > 0) {
+                foreach($accounts as $account) {
+                    $childAccs = $this->chart_of_accounts_model->getChildAccounts($account->id);
+
+                    $account->childAccs = $childAccs;
+
+                    $categoryAccs[$typeName][] = $account;
+                }
+            }
+        }
+
+        $categories = $this->expenses_model->get_transaction_categories($purchOrderId, 'Purchase Order');
+        $items = $this->expenses_model->get_transaction_items($purchOrderId, 'Purchase Order');
+
+        $this->page_data['purchaseOrder'] = $purchaseOrder;
+        $this->page_data['categories'] = $categories;
+        $this->page_data['items'] = $items;
+        $this->page_data['dropdown']['vendors'] = $this->vendors_model->getAllByCompany();
+        $this->page_data['dropdown']['customers'] = $this->accounting_customers_model->getAllByCompany();
+        $this->page_data['dropdown']['categories'] = $categoryAccs;
+
+        $this->load->view('accounting/vendors/view_purchase_order', $this->page_data);
+    }
+
+    public function view_vendor_credit($vendorCreditId)
+    {
+        $vendorCredit = $this->vendors_model->get_vendor_credit_by_id($vendorCreditId);
+
+        $categoryAccs = [];
+        $accountTypes = [
+            'Expenses',
+            'Bank',
+            'Accounts receivable (A/R)',
+            'Other Current Assets',
+            'Fixed Assets',
+            'Accounts payable (A/P)',
+            'Credit Card',
+            'Other Current Liabilities',
+            'Long Term Liabilities',
+            'Equity',
+            'Income',
+            'Cost of Goods Sold',
+            'Other Income',
+            'Other Expense'
+        ];
+
+        foreach($accountTypes as $typeName) {
+            $accType = $this->account_model->getAccTypeByName($typeName);
+
+            $accounts = $this->chart_of_accounts_model->getByAccountType($accType->id, null, logged('company_id'));
+
+            if(count($accounts) > 0) {
+                foreach($accounts as $account) {
+                    $childAccs = $this->chart_of_accounts_model->getChildAccounts($account->id);
+
+                    $account->childAccs = $childAccs;
+
+                    $categoryAccs[$typeName][] = $account;
+                }
+            }
+        }
+
+        $categories = $this->expenses_model->get_transaction_categories($vendorCreditId, 'Vendor Credit');
+        $items = $this->expenses_model->get_transaction_items($vendorCreditId, 'Vendor Credit');
+
+        $this->page_data['vendorCredit'] = $vendorCredit;
+        $this->page_data['categories'] = $categories;
+        $this->page_data['items'] = $items;
+        $this->page_data['dropdown']['items'] = $this->items_model->getItemsWithFilter(['type' => 'inventory', 'status' => [1]]);
+        $this->page_data['dropdown']['customers'] = $this->accounting_customers_model->getAllByCompany();
+        $this->page_data['dropdown']['vendors'] = $this->vendors_model->getAllByCompany();
+        $this->page_data['dropdown']['categories'] = $categoryAccs;
+
+        $this->load->view('accounting/vendors/view_vendor_credit', $this->page_data);
     }
 }

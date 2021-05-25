@@ -120,6 +120,9 @@ class DocuSign extends MY_Controller
             $message = json_encode(['recipient_id' => $recipient['id'], 'document_id' => $document['id']]);
             $hash = encrypt($message, $this->password);
             $response = json_encode(['hash' => $hash]);
+
+            $this->db->where('id', $recipient['id']);
+            $this->db->update('user_docfile_recipients', ['sent_at' => date('Y-m-d H:i:s')]);
         }
 
         $this->db->where('id', $documentId);
@@ -414,6 +417,10 @@ class DocuSign extends MY_Controller
             if ($nextRecipient['role'] === 'Signs in Person') {
                 $message = json_encode(['recipient_id' => $nextRecipient['id'], 'document_id' => $envelope['id']]);
                 $hash = encrypt($message, $this->password);
+
+                $this->db->where('id', $nextRecipient['id']);
+                $this->db->update('user_docfile_recipients', ['sent_at' => date('Y-m-d H:i:s')]);
+
                 echo json_encode(['hash' => $hash]);
                 return;
             }
@@ -630,6 +637,9 @@ class DocuSign extends MY_Controller
             if (!in_array($recipient['id'], $newRecipientIds)) {
                 $this->db->where('id', $recipient['id']);
                 $this->db->delete('user_docfile_templates_recipients');
+
+                $this->db->where('recipients_id', $recipient['id']);
+                $this->db->delete('user_docfile_templates_fields');
             }
         }
 
@@ -712,7 +722,12 @@ SQL;
     {
         $this->db->where('template_id', $templateId);
         $this->db->order_by('id', 'ASC');
-        $records = $this->db->get('user_docfile_templates_documents')->result_array();
+        $records = $this->db->get('user_docfile_templates_documents')->result();
+
+        foreach ($records as $record) {
+            $this->db->where('docfile_document_id', $record->id);
+            $record->total_fields = $this->db->get('user_docfile_templates_fields')->num_rows();
+        }
 
         header('content-type: application/json');
         echo json_encode(['data' => $records]);
@@ -731,6 +746,11 @@ SQL;
     {
         $this->db->where('template_id', $templateId);
         $records = $this->db->get('user_docfile_templates_recipients')->result();
+
+        foreach ($records as $record) {
+            $this->db->where('recipients_id', $record->id);
+            $record->total_fields = $this->db->get('user_docfile_templates_fields')->num_rows();
+        }
 
         header('content-type: application/json');
         echo json_encode(['data' => $records]);
@@ -881,6 +901,20 @@ SQL;
         $templateRecipients = $this->db->get('user_docfile_templates_recipients')->result_array();
 
         foreach ($recipients as $recipient) {
+            $payload = [
+                'user_id' => logged('id'),
+                'docfile_id' => $docfileId,
+                'name' => $recipient['name'],
+                'email' => $recipient['email'],
+                'role' => $recipient['role'],
+                'color' => $recipient['color'],
+            ];
+
+            if (strpos($recipient['id'], 'temp') === 0) {
+                $this->db->insert('user_docfile_recipients', $payload);
+                continue;
+            }
+
             $matchedRecipient = null;
             foreach ($templateRecipients as $templateRecipient) {
                 if ($templateRecipient['id'] == $recipient['id']) {
@@ -893,14 +927,7 @@ SQL;
                 continue;
             }
 
-            $this->db->insert('user_docfile_recipients', [
-                'user_id' => logged('id'),
-                'docfile_id' => $docfileId,
-                'name' => $recipient['name'],
-                'email' => $recipient['email'],
-                'role' => $recipient['role'],
-                'color' => $recipient['color'],
-            ]);
+            $this->db->insert('user_docfile_recipients', $payload);
             $recipientId = $this->db->insert_id();
 
             $this->db->where('recipients_id', $matchedRecipient['id']);
@@ -1274,6 +1301,67 @@ SQL;
 
         header('content-type: application/json');
         echo json_encode(['data' => $template]);
+    }
+
+    public function apiUploadTemplateThumbnail()
+    {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            echo json_encode(['success' => false]);
+            return;
+        }
+
+        $filepath = FCPATH . 'uploads/docusigntemplatesthumbnail/';
+        if (!file_exists($filepath)) {
+            mkdir($filepath, 0777, true);
+        }
+
+        $file = $_FILES['thumbnail'];
+        ['template_id' => $templateId] = $this->input->post();
+
+        if ($file['size'] > self::ONE_MB * 8) {
+            echo json_encode([
+                'success' => false,
+                'reason' => 'Maximum file size is less than 8MB',
+            ]);
+            return;
+        }
+
+        $tempName = $file['tmp_name'];
+        $filename = $file['name'];
+        $filename = time() . "_" . rand(1, 9999999) . "_" . basename($filename);
+
+        $isCreated = false;
+        $tableName = 'user_docfile_templates_thumbnail';
+
+        $this->db->where('template_id', $templateId);
+        $record = $this->db->get($tableName)->row();
+
+        if (!is_null($record) && file_exists($filepath . $record->filename)) {
+            unlink($filepath . $record->filename);
+        }
+
+        move_uploaded_file($tempName, $filepath . $filename);
+
+        $data = [
+            'template_id' => $templateId,
+            'filename' => $filename,
+            'filepath' => str_replace(FCPATH, '/', $filepath . $filename),
+        ];
+
+        if (is_null($record)) {
+            $isCreated = true;
+            $this->db->insert($tableName, $data);
+        } else {
+            $this->db->where('id', $record->id);
+            $this->db->update($tableName, $data);
+        }
+
+        $id = $isCreated ? $this->db->insert_id() : $record->id;
+        $this->db->where('id', $id);
+        $record = $this->db->get($tableName)->row();
+
+        header('content-type: application/json');
+        echo json_encode(['data' => $record, 'is_created' => $isCreated]);
     }
 }
 

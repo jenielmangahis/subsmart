@@ -503,12 +503,28 @@ class Vendors_model extends MY_Model {
 		return $query->result();
 	}
 
+	public function get_bill_payment_item_by_bill_id($billPaymentId, $billId)
+	{
+		$this->db->where('bill_payment_id', $billPaymentId);
+		$this->db->where('bill_id', $billId);
+		$query = $this->db->get('accounting_bill_payment_items');
+		return $query->row();
+	}
+
 	public function update_bill($billId, $data)
 	{
 		$this->db->where('company_id', logged('company_id'));
 		$this->db->where('id', $billId);
 		$update = $this->db->update('accounting_bill', $data);
 		return $update;
+	}
+
+	public function get_purchase_order_by_id($purchaseOrderId)
+	{
+		$this->db->where('company_id', logged('company_id'));
+		$this->db->where('id', $purchaseOrderId);
+		$query = $this->db->get('accounting_purchase_order');
+		return $query->row();
 	}
 
 	public function update_purchase_order($purchaseOrderId, $data)

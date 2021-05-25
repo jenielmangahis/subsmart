@@ -1,12 +1,12 @@
 <!-- Modal for bank deposit-->
 <div class="full-screen-modal">
 <form onsubmit="submitModalForm(event, this)" id="modal-form">
-    <div id="billModal" class="modal fade modal-fluid" role="dialog">
+    <div id="purchaseOrderModal" class="modal fade modal-fluid" role="dialog">
         <div class="modal-dialog">
             <!-- Modal content-->
             <div class="modal-content" style="height: 100%;">
                 <div class="modal-header" style="background: #f4f5f8;border-bottom: 0">
-                    <h4 class="modal-title"><a href="#"><i class="fa fa-history fa-lg" style="margin-right: 10px"></i></a>Bill <span></span></h4>
+                    <h4 class="modal-title"><a href="#"><i class="fa fa-history fa-lg" style="margin-right: 10px"></i></a>Purchase Order</h4>
                     <button type="button" class="close" data-dismiss="modal"><i class="fa fa-times fa-lg"></i></button>
                 </div>
                 <div class="modal-body">
@@ -17,110 +17,71 @@
                                     <div class="row">
                                         <div class="col-md-8">
                                             <div class="row">
-                                                <div class="col-md-5">
+                                                <div class="col-md-4">
                                                     <div class="form-group">
                                                         <label for="vendor">Vendor</label>
-                                                        <select name="vendor_id" id="vendor" class="form-control" required>
+                                                        <select name="vendor_id" id="vendor" class="form-control">
                                                             <option value="" disabled selected>&nbsp;</option>
                                                             <?php foreach($dropdown['vendors'] as $vendor) : ?>
-                                                                <option value="<?=$vendor->id?>" <?=$vendor->id === $bill->vendor_id ? 'selected' : ''?>><?=$vendor->display_name?></option>
+                                                                <option value="<?=$vendor->id?>" <?=$vendor->id === $purchaseOrder->vendor_id ? 'selected' : ''?>><?=$vendor->display_name?></option>
                                                             <?php endforeach; ?>
                                                         </select>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div class="form-group">
+                                                        <label for="email">Email</label>
+                                                        <input type="email" id="email" name="email" class="form-control" value="<?=$purchaseOrder->email?>">
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="col-md-4">
-                                            <h6 class="text-right"><?=$bill->status === "1" ? "BALANCE DUE" : "PAYMENT STATUS"?></h6>
-                                            <h2 class="text-right">
-                                                <?php if($bill->status === "1") : ?>
-                                                    $<span class="transaction-total-amount"><?=number_format(floatval($bill->remaining_balance), 2, '.', ',')?></span>
-                                                <?php else : ?>
-                                                    PAID
-                                                <?php endif; ?>
-                                            </h2>
-                                            <?php if($bill->status === "1") : ?>
-                                                <div class="d-flex justify-content-end">
-                                                    <button class="btn btn-secondary mr-3" type="button">
-                                                        Schedule online payment
-                                                    </button>
-                                                    <button class="btn btn-transparent" type="button">
-                                                        Mark as paid
-                                                    </button>                                                    
-                                                </div>
-                                                <?php if(count($bill_payments) > 0) : ?>
-                                                <div class="btn-group dropleft d-inline-block float-right">
-                                                    <button type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="btn text-info p-0">
-                                                        <?=count($bill_payments)?> payment made ($<?=$total_payment?>)
-                                                    </button>
-                                                    <div class="dropdown-menu p-3" id="payments-dropdown" style="min-width: 275px">
-                                                        <table class="table bg-white m-0">
-                                                            <thead>
-                                                                <tr>
-                                                                    <th>Date</th>
-                                                                    <th>Amount applied</th>
-                                                                </tr>
-                                                            </thead>
-                                                            <tbody>
-                                                                <?php foreach($bill_payments as $payment) : ?>
-                                                                    <?php $paymentDetails = $this->vendors_model->get_bill_payment_item_by_bill_id($payment->id, $bill->id); ?>
-                                                                    <tr>
-                                                                        <td><a href="#" class="text-info"><?=date("m/d/Y", strtotime($payment->payment_date))?></a></td>
-                                                                        <td class="text-right">$<?=number_format(floatval($paymentDetails->total_amount), 2, '.', ',')?></td>
-                                                                    </tr>
-                                                                <?php endforeach; ?>
-                                                            </tbody>
-                                                        </table>
-                                                    </div>
-                                                </div>
-                                                <?php endif; ?>
-                                            <?php endif; ?>
+                                            <h6 class="text-right">AMOUNT</h6>
+                                            <h2 class="text-right">$<span class="transaction-total-amount"><?=number_format(floatval($purchaseOrder->total_amount), 2, '.', ',')?></span></h2>
                                         </div>
                                         <div class="col-md-2">
                                             <div class="form-group">
                                                 <label for="mailing_address">Mailing address</label>
-                                                <textarea name="mailing_address" id="mailing_address" class="form-control">
-                                                    <?=$bill->mailing_address?>
-                                                </textarea>
+                                                <textarea name="mailing_address" id="mailing_address" class="form-control"><?=$purchaseOrder->mailing_address?></textarea>
                                             </div>
                                         </div>
                                         <div class="col-md-2">
                                             <div class="form-group">
-                                                <label for="terms">Terms</label>
-                                                <select name="term_id" id="terms" class="form-control">
-                                                    <?php foreach($dropdown['terms'] as $term) : ?>
-                                                        <option value="<?=$term->id?>" <?=$term->id === $bill->term_id ? 'selected' : ''?>><?=$term->name?></option>
-                                                    <?php endforeach; ?>
+                                                <label for="customer">Ship to</label>
+                                                <select name="customer" id="customer" class="form-control">
+                                                    <option value="" selected disabled>&nbsp;</option>
+                                                    <?php if(count($dropdown['customers']) > 0) : ?>
+                                                        <?php foreach($dropdown['customers'] as $customer) :?>
+                                                            <option value="<?=$customer->prof_id?>" <?=$customer->prof_id === $purchaseOrder->customer_id ? 'selected' : ''?>><?=$customer->business_name === "" ? $customer->first_name . ' ' . $customer->last_name : $customer->business_name?></option>
+                                                        <?php endforeach; ?>
+                                                    <?php endif; ?>
                                                 </select>
                                             </div>
-                                        </div>
-                                        <div class="col-md-2">
                                             <div class="form-group">
-                                                <label for="bill_date">Bill date</label>
-                                                <input type="text" name="bill_date" id="bill_date" class="form-control date" value="<?=date("m/d/Y", strtotime($bill->bill_date))?>" required>
+                                                <label for="shipping_address">Shipping address</label>
+                                                <textarea name="shipping_address" id="shipping_address" class="form-control"><?=$purchaseOrder->shipping_address?></textarea>
                                             </div>
                                         </div>
                                         <div class="col-md-2">
                                             <div class="form-group">
-                                                <label for="due_date">Due date</label>
-                                                <input type="text" name="due_date" id="due_date" class="form-control date" value="<?=$due_date?>" required>
+                                                <label for="purchase_order_date">Purchase order date</label>
+                                                <input type="text" name="purchase_order_date" id="purchase_order_date" class="form-control date" value="<?=date("m/d/Y", strtotime($purchaseOrder->purchase_order_date))?>">
                                             </div>
-                                        </div>
-                                        <div class="col-md-2">
                                             <div class="form-group">
-                                                <label for="bill_no">Bill no.</label>
-                                                <input type="text" name="bill_no" id="bill_no" class="form-control" value="<?=$bill->bill_no?>">
+                                                <label for="ship_via">Ship via</label>
+                                                <input type="text" class="form-control" name="ship_via" id="ship_via" value="<?=$purchaseOrder->ship_via?>">
                                             </div>
                                         </div>
-                                        <div class="col-md-6">
+                                        <div class="col-md-8">
                                             <div class="form-group">
                                                 <div id="label">
                                                     <label for="tags">Tags</label>
                                                     <span class="float-right"><a href="#" class="text-info" data-toggle="modal" data-target="#tags-modal" id="open-tags-modal">Manage tags</a></span>
                                                 </div>
                                                 <select name="tags[]" id="tags" class="form-control" multiple="multiple">
-                                                    <?php if($bill->tags !== null && $bill->tags !== "") : ?>
-                                                        <?php foreach(json_decode($bill->tags, true) as $tagId) : ?>
+                                                    <?php if($purchaseOrder->tags !== null && $purchaseOrder->tags !== "") : ?>
+                                                        <?php foreach(json_decode($purchaseOrder->tags, true) as $tagId) : ?>
                                                             <?php 
                                                                 $tag = $this->tags_model->getTagById($tagId);
                                                                 $name = $tag->name;
@@ -154,9 +115,6 @@
                                                                     <th width="10%">CATEGORY</th>
                                                                     <th>DESCRIPTION</th>
                                                                     <th width="10%">AMOUNT</th>
-                                                                    <th width="3%">BILLABLE</th>
-                                                                    <th width="10%">MARKUP %</th>
-                                                                    <th width="3%">TAX</th>
                                                                     <th width="15%">CUSTOMER</th>
                                                                     <th></th>
                                                                 </thead>
@@ -312,7 +270,7 @@
                                                 <div class="collapse <?=count($items) > 0 ? 'show' : ''?>" id="item-details">
                                                     <div class="item-details-table-container w-100">
                                                         <div class="item-details-table">
-                                                            <table class="table table-bordered table-hover clickable" id="item-details-table">
+                                                            <table class="table table-bordered table-hover" id="item-details-table">
                                                                 <thead>
                                                                     <th width="20%">PRODUCT/SERVICE</th>
                                                                     <th>TYPE</th>
@@ -349,7 +307,7 @@
                                                                 </tbody>
                                                             </table>
                                                         </div>
-                                                        <div class="table-footer">
+                                                        <div class="item-details-table-footer">
                                                             <div class="row">
                                                                 <div class="col-md-6">
                                                                     <a class="link-modal-open" href="#" id="add_another_items" data-target="#item_list"><span class="fa fa-plus-square fa-margin-right"></span>Add Items</a>
@@ -365,15 +323,23 @@
                                             <div class="row">
                                                 <div class="col-md-6">
                                                     <div class="form-group">
+                                                        <label for="message_to_vendor">Your message to vendor</label>
+                                                        <textarea name="message_to_vendor" id="message_to_vendor" class="form-control"><?=$purchaseOrder->message_to_vendor?></textarea>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
                                                         <label for="memo">Memo</label>
-                                                        <textarea name="memo" id="memo" class="form-control"><?=$bill->memo?></textarea>
+                                                        <textarea name="memo" id="memo" class="form-control"><?=$purchaseOrder->memo?></textarea>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-8">
                                                     <div class="attachments">
                                                         <label for="attachment" style="margin-right: 15px"><i class="fa fa-paperclip"></i>&nbsp;Attachment</label> 
                                                         <span>Maximum size: 20MB</span>
-                                                        <div id="bill-attachments" class="dropzone" style="border: 1px solid #e1e2e3;background: #ffffff;width: 100%;">
+                                                        <div id="expense-attachments" class="dropzone" style="border: 1px solid #e1e2e3;background: #ffffff;width: 100%;">
                                                             <div class="dz-message" style="margin: 20px;border">
                                                                 <span style="font-size: 16px;color: rgb(180,132,132);font-style: italic;">Drag and drop files here or</span>
                                                                 <a href="#" style="font-size: 16px;color: #0b97c4">browse to upload</a>
@@ -384,7 +350,7 @@
                                             </div>
                                         </div>
                                         <div class="col-md-6">
-                                            <h5 class="m-0 text-right">Total : $<span class="transaction-total-amount">0.00</span></h5>
+                                            <h5 class="m-0 text-right">Total : $<span class="transaction-total-amount"><?=number_format(floatval($purchaseOrder->total_amount), 2, '.', ',')?></span></h5>
                                         </div>
                                     </div>
                                 </div>

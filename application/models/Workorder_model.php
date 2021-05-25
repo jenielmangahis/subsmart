@@ -193,6 +193,41 @@ class Workorder_model extends MY_Model
 		return  $insert;
 	}
 
+    public function update_workorder($data)
+    {
+        extract($data);
+        $this->db->where('id', $id);
+        $this->db->update('work_orders', array(
+            'security_number'       => $security_number,
+            'birthdate'             => $birthdate,
+            'phone_number'          => $phone_number,
+            'mobile_number'         => $mobile_number,
+            'email'                 => $email,
+            'job_location'          => $job_location,
+            'city'                  => $city,
+            'state'                 => $state,
+            'zip_code'              => $zip_code,
+            'cross_street'          => $cross_street,
+            'password'              => $password,
+            'offer_code'            => $offer_code,
+            'tags'                  => $tags,
+            'schedule_date_given'   => $schedule_date_given,
+            'job_type'              => $job_type,
+            'job_name'              => $job_name,
+            'job_description'       => $job_description,
+            'payment_method'        => $payment_method,
+            'payment_amount'        => $payment_amount,
+            'terms_and_conditions'  => $terms_and_conditions,
+            'status'                => $status,
+            'priority'              => $priority,
+            'purchase_order_number' => $purchase_order_number,
+            'terms_of_use'          => $terms_of_use,
+            'instructions'          => $instructions,
+            'header'                => $header,
+        ));
+        return true;
+    }
+
     public function save_custom_fields($data){
         $custom = $this->db->insert('workorder_custom_fields', $data);
 	    $insert = $this->db->insert_id();
@@ -380,7 +415,7 @@ class Workorder_model extends MY_Model
     {
         $this->db->select('*');
         $this->db->from('custom_fields_lists');
-        $this->db->where('form_id', $id);
+        $this->db->where('work_order_id', $id);
 
         $query = $this->db->get();
         return $query->result();
