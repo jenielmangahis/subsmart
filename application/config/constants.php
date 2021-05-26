@@ -118,12 +118,20 @@ define('STRIPE_SECRET_KEY', 'sk_test_51IcoTsKPiost1m5gz29sxuGcntYe2NsiBInRphNPMv
 define('STRIPE_PUBLISH_KEY', 'pk_test_51IcoTsKPiost1m5gilfxDCpqQR0T139pAGFVUv6rSIMEn4N14ARbfQUL8MIWMLSyBloYhEluuY5Dh9N9oZG2Ku1600AgrjHJA6');
 
 //RING CENTRAL
+//Sandbox
 define('RINGCENTRAL_CLIENT_ID', 'yyGrSZo1SUaLHrh5VM-6Pw');
 define('RINGCENTRAL_CLIENT_SECRET', 'JMU-sm7HQAKU60lEo6Zq9Qe2GFqhEQRVWXTDItUjqlNA');
 define('RINGCENTRAL_DEV_URL', 'https://platform.devtest.ringcentral.com');
 define('RINGCENTRAL_USER', '+13233646599');
 define('RINGCENTRAL_PASSWORD', 's@634DFhy&*)2bNy');
 define('RINGCENTRAL_EXT', '101');
+//Production
+/*define('RINGCENTRAL_CLIENT_ID', 'nUlEWd9qRE6SmXr-glhWIA');
+define('RINGCENTRAL_CLIENT_SECRET', 'LLF8Pl45Suiad2qgQ4nxkQUl31OB7tRBmXkw1U1Rv0sA');
+define('RINGCENTRAL_DEV_URL', 'https://platform.ringcentral.com');
+define('RINGCENTRAL_USER', '+18504780530');
+define('RINGCENTRAL_PASSWORD', 's@634DFhy&*)2bNy');
+define('RINGCENTRAL_EXT', '101');*/
 
 //PHPMAILER
 define('MAIL_SERVER', 'mail.nsmartrac.com');

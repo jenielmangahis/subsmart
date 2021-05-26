@@ -466,10 +466,12 @@ class Email_Campaigns extends MY_Controller {
         $emailBlast      = $this->EmailBlast_model->getAllByCompanyId($company_id, array(), $conditions);
         $sendToOptions = $this->EmailBlast_model->sendToOptions();
         $statusOptions = $this->EmailBlast_model->statusOptions();
+        $status_draft  = $this->EmailBlast_model->statusDraft();
         
         $this->page_data['statusOptions'] = $statusOptions;
         $this->page_data['sendToOptions'] = $sendToOptions;
         $this->page_data['emailBlast']    = $emailBlast;
+        $this->page_data['status_draft']  = $status_draft;
         $this->load->view('email_campaigns/ajax_load_campaigns', $this->page_data);
     }
 
@@ -662,6 +664,74 @@ class Email_Campaigns extends MY_Controller {
         $this->load->library('Reportpdf');
 
         $title = 'email_campaign_invoice';
+
+        $obj_pdf = new Reportpdf('P', 'mm', 'A4', true, 'UTF-8', false);
+        $obj_pdf->SetTitle($title);
+        $obj_pdf->setPrintHeader(false);
+        $obj_pdf->setPrintFooter(false);
+        $obj_pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);        
+        $obj_pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
+        $obj_pdf->setFontSubsetting(false);
+        // set some language-dependent strings (optional)
+        if (@file_exists(dirname(__FILE__) . '/lang/eng.php')) {
+            require_once(dirname(__FILE__) . '/lang/eng.php');
+            $pdf->setLanguageArray($l);
+        }
+        $obj_pdf->AddPage('P');
+        $html = '';
+        $obj_pdf->writeHTML($html . $content, true, false, true, false, '');
+        //echo $display;
+        $content = ob_get_contents();
+        ob_end_clean();
+        $obj_pdf->writeHTML($content, true, false, true, false, '');
+        $obj_pdf->Output($title, 'I');
+    }
+
+    public function view_campaign($id){
+        $this->load->model('MarketingOrderPayments_model');
+        
+        $emailCampaign = $this->EmailBlast_model->getById($id);
+        $orderPayments = $this->MarketingOrderPayments_model->getByOrderNumber($emailCampaign->order_number);
+        $statusOptions = $this->EmailBlast_model->statusOptions();
+
+        $this->page_data['statusOptions'] = $statusOptions;
+        $this->page_data['emailCampaign']   = $emailCampaign;
+        $this->page_data['orderPayments'] = $orderPayments;
+        $this->load->view('email_campaigns/view_campaign', $this->page_data);    
+    }
+
+    public function view_payment($id){
+        $this->load->model('MarketingOrderPayments_model');
+        $this->load->model('Business_model');
+
+        $orderPayments = $this->MarketingOrderPayments_model->getById($id);
+        $emailCampaign   = $this->EmailBlast_model->getByOrderNumber($orderPayments->order_number);
+        $company       = $this->Business_model->getByCompanyId($smsCampaign->company_id);
+        $statusOptions = $this->EmailBlast_model->statusOptions();
+
+        $this->page_data['statusOptions'] = $statusOptions;
+        $this->page_data['emailCampaign']   = $emailCampaign;
+        $this->page_data['orderPayments'] = $orderPayments;
+        $this->page_data['company'] = $company;
+        $this->load->view('email_campaigns/view_payment_details', $this->page_data);     
+    }
+
+    public function order_pdf($id){
+
+        $this->load->model('MarketingOrderPayments_model');
+        $this->load->model('Business_model');
+        
+        $emailBlast    = $this->EmailBlast_model->getById($id);
+        $company     = $this->Business_model->getByCompanyId($emailBlast->company_id);
+        $orderPayments   = $this->MarketingOrderPayments_model->getByOrderNumber($emailBlast->order_number);
+        $this->page_data['emailBlast']   = $emailBlast;
+        $this->page_data['orderPayments'] = $orderPayments;
+        $this->page_data['company'] = $company;
+        $content = $this->load->view('email_campaigns/campaign_customer_order_pdf_template_a', $this->page_data, TRUE);  
+            
+        $this->load->library('Reportpdf');
+
+        $title = 'campaign_order';
 
         $obj_pdf = new Reportpdf('P', 'mm', 'A4', true, 'UTF-8', false);
         $obj_pdf->SetTitle($title);
