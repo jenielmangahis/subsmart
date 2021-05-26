@@ -453,8 +453,10 @@ $route['accounting/vendors/view-expense/(:any)'] = 'accounting_controllers/vendo
 $route['accounting/vendors/get-transaction-attachments/(:any)/(:any)'] = 'accounting_controllers/vendors/get_transaction_attachments/$1/$2';
 $route['accounting/vendors/view-check/(:any)'] = 'accounting_controllers/vendors/view_check/$1';
 $route['accounting/vendors/view-bill/(:any)'] = 'accounting_controllers/vendors/view_bill/$1';
-$route['accounting/vendors/view-purchase-order/(:any)'] = 'accounting_controllers/vendors/view_puchase_order/$1';
+$route['accounting/vendors/view-purchase-order/(:any)'] = 'accounting_controllers/vendors/view_purchase_order/$1';
 $route['accounting/vendors/view-vendor-credit/(:any)'] = 'accounting_controllers/vendors/view_vendor_credit/$1';
+$route['accounting/vendors/view-cc-payment/(:any)'] = 'accounting_controllers/vendors/view_cc_payment/$1';
+$route['accounting/vendors/view-cc-credit/(:any)'] = 'accounting_controllers/vendors/view_cc_credit/$1';
 
 $route['accounting/vendor-details/(:any)'] = 'accounting/vendordetails/$1';
 $route['accounting/taxes/edit-settings'] = 'taxes/edit_settings';

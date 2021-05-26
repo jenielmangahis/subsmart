@@ -2031,6 +2031,41 @@ $(document).ready(function(){
 </script>
 
 <script>
+    $(document).on("focusout", "#one_time", function () {
+        var counter = $(this).val();
+        var m_monitoring = $("#m_monitoring").val();
+        var subtotal = 0;
+        // $("#span_total_0").each(function(){
+            $('*[id^="span_total_"]').each(function(){
+            subtotal += parseFloat($(this).text());
+        });
+
+        grand_tot = parseFloat(counter) + parseFloat(subtotal) + parseFloat(m_monitoring);
+        //  alert(grand_tot);
+        var grand = $("#grand_total_input").val(grand_tot.toFixed(2));
+    });
+
+    $(document).on("focusout", "#m_monitoring", function () {
+        var counter = $(this).val();
+        // var grand = $("#grand_total_input").val();
+        var one_time = $("#one_time").val();
+        var subtotal = 0;
+        // $("#span_total_0").each(function(){
+            $('*[id^="span_total_"]').each(function(){
+            subtotal += parseFloat($(this).text());
+        });
+
+        grand_tot = parseFloat(counter) + parseFloat(subtotal) + parseFloat(one_time);
+        //  alert(grand_tot);
+        var grand = $("#grand_total_input").val(grand_tot.toFixed(2));
+    });
+
+    // $(document).on("checked", "#same_as", function () {
+    //     alert('yeah');
+    // });
+    </script>
+
+<script>
 // $(document).on('click','.show_mobile_view',function(){
 //     //    alert('yeah');
 //     $('#update_group').modal('show');

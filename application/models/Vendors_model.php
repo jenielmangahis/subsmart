@@ -566,4 +566,12 @@ class Vendors_model extends MY_Model {
 		$update = $this->db->update('accounting_pay_down_credit_card', $data);
 		return $update;
 	}
+
+	public function get_credit_card_credit_by_id($ccCreditId)
+	{
+		$this->db->where('company_id', logged('company_id'));
+		$this->db->where('id', $ccCreditId);
+		$query = $this->db->get('accounting_credit_card_credits');
+		return $query->row();
+	}
 }

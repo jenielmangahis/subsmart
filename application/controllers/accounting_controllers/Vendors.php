@@ -510,9 +510,9 @@ class Vendors extends MY_Controller {
                 }
             } else {
                 if($order === 'asc') {
-                    return strtotime($a[$columnName]) > strtotime($b[$columnname]);
+                    return strtotime($a[$columnName]) > strtotime($b[$columnName]);
                 } else {
-                    return strtotime($a[$columnName]) < strtotime($b[$columnname]);
+                    return strtotime($a[$columnName]) < strtotime($b[$columnName]);
                 }
             }
         });
@@ -1643,6 +1643,12 @@ class Vendors extends MY_Controller {
             case 'vendor-credit' :
                 $transaction = $this->vendors_model->get_vendor_credit_by_id($transactionId);
             break;
+            case 'credit-card-payment' :
+                $transaction = $this->vendors_model->get_credit_card_payment_by_id($transactionId);
+            break;
+            case 'credit-card-credit' :
+                $transaction = $this->vendors_model->get_credit_card_credit_by_id($transactionId);
+            break;
         }
 
         $attachments = json_decode($transaction->attachments, true);
@@ -1817,7 +1823,7 @@ class Vendors extends MY_Controller {
         $this->load->view('accounting/vendors/view_bill', $this->page_data);
     }
 
-    public function view_puchase_order($purchOrderId)
+    public function view_purchase_order($purchOrderId)
     {
         $purchaseOrder = $this->vendors_model->get_purchase_order_by_id($purchOrderId);
 
@@ -1918,5 +1924,117 @@ class Vendors extends MY_Controller {
         $this->page_data['dropdown']['categories'] = $categoryAccs;
 
         $this->load->view('accounting/vendors/view_vendor_credit', $this->page_data);
+    }
+
+    public function view_cc_payment($ccPaymentId)
+    {
+        $ccPayment = $this->vendors_model->get_credit_card_payment_by_id($ccPaymentId);
+
+        $detailTypes = $this->account_detail_model->getDetailTypesById(3);
+        $accounts = $this->chart_of_accounts_model->select();
+
+        $bankAccounts = [];
+        foreach($detailTypes as $detailType) {
+            $detailTypeAccs = array_filter($accounts, function($v, $k) use ($detailType) {
+                return $v->acc_detail_id === $detailType->acc_detail_id;
+            }, ARRAY_FILTER_USE_BOTH);
+
+            if(!empty($detailTypeAccs)) {
+                $bankAccounts[$detailType->acc_detail_name] = $detailTypeAccs;
+            }
+        }
+        
+        $this->page_data['ccPayment'] = $ccPayment;
+        $this->page_data['dropdown']['accounts'] = $bankAccounts;
+        $this->page_data['dropdown']['vendors'] = $this->vendors_model->getAllByCompany();
+        $this->page_data['dropdown']['creditCards'] = $this->chart_of_accounts_model->get_credit_card_accounts();
+
+        $this->load->view('accounting/vendors/view_credit_card_payment', $this->page_data);
+    }
+
+    public function view_cc_credit($ccCreditId)
+    {
+        $ccCredit = $this->vendors_model->get_credit_card_credit_by_id($ccCreditId);
+
+        $creditCardAccs = [];
+        $accType = $this->account_model->getAccTypeByName('Credit Card');
+
+        $accounts = $this->chart_of_accounts_model->getByAccountType($accType->id, null, logged('company_id'));
+
+        if(count($accounts) > 0) {
+            foreach($accounts as $account) {
+                $childAccs = $this->chart_of_accounts_model->getChildAccounts($account->id);
+
+                $account->childAccs = $childAccs;
+
+                $creditCardAccs[] = $account;
+
+                if($account->id === $ccCredit->bank_credit_account_id) {
+                    $selectedBalance = $account->balance;
+                }
+
+                foreach($childAccs as $childAcc) {
+                    if($childAcc->id === $ccCredit->bank_credit_account_id) {
+                        $selectedBalance = $childAcc->balance;
+                    }
+                }
+            }
+        }
+
+        $categoryAccs = [];
+        $accountTypes = [
+            'Expenses',
+            'Bank',
+            'Accounts receivable (A/R)',
+            'Other Current Assets',
+            'Fixed Assets',
+            'Accounts payable (A/P)',
+            'Credit Card',
+            'Other Current Liabilities',
+            'Long Term Liabilities',
+            'Equity',
+            'Income',
+            'Cost of Goods Sold',
+            'Other Income',
+            'Other Expense'
+        ];
+
+        foreach($accountTypes as $typeName) {
+            $accType = $this->account_model->getAccTypeByName($typeName);
+
+            $accounts = $this->chart_of_accounts_model->getByAccountType($accType->id, null, logged('company_id'));
+
+            if(count($accounts) > 0) {
+                foreach($accounts as $account) {
+                    $childAccs = $this->chart_of_accounts_model->getChildAccounts($account->id);
+
+                    $account->childAccs = $childAccs;
+
+                    $categoryAccs[$typeName][] = $account;
+                }
+            }
+        }
+
+        if(strpos($selectedBalance, '-') !== false) {
+            $balance = str_replace('-', '', $selectedBalance);
+            $selectedBalance = '-$'.number_format($balance, 2, '.', ',');
+        } else {
+            $selectedBalance = '$'.number_format($selectedBalance, 2, '.', ',');
+        }
+
+        $categories = $this->expenses_model->get_transaction_categories($ccCreditId, 'Credit Card Credit');
+        $items = $this->expenses_model->get_transaction_items($ccCreditId, 'Credit Card Credit');
+
+        $this->page_data['ccCredit'] = $ccCredit;
+        $this->page_data['categories'] = $categories;
+        $this->page_data['items'] = $items;
+        $this->page_data['dropdown']['employees'] = $this->users_model->getCompanyUsers(logged('company_id'));
+        $this->page_data['balance'] = $selectedBalance;
+        $this->page_data['dropdown']['categories'] = $categoryAccs;
+        $this->page_data['dropdown']['customers'] = $this->accounting_customers_model->getAllByCompany();
+        $this->page_data['dropdown']['bank_credit_accounts'] = $creditCardAccs;
+        $this->page_data['dropdown']['vendors'] = $this->vendors_model->getAllByCompany();
+
+        $this->load->view('accounting/vendors/view_credit_card_credit', $this->page_data);
     }
 }

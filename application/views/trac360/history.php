@@ -62,18 +62,74 @@ function get_differenct_of_dates($date_start, $date_end)
                     </div>
                 </div>
                 <div class="col-md-9  trac360_main_sections jobs-list-section" style="background-color: #fff;">
-                    <div id="single-job-view-directionsRenderer-panel" class="overflow-auto panel-closed"
-                        style="top:0;">
+                    <div id="employees-view-history-panel" class="overflow-auto panel-closed" style="top:0;">
                         <div class="employee-name" style="min-width:439px;">
-                            <p><span class="name"><?=$jb->FName .' '.$jb->LName?></span>
+                            <p><span class="name">Lou Pinton</span>
                             </p>
                         </div>
                         <div class="close-btn"><i class="fa fa-chevron-left" aria-hidden="true"></i></div>
                         <div class="panel-content">
-                            <div id="job-item-selected-view" class="row no-margin">
-                                sapmle
+                            <div class="filter-panel" class="row no-margin">
+                                <form action="#" id="employee-history-filter-form">
+                                    <div class="row no-margin">
+                                        <div class="col-md-5 no-padding" style="margin-bottom: 12px">
+                                            <label for="from_date_logs" class="week-label">From:</label>
+                                            <input type="text" name="date_from" id="employe-history-from"
+                                                class="form-control date-picker"
+                                                value="<?php echo date('m/d/Y', strtotime('monday this week')) ?>">
+                                        </div>
+                                        <div class="col-md-5 no-padding" style="margin-bottom: 12px">
+                                            <label for="to_date_logs" class="week-label">To:</label>
+                                            <input type="text" name="date_to date-picker" id="employe-history-from"
+                                                class="form-control"
+                                                value="<?php echo date('m/d/Y') ?>">
+                                        </div>
+                                        <div class="col-md-2" style="margin-bottom: 12px">
+                                            <div><label for="to_date_logs" class="week-label">&nbsp;</label></div>
+                                            <button type="submit"
+                                                class="btn btn-success action-btn btn-sm">View</button>
+                                        </div>
+                                    </div>
+                                </form>
                             </div>
-                            <div id="single-job-view-directionsRenderer-panel-view"></div>
+                            <div id="route-details-setion">
+                                <table class="route-details-table">
+                                    <tbody>
+                                        <tr class="first-info">
+                                            <td class="connected-icon">
+                                                <div><i class="fa fa-car" aria-hidden="true"></i></div>
+                                            </td>
+                                            <td>
+                                                <div class="address">Champagne Avenue, Panabo, Davao del Norte,
+                                                    Philippines</div>
+                                                <div class="date-time">May 1, 2021 1:00 PM GMT+8</div>
+                                            </td>
+                                        </tr>
+
+                                        <tr class="middle-info">
+                                            <td class="connected-icon">
+                                                <div><i class="fa fa-map-marker" aria-hidden="true"></i></div>
+                                            </td>
+                                            <td>
+                                                <div class="address">Panabo, Davao del Norte,
+                                                    Philippines</div>
+                                                <div class="date-time">May 1, 2021 2:00 PM GMT+8</div>
+                                            </td>
+                                        </tr>
+
+                                        <tr class="last-info">
+                                            <td class="connected-icon">
+                                                <div><i class="fa fa-stop-circle" aria-hidden="true"></i></div>
+                                            </td>
+                                            <td>
+                                                <div class="address">Champagne Avenue, Panabo, Davao del Norte,
+                                                    Philippines</div>
+                                                <div class="date-time">May 1, 2021 3:00 PM GMT+8</div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
                     <div class="loader" style="display: none;">
@@ -109,7 +165,7 @@ function get_differenct_of_dates($date_start, $date_end)
                                         $onclick = "";
                                     } else {
                                         $profile_status = "active";
-                                        $onclick = 'onclick="user_selected( ' . $exploded[0] . ', ' . $exploded[1] . ',' . $user->user_id . ')"';
+                                        // $onclick = 'onclick="user_selected( ' . $exploded[0] . ', ' . $exploded[1] . ',' . $user->user_id . ')"';
                                     }
 
                                     $image = base_url() . '/uploads/users/user-profile/' . $user->profile_img;

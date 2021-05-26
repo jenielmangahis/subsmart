@@ -88,6 +88,8 @@ defined('BASEPATH') or exit('No direct script access allowed');?>
 		</div>
 		<div class="modal-body">
 			<div class="fillAndSign__selectFile">
+				<img id="uploadTemplateThumbnailFilePreview" src="#" />
+
 				<div class="custom-file">
 					<input type="file" accept="image/*" class="custom-file-input" id="uploadTemplateThumbnailFile">
 					<label class="custom-file-label" for="uploadTemplateThumbnailFile">

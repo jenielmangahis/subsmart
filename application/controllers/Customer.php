@@ -99,6 +99,15 @@ class Customer extends MY_Controller
             );
             $this->page_data['logged_in_user'] = $this->general->get_data_with_param($get_login_user,FALSE);
             $this->page_data['jobs_data_items'] = $this->jobs_model->get_customer_job_items($id);
+
+            $customer_papers_query = array(
+                'where' => array(
+                    'customer_id' => $userid
+                ),
+                'table' => 'acs_papers',
+                'select' => '*',
+            );
+            $this->page_data['papers'] = $this->general->get_data_with_param($customer_papers_query);
         }
         $this->page_data['sales_area'] = $this->customer_ad_model->get_all(FALSE,"","ASC","ac_salesarea","sa_id");
         $this->page_data['employees'] = $this->customer_ad_model->get_all(FALSE,"","ASC","users","id");
@@ -665,6 +674,7 @@ class Customer extends MY_Controller
             $save_office = $this->save_office_information($input,$profile_id);
             $save_alarm = $this->save_alarm_information($input,$profile_id);
             $save_access = $this->save_access_information($input,$profile_id);
+            $save_papers = $this->save_papers_information($input,$profile_id);
             if($save_billing == 0){
                 echo 'Error Occured on Saving Billing Information';
             }else if($save_office == 0){
@@ -673,6 +683,8 @@ class Customer extends MY_Controller
                 echo 'Error Occured on Saving Alarm Information';
             }else if($save_access == 0){
                 echo 'Error Occured on Saving Access Information';
+            }else if($save_papers == 0){
+                echo 'Error Occured on Saving Papers Information';
             }else {
                 if ($input['notes'] != "" && $input['notes'] != NULL && !empty($input['notes'])){
                     $this->save_notes($input,$profile_id);
@@ -881,7 +893,6 @@ class Customer extends MY_Controller
         $input_access['reset_password'] ='';
         $input_access['access_login'] = $input['access_login'];
         $input_access['access_password'] = $input['access_password'];
-
         $check = array(
             'where' => array(
                 'fk_prof_id' => $id
@@ -893,6 +904,30 @@ class Customer extends MY_Controller
             return $this->general->update_with_key_field($input_access, $input['customer_id'], 'acs_access','fk_prof_id');
         }else{
             return $this->general->add_($input_access, 'acs_access');
+        }
+    }
+
+    public function save_papers_information($input,$id){
+        $input_papers = array();
+        $input_papers['customer_id'] = $id;
+        $input_papers['rep_paper_date'] = $input['rep_paper_date'];
+        $input_papers['tech_paper_date'] = $input['tech_paper_date'];
+        $input_papers['scanned_date'] = $input['scanned_date'];
+        $input_papers['paperwork'] = $input['paperwork'];
+        $input_papers['submitted'] = $input['submitted'];
+        $input_papers['funded'] = $input['funded'];
+        $input_papers['charged_back'] = $input['charged_back'];
+        $check = array(
+            'where' => array(
+                'customer_id' => $id
+            ),
+            'table' => 'acs_papers'
+        );
+        $exist = $this->general->get_data_with_param($check,FALSE);
+        if($exist){
+            return $this->general->update_with_key_field($input_papers, $input['customer_id'], 'acs_papers','customer_id');
+        }else{
+            return $this->general->add_($input_papers, 'acs_papers');
         }
     }
 

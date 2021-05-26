@@ -1,4 +1,29 @@
 <style>
+    .input-group-prepend {
+        height: 30px !important;
+    }
+    .table_head_customer{
+        border-color: #999999;
+        border-style: Solid;
+        border-width: 1px;
+        width: 200px;
+        padding-left: 5px;
+    }
+    .table_body_customer{
+        border-color: #999999;
+        border-style: Solid;
+        border-width: 1px;
+        background-color: #E5EBF2;
+        height: 20px;
+    }
+    .header_input{
+        width: 100px !important;
+    }
+    .header_checkbox{
+        margin: 5px 0 0 8px;
+    }
+</style>
+<style>
     .select2-container .select2-selection--single {
         height: 35px !important;
     }
@@ -19,6 +44,11 @@
     .form-controls{
         font-size: 11px !important;
         line-height: 150%;
+    }
+    .mini-input{
+        font-size: 11px !important;
+        line-height: 150%;
+        width: 100%;
     }
     label{
         font-size: 13px !important;
