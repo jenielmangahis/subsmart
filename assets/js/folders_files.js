@@ -3130,33 +3130,35 @@ function createDocusignTemplate(file, options = {}) {
           <table class="border border-0 mb-0 h-100" style="width: 95%">
             <tbody>
                 <tr class="node" isfolder="0">
-                  <td isfolder="0" style="position: relative;">
+                  <td class="preview" isfolder="0" style="position: relative;">
                     <span style="--size: 85px; width: var(--size); height: var(--size); color: var(--green)">
                       ${svgIcon}
                     </span>
+                  </td>
+                  <td style="width: 85%" class="pl-2 templateFooter">
+                    <div class="templateFooter__info">
+                      <div>
+                        <span style="--size: 25px; width: var(--size); height: var(--size); color: var(--green);" class="mr-2">
+                          ${svgIcon}
+                        </span>
+                        <span class="vault__fileName">${name}</span>
+                      </div>
+                      <span class="vault__fileDate">${createdString}</span>
+                    </div>
 
-                    <div class="btn-group btn-action" style="position: absolute;">
-                      <a type="button" class="btn btn-sm btn-secondary" href="${templateUrl}">Use Template</a>
-                      <button type="button" class="btn btn-sm btn-secondary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <span class="sr-only">Toggle Dropdown</span>
+                    <div class="dropdown">
+                      <button class="btn dropdown-toggle templateFooter__actions" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fa fa-ellipsis-v"></i>
                       </button>
+
                       <div class="dropdown-menu dropdown-menu-right">
+                        <a class="dropdown-item" href="${templateUrl}">Use template</a>
                         <a class="dropdown-item" href="#" data-action="share">Share with users</a>
                         <a class="dropdown-item" href="#" data-action="copy">Copy</a>
                         <a class="dropdown-item" href="#" data-action="delete">Delete</a>
                         <a class="dropdown-item" href="#" data-action="uploadThumbnail">Change thumbnail</a>
                       </div>
                     </div>
-
-                  </td>
-                  <td style="width: 85%" class="pl-2">
-                    <div>
-                      <span style="--size: 25px; width: var(--size); height: var(--size); color: var(--green);" class="mr-2">
-                        ${svgIcon}
-                      </span>
-                      <span class="vault__fileName">${name}</span>
-                    </div>
-                    <span class="vault__fileDate">${createdString}</span>
                   </td>
                 </tr>
             </tbody>
@@ -3164,23 +3166,10 @@ function createDocusignTemplate(file, options = {}) {
       </div>
     </div>
     `;
-  
+
     const element = createElementFromHTML(html);
     const $element = $(element);
     const $elementInner = $element.find('.vault__fileInner');
-  
-    $element.click(function () {
-      removeCurrentHighlighted();
-      $element.addClass('vault__item--isActive');
-      $elementInner.addClass('bg-info');
-      $elementInner.addClass('text-white');
-  
-      if (onClick) onClick(file);
-    });
-  
-    $element.dblclick(function() {
-      if (onDoubleClick) onDoubleClick(file);
-    });
 
     const actions = {
       copy: async function () {
@@ -3205,9 +3194,25 @@ function createDocusignTemplate(file, options = {}) {
         const $modal = $("#uploadTemplateThumbnail");
         const $input = $modal.find("#uploadTemplateThumbnailFile");
         const $button = $modal.find(".btn-primary");
+        const $inputName = $input.parent().find(".custom-file-label__inner");
+        const $preview = $modal.find("#uploadTemplateThumbnailFilePreview");
+
+        $modal.off();
+        $button.off();
 
         $modal.modal("show");
-        $button.off();
+        $modal.on("hidden.bs.modal", function () {
+          $input.val("");
+          $preview.attr("src", "#");
+          $inputName.html("");
+        })
+
+        $input.on("change", function () {
+          const fileName = $(this).val();
+          $inputName.html(fileName);
+          $preview.attr("src", URL.createObjectURL($input.get(0).files[0]));
+        });
+
         $button.on("click", async function () {
           $button.attr("disabled", true);
           $button.find(".spinner-border").removeClass("d-none");
@@ -3227,14 +3232,42 @@ function createDocusignTemplate(file, options = {}) {
           $input.val("");
 
           $modal.modal("hide");
+          actions.showThumbnail(data);
         });
+      },
+      showThumbnail: function (thumbnail) {
+        const $preview = $element.find(".preview");
+        const { filepath } = thumbnail;
+        const backgroundImage = base_url + filepath.replace(/\//, "");
+        $preview.css({ "--bg-image": `url('${backgroundImage}')` });
+        $preview.find("span").css({ display: "none" });
       }
     }
 
-    $element.find(".dropdown-item").click(async function (event) {
-      event.preventDefault();
+    if (file.thumbnail) {
+      actions.showThumbnail(file.thumbnail);
+    }
+  
+    $element.click(function () {
+      removeCurrentHighlighted();
+      $element.addClass('vault__item--isActive');
+      $elementInner.addClass('bg-info');
+      $elementInner.addClass('text-white');
+  
+      if (onClick) onClick(file);
+    });
+  
+    $element.dblclick(function() {
+      if (onDoubleClick) onDoubleClick(file);
+    });
 
+    $element.find(".dropdown-item").click(async function (event) {
       const action = $(this).attr("data-action");
+
+      if (action) {
+        event.preventDefault();
+      }
+
       if (actions[action]) {
         await actions[action]();
       }

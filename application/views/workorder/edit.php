@@ -167,6 +167,40 @@ border: none;
     display: none;
 }
 
+.box-wrap 
+{ 
+    position: relative; 
+    /* min-height: 250px;  */
+    width:100%;
+}
+
+/* #canvas
+{
+ width: 100%;
+ height: 100%;
+ object-fit: contain;
+} */
+.tabbed-area div div 
+{ 
+    background: white; 
+    padding: 20px; 
+    min-height: 250px; 
+    position: absolute; 
+    top: -1px; 
+    left: 0; 
+    width: 100%; 
+}
+
+.tabbed-area div div, .tabs li a 
+{ 
+    border: 1px solid #ccc; 
+}
+
+#box-one:target, #box-two:target, #box-three:target {
+  z-index: 1;
+}
+
+
 @media only screen and (max-device-width: 600px) {
     .label-element{
         position:absolute;
@@ -1123,24 +1157,8 @@ border: none;
                             </div>
                             <div class="row">
                                 <div class="col-md-4">
-                                    <h6>Company Representative Approval</h6>
+                                    <h6>Company Representative Approval &emsp; <a data-toggle="modal" data-target=".companySignature"><i class="fa fa-pencil" aria-hidden="true"></i></a> </h6>
                                     <img src="<?php echo $workorder->company_representative_signature; ?>">
-                                    <!-- <div class="sigPad" id="smoothed1a" style="width:100%;border:solid gray 1px;background-color:#00b300;">
-                                        <ul class="sigNav" style="">
-                                            <li class="drawIt"><a href="#draw-it">Draw It</a></li>
-                                            <li class="clearButton"><a href="#clear">Clear</a></li>
-                                        </ul>
-                                        <ul class="edit">
-                                            <li class="smoothed1a_pencil pointer"><a onclick="myFunction()" style="float:right;margin-right:10px;" class="smoothed1a_pencil"><i class="fa fa-pencil" aria-hidden="true"></i></a></li>
-                                        </ul>
-                                        <div class="sig sigWrapper" id="smoothed1a_pencil" style="height:auto;pointer-events: none;">
-                                            <div class="typed"></div>
-                                            <canvas class="pad" id="company_representative_approval_signature1a" style="width:100%;"></canvas>
-                                            <input type="hidden" name="output-2" class="output">
-                                        </div>
-                                    </div>
-                                    <input type="hidden" id="saveCompanySignatureDB1a"
-                                           name="company_representative_approval_signature1a"> -->
                                     <br>
 
                                     <label for="comp_rep_approval">Printed Name</label>
@@ -1150,24 +1168,8 @@ border: none;
 
                                 </div>
                                 <div class="col-md-4">
-                                    <h6>Primary Account Holder</h6>
+                                    <h6>Primary Account Holder &emsp; <a data-toggle="modal" data-target=".primarySignature"><i class="fa fa-pencil" aria-hidden="true"></i></a></h6>
                                     <img src="<?php echo $workorder->primary_account_holder_signature; ?>">
-                                    <!-- <div class="sigPad" id="smoothed2a" style="width:100%;border:solid gray 1px;background-color:#f7b900;">
-                                        <ul class="sigNav">
-                                            <li class="drawIt"><a href="#draw-it">Draw It</a></li>
-                                            <li class="clearButton"><a href="#clear">Clear</a></li>
-                                        </ul>
-                                        <ul class="edit">
-                                            <li class="smoothed1a_pencil pointer"><a onclick="myFunctiontwo()" style="float:right;margin-right:10px;" class="smoothed1a_pencil"><i class="fa fa-pencil" aria-hidden="true"></i></a></li>
-                                        </ul>
-                                        <div class="sig sigWrapper" style="height:auto;pointer-events: none;">
-                                            <div class="typed"></div>
-                                            <canvas class="pad" id="primary_account_holder_signature2a" style="width:100%;"></canvas>
-                                            <input type="hidden" name="output-2" class="output">
-                                        </div>
-                                    </div>
-                                    <input type="hidden" id="savePrimaryAccountSignatureDB2a"
-                                           name="primary_account_holder_signature2a"> -->
                                     <br>
 
                                     <label for="comp_rep_approval">Printed Name</label>
@@ -1176,24 +1178,8 @@ border: none;
 
                                 </div>
                                 <div class="col-md-4">
-                                    <h6>Secondary Account Holder</h6>
+                                    <h6>Secondary Account Holder &emsp; <a data-toggle="modal" data-target=".secondarySignature"><i class="fa fa-pencil" aria-hidden="true"></i></a></h6>
                                     <img src="<?php echo $workorder->secondary_account_holder_signature; ?>">
-                                    <!-- <div class="sigPad" id="smoothed3a" style="width:100%;border:solid gray 1px;background-color:#f75c1e;">
-                                        <ul class="sigNav">
-                                            <li class="drawIt"><a href="#draw-it">Draw It</a></li>
-                                            <li class="clearButton"><a href="#clear">Clear</a></li>
-                                        </ul>
-                                        <ul class="edit">
-                                            <li class="smoothed1a_pencil pointer"><a onclick="myFunctionthree()" style="float:right;margin-right:10px;" class="smoothed1a_pencil"><i class="fa fa-pencil" aria-hidden="true"></i></a></li>
-                                        </ul>
-                                        <div class="sig sigWrapper" style="height:auto;pointer-events: none;">
-                                            <div class="typed"></div>
-                                            <canvas class="pad" id="secondary_account_holder_signature3a" style="width:100%;"></canvas>
-                                            <input type="hidden" name="output-2" class="output">
-                                        </div>
-                                    </div>
-                                    <input type="hidden" id="saveSecondaryAccountSignatureDB3a"
-                                           name="secondary_account_holder_signature3a"> -->
                                     <br>
 
                                     <label for="comp_rep_approval">Printed Name</label>
@@ -1279,6 +1265,108 @@ border: none;
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                             <button type="button" class="btn btn-primary">Save changes</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- first signature -->
+
+            <div class="modal fade companySignature" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                            <div align="center">
+                                <p style="padding:2%;background-color:#d2d2d2;width:380px;"> Company Representative Approval </p>
+                            </div>
+                                    <div class="box-wrap">
+                                        
+                                        <div id="box-one">
+                                        <div class="row">
+                                        <div class="col-md-12" style="padding:1%;">
+                                        <center>
+                                            <canvas id="canvas" style="border: solid gray 1px;"></canvas>
+                                            <input type="hidden" class="form-control mb-3" name="company_representative_printed_name" id="comp_rep_approval1" value="Company Representative"/>
+                                            <input type="hidden" id="saveCompanySignatureDB1aM" name="company_representative_approval_signature1aM">
+                                            </div>
+                                            </div>
+                                            <br>
+                                        </center>
+                                        </div>
+                                    
+                                    </div>
+                        
+                        <div class="modal-footer">
+                            <button type="button" onClick="submit()" class="btn btn-success enter_signature" id="enter_signature">Update</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <!-- <input type="submit" value="save" id="btnSaveSign"> -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- second signature -->
+
+            <div class="modal fade primarySignature" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                            <div align="center">
+                                <p style="padding:2%;background-color:#d2d2d2;width:380px;"> Primary Account Holder </p>
+                            </div>
+                                    <div class="box-wrap">
+                                        
+                                        <div id="box-one">
+                                        <div class="row">
+                                        <div class="col-md-12" style="padding:1%;">
+                                        <center>
+                                            <canvas id="canvas2" style="border: solid gray 1px;"></canvas>
+                                            <input type="hidden" class="form-control mb-3" name="primary_representative_printed_name" id="comp_rep_approval2" value="Primary Account Holder"/>
+                                            <input type="hidden" id="savePrimaryAccountSignatureDB2aM" name="primary_account_holder_signature2aM">
+                                            </div>
+                                            </div>
+                                            <br>
+                                        </center>
+                                        </div>
+                                    
+                                    </div>
+                        
+                        <div class="modal-footer">
+                            <button type="button" onClick="submit()" class="btn btn-success enter_signature" id="enter_signature">Update</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <!-- <input type="submit" value="save" id="btnSaveSign"> -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- third signature -->
+
+            <div class="modal fade secondarySignature" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                            <div align="center">
+                                <p style="padding:2%;background-color:#d2d2d2;width:380px;"> Secondary Account Holder </p>
+                            </div>
+                                    <div class="box-wrap">
+                                        
+                                        <div id="box-one">
+                                        <div class="row">
+                                        <div class="col-md-12" style="padding:1%;">
+                                        <center>
+                                            <canvas id="canvas3" style="border: solid gray 1px;"></canvas>
+                                            <input type="hidden" class="form-control mb-3" name="secondary_representative_printed_name" id="comp_rep_approval3" value="Secondary Account Holder"/>
+                                            <input type="hidden" id="saveSecondaryAccountSignatureDB3aM" name="secondary_account_holder_signature3aM">
+                                            </div>
+                                            </div>
+                                            <br>
+                                        </center>
+                                        </div>
+                                    
+                                    </div>
+                        
+                        <div class="modal-footer">
+                            <button type="button" onClick="submit()" class="btn btn-success enter_signature" id="enter_signature">Update</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <!-- <input type="submit" value="save" id="btnSaveSign"> -->
                         </div>
                     </div>
                 </div>
@@ -1559,6 +1647,156 @@ function initialize() {
 // });
 </script>
 
+<script>
+// $('.enter_signature').click(function(){
+//     // alert("nisulod");
+//         if(signaturePad.isEmpty()){
+//             console.log('it is empty');
+//             return false;            
+//         }
+//     });
+
+var signaturePad;
+jQuery(document).ready(function () {
+  var signaturePadCanvas = document.querySelector('#canvas');
+//   var parentWidth = jQuery(signaturePadCanvas).parent().outerWidth();
+//   signaturePadCanvas.setAttribute("width", parentWidth);
+  signaturePad = new SignaturePad(signaturePadCanvas);
+
+  signaturePadCanvas.width  = 780;
+  signaturePadCanvas.height = 300;
+});
+
+var signaturePad2;
+jQuery(document).ready(function () {
+  var signaturePadCanvas2 = document.querySelector('#canvas2');
+//   var parentWidth = jQuery(signaturePadCanvas).parent().outerWidth();
+//   signaturePadCanvas.setAttribute("width", parentWidth);
+  signaturePad2 = new SignaturePad(signaturePadCanvas2);
+
+  signaturePadCanvas2.width  = 780;
+  signaturePadCanvas2.height = 300;
+});
+
+var signaturePad3;
+jQuery(document).ready(function () {
+  var signaturePadCanvas3 = document.querySelector('#canvas3');
+//   var parentWidth = jQuery(signaturePadCanvas).parent().outerWidth();
+//   signaturePadCanvas.setAttribute("width", parentWidth);
+  signaturePad3 = new SignaturePad(signaturePadCanvas3);
+
+  signaturePadCanvas3.width  = 780;
+  signaturePadCanvas3.height = 300;
+});
+
+
+$(document).on('click touchstart','#sign',function(){
+    // alert('test');
+    var canvas_web = document.getElementById("sign");    
+    var dataURL = canvas_web.toDataURL("image/png");
+    $("#saveCompanySignatureDB1aM_web").val(dataURL);
+});
+
+$(document).on('click touchstart','#sign2',function(){
+    // alert('test');
+    var canvas_web2 = document.getElementById("sign2");    
+    var dataURL = canvas_web2.toDataURL("image/png");
+    $("#saveCompanySignatureDB1aM_web2").val(dataURL);
+});
+
+$(document).on('click touchstart','#sign3',function(){
+    // alert('test');
+    var canvas_web3 = document.getElementById("sign3");    
+    var dataURL = canvas_web3.toDataURL("image/png");
+    $("#saveCompanySignatureDB1aM_web3").val(dataURL);
+});
+
+// var btn = document.getElementById('enter_signature');
+// btn.onclick = function () {
+//     document.getElementById('smoothed1a_pencil').remove();
+//     this.remove();
+// };
+
+function submit() {
+    
+    // document.getElementById('smoothed1a_pencil').remove();
+    // this.remove();
+
+    // $("#smoothed1a").remove();
+    // $("#smoothed2a").remove();
+    // $("#smoothed3a").remove();
+
+    // $(".signature_web").remove();
+
+//   if (signaturePad.isEmpty() || signaturePad2.isEmpty() || signaturePad3.isEmpty()) {
+//     // console.log("Empty!");
+//     alert('Please check, you must sign all tab.')
+//   }
+//   else{
+    // sigpad= $("#output-2a").val();
+    var canvas = document.getElementById("canvas");    
+    var dataURL = canvas.toDataURL("image/png");
+    $("#saveCompanySignatureDB1aM").val(dataURL);
+
+    var canvas2 = document.getElementById("canvas2");    
+    var dataURL2 = canvas2.toDataURL("image/png");
+    $("#savePrimaryAccountSignatureDB2aM").val(dataURL2);
+
+    var canvas3 = document.getElementById("canvas3");    
+    var dataURL3 = canvas3.toDataURL("image/png");
+    $("#saveSecondaryAccountSignatureDB3aM").val(dataURL3);
+
+    var input1 = $("#comp_rep_approval1").val();
+    var input2 = $("#comp_rep_approval2").val();
+    var input3 = $("#comp_rep_approval3").val();
+    
+    $.ajax({
+    type : 'POST',
+    url : "<?php echo base_url(); ?>accounting/testSave",
+    data : {dataURL: dataURL, dataURL2: dataURL2, dataURL3: dataURL3},
+    success: function(result){
+        // $('#res').html('Signature Uploaded successfully');
+        alert('Signature Uploaded successfully');
+        console.log(dataURL);
+        console.log(dataURL2);
+        console.log(dataURL3);
+
+        // var image = new Image();
+        // image.src = '"' + dataURL + '"';
+        // document.body.appendChild(image);
+
+        var input_conf = '<br><div style="border:solid gray 1px;padding:2%;"><img id="image1" src="'+dataURL+'"></img><input type="hidden" class="form-control" name="signature1" id="signature1" value="'+ dataURL +'"><br><input type="text" class="form-control" name="name1" id="name1" value="'+ input1 +'" readonly></div><br><div style="border:solid gray 1px;padding:2%;"><img id="image1" src="'+dataURL2+'"></img><input type="hidden" class="form-control" name="signature2" id="signature2" value="'+ dataURL2 +'"><br><input type="text" class="form-control" name="name2" id="name2" value="'+ input2 +'" readonly></div><br><div style="border:solid gray 1px;padding:2%;"><img id="image1" src="'+dataURL3+'"></img><input type="hidden" class="form-control" name="signature3" id="signature3" value="'+ dataURL3 +'"><br><input type="text" class="form-control" name="name3" id="name3" value="'+ input3 +'" readonly></div>';
+
+        $('.signatureArea').html(input_conf);
+
+        // $(".sigWrapper").remove();
+
+        $("#saveCompanySignatureDB1aM_web").val(dataURL);
+        $("#saveCompanySignatureDB1aM_web2").val(dataURL2);
+        $("#saveCompanySignatureDB1aM_web3").val(dataURL3);
+
+        $(".output1").val(dataURL);
+        $(".output2").val(dataURL2);
+        $(".output3").val(dataURL3);
+
+        $("#company_representative_printed_name").val(input1);
+        $("#primary_account_holder_name").val(input2);
+        $("#secondery_account_holder_name").val(input3);
+
+        $('#signature_mobile').modal('toggle');
+        // if (confirm('Some message')) {
+        //     alert('Thanks for confirming');
+        // } else {
+        //     alert('Why did you press cancel? You should have confirmed');
+        // }
+
+        // location.reload();
+    },
+    });
+//   }
+}
+</script>
+
 <script src="<?php echo $url->assets ?>js/add.js"></script>
 <script>
 jQuery(document).ready(function () {
@@ -1596,6 +1834,108 @@ jQuery(document).ready(function () {
         }
     }
     
+</script>
+
+
+<script>
+$(document).ready(function(){
+    if(window.matchMedia("(max-width: 600px)").matches){
+        // alert("This is a mobile device.");
+        $(document).on("click", ".testing", function () {
+            $('.getItems').hide();
+            $('#item_typeid').removeClass('form-control');
+            $(".sigWrapper").remove();
+            // $(".output2").remove();
+            // $(".output3").remove();
+        });
+        $(document).on("click", ".select_item", function () {
+            $('.getItems').hide();
+        });
+    } 
+    // else{
+    //     $('.getItems_hidden').hide();
+    // }
+});
+</script>
+
+<script>
+// $(document).on('click','.show_mobile_view',function(){
+//     //    alert('yeah');
+//     $('#update_group').modal('show');
+// });
+$(document).on('click','.groupChange',function(){
+    //    alert('yeah');
+    $('#item_group_type').val();
+});
+</script>
+
+<script>
+    $(function() {
+        $("nav:first").addClass("closed");
+    });
+</script>
+
+<script>
+var wrapper = document.getElementById("signature-pad");
+var canvas = wrapper.querySelector("canvas");
+
+var sign = new SignaturePad(document.getElementById('sign'), {
+  backgroundColor: 'rgba(255, 255, 255, 0)',
+  penColor: 'rgb(0, 0, 0)'
+});
+
+function resizeCanvas() {
+     var ratio =  Math.max(window.devicePixelRatio || 1, 1);
+
+     canvas.width = canvas.offsetWidth * ratio;
+     canvas.height = canvas.offsetHeight * ratio;
+     canvas.getContext("2d").scale(ratio, ratio);
+}
+
+window.onresize = resizeCanvas;
+resizeCanvas();
+</script>
+
+<script>
+var wrapper = document.getElementById("signature-pad2");
+var canvas = wrapper.querySelector("canvas");
+
+var sign = new SignaturePad(document.getElementById('sign2'), {
+  backgroundColor: 'rgba(255, 255, 255, 0)',
+  penColor: 'rgb(0, 0, 0)'
+});
+
+function resizeCanvas() {
+     var ratio =  Math.max(window.devicePixelRatio || 1, 1);
+
+     canvas.width = canvas.offsetWidth * ratio;
+     canvas.height = canvas.offsetHeight * ratio;
+     canvas.getContext("2d").scale(ratio, ratio);
+}
+
+window.onresize = resizeCanvas;
+resizeCanvas();
+</script>
+
+<script>
+var wrapper = document.getElementById("signature-pad3");
+var canvas = wrapper.querySelector("canvas");
+
+var sign = new SignaturePad(document.getElementById('sign3'), {
+  backgroundColor: 'rgba(255, 255, 255, 0)',
+  penColor: 'rgb(0, 0, 0)'
+});
+
+function resizeCanvas() {
+     var ratio =  Math.max(window.devicePixelRatio || 1, 1);
+
+     canvas.width = canvas.offsetWidth * ratio;
+     canvas.height = canvas.offsetHeight * ratio;
+     canvas.getContext("2d").scale(ratio, ratio);
+}
+
+window.onresize = resizeCanvas;
+resizeCanvas();
 </script>
 
 <script>

@@ -192,7 +192,7 @@ $('#transactions-table').DataTable({
     lengthChange: false,
     info: false,
     pageLength: 150,
-    order: [[1, 'asc']],
+    order: [[1, 'desc']],
     ajax: {
         url: `/accounting/vendors/${vendorId}/load-transactions`,
         dataType: 'json',
@@ -1223,6 +1223,12 @@ $(document).on('click', '#transactions-table tbody tr td:not(:first-child, :last
         case 'Vendor Credit' :
             $(this).parent().find('.view-edit-vendor-credit').trigger('click');
         break;
+        case 'Credit Card Payment' :
+            $(this).parent().find('.view-edit-cc-payment').trigger('click');
+        break;
+        case 'Credit Card Credit' :
+            viewCreditCardCredit(data);
+        break;
     }
 });
 
@@ -1697,3 +1703,231 @@ $(document).on('click', '#transactions-table .view-edit-vendor-credit', function
         $('#vendorCreditModal').modal('show');
     });
 });
+
+$(document).on('click', '#transactions-table .view-edit-cc-payment', function() {
+    var row = $(this).parent().parent().parent();
+    var data = $('#transactions-table').DataTable().row(row).data();
+    var transactionType = data.type;
+    transactionType = transactionType.replaceAll(' ', '-');
+    transactionType = transactionType.toLowerCase();
+
+    $.get('/accounting/vendors/view-cc-payment/'+data.id, function(res) {
+        if ($('div#modal-container').length > 0) {
+            $('div#modal-container').html(res);
+        } else {
+            $('body').append(`
+                <div id="modal-container"> 
+                    ${res}
+                </div>
+            `);
+        }
+
+        $(`#payDownCreditModal select`).select2();
+
+        $('div#payDownCreditModal select#tags').select2({
+            placeholder: 'Start typing to add a tag',
+            allowClear: true,
+            ajax: {
+                url: '/accounting/get-job-tags',
+                dataType: 'json'
+            }
+        });
+
+        $(`div#payDownCreditModal .date`).each(function(){
+            $(this).datepicker({
+                uiLibrary: 'bootstrap'
+            });
+        });
+
+        var attachmentContId = $(`#payDownCreditModal .attachments .dropzone`).attr('id');
+        var viewCCPaymentAtta = new Dropzone(`#${attachmentContId}`, {
+            url: '/accounting/attachments/attach',
+            maxFilesize: 20,
+            uploadMultiple: true,
+            // maxFiles: 1,
+            addRemoveLinks: true,
+            init: function() {
+                $.getJSON('/accounting/vendors/get-transaction-attachments/'+transactionType+'/'+data.id, function(data) {
+                    if(data.length > 0) {
+                        $.each(data, function(index, val) {
+                            $('#payDownCreditModal').find('.attachments').parent().append(`<input type="hidden" name="attachments[]" value="${val.id}">`);
+
+                            modalAttachmentId.push(val.id);
+                            var mockFile = {
+                                name: `${val.uploaded_name}.${val.file_extension}`,
+                                size: parseInt(val.size),
+                                dataURL: base_url+"uploads/accounting/attachments/" + val.stored_name,
+                                // size: val.size / 1000000,
+                                accepted: true
+                            };
+                            viewCCPaymentAtta.emit("addedfile", mockFile);
+                            modalAttachedFiles.push(mockFile);
+        
+                            viewCCPaymentAtta.createThumbnailFromUrl(mockFile, viewCCPaymentAtta.options.thumbnailWidth, viewCCPaymentAtta.options.thumbnailHeight, viewCCPaymentAtta.options.thumbnailMethod, true, function(thumbnail) {
+                                viewCCPaymentAtta.emit('thumbnail', mockFile, thumbnail);
+                            });
+                            viewCCPaymentAtta.emit("complete", mockFile);
+                        });
+                    }
+                });
+
+                this.on("success", function(file, response) {
+                    var ids = JSON.parse(response)['attachment_ids'];
+                    var modal = $(`#payDownCreditModal`);
+
+                    for(i in ids) {
+                        if(modal.find(`input[name="attachments[]"][value="${ids[i]}"]`).length === 0) {
+                            modal.find('.attachments').parent().append(`<input type="hidden" name="attachments[]" value="${ids[i]}">`);
+                        }
+
+                        modalAttachmentId.push(ids[i]);
+                    }
+                    modalAttachedFiles.push(file);
+                });
+            },
+            removedfile: function(file) {
+                var ids = modalAttachmentId;
+                var index = modalAttachedFiles.map(function(d, index) {
+                    if (d == file) return index;
+                }).filter(isFinite)[0];
+        
+                $(`#payDownCreditModal .attachments`).find(`input[name="attachments[]"][value="${ids[index]}"]`).remove();
+
+                //remove thumbnail
+                var previewElement;
+
+                if((previewElement = file.previewElement) !== null) {
+                    var remove = (previewElement.parentNode.removeChild(file.previewElement));
+        
+                    if($(`#${attachmentContId} .dz-preview`).length > 0) {
+                        $(`#${attachmentContId} .dz-message`).hide();
+                    } else {
+                        $(`#${attachmentContId} .dz-message`).show();
+                    }
+        
+                    return remove;
+                } else {
+                    return (void 0);
+                }
+            }
+        });
+
+        $('#payDownCreditModal').modal('show');
+    });
+});
+
+function viewCreditCardCredit(data) {
+    var transactionType = data.type;
+    transactionType = transactionType.replaceAll(' ', '-');
+    transactionType = transactionType.toLowerCase();
+
+    $.get('/accounting/vendors/view-cc-credit/'+data.id, function(res) {
+        if ($('div#modal-container').length > 0) {
+            $('div#modal-container').html(res);
+        } else {
+            $('body').append(`
+                <div id="modal-container"> 
+                    ${res}
+                </div>
+            `);
+        }
+
+        rowCount = 2;
+        catDetailsInputs = $(`#creditCardCreditModal table#category-details-table tbody tr:first-child()`).html();
+        catDetailsBlank = $(`#creditCardCreditModal table#category-details-table tbody tr:last-child`).html();
+
+        $(`#creditCardCreditModal table#category-details-table tbody tr:first-child()`).remove();
+
+        $(`#creditCardCreditModal select`).select2();
+
+        $('div#creditCardCreditModal select#tags').select2({
+            placeholder: 'Start typing to add a tag',
+            allowClear: true,
+            ajax: {
+                url: '/accounting/get-job-tags',
+                dataType: 'json'
+            }
+        });
+
+        $(`div#creditCardCreditModal .date`).each(function(){
+            $(this).datepicker({
+                uiLibrary: 'bootstrap'
+            });
+        });
+
+        var attachmentContId = $(`#creditCardCreditModal .attachments .dropzone`).attr('id');
+        var viewVendorCredAtta = new Dropzone(`#${attachmentContId}`, {
+            url: '/accounting/attachments/attach',
+            maxFilesize: 20,
+            uploadMultiple: true,
+            // maxFiles: 1,
+            addRemoveLinks: true,
+            init: function() {
+                $.getJSON('/accounting/vendors/get-transaction-attachments/'+transactionType+'/'+data.id, function(data) {
+                    if(data.length > 0) {
+                        $.each(data, function(index, val) {
+                            $('#creditCardCreditModal').find('.attachments').parent().append(`<input type="hidden" name="attachments[]" value="${val.id}">`);
+
+                            modalAttachmentId.push(val.id);
+                            var mockFile = {
+                                name: `${val.uploaded_name}.${val.file_extension}`,
+                                size: parseInt(val.size),
+                                dataURL: base_url+"uploads/accounting/attachments/" + val.stored_name,
+                                // size: val.size / 1000000,
+                                accepted: true
+                            };
+                            viewVendorCredAtta.emit("addedfile", mockFile);
+                            modalAttachedFiles.push(mockFile);
+        
+                            viewVendorCredAtta.createThumbnailFromUrl(mockFile, viewVendorCredAtta.options.thumbnailWidth, viewVendorCredAtta.options.thumbnailHeight, viewVendorCredAtta.options.thumbnailMethod, true, function(thumbnail) {
+                                viewVendorCredAtta.emit('thumbnail', mockFile, thumbnail);
+                            });
+                            viewVendorCredAtta.emit("complete", mockFile);
+                        });
+                    }
+                });
+
+                this.on("success", function(file, response) {
+                    var ids = JSON.parse(response)['attachment_ids'];
+                    var modal = $(`#creditCardCreditModal`);
+
+                    for(i in ids) {
+                        if(modal.find(`input[name="attachments[]"][value="${ids[i]}"]`).length === 0) {
+                            modal.find('.attachments').parent().append(`<input type="hidden" name="attachments[]" value="${ids[i]}">`);
+                        }
+
+                        modalAttachmentId.push(ids[i]);
+                    }
+                    modalAttachedFiles.push(file);
+                });
+            },
+            removedfile: function(file) {
+                var ids = modalAttachmentId;
+                var index = modalAttachedFiles.map(function(d, index) {
+                    if (d == file) return index;
+                }).filter(isFinite)[0];
+        
+                $(`#creditCardCreditModal .attachments`).find(`input[name="attachments[]"][value="${ids[index]}"]`).remove();
+
+                //remove thumbnail
+                var previewElement;
+
+                if((previewElement = file.previewElement) !== null) {
+                    var remove = (previewElement.parentNode.removeChild(file.previewElement));
+        
+                    if($(`#${attachmentContId} .dz-preview`).length > 0) {
+                        $(`#${attachmentContId} .dz-message`).hide();
+                    } else {
+                        $(`#${attachmentContId} .dz-message`).show();
+                    }
+        
+                    return remove;
+                } else {
+                    return (void 0);
+                }
+            }
+        });
+
+        $('#creditCardCreditModal').modal('show');
+    });
+}

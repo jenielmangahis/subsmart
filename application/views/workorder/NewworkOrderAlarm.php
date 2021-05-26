@@ -2783,6 +2783,9 @@ jQuery(document).ready(function () {
 //   var parentWidth = jQuery(signaturePadCanvas).parent().outerWidth();
 //   signaturePadCanvas.setAttribute("width", parentWidth);
   signaturePad = new SignaturePad(signaturePadCanvas);
+
+//   signaturePadCanvas3.width  = 780;
+//   signaturePadCanvas3.height = 300;
 });
 
 var signaturePad2;
@@ -2791,6 +2794,9 @@ jQuery(document).ready(function () {
 //   var parentWidth = jQuery(signaturePadCanvas).parent().outerWidth();
 //   signaturePadCanvas.setAttribute("width", parentWidth);
   signaturePad2 = new SignaturePad(signaturePadCanvas2);
+
+//   signaturePadCanvas3.width  = 780;
+//   signaturePadCanvas3.height = 300;
 });
 
 var signaturePad3;
@@ -2799,6 +2805,9 @@ jQuery(document).ready(function () {
 //   var parentWidth = jQuery(signaturePadCanvas).parent().outerWidth();
 //   signaturePadCanvas.setAttribute("width", parentWidth);
   signaturePad3 = new SignaturePad(signaturePadCanvas3);
+
+//   signaturePadCanvas3.width  = 780;
+//   signaturePadCanvas3.height = 300;
 });
 
 $(document).on('click touchstart','#sign',function(){

@@ -54,7 +54,7 @@
                 <div class="input-group-prepend">
                     <span class="input-group-text" id="basic-addon1">$</span>
                 </div>
-                <input type="text" class="form-control input_select" name="equipment" >
+                <input type="number" step="0.01" class="form-control input_select" name="equipment" >
             </div>
         </div>
     </div>
@@ -67,17 +67,17 @@
                 <div class="input-group-prepend">
                     <span class="input-group-text" id="basic-addon1">$</span>
                 </div>
-                <input type="text" class="form-control input_select" name="initial_dep"  >
+                <input type="number" step="0.01" class="form-control input_select" name="initial_dep"  >
             </div>
         </div>
     </div>
     <div class="row form_line">
         <div class="col-md-4">
-            Rate Plan $
+            Rate Plan
         </div>
         <div class="col-md-8">
             <div class="row">
-                <div class="col-md-8">
+                <div class="col-md-6">
                 <select id="mmr" name="mmr" data-customer-source="dropdown" class="input_select searchable-dropdown" required>
                 <?php if(isset($billing_info->mmr)){ ?>
                     <option selected value="<?= $billing_info->mmr ?>"><?= $billing_info->mmr ?></option>
@@ -147,9 +147,10 @@
                 <option value="97.85">97.85</option>
                 <option value="129.00">129.00</option>
             </select>
-        </div>
-                <div class="col-md-4">
-                    <a href="<?= base_url() ?>customer/settings/ratePlan" target="_blank"  style="color:#58bc4f;margin-top:10px;font-size: 10px;position: absolute;"><span class="fa fa-plus"></span>Manage Rate Plan </a>&nbsp;&nbsp;
+                </div>
+                <div class="col-md-6">
+                    <a href="<?= base_url() ?>customer/settings/ratePlan" target="_blank"  style="color:#58bc4f;margin-top:5px;font-size: 10px;position: absolute;">
+                        <span class="fa fa-plus"></span> Manage Rate Plan </a>&nbsp;&nbsp;
                 </div>
             </div>
         </div>

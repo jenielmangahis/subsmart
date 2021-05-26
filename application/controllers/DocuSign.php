@@ -672,34 +672,32 @@ class DocuSign extends MY_Controller
     public function apiTemplates()
     {
         $shared = filter_var($this->input->get('shared'), FILTER_VALIDATE_BOOLEAN);
+        $records = [];
 
         if (!$shared) {
             $this->db->where('company_id', logged('company_id'));
             $this->db->where('user_id', logged('id'));
             $this->db->order_by('created_at', 'DESC');
             $records = $this->db->get('user_docfile_templates')->result();
+        } else {
+            $this->db->where('user_id', logged('id'));
+            $sharedTemplates = $this->db->get('user_docfile_templates_shared')->result_array();
 
-            header('content-type: application/json');
-            echo json_encode(['data' => $records]);
-            return;
+            if (!empty($sharedTemplates)) {
+                $sharedTemplateIds = array_map(function ($template) {
+                    return $template['template_id'];
+                }, $sharedTemplates);
+
+                $this->db->where_in('id', $sharedTemplateIds);
+                $this->db->order_by('created_at', 'DESC');
+                $records = $this->db->get('user_docfile_templates')->result();
+            }
         }
 
-        $this->db->where('user_id', logged('id'));
-        $sharedTemplates = $this->db->get('user_docfile_templates_shared')->result_array();
-
-        if (empty($sharedTemplates)) {
-            header('content-type: application/json');
-            echo json_encode(['data' => []]);
-            return;
+        foreach ($records as $record) {
+            $this->db->where_in('template_id', $record->id);
+            $record->thumbnail = $this->db->get('user_docfile_templates_thumbnail')->row();
         }
-
-        $sharedTemplateIds = array_map(function ($template) {
-            return $template['template_id'];
-        }, $sharedTemplates);
-
-        $this->db->where_in('id', $sharedTemplateIds);
-        $this->db->order_by('created_at', 'DESC');
-        $records = $this->db->get('user_docfile_templates')->result();
 
         header('content-type: application/json');
         echo json_encode(['data' => $records]);
@@ -1198,7 +1196,13 @@ SQL;
         $documents = $this->db->get('user_docfile_templates_documents')->result_array();
 
         foreach ($documents as $document) {
-            unlink(FCPATH . 'uploads/docusigntemplates/' . $document['name']);
+            $this->db->where('id !=', $document['id']);
+            $this->db->where('name', $document['name']);
+            $result = $this->db->get('user_docfile_templates_documents')->row();
+
+            if (!$result) { // used on another template
+                unlink(FCPATH . 'uploads/docusigntemplates/' . $document['name']);
+            }
         }
 
         $this->db->where('template_id', $templateId);
@@ -1212,6 +1216,16 @@ SQL;
 
         $this->db->where('template_id', $templateId);
         $this->db->delete('user_docfile_templates_shared');
+
+        $this->db->where('template_id', $templateId);
+        $thumbnail = $this->db->get('user_docfile_templates_thumbnail')->row_array();
+
+        if ($thumbnail) {
+            unlink(FCPATH . 'uploads/docusigntemplatesthumbnail/' . $thumbnail['filename']);
+        }
+
+        $this->db->where('template_id', $templateId);
+        $this->db->delete('user_docfile_templates_thumbnail');
 
         header('content-type: application/json');
         echo json_encode(['success' => true]);

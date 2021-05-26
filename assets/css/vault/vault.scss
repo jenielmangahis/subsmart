@@ -258,3 +258,71 @@ $colorPreviewFooter: #fff;
     }
   }
 }
+
+#uploadTemplateThumbnail {
+  .fillAndSign__selectFile {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 200px;
+    flex-direction: column;
+
+    .custom-file {
+      max-width: 300px;
+    }
+
+    .custom-file-label__inner {
+      width: 200px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: block;
+    }
+  }
+
+  #uploadTemplateThumbnailFilePreview {
+    max-width: 200px;
+    max-height: 200px;
+    margin-bottom: 10px;
+
+    &[src="#"] {
+      display: none;
+    }
+  }
+}
+
+.vault__docusignTemplate {
+  .preview,
+  .templateFooter {
+    max-width: 198px;
+  }
+
+  .templateFooter {
+    flex-direction: row !important;
+
+    &__info {
+      display: flex;
+      flex-direction: column;
+
+      & > div {
+        display: flex;
+      }
+    }
+
+    &__actions {
+      color: #212529 !important;
+      padding: 0;
+      width: 30px;
+      height: 30px;
+
+      &::after {
+        display: none;
+      }
+
+      .fa.fa-ellipsis-v {
+        margin: 0 !important;
+        font-size: 16px !important;
+      }
+    }
+  }
+}

@@ -6,7 +6,7 @@
     <div class="card-body">
         <div class="row form_line">
             <div class="col-md-4">
-                <label for="">Status</label>
+                <label for="">Status
             </div>
             <div class="col-md-8">
                 <select id="status" name="status" data-customer-source="dropdown" class="input_select" >
@@ -30,7 +30,7 @@
         </div>
         <div class="row form_line">
             <div class="col-md-4">
-                <label>Customer Type</label>
+                Customer Type
             </div>
             <div class="col-md-8">
                 <select id="customer_type" name="customer_type" data-customer-source="dropdown" class="form-controls input_select">
@@ -41,7 +41,7 @@
         </div>
         <div class="row form_line">
             <div class="col-md-4">
-                <label>Customer Group</label>
+                Customer Group
             </div>
             <div class="col-md-8">
                 <select id="customer_group" name="customer_group" data-customer-source="dropdown" class="form-controls input_select">
@@ -53,7 +53,7 @@
         </div>
         <div class="row form_line">
             <div class="col-md-4">
-                <label>Sales Area <span class="required"> *</span></label>
+                Sales Area <span class="required"> *</span>
             </div>
             <div class="col-md-8">
                 <select id="fk_sa_id" name="fk_sa_id" data-customer-source="dropdown" class="input_select searchable-dropdown" required>
@@ -66,7 +66,7 @@
         </div>
         <div class="row form_line" id="businessName">
             <div class="col-md-4" id="businessNameLabel">
-                <label for="" >Business Name</label>
+                <label for="" >Business Name
             </div>
             <div class="col-md-8" id="businessNameInput">
                 <input type="text" class="form-control" name="business_name" id="business_name" value="<?php if(isset($profile_info)){ echo $profile_info->business_name; } ?>"/>
@@ -74,7 +74,7 @@
         </div>
         <div class="row form_line">
             <div class="col-md-4">
-                <label>First Name <span class="required"> *</span></label>
+                First Name <span class="required"> *</span>
             </div>
             <div class="col-md-8">
                 <input type="text" class="form-control" name="first_name" id="first_name" value="<?php if(isset($profile_info->first_name)){ echo $profile_info->first_name; } ?>" required/>
@@ -82,7 +82,7 @@
         </div>
         <div class="row form_line">
             <div class="col-md-4">
-                <label for="">Middle Initial</label>
+                <label for="">Middle Initial
             </div>
             <div class="col-md-8">
                 <input type="text" class="form-control" maxlength="1" name="middle_name" id="middle_name" value="<?php if(isset($profile_info)){ echo $profile_info->middle_name; } ?>" />
@@ -90,7 +90,7 @@
         </div>
         <div class="row form_line">
             <div class="col-md-4">
-                <label for="">Last Name <span class="required"> *</span></label>
+                <label for="">Last Name <span class="required"> *</span>
             </div>
             <div class="col-md-8">
                 <input type="text" class="form-control" name="last_name" id="last_name" value="<?php if(isset($profile_info)){ echo $profile_info->last_name; } ?>" required/>
@@ -98,7 +98,7 @@
         </div>
         <div class="row form_line">
             <div class="col-md-4">
-                <label>Name Prefix</label>
+                Name Prefix
             </div>
             <div class="col-md-8">
                 <select id="prefix" name="prefix" data-customer-source="dropdown" class="form-controls input_select searchable-dropdown">
@@ -116,7 +116,7 @@
         </div>
         <div class="row form_line">
             <div class="col-md-4">
-                <label for="">Suffix</label>
+                <label for="">Suffix
             </div>
             <div class="col-md-8">
                 <select id="suffix" name="suffix" data-customer-source="dropdown" class="input_select searchable-dropdown" >
@@ -132,7 +132,7 @@
         </div>
         <div class="row form_line">
             <div class="col-md-4">
-                <label for="">Address <span class="required"> *</span></label>
+                <label for="">Address <span class="required"> *</span>
             </div>
             <div class="col-md-8">
                 <input type="text" class="form-control" name="mail_add" id="mail_add" value="<?php if(isset($profile_info->mail_add)){ echo $profile_info->mail_add; } ?>" required/>
@@ -140,7 +140,7 @@
         </div>
         <div class="row form_line">
             <div class="col-md-4">
-                <label for="">City <span class="required"> *</span></label>
+                <label for="">City <span class="required"> *</span>
             </div>
             <div class="col-md-8">
                 <input type="text" class="form-control" name="city" id="city" value="<?php if(isset($profile_info->city)){ echo $profile_info->city; } ?>" required/>
@@ -148,7 +148,7 @@
         </div>
         <div class="row form_line">
             <div class="col-md-4">
-                <label for="">State <span class="required"> *</span></label>
+                <label for="">State <span class="required"> *</span>
             </div>
             <div class="col-md-8">
                 <input type="text" class="form-control" name="state" id="state" value="<?php if(isset($profile_info->state)){ echo $profile_info->state; } ?>" required/>
@@ -157,7 +157,7 @@
 
         <div class="row form_line">
             <div class="col-md-4">
-                <label for="">Zip Code</label>
+                <label for="">Zip Code
             </div>
             <div class="col-md-8">
                 <input type="text" class="form-control" name="zip_code" id="zip_code" value="<?php if(isset($profile_info->zip_code)){ echo $profile_info->zip_code; } ?>"/>
@@ -165,7 +165,7 @@
         </div>
         <div class="row form_line">
             <div class="col-md-4">
-                <label for="">Cross Street</label>
+                <label for="">Cross Street
             </div>
             <div class="col-md-8">
                 <input type="text" class="form-control" name="cross_street" id="cross_street" value="<?php if(isset($profile_info->cross_street)){ echo $profile_info->cross_street; } ?>"/>
@@ -173,7 +173,7 @@
         </div>
         <div class="row form_line">
             <div class="col-md-4">
-                <label for="">County</label>
+                <label for="">County
             </div>
             <div class="col-md-8">
                 <input type="text" class="form-control" name="country" id="country" value="<?php if(isset($profile_info->country)){ echo $profile_info->country; } ?> " />
@@ -181,7 +181,7 @@
         </div>
         <div class="row form_line">
             <div class="col-md-4">
-                <label for="">Subdivision</label>
+                <label for="">Subdivision
             </div>
             <div class="col-md-8">
                 <input type="text" class="form-control" name="subdivision" id="subdivision" value="<?php if(isset($profile_info->subdivision)){ echo $profile_info->subdivision; } ?>" />
@@ -189,7 +189,7 @@
         </div>
         <div class="row form_line">
             <div class="col-md-4">
-                <label for="">Social Security No.</label>
+                <label for="">Social Security No.
             </div>
             <div class="col-md-8">
                 <input type="text" placeholder="xxx-xx-xxxx" maxlength="11" class="form-control" name="ssn" id="ssn" value="<?php if(isset($profile_info)){ echo $profile_info->ssn; } ?>" />
@@ -197,7 +197,7 @@
         </div>
         <div class="row form_line">
             <div class="col-md-4">
-                <label for="">Date Of Birth </label>
+                <label for="">Date Of Birth 
             </div>
             <div class="col-md-8">
                 <input type="text" class="form-control" placeholder="01/01/2021" name="date_of_birth" id="date_picker" value="<?php if(isset($profile_info)){ echo $profile_info->date_of_birth; } ?>"/>
@@ -206,7 +206,7 @@
 
         <div class="row form_line">
             <div class="col-md-4">
-                <label for="">Email </label>
+                <label for="">Email 
             </div>
             <div class="col-md-8">
                 <input type="email" class="form-control" name="email" id="email" value="<?php if(isset($profile_info)){ echo $profile_info->email; } ?>" />
@@ -215,7 +215,7 @@
 
         <div class="row form_line">
             <div class="col-md-4">
-                <label for="">Phone (H)</label>
+                <label for="">Phone (H)
             </div>
             <div class="col-md-8">
                 <input type="text" class="form-control phone_number" maxlength="12" placeholder="xxx-xxx-xxxx" name="phone_h" id="phone_h" value="<?php if(isset($profile_info)){ echo $profile_info->phone_h; } ?>" />
@@ -223,7 +223,7 @@
         </div>
         <!--<div class="row form_line">
             <div class="col-md-4">
-                <label for="">Phone (W)</label>
+                <label for="">Phone (W)
             </div>
             <div class="col-md-8">
                 <input type="text" class="form-control phone_number" maxlength="12" placeholder="xxx-xxx-xxxx" name="phone_w" id="phone_w" value="<?php if(isset($profile_info)){ echo $profile_info->phone_w; } ?>" />
@@ -231,7 +231,7 @@
         </div>-->
         <div class="row form_line">
             <div class="col-md-4">
-                <label for="">Phone (M) <span class="required"> *</span></label>
+                <label for="">Phone (M) <span class="required"> *</span>
             </div>
             <div class="col-md-8">
                 <input type="text" class="form-control phone_number" maxlength="12" placeholder="xxx-xxx-xxxx" name="phone_m" id="phone_m" value="<?php if(isset($profile_info->phone_m)){ echo $profile_info->phone_m; } ?>" required />
@@ -240,7 +240,7 @@
         <hr>
         <div class="row form_line">
             <div class="col-md-4 ">
-                <label for="">Contact Name 1</label>
+                <label for="">Contact Name 1
             </div>
             <div class="col-md-8">
                 <input type="text" class="form-control" name="contact_name1" id="contact_name1" value="<?php if(isset($profile_info)){ echo $profile_info->contact_name1; } ?>"/>
@@ -248,7 +248,7 @@
         </div>
         <div class="row form_line">
             <div class="col-md-4">
-                <label for="">Contact Phone 1</label>
+                <label for="">Contact Phone 1
             </div>
             <div class="col-md-8">
                 <input type="text" class="form-control phone_number" maxlength="12" placeholder="xxx-xxx-xxxx" name="contact_phone1" id="contact_phone1" value="<?php if(isset($profile_info)){ echo $profile_info->contact_phone1; } ?>"/>
@@ -256,7 +256,7 @@
         </div>
         <div class="row form_line">
             <div class="col-md-4">
-                <label for="">Contact Name 2</label>
+                <label for="">Contact Name 2
             </div>
             <div class="col-md-8">
                 <input type="text" class="form-control" name="contact_name2" id="contact_name2" value="<?php if(isset($profile_info)){ echo $profile_info->contact_name2; } ?>"/>
@@ -264,7 +264,7 @@
         </div>
         <div class="row form_line">
             <div class="col-md-4">
-                <label for="">Contact Phone 2</label>
+                <label for="">Contact Phone 2
             </div>
             <div class="col-md-8">
                 <input type="text" class="form-control phone_number" maxlength="12" placeholder="xxx-xxx-xxxx" name="contact_phone2" id="contact_phone2" value="<?php if(isset($profile_info)){ echo $profile_info->contact_phone2; } ?>"/>
@@ -272,7 +272,7 @@
         </div>
         <div class="row form_line">
             <div class="col-md-4">
-                <label for="">Contact Name 3</label>
+                <label for="">Contact Name 3
             </div>
             <div class="col-md-8">
                 <input type="text" class="form-control" name="contact_name3" id="contact_name3" value="<?php if(isset($profile_info)){ echo $profile_info->contact_name3; } ?>" />
@@ -280,7 +280,7 @@
         </div>
         <div class="row form_line">
             <div class="col-md-4">
-                <label for="">Contact Phone 3</label>
+                <label for="">Contact Phone 3
             </div>
             <div class="col-md-8">
                 <input type="text" class="form-control phone_number" maxlength="12" placeholder="xxx-xxx-xxxx" name="contact_phone3" id="contact_phone3" value="<?php if(isset($profile_info)){ echo $profile_info->contact_phone3; } ?>"/>

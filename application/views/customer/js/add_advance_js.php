@@ -126,11 +126,24 @@
     });
     $(function() {
         $("nav:first").addClass("closed");
+        $(".date_checkbox").on( 'change', function (event) {
+            const date_id = this.value;
+            if (event.currentTarget.checked) {
+                event.preventDefault();
+                $('#'+date_id).prop("disabled", false);
+            } else {
+                event.preventDefault();
+                $('#'+date_id).val(""); // Element(s) are now enabled.
+                $('#'+date_id).prop("disabled", true); // Element(s) are now enabled.
+            }
+        });
     });
 </script>
 
 <script>
     $(document).ready(function () {
+
+
         $("#first_name").on("keyup change", function(e) {
             $('#card_fname').val(this.value);
         });

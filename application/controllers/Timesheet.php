@@ -4846,6 +4846,7 @@ class Timesheet extends MY_Controller
         if ($est_wage_privacy == "true") {
             $est_wage_private = 1;
         }
+        
         $this->timesheet_model->save_est_wage_privacy($est_wage_private, $company_id, $date_time_now, $user_id);
 
         echo json_encode("saved");

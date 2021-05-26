@@ -14,3 +14,105 @@
     background-color: #F7F6EF;
     font-weight: bold;
 }
+
+#employees-view-history-panel.panel-closed {
+    width: 0;
+}
+
+#employees-view-history-panel.panel-show {
+    width: 100%;
+}
+
+div#employees-view-history-panel {
+    position: absolute;
+    z-index: 1;
+    background-color: #ffffff;
+    width: 0;
+    height: 100%;
+    transition: width 0.8s, height 1s, transform 1s;
+    overflow: hidden;
+}
+
+#employees-view-history-panel .close-btn {
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding-right: 15px;
+    padding-top: 2px;
+    color: #fff;
+    padding-left: 15px;
+    cursor: pointer;
+}
+
+#employees-view-history-panel .filter-panel {
+    padding-left: 10px;
+    padding-top: 10px;
+    padding-right: 10px;
+}
+
+input#employe-history-from,
+input#employe-history-to {
+    height: 30px;
+    font-size: 12px;
+}
+
+label.week-label {
+    font-size: 13px;
+}
+
+#route-details-setion .route-details-table>tbody>tr>td {
+    padding-left: 20px;
+    height: 70px;
+}
+
+#route-details-setion .route-details-table>tbody>tr>td.connected-icon {
+    width: 50px;
+    text-align: center;
+}
+
+table.route-details-table {
+    width: 100%;
+}
+
+#route-details-setion .route-details-table .connected-icon>div {
+    color: #ffffff;
+    background-color: #2096F3;
+    border-radius: 50%;
+    padding: 5px;
+    position: relative;
+}
+
+#route-details-setion .route-details-table .first-info .connected-icon>div:after,
+#route-details-setion .route-details-table .middle-info .connected-icon>div:after {
+    content: ' ';
+    width: 3px;
+    height: 40px;
+    background-color: #2096F3;
+    position: absolute;
+    z-index: 1;
+    bottom: -40px;
+    left: 45%;
+}
+
+.route-details-table .address {
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.route-details-table .date-time {
+    font-size: 9px;
+    color: #565656;
+}
+
+.route-details-table tr:hover div.address {
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.route-details-table tr:hover {
+    cursor: pointer;
+}
+
+#employees-view-history-panel .panel-content {
+    min-width: 446px;
+}
