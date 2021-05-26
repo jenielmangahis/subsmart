@@ -42,7 +42,7 @@ class Cron_Marketing extends MY_Controller {
                         //Log to sms_sent
                         $data_logs = [
                             'user_id' => $sms->user_id,
-                            'from_number' => RINGCENTRAL_USER,
+                            'from_number' => RINGCENTRAL_FROM,
                             'to_number' => $to_number,
                             'sms_message' => $sms->sms_text,
                             'is_sent' => $result['is_sent'],
@@ -69,7 +69,7 @@ class Cron_Marketing extends MY_Controller {
                             //Log to sms_sent
                             $data_logs = [
                                 'user_id' => $sms->user_id,
-                                'from_number' => RINGCENTRAL_USER,
+                                'from_number' => RINGCENTRAL_FROM,
                                 'to_number' => $to_number,
                                 'sms_message' => $sms->sms_text,
                                 'is_sent' => $result['is_sent'],
@@ -97,7 +97,7 @@ class Cron_Marketing extends MY_Controller {
                             //Log to sms_sent
                             $data_logs = [
                                 'user_id' => $sms->user_id,
-                                'from_number' => RINGCENTRAL_USER,
+                                'from_number' => RINGCENTRAL_FROM,
                                 'to_number' => $to_number,
                                 'sms_message' => $sms->sms_text,
                                 'is_sent' => $result['is_sent'],
@@ -145,6 +145,88 @@ class Cron_Marketing extends MY_Controller {
                     break;
             }
         }
+    }
+
+    public function email_campaign(){
+        $this->load->model('EmailBlast_model');
+        $this->load->model('EmailBlastSendTo_model');
+        $this->load->model('AcsProfile_model');
+        $this->load->model('Business_model');
+
+        $emailCampaigns = $this->EmailBlast_model->getAllIsPaidAndNotSent(50);
+        foreach( $emailCampaigns as $e ){
+            $total_sent = 0;
+            $company    = $this->Business_model->getByCompanyId($e->company_id);
+            switch ($e->sending_type) {
+                case $this->EmailBlast_model->sendingTypeAll():
+                    # code...
+                    break;
+                case $this->EmailBlast_model->sedingTypeCustomerGroup():
+                    # code...
+                    break;
+                case $this->EmailBlast_model->sendingTypeCertainCustomer():
+                    $sendTo = $this->EmailBlastSendTo_model->getAllByEmailBlastId($e->id);
+                    foreach( $sendTo as $s ){
+                        $contact = $this->AcsProfile_model->getByProfId($s->customer_id);
+                        if( $contact ){
+                            $is_sent = $this->sendEmail($contact->email, $e->email_subject, $e->email_body);   
+                            if( $is_sent ){
+                                $total_sent++;
+                            }                         
+                        }
+                    }
+                    break;
+                default:
+                    break;
+            }
+
+            if( $total_sent > 0 ){
+                $email_campaign_data = ['is_sent' => 1, 'date_sent' => date("Y-m-d")];
+                $this->EmailBlast_model->updateEmailBlast($e->id, $email_campaign_data);
+            }
+        }
+
+        echo "Done";
+    }
+
+    public function sendEmail( $to, $subject, $message, $company ){
+        //Email Sending
+        $server    = MAIL_SERVER;
+        $port      = MAIL_PORT ;
+        $username  = MAIL_USERNAME;
+        $password  = MAIL_PASSWORD;
+        $from      = MAIL_FROM;
+        $recipient = $customer->email;
+        //$recipient = 'bryann.revina03@gmail.com';
+        
+        $this->page_data['company']    = $company;
+        $this->page_data['email_body'] = $message;
+        $msg = $this->load->view('cron_marketing/email_campaign_template', $this->page_data, true);
+
+        $mail = new PHPMailer;
+        //$mail->SMTPDebug = 4;
+        $mail->isSMTP();
+        $mail->Host = $server;
+        $mail->SMTPAuth = true;
+        $mail->Username   = $username;
+        $mail->Password   = $password;
+        $mail->getSMTPInstance()->Timelimit = 5;
+        $mail->SMTPSecure = 'ssl';
+        $mail->Timeout    =   10; // set the timeout (seconds)
+        $mail->Port = $port;
+        $mail->From = $from;
+        $mail->FromName = 'NsmarTrac';
+        $mail->addAddress($recipient, $recipient);
+        $mail->isHTML(true);
+        $mail->Subject = $subject;
+        $mail->Body    = $msg;
+        if(!$mail->Send()){
+            $is_sent = false;
+        }else{
+            $is_sent = true;
+        }
+
+        return $is_sent;
     }
 
     public function sendSms($to_number, $message){        

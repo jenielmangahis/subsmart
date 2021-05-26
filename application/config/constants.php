@@ -130,7 +130,7 @@ define('RINGCENTRAL_EXT', '101');
 define('RINGCENTRAL_CLIENT_SECRET', 'LLF8Pl45Suiad2qgQ4nxkQUl31OB7tRBmXkw1U1Rv0sA');
 define('RINGCENTRAL_DEV_URL', 'https://platform.ringcentral.com');
 define('RINGCENTRAL_USER', '+18504780530');
-define('RINGCENTRAL_PASSWORD', 's@634DFhy&*)2bNy');
+define('RINGCENTRAL_PASSWORD', 'Ringmybell2021');
 define('RINGCENTRAL_EXT', '101');*/
 
 //PHPMAILER
