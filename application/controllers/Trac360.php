@@ -642,4 +642,40 @@ class Trac360 extends MY_Controller
         $this->load->view('trac360/history', $this->page_data);
         // var_dump($data);
     }
+    public function get_employee_history()
+    {
+        $date_from = date("Y-m-d", strtotime($this->input->post("the_date_from")));
+        $date_to = date("Y-m-d", strtotime($this->input->post("the_date_to")));
+        $user_id = $this->input->post("the_user_id");
+        $history_details = $this->trac360_model->get_employee_history($date_from, $date_to, $user_id);
+        $info_count =0;
+        $html='';
+        foreach ($history_details as $history) {
+            $info_class="";
+            $info_icon = "";
+            if ($info_count == 0) {
+                $info_class="first-info";
+                $info_icon = "fa-car";
+            } elseif ($info_count+1 < count($history_details)) {
+                $info_class="middle-info";
+                $info_icon = "fa-map-marker";
+            } else {
+                $info_class="last-info";
+                $info_icon = "fa-stop-circle";
+            }
+            $html .= '<tr class="'.$info_class.'">
+                        <td class="connected-icon">
+                            <div><i class="fa '.$info_icon.'" aria-hidden="true"></i></div>
+                        </td>
+                        <td>
+                            <div class="address">'.$history->last_address.'</div>
+                            <div class="date-time">'.date('M d, Y h:i A').'</div>
+                        </td>
+                    </tr>';
+            $info_count++;
+        }
+        $data = new stdClass();
+        $data->html = $html;
+        echo json_encode($data);
+    }
 }

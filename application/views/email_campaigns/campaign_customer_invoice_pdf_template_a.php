@@ -5,7 +5,7 @@
         </td>
         <td style="vertical-align: top;text-align: right;">
             <span style="margin-bottom: 4px;font-size: 30px;">INVOICE</span><br>
-            <span style="font-size: 12px;line-height:30px;">#<?= $smsBlast->order_number; ?></span>
+            <span style="font-size: 12px;line-height:30px;">#<?= $emailBlast->order_number; ?></span>
         </td>
     </tr>
 </table>

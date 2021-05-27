@@ -28,7 +28,7 @@
                                         <td><?= $workorder->job_name; ?></td>
                                         <td><?= date('M d, Y', strtotime($workorder->start_date)); ?></td>
                                         <td>
-                                            <button id="<?= $workorder->customer_id; ?>" type="button" data-dismiss="modal" class="btn btn-sm btn-default workorder_select">
+                                            <button id="<?= $workorder->id; ?>" type="button" data-dismiss="modal" class="btn btn-sm btn-default workorder_select">
                                                 <span class="fa fa-plus"></span>
                                             </button>
                                         </td>

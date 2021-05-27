@@ -306,40 +306,6 @@ class Accounting_modals extends MY_Controller {
                         }
                     }
 
-                    $categoryAccs = [];
-                    $accountTypes = [
-                        'Expenses',
-                        'Bank',
-                        'Accounts receivable (A/R)',
-                        'Other Current Assets',
-                        'Fixed Assets',
-                        'Accounts payable (A/P)',
-                        'Credit Card',
-                        'Other Current Liabilities',
-                        'Long Term Liabilities',
-                        'Equity',
-                        'Income',
-                        'Cost of Goods Sold',
-                        'Other Income',
-                        'Other Expense'
-                    ];
-
-                    foreach($accountTypes as $typeName) {
-                        $accType = $this->account_model->getAccTypeByName($typeName);
-
-                        $accounts = $this->chart_of_accounts_model->getByAccountType($accType->id, null, logged('company_id'));
-
-                        if(count($accounts) > 0) {
-                            foreach($accounts as $account) {
-                                $childAccs = $this->chart_of_accounts_model->getChildAccounts($account->id);
-
-                                $account->childAccs = $childAccs;
-
-                                $categoryAccs[$typeName][] = $account;
-                            }
-                        }
-                    }
-
                     if(strpos($selectedBalance, '-') !== false) {
                         $balance = str_replace('-', '', $selectedBalance);
                         $selectedBalance = '-$'.number_format($balance, 2, '.', ',');
@@ -350,8 +316,7 @@ class Accounting_modals extends MY_Controller {
                     $this->page_data['dropdown']['payment_methods'] = $this->accounting_payment_methods_model->getCompanyPaymentMethods();
                     $this->page_data['balance'] = $selectedBalance;
                     $this->page_data['dropdown']['employees'] = $this->users_model->getCompanyUsers(logged('company_id'));
-                    $this->page_data['dropdown']['categories'] = $categoryAccs;
-                    $this->page_data['dropdown']['items'] = $this->items_model->getItemsWithFilter(['type' => 'inventory', 'status' => [1]]);
+                    $this->page_data['dropdown']['categories'] = $this->get_category_accs();
                     $this->page_data['dropdown']['customers'] = $this->accounting_customers_model->getAllByCompany();
                     $this->page_data['dropdown']['payment_accounts'] = $paymentAccs;
                     $this->page_data['dropdown']['vendors'] = $this->vendors_model->getAllByCompany();
@@ -385,46 +350,11 @@ class Accounting_modals extends MY_Controller {
                         $selectedBalance = '$'.number_format($selectedBalance, 2, '.', ',');
                     }
 
-                    $categoryAccs = [];
-                    $accountTypes = [
-                        'Expenses',
-                        'Bank',
-                        'Accounts receivable (A/R)',
-                        'Other Current Assets',
-                        'Fixed Assets',
-                        'Accounts payable (A/P)',
-                        'Credit Card',
-                        'Other Current Liabilities',
-                        'Long Term Liabilities',
-                        'Equity',
-                        'Income',
-                        'Cost of Goods Sold',
-                        'Other Income',
-                        'Other Expense'
-                    ];
-
-                    foreach($accountTypes as $typeName) {
-                        $accType = $this->account_model->getAccTypeByName($typeName);
-
-                        $accounts = $this->chart_of_accounts_model->getByAccountType($accType->id, null, logged('company_id'));
-
-                        if(count($accounts) > 0) {
-                            foreach($accounts as $account) {
-                                $childAccs = $this->chart_of_accounts_model->getChildAccounts($account->id);
-
-                                $account->childAccs = $childAccs;
-
-                                $categoryAccs[$typeName][] = $account;
-                            }
-                        }
-                    }
-
                     $this->page_data['dropdown']['customers'] = $this->accounting_customers_model->getAllByCompany();
                     $this->page_data['dropdown']['employees'] = $this->users_model->getCompanyUsers(logged('company_id'));
-                    $this->page_data['dropdown']['categories'] = $categoryAccs;
+                    $this->page_data['dropdown']['categories'] = $this->get_category_accs();
                     $this->page_data['dropdown']['vendors'] = $this->vendors_model->getAllByCompany();
                     $this->page_data['dropdown']['bank_accounts'] = $bankAccs;
-                    $this->page_data['dropdown']['items'] = $this->items_model->getItemsWithFilter(['type' => 'inventory', 'status' => [1]]);
                     $this->page_data['balance'] = $selectedBalance;
                 break;
                 case 'bill_modal' :
@@ -453,45 +383,10 @@ class Accounting_modals extends MY_Controller {
                         }
                     }
 
-                    $categoryAccs = [];
-                    $accountTypes = [
-                        'Expenses',
-                        'Bank',
-                        'Accounts receivable (A/R)',
-                        'Other Current Assets',
-                        'Fixed Assets',
-                        'Accounts payable (A/P)',
-                        'Credit Card',
-                        'Other Current Liabilities',
-                        'Long Term Liabilities',
-                        'Equity',
-                        'Income',
-                        'Cost of Goods Sold',
-                        'Other Income',
-                        'Other Expense'
-                    ];
-
-                    foreach($accountTypes as $typeName) {
-                        $accType = $this->account_model->getAccTypeByName($typeName);
-
-                        $accounts = $this->chart_of_accounts_model->getByAccountType($accType->id, null, logged('company_id'));
-
-                        if(count($accounts) > 0) {
-                            foreach($accounts as $account) {
-                                $childAccs = $this->chart_of_accounts_model->getChildAccounts($account->id);
-
-                                $account->childAccs = $childAccs;
-
-                                $categoryAccs[$typeName][] = $account;
-                            }
-                        }
-                    }
-
                     $this->page_data['due_date'] = $dueDate;
-                    $this->page_data['dropdown']['items'] = $this->items_model->getItemsWithFilter(['type' => 'inventory', 'status' => [1]]);
                     $this->page_data['dropdown']['customers'] = $this->accounting_customers_model->getAllByCompany();
                     $this->page_data['dropdown']['vendors'] = $this->vendors_model->getAllByCompany();
-                    $this->page_data['dropdown']['categories'] = $categoryAccs;
+                    $this->page_data['dropdown']['categories'] = $this->get_category_accs();
                     $this->page_data['dropdown']['terms'] = $terms;
                 break;
                 case 'pay_bills_modal' :
@@ -536,83 +431,14 @@ class Accounting_modals extends MY_Controller {
                     $this->page_data['dropdown']['payees'] = $this->vendors_model->getAllByCompany();
                 break;
                 case 'vendor_credit_modal' :
-                    $categoryAccs = [];
-                    $accountTypes = [
-                        'Expenses',
-                        'Bank',
-                        'Accounts receivable (A/R)',
-                        'Other Current Assets',
-                        'Fixed Assets',
-                        'Accounts payable (A/P)',
-                        'Credit Card',
-                        'Other Current Liabilities',
-                        'Long Term Liabilities',
-                        'Equity',
-                        'Income',
-                        'Cost of Goods Sold',
-                        'Other Income',
-                        'Other Expense'
-                    ];
-
-                    foreach($accountTypes as $typeName) {
-                        $accType = $this->account_model->getAccTypeByName($typeName);
-
-                        $accounts = $this->chart_of_accounts_model->getByAccountType($accType->id, null, logged('company_id'));
-
-                        if(count($accounts) > 0) {
-                            foreach($accounts as $account) {
-                                $childAccs = $this->chart_of_accounts_model->getChildAccounts($account->id);
-
-                                $account->childAccs = $childAccs;
-
-                                $categoryAccs[$typeName][] = $account;
-                            }
-                        }
-                    }
-
-                    $this->page_data['dropdown']['items'] = $this->items_model->getItemsWithFilter(['type' => 'inventory', 'status' => [1]]);
                     $this->page_data['dropdown']['customers'] = $this->accounting_customers_model->getAllByCompany();
                     $this->page_data['dropdown']['vendors'] = $this->vendors_model->getAllByCompany();
-                    $this->page_data['dropdown']['categories'] = $categoryAccs;
+                    $this->page_data['dropdown']['categories'] = $this->get_category_accs();
                 break;
                 case 'purchase_order_modal' :
-                    $categoryAccs = [];
-                    $accountTypes = [
-                        'Expenses',
-                        'Bank',
-                        'Accounts receivable (A/R)',
-                        'Other Current Assets',
-                        'Fixed Assets',
-                        'Accounts payable (A/P)',
-                        'Credit Card',
-                        'Other Current Liabilities',
-                        'Long Term Liabilities',
-                        'Equity',
-                        'Income',
-                        'Cost of Goods Sold',
-                        'Other Income',
-                        'Other Expense'
-                    ];
-
-                    foreach($accountTypes as $typeName) {
-                        $accType = $this->account_model->getAccTypeByName($typeName);
-
-                        $accounts = $this->chart_of_accounts_model->getByAccountType($accType->id, null, logged('company_id'));
-
-                        if(count($accounts) > 0) {
-                            foreach($accounts as $account) {
-                                $childAccs = $this->chart_of_accounts_model->getChildAccounts($account->id);
-
-                                $account->childAccs = $childAccs;
-
-                                $categoryAccs[$typeName][] = $account;
-                            }
-                        }
-                    }
-
                     $this->page_data['dropdown']['vendors'] = $this->vendors_model->getAllByCompany();
                     $this->page_data['dropdown']['customers'] = $this->accounting_customers_model->getAllByCompany();
-                    $this->page_data['dropdown']['categories'] = $categoryAccs;
+                    $this->page_data['dropdown']['categories'] = $this->get_category_accs();
                 break;
                 case 'credit_card_credit_modal' :
                     $creditCardAccs = [];
@@ -637,40 +463,6 @@ class Accounting_modals extends MY_Controller {
                         }
                     }
 
-                    $categoryAccs = [];
-                    $accountTypes = [
-                        'Expenses',
-                        'Bank',
-                        'Accounts receivable (A/R)',
-                        'Other Current Assets',
-                        'Fixed Assets',
-                        'Accounts payable (A/P)',
-                        'Credit Card',
-                        'Other Current Liabilities',
-                        'Long Term Liabilities',
-                        'Equity',
-                        'Income',
-                        'Cost of Goods Sold',
-                        'Other Income',
-                        'Other Expense'
-                    ];
-
-                    foreach($accountTypes as $typeName) {
-                        $accType = $this->account_model->getAccTypeByName($typeName);
-
-                        $accounts = $this->chart_of_accounts_model->getByAccountType($accType->id, null, logged('company_id'));
-
-                        if(count($accounts) > 0) {
-                            foreach($accounts as $account) {
-                                $childAccs = $this->chart_of_accounts_model->getChildAccounts($account->id);
-
-                                $account->childAccs = $childAccs;
-
-                                $categoryAccs[$typeName][] = $account;
-                            }
-                        }
-                    }
-
                     if(strpos($selectedBalance, '-') !== false) {
                         $balance = str_replace('-', '', $selectedBalance);
                         $selectedBalance = '-$'.number_format($balance, 2, '.', ',');
@@ -680,7 +472,7 @@ class Accounting_modals extends MY_Controller {
 
                     $this->page_data['dropdown']['employees'] = $this->users_model->getCompanyUsers(logged('company_id'));
                     $this->page_data['balance'] = $selectedBalance;
-                    $this->page_data['dropdown']['categories'] = $categoryAccs;
+                    $this->page_data['dropdown']['categories'] = $this->get_category_accs();
                     $this->page_data['dropdown']['customers'] = $this->accounting_customers_model->getAllByCompany();
                     $this->page_data['dropdown']['bank_credit_accounts'] = $creditCardAccs;
                     $this->page_data['dropdown']['vendors'] = $this->vendors_model->getAllByCompany();
@@ -689,6 +481,45 @@ class Accounting_modals extends MY_Controller {
 
             $this->load->view("accounting/modals/". $view, $this->page_data);
         }
+    }
+
+    private function get_category_accs()
+    {
+        $categoryAccs = [];
+        $accountTypes = [
+            'Expenses',
+            'Bank',
+            'Accounts receivable (A/R)',
+            'Other Current Assets',
+            'Fixed Assets',
+            'Accounts payable (A/P)',
+            'Credit Card',
+            'Other Current Liabilities',
+            'Long Term Liabilities',
+            'Equity',
+            'Income',
+            'Cost of Goods Sold',
+            'Other Income',
+            'Other Expense'
+        ];
+
+        foreach($accountTypes as $typeName) {
+            $accType = $this->account_model->getAccTypeByName($typeName);
+
+            $accounts = $this->chart_of_accounts_model->getByAccountType($accType->id, null, logged('company_id'));
+
+            if(count($accounts) > 0) {
+                foreach($accounts as $account) {
+                    $childAccs = $this->chart_of_accounts_model->getChildAccounts($account->id);
+
+                    $account->childAccs = $childAccs;
+
+                    $categoryAccs[$typeName][] = $account;
+                }
+            }
+        }
+
+        return $categoryAccs;
     }
 
     public function get_recurring_modal_fields($modal)
@@ -3241,6 +3072,7 @@ class Accounting_modals extends MY_Controller {
                 'payment_account_id' => $data['payment_account'],
                 'payment_date' => date("Y-m-d", strtotime($data['payment_date'])),
                 'starting_check_no' => $data['starting_check_no'] === "" ? null : $data['starting_check_no'],
+                'to_print_check_no' => $data['print_later'],
                 'total_amount' => $data['total'],
                 'status' => 1,
                 'created_at' => date("Y-m-d H:i:s"),
@@ -3250,7 +3082,14 @@ class Accounting_modals extends MY_Controller {
             $billPaymentId = $this->expenses_model->insert_bill_payment($billPayment);
 
             $paymentAcc = $this->chart_of_accounts_model->getById($data['payment_account']);
-            $newBalance = floatval($paymentAcc->balance) - floatval($data['total_amount']);
+            $paymentAccType = $this->account_model->getById($paymentAcc->account_id);
+
+            if($paymentAccType->account_name === 'Credit Card') {
+                $newBalance = floatval($paymentAcc->balance) + floatval($data['total_amount']);
+            } else {
+                $newBalance = floatval($paymentAcc->balance) - floatval($data['total_amount']);
+            }
+
             $newBalance = number_format($newBalance, 2, '.', ',');
 
             $paymentAccData = [

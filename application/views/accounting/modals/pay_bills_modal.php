@@ -56,7 +56,7 @@
                                                 </div>
                                                 <div class="col-md-2 d-flex align-items-center">
                                                     <div class="form-check">
-                                                        <input type="checkbox" name="print_later" id="print_later" class="form-check-input">
+                                                        <input type="checkbox" name="print_later" id="print_later" class="form-check-input" value="1">
                                                         <label for="print_later" class="form-check-label">Print later</label>
                                                     </div>
                                                 </div>

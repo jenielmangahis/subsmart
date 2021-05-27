@@ -80,21 +80,28 @@ function get_differenct_of_dates($date_start, $date_end)
                                         </div>
                                         <div class="col-md-5 no-padding" style="margin-bottom: 12px">
                                             <label for="to_date_logs" class="week-label">To:</label>
-                                            <input type="text" name="date_to date-picker" id="employe-history-from"
-                                                class="form-control"
+                                            <input type="text" name="date_to" id="employe-history-to"
+                                                class="form-control date-picker"
                                                 value="<?php echo date('m/d/Y') ?>">
                                         </div>
                                         <div class="col-md-2" style="margin-bottom: 12px">
-                                            <div><label for="to_date_logs" class="week-label">&nbsp;</label></div>
+                                            <div><label for="to_date_logs" class="week-label">&nbsp;</label>
+                                            </div>
                                             <button type="submit"
                                                 class="btn btn-success action-btn btn-sm">View</button>
                                         </div>
                                     </div>
                                 </form>
                             </div>
+                            <div class="loader" style="display: none;">
+                                <center>
+                                    <img src="<?=base_url('assets/img/trac360/loader1.gif')?>"
+                                        alt="">
+                                </center>
+                            </div>
                             <div id="route-details-setion">
                                 <table class="route-details-table">
-                                    <tbody>
+                                    <tbody class="tbody">
                                         <tr class="first-info">
                                             <td class="connected-icon">
                                                 <div><i class="fa fa-car" aria-hidden="true"></i></div>
@@ -117,6 +124,17 @@ function get_differenct_of_dates($date_start, $date_end)
                                             </td>
                                         </tr>
 
+                                        <tr class="middle-info">
+                                            <td class="connected-icon">
+                                                <div><i class="fa fa-map-marker" aria-hidden="true"></i></div>
+                                            </td>
+                                            <td>
+                                                <div class="address">Southern Davao, Panabo, Davao del Norte,
+                                                    Philippines</div>
+                                                <div class="date-time">May 1, 2021 2:00 PM GMT+8</div>
+                                            </td>
+                                        </tr>
+
                                         <tr class="last-info">
                                             <td class="connected-icon">
                                                 <div><i class="fa fa-stop-circle" aria-hidden="true"></i></div>
@@ -131,12 +149,6 @@ function get_differenct_of_dates($date_start, $date_end)
                                 </table>
                             </div>
                         </div>
-                    </div>
-                    <div class="loader" style="display: none;">
-                        <center>
-                            <img src="<?=base_url('assets/img/trac360/loader1.gif')?>"
-                                alt="">
-                        </center>
                     </div>
                     <div id="employee-upcoming-jobs" class="overflow-auto" style="height: 100%;">
                         <div class="row no-margin">
@@ -315,6 +327,7 @@ function get_differenct_of_dates($date_start, $date_end)
 <!-- page wrapper end -->
 <?php include viewPath('includes/footer'); ?>
 <script>
+    var date_today = "<?=date('m/d/Y')?>";
     var jobs_map;
     var jobs_map_marker = [];
     var directionsService;
@@ -331,7 +344,6 @@ function get_differenct_of_dates($date_start, $date_end)
             },
             zoom: 2,
         });
-
         $("#jobs-map").show();
     }
 </script>

@@ -2375,6 +2375,20 @@ class Workorder extends MY_Controller
         redirect('workorder');
     }
 
+    public function delete_workorder()
+    {
+        $id = $this->input->post('id');
+
+        $data = array(
+            'id' => $id,
+            'view_flag' => '1',
+        );
+
+        $delete = $this->workorder_model->deleteWorkorder($data);
+
+        echo json_encode($delete);
+    }
+
     public function work_order_templates()
     {
         $company_id = logged('company_id');

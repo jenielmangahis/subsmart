@@ -97,6 +97,7 @@ table.route-details-table {
 .route-details-table .address {
     font-size: 12px;
     font-weight: 600;
+    color: #565656;
 }
 
 .route-details-table .date-time {
@@ -107,6 +108,7 @@ table.route-details-table {
 .route-details-table tr:hover div.address {
     font-weight: 700;
     cursor: pointer;
+    color: #000;
 }
 
 .route-details-table tr:hover {

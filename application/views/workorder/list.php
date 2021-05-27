@@ -288,13 +288,15 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                                data-name="WO-00433"><span
                                                                     class="fa fa-money icon"></span> Create Invoice</a>
                                                     </li>
-                                                    <li role="presentation"><a role="menuitem"
+                                                    <!-- <li role="presentation"><a role="menuitem"
                                                                                tabindex="-1"
                                                                                href="<?php echo base_url('workorder/delete/' . $workorder->id) ?>>"
                                                                                onclick="return confirm('Do you really want to delete this item ?')"
                                                                                data-delete-modal="open" data-id="161983"
                                                                                data-name="WO-00433"><span
-                                                                    class="fa fa-trash-o icon"></span> Delete</a></li>
+                                                                    class="fa fa-trash-o icon"></span> Delete</a></li> -->
+                                                    <li role="presentation">
+                                                        <a href="#" work-id="<?php echo $workorder->id; ?>" id="delete_workorder" onclick="myFunction()"><span class="fa fa-trash-o icon"></span> Delete </a></li>
                                                     <li role="presentation">
                                                         <a role="menuitem" tabindex="-1" href="<?php echo base_url('job/work_order_job/'. $workorder->id) ?>">
                                                             <span class="fa fa-briefcase icon"></span> Convert To Jobs
@@ -427,3 +429,57 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     <!-- page wrapper end -->
     <?php include viewPath('includes/footer'); ?>
 </div>
+
+<script>
+// $(document).on('click','#delete_workorder',function(){
+//     // alert('test');
+    
+// });
+
+function myFunction() {
+
+    var id = $(this).attr('work-id');
+  
+  var r = confirm("Are you sure you want to delete this Work Order?");
+
+  if (r == true) {
+    $.ajax({
+    type : 'POST',
+    url : "<?php echo base_url(); ?>workorder/delete_workorder",
+    data : {id: id},
+    success: function(result){
+        // $('#res').html('Signature Uploaded successfully');
+        // if (confirm('Some message')) {
+        //     alert('Thanks for confirming');
+        // } else {
+        //     alert('Why did you press cancel? You should have confirmed');
+        // }
+
+        // location.reload();
+        sucess("Data Deleted Successfully!");
+    },
+    });
+  } 
+  else 
+  {
+    alert('no');
+  }
+
+}
+
+function sucess(information,$id){
+            Swal.fire({
+                title: 'Good job!',
+                text: information,
+                icon: 'success',
+                showCancelButton: false,
+                confirmButtonColor: '#32243d',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ok'
+            }).then((result) => {
+                if (result.value) {
+                    location.reload();
+                }
+            });
+        }
+</script>

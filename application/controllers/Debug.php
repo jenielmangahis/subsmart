@@ -251,7 +251,6 @@
         }
 
         public function deals_invoice_pdf($id){
-
             $this->load->model('MarketingOrderPayments_model');
             $this->load->model('DealsSteals_model');
             $this->load->model('Business_model');

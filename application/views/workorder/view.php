@@ -410,6 +410,11 @@ border: none;
 	{
 		margin-right:0px !important;
 	}
+
+	.mobile_header
+	{
+		margin:5% !important;
+	}
 }
 </style>
     <!-- page wrapper start -->
@@ -467,6 +472,8 @@ border: none;
 				<div class="col-md-8">
 					<div role="white__holder" style="background-color:;padding:5%;border:solid #F4F2F6 3px;box-shadow: 10px 5px 5px #DEDEDE;">
 					<div class="ribbon ribbon-top-left"><span><?php echo $workorder->status ?></span></div>
+					<div class="mobile_header"><?php echo $workorder->header; ?></div>
+					<hr>
 							<div class="workorder-inner">
 								<div clas="row">
 										<div class="col-sm-12 col-sm-push-12 text-right-sm ">
@@ -585,6 +592,15 @@ border: none;
 			         							   			</ul>
 		         							   			</div>
 
+														<hr>
+														<div class="ul-info">
+			         							   			<b class="ul-head">Terms and Conditions </b><br><br>
+															<div style="height:120px; overflow:auto; background:#FFFFFF; padding-left:10px;">
+																<?php echo $workorder->terms_and_conditions; ?>
+															</div>
+		         							   			</div>
+
+
 		         							   </div><br><br>
 		         							   <!--  user info end-->
 
@@ -592,13 +608,13 @@ border: none;
 		         							   		<table class="table-print table-items" style="width: 100%; border-collapse: collapse;">
 											            <thead>
 											                <tr>
-											                    <th style="background: #f4f4f4; text-align: center; padding: 5px 0;">#</th>
-											                    <th style="background: #f4f4f4; text-align: left; padding: 5px 0;">Services</th>
-											                    <th style="background: #f4f4f4; text-align: right; padding: 5px 0;">Qty</th>
-											                    <th style="background: #f4f4f4; text-align: right; padding: 5px 0;">Price</th>
-											                    <th class="hidden_mobile_view" style="background: #f4f4f4; text-align: right; padding: 5px 0;">Discount</th>
-											                    <th class="hidden_mobile_view" style="background: #f4f4f4; text-align: right; padding: 5px 0;">Tax (%)</th>
-											                    <th style="background: #f4f4f4; text-align: right; padding: 5px 8px 5px 0;" class="text-right">Total</th>
+											                    <th style="background: #f4f4f4; text-align: center; padding: 5px 0;font-weight:bold;">#</th>
+											                    <th style="background: #f4f4f4; text-align: left; padding: 5px 0;font-weight:bold;">Services</th>
+											                    <th style="background: #f4f4f4; text-align: right; padding: 5px 0;font-weight:bold;">Qty</th>
+											                    <th style="background: #f4f4f4; text-align: right; padding: 5px 0;font-weight:bold;">Price</th>
+											                    <th class="hidden_mobile_view" style="background: #f4f4f4; text-align: right; padding: 5px 0;font-weight:bold;">Discount</th>
+											                    <th class="hidden_mobile_view" style="background: #f4f4f4; text-align: right; padding: 5px 0;font-weight:bold;">Tax (%)</th>
+											                    <th style="background: #f4f4f4; text-align: right; padding: 5px 8px 5px 0;font-weight:bold;" class="text-right">Total</th>
 											                </tr>
 											            </thead>
 													            <tbody>
@@ -657,6 +673,29 @@ border: none;
 
 		         							     </div>
 		         							        <!--  table print end -->
+
+												
+													<hr>
+														<div class="ul-info">
+			         							   			<b class="ul-head">Terms of Use </b><br><br>
+															<div style="height:120px; overflow:auto; background:#FFFFFF; padding-left:10px;">
+																<?php echo $workorder->terms_of_use; ?>
+															</div>
+		         							   			</div>
+													<hr>
+														<div class="ul-info">
+			         							   			<b class="ul-head">Job Description</b><br><br>
+															<div style="height:120px; overflow:auto; background:#FFFFFF; padding-left:10px;">
+																<?php echo $workorder->job_description; ?>
+															</div>
+		         							   			</div>
+													<hr>
+														<div class="ul-info">
+			         							   			<b class="ul-head">Instructions</b><br><br>
+															<div style="height:120px; overflow:auto; background:#FFFFFF; padding-left:10px;">
+																<?php echo $workorder->instructions; ?>
+															</div>
+		         							   			</div>
 
 
 									</div>
