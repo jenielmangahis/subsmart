@@ -576,80 +576,7 @@ class Vendors extends MY_Controller {
         $transactions = [];
         if(isset($expenses) && count($expenses) > 0) {
             foreach($expenses as $expense) {
-                $categories = $this->expenses_model->get_transaction_categories($expense->id, 'Expense');
-                $items = $this->expenses_model->get_transaction_items($expense->id, 'Expense');
-
-                $totalCount = count($categories) + count($items);
-
-                if($totalCount > 1) {
-                    $category = '-Split-';
-                } else {
-                    if($totalCount === 1) {
-                        if(count($categories) === 1 && count($items) === 0) {
-                            $expenseAcc = $categories[0]->expense_account_id;
-
-                            $accountTypes = [
-                                'Expenses',
-                                'Bank',
-                                'Accounts receivable (A/R)',
-                                'Other Current Assets',
-                                'Fixed Assets',
-                                'Accounts payable (A/P)',
-                                'Credit Card',
-                                'Other Current Liabilities',
-                                'Long Term Liabilities',
-                                'Equity',
-                                'Income',
-                                'Cost of Goods Sold',
-                                'Other Income',
-                                'Other Expense'
-                            ];
-    
-                            $category = '<select class="form-control" name="category[]">';
-    
-                            foreach($accountTypes as $typeName) {
-                                $accType = $this->account_model->getAccTypeByName($typeName);
-        
-                                $accounts = $this->chart_of_accounts_model->getByAccountType($accType->id, null, logged('company_id'));
-        
-                                if(count($accounts) > 0) {
-                                    $category .= '<optgroup label="'.$typeName.'">';
-                                    foreach($accounts as $account) {
-                                        $childAccs = $this->chart_of_accounts_model->getChildAccounts($account->id);
-    
-                                        if($account->id === $expenseAcc) {
-                                            $category .= '<option value="'.$account->id.'" selected>'.$account->name.'</option>';
-                                        } else {
-                                            $category .= '<option value="'.$account->id.'">'.$account->name.'</option>';
-                                        }
-    
-                                        if(count($childAccs) > 0) {
-                                            $category .= '<optgroup label="&nbsp;&nbsp;&nbsp;Sub-account of '.$account->name.'">';
-    
-                                            foreach($childAccs as $childAcc) {
-                                                if($childAcc->id === $expenseAcc) {
-                                                    $category .= '<option value="'.$childAcc->id.'" selected>&nbsp;&nbsp;&nbsp;'.$childAcc->name.'</option>';
-                                                } else {
-                                                    $category .= '<option value="'.$childAcc->id.'">&nbsp;&nbsp;&nbsp;'.$childAcc->name.'</option>';
-                                                }
-                                            }
-    
-                                            $category .= '</optgroup>';
-                                        }
-                                    }
-                                    $category .= '</optgroup>';
-                                }
-                            }
-    
-                            $category .= '</select>';
-                        } else {
-                            $itemId = $items[0]->item_id;
-                            $itemAccDetails = $this->items_model->getItemAccountingDetails($itemId);
-                            $expenseAcc = $itemAccDetails->inv_asset_acc_id;
-                            $category = $this->chart_of_accounts_model->getName($expenseAcc);
-                        }
-                    }
-                }
+                $category = $this->category_col($expense->id, 'Expense');
 
                 $transactions[] = [
                     'id' => $expense->id,
@@ -665,87 +592,14 @@ class Vendors extends MY_Controller {
                     'balance' => '$0.00',
                     'total' => '$'.number_format(floatval($expense->total_amount), 2, '.', ','),
                     'status' => 'Paid',
-                    'attachments' => ''
+                    'attachments' => $expense->attachments === null ? [] : json_decode($expense->attachments, true)
                 ];
             }
         }
 
         if(isset($checks) && count($checks) > 0) {
             foreach($checks as $check) {
-                $categories = $this->expenses_model->get_transaction_categories($check->id, 'Check');
-                $items = $this->expenses_model->get_transaction_items($check->id, 'Check');
-
-                $totalCount = count($categories) + count($items);
-
-                if($totalCount > 1) {
-                    $category = '-Split-';
-                } else {
-                    if($totalCount === 1) {
-                        if(count($categories) === 1 && count($items) === 0) {
-                            $expenseAcc = $categories[0]->expense_account_id;
-
-                            $accountTypes = [
-                                'Expenses',
-                                'Bank',
-                                'Accounts receivable (A/R)',
-                                'Other Current Assets',
-                                'Fixed Assets',
-                                'Accounts payable (A/P)',
-                                'Credit Card',
-                                'Other Current Liabilities',
-                                'Long Term Liabilities',
-                                'Equity',
-                                'Income',
-                                'Cost of Goods Sold',
-                                'Other Income',
-                                'Other Expense'
-                            ];
-    
-                            $category = '<select class="form-control" name="category[]">';
-    
-                            foreach($accountTypes as $typeName) {
-                                $accType = $this->account_model->getAccTypeByName($typeName);
-        
-                                $accounts = $this->chart_of_accounts_model->getByAccountType($accType->id, null, logged('company_id'));
-        
-                                if(count($accounts) > 0) {
-                                    $category .= '<optgroup label="'.$typeName.'">';
-                                    foreach($accounts as $account) {
-                                        $childAccs = $this->chart_of_accounts_model->getChildAccounts($account->id);
-    
-                                        if($account->id === $expenseAcc) {
-                                            $category .= '<option value="'.$account->id.'" selected>'.$account->name.'</option>';
-                                        } else {
-                                            $category .= '<option value="'.$account->id.'">'.$account->name.'</option>';
-                                        }
-    
-                                        if(count($childAccs) > 0) {
-                                            $category .= '<optgroup label="&nbsp;&nbsp;&nbsp;Sub-account of '.$account->name.'">';
-    
-                                            foreach($childAccs as $childAcc) {
-                                                if($childAcc->id === $expenseAcc) {
-                                                    $category .= '<option value="'.$childAcc->id.'" selected>&nbsp;&nbsp;&nbsp;'.$childAcc->name.'</option>';
-                                                } else {
-                                                    $category .= '<option value="'.$childAcc->id.'">&nbsp;&nbsp;&nbsp;'.$childAcc->name.'</option>';
-                                                }
-                                            }
-    
-                                            $category .= '</optgroup>';
-                                        }
-                                    }
-                                    $category .= '</optgroup>';
-                                }
-                            }
-    
-                            $category .= '</select>';
-                        } else {
-                            $itemId = $items[0]->item_id;
-                            $itemAccDetails = $this->items_model->getItemAccountingDetails($itemId);
-                            $expenseAcc = $itemAccDetails->inv_asset_acc_id;
-                            $category = $this->chart_of_accounts_model->getName($expenseAcc);
-                        }
-                    }
-                }
+                $category = $this->category_col($check->id, 'Check');
 
                 $transactions[] = [
                     'id' => $check->id,
@@ -761,87 +615,14 @@ class Vendors extends MY_Controller {
                     'balance' => '$0.00',
                     'total' => '$'.number_format(floatval($check->total_amount), 2, '.', ','),
                     'status' => 'Paid',
-                    'attachments' => ''
+                    'attachments' => $check->attachments === null ? [] : json_decode($check->attachments, true)
                 ];
             }
         }
 
         if(isset($bills) && count($bills) > 0) {
             foreach($bills as $bill) {
-                $categories = $this->expenses_model->get_transaction_categories($bill->id, 'Bill');
-                $items = $this->expenses_model->get_transaction_items($bill->id, 'Bill');
-
-                $totalCount = count($categories) + count($items);
-
-                if($totalCount > 1) {
-                    $category = '-Split-';
-                } else {
-                    if($totalCount === 1) {
-                        if(count($categories) === 1 && count($items) === 0) {
-                            $expenseAcc = $categories[0]->expense_account_id;
-
-                            $accountTypes = [
-                                'Expenses',
-                                'Bank',
-                                'Accounts receivable (A/R)',
-                                'Other Current Assets',
-                                'Fixed Assets',
-                                'Accounts payable (A/P)',
-                                'Credit Card',
-                                'Other Current Liabilities',
-                                'Long Term Liabilities',
-                                'Equity',
-                                'Income',
-                                'Cost of Goods Sold',
-                                'Other Income',
-                                'Other Expense'
-                            ];
-    
-                            $category = '<select class="form-control" name="category[]">';
-    
-                            foreach($accountTypes as $typeName) {
-                                $accType = $this->account_model->getAccTypeByName($typeName);
-        
-                                $accounts = $this->chart_of_accounts_model->getByAccountType($accType->id, null, logged('company_id'));
-        
-                                if(count($accounts) > 0) {
-                                    $category .= '<optgroup label="'.$typeName.'">';
-                                    foreach($accounts as $account) {
-                                        $childAccs = $this->chart_of_accounts_model->getChildAccounts($account->id);
-    
-                                        if($account->id === $expenseAcc) {
-                                            $category .= '<option value="'.$account->id.'" selected>'.$account->name.'</option>';
-                                        } else {
-                                            $category .= '<option value="'.$account->id.'">'.$account->name.'</option>';
-                                        }
-    
-                                        if(count($childAccs) > 0) {
-                                            $category .= '<optgroup label="&nbsp;&nbsp;&nbsp;Sub-account of '.$account->name.'">';
-    
-                                            foreach($childAccs as $childAcc) {
-                                                if($childAcc->id === $expenseAcc) {
-                                                    $category .= '<option value="'.$childAcc->id.'" selected>&nbsp;&nbsp;&nbsp;'.$childAcc->name.'</option>';
-                                                } else {
-                                                    $category .= '<option value="'.$childAcc->id.'">&nbsp;&nbsp;&nbsp;'.$childAcc->name.'</option>';
-                                                }
-                                            }
-    
-                                            $category .= '</optgroup>';
-                                        }
-                                    }
-                                    $category .= '</optgroup>';
-                                }
-                            }
-    
-                            $category .= '</select>';
-                        } else {
-                            $itemId = $items[0]->item_id;
-                            $itemAccDetails = $this->items_model->getItemAccountingDetails($itemId);
-                            $expenseAcc = $itemAccDetails->inv_asset_acc_id;
-                            $category = $this->chart_of_accounts_model->getName($expenseAcc);
-                        }
-                    }
-                }
+                $category = $this->category_col($bill->id, 'Bill');
 
                 $transactions[] = [
                     'id' => $bill->id,
@@ -857,7 +638,7 @@ class Vendors extends MY_Controller {
                     'balance' => '$'.number_format(floatval($bill->remaining_balance), 2, '.', ','),
                     'total' => '$'.number_format(floatval($bill->total_amount), 2, '.', ','),
                     'status' => $bill->status === "2" ? "Paid" : "Open",
-                    'attachments' => ''
+                    'attachments' => $bill->attachments === null ? [] : json_decode($bill->attachments, true)
                 ];
             }
         }
@@ -878,87 +659,14 @@ class Vendors extends MY_Controller {
                     'balance' => '$0.00',
                     'total' => '$'.number_format(floatval($cardPayment->amount), 2, '.', ','),
                     'status' => '',
-                    'attachments' => ''
+                    'attachments' => $cardPayment->attachments === null ? [] : json_decode($cardPayment->attachments, true)
                 ];
             }
         }
 
         if(isset($purchaseOrders) && count($purchaseOrders) > 0) {
             foreach($purchaseOrders as $purchaseOrder) {
-                $categories = $this->expenses_model->get_transaction_categories($purchaseOrder->id, 'Purchase Order');
-                $items = $this->expenses_model->get_transaction_items($purchaseOrder->id, 'Purchase Order');
-
-                $totalCount = count($categories) + count($items);
-
-                if($totalCount > 1) {
-                    $category = '-Split-';
-                } else {
-                    if($totalCount === 1) {
-                        if(count($categories) === 1 && count($items) === 0) {
-                            $expenseAcc = $categories[0]->expense_account_id;
-
-                            $accountTypes = [
-                                'Expenses',
-                                'Bank',
-                                'Accounts receivable (A/R)',
-                                'Other Current Assets',
-                                'Fixed Assets',
-                                'Accounts payable (A/P)',
-                                'Credit Card',
-                                'Other Current Liabilities',
-                                'Long Term Liabilities',
-                                'Equity',
-                                'Income',
-                                'Cost of Goods Sold',
-                                'Other Income',
-                                'Other Expense'
-                            ];
-    
-                            $category = '<select class="form-control" name="category[]">';
-    
-                            foreach($accountTypes as $typeName) {
-                                $accType = $this->account_model->getAccTypeByName($typeName);
-        
-                                $accounts = $this->chart_of_accounts_model->getByAccountType($accType->id, null, logged('company_id'));
-        
-                                if(count($accounts) > 0) {
-                                    $category .= '<optgroup label="'.$typeName.'">';
-                                    foreach($accounts as $account) {
-                                        $childAccs = $this->chart_of_accounts_model->getChildAccounts($account->id);
-    
-                                        if($account->id === $expenseAcc) {
-                                            $category .= '<option value="'.$account->id.'" selected>'.$account->name.'</option>';
-                                        } else {
-                                            $category .= '<option value="'.$account->id.'">'.$account->name.'</option>';
-                                        }
-    
-                                        if(count($childAccs) > 0) {
-                                            $category .= '<optgroup label="&nbsp;&nbsp;&nbsp;Sub-account of '.$account->name.'">';
-    
-                                            foreach($childAccs as $childAcc) {
-                                                if($childAcc->id === $expenseAcc) {
-                                                    $category .= '<option value="'.$childAcc->id.'" selected>&nbsp;&nbsp;&nbsp;'.$childAcc->name.'</option>';
-                                                } else {
-                                                    $category .= '<option value="'.$childAcc->id.'">&nbsp;&nbsp;&nbsp;'.$childAcc->name.'</option>';
-                                                }
-                                            }
-    
-                                            $category .= '</optgroup>';
-                                        }
-                                    }
-                                    $category .= '</optgroup>';
-                                }
-                            }
-    
-                            $category .= '</select>';
-                        } else {
-                            $itemId = $items[0]->item_id;
-                            $itemAccDetails = $this->items_model->getItemAccountingDetails($itemId);
-                            $expenseAcc = $itemAccDetails->inv_asset_acc_id;
-                            $category = $this->chart_of_accounts_model->getName($expenseAcc);
-                        }
-                    }
-                }
+                $category = $this->category_col($purchaseOrder->id, 'Purchase Order');
 
                 $transactions[] = [
                     'id' => $purchaseOrder->id,
@@ -974,7 +682,7 @@ class Vendors extends MY_Controller {
                     'balance' => '$0.00',
                     'total' => '$'.number_format(floatval($purchaseOrder->amount), 2, '.', ','),
                     'status' => $purchaseOrder->status === "1" ? "Open" : "Closed",
-                    'attachments' => ''
+                    'attachments' => $purchaseOrder->attachments === null ? [] : json_decode($purchaseOrder->attachments, true)
                 ];
             }
         }
@@ -999,87 +707,14 @@ class Vendors extends MY_Controller {
                     'balance' => '$0.00',
                     'total' => '-$'.number_format(floatval($payment->total_amount), 2, '.', ','),
                     'status' => 'Applied',
-                    'attachments' => ''
+                    'attachments' => []
                 ];
             }
         }
 
         if(isset($vendorCredits) && count($vendorCredits) > 0) {
             foreach($vendorCredits as $vendorCredit) {
-                $categories = $this->expenses_model->get_transaction_categories($vendorCredit->id, 'Vendor Credit');
-                $items = $this->expenses_model->get_transaction_items($vendorCredit->id, 'Vendor Credit');
-
-                $totalCount = count($categories) + count($items);
-
-                if($totalCount > 1) {
-                    $category = '-Split-';
-                } else {
-                    if($totalCount === 1) {
-                        if(count($categories) === 1 && count($items) === 0) {
-                            $expenseAcc = $categories[0]->expense_account_id;
-
-                            $accountTypes = [
-                                'Expenses',
-                                'Bank',
-                                'Accounts receivable (A/R)',
-                                'Other Current Assets',
-                                'Fixed Assets',
-                                'Accounts payable (A/P)',
-                                'Credit Card',
-                                'Other Current Liabilities',
-                                'Long Term Liabilities',
-                                'Equity',
-                                'Income',
-                                'Cost of Goods Sold',
-                                'Other Income',
-                                'Other Expense'
-                            ];
-    
-                            $category = '<select class="form-control" name="category[]">';
-    
-                            foreach($accountTypes as $typeName) {
-                                $accType = $this->account_model->getAccTypeByName($typeName);
-        
-                                $accounts = $this->chart_of_accounts_model->getByAccountType($accType->id, null, logged('company_id'));
-        
-                                if(count($accounts) > 0) {
-                                    $category .= '<optgroup label="'.$typeName.'">';
-                                    foreach($accounts as $account) {
-                                        $childAccs = $this->chart_of_accounts_model->getChildAccounts($account->id);
-    
-                                        if($account->id === $expenseAcc) {
-                                            $category .= '<option value="'.$account->id.'" selected>'.$account->name.'</option>';
-                                        } else {
-                                            $category .= '<option value="'.$account->id.'">'.$account->name.'</option>';
-                                        }
-    
-                                        if(count($childAccs) > 0) {
-                                            $category .= '<optgroup label="&nbsp;&nbsp;&nbsp;Sub-account of '.$account->name.'">';
-    
-                                            foreach($childAccs as $childAcc) {
-                                                if($childAcc->id === $expenseAcc) {
-                                                    $category .= '<option value="'.$childAcc->id.'" selected>&nbsp;&nbsp;&nbsp;'.$childAcc->name.'</option>';
-                                                } else {
-                                                    $category .= '<option value="'.$childAcc->id.'">&nbsp;&nbsp;&nbsp;'.$childAcc->name.'</option>';
-                                                }
-                                            }
-    
-                                            $category .= '</optgroup>';
-                                        }
-                                    }
-                                    $category .= '</optgroup>';
-                                }
-                            }
-    
-                            $category .= '</select>';
-                        } else {
-                            $itemId = $items[0]->item_id;
-                            $itemAccDetails = $this->items_model->getItemAccountingDetails($itemId);
-                            $expenseAcc = $itemAccDetails->inv_asset_acc_id;
-                            $category = $this->chart_of_accounts_model->getName($expenseAcc);
-                        }
-                    }
-                }
+                $category = $this->category_col($vendorCredit->id, 'Vendor Credit');
 
                 $transactions[] = [
                     'id' => $vendorCredit->id,
@@ -1095,87 +730,14 @@ class Vendors extends MY_Controller {
                     'balance' => '$'.number_format(floatval($vendorCredit->total_amount), 2, '.', ','),
                     'total' => '-$'.number_format(floatval($vendorCredit->total_amount), 2, '.', ','),
                     'status' => $vendorCredit->status === "1" ? "Unapplied" : "Applied",
-                    'attachments' => ''
+                    'attachments' => $vendorCredit->attachments === null ? [] : json_decode($vendorCredit->attachments, true)
                 ];
             }
         }
 
         if(isset($creditCardCredits) && count($creditCardCredits) > 0) {
             foreach($creditCardCredits as $creditCardCredit) {
-                $categories = $this->expenses_model->get_transaction_categories($creditCardCredit->id, 'Credit Card Credit');
-                $items = $this->expenses_model->get_transaction_items($creditCardCredit->id, 'Credit Card Credit');
-
-                $totalCount = count($categories) + count($items);
-
-                if($totalCount > 1) {
-                    $category = '-Split-';
-                } else {
-                    if($totalCount === 1) {
-                        if(count($categories) === 1 && count($items) === 0) {
-                            $expenseAcc = $categories[0]->expense_account_id;
-
-                            $accountTypes = [
-                                'Expenses',
-                                'Bank',
-                                'Accounts receivable (A/R)',
-                                'Other Current Assets',
-                                'Fixed Assets',
-                                'Accounts payable (A/P)',
-                                'Credit Card',
-                                'Other Current Liabilities',
-                                'Long Term Liabilities',
-                                'Equity',
-                                'Income',
-                                'Cost of Goods Sold',
-                                'Other Income',
-                                'Other Expense'
-                            ];
-    
-                            $category = '<select class="form-control" name="category[]">';
-    
-                            foreach($accountTypes as $typeName) {
-                                $accType = $this->account_model->getAccTypeByName($typeName);
-        
-                                $accounts = $this->chart_of_accounts_model->getByAccountType($accType->id, null, logged('company_id'));
-        
-                                if(count($accounts) > 0) {
-                                    $category .= '<optgroup label="'.$typeName.'">';
-                                    foreach($accounts as $account) {
-                                        $childAccs = $this->chart_of_accounts_model->getChildAccounts($account->id);
-    
-                                        if($account->id === $expenseAcc) {
-                                            $category .= '<option value="'.$account->id.'" selected>'.$account->name.'</option>';
-                                        } else {
-                                            $category .= '<option value="'.$account->id.'">'.$account->name.'</option>';
-                                        }
-    
-                                        if(count($childAccs) > 0) {
-                                            $category .= '<optgroup label="&nbsp;&nbsp;&nbsp;Sub-account of '.$account->name.'">';
-    
-                                            foreach($childAccs as $childAcc) {
-                                                if($childAcc->id === $expenseAcc) {
-                                                    $category .= '<option value="'.$childAcc->id.'" selected>&nbsp;&nbsp;&nbsp;'.$childAcc->name.'</option>';
-                                                } else {
-                                                    $category .= '<option value="'.$childAcc->id.'">&nbsp;&nbsp;&nbsp;'.$childAcc->name.'</option>';
-                                                }
-                                            }
-    
-                                            $category .= '</optgroup>';
-                                        }
-                                    }
-                                    $category .= '</optgroup>';
-                                }
-                            }
-    
-                            $category .= '</select>';
-                        } else {
-                            $itemId = $items[0]->item_id;
-                            $itemAccDetails = $this->items_model->getItemAccountingDetails($itemId);
-                            $expenseAcc = $itemAccDetails->inv_asset_acc_id;
-                            $category = $this->chart_of_accounts_model->getName($expenseAcc);
-                        }
-                    }
-                }
+                $category = $this->category_col($creditCardCredit->id, 'Credit Card Credit');
 
                 $transactions[] = [
                     'id' => $creditCardCredit->id,
@@ -1191,12 +753,92 @@ class Vendors extends MY_Controller {
                     'balance' => '$0.00',
                     'total' => '-$'.number_format(floatval($creditCardCredit->total_amount), 2, '.', ','),
                     'status' => '',
-                    'attachments' => ''
+                    'attachments' => $creditCardCredit->attachments === null ? [] : json_decode($creditCardCredit->attachments, true)
                 ];
             }
         }
 
         return $transactions;
+    }
+
+    private function category_col($transactionId, $transactionType)
+    {
+        $categories = $this->expenses_model->get_transaction_categories($transactionId, $transactionType);
+        $items = $this->expenses_model->get_transaction_items($transactionId, $transactionType);
+
+        $totalCount = count($categories) + count($items);
+
+        if($totalCount > 1) {
+            $category = '-Split-';
+        } else {
+            if($totalCount === 1) {
+                if(count($categories) === 1 && count($items) === 0) {
+                    $expenseAcc = $categories[0]->expense_account_id;
+
+                    $accountTypes = [
+                        'Expenses',
+                        'Bank',
+                        'Accounts receivable (A/R)',
+                        'Other Current Assets',
+                        'Fixed Assets',
+                        'Accounts payable (A/P)',
+                        'Credit Card',
+                        'Other Current Liabilities',
+                        'Long Term Liabilities',
+                        'Equity',
+                        'Income',
+                        'Cost of Goods Sold',
+                        'Other Income',
+                        'Other Expense'
+                    ];
+
+                    $category = '<select class="form-control" name="category[]">';
+
+                    foreach($accountTypes as $typeName) {
+                        $accType = $this->account_model->getAccTypeByName($typeName);
+
+                        $accounts = $this->chart_of_accounts_model->getByAccountType($accType->id, null, logged('company_id'));
+
+                        if(count($accounts) > 0) {
+                            $category .= '<optgroup label="'.$typeName.'">';
+                            foreach($accounts as $account) {
+                                $childAccs = $this->chart_of_accounts_model->getChildAccounts($account->id);
+
+                                if($account->id === $expenseAcc) {
+                                    $category .= '<option value="'.$account->id.'" selected>'.$account->name.'</option>';
+                                } else {
+                                    $category .= '<option value="'.$account->id.'">'.$account->name.'</option>';
+                                }
+
+                                if(count($childAccs) > 0) {
+                                    $category .= '<optgroup label="&nbsp;&nbsp;&nbsp;Sub-account of '.$account->name.'">';
+
+                                    foreach($childAccs as $childAcc) {
+                                        if($childAcc->id === $expenseAcc) {
+                                            $category .= '<option value="'.$childAcc->id.'" selected>&nbsp;&nbsp;&nbsp;'.$childAcc->name.'</option>';
+                                        } else {
+                                            $category .= '<option value="'.$childAcc->id.'">&nbsp;&nbsp;&nbsp;'.$childAcc->name.'</option>';
+                                        }
+                                    }
+
+                                    $category .= '</optgroup>';
+                                }
+                            }
+                            $category .= '</optgroup>';
+                        }
+                    }
+
+                    $category .= '</select>';
+                } else {
+                    $itemId = $items[0]->item_id;
+                    $itemAccDetails = $this->items_model->getItemAccountingDetails($itemId);
+                    $expenseAcc = $itemAccDetails->inv_asset_acc_id;
+                    $category = $this->chart_of_accounts_model->getName($expenseAcc);
+                }
+            }
+        }
+
+        return $category;
     }
 
     public function update_transaction_category()
@@ -1536,36 +1178,8 @@ class Vendors extends MY_Controller {
         return $update;
     }
 
-    public function view_expense($expenseId)
+    private function get_category_accs()
     {
-        $expense = $this->vendors_model->get_expense_by_id($expenseId);
-        $paymentAccs = [];
-        $paymentAccsType = $this->account_model->getAccTypeByName(['Bank', 'Credit Card', 'Other Current Assets']);
-
-        foreach($paymentAccsType as $accType) {
-            $accounts = $this->chart_of_accounts_model->getByAccountType($accType->id, null, logged('company_id'));
-
-            if(count($accounts) > 0) {
-                foreach($accounts as $account) {
-                    $childAccs = $this->chart_of_accounts_model->getChildAccounts($account->id);
-
-                    $account->childAccs = $childAccs;
-
-                    $paymentAccs[$accType->account_name][] = $account;
-
-                    if($account->id === $expense->payment_account_id) {
-                        $selectedBalance = $account->balance;
-                    }
-
-                    foreach($childAccs as $childAcc) {
-                        if($childAcc->id === $expense->payment_account_id) {
-                            $selectedBalance = $childAcc->balance;
-                        }
-                    }
-                }
-            }
-        }
-
         $categoryAccs = [];
         $accountTypes = [
             'Expenses',
@@ -1600,6 +1214,39 @@ class Vendors extends MY_Controller {
             }
         }
 
+        return $categoryAccs;
+    }
+
+    public function view_expense($expenseId)
+    {
+        $expense = $this->vendors_model->get_expense_by_id($expenseId);
+        $paymentAccs = [];
+        $paymentAccsType = $this->account_model->getAccTypeByName(['Bank', 'Credit Card', 'Other Current Assets']);
+
+        foreach($paymentAccsType as $accType) {
+            $accounts = $this->chart_of_accounts_model->getByAccountType($accType->id, null, logged('company_id'));
+
+            if(count($accounts) > 0) {
+                foreach($accounts as $account) {
+                    $childAccs = $this->chart_of_accounts_model->getChildAccounts($account->id);
+
+                    $account->childAccs = $childAccs;
+
+                    $paymentAccs[$accType->account_name][] = $account;
+
+                    if($account->id === $expense->payment_account_id) {
+                        $selectedBalance = $account->balance;
+                    }
+
+                    foreach($childAccs as $childAcc) {
+                        if($childAcc->id === $expense->payment_account_id) {
+                            $selectedBalance = $childAcc->balance;
+                        }
+                    }
+                }
+            }
+        }
+
         if(strpos($selectedBalance, '-') !== false) {
             $balance = str_replace('-', '', $selectedBalance);
             $selectedBalance = '-$'.number_format($balance, 2, '.', ',');
@@ -1616,7 +1263,7 @@ class Vendors extends MY_Controller {
         $this->page_data['dropdown']['payment_methods'] = $this->accounting_payment_methods_model->getCompanyPaymentMethods();
         $this->page_data['balance'] = $selectedBalance;
         $this->page_data['dropdown']['employees'] = $this->users_model->getCompanyUsers(logged('company_id'));
-        $this->page_data['dropdown']['categories'] = $categoryAccs;
+        $this->page_data['dropdown']['categories'] = $this->get_category_accs();
         $this->page_data['dropdown']['items'] = $this->items_model->getItemsWithFilter(['type' => 'inventory', 'status' => [1]]);
         $this->page_data['dropdown']['customers'] = $this->accounting_customers_model->getAllByCompany();
         $this->page_data['dropdown']['payment_accounts'] = $paymentAccs;
@@ -1648,6 +1295,9 @@ class Vendors extends MY_Controller {
             break;
             case 'credit-card-credit' :
                 $transaction = $this->vendors_model->get_credit_card_credit_by_id($transactionId);
+            break;
+            case 'bill-payment' :
+                $transaction = $this->vendors_model->get_bill_payment_by_id($transactionId);
             break;
         }
 
@@ -1697,40 +1347,6 @@ class Vendors extends MY_Controller {
             $selectedBalance = '$'.number_format($selectedBalance, 2, '.', ',');
         }
 
-        $categoryAccs = [];
-        $accountTypes = [
-            'Expenses',
-            'Bank',
-            'Accounts receivable (A/R)',
-            'Other Current Assets',
-            'Fixed Assets',
-            'Accounts payable (A/P)',
-            'Credit Card',
-            'Other Current Liabilities',
-            'Long Term Liabilities',
-            'Equity',
-            'Income',
-            'Cost of Goods Sold',
-            'Other Income',
-            'Other Expense'
-        ];
-
-        foreach($accountTypes as $typeName) {
-            $accType = $this->account_model->getAccTypeByName($typeName);
-
-            $accounts = $this->chart_of_accounts_model->getByAccountType($accType->id, null, logged('company_id'));
-
-            if(count($accounts) > 0) {
-                foreach($accounts as $account) {
-                    $childAccs = $this->chart_of_accounts_model->getChildAccounts($account->id);
-
-                    $account->childAccs = $childAccs;
-
-                    $categoryAccs[$typeName][] = $account;
-                }
-            }
-        }
-
         $categories = $this->expenses_model->get_transaction_categories($checkId, 'Check');
         $items = $this->expenses_model->get_transaction_items($checkId, 'Check');
 
@@ -1740,7 +1356,7 @@ class Vendors extends MY_Controller {
         $this->page_data['dropdown']['payment_methods'] = $this->accounting_payment_methods_model->getCompanyPaymentMethods();
         $this->page_data['balance'] = $selectedBalance;
         $this->page_data['dropdown']['employees'] = $this->users_model->getCompanyUsers(logged('company_id'));
-        $this->page_data['dropdown']['categories'] = $categoryAccs;
+        $this->page_data['dropdown']['categories'] = $this->get_category_accs();
         $this->page_data['dropdown']['items'] = $this->items_model->getItemsWithFilter(['type' => 'inventory', 'status' => [1]]);
         $this->page_data['dropdown']['customers'] = $this->accounting_customers_model->getAllByCompany();
         $this->page_data['dropdown']['bank_accounts'] = $bankAccs;
@@ -1756,40 +1372,6 @@ class Vendors extends MY_Controller {
         $terms = $this->accounting_terms_model->getActiveCompanyTerms(logged('company_id'));
 
         $selectedTerm = $terms[0];
-
-        $categoryAccs = [];
-        $accountTypes = [
-            'Expenses',
-            'Bank',
-            'Accounts receivable (A/R)',
-            'Other Current Assets',
-            'Fixed Assets',
-            'Accounts payable (A/P)',
-            'Credit Card',
-            'Other Current Liabilities',
-            'Long Term Liabilities',
-            'Equity',
-            'Income',
-            'Cost of Goods Sold',
-            'Other Income',
-            'Other Expense'
-        ];
-
-        foreach($accountTypes as $typeName) {
-            $accType = $this->account_model->getAccTypeByName($typeName);
-
-            $accounts = $this->chart_of_accounts_model->getByAccountType($accType->id, null, logged('company_id'));
-
-            if(count($accounts) > 0) {
-                foreach($accounts as $account) {
-                    $childAccs = $this->chart_of_accounts_model->getChildAccounts($account->id);
-
-                    $account->childAccs = $childAccs;
-
-                    $categoryAccs[$typeName][] = $account;
-                }
-            }
-        }
 
         $billPayments = $this->vendors_model->get_bill_payments_by_bill_id($billId);
 
@@ -1813,7 +1395,7 @@ class Vendors extends MY_Controller {
         $this->page_data['bill'] = $bill;
         $this->page_data['categories'] = $categories;
         $this->page_data['items'] = $items;
-        $this->page_data['dropdown']['categories'] = $categoryAccs;
+        $this->page_data['dropdown']['categories'] = $this->get_category_accs();
         $this->page_data['dropdown']['items'] = $this->items_model->getItemsWithFilter(['type' => 'inventory', 'status' => [1]]);
         $this->page_data['dropdown']['customers'] = $this->accounting_customers_model->getAllByCompany();
         $this->page_data['dropdown']['vendors'] = $this->vendors_model->getAllByCompany();
@@ -1827,40 +1409,6 @@ class Vendors extends MY_Controller {
     {
         $purchaseOrder = $this->vendors_model->get_purchase_order_by_id($purchOrderId);
 
-        $categoryAccs = [];
-        $accountTypes = [
-            'Expenses',
-            'Bank',
-            'Accounts receivable (A/R)',
-            'Other Current Assets',
-            'Fixed Assets',
-            'Accounts payable (A/P)',
-            'Credit Card',
-            'Other Current Liabilities',
-            'Long Term Liabilities',
-            'Equity',
-            'Income',
-            'Cost of Goods Sold',
-            'Other Income',
-            'Other Expense'
-        ];
-
-        foreach($accountTypes as $typeName) {
-            $accType = $this->account_model->getAccTypeByName($typeName);
-
-            $accounts = $this->chart_of_accounts_model->getByAccountType($accType->id, null, logged('company_id'));
-
-            if(count($accounts) > 0) {
-                foreach($accounts as $account) {
-                    $childAccs = $this->chart_of_accounts_model->getChildAccounts($account->id);
-
-                    $account->childAccs = $childAccs;
-
-                    $categoryAccs[$typeName][] = $account;
-                }
-            }
-        }
-
         $categories = $this->expenses_model->get_transaction_categories($purchOrderId, 'Purchase Order');
         $items = $this->expenses_model->get_transaction_items($purchOrderId, 'Purchase Order');
 
@@ -1869,7 +1417,7 @@ class Vendors extends MY_Controller {
         $this->page_data['items'] = $items;
         $this->page_data['dropdown']['vendors'] = $this->vendors_model->getAllByCompany();
         $this->page_data['dropdown']['customers'] = $this->accounting_customers_model->getAllByCompany();
-        $this->page_data['dropdown']['categories'] = $categoryAccs;
+        $this->page_data['dropdown']['categories'] = $this->get_category_accs();
 
         $this->load->view('accounting/vendors/view_purchase_order', $this->page_data);
     }
@@ -1877,40 +1425,6 @@ class Vendors extends MY_Controller {
     public function view_vendor_credit($vendorCreditId)
     {
         $vendorCredit = $this->vendors_model->get_vendor_credit_by_id($vendorCreditId);
-
-        $categoryAccs = [];
-        $accountTypes = [
-            'Expenses',
-            'Bank',
-            'Accounts receivable (A/R)',
-            'Other Current Assets',
-            'Fixed Assets',
-            'Accounts payable (A/P)',
-            'Credit Card',
-            'Other Current Liabilities',
-            'Long Term Liabilities',
-            'Equity',
-            'Income',
-            'Cost of Goods Sold',
-            'Other Income',
-            'Other Expense'
-        ];
-
-        foreach($accountTypes as $typeName) {
-            $accType = $this->account_model->getAccTypeByName($typeName);
-
-            $accounts = $this->chart_of_accounts_model->getByAccountType($accType->id, null, logged('company_id'));
-
-            if(count($accounts) > 0) {
-                foreach($accounts as $account) {
-                    $childAccs = $this->chart_of_accounts_model->getChildAccounts($account->id);
-
-                    $account->childAccs = $childAccs;
-
-                    $categoryAccs[$typeName][] = $account;
-                }
-            }
-        }
 
         $categories = $this->expenses_model->get_transaction_categories($vendorCreditId, 'Vendor Credit');
         $items = $this->expenses_model->get_transaction_items($vendorCreditId, 'Vendor Credit');
@@ -1921,7 +1435,7 @@ class Vendors extends MY_Controller {
         $this->page_data['dropdown']['items'] = $this->items_model->getItemsWithFilter(['type' => 'inventory', 'status' => [1]]);
         $this->page_data['dropdown']['customers'] = $this->accounting_customers_model->getAllByCompany();
         $this->page_data['dropdown']['vendors'] = $this->vendors_model->getAllByCompany();
-        $this->page_data['dropdown']['categories'] = $categoryAccs;
+        $this->page_data['dropdown']['categories'] = $this->get_category_accs();
 
         $this->load->view('accounting/vendors/view_vendor_credit', $this->page_data);
     }
@@ -1981,40 +1495,6 @@ class Vendors extends MY_Controller {
             }
         }
 
-        $categoryAccs = [];
-        $accountTypes = [
-            'Expenses',
-            'Bank',
-            'Accounts receivable (A/R)',
-            'Other Current Assets',
-            'Fixed Assets',
-            'Accounts payable (A/P)',
-            'Credit Card',
-            'Other Current Liabilities',
-            'Long Term Liabilities',
-            'Equity',
-            'Income',
-            'Cost of Goods Sold',
-            'Other Income',
-            'Other Expense'
-        ];
-
-        foreach($accountTypes as $typeName) {
-            $accType = $this->account_model->getAccTypeByName($typeName);
-
-            $accounts = $this->chart_of_accounts_model->getByAccountType($accType->id, null, logged('company_id'));
-
-            if(count($accounts) > 0) {
-                foreach($accounts as $account) {
-                    $childAccs = $this->chart_of_accounts_model->getChildAccounts($account->id);
-
-                    $account->childAccs = $childAccs;
-
-                    $categoryAccs[$typeName][] = $account;
-                }
-            }
-        }
-
         if(strpos($selectedBalance, '-') !== false) {
             $balance = str_replace('-', '', $selectedBalance);
             $selectedBalance = '-$'.number_format($balance, 2, '.', ',');
@@ -2030,11 +1510,58 @@ class Vendors extends MY_Controller {
         $this->page_data['items'] = $items;
         $this->page_data['dropdown']['employees'] = $this->users_model->getCompanyUsers(logged('company_id'));
         $this->page_data['balance'] = $selectedBalance;
-        $this->page_data['dropdown']['categories'] = $categoryAccs;
+        $this->page_data['dropdown']['categories'] = $this->get_category_accs();
         $this->page_data['dropdown']['customers'] = $this->accounting_customers_model->getAllByCompany();
         $this->page_data['dropdown']['bank_credit_accounts'] = $creditCardAccs;
         $this->page_data['dropdown']['vendors'] = $this->vendors_model->getAllByCompany();
 
         $this->load->view('accounting/vendors/view_credit_card_credit', $this->page_data);
+    }
+
+    public function view_bill_payment($billPaymentId, $vendorId)
+    {
+        $paymentAccs = [];
+        $accountTypes = [
+            'Bank',
+            'Credit Card'
+        ];
+
+        foreach($accountTypes as $typeName) {
+            $accType = $this->account_model->getAccTypeByName($typeName);
+
+            $accounts = $this->chart_of_accounts_model->getByAccountType($accType->id, null, logged('company_id'));
+
+            $count = 0;
+            if(count($accounts) > 0) {
+                foreach($accounts as $account) {
+                    $childAccs = $this->chart_of_accounts_model->getChildAccounts($account->id);
+
+                    $account->childAccs = $childAccs;
+
+                    $paymentAccs[$typeName][] = $account;
+
+                    if($count === 1) {
+                        $selectedBalance = $account->balance;
+                    }
+
+                    $count++;
+                }
+            }
+        }
+
+        if(strpos($selectedBalance, '-') !== false) {
+            $balance = str_replace('-', '', $selectedBalance);
+            $selectedBalance = '-$'.number_format($balance, 2, '.', ',');
+        } else {
+            $selectedBalance = '$'.number_format($selectedBalance, 2, '.', ',');
+        }
+
+        $this->page_data['billPayment'] = $this->vendors_model->get_bill_payment_by_id($billPaymentId);
+        $this->page_data['vendor'] = $this->vendors_model->get_vendor_by_id($vendorId);
+        $this->page_data['dropdown']['payment_accounts'] = $paymentAccs;
+        $this->page_data['balance'] = $selectedBalance;
+        $this->page_data['dropdown']['payees'] = $this->vendors_model->getAllByCompany();
+
+        $this->load->view('accounting/vendors/view_bill_payment', $this->page_data);
     }
 }

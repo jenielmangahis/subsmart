@@ -264,4 +264,10 @@ class Trac360_model extends MY_Model
         $query = $this->db->get();
         return $query->result();
     }
+    public function get_employee_history($date_from, $date_to, $user_id)
+    {
+        $this->db->reset_query();
+        $qry = $this->db->query("SELECT * from trac360_user_visit_details WHERE date_created >= '".$date_from."' AND date_created <= '".$date_to." 23:59:59' AND user_id = ".$user_id);
+        return $qry->result();
+    }
 }

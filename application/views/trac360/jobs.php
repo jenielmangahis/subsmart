@@ -15,7 +15,9 @@ function get_differenct_of_dates($date_start, $date_end)
     return ($difference / 60) / 60;
 }
 ?>
+<style>
 
+</style>
 <!-- page wrapper start -->
 <!-- <div class="wrapper" role="wrapper"> -->
 <!--<div wrapper__section>-->

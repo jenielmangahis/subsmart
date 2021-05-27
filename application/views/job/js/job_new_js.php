@@ -155,9 +155,9 @@ if(isset($jobs_data)){
         });
 
         $(".workorder_select").click(function () {
-            var idd = this.id;
-            $('#customer_id').empty().append('<option value="">Select Existing Customer</option>');
-            get_customers(idd);
+            window.location.href='<?= base_url(); ?>job/work_order_job/'+this.id;
+            //$('#customer_id').empty().append('<option value="">Select Existing Customer</option>');
+            //get_customers(idd);
         });
 
         $(".invoice_select").click(function () {
