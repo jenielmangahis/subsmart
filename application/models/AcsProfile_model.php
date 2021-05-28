@@ -32,6 +32,12 @@ class AcsProfile_model extends MY_Model
         $this->db->from($this->table);
         $this->db->where('prof_id', $prof_id);
 
+        if( !empty($conditions) ){
+            foreach( $conditions as $c ){
+                $this->db->where($c['field'], $c['value']);                
+            }
+        }
+        
         $query = $this->db->get();
         return $query->row();
     }
