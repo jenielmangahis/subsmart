@@ -582,4 +582,26 @@ class Vendors_model extends MY_Model {
 		$query = $this->db->get('accounting_credit_card_credits');
 		return $query->row();
 	}
+
+	public function get_bill_payment_bills_by_vendor_id($billPaymentId, $vendorId, $filters = [])
+	{
+		$this->db->select('accounting_bill.*');
+		$this->db->where('accounting_bill.vendor_id', $vendorId);
+		$this->db->where('accounting_bill_payment_items.bill_payment_id', $billPaymentId);
+		if(isset($filters['from']) && !is_null($filters['from'])) {
+			$this->db->where('accounting_bill.bill_date >=', $filters['from']);
+		}
+		if(isset($filters['to'])  && !is_null($filters['to'])) {
+			$this->db->where('accounting_bill.bill_date <=', $filters['to']);
+		}
+		if($filters['overdue']) {
+			$this->db->where('accounting_bill.due_date <', date("Y-m-d"));
+		}
+		$this->db->order_by('accounting_bill.bill_date', 'asc');
+		$this->db->from('accounting_bill');
+		$this->db->join('accounting_bill_payment_items', 'accounting_bill_payment_items.bill_id = accounting_bill.id');
+		$query = $this->db->get();
+
+		return $query->result();
+	}
 }

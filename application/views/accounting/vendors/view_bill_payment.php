@@ -106,6 +106,77 @@
                                             <div class="row">
                                                 <div class="col-md-12">
                                                     <h4>Outstanding Transactions</h4>
+                                                </div>
+
+                                                <div class="col-md-6">
+                                                    <div class="form-row">
+                                                        <div class="col-3">
+                                                            <input type="text" name="search" id="search" class="form-control" placeholder="Find Bill no.">
+                                                        </div>
+                                                        <div class="col-3">
+                                                            <div class="dropdown d-inline-block d-flex align-items-center h-100">
+                                                                <a href="javascript:void(0);" class="btn btn-transparent dropdown-toggle hide-toggle" id="filterDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Filter <i class="fa fa-chevron-right"></i></a>
+
+                                                                <div class="dropdown-menu p-3 w-auto" aria-labelledby="filterDropdown" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 40px, 0px); top: 0px; left: 0px; will-change: transform;">
+                                                                    <div class="inner-filter-list">
+                                                                        <div class="row">
+                                                                            <div class="col-sm-12">
+                                                                                <div class="form-row">
+                                                                                    <div class="col-6">
+                                                                                        <div class="form-group">
+                                                                                            <label for="bills-from">Bills from</label>
+                                                                                            <input type="text" name="bills_from" id="bills-from" class="form-control date">
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div class="col-6">
+                                                                                        <div class="form-group">
+                                                                                            <label for="bills-to">To</label>
+                                                                                            <input type="text" name="bills_to" id="bills-to" class="form-control date">
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="form-check">
+                                                                                    <input type="checkbox" name="overdue_bills_only" id="overdue_bills_only" class="form-check-input" value="1">
+                                                                                    <label for="overdue_bills_only" class="form-check-label">Overdue bills only</label>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+
+                                                                        <div class="btn-group">
+                                                                            <a href="#" class="btn-main" id="reset-btn" onclick="resetBillsFilter()">Reset</a>
+                                                                            <a href="#" id="apply-btn" class="btn-main apply-btn" onclick="applyBillsFilter()">Apply</a>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="action-bar h-100 d-flex align-items-center">
+                                                        <ul class="ml-auto">
+                                                            <li class="">
+                                                                <a class="hide-toggle dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                                    <i class="fa fa-cog"></i>
+                                                                </a>
+                                                                <div class="dropdown-menu p-3" aria-labelledby="dropdownMenuLink" x-placement="bottom-start" style="position: absolute; transform: translate3d(970px, 33px, 0px); top: 0px; left: 0px; will-change: transform;">
+                                                                    <p class="m-0">Rows</p>
+                                                                    <p class="m-0">
+                                                                        <select name="table_rows" id="table_rows" class="form-control select2-hidden-accessible" tabindex="-1" aria-hidden="true">
+                                                                            <option value="50">50</option>
+                                                                            <option value="75">75</option>
+                                                                            <option value="100">100</option>
+                                                                            <option value="150" selected>150</option>
+                                                                            <option value="300">300</option>
+                                                                        </select>
+                                                                    </p>
+                                                                </div>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-12 my-3">
                                                     <table class="table table-bordered table-hover clickable" id="bills-table">
                                                         <thead>
                                                             <th></th>

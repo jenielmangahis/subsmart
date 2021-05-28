@@ -649,8 +649,12 @@ class Trac360 extends MY_Controller
         $user_id = $this->input->post("the_user_id");
         $history_details = $this->trac360_model->get_employee_history($date_from, $date_to, $user_id);
         $info_count =0;
+        $route_latlng = array();
         $html='';
         foreach ($history_details as $history) {
+            $explode= explode(",", $history->last_coordinate);
+            $explode[]=$history->last_address;
+            $route_latlng [] = $explode;
             $info_class="";
             $info_icon = "";
             if ($info_count == 0) {
@@ -658,24 +662,26 @@ class Trac360 extends MY_Controller
                 $info_icon = "fa-car";
             } elseif ($info_count+1 < count($history_details)) {
                 $info_class="middle-info";
-                $info_icon = "fa-map-marker";
+                $info_icon = "fa-stop-circle";
             } else {
                 $info_class="last-info";
-                $info_icon = "fa-stop-circle";
+                $info_icon = "fa-map-marker";
             }
-            $html .= '<tr class="'.$info_class.'">
+            $html .= '<tr class="last-coords-details '.$info_class.'"  data-i="'.$info_count.'">
                         <td class="connected-icon">
                             <div><i class="fa '.$info_icon.'" aria-hidden="true"></i></div>
                         </td>
                         <td>
                             <div class="address">'.$history->last_address.'</div>
-                            <div class="date-time">'.date('M d, Y h:i A').'</div>
+                            <div class="date-time">'.date('M d, Y h:i A', strtotime($history->date_created)).'</div>
                         </td>
                     </tr>';
             $info_count++;
         }
         $data = new stdClass();
         $data->html = $html;
+        $data->route_latlng = $route_latlng;
+        
         echo json_encode($data);
     }
 }

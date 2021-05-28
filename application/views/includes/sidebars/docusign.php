@@ -47,8 +47,13 @@
         <li class="nav-header" style="padding-top: 0px;margin-top: 0px;">DOCUSIGN</li>
 
         <li class="submenus">
-            <a href="<?=base_url('esign/Files')?>" title="New">
-            <span class="fa fa-plus"></span>New</a>
+            <a href="<?=base_url('esign/Files')?>" title="Send Envelope">
+            <span class="fa fa-envelope"></span>Send envelope</a>
+        </li>
+
+        <li class="submenus" id="signadocument">
+            <a href="#" title="Sign a document">
+            <span class="fa fa-pencil"></span>Sign a document</a>
         </li>
 
         <li class="submenus">
@@ -72,3 +77,38 @@
         </li>
     </ul>
 </nav>
+
+<div class="modal fade" id="selectDocument" tabindex="-1" role="dialog" aria-labelledby="selectDocumentLabel" aria-hidden="true">
+	<div class="modal-dialog modal-lg" role="document">
+		<div class="modal-content">
+		<div class="modal-header">
+			<h5 class="modal-title" id="selectDocumentLabel">Sign a document</h5>
+			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+			<span aria-hidden="true">&times;</span>
+			</button>
+		</div>
+		<div class="modal-body">
+            <div class="fileupload">
+                <div class="custome-fileup">
+                    <div class="upload-btn-wrapper">
+                        <button class="btn">
+                            <img src="https://localhost/nsmartrac/assets/esign/images/fileup-ic.png" alt="">
+                            <span>Upload</span>
+                        </button>
+                        <input multiple="" type="file" name="docFile" id="docFile" accept="application/pdf,application/vnd.ms-excel" required="">
+                    </div>
+                </div>
+            </div>
+		</div>
+		<div class="modal-footer">
+			<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+			<button type="button" class="btn btn-primary d-flex align-items-center">
+				<div class="spinner-border spinner-border-sm m-0 d-none" role="status">
+					<span class="sr-only">Loading...</span>
+				</div>
+				<span class="ml-1">Sign</span>
+			</button>
+		</div>
+		</div>
+	</div>
+</div>

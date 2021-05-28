@@ -429,3 +429,110 @@ div.popup-map-marker:hover h3 {
 #single-job-view-directionsRenderer-panel .panel-content {
     min-width: 439px;
 }
+
+#single-job-view-directionsRenderer-panel-view table.adp-directions td.adp-substep {
+    border: none;
+    font-size: 13px;
+    position: relative;
+}
+
+#single-job-view-directionsRenderer-panel-view table.adp-directions td.adp-substep .adp-stepicon .adp-maneuver {
+    background-image: url('../../img/trac360/directions.png');
+}
+
+#single-job-view-directionsRenderer-panel-view table.adp-directions td.adp-substep .adp-stepicon .adp-maneuver {
+    left: 7px;
+    top: 5px;
+}
+
+#single-job-view-directionsRenderer-panel-view table.adp-directions td.adp-substep .adp-stepicon {
+    width: 30px;
+    height: 30px;
+    background-color: #2196f3;
+    border-radius: 50%;
+    overflow: visible;
+}
+
+#single-job-view-directionsRenderer-panel-view table.adp-directions tr {
+    height: 60px;
+    overflow: hidden;
+}
+
+#single-job-view-directionsRenderer-panel-view table.adp-directions td.adp-substep:first-child:after {
+    content: ' ';
+    width: 3px;
+    height: 61px;
+    background: #2196f3;
+    z-index: -1;
+    bottom: -8px;
+    position: absolute;
+    left: 16px;
+}
+
+#single-job-view-directionsRenderer-panel-view table.adp-directions td.adp-substep:first-child:before {
+    content: ' ';
+    width: 20px;
+    height: 20px;
+    border-radius: 50px;
+    position: absolute;
+    background-color: #2196f3;
+    left: 7px;
+    top: 7px;
+}
+
+#single-job-view-directionsRenderer-panel-view table.adp-directions tr:last-child td.adp-substep:first-child:after {
+    content: none;
+}
+
+#single-job-view-directionsRenderer-panel-view table.adp-directions td.adp-substep:last-child {
+    font-size: 13px;
+}
+
+#single-job-view-directionsRenderer-panel-view table.adp-directions tr:hover {
+    font-weight: 400;
+}
+
+#single-job-view-directionsRenderer-panel-view .adp-summary {
+    text-align: right;
+}
+
+#single-job-view-directionsRenderer-panel-view table.adp-placemark td:first-child {
+    display: none;
+}
+
+#single-job-view-directionsRenderer-panel-view table.adp-placemark td.adp-text {
+    background-color: #fff;
+    border: none;
+    padding: 10px;
+    padding-left: 50px;
+    font-weight: 500;
+}
+
+#single-job-view-directionsRenderer-panel-view table.adp-placemark {
+    border: none;
+    position: relative;
+}
+
+#single-job-view-directionsRenderer-panel-view table.adp-placemark td.adp-text:after {
+    content: ' ';
+    width: 50px;
+    height: 50px;
+    position: absolute;
+    z-index: 5;
+    background-position: center;
+    background-size: cover;
+    bottom: 0;
+    left: 0;
+}
+
+#single-job-view-directionsRenderer-panel-view table.adp-placemark td.adp-text[jstcache='54']:after {
+    background-image: url(../../img/trac360/office.png);
+}
+
+#single-job-view-directionsRenderer-panel-view table.adp-placemark td.adp-text[jstcache='68']:after {
+    background-image: url(../../img/trac360/home_address.png);
+}
+
+#single-job-view-directionsRenderer-panel-view .adp-legal {
+    color: #fff;
+}

@@ -439,3 +439,13 @@ $(document).ready(function () {
     await actions[action](row, table, event);
   });
 });
+
+(() => {
+  $signadocument = $("#signadocument");
+  $modal = $("#selectDocument");
+
+  $signadocument.on("click", function (event) {
+    event.preventDefault();
+    $modal.modal("show");
+  });
+})();

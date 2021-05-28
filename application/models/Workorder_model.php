@@ -552,16 +552,16 @@ class Workorder_model extends MY_Model
     public function updateTemplate($data)
     {
         extract($data);
-        $this->db->where('id', $id);
-        $this->db->update('work_orders', array('view_flag' => $view_flag));
+        $this->db->where('company_id', $company_id);
+        $this->db->update('company_work_order_used', array('work_order_template_id' => $work_order_template_id));
         return true;
     }
 
     public function deleteWorkorder($data)
     {
         extract($data);
-        $this->db->where('company_id', $company_id);
-        $this->db->update('company_work_order_used', array('work_order_template_id' => $work_order_template_id));
+        $this->db->where('id', $id);
+        $this->db->update('work_orders', array('view_flag' => $view_flag));
         return true;
     }
 
