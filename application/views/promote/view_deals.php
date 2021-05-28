@@ -95,7 +95,11 @@ table.dataTable tbody tr td {
                             <div class="row margin-top" style="bottom: 55px;">
                                 <div class="col-sm-12"></div>
                                 <div class="col-sm-12 text-right">
-                                    <a class="btn btn-primary" href="<?php echo url('promote/build_email'); ?>">View Deal Page</a>
+                                	<?php
+		                              $slug = createSlug($dealsSteals->title,'-');
+		                              $deal_url = url('deal/' . $slug . '/' . $dealsSteals->id);
+		                            ?>
+                                    <a class="btn btn-primary" href="<?php echo $deal_url; ?>">View Deal Page</a>
                                     <a class="btn btn-primary" href="<?= url('promote/edit_deals/' . $dealsSteals->id); ?>"><i class="fa fa-edit"></i> Edit</a>
                                 </div>
                             </div>

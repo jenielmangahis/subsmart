@@ -561,6 +561,7 @@ class Pages extends MY_Controller {
     	$this->load->model('DealsSteals_model');
     	$this->load->model('DealsBookings_model');
     	$this->load->model('Business_model');
+    	$this->load->model('Customer_advance_model');
 
     	$is_success = 0;
     	$msg  = 'Check form inputs and try again.';
@@ -573,7 +574,8 @@ class Pages extends MY_Controller {
 
     		$data = [
     			'deals_id' => $post['did'],
-    			'name' => $post['name'],
+    			'company_id' => $dealsSteals->company_id,
+    			'name' => $post['first_name'] . " " . $post['last_name'],
     			'phone' => $post['phone'],
     			'email' => $post['email'],
     			'address' => $post['address_full'],
@@ -581,6 +583,16 @@ class Pages extends MY_Controller {
     			'date_created' => date("Y-m-d H:i:s")
     		];
     		$this->DealsBookings_model->create($data);	
+
+    		$leads_input = array(
+	            'firstname'     => $post['first_name'],
+	            'lastname'      => $post['last_name'],
+	            'phone_cell'    => $post['phone'],
+	            'email_add'     => $post['email'],
+	            'address'       => $post['address_full'],
+	        );
+
+	        $this->Customer_advance_model->add($leads_input, "ac_leads");
 
     		$this->page_data['dealsSteals']  = $dealsSteals;
     		$this->page_data['company']      = $company;
@@ -636,7 +648,7 @@ class Pages extends MY_Controller {
             $mail->isHTML(true);
             $mail->Subject = $subject_company;
             $mail->Body    = $msg_company;
-            $mail->Send();
+            //$mail->Send();
 
     		$is_success = 1;
     		$msg = '';

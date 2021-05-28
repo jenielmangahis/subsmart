@@ -788,6 +788,7 @@ class Workcalender extends MY_Controller
         $this->load->model('Jobs_model');
         $this->load->model('GoogleAccounts_model');
         $this->load->model('ColorSettings_model');
+        $this->load->model('DealsBookings_model');
 
         $post = $this->input->post();
         $role = logged('role');
@@ -1082,6 +1083,27 @@ class Workcalender extends MY_Controller
 
                 $inc++;
             }
+        }
+
+        //Deals Booking
+        $bookings = $this->DealsBookings_model->getAllByCompanyId($company_id);
+        foreach( $bookings as $b ){
+
+            $custom_html  = "<i class='fa fa-calendar'></i> " . date("Y-m-d g:i A", strtotime($b->date_created)) . "<br />";
+            $custom_html .= "<small>Deals Steals : " . $b->title . "</small> <br />";
+            $custom_html .= "<small>Name : " . $b->name . "</small> <br />";
+
+            $resources_user_events[$inc]['eventId'] = $b->id;
+            $resources_user_events[$inc]['eventType'] = 'booking';
+            $resources_user_events[$inc]['resourceId'] = 'user17';
+            $resources_user_events[$inc]['title'] = $title;
+            $resources_user_events[$inc]['customHtml'] = $custom_html;
+            $resources_user_events[$inc]['start'] = date("Y-m-d", strtotime($b->date_created));
+            $resources_user_events[$inc]['end'] = date("Y-m-d", strtotime($b->date_created));
+            $resources_user_events[$inc]['starttime'] = strtotime($b->date_created);
+            $resources_user_events[$inc]['backgroundColor'] = '#42b9f5';
+
+            $inc++;
         }
 
         echo json_encode($resources_user_events);

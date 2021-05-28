@@ -602,6 +602,14 @@ class Promote extends MY_Controller {
         $this->load->view('promote/view_deals', $this->page_data);    
     }
 
+    public function view_booking($booking_id){
+        $this->load->model('DealsBookings_model');
+        
+        $booking = $this->DealsBookings_model->getById($booking_id);
+        $this->page_data['booking'] = $booking;
+        $this->load->view('promote/view_booking', $this->page_data);    
+    }
+
     public function bookings($id){
         $this->load->model('DealsBookings_model');
 

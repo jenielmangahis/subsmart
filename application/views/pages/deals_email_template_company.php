@@ -2,8 +2,8 @@
   <?php $nsmart_logo  = base_url("assets/frontend/images/logo.png"); ?>
   <img src="<?= $nsmart_logo; ?>" style="height: 100px;margin-bottom: 15px;">
   <p>You have received a new deal booking on <?= date("d-M-Y g:i A"); ?></p><br/>
-  <p>Name  : <?= $booking_data['name']; ?></p>
-  <p>Phone : <?= $booking_data['name']; ?></p>
+  <p>Name  : <?= $booking_data['first_name'] . " " . $booking_data['last_name']; ?></p>
+  <p>Phone : <?= $booking_data['phone']; ?></p>
   <p>Email : <?= $booking_data['email']; ?></p>
   <p>Address : <?= $booking_data['address_full']; ?></p>
   <p>Message : <?= $booking_data['message']; ?></p><br/>
