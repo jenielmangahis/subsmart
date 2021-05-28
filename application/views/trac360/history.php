@@ -314,7 +314,7 @@ function get_differenct_of_dates($date_start, $date_end)
             </div>
             <div id="map-holder" style="display:none;">
                 <div class="map-error-message">This is a danger alert—check it out!</div>
-                <div id="jobs-map" style="display:none;"></div>
+                <div id="history-map" style="display:none;"></div>
             </div>
         </div>
     </div>
@@ -328,8 +328,9 @@ function get_differenct_of_dates($date_start, $date_end)
 <?php include viewPath('includes/footer'); ?>
 <script>
     var date_today = "<?=date('m/d/Y')?>";
-    var jobs_map;
-    var jobs_map_marker = [];
+    var history_map;
+    var history_map_marker = [];
+    var antennasCircle_history_map;
     var directionsService;
     var directionsRenderer;
     var infoWindow;
@@ -337,14 +338,14 @@ function get_differenct_of_dates($date_start, $date_end)
     function initMap() {
         $("#map-loader").hide();
         $("#map-holder").show();
-        jobs_map = new google.maps.Map(document.getElementById("jobs-map"), {
+        history_map = new google.maps.Map(document.getElementById("history-map"), {
             center: {
                 lat: 37.0902,
                 lng: 95.7129
             },
             zoom: 2,
         });
-        $("#jobs-map").show();
+        $("#history-map").show();
     }
 </script>
 <script

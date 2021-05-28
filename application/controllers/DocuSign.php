@@ -137,6 +137,7 @@ class DocuSign extends MY_Controller
         add_css([
             'https://cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css',
             'assets/css/esign/docusign/manage/manage.css',
+            'assets/css/esign/docusign/template-create/template-create.css',
         ]);
 
         add_footer_js([
@@ -1077,6 +1078,7 @@ SQL;
         $this->db->order_by('id', 'ASC');
         $baseTemplateFiles = $this->db->get('user_docfile_templates_documents')->result();
 
+        $storedRecipientIds = [];
         foreach ($baseTemplateFiles as $baseFile) {
 
             // copy template file
@@ -1100,17 +1102,22 @@ SQL;
             }
 
             foreach ($groupedFields as $recipientId => $fields) {
-                $this->db->where('id', $recipientId);
-                $baseTemplateRecipient = $this->db->get('user_docfile_templates_recipients')->row_array();
-                unset($baseTemplateRecipient['id']);
-                unset($baseTemplateRecipient['template_id']);
+                if (!array_key_exists($recipientId, $storedRecipientIds)) {
+                    // copy recipient
+                    $this->db->where('id', $recipientId);
+                    $baseTemplateRecipient = $this->db->get('user_docfile_templates_recipients')->row_array();
+                    unset($baseTemplateRecipient['id']);
+                    unset($baseTemplateRecipient['template_id']);
 
-                // copy recipient
-                $baseTemplateRecipient['template_id'] = $newTemplate->id;
-                $this->db->insert('user_docfile_templates_recipients', $baseTemplateRecipient);
+                    $baseTemplateRecipient['template_id'] = $newTemplate->id;
+                    $this->db->insert('user_docfile_templates_recipients', $baseTemplateRecipient);
+                    $storedRecipientIds[$recipientId] = $this->db->insert_id();
+                }
+
+                $newRecipientId = $storedRecipientIds[$recipientId];
 
                 // copy recipient fields
-                $newFields = array_map(function ($field) use ($newTemplate, $recipientId, $newTemplateDocumentFileId) {
+                $newFields = array_map(function ($field) use ($newTemplate, $newRecipientId, $newTemplateDocumentFileId) {
                     unset($field['id']);
                     unset($field['template_id']);
                     unset($field['recipients_id']);
@@ -1118,7 +1125,7 @@ SQL;
                     unset($field['docfile_document_id']);
 
                     $field['template_id'] = $newTemplate->id;
-                    $field['recipients_id'] = $recipientId;
+                    $field['recipients_id'] = $newRecipientId;
                     $field['unique_key'] = uniqid();
                     $field['docfile_document_id'] = $newTemplateDocumentFileId;
                     return $field;

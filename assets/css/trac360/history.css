@@ -116,5 +116,10 @@ table.route-details-table {
 }
 
 #employees-view-history-panel .panel-content {
-    min-width: 446px;
+    min-width: 439px;
+}
+
+#history-map {
+    width: 100%;
+    height: 100%;
 }

@@ -216,6 +216,7 @@ $(document).on('click','#alarm-template',function(){
             type: "POST",
             data: {template : template },
             success: function(dataResult){
+              // alert('success');
                 $("#myModal").modal("hide");
                 $("#successm").modal("show");
                 $('#selecting_form').load(window.location.href +  ' #selecting_form');

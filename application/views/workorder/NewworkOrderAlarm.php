@@ -2588,51 +2588,6 @@ border: none;
 
                                 </div>
                         
-                        <!-- Tab panes -->
-                        <!-- <div class="tab-content">
-                            <div class="tab-pane fade active in" id="home">
-                                                        <canvas id="canvas" height="150" style="border: 1px solid #ddd;"></canvas>
-                                                        <input type="text" class="form-control mb-3" name="company_representative_printed_name" id="comp_rep_approval1" placeholder="Printed Name"/>
-                                                        <input type="hidden" id="saveCompanySignatureDB1aM" name="company_representative_approval_signature1aM">
-                            </div>
-                            <div class="tab-pane fade" id="profile">
-                                                        <canvas id="canvas2" height="150" style="border: 1px solid #ddd;"></canvas>
-                                                        <input type="text" class="form-control mb-3" name="company_representative_printed_name" id="comp_rep_approval2" placeholder="Printed Name"/>
-                                                        <input type="hidden" id="savePrimaryAccountSignatureDB2aM" name="primary_account_holder_signature2aM">
-                            </div>
-                            <div class="tab-pane fade" id="messages">
-                                                        <canvas id="canvas3" height="150" style="border: 1px solid #ddd;"></canvas>
-                                                        <input type="text" class="form-control mb-3" name="company_representative_printed_name" id="comp_rep_approval3" placeholder="Printed Name"/>
-                                                        <input type="hidden" id="saveSecondaryAccountSignatureDB3aM" name="secondary_account_holder_signature3aM">
-                            </div>
-                        </div> -->
-                                <!-- <div class="col-md-12">
-                                    <div class="tab-content" id="nav-tabContent" style="width:;">
-                                        <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab" style="padding:1%;">
-                                                            <canvas id="canvas" height="150" style="border: 1px solid #ddd;"></canvas>
-                                                            <input type="text" class="form-control mb-3" name="company_representative_printed_name" id="comp_rep_approval1" placeholder="Printed Name"/>
-                                                            <input type="hidden" id="saveCompanySignatureDB1aM" name="company_representative_approval_signature1aM">
-                                        </div>
-                                        <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab" style="padding:1%;">
-                                                            <canvas id="canvas2" height="150" style="border: 1px solid #ddd;"></canvas>
-                                                            <input type="text" class="form-control mb-3" name="company_representative_printed_name" id="comp_rep_approval2" placeholder="Printed Name"/>
-                                                            <input type="hidden" id="savePrimaryAccountSignatureDB2aM" name="primary_account_holder_signature2aM">
-                                        </div>
-                                        <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab" style="padding:1%;">
-                                                            <canvas id="canvas3" height="150" style="border: 1px solid #ddd;"></canvas>
-                                                            <input type="text" class="form-control mb-3" name="company_representative_printed_name" id="comp_rep_approval3" placeholder="Printed Name"/>
-                                                            <input type="hidden" id="saveSecondaryAccountSignatureDB3aM" name="secondary_account_holder_signature3aM">
-                                        </div>
-                                    </div>
-                                    <nav>
-                                        <div class="nav nav-tabs nav-fill" id="nav-tab" role="tablist">
-                                        <a class="nav-item nav-link" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">Company Representative Approval</a>
-                                        <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-profile" role="tab" aria-controls="nav-profile" aria-selected="false">Primary Account Holder</a>
-                                        <a class="nav-item nav-link" id="nav-contact-tab" data-toggle="tab" href="#nav-contact" role="tab" aria-controls="nav-contact" aria-selected="false">Secondary Account Holder</a>
-                                        </div>
-                                    </nav>
-                                
-                                </div> -->
                             </div>
                     </div>
                     <div class="modal-footer">
@@ -2885,7 +2840,7 @@ function submit() {
         // image.src = '"' + dataURL + '"';
         // document.body.appendChild(image);
 
-        var input_conf = '<br><div style="border:solid gray 1px;padding:2%;"><img id="image1" src="'+dataURL+'"></img><input type="hidden" class="form-control" name="signature1" id="signature1" value="'+ dataURL +'"><br><input type="text" class="form-control" name="name1" id="name1" value="'+ input1 +'" readonly></div><br><div style="border:solid gray 1px;padding:2%;"><img id="image1" src="'+dataURL2+'"></img><input type="hidden" class="form-control" name="signature2" id="signature2" value="'+ dataURL2 +'"><br><input type="text" class="form-control" name="name2" id="name2" value="'+ input2 +'" readonly></div><br><div style="border:solid gray 1px;padding:2%;"><img id="image1" src="'+dataURL3+'"></img><input type="hidden" class="form-control" name="signature3" id="signature3" value="'+ dataURL3 +'"><br><input type="text" class="form-control" name="name3" id="name3" value="'+ input3 +'" readonly></div>';
+        var input_conf = '<br><div style="border:solid gray 1px;padding:2%;width:400px !important;"><img id="image1" src="'+dataURL+'"></img><input type="hidden" class="form-control" name="signature1" id="signature1" value="'+ dataURL +'"><br><input type="text" class="form-control" name="name1" id="name1" value="'+ input1 +'" readonly></div><br><div style="border:solid gray 1px;padding:2%;"><img id="image1" src="'+dataURL2+'"></img><input type="hidden" class="form-control" name="signature2" id="signature2" value="'+ dataURL2 +'"><br><input type="text" class="form-control" name="name2" id="name2" value="'+ input2 +'" readonly></div><br><div style="border:solid gray 1px;padding:2%;"><img id="image1" src="'+dataURL3+'"></img><input type="hidden" class="form-control" name="signature3" id="signature3" value="'+ dataURL3 +'"><br><input type="text" class="form-control" name="name3" id="name3" value="'+ input3 +'" readonly></div>';
 
         $('.signatureArea').html(input_conf);
 
@@ -3751,4 +3706,124 @@ document.getElementById("payment_method").onchange = function() {
         $('#other_payment_area').show();
     }
 }
+</script>
+
+<script>
+$(document).on("focusout", ".qtyest3", function () {
+        // alert('yeah');
+        var id = this.id;
+        var in_id = $(this).attr('data-itemid');
+            var qty=this.value;
+            var cost = $('#price'+id).val();
+            var new_sub_total = Number(qty) * Number(cost);
+            var new_sub_total_val = Number(qty) * Number(cost);
+            var tax = '0.075';
+            var new_sub_total_tax =  new_sub_total * tax;
+            // $('#sub_total'+id).data('subtotal',new_sub_total);
+            // $('#sub_total'+id).text('$' + formatNumber(new_sub_total));
+            $("#span_total_"+id).text(new_sub_total.toFixed(2));
+            // $("#sub_total_text" + id).val(new_sub_total.toFixed(2));
+            $("#sub_total_text"+id).val(new_sub_total.toFixed(2));
+            // $(".total_per_item").text(new_sub_total_tax.toFixed(2));
+            var counter = $(this).data("counter");
+            // var counter = jQuery(obj)
+            // .parent()
+            // .parent()
+            // .parent()
+            // .find(".price")
+            // .data("counter");
+            // calculate_subtotal();
+
+  var price = $("#price_" + in_id).val();
+  var quantity = $("#quantity_" + in_id).val();
+  var discount = $("#discount_" + in_id).val();
+  var tax = (parseFloat(price) * 7.5) / 100;
+  var tax1 = (((parseFloat(price) * 7.5) / 100) * parseFloat(quantity)).toFixed(
+    2
+  );
+  if( discount == '' ){
+    discount = 0;
+  }
+  
+  var total = (
+    (parseFloat(price) + parseFloat(tax)) * parseFloat(quantity) -
+    parseFloat(discount)
+  ).toFixed(2);
+
+  // alert( 'yeah' + total);
+
+  $("#span_total_" + in_id).text(total);
+  $("#tax_1_" + in_id).text(tax1);
+  $("#tax_1_" + in_id).val(tax1);
+  $("#discount_" + in_id).val(discount);
+
+  if( $('#tax_1_'+ in_id).length ){
+    $('#tax_1_'+in_id).val(tax1);
+  }
+
+  if( $('#item_total_'+ in_id).length ){
+    $('#item_total_'+in_id).val(total);
+  }
+
+  var eqpt_cost = 0;
+  var cnt = $("#count").val();
+  var total_discount = 0;
+  for (var p = 0; p <= cnt; p++) {
+    var prc = $("#price_" + p).val();
+    var quantity = $("#quantity_" + p).val();
+    var discount = $("#discount_" + p).val();
+    // var discount= $('#discount_' + p).val();
+    // eqpt_cost += parseFloat(prc) - parseFloat(discount);
+    eqpt_cost += parseFloat(prc) * parseFloat(quantity);
+    total_discount += parseFloat(discount);
+  }
+//   var subtotal = 0;
+// $( total ).each( function(){
+//   subtotal += parseFloat( $( this ).val() ) || 0;
+// });
+
+  eqpt_cost = parseFloat(eqpt_cost).toFixed(2);
+  total_discount = parseFloat(total_discount).toFixed(2);
+  // var test = 5;
+
+  var subtotal = 0;
+  // $("#span_total_0").each(function(){
+    $('*[id^="span_total_"]').each(function(){
+    subtotal += parseFloat($(this).text());
+  });
+  // $('#sum').text(subtotal);
+
+  var subtotaltax = 0;
+  // $("#span_total_0").each(function(){
+    $('*[id^="tax_1_"]').each(function(){
+      subtotaltax += parseFloat($(this).text());
+  });
+
+  // alert(subtotaltax);
+
+  $("#eqpt_cost").val(eqpt_cost);
+  $("#total_discount").val(total_discount);
+  $("#span_sub_total_0").text(total_discount);
+  $("#span_sub_total_invoice").text(subtotal.toFixed(2));
+  $("#item_total").val(subtotal.toFixed(2));
+  
+  var s_total = subtotal.toFixed(2);
+  var adjustment = $("#adjustment_input").val();
+  var grand_total = s_total - parseFloat(adjustment);
+  var markup = $("#markup_input_form").val();
+  var grand_total_w = grand_total + parseFloat(markup);
+
+  $("#total_tax_").text(subtotaltax.toFixed(2));
+  $("#total_tax_").val(subtotaltax.toFixed(2));
+  
+
+  $("#grand_total").text(grand_total_w.toFixed(2));
+  $("#grand_total_input").val(grand_total_w.toFixed(2));
+
+  var sls = (parseFloat(eqpt_cost).toFixed(2) * 7.5) / 100;
+  sls = parseFloat(sls).toFixed(2);
+  $("#sales_tax").val(sls);
+  cal_total_due();
+            // calculation(id);
+        });
 </script>

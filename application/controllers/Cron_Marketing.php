@@ -159,7 +159,14 @@ class Cron_Marketing extends MY_Controller {
             $company    = $this->Business_model->getByCompanyId($e->company_id);
             switch ($e->sending_type) {
                 case $this->EmailBlast_model->sendingTypeAll():
-                    # code...
+                    $conditions[] = ['field' => 'email !=', 'value' => ''];
+                    $contacts = $this->AcsProfile_model->getAllByCompanyId($e->company_id, $conditions); 
+                    foreach( $contacts as $c ){
+                        $is_sent = $this->sendEmail($c->email, $e->email_subject, $e->email_body);   
+                        if( $is_sent ){
+                            $total_sent++;
+                        }  
+                    }
                     break;
                 case $this->EmailBlast_model->sedingTypeCustomerGroup():
                     # code...
@@ -167,12 +174,13 @@ class Cron_Marketing extends MY_Controller {
                 case $this->EmailBlast_model->sendingTypeCertainCustomer():
                     $sendTo = $this->EmailBlastSendTo_model->getAllByEmailBlastId($e->id);
                     foreach( $sendTo as $s ){
-                        $contact = $this->AcsProfile_model->getByProfId($s->customer_id);
+                        $conditions[] = ['field' => 'email !=', 'value' => ''];
+                        $contact = $this->AcsProfile_model->getByProfId($s->customer_id, $conditions);
                         if( $contact ){
                             $is_sent = $this->sendEmail($contact->email, $e->email_subject, $e->email_body);   
                             if( $is_sent ){
                                 $total_sent++;
-                            }                         
+                            }                      
                         }
                     }
                     break;

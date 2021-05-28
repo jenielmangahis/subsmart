@@ -17,11 +17,6 @@ $(document).on("click", "#single-job-view-directionsRenderer-panel .close-btn", 
 });
 
 function toggleBounce(the_marker) {
-    // if (the_marker.getAnimation() !== null) {
-    //     the_marker.setAnimation(null);
-    // } else {
-    //     the_marker.setAnimation(google.maps.Animation.BOUNCE);
-    // }
     if (infoWindow != null) {
         if (infoWindow) {
             infoWindow.close();
