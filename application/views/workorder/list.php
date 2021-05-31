@@ -265,9 +265,12 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                     <li role="presentation"><a role="menuitem" tabindex="-1"
                                                                                href="<?php echo base_url('workorder/view/' . $workorder->id) ?>"><span
                                                                     class="fa fa-file-text-o icon"></span> View</a></li>
-                                                    <li role="presentation"><a role="menuitem" tabindex="-1"
-                                                                               href="<?php echo base_url('workorder/edit/' . $workorder->id) ?>"><span
-                                                                    class="fa fa-pencil-square-o icon"></span> Edit</a>
+                                                    <li role="presentation">
+                                                    <?php if($workorder->is_template == '2'){ ?>
+                                                        <a role="menuitem" tabindex="-1" href="<?php echo base_url('workorder/editAlarm/' . $workorder->id) ?>"><span class="fa fa-pencil-square-o icon"></span> Edit</a>
+                                                    <?php }else{ ?>
+                                                        <a role="menuitem" tabindex="-1" href="<?php echo base_url('workorder/edit/' . $workorder->id) ?>"><span class="fa fa-pencil-square-o icon"></span> Edit</a>
+                                                    <?php } ?>
                                                     </li>
                                                     <li role="separator" class="divider"></li>
                                                     <li role="presentation"><a role="menuitem"
@@ -276,7 +279,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                                data-toggle="modal"
                                                                                data-target="#modalCloneWorkorder"
                                                                                data-id="<?php echo $workorder->id ?>"
-                                                                               data-name="WO-00433"><span
+                                                                               data-wo_num="<?php echo $workorder->work_order_number ?>" class="clone-workorder"><span
                                                                     class="fa fa-files-o icon clone-workorder">
 
                                                         </span> Clone Work Order</a>
@@ -296,7 +299,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                                data-name="WO-00433"><span
                                                                     class="fa fa-trash-o icon"></span> Delete</a></li> -->
                                                     <li role="presentation">
-                                                        <a href="#" work-id="<?php echo $workorder->id; ?>" id="delete_workorder" onclick="myFunction()"><span class="fa fa-trash-o icon"></span> Delete </a></li>
+                                                        <a href="#" work-id="<?php echo $workorder->id; ?>" id="delete_workorder"><span class="fa fa-trash-o icon"></span> Delete </a></li>
                                                     <li role="presentation">
                                                         <a role="menuitem" tabindex="-1" href="<?php echo base_url('job/work_order_job/'. $workorder->id) ?>">
                                                             <span class="fa fa-briefcase icon"></span> Convert To Jobs
@@ -339,7 +342,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <div class="validation-error" style="display: none;"></div>
                         <p>
                             You are going create a new work order based on <b>Work Order #<span
-                                        class="data_workorder_id"></span></b>.<br>
+                                        class="work_order_no"></span></b>.<br>
                             Afterwards you can edit the newly created work order.
                         </p>
                     </form>
@@ -436,9 +439,12 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     
 // });
 
-function myFunction() {
+// function myFunction() {
+// $('#delete_workorder').on('click', function(){
+$(document).on('click touchstart','#delete_workorder',function(){
 
     var id = $(this).attr('work-id');
+    // alert(id);
   
   var r = confirm("Are you sure you want to delete this Work Order?");
 
@@ -465,7 +471,7 @@ function myFunction() {
     alert('no');
   }
 
-}
+});
 
 function sucess(information,$id){
             Swal.fire({
@@ -482,4 +488,33 @@ function sucess(information,$id){
                 }
             });
         }
+</script>
+
+<script>
+$(document).on('click touchstart','.clone-workorder',function(){
+
+var num = $(this).attr('data-wo_num');
+// alert(id);
+$('.work_order_no').text(num)
+
+
+});
+
+$(document).on('click touchstart','#clone_workorder',function(){
+
+// var num = $(this).attr('data-wo_num');
+var wo_num = $('.work_order_no').text();
+// alert(id);
+// $('.work_order_no').text(num);
+$.ajax({
+    type : 'POST',
+    url : "<?php echo base_url(); ?>workorder/duplicate_workorder",
+    data : {wo_num: wo_num},
+    success: function(result){
+        sucess("Data Deleted Successfully!");
+    },
+    });
+
+
+});
 </script>

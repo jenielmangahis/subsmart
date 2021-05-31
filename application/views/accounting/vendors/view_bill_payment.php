@@ -1,6 +1,6 @@
 <!-- Modal for bank deposit-->
 <div class="full-screen-modal">
-<form onsubmit="submitModalForm(event, this)" id="modal-form">
+<form onsubmit="updateTransaction(event, this)" id="modal-form" data-href="/accounting/vendors/<?=$vendor->id?>/update-transaction/bill-payment/<?=$billPayment->id?>">
     <div id="billPaymentModal" class="modal fade modal-fluid" role="dialog">
         <div class="modal-dialog">
             <!-- Modal content-->

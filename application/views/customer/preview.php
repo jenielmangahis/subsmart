@@ -41,7 +41,7 @@ add_css(array(
                         <div class="row ">
                             <div class="col-md-12">
                                 <div style="margin-top: 5px;">
-                                    <b>Account: </b><span>  <?= !empty($alarm_info->monitor_id) ? $alarm_info->monitor_id : '---';?></span>&nbsp;&nbsp;&nbsp;
+                                    <b>Account No: </b><span>  <?= !empty($alarm_info->monitor_id) ? $alarm_info->monitor_id : '---';?></span>&nbsp;&nbsp;&nbsp;
                                     <b>Online: </b><span> <?= !empty($alarm_info->online) ? $alarm_info->online : '---';?></span>&nbsp;&nbsp;&nbsp;
                                     <b>In Service: </b><span> <?= !empty($alarm_info->in_service) ? $alarm_info->in_service : '---';?></span> &nbsp;&nbsp;
                                     <b>Status: </b><span> <?= !empty($profile_info->status) ? $profile_info->status : '---';?> </span>&nbsp;&nbsp;&nbsp;

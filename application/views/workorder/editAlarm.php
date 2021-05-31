@@ -390,7 +390,7 @@ border: none;
                       <div class="col-sm-12">
                           </div>
                           <!-- <h3 class="page-title mt-0">New Lead</h3> -->
-                          <h3 style="font-family: Sarabun, sans-serif">ALARM SYSTEM WORKORDER AGREEMENT</h3>
+                          <h3 style="font-family: Sarabun, sans-serif">UPDATE ALARM SYSTEM WORKORDER AGREEMENT</h3>
                           <!-- <div class="pl-3 pr-3 mt-1 row">
                             <div class="col mb-4 left alert alert-warning mt-0 mb-2">
                                 <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">
@@ -494,18 +494,18 @@ border: none;
 											<label for="last_name" class="label-element">Last Name</label>
 											<input type="text" class="form-control input-element" name="last_name"
 												   id="last_name"
-												   required placeholder="Enter Last Name"
-												   value="<?php echo (!empty($workorder->customer['last_name'])) ? $workorder->customer['last_name'] : '' ?>"/>
+												    placeholder="Enter Last Name"
+												   value="<?php echo $alarms->last_name; ?>"/>
 										</div>
 										<div class="col-md-3 form-group">
 											<label for="first_name" class="label-element">First Name</label>
 											<input type="text" class="form-control input-element" name="first_name"
-												   id="first_name" required
-												   required placeholder="Enter First Name" />
+												   id="first_name" 
+												   placeholder="Enter First Name" value="<?php echo $alarms->first_name; ?>" />
 										</div>
 										<div class="col-md-2 form-group">
 											<label for="contact_mobile" class="label-element">Mobile</label>
-											<input type="text" class="form-control input-element" name="mobile_number" required
+											<input type="text" class="form-control input-element" name="mobile_number" value="<?php echo $workorder->mobile_number; ?>"
 												   id="contact_mobile" />
 
 										</div>
@@ -514,7 +514,7 @@ border: none;
 											<label for="contact_dob" class="label-element">DOB</label>
 											<input type="text" class="form-control input-element" name="dob"
 												   id="customer_contact_dob" required
-												   value="<?php echo (!empty($workorder->customer['contact_dob'])) ? date('m/d/Y', strtotime($workorder->customer['contact_dob'])) : '' ?>"
+                                                   value="<?php echo $alarms->dob; ?>"
 												   placeholder="Enter DOB"/>
 										</div>
 
@@ -522,8 +522,7 @@ border: none;
 											<label for="contact_ssn" class="label-element">SSN</label>
 											<input type="text" class="form-control input-element" name="security_number"
 												   id="contact_ssn"
-												   value="<?php echo (!empty($workorder->customer['contact_ssn'])) ? $workorder->customer['contact_ssn'] : '' ?>"
-												   required
+												   value="<?php echo $workorder->security_number; ?>"
 												   placeholder="Enter SSN"/>
 										</div>
 									</div>
@@ -535,21 +534,21 @@ border: none;
 										<div class="col-md-3 form-group">
 											<label for="spouse_last_name" class="label-element">Last Name</label>
 											<input type="text" class="form-control input-element" name="s_last_name"
-												   id="spouse_last_name"
+												   id="spouse_last_name" value="<?php echo $alarms->s_last_name; ?>"
 												     placeholder="Enter Spouse Last Name" />
 										</div>
 										<div class="col-md-3 form-group">
 											<label for="spouse_first_name" class="label-element">First Name</label>
 											<input type="text" class="form-control input-element" name="s_first_name"
 												   id="spouse_first_name"
-												     placeholder="Enter Spouse First Name"
-												   value="<?php echo (!empty($workorder->customer['spouse_first_name'])) ? $workorder->customer['spouse_first_name'] : '' ?>"/>
+												    placeholder="Enter Spouse First Name"
+                                                    value="<?php echo $alarms->s_first_name; ?>" />
 										</div>
 										<div class="col-md-2 form-group">
 											<label for="spouse_contact_mobile" class="label-element">Mobile</label>
 											<input type="text" class="form-control input-element" name="s_mobile"
 												   id="spouse_contact_mobile"
-												   value="<?php echo (!empty($workorder->customer['spouse_contact_mobile'])) ? $workorder->customer['spouse_contact_mobile'] : '' ?>"
+												   value="<?php echo $alarms->s_mobile; ?>"
 												   placeholder="Enter Mobile"/>
 
 										</div>
@@ -558,7 +557,7 @@ border: none;
 											<label for="contact_dob" class="label-element">DOB</label>
 											<input type="text" class="form-control input-element" name="s_dob"
 												   id="customer_spouse_contact_dob"
-												   value="<?php echo (!empty($workorder->customer['spouse_contact_dob'])) ? date('m/d/Y', strtotime($workorder->customer['spouse_contact_dob'])) : '' ?>"
+												   value="<?php echo $alarms->s_dob; ?>"
 												   placeholder="Enter DOB"/>
 										</div>
 
@@ -566,7 +565,7 @@ border: none;
 											<label for="spouse_contact_ssn" class="label-element">SSN</label>
 											<input type="text" class="form-control input-element" name="s_ssn"
 												   id="spouse_contact_ssn"
-												   value="<?php echo (!empty($workorder->customer['spouse_contact_ssn'])) ? $workorder->customer['spouse_contact_ssn'] : '' ?>"
+												   value="<?php echo $alarms->s_ssn; ?>"
 												   placeholder="Enter SSN"/>
 										</div>
 									</div>
@@ -576,30 +575,30 @@ border: none;
 											<label for="monitored_location" class="label-element">Monitored Location</label>
 											<input type="text" class="form-control input-element" name="monitored_location"
 												   id="ship-address"
-												   value="<?php echo (!empty($workorder->customer['monitored_location'])) ? $workorder->customer['monitored_location'] : '' ?>"
+												   value="<?php echo $workorder->job_location; ?>"
 												   required placeholder="Monitored Location"/>
 										</div>
 										<div class="col-md-3 form-group">
 											<label for="city" class="label-element">City</label> 
-                                                   <input type="text" class="form-control input-element" name="city" id="locality" placeholder="Enter City" />
+                                                   <input type="text" class="form-control input-element" name="city" id="locality" placeholder="Enter City" value="<?php echo $workorder->city; ?>"/>
 										</div>
 										<div class="col-md-2 form-group">
 											<label for="state" class="label-element">State</label>
 											<input type="text" class="form-control input-element" name="state"
-												   id="state"  placeholder="Enter State"/>
+												   id="state"  placeholder="Enter State" value="<?php echo $workorder->state; ?>"/>
 
 										</div>
 
 										<div class="col-md-2 form-group">
 											<label for="zip" class="label-element">ZIP</label> 
-                                                   <input type="text" id="postcode" name="zip_code" class="form-control input-element"  placeholder="Enter Zip"/>
+                                                   <input type="text" id="postcode" name="zip_code" class="form-control input-element"  value="<?php echo $workorder->zip_code; ?>"/>
 										</div>
 
 										<div class="col-md-2 form-group">
 											<label for="cross_street" class="label-element">Cross Street</label>
 											<input type="text" class="form-control input-element" name="cross_street"
 												   id="cross_street"
-												   value="<?php echo (!empty($workorder->customer['cross_street'])) ? $workorder->customer['cross_street'] : '' ?>"
+												   value="<?php echo $workorder->cross_street; ?>"
 												   required
 												   placeholder="Cross Street"/>
 										</div>
@@ -610,19 +609,20 @@ border: none;
 											<label for="email" class="label-element">Email</label>
 											<input type="email" class="form-control input-element" name="email"
 												   id="email" 
-												   value="<?php echo (!empty($workorder->customer['email'])) ? $workorder->customer['email'] : '' ?>"
+												   value="<?php echo $workorder->email; ?>"
 												   required placeholder="Enter Email"/>
 										</div>
 										<div class="col-md-2 form-group">
 											<label for="password" class="label-element">Password</label>
-											<input type="text" class="form-control input-element" name="password" required
+											<input type="text" class="form-control input-element" name="password" value="<?php echo $workorder->password; ?>"
 												   id="password" >
 										</div>
                                         
                                         <div class="col-md-3 form-group">
                                         <div class="select-wrap">
                                             <label for="">Notification Type</label><br/>
-                                                <select name="notification_type" id="customer_notification_type_email" class="form-control custom-select m_select" required>
+                                                <select name="notification_type" id="customer_notification_type_email" class="form-control custom-select m_select">
+                                                    <option value="<?php echo $alarms->notification_type; ?>"><?php echo $alarms->notification_type; ?></option>
                                                     <option>Notification Type</option>
                                                     <option value="Text">Text</option>
                                                     <option value="Email">Email</option>
@@ -668,7 +668,7 @@ border: none;
                                         <label for="1st_call_verification_name" class="label-element">1st Call Verification Name</label>
                                         <input type="text" class="form-control input-element"
                                                name="1st_verification_name"
-                                               value="<?php echo (!empty($workorder->emergency_call_list['1st_call_verification_name'])) ? $workorder->emergency_call_list['1st_call_verification_name'] : '' ?>"
+                                               value="<?php echo $alarms->first_verification_name; ?>"
                                                id="1st_call_verification_name"
                                                required placeholder="Enter 1st Call Verification Name"/>
                                     <!-- </div> -->
@@ -693,11 +693,11 @@ border: none;
                                             </span>
                                             <input type="hidden" name="1st_number_type"
                                                    class="type-input"
-                                                   value="<?php echo (!empty($workorder->emergency_call_list['phone']['type'][0])) ? $workorder->emergency_call_list['phone']['type'][0] : '' ?>"
+                                                   value="<?php echo $alarms->first_number_type; ?>"
                                                    value="mobile"/>
                                             <input type="text" name="1st_number"
                                                    class="form-control"
-                                                   value="<?php echo (!empty($workorder->emergency_call_list['phone']['number'][0])) ? $workorder->emergency_call_list['phone']['number'][0] : '' ?>"
+                                                   value="<?php echo $alarms->first_number; ?>"
                                                    placeholder="Enter Phone"/>
                                         </div>
 
@@ -708,7 +708,7 @@ border: none;
                                         <label for="emergency_call_relation" class="label-element">Relation</label>
                                         <input type="text" class="form-control input-element" name="1st_relation"
                                                id="emergency_call_relation"
-                                               value="<?php echo (!empty($workorder->emergency_call_list['relation'][0])) ? $workorder->emergency_call_list['relation'][0] : '' ?>"
+                                               value="<?php echo $alarms->first_relation; ?>"
                                                required placeholder="Enter Relation"/>
                                     <!-- </div> -->
                                 </div>
@@ -729,7 +729,7 @@ border: none;
                                         <input type="text" class="form-control input-element"
                                                name="2nd_verification_name"
                                                id="2nd_call_verification_name"
-                                               value="<?php echo (!empty($workorder->emergency_call_list['2nd_call_verification_name'])) ? $workorder->emergency_call_list['2nd_call_verification_name'] : '' ?>"
+                                               value="<?php echo $alarms->second_verification_name; ?>"
                                                required placeholder="Enter 2nd Call Verification Name"/>
                                     <!-- </div> -->
                                 </div>
@@ -753,11 +753,11 @@ border: none;
                                             </span>
                                             <input type="hidden" name="2nd_number_type"
                                                    class="type-input"
-                                                   value="<?php echo (!empty($workorder->emergency_call_list['phone']['type'][1])) ? $workorder->emergency_call_list['phone']['type'][1] : '' ?>"
+                                                   value="<?php echo $alarms->second_number_type; ?>"
                                                    value="mobile"/>
                                             <input type="text" name="2nd_number"
                                                    class="form-control"
-                                                   value="<?php echo (!empty($workorder->emergency_call_list['phone']['number'][1])) ? $workorder->emergency_call_list['phone']['number'][1] : '' ?>"
+                                                   value="<?php echo $alarms->second_number; ?>"
                                                    placeholder="Enter Phone"/>
                                         </div>
 
@@ -768,7 +768,7 @@ border: none;
                                         <label for="emergency_call_relation" class="label-element">Relation</label>
                                         <input type="text" class="form-control input-element" name="2nd_relation"
                                                id="emergency_call_relation"
-                                               value="<?php echo (!empty($workorder->emergency_call_list['relation'][1])) ? $workorder->emergency_call_list['relation'][1] : '' ?>"
+                                               value="<?php echo $alarms->second_relation; ?>"
                                                required placeholder="Enter Relation"/>
                                     <!-- </div> -->
                                 </div>
@@ -789,7 +789,7 @@ border: none;
                                         <input type="text" class="form-control input-element"
                                                name="3rd_verification_name"
                                                id="emergency_call_emergency_contact_1"
-                                               value="<?php echo (!empty($workorder->emergency_call_list['emergency_contact_1'])) ? $workorder->emergency_call_list['emergency_contact_1'] : '' ?>"
+                                               value="<?php echo $alarms->third_verification_name; ?>"
                                                required placeholder="Enter Emergency Contact"/>
                                     <!-- </div> -->
                                 </div>
@@ -813,11 +813,11 @@ border: none;
                                             </span>
                                             <input type="hidden" name="3rd_number_type"
                                                    class="type-input"
-                                                   value="<?php echo (!empty($workorder->emergency_call_list['phone']['type'][2])) ? $workorder->emergency_call_list['phone']['type'][2] : '' ?>"
+                                                   value="<?php echo $alarms->third_number_type; ?>"
                                                    value="mobile"/>
                                             <input type="text" name="3rd_number"
                                                    class="form-control"
-                                                   value="<?php echo (!empty($workorder->emergency_call_list['phone']['number'][2])) ? $workorder->emergency_call_list['phone']['number'][2] : '' ?>"
+                                                   value="<?php echo $alarms->third_number; ?>"
                                                    placeholder="Enter Phone"/>
                                         </div>
 
@@ -828,7 +828,7 @@ border: none;
                                         <label for="emergency_call_relation" class="label-element">Relation</label>
                                         <input type="text" class="form-control input-element" name="3rd_relation"
                                                id="emergency_call_relation"
-                                               value="<?php echo (!empty($workorder->emergency_call_list['relation'][2])) ? $workorder->emergency_call_list['relation'][2] : '' ?>"
+                                               value="<?php echo $alarms->third_relation; ?>"
                                                required placeholder="Enter Relation"/>
                                     <!-- </div> -->
                                 </div>
@@ -841,7 +841,7 @@ border: none;
                                         <input type="text" class="form-control input-element"
                                                name="4th_verification_name"
                                                id="emergency_call_emergency_contact_2"
-                                               value="<?php echo (!empty($workorder->emergency_call_list['emergency_contact_2'])) ? $workorder->emergency_call_list['emergency_contact_2'] : '' ?>"
+                                               value="<?php echo $alarms->fourth_verification_name; ?>"
                                                required placeholder="Enter Emergency Contact"/>
                                     <!-- </div> -->
                                 </div>
@@ -865,11 +865,11 @@ border: none;
                                             </span>
                                             <input type="hidden" name="4th_number_type"
                                                    class="type-input"
-                                                   value="<?php echo (!empty($workorder->emergency_call_list['phone']['type'][3])) ? $workorder->emergency_call_list['phone']['type'][3] : '' ?>"
+                                                   value="<?php echo $alarms->fourth_number_type; ?>"
                                                    value="mobile"/>
                                             <input type="text" name="4th_number"
                                                    class="form-control"
-                                                   value="<?php echo (!empty($workorder->emergency_call_list['phone']['number'][3])) ? $workorder->emergency_call_list['phone']['number'][3] : '' ?>"
+                                                   value="<?php echo $alarms->fourth_number; ?>"
                                                    placeholder="Enter Phone"/>
                                         </div>
 
@@ -880,7 +880,7 @@ border: none;
                                         <label for="emergency_call_relation" class="label-element">Relation</label>
                                         <input type="text" class="form-control input-element" name="4th_relation"
                                                id="emergency_call_relation"
-                                               value="<?php echo (!empty($workorder->emergency_call_list['relation'][3])) ? $workorder->emergency_call_list['relation'][3] : '' ?>"
+                                               value="<?php echo $alarms->fourth_relation; ?>"
                                                required placeholder="Enter Relation"/>
                                     <!-- </div> -->
                                 </div>
@@ -901,7 +901,7 @@ border: none;
                                             <option>Select Plan Type</option>
                                         </select> -->
                                         <select name="plan_type" id="plan_types" class="form-control custom-select m_select" required>
-                                            <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == ''){echo "selected";} } ?> value=""></option>
+                                            <option value="<?php echo $alarms->plan_type; ?>"><?php echo $alarms->plan_type; ?></option>
                                             <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == 'DIGI'){echo "selected";} } ?> value="DIGI">Landline</option>
                                             <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == 'DW2W'){echo "selected";} } ?> value="DW2W">Landline W/ 2-Way</option>
                                             <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == 'DWCB'){echo "selected";} } ?> value="DWCB">Landline W/ Cell Backup</option>
@@ -935,7 +935,7 @@ border: none;
                                         <select name="account_type"
                                                 class="form-control custom-select m_select"
                                                 id="account_type" required>
-                                            <option>--SELECT--</option>
+                                                <option value="<?php echo $alarms->account_type; ?>"><?php echo $alarms->account_type; ?></option>
                                             <?php foreach (get_config_item('account_types') as $key => $account_type) { ?>
                                                 <option value="<?php echo $account_type ?>"
                                                     <?php echo (!empty($workorder->account_type['name'])
@@ -949,8 +949,7 @@ border: none;
                                              style="display: <?php echo (empty($workorder->account_type['other'])) ? 'none' : '' ?>">
                                             <input name="account_type[other]"
                                                    type="text" class="form-control"
-                                                   value="<?php echo (!empty($workorder->account_type['other'])) ?
-                                                       $workorder->account_type['other'] : '' ?>"
+                                                   value="<?php echo (!empty($workorder->account_type['other'])) ? $workorder->account_type['other'] : '' ?>"
                                                    placeholder="Write it here..." required>
                                         </div>
                                     <!-- </div> -->
@@ -964,7 +963,7 @@ border: none;
                                     <div class="select-wrap">
                                         <label>Panel Type</label>
                                         <select name="panel_type" id="panel_type" class="form-control custom-select m_select" required>
-                                            <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == ''){echo "selected";} } ?> value=""></option>
+                                            <option value="<?php echo $alarms->panel_type; ?>"><?php echo $alarms->panel_type; ?></option>
                                             <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'AERIONICS'){echo "selected";} } ?> value="AERIONICS">AERIONICS</option>
                                             <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'AlarmNet'){echo "selected";} } ?> value="AlarmNet">AlarmNet</option>
                                             <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'Alarm.com'){echo "selected";} } ?> value="Alarm.com">Alarm.com</option>
@@ -1001,7 +1000,7 @@ border: none;
                                         <!-- <div class="form-group"> -->
                                             <label for="panel_location" class="label-element"> Panel Location:</label>
                                             <input type="text" class="form-control input-element" name="panel_location"
-                                                value="<?php echo (!empty($workorder->panel_location)) ? $workorder->panel_location : '' ?>"
+                                                value="<?php echo $alarms->panel_location; ?>"
                                                 id="panel_location" placeholder=""/>
                                         <!-- </div> -->
                                     </div>
@@ -1012,7 +1011,7 @@ border: none;
                                             <select name="panel_communication"
                                                     class="form-control custom-select m_select"
                                                     id="panel_communication">
-                                                <option>--SELECT--</option>
+                                                    <option value="<?php echo $alarms->panel_communication; ?>"><?php echo $alarms->panel_communication; ?></option>
                                                 <?php foreach (get_config_item('panel_communications') as $key => $panel_communication) { ?>
                                                     <option value="<?php echo $panel_communication ?>" <?php echo (!empty($workorder->panel_communication) && $workorder->panel_communication == $panel_communication) ? 'selected' : '' ?>>
                                                         <?php echo $panel_communication ?>
@@ -1041,6 +1040,7 @@ border: none;
                                             <input type="date"
                                                    name="date_issued"
                                                    class="form-control input-element"
+                                                   value="<?php echo $alarms->job_requested_date; ?>"
                                                    id=""/>
                                         <!-- </div> -->
                                     <!-- </div> -->
@@ -1051,6 +1051,7 @@ border: none;
                                     <!-- <div class=""> -->
                                         <label for="job_type_id"> Job Type:</label>
                                         <select name="job_type" id="job_type" class="form-control custom-select m_select">
+                                        <option value="<?php echo $workorder->job_type; ?>"><?php echo $workorder->job_type; ?></option>
                                     <?php foreach($job_types as $jt){ ?>
                                         <option value="<?php echo $jt->title ?>"><?php echo $jt->title ?></option>
 
@@ -1070,6 +1071,7 @@ border: none;
                                     <!-- <div class="form-group"> -->
                                         <label for="job_type_id">Job Tag</label>
                                         <select name="job_tag" id="job_tag" class="form-control custom-select m_select">
+                                        <option value="<?php echo $workorder->tags; ?>"><?php echo $workorder->tags; ?></option>
                                         <?php foreach($job_tags as $tags){ ?>
                                                 <option value="<?php echo $tags->name; ?>"><?php echo $tags->name; ?></option>
                                             <?php } ?>
@@ -1084,6 +1086,7 @@ border: none;
                                     <!-- <div class=""> -->
                                         <label for="status_id"> Status:</label>
                                         <select name="status" id="workorder_status" class="form-control custom-select m_select">
+                                        <option value="<?php echo $workorder->status; ?>"><?php echo $workorder->status; ?></option>
                                         <option value="New">New</option>
                                         <option value="Draft">Draft</option>
                                         <option value="Scheduled">Scheduled</option>
@@ -1103,6 +1106,7 @@ border: none;
                                     <!-- <div class=""> -->
                                         <label for="job_priority"> Priority:</label> 
                                         <select name="priority" id="workorder_priority" class="form-control custom-select m_select">
+                                        <option value="<?php echo $workorder->priority; ?>"><?php echo $workorder->priority; ?></option>
                                         <option value="Standard">Standard</option>
                                         <option value="Emergency">Emergency</option>
                                         <option value="Low">Low</option>
@@ -1140,50 +1144,50 @@ border: none;
                                                     <tr>
                                                         <td>Honeywell</td>
                                                         <td style="min-width:10%;"><input type="text" class="form-control"
-                                                                   name="honeywell_wo"
-                                                                   value="<?php echo (!empty($workorder->ip_cameras)) ? $workorder->ip_cameras['honeywell']['wo'] : '' ?>"
-                                                                   placeholder=""/>
+                                                                    name="honeywell_wo"
+                                                                    value="<?php echo $cameras->honeywell_wo; ?>"
+                                                                    placeholder=""/>
                                                         </td>
                                                         <td style="min-width:80px;"><input type="text" class="form-control"
-                                                                   value="<?php echo (!empty($workorder->ip_cameras)) ? $workorder->ip_cameras['honeywell']['wi'] : '' ?>"
-                                                                   name="honeywell_wi" placeholder=""/>
+                                                                    value="<?php echo $cameras->honeywell_wi; ?>"
+                                                                    name="honeywell_wi" placeholder=""/>
                                                         </td>
                                                         <td style="min-width:80px;"><input type="text" class="form-control"
-                                                                   value="<?php echo (!empty($workorder->ip_cameras)) ? $workorder->ip_cameras['honeywell']['doorbell_cam'] : '' ?>"
-                                                                   name="honeywell_doorbellcam"
-                                                                   placeholder=""/>
+                                                                    value="<?php echo $cameras->honeywell_doorbellcam; ?>"
+                                                                    name="honeywell_doorbellcam"
+                                                                    placeholder=""/>
                                                         </td>
                                                     </tr>
                                                     <tr>
                                                         <td>Alarm.com</td>
                                                         <td style="min-width:80px;"><input type="text" class="form-control"
-                                                                   value="<?php echo (!empty($workorder->ip_cameras)) ? $workorder->ip_cameras['avycon']['wo'] : '' ?>"
-                                                                   name="alarm_wo" placeholder=""/>
+                                                                    value="<?php echo $cameras->alarm_wo; ?>"
+                                                                    name="alarm_wo" placeholder=""/>
                                                         </td>
                                                         <td style="min-width:80px;"><input type="text" class="form-control"
-                                                                   value="<?php echo (!empty($workorder->ip_cameras)) ? $workorder->ip_cameras['avycon']['wi'] : '' ?>"
-                                                                   name="alarm_wi" placeholder=""/>
+                                                                    value="<?php echo $cameras->alarm_wi; ?>"
+                                                                    name="alarm_wi" placeholder=""/>
                                                         </td>
                                                         <td style="min-width:80px;"><input type="text" class="form-control"
-                                                                   value="<?php echo (!empty($workorder->ip_cameras)) ? $workorder->ip_cameras['avycon']['doorbell_cam'] : '' ?>"
-                                                                   name="alarm_doorbellcam"
-                                                                   placeholder=""/>
+                                                                    value="<?php echo $cameras->alarm_doorbellcam; ?>"
+                                                                    name="alarm_doorbellcam"
+                                                                    placeholder=""/>
                                                         </td>
                                                     </tr>
                                                     <tr>
                                                         <td>Other</td>
                                                         <td style="min-width:80px;"><input type="text" class="form-control"
-                                                                   value="<?php echo (!empty($workorder->ip_cameras)) ? $workorder->ip_cameras['other']['wo'] : '' ?>"
-                                                                   name="other_wo" placeholder=""/>
+                                                                    value="<?php echo $cameras->other_wo; ?>"
+                                                                    name="other_wo" placeholder=""/>
                                                         </td>
                                                         <td style="min-width:80px;"><input type="text" class="form-control"
-                                                                   value="<?php echo (!empty($workorder->ip_cameras)) ? $workorder->ip_cameras['other']['wi'] : '' ?>"
-                                                                   name="other_wi" placeholder=""/>
+                                                                    value="<?php echo $cameras->other_wi; ?>"
+                                                                    name="other_wi" placeholder=""/>
                                                         </td>
                                                         <td style="min-width:80px;"><input type="text" class="form-control"
-                                                                   value="<?php echo (!empty($workorder->ip_cameras)) ? $workorder->ip_cameras['other']['doorbell_cam'] : '' ?>"
-                                                                   name="other_doorbellcam"
-                                                                   placeholder=""/>
+                                                                    value="<?php echo $cameras->other_doorbellcam; ?>"
+                                                                    name="other_doorbellcam"
+                                                                    placeholder=""/>
                                                         </td>
                                                     </tr>
                                                 </table>
@@ -1215,33 +1219,33 @@ border: none;
                                                             <td>Deadbolt</td>
                                                             <td style="min-width:80px;"><input type="text" class="form-control"
                                                                        name="deadbolt_brass"
-                                                                       value="<?php echo (!empty($workorder->doorlocks)) ? $workorder->doorlocks['deadbolt']['brass'] : '' ?>"
+                                                                       value="<?php echo $doorlocks->deadbolt_brass; ?>"
                                                                        placeholder=""/>
                                                             </td>
                                                             <td style="min-width:80px;"><input type="text" class="form-control"
-                                                                       value="<?php echo (!empty($workorder->doorlocks)) ? $workorder->doorlocks['deadbolt']['nickal'] : '' ?>"
-                                                                       name="deadbolt_nickel"
-                                                                       placeholder=""/>
+                                                                        value="<?php echo $doorlocks->deadbolt_nickel; ?>"
+                                                                        name="deadbolt_nickel"
+                                                                        placeholder=""/>
                                                             </td>
                                                             <td style="min-width:80px;"><input type="text" class="form-control"
-                                                                       value="<?php echo (!empty($workorder->doorlocks)) ? $workorder->doorlocks['deadbolt']['bronze'] : '' ?>"
-                                                                       name="deadbolt_bronze"
-                                                                       placeholder=""/>
+                                                                        value="<?php echo $doorlocks->deadbolt_bronze; ?>"
+                                                                        name="deadbolt_bronze"
+                                                                        placeholder=""/>
                                                             </td>
                                                         </tr>
                                                         <tr>
                                                             <td>Handle</td>
                                                             <td style="min-width:80px;"><input type="text" class="form-control"
-                                                                       value="<?php echo (!empty($workorder->doorlocks)) ? $workorder->doorlocks['handle']['brass'] : '' ?>"
-                                                                       name="handle_brass" placeholder=""/>
+                                                                        value="<?php echo $doorlocks->handle_brass; ?>"
+                                                                        name="handle_brass" placeholder=""/>
                                                             </td>
                                                             <td style="min-width:80px;"><input type="text" class="form-control"
-                                                                       value="<?php echo (!empty($workorder->doorlocks)) ? $workorder->doorlocks['handle']['nickal'] : '' ?>"
-                                                                       name="handle_nickel" placeholder=""/>
+                                                                        value="<?php echo $doorlocks->handle_nickel; ?>"
+                                                                        name="handle_nickel" placeholder=""/>
                                                             </td>
                                                             <td style="min-width:80px;"><input type="text" class="form-control"
-                                                                       value="<?php echo (!empty($workorder->doorlocks)) ? $workorder->doorlocks['handle']['bronze'] : '' ?>"
-                                                                       name="handle_bonze" placeholder=""/>
+                                                                        value="<?php echo $doorlocks->handle_bonze; ?>"
+                                                                        name="handle_bonze" placeholder=""/>
                                                             </td>
                                                         </tr>
                                                     </table>
@@ -1272,15 +1276,15 @@ border: none;
                                                     <tr>
                                                         <td>Honeywell</td>
                                                         <td><input type="text" class="form-control"
-                                                                   value="<?php echo (!empty($workorder->dvr_nvr)) ? $workorder->dvr_nvr['honeywell']['4_channel'] : '' ?>"
-                                                                   name="honeywell_4ch" placeholder=""/>
+                                                                    value="<?php echo $dvr->honeywell_4ch; ?>"
+                                                                    name="honeywell_4ch" placeholder=""/>
                                                         </td>
                                                         <td><input type="text" class="form-control"
-                                                                   value="<?php echo (!empty($workorder->dvr_nvr)) ? $workorder->dvr_nvr['honeywell']['8_channel'] : '' ?>"
+                                                                    value="<?php echo $dvr->honeywell_8ch; ?>"
                                                                    name="honeywell_8ch" placeholder=""/>
                                                         </td>
                                                         <td><input type="text" class="form-control"
-                                                                   value="<?php echo (!empty($workorder->dvr_nvr)) ? $workorder->dvr_nvr['honeywell']['16_channel'] : '' ?>"
+                                                                    value="<?php echo $dvr->honeywell_16ch; ?>"
                                                                    name="honeywell_16ch"
                                                                    placeholder=""/>
                                                         </td>
@@ -1288,30 +1292,30 @@ border: none;
                                                     <tr>
                                                         <td>Alarm.com</td>
                                                         <td><input type="text" class="form-control"
-                                                                   value="<?php echo (!empty($workorder->dvr_nvr)) ? $workorder->dvr_nvr['avycon']['4_channel'] : '' ?>"
+                                                                    value="<?php echo $dvr->alarm_4ch; ?>"
                                                                    name="alarm_4ch" placeholder=""/>
                                                         </td>
                                                         <td><input type="text" class="form-control"
-                                                                   value="<?php echo (!empty($workorder->dvr_nvr)) ? $workorder->dvr_nvr['avycon']['8_channel'] : '' ?>"
+                                                                    value="<?php echo $dvr->alarm_8ch; ?>"
                                                                    name="alarm_8ch" placeholder=""/>
                                                         </td>
                                                         <td><input type="text" class="form-control"
-                                                                   value="<?php echo (!empty($workorder->dvr_nvr)) ? $workorder->dvr_nvr['avycon']['16_channel'] : '' ?>"
+                                                                    value="<?php echo $dvr->alarm_16ch; ?>"
                                                                    name="alarm_16ch" placeholder=""/>
                                                         </td>
                                                     </tr>
                                                     <tr>
                                                         <td>Other</td>
                                                         <td><input type="text" class="form-control"
-                                                                   value="<?php echo (!empty($workorder->dvr_nvr)) ? $workorder->dvr_nvr['other']['4_channel'] : '' ?>"
+                                                                    value="<?php echo $dvr->other_4ch; ?>"
                                                                    name="other_4ch" placeholder=""/>
                                                         </td>
                                                         <td><input type="text" class="form-control"
-                                                                   value="<?php echo (!empty($workorder->dvr_nvr)) ? $workorder->dvr_nvr['other']['8_channel'] : '' ?>"
+                                                                    value="<?php echo $dvr->other_8ch; ?>"
                                                                    name="other_8ch" placeholder=""/>
                                                         </td>
                                                         <td><input type="text" class="form-control"
-                                                                   value="<?php echo (!empty($workorder->dvr_nvr)) ? $workorder->dvr_nvr['other']['16_channel'] : '' ?>"
+                                                                    value="<?php echo $dvr->other_16ch; ?>"
                                                                    name="other_16ch" placeholder=""/>
                                                         </td>
                                                     </tr>
@@ -1338,39 +1342,19 @@ border: none;
                                                         <th>Thermostats</th>
                                                         <th>Lights & Bulbs</th>
                                                     </tr>
+                                                    <?php foreach($automation as $auto){ ?>
                                                     <tr>
                                                         <!-- <td></td> -->
                                                         <td style="min-width:100px;"><input type="text" class="form-control"
-                                                                   value="<?php echo (!empty($workorder->automation)) ? $workorder->automation['thermostats'][0] : '' ?>"
+                                                                    value="<?php echo $auto->thermostats; ?>"
                                                                    name="thermostats[]" placeholder=""/>
                                                         </td>
                                                         <td style="min-width:100px;"><input type="text" class="form-control"
-                                                                   value="<?php echo (!empty($workorder->automation)) ? $workorder->automation['light_bulbs'][0] : '' ?>"
+                                                                    value="<?php echo $auto->lights_and_bulbs; ?>"
                                                                    name="lights_and_bulbs[]" placeholder=""/>
                                                         </td>
                                                     </tr>
-                                                    <tr>
-                                                        <!-- <td></td> -->
-                                                        <td style="min-width:100px;"><input type="text" class="form-control"
-                                                                   value="<?php echo (!empty($workorder->automation)) ? $workorder->automation['thermostats'][1] : '' ?>"
-                                                                   name="thermostats[]" placeholder=""/>
-                                                        </td>
-                                                        <td style="min-width:100px;"><input type="text" class="form-control"
-                                                                   value="<?php echo (!empty($workorder->automation)) ? $workorder->automation['light_bulbs'][1] : '' ?>"
-                                                                   name="lights_and_bulbs[]" placeholder=""/>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <!-- <td></td> -->
-                                                        <td style="min-width:100px;"><input type="text" class="form-control"
-                                                                   value="<?php echo (!empty($workorder->automation)) ? $workorder->automation['thermostats'][2] : '' ?>"
-                                                                   name="thermostats[]" placeholder=""/>
-                                                        </td>
-                                                        <td style="min-width:100px;"><input type="text" class="form-control"
-                                                                   value="<?php echo (!empty($workorder->automation)) ? $workorder->automation['light_bulbs'][2] : '' ?>"
-                                                                   name="lights_and_bulbs[]" placeholder=""/>
-                                                        </td>
-                                                    </tr>
+                                                    <?php } ?>
                                                 </table>
                                             </div>
                                         </div>
@@ -1397,11 +1381,11 @@ border: none;
                                                     <tr>
                                                         <td></td>
                                                         <td style="min-width:100px;"><input type="number" class="form-control"
-                                                                   value="<?php echo (!empty($workorder->pers)) ? $workorder->pers['fall_detection'][0] : '' ?>"
+                                                                    value="<?php echo $pers->fall_detection; ?>"
                                                                    name="fall_detection" placeholder=""/>
                                                         </td>
                                                         <td style="min-width:100px;"><input type="number" class="form-control"
-                                                                   value="<?php echo (!empty($workorder->pers)) ? $workorder->pers['wo_fall_detection'][0] : '' ?>"
+                                                                    value="<?php echo $pers->w_o_fall_protection; ?>"
                                                                    name="w_o_fall_protection" placeholder=""/>
                                                         </td>
                                                     </tr>
@@ -1589,41 +1573,47 @@ border: none;
                                                     </tr>
                                                     </thead>
                                                     <tbody id="jobs_items_table_body">
-                                                    <tr>
-                                            <td width="30%">
-                                                <input type="text" class="form-control getItems"
-                                                       onKeyup="getItems(this)" name="items[]">
-                                                <ul class="suggestions"></ul>
-                                                <div class="show_mobile_view"><span class="getItems_hidden"></span></div>
-                                            </td>
-                                            <td width="20%">
-                                            <div class="dropdown-wrapper">
-                                                <select name="item_type[]" id="item_typeid" class="form-control">
-                                                    <option value="product">Product</option>
-                                                    <option value="material">Material</option>
-                                                    <option value="service">Service</option>
-                                                    <option value="fee">Fee</option>
-                                                </select>
-                                            </div>
-
-                                            <!-- <div class="show_mobile_view" style="color:green;"><span>Product</span></div> -->
-                                                </td>
-                                            <td width="10%"><input type="number" class="form-control quantity mobile_qty" name="quantity[]"
-                                                       data-counter="0" id="quantity_0" value="1"> 
-                                                       <!-- <div class="show_mobile_view_test"><span>1</span><input type="hidden" class="form-control quantity" name="quantity[]" data-counter="0" id="quantity_0" value="1"></div>  -->
-                                            </td>
-                                            <td width="10%"><input type="number" class="form-control price hidden_mobile_view" name="price[]"
-                                                       data-counter="0" id="price_0" min="0" value="0"> <input type="hidden" class="priceqty" id="priceqty_0"> <div class="show_mobile_view"><span class="price">0</span><input type="hidden" class="form-control price" name="price[]" data-counter="0" id="priceM_0" min="0" value="0"></div><input id="priceM_qty0" value=""  type="hidden" name="price_qty[]" class="form-control hidden_mobile_view price_qty"></td>
-                                            <td width="10%" class="hidden_mobile_view"><input type="number" class="form-control discount" name="discount[]"
-                                                       data-counter="0" id="discount_0" min="0" value="0" ></td>
-                                            <td width="10%" class="hidden_mobile_view"><input type="text" class="form-control tax_change" name="tax[]"
-                                                       data-counter="0" id="tax1_0" min="0" value="0">
-                                                       <!-- <span id="span_tax_0">0.0</span> -->
-                                                       </td>
-                                            <td width="10%" class="hidden_mobile_view"><input type="hidden" class="form-control " name="total[]"
-                                                       data-counter="0" id="item_total_0" min="0" value="0">
-                                                       $<span id="span_total_0">0.00</span></td>
-                                        </tr>
+                                                    <?php foreach($items_data as $data){ ?>
+                                                        <tr>
+                                                            <td width="30%">
+                                                            <div class="hidden_mobile_view">
+                                                                <input type="text" class="form-control getItems"
+                                                                    onKeyup="getItems(this)" name="items[]" value="<?php echo $data->item; ?>">
+                                                                <ul class="suggestions"></ul>
+                                                            </div>
+                                                            <div class="show_mobile_view">
+                                                            <?php echo $data->item; ?>
+                                                            </div>
+                                                            </td>
+                                                            <td width="20%">
+                                                            <div class="hidden_mobile_view">
+                                                            <select name="item_type[]" class="form-control">
+                                                                    <option value="product">Product</option>
+                                                                    <option value="material">Material</option>
+                                                                    <option value="service">Service</option>
+                                                                    <option value="fee">Fee</option>
+                                                                </select>
+                                                            </div>
+                                                            <div class="show_mobile_view">
+                                                            <?php echo $data->item_type; ?>
+                                                            </div>
+                                                            </td>
+                                                            <td width="10%"><input type="number" class="form-control quantity hidden_mobile_view" name="quantity[]"
+                                                                    data-counter="0" id="quantity_<?php echo $data->id; ?>" value="<?php echo $data->qty; ?>"><div class="show_mobile_view"><span><?php echo $data->qty; ?></span><input type="hidden" class="form-control quantity" name="quantity[]"
+                                                                    data-counter="0" id="quantity_0" value="<?php echo $data->qty; ?>"></div></td>
+                                                            <td width="10%"><input type="number" class="form-control price hidden_mobile_view" name="price[]"
+                                                                    data-counter="0" id="price_<?php echo $data->id; ?>" min="0" value="<?php echo $data->cost; ?>"><div class="show_mobile_view"><?php echo $data->cost; ?></div></td>
+                                                            <td class="hidden_mobile_view" width="10%"><input type="number" class="form-control discount" name="discount[]"
+                                                                    data-counter="0" id="discount_<?php echo $data->id; ?>" min="0" value="<?php echo $data->discount; ?>" ></td>
+                                                            <td class="hidden_mobile_view" width="10%"><input type="text" class="form-control tax_change" name="tax[]"
+                                                                    data-counter="0" id="tax1_<?php echo $data->id; ?>" min="0" value="<?php echo $data->tax; ?>">
+                                                                    <!-- <span id="span_tax_0">0.0</span> -->
+                                                                    </td>
+                                                            <td class="hidden_mobile_view" width="10%"><input type="hidden" class="form-control " name="total[]"
+                                                                    data-counter="0" id="item_total_<?php echo $data->id; ?>" min="0" value="<?php echo $data->total; ?>">
+                                                                    $<span id="span_total_<?php echo $data->id; ?>"><?php echo $data->total; ?></span></td>
+                                                        </tr>
+                                                    <?php } ?>
                                                     </tbody>
                                                 </table>
                                                 <!-- <a href="#" class="btn btn-primary" id="add_another">Add Items</a> -->
@@ -1645,7 +1635,7 @@ border: none;
                                         <table class="table table-bordered" style="width:80%;">
                                             <tr>
                                                 <td>Equipment Cost</td>
-                                                 <td class="d-flex align-items-center">$  <input type="text" name="subtotal" id="item_total" class="form-control" >
+                                                 <td class="d-flex align-items-center">$  <input type="text" name="subtotal" id="item_total" class="form-control" value="<?php echo $workorder->subtotal; ?>">
                                                 </td>
                                             </tr>
                                             <tr>
@@ -1653,7 +1643,7 @@ border: none;
                                                 <td class="d-flex align-items-center">$ <input type="text" 
                                                                                                name="taxes"
                                                                                                id="sales_taxs"
-                                                                                               class="form-control">
+                                                                                               class="form-control" value="<?php echo $workorder->taxes; ?>">
                                                 </td>
                                             </tr>
                                             <tr>
@@ -1665,7 +1655,7 @@ border: none;
                                                        class="form-control">
                                                 <td>One Time Program and Setup</td>
                                                 <td class="d-flex align-items-center">$ <input type="text"
-                                                                                               value="<?php echo !empty($workorder->total) ? $workorder->total['one_time'] : 0.00; ?>"
+                                                                                                value="<?php echo $workorder->otp_setup; ?>"
                                                                                                name="otp_setup"
                                                                                                id="one_time"
                                                                                                class="form-control">
@@ -1674,7 +1664,7 @@ border: none;
                                             <tr>
                                                 <td>Monthly Monitoring</td>
                                                 <td class="d-flex align-items-center">$ <input type="text"
-                                                                                               value="<?php echo !empty($workorder->total) ? $workorder->total['m_monitoring'] : 0.00; ?>"
+                                                                                                value="<?php echo $workorder->monthly_monitoring; ?>"
                                                                                                name="monthly_monitoring"
                                                                                                id="m_monitoring"
                                                                                                class="form-control">
@@ -1684,7 +1674,7 @@ border: none;
                                                 <td>Total Due</td>
                                                  <td class="d-flex align-items-center">$ 
                                                             <input type="hidden" name="adjustment_value" id="adjustment_input" value="0" class="form-control adjustment_input" style="width:100px; display:inline-block"><input type="hidden" name="markup_input_form" id="markup_input_form" class="markup_input" value="0"> 
-                                                            <input type="text" name="grand_total_text" id="grand_total_input" class="form-control" placeholder="0">
+                                                            <input type="text" name="grand_total_text" id="grand_total_input" class="form-control" placeholder="0" value="<?php echo $workorder->grand_total; ?>">
                                                 </td>
                                             </tr>
                                         </table>
@@ -1762,7 +1752,7 @@ border: none;
                                         <div class="col-md-3">
                                             <div class="form-group">
                                                 <label for="job_type">Amount<small class="help help-sm"> ( $ )</small></label>
-                                                <input type="text" class="form-control" name="payment_amount" id="payment_amount"  />
+                                                <input type="text" class="form-control" name="payment_amount" id="payment_amount" value="<?php echo $workorder->payment_amount; ?>" />
                                             </div>
                                             <div id="cash_area" style="display:none;margin-top:-20px;">
                                                 <input type="checkbox" id="collected_checkbox"> <b style="font-size:14px;" id="collected_checkbox_label"> Cash collected already </b>          
@@ -2102,9 +2092,9 @@ border: none;
                                 <div class=" col-md-12"><label style="float:right;color:green;"><a href="#" style="color:green;" data-toggle="modal" data-target="#terms_conditions_modal">Update Terms and Condition</a></label>
                                     <h6>Agreement</h6>
                                     <div style="height:400px; overflow:auto; background:#FFFFFF; padding-left:10px;" id="thisdiv2">
-                                    <?php echo $terms_conditions->content; ?></p>
+                                    <?php echo $workorder->terms_and_conditions; ?></p>
                                             <input type="hidden" id="company_id" value="<?php echo getLoggedCompanyID(); ?>">
-                                            <input type="hidden" class="form-control" name="terms_conditions" id="terms_conditions" value="<?php echo $terms_conditions->content; ?>" />
+                                            <input type="hidden" class="form-control" name="terms_conditions" id="terms_conditions" value="<?php echo $workorder->terms_and_conditions; ?>" />
                                     </div>
                                 </div>
                             </div>
@@ -2119,107 +2109,49 @@ border: none;
                                     </div>
                                 </div>
                             </div>
-                            <div class="row signature_web">
+                            <div class="row">
                                 <div class="col-md-4">
-                                    <h6>Company Representative Approval</h6>
-                                    <div class="sigPad" id="smoothed1a" style="width:100%;border:solid gray 1px;background-color:#00b300;">
-                                        <ul class="sigNav" style="">
-                                            <li class="drawIt"><a href="#draw-it">Draw It</a></li>
-                                            <li class="clearButton"><a href="#clear">Clear</a></li>
-                                        </ul>
-                                        <ul class="edit">
-                                            <li class="smoothed1a_pencil pointer"><a onclick="myFunction()" style="float:right;margin-right:10px;" class="smoothed1a_pencil"><i class="fa fa-pencil" aria-hidden="true"></i></a></li>
-                                        </ul>
-                                        <div class="sig sigWrapper sigWrapper1" id="smoothed1a_pencil" style="height:auto;pointer-events: none;">
-                                            <div class="typed"></div>
-                                            <div id="signature-pad">
-                                            <canvas style="border:1px solid #000" id="sign"></canvas>
-                                            </div>
-                                            <input type="hidden" name="output-2" class="output output1">
-                                        </div>
-                                    </div>
-                                    <input type="hidden" id="saveCompanySignatureDB1a"
-                                           name="company_representative_approval_signature1a">
+                                    <h6>Company Representative Approval &emsp; <a data-toggle="modal" data-target=".companySignature"><i class="fa fa-pencil" aria-hidden="true"></i></a> </h6>
+                                    <img src="<?php echo $workorder->company_representative_signature; ?>">
                                     <br>
 
                                     <label for="comp_rep_approval">Printed Name</label>
                                     <input type="text6" class="form-control mb-3"
                                            name="company_representative_printed_name"
-                                           id="company_representative_printed_name" placeholder=""/>
-                                           <!-- <canvas id="canvas_web" style="border: 1px solid #ddd;"></canvas>
-                                            <input type="text" class="form-control mb-3" name="company_representative_printed_name" id="comp_rep_approval1" placeholder="Printed Name"/> -->
-                                            <input type="hidden" id="saveCompanySignatureDB1aM_web" name="company_representative_approval_signature1aM_web">
+                                           id="comp_rep_approval" value="<?php echo $workorder->company_representative_name; ?>" />
 
                                 </div>
                                 <div class="col-md-4">
-                                    <h6>Primary Account Holder</h6>
-                                    <div class="sigPad" id="smoothed2a" style="width:100%;border:solid gray 1px;background-color:#f7b900;">
-                                        <ul class="sigNav">
-                                            <li class="drawIt"><a href="#draw-it">Draw It</a></li>
-                                            <li class="clearButton"><a href="#clear">Clear</a></li>
-                                        </ul>
-                                        <ul class="edit">
-                                            <li class="smoothed1a_pencil pointer"><a onclick="myFunctiontwo()" style="float:right;margin-right:10px;" class="smoothed1a_pencil"><i class="fa fa-pencil" aria-hidden="true"></i></a></li>
-                                        </ul>
-                                        <div class="sig sigWrapper sigWrapper2" id="smoothed1a_pencil" style="height:auto;pointer-events: none;">
-                                            <div class="typed"></div>
-                                            <div id="signature-pad2">
-                                            <canvas style="border:1px solid #000" id="sign2"></canvas>
-                                            </div>
-                                            <input type="hidden" name="output-2" class="output output2">
-                                        </div>
-                                    </div>
-                                    <input type="hidden" id="savePrimaryAccountSignatureDB2a"
-                                           name="primary_account_holder_signature2a">
+                                    <h6>Primary Account Holder &emsp; <a data-toggle="modal" data-target=".primarySignature"><i class="fa fa-pencil" aria-hidden="true"></i></a></h6>
+                                    <img src="<?php echo $workorder->primary_account_holder_signature; ?>">
                                     <br>
 
                                     <label for="comp_rep_approval">Printed Name</label>
                                     <input type="text6" class="form-control mb-3" name="primary_account_holder_name"
-                                           id="primary_account_holder_name" placeholder=""/>
-                                    
-                                           <input type="hidden" id="saveCompanySignatureDB1aM_web2" name="primary_representative_approval_signature1aM_web">
+                                           id="comp_rep_approval" placeholder="" value="<?php echo $workorder->primary_account_holder_name; ?>"/>
 
                                 </div>
                                 <div class="col-md-4">
-                                    <h6>Secondary Account Holder</h6>
-                                    <div class="sigPad" id="smoothed3a" style="width:100%;border:solid gray 1px;background-color:#f75c1e;">
-                                        <ul class="sigNav">
-                                            <li class="drawIt"><a href="#draw-it">Draw It</a></li>
-                                            <li class="clearButton"><a href="#clear">Clear</a></li>
-                                        </ul>
-                                        <ul class="edit">
-                                            <li class="smoothed1a_pencil pointer"><a onclick="myFunctionthree()" style="float:right;margin-right:10px;" class="smoothed1a_pencil"><i class="fa fa-pencil" aria-hidden="true"></i></a></li>
-                                        </ul>
-                                        <div class="sig sigWrapper sigWrapper3" id="smoothed1a_pencil" style="height:auto;pointer-events: none;">
-                                            <div class="typed"></div>
-                                            <div id="signature-pad3">
-                                            <canvas style="border:1px solid #000" id="sign3"></canvas>
-                                            </div>
-                                            <input type="hidden" name="output-2" class="output output3">
-                                        </div>
-                                    </div>
-                                    <input type="hidden" id="saveSecondaryAccountSignatureDB3a"
-                                           name="secondary_account_holder_signature3a">
+                                    <h6>Secondary Account Holder &emsp; <a data-toggle="modal" data-target=".secondarySignature"><i class="fa fa-pencil" aria-hidden="true"></i></a></h6>
+                                    <img src="<?php echo $workorder->secondary_account_holder_signature; ?>">
                                     <br>
 
                                     <label for="comp_rep_approval">Printed Name</label>
                                     <input type="text6" class="form-control mb-3" name="secondery_account_holder_name"
-                                           id="secondery_account_holder_name" placeholder=""/>
-
-                                           <input type="hidden" id="saveCompanySignatureDB1aM_web3" name="secondary_representative_approval_signature1aM_web">
+                                           id="comp_rep_approval" placeholder="" value="<?php echo $workorder->secondary_account_holder_name; ?>"/>
 
                                 </div>
                             </div>
 
 
-                            <div class="signature_mobile">
+                            <!-- <div class="signature_mobile">
                                     <br><br>
                                     <a href="#" class="btn btn-success" data-toggle="modal" data-target="#signature_mobile">Signature</a>
                                     <br><br>
                             </div>
 
                             <div class="signature_mobile signatureArea">
-                            </div>
+                            </div> -->
 
                             <!-- ====== TERMS OF USE ====== -->
                             <div class="row" id="group_area">
@@ -2229,9 +2161,9 @@ border: none;
                                 <div class=" col-md-12"><label style="float:right;color:green;"><a href="#" style="color:green;" data-toggle="modal" data-target="#terms_use_modal">Update Terms of Use</a></label>
                                     <h6>Agreement</h6>
                                     <div style="height:200px; overflow:auto; background:#FFFFFF; padding-left:10px;" id="thisdiv3">
-                                    <p><?php echo $terms_uses->content; ?></p>
+                                    <p><?php echo $workorder->terms_of_use; ?></p>
                                             <input type="hidden" id="company_id" value="<?php echo getLoggedCompanyID(); ?>">
-                                            <input type="hidden" class="form-control" name="terms_of_use" id="terms_of_use"  value="<?php echo $terms_uses->content; ?>"/>
+                                            <input type="hidden" class="form-control" name="terms_of_use" id="terms_of_use" value="<?php echo $workorder->terms_of_use; ?>"/>
                                     </div>
                                 </div>
 
@@ -2240,7 +2172,7 @@ border: none;
                                         <br><br>
                                         <label for="initials">**INITIALS**</label>
                                         <input type="text" class="form-control"
-                                               name="initials"
+                                               name="initials" value="<?php echo $alarms->initials; ?>"
                                                id="initials" placeholder=""/>
                                     </div>
                                 </div>
@@ -2425,6 +2357,108 @@ border: none;
         </div>
         <!-- page wrapper end -->
     </div>
+
+    <!-- first signature -->
+
+    <div class="modal fade companySignature" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                            <div align="center">
+                                <p style="padding:2%;background-color:#d2d2d2;width:380px;"> Company Representative Approval </p>
+                            </div>
+                                    <div class="box-wrap">
+                                        
+                                        <div id="box-one">
+                                        <div class="row">
+                                        <div class="col-md-12" style="padding:1%;">
+                                        <center>
+                                            <canvas id="canvas" style="border: solid gray 1px;"></canvas>
+                                            <input type="hidden" class="form-control mb-3" name="company_representative_printed_name" id="comp_rep_approval1" value="Company Representative"/>
+                                            <input type="hidden" id="saveCompanySignatureDB1aM" name="company_representative_approval_signature1aM">
+                                            </div>
+                                            </div>
+                                            <br>
+                                        </center>
+                                        </div>
+                                    
+                                    </div>
+                        
+                        <div class="modal-footer">
+                            <button type="button" onClick="submit()" class="btn btn-success enter_signature" id="enter_signature">Update</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <!-- <input type="submit" value="save" id="btnSaveSign"> -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- second signature -->
+
+            <div class="modal fade primarySignature" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                            <div align="center">
+                                <p style="padding:2%;background-color:#d2d2d2;width:380px;"> Primary Account Holder </p>
+                            </div>
+                                    <div class="box-wrap">
+                                        
+                                        <div id="box-one">
+                                        <div class="row">
+                                        <div class="col-md-12" style="padding:1%;">
+                                        <center>
+                                            <canvas id="canvas2" style="border: solid gray 1px;"></canvas>
+                                            <input type="hidden" class="form-control mb-3" name="primary_representative_printed_name" id="comp_rep_approval2" value="Primary Account Holder"/>
+                                            <input type="hidden" id="savePrimaryAccountSignatureDB2aM" name="primary_account_holder_signature2aM">
+                                            </div>
+                                            </div>
+                                            <br>
+                                        </center>
+                                        </div>
+                                    
+                                    </div>
+                        
+                        <div class="modal-footer">
+                            <button type="button" onClick="submit()" class="btn btn-success enter_signature" id="enter_signature">Update</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <!-- <input type="submit" value="save" id="btnSaveSign"> -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- third signature -->
+
+            <div class="modal fade secondarySignature" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                            <div align="center">
+                                <p style="padding:2%;background-color:#d2d2d2;width:380px;"> Secondary Account Holder </p>
+                            </div>
+                                    <div class="box-wrap">
+                                        
+                                        <div id="box-one">
+                                        <div class="row">
+                                        <div class="col-md-12" style="padding:1%;">
+                                        <center>
+                                            <canvas id="canvas3" style="border: solid gray 1px;"></canvas>
+                                            <input type="hidden" class="form-control mb-3" name="secondary_representative_printed_name" id="comp_rep_approval3" value="Secondary Account Holder"/>
+                                            <input type="hidden" id="saveSecondaryAccountSignatureDB3aM" name="secondary_account_holder_signature3aM">
+                                            </div>
+                                            </div>
+                                            <br>
+                                        </center>
+                                        </div>
+                                    
+                                    </div>
+                        
+                        <div class="modal-footer">
+                            <button type="button" onClick="submit()" class="btn btn-success enter_signature" id="enter_signature">Update</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <!-- <input type="submit" value="save" id="btnSaveSign"> -->
+                        </div>
+                    </div>
+                </div>
+            </div>
 
     <!-- Modal -->
     <div class="modal fade" id="update_header_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
@@ -2739,8 +2773,8 @@ jQuery(document).ready(function () {
 //   signaturePadCanvas.setAttribute("width", parentWidth);
   signaturePad = new SignaturePad(signaturePadCanvas);
 
-//   signaturePadCanvas3.width  = 780;
-//   signaturePadCanvas3.height = 300;
+  signaturePadCanvas.width  = 780;
+  signaturePadCanvas.height = 300;
 });
 
 var signaturePad2;
@@ -2750,8 +2784,8 @@ jQuery(document).ready(function () {
 //   signaturePadCanvas.setAttribute("width", parentWidth);
   signaturePad2 = new SignaturePad(signaturePadCanvas2);
 
-//   signaturePadCanvas3.width  = 780;
-//   signaturePadCanvas3.height = 300;
+  signaturePadCanvas2.width  = 780;
+  signaturePadCanvas2.height = 300;
 });
 
 var signaturePad3;
@@ -2761,9 +2795,10 @@ jQuery(document).ready(function () {
 //   signaturePadCanvas.setAttribute("width", parentWidth);
   signaturePad3 = new SignaturePad(signaturePadCanvas3);
 
-//   signaturePadCanvas3.width  = 780;
-//   signaturePadCanvas3.height = 300;
+  signaturePadCanvas3.width  = 780;
+  signaturePadCanvas3.height = 300;
 });
+
 
 $(document).on('click touchstart','#sign',function(){
     // alert('test');
@@ -2840,7 +2875,7 @@ function submit() {
         // image.src = '"' + dataURL + '"';
         // document.body.appendChild(image);
 
-        var input_conf = '<br><div style="border:solid gray 1px;padding:2%;width:400px !important;"><img id="image1" src="'+dataURL+'"></img><input type="hidden" class="form-control" name="signature1" id="signature1" value="'+ dataURL +'"><br><input type="text" class="form-control" name="name1" id="name1" value="'+ input1 +'" readonly></div><br><div style="border:solid gray 1px;padding:2%;"><img id="image1" src="'+dataURL2+'"></img><input type="hidden" class="form-control" name="signature2" id="signature2" value="'+ dataURL2 +'"><br><input type="text" class="form-control" name="name2" id="name2" value="'+ input2 +'" readonly></div><br><div style="border:solid gray 1px;padding:2%;"><img id="image1" src="'+dataURL3+'"></img><input type="hidden" class="form-control" name="signature3" id="signature3" value="'+ dataURL3 +'"><br><input type="text" class="form-control" name="name3" id="name3" value="'+ input3 +'" readonly></div>';
+        var input_conf = '<br><div style="border:solid gray 1px;padding:2%;"><img id="image1" src="'+dataURL+'"></img><input type="hidden" class="form-control" name="signature1" id="signature1" value="'+ dataURL +'"><br><input type="text" class="form-control" name="name1" id="name1" value="'+ input1 +'" readonly></div><br><div style="border:solid gray 1px;padding:2%;"><img id="image1" src="'+dataURL2+'"></img><input type="hidden" class="form-control" name="signature2" id="signature2" value="'+ dataURL2 +'"><br><input type="text" class="form-control" name="name2" id="name2" value="'+ input2 +'" readonly></div><br><div style="border:solid gray 1px;padding:2%;"><img id="image1" src="'+dataURL3+'"></img><input type="hidden" class="form-control" name="signature3" id="signature3" value="'+ dataURL3 +'"><br><input type="text" class="form-control" name="name3" id="name3" value="'+ input3 +'" readonly></div>';
 
         $('.signatureArea').html(input_conf);
 

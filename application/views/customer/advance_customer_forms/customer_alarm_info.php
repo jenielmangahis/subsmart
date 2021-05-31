@@ -5,10 +5,10 @@
     </div>
     <div class="card-body">
         <div class="row form_line">
-            <div class="col-md-4">
+            <div class="col-md-6">
                 Monitoring Company
             </div>
-            <div class="col-md-8">
+            <div class="col-md-6">
                 <select id="monitor_comp" name="monitor_comp" data-customer-source="dropdown" class="input_select" >
                     <option value=""></option>
                     <option <?= isset($alarm_info) && $alarm_info->monitor_comp == 'ADT' ?  'selected' : '';?> value="ABT">ADT</option>
@@ -28,19 +28,18 @@
             </div>
         </div>
         <div class="row form_line">
-            <div class="col-md-4">
+            <div class="col-md-6">
                 Monitoring ID
             </div>
-            <div class="col-md-8">
+            <div class="col-md-6">
                 <input type="text" class="form-control" name="monitor_id" id="monitor_id" value="<?php if(isset($alarm_info)){ echo $alarm_info->monitor_id != 0 ? $alarm_info->monitor_id : '' ; } ?>"/>
             </div>
         </div>
-
         <div class="row form_line">
-            <div class="col-md-4">
+            <div class="col-md-6">
                 Account Type
             </div>
-            <div class="col-md-8">
+            <div class="col-md-6">
                 <select name="acct_type" id="acct_type" class="input_select">
                     <option <?php if(isset($alarm_info)){ if($alarm_info->acct_type == ''){echo "selected";} } ?> value=""></option>
                     <option <?php if(isset($alarm_info)){ if($alarm_info->acct_type == 'In-House'){echo "selected";} } ?> value="In-House">In-House</option>
@@ -50,10 +49,10 @@
             </div>
         </div>
         <div class="row form_line">
-            <div class="col-md-4">
+            <div class="col-md-6">
                 <label>Online
             </div>
-            <div class="col-md-8">
+            <div class="col-md-6">
                 <select id="online" name="online" data-customer-source="dropdown" class="form-controls input_select">
                     <option <?= isset($alarm_info) && $alarm_info->online == 'Yes' ?  'selected' : '';?> value="Yes">Yes</option>
                     <option <?= isset($alarm_info) && $alarm_info->online == 'No' ?  'selected' : '';?> value="No">No</option>
@@ -61,10 +60,10 @@
             </div>
         </div>
         <div class="row form_line">
-            <div class="col-md-4">
+            <div class="col-md-6">
                 <label>In Service
             </div>
-            <div class="col-md-8">
+            <div class="col-md-6">
                 <select id="in_service" name="in_service" data-customer-source="dropdown" class="form-controls input_select">
                     <option <?= isset($alarm_info) && $alarm_info->in_service == 'Yes' ?  'selected' : '';?> value="Yes">Yes</option>
                     <option <?= isset($alarm_info) && $alarm_info->in_service == 'No' ?  'selected' : '';?> value="No">No</option>
@@ -72,10 +71,10 @@
             </div>
         </div>
         <div class="row form_line">
-            <div class="col-md-4">
+            <div class="col-md-6">
                 <label>Equipment
             </div>
-            <div class="col-md-8">
+            <div class="col-md-6">
                 <select id="equipment" name="equipment" data-customer-source="dropdown" class="form-controls input_select">
                     <option value=""></option>
                     <option <?= isset($alarm_info) && $alarm_info->equipment == 'Not Installed' ?  'selected' : '';?> value="Not Installed">Not Installed</option>
@@ -86,43 +85,43 @@
         </div>
 
         <div class="row form_line">
-            <div class="col-md-4">
+            <div class="col-md-6">
                 Abort Code
             </div>
-            <div class="col-md-8">
+            <div class="col-md-6">
                 <input type="text" class="form-control" name="passcode" id="passcode" value="<?php if(isset($alarm_info)){ echo $alarm_info->passcode; } ?>"/>
             </div>
         </div>
         <div class="row form_line">
-            <div class="col-md-4">
+            <div class="col-md-6">
                 Installer Code
             </div>
-            <div class="col-md-8">
+            <div class="col-md-6">
                 <input type="text" class="form-control" name="install_code" id="install_code" value="<?php if(isset($alarm_info)){ echo $alarm_info->install_code!=0 ?  $alarm_info->install_code : ''; } ?>"/>
             </div>
         </div>
         <div class="row form_line">
-            <div class="col-md-4">
+            <div class="col-md-6">
                 Monitoring Confirm#
             </div>
-            <div class="col-md-8">
+            <div class="col-md-6">
                 <input type="text" class="form-control" name="mcn" id="mcn" value="<?php if(isset($alarm_info)){ echo $alarm_info->mcn !=0 ? $alarm_info->mcn : ''; } ?>"/>
             </div>
         </div>
         <div class="row form_line">
-            <div class="col-md-4">
+            <div class="col-md-6">
                 Signal Confirm#
             </div>
-            <div class="col-md-8">
+            <div class="col-md-6">
                 <input type="text" class="form-control" name="scn" id="scn" value="<?php if(isset($alarm_info)){ echo $alarm_info->scn !=0 ? $alarm_info->scn : ''; } ?>"/>
             </div>
         </div>
 
         <div class="row form_line">
-            <div class="col-md-4">
+            <div class="col-md-6">
                 Panel Type
             </div>
-            <div class="col-md-8">
+            <div class="col-md-6">
                 <select name="panel_type" id="panel_type" class="input_select">
                     <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == ''){echo "selected";} } ?> value=""></option>
                     <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'AERIONICS'){echo "selected";} } ?> value="AERIONICS">AERIONICS</option>
@@ -156,10 +155,10 @@
             </div>
         </div>
         <div class="row form_line">
-            <div class="col-md-4">
+            <div class="col-md-6">
                 System Package Type
             </div>
-            <div class="col-md-8">
+            <div class="col-md-6">
                 <select name="system_type" id="system_type" class="input_select">
                     <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == ''){echo "selected";} } ?> value=""></option>
                     <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == 'Landline'){echo "selected";} } ?> value="Landline">Landline</option>
@@ -188,10 +187,10 @@
             </div>
         </div>
         <div class="row form_line">
-            <div class="col-md-4">
+            <div class="col-md-6">
                 Warranty Type
             </div>
-            <div class="col-md-8">
+            <div class="col-md-6">
                 <select id="warranty_type" name="warranty_type" data-customer-source="dropdown" class="input_select" >
                     <option <?php if(isset($alarm_info)){ if($alarm_info->warranty_type == ""){ echo 'selected'; } } ?> value="">Select</option>
                     <option <?php if(isset($alarm_info)){ if($alarm_info->warranty_type == "Limited. 90 Days"){ echo 'selected'; } } ?> value="Limited. 90 Days">Limited 90 Days</option>
@@ -205,10 +204,10 @@
         </div>
         <hr>
         <div class="row form_line">
-            <div class="col-md-4">
+            <div class="col-md-6">
                 Dealer
             </div>
-            <div class="col-md-8">
+            <div class="col-md-6">
                 <select id="dealer" name="dealer" data-customer-source="dropdown" class="input_select" >
                     <option value=""></option>
                     <option <?php if(isset($alarm_info)){ if($alarm_info->dealer == "Alarm.com"){ echo 'selected'; } } ?> value="Alarm.com">Alarm.com</option>
@@ -217,26 +216,26 @@
             </div>
         </div>
         <div class="row form_line">
-            <div class="col-md-4">
+            <div class="col-md-6">
                  Login 
             </div>
-            <div class="col-md-8">
+            <div class="col-md-6">
                 <input type="text" class="form-control" name="alarm_login" id="alarm_login" value="<?php if(isset($alarm_info)){ echo $alarm_info->alarm_login; } ?>"/>
             </div>
         </div>
         <div class="row form_line">
-            <div class="col-md-4">
+            <div class="col-md-6">
                 Customer ID 
             </div>
-            <div class="col-md-8">
+            <div class="col-md-6">
                 <input type="text" class="form-control" name="alarm_customer_id" id="alarm_customer_id" value="<?php if(isset($alarm_info)){ echo $alarm_info->alarm_customer_id; } ?>"/>
             </div>
         </div>
         <div class="row form_line">
-            <div class="col-md-4">
+            <div class="col-md-6">
                 CS Account
             </div>
-            <div class="col-md-8">
+            <div class="col-md-6">
                 <input type="text" class="form-control" name="alarm_cs_account" id="alarm_cs_account" value="<?php if(isset($alarm_info)){ echo $alarm_info->alarm_cs_account; } ?>"/>
             </div>
         </div>
@@ -294,34 +293,34 @@
         </div>
         <div class="card-body">
             <div class="row form_line">
-                <div class="col-md-4">
+                <div class="col-md-6">
                     Custom Field 1
                 </div>
-                <div class="col-md-8">
+                <div class="col-md-6">
                     <input type="text" class="form-control" name="office_custom_field1" id="office_custom_field1" value="<?php if(isset($office_info)){ echo  $office_info->office_custom_field1; } ?>" />
                 </div>
             </div>
             <div class="row form_line">
-                <div class="col-md-4">
+                <div class="col-md-6">
                     Custom Field 2
                 </div>
-                <div class="col-md-8">
+                <div class="col-md-6">
                     <input type="text" class="form-control" name="office_custom_field1" id="office_custom_field1" value="<?php if(isset($office_info)){ echo  $office_info->office_custom_field1; } ?>" />
                 </div>
             </div>
             <div class="row form_line">
-                <div class="col-md-4">
+                <div class="col-md-6">
                     Custom Field 3
                 </div>
-                <div class="col-md-8">
+                <div class="col-md-6">
                     <input type="text" class="form-control" name="office_custom_field1" id="office_custom_field1" value="<?php if(isset($office_info)){ echo  $office_info->office_custom_field1; } ?>" />
                 </div>
             </div>
             <div class="row form_line">
-                <div class="col-md-4">
+                <div class="col-md-6">
                     Custom Field 4
                 </div>
-                <div class="col-md-8">
+                <div class="col-md-6">
                     <input type="text" class="form-control" name="office_custom_field1" id="office_custom_field1" value="<?php if(isset($office_info)){ echo  $office_info->office_custom_field1; } ?>" />
                 </div>
             </div>

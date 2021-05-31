@@ -1,6 +1,6 @@
 <!-- Modal for bank deposit-->
 <div class="full-screen-modal">
-<form onsubmit="submitModalForm(event, this)" id="modal-form">
+<form onsubmit="updateTransaction(event, this)" id="modal-form" data-href="/accounting/vendors/<?=$ccPayment->payee_id?>/update-transaction/credit-card-payment/<?=$ccPayment->id?>">
     <div id="payDownCreditModal" class="modal fade modal-fluid" role="dialog">
         <div class="modal-dialog">
             <!-- Modal content-->

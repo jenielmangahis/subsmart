@@ -86,7 +86,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <div class="card-body hid-desk pl-0 pr-0" style="padding-top:0px;padding-bottom:0px;">
                             <div class="row align-items-center mb-0">
                                 <div class="col-sm-6">
-                                    <h3 class="page-title mt-0" style="margin:5px 0 10px 0 !important;">Leads Manager</h3>
+                                    <h3 class="page-title mt-0" style="margin:5px 0 10px 0 !important;">Leads Manager List</h3>
                                 </div>
                                 <div class="col-sm-6">
                                     <div class="float-right d-md-block">
@@ -111,11 +111,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     <thead>
                                     <tr>
                                         <th>Name</th>
-                                        <th>Address</th>
+                                        <th>City</th>
+                                        <th>State</th>
                                         <th>Assigned To</th>
                                         <th>Email</th>
                                         <th>SSS Number</th>
-                                        <th>Date of Birth</th>
                                         <th>Phone</th>
                                         <th>Status</th>
                                         <th>Actions</th>
@@ -125,11 +125,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         <?php foreach ($leads as $lead) : ?>
                                             <tr>
                                                 <td><?= $lead->firstname.' '.$lead->lastname; ?></td>
-                                                <td><?= $lead->address; ?></td>
-                                                <td><?= $lead->FName; ?></td>
+                                                <td><?= $lead->city ?></td>
+                                                <td><?= $lead->state ?></td>
+                                                <td><?= $lead->FName. ' '. $lead->LName; ?></td>
                                                 <td><?= $lead->email_add; ?></td>
                                                 <td><?= $lead->sss_num; ?></td>
-                                                <td><?= $lead->date_of_birth; ?></td>
                                                 <td><?= $lead->phone_cell; ?></td>
                                                 <td><?= $lead->status; ?></td>
                                                 <td>
@@ -181,33 +181,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         "scrollX":        false,
         "scrollCollapse": true,
         "autoWidth": true,
-        "order": [[ 1, "asc" ]],
-        initComplete: function () {
-            this.api().columns([7]).every( function () {
-                var column = this;
-                var select = $('<select >' +
-                    '<option value=""></option>' +
-                    '<option value="New">New</option>' +
-                    '<option value="Contacted">Contacted</option>' +
-                    '<option value="Follow Up">Follow Up</option>' +
-                    '<option value="Assigned">Assigned</option>' +
-                    '<option value="Converted">Converted</option>' +
-                    '<option value="Closed">Closed</option>' +
-                    '</select>').appendTo( $(column.header()))
-                    .on( 'change', function () {
-                        var val = $.fn.dataTable.util.escapeRegex(
-                            $(this).val()
-                        );
-                        column.search( val ? val : '', false, true ).draw();
-                    } );
-                column.data().unique().sort().each( function ( d, j ) {
-                    //var val = $('<div/>').html(d).text();
-                    //select.append( '<option value="' + val + '">' + val + '</option>' );
-                   // select.append( '<option value="'+d+'">'+d+'</option>' )
-                    //console.log(val);
-                });
-            } );
-        }
+        "order": [],
+        
     });
     });
     $(".delete_lead").on( "click", function( event ) {

@@ -556,12 +556,11 @@ add_css(array(
                                         </tr>
                                     </thead>
                                     <tbody>
-
                                         <?php foreach ($profiles as $customer) : ?>
                                         <tr>
                                             <td>
-                                                <a href="<?= base_url('/customer/preview/' . $customer->prof_id) . ''; ?>"
-                                                    style="color:#32243d;">
+                                                <a href="<?= base_url('/customer/preview/' . $customer->prof_id); ?>"
+                                                    style="color:#1E5DA9;">
                                                     <?= ($customer) ? $customer->first_name . ' ' . $customer->last_name : ''; ?>
                                                 </a>
                                             </td>

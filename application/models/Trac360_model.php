@@ -163,7 +163,7 @@ class Trac360_model extends MY_Model
     }
     public function getAllpreviousJobsByCompanyID($company_id = 0)
     {
-        $this->db->select('jobs.id, jobs.job_number, jobs.job_name, jobs.event_color, jobs.job_description, jobs.job_location, jobs.job_type, jobs.tags, jobs.start_date, 
+        $this->db->select('jobs.id, jobs.employee_id, jobs.job_number, jobs.job_name, jobs.event_color, jobs.job_description, jobs.job_location, jobs.job_type, jobs.tags, jobs.start_date, 
         jobs.end_date, jobs.company_id, jobs.start_time, jobs.end_time, jobs.status, jobs.priority, acs_profile.prof_id, acs_profile.first_name, acs_profile.last_name,
         job_tags.name as tags_name,cust.first_name,cust.last_name,cust.mail_add,cust.city as cust_city,cust.state as cust_state,cust.zip_code as cust_zip_code,job_url_links.link,users.profile_img,jpd.amount,users.FName,users.LName,
         business_profile.address as office_address, business_profile.city as office_city, business_profile.state as office_state, business_profile.postal_code as office_postal_code, business_profile.business_name');
@@ -269,5 +269,60 @@ class Trac360_model extends MY_Model
         $this->db->reset_query();
         $qry = $this->db->query("SELECT * from trac360_user_visit_details WHERE date_created >= '".$date_from."' AND date_created <= '".$date_to." 23:59:59' AND user_id = ".$user_id);
         return $qry->result();
+    }
+    
+    public function get_all_jobs_byID($date_from, $date_to, $user_id)
+    {
+        $this->db->select('jobs.id, jobs.employee_id, jobs.job_number, jobs.job_name, jobs.event_color, jobs.job_description, jobs.job_location, jobs.job_type, jobs.tags, jobs.start_date, 
+        jobs.end_date, jobs.company_id, jobs.start_time, jobs.end_time, jobs.status, jobs.priority, acs_profile.prof_id, acs_profile.first_name, acs_profile.last_name,
+        job_tags.name as tags_name,cust.first_name,cust.last_name,cust.mail_add,cust.city as cust_city,cust.state as cust_state,cust.zip_code as cust_zip_code,job_url_links.link,users.profile_img,jpd.amount,users.FName,users.LName,
+        business_profile.address as office_address, business_profile.city as office_city, business_profile.state as office_state, business_profile.postal_code as office_postal_code, business_profile.business_name');
+
+        $this->db->from('jobs');
+        $this->db->join('acs_profile', 'jobs.customer_id = acs_profile.prof_id');
+        $this->db->join('job_url_links', 'jobs.id = job_url_links.job_id', 'left');
+        $this->db->join('job_payments as jpd', 'jobs.id = jpd.job_id', 'left');
+        $this->db->join('job_tags', 'job_tags.id = jobs.tags', 'left');
+        $this->db->join('acs_profile as cust', 'cust.prof_id = jobs.customer_id', 'left');
+        $this->db->join('users', 'users.id = jobs.employee_id', 'left');
+        $this->db->join('business_profile', 'business_profile.company_id = users.company_id', 'left');
+
+        //echo $start_date . "/" . $end_date;exit;
+        
+        $this->db->where('jobs.start_date BETWEEN "'. $date_from . '" and "'. $date_to .' 23:59:59"');
+        $this->db->where('jobs.employee_id', $user_id);
+        $this->db->order_by('jobs.start_date', 'DESC');
+
+        $query = $this->db->get();
+        return $query->result();
+    }
+    public function get_jobs_travel_history($job_id, $user_id)
+    {
+        $this->db->reset_query();
+        $qry = $this->db->query("SELECT * from trac360_user_visit_details WHERE job_id = $job_id AND user_id = ".$user_id);
+        return $qry->result();
+    }
+    public function get_job_byID($job_id)
+    {
+        $this->db->select('jobs.id, jobs.employee_id, jobs.job_number, jobs.job_name, jobs.event_color, jobs.job_description, jobs.job_location, jobs.job_type, jobs.tags, jobs.start_date, 
+        jobs.end_date, jobs.company_id, jobs.start_time, jobs.end_time, jobs.status, jobs.priority, acs_profile.prof_id, acs_profile.first_name, acs_profile.last_name,
+        job_tags.name as tags_name,cust.first_name,cust.last_name,cust.mail_add,cust.city as cust_city,cust.state as cust_state,cust.zip_code as cust_zip_code,job_url_links.link,users.profile_img,jpd.amount,users.FName,users.LName,
+        business_profile.address as office_address, business_profile.city as office_city, business_profile.state as office_state, business_profile.postal_code as office_postal_code, business_profile.business_name');
+
+        $this->db->from('jobs');
+        $this->db->join('acs_profile', 'jobs.customer_id = acs_profile.prof_id');
+        $this->db->join('job_url_links', 'jobs.id = job_url_links.job_id', 'left');
+        $this->db->join('job_payments as jpd', 'jobs.id = jpd.job_id', 'left');
+        $this->db->join('job_tags', 'job_tags.id = jobs.tags', 'left');
+        $this->db->join('acs_profile as cust', 'cust.prof_id = jobs.customer_id', 'left');
+        $this->db->join('users', 'users.id = jobs.employee_id', 'left');
+        $this->db->join('business_profile', 'business_profile.company_id = users.company_id', 'left');
+
+        //echo $start_date . "/" . $end_date;exit;
+        
+        $this->db->where('jobs.id', $job_id);
+        $this->db->order_by('jobs.start_date', 'DESC');
+        $query = $this->db->get();
+        return $query->row();
     }
 }

@@ -224,8 +224,23 @@ class Workorder_model extends MY_Model
             'terms_of_use'          => $terms_of_use,
             'instructions'          => $instructions,
             'header'                => $header,
+            'subtotal'              => $subtotal,
+            'taxes'                 => $taxes, 
+            'adjustment_name'       => $adjustment_name,
+            'adjustment_value'      => $adjustment_value,
+            'voucher_value'         => $voucher_value,
+            'grand_total'           => $grand_total,
         ));
         return true;
+    }
+
+    public function getDataByWO($wo_num)
+    {
+        $this->db->select('*');
+		$this->db->from('work_orders');
+		$this->db->where('work_order_number', $wo_num);
+		$query = $this->db->get();
+		return $query->row();
     }
 
     public function save_custom_fields($data){
@@ -513,15 +528,103 @@ class Workorder_model extends MY_Model
     public function getworkorderList()
     {
         $company_id = logged('company_id');
+        
+        $where = array(
+            'work_orders.company_id' => $company_id,
+            'view_flag'   => '0'
+          );
 
-        $this->db->select('work_orders.* , acs_profile.first_name,  acs_profile.last_name, acs_profile.middle_name, acs_profile.prof_id');
+        // $this->db->select('work_orders.* , acs_profile.first_name,  acs_profile.last_name, acs_profile.middle_name, acs_profile.prof_id, work_order_alarm_details.work_order_id');
 		// $this->db->from('workorders.* , acs_profile.first_name,  acs_profile.last_name, acs_profile.middle_name, acs_profile.prof_id');
+        $this->db->select('*');
         $this->db->from('work_orders');
-        $this->db->join('acs_profile', 'work_orders.customer_id  = acs_profile.prof_id');
-		$this->db->where('work_orders.company_id', $company_id);
-        $this->db->order_by('id', 'ASC');
+        // $this->db->join('acs_profile', 'work_orders.customer_id  = acs_profile.prof_id');
+        // $this->db->join('work_order_alarm_details', 'work_orders.id  = work_order_alarm_details.work_order_id');
+		$this->db->where($where);
+        $this->db->order_by('id', 'DESC');
         $query = $this->db->get();
         return $query->result();
+
+        // $this->db->select('*');    
+        // $this->db->from('work_orders');
+        // $this->db->join('acs_profile', 'work_orders.customer_id = acs_profile.prof_id');
+        // $this->db->join('work_order_alarm_details', 'work_orders.id = work_order_alarm_details.work_order_id');
+        // $this->db->where('work_orders.company_id', $company_id);
+        // $query = $this->db->get();
+        // return $query;
+    }
+
+    public function getAlarms($id)
+    {
+        $this->db->select('*');
+		$this->db->from('work_order_alarm_details');
+		$this->db->where('work_order_id', $id);
+        $query = $this->db->get();
+        return $query->row();
+    }
+
+    public function getenhanced_services_cameras($id)
+    {
+        $this->db->select('*');
+		$this->db->from('enhanced_services_cameras');
+		$this->db->where('work_order_id', $id);
+        $query = $this->db->get();
+        return $query->row();
+    }
+
+    public function getenhanced_services_doorlocks($id)
+    {
+        $this->db->select('*');
+		$this->db->from('enhanced_services_doorlocks');
+		$this->db->where('work_order_id', $id);
+        $query = $this->db->get();
+        return $query->row();
+    }
+
+    public function getenhanced_services_dvr($id)
+    {
+        $this->db->select('*');
+		$this->db->from('enhanced_services_dvr');
+		$this->db->where('work_order_id', $id);
+        $query = $this->db->get();
+        return $query->row();
+    }
+
+    public function getenhanced_services_automation($id)
+    {
+        $this->db->select('*');
+		$this->db->from('enhanced_services_automation');
+		$this->db->where('work_order_id', $id);
+        $query = $this->db->get();
+        return $query->result();
+    }
+
+    public function getenhanced_services_pers($id)
+    {
+        $this->db->select('*');
+		$this->db->from('enhanced_services_pers');
+		$this->db->where('work_order_id', $id);
+        $query = $this->db->get();
+        return $query->row();
+    }
+
+    public function delete_custom_fields($id)
+    {
+        $this->db->where('work_order_id',$id);
+        $this->db->delete('custom_fields_lists');
+        return true;
+    }
+
+    public function delete_items($id)
+    {
+        $where = array(
+            'type' => 'Work Order',
+            'type_id'   => $id
+          );
+
+        $this->db->where($where);
+        $this->db->delete('item_details');
+        return true;
     }
 
     public function getById($id)
@@ -545,6 +648,41 @@ class Workorder_model extends MY_Model
     public function addTemplate($data)
     {
         $vendor = $this->db->insert('company_work_order_used', $data);
+	    $insert_id = $this->db->insert_id();
+		return  $insert_id;
+    }
+
+    public function save_cameras($data)
+    {
+        $vendor = $this->db->insert('enhanced_services_cameras', $data);
+	    $insert_id = $this->db->insert_id();
+		return  $insert_id;
+    }
+
+    public function save_doorlocks($data)
+    {
+        $vendor = $this->db->insert('enhanced_services_doorlocks', $data);
+	    $insert_id = $this->db->insert_id();
+		return  $insert_id;
+    }
+
+    public function save_dvr($data)
+    {
+        $vendor = $this->db->insert('enhanced_services_dvr', $data);
+	    $insert_id = $this->db->insert_id();
+		return  $insert_id;
+    }
+
+    public function save_automation($data)
+    {
+        $vendor = $this->db->insert('enhanced_services_automation', $data);
+	    $insert_id = $this->db->insert_id();
+		return  $insert_id;
+    }
+
+    public function save_pers($data)
+    {
+        $vendor = $this->db->insert('enhanced_services_pers', $data);
 	    $insert_id = $this->db->insert_id();
 		return  $insert_id;
     }

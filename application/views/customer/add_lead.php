@@ -2,25 +2,19 @@
 defined('BASEPATH') or exit('No direct script access allowed');
 ?>
 <?php include viewPath('includes/header'); ?>
+<?php include viewPath('customer/css/customer_css'); ?>
 <div class="wrapper" role="wrapper">
     <?php include viewPath('includes/sidebars/customer'); ?>
     <!-- page wrapper start -->
     <div wrapper__section>
         <div class="container-fluid p-40">
           <div class="card">
+            <form method="post" id="new_lead_form">
               <div class="page-title-box pt-1 pb-0">
                   <div class="row align-items-center">
                       <div class="col-sm-12">
-                          <div class="float-right">
-                              <div class="dropdown">
-                                  <a href="<?php echo base_url('customer/leads') ?>" class="btn btn-primary"
-                                     aria-expanded="false">
-                                      <i class="mdi mdi-settings mr-2"></i> Lead Lists
-                                  </a>
-                              </div>
-                          </div>
                           <!-- <h3 class="page-title mt-0">New Lead</h3> -->
-                          <h3 style="font-family: Sarabun, sans-serif">Lead Lists</h3>
+                          <h3 style="font-family: Sarabun, sans-serif">New Lead Form</h3>
                           <div class="pl-3 pr-3 mt-1 row">
                             <div class="col mb-4 left alert alert-warning mt-0 mb-2">
                                 <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">
@@ -128,7 +122,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         <input type="text" class="form-control" name="city" id="city" value="<?php if(isset($leads_data)){ echo $leads_data->city; } ?>" required/>
                     </div>
                     <div class="col-md-2">
-                        <label for=""><b>County</b><span class="required_field">*</span></label>
+                        <label for=""><b>County</b></label>
                         <input type="text" class="form-control" name="county" id="county" value="<?php if(isset($leads_data)){ echo $leads_data->county; } ?>" />
                     </div>
                     <div class="col-md-1">
@@ -141,10 +135,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 <div class="row">
                     <div class="col-md-3">
                         <label for=""><b>Country</b></label>
-                        <select id="country" name="country" class="form-control" required>
-                        <option <?php if(isset($leads_data)){ if($leads_data->country == 'USA'){ echo 'selected'; }} ?> value="USA">USA</option>
-                        <option <?php if(isset($leads_data)){ if($leads_data->country == 'CANADA'){ echo 'selected'; }} ?> value="CANADA">CANADA</option>
-                        </select>
+                        <input type="text" class="form-control" name="country" id="country" value="<?php if(isset($leads_data)){ echo $leads_data->country; } ?>" required/>
                     </div>
                     <div class="col-md-3">
                         <label for=""><b>Home/Panel Phone</b></label>
@@ -155,8 +146,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         <input type="text" class="form-control phone_number" maxlength="12" placeholder="xxx-xxx-xxxx" name="phone_cell" id="phone_cell" value="<?php if(isset($leads_data)){ echo $leads_data->phone_cell; } ?>" required/>
                     </div>
                     <div class="col-md-3">
-                        <label for=""><b>Email Address</b><span class="required_field">*</span></label>
-                        <input type="email" class="form-control" name="email_add" id="email_add" value="<?php if(isset($leads_data)){ echo $leads_data->email_add; } ?>" required/>
+                        <label for=""><b>Email Address</b></label>
+                        <input type="email" class="form-control" name="email_add" id="email_add" value="<?php if(isset($leads_data)){ echo $leads_data->email_add; } ?>"/>
                     </div>
                 </div>
                             
@@ -243,23 +234,103 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     </div>
                 </div>
             <!-- end card -->
+            </form>
             </div>
-
-
-
-
         </div>
-
-        <style>
-
-        </style>
-        <?php echo form_close(); ?>
     </div>
     <!-- end container-fluid -->
 </div>
 
 <?php include viewPath('includes/footer'); ?>
-<script>
+<?php
+    // JS to add only Customer module
+    add_footer_js(array(
+        'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js',
+        'https://code.jquery.com/ui/1.12.1/jquery-ui.js',
+    ));
+?>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-timepicker/0.5.2/js/bootstrap-timepicker.min.js" integrity="sha512-2xXe2z/uA+2SyT/sTSt9Uq4jDKsT0lV4evd3eoE/oxKih8DSAsOF6LUb+ncafMJPAimWAXdu9W+yMXGrCVOzQA==" crossorigin="anonymous"></script>
+<script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=<?= google_credentials()['api_key'] ?>&callback=initMap&libraries=places&v=weekly&sensor=false"></script>
+<script src="https://momentjs.com/downloads/moment-with-locales.js"></script>
+<script >
+    $("#new_lead_form").submit(function(e) {
+        e.preventDefault(); // avoid to execute the actual submit of the form.
+        var form = $(this);
+        $.ajax({
+            type: "POST",
+            url: "<?= base_url()?>customer/save_new_lead",
+            data: form.serialize(), // serializes the form's elements.
+            success: function(data)
+            {
+                console.log(data);
+                 if(data === "Saved"){
+                    sucess_add('Good Job!','Successfully Added!','success');
+                 }else{
+                    sucess_add('Sorry!','Something Goes Wrong!','error');
+                }
+            }
+        });
+    });
+
+    function sucess_add($title,information,icon){
+        Swal.fire({
+            title: $title,
+            text: information,
+            icon: icon,
+            showCancelButton: false,
+            confirmButtonColor: '#32243d',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Ok'
+        }).then((result) => {
+            if (result.value) {
+                window.location.href='<?= base_url(); ?>customer/leads';
+            }
+        });
+    }
+
+    var autocomplete;
+    function initMap() {
+        var input = document.getElementById('address');
+        autocomplete = new google.maps.places.Autocomplete(input);
+        autocomplete.addListener("place_changed", fillInAddress);
+    }
+    function fillInAddress(){
+        var place = autocomplete.getPlace();
+        var street="";
+        for (const component of place.address_components) {
+            const componentType = component.types[0];
+            switch (componentType) {
+                case "street_number": {
+                    //$('#cross_street').val(component.long_name);
+                    street = component.long_name;
+                    break;
+                }
+                case "postal_code": {
+                    $('#zip').val(component.long_name);
+                    break;
+                }
+                case "country": {
+                    $('#country').val(component.long_name);
+                    break;
+                }
+                case "route": {
+                    $('#address').val(street +' '+ component.long_name);
+                    break;
+                }
+                case "locality": {
+                    $('#city').val(component.long_name);
+                    break;
+                }
+                case "administrative_area_level_1": {
+                    $('#state').val(component.short_name);
+                    break;
+                }
+            }
+        }
+        console.log(place);
+    }
+
     $("#date_of_birth").datetimepicker({
         format: "L",
         //minDate: new Date(),

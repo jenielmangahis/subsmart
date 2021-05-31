@@ -381,6 +381,20 @@ class Items_model extends MY_Model
         return $query->result();
     }
 
+    public function getItemDataAlarm($id)
+    {
+        $where = array(
+            'type' => 'Work Order Alarm',
+            'type_id'   => $id
+          );
+
+        $this->db->select('*');
+        $this->db->from('item_details');
+        $this->db->where($where);
+        $query = $this->db->get();
+        return $query->result();
+    }
+
     public function getItemLocation($locationId, $itemId)
     {
         $this->db->where('item_id', $itemId);

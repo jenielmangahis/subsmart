@@ -30,12 +30,17 @@
     $('.payment_method').on( 'change', function () {
         var method = this.value;
         $('#method').val(method);
+        remove_required();
         if(method === 'CASH'){
             hide_all();
             $("#payment_collected").show('slow');
+            $('#is_collected').prop("required", true);
         }else if(method === 'CC' || method === 'OCCP'){
             hide_all();
             $("#credit_card").show('slow');
+            $('#exp_month').prop("required", true);
+            $('#exp_year').prop("required", true);
+            $('#cvc').prop("required", true);
         }else if(method === 'CHECK'){
             hide_all();
             $("#check_number").show('slow');
@@ -56,8 +61,15 @@
             hide_all();
             $(".invoicing_field").show("slow");
         }
-        console.log(method);
     });
+
+    function remove_required(){
+        $('#exp_month').prop("required", false);
+        $('#exp_year').prop("required", false);
+        $('#cvc').prop("required", false);
+        $('#is_collected').prop("required", false);
+    }
+
     function hide_all(){
         $("#credit_card").hide("slow");
         $("#account_number").hide("slow");
