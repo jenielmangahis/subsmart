@@ -623,12 +623,23 @@ border: none;
                                             </div>
                                                 </td>
                                             <td width="10%"><input type="number" class="form-control quantity mobile_qty hidden_mobile_view" name="quantity[]"
-                                                       data-counter="0" id="quantity_<?php echo $data->id; ?>" value="<?php echo $data->qty; ?>"> <div class="show_mobile_view"><span>1</span><input type="hidden" class="form-control qtyest2" name="quantity[]"
-                                                       data-counter="0" id="quantity_<?php echo $data->id; ?>" value="<?php echo $data->qty; ?>"></div> </td>
+                                                       data-counter="0" id="quantity_<?php echo $data->id; ?>" value="<?php echo $data->qty; ?>"> 
+                                                       <!-- <div class="show_mobile_view"><span>1</span><input type="hidden" class="form-control qtyest2" name="quantity[]"
+                                                       data-counter="0" id="quantity_<?php echo $data->id; ?>" value="<?php echo $data->qty; ?>"></div>  -->
+                                                       </td>
                                             <td width="10%"><input type="number" class="form-control price hidden_mobile_view" name="price[]"
-                                                       data-counter="0" id="price_<?php echo $data->id; ?>" min="0" value="<?php echo $data->cost; ?>"> <input type="hidden" class="priceqty" id="priceqty_<?php echo $data->id; ?>" value="<?php echo $data->cost; ?>"> 
+                                                       data-counter="0" id="price_<?php echo $data->id; ?>" min="0" value="<?php echo $data->cost; ?>"> <input type="hidden" class="priceqty" id="priceqty_<?php echo $data->id; ?>" value="<?php $quantity1 = $data->qty;
+                                                                                    $price1 = $data->cost; 
+                                                                                    $total1 = $quantity1*$price1;
+                                                                                    echo $total1;
+                                                                                                ?>"> 
                                                        <!-- <div class="show_mobile_view"><span class="price">0</span><input type="hidden" class="form-control price" name="price[]" data-counter="0" id="priceM_<?php echo $data->id; ?>" min="0" value="0"></div> -->
-                                                       <input id="priceM_qty<?php echo $data->id; ?>" value=""  type="hidden" name="price_qty[]" class="form-control hidden_mobile_view price_qty" value="<?php echo $data->qty * $data->cost; ?>"></td>
+                                                       <input id="priceM_qty<?php echo $data->id; ?>"  type="hidden" name="price_qty[]" class="form-control hidden_mobile_view price_qty" value="<?php 
+                                                                                                                                                                                                $quantity = $data->qty;
+                                                                                                                                                                                                $price = $data->cost; 
+                                                                                                                                                                                                $total = $quantity*$price;
+                                                                                                                                                                                                echo $total;
+                                                                                                                                                                                                ?>"></td>
                                             <td width="10%" class="hidden_mobile_view"><input type="number" class="form-control discount" name="discount[]"
                                                        data-counter="0" id="discount_<?php echo $data->id; ?>" min="0"  value="<?php echo $data->discount; ?>" ></td>
                                             <td width="10%" class="hidden_mobile_view"><input type="text" class="form-control tax_change2" name="tax[]"
@@ -1201,6 +1212,7 @@ border: none;
                                     <input type="text6" class="form-control mb-3"
                                            name="company_representative_printed_name"
                                            id="comp_rep_approval" value="<?php echo $workorder->company_representative_name; ?>" />
+                                           <input type="hidden" id="saveCompanySignatureDB1aM_web" name="company_representative_approval_signature1aM_web">
 
                                 </div>
                                 <div class="col-md-4">
@@ -1211,6 +1223,7 @@ border: none;
                                     <label for="comp_rep_approval">Printed Name</label>
                                     <input type="text6" class="form-control mb-3" name="primary_account_holder_name"
                                            id="comp_rep_approval" placeholder="" value="<?php echo $workorder->primary_account_holder_name; ?>"/>
+                                           <input type="hidden" id="saveCompanySignatureDB1aM_web2" name="primary_representative_approval_signature1aM_web">
 
                                 </div>
                                 <div class="col-md-4">
@@ -1221,6 +1234,7 @@ border: none;
                                     <label for="comp_rep_approval">Printed Name</label>
                                     <input type="text6" class="form-control mb-3" name="secondery_account_holder_name"
                                            id="comp_rep_approval" placeholder="" value="<?php echo $workorder->secondary_account_holder_name; ?>"/>
+                                           <input type="hidden" id="saveCompanySignatureDB1aM_web3" name="secondary_representative_approval_signature1aM_web">
 
                                 </div>
                             </div>
@@ -1244,7 +1258,7 @@ border: none;
                 <div>
 
                      <div class="form-group">
-                                <button type="submit" class="btn btn-flat btn-success">Submit</button>
+                                <button type="submit" class="btn btn-flat btn-danger">Update</button>
                                 <button type="submit" class="btn btn-flat btn-success">Preview</button>
                                 <button type="submit" class="btn btn-flat btn-success" style="background-color: #32243d !important"><b>Save Template</b></button>
                                 <button type="submit" class="btn btn-flat btn-success" id="esignButton">eSign</button>
@@ -1332,7 +1346,7 @@ border: none;
                                     </div>
                         
                         <div class="modal-footer">
-                            <button type="button" onClick="submit()" class="btn btn-success enter_signature" id="enter_signature">Update</button>
+                            <button type="button" class="btn btn-success edit_first_signature" id="enter_signature">Update</button>
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                             <!-- <input type="submit" value="save" id="btnSaveSign"> -->
                         </div>
@@ -1366,7 +1380,7 @@ border: none;
                                     </div>
                         
                         <div class="modal-footer">
-                            <button type="button" onClick="submit()" class="btn btn-success enter_signature" id="enter_signature">Update</button>
+                            <button type="button" class="btn btn-success edit_second_signature" id="enter_signature">Update</button>
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                             <!-- <input type="submit" value="save" id="btnSaveSign"> -->
                         </div>
@@ -1400,7 +1414,7 @@ border: none;
                                     </div>
                         
                         <div class="modal-footer">
-                            <button type="button" onClick="submit()" class="btn btn-success enter_signature" id="enter_signature">Update</button>
+                            <button type="button" class="btn btn-success edit_third_signature" id="enter_signature">Update</button>
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                             <!-- <input type="submit" value="save" id="btnSaveSign"> -->
                         </div>
@@ -1832,6 +1846,72 @@ function submit() {
 //   }
 }
 </script>
+
+<script>
+    // var canvas = document.getElementById("canvas");    
+    // var dataURL = canvas.toDataURL("image/png");
+    // $("#saveCompanySignatureDB1aM").val(dataURL);
+
+    // var canvas2 = document.getElementById("canvas2");    
+    // var dataURL2 = canvas2.toDataURL("image/png");
+    // $("#savePrimaryAccountSignatureDB2aM").val(dataURL2);
+
+    // var canvas3 = document.getElementById("canvas3");    
+    // var dataURL3 = canvas3.toDataURL("image/png");
+    // $("#saveSecondaryAccountSignatureDB3aM").val(dataURL3);
+
+$(document).on('click touchstart','#canvas',function(){
+    // alert('test');
+    var canvas_web = document.getElementById("canvas");    
+    var dataURL = canvas_web.toDataURL("image/png");
+    $("#saveCompanySignatureDB1aM").val(dataURL);
+});
+
+$(document).on('click touchstart','#canvas2',function(){
+    // alert('test');
+    var canvas_web2 = document.getElementById("canvas2");    
+    var dataURL = canvas_web2.toDataURL("image/png");
+    $("#savePrimaryAccountSignatureDB2aM").val(dataURL);
+});
+
+$(document).on('click touchstart','#canvas3',function(){
+    // alert('test');
+    var canvas_web3 = document.getElementById("canvas3");    
+    var dataURL = canvas_web3.toDataURL("image/png");
+    $("#saveSecondaryAccountSignatureDB3aM").val(dataURL);
+});
+
+
+
+$(document).on('click touchstart','.edit_first_signature',function(){
+    // alert('test');
+    var first = $("#saveCompanySignatureDB1aM").val();
+    // alert(first);
+    $("#saveCompanySignatureDB1aM_web").val(first);
+    $('.companySignature').modal('hide');
+    
+});
+
+$(document).on('click touchstart','.edit_second_signature',function(){
+    // alert('test');
+    var first = $("#savePrimaryAccountSignatureDB2aM").val();
+    // alert(first);
+    $("#saveCompanySignatureDB1aM_web2").val(first);
+    $('.primarySignature').modal('hide');
+    
+});
+
+$(document).on('click touchstart','.edit_third_signature',function(){
+    // alert('test');
+    var first = $("#saveSecondaryAccountSignatureDB3aM").val();
+    // alert(first);
+    $("#saveCompanySignatureDB1aM_web3").val(first);
+    $('.secondarySignature').modal('hide');
+    
+});
+</script>
+
+
 
 <script src="<?php echo $url->assets ?>js/add.js"></script>
 <script>

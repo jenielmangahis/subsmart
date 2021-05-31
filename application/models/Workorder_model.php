@@ -230,6 +230,7 @@ class Workorder_model extends MY_Model
             'adjustment_value'      => $adjustment_value,
             'voucher_value'         => $voucher_value,
             'grand_total'           => $grand_total,
+            'company_representative_signature'  => $company_representative_signature,
         ));
         return true;
     }
