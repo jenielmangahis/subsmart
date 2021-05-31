@@ -148,4 +148,12 @@ $(document).on("click", ".jobs-list-item", function() {
             }
         });
     }
+
+});
+
+
+$(document).on("click", "#previousjobs-collapse-panel .job-item-panel", function() {
+    var external_job_id = $(this).attr('data-job-id');
+    console.log(external_job_id);
+    window.location.href = baseURL + "/trac360/history/" + external_job_id;
 });

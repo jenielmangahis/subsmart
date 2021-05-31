@@ -581,10 +581,14 @@ $(function() {
             $(this).children('td:nth-child(2)').html(num);
             num++;
         });
+
+        computeTransactionTotal();
     });
 
     $(document).on('click', '#modal-container #item-details-table tbody tr td a.deleteRow', function() {
         $(this).parent().parent().remove();
+
+        computeTransactionTotal();
     });
 
     $(document).on('keyup', '#search-tag', function(){

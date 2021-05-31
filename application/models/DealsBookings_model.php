@@ -22,6 +22,25 @@ class DealsBookings_model extends MY_Model
         return $query->result();
     }  
 
+    public function getAllByCompanyId($company_id, $filters=array())
+    {
+        $this->db->select('deals_bookings.*, deals_steals.id AS duid, deals_steals.title, deals_steals.deal_price');
+        $this->db->from($this->table);
+        $this->db->join('deals_steals', 'deals_bookings.deals_id = deals_steals.id', 'LEFT');
+
+        if ( !empty($filters) ) {
+            if ( !empty($filters['search']) ) {
+                $this->db->like('title', $filters['search'], 'both');
+            }
+        }
+
+        $this->db->where('deals_bookings.company_id', $company_id);
+        $this->db->order_by('id', 'ASC');
+
+        $query = $this->db->get();
+        return $query->result();
+    }  
+
     public function getAllByDealsId($deals_id, $filters=array(), $conditions=array())
     {
 

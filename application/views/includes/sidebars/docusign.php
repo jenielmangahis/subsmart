@@ -79,7 +79,7 @@
 </nav>
 
 <div class="modal fade" id="selectDocument" tabindex="-1" role="dialog" aria-labelledby="selectDocumentLabel" aria-hidden="true">
-	<div class="modal-dialog modal-lg" role="document">
+	<div class="modal-dialog modal-lg" role="document" style="max-width: 802px;">
 		<div class="modal-content">
 		<div class="modal-header">
 			<h5 class="modal-title" id="selectDocumentLabel">Sign a document</h5>
@@ -111,4 +111,18 @@
 		</div>
 		</div>
 	</div>
+</div>
+
+<div class="modal fillAndSign__modal" id="documentModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span>&times;</span>
+                </button>
+            </div>
+            <div class="modal-body d-flex flex-column"></div>
+        </div>
+    </div>
 </div>

@@ -1,6 +1,6 @@
 <!-- Modal for bank deposit-->
 <div class="full-screen-modal">
-<form onsubmit="submitModalForm(event, this)" id="modal-form">
+<form onsubmit="updateTransaction(event, this)" id="modal-form" data-href="/accounting/vendors/<?=$check->payee_id?>/update-transaction/check/<?=$check->id?>">
     <div id="checkModal" class="modal fade modal-fluid" role="dialog">
         <div class="modal-dialog">
             <!-- Modal content-->
@@ -145,7 +145,7 @@
                                                                     <th></th>
                                                                 </thead>
                                                                 <tbody class="cursor-pointer">
-                                                                    <tr>
+                                                                <tr>
                                                                         <td></td>
                                                                         <td>1</td>
                                                                         <td>
@@ -201,8 +201,8 @@
                                                                         </td>
                                                                         <td><a href="#" class="deleteRow"><i class="fa fa-trash"></i></a></td>
                                                                     </tr>
-                                                                    <?php if(count($categories) > 0) : ?>
                                                                     <?php $count = 1; ?>
+                                                                    <?php if(count($categories) > 0) : ?>
                                                                     <?php foreach($categories as $category) : ?>
                                                                     <tr>
                                                                         <td></td>
@@ -261,9 +261,10 @@
                                                                         <td><a href="#" class="deleteRow"><i class="fa fa-trash"></i></a></td>
                                                                     </tr>
                                                                     <?php $count++; endforeach; ?>
+                                                                    <?php endif; ?>
                                                                     <tr>
                                                                         <td></td>
-                                                                        <td><?=$count?></td>
+                                                                        <td><?=$count === 1 ? $count+1 : $count?></td>
                                                                         <td></td>
                                                                         <td></td>
                                                                         <td></td>
@@ -274,7 +275,6 @@
                                                                         <td></td>
                                                                         <td><a href="#" class="deleteRow"><i class="fa fa-trash"></i></a></td>
                                                                     </tr>
-                                                                    <?php endif; ?>
                                                                 </tbody>
                                                             </table>
                                                         </div>
@@ -313,7 +313,7 @@
                                                                         <?php $itemDetails = $this->items_model->getItemById($item->item_id)[0];?>
                                                                         <?php $locations = $this->items_model->getLocationByItemId($item->item_id);?>
                                                                         <tr>
-                                                                            <td><?=$itemDetails->title?></td>
+                                                                            <td><?=$itemDetails->title?><input type="hidden" name="item[]" value="<?=$item->item_id?>"></td>
                                                                             <td>Product</td>
                                                                             <td>
                                                                                 <select name="location[]" class="form-control" required>

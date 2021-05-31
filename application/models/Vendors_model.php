@@ -583,6 +583,14 @@ class Vendors_model extends MY_Model {
 		return $query->row();
 	}
 
+	public function update_credit_card_credit($ccCreditId, $data)
+	{
+		$this->db->where('company_id', logged('company_id'));
+		$this->db->where('id', $ccCreditId);
+		$update = $this->db->update('accounting_credit_card_credits', $data);
+		return $update;
+	}
+
 	public function get_bill_payment_bills_by_vendor_id($billPaymentId, $vendorId, $filters = [])
 	{
 		$this->db->select('accounting_bill.*');
@@ -603,5 +611,35 @@ class Vendors_model extends MY_Model {
 		$query = $this->db->get();
 
 		return $query->result();
+	}
+
+	public function update_transaction_category_details($id, $data)
+	{
+		$this->db->where('id', $id);
+		$update = $this->db->update('accounting_vendor_transaction_categories', $data);
+		return $update;
+	}
+
+	public function update_transaction_item($id, $data)
+	{
+		$this->db->where('id', $id);
+		$update = $this->db->update('accounting_vendor_transaction_items', $data);
+		return $update ? true : false;
+	}
+
+	public function delete_transaction_category($id, $transactionType)
+	{
+		$this->db->where('id', $id);
+		$this->db->where('transaction_type', $transactionType);
+		$delete = $this->db->delete('accounting_vendor_transaction_categories');
+		return $delete ? true : false;
+	}
+
+	public function delete_transaction_item($id, $transactionType)
+	{
+		$this->db->where('id', $id);
+		$this->db->where('transaction_type', $transactionType);
+		$delete = $this->db->delete('accounting_vendor_transaction_items');
+		return $delete ? true : false;
 	}
 }

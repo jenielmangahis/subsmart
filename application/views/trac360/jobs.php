@@ -165,7 +165,8 @@ function get_differenct_of_dates($date_start, $date_end)
                             <?php
                             if (!empty($previousJobs)) { ?>
                             <?php foreach ($previousJobs as $jb) { ?>
-                            <div class="job-item-panel">
+                            <div class="job-item-panel"
+                                data-job-id="<?=$jb->id?>">
                                 <div class="employee-name">
                                     <p><span class="name"><?=$jb->FName .' '.$jb->LName?></span>
                                     </p>

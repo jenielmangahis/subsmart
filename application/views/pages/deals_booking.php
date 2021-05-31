@@ -40,8 +40,12 @@
                         The business <b><?= $company->business_name; ?></b> needs your contact information, please fill in the form below.
                     </p>
                     <div class="form-group">
-                        <label>Name</label> <span class="form-required">*</span>
-                        <input name="name" required="" type="text" class="form-control" autocomplete="off">
+                        <label>First Name</label> <span class="form-required">*</span>
+                        <input name="first_name" required="" type="text" class="form-control" autocomplete="off">
+                    </div>
+                    <div class="form-group">
+                        <label>Last Name</label> <span class="form-required">*</span>
+                        <input name="last_name" required="" type="text" class="form-control" autocomplete="off">
                     </div>
                     <div class="form-group">
                         <label>Phone</label> <span class="form-required">*</span>

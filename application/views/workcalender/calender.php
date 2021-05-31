@@ -1254,6 +1254,8 @@ a.top-1 {
                     //alert(arg.event._def.extendedProps.eventType);
                     if( arg.event._def.extendedProps.eventType == 'jobs'){
                         location.href = base_url + 'job/job_preview/' + arg.event._def.extendedProps.eventId;
+                    }else if(arg.event._def.extendedProps.eventType == 'booking'){
+                        location.href = base_url + 'promote/view_booking/' + arg.event._def.extendedProps.eventId;
                     }else{
                         location.href = base_url + 'events/event_preview/' + arg.event._def.extendedProps.eventId;
                     }

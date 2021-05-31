@@ -86,7 +86,7 @@
                     <div class="input-group-prepend">
                         <span class="input-group-text" id="basic-addon1">$</span>
                     </div>
-                    <input type="number" class="form-control input_select" id="rep_paid" name="rep_paid" min="0">
+                    <input type="number" step="0.01" class="form-control input_select" id="rep_paid" name="rep_paid" min="0">
                 </div>
             </td>
             <td align="center" class="table_body_customer">

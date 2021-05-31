@@ -183,7 +183,7 @@ if (!function_exists('transaction_categories')){
                 'description' => 'Equipment',
             ),array(
                 'name' => 'MMR',
-                'description' => 'MMR',
+                'description' => 'Monthly Monitoring',
             ),array(
                 'name' => 'RMR',
                 'description' => 'RMR',

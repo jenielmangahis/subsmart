@@ -74,9 +74,20 @@ table.dataTable tbody tr td {
                     <div class="card mt-0" style="min-height: 400px !important;">
                         <div class="row">
                           <div class="col-sm-6 left">
-                            <h3 class="page-title">Bookings</h3><br/><br/>
-                          </div>
+                                <h3 class="page-title">Bookings : <?= $dealsSteals->title; ?></h3>
+                              </div>
+                              <div class="col-sm-6 right dashboard-container-1">
+                                <div class="float-right d-none d-md-block">
+                                    <div class="dropdown">
+                                      <a class="btn btn-primary" href="<?php echo url('promote/deals'); ?>">Return to Deals</a>
+                                    </div>
+                                </div>
+                              </div>
+                            </div>
+                        <div class="alert alert-warning mt-2 mb-0" role="alert">
+                            <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">List of deals bookings</span>
                         </div>
+                        <br />
                         <!-- Main content -->
                         <section class="content">
                             <div class="tabs mt-2">
@@ -92,12 +103,6 @@ table.dataTable tbody tr td {
                                         </li>
                                 </ul>
                             </div>
-                            <div class="row margin-top" style="bottom: 55px;">
-                                <div class="col-sm-12"></div>
-                                <div class="col-sm-12 text-right">
-                                    <a class="btn btn-primary" href="<?php echo url('promote/deals'); ?>">Return to Deals</a>
-                                </div>
-                            </div>
 
                             <div class="row">
                               <div class="col-xl-12 col-md-12">
@@ -107,6 +112,7 @@ table.dataTable tbody tr td {
                                               <th>Date</th>
                                               <th>Customer</th>
                                               <th>Deal Price</th>
+                                              <th></th>
                                           </tr>
                                       </thead>
                                       <tbody>
@@ -115,6 +121,7 @@ table.dataTable tbody tr td {
                                               <td><?= date("d-M-Y H:i", strtotime($b->date_created)); ?></td>
                                               <td><?= $b->name; ?></td>
                                               <td>$<?= number_format($b->deal_price,2); ?></td>
+                                              <td><a class="btn btn-sm btn-primary" href="<?= base_url('promote/view_booking/' . $b->id); ?>"><i class="fa fa-eye"></i> View</a></td>
                                             </tr>
                                           <?php } ?>
                                       </tbody>
@@ -143,8 +150,9 @@ $(function(){
         "order": [],
          "aoColumnDefs": [
           { "sWidth": "10%", "aTargets": [ 0 ] },
-          { "sWidth": "50%", "aTargets": [ 1 ] },
-          { "sWidth": "10%", "aTargets": [ 2 ] }                   
+          { "sWidth": "60%", "aTargets": [ 1 ] },
+          { "sWidth": "10%", "aTargets": [ 2 ] },                   
+          { "sWidth": "5%", "aTargets": [ 3 ] }                   
         ]
     });    
 });

@@ -514,6 +514,7 @@ $('#transactions-table').DataTable({
                     break;
                     default :
                         $(td).html('');
+                        $(td).css('height', '64.67px');
                     break;
                 }
             }
@@ -1107,7 +1108,12 @@ $(document).on('click', '#transactions-table .view-edit-expense', function() {
         catDetailsInputs = $(`#expenseModal table#category-details-table tbody tr:first-child()`).html();
         catDetailsBlank = $(`#expenseModal table#category-details-table tbody tr:last-child`).html();
 
-        $(`#expenseModal table#category-details-table tbody tr:first-child()`).remove();
+        if($('#expenseModal table#category-details-table tbody tr').length === 2) {
+            $(`#expenseModal table#category-details-table tbody tr:first-child()`).html(catDetailsBlank);
+            $(`#expenseModal table#category-details-table tbody tr:first-child() td:nth-child(2)`).html(1);
+        } else {
+            $(`#expenseModal table#category-details-table tbody tr:first-child()`).remove();
+        }
 
         $(`#expenseModal select`).select2();
 
@@ -1178,7 +1184,7 @@ $(document).on('click', '#transactions-table .view-edit-expense', function() {
                     if (d == file) return index;
                 }).filter(isFinite)[0];
         
-                $(`#expenseModal .attachments`).find(`input[name="attachments[]"][value="${ids[index]}"]`).remove();
+                $(`#expenseModal .attachments`).parent().find(`input[name="attachments[]"][value="${ids[index]}"]`).remove();
 
                 //remove thumbnail
                 var previewElement;
@@ -1260,7 +1266,12 @@ $(document).on('click', '#transactions-table .view-edit-check', function() {
         catDetailsInputs = $(`#checkModal table#category-details-table tbody tr:first-child()`).html();
         catDetailsBlank = $(`#checkModal table#category-details-table tbody tr:last-child`).html();
 
-        $(`#checkModal table#category-details-table tbody tr:first-child()`).remove();
+        if($('#checkModal table#category-details-table tbody tr').length === 2) {
+            $(`#checkModal table#category-details-table tbody tr:first-child()`).html(catDetailsBlank);
+            $(`#checkModal table#category-details-table tbody tr:first-child() td:nth-child(2)`).html(1);
+        } else {
+            $(`#checkModal table#category-details-table tbody tr:first-child()`).remove();
+        }
 
         $(`#checkModal select`).select2();
 
@@ -1331,7 +1342,7 @@ $(document).on('click', '#transactions-table .view-edit-check', function() {
                     if (d == file) return index;
                 }).filter(isFinite)[0];
         
-                $(`#checkModal .attachments`).find(`input[name="attachments[]"][value="${ids[index]}"]`).remove();
+                $(`#checkModal .attachments`).parent().find(`input[name="attachments[]"][value="${ids[index]}"]`).remove();
 
                 //remove thumbnail
                 var previewElement;
@@ -1378,7 +1389,12 @@ $(document).on('click', '#transactions-table .view-edit-bill', function() {
         catDetailsInputs = $(`#billModal table#category-details-table tbody tr:first-child()`).html();
         catDetailsBlank = $(`#billModal table#category-details-table tbody tr:last-child`).html();
 
-        $(`#billModal table#category-details-table tbody tr:first-child()`).remove();
+        if($('#billModal table#category-details-table tbody tr').length === 2) {
+            $(`#billModal table#category-details-table tbody tr:first-child()`).html(catDetailsBlank);
+            $(`#billModal table#category-details-table tbody tr:first-child() td:nth-child(2)`).html(1);
+        } else {
+            $(`#billModal table#category-details-table tbody tr:first-child()`).remove();
+        }
 
         $(`#billModal select`).select2();
 
@@ -1449,7 +1465,7 @@ $(document).on('click', '#transactions-table .view-edit-bill', function() {
                     if (d == file) return index;
                 }).filter(isFinite)[0];
         
-                $(`#billModal .attachments`).find(`input[name="attachments[]"][value="${ids[index]}"]`).remove();
+                $(`#billModal .attachments`).parent().find(`input[name="attachments[]"][value="${ids[index]}"]`).remove();
 
                 //remove thumbnail
                 var previewElement;
@@ -1496,7 +1512,12 @@ $(document).on('click', '#transactions-table .view-edit-purch-order', function()
         catDetailsInputs = $(`#purchaseOrderModal table#category-details-table tbody tr:first-child()`).html();
         catDetailsBlank = $(`#purchaseOrderModal table#category-details-table tbody tr:last-child`).html();
 
-        $(`#purchaseOrderModal table#category-details-table tbody tr:first-child()`).remove();
+        if($('#purchaseOrderModal table#category-details-table tbody tr').length === 2) {
+            $(`#purchaseOrderModal table#category-details-table tbody tr:first-child()`).html(catDetailsBlank);
+            $(`#purchaseOrderModal table#category-details-table tbody tr:first-child() td:nth-child(2)`).html(1);
+        } else {
+            $(`#purchaseOrderModal table#category-details-table tbody tr:first-child()`).remove();
+        }
 
         $(`#purchaseOrderModal select`).select2();
 
@@ -1567,7 +1588,7 @@ $(document).on('click', '#transactions-table .view-edit-purch-order', function()
                     if (d == file) return index;
                 }).filter(isFinite)[0];
         
-                $(`#purchaseOrderModal .attachments`).find(`input[name="attachments[]"][value="${ids[index]}"]`).remove();
+                $(`#purchaseOrderModal .attachments`).parent().find(`input[name="attachments[]"][value="${ids[index]}"]`).remove();
 
                 //remove thumbnail
                 var previewElement;
@@ -1614,7 +1635,12 @@ $(document).on('click', '#transactions-table .view-edit-vendor-credit', function
         catDetailsInputs = $(`#vendorCreditModal table#category-details-table tbody tr:first-child()`).html();
         catDetailsBlank = $(`#vendorCreditModal table#category-details-table tbody tr:last-child`).html();
 
-        $(`#vendorCreditModal table#category-details-table tbody tr:first-child()`).remove();
+        if($('#vendorCreditModal table#category-details-table tbody tr').length === 2) {
+            $(`#vendorCreditModal table#category-details-table tbody tr:first-child()`).html(catDetailsBlank);
+            $(`#vendorCreditModal table#category-details-table tbody tr:first-child() td:nth-child(2)`).html(1);
+        } else {
+            $(`#vendorCreditModal table#category-details-table tbody tr:first-child()`).remove();
+        }
 
         $(`#vendorCreditModal select`).select2();
 
@@ -1685,7 +1711,7 @@ $(document).on('click', '#transactions-table .view-edit-vendor-credit', function
                     if (d == file) return index;
                 }).filter(isFinite)[0];
         
-                $(`#vendorCreditModal .attachments`).find(`input[name="attachments[]"][value="${ids[index]}"]`).remove();
+                $(`#vendorCreditModal .attachments`).parent().find(`input[name="attachments[]"][value="${ids[index]}"]`).remove();
 
                 //remove thumbnail
                 var previewElement;
@@ -1797,7 +1823,7 @@ $(document).on('click', '#transactions-table .view-edit-cc-payment', function() 
                     if (d == file) return index;
                 }).filter(isFinite)[0];
         
-                $(`#payDownCreditModal .attachments`).find(`input[name="attachments[]"][value="${ids[index]}"]`).remove();
+                $(`#payDownCreditModal .attachments`).parent().find(`input[name="attachments[]"][value="${ids[index]}"]`).remove();
 
                 //remove thumbnail
                 var previewElement;
@@ -1842,7 +1868,12 @@ function viewCreditCardCredit(data) {
         catDetailsInputs = $(`#creditCardCreditModal table#category-details-table tbody tr:first-child()`).html();
         catDetailsBlank = $(`#creditCardCreditModal table#category-details-table tbody tr:last-child`).html();
 
-        $(`#creditCardCreditModal table#category-details-table tbody tr:first-child()`).remove();
+        if($('#creditCardCreditModal table#category-details-table tbody tr').length === 2) {
+            $(`#creditCardCreditModal table#category-details-table tbody tr:first-child()`).html(catDetailsBlank);
+            $(`#creditCardCreditModal table#category-details-table tbody tr:first-child() td:nth-child(2)`).html(1);
+        } else {
+            $(`#creditCardCreditModal table#category-details-table tbody tr:first-child()`).remove();
+        }
 
         $(`#creditCardCreditModal select`).select2();
 
@@ -1913,7 +1944,7 @@ function viewCreditCardCredit(data) {
                     if (d == file) return index;
                 }).filter(isFinite)[0];
         
-                $(`#creditCardCreditModal .attachments`).find(`input[name="attachments[]"][value="${ids[index]}"]`).remove();
+                $(`#creditCardCreditModal .attachments`).parent().find(`input[name="attachments[]"][value="${ids[index]}"]`).remove();
 
                 //remove thumbnail
                 var previewElement;
@@ -2012,7 +2043,7 @@ function viewBillPayment(data) {
                     if (d == file) return index;
                 }).filter(isFinite)[0];
         
-                $(`#billPaymentModal .attachments`).find(`input[name="attachments[]"][value="${ids[index]}"]`).remove();
+                $(`#billPaymentModal .attachments`).parent().find(`input[name="attachments[]"][value="${ids[index]}"]`).remove();
 
                 //remove thumbnail
                 var previewElement;
@@ -2120,3 +2151,64 @@ function resetBillsFilter() {
 $(document).on('keyup', '#billPaymentModal #search', function() {
     $('#billPaymentModal #bills-table').DataTable().ajax.reload();
 });
+
+const updateTransaction = (event, el) => {
+    event.preventDefault();
+
+    var data = new FormData(document.getElementById($(el).attr('id')));
+    var modalId = '#'+$(el).children().attr('id');
+
+    var totalAmount = $(`${modalId} span.transaction-total-amount`).html();
+    data.append('total_amount', totalAmount);
+
+    var count = 0;
+    if($(`${modalId} table#category-details-table`).length > 0) {
+        $(`${modalId} table#category-details-table tbody tr`).each(function() {
+            var billable = $(this).find('input[name="category_billable[]"]');
+            var tax = $(this).find('input[name="category_tax[]"]');
+    
+            if(billable.length > 0 && tax.length > 0) {
+                if(count === 0) {
+                    data.set('category_billable[]', billable.prop('checked') ? "1" : "0");
+                    data.set('category_tax[]', tax.prop('checked') ? "1" : "0");
+                } else {
+                    data.append('category_billable[]', billable.prop('checked') ? "1" : "0");
+                    data.append('category_tax[]', tax.prop('checked') ? "1" : "0");
+                }
+            }
+    
+            count++;
+        });
+    }
+
+    if($(`${modalId} table#item-details-table`).length > 0) {
+        count = 0;
+        $(`${modalId} table#item-details-table tbody tr`).each(function() {
+            if(count === 0) {
+                data.set('item_total[]', $(this).find('td span.row-total').html());
+            } else {
+                data.append('item_total[]', $(this).find('td span.row-total').html());
+            }
+
+            count++;
+        });
+    }
+
+    $.ajax({
+        url: $(el).attr('data-href'),
+        data: data,
+        type: 'post',
+        processData: false,
+        contentType: false,
+        success: function(result) {
+            var res = JSON.parse(result);
+
+            if(res.success === true) {
+                $('#transactions-table').DataTable().ajax.reload();
+                $(el).children().modal('hide');
+            }
+
+            toast(res.success, res.message);
+        }
+    });
+}

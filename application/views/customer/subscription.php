@@ -166,15 +166,12 @@ add_css(array(
                                 <div class="col-md-6">
                                     <div class="card">
                                         <div class="card-header">
-                                            <span style="position: absolute;right: 0;margin-right: 25px;font-size: 20px;padding-top:10px;" class="fa fa-ellipsis-v"></span>
-                                            <h6 ><span class="fa fa-user"></span>&nbsp; &nbsp;Payment Information</h6>
+                                            <h6 ><span class="fa fa-money"></span>&nbsp; &nbsp;Payment Information</h6>
                                         </div>
                                         <div class="card-body">
                                             <form id="pay_billing" method="post">
                                                 <div class="row form_line">
-                                                    <div class="col-md-4">
-                                                        Billing Frequency
-                                                    </div>
+                                                    <div class="col-md-4"> Billing Frequency </div>
                                                     <div class="col-md-8">
                                                         <div class="row">
                                                             <div class="col-md-12">
@@ -184,9 +181,7 @@ add_css(array(
                                                     </div>
                                                 </div>
                                                     <div class="row form_line invoicing_field">
-                                                        <div class="col-md-4">
-                                                            Term
-                                                        </div>
+                                                        <div class="col-md-4">Term</div>
                                                         <div class="col-md-8">
                                                             <select id="invoice_term" name="invoice_term" data-customer-source="dropdown" class="input_select" >
                                                                 <option  value="Due On Receipt">Due On Receipt</option>
@@ -230,7 +225,7 @@ add_css(array(
                                                         <div class="col-md-8">
                                                             <div class="row">
                                                                 <div class="col-md-4">
-                                                                    <select id="exp_month" name="exp_month" data-customer-source="dropdown" class="input_select" >
+                                                                    <select id="exp_month" name="exp_month" data-customer-source="dropdown" class="input_select" required>
                                                                         <option  value=""></option>
                                                                         <option  value="1">01</option>
                                                                         <option  value="2">02</option>
@@ -247,7 +242,7 @@ add_css(array(
                                                                     </select>
                                                                 </div>
                                                                 <div class="col-md-4">
-                                                                    <select id="exp_year" name="exp_year" data-customer-source="dropdown" class="input_select" >
+                                                                    <select id="exp_year" name="exp_year" data-customer-source="dropdown" class="input_select" required>
                                                                         <option  value=""></option>
                                                                         <option  value="2021">2021</option>
                                                                         <option  value="2022">2022</option>
@@ -263,7 +258,7 @@ add_css(array(
                                                                     </select>
                                                                 </div>
                                                                 <div class="col-md-4">
-                                                                    <input type="text" maxlength="3" class="form-control" name="cvc" id="cvc" value="" placeholder="CVC"/>
+                                                                    <input type="text" maxlength="3" class="form-control" name="cvc" id="cvc" value="" placeholder="CVC" required/>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -272,7 +267,7 @@ add_css(array(
                                                 <div class="row form_line" id="payment_collected">
                                                     <div class="col-md-4"></div>
                                                     <div class="col-md-8">
-                                                        <input type="checkbox" name="is_collected" value="collected">
+                                                        <input type="checkbox" id="is_collected" name="is_collected" value="collected">
                                                         <span >Payment has been collected.</span>
                                                     </div>
                                                 </div>
@@ -368,14 +363,14 @@ add_css(array(
                                                     <div class="col-md-8">
                                                         <select id="transaction_category" name="transaction_category" data-customer-source="dropdown" class="input_select" >
                                                         <option  value=""></option>
-                                                        <?php
-                                                            $transaction_category = transaction_categories();
-                                                            foreach($transaction_category as $category):
-                                                                ?>
-                                                                    <option <?= $category['name'] == $billing_info->transaction_category ? 'selected' : ''; ?> value="<?= $category['name']; ?>"><?= $category['description']; ?></option>
-                                                                <?php
-                                                            endforeach;
-                                                        ?>
+                                                            <?php
+                                                                $transaction_category = transaction_categories();
+                                                                foreach($transaction_category as $category):
+                                                                    ?>
+                                                                        <option <?= $category['name'] == $billing_info->transaction_category ? 'selected' : ''; ?> value="<?= $category['name']; ?>"><?= $category['description']; ?></option>
+                                                                    <?php
+                                                                endforeach;
+                                                            ?>
                                                         </select>
                                                     </div>
                                                 </div>
@@ -401,8 +396,7 @@ add_css(array(
                             <div class="col-md-12">
                                         <div class="card">
                                             <div class="card-header">
-                                                <span style="position: absolute;right: 0;margin-right: 25px;font-size: 20px;padding-top:10px;" class="fa fa-ellipsis-v"></span>
-                                                <h6 ><span class="fa fa-user"></span>&nbsp; &nbsp;Subscription History</h6>
+                                                <h6 ><span class="fa fa-history"></span>&nbsp; &nbsp;Subscription History</h6>
                                             </div>
                                             <div class="card-body">
                                                 <table class="table">
@@ -424,9 +418,9 @@ add_css(array(
                                                         foreach ($subscriptions as $detail):
                                                            ?>
                                                             <tr>
-                                                                <td><?= $detail->id; ?></td>
+                                                                <td><a target="_blank" href="<?= base_url('customer/subscription_details/'.$detail->id) ?>"> <?= $detail->id; ?></a></td>
                                                                 <td><?= date("d-m-Y h:i A",strtotime($detail->datetime)); ?></td>
-                                                                <td>$<?= number_format((float)$detail->subtotal + $detail->tax,2,'.',','); ?></td>
+                                                                <td>$<?= number_format((float)$detail->total_amount,2,'.',','); ?></td>
                                                                 <td><?php $tt = transaction_categories($detail->category); echo $tt['description']; ?></td>
                                                                 <td><?= $detail->method; ?></td>
                                                                 <td><?= $detail->transaction_type; ?></td>

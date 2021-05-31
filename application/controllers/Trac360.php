@@ -564,13 +564,13 @@ class Trac360 extends MY_Controller
         $settings = $this->settings_model->getValueByKey(DB_SETTINGS_TABLE_KEY_SCHEDULE);
         $this->page_data['settings'] = unserialize($settings);
         if ($role == 1 || $role == 2) {
-            $upcomingJobs = $this->trac360_model->getAllUpcomingJobs();
+            $upcomingJobs = $this->trac360_model->getAllUpcomingJobsByCompanyId($company_id); //$this->trac360_model->getAllUpcomingJobs();
         } else {
             $upcomingJobs = $this->trac360_model->getAllUpcomingJobsByCompanyId($company_id);
         }
         
         if ($role == 1 || $role == 2) {
-            $previousJobs = $this->trac360_model->getAllpreviousJobs();
+            $previousJobs = $this->trac360_model->getAllpreviousJobsByCompanyID($company_id);//$this->trac360_model->getAllpreviousJobs();
         } else {
             $previousJobs = $this->trac360_model->getAllpreviousJobsByCompanyID($company_id);
         }
@@ -605,7 +605,7 @@ class Trac360 extends MY_Controller
         $data->date_to=$date_to;
         echo json_encode($data);
     }
-    public function history()
+    public function history($job_id=0)
     {
         add_css(array(
             "assets/css/timesheet/calendar/main.css",
@@ -618,6 +618,9 @@ class Trac360 extends MY_Controller
             "assets/js/timesheet/calendar/main.js",
             "assets/js/trac360/calendar.js",
             "assets/js/trac360/history.js",
+            "assets/js/trac360/history_includes/employee-jobs-panel.js",
+            "assets/js/trac360/history_includes/employee-history-panel.js",
+            "assets/js/trac360/history_includes/single-job-view-panel.js",
 
         ));
         $company_id = logged('company_id');
@@ -627,7 +630,7 @@ class Trac360 extends MY_Controller
         $settings = $this->settings_model->getValueByKey(DB_SETTINGS_TABLE_KEY_SCHEDULE);
         $this->page_data['settings'] = unserialize($settings);
         if ($role == 1 || $role == 2) {
-            $previousJobs = $this->trac360_model->getAllpreviousJobs();
+            $previousJobs = $this->trac360_model->getAllpreviousJobsByCompanyID($company_id);//$this->trac360_model->getAllpreviousJobs();
         } else {
             $previousJobs = $this->trac360_model->getAllpreviousJobsByCompanyID($company_id);
         }
@@ -639,6 +642,62 @@ class Trac360 extends MY_Controller
         $user_locations = $this->trac360_model->get_current_user_location($company_id);
         $this->page_data['user_locations'] = $user_locations;
 
+
+
+        if ($job_id > 0) {
+            $jb = $this->trac360_model->get_job_byID($job_id);
+            $this->page_data['external_employee_id'] = $jb->employee_id;
+            $this->page_data['external_employee_name'] = $jb->FName.' '.$jb->LName;
+            $this->page_data['external_job_item_selected_view_html'] ='';
+
+            $this->page_data['external_job_selcted'] = true;
+            $this->page_data['external_job_id'] = $job_id;
+
+            $this->page_data['external_job_item_selected_view_html'] .='<div class="col-md-4 job-sched text-center">
+                                        <a href="#">
+                                            <time style="font-size: 10px; text-align: left;" datetime="2021-02-09"
+                                                class="icon-calendar-live">
+                                                <em>'.date('D', strtotime($jb->start_date)).'</em>
+                                                <strong style="background-color: #58c04e;">'.date('M', strtotime($jb->start_date)) .'</strong>
+                                                <span>'.date('d', strtotime($jb->start_date)) .'</span>
+                                            </time>
+                                        </a>
+                                        <div class="job-status text-center mb-2"
+                                            style="background:'.$jb->event_color.'; color:#ffffff;">
+                                            <b>'.strtoupper($jb->status) .'</b>
+                                        </div>
+                                        <span class="text-center after-status">ARRIVAL TIME</span><br>
+                                        <span class="job-caption text-center">
+                                            '.get_format_time($jb->start_time).' - '. get_format_time_plus_hours($jb->end_time).'
+                                        </span>
+                                    </div>
+                                    <div class="col-md-8 job-details">
+                                        <a style="color: #000!important;" href="#">
+                                            <h6
+                                                style="font-weight:600; margin:0;font-size: 14px;text-transform: uppercase; color:#616161;">
+                                                '.$jb->job_number . ' : ' . $jb->job_type. ' - ' . $jb->tags_name.'
+                                            </h6>
+                                            <b style="color:#45a73c;">
+                                                '.$jb->first_name. ' '. $jb->last_name.'
+                                            </b><br>';
+                                            
+            $this->page_data['external_job_item_selected_view_html'] .='<small class="text-muted">'.$jb->mail_add .' '. $jb->cust_city.' '.$jb->cust_state.' '.$jb->cust_zip_code.'</small><br>
+                <i> <small class="text-muted">'.$jb->job_description.'</small></i><br>';
+                            
+            if ($jb->amount!="") {
+                $amoun =number_format((float)$jb->amount, 2, '.', ',') ;
+            } else {
+                $amount = '0.00';
+            }
+            $this->page_data['external_job_item_selected_view_html'] .='<small>Amount : $ '.$amount .'</small>
+                <br>';
+            if ($jb->link!='') {
+                $this->page_data['external_job_item_selected_view_html'] .='<a href="'.$jb->link.'" target="">
+            <small style="color: darkred; width:400px; overflow:hidden">Click here for the link </small></a>';
+            }
+            
+            $this->page_data['external_job_item_selected_view_html'] .='</div>';
+        }
         $this->load->view('trac360/history', $this->page_data);
         // var_dump($data);
     }
@@ -661,27 +720,131 @@ class Trac360 extends MY_Controller
                 $info_class="first-info";
                 $info_icon = "fa-car";
             } elseif ($info_count+1 < count($history_details)) {
-                $info_class="middle-info";
-                $info_icon = "fa-stop-circle";
+                $info_class="middle-info" ;
+                $info_icon="fa-stop-circle" ;
             } else {
-                $info_class="last-info";
-                $info_icon = "fa-map-marker";
+                $info_class="last-info" ;
+                $info_icon="fa-map-marker" ;
             }
-            $html .= '<tr class="last-coords-details '.$info_class.'"  data-i="'.$info_count.'">
-                        <td class="connected-icon">
-                            <div><i class="fa '.$info_icon.'" aria-hidden="true"></i></div>
-                        </td>
-                        <td>
-                            <div class="address">'.$history->last_address.'</div>
-                            <div class="date-time">'.date('M d, Y h:i A', strtotime($history->date_created)).'</div>
-                        </td>
-                    </tr>';
+            $html .='<tr class="last-coords-details ' .$info_class.'"
+    data-i="'.$info_count.'">
+    <td class="connected-icon">
+        <div><i class="fa '.$info_icon.'" aria-hidden="true"></i></div>
+    </td>
+    <td>
+        <div class="address">'.$history->last_address.'</div>
+        <div class="date-time">'.date('M d, Y h:i A', strtotime($history->date_created)).'</div>
+    </td>
+    </tr>';
             $info_count++;
         }
         $data = new stdClass();
         $data->html = $html;
         $data->route_latlng = $route_latlng;
-        
+        echo json_encode($data);
+    }
+    public function get_employee_prev_jobs()
+    {
+        $date_from = date("Y-m-d", strtotime($this->input->post("the_date_from")));
+        $date_to = date("Y-m-d", strtotime($this->input->post("the_date_to")));
+        $user_id = $this->input->post("the_user_id");
+        $html = '';
+
+        $all_jobs=$this->trac360_model->get_all_jobs_byID($date_from, $date_to, $user_id);
+
+        foreach ($all_jobs as $jb) {
+            $clickable_class ='clickable';
+            if (date("Y-m-d", strtotime($jb->start_date)) > date("Y-m-d")) {
+                $clickable_class ='upcoming-job';
+            }
+            $html .= '<div class="row no-margin jobs-list-item  '.$clickable_class.'"
+        data-address="'.$jb->mail_add .' '. $jb->cust_city.' '.$jb->cust_state.' '.$jb->cust_zip_code.'"
+        data-job-title="'.$jb->job_number . ' : ' . $jb->job_type. ' - ' . $jb->tags_name.'"
+        data-office-address="'.$jb->office_address.', '.$jb->office_city.', '.$jb->office_state.', '.$jb->office_postal_code.'"
+        data-business-name="'.$jb->business_name.'" data-employee-name="'.$jb->FName.' '.$jb->LName.'"
+        data-job-id="'.$jb->id.'" data-user-id="'.$jb->employee_id.'">
+        <div class="col-md-4 job-sched text-center">
+            <a href="#">
+                <time style="font-size: 10px; text-align: left;" datetime="2021-02-09" class="icon-calendar-live">
+                    <em>'.date('D', strtotime($jb->start_date)) .'</em>
+                    <strong style="background-color: #58c04e;">'.date('M', strtotime($jb->start_date)) .'</strong>
+                    <span>'. date('d', strtotime($jb->start_date)) .'</span>
+                </time>
+            </a>
+            <div class="job-status text-center mb-2" style="background:'.$jb->event_color.'; color:#ffffff;">
+                <b>'.strtoupper($jb->status) .'</b>
+            </div>
+            <span class="text-center after-status">ARRIVAL TIME</span><br>
+            <span class="job-caption text-center">
+                '.get_format_time($jb->start_time).' - '.get_format_time_plus_hours($jb->end_time).'
+            </span>
+        </div>
+        <div class="col-md-8 job-details">
+            <a style="color: #000!important;" href="#">
+                <h6 style="font-weight:600; margin:0;font-size: 14px;text-transform: uppercase; color:#616161;">
+                    '.$jb->job_number . ' : ' . $jb->job_type. ' - ' . $jb->tags_name.'
+                </h6>';
+            $html.='<b style="color:#45a73c;">'.$jb->first_name. ' '. $jb->last_name.'
+                </b><br>';
+
+            $html.='<small class="text-muted">'.$jb->mail_add .' '. $jb->cust_city.' '.$jb->cust_state.'
+                    '.$jb->cust_zip_code.'</small><br>
+                <i> <small class="text-muted">'.$jb->job_description.'</small></i><br>';
+            $amount = $jb->amount!="" ? number_format((float)$jb->amount, 2, '.', ',') : '0.00' ;
+            $html .='<small>Amount : $ '.$amount.'</small>
+                <br>';
+
+            $html .='<a target=""><small style="color: darkred;">'.$jb->link.'</small></a>';
+
+            $html .='
+        </div>
+    </div>';
+        }
+        $data = new stdClass();
+        $data->html = $html;
+
+
+        echo json_encode($data);
+    }
+    public function get_jobs_travel_history()
+    {
+        $job_id = $this->input->post("job_id");
+        $user_id = $this->input->post("user_id");
+        $history_details = $this->trac360_model->get_jobs_travel_history($job_id, $user_id);
+        $info_count =0;
+        $route_latlng = array();
+        $html='';
+        foreach ($history_details as $history) {
+            $explode= explode(",", $history->last_coordinate);
+            $explode[]=$history->last_address;
+            $route_latlng [] = $explode;
+            $info_class="";
+            $info_icon = "";
+            if ($info_count == 0) {
+                $info_class="first-info";
+                $info_icon = "fa-car";
+            } elseif ($info_count+1 < count($history_details)) {
+                $info_class="middle-info" ;
+                $info_icon="fa-stop-circle" ;
+            } else {
+                $info_class="last-info" ;
+                $info_icon="fa-map-marker" ;
+            }
+            $html .='<tr class="last-coords-details '
+        .$info_class.'" data-i="'.$info_count.'">
+        <td class="connected-icon">
+            <div><i class="fa '.$info_icon.'" aria-hidden="true"></i></div>
+        </td>
+        <td>
+            <div class="address">'.$history->last_address.'</div>
+            <div class="date-time">'.date('M d, Y h:i A', strtotime($history->date_created)).'</div>
+        </td>
+        </tr>';
+            $info_count++;
+        }
+        $data = new stdClass();
+        $data->html = $html;
+        $data->route_latlng = $route_latlng;
         echo json_encode($data);
     }
 }

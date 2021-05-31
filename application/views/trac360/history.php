@@ -62,94 +62,9 @@ function get_differenct_of_dates($date_start, $date_end)
                     </div>
                 </div>
                 <div class="col-md-9  trac360_main_sections jobs-list-section" style="background-color: #fff;">
-                    <div id="employees-view-history-panel" class="overflow-auto panel-closed" style="top:0;">
-                        <div class="employee-name" style="min-width:439px;">
-                            <p><span class="name">Lou Pinton</span>
-                            </p>
-                        </div>
-                        <div class="close-btn"><i class="fa fa-chevron-left" aria-hidden="true"></i></div>
-                        <div class="panel-content">
-                            <div class="filter-panel" class="row no-margin">
-                                <form action="#" id="employee-history-filter-form">
-                                    <div class="row no-margin">
-                                        <div class="col-md-5 no-padding" style="margin-bottom: 12px">
-                                            <label for="from_date_logs" class="week-label">From:</label>
-                                            <input type="text" name="date_from" id="employe-history-from"
-                                                class="form-control date-picker"
-                                                value="<?php echo date('m/d/Y', strtotime('monday this week')) ?>">
-                                        </div>
-                                        <div class="col-md-5 no-padding" style="margin-bottom: 12px">
-                                            <label for="to_date_logs" class="week-label">To:</label>
-                                            <input type="text" name="date_to" id="employe-history-to"
-                                                class="form-control date-picker"
-                                                value="<?php echo date('m/d/Y') ?>">
-                                        </div>
-                                        <div class="col-md-2" style="margin-bottom: 12px">
-                                            <div><label for="to_date_logs" class="week-label">&nbsp;</label>
-                                            </div>
-                                            <button type="submit"
-                                                class="btn btn-success action-btn btn-sm">View</button>
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
-                            <div class="loader" style="display: none;">
-                                <center>
-                                    <img src="<?=base_url('assets/img/trac360/loader1.gif')?>"
-                                        alt="">
-                                </center>
-                            </div>
-                            <div id="route-details-setion">
-                                <table class="route-details-table">
-                                    <tbody class="tbody">
-                                        <tr class="first-info">
-                                            <td class="connected-icon">
-                                                <div><i class="fa fa-car" aria-hidden="true"></i></div>
-                                            </td>
-                                            <td>
-                                                <div class="address">Champagne Avenue, Panabo, Davao del Norte,
-                                                    Philippines</div>
-                                                <div class="date-time">May 1, 2021 1:00 PM GMT+8</div>
-                                            </td>
-                                        </tr>
-
-                                        <tr class="middle-info">
-                                            <td class="connected-icon">
-                                                <div><i class="fa fa-map-marker" aria-hidden="true"></i></div>
-                                            </td>
-                                            <td>
-                                                <div class="address">Panabo, Davao del Norte,
-                                                    Philippines</div>
-                                                <div class="date-time">May 1, 2021 2:00 PM GMT+8</div>
-                                            </td>
-                                        </tr>
-
-                                        <tr class="middle-info">
-                                            <td class="connected-icon">
-                                                <div><i class="fa fa-map-marker" aria-hidden="true"></i></div>
-                                            </td>
-                                            <td>
-                                                <div class="address">Southern Davao, Panabo, Davao del Norte,
-                                                    Philippines</div>
-                                                <div class="date-time">May 1, 2021 2:00 PM GMT+8</div>
-                                            </td>
-                                        </tr>
-
-                                        <tr class="last-info">
-                                            <td class="connected-icon">
-                                                <div><i class="fa fa-stop-circle" aria-hidden="true"></i></div>
-                                            </td>
-                                            <td>
-                                                <div class="address">Champagne Avenue, Panabo, Davao del Norte,
-                                                    Philippines</div>
-                                                <div class="date-time">May 1, 2021 3:00 PM GMT+8</div>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
+                    <?php include viewPath('trac360/history_includes/employee-history-panel'); ?>
+                    <?php include viewPath('trac360/history_includes/employee-jobs-panel'); ?>
+                    <?php include viewPath('trac360/history_includes/single-job-view-panel'); ?>
                     <div id="employee-upcoming-jobs" class="overflow-auto" style="height: 100%;">
                         <div class="row no-margin">
                             <div class="col-md-6 no-padding">
@@ -221,7 +136,7 @@ function get_differenct_of_dates($date_start, $date_end)
                                     }
                                     $html .= $time_display . '</p>
                                         <div class="people-job-btns">
-                                        <button href="#" class="people-job-btn" data-user-id="'.$user->user_id .'" data-name="'.$user->FName.' '.$user->LName.'" data-toggle="tooltip" title="View history">
+                                        <button href="#" class="people-history-btn" data-user-id="'.$user->user_id .'" data-name="'.$user->FName.' '.$user->LName.'" data-toggle="tooltip" title="View history">
                                             <i class="fa fa-street-view" aria-hidden="true"></i>
                                         </button>
                                         <button href="#" class="people-job-btn" data-user-id="'.$user->user_id .'" data-name="'.$user->FName.' '.$user->LName.'" data-toggle="tooltip" title="View previous jobs">
@@ -245,7 +160,11 @@ function get_differenct_of_dates($date_start, $date_end)
                             <?php
                             if (!empty($previousJobs)) { ?>
                             <?php foreach ($previousJobs as $jb) { ?>
-                            <div class="job-item-panel">
+                            <div class="job-item-panel jobs-list-item  clickable"
+                                data-employee-name="<?=$jb->FName .' '.$jb->LName?>"
+                                data-job-id="<?=$jb->id?>"
+                                data-user-id="<?=$jb->employee_id?>"
+                                data-section="prev-panel">
                                 <div class="employee-name">
                                     <p><span class="name"><?=$jb->FName .' '.$jb->LName?></span>
                                     </p>
@@ -320,6 +239,11 @@ function get_differenct_of_dates($date_start, $date_end)
     </div>
 </div>
 <?php include viewPath('trac360/calendar'); ?>
+<div id="from_external_html">
+    <div id="external_prev_job">
+        <?=$external_job_item_selected_view_html?>
+    </div>
+</div>
 
 <!--</div>-->
 <!-- end container-fluid -->
@@ -328,6 +252,8 @@ function get_differenct_of_dates($date_start, $date_end)
 <?php include viewPath('includes/footer'); ?>
 <script>
     var date_today = "<?=date('m/d/Y')?>";
+    var date_monday_this_week =
+        "<?php echo date('m/d/Y', strtotime("monday this week")) ?>";
     var history_map;
     var history_map_marker = [];
     var antennasCircle_history_map;
@@ -347,6 +273,14 @@ function get_differenct_of_dates($date_start, $date_end)
         });
         $("#history-map").show();
     }
+
+    $(document).ready(function() {
+        <?php
+            if ($external_job_selcted == true) {
+                echo 'jobs_list_item_clicked('.$external_job_id.', '.$external_employee_id.', "'.$external_employee_name.'", $("#external_prev_job").html());';
+            }
+        ?>
+    });
 </script>
 <script
     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBg27wLl6BoSPmchyTRgvWuGHQhUUHE5AU&callback=initMap&libraries=&v=weekly"
