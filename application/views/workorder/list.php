@@ -266,7 +266,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                                href="<?php echo base_url('workorder/view/' . $workorder->id) ?>"><span
                                                                     class="fa fa-file-text-o icon"></span> View</a></li>
                                                     <li role="presentation">
-                                                    <?php if($workorder->is_template == '2'){ ?>
+                                                    <?php if($workorder->work_order_type_id == '2'){ ?>
                                                         <a role="menuitem" tabindex="-1" href="<?php echo base_url('workorder/editAlarm/' . $workorder->id) ?>"><span class="fa fa-pencil-square-o icon"></span> Edit</a>
                                                     <?php }else{ ?>
                                                         <a role="menuitem" tabindex="-1" href="<?php echo base_url('workorder/edit/' . $workorder->id) ?>"><span class="fa fa-pencil-square-o icon"></span> Edit</a>
@@ -342,7 +342,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <div class="validation-error" style="display: none;"></div>
                         <p>
                             You are going create a new work order based on <b>Work Order #<span
-                                        class="work_order_no"></span></b>.<br>
+                                        class="work_order_no"></span> <input type="hidden" id="wo_id" name="wo_id"> </b>.<br>
                             Afterwards you can edit the newly created work order.
                         </p>
                     </form>
@@ -494,8 +494,10 @@ function sucess(information,$id){
 $(document).on('click touchstart','.clone-workorder',function(){
 
 var num = $(this).attr('data-wo_num');
+var id = $(this).attr('data-id');
 // alert(id);
 $('.work_order_no').text(num)
+$('#wo_id').val(id)
 
 
 });
@@ -503,7 +505,8 @@ $('.work_order_no').text(num)
 $(document).on('click touchstart','#clone_workorder',function(){
 
 // var num = $(this).attr('data-wo_num');
-var wo_num = $('.work_order_no').text();
+// var wo_num = $('.work_order_no').text();
+var wo_num = $('#wo_id').val();
 // alert(id);
 // $('.work_order_no').text(num);
 $.ajax({

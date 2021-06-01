@@ -6,8 +6,13 @@ $(document).on("click", ".jobs-collapse-btn", function() {
         $(this).addClass('collapse-active');
         if ($(this).hasClass('upcoming')) {
             $("#previousjobs-collapse-panel").removeClass("show");
+            $("#livejobs-collapse-panel").removeClass("show");
+        } else if ($(this).hasClass('live')) {
+            $("#previousjobs-collapse-panel").removeClass("show");
+            $("#upcomingjobs-collapse-panel").removeClass("show");
         } else {
             $("#upcomingjobs-collapse-panel").removeClass("show");
+            $("#livejobs-collapse-panel").removeClass("show");
         }
     }
 });

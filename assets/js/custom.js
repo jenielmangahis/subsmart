@@ -403,6 +403,7 @@ var price = $("#price_" + counter).val();
 
   $("#grand_total").text(grand_total_w.toFixed(2));
   $("#grand_total_input").val(grand_total_w.toFixed(2));
+  $("#grand_total_inputs").val(grand_total_w.toFixed(2));
   $("#grandtotal_input").val(grand_total_w.toFixed(2));
   
 
@@ -413,6 +414,7 @@ var price = $("#price_" + counter).val();
   }else{
     $("#grand_total").text(grand_total_w.toFixed(2));
     $("#grand_total_input").val(grand_total_w.toFixed(2));
+    $("#grand_total_inputs").val(grand_total_w.toFixed(2));
 
     var bundle1_total = $("#grand_total").text();
     var bundle2_total = $("#grand_total2").text();
@@ -530,6 +532,7 @@ $(document).on("focusout", ".tax_change", function () {
 
   $("#grand_total").text(grand_total_w.toFixed(2));
   $("#grand_total_input").val(grand_total_w.toFixed(2));
+  $("#grand_total_inputs").val(grand_total_w.toFixed(2));
 
   var sls = (parseFloat(eqpt_cost).toFixed(2) * 7.5) / 100;
   sls = parseFloat(sls).toFixed(2);
@@ -635,6 +638,7 @@ $(document).on("focusout", ".tax_change2", function () {
 
   $("#grand_total").text(grand_total_w.toFixed(2));
   $("#grand_total_input").val(grand_total_w.toFixed(2));
+  $("#grand_total_inputs").val(grand_total_w.toFixed(2));
 
   var sls = (parseFloat(eqpt_cost).toFixed(2) * 7.5) / 100;
   sls = parseFloat(sls).toFixed(2);
@@ -806,6 +810,7 @@ $("#total_tax_").val(subtotaltax.toFixed(2));
 
 $("#grand_total").text(grand_total_w.toFixed(2));
 $("#grand_total_input").val(grand_total_w.toFixed(2));
+$("#grand_total_inputs").val(grand_total_w.toFixed(2));
 
 var sls = (parseFloat(eqpt_cost).toFixed(2) * 7.5) / 100;
 sls = parseFloat(sls).toFixed(2);
@@ -961,6 +966,7 @@ $("#total_tax_").val(subtotaltax.toFixed(2));
 
 $("#grand_total").text(grand_total_w.toFixed(2));
 $("#grand_total_input").val(grand_total_w.toFixed(2));
+$("#grand_total_inputs").val(grand_total_w.toFixed(2));
 
 var sls = (parseFloat(eqpt_cost).toFixed(2) * 7.5) / 100;
 sls = parseFloat(sls).toFixed(2);
@@ -1165,6 +1171,7 @@ $("#total_tax_").text(over_tax);
 
   $("#grand_total").text(grand_total_w.toFixed(2));
   $("#grand_total_input").val(grand_total_w.toFixed(2));
+  $("#grand_total_inputs").val(grand_total_w.toFixed(2));
 
   var sls = (parseFloat(eqpt_cost).toFixed(2) * 7.5) / 100;
   sls = parseFloat(sls).toFixed(2);
@@ -1216,6 +1223,7 @@ $(document).on("focusout", ".qtyest2", function () {
   var grandtotal = priceqty + subtotaltax + one_time + m_monitoring;
 
   $("#grand_total_input").val(grandtotal);
+  $("#grand_total_inputs").val(grandtotal);
   // alert(grandtotal);
   // standard form
   var taxtotal  = $("#total_tax_input").val();
@@ -1223,6 +1231,7 @@ $(document).on("focusout", ".qtyest2", function () {
   var s_grandtotal = subtotaltax + priceqty;
   $("#grand_total").text(s_grandtotal.toFixed(2));
   $("#grand_total_input").val(s_grandtotal.toFixed(2));
+  $("#grand_total_inputs").val(s_grandtotal.toFixed(2));
   
 });
 
@@ -1347,6 +1356,7 @@ $(document).on("focusout", ".qtyest2", function () {
 
   $("#grand_total").text(grand_total_w.toFixed(2));
   $("#grand_total_input").val(grand_total_w.toFixed(2));
+  $("#grand_total_inputs").val(grand_total_w.toFixed(2));
 
   var sls = (parseFloat(eqpt_cost).toFixed(2) * 7.5) / 100;
   sls = parseFloat(sls).toFixed(2);
@@ -1459,6 +1469,7 @@ function calculation(counter) {
   }else{
     $("#grand_total").text(grand_total_w.toFixed(2));
     $("#grand_total_input").val(grand_total_w.toFixed(2));
+    $("#grand_total_inputs").val(grand_total_w.toFixed(2));
 
     var bundle1_total = $("#grand_total").text();
     var bundle2_total = $("#grand_total2").text();
@@ -1660,6 +1671,7 @@ $(document).on("focusout", ".quantity", function () {
 
   $("#grand_total").text(grand_total_w.toFixed(2));
   $("#grand_total_input").val(grand_total_w.toFixed(2));
+  $("#grand_total_inputs").val(grand_total_w.toFixed(2));
   $("#grandtotal_input").val(grand_total_w.toFixed(2));
   
 
@@ -1670,6 +1682,7 @@ $(document).on("focusout", ".quantity", function () {
   }else{
     $("#grand_total").text(grand_total_w.toFixed(2));
     $("#grand_total_input").val(grand_total_w.toFixed(2));
+    $("#grand_total_inputs").val(grand_total_w.toFixed(2));
 
     var bundle1_total = $("#grand_total").text();
     var bundle2_total = $("#grand_total2").text();
@@ -1801,6 +1814,7 @@ function calculation(counter) {
 
   $("#grand_total").text(grand_total_w.toFixed(2));
   $("#grand_total_input").val(grand_total_w.toFixed(2));
+  $("#grand_total_inputs").val(grand_total_w.toFixed(2));
   $("#grandtotal_input").val(grand_total_w.toFixed(2));
   
 
@@ -1811,6 +1825,7 @@ function calculation(counter) {
   }else{
     $("#grand_total").text(grand_total_w.toFixed(2));
     $("#grand_total_input").val(grand_total_w.toFixed(2));
+    $("#grand_total_inputs").val(grand_total_w.toFixed(2));
 
     var bundle1_total = $("#grand_total").text();
     var bundle2_total = $("#grand_total2").text();
@@ -1924,6 +1939,7 @@ function calculation2(counter) {
   }else{
     $("#grand_total").text(grand_total_w.toFixed(2));
     $("#grand_total_input").val(grand_total_w.toFixed(2));
+    $("#grand_total_inputs").val(grand_total_w.toFixed(2));
 
     var bundle1_total = $("#grand_total").text();
     var bundle2_total = $("#grand_total2").text();

@@ -57,7 +57,7 @@ class Cron_Marketing extends MY_Controller {
                     $sendTo = $this->SmsBlastSendTo_model->getAllBySmsBlastId($sms->id);
                     foreach( $sendTo as $st ){
                         $condition[] = ['customer_group_id' => $st->customer_group_id];     
-                        $contact = $this->AcsProfile_model->getAllByCompanyId($st->customer_id, $condition);
+                        $contact = $this->AcsProfile_model->getAllByCompanyId($sms->company_id, $condition);
                         foreach( $contact as $c ){
                             $to_number = $this->cleanMobileNumber($c->phone_m);
                             $result    = $this->sendSms($to_number, $sms->sms_text);
@@ -152,6 +152,7 @@ class Cron_Marketing extends MY_Controller {
         $this->load->model('EmailBlastSendTo_model');
         $this->load->model('AcsProfile_model');
         $this->load->model('Business_model');
+        $this->load->model('EmailLogs_model');
 
         $emailCampaigns = $this->EmailBlast_model->getAllIsPaidAndNotSent(50);
         foreach( $emailCampaigns as $e ){
@@ -163,13 +164,47 @@ class Cron_Marketing extends MY_Controller {
                     $contacts = $this->AcsProfile_model->getAllByCompanyId($e->company_id, $conditions); 
                     foreach( $contacts as $c ){
                         $is_sent = $this->sendEmail($c->email, $e->email_subject, $e->email_body);   
-                        if( $is_sent ){
+                        if( $is_sent == 1 ){
                             $total_sent++;
                         }  
+
+                        $data_logs = [
+                            'user_id' => $e->user_id,
+                            'to_email' => $c->email,
+                            'from_email' => MAIL_FROM,
+                            'subject' => $e->subject,
+                            'message' => $e->email_body,
+                            'is_sent' => $is_sent
+                        ];   
+
+                        $this->EmailLogs_model->create($data_logs);  
                     }
                     break;
                 case $this->EmailBlast_model->sedingTypeCustomerGroup():
-                    # code...
+                    $sendTo = $this->EmailBlastSendTo_model->getAllByEmailBlastId($e->id);
+                    foreach( $sendTo as $st ){
+                        $condition[] = ['customer_group_id' => $st->customer_group_id];     
+                        $contact = $this->AcsProfile_model->getAllByCompanyId($e->company_id, $condition);
+                        foreach( $contact as $c ){
+                            if( $c->email != '' ){
+                                $is_sent = $this->sendEmail($c->email, $e->email_subject, $e->email_body);   
+                                if( $is_sent == 1 ){
+                                    $total_sent++;
+                                }                 
+
+                                $data_logs = [
+                                    'user_id' => $e->user_id,
+                                    'to_email' => $c->email,
+                                    'from_email' => MAIL_FROM,
+                                    'subject' => $e->subject,
+                                    'message' => $e->email_body,
+                                    'is_sent' => $is_sent
+                                ];   
+
+                                $this->EmailLogs_model->create($data_logs);  
+                            }
+                        }
+                    }
                     break;
                 case $this->EmailBlast_model->sendingTypeCertainCustomer():
                     $sendTo = $this->EmailBlastSendTo_model->getAllByEmailBlastId($e->id);
@@ -178,9 +213,20 @@ class Cron_Marketing extends MY_Controller {
                         $contact = $this->AcsProfile_model->getByProfId($s->customer_id, $conditions);
                         if( $contact ){
                             $is_sent = $this->sendEmail($contact->email, $e->email_subject, $e->email_body);   
-                            if( $is_sent ){
+                            if( $is_sent == 1 ){
                                 $total_sent++;
-                            }                      
+                            }
+
+                            $data_logs = [
+                                'user_id' => $e->user_id,
+                                'to_email' => $c->email,
+                                'from_email' => MAIL_FROM,
+                                'subject' => $e->subject,
+                                'message' => $e->email_body,
+                                'is_sent' => $is_sent
+                            ];   
+
+                            $this->EmailLogs_model->create($data_logs);                 
                         }
                     }
                     break;
@@ -229,9 +275,9 @@ class Cron_Marketing extends MY_Controller {
         $mail->Subject = $subject;
         $mail->Body    = $msg;
         if(!$mail->Send()){
-            $is_sent = false;
+            $is_sent = 0;
         }else{
-            $is_sent = true;
+            $is_sent = 1;
         }
 
         return $is_sent;

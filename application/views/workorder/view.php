@@ -595,7 +595,7 @@ border: none;
 														<hr>
 														<div class="ul-info">
 			         							   			<b class="ul-head">Terms and Conditions </b><br><br>
-															<div style="height:120px; overflow:auto; background:#FFFFFF; padding-left:10px;">
+															<div style="height:; overflow:auto; background:#FFFFFF; padding-left:10px;">
 																<?php echo $workorder->terms_and_conditions; ?>
 															</div>
 		         							   			</div>
@@ -678,7 +678,7 @@ border: none;
 													<hr>
 														<div class="ul-info">
 			         							   			<b class="ul-head">Terms of Use </b><br><br>
-															<div style="height:120px; overflow:auto; background:#FFFFFF; padding-left:10px;">
+															<div style="height:; overflow:auto; background:#FFFFFF; padding-left:10px;">
 																<?php echo $workorder->terms_of_use; ?>
 															</div>
 		         							   			</div>
@@ -695,6 +695,22 @@ border: none;
 															<div style="height:120px; overflow:auto; background:#FFFFFF; padding-left:10px;">
 																<?php echo $workorder->instructions; ?>
 															</div>
+		         							   			</div>
+													<hr>
+														<div class="ul-info">
+			         							   			<b class="ul-head">ASSIGNED TO</b><br><br>
+																<div class="row">
+																	<div class="col-md-6">
+																		<img src="<?php echo $workorder->company_representative_signature; ?>">
+																		<hr>
+																		<?php echo $workorder->company_representative_name; ?>
+																	</div>
+																	<div class="col-md-6">
+																		<img src="<?php echo $workorder->primary_account_holder_signature; ?>">
+																		<hr>
+																		<?php echo $workorder->primary_account_holder_name; ?>
+																	</div>
+																</div>
 		         							   			</div>
 
 

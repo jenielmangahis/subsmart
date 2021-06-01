@@ -437,7 +437,7 @@ border: none;
                             </div>
                             <div class="col-md-3 form-group">
                                 <label for="birthdate" class="label-element">Birth Date</label>
-                                <input type="date" class="form-control input-element" name="birthdate" id="date_of_birth" required/>
+                                <input type="text" class="form-control input-element" name="birthdate" id="datepicker2"/>
                             </div>
                         </div>
                         <div class="row">                   
@@ -865,7 +865,7 @@ border: none;
                             <div class="row">                        
                                 <div class="form-group col-md-4">
                                     <label for="contact_name" class="label-element">Schedule Date Given</label>
-                                    <input type="date" class="form-control input-element" name="schedule_date_given" id="schedule_date_given" />
+                                    <input type="text" class="form-control input-element" name="schedule_date_given" id="schedule_date_given" />
                                 </div>      
                                 <div class="form-group col-md-4">
                                 <div class="select-wrap">
@@ -882,7 +882,7 @@ border: none;
                             <div class="row">                        
                                 <div class="form-group col-md-4">
                                     <label for="job_name" class="label-element">Job Name</label>
-                                    <input type="text" class="form-control input-element" name="job_name" id="job_name" required />
+                                    <input type="text" class="form-control input-element" name="job_name" id="job_name" />
                                 </div>
                                 <div class="form-group col-md-4">
                                     <label for="job_desc" class="label-element">Job Description</label>
@@ -1781,6 +1781,12 @@ border: none;
             </div>
 
 <?php include viewPath('includes/footer'); ?>
+
+<script>
+  $( function() {
+    $( "#datepicker2" ).datepicker();
+  } );
+</script>
 
 <script>
 // $("#company_representative_approval_signature1aM").on("click touchstart",

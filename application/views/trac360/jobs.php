@@ -86,16 +86,31 @@ function get_differenct_of_dates($date_start, $date_end)
                     </div>
                     <div id="employee-upcoming-jobs" class="overflow-auto" style="height: 100%;">
                         <div class="row no-margin">
-                            <div class="col-md-6 no-padding">
+                            <div class="col-md-4 no-padding">
                                 <a data-toggle="collapse" href="#upcomingjobs-collapse-panel" role="button"
                                     aria-expanded="true" aria-controls="upcomingjobs-collapse-panel">
-                                    <div class="upcoming jobs-collapse-btn collapse-active">Upcoming Jobs</div>
+                                    <div class="upcoming jobs-collapse-btn collapse-active">
+                                        <i class="fa fa-angle-double-right" aria-hidden="true"></i>
+                                        Upcoming Jobs
+                                    </div>
                                 </a>
                             </div>
-                            <div class="col-md-6 no-padding">
+                            <div class="col-md-4 no-padding">
                                 <a data-toggle="collapse" href="#previousjobs-collapse-panel" role="button"
                                     aria-expanded="true" aria-controls="collapseExample" class="">
-                                    <div class="previous jobs-collapse-btn">Previous Jobs</div>
+                                    <div class="previous jobs-collapse-btn">
+                                        <i class="fa fa-angle-double-left" aria-hidden="true"></i>
+                                        Previous Jobs
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="col-md-4 no-padding">
+                                <a data-toggle="collapse" href="#livejobs-collapse-panel" role="button"
+                                    aria-expanded="true" aria-controls="collapseExample" class="">
+                                    <div class="live jobs-collapse-btn">
+                                        <i class="fa fa-bullseye" aria-hidden="true"></i>
+                                        Live
+                                    </div>
                                 </a>
                             </div>
                         </div>
@@ -220,6 +235,88 @@ function get_differenct_of_dates($date_start, $date_end)
                             <?php } else { ?>
                             <div class="cue-event-name no-data">No previous jobs.</div>
                             <?php } ?>
+                        </div>
+                        <div id="livejobs-collapse-panel" class="collapse">
+                            <div class="livejobs-filter-section">
+                                <form action="#" id="live-jobs-filter-form" data-user-id="14">
+                                    <div class="row no-margin">
+                                        <div class="col-md-10 no-padding" style="margin-bottom: 12px">
+                                            <input type="text" name="job_long_id" id="livejob-long-id"
+                                                class="form-control" placeholder="Search a job number">
+                                        </div>
+                                        <div class="col-md-2" style="margin-bottom: 12px">
+                                            <button type="submit"
+                                                class="btn btn-success action-btn btn-sm">View</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="loader" style="display: none;">
+                                <center>
+                                    <img src="<?=base_url('assets/img/trac360/loader1.gif')?>"
+                                        alt="">
+                                </center>
+                            </div>
+                            <div class="livejobs-section">
+                                <?php
+                            if (!empty($liveJobs)) { ?>
+                                <?php foreach ($liveJobs as $jb) { ?>
+                                <div class="job-item-panel"
+                                    data-job-id="<?=$jb->id?>">
+                                    <div class="employee-name">
+                                        <p><span class="name"><?=$jb->FName .' '.$jb->LName?></span>
+                                        </p>
+                                    </div>
+                                    <div class="row no-margin jobs-list-item">
+                                        <div class="col-md-4 job-sched text-center">
+                                            <a href="#">
+                                                <time style="font-size: 10px; text-align: left;" datetime="2021-02-09"
+                                                    class="icon-calendar-live">
+                                                    <em><?= date('D', strtotime($jb->start_date)) ?></em>
+                                                    <strong style="background-color: #58c04e;"><?= date('M', strtotime($jb->start_date)) ?></strong>
+                                                    <span><?= date('d', strtotime($jb->start_date)) ?></span>
+                                                </time>
+                                            </a>
+                                            <div class="job-status text-center mb-2"
+                                                style="background:<?= $jb->event_color?>; color:#ffffff;">
+                                                <b><?php echo strtoupper($jb->status); ?></b>
+                                            </div>
+                                            <span class="text-center after-status">ARRIVAL TIME</span><br>
+                                            <span class="job-caption text-center">
+                                                <?php echo get_format_time($jb->start_time); ?>-<?php echo get_format_time_plus_hours($jb->end_time); ?>
+                                            </span>
+                                        </div>
+                                        <div class="col-md-8 job-details">
+                                            <a style="color: #000!important;" href="#">
+                                                <h6
+                                                    style="font-weight:600; margin:0;font-size: 14px;text-transform: uppercase; color:#616161;">
+                                                    <?php echo $jb->job_number . ' : ' . $jb->job_type. ' - ' . $jb->tags_name; ?>
+                                                </h6>
+                                                <b style="color:#45a73c;">
+                                                    <?= $jb->first_name. ' '. $jb->last_name; ?>
+                                                </b><br>
+                                                <?php if (!empty($settings['work_order_show_details']) && $settings['work_order_show_details'] == 1): ?>
+                                                <small class="text-muted"><?= $jb->mail_add .' '. $jb->cust_city.' '.$jb->cust_state.' '.$jb->cust_zip_code; ?></small><br>
+                                                <i> <small class="text-muted"><?= $jb->job_description; ?></small></i><br>
+                                                <?php endif; ?>
+                                                <?php if (!empty($settings['work_order_show_price']) && $settings['work_order_show_price'] == 1): ?>
+                                                <small>Amount : $ <?= $jb->amount!="" ? number_format((float)$jb->amount, 2, '.', ',') : '0.00' ; ?></small>
+                                                <br>
+                                                <?php endif; ?>
+                                                <?php if (!empty($settings['work_order_show_link']) && $settings['work_order_show_link'] == 1) {?>
+                                                <a href="<?=$jb->link; ?>"
+                                                    target="">
+                                                    <small style="color: darkred; width:400px; overflow:hidden"><?=$jb->link==''?'':'Click here for the link' ?></small></a>
+
+                                                <?php } ?>
+                                        </div>
+                                    </div>
+                                </div>
+                                <?php } ?>
+                                <?php } else { ?>
+                                <div class="cue-event-name no-data">No live jobs.</div>
+                                <?php } ?>
+                            </div>
                         </div>
                     </div>
                 </div>

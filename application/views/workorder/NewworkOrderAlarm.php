@@ -523,7 +523,7 @@ border: none;
 											<input type="text" class="form-control input-element" name="security_number"
 												   id="contact_ssn"
 												   value="<?php echo (!empty($workorder->customer['contact_ssn'])) ? $workorder->customer['contact_ssn'] : '' ?>"
-												   required
+												   
 												   placeholder="Enter SSN"/>
 										</div>
 									</div>
@@ -622,7 +622,7 @@ border: none;
                                         <div class="col-md-3 form-group">
                                         <div class="select-wrap">
                                             <label for="">Notification Type</label><br/>
-                                                <select name="notification_type" id="customer_notification_type_email" class="form-control custom-select m_select" required>
+                                                <select name="notification_type" id="customer_notification_type_email" class="form-control custom-select m_select">
                                                     <option>Notification Type</option>
                                                     <option value="Text">Text</option>
                                                     <option value="Email">Email</option>
@@ -670,7 +670,7 @@ border: none;
                                                name="1st_verification_name"
                                                value="<?php echo (!empty($workorder->emergency_call_list['1st_call_verification_name'])) ? $workorder->emergency_call_list['1st_call_verification_name'] : '' ?>"
                                                id="1st_call_verification_name"
-                                               required placeholder="Enter 1st Call Verification Name"/>
+                                                placeholder="Enter 1st Call Verification Name"/>
                                     <!-- </div> -->
                                 </div>
                                 <div class="col-md-4">
@@ -709,7 +709,7 @@ border: none;
                                         <input type="text" class="form-control input-element" name="1st_relation"
                                                id="emergency_call_relation"
                                                value="<?php echo (!empty($workorder->emergency_call_list['relation'][0])) ? $workorder->emergency_call_list['relation'][0] : '' ?>"
-                                               required placeholder="Enter Relation"/>
+                                                placeholder="Enter Relation"/>
                                     <!-- </div> -->
                                 </div>
                                 <!-- <div class="col-md-3">
@@ -730,7 +730,7 @@ border: none;
                                                name="2nd_verification_name"
                                                id="2nd_call_verification_name"
                                                value="<?php echo (!empty($workorder->emergency_call_list['2nd_call_verification_name'])) ? $workorder->emergency_call_list['2nd_call_verification_name'] : '' ?>"
-                                               required placeholder="Enter 2nd Call Verification Name"/>
+                                                placeholder="Enter 2nd Call Verification Name"/>
                                     <!-- </div> -->
                                 </div>
                                 <div class="col-md-4">
@@ -769,7 +769,7 @@ border: none;
                                         <input type="text" class="form-control input-element" name="2nd_relation"
                                                id="emergency_call_relation"
                                                value="<?php echo (!empty($workorder->emergency_call_list['relation'][1])) ? $workorder->emergency_call_list['relation'][1] : '' ?>"
-                                               required placeholder="Enter Relation"/>
+                                                placeholder="Enter Relation"/>
                                     <!-- </div> -->
                                 </div>
                                 <!-- <div class="col-md-3">
@@ -790,7 +790,7 @@ border: none;
                                                name="3rd_verification_name"
                                                id="emergency_call_emergency_contact_1"
                                                value="<?php echo (!empty($workorder->emergency_call_list['emergency_contact_1'])) ? $workorder->emergency_call_list['emergency_contact_1'] : '' ?>"
-                                               required placeholder="Enter Emergency Contact"/>
+                                                placeholder="Enter Emergency Contact"/>
                                     <!-- </div> -->
                                 </div>
                                 <div class="col-md-4">
@@ -829,7 +829,7 @@ border: none;
                                         <input type="text" class="form-control input-element" name="3rd_relation"
                                                id="emergency_call_relation"
                                                value="<?php echo (!empty($workorder->emergency_call_list['relation'][2])) ? $workorder->emergency_call_list['relation'][2] : '' ?>"
-                                               required placeholder="Enter Relation"/>
+                                                placeholder="Enter Relation"/>
                                     <!-- </div> -->
                                 </div>
 
@@ -842,7 +842,7 @@ border: none;
                                                name="4th_verification_name"
                                                id="emergency_call_emergency_contact_2"
                                                value="<?php echo (!empty($workorder->emergency_call_list['emergency_contact_2'])) ? $workorder->emergency_call_list['emergency_contact_2'] : '' ?>"
-                                               required placeholder="Enter Emergency Contact"/>
+                                                placeholder="Enter Emergency Contact"/>
                                     <!-- </div> -->
                                 </div>
                                 <div class="col-md-4">
@@ -881,7 +881,7 @@ border: none;
                                         <input type="text" class="form-control input-element" name="4th_relation"
                                                id="emergency_call_relation"
                                                value="<?php echo (!empty($workorder->emergency_call_list['relation'][3])) ? $workorder->emergency_call_list['relation'][3] : '' ?>"
-                                               required placeholder="Enter Relation"/>
+                                                placeholder="Enter Relation"/>
                                     <!-- </div> -->
                                 </div>
                             </div>
@@ -1038,10 +1038,10 @@ border: none;
                                     <!-- <div class=""> -->
                                         <label for="date_w_issued" class="label-element"> Requested Date:</label>
                                         <!-- <div class='input-group date datepicker'> -->
-                                            <input type="date"
+                                            <input type="text"
                                                    name="date_issued"
                                                    class="form-control input-element"
-                                                   id=""/>
+                                                   id="datepicker"/>
                                         <!-- </div> -->
                                     <!-- </div> -->
                                 </div>
@@ -1684,7 +1684,7 @@ border: none;
                                                 <td>Total Due</td>
                                                  <td class="d-flex align-items-center">$ 
                                                             <input type="hidden" name="adjustment_value" id="adjustment_input" value="0" class="form-control adjustment_input" style="width:100px; display:inline-block"><input type="hidden" name="markup_input_form" id="markup_input_form" class="markup_input" value="0"> 
-                                                            <input type="text" name="grand_total_text" id="grand_total_input" class="form-control" placeholder="0">
+                                                            <input type="text" name="grand_total_text" id="grand_total_inputs" class="form-control" placeholder="0">
                                                 </td>
                                             </tr>
                                         </table>
@@ -2381,7 +2381,7 @@ border: none;
 
                                 </div>
                             </div> -->
-
+                            </div>
 
                             <div class="row">
                                 <div class="col-md-4 form-group">
@@ -2626,6 +2626,12 @@ border: none;
             </div>
 
     <?php include viewPath('includes/footer'); ?>
+
+<script>
+  $( function() {
+    $( "#datepicker" ).datepicker();
+  } );
+</script>
 
     <script>
 // $("#company_representative_approval_signature1aM").on("click touchstart",

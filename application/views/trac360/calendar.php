@@ -1,7 +1,7 @@
 <?php
 $date_from = date('Y-m-d', strtotime('first day of last month'));
 $date_to = date("Y-m-t");
-$all_jobs = $this->trac360_model->get_all_jobs($date_from, $date_to);
+$all_jobs = $this->trac360_model->get_all_jobs($date_from, $date_to, logged('company_id'));
 
 ?>
 
