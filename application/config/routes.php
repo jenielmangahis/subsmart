@@ -885,3 +885,6 @@ $route['promote/order_pdf/(:any)'] = 'Promote/deals_order_pdf/$1';
 $route['deal/booking/(:num)'] = 'Pages/deals_booking/$1';
 $route['deal/(:any)/(:num)']  = 'Pages/deals_view/$1/$2';
 $route['deal/save_booking']  = 'Pages/create_deals_booking';
+
+//Admin login
+$route['admin/login'] = 'Admin/login';

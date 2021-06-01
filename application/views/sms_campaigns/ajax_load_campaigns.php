@@ -6,6 +6,7 @@
                     <th>Campaign</th>
                     <th>Send To</th>
                     <th>Sent on</th>
+                    <th>Texts</th>
                     <th>Status</th>           
                     <th></th>            
                 </tr>
@@ -32,6 +33,7 @@
                                 }
                             ?>
                         </td>
+                        <td>0 - <a href="<?php echo base_url('sms_campaigns/view_logs/' . $sb->id) ?>" style="color:#259e57;">view log</a></td>
                         <td><?= $statusOptions[$sb->status]; ?></td>
                         <td>
                             <div class="dropdown dropdown-btn">

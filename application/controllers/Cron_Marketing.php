@@ -42,6 +42,8 @@ class Cron_Marketing extends MY_Controller {
                         //Log to sms_sent
                         $data_logs = [
                             'user_id' => $sms->user_id,
+                            'sms_id' => $sms->id,
+                            'sms_type' => 'Campaign',
                             'from_number' => RINGCENTRAL_FROM,
                             'to_number' => $to_number,
                             'sms_message' => $sms->sms_text,
@@ -69,6 +71,8 @@ class Cron_Marketing extends MY_Controller {
                             //Log to sms_sent
                             $data_logs = [
                                 'user_id' => $sms->user_id,
+                                'sms_id' => $sms->id,
+                                'sms_type' => 'Campaign',
                                 'from_number' => RINGCENTRAL_FROM,
                                 'to_number' => $to_number,
                                 'sms_message' => $sms->sms_text,
@@ -97,6 +101,8 @@ class Cron_Marketing extends MY_Controller {
                             //Log to sms_sent
                             $data_logs = [
                                 'user_id' => $sms->user_id,
+                                'sms_id' => $sms->id,
+                                'sms_type' => 'Campaign',
                                 'from_number' => RINGCENTRAL_FROM,
                                 'to_number' => $to_number,
                                 'sms_message' => $sms->sms_text,
@@ -163,8 +169,8 @@ class Cron_Marketing extends MY_Controller {
                     $conditions[] = ['field' => 'email !=', 'value' => ''];
                     $contacts = $this->AcsProfile_model->getAllByCompanyId($e->company_id, $conditions); 
                     foreach( $contacts as $c ){
-                        $is_sent = $this->sendEmail($c->email, $e->email_subject, $e->email_body);   
-                        if( $is_sent == 1 ){
+                        $result = $this->sendEmail($c->email, $e->email_subject, $e->email_body, $company);   
+                        if( $result['is_sent'] == 1 ){
                             $total_sent++;
                         }  
 
@@ -174,7 +180,8 @@ class Cron_Marketing extends MY_Controller {
                             'from_email' => MAIL_FROM,
                             'subject' => $e->subject,
                             'message' => $e->email_body,
-                            'is_sent' => $is_sent
+                            'is_sent' => $result['is_sent'],
+                            'error_message' => $result['err_msg']
                         ];   
 
                         $this->EmailLogs_model->create($data_logs);  
@@ -187,8 +194,8 @@ class Cron_Marketing extends MY_Controller {
                         $contact = $this->AcsProfile_model->getAllByCompanyId($e->company_id, $condition);
                         foreach( $contact as $c ){
                             if( $c->email != '' ){
-                                $is_sent = $this->sendEmail($c->email, $e->email_subject, $e->email_body);   
-                                if( $is_sent == 1 ){
+                                $result = $this->sendEmail($c->email, $e->email_subject, $e->email_body, $company);   
+                                if( $result['is_sent'] == 1 ){
                                     $total_sent++;
                                 }                 
 
@@ -198,7 +205,8 @@ class Cron_Marketing extends MY_Controller {
                                     'from_email' => MAIL_FROM,
                                     'subject' => $e->subject,
                                     'message' => $e->email_body,
-                                    'is_sent' => $is_sent
+                                    'is_sent' => $result['is_sent'],
+                                    'error_message' => $result['err_msg']
                                 ];   
 
                                 $this->EmailLogs_model->create($data_logs);  
@@ -212,18 +220,19 @@ class Cron_Marketing extends MY_Controller {
                         $conditions[] = ['field' => 'email !=', 'value' => ''];
                         $contact = $this->AcsProfile_model->getByProfId($s->customer_id, $conditions);
                         if( $contact ){
-                            $is_sent = $this->sendEmail($contact->email, $e->email_subject, $e->email_body);   
-                            if( $is_sent == 1 ){
+                            $result = $this->sendEmail($contact->email, $e->email_subject, $e->email_body, $company);   
+                            if( $result['is_sent'] == 1 ){
                                 $total_sent++;
                             }
 
                             $data_logs = [
                                 'user_id' => $e->user_id,
-                                'to_email' => $c->email,
+                                'to_email' => $contact->email,
                                 'from_email' => MAIL_FROM,
-                                'subject' => $e->subject,
+                                'subject' => $e->email_subject,
                                 'message' => $e->email_body,
-                                'is_sent' => $is_sent
+                                'is_sent' => $result['is_sent'],
+                                'error_message' => $result['err_msg']
                             ];   
 
                             $this->EmailLogs_model->create($data_logs);                 
@@ -250,15 +259,16 @@ class Cron_Marketing extends MY_Controller {
         $username  = MAIL_USERNAME;
         $password  = MAIL_PASSWORD;
         $from      = MAIL_FROM;
-        $recipient = $customer->email;
+        $recipient = $to;
+        $err_msg   = '';
         //$recipient = 'bryann.revina03@gmail.com';
         
         $this->page_data['company']    = $company;
-        $this->page_data['email_body'] = $message;
+        $this->page_data['email_body'] = replaceSmartTags($message);
         $msg = $this->load->view('cron_marketing/email_campaign_template', $this->page_data, true);
 
         $mail = new PHPMailer;
-        //$mail->SMTPDebug = 4;
+        $mail->SMTPDebug = 4;
         $mail->isSMTP();
         $mail->Host = $server;
         $mail->SMTPAuth = true;
@@ -274,17 +284,23 @@ class Cron_Marketing extends MY_Controller {
         $mail->isHTML(true);
         $mail->Subject = $subject;
         $mail->Body    = $msg;
+
         if(!$mail->Send()){
             $is_sent = 0;
+            $err_msg = $mail->ErrorInfo;
         }else{
             $is_sent = 1;
         }
 
-        return $is_sent;
+        $return = ['is_sent' => $is_sent, 'err_msg' => $err_msg];
+
+        return $return;
     }
 
     public function sendSms($to_number, $message){        
         include_once APPPATH . 'libraries/ringcentral_lite/src/ringcentrallite.php';
+
+        $message = replaceSmartTags($message);
 
         $rc = new RingCentralLite(
             RINGCENTRAL_CLIENT_ID, //Client id

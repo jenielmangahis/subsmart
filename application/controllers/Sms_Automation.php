@@ -272,6 +272,34 @@ class Sms_Automation extends MY_Controller {
 
         echo json_encode($json_data);
     }
+
+    public function view_automation($id){
+        $this->load->model('MarketingOrderPayments_model');
+        
+        $smsAutomation = $this->SmsAutomation_model->getById($id);
+        $statusOptions = $this->SmsAutomation_model->optionStatus();
+        $customerTypeOptions = $this->SmsAutomation_model->optionCustomerTypeService();
+        $ruleNotifyAtOptions = $this->SmsAutomation_model->optionRuleNotifyAt();
+        $ruleNotifyOptions   = $this->SmsAutomation_model->optionRuleNotify();  
+
+        $this->page_data['statusOptions'] = $statusOptions;
+        $this->page_data['smsAutomation']   = $smsAutomation;
+        $this->page_data['ruleNotifyAtOptions'] = $ruleNotifyAtOptions;
+        $this->page_data['ruleNotifyOptions']   = $ruleNotifyOptions;
+        $this->page_data['customerTypeOptions'] = $customerTypeOptions;
+        $this->load->view('sms_automation/view_automation', $this->page_data);    
+    }
+
+    public function view_logs($id){
+        $this->load->model('SmsLogs_model');
+        
+        $smsAutomation = $this->SmsAutomation_model->getById($id);
+        $smsLogs       = $this->SmsLogs_model->getAllAutomationBySmsId($smsAutomation->id);
+
+        $this->page_data['smsAutomation'] = $smsAutomation;
+        $this->page_data['smsLogs'] = $smsLogs;
+        $this->load->view('sms_automation/view_logs', $this->page_data);    
+    }
 }
 
 
