@@ -413,7 +413,7 @@ $(function() {
                             if (d == file) return index;
                         }).filter(isFinite)[0];
                 
-                        $(`${modal_element} .attachments`).find(`input[name="attachments[]"][value="${ids[index]}"]`).remove();
+                        $(`${modal_element} .attachments`).parent().find(`input[name="attachments[]"][value="${ids[index]}"]`).remove();
                 
                         //remove thumbnail
                         var previewElement;

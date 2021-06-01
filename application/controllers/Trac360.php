@@ -553,6 +553,7 @@ class Trac360 extends MY_Controller
         ));
         add_footer_js(array(
             "assets/js/trac360/jobs.js",
+            "assets/js/trac360/jobs_includes/live_jobs.js",
             "assets/js/trac360/calendar.js",
             "assets/js/timesheet/calendar/main.js",
 
@@ -574,11 +575,15 @@ class Trac360 extends MY_Controller
         } else {
             $previousJobs = $this->trac360_model->getAllpreviousJobsByCompanyID($company_id);
         }
+        
+        $liveJobs = $this->trac360_model->get_all_jobs(date("Y-m-d"), date("Y-m-d"), logged('company_id'), "live");
+        
 
         $this->page_data['upcomingJobs'] = $upcomingJobs;
         $this->page_data['previousJobs'] = $previousJobs;
         $this->page_data['company_id'] = $company_id;
         $this->page_data['user_id'] = $user_id;
+        $this->page_data['liveJobs'] = $liveJobs;
 
 
         $this->load->view('trac360/jobs', $this->page_data);
@@ -588,7 +593,7 @@ class Trac360 extends MY_Controller
     {
         $date_from =date('Y-m-d', strtotime('first day of last month', strtotime($this->input->post("date_viewed"))));
         $date_to = date("Y-m-t", strtotime($this->input->post("date_viewed")));
-        $all_jobs=$this->trac360_model->get_all_jobs($date_from, $date_to);
+        $all_jobs=$this->trac360_model->get_all_jobs($date_from, $date_to, logged('company_id'));
         $scredules = array();
         foreach ($all_jobs as $job) {
             $scredules[]=array(
@@ -845,6 +850,78 @@ class Trac360 extends MY_Controller
         $data = new stdClass();
         $data->html = $html;
         $data->route_latlng = $route_latlng;
+        echo json_encode($data);
+    }
+    public function get_seach_live_jobs()
+    {
+        $job_long_id = $this->input->post("the_job_long_id");
+        $liveJobs = array();
+        $html ="";
+        if ($job_long_id=="") {
+            $liveJobs = $this->trac360_model->get_all_jobs(date("Y-m-d"), date("Y-m-d"), logged('company_id'), "live");
+        } else {
+            $liveJobs = $this->trac360_model->get_seach_live_jobs($job_long_id, logged('company_id'));
+        }
+        if (count($liveJobs) > 0) {
+            foreach ($liveJobs as $jb) {
+                $html .='<div class="job-item-panel"
+                    data-job-id="'.$jb->id.'">
+                    <div class="employee-name">
+                        <p><span class="name">'.$jb->FName .' '.$jb->LName.'</span>
+                        </p>
+                    </div>
+                    <div class="row no-margin jobs-list-item">
+                        <div class="col-md-4 job-sched text-center">
+                            <a href="#">
+                                <time style="font-size: 10px; text-align: left;" datetime="2021-02-09"
+                                    class="icon-calendar-live">
+                                    <em>'.date('D', strtotime($jb->start_date)).'</em>
+                                    <strong style="background-color: #58c04e;">'.date('M', strtotime($jb->start_date)) .'</strong>
+                                    <span>'.date('d', strtotime($jb->start_date)) .'</span>
+                                </time>
+                            </a>
+                            <div class="job-status text-center mb-2"
+                                style="background:'.$jb->event_color.'; color:#ffffff;">
+                                <b>'.strtoupper($jb->status).'</b>
+                            </div>
+                            <span class="text-center after-status">ARRIVAL TIME</span><br>
+                            <span class="job-caption text-center">
+                                '.get_format_time($jb->start_time).' - '.get_format_time_plus_hours($jb->end_time).'
+                            </span>
+                        </div>
+                        <div class="col-md-8 job-details">
+                            <a style="color: #000!important;" href="#">
+                                <h6
+                                    style="font-weight:600; margin:0;font-size: 14px;text-transform: uppercase; color:#616161;">
+                                    '.$jb->job_number . ' : ' . $jb->job_type. ' - ' . $jb->tags_name.'
+                                </h6>
+                                <b style="color:#45a73c;">
+                                    '.$jb->first_name. ' '. $jb->last_name.'
+                                </b><br>';
+                $html.='<small class="text-muted">'.$jb->mail_add .' '. $jb->cust_city.' '.$jb->cust_state.' '.$jb->cust_zip_code.'</small><br>
+                    <i> <small class="text-muted">'.$jb->job_description.'</small></i><br>';
+                
+                $amount = '0.00';
+                if ($jb->amount != "") {
+                    $amount= number_format((float)$jb->amount, 2, '.', ',') ;
+                }
+                $html.='<small>Amount : $ '.$amount.'</small>
+                    <br>';
+                
+                $click_me = "";
+                if ($jb->link!='') {
+                    $click_me ="Click here for the link";
+                }
+                $html.='<a href="'.$jb->link.'" target="">
+                        <small style="color: darkred; width:400px; overflow:hidden">'.$click_me.'</small></a>';
+                
+                $html.='</div>
+                    </div>
+                    </div>';
+            }
+        }
+        $data = new stdClass();
+        $data->html = $html;
         echo json_encode($data);
     }
 }

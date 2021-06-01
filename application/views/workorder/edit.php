@@ -394,7 +394,7 @@ border: none;
                             </div>
                             <div class="col-md-3 form-group">
                                 <label for="birthdate">Birth Date</label>
-                                <input type="date" class="form-control" name="birthdate" id="date_of_birth" value="<?php echo $workorder->birthdate; ?>"/>
+                                <input type="text" class="form-control" name="birthdate" id="date_of_birth" value="<?php echo $workorder->birthdate; ?>"/>
                             </div>
                             </div>
                         <div class="row">                   
@@ -881,7 +881,7 @@ border: none;
                             <div class="row">                        
                                 <div class="form-group col-md-4">
                                     <label for="contact_name">Schedule Date Given</label>
-                                    <input type="date" class="form-control" name="schedule_date_given" id="schedule_date_given" value="<?php echo $workorder->schedule_date_given; ?>" />
+                                    <input type="text" class="form-control" name="schedule_date_given" id="datepicker2" value="<?php echo $workorder->schedule_date_given; ?>" />
                                 </div>      
                                 <div class="form-group col-md-4">
                                     <label for="workorder_priority">Priority</label>
@@ -1168,7 +1168,7 @@ border: none;
                             <div class="row">                        
                                 <div class="form-group col-md-4">
                                     <label for="purchase_order">Purchase Order# (optional)</label>
-                                    <input type="text" class="form-control" name="purchase_order_number" id="purchase_order" value="<?php echo $workorder->purchase_order_number; ?>" /> 
+                                    <input type="text" class="form-control" name="purchase_order_number" id="purchase_order" value="<?php echo $workorder->po_number; ?>" /> 
                                 </div>                                        
                             </div>
 
@@ -1205,11 +1205,12 @@ border: none;
                             <div class="row">
                                 <div class="col-md-4">
                                     <h6>Company Representative Approval &emsp; <a data-toggle="modal" data-target=".companySignature"><i class="fa fa-pencil" aria-hidden="true"></i></a> </h6>
-                                    <img src="<?php echo $workorder->company_representative_signature; ?>">
+                                    <img src="<?php echo $workorder->company_representative_signature; ?>" class="img1">
+                                    <div id="companyrep"></div>
                                     <br>
 
                                     <label for="comp_rep_approval">Printed Name</label>
-                                    <input type="text6" class="form-control mb-3"
+                                    <input type="text" class="form-control mb-3"
                                            name="company_representative_printed_name"
                                            id="comp_rep_approval" value="<?php echo $workorder->company_representative_name; ?>" />
                                            <input type="hidden" id="saveCompanySignatureDB1aM_web" name="company_representative_approval_signature1aM_web">
@@ -1217,22 +1218,24 @@ border: none;
                                 </div>
                                 <div class="col-md-4">
                                     <h6>Primary Account Holder &emsp; <a data-toggle="modal" data-target=".primarySignature"><i class="fa fa-pencil" aria-hidden="true"></i></a></h6>
-                                    <img src="<?php echo $workorder->primary_account_holder_signature; ?>">
+                                    <img src="<?php echo $workorder->primary_account_holder_signature; ?>" class="img2">
+                                    <div id="primaryrep"></div>
                                     <br>
 
                                     <label for="comp_rep_approval">Printed Name</label>
-                                    <input type="text6" class="form-control mb-3" name="primary_account_holder_name"
+                                    <input type="text" class="form-control mb-3" name="primary_account_holder_name"
                                            id="comp_rep_approval" placeholder="" value="<?php echo $workorder->primary_account_holder_name; ?>"/>
                                            <input type="hidden" id="saveCompanySignatureDB1aM_web2" name="primary_representative_approval_signature1aM_web">
 
                                 </div>
                                 <div class="col-md-4">
                                     <h6>Secondary Account Holder &emsp; <a data-toggle="modal" data-target=".secondarySignature"><i class="fa fa-pencil" aria-hidden="true"></i></a></h6>
-                                    <img src="<?php echo $workorder->secondary_account_holder_signature; ?>">
+                                    <img src="<?php echo $workorder->secondary_account_holder_signature; ?>" class="img3">
+                                    <div id="secondaryrep"></div>
                                     <br>
 
                                     <label for="comp_rep_approval">Printed Name</label>
-                                    <input type="text6" class="form-control mb-3" name="secondery_account_holder_name"
+                                    <input type="text" class="form-control mb-3" name="secondery_account_holder_name"
                                            id="comp_rep_approval" placeholder="" value="<?php echo $workorder->secondary_account_holder_name; ?>"/>
                                            <input type="hidden" id="saveCompanySignatureDB1aM_web3" name="secondary_representative_approval_signature1aM_web">
 
@@ -1686,6 +1689,12 @@ function initialize() {
         google.maps.event.addDomListener(window, 'load', initialize);
 </script>
 
+<script>
+  $( function() {
+    $( "#datepicker2" ).datepicker();
+  } );
+</script>
+
 <script type="text/javascript">
 // $(window).on('beforeunload', function(){
 //     var c = confirm();
@@ -1888,6 +1897,13 @@ $(document).on('click touchstart','.edit_first_signature',function(){
     var first = $("#saveCompanySignatureDB1aM").val();
     // alert(first);
     $("#saveCompanySignatureDB1aM_web").val(first);
+
+    $(".img1").hide();
+
+    var input_conf = '<img src="'+first+'">'
+
+    $('#companyrep').html(input_conf);
+    
     $('.companySignature').modal('hide');
     
 });
@@ -1897,6 +1913,13 @@ $(document).on('click touchstart','.edit_second_signature',function(){
     var first = $("#savePrimaryAccountSignatureDB2aM").val();
     // alert(first);
     $("#saveCompanySignatureDB1aM_web2").val(first);
+
+    $(".img2").hide();
+
+    var input_conf = '<img src="'+first+'">'
+
+    $('#primaryrep').html(input_conf);
+
     $('.primarySignature').modal('hide');
     
 });
@@ -1906,6 +1929,13 @@ $(document).on('click touchstart','.edit_third_signature',function(){
     var first = $("#saveSecondaryAccountSignatureDB3aM").val();
     // alert(first);
     $("#saveCompanySignatureDB1aM_web3").val(first);
+
+    $(".img3").hide();
+
+    var input_conf = '<img src="'+first+'">'
+
+    $('#secondaryrep').html(input_conf);
+
     $('.secondarySignature').modal('hide');
     
 });

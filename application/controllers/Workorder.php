@@ -1731,39 +1731,61 @@ class Workorder extends MY_Controller
 
     public function savenewWorkorder(){
         $company_id     = getLoggedCompanyID();
-        $user_id        = getLoggedUserID();
+        // $user_id        = getLoggedUserID();
+        $user_id = logged('id');
 
         $wo_id          = $this->input->post('workorder_number');
 
-        $datasig            = $this->input->post('company_representative_approval_signature1aM_web');
-        $folderPath         = "./uploads/Signatures/1/";
-        $image_parts        = explode(";base64,", $datasig);
-        $image_type_aux     = explode("image/", $image_parts[0]);
-        $image_type         = $image_type_aux[1];
-        $image_base64       = base64_decode($image_parts[1]);
-        $file               = $folderPath . $wo_id . '_company' . '.'.$image_type;
-        $file_save          = '../../uploads/Signatures/1/' . $wo_id . '_company' . '.'.$image_type;
-        file_put_contents($file, $image_base64);
+        if(!empty($this->input->post('company_representative_approval_signature1aM_web')))
+        {
+            $datasig            = $this->input->post('company_representative_approval_signature1aM_web');
+            $folderPath         = "./uploads/Signatures/1/";
+            $image_parts        = explode(";base64,", $datasig);
+            $image_type_aux     = explode("image/", $image_parts[0]);
+            $image_type         = $image_type_aux[1];
+            $image_base64       = base64_decode($image_parts[1]);
+            $file               = $folderPath . $wo_id . '_company' . '.'.$image_type;
+            $file_save          = '../../uploads/Signatures/1/' . $wo_id . '_company' . '.'.$image_type;
+            file_put_contents($file, $image_base64);
+        }
+        else
+        {
+            $file_save          = NULL;
+        }
 
-        $datasig2           = $this->input->post('primary_representative_approval_signature1aM_web');
-        $folderPath2        = "./uploads/Signatures/1/";
-        $image_parts2       = explode(";base64,", $datasig2);
-        $image_type_aux2    = explode("image/", $image_parts2[0]);
-        $image_type2        = $image_type_aux2[1];
-        $image_base642      = base64_decode($image_parts2[1]);
-        $file2              = $folderPath2 . $wo_id . '_primary' . '.'.$image_type2;
-        $file2_save         = '../../uploads/Signatures/1/' . $wo_id . '_primary' . '.'.$image_type2;
-        file_put_contents($file2, $image_base642);
+        if(!empty($this->input->post('primary_representative_approval_signature1aM_web')))
+        {
+            $datasig2           = $this->input->post('primary_representative_approval_signature1aM_web');
+            $folderPath2        = "./uploads/Signatures/1/";
+            $image_parts2       = explode(";base64,", $datasig2);
+            $image_type_aux2    = explode("image/", $image_parts2[0]);
+            $image_type2        = $image_type_aux2[1];
+            $image_base642      = base64_decode($image_parts2[1]);
+            $file2              = $folderPath2 . $wo_id . '_primary' . '.'.$image_type2;
+            $file2_save         = '../../uploads/Signatures/1/' . $wo_id . '_primary' . '.'.$image_type2;
+            file_put_contents($file2, $image_base642);
+        }
+        else
+        {
+            $file2_save          = NULL;
+        }
 
-        $datasig3           = $this->input->post('secondary_representative_approval_signature1aM_web');
-        $folderPath3        = "./uploads/Signatures/1/";
-        $image_parts3       = explode(";base64,", $datasig3);
-        $image_type_aux3    = explode("image/", $image_parts3[0]);
-        $image_type3        = $image_type_aux3[1];
-        $image_base643      = base64_decode($image_parts3[1]);
-        $file3              = $folderPath3 . $wo_id . '_secondary' . '.'.$image_type3;
-        $file3_save         = '../../uploads/Signatures/1/' . $wo_id . '_secondary' . '.'.$image_type3;
-        file_put_contents($file3, $image_base643);
+        if(!empty($this->input->post('primary_representative_approval_signature1aM_web')))
+        {
+            $datasig3           = $this->input->post('secondary_representative_approval_signature1aM_web');
+            $folderPath3        = "./uploads/Signatures/1/";
+            $image_parts3       = explode(";base64,", $datasig3);
+            $image_type_aux3    = explode("image/", $image_parts3[0]);
+            $image_type3        = $image_type_aux3[1];
+            $image_base643      = base64_decode($image_parts3[1]);
+            $file3              = $folderPath3 . $wo_id . '_secondary' . '.'.$image_type3;
+            $file3_save         = '../../uploads/Signatures/1/' . $wo_id . '_secondary' . '.'.$image_type3;
+            file_put_contents($file3, $image_base643);
+        }
+        else
+        {
+            $file3_save          = NULL;
+        }
 
         $new_data = array(
             
@@ -1774,6 +1796,7 @@ class Workorder extends MY_Controller
             'phone_number'                          => $this->input->post('phone_number'),
             'mobile_number'                         => $this->input->post('mobile_number'),
             'email'                                 => $this->input->post('email'),
+            // 'job_location'                          => $this->input->post('job_location') .', ' .$this->input->post('city') .', '. $this->input->post('state') .', '. $this->input->post('zip_code') .', '. $this->input->post('cross_street'),
             'job_location'                          => $this->input->post('job_location'),
             'city'                                  => $this->input->post('city'),
             'state'                                 => $this->input->post('state'),
@@ -1782,7 +1805,7 @@ class Workorder extends MY_Controller
             'password'                              => $this->input->post('password'),
             'offer_code'                            => $this->input->post('offer_code'),//
             'tags'                                  => $this->input->post('job_tag'),
-            'schedule_date_given'                   => $this->input->post('schedule_date_given'),
+            'date_issued'                           => $this->input->post('schedule_date_given'),
             'job_type'                              => $this->input->post('job_type'),
             'job_name'                              => $this->input->post('job_name'),
             'job_description'                       => $this->input->post('job_description'),
@@ -1837,6 +1860,8 @@ class Workorder extends MY_Controller
             'date_updated'                          => date("Y-m-d H:i:s"),
             'work_order_type_id'                    => '1'
         );
+
+        // var_dump($new_data);
 
         $addQuery = $this->workorder_model->save_workorder($new_data);
         
@@ -2166,14 +2191,24 @@ class Workorder extends MY_Controller
             // 'grand_total'                           => $this->input->post('grand_total'),
 
             'employee_id'                           => $user_id,
-            'is_template'                           => '1',
+            'is_template'                           => $datas->is_template,
             'company_id'                            => $company_id,
             'date_created'                          => date("Y-m-d H:i:s"),
             'date_updated'                          => date("Y-m-d H:i:s"),
-            'work_order_type_id'                    => '1'
+            'work_order_type_id'                    => $datas->work_order_type_id,
         );
 
         $addQuery = $this->workorder_model->save_workorder($new_data);
+
+        // if($datas->is_template == 2)
+        // {
+        //     $payment_data = array(
+        //                 'payment_method' => $this->input->post('payment_method'),
+        //                 'amount' => $this->input->post('payment_amount'),
+        //             );
+        
+        //     $pay = $this->workorder_model->save_payment($payment_data);
+        // }
     }
 
     public function UpdateWorkorder(){
@@ -2203,14 +2238,15 @@ class Workorder extends MY_Controller
 
         if(!empty($this->input->post('primary_representative_approval_signature1aM_web')))
         {
+            $rand2  = rand(10,10000000);
             $datasig2           = $this->input->post('primary_representative_approval_signature1aM_web');
             $folderPath2        = "./uploads/Signatures/1/";
             $image_parts2       = explode(";base64,", $datasig2);
             $image_type_aux2    = explode("image/", $image_parts2[0]);
             $image_type2        = $image_type_aux2[1];
             $image_base642      = base64_decode($image_parts2[1]);
-            $file2              = $folderPath2 . $wo_id . '_primary' . '.'.$image_type2;
-            $file2_save         = '../../uploads/Signatures/1/' . $wo_id . '_primary' . '.'.$image_type2;
+            $file2              = $folderPath2. $rand2 . $wo_id . '_primary' . '.'.$image_type2;
+            $file2_save         = '../../uploads/Signatures/1/'. $rand2 . $wo_id . '_primary' . '.'.$image_type2;
             file_put_contents($file2, $image_base642);
         }
         else{
@@ -2220,14 +2256,15 @@ class Workorder extends MY_Controller
 
         if(!empty($this->input->post('secondary_representative_approval_signature1aM_web')))
         {
+            $rand3  = rand(10,10000000);
             $datasig3           = $this->input->post('secondary_representative_approval_signature1aM_web');
             $folderPath3        = "./uploads/Signatures/1/";
             $image_parts3       = explode(";base64,", $datasig3);
             $image_type_aux3    = explode("image/", $image_parts3[0]);
             $image_type3        = $image_type_aux3[1];
             $image_base643      = base64_decode($image_parts3[1]);
-            $file3              = $folderPath3 . $wo_id . '_secondary' . '.'.$image_type3;
-            $file3_save         = '../../uploads/Signatures/1/' . $wo_id . '_secondary' . '.'.$image_type3;
+            $file3              = $folderPath3. $rand3 . $wo_id . '_secondary' . '.'.$image_type3;
+            $file3_save         = '../../uploads/Signatures/1/'. $rand3 . $wo_id . '_secondary' . '.'.$image_type3;
             file_put_contents($file3, $image_base643);
         }
         else{
@@ -2253,7 +2290,7 @@ class Workorder extends MY_Controller
             'password'              => $this->input->post('password'),
             'offer_code'            => $this->input->post('offer_code'),//
             'tags'                  => $this->input->post('job_tag'),
-            'schedule_date_given'   => $this->input->post('schedule_date_given'),
+            'date_issued'           => $this->input->post('schedule_date_given'),
             'job_type'              => $this->input->post('job_type'),
             'job_name'              => $this->input->post('job_name'),
             'job_description'       => $this->input->post('job_description'),
@@ -2262,7 +2299,7 @@ class Workorder extends MY_Controller
             'terms_and_conditions'  => $this->input->post('terms_conditions'),
             'status'                => $this->input->post('status'),
             'priority'              => $this->input->post('priority'),
-            'purchase_order_number' => $this->input->post('purchase_order_number'),
+            'po_number'             => $this->input->post('purchase_order_number'),
             'terms_of_use'          => $this->input->post('terms_of_use'),
             'instructions'          => $this->input->post('instructions'),
             'header'                => $this->input->post('header'),
@@ -2276,8 +2313,11 @@ class Workorder extends MY_Controller
             // 'secondary_account_holder_name' => $this->input->post('secondary_account_holder_name'),
 
             'company_representative_signature'      => $file_save,
+            'company_representative_name'           => $this->input->post('company_representative_printed_name'),
             'primary_account_holder_signature'      => $file2_save,
+            'primary_account_holder_name'           => $this->input->post('primary_account_holder_name'),
             'secondary_account_holder_signature'    => $file3_save,
+            'secondary_account_holder_name'         => $this->input->post('secondery_account_holder_name'),
             
 
             //attachment
@@ -2565,6 +2605,412 @@ class Workorder extends MY_Controller
         redirect('workorder');
     }
 
+    public function UpdateWorkorderAlarm(){
+        $company_id  = getLoggedCompanyID();
+        $user_id  = getLoggedUserID();
+
+        $id = $this->input->post('wo_id_alarm');
+        $wo_id = $this->input->post('wo_id_alarm');
+
+        // var_dump($id);
+        
+        if(!empty($this->input->post('company_representative_approval_signature1aM_web')))
+        {
+            $rand1  = rand(10,10000000);
+            $datasig            = $this->input->post('company_representative_approval_signature1aM_web');
+            $folderPath         = "./uploads/Signatures/1/";
+            $image_parts        = explode(";base64,", $datasig);
+            $image_type_aux     = explode("image/", $image_parts[0]);
+            $image_type         = $image_type_aux[1];
+            $image_base64       = base64_decode($image_parts[1]);
+            $file               = $folderPath. $rand1 . $wo_id . '_alarm_company' . '.'.$image_type;
+            $file_save          = '../../uploads/Signatures/1/'. $rand1 . $wo_id . '_alarm_company' . '.'.$image_type;
+            file_put_contents($file, $image_base64);
+        }
+        else{
+            $one = $this->workorder_model->getById($id);
+            $file_save = $one->company_representative_signature;
+        }
+
+        if(!empty($this->input->post('primary_representative_approval_signature1aM_web')))
+        {
+            $rand2  = rand(10,10000000);
+            $datasig2           = $this->input->post('primary_representative_approval_signature1aM_web');
+            $folderPath2        = "./uploads/Signatures/1/";
+            $image_parts2       = explode(";base64,", $datasig2);
+            $image_type_aux2    = explode("image/", $image_parts2[0]);
+            $image_type2        = $image_type_aux2[1];
+            $image_base642      = base64_decode($image_parts2[1]);
+            $file2              = $folderPath2. $rand2 . $wo_id . '_alarm_primary' . '.'.$image_type2;
+            $file2_save         = '../../uploads/Signatures/1/'. $rand2 . $wo_id . '_alarm_primary' . '.'.$image_type2;
+            file_put_contents($file2, $image_base642);
+        }
+        else{
+            $two = $this->workorder_model->getById($id);
+            $file2_save = $two->primary_account_holder_signature;
+        }
+
+        if(!empty($this->input->post('secondary_representative_approval_signature1aM_web')))
+        {
+            $rand3  = rand(10,10000000);
+            $datasig3           = $this->input->post('secondary_representative_approval_signature1aM_web');
+            $folderPath3        = "./uploads/Signatures/1/";
+            $image_parts3       = explode(";base64,", $datasig3);
+            $image_type_aux3    = explode("image/", $image_parts3[0]);
+            $image_type3        = $image_type_aux3[1];
+            $image_base643      = base64_decode($image_parts3[1]);
+            $file3              = $folderPath3. $rand3 . $wo_id . '_alarm_secondary' . '.'.$image_type3;
+            $file3_save         = '../../uploads/Signatures/1/'. $rand3 . $wo_id . '_alarm_secondary' . '.'.$image_type3;
+            file_put_contents($file3, $image_base643);
+        }
+        else{
+            $three = $this->workorder_model->getById($id);
+            $file3_save = $three->secondary_account_holder_signature;
+        }
+
+        
+
+        $update_data = array(
+            'id'                    => $this->input->post('wo_id_alarm'),
+            // 'work_order_number'     => $this->input->post('workorder_number'),
+            // 'customer_id'           => $this->input->post('customer_id'),
+            'security_number'       => $this->input->post('security_number'),
+            'birthdate'             => $this->input->post('dob'),
+            'phone_number'          => $this->input->post('phone_number'),
+            'mobile_number'         => $this->input->post('mobile_number'),
+            'email'                 => $this->input->post('email'),
+            'job_location'          => $this->input->post('monitored_location'),
+            'city'                  => $this->input->post('city'),
+            'state'                 => $this->input->post('state'),
+            'zip_code'              => $this->input->post('zip_code'),
+            'cross_street'          => $this->input->post('cross_street'),
+            'password'              => $this->input->post('password'),
+            // 'offer_code'            => $this->input->post('offer_code'),
+            'tags'                  => $this->input->post('job_tag'),
+            'schedule_date_given'   => $this->input->post('date_issued'),
+            'job_type'              => $this->input->post('job_type'),
+            // 'job_name'              => $this->input->post('job_name'),
+            // 'job_description'       => $this->input->post('job_description'),
+            'payment_method'        => $this->input->post('payment_method'),
+            'payment_amount'        => $this->input->post('payment_amount'),
+            'terms_and_conditions'  => $this->input->post('terms_conditions'),
+            'status'                => $this->input->post('status'),
+            'priority'              => $this->input->post('priority'),
+            // 'purchase_order_number' => $this->input->post('purchase_order_number'),
+            'terms_of_use'          => $this->input->post('terms_of_use'),
+            // 'instructions'          => $this->input->post('instructions'),
+            'header'                => $this->input->post('header'),
+
+            //signature
+            // 'company_representative_signature' => $this->input->post('company_representative_signature'),
+            // 'company_representative_name' => $this->input->post('company_representative_name'),
+            // 'primary_account_holder_signature' => $this->input->post('primary_account_holder_signature'),
+            // 'primary_account_holder_name' => $this->input->post('primary_account_holder_name'),
+            // 'secondary_account_holder_signature' => $this->input->post('secondary_account_holder_signature'),
+            // 'secondary_account_holder_name' => $this->input->post('secondary_account_holder_name'),
+
+            'company_representative_signature'      => $file_save,
+            'company_representative_name'           => $this->input->post('company_representative_printed_name'),
+            'primary_account_holder_signature'      => $file2_save,
+            'primary_account_holder_name'           => $this->input->post('primary_account_holder_name'),
+            'secondary_account_holder_signature'    => $file3_save,
+            'secondary_account_holder_name'         => $this->input->post('secondery_account_holder_name'),
+            
+
+            //attachment
+            // 'attached_photo' => $this->input->post('attached_photo'),
+            // 'document_links' => $this->input->post('document_links'),
+            'attached_photo'        => 'attached_photo',
+            'document_links'        => 'document_links',
+
+            'subtotal'              => $this->input->post('subtotal'),
+            'taxes'                 => $this->input->post('taxes'), 
+            'otp_setup'             => $this->input->post('otp_setup'),
+            'monthly_monitoring'    => $this->input->post('monthly_monitoring'),
+            // 'adjustment_name'       => $this->input->post('adjustment_name'),
+            // 'adjustment_value'      => $this->input->post('adjustment_value'),
+            // 'voucher_value'         => $this->input->post('voucher_value'),
+            'grand_total'           => $this->input->post('grand_total'),
+
+            'initials'              => $this->input->post('initials'),
+            'plan_type'             => $this->input->post('plan_type'),
+            'account_type'          => $this->input->post('account_type'),
+            'panel_type'            => $this->input->post('panel_type'),
+            'panel_location'        => $this->input->post('panel_location'),
+            'panel_communication'   => $this->input->post('panel_communication'),
+
+            // 'employee_id' => $user_id,
+            // 'company_id' => $company_id,
+            // 'date_created' => date("Y-m-d H:i:s"),
+            'date_updated'          => date("Y-m-d H:i:s"),
+            // 'work_order_type_id' => '1'
+        );
+
+        $addQuery = $this->workorder_model->update_workorder_alarm($update_data);
+        
+
+        // if($this->input->post('payment_method') == 'Cash'){
+        //     $payment_data = array(
+            
+        //         'payment_method' => $this->input->post('payment_method'),
+        //         'amount' => $this->input->post('payment_amount'),
+        //         'is_collected' => '1',
+        //         'work_order_id' => $addQuery,
+        //         'date_created' => date("Y-m-d H:i:s"),
+        //         'date_updated' => date("Y-m-d H:i:s")
+        //     );
+
+        //     $pay = $this->workorder_model->save_payment($payment_data);
+        // }
+        // elseif($this->input->post('payment_method') == 'Check'){
+        //     $payment_data = array(
+            
+        //         'payment_method' => $this->input->post('payment_method'),
+        //         'amount' => $this->input->post('payment_amount'),
+        //         'check_number' => $this->input->post('check_number'),
+        //         'routing_number' => $this->input->post('routing_number'),
+        //         'work_order_id' => $addQuery,
+        //         'date_created' => date("Y-m-d H:i:s"),
+        //         'date_updated' => date("Y-m-d H:i:s")
+        //     );
+
+        //     $pay = $this->workorder_model->save_payment($payment_data);
+        // }
+        // elseif($this->input->post('payment_method') == 'Credit Card'){
+        //     $payment_data = array(
+            
+        //         'payment_method' => $this->input->post('payment_method'),
+        //         'amount' => $this->input->post('payment_amount'),
+        //         'credit_number' => $this->input->post('credit_number'),
+        //         'credit_expiry' => $this->input->post('credit_expiry'),
+        //         'credit_cvc' => $this->input->post('credit_cvc'),
+        //         'work_order_id' => $addQuery,
+        //         'date_created' => date("Y-m-d H:i:s"),
+        //         'date_updated' => date("Y-m-d H:i:s")
+        //     );
+
+        //     $pay = $this->workorder_model->save_payment($payment_data);
+        // }
+        // elseif($this->input->post('payment_method') == 'Debit Card'){
+        //     $payment_data = array(
+            
+        //         'payment_method' => $this->input->post('payment_method'),
+        //         'amount' => $this->input->post('payment_amount'),
+        //         'credit_number' => $this->input->post('debit_credit_number'),
+        //         'credit_expiry' => $this->input->post('debit_credit_expiry'),
+        //         'credit_cvc' => $this->input->post('debit_credit_cvc'),
+        //         'work_order_id' => $addQuery,
+        //         'date_created' => date("Y-m-d H:i:s"),
+        //         'date_updated' => date("Y-m-d H:i:s")
+        //     );
+
+        //     $pay = $this->workorder_model->save_payment($payment_data);
+        // }
+        // elseif($this->input->post('payment_method') == 'ACH'){
+        //     $payment_data = array(
+            
+        //         'payment_method' => $this->input->post('payment_method'),
+        //         'amount' => $this->input->post('payment_amount'),
+        //         'routing_number' => $this->input->post('ach_routing_number'),
+        //         'account_number' => $this->input->post('ach_account_number'),
+        //         'work_order_id' => $addQuery,
+        //         'date_created' => date("Y-m-d H:i:s"),
+        //         'date_updated' => date("Y-m-d H:i:s")
+        //     );
+
+        //     $pay = $this->workorder_model->save_payment($payment_data);
+        // }
+        // elseif($this->input->post('payment_method') == 'Venmo'){
+        //     $payment_data = array(
+            
+        //         'payment_method' => $this->input->post('payment_method'),
+        //         'amount' => $this->input->post('payment_amount'),
+        //         'account_credentials' => $this->input->post('account_credentials'),
+        //         'account_note' => $this->input->post('account_note'),
+        //         'confirmation' => $this->input->post('confirmation'),
+        //         'work_order_id' => $addQuery,
+        //         'date_created' => date("Y-m-d H:i:s"),
+        //         'date_updated' => date("Y-m-d H:i:s")
+        //     );
+
+        //     $pay = $this->workorder_model->save_payment($payment_data);
+        // }
+        // elseif($this->input->post('payment_method') == 'Paypal'){
+        //     $payment_data = array(
+            
+        //         'payment_method' => $this->input->post('payment_method'),
+        //         'amount' => $this->input->post('payment_amount'),
+        //         'account_credentials' => $this->input->post('paypal_account_credentials'),
+        //         'account_note' => $this->input->post('paypal_account_note'),
+        //         'confirmation' => $this->input->post('paypal_confirmation'),
+        //         'work_order_id' => $addQuery,
+        //         'date_created' => date("Y-m-d H:i:s"),
+        //         'date_updated' => date("Y-m-d H:i:s")
+        //     );
+
+        //     $pay = $this->workorder_model->save_payment($payment_data);
+        // }
+        // elseif($this->input->post('payment_method') == 'Square'){
+        //     $payment_data = array(
+            
+        //         'payment_method' => $this->input->post('payment_method'),
+        //         'amount' => $this->input->post('payment_amount'),
+        //         'account_credentials' => $this->input->post('square_account_credentials'),
+        //         'account_note' => $this->input->post('square_account_note'),
+        //         'confirmation' => $this->input->post('square_confirmation'),
+        //         'work_order_id' => $addQuery,
+        //         'date_created' => date("Y-m-d H:i:s"),
+        //         'date_updated' => date("Y-m-d H:i:s")
+        //     );
+
+        //     $pay = $this->workorder_model->save_payment($payment_data);
+        // }
+        // elseif($this->input->post('payment_method') == 'Warranty Work'){
+        //     $payment_data = array(
+            
+        //         'payment_method' => $this->input->post('payment_method'),
+        //         'amount' => $this->input->post('payment_amount'),
+        //         'account_credentials' => $this->input->post('warranty_account_credentials'),
+        //         'account_note' => $this->input->post('warranty_account_note'),
+        //         'work_order_id' => $addQuery,
+        //         'date_created' => date("Y-m-d H:i:s"),
+        //         'date_updated' => date("Y-m-d H:i:s")
+        //     );
+
+        //     $pay = $this->workorder_model->save_payment($payment_data);
+        // }
+        // elseif($this->input->post('payment_method') == 'Home Owner Financing'){
+        //     $payment_data = array(
+            
+        //         'payment_method' => $this->input->post('payment_method'),
+        //         'amount' => $this->input->post('payment_amount'),
+        //         'account_credentials' => $this->input->post('home_account_credentials'),
+        //         'account_note' => $this->input->post('home_account_note'),
+        //         'work_order_id' => $addQuery,
+        //         'date_created' => date("Y-m-d H:i:s"),
+        //         'date_updated' => date("Y-m-d H:i:s")
+        //     );
+
+        //     $pay = $this->workorder_model->save_payment($payment_data);
+        // }
+        // elseif($this->input->post('payment_method') == 'e-Transfer'){
+        //     $payment_data = array(
+            
+        //         'payment_method' => $this->input->post('payment_method'),
+        //         'amount' => $this->input->post('payment_amount'),
+        //         'account_credentials' => $this->input->post('e_account_credentials'),
+        //         'account_note' => $this->input->post('e_account_note'),
+        //         'work_order_id' => $addQuery,
+        //         'date_created' => date("Y-m-d H:i:s"),
+        //         'date_updated' => date("Y-m-d H:i:s")
+        //     );
+
+        //     $pay = $this->workorder_model->save_payment($payment_data);
+        // }
+        // elseif($this->input->post('payment_method') == 'Other Credit Card Professor'){
+        //     $payment_data = array(
+            
+        //         'payment_method' => $this->input->post('payment_method'),
+        //         'amount' => $this->input->post('payment_amount'),
+        //         'credit_number' => $this->input->post('other_credit_number'),
+        //         'credit_expiry' => $this->input->post('other_credit_expiry'),
+        //         'credit_cvc' => $this->input->post('other_credit_cvc'),
+        //         'work_order_id' => $addQuery,
+        //         'date_created' => date("Y-m-d H:i:s"),
+        //         'date_updated' => date("Y-m-d H:i:s")
+        //     );
+
+        //     $pay = $this->workorder_model->save_payment($payment_data);
+        // }
+        // elseif($this->input->post('payment_method') == 'Other Payment Type'){
+        //     $payment_data = array(
+            
+        //         'payment_method' => $this->input->post('payment_method'),
+        //         'amount' => $this->input->post('payment_amount'),
+        //         'account_credentials' => $this->input->post('other_payment_account_credentials'),
+        //         'account_note' => $this->input->post('other_payment_account_note'),
+        //         'work_order_id' => $addQuery,
+        //         'date_created' => date("Y-m-d H:i:s"),
+        //         'date_updated' => date("Y-m-d H:i:s")
+        //     );
+
+        //     $pay = $this->workorder_model->save_payment($payment_data);
+        // }
+        
+        
+        // $custom_data = array(
+            
+        //     'custom1_field' => $this->input->post('custom1_field'),
+        //     'custom1_value' => $this->input->post('custom1_value'),
+        //     'custom2_field' => $this->input->post('custom2_field'),
+        //     'custom2_value' => $this->input->post('custom2_value'),
+        //     'custom3_field' => $this->input->post('custom3_field'),
+        //     'custom3_value' => $this->input->post('custom3_value'),
+        //     'custom4_field' => $this->input->post('custom4_field'),
+        //     'custom4_value' => $this->input->post('custom4_value'),
+        //     'custom5_field' => $this->input->post('custom5_field'),
+        //     'custom5_value' => $this->input->post('custom5_value'),
+        //     'workorder_id' => $addQuery,
+        // );
+
+        // $custom_dataQuery = $this->workorder_model->save_custom_fields($custom_data);
+
+        // $delete = $this->workorder_model->delete_custom_fields($id);
+
+        // $name = $this->input->post('custom_field');
+        // $value = $this->input->post('custom_value');
+
+        // $c = 0;
+        //     foreach($name as $row2){
+        //         $dataa['name'] = $name[$c];
+        //         $dataa['value'] = $value[$c];
+        //         $dataa['work_order_id'] = $id;
+        //         $dataa['company_id'] = $company_id;
+        //         $dataa['date_added'] = date("Y-m-d H:i:s");
+        //         $addQuery2a = $this->workorder_model->additem_details($dataa);
+        //         $c++;
+        //     }
+
+
+        $delete2 = $this->workorder_model->delete_items_alarm($id);
+
+
+        // if($addQuery > 0){
+            $a = $this->input->post('items');
+            $b = $this->input->post('item_type');
+            $d = $this->input->post('quantity');
+            $f = $this->input->post('price');
+            $g = $this->input->post('discount');
+            $h = $this->input->post('tax');
+            $ii = $this->input->post('total');
+
+            $i = 0;
+            foreach($a as $row){
+                $data['item'] = $a[$i];
+                $data['item_type'] = $b[$i];
+                $data['qty'] = $d[$i];
+                $data['cost'] = $f[$i];
+                $data['discount'] = $g[$i];
+                $data['tax'] = $h[$i];
+                $data['total'] = $ii[$i];
+                $data['type'] = 'Work Order Alarm';
+                $data['type_id'] = $id;
+                // $data['status'] = '1';
+                $data['created_at'] = date("Y-m-d H:i:s");
+                $data['updated_at'] = date("Y-m-d H:i:s");
+                $addQuery2 = $this->accounting_invoices_model->additem_details($data);
+                $i++;
+            }
+
+        //    redirect('workorder');
+        // }
+        // else{
+        //     echo json_encode(0);
+        // }
+
+        redirect('workorder');
+    }
+
     public function delete_workorder()
     {
         $id = $this->input->post('id');
@@ -2777,15 +3223,58 @@ class Workorder extends MY_Controller
         // $file3_save = '../../uploads/Signatures/1/' . $wo_id . '_secondary' . '.'.$image_type3;
         // file_put_contents($file3, $image_base643);
         /////////////////////////////////////////////////////////////////////////////////////////////
+
+        $acs = array(
+            'fk_user_id'                => $user_id,
+            'customer_type'             => $this->input->post('customer_type'),
+            'business_name'             => $this->input->post('business_name'),
+            'install_type'              => $this->input->post('install_type'),
+            'last_name'                 => $this->input->post('last_name'),
+            'first_name'                => $this->input->post('first_name'),
+            'date_of_birth'             => $this->input->post('dob'),
+            's_last_name'               => $this->input->post('s_last_name'),
+            's_first_name'              => $this->input->post('s_first_name'),
+            's_mobile'                  => $this->input->post('s_mobile'),
+            's_dob'                     => $this->input->post('s_dob'),
+            's_ssn'                     => $this->input->post('s_ssn'),
+            'notification_type'         => $this->input->post('notification_type'),
+            'first_verification_name'   => $this->input->post('1st_verification_name'),
+            'first_number'              => $this->input->post('1st_number'),
+            'first_number_type'         => $this->input->post('1st_number_type'),
+            'first_relation'            => $this->input->post('1st_relation'),
+            'second_verification_name'  => $this->input->post('2nd_verification_name'),
+            'second_number'             => $this->input->post('2nd_number'),
+            'second_number_type'        => $this->input->post('2nd_number_type'),
+            'second_relation'           => $this->input->post('2nd_relation'),
+            'third_verification_name'   => $this->input->post('3rd_verification_name'),
+            'third_number'              => $this->input->post('3rd_number'),
+            'third_number_type'         => $this->input->post('3rd_number_type'),
+            'third_relation'            => $this->input->post('3rd_relation'),
+            'fourth_verification_name'  => $this->input->post('4th_verification_name'),
+            'fourth_number'             => $this->input->post('4th_number'),
+            'fourth_number_type'        => $this->input->post('4th_number_type'),
+            'fourth_relation'           => $this->input->post('4th_relation'),
+            // 'plan_type'                 => $this->input->post('plan_type'),
+            // 'account_type'              => $this->input->post('account_type'),
+            // 'panel_type'                => $this->input->post('panel_type'),
+            // 'panel_location'            => $this->input->post('panel_location'),
+            // 'panel_communication'       => $this->input->post('panel_communication'),
+            // 'job_requested_date'        => $this->input->post('date_issued'),
+            // 'initials'                  => $this->input->post('initials'),
+            // 'work_order_id'             => $addQuery
+        );
+
+        $w_acs = $this->workorder_model->save_alarm($acs);
         
 
         $new_data = array(
-            
+            'customer_id'                           => $w_acs,
             'security_number'                       => $this->input->post('security_number'),
             'mobile_number'                         => $this->input->post('mobile_number'),
             'email'                                 => $this->input->post('email'),
             // 'employee_id' => '0',
             'job_location'                          => $this->input->post('monitored_location'),
+            // 'job_location'                          => $this->input->post('monitored_location') .', ' .$this->input->post('city') .', '. $this->input->post('state') .', '. $this->input->post('zip_code') .', '. $this->input->post('cross_street'),
             'city'                                  => $this->input->post('city'),
             'state'                                 => $this->input->post('state'),
             'zip_code'                              => $this->input->post('zip_code'),
@@ -2801,7 +3290,7 @@ class Workorder extends MY_Controller
             'terms_of_use'                          => $this->input->post('terms_of_use'),
             'header'                                => $this->input->post('header'),
             'date_issued'                           => $this->input->post('date_issued'),
-            'system_type'                           => $this->input->post('plan_type'),
+            'plan_type'                             => $this->input->post('plan_type'),
 
              //signature
              'company_representative_signature'     => $file_save,
@@ -2817,6 +3306,13 @@ class Workorder extends MY_Controller
             // 'primary_account_holder_name' => 'primary_account_holder_name',
             // 'secondary_account_holder_signature' => 'secondary_account_holder_signature',
             // 'secondary_account_holder_name' => 'secondary_account_holder_name',
+
+            'account_type'              => $this->input->post('account_type'),
+            'panel_type'                => $this->input->post('panel_type'),
+            'panel_location'            => $this->input->post('panel_location'),
+            'panel_communication'       => $this->input->post('panel_communication'),
+            // 'job_requested_date'        => $this->input->post('date_issued'),
+            'initials'                  => $this->input->post('initials'),
             
 
             'subtotal'                              => $this->input->post('subtotal'),
@@ -2826,7 +3322,7 @@ class Workorder extends MY_Controller
             'grand_total'                           => $this->input->post('grand_total_text'),
 
             'employee_id'                           => $user_id,
-            'is_template'                           => '2',
+            'is_template'                           => '1',
             'company_id'                            => $company_id,
             'date_created'                          => date("Y-m-d H:i:s"),
             'date_updated'                          => date("Y-m-d H:i:s"),
@@ -2946,48 +3442,6 @@ class Workorder extends MY_Controller
 
         $enhanced_services_pers = $this->workorder_model->save_pers($pers);
 
-
-        $alarm = array(
-            
-            'customer_type'             => $this->input->post('customer_type'),
-            'business_name'             => $this->input->post('business_name'),
-            'install_type'              => $this->input->post('install_type'),
-            'last_name'                 => $this->input->post('last_name'),
-            'first_name'                => $this->input->post('first_name'),
-            'dob'                       => $this->input->post('dob'),
-            's_last_name'               => $this->input->post('s_last_name'),
-            's_first_name'              => $this->input->post('s_first_name'),
-            's_mobile'                  => $this->input->post('s_mobile'),
-            's_dob'                     => $this->input->post('s_dob'),
-            's_ssn'                     => $this->input->post('s_ssn'),
-            'notification_type'         => $this->input->post('notification_type'),
-            'first_verification_name'   => $this->input->post('1st_verification_name'),
-            'first_number'              => $this->input->post('1st_number'),
-            'first_number_type'         => $this->input->post('1st_number_type'),
-            'first_relation'            => $this->input->post('1st_relation'),
-            'second_verification_name'  => $this->input->post('2nd_verification_name'),
-            'second_number'             => $this->input->post('2nd_number'),
-            'second_number_type'        => $this->input->post('2nd_number_type'),
-            'second_relation'           => $this->input->post('2nd_relation'),
-            'third_verification_name'   => $this->input->post('3rd_verification_name'),
-            'third_number'              => $this->input->post('3rd_number'),
-            'third_number_type'         => $this->input->post('3rd_number_type'),
-            'third_relation'            => $this->input->post('3rd_relation'),
-            'fourth_verification_name'  => $this->input->post('4th_verification_name'),
-            'fourth_number'             => $this->input->post('4th_number'),
-            'fourth_number_type'        => $this->input->post('4th_number_type'),
-            'fourth_relation'           => $this->input->post('4th_relation'),
-            'plan_type'                 => $this->input->post('plan_type'),
-            'account_type'              => $this->input->post('account_type'),
-            'panel_type'                => $this->input->post('panel_type'),
-            'panel_location'            => $this->input->post('panel_location'),
-            'panel_communication'       => $this->input->post('panel_communication'),
-            'job_requested_date'        => $this->input->post('date_issued'),
-            'initials'                  => $this->input->post('initials'),
-            'work_order_id'             => $addQuery
-        );
-
-        $w_alarm = $this->workorder_model->save_alarm($alarm);
         
 
         if($this->input->post('payment_method') == 'Cash'){

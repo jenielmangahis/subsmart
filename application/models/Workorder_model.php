@@ -220,7 +220,7 @@ class Workorder_model extends MY_Model
             'terms_and_conditions'  => $terms_and_conditions,
             'status'                => $status,
             'priority'              => $priority,
-            'purchase_order_number' => $purchase_order_number,
+            'po_number'             => $po_number,
             'terms_of_use'          => $terms_of_use,
             'instructions'          => $instructions,
             'header'                => $header,
@@ -230,7 +230,68 @@ class Workorder_model extends MY_Model
             'adjustment_value'      => $adjustment_value,
             'voucher_value'         => $voucher_value,
             'grand_total'           => $grand_total,
-            'company_representative_signature'  => $company_representative_signature,
+            'company_representative_signature'      => $company_representative_signature,
+            'company_representative_name'           => $company_representative_name,
+            'primary_account_holder_signature'      => $primary_account_holder_signature,
+            'primary_account_holder_name'           => $primary_account_holder_name,
+            'secondary_account_holder_signature'    => $secondary_account_holder_signature,
+            'secondary_account_holder_name'         => $secondary_account_holder_name,
+        ));
+        return true;
+    }
+
+    public function update_workorder_alarm($data)
+    {
+        extract($data);
+        $this->db->where('id', $id);
+        $this->db->update('work_orders', array(
+            'security_number'       => $security_number,
+            'birthdate'             => $birthdate,
+            'phone_number'          => $phone_number,
+            'mobile_number'         => $mobile_number,
+            'email'                 => $email,
+            'job_location'          => $job_location,
+            'city'                  => $city,
+            'state'                 => $state,
+            'zip_code'              => $zip_code,
+            'cross_street'          => $cross_street,
+            'password'              => $password,
+            // 'offer_code'            => $offer_code,
+            'tags'                  => $tags,
+            'schedule_date_given'   => $schedule_date_given,
+            'job_type'              => $job_type,
+            // 'job_name'              => $job_name,
+            // 'job_description'       => $job_description,
+            'payment_method'        => $payment_method,
+            'payment_amount'        => $payment_amount,
+            'terms_and_conditions'  => $terms_and_conditions,
+            'status'                => $status,
+            'priority'              => $priority,
+            // 'purchase_order_number' => $purchase_order_number,
+            'terms_of_use'          => $terms_of_use,
+            // 'instructions'          => $instructions,
+            'header'                => $header,
+            'subtotal'              => $subtotal,
+            'taxes'                 => $taxes, 
+            'otp_setup'             => $otp_setup,
+            'monthly_monitoring'    => $monthly_monitoring,
+            // 'adjustment_name'       => $adjustment_name,
+            // 'adjustment_value'      => $adjustment_value,
+            // 'voucher_value'         => $voucher_value,
+            'grand_total'           => $grand_total,
+            'company_representative_signature'      => $company_representative_signature,
+            'company_representative_name'           => $company_representative_name,
+            'primary_account_holder_signature'      => $primary_account_holder_signature,
+            'primary_account_holder_name'           => $primary_account_holder_name,
+            'secondary_account_holder_signature'    => $secondary_account_holder_signature,
+            'secondary_account_holder_name'         => $secondary_account_holder_name,
+
+            'initials'              => $initials,
+            'plan_type'             => $plan_type,
+            'account_type'          => $account_type,
+            'panel_type'            => $panel_type,
+            'panel_location'        => $panel_location,
+            'panel_communication'   => $panel_communication,
         ));
         return true;
     }
@@ -239,7 +300,7 @@ class Workorder_model extends MY_Model
     {
         $this->db->select('*');
 		$this->db->from('work_orders');
-		$this->db->where('work_order_number', $wo_num);
+		$this->db->where('id', $wo_num);
 		$query = $this->db->get();
 		return $query->row();
     }
@@ -628,6 +689,18 @@ class Workorder_model extends MY_Model
         return true;
     }
 
+    public function delete_items_alarm($id)
+    {
+        $where = array(
+            'type' => 'Work Order Alarm',
+            'type_id'   => $id
+          );
+
+        $this->db->where($where);
+        $this->db->delete('item_details');
+        return true;
+    }
+
     public function getById($id)
     {
         $this->db->select('*');
@@ -792,7 +865,7 @@ class Workorder_model extends MY_Model
 
     public function save_alarm($data)
     {
-        $vendor = $this->db->insert('work_order_alarm_details', $data);
+        $vendor = $this->db->insert('acs_profile', $data);
 	    $insert_id = $this->db->insert_id();
 		return  $insert_id;
     }
