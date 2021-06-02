@@ -612,7 +612,8 @@ class Workorder extends MY_Controller
         }
         $this->page_data['headers'] = $this->workorder_model->getheaderByID();
         $this->page_data['workstatus'] = $this->Workstatus_model->getByWhere(['company_id' => $company_id]);
-        $this->page_data['workorder'] = $this->workorder_model->getById($id);
+        // $this->page_data['workorder'] = $this->workorder_model->getById($id);
+        $this->page_data['workorder'] = $this->workorder_model->getworkorder($id);
         $this->page_data['plans'] = $this->plans_model->getByWhere(['company_id' => $company_id]);
         $this->page_data['customer'] = $this->workorder_model->getcustomerCompanyId($id);
         $this->page_data['job_types'] = $this->workorder_model->getjob_types();
@@ -2668,6 +2669,58 @@ class Workorder extends MY_Controller
             $file3_save = $three->secondary_account_holder_signature;
         }
 
+        $acs = array(
+            'prof_id'                   => $this->input->post('acs_id'),
+            'customer_type'             => $this->input->post('customer_type'),
+            'business_name'             => $this->input->post('business_name'), //new
+            'install_type'              => $this->input->post('install_type'),
+            'last_name'                 => $this->input->post('last_name'),
+            'first_name'                => $this->input->post('first_name'),
+            'phone_h'                   => $this->input->post('phone_number'),
+            'phone_m'                   => $this->input->post('mobile_number'), //new
+            'date_of_birth'             => $this->input->post('dob'), //new
+            'ssn'                       => $this->input->post('security_number'), //new
+            's_last_name'               => $this->input->post('s_last_name'),
+            's_first_name'              => $this->input->post('s_first_name'),
+            's_mobile'                  => $this->input->post('s_mobile'),
+            's_dob'                     => $this->input->post('s_dob'),
+            's_ssn'                     => $this->input->post('s_ssn'),
+            'notification_type'         => $this->input->post('notification_type'),
+            'first_verification_name'   => $this->input->post('1st_verification_name'),
+            'first_number'              => $this->input->post('1st_number'),
+            'first_number_type'         => $this->input->post('1st_number_type'),
+            'first_relation'            => $this->input->post('1st_relation'),
+            'second_verification_name'  => $this->input->post('2nd_verification_name'),
+            'second_number'             => $this->input->post('2nd_number'),
+            'second_number_type'        => $this->input->post('2nd_number_type'),
+            'second_relation'           => $this->input->post('2nd_relation'),
+            'third_verification_name'   => $this->input->post('3rd_verification_name'),
+            'third_number'              => $this->input->post('3rd_number'),
+            'third_number_type'         => $this->input->post('3rd_number_type'),
+            'third_relation'            => $this->input->post('3rd_relation'),
+            'fourth_verification_name'  => $this->input->post('4th_verification_name'),
+            'fourth_number'             => $this->input->post('4th_number'),
+            'fourth_number_type'        => $this->input->post('4th_number_type'),
+            'fourth_relation'           => $this->input->post('4th_relation'),
+
+            'mail_add'                  => $this->input->post('monitored_location'), //new
+            'city'                      => $this->input->post('city'), //new
+            'state'                     => $this->input->post('state'), //new
+            'zip_code'                  => $this->input->post('zip_code'), //new
+            'cross_street'              => $this->input->post('cross_street'), //new
+            // 'plan_type'                 => $this->input->post('plan_type'),
+            // 'account_type'              => $this->input->post('account_type'),
+            // 'panel_type'                => $this->input->post('panel_type'),
+            // 'panel_location'            => $this->input->post('panel_location'),
+            // 'panel_communication'       => $this->input->post('panel_communication'),
+            // 'job_requested_date'        => $this->input->post('date_issued'),
+            // 'initials'                  => $this->input->post('initials'),
+            // 'work_order_id'             => $addQuery
+            // 'company_id'                => $company_id,
+        );
+
+        $w_acs = $this->workorder_model->update_acs_alarm($acs);
+
         
 
         $update_data = array(
@@ -2747,6 +2800,106 @@ class Workorder extends MY_Controller
         );
 
         $addQuery = $this->workorder_model->update_workorder_alarm($update_data);
+
+        $cameras = array(
+            'work_order_id'         => $this->input->post('wo_id_alarm'),
+            'honeywell_wo'          => $this->input->post('honeywell_wo'),
+            'honeywell_wi'          => $this->input->post('honeywell_wi'),
+            'honeywell_doorbellcam' => $this->input->post('honeywell_doorbellcam'),
+            'alarm_wo'              => $this->input->post('alarm_wo'),
+            'alarm_wi'              => $this->input->post('alarm_wi'),
+            'alarm_doorbellcam'     => $this->input->post('alarm_doorbellcam'),
+            'other_wo'              => $this->input->post('other_wo'),
+            'other_wi'              => $this->input->post('other_wi'),
+            'other_doorbellcam'     => $this->input->post('other_doorbellcam'),
+        );
+
+        $enhanced_services_cameras = $this->workorder_model->update_cameras($cameras);
+
+        $doorlocks = array(
+            'work_order_id'         => $this->input->post('wo_id_alarm'),
+            'deadbolt_brass'        => $this->input->post('deadbolt_brass'),
+            'deadbolt_nickel'       => $this->input->post('deadbolt_nickel'),
+            'deadbolt_bronze'       => $this->input->post('deadbolt_bronze'),
+            'handle_brass'          => $this->input->post('handle_brass'),
+            'handle_nickel'         => $this->input->post('handle_nickel'),
+            'handle_bonze'          => $this->input->post('handle_bonze'),
+        );
+
+        $enhanced_services_doorlocks = $this->workorder_model->update_doorlocks($doorlocks);
+
+        $dvr = array(
+            'work_order_id'         => $this->input->post('wo_id_alarm'),
+            'honeywell_4ch'         => $this->input->post('honeywell_4ch'),
+            'honeywell_8ch'         => $this->input->post('honeywell_8ch'),
+            'honeywell_16ch'        => $this->input->post('honeywell_16ch'),
+            'alarm_4ch'             => $this->input->post('alarm_4ch'),
+            'alarm_8ch'             => $this->input->post('alarm_8ch'),
+            'alarm_16ch'            => $this->input->post('alarm_16ch'),
+            'other_4ch'             => $this->input->post('other_4ch'),
+            'other_8ch'             => $this->input->post('other_8ch'),
+            'other_16ch'            => $this->input->post('other_16ch'),
+        );
+
+        $enhanced_services_dvr = $this->workorder_model->update_dvr($dvr);
+
+        // $automation = array(
+            
+        //     'thermostats'           => $this->input->post('thermostats'),
+        //     'lights_and_bulbs'      => $this->input->post('lights_and_bulbs'),
+        //     'work_order_id'         => $addQuery,
+        // );
+
+        // if($addQuery > 0){
+        //     $a = $this->input->post('items');
+        //     $b = $this->input->post('item_type');
+        //     $d = $this->input->post('quantity');
+        //     $f = $this->input->post('price');
+        //     $g = $this->input->post('discount');
+        //     $h = $this->input->post('tax');
+        //     $ii = $this->input->post('total');
+
+        //     $i = 0;
+        //     foreach($a as $row){
+        //         $data['item'] = $a[$i];
+        //         $data['item_type'] = $b[$i];
+        //         $data['qty'] = $d[$i];
+        //         $data['cost'] = $f[$i];
+        //         $data['discount'] = $g[$i];
+        //         $data['tax'] = $h[$i];
+        //         $data['total'] = $ii[$i];
+        //         $data['type'] = 'Work Order Alarm';
+        //         $data['type_id'] = $addQuery;
+        //         // $data['status'] = '1';
+        //         $data['created_at'] = date("Y-m-d H:i:s");
+        //         $data['updated_at'] = date("Y-m-d H:i:s");
+        //         $addQuery2 = $this->accounting_invoices_model->additem_details($data);
+        //         $i++;
+        //     }
+
+        //    redirect('workorder');
+        // }
+
+        //     $autoa = $this->input->post('thermostats');
+        //     $autob = $this->input->post('lights_and_bulbs');
+
+        //     $auto = 0;
+        //     foreach($autoa as $row2){
+        //         $dataa['thermostats'] = $autoa[$auto];
+        //         $dataa['lights_and_bulbs'] = $autob[$auto];
+        //         $dataa['work_order_id'] = $addQuery;
+        //         $enhanced_services_automation = $this->workorder_model->save_automation($dataa);
+        //         $auto++;
+        //     }
+
+
+        $pers = array(
+            'work_order_id'         => $this->input->post('wo_id_alarm'),
+            'fall_detection'        => $this->input->post('fall_detection'),
+            'w_o_fall_protection'   => $this->input->post('w_o_fall_protection'),
+        );
+
+        $enhanced_services_pers = $this->workorder_model->update_pers($pers);
         
 
         // if($this->input->post('payment_method') == 'Cash'){
@@ -3227,11 +3380,13 @@ class Workorder extends MY_Controller
         $acs = array(
             'fk_user_id'                => $user_id,
             'customer_type'             => $this->input->post('customer_type'),
-            'business_name'             => $this->input->post('business_name'),
+            'business_name'             => $this->input->post('business_name'), //new
             'install_type'              => $this->input->post('install_type'),
             'last_name'                 => $this->input->post('last_name'),
             'first_name'                => $this->input->post('first_name'),
-            'date_of_birth'             => $this->input->post('dob'),
+            'phone_m'                   => $this->input->post('mobile_number'), //new
+            'date_of_birth'             => $this->input->post('dob'), //new
+            'ssn'                       => $this->input->post('security_number'), //new
             's_last_name'               => $this->input->post('s_last_name'),
             's_first_name'              => $this->input->post('s_first_name'),
             's_mobile'                  => $this->input->post('s_mobile'),
@@ -3254,6 +3409,12 @@ class Workorder extends MY_Controller
             'fourth_number'             => $this->input->post('4th_number'),
             'fourth_number_type'        => $this->input->post('4th_number_type'),
             'fourth_relation'           => $this->input->post('4th_relation'),
+
+            'mail_add'                  => $this->input->post('monitored_location'), //new
+            'city'                      => $this->input->post('city'), //new
+            'state'                     => $this->input->post('state'), //new
+            'zip_code'                  => $this->input->post('zip_code'), //new
+            'cross_street'              => $this->input->post('cross_street'), //new
             // 'plan_type'                 => $this->input->post('plan_type'),
             // 'account_type'              => $this->input->post('account_type'),
             // 'panel_type'                => $this->input->post('panel_type'),
@@ -3262,6 +3423,7 @@ class Workorder extends MY_Controller
             // 'job_requested_date'        => $this->input->post('date_issued'),
             // 'initials'                  => $this->input->post('initials'),
             // 'work_order_id'             => $addQuery
+            'company_id'                => $company_id,
         );
 
         $w_acs = $this->workorder_model->save_alarm($acs);

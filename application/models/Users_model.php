@@ -61,6 +61,32 @@ class Users_model extends MY_Model
         return false;
     }
 
+    /**
+     * @param $data
+     * @return bool|string
+     */
+    public function admin_attempt($data)
+    {
+        $this->db->where('username', $data['username']);
+        $this->db->where('user_type', 1);
+        $query = $this->db->get($this->table);
+
+        // validate user
+        if (!empty($query) && $query->num_rows() > 0) {
+            if ($query->row()->password == hash("sha256", $data['password'])) {
+                if ($query->row()->status==='1') {
+                    return 'valid';
+                } 
+                else {
+                    return 'not_allowed';
+                }
+            } else {
+                return 'invalid_password';
+            } 
+        }
+        return false;
+    }
+
     public function getUsers()
     {
 
@@ -257,7 +283,6 @@ class Users_model extends MY_Model
             $this->session->set_userdata($array);
         } else {
             $data = [
-
                 'id' => $row->id,
                 'time' => time()."",
                 'company_id' => $row->company_id,
@@ -326,9 +351,18 @@ class Users_model extends MY_Model
         delete_cookie('login_token');
     }
 
-    
+    public function admin_logout()
+    {
 
+        // Deleting Sessions
+        $this->session->unset_userdata('admin_login');
+        $this->session->unset_userdata('admin_logged');
 
+        // Deleting Cookie
+        delete_cookie('admin_login');
+        delete_cookie('admin_logged');
+        delete_cookie('admin_login_token');
+    }
 
     public function resetPassword($data)
     {
@@ -612,6 +646,74 @@ class Users_model extends MY_Model
     {
         $qry = $this->db->query("SELECT *,timesheet_attendance.status as att_status fROM timesheet_logs Join users ON users.id=timesheet_logs.user_id JOIN timesheet_attendance ON timesheet_attendance.id = timesheet_logs.attendance_id WHERE timesheet_logs.user_id = $user_id order by timesheet_logs.id DESC Limit 1");
         return $qry->row();
+    }
+
+    public function admin_login($row, $remember = false)
+    {
+        $time = time();
+
+        // encypting userid and password with current time $time
+
+        $login_token = sha1($row->id.$row->password.$time);
+
+        if ($remember===false) {
+            $array = [
+
+                'admin_login' => true,
+                'admin_login_token' => $login_token,
+                'admin_logged' => [
+                    'id' => $row->id,
+                    'time' => $time,
+                    'role' => $row->role,
+                    'company_id' => $row->company_id
+                ]
+
+            ];
+
+            $this->session->set_userdata($array);
+        } else {
+            $data = [
+                'id' => $row->id,
+                'time' => time()."",
+                'company_id' => $row->company_id,
+                'role' => $row->role,
+                'usertimezone' => $this->session->userdata('usertimezone'),
+                'offset_zone'=> $this->session->userdata('offset_zone')
+
+            ];
+
+            $expiry = strtotime('+7 days');
+
+            set_cookie('admin_login', true, $expiry);
+
+            set_cookie('admin_logged', json_encode($data), $expiry);
+
+            set_cookie('admin_login_token', $login_token, $expiry);
+            $array = [
+
+                'admin_login' => true,
+                'admin_login_token' => $login_token,
+                'admin_logged' => [
+                    'id' => $row->id,
+                    'time' => $time,
+                    'role' => $row->role,
+                    'company_id' => $row->company_id
+                ]
+
+            ];
+
+            $this->session->set_userdata($array);
+        }
+
+
+
+        $this->update($row->id, [
+
+            'last_login' => date('Y-m-d H:m:i')
+
+        ]);
+
+        $this->activity_model->add($row->FName.' ('.$row->username.') Logged in', $row->id);
     }
 }
 

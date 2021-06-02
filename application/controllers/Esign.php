@@ -204,6 +204,17 @@ class Esign extends MY_Controller {
 		$this->load->model('User_docflies_model', 'User_docflies_model');
 		$this->page_data['users'] = $this->users_model->getUser(logged('id'));
 		$this->page_data['file_id'] = $this->input->get('id');
+
+		$queries = array();
+		parse_str($_SERVER['QUERY_STRING'], $queries);
+		$isTemplate = array_key_exists('template_id', $queries);
+		$isSelfSigning = array_key_exists('signing_id', $queries);
+
+		if ($isSelfSigning) {
+			$this->page_data['file_id'] = $queries['signing_id'];
+			$this->page_data['is_self_signing'] = true;
+		}
+
 		$this->page_data['file_url'] = "";
 		if($this->page_data['file_id'] > 0) {
 			$query = $this->db->from('user_docfile')->where('id',$this->page_data['file_id'])->get();
@@ -211,14 +222,12 @@ class Esign extends MY_Controller {
 		}
 		$this->page_data['next_step'] = ($this->input->get('next_step') == '')?0:$this->input->get('next_step');
 
-		$queries = array();
-		parse_str($_SERVER['QUERY_STRING'], $queries);
-		$isTemplate = array_key_exists('template_id', $queries);
 	
+		$recipients = [];
 		if ($isTemplate) { // :( this shouldn't be here
 			$this->db->where('template_id', $queries['template_id']);
 			$recipients = $this->db->get('user_docfile_templates_recipients')->result_array();
-		} else {
+		} else if (!$isSelfSigning) {
 			$queryRecipients = $this->db->from('user_docfile_recipients')->where('docfile_id',$this->page_data['file_id'])->get();
 			$recipients = $queryRecipients->result_array();
 		}
@@ -233,12 +242,18 @@ class Esign extends MY_Controller {
 		}, $recipients, array_keys($recipients));
 		$this->page_data['recipients'] = $recipients;
 
-		add_css('assets/css/esign/esign-builder/esign-builder.css');
+		add_css([
+			'assets/css/esign/esign-builder/esign-builder.css',
+			'assets/css/esign/docusign/docusign.css'
+		]);
+
 		add_footer_js([
 			// 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js',
 			'assets/js/esign/libs/pdf.js',
 			'assets/js/esign/libs/pdf.worker.js',
+            'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js',
 
+			'assets/js/esign/docusign/input.autoresize.js',
 			'assets/js/esign/step1.js',
 			'assets/js/esign/step2.js',
 			'assets/js/esign/step3.js',

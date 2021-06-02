@@ -370,7 +370,7 @@ $('#transactions-table').DataTable({
 
                             <div class="dropdown-menu" aria-labelledby="statusDropdownButton">
                                 <a class="dropdown-item" href="#">Print</a>
-                                <a class="dropdown-item" href="#">Copy</a>
+                                <a class="dropdown-item copy-expense" href="#">Copy</a>
                                 <a class="dropdown-item delete-transaction" href="#">Delete</a>
                                 <a class="dropdown-item" href="#">Void</a>
                             </div>
@@ -389,7 +389,7 @@ $('#transactions-table').DataTable({
                             </button>
 
                             <div class="dropdown-menu" aria-labelledby="statusDropdownButton">
-                                <a class="dropdown-item" href="#">Copy</a>
+                                <a class="dropdown-item copy-check" href="#">Copy</a>
                                 <a class="dropdown-item delete-transaction" href="#">Delete</a>
                                 <a class="dropdown-item" href="#">Void</a>
                             </div>
@@ -2212,3 +2212,257 @@ const updateTransaction = (event, el) => {
         }
     });
 }
+
+$(document).on('click', '#transactions-table .copy-expense', function(e) {
+    e.preventDefault();
+
+    var row = $(this).parent().parent().parent().parent();
+    var data = $('#transactions-table').DataTable().row(row).data();
+    var transactionType = data.type;
+    transactionType = transactionType.replaceAll(' ', '-');
+    transactionType = transactionType.toLowerCase();
+
+    $.get('/accounting/vendors/copy-expense/'+data.id, function(res) {
+        if ($('div#modal-container').length > 0) {
+            $('div#modal-container').html(res);
+        } else {
+            $('body').append(`
+                <div id="modal-container"> 
+                    ${res}
+                </div>
+            `);
+        }
+
+        $('#expenseModal').parent().attr('onsubmit', 'submitModalForm(event, this)');
+
+        rowCount = 2;
+        catDetailsInputs = $(`#expenseModal table#category-details-table tbody tr:first-child()`).html();
+        catDetailsBlank = $(`#expenseModal table#category-details-table tbody tr:last-child`).html();
+
+        if($('#expenseModal table#category-details-table tbody tr').length === 2) {
+            $(`#expenseModal table#category-details-table tbody tr:first-child()`).html(catDetailsBlank);
+            $(`#expenseModal table#category-details-table tbody tr:first-child() td:nth-child(2)`).html(1);
+        } else {
+            $(`#expenseModal table#category-details-table tbody tr:first-child()`).remove();
+        }
+
+        $(`#expenseModal select`).select2();
+
+        $('div#expenseModal select#tags').select2({
+            placeholder: 'Start typing to add a tag',
+            allowClear: true,
+            ajax: {
+                url: '/accounting/get-job-tags',
+                dataType: 'json'
+            }
+        });
+
+        $(`div#expenseModal .date`).each(function(){
+            $(this).datepicker({
+                uiLibrary: 'bootstrap'
+            });
+        });
+
+        var attachmentContId = $(`#expenseModal .attachments .dropzone`).attr('id');
+        var viewExpenseAtta = new Dropzone(`#${attachmentContId}`, {
+            url: '/accounting/attachments/attach',
+            maxFilesize: 20,
+            uploadMultiple: true,
+            // maxFiles: 1,
+            addRemoveLinks: true,
+            init: function() {
+                $.getJSON('/accounting/vendors/get-transaction-attachments/'+transactionType+'/'+data.id, function(data) {
+                    if(data.length > 0) {
+                        $.each(data, function(index, val) {
+                            $('#expenseModal').find('.attachments').parent().append(`<input type="hidden" name="attachments[]" value="${val.id}">`);
+
+                            modalAttachmentId.push(val.id);
+                            var mockFile = {
+                                name: `${val.uploaded_name}.${val.file_extension}`,
+                                size: parseInt(val.size),
+                                dataURL: base_url+"uploads/accounting/attachments/" + val.stored_name,
+                                // size: val.size / 1000000,
+                                accepted: true
+                            };
+                            viewExpenseAtta.emit("addedfile", mockFile);
+                            modalAttachedFiles.push(mockFile);
+        
+                            viewExpenseAtta.createThumbnailFromUrl(mockFile, viewExpenseAtta.options.thumbnailWidth, viewExpenseAtta.options.thumbnailHeight, viewExpenseAtta.options.thumbnailMethod, true, function(thumbnail) {
+                                viewExpenseAtta.emit('thumbnail', mockFile, thumbnail);
+                            });
+                            viewExpenseAtta.emit("complete", mockFile);
+                        });
+                    }
+                });
+
+                this.on("success", function(file, response) {
+                    var ids = JSON.parse(response)['attachment_ids'];
+                    var modal = $(`#expenseModal`);
+
+                    for(i in ids) {
+                        if(modal.find(`input[name="attachments[]"][value="${ids[i]}"]`).length === 0) {
+                            modal.find('.attachments').parent().append(`<input type="hidden" name="attachments[]" value="${ids[i]}">`);
+                        }
+
+                        modalAttachmentId.push(ids[i]);
+                    }
+                    modalAttachedFiles.push(file);
+                });
+            },
+            removedfile: function(file) {
+                var ids = modalAttachmentId;
+                var index = modalAttachedFiles.map(function(d, index) {
+                    if (d == file) return index;
+                }).filter(isFinite)[0];
+        
+                $(`#expenseModal .attachments`).parent().find(`input[name="attachments[]"][value="${ids[index]}"]`).remove();
+
+                //remove thumbnail
+                var previewElement;
+
+                if((previewElement = file.previewElement) !== null) {
+                    var remove = (previewElement.parentNode.removeChild(file.previewElement));
+        
+                    if($(`#${attachmentContId} .dz-preview`).length > 0) {
+                        $(`#${attachmentContId} .dz-message`).hide();
+                    } else {
+                        $(`#${attachmentContId} .dz-message`).show();
+                    }
+        
+                    return remove;
+                } else {
+                    return (void 0);
+                }
+            }
+        });
+
+        $('#expenseModal').modal('show');
+    });
+});
+
+$(document).on('click', '#transactions-table .copy-check', function(e) {
+    e.preventDefault();
+
+    var row = $(this).parent().parent().parent().parent();
+    var data = $('#transactions-table').DataTable().row(row).data();
+    var transactionType = data.type;
+    transactionType = transactionType.replaceAll(' ', '-');
+    transactionType = transactionType.toLowerCase();
+
+    $.get('/accounting/vendors/copy-check/'+data.id, function(res) {
+        if ($('div#modal-container').length > 0) {
+            $('div#modal-container').html(res);
+        } else {
+            $('body').append(`
+                <div id="modal-container"> 
+                    ${res}
+                </div>
+            `);
+        }
+
+        $('#checkModal').parent().attr('onsubmit', 'submitModalForm(event, this)');
+
+        rowCount = 2;
+        catDetailsInputs = $(`#checkModal table#category-details-table tbody tr:first-child()`).html();
+        catDetailsBlank = $(`#checkModal table#category-details-table tbody tr:last-child`).html();
+
+        if($('#checkModal table#category-details-table tbody tr').length === 2) {
+            $(`#checkModal table#category-details-table tbody tr:first-child()`).html(catDetailsBlank);
+            $(`#checkModal table#category-details-table tbody tr:first-child() td:nth-child(2)`).html(1);
+        } else {
+            $(`#checkModal table#category-details-table tbody tr:first-child()`).remove();
+        }
+
+        $(`#checkModal select`).select2();
+
+        $('div#checkModal select#tags').select2({
+            placeholder: 'Start typing to add a tag',
+            allowClear: true,
+            ajax: {
+                url: '/accounting/get-job-tags',
+                dataType: 'json'
+            }
+        });
+
+        $(`div#checkModal .date`).each(function(){
+            $(this).datepicker({
+                uiLibrary: 'bootstrap'
+            });
+        });
+
+        var attachmentContId = $(`#checkModal .attachments .dropzone`).attr('id');
+        var viewcheckAtta = new Dropzone(`#${attachmentContId}`, {
+            url: '/accounting/attachments/attach',
+            maxFilesize: 20,
+            uploadMultiple: true,
+            // maxFiles: 1,
+            addRemoveLinks: true,
+            init: function() {
+                $.getJSON('/accounting/vendors/get-transaction-attachments/'+transactionType+'/'+data.id, function(data) {
+                    if(data.length > 0) {
+                        $.each(data, function(index, val) {
+                            $('#checkModal').find('.attachments').parent().append(`<input type="hidden" name="attachments[]" value="${val.id}">`);
+
+                            modalAttachmentId.push(val.id);
+                            var mockFile = {
+                                name: `${val.uploaded_name}.${val.file_extension}`,
+                                size: parseInt(val.size),
+                                dataURL: base_url+"uploads/accounting/attachments/" + val.stored_name,
+                                // size: val.size / 1000000,
+                                accepted: true
+                            };
+                            viewcheckAtta.emit("addedfile", mockFile);
+                            modalAttachedFiles.push(mockFile);
+        
+                            viewcheckAtta.createThumbnailFromUrl(mockFile, viewcheckAtta.options.thumbnailWidth, viewcheckAtta.options.thumbnailHeight, viewcheckAtta.options.thumbnailMethod, true, function(thumbnail) {
+                                viewcheckAtta.emit('thumbnail', mockFile, thumbnail);
+                            });
+                            viewcheckAtta.emit("complete", mockFile);
+                        });
+                    }
+                });
+
+                this.on("success", function(file, response) {
+                    var ids = JSON.parse(response)['attachment_ids'];
+                    var modal = $(`#checkModal`);
+
+                    for(i in ids) {
+                        if(modal.find(`input[name="attachments[]"][value="${ids[i]}"]`).length === 0) {
+                            modal.find('.attachments').parent().append(`<input type="hidden" name="attachments[]" value="${ids[i]}">`);
+                        }
+
+                        modalAttachmentId.push(ids[i]);
+                    }
+                    modalAttachedFiles.push(file);
+                });
+            },
+            removedfile: function(file) {
+                var ids = modalAttachmentId;
+                var index = modalAttachedFiles.map(function(d, index) {
+                    if (d == file) return index;
+                }).filter(isFinite)[0];
+        
+                $(`#checkModal .attachments`).parent().find(`input[name="attachments[]"][value="${ids[index]}"]`).remove();
+
+                //remove thumbnail
+                var previewElement;
+
+                if((previewElement = file.previewElement) !== null) {
+                    var remove = (previewElement.parentNode.removeChild(file.previewElement));
+        
+                    if($(`#${attachmentContId} .dz-preview`).length > 0) {
+                        $(`#${attachmentContId} .dz-message`).hide();
+                    } else {
+                        $(`#${attachmentContId} .dz-message`).show();
+                    }
+        
+                    return remove;
+                } else {
+                    return (void 0);
+                }
+            }
+        });
+
+        $('#checkModal').modal('show');
+    });
+});

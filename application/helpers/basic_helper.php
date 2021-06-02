@@ -3413,3 +3413,51 @@ function replaceSmartTags($message){
 
     return $message;
 }
+
+/**
+ * Function to check if the user is loggedIn
+ *
+ * @return boolean
+ *
+
+ */
+
+if (!function_exists('is_admin_logged')) {
+
+
+    function is_admin_logged()
+
+    {
+
+        $CI = &get_instance();
+
+
+        $login_token_match = false;
+
+
+        $isLogged = !empty($CI->session->userdata('admin_login')) && !empty($CI->session->userdata('admin_logged')) ? (object)$CI->session->userdata('admin_logged') : false;
+
+        $_token = $isLogged && !empty($CI->session->userdata('admin_login_token')) ? $CI->session->userdata('login_token') : false;
+
+
+        if (!$isLogged) {
+
+            $isLogged = get_cookie('admin_login') && !empty(get_cookie('admin_logged')) ? json_decode(get_cookie('admin_logged')) : false;
+
+            $_token = $isLogged && !empty(get_cookie('admin_login_token')) ? get_cookie('admin_login_token') : false;
+        }
+
+
+        if ($isLogged) {
+
+            $user = $CI->users_model->getById($CI->db->escape((int)$isLogged->id));
+
+            // verify login_token
+
+            $login_token_match = (sha1($user->id . $user->password . $isLogged->time) == $_token);
+        }
+
+
+        return $isLogged && $login_token_match;
+    }
+}

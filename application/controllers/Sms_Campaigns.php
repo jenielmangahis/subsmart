@@ -1064,6 +1064,17 @@ class Sms_Campaigns extends MY_Controller {
         $obj_pdf->writeHTML($content, true, false, true, false, '');
         $obj_pdf->Output($title, 'I');
     }
+
+    public function view_logs($id){
+        $this->load->model('SmsLogs_model');
+        
+        $smsBlast = $this->SmsBlast_model->getById($id);
+        $smsLogs  = $this->SmsLogs_model->getAllCampaignBySmsId($smsBlast->id);
+
+        $this->page_data['smsBlast'] = $smsBlast;
+        $this->page_data['smsLogs']  = $smsLogs;
+        $this->load->view('sms_campaigns/view_logs', $this->page_data);    
+    }
 }
 
 

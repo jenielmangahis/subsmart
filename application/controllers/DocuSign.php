@@ -1388,6 +1388,28 @@ SQL;
         header('content-type: application/json');
         echo json_encode(['data' => $record, 'is_created' => $isCreated]);
     }
+
+    public function apiUserDetails()
+    {
+        $userId = logged('id');
+        $this->db->where('user_id', $userId);
+        $signature = $this->db->get('user_signatures')->row();
+
+        $this->db->where('id', $userId);
+        $details = $this->db->get('users')->row();
+
+        $this->db->where('id', $details->company_id);
+        $company = $this->db->get('business_profile')->row();
+
+        header('content-type: application/json');
+        echo json_encode([
+            'data' => [
+                'signature' => $signature,
+                'details' => $details,
+                'company' => $company,
+            ],
+        ]);
+    }
 }
 
 // https://stackoverflow.com/a/50373095/8062659

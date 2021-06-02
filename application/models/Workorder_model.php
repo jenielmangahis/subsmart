@@ -296,6 +296,123 @@ class Workorder_model extends MY_Model
         return true;
     }
 
+    public function update_acs_alarm($data)
+    {
+        extract($data);
+        $this->db->where('prof_id', $prof_id);
+        $this->db->update('acs_profile', array(
+            // 'prof_id'                   => $this->input->post('acs_id'),
+            'customer_type'             => $customer_type,
+            'business_name'             => $business_name, //new
+            'install_type'              => $install_type,
+            'last_name'                 => $last_name,
+            'first_name'                => $first_name,
+            'phone_m'                   => $phone_m, //new
+            'date_of_birth'             => $date_of_birth, //new
+            'ssn'                       => $ssn, //new
+            's_last_name'               => $s_last_name,
+            's_first_name'              => $s_first_name,
+            's_mobile'                  => $s_mobile,
+            's_dob'                     => $s_dob,
+            's_ssn'                     => $s_ssn,
+            'notification_type'         => $notification_type,
+            'first_verification_name'   => $first_verification_name,
+            'first_number'              => $first_number,
+            'first_number_type'         => $first_number_type,
+            'first_relation'            => $first_relation,
+            'second_verification_name'  => $second_verification_name,
+            'second_number'             => $second_number,
+            'second_number_type'        => $second_number_type,
+            'second_relation'           => $second_relation,
+            'third_verification_name'   => $third_verification_name,
+            'third_number'              => $third_number,
+            'third_number_type'         => $third_number_type,
+            'third_relation'            => $third_relation,
+            'fourth_verification_name'  => $fourth_verification_name,
+            'fourth_number'             => $fourth_number,
+            'fourth_number_type'        => $fourth_number_type,
+            'fourth_relation'           => $fourth_relation,
+
+            'mail_add'                  => $mail_add, //new
+            'city'                      => $city, //new
+            'state'                     => $state, //new
+            'zip_code'                  => $zip_code, //new
+            'cross_street'              => $cross_street, //new
+            // 'plan_type'                 => $this->input->post('plan_type'),
+            // 'account_type'              => $this->input->post('account_type'),
+            // 'panel_type'                => $this->input->post('panel_type'),
+            // 'panel_location'            => $this->input->post('panel_location'),
+            // 'panel_communication'       => $this->input->post('panel_communication'),
+            // 'job_requested_date'        => $this->input->post('date_issued'),
+            // 'initials'                  => $this->input->post('initials'),
+            // 'work_order_id'             => $addQuery
+            // 'company_id'                => $company_id,
+        ));
+        return true;
+    }
+
+    public function update_cameras($data)
+    {
+        extract($data);
+        $this->db->where('work_order_id', $work_order_id);
+        $this->db->update('enhanced_services_cameras', array(
+            'honeywell_wo'          => $honeywell_wo,
+            'honeywell_wi'          => $honeywell_wi,
+            'honeywell_doorbellcam' => $honeywell_doorbellcam,
+            'alarm_wo'              => $alarm_wo,
+            'alarm_wi'              => $alarm_wi,
+            'alarm_doorbellcam'     => $alarm_doorbellcam,
+            'other_wo'              => $other_wo,
+            'other_wi'              => $other_wi,
+            'other_doorbellcam'     => $other_doorbellcam,
+        ));
+        return true;
+    }
+
+    public function update_doorlocks($data)
+    {
+        extract($data);
+        $this->db->where('work_order_id', $work_order_id);
+        $this->db->update('enhanced_services_doorlocks', array(
+            'deadbolt_brass'        => $deadbolt_brass,
+            'deadbolt_nickel'       => $deadbolt_nickel,
+            'deadbolt_bronze'       => $deadbolt_bronze,
+            'handle_brass'          => $handle_brass,
+            'handle_nickel'         => $handle_nickel,
+            'handle_bonze'          => $handle_bonze,
+        ));
+        return true;
+    }
+
+    public function update_dvr($data)
+    {
+        extract($data);
+        $this->db->where('work_order_id', $work_order_id);
+        $this->db->update('enhanced_services_dvr', array(
+            'honeywell_4ch'         => $honeywell_4ch,
+            'honeywell_8ch'         => $honeywell_8ch,
+            'honeywell_16ch'        => $honeywell_16ch,
+            'alarm_4ch'             => $alarm_4ch,
+            'alarm_8ch'             => $alarm_8ch,
+            'alarm_16ch'            => $alarm_16ch,
+            'other_4ch'             => $other_4ch,
+            'other_8ch'             => $other_8ch,
+            'other_16ch'            => $other_16ch,
+        ));
+        return true;
+    }
+
+    public function update_pers($data)
+    {
+        extract($data);
+        $this->db->where('work_order_id', $work_order_id);
+        $this->db->update('enhanced_services_pers', array(
+            'fall_detection'        => $fall_detection,
+            'w_o_fall_protection'   => $w_o_fall_protection,
+        ));
+        return true;
+    }
+
     public function getDataByWO($wo_num)
     {
         $this->db->select('*');
@@ -600,7 +717,7 @@ class Workorder_model extends MY_Model
 		// $this->db->from('workorders.* , acs_profile.first_name,  acs_profile.last_name, acs_profile.middle_name, acs_profile.prof_id');
         $this->db->select('*');
         $this->db->from('work_orders');
-        // $this->db->join('acs_profile', 'work_orders.customer_id  = acs_profile.prof_id');
+        $this->db->join('acs_profile', 'work_orders.customer_id  = acs_profile.prof_id');
         // $this->db->join('work_order_alarm_details', 'work_orders.id  = work_order_alarm_details.work_order_id');
 		$this->db->where($where);
         $this->db->order_by('id', 'DESC');
@@ -706,6 +823,23 @@ class Workorder_model extends MY_Model
         $this->db->select('*');
 		$this->db->from('work_orders');
 		$this->db->where('id', $id);
+        $query = $this->db->get();
+        return $query->row();
+    }
+
+    public function getworkorder($id)
+    {
+        $company_id = logged('company_id');
+        
+        $where = array(
+            // 'work_orders.company_id' => $company_id,
+            'work_orders.id'   => $id
+          );
+
+        $this->db->select('*');
+        $this->db->from('work_orders');
+        $this->db->join('acs_profile', 'work_orders.customer_id  = acs_profile.prof_id');
+		$this->db->where($where);
         $query = $this->db->get();
         return $query->row();
     }
