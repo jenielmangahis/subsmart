@@ -213,7 +213,7 @@ class Customer extends MY_Controller
                     'card_number' => $input['card_number'],
                     'exp_month' => $input['exp_month'],
                     'exp_year' => $input['exp_year'],
-                    'card_cvc' => $input['card_cvc'],
+                    'card_cvc' => $input['cvc'],
                     'address' => $customer->mail_add,
                     'zip' => $customer->zip_code
                 ];
@@ -252,15 +252,17 @@ class Customer extends MY_Controller
 
         $is_success = false;
         $msg = '';
-
-        $exp_date = $data['exp_month'] . date("y",strtotime($data['exp_year']));
+        if( $data['exp_month'] < 10 ){
+            $data['exp_month'] = 0 . $data['exp_month'];
+        }
+        $year = date("d-m-" . $data['exp_year']);
+        $exp_date = $data['exp_month'] . date("y",strtotime($year));
         $converge = new \wwwroth\Converge\Converge([
             'merchant_id' => CONVERGE_MERCHANTID,
             'user_id' => CONVERGE_MERCHANTUSERID,
             'pin' => CONVERGE_MERCHANTPIN,
             'demo' => false,
         ]);
-        
         $createSale = $converge->request('ccsale', [
             'ssl_card_number' => $data['card_number'],
             'ssl_exp_date' => $exp_date,

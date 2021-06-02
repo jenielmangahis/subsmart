@@ -288,6 +288,36 @@
             $obj_pdf->writeHTML($content, true, false, true, false, '');
             $obj_pdf->Output($title, 'I');
         }
+
+        public function qr_generator(){
+            require_once APPPATH . 'libraries/qr_generator/QrCode.php';
+
+            $qrApi = new \Qr\QrCode();
+            $maxSize   = $qrApi->getQrFormatOptions();
+            $optionQrFormat    = $qrApi->getQrFormatOptions();
+            $optionNetworkType = $qrApi->getWifiNetworkTypeOptions();
+
+            $target_dir = "./uploads/jobs_qr/";
+        
+            if(!file_exists($target_dir)) {
+                mkdir($target_dir, 0777, true);
+            }
+
+            $directory_name = WWW_ROOT . '/upload/qr/'; 
+            $qr_data  = 'https://localhost/nguyen/nsmart_v2/index.php/debug/qr_generator';
+            $ecc      = 'M';                       
+            $size     = 3;
+            $filename = 'qr'.md5($qr_data.'|'.$ecc.'|'.$size).'.png';   
+            $qrApi->setFileName($target_dir . $filename);
+            $qrApi->setErrorCorrectionLevel($ecc);
+            $qrApi->setMatrixPointSize($size);
+            $qrApi->setQrData($qr_data);               
+            $qr_data = $qrApi->generateQR();
+
+            echo "<pre>";
+            print_r($qr_data);
+            exit;
+        }
     }
     /* End of file Debug.php */
 
