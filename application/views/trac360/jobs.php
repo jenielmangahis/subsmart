@@ -338,6 +338,7 @@ function get_differenct_of_dates($date_start, $date_end)
     </div>
 </div>
 <?php include viewPath('trac360/calendar'); ?>
+<?php include viewPath('trac360/jobs_includes/live-jobs-modal'); ?>
 
 <!--</div>-->
 <!-- end container-fluid -->
@@ -363,6 +364,7 @@ function get_differenct_of_dates($date_start, $date_end)
         });
 
         $("#jobs-map").show();
+        initLiveMap();
     }
 </script>
 <script

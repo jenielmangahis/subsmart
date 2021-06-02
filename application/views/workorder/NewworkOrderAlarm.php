@@ -446,8 +446,8 @@ border: none;
 										</div>
 										<div class="col-md-4 form-group">
                                         <div class="select-wrap">
-											<label for="">Customer Type</label><br/>
-											<select name="customer_type"
+											<label for="">Customer Type</label> <span class="form-required">*</span><br/>
+											<select name="customer_type" required
 													class="form-control custom-select m_select"
 													id="customer_type">
 												<?php foreach (get_config_item('customer_types') as $key => $customer_type) { ?>
@@ -466,7 +466,7 @@ border: none;
 
 										<div class="col-md-4 form-group">
                                         <div class="select-wrap">
-											<label for="customer_install_type">Install Type</label><br/>
+											<label for="customer_install_type">Install Type</label> <span class="form-required">*</span><br/>
 											<select name="install_type"
 													class="form-control custom-select m_select"
 													id="customer_install_type">
@@ -482,7 +482,7 @@ border: none;
 											 style="display: <?php echo (!empty($workorder->customer['install_type']) && $workorder->customer['install_type'] == 'Takeover') ? 'block' : 'none' ?>">
 											<label for="customer_company_name" class="label-element">
 												Company Name </label>
-											<input type="text" class="form-control input-element" name="customer[company_name]"
+											<input type="text" class="form-control input-element" required name="customer[company_name]"
 												   id="customer_company_name"
 												   value="<?php echo (!empty($workorder->customer['company_name'])) ? $workorder->customer['company_name'] : '' ?>" 
 												   placeholder="Enter Company Name" <?php echo (!empty($workorder->customer['install_type']) && $workorder->customer['install_type'] == 'Takeover') ? "" : 'disabled' ?> />
@@ -491,27 +491,27 @@ border: none;
 
 									<div class="row">
 										<div class="col-md-3 form-group">
-											<label for="last_name" class="label-element">Last Name</label>
+											<label for="last_name" class="label-element">Last Name</label> <span class="form-required">*</span>
 											<input type="text" class="form-control input-element" name="last_name"
 												   id="last_name"
 												   required placeholder="Enter Last Name"
 												   value="<?php echo (!empty($workorder->customer['last_name'])) ? $workorder->customer['last_name'] : '' ?>"/>
 										</div>
 										<div class="col-md-3 form-group">
-											<label for="first_name" class="label-element">First Name</label>
+											<label for="first_name" class="label-element">First Name</label> <span class="form-required">*</span>
 											<input type="text" class="form-control input-element" name="first_name"
 												   id="first_name" required
 												   required placeholder="Enter First Name" />
 										</div>
 										<div class="col-md-2 form-group">
-											<label for="contact_mobile" class="label-element">Mobile</label>
+											<label for="contact_mobile" class="label-element">Mobile</label> <span class="form-required">*</span>
 											<input type="text" class="form-control input-element" name="mobile_number" required
 												   id="contact_mobile" />
 
 										</div>
 
 										<div class="col-md-2 form-group">
-											<label for="contact_dob" class="label-element">DOB</label>
+											<label for="contact_dob" class="label-element">DOB</label> <span class="form-required">*</span>
 											<input type="text" class="form-control input-element" name="dob"
 												   id="customer_contact_dob" required
 												   value="<?php echo (!empty($workorder->customer['contact_dob'])) ? date('m/d/Y', strtotime($workorder->customer['contact_dob'])) : '' ?>"
@@ -519,11 +519,11 @@ border: none;
 										</div>
 
 										<div class="col-md-2 form-group">
-											<label for="contact_ssn" class="label-element">SSN</label>
+											<label for="contact_ssn" class="label-element">SSN</label> <span class="form-required">*</span>
 											<input type="text" class="form-control input-element" name="security_number"
 												   id="contact_ssn"
 												   value="<?php echo (!empty($workorder->customer['contact_ssn'])) ? $workorder->customer['contact_ssn'] : '' ?>"
-												   
+                                                   required
 												   placeholder="Enter SSN"/>
 										</div>
 									</div>
@@ -533,20 +533,20 @@ border: none;
 											<span class="help help-sm">Spouse</span>
 										</div>
 										<div class="col-md-3 form-group">
-											<label for="spouse_last_name" class="label-element">Last Name</label>
+											<label for="spouse_last_name" class="label-element">Last Name</label><small class="help help-sm">(optional)</small>
 											<input type="text" class="form-control input-element" name="s_last_name"
 												   id="spouse_last_name"
 												     placeholder="Enter Spouse Last Name" />
 										</div>
 										<div class="col-md-3 form-group">
-											<label for="spouse_first_name" class="label-element">First Name</label>
+											<label for="spouse_first_name" class="label-element">First Name</label><small class="help help-sm">(optional)</small>
 											<input type="text" class="form-control input-element" name="s_first_name"
 												   id="spouse_first_name"
 												     placeholder="Enter Spouse First Name"
 												   value="<?php echo (!empty($workorder->customer['spouse_first_name'])) ? $workorder->customer['spouse_first_name'] : '' ?>"/>
 										</div>
 										<div class="col-md-2 form-group">
-											<label for="spouse_contact_mobile" class="label-element">Mobile</label>
+											<label for="spouse_contact_mobile" class="label-element">Mobile</label><small class="help help-sm">(optional)</small>
 											<input type="text" class="form-control input-element" name="s_mobile"
 												   id="spouse_contact_mobile"
 												   value="<?php echo (!empty($workorder->customer['spouse_contact_mobile'])) ? $workorder->customer['spouse_contact_mobile'] : '' ?>"
@@ -555,7 +555,7 @@ border: none;
 										</div>
 
 										<div class="col-md-2 form-group">
-											<label for="contact_dob" class="label-element">DOB</label>
+											<label for="contact_dob" class="label-element">DOB</label><small class="help help-sm">(optional)</small>
 											<input type="text" class="form-control input-element" name="s_dob"
 												   id="customer_spouse_contact_dob"
 												   value="<?php echo (!empty($workorder->customer['spouse_contact_dob'])) ? date('m/d/Y', strtotime($workorder->customer['spouse_contact_dob'])) : '' ?>"
@@ -563,7 +563,7 @@ border: none;
 										</div>
 
 										<div class="col-md-2 form-group">
-											<label for="spouse_contact_ssn" class="label-element">SSN</label>
+											<label for="spouse_contact_ssn" class="label-element">SSN</label><small class="help help-sm">(optional)</small>
 											<input type="text" class="form-control input-element" name="s_ssn"
 												   id="spouse_contact_ssn"
 												   value="<?php echo (!empty($workorder->customer['spouse_contact_ssn'])) ? $workorder->customer['spouse_contact_ssn'] : '' ?>"
@@ -573,48 +573,47 @@ border: none;
 
 									<div class="row">
 										<div class="col-md-3 form-group">
-											<label for="monitored_location" class="label-element">Monitored Location</label>
+											<label for="monitored_location" class="label-element">Monitored Location</label> <span class="form-required">*</span>
 											<input type="text" class="form-control input-element" name="monitored_location"
 												   id="ship-address"
 												   value="<?php echo (!empty($workorder->customer['monitored_location'])) ? $workorder->customer['monitored_location'] : '' ?>"
 												   required placeholder="Monitored Location"/>
 										</div>
 										<div class="col-md-3 form-group">
-											<label for="city" class="label-element">City</label> 
-                                                   <input type="text" class="form-control input-element" name="city" id="locality" placeholder="Enter City" />
+											<label for="city" class="label-element">City</label>  <span class="form-required">*</span>
+                                                   <input type="text" class="form-control input-element" name="city" id="locality" placeholder="Enter City"  required/>
 										</div>
 										<div class="col-md-2 form-group">
-											<label for="state" class="label-element">State</label>
-											<input type="text" class="form-control input-element" name="state"
+											<label for="state" class="label-element">State</label> <span class="form-required">*</span>
+											<input type="text" class="form-control input-element" name="state" required
 												   id="state"  placeholder="Enter State"/>
 
 										</div>
 
 										<div class="col-md-2 form-group">
-											<label for="zip" class="label-element">ZIP</label> 
-                                                   <input type="text" id="postcode" name="zip_code" class="form-control input-element"  placeholder="Enter Zip"/>
+											<label for="zip" class="label-element">ZIP</label>  <span class="form-required">*</span>
+                                                   <input type="text" id="postcode" name="zip_code" class="form-control input-element"  required placeholder="Enter Zip"/>
 										</div>
 
 										<div class="col-md-2 form-group">
-											<label for="cross_street" class="label-element">Cross Street</label>
+											<label for="cross_street" class="label-element">Cross Street</label><small class="help help-sm">(optional)</small>
 											<input type="text" class="form-control input-element" name="cross_street"
 												   id="cross_street"
 												   value="<?php echo (!empty($workorder->customer['cross_street'])) ? $workorder->customer['cross_street'] : '' ?>"
-												   required
 												   placeholder="Cross Street"/>
 										</div>
 									</div>
 
 									<div class="row">
 										<div class="col-md-3 form-group">
-											<label for="email" class="label-element">Email</label>
+											<label for="email" class="label-element">Email</label> <span class="form-required">*</span>
 											<input type="email" class="form-control input-element" name="email"
 												   id="email" 
 												   value="<?php echo (!empty($workorder->customer['email'])) ? $workorder->customer['email'] : '' ?>"
 												   required placeholder="Enter Email"/>
 										</div>
 										<div class="col-md-2 form-group">
-											<label for="password" class="label-element">Password</label>
+											<label for="password" class="label-element">Password</label> <span class="form-required">*</span>
 											<input type="text" class="form-control input-element" name="password" required
 												   id="password" >
 										</div>
@@ -665,7 +664,7 @@ border: none;
                                 </div>
                                 <div class="col-md-4 form-group">
                                     <!-- <div class=""> -->
-                                        <label for="1st_call_verification_name" class="label-element">1st Call Verification Name</label>
+                                        <label for="1st_call_verification_name" class="label-element">1st Call Verification Name</label><small class="help help-sm">(optional)</small>
                                         <input type="text" class="form-control input-element"
                                                name="1st_verification_name"
                                                value="<?php echo (!empty($workorder->emergency_call_list['1st_call_verification_name'])) ? $workorder->emergency_call_list['1st_call_verification_name'] : '' ?>"
@@ -675,7 +674,7 @@ border: none;
                                 </div>
                                 <div class="col-md-4">
                                     <div class="form-group">
-                                        <label for="contact_phone" class="mobile_view">Phone Number</label>
+                                        <label for="contact_phone" class="mobile_view">Phone Number</label><small class="help help-sm">(optional)</small>
                                         <div class="input-group phone-input">
                                             <span class="input-group-btn">
                                                 <button type="button" class="btn btn-default dropdown-toggle"
@@ -705,7 +704,7 @@ border: none;
                                 </div>
                                 <div class="col-md-4 form-group">
                                     <!-- <div class=""> -->
-                                        <label for="emergency_call_relation" class="label-element">Relation</label>
+                                        <label for="emergency_call_relation" class="label-element">Relation</label><small class="help help-sm">(optional)</small>
                                         <input type="text" class="form-control input-element" name="1st_relation"
                                                id="emergency_call_relation"
                                                value="<?php echo (!empty($workorder->emergency_call_list['relation'][0])) ? $workorder->emergency_call_list['relation'][0] : '' ?>"
@@ -725,7 +724,7 @@ border: none;
 
                                 <div class="col-md-4 form-group">
                                     <!-- <div class="form-group"> -->
-                                        <label for="2nd_call_verification_name" class="label-element">2nd Call Verification Name</label>
+                                        <label for="2nd_call_verification_name" class="label-element">2nd Call Verification Name</label><small class="help help-sm">(optional)</small>
                                         <input type="text" class="form-control input-element"
                                                name="2nd_verification_name"
                                                id="2nd_call_verification_name"
@@ -735,7 +734,7 @@ border: none;
                                 </div>
                                 <div class="col-md-4">
                                     <div class="form-group">
-                                        <label for="contact_phone" class="mobile_view">Phone Number</label>
+                                        <label for="contact_phone" class="mobile_view">Phone Number</label><small class="help help-sm">(optional)</small>
                                         <div class="input-group phone-input">
                                             <span class="input-group-btn">
                                                 <button type="button" class="btn btn-default dropdown-toggle"
@@ -765,7 +764,7 @@ border: none;
                                 </div>
                                 <div class="col-md-4 form-group">
                                     <!-- <div class="form-group"> -->
-                                        <label for="emergency_call_relation" class="label-element">Relation</label>
+                                        <label for="emergency_call_relation" class="label-element">Relation</label><small class="help help-sm">(optional)</small>
                                         <input type="text" class="form-control input-element" name="2nd_relation"
                                                id="emergency_call_relation"
                                                value="<?php echo (!empty($workorder->emergency_call_list['relation'][1])) ? $workorder->emergency_call_list['relation'][1] : '' ?>"
@@ -785,7 +784,7 @@ border: none;
 
                                 <div class="col-md-4 form-group">
                                     <!-- <div class=""> -->
-                                        <label for="emergency_call_emergency_contact_1" class="label-element">3rd Call Verification Name</label>
+                                        <label for="emergency_call_emergency_contact_1" class="label-element">3rd Call Verification Name</label><small class="help help-sm">(optional)</small>
                                         <input type="text" class="form-control input-element"
                                                name="3rd_verification_name"
                                                id="emergency_call_emergency_contact_1"
@@ -795,7 +794,7 @@ border: none;
                                 </div>
                                 <div class="col-md-4">
                                     <div class="form-group">
-                                        <label for="contact_phone" class="mobile_view">Phone Number</label>
+                                        <label for="contact_phone" class="mobile_view">Phone Number</label><small class="help help-sm">(optional)</small>
                                         <div class="input-group phone-input">
                                             <span class="input-group-btn">
                                                 <button type="button" class="btn btn-default dropdown-toggle"
@@ -825,7 +824,7 @@ border: none;
                                 </div>
                                 <div class="col-md-4 form-group">
                                     <!-- <div class="form-group"> -->
-                                        <label for="emergency_call_relation" class="label-element">Relation</label>
+                                        <label for="emergency_call_relation" class="label-element">Relation</label><small class="help help-sm">(optional)</small>
                                         <input type="text" class="form-control input-element" name="3rd_relation"
                                                id="emergency_call_relation"
                                                value="<?php echo (!empty($workorder->emergency_call_list['relation'][2])) ? $workorder->emergency_call_list['relation'][2] : '' ?>"
@@ -837,7 +836,7 @@ border: none;
 								</div> -->
                                 <div class="col-md-4 form-group">
                                     <!-- <div class=""> -->
-                                        <label for="emergency_call_emergency_contact_2" class="label-element">4th Call Verification Name</label>
+                                        <label for="emergency_call_emergency_contact_2" class="label-element">4th Call Verification Name</label><small class="help help-sm">(optional)</small>
                                         <input type="text" class="form-control input-element"
                                                name="4th_verification_name"
                                                id="emergency_call_emergency_contact_2"
@@ -847,7 +846,7 @@ border: none;
                                 </div>
                                 <div class="col-md-4">
                                     <div class="form-group">
-                                        <label for="contact_phone" class="mobile_view">Phone Number</label>
+                                        <label for="contact_phone" class="mobile_view">Phone Number</label><small class="help help-sm">(optional)</small>
                                         <div class="input-group phone-input">
                                             <span class="input-group-btn">
                                                 <button type="button" class="btn btn-default dropdown-toggle"
@@ -877,7 +876,7 @@ border: none;
                                 </div>
                                 <div class="col-md-4 form-group">
                                     <!-- <div class=""> -->
-                                        <label for="emergency_call_relation" class="label-element">Relation</label>
+                                        <label for="emergency_call_relation" class="label-element">Relation</label><small class="help help-sm">(optional)</small>
                                         <input type="text" class="form-control input-element" name="4th_relation"
                                                id="emergency_call_relation"
                                                value="<?php echo (!empty($workorder->emergency_call_list['relation'][3])) ? $workorder->emergency_call_list['relation'][3] : '' ?>"
@@ -893,7 +892,7 @@ border: none;
                                 </div>
                                 <div class="col-md-6 form-group">
                                 <div class="select-wrap">
-                                    <label for="street_address"> Plan Type:</label>
+                                    <label for="street_address"> Plan Type:</label> <span class="form-required">*</span>
                                         <!-- <select
                                                 name="plan_type"
                                                 id="plan_type"
@@ -929,7 +928,7 @@ border: none;
                                 <div class="form-group col-md-6">
                                 <div class="select-wrap">
                                     <!-- <div class="col-md-12"> -->
-                                        <label>Account Type</label>
+                                        <label>Account Type</label> <span class="form-required">*</span>
                                     <!-- </div> -->
                                     <!-- <div class="col-md-12"> -->
                                         <select name="account_type"
@@ -962,7 +961,7 @@ border: none;
                                 <!-- <div class="row"> -->
                                     <div class="col-md-4">
                                     <div class="select-wrap">
-                                        <label>Panel Type</label>
+                                        <label>Panel Type</label> <span class="form-required">*</span>
                                         <select name="panel_type" id="panel_type" class="form-control custom-select m_select" required>
                                             <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == ''){echo "selected";} } ?> value=""></option>
                                             <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'AERIONICS'){echo "selected";} } ?> value="AERIONICS">AERIONICS</option>

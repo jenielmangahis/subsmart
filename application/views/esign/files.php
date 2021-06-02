@@ -27,6 +27,16 @@
     <title>eSign</title>
 
     <?php echo put_header_assets(); ?>
+
+    <style>
+        .fillAndSign__signatureDraw {
+            max-height: 40px;
+        }
+
+        .signing__signatureInput {
+            width: 100% !important;
+        }
+    </style>
 </head>
 
 <body style="background: white !important;">
@@ -252,7 +262,7 @@
                     <div class="content_sidebar content_sidebar-left resizable" style="overflow-x: hidden" id="fieldsSidebar">
                         <div class="sidebar-fields sidebar-flex">
                             <div class="sidebar_main">
-                                <div class="dropdown esignBuilder__recipientSelect">
+                                <div class="dropdown esignBuilder__recipientSelect <?=$is_self_signing ? "d-none" : ""?>">
                                     <button
                                         data-recipient-color="<?=$recipients[0]['color'];?>"
                                         data-recipient-id="<?=$recipients[0]['id'];?>"
@@ -365,21 +375,21 @@
                                                     </div>
                                                 </li>
 
-                                                <li class="menu_listItem">
+                                                <li class="menu_listItem <?=$is_self_signing ? "d-none" : ""?>">
                                                     <div class="fields menu_item">
                                                         <span class="swatch swatch-recipient swatch-lg swatch-ext-0"><i class="icon icon-color-tagger icon-palette-field-checkbox"></i></span>
                                                         <span class="u-ellipsis ng-binding">Checkbox</span>
                                                     </div>
                                                 </li>
 
-                                                <li class="menu_listItem">
+                                                <li class="menu_listItem <?=$is_self_signing ? "d-none" : ""?>">
                                                     <div class="fields menu_item">
                                                         <span class="swatch swatch-recipient swatch-lg swatch-ext-0"><i class="icon icon-color-tagger icon-palette-field-dropdown"></i></span>
                                                         <span class="u-ellipsis ng-binding">Dropdown</span>
                                                     </div>
                                                 </li>
 
-                                                <li class="menu_listItem">
+                                                <li class="menu_listItem <?=$is_self_signing ? "d-none" : ""?>">
                                                     <div class="fields menu_item">
                                                         <span class="swatch swatch-recipient swatch-lg swatch-ext-0"><i class="icon icon-color-tagger icon-palette-field-radio"></i></span>
                                                         <span class="u-ellipsis ng-binding">Radio</span>
@@ -389,7 +399,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="sidebar_item">
+                                    <div class="sidebar_item <?=$is_self_signing ? "d-none" : ""?>">
                                         <div class="menu-fields">
                                             <ul class="menu_list">
                                                 <li class="menu_listItem">
@@ -524,6 +534,55 @@
                 <button type="button" class="btn btn-secondary btn-block" id="closeOption">
                     Close
                 </button>
+            </div>
+        </div>
+
+        <div class="modal fade" id="selfSigningSend" tabindex="-1" role="dialog" aria-labelledby="selfSigningSendLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="selfSigningSendLabel">Sign and Return</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form class="form">
+                        <div>
+                            <div class="form-group">
+                                <label for="selfSigningSend__name">Full Name</label>
+                                <input class="form-control" id="selfSigningSend__name">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="selfSigningSend__email">Email</label>
+                                <input class="form-control" id="selfSigningSend__email">
+                            </div>
+                        </div>
+
+                        <div>
+                            <div class="form-group">
+                                <label for="selfSigningSend__subject">Subject</label>
+                                <input class="form-control" id="selfSigningSend__subject" maxlength="100">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="selfSigningSend__message">Message</label>
+                                <textarea class="form-control" id="selfSigningSend__message" rows="3" maxlength="10000"></textarea>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">No Thanks</button>
+                    <button type="button" class="btn btn-danger d-flex align-items-center">
+                        <div class="spinner-border spinner-border-sm mt-0 d-none" role="status">
+                            <span class="sr-only">Loading...</span>
+                        </div>
+                        Send And Close
+                    </button>
+                </div>
+                </div>
             </div>
         </div>
 

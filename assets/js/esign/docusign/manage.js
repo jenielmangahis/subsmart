@@ -604,7 +604,7 @@ $(document).ready(function () {
   }
 
   // https://stackoverflow.com/a/47480429/8062659
-  function sleep (ms) {
+  function sleep(ms) {
     return new Promise((res) => setTimeout(res, ms));
   }
 
@@ -626,8 +626,34 @@ $(document).ready(function () {
     await Promise.all(promises);
   });
 
-  $modal.find(".btn-primary").on("click", function (event) {
+  $modal.find(".btn-primary").on("click", async function (event) {
     event.preventDefault();
-    console.log({files});
-  })
+    if (!files.length) return;
+
+    const $this = $(this);
+    $this.prop("disabled", true);
+    $this.find(".spinner-border").removeClass("d-none");
+
+    const formData = new FormData();
+    formData.append("subject", "");
+    formData.append("message", "");
+    files.forEach(({ file }) => {
+      formData.append("files[]", file);
+    });
+
+    const endpoint = `${prefixURL}/esign/fileSave`;
+    const response = await fetch(endpoint, {
+      method: "POST",
+      body: formData,
+    });
+
+    const { data } = await response.json();
+    const { id: envelopeId } = data;
+    window.location = `${prefixURL}/esign/Files?signing_id=${envelopeId}&next_step=3`;
+  });
+
+  $modal.on("hidden.bs.modal", function (e) {
+    files = [];
+    $modal.find(".esignBuilder__docPreview").remove();
+  });
 })();

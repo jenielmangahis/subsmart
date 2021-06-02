@@ -428,6 +428,7 @@ border: none;
                                         <input type="hidden" id="company_name" value="<?php echo $clients->business_name; ?>">
                                         <input type="hidden" name="wo_id_alarm" value="<?php echo $workorder->id; ?>">
                                         <input type="hidden" id="current_date" value="<?php echo @date('m-d-Y'); ?>">
+                                        <input type="hidden" name="acs_id" value="<?php echo $workorder->customer_id; ?>">
 
                                 <input type="hidden" id="content_input" class="form-control" name="header" value="<?php echo $headers->content; ?>">
                                 <input type="hidden" name="wo_id" value="<?php 
@@ -451,6 +452,7 @@ border: none;
 											<select name="customer_type"
 													class="form-control custom-select m_select"
 													id="customer_type">
+                                                    <option><?php echo $workorder->customer_type; ?></option>
 												<?php foreach (get_config_item('customer_types') as $key => $customer_type) { ?>
 													<option value="<?php echo $customer_type ?>" <?php echo (!empty($workorder->customer['customer_type']) && $workorder->customer['customer_type'] == $customer_type) ? "selected" : "" ?>>
 														<?php echo $customer_type ?>
@@ -471,6 +473,7 @@ border: none;
 											<select name="install_type"
 													class="form-control custom-select m_select"
 													id="customer_install_type">
+                                                    <option><?php echo $workorder->install_type; ?></option>
 												<?php foreach (get_config_item('install_types') as $key => $install_type) { ?>
 													<option value="<?php echo $install_type ?>" <?php echo (!empty($workorder->customer['install_type']) && $workorder->customer['install_type'] == $install_type) ? "selected" : "" ?>>
 														<?php echo $install_type ?>
@@ -485,8 +488,7 @@ border: none;
 												Company Name </label>
 											<input type="text" class="form-control input-element" name="customer[company_name]"
 												   id="customer_company_name"
-												   value="<?php echo (!empty($workorder->customer['company_name'])) ? $workorder->customer['company_name'] : '' ?>" 
-												   placeholder="Enter Company Name" <?php echo (!empty($workorder->customer['install_type']) && $workorder->customer['install_type'] == 'Takeover') ? "" : 'disabled' ?> />
+												   value="<?php echo $workorder->business_name; ?>" />
 										</div>
 									</div>
 
@@ -496,17 +498,17 @@ border: none;
 											<input type="text" class="form-control input-element" name="last_name"
 												   id="last_name"
 												    placeholder="Enter Last Name"
-												   value="<?php echo $alarms->last_name; ?>"/>
+												   value="<?php echo $workorder->first_name; ?>"/>
 										</div>
 										<div class="col-md-3 form-group">
 											<label for="first_name" class="label-element">First Name</label>
 											<input type="text" class="form-control input-element" name="first_name"
 												   id="first_name" 
-												   placeholder="Enter First Name" value="<?php echo $alarms->first_name; ?>" />
+												   placeholder="Enter First Name" value="<?php echo $workorder->first_name; ?>" />
 										</div>
 										<div class="col-md-2 form-group">
 											<label for="contact_mobile" class="label-element">Mobile</label>
-											<input type="text" class="form-control input-element" name="mobile_number" value="<?php echo $workorder->mobile_number; ?>"
+											<input type="text" class="form-control input-element" name="mobile_number" value="<?php echo $workorder->phone_m; ?>"
 												   id="contact_mobile" />
 
 										</div>
@@ -515,7 +517,7 @@ border: none;
 											<label for="contact_dob" class="label-element">DOB</label>
 											<input type="text" class="form-control input-element" name="dob"
 												   id="customer_contact_dob" 
-                                                   value="<?php echo $alarms->dob; ?>"
+                                                   value="<?php echo $workorder->date_of_birth; ?>"
 												   placeholder="Enter DOB"/>
 										</div>
 
@@ -523,7 +525,7 @@ border: none;
 											<label for="contact_ssn" class="label-element">SSN</label>
 											<input type="text" class="form-control input-element" name="security_number"
 												   id="contact_ssn"
-												   value="<?php echo $workorder->security_number; ?>"
+												   value="<?php echo $workorder->ssn; ?>"
 												   placeholder="Enter SSN"/>
 										</div>
 									</div>
@@ -535,7 +537,7 @@ border: none;
 										<div class="col-md-3 form-group">
 											<label for="spouse_last_name" class="label-element">Last Name</label>
 											<input type="text" class="form-control input-element" name="s_last_name"
-												   id="spouse_last_name" value="<?php echo $alarms->s_last_name; ?>"
+												   id="spouse_last_name" value="<?php echo $workorder->s_last_name; ?>"
 												     placeholder="Enter Spouse Last Name" />
 										</div>
 										<div class="col-md-3 form-group">
@@ -543,13 +545,13 @@ border: none;
 											<input type="text" class="form-control input-element" name="s_first_name"
 												   id="spouse_first_name"
 												    placeholder="Enter Spouse First Name"
-                                                    value="<?php echo $alarms->s_first_name; ?>" />
+                                                    value="<?php echo $workorder->s_first_name; ?>" />
 										</div>
 										<div class="col-md-2 form-group">
 											<label for="spouse_contact_mobile" class="label-element">Mobile</label>
 											<input type="text" class="form-control input-element" name="s_mobile"
 												   id="spouse_contact_mobile"
-												   value="<?php echo $alarms->s_mobile; ?>"
+												   value="<?php echo $workorder->s_mobile; ?>"
 												   placeholder="Enter Mobile"/>
 
 										</div>
@@ -558,7 +560,7 @@ border: none;
 											<label for="contact_dob" class="label-element">DOB</label>
 											<input type="text" class="form-control input-element" name="s_dob"
 												   id="customer_spouse_contact_dob"
-												   value="<?php echo $alarms->s_dob; ?>"
+												   value="<?php echo $workorder->s_dob; ?>"
 												   placeholder="Enter DOB"/>
 										</div>
 
@@ -566,7 +568,7 @@ border: none;
 											<label for="spouse_contact_ssn" class="label-element">SSN</label>
 											<input type="text" class="form-control input-element" name="s_ssn"
 												   id="spouse_contact_ssn"
-												   value="<?php echo $alarms->s_ssn; ?>"
+												   value="<?php echo $workorder->s_ssn; ?>"
 												   placeholder="Enter SSN"/>
 										</div>
 									</div>
@@ -576,7 +578,7 @@ border: none;
 											<label for="monitored_location" class="label-element">Monitored Location</label>
 											<input type="text" class="form-control input-element" name="monitored_location"
 												   id="ship-address"
-												   value="<?php echo $workorder->job_location; ?>"
+												   value="<?php echo $workorder->mail_add; ?>"
 												    placeholder="Monitored Location"/>
 										</div>
 										<div class="col-md-3 form-group">
@@ -623,7 +625,7 @@ border: none;
                                         <div class="select-wrap">
                                             <label for="">Notification Type</label><br/>
                                                 <select name="notification_type" id="customer_notification_type_email" class="form-control custom-select m_select">
-                                                    <option value="<?php echo $alarms->notification_type; ?>"><?php echo $alarms->notification_type; ?></option>
+                                                    <option value="<?php echo $workorder->notification_type; ?>"><?php echo $workorder->notification_type; ?></option>
                                                     <option>Notification Type</option>
                                                     <option value="Text">Text</option>
                                                     <option value="Email">Email</option>
@@ -669,7 +671,7 @@ border: none;
                                         <label for="1st_call_verification_name" class="label-element">1st Call Verification Name</label>
                                         <input type="text" class="form-control input-element"
                                                name="1st_verification_name"
-                                               value="<?php echo $alarms->first_verification_name; ?>"
+                                               value="<?php echo $workorder->first_verification_name; ?>"
                                                id="1st_call_verification_name"
                                                 placeholder="Enter 1st Call Verification Name"/>
                                     <!-- </div> -->
@@ -694,11 +696,11 @@ border: none;
                                             </span>
                                             <input type="hidden" name="1st_number_type"
                                                    class="type-input"
-                                                   value="<?php echo $alarms->first_number_type; ?>"
+                                                   value="<?php echo $workorder->first_number_type; ?>"
                                                    value="mobile"/>
                                             <input type="text" name="1st_number"
                                                    class="form-control"
-                                                   value="<?php echo $alarms->first_number; ?>"
+                                                   value="<?php echo $workorder->first_number; ?>"
                                                    placeholder="Enter Phone"/>
                                         </div>
 
@@ -709,7 +711,7 @@ border: none;
                                         <label for="emergency_call_relation" class="label-element">Relation</label>
                                         <input type="text" class="form-control input-element" name="1st_relation"
                                                id="emergency_call_relation"
-                                               value="<?php echo $alarms->first_relation; ?>"
+                                               value="<?php echo $workorder->first_relation; ?>"
                                                 placeholder="Enter Relation"/>
                                     <!-- </div> -->
                                 </div>
@@ -730,7 +732,7 @@ border: none;
                                         <input type="text" class="form-control input-element"
                                                name="2nd_verification_name"
                                                id="2nd_call_verification_name"
-                                               value="<?php echo $alarms->second_verification_name; ?>"
+                                               value="<?php echo $workorder->second_verification_name; ?>"
                                                 placeholder="Enter 2nd Call Verification Name"/>
                                     <!-- </div> -->
                                 </div>
@@ -754,11 +756,11 @@ border: none;
                                             </span>
                                             <input type="hidden" name="2nd_number_type"
                                                    class="type-input"
-                                                   value="<?php echo $alarms->second_number_type; ?>"
+                                                   value="<?php echo $workorder->second_number_type; ?>"
                                                    value="mobile"/>
                                             <input type="text" name="2nd_number"
                                                    class="form-control"
-                                                   value="<?php echo $alarms->second_number; ?>"
+                                                   value="<?php echo $workorder->second_number; ?>"
                                                    placeholder="Enter Phone"/>
                                         </div>
 
@@ -769,7 +771,7 @@ border: none;
                                         <label for="emergency_call_relation" class="label-element">Relation</label>
                                         <input type="text" class="form-control input-element" name="2nd_relation"
                                                id="emergency_call_relation"
-                                               value="<?php echo $alarms->second_relation; ?>"
+                                               value="<?php echo $workorder->second_relation; ?>"
                                                 placeholder="Enter Relation"/>
                                     <!-- </div> -->
                                 </div>
@@ -790,7 +792,7 @@ border: none;
                                         <input type="text" class="form-control input-element"
                                                name="3rd_verification_name"
                                                id="emergency_call_emergency_contact_1"
-                                               value="<?php echo $alarms->third_verification_name; ?>"
+                                               value="<?php echo $workorder->third_verification_name; ?>"
                                                 placeholder="Enter Emergency Contact"/>
                                     <!-- </div> -->
                                 </div>
@@ -814,11 +816,11 @@ border: none;
                                             </span>
                                             <input type="hidden" name="3rd_number_type"
                                                    class="type-input"
-                                                   value="<?php echo $alarms->third_number_type; ?>"
+                                                   value="<?php echo $workorder->third_number_type; ?>"
                                                    value="mobile"/>
                                             <input type="text" name="3rd_number"
                                                    class="form-control"
-                                                   value="<?php echo $alarms->third_number; ?>"
+                                                   value="<?php echo $workorder->third_number; ?>"
                                                    placeholder="Enter Phone"/>
                                         </div>
 
@@ -829,7 +831,7 @@ border: none;
                                         <label for="emergency_call_relation" class="label-element">Relation</label>
                                         <input type="text" class="form-control input-element" name="3rd_relation"
                                                id="emergency_call_relation"
-                                               value="<?php echo $alarms->third_relation; ?>"
+                                               value="<?php echo $workorder->third_relation; ?>"
                                                 placeholder="Enter Relation"/>
                                     <!-- </div> -->
                                 </div>
@@ -842,7 +844,7 @@ border: none;
                                         <input type="text" class="form-control input-element"
                                                name="4th_verification_name"
                                                id="emergency_call_emergency_contact_2"
-                                               value="<?php echo $alarms->fourth_verification_name; ?>"
+                                               value="<?php echo $workorder->fourth_verification_name; ?>"
                                                 placeholder="Enter Emergency Contact"/>
                                     <!-- </div> -->
                                 </div>
@@ -866,11 +868,11 @@ border: none;
                                             </span>
                                             <input type="hidden" name="4th_number_type"
                                                    class="type-input"
-                                                   value="<?php echo $alarms->fourth_number_type; ?>"
+                                                   value="<?php echo $workorder->fourth_number_type; ?>"
                                                    value="mobile"/>
                                             <input type="text" name="4th_number"
                                                    class="form-control"
-                                                   value="<?php echo $alarms->fourth_number; ?>"
+                                                   value="<?php echo $workorder->fourth_number; ?>"
                                                    placeholder="Enter Phone"/>
                                         </div>
 
@@ -881,7 +883,7 @@ border: none;
                                         <label for="emergency_call_relation" class="label-element">Relation</label>
                                         <input type="text" class="form-control input-element" name="4th_relation"
                                                id="emergency_call_relation"
-                                               value="<?php echo $alarms->fourth_relation; ?>"
+                                               value="<?php echo $workorder->fourth_relation; ?>"
                                                 placeholder="Enter Relation"/>
                                     <!-- </div> -->
                                 </div>

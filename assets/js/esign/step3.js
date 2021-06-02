@@ -21,6 +21,7 @@ function Step3() {
   let fileId = undefined;
   let documentUrl = undefined;
   let isTemplate = undefined;
+  let userInfo = undefined;
   const prefixURL = location.hostname === "localhost" ? "/nsmartrac" : "";
 
   async function renderPage({ canvas, page, document }) {
@@ -72,7 +73,7 @@ function Step3() {
   }
 
   async function storeField(position, $element, specs = null) {
-    if (!$element.hasClass("esignBuilder__field")) {
+    if (!$element.hasClass("esignBuilder__field") && !userInfo) {
       $element = $element.closest(".esignBuilder__field");
     }
 
@@ -106,10 +107,9 @@ function Step3() {
       }
     }
 
-    const key = $element.find(".subData").data("key");
+    let key = $element.find(".subData").data("key");
+    let fieldName = $element.text().trim();
     const recipientId = $("#recipientsSelect").get(0).dataset.recipientId;
-
-    const fieldName = $element.text().trim();
 
     if (specs === null) {
       const field = fields.find((f) => f.unique_key == key);
@@ -120,6 +120,23 @@ function Step3() {
 
     if (fieldName === "Text") {
       specs = { ...specs, width: parseInt($element.css("width"), 10) };
+    }
+
+    if (userInfo !== undefined) {
+      fieldName = $element.data("field-name");
+      key = $element.data("unique-key");
+
+      if (specs === null) {
+        specs = {};
+      }
+
+      if ($element.find("input").length) {
+        specs.value = $element.find("input").val();
+      }
+
+      if ($element.find(".fillAndSign__signatureDraw").length) {
+        specs.value = $element.find(".fillAndSign__signatureDraw").attr("src");
+      }
     }
 
     await apiStoreField({
@@ -237,7 +254,85 @@ function Step3() {
     $optionsSidebar.removeAttr("data-subcheckbox");
   }
 
+  function createFieldWithValue(field) {
+    const { coordinates: coords, unique_key, field_name = "" } = field;
+    const coordinates = JSON.parse(coords);
+    const top = parseInt(coordinates.top, 10);
+    const left = parseInt(coordinates.left, 10);
+    const specs = field.specs ? JSON.parse(field.specs) : {};
+
+    const fieldName = field_name.trim();
+    const uniqueKey = unique_key || Date.now();
+    field.field_name = fieldName;
+    field.unique_key = uniqueKey;
+
+    let html = undefined;
+    let textWidth = undefined;
+
+    if (fieldName === "Signature") {
+      const { signature } = userInfo.signature;
+      const value = specs.value || signature;
+
+      html = `
+        <div class="menu_item ui-draggable ui-draggable-handle ui-draggable-dragging esignBuilder__field">
+          <div class="fillAndSign__signatureContainer">
+            <img class="fillAndSign__signatureDraw" src="${value}"/>
+          </div>
+        </div>
+      `;
+    }
+
+    if (fieldName === "Date Signed") {
+      html = `
+        <div class="menu_item ui-draggable ui-draggable-handle ui-draggable-dragging esignBuilder__field">
+          ${moment().format("MM/DD/YYYY")}
+        </div>
+      `;
+    }
+
+    if (html === undefined) {
+      const { details, company } = userInfo;
+      const { FName, LName, email } = details;
+
+      let value = "";
+      value = fieldName === "Name" ? `${FName} ${LName}` : value;
+      value = fieldName === "Email" ? email : value;
+      value = fieldName === "Company" ? company.contact_name : value;
+      value = specs.value || value;
+
+      textWidth = getWidth("16px", value);
+
+      html = `
+        <div
+          class="signing docusignField"
+          style="position: relative; display: flex; align-items: center; margin: 0;"
+        >
+          <input type="text" value="${value}" />
+          <div class="spinner-border spinner-border-sm d-none" role="status" style="position: absolute; right: 4px;">
+            <span class="sr-only">Loading...</span>
+          </div>
+        </div>
+      `;
+    }
+
+    const $element = createElementFromHTML(html);
+
+    // requires assets/js/esign/docusign/input.autoresize.js
+    const minWidth = textWidth < 100 ? 100 : textWidth;
+    $element.find("input").autoresize({ minWidth: textWidth });
+
+    $element.css({ top, left, position: "absolute" });
+    $element.attr("data-unique-key", uniqueKey);
+    $element.attr("data-field-name", fieldName);
+
+    return $element;
+  }
+
   function createField(field) {
+    if (userInfo !== undefined) {
+      return createFieldWithValue(field);
+    }
+
     const { coordinates: coords, unique_key, field_name = "", color } = field;
     const coordinates = JSON.parse(coords);
     const top = parseInt(coordinates.top, 10);
@@ -487,7 +582,7 @@ function Step3() {
       drop: function (_, ui) {
         const $item = $(ui.helper).clone();
         const color = getRecipientColor();
-        $element = createField({
+        const $element = createField({
           coordinates: JSON.stringify(ui.position),
           field_name: $item.text(),
           color,
@@ -530,6 +625,12 @@ function Step3() {
 
     $formSubmit.on("click", async function (event) {
       event.preventDefault();
+
+      if (userInfo !== undefined) {
+        const $modal = $("#selfSigningSend");
+        // $modal.modal("show");
+        return;
+      }
 
       if (isTemplate) {
         window.location = `${prefixURL}/vault/mylibrary`;
@@ -729,6 +830,12 @@ function Step3() {
     return data;
   }
 
+  async function getUserInfo() {
+    const response = await fetch(`${prefixURL}/DocuSign/apiUserDetails`);
+    const { data } = await response.json();
+    userInfo = data;
+  }
+
   function hideLoader() {
     $(".esignBuilder--loading").removeClass("esignBuilder--loading");
   }
@@ -736,10 +843,17 @@ function Step3() {
   async function init() {
     const urlParams = new URLSearchParams(window.location.search);
     const templateId = urlParams.get("template_id");
+    const signingId = urlParams.get("signing_id");
+
     isTemplate = Boolean(templateId);
+    isSelfSigning = Boolean(signingId);
 
     fileId = parseInt($("[name=file_id]").val());
     fileId = isTemplate ? templateId : fileId;
+
+    if (isSelfSigning) {
+      await getUserInfo();
+    }
 
     const { data } = await getPDFFiles(fileId);
     await getFields();
@@ -803,4 +917,20 @@ function hexToRGB(hex, alpha) {
   } else {
     return "rgb(" + r + ", " + g + ", " + b + ")";
   }
+}
+
+// https://stackoverflow.com/a/61088413/8062659
+function getWidth(fontSize, value) {
+  let div = document.createElement("div");
+  div.innerHTML = value;
+  div.style.fontSize = fontSize;
+  div.style.width = "auto";
+  div.style.display = "inline-block";
+  div.style.visibility = "hidden";
+  div.style.position = "fixed";
+  div.style.overflow = "auto";
+  document.body.append(div);
+  let width = div.clientWidth;
+  div.remove();
+  return width;
 }
