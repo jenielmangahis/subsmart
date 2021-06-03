@@ -454,7 +454,8 @@ border: none;
 												<li class="divider"></li>
 												<li ><a  href="#" ><span class="fa fa-files-o icon"></span> Clone Work Order</a></li>
 												<li ><a href="#" ><span class="fa fa-file-text-o icon"></span> Convert to Estimate</a></li>
-												<li ><a  href=""><span class="fa fa-envelope-o icon"></span> Send to Customer</a></li>
+												<li ><a  href="" acs-id="<?php echo $workorder->customer_id; ?>" workorder-id="<?php echo $workorder->id; ?>" class="send_to_customer"><span class="fa fa-envelope-o icon"></span> Send to Customer</a></li>
+												<li ><a  href="" acs-id="<?php echo $workorder->customer_id; ?>" workorder-id="<?php echo $workorder->id; ?>" class="send_to_company"><span class="fa fa-envelope-o icon"></span> Send to Company</a></li>
 												<li class="divider"></li>
 												<li ><a   href="#" ><span class="fa fa-trash-o icon"></span> Delete Work Order</a></li>
 												<li ><a   href="#" id="esignButton"><span class="fa fa-envelope-o icon"></span> eSign</a></li>
@@ -914,4 +915,69 @@ function initMap() {
 	zoom: 8,
   });
 }
+</script>
+
+<script>
+$(document).on('click touchstart','.send_to_customer',function(){
+
+var id = $(this).attr('acs-id');
+var wo_id = $(this).attr('workorder-id');
+// alert(wo_id);
+
+var r = confirm("Send this to customer?");
+
+if (r == true) {
+	$.ajax({
+	type : 'POST',
+	url : "<?php echo base_url(); ?>workorder/sendWorkorderToAcs",
+	data : {id: id, wo_id: wo_id},
+	success: function(result){
+		//sucess("Email Successfully!");
+		// alert('Email Successfully!');
+	},
+	error: function () {
+      alert("An error has occurred");
+    },
+
+	});
+
+	} 
+else 
+{
+	alert('no');
+}
+
+});
+</script>
+<script>
+$(document).on('click touchstart','.send_to_company',function(){
+
+var id = $(this).attr('acs-id');
+var wo_id = $(this).attr('workorder-id');
+// alert(wo_id);
+
+var r = confirm("Send this to Company?");
+
+if (r == true) {
+	$.ajax({
+	type : 'POST',
+	url : "<?php echo base_url(); ?>workorder/sendWorkorderToCompany",
+	data : {id: id, wo_id: wo_id},
+	success: function(result){
+		//sucess("Email Successfully!");
+		// alert('Email Successfully!');
+	},
+	error: function () {
+      alert("An error has occurred");
+    },
+
+	});
+
+	} 
+else 
+{
+	alert('no');
+}
+
+});
 </script>

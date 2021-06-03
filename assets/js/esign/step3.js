@@ -22,6 +22,7 @@ function Step3() {
   let documentUrl = undefined;
   let isTemplate = undefined;
   let userInfo = undefined;
+  let files = [];
   const prefixURL = location.hostname === "localhost" ? "/nsmartrac" : "";
 
   async function renderPage({ canvas, page, document }) {
@@ -627,9 +628,7 @@ function Step3() {
       event.preventDefault();
 
       if (userInfo !== undefined) {
-        const $modal = $("#selfSigningSend");
-        // $modal.modal("show");
-        return;
+        return handleSelfSigningOnSubmit({ event, evenlopeId: fileId, files });
       }
 
       if (isTemplate) {
@@ -852,10 +851,12 @@ function Step3() {
     fileId = isTemplate ? templateId : fileId;
 
     if (isSelfSigning) {
+      fileId = signingId;
       await getUserInfo();
     }
 
     const { data } = await getPDFFiles(fileId);
+    files = data;
     await getFields();
 
     for (let index = 0; index < data.length; index++) {
@@ -933,4 +934,97 @@ function getWidth(fontSize, value) {
   let width = div.clientWidth;
   div.remove();
   return width;
+}
+
+// https://stackoverflow.com/a/46181/8062659
+function isValidEmail(string) {
+  const regex =
+    /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  return regex.test(String(string).toLowerCase());
+}
+
+function handleSelfSigningOnSubmit(args) {
+  jQuery.noConflict();
+
+  const { evenlopeId, files } = args;
+
+  const $modal = $("#selfSigningSend");
+  const $form = $modal.find(".form");
+  const $submit = $modal.find(".btn-primary");
+  const $close = $modal.find(".btn-secondary");
+  const $name = $modal.find("#selfSigningSend__name");
+  const $email = $modal.find("#selfSigningSend__email");
+  const $subject = $modal.find("#selfSigningSend__subject");
+  const $message = $modal.find("#selfSigningSend__message");
+
+  const prefixURL = location.hostname === "localhost" ? "/nsmartrac" : "";
+
+  const filenames = files.map((file) => file.name);
+  const subject = `Please eSign: ${filenames.join(", ")}`;
+  $subject.val(subject);
+
+  $modal.modal("show");
+  $modal.addClass("show");
+
+  $modal.on("hidden.bs.modal", function () {
+    $modal.removeClass("show");
+  });
+
+  $submit.on("click", function (event) {
+    event.preventDefault();
+    $form.submit();
+  });
+
+  $form.on("submit", async function (event) {
+    event.preventDefault();
+
+    const payload = {
+      recipients: [
+        {
+          name: $name.val().trim(),
+          email: $email.val().trim(),
+        },
+      ],
+      subject: $subject.val().trim(),
+      message: $message.val().trim(),
+    };
+
+    const [recipient] = payload.recipients;
+    if (isEmpty(recipient.name)) {
+      $name.focus();
+      $name.addClass("is-invalid");
+      return;
+    } else {
+      $name.removeClass("is-invalid");
+    }
+
+    if (isEmpty(recipient.email) || !isValidEmail(recipient.email)) {
+      $email.focus();
+      $email.addClass("is-invalid");
+      return;
+    } else {
+      $email.removeClass("is-invalid");
+    }
+
+    $submit.find(".spinner-border").removeClass("d-none");
+    $submit.attr("disabled", true);
+
+    const endpoint = `${prefixURL}/DocuSign/apiSubmitSelfSigned/${evenlopeId}`;
+    const response = await fetch(endpoint, {
+      method: "POST",
+      body: JSON.stringify(payload),
+      headers: {
+        accepts: "application/json",
+        "content-type": "application/json",
+      },
+    });
+
+    const json = await response.json();
+    window.location = `${prefixURL}/DocuSign/manage?view=sent`;
+  });
+
+  $close.on("click", function (event) {
+    event.preventDefault();
+    window.location = `${prefixURL}/DocuSign/manage?view=inbox`;
+  });
 }

@@ -119,7 +119,13 @@ function Signing(hash) {
     }
 
     if (field_name === "Signature") {
-      const { value } = fieldValue || { value: null };
+      const { specs: fieldSpecs } = field;
+      const specs = fieldSpecs ? JSON.parse(fieldSpecs) : {};
+
+      let { value } = fieldValue || { value: null };
+      if (specs.value) {
+        value = specs.value;
+      }
 
       let html = `
             <div class="signing__fieldSignature docusignField" title="Signature" data-field-type="signature" id="signature${fieldId}">
@@ -141,7 +147,7 @@ function Signing(hash) {
         $element.html(createElementFromHTML(valueHtml));
       }
 
-      $element.css({ top, left, position: "absolute" });
+      $element.css({ top: top - 8, left: left + 30, position: "absolute" });
 
       $element.on("click", () => {
         signaturePad.clear();
@@ -301,6 +307,11 @@ function Signing(hash) {
       return $element;
     }
 
+    const { decrypted } = data;
+    if (decrypted.is_self_signed) {
+      text = undefined;
+    }
+
     if (field_name === "Text" || text === undefined) {
       let { value } = fieldValue || { value: "" };
       const { specs: fieldSpecs, unique_key } = field;
@@ -313,6 +324,10 @@ function Signing(hash) {
 
       if (customer && specs.name && !value) {
         value = customer[specs.name] || "";
+      }
+
+      if (specs.value) {
+        value = specs.value;
       }
 
       const placeholder = specs.name || field_name;
@@ -370,7 +385,7 @@ function Signing(hash) {
         }
       });
 
-      $element.css({ top, left, position: "absolute" });
+      $element.css({ top: top + 8, left, position: "absolute" });
       return $element;
     }
 

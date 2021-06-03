@@ -94,6 +94,11 @@ function emeployee_history_calculateAndDisplayRoute(route_latlng) {
     directionsRenderer = new google.maps.DirectionsRenderer({
         suppressMarkers: true
     });
+    directionsRenderer.setOptions({
+        polylineOptions: {
+            strokeColor: '#6241A4'
+        }
+    });
     directionsRenderer.setMap(history_map);
     directionsService.route({
             origin: new google.maps.LatLng(route_latlng[0][0], route_latlng[0][1]),

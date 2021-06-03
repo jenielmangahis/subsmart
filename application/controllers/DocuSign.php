@@ -21,13 +21,16 @@ class DocuSign extends MY_Controller
         $decrypted = decrypt($this->input->get('hash', true), $this->password);
         $decrypted = json_decode($decrypted, true);
         ['recipient_id' => $recipientId, 'document_id' => $documentId] = $decrypted;
+        $isSelfSigned = $decrypted['is_self_signed'] ?? false;
 
         $this->db->where('id', $recipientId);
         $this->db->where('docfile_id', $documentId);
         $recipient = $this->db->get('user_docfile_recipients')->row();
 
         $this->db->where('docfile_id', $documentId);
-        $this->db->where('user_docfile_recipients_id', $recipientId);
+        if (!$isSelfSigned) {
+            $this->db->where('user_docfile_recipients_id', $recipientId);
+        }
         $fields = $this->db->get('user_docfile_fields')->result();
 
         foreach ($fields as $field) {
@@ -438,7 +441,7 @@ class DocuSign extends MY_Controller
         echo json_encode([
             'data' => $record,
             'next_recipient' => $nextRecipient,
-            'has_user' => $this->session->userdata('login'),
+            'has_user' => logged('id') !== false,
         ]);
     }
 
@@ -979,6 +982,9 @@ SQL;
             $message = json_encode(['recipient_id' => $recipient['id'], 'document_id' => $envelope['id']]);
             $hash = encrypt($message, $this->password);
             $response = json_encode(['hash' => $hash]);
+
+            $this->db->where('id', $recipient['id']);
+            $this->db->update('user_docfile_recipients', ['sent_at' => date('Y-m-d H:i:s')]);
         }
 
         $this->db->where('id', $envelope['id']);
@@ -998,7 +1004,7 @@ SQL;
         return $baseUrl . '/DocuSign';
     }
 
-    private function sendEnvelope(array $envelope, array $recipient)
+    private function sendEnvelope(array $envelope, array $recipient, bool $isSelfSigned = false)
     {
         $mail = getMailInstance(['subject' => $envelope['subject']]);
         $templatePath = VIEWPATH . 'esign/docusign/email/invitation.html';
@@ -1008,7 +1014,11 @@ SQL;
         $inviter = $this->db->get('users')->row();
         $inviterName = implode(' ', [$inviter->FName, $inviter->LName]);
 
-        $message = json_encode(['recipient_id' => $recipient['id'], 'document_id' => $envelope['id']]);
+        $message = json_encode([
+            'recipient_id' => $recipient['id'],
+            'document_id' => $envelope['id'],
+            'is_self_signed' => $isSelfSigned,
+        ]);
         $hash = encrypt($message, $this->password);
 
         $data = [
@@ -1407,6 +1417,57 @@ SQL;
                 'signature' => $signature,
                 'details' => $details,
                 'company' => $company,
+            ],
+        ]);
+    }
+
+    public function apiSubmitSelfSigned($envelopeId)
+    {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            echo json_encode(['success' => false]);
+            return;
+        }
+
+        $payload = json_decode(file_get_contents('php://input'), true);
+        $payloadRecipients = $payload['recipients'] ?? [];
+        $subject = $payload['subject'] ?? '';
+        $message = $payload['message'] ?? '';
+
+        foreach ($payloadRecipients as $recipient) {
+            $this->db->insert('user_docfile_recipients', [
+                'user_id' => logged('id'),
+                'docfile_id' => $envelopeId,
+                'name' => $recipient['name'],
+                'email' => $recipient['email'],
+                'role' => 'Receives a copy',
+            ]);
+        }
+
+        $this->db->where('id', $envelopeId);
+        $this->db->update('user_docfile', [
+            'subject' => $subject,
+            'message' => $message,
+            'status' => 'Completed',
+        ]);
+
+        $this->db->where('id', $envelopeId);
+        $envelope = $this->db->get('user_docfile')->row_array();
+
+        $this->db->where('docfile_id', $envelopeId);
+        $recipients = $this->db->get('user_docfile_recipients')->result_array();
+
+        foreach ($recipients as $recipient) {
+            $this->sendEnvelope($envelope, $recipient, true);
+            $this->db->where('id', $recipient['id']);
+            $this->db->update('user_docfile_recipients', ['completed_at' => date('Y-m-d H:i:s')]);
+        }
+
+        header('content-type: application/json');
+        echo json_encode([
+            'data' => [
+                'status' => '👌',
+                'envelope_id' => $envelopeId,
+                'recipients' => $recipients,
             ],
         ]);
     }

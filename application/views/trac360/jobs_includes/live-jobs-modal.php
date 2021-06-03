@@ -42,7 +42,33 @@
                                 </a><a href="" target=""><small style="color: darkred;"></small></a>
                             </div>
                         </div>
-                        <div class="route-details-setion" style="">
+                        <div class="office-customer" style="">
+                            <table class="route-details-table">
+                                <tbody class="tbody">
+                                    <tr class="last-coords-details first-info" data-i="0">
+                                        <td class="connected-icon">
+                                            <div><i class="fa fa-building" aria-hidden="true"></i></div>
+                                        </td>
+                                        <td>
+                                            <div class="address office">Pan-Philippine Hwy
+                                                Panabo, Davao del Norte</div>
+                                            <div class="date-time office">Office: May 26, 2021 07:36 PM</div>
+                                        </td>
+                                    </tr>
+                                    <tr class="last-coords-details last-info" data-i="1">
+                                        <td class="connected-icon">
+                                            <div><i class="fa fa-home" aria-hidden="true"></i></div>
+                                        </td>
+                                        <td>
+                                            <div class="address customer">Tadeco Rd
+                                                Panabo, Davao del Norte</div>
+                                            <div class="date-time customer">Customer: May 26, 2021 07:36 PM</div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="route-details-setion">
                             <table class="route-details-table">
                                 <tbody class="tbody">
                                     <tr class="last-coords-details first-info" data-i="0">
@@ -103,6 +129,17 @@
 <script>
     var live_map;
     var live_job_id;
+    var live_employee_id;
+    var live_last_route_id;
+    var live_map_marker = [];
+    var antennasCircle_live_map;
+    var live_directionsService;
+    var live_directionsRenderer;
+    var live_infoWindow;
+    var expected_live_directionsService;
+    var expected_live_directionsRenderer;
+    var expected_live_map_marker = [];
+    var autoclockout_checker_loop;
 
     function initLiveMap() {
         live_map = new google.maps.Map(document.getElementById("live-map"), {

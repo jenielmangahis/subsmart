@@ -190,17 +190,21 @@ table.adp-directions tr:hover {
     text-transform: uppercase;
 }
 
-.route-details-setion .route-details-table>tbody>tr>td.connected-icon {
+.route-details-setion .route-details-table>tbody>tr>td.connected-icon,
+.office-customer .route-details-table>tbody>tr>td.connected-icon {
     width: 50px;
     text-align: center;
 }
 
-table.route-details-table {
+table.route-details-table,
+table.office-customer {
     width: 100%;
 }
 
 .route-details-setion .route-details-table .first-info .connected-icon>div:after,
-.route-details-setion .route-details-table .middle-info .connected-icon>div:after {
+.route-details-setion .route-details-table .middle-info .connected-icon>div:after,
+.office-customer .route-details-table .first-info .connected-icon>div:after,
+.office-customer .route-details-table .middle-info .connected-icon>div:after {
     content: ' ';
     width: 3px;
     height: 40px;
@@ -211,23 +215,34 @@ table.route-details-table {
     left: 45%;
 }
 
-.route-details-table .address {
+.route-details-table .address,
+.office-customer .address {
     font-size: 12px;
     font-weight: 600;
     color: #565656;
 }
 
-.route-details-setion .route-details-table>tbody>tr>td {
+.route-details-setion .route-details-table>tbody>tr>td,
+.office-customer .route-details-table>tbody>tr>td {
     padding-left: 20px;
     height: 70px;
 }
 
-.route-details-table .date-time {
+.route-details-setion .route-details-table>tbody>tr>td.no-data,
+.office-customer .route-details-table>tbody>tr>td.no-data {
+    text-align: center;
+    font-size: 12px;
+    color: #565656;
+}
+
+.route-details-table .date-time,
+.office-customer .date-time {
     font-size: 9px;
     color: #565656;
 }
 
-.route-details-setion .route-details-table .connected-icon>div {
+.route-details-setion .route-details-table .connected-icon>div,
+.office-customer .route-details-table .connected-icon>div {
     color: #ffffff;
     background-color: #2096F3;
     border-radius: 50%;
