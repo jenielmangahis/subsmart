@@ -422,6 +422,42 @@ class Workorder_model extends MY_Model
 		return $query->row();
     }
 
+    public function get_workorder_data($id)
+    {
+        $this->db->select('*');
+		$this->db->from('work_orders');
+		$this->db->where('id', $id);
+		$query = $this->db->get();
+		return $query->row();
+    }
+
+    public function get_source_data($id)
+    {
+        $this->db->select('*');
+		$this->db->from('ac_leadsource');
+		$this->db->where('id', $id);
+		$query = $this->db->get();
+		return $query->row();
+    }
+
+    public function get_cliets_data($id)
+    {
+        $this->db->select('*');
+		$this->db->from('clients');
+		$this->db->where('id', $id);
+		$query = $this->db->get();
+		return $query->row();
+    }
+
+    public function get_customerData_data($id)
+    {
+        $this->db->select('*');
+		$this->db->from('acs_profile');
+		$this->db->where('prof_id ', $id);
+		$query = $this->db->get();
+		return $query->row();
+    }
+
     public function save_custom_fields($data){
         $custom = $this->db->insert('workorder_custom_fields', $data);
 	    $insert = $this->db->insert_id();

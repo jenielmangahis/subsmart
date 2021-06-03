@@ -316,6 +316,11 @@ const actions = {
     });
   },
   continue: function (row) {
+    if (!row.recipients.length) {
+      window.location = `${prefixURL}/esign/Files?signing_id=${row.id}&next_step=3`;
+      return;
+    }
+
     window.location = `${prefixURL}/esign/Files?id=${row.id}&next_step=2`;
   },
 

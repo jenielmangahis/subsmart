@@ -213,7 +213,7 @@ class Customer extends MY_Controller
                     'card_number' => $input['card_number'],
                     'exp_month' => $input['exp_month'],
                     'exp_year' => $input['exp_year'],
-                    'card_cvc' => $input['card_cvc'],
+                    'card_cvc' => $input['cvc'],
                     'address' => $customer->mail_add,
                     'zip' => $customer->zip_code
                 ];
@@ -252,15 +252,17 @@ class Customer extends MY_Controller
 
         $is_success = false;
         $msg = '';
-
-        $exp_date = $data['exp_month'] . date("y",strtotime($data['exp_year']));
+        if( $data['exp_month'] < 10 ){
+            $data['exp_month'] = 0 . $data['exp_month'];
+        }
+        $year = date("d-m-" . $data['exp_year']);
+        $exp_date = $data['exp_month'] . date("y",strtotime($year));
         $converge = new \wwwroth\Converge\Converge([
             'merchant_id' => CONVERGE_MERCHANTID,
             'user_id' => CONVERGE_MERCHANTUSERID,
             'pin' => CONVERGE_MERCHANTPIN,
             'demo' => false,
         ]);
-        
         $createSale = $converge->request('ccsale', [
             'ssl_card_number' => $data['card_number'],
             'ssl_exp_date' => $exp_date,
@@ -681,7 +683,8 @@ class Customer extends MY_Controller
                 if ($input['notes'] != "" && $input['notes'] != NULL && !empty($input['notes'])){
                     $this->save_notes($input,$profile_id);
                 }
-                $this->qrcodeGenerator($profile_id);
+                $this->generate_qr_image($profile_id);
+                //$this->qrcodeGenerator($profile_id);
                 if(isset($input['customer_id'])){
                     echo $input['customer_id'];
                 }else{
@@ -2919,6 +2922,32 @@ class Customer extends MY_Controller
         }
 
         echo json_encode($json_data);
+    }
+
+    public function generate_qr_image($profile_id)
+    {
+        require_once APPPATH . 'libraries/qr_generator/QrCode.php';
+
+        $target_dir = "./uploads/customer_qr/";
+        
+        if(!file_exists($target_dir)) {
+            mkdir($target_dir, 0777, true);
+        }
+        
+        $qr_data  = base_url('/customer/preview/' . $profile_id);
+        $ecc      = 'M';                       
+        $size     = 3;
+        $filename = 'qr'.md5($qr_data.'|'.$ecc.'|'.$size).'.png'; 
+
+        $qrApi = new \Qr\QrCode();  
+        $qrApi->setFileName($target_dir . $filename);
+        $qrApi->setErrorCorrectionLevel($ecc);
+        $qrApi->setMatrixPointSize($size);
+        $qrApi->setQrData($qr_data);               
+        $qr_data = $qrApi->generateQR();
+
+        $profile_data = ['qr_img' => $filename];
+        $this->general->update_with_key_field($profile_data, $profile_id,'acs_profile','prof_id');
     }
 
 }

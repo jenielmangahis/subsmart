@@ -262,7 +262,12 @@ function get_differenct_of_dates($date_start, $date_end)
                             if (!empty($liveJobs)) { ?>
                                 <?php foreach ($liveJobs as $jb) { ?>
                                 <div class="job-item-panel"
-                                    data-job-id="<?=$jb->id?>">
+                                    data-job-id="<?=$jb->id?>"
+                                    data-employee-id="<?=$jb->employee_id?>"
+                                    data-customer-address="<?= $jb->mail_add .' '. $jb->cust_city.' '.$jb->cust_state.' '.$jb->cust_zip_code; ?>"
+                                    data-office-address="<?=$jb->office_address.', '.$jb->office_city.', '.$jb->office_state.', '.$jb->office_postal_code?>"
+                                    data-customer-name="<?= $jb->first_name. ' '. $jb->last_name; ?>"
+                                    data-business-name="<?=$jb->business_name?>">
                                     <div class="employee-name">
                                         <p><span class="name"><?=$jb->FName .' '.$jb->LName?></span>
                                         </p>

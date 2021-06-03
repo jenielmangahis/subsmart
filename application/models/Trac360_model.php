@@ -242,7 +242,7 @@ class Trac360_model extends MY_Model
     }
     public function get_all_jobs($date_from, $date_to, $company_id, $purpose="")
     {
-        $this->db->select('jobs.id, jobs.job_number, jobs.job_name, jobs.event_color, jobs.job_description, jobs.job_location, jobs.job_type, jobs.tags, jobs.start_date, 
+        $this->db->select('jobs.id,jobs.employee_id, jobs.job_number, jobs.job_name, jobs.event_color, jobs.job_description, jobs.job_location, jobs.job_type, jobs.tags, jobs.start_date, 
         jobs.end_date, jobs.company_id, jobs.start_time, jobs.end_time, jobs.status, jobs.priority, acs_profile.prof_id, acs_profile.first_name, acs_profile.last_name,
         job_tags.name as tags_name,cust.first_name,cust.last_name,cust.mail_add,cust.city as cust_city,cust.state as cust_state,cust.zip_code as cust_zip_code,job_url_links.link,users.profile_img,jpd.amount,users.FName,users.LName,
         business_profile.address as office_address, business_profile.city as office_city, business_profile.state as office_state, business_profile.postal_code as office_postal_code, business_profile.business_name');
@@ -334,7 +334,7 @@ class Trac360_model extends MY_Model
 
     public function get_seach_live_jobs($job_long_id, $company_id)
     {
-        $this->db->select('jobs.id, jobs.job_number, jobs.job_name, jobs.event_color, jobs.job_description, jobs.job_location, jobs.job_type, jobs.tags, jobs.start_date, 
+        $this->db->select('jobs.id,jobs.employee_id, jobs.job_number, jobs.job_name, jobs.event_color, jobs.job_description, jobs.job_location, jobs.job_type, jobs.tags, jobs.start_date, 
         jobs.end_date, jobs.company_id, jobs.start_time, jobs.end_time, jobs.status, jobs.priority, acs_profile.prof_id, acs_profile.first_name, acs_profile.last_name,
         job_tags.name as tags_name,cust.first_name,cust.last_name,cust.mail_add,cust.city as cust_city,cust.state as cust_state,cust.zip_code as cust_zip_code,job_url_links.link,users.profile_img,jpd.amount,users.FName,users.LName,
         business_profile.address as office_address, business_profile.city as office_city, business_profile.state as office_state, business_profile.postal_code as office_postal_code, business_profile.business_name');

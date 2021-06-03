@@ -36,6 +36,10 @@
         .signing__signatureInput {
             width: 100% !important;
         }
+
+        .modal-backdrop.in {
+            opacity: 0.5 !important;
+        }
     </style>
 </head>
 
@@ -536,7 +540,8 @@
                 </button>
             </div>
         </div>
-
+        <?php echo form_close(); ?>
+        <?php include viewPath('esign/esign-page-preview-step-4-style');?>
         <div class="modal fade" id="selfSigningSend" tabindex="-1" role="dialog" aria-labelledby="selfSigningSendLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
@@ -552,11 +557,13 @@
                             <div class="form-group">
                                 <label for="selfSigningSend__name">Full Name</label>
                                 <input class="form-control" id="selfSigningSend__name">
+                                <div class="invalid-feedback">Invalid recipient name</div>
                             </div>
 
                             <div class="form-group">
                                 <label for="selfSigningSend__email">Email</label>
                                 <input class="form-control" id="selfSigningSend__email">
+                                <div class="invalid-feedback">Invalid recipient email</div>
                             </div>
                         </div>
 
@@ -574,8 +581,8 @@
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">No Thanks</button>
-                    <button type="button" class="btn btn-danger d-flex align-items-center">
+                    <button type="button" class="btn btn-secondary">No Thanks</button>
+                    <button type="button" class="btn btn-primary d-flex align-items-center">
                         <div class="spinner-border spinner-border-sm mt-0 d-none" role="status">
                             <span class="sr-only">Loading...</span>
                         </div>
@@ -585,9 +592,6 @@
                 </div>
             </div>
         </div>
-
-        <?php echo form_close(); ?>
-        <?php include viewPath('esign/esign-page-preview-step-4-style');?>
     <?php endif;?>
 
     <script type="text/javascript" src="<?php echo $url->assets ?>/esign/js/jquery.min.js"></script>

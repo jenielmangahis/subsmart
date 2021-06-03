@@ -3460,4 +3460,16 @@ if (!function_exists('is_admin_logged')) {
 
         return $isLogged && $login_token_match;
     }
+
+    function customerQrCode($profile_id){
+        $CI =& get_instance();
+        $CI->load->model('AcsProfile_model');
+        $customer = $CI->AcsProfile_model->getByProfId($profile_id);
+        $qr_image = base_url('uploads/customer_qr/' . $customer->qr_img);
+        if( !file_exists($qr_image) ){
+            return $qr_image;
+        }else{
+            return false;
+        }
+    }
 }

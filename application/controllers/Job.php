@@ -113,8 +113,7 @@ class Job extends MY_Controller
             'select' => '*',
         );
         $this->page_data['color_settings'] = $this->general->get_data_with_param($get_color_settings);
-
-
+        
         $get_company_info = array(
             'where' => array(
                 'company_id' => logged('company_id'),

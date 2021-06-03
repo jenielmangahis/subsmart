@@ -865,7 +865,7 @@ class Trac360 extends MY_Controller
         if (count($liveJobs) > 0) {
             foreach ($liveJobs as $jb) {
                 $html .='<div class="job-item-panel"
-                    data-job-id="'.$jb->id.'">
+                    data-job-id="'.$jb->id.'" data-employee-id="'.$jb->employee_id.'" data-customer-address="'.$jb->mail_add .' '. $jb->cust_city.' '.$jb->cust_state.' '.$jb->cust_zip_code.'" data-office-address="'.$jb->office_address.', '.$jb->office_city.', '.$jb->office_state.', '.$jb->office_postal_code.'">
                     <div class="employee-name">
                         <p><span class="name">'.$jb->FName .' '.$jb->LName.'</span>
                         </p>
@@ -922,6 +922,51 @@ class Trac360 extends MY_Controller
         }
         $data = new stdClass();
         $data->html = $html;
+        echo json_encode($data);
+    }
+    public function get_live_job_last_track_location()
+    {
+        $job_id = $this->input->post("the_live_job_id");
+        $user_id = $this->input->post("the_live_employee_id");
+        $last_route_id = 0;
+        $html ='';
+        $history_details = $this->trac360_model->get_jobs_travel_history($job_id, $user_id);
+        $info_count =0;
+        $route_latlng = array();
+        $html='';
+        foreach ($history_details as $history) {
+            $explode= explode(",", $history->last_coordinate);
+            $explode[]=$history->last_address;
+            $route_latlng [] = $explode;
+            $info_class="";
+            $info_icon = "";
+            if ($info_count == 0) {
+                $info_class="first-info";
+                $info_icon = "fa-map-marker";
+            } elseif ($info_count+1 < count($history_details)) {
+                $info_class="middle-info" ;
+                $info_icon="fa-stop-circle" ;
+            } else {
+                $info_class="last-info" ;
+                $info_icon="fa-car" ;
+                $last_route_id = $history->id;
+            }
+            $html .='<tr class="last-coords-details '
+        .$info_class.'" data-i="'.$info_count.'">
+        <td class="connected-icon">
+            <div><i class="fa '.$info_icon.'" aria-hidden="true"></i></div>
+        </td>
+        <td>
+            <div class="address">'.$history->last_address.'</div>
+            <div class="date-time">'.date('M d, Y h:i A', strtotime($history->date_created)).'</div>
+        </td>
+        </tr>';
+            $info_count++;
+        }
+        $data = new stdClass();
+        $data->html = $html;
+        $data->last_route_id = $last_route_id;
+        $data->route_latlng = $route_latlng;
         echo json_encode($data);
     }
 }
