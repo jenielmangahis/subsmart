@@ -318,6 +318,44 @@
             print_r($qr_data);
             exit;
         }
+
+        public function customer_create_qr_image(){
+            $this->load->model('AcsProfile_model');
+
+            $customers = $this->AcsProfile_model->getAll(50);
+            foreach( $customers as $c ){
+                if( $c->qr_img == '' ){
+                    $this->generate_qr_image($c->prof_id);
+                }
+            }
+        }
+
+        public function generate_qr_image($profile_id){
+            require_once APPPATH . 'libraries/qr_generator/QrCode.php';
+
+            $this->load->model('General_model', 'general');
+            
+            $target_dir = "./uploads/customer_qr/";
+            
+            if(!file_exists($target_dir)) {
+                mkdir($target_dir, 0777, true);
+            }
+            
+            $qr_data  = base_url('/customer/preview/' . $profile_id);
+            $ecc      = 'M';                       
+            $size     = 3;
+            $filename = 'qr'.md5($qr_data.'|'.$ecc.'|'.$size).'.png'; 
+
+            $qrApi = new \Qr\QrCode();  
+            $qrApi->setFileName($target_dir . $filename);
+            $qrApi->setErrorCorrectionLevel($ecc);
+            $qrApi->setMatrixPointSize($size);
+            $qrApi->setQrData($qr_data);               
+            $qr_data = $qrApi->generateQR();
+
+            $profile_data = ['qr_img' => $filename];
+            $this->general->update_with_key_field($profile_data, $profile_id,'acs_profile','prof_id');
+        }
     }
     /* End of file Debug.php */
 
