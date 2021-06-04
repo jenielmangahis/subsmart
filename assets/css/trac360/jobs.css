@@ -249,3 +249,9 @@ table.office-customer {
     padding: 5px;
     position: relative;
 }
+
+.route-details-setion .route-details-table tr:hover .address,
+.office-customer .route-details-table tr:hover .address {
+    font-weight: bold;
+    cursor: pointer;
+}

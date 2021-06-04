@@ -263,8 +263,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                 <p class="m-0"><input type="checkbox" id="payee_chk" onchange="showCol(this)" checked> Payee</p>
                                                                 <p class="m-0"><input type="checkbox" id="category_chk" onchange="showCol(this)" checked> Category</p>
                                                                 <p class="m-0"><input type="checkbox" id="memo_chk" onchange="showCol(this)" checked> Memo</p>
-                                                                <p class="m-0">Other</p>
-                                                                <p class="m-0"><input type="checkbox" id="inc_inactive" value="1"> Include Inactive</p>
                                                                 <p class="m-0">Rows</p>
                                                                 <p class="m-0"><input type="checkbox" id="compact_chk"> Compact</p>
                                                             </div>

@@ -296,7 +296,7 @@ class Vendors_model extends MY_Model {
 				$this->db->where('status', $filters['status']);
 			}
 		} else {
-			$this->db->where('status', 1);
+			$this->db->where('status !=', 0);
 		}
 
 		$query = $this->db->get('accounting_check');
@@ -320,7 +320,7 @@ class Vendors_model extends MY_Model {
 				$this->db->where('status', $filters['status']);
 			}
 		} else {
-			$this->db->where('status', 1);
+			$this->db->where('status !=', 0);
 		}
 		
 		$query = $this->db->get('accounting_expense');

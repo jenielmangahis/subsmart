@@ -133,18 +133,36 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                 <td><?= $lead->phone_cell; ?></td>
                                                 <td><?= $lead->status; ?></td>
                                                 <td>
-                                                    <a href="<?php echo url('/customer/add_lead/'.$lead->leads_id); ?>" style="text-decoration:none;display:inline-block;" title="Edit Customer">
-                                                        <img src="/assets/img/customer/actions/ac_edit.png" width="16px" height="16px" border="0" title="Edit Lead">
-                                                    </a>
-                                                    <a href="javascript:void(0);" id="<?php echo $lead->leads_id; ?>" class="delete_lead" style="text-decoration:none;display:inline-block;" title="Edit Customer">
-                                                        <img src="/assets/img/customer/actions/ac_delete.png" width="16px" height="16px" border="0" title="Delete Lead">
-                                                    </a>
-                                                    <a href="#" style="text-decoration:none; display:inline-block;" >
-                                                        <img src="/assets/img/customer/actions/ac_sms.png" width="16px" height="16px" border="0" title="Send SMS">
-                                                    </a>
-                                                    <a href="mailto:<?= $lead->email_add; ?>" style="text-decoration:none; display:inline-block;" >
-                                                        <img src="/assets/img/customer/actions/ac_email.png" width="16px" height="16px" border="0" title="Send Email">
-                                                    </a>
+                                                    <div class="dropdown dropdown-btn text-center">
+                                                        <button class="btn btn-default" type="button" id="dropdown-edit"
+                                                            data-toggle="dropdown" aria-expanded="true">
+                                                            <span class="btn-label">Manage <i class="fa fa-caret-down fa-sm"
+                                                                    style="margin-left:10px;"></i></span></span>
+                                                        </button>
+                                                        <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="dropdown-edit">
+                                                            <li role="presentation">
+                                                                <a role="menuitem" tabindex="-1" href="<?php echo url('/customer/add_lead/'.$lead->leads_id); ?>" class="editItemBtn">
+                                                                    <span class="fa fa-edit icon"></span> Edit
+                                                                </a>
+                                                            </li>
+                                                            <li role="presentation">
+                                                                <a role="menuitem" tabindex="-1" href="javascript:void(0);" id="<?php echo $lead->leads_id; ?>" class="delete_lead">
+                                                                    <span class="fa fa-trash icon"></span> Delete
+                                                                </a>
+                                                            </li>
+                                                            <li role="presentation">
+                                                                <a role="menuitem" tabindex="-1" href="<?php echo url('/customer/add_lead/'.$lead->leads_id); ?>" class="editItemBtn">
+                                                                    <span class="fa fa-file-text icon"></span> Send SMS
+                                                                </a>
+                                                            </li>
+                                                            <li role="presentation">
+                                                                <a role="menuitem" tabindex="-1" href="mailto:<?= $lead->email_add; ?>" class="editItemBtn">
+                                                                    <span class="fa fa-envelope icon"></span> Send Email
+                                                                </a>
+                                                            </li>
+                                                            <li role="separator" class="divider"></li>
+                                                        </ul>
+                                                    </div>
                                                 </td>
                                             </tr>
                                         <?php endforeach; ?>

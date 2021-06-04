@@ -310,6 +310,7 @@ class Workorder_model extends MY_Model
             'phone_m'                   => $phone_m, //new
             'date_of_birth'             => $date_of_birth, //new
             'ssn'                       => $ssn, //new
+            'email'                     => $email, //new
             's_last_name'               => $s_last_name,
             's_first_name'              => $s_first_name,
             's_mobile'                  => $s_mobile,
@@ -584,6 +585,18 @@ class Workorder_model extends MY_Model
 		// return  $insert;
         $this->db->where('id', $id);
         $this->db->update('custom_fields', array('name' => $name));
+        return true;
+    }
+
+    public function update_custom_field_edit($data)
+    {
+        extract($data);
+        // $vendor = $this->db->update('custom_fields', $data);
+        //           $this->db->where('id', $data['id']);
+	    // $insert = $this->db->insert_id();
+		// return  $insert;
+        $this->db->where('id', $id);
+        $this->db->update('custom_fields_lists', array('name' => $name));
         return true;
     }
 
@@ -863,6 +876,15 @@ class Workorder_model extends MY_Model
         return $query->row();
     }
 
+    public function get_custom_data($id)
+    {
+        $this->db->select('*');
+		$this->db->from('custom_fields_lists');
+		$this->db->where('work_order_id', $id);
+        $query = $this->db->get();
+        return $query->result();
+    }
+
     public function getworkorder($id)
     {
         $company_id = logged('company_id');
@@ -872,10 +894,10 @@ class Workorder_model extends MY_Model
             'work_orders.id'   => $id
           );
 
-        $this->db->select('*');
+        $this->db->select('* , work_orders.email AS w_email, work_orders.status AS w_status');
         $this->db->from('work_orders');
         $this->db->join('acs_profile', 'work_orders.customer_id  = acs_profile.prof_id');
-		$this->db->where($where);
+		$this->db->where('id',$id);
         $query = $this->db->get();
         return $query->row();
     }

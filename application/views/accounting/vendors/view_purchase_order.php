@@ -40,6 +40,15 @@
                                             <h6 class="text-right">AMOUNT</h6>
                                             <h2 class="text-right">$<span class="transaction-total-amount"><?=number_format(floatval($purchaseOrder->total_amount), 2, '.', ',')?></span></h2>
                                         </div>
+                                        <?php if($is_copy) : ?>
+                                        <div class="col-md-12">
+                                            <div class="alert alert-info alert-dismissible mb-4" role="alert">
+                                                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                                                <h6 class="mt-0">This is a copy</h6>
+                                                <span>This is a copy of an expense. Revise as needed and save the expense.</span>
+                                            </div>
+                                        </div>
+                                        <?php endif; ?>
                                         <div class="col-md-2">
                                             <div class="form-group">
                                                 <label for="mailing_address">Mailing address</label>
@@ -116,10 +125,14 @@
                                                                     <th>DESCRIPTION</th>
                                                                     <th width="10%">AMOUNT</th>
                                                                     <th width="15%">CUSTOMER</th>
+                                                                    <?php if(!$is_copy) : ?>
+                                                                    <th width="10%">RECEIVED</th>
+                                                                    <th width="3%">CLOSED</th>
+                                                                    <?php endif; ?>
                                                                     <th></th>
                                                                 </thead>
                                                                 <tbody class="cursor-pointer">
-                                                                <tr>
+                                                                    <tr>
                                                                         <td></td>
                                                                         <td>1</td>
                                                                         <td>
@@ -153,17 +166,6 @@
                                                                         <td><input type="text" name="description[]" class="form-control"></td>
                                                                         <td><input type="number" name="category_amount[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01"></td>
                                                                         <td>
-                                                                            <div class="d-flex align-items-center justify-content-center">
-                                                                                <input type="checkbox" name="category_billable[]" class="form-check" value="1">
-                                                                            </div>
-                                                                        </td>
-                                                                        <td><input type="number" name="category_markup[]" class="form-control" onchange="convertToDecimal(this)"></td>
-                                                                        <td>
-                                                                            <div class="d-flex align-items-center justify-content-center">
-                                                                                <input type="checkbox" name="category_tax[]" class="form-check" value="1">
-                                                                            </div>
-                                                                        </td>
-                                                                        <td>
                                                                             <select name="category_customer[]" class="form-control">
                                                                                 <option value="" selected disabled>&nbsp;</option>
                                                                                 <?php if(count($dropdown['customers']) > 0) : ?>
@@ -173,6 +175,14 @@
                                                                                 <?php endif; ?>
                                                                             </select>
                                                                         </td>
+                                                                        <?php if(!$is_copy) : ?>
+                                                                        <td><span class="float-right">0.00</span></td>
+                                                                        <td>
+                                                                            <div class="d-flex align-items-center justify-content-center">
+                                                                                <input type="checkbox" name="category_closed[]" class="form-check" value="1">
+                                                                            </div>
+                                                                        </td>
+                                                                        <?php endif; ?>
                                                                         <td><a href="#" class="deleteRow"><i class="fa fa-trash"></i></a></td>
                                                                     </tr>
                                                                     <?php $count = 1; ?>
@@ -212,17 +222,6 @@
                                                                         <td><input type="text" name="description[]" class="form-control" value="<?=$category->description?>"></td>
                                                                         <td><input type="number" name="category_amount[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" value="<?=number_format(floatval($category->amount), 2, '.', ',')?>"></td>
                                                                         <td>
-                                                                            <div class="d-flex align-items-center justify-content-center">
-                                                                                <input type="checkbox" name="category_billable[]" class="form-check" value="1" <?=$category->billable === "1" ? 'checked' : ''?>>
-                                                                            </div>
-                                                                        </td>
-                                                                        <td><input type="number" name="category_markup[]" class="form-control" onchange="convertToDecimal(this)" value="<?=number_format(floatval($category->markup_percentage), 2, '.', ',')?>"></td>
-                                                                        <td>
-                                                                            <div class="d-flex align-items-center justify-content-center">
-                                                                                <input type="checkbox" name="category_tax[]" class="form-check" value="1" <?=$category->tax === "1" ? 'checked' : ''?>>
-                                                                            </div>
-                                                                        </td>
-                                                                        <td>
                                                                             <select name="category_customer[]" class="form-control">
                                                                                 <option value="" selected disabled>&nbsp;</option>
                                                                                 <?php if(count($dropdown['customers']) > 0) : ?>
@@ -232,6 +231,14 @@
                                                                                 <?php endif; ?>
                                                                             </select>
                                                                         </td>
+                                                                        <?php if(!$is_copy) : ?>
+                                                                        <td class="text-right">0.00</td>
+                                                                        <td>
+                                                                            <div class="d-flex align-items-center justify-content-center">
+                                                                                <input type="checkbox" name="category_closed[]" class="form-check" value="1">
+                                                                            </div>
+                                                                        </td>
+                                                                        <?php endif; ?>
                                                                         <td><a href="#" class="deleteRow"><i class="fa fa-trash"></i></a></td>
                                                                     </tr>
                                                                     <?php $count++; endforeach; ?>
@@ -244,9 +251,10 @@
                                                                         <td></td>
                                                                         <td></td>
                                                                         <td></td>
+                                                                        <?php if(!$is_copy) : ?>
                                                                         <td></td>
                                                                         <td></td>
-                                                                        <td></td>
+                                                                        <?php endif; ?>
                                                                         <td><a href="#" class="deleteRow"><i class="fa fa-trash"></i></a></td>
                                                                     </tr>
                                                                 </tbody>
@@ -280,6 +288,10 @@
                                                                     <th width="10%">DISCOUNT</th>
                                                                     <th width="10%">TAX (CHANGE IN %)</th>
                                                                     <th>TOTAL</th>
+                                                                    <?php if(!$is_copy) : ?>
+                                                                    <th width="10%">RECEIVED</th>
+                                                                    <th width="3%">CLOSED</th>
+                                                                    <?php endif; ?>
                                                                     <th width="3%"></th>
                                                                 </thead>
                                                                 <tbody>
@@ -301,6 +313,14 @@
                                                                             <td><input type="number" name="discount[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" value="<?=number_format(floatval($item->discount), 2, '.', ',')?>"></td>
                                                                             <td><input type="number" name="item_tax[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" value="<?=number_format(floatval($item->tax), 2, '.', ',')?>"></td>
                                                                             <td>$<span class="row-total"><?=number_format(floatval($item->total), 2, '.', ',')?></span></td>
+                                                                            <?php if(!$is_copy) : ?>
+                                                                            <td class="text-right">0</td>
+                                                                            <td>
+                                                                                <div class="d-flex align-items-center justify-content-center">
+                                                                                    <input type="checkbox" name="item_closed[]" class="form-check" value="1">
+                                                                                </div>
+                                                                            </td>
+                                                                            <?php endif; ?>
                                                                             <td><a href="#" class="deleteRow"><i class="fa fa-trash"></i></a></td>
                                                                         </tr>
                                                                     <?php endforeach; ?>

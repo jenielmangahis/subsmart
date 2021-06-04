@@ -23,6 +23,42 @@ $(document).on("click", "#livejobs-collapse-panel .livejobs-section .job-item-pa
 
     get_live_job_last_track_location($(this).attr('data-customer-address'), $(this).attr('data-office-address'));
 });
+$(document).on('click', '.office-customer .last-coords-details', function(event) {
+    if ($(this).hasClass("first-info")) {
+        live_map.setCenter(expected_live_map_marker[0].internalPosition);
+    } else if ($(this).hasClass("last-info")) {
+        live_map.setCenter(expected_live_map_marker[1].internalPosition);
+    }
+    live_map.setZoom(14);
+});
+$(document).on('mouseenter', '.office-customer .last-coords-details', function(event) {
+    if ($(this).hasClass("first-info")) {
+        openwindow_title(expected_live_map_marker[0]);
+    } else if ($(this).hasClass("last-info")) {
+        openwindow_title(expected_live_map_marker[1]);
+    }
+}).on('mouseleave', '.office-customer .last-coords-details', function() {
+    if (live_infoWindow != null) {
+        if (live_infoWindow) {
+            live_infoWindow.close();
+        }
+    }
+});
+$(document).on('click', '.route-details-setion .route-details-table .last-coords-details', function(event) {
+    live_map.setCenter(live_map_marker[$(this).attr("data-i")].internalPosition);
+    live_map.setZoom(14);
+});
+$(document).on('mouseenter', '.route-details-setion .route-details-table .last-coords-details', function(event) {
+
+    openwindow_title(live_map_marker[$(this).attr("data-i")]);
+
+}).on('mouseleave', '.route-details-setion .route-details-table .last-coords-details', function() {
+    if (live_infoWindow != null) {
+        if (live_infoWindow) {
+            live_infoWindow.close();
+        }
+    }
+});
 
 function get_live_jobs(the_job_long_id = "") {
     $.ajax({
@@ -224,7 +260,7 @@ function emeployee_expected_live_calculateAndDisplayRoute(customer_address, offi
                     title: office_address,
                 }));
                 expected_live_map_marker[0].addListener("click", function() {
-                    toggleBounce(expected_live_map_marker[0]);
+                    openwindow_title(expected_live_map_marker[0]);
                 });
                 expected_live_map_marker.push(new google.maps.Marker({
                     position: my_route.legs[my_route.legs.length - 1].end_location,
@@ -236,7 +272,7 @@ function emeployee_expected_live_calculateAndDisplayRoute(customer_address, offi
                     title: customer_address,
                 }));
                 expected_live_map_marker[1].addListener("click", function() {
-                    toggleBounce(expected_live_map_marker[1]);
+                    openwindow_title(expected_live_map_marker[1]);
                 });
             } else {
                 window.alert("Expected directions request failed due to " + status);
@@ -245,16 +281,6 @@ function emeployee_expected_live_calculateAndDisplayRoute(customer_address, offi
     );
 }
 
-function toggleBounce(the_marker) {
-    if (live_infoWindow != null) {
-        if (live_infoWindow) {
-            live_infoWindow.close();
-        }
-    }
-    live_infoWindow = new google.maps.InfoWindow();
-    live_infoWindow.setContent(the_marker.getTitle());
-    live_infoWindow.open(the_marker.getMap(), the_marker);
-}
 
 function openwindow_title(the_marker) {
     if (live_infoWindow != null) {

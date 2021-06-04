@@ -475,7 +475,7 @@ border: none;
                         <div class="row" id="thisdiv">
                         <?php foreach($custom_fields as $field){ ?>
                             <div class="col-md-3 form-group">
-                                <label><?php echo $field->name; ?></label> <i class="fa fa-pencil" aria-hidden="true"></i>
+                            <label for="suit" data-toggle="modal" data-target="#modalupdateCustom" class="mytxtc label-element" label-id="<?php echo $field->id; ?>"  label-name="<?php echo $field->name; ?>"><?php echo $field->name; ?></label> <i class="fa fa-pencil" aria-hidden="true"></i>
                                 <input type="text" class="form-control" name="custom_value[]" id="custom1_value" value="<?php echo $field->value; ?>"/>
                                 <input type="hidden" class="custom_<?php echo $field->id; ?>" value="<?php echo $field->name; ?>" name="custom_field[]">
                             </div>     
@@ -2528,9 +2528,10 @@ $('.saveUpdateCustomField').on('click', function(){
     //   alert('yeah');
       var id = $('#update_custom_id').val();
       var name = $('#update_custom_name').val();
+    //   alert(name);
 
       $.ajax({
-            url:"<?php echo base_url(); ?>workorder/save_update_custom_name",
+            url:"<?php echo base_url(); ?>workorder/save_update_custom_name_edit",
             type: "POST",
             data: {id : id, name : name },
             success: function(dataResult){

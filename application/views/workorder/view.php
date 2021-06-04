@@ -442,7 +442,7 @@ border: none;
 									
 									<div class="user-menu mobile_btn"><br>
 										<a class="btn btn-sec" href=""><span class="fa fa-edit"></span> Edit</a>
-                       					<a class="btn btn-sec" data-print-modal="open" href="#" target="_blank"><span class="fa fa-file-pdf-o"></span> PDF</a>
+                       					<a href="<?php echo base_url('workorder/work_order_pdf/' . $workorder->id) ?>" class="btn btn-sec download_work_order_pdfsss" acs-id="<?php echo $workorder->customer_id; ?>" workorder-id="<?php echo $workorder->id; ?>"><span class="fa fa-file-pdf-o"></span> PDF</a>
           								<a class="btn btn-sec" data-print-modal="open" href="#" target="_blank"><span class="fa fa-print"></span> Print</a>
 										  <div class="user-menu">
 									<div class="dropdown dropdown-btn dropdown-inline margin-left-sec"><br>
@@ -454,8 +454,8 @@ border: none;
 												<li class="divider"></li>
 												<li ><a  href="#" ><span class="fa fa-files-o icon"></span> Clone Work Order</a></li>
 												<li ><a href="#" ><span class="fa fa-file-text-o icon"></span> Convert to Estimate</a></li>
-												<li ><a  href="" acs-id="<?php echo $workorder->customer_id; ?>" workorder-id="<?php echo $workorder->id; ?>" class="send_to_customer"><span class="fa fa-envelope-o icon"></span> Send to Customer</a></li>
-												<li ><a  href="" acs-id="<?php echo $workorder->customer_id; ?>" workorder-id="<?php echo $workorder->id; ?>" class="send_to_company"><span class="fa fa-envelope-o icon"></span> Send to Company</a></li>
+												<li ><a href="" acs-id="<?php echo $workorder->customer_id; ?>" workorder-id="<?php echo $workorder->id; ?>" class="send_to_customer"><span class="fa fa-envelope-o icon"></span> Send to Customer</a></li>
+												<li ><a href="" acs-id="<?php echo $workorder->customer_id; ?>" workorder-id="<?php echo $workorder->id; ?>" class="send_to_customer_alarm"><span class="fa fa-envelope-o icon"></span> Send to Company</a></li>
 												<li class="divider"></li>
 												<li ><a   href="#" ><span class="fa fa-trash-o icon"></span> Delete Work Order</a></li>
 												<li ><a   href="#" id="esignButton"><span class="fa fa-envelope-o icon"></span> eSign</a></li>
@@ -497,7 +497,7 @@ border: none;
 														</tr>
 														<tr>
 															<td align="left"><div style="">Date:</div></td>
-															<td align="left"><?php echo $workorder->date_created ?></td>
+															<td align="left"><?php $wDate = $workorder->date_created; echo date("m-d-Y", strtotime($wDate) ); ?></td>
 														</tr>
 														<tr>
 															<td align="left"><div style="">Type:</div></td>
@@ -506,6 +506,33 @@ border: none;
 															<td align="left"><div style="">Priority:</div></td>
 															<td align="left"><?php echo $workorder->priority ?></td>
 														</tr>
+														<?php if($workorder->work_order_type_id == 2){ ?>
+														<tr>
+															<td align="left"><div style="">Contacts:</div></td>
+														</tr>
+														</tr>
+															<td align="left"></td>
+															<td align="left"><?php echo $customer->first_verification_name ?> <br> <?php echo $customer->first_number ?> <br> <?php echo $customer->first_relation ?></td>
+														</tr>
+														<tr>
+															<td align="left"><br></td>
+															<td align="left"></td>
+														</tr>
+														<tr>
+															<td align="left"></td>
+															<td align="left"><?php echo $customer->second_verification_name ?> <br> <?php echo $customer->second_number ?> <br> <?php echo $customer->second_relation ?></td>
+														</tr>
+														<tr>
+															<td align="left"><br></td>
+															<td align="left"></td>
+														</tr>
+														<tr>
+															<td align="left"></td>
+															<td align="left"><?php echo $customer->third_verification_name ?> <br> <?php echo $customer->third_number ?> <br> <?php echo $customer->third_relation ?></td>
+														</tr>
+														<?php }else{ ?>
+
+														<?php } ?>
 														</tbody>
 													</table>
 												</div>
@@ -962,6 +989,72 @@ if (r == true) {
 	$.ajax({
 	type : 'POST',
 	url : "<?php echo base_url(); ?>workorder/sendWorkorderToCompany",
+	data : {id: id, wo_id: wo_id},
+	success: function(result){
+		//sucess("Email Successfully!");
+		// alert('Email Successfully!');
+	},
+	error: function () {
+      alert("An error has occurred");
+    },
+
+	});
+
+	} 
+else 
+{
+	alert('no');
+}
+
+});
+</script>
+
+<script>
+$(document).on('click touchstart','.send_to_customer_alarm',function(){
+
+var id = $(this).attr('acs-id');
+var wo_id = $(this).attr('workorder-id');
+// alert(wo_id);
+
+var r = confirm("Send this to Customer?");
+
+if (r == true) {
+	$.ajax({
+	type : 'POST',
+	url : "<?php echo base_url(); ?>workorder/sendWorkorderToAcsAlarm",
+	data : {id: id, wo_id: wo_id},
+	success: function(result){
+		//sucess("Email Successfully!");
+		// alert('Email Successfully!');
+	},
+	error: function () {
+      alert("An error has occurred");
+    },
+
+	});
+
+	} 
+else 
+{
+	alert('no');
+}
+
+});
+</script>
+
+<script>
+$(document).on('click touchstart','.download_work_order_pdf',function(){
+
+var id = $(this).attr('acs-id');
+var wo_id = $(this).attr('workorder-id');
+// alert(wo_id);
+
+var r = confirm("Send this to Customer?");
+
+if (r == true) {
+	$.ajax({
+	type : 'POST',
+	url : "<?php echo base_url(); ?>workorder/work_order_pdf",
 	data : {id: id, wo_id: wo_id},
 	success: function(result){
 		//sucess("Email Successfully!");

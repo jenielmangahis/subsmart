@@ -596,11 +596,16 @@ class Trac360 extends MY_Controller
         $all_jobs=$this->trac360_model->get_all_jobs($date_from, $date_to, logged('company_id'));
         $scredules = array();
         foreach ($all_jobs as $job) {
+            if (date("Y-m-d", strtotime($job->start_date))< date("Y-m-d")) {
+                $url= base_url().'/trac360/history/' . $job->id;
+            } else {
+                $url= "";
+            }
             $scredules[]=array(
                 "title" => $job->FName .' '.$job->LName.' : '.$job->job_number . ' : ' . $job->job_type. ' - ' . $job->tags_name,
                 "start" => $job->start_date.'T'.date('H:i:s', $job->start_time),
                 "end" => $job->end_date.'T'.date('H:i:s', $job->end_time),
-                "url" => $job->job_number . ' : ' . $job->job_type. ' - ' . $job->tags_name
+                "url" => base_url().'/trac360/history/' . $job->id
             );
         }
         $data = new stdClass();

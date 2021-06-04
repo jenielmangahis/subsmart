@@ -2,7 +2,8 @@
 defined('BASEPATH') or exit('No direct script access allowed');
 ?>
 <div class="customizable module_med ui-state-default"  data-id="<?= $id ?>"  id="<?= $id ?>">
-    <div class="col-sm-12">
+    <div class="col-sm-12 individual-module-big">
+        <h6>Customizable</h6>
         <div class="row">
             <div class="col-sm-12">
                 <div class="contacttext">
