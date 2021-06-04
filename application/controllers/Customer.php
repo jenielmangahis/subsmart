@@ -230,6 +230,7 @@ class Customer extends MY_Controller
                 $subscription_details['method'] = $input['method'];
                 $subscription_details['transaction_type'] = 'Pre-Auth and Capture';
                 $subscription_details['frequency'] = $input['frequency'];
+                $subscription_details['num_frequency'] = $input['num_frequency'];
                 $subscription_details['notes'] = $input['notes'];
                 $subscription_details['status'] = 'Approved';
 
@@ -732,7 +733,9 @@ class Customer extends MY_Controller
         $input_billing['transaction_amount'] = $input['transaction_amount'];
         $input_billing['transaction_category'] = $input['transaction_category'];
         $input_billing['frequency'] = $input['frequency'];
-
+        $input_billing['last_payment_date'] = '';
+        $input_billing['total_payments']    = 0;
+        $input_billing['next_billing_date'] = date("n/j/Y",strtotime("+" . $input['frequency'] . " months"));
 
         $check = array(
             'where' => array(
