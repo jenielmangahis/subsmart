@@ -578,8 +578,7 @@ border: none;
 											<label for="monitored_location" class="label-element">Monitored Location</label>
 											<input type="text" class="form-control input-element" name="monitored_location"
 												   id="ship-address"
-												   value="<?php echo $workorder->mail_add; ?>"
-												    placeholder="Monitored Location"/>
+												   value="<?php echo $workorder->mail_add; ?>" />
 										</div>
 										<div class="col-md-3 form-group">
 											<label for="city" class="label-element">City</label> 
@@ -612,7 +611,8 @@ border: none;
 											<label for="email" class="label-element">Email</label>
 											<input type="email" class="form-control input-element" name="email"
 												   id="email" 
-												   value="<?php echo $workorder->email; ?>"
+												   value="<?php echo $workorder->email; 
+                                                   //print_r($workorder); ?>"
 												    placeholder="Enter Email"/>
 										</div>
 										<div class="col-md-2 form-group">
@@ -1033,11 +1033,11 @@ border: none;
                                     <!-- <div class=""> -->
                                         <label for="date_w_issued" class="label-element"> Requested Date:</label>
                                         <!-- <div class='input-group date datepicker'> -->
-                                            <input type="date"
+                                            <input type="text"
                                                    name="date_issued"
                                                    class="form-control input-element"
                                                    value="<?php echo $workorder->date_issued; ?>"
-                                                   id=""/>
+                                                   id="datepicker"/>
                                         <!-- </div> -->
                                     <!-- </div> -->
                                 </div>
@@ -1082,7 +1082,7 @@ border: none;
                                     <!-- <div class=""> -->
                                         <label for="status_id"> Status:</label>
                                         <select name="status" id="workorder_status" class="form-control custom-select m_select">
-                                        <option value="<?php echo $workorder->status; ?>"><?php echo $workorder->status; ?></option>
+                                        <option value="<?php echo $workorder->w_status; ?>"><?php echo $workorder->w_status; ?></option>
                                         <option value="New">New</option>
                                         <option value="Draft">Draft</option>
                                         <option value="Scheduled">Scheduled</option>
@@ -2537,6 +2537,11 @@ border: none;
 
     <?php include viewPath('includes/footer'); ?>
 
+    <script>
+  $( function() {
+    $( "#datepicker" ).datepicker();
+  } );
+</script>
     <script>
 // $("#company_representative_approval_signature1aM").on("click touchstart",
 //   function () {

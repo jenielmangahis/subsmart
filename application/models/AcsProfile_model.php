@@ -53,7 +53,7 @@ class AcsProfile_model extends MY_Model
         return $query->row();
     }
 
-    public function getAll()
+    public function getAll($limit = 0)
     {
 
         $this->db->select('*');
@@ -61,6 +61,9 @@ class AcsProfile_model extends MY_Model
         $this->db->order_by('first_name', 'ASC');
 
         $query = $this->db->get();
+        if( $limit > 0 ){
+            $this->db->limit($limit);
+        }
         return $query->result();
     }
 

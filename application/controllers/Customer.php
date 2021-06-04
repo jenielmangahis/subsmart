@@ -1497,7 +1497,7 @@ class Customer extends MY_Controller
         }
     }
 
-    public function send_qr($id=null)
+    public function send_qr2($id=null)
     {
         $info = $this->customer_ad_model->get_data_by_id('prof_id',$id,"acs_profile");
         $to = $info->email;
@@ -1526,33 +1526,51 @@ class Customer extends MY_Controller
         }
     }
 
-    public function sendqr(){
-        $config = Array(
-            'protocol' => 'smtp',
-            'smtp_host' => 'ssl://smtp.gmail.com',
-            'smtp_port' => 465,
-            'smtp_user' => 'welyelfhisula@gmail.com',
-            'smtp_pass' => 'wrhisula1123',
-            'mailtype' => 'html',
-            'charset' => 'iso-8859-1',
-            'starttls'  => true,
-            'smtp_timeout' =>'60',
-            'crlf'     => "\n",
-            'validation'  => TRUE,
-            'wordwrap' => TRUE,
-    );
-        $this->load->library('email',$config);
-        //$this->email->initialize($config);
-       // $this->email->set_mailtype("html");
-        //Email content
-        $this->email->set_newline("\r\n");
-        $this->email->to('wrhisula1123@gmail.com');
-        $this->email->from('welyelfhisula@gmail.com','MyWebsite');
-        $this->email->subject('QR Details');
-        $this->email->message('Testing the email class.');
-        //Send email
-       $this->email->send();
-       show_error($this->email->print_debugger());
+    public function send_qr($id=null){
+        
+        $customer = $this->customer_ad_model->get_data_by_id('prof_id',$id,"acs_profile");
+        //Email Sending
+        $server    = MAIL_SERVER;
+        $port      = MAIL_PORT ;
+        $username  = MAIL_USERNAME;
+        $password  = MAIL_PASSWORD;
+        $from      = MAIL_FROM;
+        $recipient = 'welyelfhisula@gmail.com';
+        $subject = 'nSmarTrac : Customer QR';
+        $this->page_data['customer_id'] = $id.'.png';
+
+        $params = array();
+        $params['customer_id'] = ["id"=>$id,"firstname"=>$customer->first_name,"lastname"=>$customer->last_name];
+
+        include APPPATH . 'libraries/PHPMailer/PHPMailerAutoload.php';
+        
+        $mail = new PHPMailer;
+        $mail->isSMTP();
+        $mail->getSMTPInstance()->Timelimit = 5;
+        $mail->Host = $server;
+        $mail->SMTPAuth = true;
+        $mail->Username = $username;
+        $mail->Password = $password;
+        $mail->SMTPSecure = 'ssl';
+        $mail->Timeout = 10; // seconds
+        $mail->Port = $port;
+        $mail->From = $from;
+        $mail->FromName = 'nSmarTrac';
+        $mail->Subject = $subject;
+        $mail->Body    = 'This is customer QR.';
+        //$mail->addAttachment($attachment);
+
+        $content = $this->load->view('customer/email_template/customer_qr_template', $params, true);
+
+        $mail->MsgHTML($content);
+        $mail->addAddress($recipient);
+        if($mail->send()){
+            echo json_encode(['success' => true]);
+        }else{
+            echo json_encode(['success' => false]);
+        }
+        $mail->ClearAllRecipients();
+        
     }
 
     public function get_customer_import_header(){

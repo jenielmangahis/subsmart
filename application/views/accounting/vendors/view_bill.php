@@ -31,14 +31,25 @@
                                             </div>
                                         </div>
                                         <div class="col-md-4">
-                                            <h6 class="text-right"><?=$bill->status === "1" ? "BALANCE DUE" : "PAYMENT STATUS"?></h6>
-                                            <h2 class="text-right">
-                                                <?php if($bill->status === "1") : ?>
-                                                    $<span class="transaction-total-amount"><?=number_format(floatval($bill->remaining_balance), 2, '.', ',')?></span>
+                                            <h6 class="text-right">
+                                                <?php if(!$is_copy) : ?>
+                                                    <?=$bill->status === "1" ? "BALANCE DUE" : "PAYMENT STATUS"?>
                                                 <?php else : ?>
-                                                    PAID
+                                                    AMOUNT
+                                                <?php endif; ?>
+                                            </h6>
+                                            <h2 class="text-right">
+                                                <?php if(!$is_copy) : ?>
+                                                    <?php if($bill->status === "1") : ?>
+                                                        $<span class="transaction-total-amount"><?=number_format(floatval($bill->remaining_balance), 2, '.', ',')?></span>
+                                                    <?php else : ?>
+                                                        PAID
+                                                    <?php endif; ?>
+                                                <?php else : ?>
+                                                    $<span class="transaction-total-amount"><?=number_format(floatval($bill->remaining_balance), 2, '.', ',')?></span>
                                                 <?php endif; ?>
                                             </h2>
+                                            <?php if(!$is_copy) : ?>
                                             <?php if($bill->status === "1") : ?>
                                                 <div class="d-flex justify-content-end">
                                                     <button class="btn btn-secondary mr-3" type="button">
@@ -75,7 +86,17 @@
                                                 </div>
                                                 <?php endif; ?>
                                             <?php endif; ?>
+                                            <?php endif; ?>
                                         </div>
+                                        <?php if($is_copy) : ?>
+                                        <div class="col-md-12">
+                                            <div class="alert alert-info alert-dismissible mb-4" role="alert">
+                                                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                                                <h6 class="mt-0">This is a copy</h6>
+                                                <span>This is a copy of an expense. Revise as needed and save the expense.</span>
+                                            </div>
+                                        </div>
+                                        <?php endif; ?>
                                         <div class="col-md-2">
                                             <div class="form-group">
                                                 <label for="mailing_address">Mailing address</label>

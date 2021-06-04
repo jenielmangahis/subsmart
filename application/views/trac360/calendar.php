@@ -27,34 +27,18 @@ $all_jobs = $this->trac360_model->get_all_jobs($date_from, $date_to, logged('com
     var current_date = new Date();
 
     document.addEventListener('DOMContentLoaded', function() {
-        load_calendar();
+        let ye = new Intl.DateTimeFormat('en', {
+            year: 'numeric'
+        }).format(current_date);
+        let mo = new Intl.DateTimeFormat('en', {
+            month: '2-digit'
+        }).format(current_date);
+        let da = new Intl.DateTimeFormat('en', {
+            day: '2-digit'
+        }).format(current_date);
+        var date_viewed = `${ye}-${mo}-${da}`;
+        // load_calendar();
+        current_date = new Date(date_viewed);
+        calendar_changed(date_viewed);
     });
-
-    function load_calendar() {
-        var calendarEl = document.getElementById('trac360-calendar');
-        var calendar = new FullCalendar.Calendar(calendarEl, {
-            initialDate: current_date,
-            editable: false,
-            selectable: true,
-            businessHours: true,
-            dayMaxEvents: true, // allow "more" link when too many events
-            events: [
-                <?php
-                           foreach ($all_jobs as $job) {
-                               echo "{
-                               title: '".$job->FName .' '.$job->LName.' : '.$job->job_number . ' : ' . $job->job_type. ' - ' . $job->tags_name."',
-                               start: '".$job->start_date.'T'.date('H:i:s', $job->start_time)."',
-                               end: '".$job->end_date.'T'.date('H:i:s', $job->end_time)."',
-                               url: '".$job->job_number . ' : ' . $job->job_type. ' - ' . $job->tags_name."'
-                               },";
-                           }
-                           ?>
-            ]
-        });
-        calendar.render();
-        if (fresh_calendar_run) {
-            fresh_calendar_run = false;
-            $(".trac360-calendar-modal").hide();
-        }
-    }
 </script>

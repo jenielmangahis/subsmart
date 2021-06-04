@@ -7,7 +7,7 @@
         <div class="trac360-live-jobs-content" style="height: 100%;">
             <div class="trac360-live-jobs" style="height: 100%;">
                 <div class="row no-margin" style="height: 100%;">
-                    <div class="col-md-4 no-padding">
+                    <div class="col-md-4 no-padding overflow-auto" style="height: 100%;">
                         <div class="employee-name" style="min-width:439px;">
                             <span class="name">asdasd asdasd</span>
                         </div>
@@ -42,7 +42,7 @@
                                 </a><a href="" target=""><small style="color: darkred;"></small></a>
                             </div>
                         </div>
-                        <div class="office-customer" style="">
+                        <div class="office-customer">
                             <table class="route-details-table">
                                 <tbody class="tbody">
                                     <tr class="last-coords-details first-info" data-i="0">

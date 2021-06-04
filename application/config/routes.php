@@ -462,6 +462,11 @@ $route['accounting/vendors/(:any)/load-bill-payment-bills/(:any)']['post'] = 'ac
 $route['accounting/vendors/(:any)/update-transaction/(:any)/(:any)']['post'] = 'accounting_controllers/vendors/update_transaction/$1/$2/$3';
 $route['accounting/vendors/copy-expense/(:any)'] = 'accounting_controllers/vendors/copy_expense/$1';
 $route['accounting/vendors/copy-check/(:any)'] = 'accounting_controllers/vendors/copy_check/$1';
+$route['accounting/vendors/copy-bill/(:any)'] = 'accounting_controllers/vendors/copy_bill/$1';
+$route['accounting/vendors/copy-purchase-order/(:any)'] = 'accounting_controllers/vendors/copy_purchase_order/$1';
+$route['accounting/vendors/copy-vendor-credit/(:any)'] = 'accounting_controllers/vendors/copy_vendor_credit/$1';
+$route['accounting/vendors/copy-to-bill/(:any)'] = 'accounting_controllers/vendors/copy_to_bill/$1';
+$route['accounting/vendors/void-transaction/(:any)/(:any)'] = 'accounting_controllers/vendors/void_transaction/$1/$2';
 
 $route['accounting/vendor-details/(:any)'] = 'accounting/vendordetails/$1';
 $route['accounting/taxes/edit-settings'] = 'taxes/edit_settings';

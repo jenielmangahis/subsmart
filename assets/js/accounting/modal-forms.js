@@ -356,6 +356,10 @@ $(function() {
                 $(`${modal_element} table#category-details-table tbody tr:first-child()`).html(catDetailsBlank);
                 $(`${modal_element} table#category-details-table tbody tr:first-child() td:nth-child(2)`).html(1);
 
+                if($(`${modal_element} table#category-details-table tbody tr`).length > 2) {
+                    $(`${modal_element} table#category-details-table tbody tr:first-child()`).remove();
+                }
+
                 // $(`${modal_element} table#item-details-table tbody tr:first-child()`).html(itemDetailsBlank);
                 // $(`${modal_element} table#item-details-table tbody tr:first-child() td:nth-child(2)`).html(1);
             }
@@ -1556,23 +1560,43 @@ $(function() {
                 locs += `<option value="${locations[i].id}" data-quantity="${locations[i].qty === "null" ? 0 : locations[i].qty}">${locations[i].name}</option>`;
             }
 
-            if($('#modal-container form#modal-form .modal').attr('id') === 'creditCardCreditModal') {
+            if($('#modal-container form#modal-form .modal').attr('id') === 'creditCardCreditModal' || $('#modal-container form#modal-form .modal').attr('id') === 'vendorCreditModal') {
                 var qtyField = `<input type="number" name="quantity[]" class="form-control text-right" required value="0" max="${locations[0].qty}">`;
             } else {
                 var qtyField = `<input type="number" name="quantity[]" class="form-control text-right" required value="0">`;
             }
 
-            var fields = `
-                <td>${item.title}<input type="hidden" name="item[]" value="${item.id}"></td>
-                <td>Product</td>
-                <td><select name="location[]" class="form-control" required>${locs}</select></td>
-                <td>${qtyField}</td>
-                <td><input type="number" name="item_amount[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" value="${item.price}"></td>
-                <td><input type="number" name="discount[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" value="0.00"></td>
-                <td><input type="number" name="item_tax[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" value="7.50"></td>
-                <td>$<span class="row-total">0.00</span></td>
-                <td><a href="#" class="deleteRow"><i class="fa fa-trash"></i></a></td>
-            `;
+            if($('#modal-container form#modal-form .modal').attr('id') === 'purchaseOrderModal' && $('#modal-container #item-details-table thead th').length > 9) {
+                var fields = `
+                    <td>${item.title}<input type="hidden" name="item[]" value="${item.id}"></td>
+                    <td>Product</td>
+                    <td><select name="location[]" class="form-control" required>${locs}</select></td>
+                    <td>${qtyField}</td>
+                    <td><input type="number" name="item_amount[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" value="${item.price}"></td>
+                    <td><input type="number" name="discount[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" value="0.00"></td>
+                    <td><input type="number" name="item_tax[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" value="7.50"></td>
+                    <td>$<span class="row-total">0.00</span></td>
+                    <td class="text-right">0</td>
+                    <td>
+                        <div class="d-flex align-items-center justify-content-center">
+                            <input type="checkbox" name="item_closed[]" class="form-check" value="1">
+                        </div>
+                    </td>
+                    <td><a href="#" class="deleteRow"><i class="fa fa-trash"></i></a></td>
+                `;
+            } else {
+                var fields = `
+                    <td>${item.title}<input type="hidden" name="item[]" value="${item.id}"></td>
+                    <td>Product</td>
+                    <td><select name="location[]" class="form-control" required>${locs}</select></td>
+                    <td>${qtyField}</td>
+                    <td><input type="number" name="item_amount[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" value="${item.price}"></td>
+                    <td><input type="number" name="discount[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" value="0.00"></td>
+                    <td><input type="number" name="item_tax[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" value="7.50"></td>
+                    <td>$<span class="row-total">0.00</span></td>
+                    <td><a href="#" class="deleteRow"><i class="fa fa-trash"></i></a></td>
+                `;
+            }
 
             $('#modal-container form#modal-form .modal #item-details-table tbody').append(`<tr></tr>`);
             $('#modal-container form#modal-form .modal #item-details-table tbody tr:last-child').append(fields);
@@ -1581,6 +1605,12 @@ $(function() {
     });
 
     $(document).on('change', '#creditCardCreditModal #item-details-table select[name="location[]"]', function() {
+        var quantity = $(this).find('option:selected')[0].dataset.quantity;
+
+        $(this).parent().parent().find('input[name="quantity[]"]').attr('max', quantity);
+    });
+
+    $(document).on('change', '#vendorCreditModal #item-details-table select[name="location[]"]', function() {
         var quantity = $(this).find('option:selected')[0].dataset.quantity;
 
         $(this).parent().parent().find('input[name="quantity[]"]').attr('max', quantity);
@@ -2496,7 +2526,7 @@ const computeTransactionTotal = () => {
         total = parseFloat(parseFloat(total) + parseFloat(value)).toFixed(2);
     });
 
-    $('#modal-container .transaction-total-amount').html(total);
+    $('#modal-container .transaction-total-amount').html(parseFloat(total).toFixed(2));
 }
 
 const loadBills = () => {

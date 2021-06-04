@@ -592,7 +592,7 @@ class Vendors extends MY_Controller {
                     'due_date' => '',
                     'balance' => '$0.00',
                     'total' => '$'.number_format(floatval($expense->total_amount), 2, '.', ','),
-                    'status' => 'Paid',
+                    'status' => $expense->status === '4' ? 'Voided' : 'Paid',
                     'attachments' => $expense->attachments === null ? [] : json_decode($expense->attachments, true)
                 ];
             }
@@ -615,7 +615,7 @@ class Vendors extends MY_Controller {
                     'due_date' => '',
                     'balance' => '$0.00',
                     'total' => '$'.number_format(floatval($check->total_amount), 2, '.', ','),
-                    'status' => 'Paid',
+                    'status' => $check->status === '4' ? 'Voided' : 'Paid',
                     'attachments' => $check->attachments === null ? [] : json_decode($check->attachments, true)
                 ];
             }
@@ -2490,5 +2490,213 @@ class Vendors extends MY_Controller {
         $this->page_data['is_copy'] = true;
 
         $this->load->view('accounting/vendors/view_check', $this->page_data);
+    }
+
+    public function copy_bill($billId)
+    {
+        $bill = $this->vendors_model->get_bill_by_id($billId);
+        $terms = $this->accounting_terms_model->getActiveCompanyTerms(logged('company_id'));
+
+        $selectedTerm = $terms[0];
+
+        $billPayments = $this->vendors_model->get_bill_payments_by_bill_id($billId);
+
+        $totalPayment = 0.00;
+        foreach($billPayments as $billPayment) {
+            $paymentItems = $this->vendors_model->get_bill_payment_items($billPayment->id);
+
+            foreach($paymentItems as $paymentItem) {
+                if($paymentItem->bill_id === $billId) {
+                    $totalPayment += floatval($paymentItem->total_amount);
+                }
+            }
+        }
+
+        $categories = $this->expenses_model->get_transaction_categories($billId, 'Bill');
+        $items = $this->expenses_model->get_transaction_items($billId, 'Bill');
+
+        $this->page_data['bill_payments'] = $billPayments;
+        $this->page_data['total_payment'] = number_format(floatval($totalPayment), 2, '.', ',');
+        $this->page_data['due_date'] = date("m/d/Y", strtotime($bill->due_date));
+        $this->page_data['bill'] = $bill;
+        $this->page_data['categories'] = $categories;
+        $this->page_data['items'] = $items;
+        $this->page_data['dropdown']['categories'] = $this->get_category_accs();
+        $this->page_data['dropdown']['items'] = $this->items_model->getItemsWithFilter(['type' => 'inventory', 'status' => [1]]);
+        $this->page_data['dropdown']['customers'] = $this->accounting_customers_model->getAllByCompany();
+        $this->page_data['dropdown']['vendors'] = $this->vendors_model->getAllByCompany();
+        $this->page_data['dropdown']['items'] = $this->items_model->getItemsWithFilter(['type' => 'inventory', 'status' => [1]]);
+        $this->page_data['dropdown']['terms'] = $terms;
+        $this->page_data['is_copy'] = true;
+
+        $this->load->view('accounting/vendors/view_bill', $this->page_data);
+    }
+
+    public function copy_purchase_order($purchOrderId)
+    {
+        $purchaseOrder = $this->vendors_model->get_purchase_order_by_id($purchOrderId);
+
+        $categories = $this->expenses_model->get_transaction_categories($purchOrderId, 'Purchase Order');
+        $items = $this->expenses_model->get_transaction_items($purchOrderId, 'Purchase Order');
+
+        $this->page_data['purchaseOrder'] = $purchaseOrder;
+        $this->page_data['categories'] = $categories;
+        $this->page_data['items'] = $items;
+        $this->page_data['dropdown']['vendors'] = $this->vendors_model->getAllByCompany();
+        $this->page_data['dropdown']['customers'] = $this->accounting_customers_model->getAllByCompany();
+        $this->page_data['dropdown']['categories'] = $this->get_category_accs();
+        $this->page_data['is_copy'] = true;
+
+        $this->load->view('accounting/vendors/view_purchase_order', $this->page_data);
+    }
+
+    public function copy_vendor_credit($vendorCreditId)
+    {
+        $vendorCredit = $this->vendors_model->get_vendor_credit_by_id($vendorCreditId);
+
+        $categories = $this->expenses_model->get_transaction_categories($vendorCreditId, 'Vendor Credit');
+        $items = $this->expenses_model->get_transaction_items($vendorCreditId, 'Vendor Credit');
+
+        $this->page_data['vendorCredit'] = $vendorCredit;
+        $this->page_data['categories'] = $categories;
+        $this->page_data['items'] = $items;
+        $this->page_data['dropdown']['items'] = $this->items_model->getItemsWithFilter(['type' => 'inventory', 'status' => [1]]);
+        $this->page_data['dropdown']['customers'] = $this->accounting_customers_model->getAllByCompany();
+        $this->page_data['dropdown']['vendors'] = $this->vendors_model->getAllByCompany();
+        $this->page_data['dropdown']['categories'] = $this->get_category_accs();
+        $this->page_data['is_copy'] = true;
+
+        $this->load->view('accounting/vendors/view_vendor_credit', $this->page_data);
+    }
+
+    public function copy_to_bill($purchaseOrderId)
+    {
+        $purchaseOrder = $this->vendors_model->get_purchase_order_by_id($purchaseOrderId);
+        $terms = $this->accounting_terms_model->getActiveCompanyTerms(logged('company_id'));
+
+        $selectedTerm = $terms[0];
+
+        $billPayments = $this->vendors_model->get_bill_payments_by_bill_id($billId);
+
+        $totalPayment = 0.00;
+        foreach($billPayments as $billPayment) {
+            $paymentItems = $this->vendors_model->get_bill_payment_items($billPayment->id);
+
+            foreach($paymentItems as $paymentItem) {
+                if($paymentItem->bill_id === $billId) {
+                    $totalPayment += floatval($paymentItem->total_amount);
+                }
+            }
+        }
+
+        $categories = $this->expenses_model->get_transaction_categories($purchaseOrderId, 'Purchase Order');
+        $items = $this->expenses_model->get_transaction_items($purchaseOrderId, 'Purchase Order');
+
+        $this->page_data['purchaseOrder'] = $purchaseOrder;
+        $this->page_data['bill_payments'] = $billPayments;
+        $this->page_data['total_payment'] = number_format(floatval($totalPayment), 2, '.', ',');
+        $this->page_data['due_date'] = date("m/d/Y", strtotime($bill->due_date));
+        // $this->page_data['bill'] = $bill;
+        $this->page_data['categories'] = $categories;
+        $this->page_data['items'] = $items;
+        $this->page_data['dropdown']['categories'] = $this->get_category_accs();
+        $this->page_data['dropdown']['items'] = $this->items_model->getItemsWithFilter(['type' => 'inventory', 'status' => [1]]);
+        $this->page_data['dropdown']['customers'] = $this->accounting_customers_model->getAllByCompany();
+        $this->page_data['dropdown']['vendors'] = $this->vendors_model->getAllByCompany();
+        $this->page_data['dropdown']['items'] = $this->items_model->getItemsWithFilter(['type' => 'inventory', 'status' => [1]]);
+        $this->page_data['dropdown']['terms'] = $terms;
+
+        $this->load->view('accounting/modals/bill_modal', $this->page_data);
+    }
+
+    public function void_transaction($transactionType, $transactionId)
+    {
+        switch($transactionType) {
+            case 'expense' :
+                $return = $this->void_expense($transactionId);
+            break;
+            case 'check' :
+                $return = $this->void_check($transactionId);
+            break;
+        }
+
+        echo json_encode($return);
+    }
+
+    private function void_expense($expenseId)
+    {
+        $data = [
+            'memo' => 'Voided',
+            'status' => 4,
+            'total_amount' => 0.00,
+            'updated_at' => date("Y-m-d H:i:s")
+        ];
+
+        $void = $this->vendors_model->update_expense($expenseId, $data);
+
+        if($void) {
+            $this->void_categories('Expense', $expenseId);
+            $this->void_items('Expense', $expenseId);
+        }
+
+        return [
+            'data' => $expenseId,
+            'success' => $void ? true : false,
+            'message' => $void ? 'Transaction successfully voided!' : 'Unexpected error occurred.'
+        ];
+    }
+
+    private function void_check($checkId)
+    {
+        $data = [
+            'memo' => 'Voided',
+            'status' => 4,
+            'total_amount' => 0.00,
+            'updated_at' => date("Y-m-d H:i:s")
+        ];
+
+        $void = $this->vendors_model->update_check($checkId, $data);
+
+        if($void) {
+            $this->void_categories('Check', $checkId);
+            $this->void_items('Check', $checkId);
+        }
+
+        return [
+            'data' => $checkId,
+            'success' => $void ? true : false,
+            'message' => $void ? 'Transaction successfully voided!' : 'Unexpected error occurred.'
+        ];
+    }
+
+    private function void_categories($transactionType, $transactionId)
+    {
+        $categories = $this->expenses_model->get_transaction_categories($transactionId, $transactionType);
+
+        if(count($categories) > 0) {
+            foreach($categories as $category) {
+                $categoryDetails = [
+                    'amount' => 0.00
+                ];
+
+                $this->vendors_model->update_transaction_category_details($category->id, $categoryDetails);
+            }
+        }
+    }
+
+    private function void_items($transactionType, $transactionId)
+    {
+        $items = $this->expenses_model->get_transaction_items($transactionId, $transactionType);
+
+        if(count($items) > 0) {
+            foreach($items as $item) {
+                $itemDetails = [
+                    'quantity' => 0,
+                    'total' => 0.00
+                ];
+
+                $this->vendors_model->update_transaction_category_details($item->id, $itemDetails);
+            }
+        }
     }
 }

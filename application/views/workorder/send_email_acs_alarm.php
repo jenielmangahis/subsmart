@@ -144,13 +144,24 @@
                                         <div class="sameRow"></div>
                                         <div class="sameRow" style="margin-left: 50%;">
                                             Job Tags: <?php echo $tags; ?> <br>
-                                            Date Issued: <?php $wDate = $date_issued; echo date("m-d-Y", strtotime($wDate) ); ?> <br>
-                                            Type: <?php echo $job_type; ?> <br>
+                                            Date Issued: <?php echo $wDate = $date_issued; ?> <br>
                                             Priority: <?php echo $priority; ?> <br>
                                             Password: <?php echo $password; ?> <br>
                                             Security Number: <?php echo $security_number; ?> <br>
-                                            Custom Field: <?php echo $security_number; ?> <br>
+                                            <!-- Custom Field: <?php //echo $security_number; ?> <br> -->
                                             Source: <?php echo $source_name; ?> <br>
+                                            Contacts: <br>
+													&emsp;  <?php echo $first_verification_name ?> <br> 
+                                                    &emsp;  <?php echo $first_number ?> <br>
+                                                    &emsp;  <?php echo $first_relation ?><br><br>
+
+													&emsp;  <?php echo $second_verification_name ?> <br> 
+                                                    &emsp;  <?php echo $second_number ?> <br> 
+                                                    &emsp;  <?php echo $second_relation ?><br><br>
+
+													&emsp;  <?php echo $third_verification_name ?> <br> 
+                                                    &emsp;  <?php echo $third_number ?> <br> 
+                                                    &emsp;  <?php echo $third_relation ?>
                                         </div>
                                 </div>
                             </div>
@@ -158,9 +169,9 @@
                                 <img src='<?=base_url()?>uploads/sample_logo.png'>
                             </div>
                         </div>
-                        <br><br><br><br><br><br>
+                        <br><br><br><br><br><br><br><br><br><br>
                         <b>FROM:</b>
-                        <hr>
+                        <hr style="width: 50% !important;" align="left">
                             <div class="container">
                                 <?php echo $company; ?><br>
                                 License: <?php echo $business_address; ?><br>
@@ -169,7 +180,7 @@
                             </div>
                             <br>
                             <b>CUSTOMER:</b>
-                            <hr>
+                            <hr style="width: 50% !important;" align="left">
                             <div class="container">
                                 <?php echo $acs_name; ?><br>
                                 <?php echo $job_location; ?><br><br>
@@ -183,9 +194,6 @@
                             <hr>
                             <div class="container">
                             <!-- text -->
-                            <?php foreach($custom as $c){ ?>
-                                <?php echo $c->name; ?>: <?php echo $c->value; ?> <br>
-                            <?php } ?>
                             </div>
                             <br>
                             <b>TERMS & CONDITIONS</b>
