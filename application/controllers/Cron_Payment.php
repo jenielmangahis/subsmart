@@ -75,6 +75,9 @@ class Cron_Payment extends MY_Controller {
         
     public function customer_recurring_subscription(){
         include APPPATH . 'libraries/Converge/src/Converge.php';
+
+        ini_set('max_execution_time', 0);
+        
         $this->load->model('General_model', 'general');
         $date = date("n/j/Y");
         $get_billing = array(
@@ -87,6 +90,7 @@ class Cron_Payment extends MY_Controller {
             ),
             'table' => 'acs_billing',
             'select' => 'acs_billing.*',
+            'limit' => 50
         );
         $data = $this->general->get_data_with_param($get_billing, true);
 
