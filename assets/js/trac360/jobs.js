@@ -115,6 +115,16 @@ $(document).on("click", ".jobs-list-item", function() {
                                 toggleBounce(jobs_map_marker[1]);
                             });
                             $(".map-error-message").hide();
+                            var duration = my_route.legs[0].duration.value / 60;
+                            var variable = "min";
+                            if (duration > 60) {
+                                duration = duration / 60;
+                                variable = "hr";
+                            }
+                            $("#single-job-view-directionsRenderer-panel .estimated-calculation .est.eta .value").html(parseFloat(duration).toFixed(2) + "<br> " + variable);
+                            $("#single-job-view-directionsRenderer-panel  .estimated-calculation .est.distance .value").html(parseFloat(my_route.legs[0].distance.value / 1609.34).toFixed(2) + "<br> mi");
+                            $("#single-job-view-directionsRenderer-panel  .estimated-calculation .est.exp-speed .value").html(parseFloat(((my_route.legs[0].distance.value / 1609.34) / (my_route.legs[0].duration.value / 60 / 60))).toFixed(2) + "<br> mi/hr");
+
                         } else {
                             if (jobs_map_marker.length > 0) {
                                 for (var i = 0; i < jobs_map_marker.length; i++) {

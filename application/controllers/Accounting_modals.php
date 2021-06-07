@@ -118,49 +118,94 @@ class Accounting_modals extends MY_Controller {
                     $this->page_data['dropdown']['employees'] = $this->users_model->getCompanyUsers(logged('company_id'));
                 break;
                 case 'transfer_modal' :
-                    $accounts = $this->chart_of_accounts_model->select();
-                    $accountTypes = $this->account_model->getAccounts();
+                    $accountTypes = [
+                        'Bank',
+                        'Other Current Assets',
+                        'Fixed Assets',
+                        'Credit Card',
+                        'Other Current Liabilities',
+                        'Long Term Liabilities',
+                        'Equity'
+                    ];
 
-                    $bankAccounts = [];
-                    foreach($accountTypes as $accType) {
-                        $accName = strtolower($accType->account_name);
+                    $accounts = [];
 
-                        foreach($accounts as $account) {
-                            if($account->account_id === $accType->id) {
-                                $bankAccounts[$accType->account_name][] = [
-                                    'value' => $accName.'-'.$account->id,
-                                    'text' => $account->name,
-                                ];
+                    foreach($accountTypes as $accountType) {
+                        $type = $this->account_model->getAccTypeByName($accountType);
+
+                        $typeAccounts = $this->chart_of_accounts_model->getByAccountType($type->id, null, logged('company_id'));
+
+                        if(count($typeAccounts) > 0) {
+                            foreach($typeAccounts as $typeAcc) {
+                                $childAcc = $this->chart_of_accounts_model->getChildAccounts($typeAcc->id);
+
+                                $typeAcc->childAccs = $childAcc;
+
+                                $accounts[$accountType][] = $typeAcc;
                             }
                         }
                     }
 
-                    $this->page_data['accounts'] = $bankAccounts;
+                    $this->page_data['accounts'] = $accounts;
                 break;
                 case 'bank_deposit_modal':
-                    $accounts = $this->chart_of_accounts_model->select();
-                    $accountTypes = $this->account_model->getAccounts();
+                    $accountTypes = $this->account_model->getAccTypeByName(['Bank', 'Other Current Assets']);
 
                     $bankAccounts = [];
                     $count = 1;
                     foreach($accountTypes as $accType) {
-                        $accName = strtolower($accType->account_name);
+                        $accounts = $this->chart_of_accounts_model->getByAccountType($accType->id, null, logged('company_id'));
 
-                        foreach($accounts as $account) {
-                            if($account->account_id === $accType->id) {
-                                $bankAccounts[$accType->account_name][] = [
-                                    'value' => $accName.'-'.$account->id,
-                                    'text' => $account->name,
-                                    'selected' => $count === 1 ? true : false
-                                ];
+                        if(count($accounts) > 0) {
+                            foreach($accounts as $account) {
+                                $childAccs = $this->chart_of_accounts_model->getChildAccounts($account->id);
+
+                                $account->childAccs = $childAccs;
+
+                                $bankAccounts[$accType->account_name][] = $account;
 
                                 if($count === 1) {
                                     $selectedBalance = $account->balance;
                                 }
+
+                                $count++;
                             }
-                            $count++;
                         }
                     }
+
+                    $fundAccsTypes = [
+                        'Income',
+                        'Other Income',
+                        'Bank',
+                        'Other Current Assets',
+                        'Fixed Assets',
+                        'Accounts payable (A/P)',
+                        'Credit Card',
+                        'Other Current Liabilities',
+                        'Long Term Liabilities',
+                        'Equity',
+                        'Cost of Goods Sold',
+                        'Expenses',
+                        'Other Expense'
+                    ];
+                    $fundsAccounts = [];
+
+                    foreach($fundAccsTypes as $fundAccType) {
+                        $type = $this->account_model->getAccTypeByName($fundAccType);
+
+                        $fundAccs = $this->chart_of_accounts_model->getByAccountType($type->id, null, logged('company_id'));
+
+                        if(count($fundAccs) > 0) {
+                            foreach($fundAccs as $fundAcc) {
+                                $childFundAccs = $this->chart_of_accounts_model->getChildAccounts($account->id);
+
+                                $fundAcc->childAccs = $childFundAccs;
+
+                                $fundsAccounts[$fundAccType][] = $fundAcc;
+                            }
+                        }
+                    }
+
 
                     if(strpos($selectedBalance, '-') !== false) {
                         $balance = str_replace('-', '', $selectedBalance);
@@ -169,8 +214,10 @@ class Accounting_modals extends MY_Controller {
                         $selectedBalance = '$'.number_format($selectedBalance, 2, '.', ',');
                     }
 
+                    $this->page_data['fundsAccounts'] = $fundsAccounts;
                     $this->page_data['balance'] = $selectedBalance;
                     $this->page_data['accounts'] = $bankAccounts;
+                    $this->page_data['dropdown']['payment_methods'] = $this->accounting_payment_methods_model->getCompanyPaymentMethods();
                     $this->page_data['dropdown']['customers'] = $this->accounting_customers_model->getAllByCompany();
                     $this->page_data['dropdown']['vendors'] = $this->vendors_model->getAllByCompany();
                     $this->page_data['dropdown']['employees'] = $this->users_model->getCompanyUsers(logged('company_id'));
@@ -1415,15 +1462,10 @@ class Accounting_modals extends MY_Controller {
         } else {
             $filenames = $this->move_files($files, 'transfer');
 
-            $transferFrom = explode('-', $data['transfer_from']);
-            $transferTo = explode('-', $data['transfer_to']);
-
             $insertData = [
                 'company_id' => logged('company_id'),
-                'transfer_from_account_key' => $transferFrom[0],
-                'transfer_from_account_id' => $transferFrom[1],
-                'transfer_to_account_key' => $transferTo[0],
-                'transfer_to_account_id' => $transferTo[1],
+                'transfer_from_account_id' => $data['transfer_from'],
+                'transfer_to_account_id' => $data['transfer_to'],
                 'transfer_amount' => $data['transfer_amount'],
                 'transfer_date' => isset($data['date']) ? date('Y-m-d', strtotime($data['date'])) : null,
                 'transfer_memo' => $data['memo'],
@@ -1780,9 +1822,6 @@ class Accounting_modals extends MY_Controller {
         } else {
             $filenames = $this->move_files($files, 'bank_deposit');
 
-            $bankAccount = explode('-', $data['bank_account']);
-            $cashBackTarget = explode('-', $data['cash_back_target']);
-
             $totalAmount = array_sum(array_map(function($item) {
                 return floatval($item);
             }, $data['amount']));
@@ -1791,13 +1830,11 @@ class Accounting_modals extends MY_Controller {
 
             $insertData = [
                 'company_id' => logged('company_id'),
-                'account_key' => $bankAccount[0],
-                'account_id' => $bankAccount[1],
+                'account_id' => $data['bank_account'],
                 'date' => isset($data['template_name']) ? null : date('Y-m-d', strtotime($data['date'])),
                 'tags' => $data['tags'] !== null ? json_encode($data['tags']) : null,
                 'total_amount' => number_format($totalAmount, 2, '.', ','),
-                'cash_back_account_key' => $cashBackTarget[0],
-                'cash_back_account_id' => $cashBackTarget[1],
+                'cash_back_account_id' => $data['cash_back_target'],
                 'cash_back_memo' => $data['cash_back_memo'],
                 'cash_back_amount' => $data['cash_back_amount'],
                 'memo' => $data['memo'],

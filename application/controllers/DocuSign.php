@@ -507,13 +507,6 @@ class DocuSign extends MY_Controller
         echo json_encode(['data' => $record, 'is_created' => $isCreated]);
     }
 
-    public function home()
-    {
-        $this->checkLogin();
-        add_css('assets/css/esign/docusign/home/home.css');
-        $this->load->view('esign/docusign/home', $this->page_data);
-    }
-
     public function templateCreate()
     {
         $this->checkLogin();
@@ -531,13 +524,6 @@ class DocuSign extends MY_Controller
         ]);
 
         $this->load->view('esign/docusign/template-create/index', $this->page_data);
-    }
-
-    public function templateList()
-    {
-        $this->checkLogin();
-        add_css('assets/css/esign/docusign/template-list/template-list.css');
-        $this->load->view('esign/docusign/template-list', $this->page_data);
     }
 
     public function apiStoreTemplate()
@@ -994,14 +980,13 @@ SQL;
 
     private function getSigningUrl()
     {
-        $whitelist = ['127.0.0.1', '::1'];
         $baseUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . "://$_SERVER[HTTP_HOST]";
 
-        if (in_array($_SERVER['REMOTE_ADDR'], $whitelist)) {
+        if (isLocalhost()) {
             $baseUrl .= '/nsmartrac';
         }
 
-        return $baseUrl . '/DocuSign';
+        return $baseUrl . '/eSign';
     }
 
     private function sendEnvelope(array $envelope, array $recipient, bool $isSelfSigned = false)
@@ -1542,5 +1527,23 @@ function getMailInstance($config = [])
     $mail->Subject = $subject;
     $mail->IsHTML($config['isHTML']);
 
+    if (isLocalhost()) {
+        // Send using gmail
+        $mail->Host = 'tls://smtp.gmail.com:587';
+        $mail->SMTPOptions = [
+            'ssl' => [
+                'verify_peer' => false,
+                'verify_peer_name' => false,
+                'allow_self_signed' => true,
+            ],
+        ];
+    }
+
     return $mail;
+}
+
+function isLocalhost(): bool
+{
+    $whitelist = ['127.0.0.1', '::1'];
+    return in_array($_SERVER['REMOTE_ADDR'], $whitelist);
 }

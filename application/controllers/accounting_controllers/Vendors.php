@@ -398,18 +398,10 @@ class Vendors extends MY_Controller {
         $limit = $post['length'];
         $type = $post['type'];
         $date = $post['date'];
-        $inactive = $post['inactive'];
 
         $filters = [
             'type' => $type
         ];
-
-        if($inactive) {
-            $filters['status'] = [
-                0,
-                1
-            ];
-        }
 
         switch($date) {
             case 'today' :
@@ -2618,6 +2610,9 @@ class Vendors extends MY_Controller {
             case 'check' :
                 $return = $this->void_check($transactionId);
             break;
+            case 'credit-card-payment' :
+                $return = $this->void_cc_payment($transactionId);
+            break;
         }
 
         echo json_encode($return);
@@ -2625,6 +2620,20 @@ class Vendors extends MY_Controller {
 
     private function void_expense($expenseId)
     {
+        $expense = $this->vendors_model->get_expense_by_id($expenseId);
+
+        $paymentAcc = $this->chart_of_accounts_model->getById($expense->payment_account_id);
+        $newBalance = floatval($paymentAcc->balance) - floatval($expense->total_amount);
+        $newBalance = number_format($newBalance, 2, '.', ',');
+
+        $paymentAccData = [
+            'id' => $paymentAcc->id,
+            'company_id' => logged('company_id'),
+            'balance' => $newBalance
+        ];
+
+        $this->chart_of_accounts_model->updateBalance($paymentAccData);
+
         $data = [
             'memo' => 'Voided',
             'status' => 4,
@@ -2648,6 +2657,20 @@ class Vendors extends MY_Controller {
 
     private function void_check($checkId)
     {
+        $check = $this->vendors_model->get_check_by_id($checkId);
+
+        $bankAcc = $this->chart_of_accounts_model->getById($check->bank_account_id);
+        $newBalance = floatval($bankAcc->balance) + floatval($check->total_amount);
+        $newBalance = number_format($newBalance, 2, '.', ',');
+
+        $bankAccData = [
+            'id' => $bankAcc->id,
+            'company_id' => logged('company_id'),
+            'balance' => $newBalance
+        ];
+
+        $this->chart_of_accounts_model->updateBalance($bankAccData);
+
         $data = [
             'memo' => 'Voided',
             'status' => 4,
@@ -2669,12 +2692,58 @@ class Vendors extends MY_Controller {
         ];
     }
 
+    private function void_cc_payment($ccPaymentId)
+    {
+        $ccPayment = $this->vendors_model->get_credit_card_payment_by_id($ccPaymentId);
+
+        $creditAcc = $this->chart_of_accounts_model->getById($ccPayment->credit_card_id);
+
+        $newBalance = floatval($creditAcc->balance) + floatval($ccPayment->amount);
+        $newBalance = number_format($newBalance, 2, '.', ',');
+
+        $this->chart_of_accounts_model->updateBalance(['id' => $creditAcc->id, 'company_id' => logged('company_id'), 'balance' => $newBalance]);
+
+        $bankAcc = $this->chart_of_accounts_model->getById($ccPayment->bank_account_id);
+
+        $newBalance = floatval($bankAcc->balance) + floatval($ccPayment->amount);
+        $newBalance = number_format($newBalance, 2, '.', ',');
+
+        $this->chart_of_accounts_model->updateBalance(['id' => $bankAcc->id, 'company_id' => logged('company_id'), 'balance' => $newBalance]);
+
+        $data = [
+            'memo' => 'Voided',
+            'status' => 4,
+            'amount' => 0.00,
+            'updated_at' => date("Y-m-d H:i:s")
+        ];
+
+        $void = $this->vendors_model->update_credit_card_payment($ccPaymentId, $data);
+
+        return [
+            'data' => $ccPaymentId,
+            'success' => $void ? true : false,
+            'message' => $void ? 'Transaction successfully voided!' : 'Unexpected error occurred.'
+        ];
+    }
+
     private function void_categories($transactionType, $transactionId)
     {
         $categories = $this->expenses_model->get_transaction_categories($transactionId, $transactionType);
 
         if(count($categories) > 0) {
             foreach($categories as $category) {
+                $expenseAcc = $this->chart_of_accounts_model->getById($category->expense_account_id);
+                $newBalance = floatval($expenseAcc->balance) - floatval($category->amount);
+                $newBalance = number_format($newBalance, 2, '.', ',');
+
+                $expenseAccData = [
+                    'id' => $expenseAcc->id,
+                    'company_id' => logged('company_id'),
+                    'balance' => $newBalance
+                ];
+
+                $this->chart_of_accounts_model->updateBalance($expenseAccData);
+
                 $categoryDetails = [
                     'amount' => 0.00
                 ];
@@ -2690,6 +2759,25 @@ class Vendors extends MY_Controller {
 
         if(count($items) > 0) {
             foreach($items as $item) {
+                $location = $this->items_model->getItemLocation($item->location_id, $item->item_id);
+                $newQty = intval($location->qty) - intval($item->quantity);
+
+                $this->items_model->updateLocationQty($item->location_id, $item->item_id, $newQty);
+
+                $itemAccDetails = $this->items_model->getItemAccountingDetails($item->item_id);
+
+                $invAssetAcc = $this->chart_of_accounts_model->getById($itemAccDetails->inv_asset_acc_id);
+                $newBalance = floatval($invAssetAcc->balance) - floatval($item->total);
+                $newBalance = number_format($newBalance, 2, '.', ',');
+
+                $invAssetAccData = [
+                    'id' => $invAssetAcc->id,
+                    'company_id' => logged('company_id'),
+                    'balance' => $newBalance
+                ];
+
+                $this->chart_of_accounts_model->updateBalance($invAssetAccData);
+
                 $itemDetails = [
                     'quantity' => 0,
                     'total' => 0.00

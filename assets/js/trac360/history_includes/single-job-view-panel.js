@@ -29,9 +29,19 @@ function get_jobs_travel_history(the_job_id, the_user_id) {
             if (data != null) {
                 if (data.html == "") {
                     $("#single-job-view-panel .route-details-setion .route-details-table .tbody").html('<tr><td class="no-data">No travel history available.</td></tr>');
+                    $("#single-job-view-panel .estimated-calculation").hide();
                 } else {
+                    var actual_duration = parseFloat(data.duration).toFixed(2);
+                    var variable = "min";
+                    if (actual_duration > 60) {
+                        actual_duration = actual_duration / 60;
+                        variable = "hr";
+                    }
+
+                    $("#single-job-view-panel .estimated-calculation .eta .value").html(parseFloat(actual_duration).toFixed(2) + "<br>" + variable);
                     $("#single-job-view-panel .route-details-setion .route-details-table .tbody").html(data.html);
-                    emeployee_history_calculateAndDisplayRoute(data.route_latlng);
+                    emeployee_history_calculateAndDisplayRoute(data.route_latlng, parseFloat(data.duration));
+                    $("#single-job-view-panel .estimated-calculation").show();
                 }
                 $("#single-job-view-panel .panel-content .loader").hide();
                 $("#single-job-view-panel .panel-content .route-details-setion").show();

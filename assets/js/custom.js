@@ -1179,6 +1179,7 @@ $("#total_tax_").text(over_tax);
   cal_total_due();
 });
 
+
 $(document).on("focusout", ".qtyest2", function () {
   // alert('yeah');
   var in_id = $(this).attr('data-itemid');

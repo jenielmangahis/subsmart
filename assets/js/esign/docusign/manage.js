@@ -366,7 +366,7 @@ const actions = {
     const endpoint = `${prefixURL}/DocuSign/apiSaveEnvelopeAsTemplate/${row.id}`;
     const response = await fetch(endpoint);
     const { data } = await response.json();
-    window.location = `${prefixURL}/DocuSign/templatePrepare?id=${data.id}`;
+    window.location = `${prefixURL}/eSign/templatePrepare?id=${data.id}`;
   },
 };
 

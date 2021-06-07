@@ -173,3 +173,30 @@ table.route-details-table {
 #from_external_html {
     display: none;
 }
+
+.estimated-calculation {
+    padding-top: 10px;
+}
+
+.estimated-calculation .est {
+    border-radius: 50%;
+    height: 100px;
+    width: 100px;
+    padding: 17px 0px;
+    text-align: center;
+    color: #f7f7f7;
+    background-color: #2196F3;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    position: inherit;
+}
+
+.estimated-calculation .est .title {
+    font-size: 12px;
+}
+
+.estimated-calculation .est .value {
+    font-size: 15px;
+    font-weight: bold;
+}

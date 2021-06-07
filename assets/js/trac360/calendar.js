@@ -64,8 +64,6 @@ function calendar_changed(date_viewed) {
         dataType: "json",
         data: { date_viewed: date_viewed },
         success: function(data) {
-
-            console.log(data);
             var calendarEl = document.getElementById('trac360-calendar');
             var calendar = new FullCalendar.Calendar(calendarEl, {
                 initialDate: date_viewed,

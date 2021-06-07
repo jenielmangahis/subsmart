@@ -376,6 +376,22 @@ function Signing(hash) {
 
         $input.attr("readonly", false);
         $spinner.addClass("d-none");
+
+        const name = $input.attr("data-name");
+        const key = $input.attr("data-key");
+        const $sameFields = $(`input[data-name='${name}' i]:not([data-key='${key}'])`); // prettier-ignore
+
+        if (!$sameFields.length) return;
+
+        const promises = [...$sameFields].map((input) => {
+          const $input = $(input);
+          const key = $input.attr("data-key");
+          const field = data.fields.find(({ unique_key }) => unique_key === key); // prettier-ignore
+          return storeFieldValue({ value, id: field.id });
+        });
+
+        await Promise.all(promises);
+        $sameFields.val(value);
       };
 
       $element.find("input").keyup(function () {
@@ -714,12 +730,12 @@ function Signing(hash) {
 
       const data = await response.json();
       if (data.hash) {
-        window.location = `${prefixURL}/DocuSign/signing?hash=${data.hash}`;
+        window.location = `${prefixURL}/eSign/signing?hash=${data.hash}`;
         return;
       }
 
       if (data.has_user) {
-        window.location = `${prefixURL}/DocuSign/manage?view=sent`;
+        window.location = `${prefixURL}/eSign/manage?view=sent`;
       }
 
       $(this).attr("disabled", false);

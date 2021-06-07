@@ -653,9 +653,9 @@ function Step3() {
       });
 
       const data = await response.json();
-      let nextUrl = `${prefixURL}/DocuSign/manage?view=sent`;
+      let nextUrl = `${prefixURL}/eSign/manage?view=sent`;
       if (data.hash) {
-        nextUrl = `${prefixURL}/DocuSign/signing?hash=${data.hash}`;
+        nextUrl = `${prefixURL}/eSign/signing?hash=${data.hash}`;
       }
 
       window.location = nextUrl;
@@ -1020,11 +1020,11 @@ function handleSelfSigningOnSubmit(args) {
     });
 
     const json = await response.json();
-    window.location = `${prefixURL}/DocuSign/manage?view=sent`;
+    window.location = `${prefixURL}/eSign/manage?view=sent`;
   });
 
   $close.on("click", function (event) {
     event.preventDefault();
-    window.location = `${prefixURL}/DocuSign/manage?view=inbox`;
+    window.location = `${prefixURL}/eSign/manage?view=inbox`;
   });
 }

@@ -895,3 +895,9 @@ $route['deal/save_booking']  = 'Pages/create_deals_booking';
 
 //Admin login
 $route['admin/login'] = 'Admin/login';
+
+// Removes DocuSign in URLs
+$route['eSign/templateCreate'] = 'DocuSign/templateCreate';
+$route['eSign/templatePrepare'] = 'DocuSign/templatePrepare';
+$route['eSign/signing'] = 'DocuSign/signing';
+$route['eSign/manage'] = 'DocuSign/manage';

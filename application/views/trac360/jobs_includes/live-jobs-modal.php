@@ -53,6 +53,7 @@
                                             <div class="address office">Pan-Philippine Hwy
                                                 Panabo, Davao del Norte</div>
                                             <div class="date-time office">Office: May 26, 2021 07:36 PM</div>
+                                            <div class="milage expected-milage"></div>
                                         </td>
                                     </tr>
                                     <tr class="last-coords-details last-info" data-i="1">
@@ -67,6 +68,31 @@
                                     </tr>
                                 </tbody>
                             </table>
+                        </div>
+                        <div class="estimated-calculation">
+                            <div class="row no-margin">
+                                <div class="col-md-4">
+                                    <div class="est eta">
+                                        <span class="title">ETA</span>
+                                        <br>
+                                        <span class="value">33<br> min</span>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="est distance">
+                                        <span class="title">Distance</span>
+                                        <br>
+                                        <span class="value">10.89 <br> mi</span>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="est exp-speed">
+                                        <span class="title">Exp Speed</span>
+                                        <br>
+                                        <span class="value">10.89 <br> mi/hr</span>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         <div class="route-details-setion">
                             <table class="route-details-table">

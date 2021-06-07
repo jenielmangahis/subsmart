@@ -57,22 +57,22 @@
         </li>
 
         <li class="submenus">
-            <a href="<?=base_url('DocuSign/manage')?>?view=inbox" title="Inbox">
+            <a href="<?=base_url('eSign/manage')?>?view=inbox" title="Inbox">
             <span class="fa fa-inbox"></span>Inbox</a>
         </li>
 
         <li class="submenus">
-            <a href="<?=base_url('DocuSign/manage')?>?view=sent" title="Sent">
+            <a href="<?=base_url('eSign/manage')?>?view=sent" title="Sent">
             <span class="fa fa-send"></span>Sent</a>
         </li>
 
         <li class="submenus">
-            <a href="<?=base_url('DocuSign/manage')?>?view=drafts" title="Drafts">
+            <a href="<?=base_url('eSign/manage')?>?view=drafts" title="Drafts">
             <span class="fa fa-pencil"></span>Drafts</a>
         </li>
 
         <li class="submenus">
-            <a href="<?=base_url('DocuSign/manage')?>?view=deleted" title="Deleted">
+            <a href="<?=base_url('eSign/manage')?>?view=deleted" title="Deleted">
             <span class="fa fa-trash"></span>Deleted</a>
         </li>
     </ul>

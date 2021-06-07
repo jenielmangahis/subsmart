@@ -12,6 +12,20 @@ class Trac360 extends MY_Controller
         $this->load->model('trac360_model');
         $this->load->model('jobs_model');
     }
+    
+
+    public function get_differenct_of_dates($date_start, $date_end)
+    {
+        $start = new DateTime($date_start);
+        $end =  new DateTime($date_end);
+        $interval = $start->diff($end);
+
+        $difference = ($interval->days * 24 * 60) * 60;
+        $difference += ($interval->h * 60) * 60;
+        $difference += ($interval->i) * 60;
+        $difference += $interval->s;
+        return ($difference / 60) / 60;
+    }
 
     public function getUsersCategories()
     {
@@ -824,7 +838,14 @@ class Trac360 extends MY_Controller
         $info_count =0;
         $route_latlng = array();
         $html='';
+        $start_time="";
+        $end_time="";
+        $duration =0;
         foreach ($history_details as $history) {
+            if ($info_count == 0) {
+                $start_time=$history->date_created;
+            }
+            $end_time=$history->date_created;
             $explode= explode(",", $history->last_coordinate);
             $explode[]=$history->last_address;
             $route_latlng [] = $explode;
@@ -847,14 +868,19 @@ class Trac360 extends MY_Controller
         </td>
         <td>
             <div class="address">'.$history->last_address.'</div>
-            <div class="date-time">'.date('M d, Y h:i A', strtotime($history->date_created)).'</div>
+            <div class="date-time">'.date('M d, Y h:i A', strtotime($history->date_created)).' <span class="speed'.$info_count.'"></span></div>
+            <div class="milage"><div class="milage'.$info_count.'"></div></div>
         </td>
         </tr>';
             $info_count++;
         }
+        if ($html != '') {
+            $duration = $this->get_differenct_of_dates($start_time, $end_time)*60;
+        }
         $data = new stdClass();
         $data->html = $html;
         $data->route_latlng = $route_latlng;
+        $data->duration = $duration;
         echo json_encode($data);
     }
     public function get_seach_live_jobs()
@@ -963,7 +989,10 @@ class Trac360 extends MY_Controller
         </td>
         <td>
             <div class="address">'.$history->last_address.'</div>
-            <div class="date-time">'.date('M d, Y h:i A', strtotime($history->date_created)).'</div>
+            <div class="date-time">'.date('M d, Y h:i A', strtotime($history->date_created)).' <span class="speed'.$info_count.'"></span></div>
+            <div class="milage">
+                <div class="milage'.$info_count.'"></div>
+            </div>
         </td>
         </tr>';
             $info_count++;
