@@ -827,6 +827,15 @@ class Workorder_model extends MY_Model
         return $query->result();
     }
 
+    public function getPackagelist($id)
+    {
+        $this->db->select('*');
+		$this->db->from('item_categories');
+		$this->db->where('company_id', $id);
+        $query = $this->db->get();
+        return $query->result();
+    }
+
     public function getenhanced_services_pers($id)
     {
         $this->db->select('*');
@@ -834,6 +843,15 @@ class Workorder_model extends MY_Model
 		$this->db->where('work_order_id', $id);
         $query = $this->db->get();
         return $query->row();
+    }
+
+    public function getitemsajax($id)
+    {
+        $this->db->select('*');
+		$this->db->from('items');
+		$this->db->where('item_categories_id', $id);
+        $query = $this->db->get();
+        return $query->result();
     }
 
     public function delete_custom_fields($id)

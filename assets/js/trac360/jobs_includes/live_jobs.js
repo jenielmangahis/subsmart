@@ -96,6 +96,7 @@ function get_live_job_last_track_location(customer_address, office_address) {
                 if (data.html == "") {
                     $(".trac360-live-jobs-modal .route-details-setion .route-details-table .tbody").html('<tr><td class="no-data">No travel history available.</td></tr>');
                     clear_live_map();
+                    emeployee_expected_live_calculateAndDisplayRoute(customer_address, office_address);
                     clearInterval(autoclockout_checker_loop);
 
                 } else {
@@ -179,8 +180,8 @@ function emeployee_live_calculateAndDisplayRoute(route_latlng) {
             if (status === "OK" && response) {
                 live_directionsRenderer.setDirections(response);
                 const route = response.routes[0];
+                console.log(route.legs);
                 for (let i = 0; i < route.legs.length; i++) {
-
                     if (i == 0) {
                         const map_icon = {
                             url: base_url + "/assets/img/trac360/map_marker1.png", // url
@@ -218,6 +219,10 @@ function emeployee_live_calculateAndDisplayRoute(route_latlng) {
                     live_map_marker[i].addListener("click", function() {
                         openwindow_title(live_map_marker[i]);
                     });
+                    if (i < route.legs.length - 1) {
+                        $(".trac360-live-jobs-content .route-details-setion .milage" + i).html(route.legs[i].distance.text);
+                        $(".trac360-live-jobs-content .route-details-setion .speed" + (i + 1)).html("(" + parseFloat(((route.legs[i].distance.value / 1609.34) / (route.legs[i].duration.value / 60 / 60))).toFixed(2) + " mi/hr)");
+                    }
                 }
 
             } else {
@@ -274,6 +279,11 @@ function emeployee_expected_live_calculateAndDisplayRoute(customer_address, offi
                 expected_live_map_marker[1].addListener("click", function() {
                     openwindow_title(expected_live_map_marker[1]);
                 });
+                $(".trac360-live-jobs-content .office-customer .expected-milage").html(my_route.legs[0].distance.text);
+
+                $(".trac360-live-jobs-content .estimated-calculation .est.eta .value").html(parseFloat(my_route.legs[0].duration.value / 60).toFixed(2) + "<br> min");
+                $(".trac360-live-jobs-content .estimated-calculation .est.distance .value").html(parseFloat(my_route.legs[0].distance.value / 1609.34).toFixed(2) + "<br> mi");
+                $(".trac360-live-jobs-content .estimated-calculation .est.exp-speed .value").html(parseFloat(((my_route.legs[0].distance.value / 1609.34) / (my_route.legs[0].duration.value / 60 / 60))).toFixed(2) + "<br> mi/hr");
             } else {
                 window.alert("Expected directions request failed due to " + status);
             }

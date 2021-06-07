@@ -91,6 +91,12 @@
     });
 </script>
 
+<script>
+    jQuery(document).ready(function() {
+        $('#items_table_newWorkorder').DataTable();
+    });
+</script>
+
 <?php echo put_footer_assets(); ?>
 
 

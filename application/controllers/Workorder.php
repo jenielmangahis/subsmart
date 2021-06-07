@@ -1234,6 +1234,12 @@ class Workorder extends MY_Controller
             'security_number'                   => $workData->security_number,
             'source_name'                       => $workData->lead_source_id,
             'company_representative_signature'  => $workData->company_representative_signature,
+            'company_representative_name'       => $workData->company_representative_name,
+            'primary_account_holder_signature'  => $workData->primary_account_holder_signature,
+            'primary_account_holder_name'       => $workData->primary_account_holder_name,
+            'secondary_account_holder_signature'=> $workData->secondary_account_holder_signature,
+            'secondary_account_holder_name'     => $workData->secondary_account_holder_name,
+
             'company'                           => $cliets->business_name,
             'business_address'                  => $cliets->business_address,
             'phone_number'                      => $cliets->phone_number,
@@ -1270,7 +1276,7 @@ class Workorder extends MY_Controller
         $this->load->library('pdf');
 
 
-        $this->pdf->load_view('workorder/send_email_acs_alarm', $data, $filename, "portrait");
+        $this->pdf->load_view('workorder/work_order_pdf_template', $data, $filename, "portrait");
         $this->pdf->render();
 
 
@@ -2343,13 +2349,26 @@ class Workorder extends MY_Controller
         $this->page_data['job_tags'] = $this->workorder_model->getjob_tagsById();
         $this->page_data['clients'] = $this->workorder_model->getclientsById();
         $this->page_data['lead_source'] = $this->workorder_model->getlead_source($company_id);
-
+        
+        $this->page_data['packages'] = $this->workorder_model->getPackagelist($company_id);
 
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->page_data['page_title'] = "Work Order";
         // print_r($this->page_data['lead_source']);
 
         $this->load->view('workorder/addNewworkOrder', $this->page_data);
+    }
+
+    public function select_package()
+    {
+        $id = $this->input->post('idd');
+
+            $items = $this->workorder_model->getitemsajax($id);
+
+            $this->page_data['items'] = $items;
+            // $this->page_data['checklists_items'] = $checklist;
+
+        echo json_encode($this->page_data);
     }
     
 

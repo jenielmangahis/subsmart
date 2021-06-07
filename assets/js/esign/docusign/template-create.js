@@ -281,9 +281,9 @@ function TemplateCreate() {
       });
 
       const data = await response.json();
-      let nextUrl = `${prefixURL}/DocuSign/manage?view=sent`;
+      let nextUrl = `${prefixURL}/eSign/manage?view=sent`;
       if (data.hash) {
-        nextUrl = `${prefixURL}/DocuSign/signing?hash=${data.hash}`;
+        nextUrl = `${prefixURL}/eSign/signing?hash=${data.hash}`;
       }
 
       window.location = nextUrl;

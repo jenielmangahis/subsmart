@@ -21,10 +21,18 @@
                                                     <div class="form-group">
                                                         <label for="bankAccount">Account</label>
                                                         <select name="bank_account" id="bankAccount" class="form-control" required>
-                                                            <?php foreach($accounts as $key => $value) : ?>
-                                                                <optgroup label="<?= $key ?>">
-                                                                    <?php foreach($value as $account) : ?>
-                                                                        <option value="<?= $account['value'] ?>" <?= $account['selected'] === true ? 'selected' : '' ?>><?= $account['text'] ?></option>
+                                                            <?php foreach($accounts as $accType => $accs) : ?>
+                                                                <optgroup label="<?=$accType?>">
+                                                                    <?php foreach($accs as $account) : ?>
+                                                                        <option value="<?=$account->id?>"><?=$account->name?></option>
+
+                                                                        <?php if(count($account->childAccs) > 0) : ?>
+                                                                            <optgroup label="&nbsp;&nbsp;&nbsp;Sub-account of <?=$account->name?>">
+                                                                                <?php foreach($account->childAccs as $childAcc) : ?>
+                                                                                    <option value="<?=$childAcc->id?>">&nbsp;&nbsp;&nbsp;<?=$childAcc->name?></option>
+                                                                                <?php endforeach; ?>
+                                                                            </optgroup>
+                                                                        <?php endif; ?>
                                                                     <?php endforeach; ?>
                                                                 </optgroup>
                                                             <?php endforeach; ?>
@@ -113,11 +121,18 @@
                                                                 <td>
                                                                     <select name="account[]" class="form-control" required>
                                                                         <option value="" disabled selected>&nbsp;</option>
-                                                                        <?php foreach($accounts as $key => $value) : ?>
-                                                                            <optgroup label="<?= $key ?>">
-                                                                                <?php foreach($value as $account) : ?>
-                                                                                    <option value="<?= $account['value'] ?>"><?= $account['text'] ?></option>
-                                                                                    <?php $count++; ?>
+                                                                        <?php foreach($fundsAccounts as $accType => $fundAccs) : ?>
+                                                                            <optgroup label="<?=$accType?>">
+                                                                                <?php foreach($fundAccs as $fundAcc) : ?>
+                                                                                    <option value="<?=$fundAcc->id?>"><?=$fundAcc->name?></option>
+
+                                                                                    <?php if(count($fundAcc->childAccs) > 0) : ?>
+                                                                                        <optgroup label="&nbsp;&nbsp;&nbsp;Sub-account of <?=$fundAcc->name?>">
+                                                                                            <?php foreach($fundAcc->childAccs as $childAcc) : ?>
+                                                                                                <option value="<?=$childAcc->id?>">&nbsp;&nbsp;&nbsp;<?=$childAcc->name?></option>
+                                                                                            <?php endforeach; ?>
+                                                                                        </optgroup>
+                                                                                    <?php endif; ?>
                                                                                 <?php endforeach; ?>
                                                                             </optgroup>
                                                                         <?php endforeach; ?>
@@ -127,9 +142,9 @@
                                                                 <td>
                                                                     <select name="payment_method[]" class="form-control">
                                                                         <option value="" disabled selected>&nbsp;</option>
-                                                                        <option value="1">Cash</option>
-                                                                        <option value="2">Check</option>
-                                                                        <option value="3">Credit Card</option>
+                                                                        <?php foreach($dropdown['payment_methods'] as $paymentMethod) : ?>
+                                                                            <option value="<?=$paymentMethod['id']?>"><?=$paymentMethod['name']?></option>
+                                                                        <?php endforeach; ?>
                                                                     </select>
                                                                 </td>
                                                                 <td><input type="text" name="reference_no[]" class="form-control"></td>
@@ -179,11 +194,18 @@
                                                     <div class="form-group">
                                                         <label for="cashBackTarget">Cash back goes to</label>
                                                         <select name="cash_back_target" id="cashBackTarget" class="form-control" required>
-                                                        <?php foreach($accounts as $key => $value) : ?>
-                                                            <optgroup label="<?= $key ?>">
-                                                                <?php foreach($value as $account) : ?>
-                                                                    <option value="<?= $account['value'] ?>"><?= $account['text'] ?></option>
-                                                                    <?php $count++; ?>
+                                                        <?php foreach($accounts as $accType => $accounts) : ?>
+                                                            <optgroup label="<?=$accType?>">
+                                                                <?php foreach($accounts as $account) : ?>
+                                                                    <option value="<?=$account->id?>"><?=$account->name?></option>
+
+                                                                    <?php if(count($account->childAccs) > 0) : ?>
+                                                                        <optgroup label="&nbsp;&nbsp;&nbsp;Sub-account of <?=$account->name?>">
+                                                                            <?php foreach($account->childAccs as $childAcc) : ?>
+                                                                                <option value="<?=$childAcc->id?>">&nbsp;&nbsp;&nbsp;<?=$childAcc->name?></option>
+                                                                            <?php endforeach; ?>
+                                                                        </optgroup>
+                                                                    <?php endif; ?>
                                                                 <?php endforeach; ?>
                                                             </optgroup>
                                                         <?php endforeach; ?>

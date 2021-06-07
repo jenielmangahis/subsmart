@@ -67,7 +67,7 @@ function get_employee_history(the_date_from, the_date_to, the_user_id) {
     });
 }
 
-function emeployee_history_calculateAndDisplayRoute(route_latlng) {
+function emeployee_history_calculateAndDisplayRoute(route_latlng, actual_duration = 0) {
 
 
     if (directionsRenderer != null) {
@@ -117,6 +117,7 @@ function emeployee_history_calculateAndDisplayRoute(route_latlng) {
                     }
                     history_map_marker = [];
                 }
+                var total_distance = 0;
                 for (let i = 0; i < route.legs.length; i++) {
 
                     if (i == 0) {
@@ -156,8 +157,17 @@ function emeployee_history_calculateAndDisplayRoute(route_latlng) {
                     history_map_marker[i].addListener("click", function() {
                         openwindow_title(history_map_marker[i]);
                     });
-                }
+                    total_distance += route.legs[i].distance.value;
+                    if (i < route.legs.length - 1) {
+                        $("#single-job-view-panel .route-details-setion .route-details-table .date-time .speed" + (i + 1)).html(" (" + parseFloat(((route.legs[i].distance.value / 1609.34) / (route.legs[i].duration.value / 60 / 60))).toFixed(2) + " mi/hr)");
+                        $("#single-job-view-panel .route-details-setion .route-details-table .milage" + i).html(route.legs[i].distance.text);
+                    }
 
+                }
+                $("#single-job-view-panel .estimated-calculation .distance .value").html(parseFloat(total_distance / 1609.34).toFixed(2) + "<br> mi");
+                if (actual_duration > 0) {
+                    $("#single-job-view-panel .estimated-calculation .exp-speed .value").html(parseFloat((total_distance / 1609.34) / ((actual_duration / 60) / 60)).toFixed(2) + "<br>mi/hr");
+                }
             } else {
                 window.alert("Directions request failed due to " + status);
             }

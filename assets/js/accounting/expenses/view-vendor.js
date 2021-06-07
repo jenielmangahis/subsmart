@@ -201,7 +201,6 @@ $('#transactions-table').DataTable({
         data: function(d) {
             d.date = $('#date').val();
             d.type = $('#template-type').val();
-            d.inactive = $('#inc_inactive').prop('checked');
             return JSON.stringify(d);
         },
         pagingType: 'full_numbers'
@@ -507,7 +506,7 @@ $('#transactions-table').DataTable({
 
                             <div class="dropdown-menu" aria-labelledby="statusDropdownButton">
                                 <a class="dropdown-item delete-transaction" href="#">Delete</a>
-                                <a class="dropdown-item" href="#">Void</a>
+                                <a class="dropdown-item void-cc-payment" href="#">Void</a>
                             </div>
                         </div>
                         `);
@@ -2994,6 +2993,24 @@ $(document).on('click', '#transactions-table .void-expense', function(e) {
 });
 
 $(document).on('click', '#transactions-table .void-check', function(e) {
+    e.preventDefault();
+
+    var row = $(this).parent().parent().parent().parent();
+    var data = $('#transactions-table').DataTable().row(row).data();
+    var transactionType = data.type;
+    transactionType = transactionType.replaceAll(' ', '-');
+    transactionType = transactionType.toLowerCase();
+
+    $.get('/accounting/vendors/void-transaction/'+transactionType+'/'+data.id, function(res) {
+        var result = JSON.parse(res);
+
+        toast(result.success, result.message);
+
+        $('#transactions-table').DataTable().ajax.reload();
+    });
+});
+
+$(document).on('click', '#transactions-table .void-cc-payment', function(e) {
     e.preventDefault();
 
     var row = $(this).parent().parent().parent().parent();

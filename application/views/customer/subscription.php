@@ -176,6 +176,7 @@ add_css(array(
                                                         <div class="row">
                                                             <div class="col-md-12">
                                                                 <input type="text" class="form-control" name="frequency" id="frequency" value="<?= 'Every '.$billing_info->frequency.' month(s)';  ?>" readonly/>
+                                                                <input type="hidden" class="form-control" name="num_frequency" id="num_frequency" value="<?= $billing_info->frequency; ?>" readonly/>
                                                             </div>
                                                         </div>
                                                     </div>

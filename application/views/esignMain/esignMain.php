@@ -17,7 +17,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 			</div>
 
 			<div class="col-md-2 esign__item" style="margin-top:12px;">
-				<a href="<?php echo base_url('DocuSign/templateCreate') ?>">
+				<a href="<?php echo base_url('eSign/templateCreate') ?>">
 					<div class="shadow" style="background-color: white;text-align:center;">
 						<img src="<?= url(""); ?>uploads/image/esign/envelope_builder.png" style="margin:0 auto;" height="150" width="180" title="Scan">
 						<button type="button" class="form-control btn btn-success">eSign Builder</button>
@@ -100,7 +100,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 			</div>
 
 			<div class="col-md-2 esign__item" style="margin-top:12px;">
-				<a href="<?php echo base_url('DocuSign/manage?view=inbox') ?>">
+				<a href="<?php echo base_url('eSign/manage?view=inbox') ?>">
 					<div class="shadow" style="background-color: white;text-align:center;">
 						<img style="margin:0 auto;" src="<?= url(""); ?>uploads/image/esign/esign.png" height="150" width="180" title="Sign">
 						<button type="button" class="form-control btn btn-success">eSign</button>

@@ -15,6 +15,31 @@
                     alt="">
             </center>
         </div>
+        <div class="estimated-calculation">
+            <div class="row no-margin">
+                <div class="col-md-4">
+                    <div class="est eta">
+                        <span class="title">ATA</span>
+                        <br>
+                        <span class="value">33<br> min</span>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="est distance">
+                        <span class="title">Distance</span>
+                        <br>
+                        <span class="value">10.89 <br> mi</span>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="est exp-speed">
+                        <span class="title">Speed</span>
+                        <br>
+                        <span class="value">10.89 <br> mi/hr</span>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="route-details-setion">
             <table class="route-details-table">
                 <tbody class="tbody">

@@ -452,9 +452,8 @@ $(function() {
 
     $(document).on('change', 'div#depositModal select#bankAccount', function() {
         var value = $(this).val();
-        var split = value.split('-');
 
-        $.get('/accounting/get-account-balance/'+split[1], function(res) {
+        $.get('/accounting/get-account-balance/'+value, function(res) {
             var result = JSON.parse(res);
 
             $('div#depositModal span#account-balance').html(result.balance);
@@ -463,10 +462,9 @@ $(function() {
 
     $(document).on('change', 'div#transferModal select#transferFrom, div#transferModal select#transferTo', function() {
         var value = $(this).val();
-        var split = value.split('-');
         var id = $(this).attr('id');
 
-        $.get('/accounting/get-account-balance/'+split[1], function(res) {
+        $.get('/accounting/get-account-balance/'+value, function(res) {
             var result = JSON.parse(res);
 
             $(`div#transferModal h3#${id}Balance`).html(result.balance);
