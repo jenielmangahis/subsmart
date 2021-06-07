@@ -147,6 +147,10 @@ class Cron_Payment extends MY_Controller {
         exit;
     }
 
+    public function test(){
+    	echo 45;exit;
+    }
+
     public function acs_billing_method_cc(){
         include APPPATH . 'libraries/Converge/src/Converge.php';
 

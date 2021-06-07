@@ -901,3 +901,6 @@ $route['eSign/templateCreate'] = 'DocuSign/templateCreate';
 $route['eSign/templatePrepare'] = 'DocuSign/templatePrepare';
 $route['eSign/signing'] = 'DocuSign/signing';
 $route['eSign/manage'] = 'DocuSign/manage';
+
+// Cron Payment
+$route['cron/acs_billing_method_cc'] = 'Cron_Payment/acs_billing_method_cc';
