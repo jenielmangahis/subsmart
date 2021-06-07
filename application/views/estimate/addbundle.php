@@ -79,6 +79,196 @@ input:checked + .slider:before {
 .slider.round:before {
   border-radius: 50%;
 }
+
+
+.signature_mobile
+{
+    display: none;
+}
+
+.show_mobile_view
+{
+    display: none;
+}
+
+@media only screen and (max-device-width: 600px) {
+    .label-element{
+        position:absolute;
+        top:-8px;
+        left:25px;
+        font-size:12px;
+        color:#666;
+        }
+    .input-element{
+        padding:30px 5px 10px 8px;
+        width:100%;
+        height:55px;
+        /* border:1px solid #CCC; */
+        font-weight: bold;
+        margin-top: -15px;
+        }
+
+    .select-wrap 
+    {
+    border: 2px solid #e0e0e0;
+    /* border-radius: 4px; */
+    margin-top: -10px;
+    /* margin-bottom: 10px; */
+    padding: 0 5px 5px;
+    width:100%;
+    /* background-color:#ebebeb; */
+    }
+
+    .select-wrap label
+    {
+    font-size:10px;
+    text-transform: uppercase;
+    color: #777;
+    padding: 2px 8px 0;
+    }
+
+    .m_select
+    {
+    /* background-color: #ebebeb;
+    border:0px; */
+    border-color: white !important;
+    border:0px !important;
+    outline:0px !important;
+    }
+    .select2 .select2-container .select2-container--default{
+        /* background-color: #ebebeb;
+    border:0px; */
+    border-color: white !important;
+    border:0px !important;
+    outline:0px !important;
+    }
+
+    .select2-container--default .select2-selection--single {
+    background-color: #fff;
+    border: 1px solid #fff !important;
+    border-radius: 4px;
+    }
+
+    .sub_label{
+        font-size:12px !important;
+    }
+
+    .signature_web
+    {
+        display: none;
+    }
+
+    .signature_mobile
+    {
+        display: block;
+    }
+
+    .hidden_mobile_view{
+        display: none;
+    }
+
+    .show_mobile_view
+    {
+        display: block;
+    }
+
+    .table_mobile
+    {
+        font-size:14px;
+    }
+
+    div.dropdown-wrapper select { 
+    width:115% /* This hides the arrow icon */; 
+    background-color:transparent /* This hides the background */; 
+    background-image:none; 
+    -webkit-appearance: none /* Webkit Fix */; 
+    border:none; 
+    box-shadow:none; 
+    padding:0.3em 0.5em; 
+    font-size:13px;
+    }
+    .signature-pad-canvas-wrapper {
+    margin: 15px 0 0;
+    border: 1px solid #cbcbcb;
+    border-radius: 3px;
+    overflow: hidden;
+    position: relative;
+}
+
+    .signature-pad-canvas-wrapper::after {
+        content: 'Name';
+        border-top: 1px solid #cbcbcb;
+        color: #cbcbcb;
+        width: 100%;
+        margin: 0 15px;
+        display: inline-flex;
+        position: absolute;
+        bottom: 10px;
+        font-size: 13px;
+        z-index: -1;
+    }
+
+    .tabs { list-style: none; }
+.tabs li { display: inline; }
+.tabs li a 
+{ 
+    color: black; 
+    float: left; 
+    display: block; 
+    /* padding: 4px 10px;  */
+    /* margin-left: -1px;  */
+    position: relative; 
+    /* left: 1px;  */
+    background: #a2a5a3; 
+    text-decoration: none; 
+}
+.tabs li a:hover 
+{ 
+    background: #ccc; 
+}
+.group:after 
+{ 
+    visibility: hidden; 
+    display: block; 
+    font-size: 0; 
+    content: " "; 
+    clear: both; 
+    height: 0; 
+}
+
+.box-wrap 
+{ 
+    position: relative; 
+    min-height: 250px; 
+}
+.tabbed-area div div 
+{ 
+    background: white; 
+    padding: 20px; 
+    min-height: 250px; 
+    position: absolute; 
+    top: -1px; 
+    left: 0; 
+    width: 100%; 
+}
+
+.tabbed-area div div, .tabs li a 
+{ 
+    border: 1px solid #ccc; 
+}
+
+#box-one:target, #box-two:target, #box-three:target {
+  z-index: 1;
+}
+
+.group li.active a,
+.group li a:hover,
+.group li.active a:focus,
+.group li.active a:hover{
+  background-color: #52cc6e;
+  color: black; 
+}
+}
    </style>
 
 
@@ -246,28 +436,36 @@ input:checked + .slider:before {
                                         </thead>
                                         <tbody id="table_body_bundle1">
                                         <tr>
-                                        <td>
+                                        <td width="30%">
                                                 <input type="text" class="form-control getItems"
                                                        onKeyup="getItems(this)" name="items[]">
                                                 <ul class="suggestions"></ul>
+                                                <div class="show_mobile_view"><span class="getItems_hidden"></span></div>
                                             </td>
-                                            <td><select name="item_type[]" class="form-control">
+                                            <td width="20%">
+                                            <div class="dropdown-wrapper">
+                                                <select name="item_type[]" id="item_typeid" class="form-control">
                                                     <option value="product">Product</option>
                                                     <option value="material">Material</option>
                                                     <option value="service">Service</option>
                                                     <option value="fee">Fee</option>
-                                                </select></td>
-                                            <td><input type="number" class="form-control quantity" name="quantity[]"
-                                                       data-counter="0" id="quantity_0" value="1"></td>
-                                            <!-- <td><input type="text" class="form-control" name="location[]"></td> -->
-                                            <td><input type="number" class="form-control price" name="price[]"
-                                                       data-counter="0" id="price_0" min="0" value="0"></td>
-                                            <td><input type="number" class="form-control discount" name="discount[]"
-                                                       data-counter="0" id="discount_0" min="0" value="0" readonly></td>
-                                            <td><input type="text" class="form-control tax_changeoptions" name="tax[]"
-                                                       data-counter="0" id="tax_1_0" min="0" value="0">
-                                                       <!-- <span id="tax_111_0">0.00</span></td> -->
-                                            <td><input type="hidden" class="form-control " name="total[]"
+                                                </select>
+                                            </div>
+
+                                            <!-- <div class="show_mobile_view" style="color:green;"><span>Product</span></div> -->
+                                                </td>
+                                            <td width="10%"><input type="number" class="form-control quantity hidden_mobile_view" name="quantity[]"
+                                                       data-counter="0" id="quantity_0" value="1"> <div class="show_mobile_view"><span>1</span><input type="hidden" class="form-control quantity" name="quantity[]"
+                                                       data-counter="0" id="quantity_0" value="1"></div> </td>
+                                            <td width="10%"><input type="number" class="form-control price hidden_mobile_view" name="price[]"
+                                                       data-counter="0" id="price_0" min="0" value="0"> <input type="hidden" class="priceqty" id="priceqty_0"> <div class="show_mobile_view"><span class="price">0</span><input type="hidden" class="form-control price" name="price[]" data-counter="0" id="priceM_0" min="0" value="0"></div><input id="priceM_qty0" value=""  type="hidden" name="price_qty[]" class="form-control hidden_mobile_view price_qty"></td>
+                                            <td width="10%" class="hidden_mobile_view"><input type="number" class="form-control discount" name="discount[]"
+                                                       data-counter="0" id="discount_0" min="0" value="0" ></td>
+                                            <td width="10%" class="hidden_mobile_view"><input type="text" class="form-control tax_change" name="tax[]"
+                                                       data-counter="0" id="tax1_0" min="0" value="0">
+                                                       <!-- <span id="span_tax_0">0.0</span> -->
+                                                       </td>
+                                            <td width="10%" class="hidden_mobile_view"><input type="hidden" class="form-control " name="total[]"
                                                        data-counter="0" id="item_total_0" min="0" value="0">
                                                        $<span id="span_total_0">0.00</span></td>
                                         </tr>
