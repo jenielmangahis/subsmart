@@ -1,6 +1,8 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed'); ?>
 <?php include viewPath('includes/admin_header'); ?>
+<script src="https://rawgit.com/enyo/dropzone/master/dist/dropzone.js"></script>
+<link rel="stylesheet" href="https://rawgit.com/enyo/dropzone/master/dist/dropzone.css">
 <style>
     .btn-success {
         background-color: #46a83d;
@@ -253,7 +255,6 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                 </div>
                                 <div class="col-md-6">
                                     <button class="btn btn-info add-employee" id="addEmployeeData"><i class="fa fa-user-plus"></i> Add Employee</button>
-                                    <button class="btn btn-info share-add-employee" id="shareEmployeeForm"><i class="fa fa-globe"></i> Share Add Employee</button>
                                 </div>
                             </div>
                             <div class="row">
@@ -318,29 +319,15 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                                     <td class="text-center"><span class="fa fa-lg fa-mobile"></span></td>
                                                     <td class="text-center"><span class="fa fa-lg fa-desktop"></span></td>
                                                     <td class="center">
-                                                        <?php //if (hasPermissions('users_edit')){ 
-                                                        ?>
-                                                        <!-- <a href="<?php echo url('users/edit/' . $row->id); ?>" title="Edit User" data-toggle="tooltip"><i class="fa fa-edit"></i></a> -->
-                                                        <?php //} 
-                                                        ?>
-                                                        <a href="javascript:void(0)" data-id="<?php echo $row->id ?>" id="editEmployee" title="Edit User" data-toggle="tooltip"><i class="fa fa-pencil"></i></a>
+                                                        <a href="javascript:void(0)" data-id="<?php echo $row->id ?>" id="editEmployee" title="Edit User" data-toggle="tooltip"><i class="fa fa-edit"></i></a>
                                                         <a href="javascript:void(0)" data-name="<?php echo $row->FName . ' ' . $row->LName; ?>" data-id="<?php echo $row->id ?>" id="changePassword" title="Change Password" data-toggle="tooltip"><i class="fa fa-lock"></i></a>
-                                                        <?php //endif 
-                                                        ?>
-                                                        <?php //if (hasPermissions('users_view')): 
-                                                        ?>
+                                                        
                                                         <a href="<?php echo url('users/view/' . $row->id) ?>" title="View User" data-toggle="tooltip"><i class="fa fa-eye"></i></a>
-                                                        <?php //endif 
-                                                        ?>
-                                                        <?php //if (hasPermissions('users_delete')): 
-                                                        ?>
                                                         <?php if ($row->id != 1 && logged('id') != $row->id) : ?>
-                                                            <a href="<?php echo url('users/delete/' . $row->id) ?>" onclick="return confirm('Do you really want to delete this user ?')" title="Delete User" data-toggle="tooltip"><i class="fa fa-trash"></i></a>
+                                                            <a href="<?php echo url('admin/delete/' . $row->id) ?>" onclick="return confirm('Do you really want to delete this user ?')" title="Delete User" data-toggle="tooltip"><i class="fa fa-trash"></i></a>
                                                         <?php else : ?>
                                                             <a href="javascript:void (0)" title="You cannot Delete this User" data-toggle="tooltip" disabled><i class="fa fa-trash"></i></a>
                                                         <?php endif ?>
-                                                        <?php //endif 
-                                                        ?>
                                                     </td>
                                                 </tr>
                                             <?php endforeach ?>
@@ -482,6 +469,17 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                 <div class="modal-body">
                     <div class="section-title" style="">Basic Details</div>
                     <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label for="">Company</label>
+                                <select class="form-control select2-company">
+                                    <option value="">-Select Company-</option>
+                                    <?php foreach($companies as $c){ ?>
+                                        <option value="<?= $c->id; ?>"><?= $c->business_name; ?></option>
+                                    <?php } ?>
+                                </select>                                
+                            </div>
+                        </div>
                         <div class="row">
                             <div class="col-md-6">
                                 <label for="">Employee Number</label>
@@ -703,25 +701,6 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         </div>
     </div>
 </div>
-
-<div class="modal fade" id="modalShareAddEmployee">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <!-- Modal Header -->
-            <div class="modal-header">
-                <h4 class="modal-title"><i class="fa fa-globe"></i> Public URL</h4>
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-            </div>
-            <!-- Modal body -->
-            <div class="modal-body">
-                <p>You public URL for adding employees</p>
-                <div class="copy-info"></div>
-                <input type="hidden" id="e-public-url" value="<?php echo base_url('/add_company_employee/' . $eid); ?>">
-                <label class="label label-default label-public-url" style="padding: 10px;font-size:15px;width: 88%; color: #ffffff;"><?php echo base_url('/add_company_employee/' . $eid); ?></label><a class="btn-copy-public-url" href="javascript:void(0);" style="padding: 10px;"><i class="fa fa-copy"></i></a>
-            </div>
-        </div>
-    </div>
-</div>
 <!--end of modal-->
 <?php include viewPath('includes/admin_footer'); ?>
 <script>
@@ -729,20 +708,6 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         $('#employeeTable').DataTable({
             "searching": false,
             "sort": false
-        });
-
-        $("#shareEmployeeForm").click(function() {
-            $("#modalShareAddEmployee").modal("show");
-        });
-
-        $(".btn-copy-public-url").click(function() {
-            var copyText = document.getElementById("e-public-url");
-            copyText.type = 'text';
-            copyText.select();
-            document.execCommand("copy");
-            copyText.type = 'hidden';
-
-            $(".label-public-url").fadeOut(100).fadeIn(100).fadeOut(100).fadeIn(100);
         });
 
         $(document).on('click', '#addEmployeeData', function() {
@@ -793,7 +758,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             width: 'resolve',
             delay: 250,
             ajax: {
-                url: 'users/getRoles',
+                url: base_url + 'admin/getRoles',
                 type: "GET",
                 dataType: "json",
                 data: function(params) {
@@ -812,6 +777,11 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         });
         $('.select2-payscale').select2({
             placeholder: 'Select Payscale',
+            allowClear: true,
+            width: 'resolve'
+        });
+        $('.select2-company').select2({
+            placeholder: 'Select Company',
             allowClear: true,
             width: 'resolve'
         });
@@ -903,7 +873,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             var image_id = $('#photoId').val();
             var image = $('#photoName').val();
             $.ajax({
-                url: base_url + 'users/removeTemporaryImg',
+                url: base_url + 'admin/removeTemporaryImg',
                 type: 'POST',
                 dataType: 'json',
                 data: {
@@ -936,7 +906,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             //if(values['firstname'] && values['lastname'] && values['email'] && values['username'] && values['password'] && values['role']){
             if (values['firstname'] && values['lastname'] && values['username'] && values['password'] && values['role']) {
                 $.ajax({
-                    url: base_url + 'users/addNewEmployee',
+                    url: base_url + 'admin/create_employee',
                     type: "POST",
                     dataType: "json",
                     data: {
@@ -981,7 +951,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             });
             if (values['firstname'] && values['lastname'] && values['email'] && values['username'] && values['role']) {
                 $.ajax({
-                    url: base_url + 'users/_update_employee',
+                    url: base_url + 'admin/_update_employee',
                     type: "POST",
                     dataType: "json",
                     data: {
@@ -1073,7 +1043,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             });
             if (values['new_password'] && values['re_password']) {
                 $.ajax({
-                    url: base_url + 'users/_update_employee_password',
+                    url: base_url + 'admin/_update_employee_password',
                     type: "POST",
                     dataType: "json",
                     data: {
@@ -1120,7 +1090,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                 keyboard: false
             });
             $.ajax({
-                url: base_url + "users/ajax_edit_employee",
+                url: base_url + "admin/ajax_edit_employee",
                 type: "POST",
                 dataType: "html",
                 data: {
@@ -1191,7 +1161,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         var fname = [];
         var selected = [];
         var profilePhoto = new Dropzone('#employeeProfilePhoto', {
-            url: '<?= base_url() ?>users/profilePhoto',
+            url: base_url + 'admin/profilePhoto',
             acceptedFiles: "image/*",
             maxFilesize: 20,
             maxFiles: 1,
@@ -1231,7 +1201,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         });
 
         var profilePhoto = new Dropzone('#employeeProfilePhotoUpdate', {
-            url: base_url + 'users/profilePhoto',
+            url: base_url + 'admin/profilePhoto',
             acceptedFiles: "image/*",
             maxFilesize: 20,
             maxFiles: 1,
@@ -1252,7 +1222,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                 }).filter(isFinite)[0];
                 $.ajax({
                     type: "POST",
-                    url: base_url + 'users/removeProfilePhoto',
+                    url: base_url + 'admin/removeProfilePhoto',
                     dataType: 'json',
                     data: {
                         name: name,

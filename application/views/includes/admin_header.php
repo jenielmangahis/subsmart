@@ -389,27 +389,10 @@ if ($this->session->userdata('usertimezone') == null) {
                                     </a>
                                     <div class="dropdown-menu dropdown-menu-right profile-dropdown">
                                         <a class="dropdown-item"
-                                            href="<?php echo url('dashboard') ?>"><i
+                                            href="<?php echo url('admin/dashboard') ?>"><i
                                                 class="mdi mdi-account-circle m-r-5"></i>Dashboard</a>
-                                        <a class="dropdown-item"
-                                            href="<?php echo url('profile') ?>"><i
-                                                class="mdi mdi-account-circle m-r-5"></i>Public Profile</a>
-                                        <a class="dropdown-item"
-                                            href="<?php echo url() ?>"><i
-                                                class="mdi mdi-account-circle m-r-5"></i>nSmart Home</a>
-                                        <a class="dropdown-item" href="#"><i class="mdi mdi-account-circle m-r-5"></i>Join our
-                                            community</a>
-                                        <?php //if (hasPermissions('activity_log_list')):
-                                                    ?>
-                                        <a
-                                            href="<?php echo url('activity_logs') ?>">
-                                            <i class="mdi mdi-account-circle m-r-5"></i><span>Activity Logs</span>
-                                        </a>
-                                        <?php //endif
-                                                    ?>
-                                        <div class="dropdown-divider"></div>
                                         <a class="dropdown-item text-danger"
-                                            href="<?php echo url('/logout') ?>"><i
+                                            href="<?php echo url('/admin/logout') ?>"><i
                                                 class="mdi mdi-power text-danger"></i> Logout</a>
                                     </div>
                                 </div>
