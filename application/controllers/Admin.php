@@ -381,8 +381,12 @@ class Admin extends CI_Controller
         echo json_encode($json_data);
     }
 
-    public function delete($id){
+    public function delete(){
+        $this->load->model('Users_model');
+        
+        $id = post('delete_user_id');
         $user = $this->users_model->delete($id);
+
         //Delete Timesheet 
         $this->load->model('TimesheetTeamMember_model');
         $this->TimesheetTeamMember_model->deleteByUserId($id);
@@ -391,9 +395,237 @@ class Admin extends CI_Controller
         $this->Trac360_model->deleteUser('trac360_people', $id);
 
         $this->activity_model->add("User #$id Deleted by User:".logged('name'));
+
         $this->session->set_flashdata('alert-type', 'success');
+
         $this->session->set_flashdata('alert', 'User has been Deleted Successfully');
-        redirect('admin/users');
+        
+        $return = ['is_success' => 1];
+        echo json_encode($return);
+    }
+
+    public function ajaxUpdateEmployeeProfilePhoto(){
+        $this->load->model('Users_model');
+
+        $user_id = $this->input->post('values[user_id_prof]');
+        $profile_img = $this->input->post('values[profile_img]');
+
+        $user = $this->Users_model->getUser($user_id);
+
+        if( $profile_img == '' ){
+            $profile_img = $user->profile_img;
+        }
+        $data = array(            
+            'profile_img' => $profile_img
+        );
+
+        $user = $this->Users_model->update($user_id,$data);
+
+        echo json_encode(1);
+    }
+
+    public function nsmart_plans() {
+        $this->load->model('NsmartPlan_model');
+
+        $nSmartPlans   = $this->NsmartPlan_model->getAll();
+        $option_status = $this->NsmartPlan_model->getPlanStatus();
+        $option_discount_types = $this->NsmartPlan_model->getDiscountTypes();
+
+        $this->page_data['option_status'] = $option_status;
+        $this->page_data['option_discount_types'] = $option_discount_types;
+        $this->page_data['nSmartPlans'] = $nSmartPlans;
+        $this->load->view('admin/nsmart_plans/list', $this->page_data);
+    }
+
+    public function add_new_plan() {
+        $this->load->model('NsmartPlan_model');
+
+        $option_status = $this->NsmartPlan_model->getPlanStatus();
+        $option_discount_types = $this->NsmartPlan_model->getDiscountTypes();
+
+        $this->page_data['option_status'] = $option_status;
+        $this->page_data['option_discount_types'] = $option_discount_types;
+        $this->load->view('admin/nsmart_plans/add_new_plan', $this->page_data);
+    }
+
+    public function create_nsmart_plan() {
+        $this->load->model('NsmartPlan_model');
+
+        $user = $this->session->userdata('logged');
+        $post = $this->input->post();
+
+        if( $post['plan_name'] != '' ){
+            if( $this->NsmartPlan_model->isPlanNameExists($post['plan_name']) ){
+                $this->session->set_flashdata('message', 'Plan name already exists');
+                $this->session->set_flashdata('alert_class', 'alert-danger');
+            }else{
+                $data = [
+                    'plan_name' => $post['plan_name'],
+                    'plan_description' => $post['plan_description'],
+                    'price' => $post['plan_price'],
+                    'discount' => $post['plan_discount'],
+                    'discount_type' => $post['plan_discount_type'],
+                    'status' => $post['plan_status'],
+                    'date_created' => date("Y-m-d H:i:s")
+                ];
+
+                $nsPlan = $this->NsmartPlan_model->create($data);
+
+                $this->session->set_flashdata('message', 'Add new plan was successful');
+                $this->session->set_flashdata('alert_class', 'alert-success');
+            }
+        }else{
+            $this->session->set_flashdata('message', 'Please enter plan name');
+            $this->session->set_flashdata('alert_class', 'alert-danger');
+        }
+
+        redirect('admin/nsmart_plans');
+    }
+
+    public function edit_nsmart_plan($plan_id) {
+        $this->load->model('NsmartPlan_model');
+        $nSmartPlan = $this->NsmartPlan_model->getById($plan_id);
+
+        if( $nSmartPlan ){
+            $option_status = $this->NsmartPlan_model->getPlanStatus();
+            $option_discount_types = $this->NsmartPlan_model->getDiscountTypes();
+
+            $this->page_data['nSmartPlan'] = $nSmartPlan;
+            $this->page_data['option_status'] = $option_status;
+            $this->page_data['option_discount_types'] = $option_discount_types;
+            $this->load->view('admin/nsmart_plans/edit_plan', $this->page_data);
+        }else{
+            $this->session->set_flashdata('message', 'Cannot find data');
+            $this->session->set_flashdata('alert_class', 'alert-danger');
+            redirect('admin/nsmart_plans');
+        }
+    }
+
+    public function update_nsmart_plan() {
+        $this->load->model('NsmartPlan_model');
+
+        $user = $this->session->userdata('logged');
+        $post = $this->input->post();
+
+        $nSmartPlan = $this->NsmartPlan_model->getById($post['plan_id']);
+
+        if( $nSmartPlan ){
+            if( $post['plan_name'] != '' ){
+                $data = [
+                    'plan_name' => $post['plan_name'],
+                    'plan_description' => $post['plan_description'],
+                    'price' => $post['plan_price'],
+                    'discount' => $post['plan_discount'],
+                    'discount_type' => $post['plan_discount_type'],
+                    'status' => $post['plan_status'],
+                    'date_updated' => date("Y-m-d H:i:s")
+                ];
+                $nsPlan = $this->NsmartPlan_model->updatePlan($post['plan_id'],$data);
+
+                $this->session->set_flashdata('message', 'Plan was successfully updated');
+                $this->session->set_flashdata('alert_class', 'alert-success');
+            }else{
+                $this->session->set_flashdata('message', 'Please enter plan name');
+                $this->session->set_flashdata('alert_class', 'alert-danger');
+            }
+
+            redirect('admin/edit_nsmart_plan/'.$post['plan_id']);
+
+        }else{
+            $this->session->set_flashdata('message', 'Cannot find data');
+            $this->session->set_flashdata('alert_class', 'alert-danger');
+
+            redirect('admin/nsmart_plans');
+        }
+    }
+
+    public function delete_nsmart_plan(){
+        $this->load->model('NsmartPlan_model');
+
+        $id = $this->NsmartPlan_model->deletePlan(post('pid'));
+
+        $this->session->set_flashdata('message', 'Plan has been Deleted Successfully');
+        $this->session->set_flashdata('alert_class', 'alert-success');
+
+        redirect('admin/nsmart_plans');
+    }
+
+    public function nsmart_features() {
+        $this->load->model('NsmartPlan_model');
+        $this->load->model('PlanHeadings_model');
+        $this->load->model('NsmartFeature_model');
+        $this->load->model('NsmartPlanModules_model');
+
+        $planHeadings = $this->PlanHeadings_model->getAll();
+        $data_features = array();
+        foreach( $planHeadings as $ph ){
+            $modules = $this->NsmartPlanModules_model->getAllByPlanHeadingId($ph->id);
+            foreach( $modules as $m ){
+                $data_features[$ph->title][$m->nsmart_feature_id]['feature_name'] = $m->feature_name; 
+                $data_features[$ph->title][$m->nsmart_feature_id]['feature_id'] = $m->nsmart_feature_id;  
+                $data_features[$ph->title][$m->nsmart_feature_id]['plans'][] = $m->plan_name;
+            }
+        }
+
+        $this->page_data['data_features'] = $data_features;
+        $this->load->view('admin/nsmart_features/list', $this->page_data);
+
+    }
+
+    public function add_new_feature() {
+        $this->load->model('NsmartPlan_model');
+        $this->load->model('PlanHeadings_model');
+        $this->load->model('NsmartFeature_model');
+
+        $planHeadings   = $this->PlanHeadings_model->getAll();
+        $plans   = $this->NsmartPlan_model->getAll();
+
+        $this->page_data['planHeadings'] = $planHeadings;
+        $this->page_data['plans'] = $plans;
+        $this->load->view('admin/nsmart_features/add_new_feature', $this->page_data);
+    }   
+
+    public function create_nsmart_feature() {
+        $this->load->model('NsmartPlan_model');
+        $this->load->model('PlanHeadings_model');
+        $this->load->model('NsmartFeature_model');
+        
+        $post = $this->input->post();
+
+        if( $post['feature_name'] != '' ){
+            $data_feature = [
+                'feature_name' => $post['feature_name'],
+                'feature_description' => $post['feature_description'],
+                'plan_heading_id' => $post['feature_heading'],
+                'date_created' => date("Y-m-d H:i:s")
+            ];
+
+            $nsmart_feature_id = $this->NsmartFeature_model->save($data_feature);
+            if( $nsmart_feature_id > 0 ){
+                foreach( $post['plans'] as $id => $value ){
+                    $data_plan_modules = [
+                        'nsmart_plans_id' => $id,
+                        'nsmart_feature_id' => $nsmart_feature_id,
+                        'plan_heading_id' => $post['feature_heading']
+                    ];
+
+                    $nsPlanFeature = $this->NsmartPlanModules_model->create($data_plan_modules);
+                }
+
+                $this->session->set_flashdata('message', 'Add new plan feature was successful');
+                $this->session->set_flashdata('alert_class', 'alert-success');
+
+            }else{
+                $this->session->set_flashdata('message', 'Cannot save feature.');
+                $this->session->set_flashdata('alert_class', 'alert-danger');
+            }
+
+        }else{
+            $this->session->set_flashdata('message', 'Please enter feature name');
+            $this->session->set_flashdata('alert_class', 'alert-danger');
+        }
+
+        redirect('admin/nsmart_features');
     }
 }
 

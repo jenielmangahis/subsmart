@@ -230,7 +230,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
     }
 </style>
 <div class="wrapper" role="wrapper">
-    <?php include viewPath('includes/sidebars/employee'); ?>
+    <?php include viewPath('includes/sidebars/admin/employee'); ?>
     <!-- page wrapper start -->
     <div wrapper__section>
         <div class="container-fluid p-40">
@@ -321,10 +321,8 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                                     <td class="center">
                                                         <a href="javascript:void(0)" data-id="<?php echo $row->id ?>" id="editEmployee" title="Edit User" data-toggle="tooltip"><i class="fa fa-edit"></i></a>
                                                         <a href="javascript:void(0)" data-name="<?php echo $row->FName . ' ' . $row->LName; ?>" data-id="<?php echo $row->id ?>" id="changePassword" title="Change Password" data-toggle="tooltip"><i class="fa fa-lock"></i></a>
-                                                        
-                                                        <a href="<?php echo url('users/view/' . $row->id) ?>" title="View User" data-toggle="tooltip"><i class="fa fa-eye"></i></a>
                                                         <?php if ($row->id != 1 && logged('id') != $row->id) : ?>
-                                                            <a href="<?php echo url('admin/delete/' . $row->id) ?>" onclick="return confirm('Do you really want to delete this user ?')" title="Delete User" data-toggle="tooltip"><i class="fa fa-trash"></i></a>
+                                                            <a href="javascript:void(0);" title="Delete User" class="delete-user" data-name="<?= $row->FName . ' ' . $row->LName; ?>" data-id="<?= $row->id; ?>"><i class="fa fa-trash"></i></a>
                                                         <?php else : ?>
                                                             <a href="javascript:void (0)" title="You cannot Delete this User" data-toggle="tooltip" disabled><i class="fa fa-trash"></i></a>
                                                         <?php endif ?>
@@ -353,7 +351,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         <div class="modal-content">
             <!-- Modal Header -->
             <div class="modal-header">
-                <h4 class="modal-title"><i class="fa fa-pencil"></i> Edit Employee</h4>
+                <h4 class="modal-title"><i class="fa fa-edit"></i> Edit Employee</h4>
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
             <!-- Modal body -->
@@ -363,6 +361,29 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" id="closeEditEmployeeModal">Cancel</button>
                     <button type="button" class="btn btn-success" id="updateEmployee">Save</button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+<!--Delete Employee modal-->
+<div class="modal fade" id="modalDeleteEmployee">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title"><i class="fa fa-trash"></i> Delete Employee</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <!-- Modal body -->
+            <form action="" id="deleteEmployeeForm">
+                <input type="hidden" id="delete-user-id" name="delete_user_id" value="" />
+                <div class="modal-body">Are you sure you want to delete <span class="delete-user-name"></span></div>
+                <!-- Modal footer -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+                    <button type="submit" class="btn btn-danger">Yes</button>
                 </div>
             </form>
 
@@ -851,6 +872,48 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             });
 
         });
+
+
+        //Delete user modal
+        $(document).on('click', '.delete-user', function(){
+            var user_id   = $(this).attr("data-id");
+            var user_name = $(this).attr("data-name");
+            $("#delete-user-id").val(user_id);
+            $(".delete-user-name").html('<b>' + user_name + '</b>');
+            $("#modalDeleteEmployee").modal('show'); 
+        });
+
+        $(document).on('submit', '#deleteEmployeeForm', function(e){
+            e.preventDefault();
+            $.ajax({
+                url: base_url + 'admin/_delete_employee',
+                type: "POST",
+                dataType: "json",
+                data: $('#deleteEmployeeForm').serialize(),
+                success: function(data) {
+                    if (data.is_success == 1) {
+                        $("#modalDeleteEmployee").modal('hide');
+                        Swal.fire({
+                            showConfirmButton: false,
+                            timer: 2000,
+                            title: 'Success',
+                            text: "User has been deleted",
+                            icon: 'success'
+                        });
+                        location.reload();
+                    } else {
+                        Swal.fire({
+                            showConfirmButton: false,
+                            timer: 2000,
+                            title: 'Failed',
+                            text: "Something is wrong in the process",
+                            icon: 'warning'
+                        });
+                    }
+                }
+            });
+        });
+
         // Password and Confirm Password Validation
         $(document).on('change', '#employeeConfirmPass', function() {
             var con_pass = $(this).val();
@@ -997,7 +1060,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             });
             if (values['profile_img']) {
                 $.ajax({
-                    url: base_url + 'users/ajaxUpdateEmployeeProfilePhoto',
+                    url: base_url + 'admin/_update_employee_profile_photo',
                     type: "POST",
                     dataType: "json",
                     data: {

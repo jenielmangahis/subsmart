@@ -907,3 +907,13 @@ $route['cron/acs_billing_method_cc'] = 'Cron_Payment/acs_billing_method_cc';
 
 //Admin Users
 $route['admin/_update_employee'] = 'Admin/ajaxUpdateEmployee';
+$route['admin/_update_employee_password'] = 'Admin/ajaxUpdateEmployeePassword';
+$route['admin/_delete_employee'] = 'Admin/ajaxUpdateEmployeePassword';
+$route['admin/_update_employee_profile_photo'] = 'Admin/ajaxUpdateEmployeeProfilePhoto';
+
+//Admin nsmart plans
+$route['admin/nsmart_plans'] = 'Admin/nsmart_plans';
+$route['admin/add_new_nsmart_plan'] = 'Admin/add_new_plan';
+$route['admin/create_nsmart_plan'] = 'Admin/create_nsmart_plan';
+$route['admin/update_nsmart_plan'] = 'Admin/update_nsmart_plan';
+$route['admin/delete_nsmart_plan'] = 'Admin/delete_nsmart_plan';
