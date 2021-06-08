@@ -37,7 +37,6 @@ function get_jobs_travel_history(the_job_id, the_user_id) {
                         actual_duration = actual_duration / 60;
                         variable = "hr";
                     }
-
                     $("#single-job-view-panel .estimated-calculation .eta .value").html(parseFloat(actual_duration).toFixed(2) + "<br>" + variable);
                     $("#single-job-view-panel .route-details-setion .route-details-table .tbody").html(data.html);
                     emeployee_history_calculateAndDisplayRoute(data.route_latlng, parseFloat(data.duration));

@@ -5,8 +5,10 @@ defined('BASEPATH') or exit('No direct script access allowed');
 <html lang="en">
 
 <head>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+        integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+        integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
     <style>
         article,
         aside,
@@ -225,12 +227,16 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 <body>
     <h2>Timesheet Report</h2>
-    <p class="lead text-muted" style="text-align: left; font-size:10px; color:#212529;">Below you'll find the timesheet report you requested for your team at <b> <?= $business_name ?></b> for the time period <b><?= date('M d', strtotime($date_from)) ?> - <?= date("d",strtotime($date_to))<date("d",strtotime($date_from))?date("M d",strtotime($date_to)):date("d",strtotime($date_to)) ?></b>.</p>
+    <p class="lead text-muted" style="text-align: left; font-size:10px; color:#212529;">Below you'll find the timesheet
+        report you requested for your team at <b> <?= $business_name ?></b> for the time period <b><?= date('M d', strtotime($date_from)) ?> -
+            <?= date("d", strtotime($date_to))<date("d", strtotime($date_from))?date("M d", strtotime($date_to)):date("d", strtotime($date_to)) ?></b>.
+    </p>
     <table class="table">
         <tbody>
             <thead>
                 <tr style="font-weight: bold; background-color:#E6E6E6; text-align:left;">
-                    <th>Date <br>(<?= $timesheet_report_timezone ?>)</th>
+                    <th>Date <br>(<?= $timesheet_report_timezone ?>)
+                    </th>
                     <th>Role</th>
                     <th style=" text-align:center;">Wage</th>
                     <th>Time Card <br>(<?= $timesheet_report_timezone ?>)</th>
@@ -238,9 +244,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     <th>Total Paid</th>
                     <th>Regular</th>
                     <th>OT</th>
-                    <?php if($est_wage_privacy == 1){
-                        echo '<th>Est. Wages</th>';
-                    }
+                    <?php if ($est_wage_privacy == 1) {
+    echo '<th>Est. Wages</th>';
+}
                     ?>
                     <th>Notes</th>
                 </tr>
@@ -265,7 +271,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
             $overall_total_est_wage = 0;
             $overall_time_card_ctr = 0;
             for ($i = 0; $i < count($timehseet_storage); $i++) {
-
                 if ($id_running != $timehseet_storage[$i][0]) {
                     if (!$started) {
                         $started = true;
@@ -275,7 +280,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         </tr>
                                     ';
                     } else {
-                        if($est_wage_privacy == 1){
+                        if ($est_wage_privacy == 1) {
                             $est_wage_privacy_html = '<td style="font-weight:bold;">$' . $total_est_wage . '</td>';
                         }
                         $table .= '<tr style="background-color:#F2F2F2;font-weight:500;">
@@ -322,10 +327,10 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 } else {
                     $est_wage = round(($timehseet_storage[$i][20] / $regular_hours) * $paid_hours, 2);
                 }
-                if($est_wage_privacy == 1){
+                if ($est_wage_privacy == 1) {
                     $est_wage_privacy_html = '<td>$' . $est_wage . '</td>';
                 }
-                    $table .= '<tr>
+                $table .= '<tr>
                                     <td>' . date("D M d", strtotime($timehseet_storage[$i][3])) . '</td>
                                     <td>' . $timehseet_storage[$i][2] . '</td>
                                     <td style="text-align:center;">$' . $timehseet_storage[$i][20] . '</td>
@@ -352,10 +357,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 $overall_total_est_wage += $est_wage;
                 $overall_time_card_ctr++;
                 if ($i == count($timehseet_storage) - 1) {
-                    
-                if($est_wage_privacy == 1){
-                    $est_wage_privacy_html = '<td style="font-weight:bold;">$' . $total_est_wage . '</td>';
-                }
+                    if ($est_wage_privacy == 1) {
+                        $est_wage_privacy_html = '<td style="font-weight:bold;">$' . $total_est_wage . '</td>';
+                    }
                     $table .= '<tr style="background-color:#F2F2F2; font-weight:500;">
                                             <td colspan="2"> Total for ' . $timehseet_storage[$i][1] . '</td>
                                             <td style="font-weight:bold; text-align:center;">$' . $total_wage . '</td>
@@ -368,21 +372,35 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                             <td style="font-weight:bold;"></td>
                                         </tr>';
                 }
+            } if (count($timehseet_storage) == 0) {
+                $col_span =9;
+                if ($est_wage_privacy == 1) {
+                    $col_span = 10;
+                }
+                $table .= '<tr style="background-color:#F2F2F2; font-weight:500;">
+                                            <td colspan="'.$col_span.'"> No timelogs recorded.</td>
+                                        </tr>';
             }
             echo $table;
             ?>
         <tfoot>
             <tr style="font-weight: bold; background-color:#E6E6E6; text-align:left;border:solid 2px #E6E6E6;">
                 <th colspan="2">Total for this Pay Period</th>
-                <th style="text-align:center;">$<?= $overall_total_wage ?></th>
-                <th><?= $overall_time_card_ctr . ($overall_time_card_ctr > 1 ? ' Time cards' : ' Time card') ?></th>
-                <th style="text-align:center;"><?= $overall_act_dif_total ?></th>
-                <th><?= $overall_total_paid ?></th>
-                <th><?= $overall_total_regular ?></th>
-                <th><?= $overall_total_overtime ?></th>
-                <?php if($est_wage_privacy == 1){
-                    echo '<th>$'.$overall_total_est_wage .'</th>';
-                } ?>
+                <th style="text-align:center;">$<?= $overall_total_wage ?>
+                </th>
+                <th><?= $overall_time_card_ctr . ($overall_time_card_ctr > 1 ? ' Time cards' : ' Time card') ?>
+                </th>
+                <th style="text-align:center;"><?= $overall_act_dif_total ?>
+                </th>
+                <th><?= $overall_total_paid ?>
+                </th>
+                <th><?= $overall_total_regular ?>
+                </th>
+                <th><?= $overall_total_overtime ?>
+                </th>
+                <?php if ($est_wage_privacy == 1) {
+                echo '<th>$'.$overall_total_est_wage .'</th>';
+            } ?>
                 <th></th>
             </tr>
         </tfoot>

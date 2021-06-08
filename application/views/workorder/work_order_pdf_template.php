@@ -11,6 +11,9 @@
         {
             margin:5px;
         } */
+table {
+ border-collapse: collapse;
+}
     </style>
 </head>
 <body style="font-family: Gill Sans, sans-serif; font-size: 16px;" >
@@ -71,8 +74,14 @@
             </div>
 
             <div>
-                <b>ADDITIONAL CONTACTS:</b>
+                <b>ADDITIONAL:</b>
                 <hr><br>
+                <?php foreach($customs as $c){ ?>
+                    <?php if(empty($c->value)){ }else{ ?>
+                        <?php echo $c->name; ?>: <?php echo $c->value; ?><br>
+                    <?php } ?>
+                <?php } ?>
+                <br><br>
             </div>
 
             <div style="text-align: justify; text-justify: inter-word;">
@@ -85,8 +94,8 @@
             <div class=""><br>
                 <b>JOB DETAILS:</b>
                 <hr>
-                <table class="pure-table">
-                    <tr>
+                <table class="pure-table" style="border-collapse: collapse !important;">
+                    <tr style="background-color: #E9DDFF !important;">
                         <th>Items</th>
                         <th>Qty</th>
                         <th>Price</th>
@@ -103,21 +112,78 @@
                             <td data-column=""> </td>
                             <td data-column=""> </td>
                         </tr>
+                        <?php foreach($items as $item){ ?>
                         <tr>
-                            <td data-column="">Residential Smart QSP </td>
-                            <td data-column="">1</td>
-                            <td data-column="">$49.99</td>
-                            <td data-column="">$0.00</td>
-                            <td data-column="">$3.75 </td>
-                            <td data-column="">$53.74</td>
+                            <td data-column=""><?php echo $item->item; ?></td>
+                            <td data-column=""><?php echo $item->qty; ?></td>
+                            <td data-column=""><?php echo $item->cost; ?></td>
+                            <td data-column=""><?php echo $item->discount; ?></td>
+                            <td data-column=""><?php echo $item->tax; ?> </td>
+                            <td data-column=""><?php echo $item->total; ?></td>
                         </tr>
-                        <tr>
-                            <td data-column=""><b>Grand Total</b></td>
+                        <?php } ?>
+                        <tr style="background-color: #F7F4FF !important;">
+                            <td colspan="5" style="background-color: #F8F8F8 !important;">Subtotal</td>
+                            <!-- <td data-column=""></td>
                             <td data-column=""></td>
                             <td data-column=""></td>
+                            <td data-column=""></td> -->
+                            <td style="background-color: #F8F8F8 !important;"><?php echo $subtotal; ?></td>
+                        </tr>
+                        <tr style="background-color: #E9DDFF !important;">
+                            <td colspan="5" style="background-color: #F8F8F8 !important;">Taxes</td>
+                            <!-- <td data-column=""></td>
+                            <td data-column=""></td>
+                            <td data-column=""></td> 
+                            <td data-column=""></td>-->
+                            <td style="background-color: #F8F8F8 !important;"><?php echo $taxes; ?></td>
+                        </tr>
+                        <?php if(empty($adjustment_value)){  } else{ ?>
+                        <tr style="background-color: #F3F3F3 !important;">
+                            <td style="background-color: #F8F8F8 !important;" colspan="5"><?php echo $adjustment_name; ?></td>
+                            <!-- <td data-column=""></td>
+                            <td data-column=""></td>
+                            <td data-column=""></td> -->
+                            <td style="background-color: #F8F8F8 !important;"><?php echo $adjustment_value; ?></td>
+                        </tr>
+                        <?php } ?>
+                        <?php if(empty($voucher_value)){  } else{ ?>
+                        <tr style="background-color: #F3F3F3 !important;">
+                            <td style="background-color: #F8F8F8 !important;" colspan="5">Voucher</td>
+                            <!-- <td data-column=""></td>
                             <td data-column=""></td>
                             <td data-column=""></td>
-                            <td data-column=""><b>$53.74</b></td>
+                            <td data-column=""></td> -->
+                            <td style="background-color: #F8F8F8 !important;"><?php echo $voucher_value; ?></td>
+                        </tr>
+                        <?php } ?>
+                        <?php if(empty($otp_setup)){ } else{ ?>
+                        <tr style="background-color: #F3F3F3 !important;">
+                            <td style="background-color: #F8F8F8 !important;" colspan="5">One Time Program and Setup</td>
+                            <!-- <td data-column=""></td>
+                            <td data-column=""></td> 
+                            <td data-column=""></td>
+                            <td data-column=""></td>-->
+                            <td style="background-color: #F8F8F8 !important;"><?php echo $otp_setup; ?></td>
+                        </tr>
+                        <?php } ?>
+                        <?php if(empty($monthly_monitoring)){ } else{ ?>
+                        <tr style="background-color: #F3F3F3 !important;">
+                            <td style="background-color: #F8F8F8 !important;" colspan="5">Monthly Monitoring</td>
+                            <!-- <td data-column=""></td>
+                            <td data-column=""></td> 
+                            <td data-column=""></td>
+                            <td data-column=""></td>-->
+                            <td style="background-color: #F8F8F8 !important;"><?php echo $monthly_monitoring; ?></td>
+                        </tr>
+                        <?php } ?>
+                        <tr style="background-color: #F3F3F3 !important;">
+                            <td style="background-color: #F8F8F8 !important;" colspan="5"><b>Grand Total</b></td>
+                            <!-- <td data-column=""></td>
+                            <td data-column=""></td>
+                            <td data-column=""></td>
+                            <td data-column=""></td> -->
+                            <td style="background-color: #F8F8F8 !important;"><b><?php echo $total; ?></b></td>
                         </tr>
                     </tbody>
                 </table>
@@ -157,11 +223,20 @@
             <div style="text-align: justify; text-justify: inter-word;">
                 <b>ASSIGNED TO:</b>
                 <hr>
+                    <?php if(empty($company_representative_signature) || empty($company_representative_name)){ } else{ ?>
                     <img src="<?php echo " $company_representative_signature"; ?>" style="width: 50%;"><br>
                     <?php echo $company_representative_name; ?><br><br>
+                    <?php } ?>
 
+                    <?php if(empty($primary_account_holder_signature) || empty($primary_account_holder_name)){ } else{ ?>
                     <img src="<?php echo " $primary_account_holder_signature"; ?>" style="width: 50%;"><br>
                     <?php echo $primary_account_holder_name; ?><br><br>
+                    <?php } ?>
+
+                    <?php if(empty($secondary_account_holder_signature) || empty($secondary_account_holder_name)){ } else{ ?>
+                    <img src="<?php echo " $secondary_account_holder_signature"; ?>" style="width: 50%;"><br>
+                    <?php echo $secondary_account_holder_name; ?><br><br>
+                    <?php } ?>
                 <br>
             </div>
 

@@ -35,7 +35,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 /* top left*/
 .ribbon-top-left {
   top: -10px;
-  left: -10px;
+  left: -2px;
 }
 .ribbon-top-left::before,
 .ribbon-top-left::after {
@@ -51,8 +51,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
   left: 0;
 }
 .ribbon-top-left span {
-  right: -25px;
-  top: 30px;
+  right: -40px;
+  top: 20px;
   transform: rotate(-45deg);
 }
 
@@ -423,9 +423,9 @@ border: none;
     <?php include viewPath('includes/sidebars/workorder'); ?>
     <div wrapper__section>
         <?php include viewPath('includes/notifications'); ?>
-				<div class="order-heading">
-					<h3>Work Order # <?php echo $workorder->workorder_number ?></h3>
-				</div>
+				<!-- <div class="order-heading">
+					<h3>Work Order # <?php //echo $workorder->work_order_number ?></h3>
+				</div> -->
 
 				<div class="order-menu">
 					<div class="row">
@@ -442,7 +442,13 @@ border: none;
 									
 									<div class="user-menu mobile_btn"><br>
 										<a class="btn btn-sec" href=""><span class="fa fa-edit"></span> Edit</a>
+
+									<?php if($workorder->work_order_type_id == 1){ ?>
                        					<a href="<?php echo base_url('workorder/work_order_pdf/' . $workorder->id) ?>" class="btn btn-sec download_work_order_pdfsss" acs-id="<?php echo $workorder->customer_id; ?>" workorder-id="<?php echo $workorder->id; ?>"><span class="fa fa-file-pdf-o"></span> PDF</a>
+									<?php } else{ ?>
+										<a href="<?php echo base_url('workorder/work_order_pdf_alarm/' . $workorder->id) ?>" class="btn btn-sec download_work_order_pdfsss" acs-id="<?php echo $workorder->customer_id; ?>" workorder-id="<?php echo $workorder->id; ?>"><span class="fa fa-file-pdf-o"></span> PDF</a>
+									<?php } ?>
+
           								<a class="btn btn-sec" data-print-modal="open" href="#" target="_blank"><span class="fa fa-print"></span> Print</a>
 										  <div class="user-menu">
 									<div class="dropdown dropdown-btn dropdown-inline margin-left-sec"><br>
@@ -452,12 +458,24 @@ border: none;
 											<ul class="dropdown-menu dropdown-menu-right usermenu-dropdown" role="menu" aria-labelledby="dropdown-edit">
 												<li ><a  href="#" ><span class="fa fa-flag-o icon"></span> Change Status</a></li>
 												<li class="divider"></li>
-												<li ><a  href="#" ><span class="fa fa-files-o icon"></span> Clone Work Order</a></li>
+												<!-- <li ><a  href="#" ><span class="fa fa-files-o icon"></span> Clone Work Order</a></li> -->
+												<li role="presentation"><a role="menuitem"
+                                                                               tabindex="-1"
+                                                                               href="#"
+                                                                               data-toggle="modal"
+                                                                               data-target="#modalCloneWorkorder"
+                                                                               data-id="<?php echo $workorder->id ?>"
+                                                                               data-wo_num="<?php echo $workorder->work_order_number ?>" class="clone-workorder"><span
+                                                                    class="fa fa-files-o icon clone-workorder">
+
+                                                        </span> Clone Work Order</a>
 												<li ><a href="#" ><span class="fa fa-file-text-o icon"></span> Convert to Estimate</a></li>
 												<li ><a href="" acs-id="<?php echo $workorder->customer_id; ?>" workorder-id="<?php echo $workorder->id; ?>" class="send_to_customer"><span class="fa fa-envelope-o icon"></span> Send to Customer</a></li>
 												<li ><a href="" acs-id="<?php echo $workorder->customer_id; ?>" workorder-id="<?php echo $workorder->id; ?>" class="send_to_customer_alarm"><span class="fa fa-envelope-o icon"></span> Send to Company</a></li>
 												<li class="divider"></li>
-												<li ><a   href="#" ><span class="fa fa-trash-o icon"></span> Delete Work Order</a></li>
+												<!-- <li ><a   href="#" ><span class="fa fa-trash-o icon"></span> Delete Work Order</a></li> -->
+												<li role="presentation">
+                                                        <a href="#" work-id="<?php echo $workorder->id; ?>" id="delete_workorder"><span class="fa fa-trash-o icon"></span> Delete Work Order </a></li>
 												<li ><a   href="#" id="esignButton"><span class="fa fa-envelope-o icon"></span> eSign</a></li>
 											</ul>
 										</div>
@@ -469,7 +487,7 @@ border: none;
 			</div>
 
 
-			<div class="row" style="padding:1%;">
+			<div class="row" style="padding:1%;margin-top:-30px;">
 				<div class="col-md-8">
 					<div role="white__holder" style="background-color:;padding:5%;border:solid #F4F2F6 3px;box-shadow: 10px 5px 5px #DEDEDE;">
 					<div class="ribbon ribbon-top-left"><span><?php echo $workorder->status ?></span></div>
@@ -496,14 +514,14 @@ border: none;
 															<td colspan="2"><span># <?php echo $workorder->work_order_number ?></span></td>
 														</tr>
 														<tr>
-															<td align="left"><div style="">Date:</div></td>
+															<td align="left"><div style="">Date: </div></td>
 															<td align="left"><?php $wDate = $workorder->date_created; echo date("m-d-Y", strtotime($wDate) ); ?></td>
 														</tr>
 														<tr>
-															<td align="left"><div style="">Type:</div></td>
+															<td align="left"><div style="">Type: </div></td>
 															<td align="left"><?php echo $workorder->job_type ?></td>
 														</tr>
-															<td align="left"><div style="">Priority:</div></td>
+															<td align="left"><div style="">Priority: </div></td>
 															<td align="left"><?php echo $workorder->priority ?></td>
 														</tr>
 														<?php if($workorder->work_order_type_id == 2){ ?>
@@ -728,15 +746,20 @@ border: none;
 														<div class="ul-info">
 			         							   			<b class="ul-head">ASSIGNED TO</b><br><br>
 																<div class="row">
-																	<div class="col-md-6">
+																	<div class="col-md-4">
 																		<img src="<?php echo $workorder->company_representative_signature; ?>">
 																		<hr>
 																		<?php echo $workorder->company_representative_name; ?>
 																	</div>
-																	<div class="col-md-6">
+																	<div class="col-md-4">
 																		<img src="<?php echo $workorder->primary_account_holder_signature; ?>">
 																		<hr>
 																		<?php echo $workorder->primary_account_holder_name; ?>
+																	</div>
+																	<div class="col-md-4">
+																		<img src="<?php echo $workorder->secondary_account_holder_signature; ?>">
+																		<hr>
+																		<?php echo $workorder->secondary_account_holder_name; ?>
 																	</div>
 																</div>
 		         							   			</div>
@@ -896,6 +919,37 @@ border: none;
       </nav>
     </div> 
 </div>
+
+<!-- MODAL CLONE WORKORDER -->
+<div class="modal fade" id="modalCloneWorkorder" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                    <h4 class="modal-title">Clone Work Order</h4>
+                </div>
+                <div class="modal-body">
+                    <form name="clone-modal-form">
+                        <div class="validation-error" style="display: none;"></div>
+                        <p>
+                            You are going create a new work order based on <b>Work Order #<span
+                                        class="work_order_no"></span> <input type="hidden" id="wo_id" name="wo_id"> </b>.<br>
+                            Afterwards you can edit the newly created work order.
+                        </p>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-default" type="button" data-dismiss="modal">Close</button>
+                    <button id="clone_workorder" class="btn btn-primary" type="button" data-clone-modal="submit">Clone
+                        Work Order
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 
 <div class="modal fade" id="docusignTemplateModal" tabindex="-1" role="dialog" aria-labelledby="docusignTemplateModalLabel" aria-hidden="true">
 	<div class="modal-dialog modal-lg" role="document">
@@ -1073,4 +1127,111 @@ else
 }
 
 });
+</script>
+
+<script>
+$(document).on('click touchstart','.clone-workorder',function(){
+
+var num = $(this).attr('data-wo_num');
+var id = $(this).attr('data-id');
+// alert(id);
+$('.work_order_no').text(num)
+$('#wo_id').val(id)
+
+
+});
+
+$(document).on('click touchstart','#clone_workorder',function(){
+
+// var num = $(this).attr('data-wo_num');
+// var wo_num = $('.work_order_no').text();
+var wo_num = $('#wo_id').val();
+// alert(id);
+// $('.work_order_no').text(num);
+$.ajax({
+    type : 'POST',
+    url : "<?php echo base_url(); ?>workorder/duplicate_workorder",
+    data : {wo_num: wo_num},
+    success: function(result){
+        sucess("Data Cloned Successfully!");
+    },
+    });
+
+
+});
+
+function sucess(information,$id){
+            Swal.fire({
+                title: 'Good job!',
+                text: information,
+                icon: 'success',
+                showCancelButton: false,
+                confirmButtonColor: '#32243d',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ok'
+            }).then((result) => {
+                if (result.value) {
+                    location.reload();
+                }
+            });
+        }
+</script>
+
+<script>
+// $(document).on('click','#delete_workorder',function(){
+//     // alert('test');
+    
+// });
+
+// function myFunction() {
+// $('#delete_workorder').on('click', function(){
+$(document).on('click touchstart','#delete_workorder',function(){
+
+    var id = $(this).attr('work-id');
+    // alert(id);
+  
+  var r = confirm("Are you sure you want to delete this Work Order?");
+
+  if (r == true) {
+    $.ajax({
+    type : 'POST',
+    url : "<?php echo base_url(); ?>workorder/delete_workorder",
+    data : {id: id},
+    success: function(result){
+        // $('#res').html('Signature Uploaded successfully');
+        // if (confirm('Some message')) {
+        //     alert('Thanks for confirming');
+        // } else {
+        //     alert('Why did you press cancel? You should have confirmed');
+        // }
+
+        // location.reload();
+        sucess("Data Deleted Successfully!");
+		var url = "<?php echo base_url(); ?>workorder";
+		window.location = url; 
+    },
+    });
+  } 
+  else 
+  {
+    alert('no');
+  }
+
+});
+
+function sucess(information,$id){
+            Swal.fire({
+                title: 'Good job!',
+                text: information,
+                icon: 'success',
+                showCancelButton: false,
+                confirmButtonColor: '#32243d',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ok'
+            }).then((result) => {
+                if (result.value) {
+                    location.reload();
+                }
+            });
+        }
 </script>

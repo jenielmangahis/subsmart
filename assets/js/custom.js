@@ -180,7 +180,16 @@ $(document).on("focusout", ".markup_input", function () {
 
 $(document).on("focusout", ".adjustment_input", function () {
   var counter = $(this).data("counter");
-  calculation(counter);
+  // calculation(counter);
+  var subtotal = $('#item_total').val();
+  var taxes = $('#total_tax_input').val();
+  var adjustment = $(this).val();
+  var grand = parseFloat(subtotal) + parseFloat(taxes);
+  var new_grand = parseFloat(grand) - adjustment;
+  $('#grand_total_input').val(new_grand.toFixed(2));
+  $('#grand_total').text(new_grand.toFixed(2));
+  $('#adjustmentText').text(adjustment.toFixed(2));
+
 });
 
 $(document).on("focusout", ".setmarkup", function () {

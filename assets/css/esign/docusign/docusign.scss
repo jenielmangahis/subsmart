@@ -1,3 +1,8 @@
+$browser-context: 16; // Default
+@function em($pixels, $context: $browser-context) {
+  @return #{$pixels/$context}em;
+}
+
 @font-face {
   font-family: "Southam";
   src: url(../fill-and-sign/fonts/SouthamDemo.otf);
@@ -52,7 +57,7 @@ body {
   }
 
   &-indicator {
-    --size: 14px;
+    --size: #{em(14)};
 
     display: none;
     width: var(--size);
@@ -62,7 +67,7 @@ body {
     cursor: default;
 
     // font should be similar to field inputs
-    font-size: 12px;
+    font-size: #{em(12)};
     font-family: monospace;
   }
 }
@@ -100,15 +105,15 @@ body {
 
   input,
   select {
-    font-size: 12px;
+    font-size: #{em(12)};
     font-family: monospace;
-    border: 2px var(--border-style) var(--border-color, #bf1e2e);
+    border: #{em(2)} var(--border-style) var(--border-color, #bf1e2e);
     outline: 0;
   }
 
   input[type="checkbox"],
   input[type="radio"] {
-    outline: 2px var(--border-style) #bf1e2e;
+    outline: #{em(2)} var(--border-style) #bf1e2e;
   }
 
   &--finished,
@@ -204,6 +209,8 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
+    min-width: 500px;
+    font-size: 16px;
 
     canvas {
       width: 100%;
@@ -218,15 +225,15 @@ body {
 
   &__fieldSignature,
   &__fieldAttachment {
-    --size: 60px;
-    --size-svg: 30px;
+    --size: #{em(60)};
+    --size-svg: #{em(30)};
 
     height: var(--size);
     width: var(--size);
     display: flex;
     align-items: center;
     justify-content: center;
-    border: 2px solid #bf1e2e;
+    border: #{em(2)} solid #bf1e2e;
     cursor: pointer;
 
     svg {
@@ -244,7 +251,7 @@ body {
   }
 
   &__fieldSignature {
-    --size-svg: 35px;
+    --size-svg: #{em(35)};
   }
 
   &__signaturePad {
