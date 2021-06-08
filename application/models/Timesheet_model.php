@@ -1594,7 +1594,7 @@ class Timesheet_model extends MY_Model
     public function get_user_and_company_details($user_id)
     {
         $this->db->reset_query();
-        $qry = $this->db->query("SELECT timesheet_timezone_admin_report.*,timesheet_timezone_list.*,users.FName,users.LName,users.email,users.company_id,users.device_token,users.device_type,business_profile.business_name,business_profile.business_image from timesheet_timezone_admin_report 
+        $qry = $this->db->query("SELECT timesheet_timezone_admin_report.*,timesheet_timezone_list.*,users.FName,users.LName,users.email,users.company_id,users.device_token,users.device_type,business_profile.id as logo_folder_id,business_profile.business_name,business_profile.business_image from timesheet_timezone_admin_report 
         JOIN timesheet_timezone_list ON timesheet_timezone_admin_report.timezone_id=timesheet_timezone_list.id  
         JOIN users ON timesheet_timezone_admin_report.user_id = users.id
         JOIN business_profile ON users.company_id = business_profile.company_id

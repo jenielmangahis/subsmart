@@ -31,7 +31,7 @@ class Cron_Jobs_Controller extends MY_Controller
         $FName,
         $business_name,
         $file_info,
-        $company_id,
+        $logo_folder,
         $company_logo,
         $est_wage_privacy
     ) {
@@ -74,9 +74,9 @@ class Cron_Jobs_Controller extends MY_Controller
         $this->page_data['est_wage_privacy'] = $est_wage_privacy;
         $mail->IsHTML(true);
         $mail->AddEmbeddedImage(dirname(__DIR__, 2) . '/assets/dashboard/images/logo.png', 'logo_2u', 'logo.png');
-        $filePath = base_url() . '/uploads/users/business_profile/'.$company_id.'/'.$company_logo;
+        $filePath = base_url() . '/uploads/users/business_profile/'.$logo_folder.'/'.$company_logo;
         if (@getimagesize($filePath)) {
-            $mail->AddEmbeddedImage(dirname(__DIR__, 2) . '/uploads/users/business_profile/'.$company_id.'/'.$company_logo, 'company_logo', $company_logo);
+            $mail->AddEmbeddedImage(dirname(__DIR__, 2) . '/uploads/users/business_profile/'.$logo_folder.'/'.$company_logo, 'company_logo', $company_logo);
             $this->page_data['has_logo'] = true;
         }
 
@@ -104,40 +104,38 @@ class Cron_Jobs_Controller extends MY_Controller
             if ($admin != null) {
                 $file_info = $this->get_time_sheet_storage($admin->company_id, $admin->id_of_timezone, $admin->timezone_id);
                 $est_wage_privacy = $this->timesheet_model->get_timesheet_report_privacy($admin->company_id)->est_wage_private;
-                
-                if (count($file_info[2]) > 0) {
-                    $date_from = date("Y-m-d", strtotime('sunday last week', strtotime(date('Y-m-d'))));
-                    $date_to = date("Y-m-d", strtotime('saturday this week', strtotime(date('Y-m-d'))));
-                    $subscribed = false;
-                    if ($admin->subscribed == 1) {
-                        $subscribed=true;
-                    }
-                    if ($subscribed) {
-                        $this->generate_timelogs_csv($file_info[2], $file_info[0], $est_wage_privacy);
-                        $this->generate_weekly_timesheet_pdf_report($file_info, $admin->business_name, $est_wage_privacy);
+                // if (count($file_info[2]) > 0) {
+                $date_from = date("Y-m-d", strtotime('sunday last week', strtotime(date('Y-m-d'))));
+                $date_to = date("Y-m-d", strtotime('saturday this week', strtotime(date('Y-m-d'))));
+                $subscribed = false;
+                if ($admin->subscribed == 1) {
+                    $subscribed=true;
+                }
+                if ($subscribed) {
+                    $this->generate_timelogs_csv($file_info[2], $file_info[0], $est_wage_privacy);
+                    $this->generate_weekly_timesheet_pdf_report($file_info, $admin->business_name, $est_wage_privacy);
                         
-                        $this->timelogs_csv_email_sender(
-                            $admin->email_report,
-                            $admin->business_name . "",
-                            $file_info[0],
-                            $date_from,
-                            $admin->FName,
-                            $admin->business_name,
-                            $file_info,
-                            $admin->company_id,
-                            $admin->business_image,
-                            $est_wage_privacy
-                        );
-                        
-                        $this->timesheet_model->save_timesheet_report_file_names($admin->user_id, $file_info[0]);
-                        $this->timesheet_model->save_timesheet_report_file_names($admin->user_id, $file_info[3]);
-                        if ($admin->device_type == "Android") {
-                            $android_tokens[] = $admin->device_token;
-                        } elseif ($admin->device_type == "iOS") {
-                            $ios_tokens[] = $admin->device_token;
-                        }
+                    $this->timelogs_csv_email_sender(
+                        $admin->email_report,
+                        $admin->business_name . "",
+                        $file_info[0],
+                        $date_from,
+                        $admin->FName,
+                        $admin->business_name,
+                        $file_info,
+                        $admin->logo_folder_id,
+                        $admin->business_image,
+                        $est_wage_privacy
+                    );
+                    $this->timesheet_model->save_timesheet_report_file_names($admin->user_id, $file_info[0]);
+                    $this->timesheet_model->save_timesheet_report_file_names($admin->user_id, $file_info[3]);
+                    if ($admin->device_type == "Android") {
+                        $android_tokens[] = $admin->device_token;
+                    } elseif ($admin->device_type == "iOS") {
+                        $ios_tokens[] = $admin->device_token;
                     }
                 }
+                // }
             }
         }
         $title = "Timesheet Report";
@@ -354,7 +352,10 @@ class Cron_Jobs_Controller extends MY_Controller
             $data[] = $paid_hours;
             $data[] = $regular_hours;
             $data[] = ($timehseet_storage[$i][17] == 'Approved' ? $timehseet_storage[$i][16] : 0.00);
-            $data[] = $est_wage;
+            if ($est_wage_privacy == 1) {
+                $data[] = $est_wage;
+            }
+            
             $data[] = $timehseet_storage[$i][19];
             fputcsv($file, $data);
             $data = array();

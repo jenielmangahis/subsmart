@@ -514,10 +514,26 @@ $.ajax({
     url : "<?php echo base_url(); ?>workorder/duplicate_workorder",
     data : {wo_num: wo_num},
     success: function(result){
-        sucess("Data Deleted Successfully!");
+        sucess("Data Cloned Successfully!");
     },
     });
 
 
 });
+
+function sucess(information,$id){
+            Swal.fire({
+                title: 'Good job!',
+                text: information,
+                icon: 'success',
+                showCancelButton: false,
+                confirmButtonColor: '#32243d',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ok'
+            }).then((result) => {
+                if (result.value) {
+                    location.reload();
+                }
+            });
+        }
 </script>

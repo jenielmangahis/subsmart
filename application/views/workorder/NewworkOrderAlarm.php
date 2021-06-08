@@ -491,27 +491,27 @@ border: none;
 
 									<div class="row">
 										<div class="col-md-3 form-group">
-											<label for="last_name" class="label-element">Last Name</label> <span class="form-required">*</span>
+											<label for="last_name" class="label-element">Last Name <span class="form-required">*</span></label>
 											<input type="text" class="form-control input-element" name="last_name"
 												   id="last_name"
 												   required placeholder="Enter Last Name"
 												   value="<?php echo (!empty($workorder->customer['last_name'])) ? $workorder->customer['last_name'] : '' ?>"/>
 										</div>
 										<div class="col-md-3 form-group">
-											<label for="first_name" class="label-element">First Name</label> <span class="form-required">*</span>
+											<label for="first_name" class="label-element">First Name <span class="form-required">*</span></label>
 											<input type="text" class="form-control input-element" name="first_name"
 												   id="first_name" required
 												   required placeholder="Enter First Name" />
 										</div>
 										<div class="col-md-2 form-group">
-											<label for="contact_mobile" class="label-element">Mobile</label> <span class="form-required">*</span>
+											<label for="contact_mobile" class="label-element">Mobile <span class="form-required">*</span></label>
 											<input type="text" class="form-control input-element" name="mobile_number" required
 												   id="contact_mobile" />
 
 										</div>
 
 										<div class="col-md-2 form-group">
-											<label for="contact_dob" class="label-element">DOB</label> <span class="form-required">*</span>
+											<label for="contact_dob" class="label-element">DOB <span class="form-required">*</span></label>
 											<input type="text" class="form-control input-element" name="dob"
 												   id="customer_contact_dob" required
 												   value="<?php echo (!empty($workorder->customer['contact_dob'])) ? date('m/d/Y', strtotime($workorder->customer['contact_dob'])) : '' ?>"
@@ -519,7 +519,7 @@ border: none;
 										</div>
 
 										<div class="col-md-2 form-group">
-											<label for="contact_ssn" class="label-element">SSN</label> <span class="form-required">*</span>
+											<label for="contact_ssn" class="label-element">SSN <span class="form-required">*</span></label>
 											<input type="text" class="form-control input-element" name="security_number"
 												   id="contact_ssn"
 												   value="<?php echo (!empty($workorder->customer['contact_ssn'])) ? $workorder->customer['contact_ssn'] : '' ?>"
@@ -533,20 +533,20 @@ border: none;
 											<span class="help help-sm">Spouse</span>
 										</div>
 										<div class="col-md-3 form-group">
-											<label for="spouse_last_name" class="label-element">Last Name</label><small class="help help-sm">(optional)</small>
+											<label for="spouse_last_name" class="label-element">Last Name <small class="help help-sm">(optional)</small></label>
 											<input type="text" class="form-control input-element" name="s_last_name"
 												   id="spouse_last_name"
 												     placeholder="Enter Spouse Last Name" />
 										</div>
 										<div class="col-md-3 form-group">
-											<label for="spouse_first_name" class="label-element">First Name</label><small class="help help-sm">(optional)</small>
+											<label for="spouse_first_name" class="label-element">First Name <small class="help help-sm">(optional)</small></label>
 											<input type="text" class="form-control input-element" name="s_first_name"
 												   id="spouse_first_name"
 												     placeholder="Enter Spouse First Name"
 												   value="<?php echo (!empty($workorder->customer['spouse_first_name'])) ? $workorder->customer['spouse_first_name'] : '' ?>"/>
 										</div>
 										<div class="col-md-2 form-group">
-											<label for="spouse_contact_mobile" class="label-element">Mobile</label><small class="help help-sm">(optional)</small>
+											<label for="spouse_contact_mobile" class="label-element">Mobile <small class="help help-sm">(optional)</small></label>
 											<input type="text" class="form-control input-element" name="s_mobile"
 												   id="spouse_contact_mobile"
 												   value="<?php echo (!empty($workorder->customer['spouse_contact_mobile'])) ? $workorder->customer['spouse_contact_mobile'] : '' ?>"
@@ -555,7 +555,7 @@ border: none;
 										</div>
 
 										<div class="col-md-2 form-group">
-											<label for="contact_dob" class="label-element">DOB</label><small class="help help-sm">(optional)</small>
+											<label for="contact_dob" class="label-element">DOB <small class="help help-sm">(optional)</small></label>
 											<input type="text" class="form-control input-element" name="s_dob"
 												   id="customer_spouse_contact_dob"
 												   value="<?php echo (!empty($workorder->customer['spouse_contact_dob'])) ? date('m/d/Y', strtotime($workorder->customer['spouse_contact_dob'])) : '' ?>"
@@ -563,7 +563,7 @@ border: none;
 										</div>
 
 										<div class="col-md-2 form-group">
-											<label for="spouse_contact_ssn" class="label-element">SSN</label><small class="help help-sm">(optional)</small>
+											<label for="spouse_contact_ssn" class="label-element">SSN <small class="help help-sm">(optional)</small></label>
 											<input type="text" class="form-control input-element" name="s_ssn"
 												   id="spouse_contact_ssn"
 												   value="<?php echo (!empty($workorder->customer['spouse_contact_ssn'])) ? $workorder->customer['spouse_contact_ssn'] : '' ?>"
@@ -573,30 +573,30 @@ border: none;
 
 									<div class="row">
 										<div class="col-md-3 form-group">
-											<label for="monitored_location" class="label-element">Monitored Location</label> <span class="form-required">*</span>
+											<label for="monitored_location" class="label-element">Monitored Location <span class="form-required">*</span></label>
 											<input type="text" class="form-control input-element" name="monitored_location"
 												   id="ship-address"
 												   value="<?php echo (!empty($workorder->customer['monitored_location'])) ? $workorder->customer['monitored_location'] : '' ?>"
 												   required placeholder="Monitored Location"/>
 										</div>
 										<div class="col-md-3 form-group">
-											<label for="city" class="label-element">City</label>  <span class="form-required">*</span>
+											<label for="city" class="label-element">City  <span class="form-required">*</span></label>
                                                    <input type="text" class="form-control input-element" name="city" id="locality" placeholder="Enter City"  required/>
 										</div>
 										<div class="col-md-2 form-group">
-											<label for="state" class="label-element">State</label> <span class="form-required">*</span>
+											<label for="state" class="label-element">State <span class="form-required">*</span></label>
 											<input type="text" class="form-control input-element" name="state" required
 												   id="state"  placeholder="Enter State"/>
 
 										</div>
 
 										<div class="col-md-2 form-group">
-											<label for="zip" class="label-element">ZIP</label>  <span class="form-required">*</span>
+											<label for="zip" class="label-element">ZIP  <span class="form-required">*</span></label>
                                                    <input type="text" id="postcode" name="zip_code" class="form-control input-element"  required placeholder="Enter Zip"/>
 										</div>
 
 										<div class="col-md-2 form-group">
-											<label for="cross_street" class="label-element">Cross Street</label><small class="help help-sm">(optional)</small>
+											<label for="cross_street" class="label-element">Cross Street <small class="help help-sm">(optional)</small></label>
 											<input type="text" class="form-control input-element" name="cross_street"
 												   id="cross_street"
 												   value="<?php echo (!empty($workorder->customer['cross_street'])) ? $workorder->customer['cross_street'] : '' ?>"
@@ -606,14 +606,14 @@ border: none;
 
 									<div class="row">
 										<div class="col-md-3 form-group">
-											<label for="email" class="label-element">Email</label> <span class="form-required">*</span>
+											<label for="email" class="label-element">Email <span class="form-required">*</span></label>
 											<input type="email" class="form-control input-element" name="email"
 												   id="email" 
 												   value="<?php echo (!empty($workorder->customer['email'])) ? $workorder->customer['email'] : '' ?>"
 												   required placeholder="Enter Email"/>
 										</div>
 										<div class="col-md-2 form-group">
-											<label for="password" class="label-element">Password</label> <span class="form-required">*</span>
+											<label for="password" class="label-element">Password <span class="form-required">*</span></label>
 											<input type="text" class="form-control input-element" name="password" required
 												   id="password" >
 										</div>
@@ -664,7 +664,7 @@ border: none;
                                 </div>
                                 <div class="col-md-4 form-group">
                                     <!-- <div class=""> -->
-                                        <label for="1st_call_verification_name" class="label-element">1st Call Verification Name</label><small class="help help-sm">(optional)</small>
+                                        <label for="1st_call_verification_name" class="label-element">1st Call Verification Name <small class="help help-sm">(optional)</small></label>
                                         <input type="text" class="form-control input-element"
                                                name="1st_verification_name"
                                                value="<?php echo (!empty($workorder->emergency_call_list['1st_call_verification_name'])) ? $workorder->emergency_call_list['1st_call_verification_name'] : '' ?>"
@@ -674,7 +674,7 @@ border: none;
                                 </div>
                                 <div class="col-md-4">
                                     <div class="form-group">
-                                        <label for="contact_phone" class="mobile_view">Phone Number</label><small class="help help-sm">(optional)</small>
+                                        <label for="contact_phone" class="mobile_view">Phone Number <small class="help help-sm">(optional)</small></label>
                                         <div class="input-group phone-input">
                                             <span class="input-group-btn">
                                                 <button type="button" class="btn btn-default dropdown-toggle"
@@ -704,7 +704,7 @@ border: none;
                                 </div>
                                 <div class="col-md-4 form-group">
                                     <!-- <div class=""> -->
-                                        <label for="emergency_call_relation" class="label-element">Relation</label><small class="help help-sm">(optional)</small>
+                                        <label for="emergency_call_relation" class="label-element">Relation <small class="help help-sm">(optional)</small></label>
                                         <input type="text" class="form-control input-element" name="1st_relation"
                                                id="emergency_call_relation"
                                                value="<?php echo (!empty($workorder->emergency_call_list['relation'][0])) ? $workorder->emergency_call_list['relation'][0] : '' ?>"
@@ -724,7 +724,7 @@ border: none;
 
                                 <div class="col-md-4 form-group">
                                     <!-- <div class="form-group"> -->
-                                        <label for="2nd_call_verification_name" class="label-element">2nd Call Verification Name</label><small class="help help-sm">(optional)</small>
+                                        <label for="2nd_call_verification_name" class="label-element">2nd Call Verification Name <small class="help help-sm">(optional)</small></label>
                                         <input type="text" class="form-control input-element"
                                                name="2nd_verification_name"
                                                id="2nd_call_verification_name"
@@ -734,7 +734,7 @@ border: none;
                                 </div>
                                 <div class="col-md-4">
                                     <div class="form-group">
-                                        <label for="contact_phone" class="mobile_view">Phone Number</label><small class="help help-sm">(optional)</small>
+                                        <label for="contact_phone" class="mobile_view">Phone Number <small class="help help-sm">(optional)</small></label>
                                         <div class="input-group phone-input">
                                             <span class="input-group-btn">
                                                 <button type="button" class="btn btn-default dropdown-toggle"
@@ -764,7 +764,7 @@ border: none;
                                 </div>
                                 <div class="col-md-4 form-group">
                                     <!-- <div class="form-group"> -->
-                                        <label for="emergency_call_relation" class="label-element">Relation</label><small class="help help-sm">(optional)</small>
+                                        <label for="emergency_call_relation" class="label-element">Relation <small class="help help-sm">(optional)</small></label>
                                         <input type="text" class="form-control input-element" name="2nd_relation"
                                                id="emergency_call_relation"
                                                value="<?php echo (!empty($workorder->emergency_call_list['relation'][1])) ? $workorder->emergency_call_list['relation'][1] : '' ?>"
@@ -784,7 +784,7 @@ border: none;
 
                                 <div class="col-md-4 form-group">
                                     <!-- <div class=""> -->
-                                        <label for="emergency_call_emergency_contact_1" class="label-element">3rd Call Verification Name</label><small class="help help-sm">(optional)</small>
+                                        <label for="emergency_call_emergency_contact_1" class="label-element">3rd Call Verification Name <small class="help help-sm">(optional)</small></label>
                                         <input type="text" class="form-control input-element"
                                                name="3rd_verification_name"
                                                id="emergency_call_emergency_contact_1"
@@ -794,7 +794,7 @@ border: none;
                                 </div>
                                 <div class="col-md-4">
                                     <div class="form-group">
-                                        <label for="contact_phone" class="mobile_view">Phone Number</label><small class="help help-sm">(optional)</small>
+                                        <label for="contact_phone" class="mobile_view">Phone Number <small class="help help-sm">(optional)</small></label>
                                         <div class="input-group phone-input">
                                             <span class="input-group-btn">
                                                 <button type="button" class="btn btn-default dropdown-toggle"
@@ -824,7 +824,7 @@ border: none;
                                 </div>
                                 <div class="col-md-4 form-group">
                                     <!-- <div class="form-group"> -->
-                                        <label for="emergency_call_relation" class="label-element">Relation</label><small class="help help-sm">(optional)</small>
+                                        <label for="emergency_call_relation" class="label-element">Relation <small class="help help-sm">(optional)</small></label>
                                         <input type="text" class="form-control input-element" name="3rd_relation"
                                                id="emergency_call_relation"
                                                value="<?php echo (!empty($workorder->emergency_call_list['relation'][2])) ? $workorder->emergency_call_list['relation'][2] : '' ?>"
@@ -836,7 +836,7 @@ border: none;
 								</div> -->
                                 <div class="col-md-4 form-group">
                                     <!-- <div class=""> -->
-                                        <label for="emergency_call_emergency_contact_2" class="label-element">4th Call Verification Name</label><small class="help help-sm">(optional)</small>
+                                        <label for="emergency_call_emergency_contact_2" class="label-element">4th Call Verification Name <small class="help help-sm">(optional)</small></label>
                                         <input type="text" class="form-control input-element"
                                                name="4th_verification_name"
                                                id="emergency_call_emergency_contact_2"
@@ -846,7 +846,7 @@ border: none;
                                 </div>
                                 <div class="col-md-4">
                                     <div class="form-group">
-                                        <label for="contact_phone" class="mobile_view">Phone Number</label><small class="help help-sm">(optional)</small>
+                                        <label for="contact_phone" class="mobile_view">Phone Number <small class="help help-sm">(optional)</small></label>
                                         <div class="input-group phone-input">
                                             <span class="input-group-btn">
                                                 <button type="button" class="btn btn-default dropdown-toggle"
@@ -876,7 +876,7 @@ border: none;
                                 </div>
                                 <div class="col-md-4 form-group">
                                     <!-- <div class=""> -->
-                                        <label for="emergency_call_relation" class="label-element">Relation</label><small class="help help-sm">(optional)</small>
+                                        <label for="emergency_call_relation" class="label-element">Relation <small class="help help-sm">(optional)</small></label>
                                         <input type="text" class="form-control input-element" name="4th_relation"
                                                id="emergency_call_relation"
                                                value="<?php echo (!empty($workorder->emergency_call_list['relation'][3])) ? $workorder->emergency_call_list['relation'][3] : '' ?>"
@@ -892,7 +892,7 @@ border: none;
                                 </div>
                                 <div class="col-md-6 form-group">
                                 <div class="select-wrap">
-                                    <label for="street_address"> Plan Type:</label> <span class="form-required">*</span>
+                                    <label for="street_address"> Plan Type: <span class="form-required">*</span></label>
                                         <!-- <select
                                                 name="plan_type"
                                                 id="plan_type"
@@ -928,7 +928,7 @@ border: none;
                                 <div class="form-group col-md-6">
                                 <div class="select-wrap">
                                     <!-- <div class="col-md-12"> -->
-                                        <label>Account Type</label> <span class="form-required">*</span>
+                                        <label>Account Type <span class="form-required">*</span></label>
                                     <!-- </div> -->
                                     <!-- <div class="col-md-12"> -->
                                         <select name="account_type"
@@ -961,7 +961,7 @@ border: none;
                                 <!-- <div class="row"> -->
                                     <div class="col-md-4">
                                     <div class="select-wrap">
-                                        <label>Panel Type</label> <span class="form-required">*</span>
+                                        <label>Panel Type <span class="form-required">*</span></label>
                                         <select name="panel_type" id="panel_type" class="form-control custom-select m_select" required>
                                             <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == ''){echo "selected";} } ?> value=""></option>
                                             <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'AERIONICS'){echo "selected";} } ?> value="AERIONICS">AERIONICS</option>
@@ -1432,6 +1432,7 @@ border: none;
                                     </div>
                                 </div>
                             </div>
+                            </div>
 
                             <!-- ====== Additional Equipment/Services ====== -->
                             <div class="row" id="group_area">
@@ -1444,151 +1445,23 @@ border: none;
                                         <div class="row" id="plansItemDiv">
 
                                             <div class="col-md-12 table-responsive">
-                                                <table class="table table-hover">
-                                                    <input type="hidden" name="count" value="0" id="count">
-                                                    <thead>
-                                                    <tr>
-                                                        <th>DESCRIPTION</th>
-                                                        <th>GROUP</th>
-                                                        <th width="100px">QUANTITY</th>
-                                                        <th>LOCATION</th>
-                                                        <th width="140px">COST</th>
-                                                        <th width="100px">Discount</th>
-                                                        <th>Tax(%)</th>
-                                                        <th>Total</th>
-                                                    </tr>
-                                                    </thead>
-                                                    <tbody id="jobs_items_table_body">
-                                                    <?php if (count($workorder->additional_services) > 0) { ?>
-                                                        <input type="hidden" name="count"
-                                                               value="<?php echo count($workorder->additional_services) > 0 ? count($workorder->additional_services) - 1 : 0; ?>"
-                                                               id="count">
-                                                        <?php $i = 0;
-                                                        foreach ($workorder->additional_services as $row) { ?>
-
-                                                            <tr>
-                                                                <td>
-                                                                    <input type="text" class="form-control getItems"
-                                                                           onKeyup="getItems(this)" name="item[]"
-                                                                           value="<?php echo $row['item']; ?>">
-                                                                    <ul class="suggestions"></ul>
-                                                                </td>
-                                                                <td><select name="item_type[]" class="form-control">
-
-                                                                        <option value="Product" <?php if ($row['item_type'] == 'Product') echo 'selected'; ?>>
-                                                                        Product
-                                                                        </option>
-                                                                        <option value="Service" <?php if ($row['item_type'] == 'Service') echo 'selected'; ?>>
-                                                                        Service
-                                                                        </option>
-                                                                        <option value="QSP" <?php if ($row['item_type'] == 'QSP') echo 'selected'; ?>>
-                                                                        QSP
-                                                                        </option>
-                                                                    </select></td>
-                                                                <td>
-                                                                    <input type="text" class="form-control quantity"
-                                                                           name="quantity[]"
-                                                                           data-counter="<?php echo $i; ?>"
-                                                                           id="quantity_<?php echo $i; ?>"
-                                                                           value="<?php echo $row['quantity'] ?>">
-                                                                </td>
-                                                                <td>
-                                                                    <input type="text" class="form-control"
-                                                                           name="location[]"
-                                                                           value="<?php echo $row['location'] ?>">
-                                                                </td>
-                                                                <td>
-                                                                    <input type="number" class="form-control price"
-                                                                           name="price[]"
-                                                                           data-counter="<?php echo $i; ?>"
-                                                                           id="price_<?php echo $i; ?>" min="0"
-                                                                           value="<?php echo $row['price'] ?>">
-                                                                </td>
-                                                                <td>
-                                                                    <input type="number"
-                                                                           value="<?php echo $row['discount'] ?>"
-                                                                           class="form-control discount"
-                                                                           name="discount[]"
-                                                                           data-counter="<?php echo $i; ?>"
-                                                                           id="discount_<?php echo $i; ?>" min="0"
-                                                                           value="0"
-                                                                           readonly>
-                                                                </td>
-                                                                <td style="width:85px;">
-															<span id="span_tax_<?php echo $i; ?>"><?php $tax = ($row['price'] * 7.5 / 100) * $row['quantity'];
-                                                                echo number_format($tax, 2) ?></span>
-                                                                </td>
-                                                                <td>
-															<span id="span_total_<?php echo $i; ?>"><?php $price = ($row['price'] + $tax) * $row['quantity'];
-                                                                echo number_format($price, 2); ?></span>
-                                                                </td>
-                                                                <td>
-                                                                    <a href="#" class="remove">X</a>
-                                                                </td>
-                                                            </tr>
-                                                            <?php $i++;
-                                                        } ?>
-
-                                                    <?php } else { ?>
-                                                        <input type="hidden" name="count" value="0" id="count">
-                                                        <tr>
-                                                            <td><input type="text" class="form-control getItems"
-                                                                       onKeyup="getItems(this)" name="item[]">
-                                                                <ul class="suggestions"></ul>
-                                                            </td>
-                                                            <td><select name="item_type[]" class="form-control">
-                                                                    <option value="Product">Product</option>
-                                                                    <option value="Service">Service</option>
-                                                                    <option value="QSP">QSP</option>
-                                                                </select></td>
-                                                            <td><input type="text" class="form-control quantity"
-                                                                       name="quantity[]" data-counter="0"
-                                                                       id="quantity_0"
-                                                                       value="1"></td>
-                                                            <td><input type="text" class="form-control"
-                                                                       name="location[]"></td>
-                                                            <td><input type="number" class="form-control price"
-                                                                       name="price[]"
-                                                                       data-counter="0" id="price_0" min="0" value="0">
-                                                            </td>
-                                                            <td><input type="number" class="form-control discount"
-                                                                       name="discount[]" data-counter="0"
-                                                                       id="discount_0"
-                                                                       min="0" value="0" readonly></td>
-                                                            <td style="width:85px;"><span id="span_tax_0">0.00 (7.5%)</span></td>
-                                                            <td><span id="span_total_0">0.00</span></td>
-                                                        </tr>
-
-                                                    <?php } ?>
-                                                    </tbody>
-                                                </table>
-                                                <!-- <a href="#" class="btn btn-primary" id="add_another">Add Items</a> -->
-                                                <a class="link-modal-open" href="#" id="add_another_itemss" data-toggle="modal" data-target="#item_list"><span class="fa fa-plus-square fa-margin-right"></span>Add Items</a>
-                                            </div>
-                                        </div><br/>
-
-
-                                    <?php } else { ?>
-
-                                        <div class="row" id="plansItemDiv">
-
-                                            <div class="col-md-12 table-responsive">
-                                                <table class="table table-hover mobile_view_table" >
-                                                    <input type="hidden" name="count" value="0" id="count">
-                                                    <thead>
-                                                    <tr>
-                                                        <th>DESCRIPTION</th>
-                                                        <th>GROUP</th>
-                                                        <th width="100px">Quantity</th>
-                                                        <!-- <th>LOCATION</th> -->
-                                                        <th width="140px">COST</th>
-                                                        <th class="hidden_mobile_view" width="100px">Discount</th>
-                                                        <th class="hidden_mobile_view">Tax(%)</th>
-                                                        <th class="hidden_mobile_view">Total</th>
-                                                    </tr>
-                                                    </thead>
-                                                    <tbody id="jobs_items_table_body">
-                                                    <tr>
+                                            <table class="table table-hover">
+                                        <input type="hidden" name="count" value="0" id="count">
+                                        <thead style="background-color:#E9E8EA;">
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Group</th>
+                                            <!-- <th>Description</th> -->
+                                            <th width="150px">Quantity</th>
+                                            <!-- <th>Location</th> -->
+                                            <th width="150px">Price</th>
+                                            <th class="hidden_mobile_view" width="150px">Discount</th>
+                                            <th class="hidden_mobile_view" width="150px">Tax (Change in %)</th>
+                                            <th class="hidden_mobile_view">Total</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody id="jobs_items_table_body">
+                                        <tr>
                                             <td width="30%">
                                                 <input type="text" class="form-control getItems"
                                                        onKeyup="getItems(this)" name="items[]">
@@ -1607,10 +1480,9 @@ border: none;
 
                                             <!-- <div class="show_mobile_view" style="color:green;"><span>Product</span></div> -->
                                                 </td>
-                                            <td width="10%"><input type="number" class="form-control quantity mobile_qty" name="quantity[]"
-                                                       data-counter="0" id="quantity_0" value="1"> 
-                                                       <!-- <div class="show_mobile_view_test"><span>1</span><input type="hidden" class="form-control quantity" name="quantity[]" data-counter="0" id="quantity_0" value="1"></div>  -->
-                                            </td>
+                                            <td width="10%"><input type="number" class="form-control quantity hidden_mobile_view" name="quantity[]"
+                                                       data-counter="0" id="quantity_0" value="1"> <div class="show_mobile_view"><span>1</span><input type="hidden" class="form-control quantity" name="quantity[]"
+                                                       data-counter="0" id="quantity_0" value="1"></div> </td>
                                             <td width="10%"><input type="number" class="form-control price hidden_mobile_view" name="price[]"
                                                        data-counter="0" id="price_0" min="0" value="0"> <input type="hidden" class="priceqty" id="priceqty_0"> <div class="show_mobile_view"><span class="price">0</span><input type="hidden" class="form-control price" name="price[]" data-counter="0" id="priceM_0" min="0" value="0"></div><input id="priceM_qty0" value=""  type="hidden" name="price_qty[]" class="form-control hidden_mobile_view price_qty"></td>
                                             <td width="10%" class="hidden_mobile_view"><input type="number" class="form-control discount" name="discount[]"
@@ -1623,8 +1495,71 @@ border: none;
                                                        data-counter="0" id="item_total_0" min="0" value="0">
                                                        $<span id="span_total_0">0.00</span></td>
                                         </tr>
-                                                    </tbody>
-                                                </table>
+                                        </tbody>
+                                    </table>
+                                                <!-- <a href="#" class="btn btn-primary" id="add_another">Add Items</a> -->
+                                                <a class="link-modal-open" href="#" id="add_another_itemss" data-toggle="modal" data-target="#item_list"><span class="fa fa-plus-square fa-margin-right"></span>Add Items</a>
+                                            </div>
+                                        </div><br/>
+
+
+                                    <?php } else { ?>
+
+                                        <div class="row" id="plansItemDiv">
+
+                                            <div class="col-md-12 table-responsive">
+                                            <table class="table table-hover">
+                                        <input type="hidden" name="count" value="0" id="count">
+                                        <thead style="background-color:#E9E8EA;">
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Group</th>
+                                            <!-- <th>Description</th> -->
+                                            <th width="150px">Quantity</th>
+                                            <!-- <th>Location</th> -->
+                                            <th width="150px">Price</th>
+                                            <th class="hidden_mobile_view" width="150px">Discount</th>
+                                            <th class="hidden_mobile_view" width="150px">Tax (Change in %)</th>
+                                            <th class="hidden_mobile_view">Total</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody id="jobs_items_table_body">
+                                        <tr>
+                                            <td width="30%">
+                                                <input type="text" class="form-control getItems"
+                                                       onKeyup="getItems(this)" name="items[]">
+                                                <ul class="suggestions"></ul>
+                                                <div class="show_mobile_view"><span class="getItems_hidden"></span></div>
+                                            </td>
+                                            <td width="20%">
+                                            <div class="dropdown-wrapper">
+                                                <select name="item_type[]" id="item_typeid" class="form-control">
+                                                    <option value="product">Product</option>
+                                                    <option value="material">Material</option>
+                                                    <option value="service">Service</option>
+                                                    <option value="fee">Fee</option>
+                                                </select>
+                                            </div>
+
+                                            <!-- <div class="show_mobile_view" style="color:green;"><span>Product</span></div> -->
+                                                </td>
+                                            <td width="10%"><input type="number" class="form-control quantity hidden_mobile_view" name="quantity[]"
+                                                       data-counter="0" id="quantity_0" value="1"> <div class="show_mobile_view"><span>1</span><input type="hidden" class="form-control quantity" name="quantity[]"
+                                                       data-counter="0" id="quantity_0" value="1"></div> </td>
+                                            <td width="10%"><input type="number" class="form-control price hidden_mobile_view" name="price[]"
+                                                       data-counter="0" id="price_0" min="0" value="0"> <input type="hidden" class="priceqty" id="priceqty_0"> <div class="show_mobile_view"><span class="price">0</span><input type="hidden" class="form-control price" name="price[]" data-counter="0" id="priceM_0" min="0" value="0"></div><input id="priceM_qty0" value=""  type="hidden" name="price_qty[]" class="form-control hidden_mobile_view price_qty"></td>
+                                            <td width="10%" class="hidden_mobile_view"><input type="number" class="form-control discount" name="discount[]"
+                                                       data-counter="0" id="discount_0" min="0" value="0" ></td>
+                                            <td width="10%" class="hidden_mobile_view"><input type="text" class="form-control tax_change" name="tax[]"
+                                                       data-counter="0" id="tax1_0" min="0" value="0">
+                                                       <!-- <span id="span_tax_0">0.0</span> -->
+                                                       </td>
+                                            <td width="10%" class="hidden_mobile_view"><input type="hidden" class="form-control " name="total[]"
+                                                       data-counter="0" id="item_total_0" min="0" value="0">
+                                                       $<span id="span_total_0">0.00</span></td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
                                                 <!-- <a href="#" class="btn btn-primary" id="add_another">Add Items</a> -->
                                                 <a class="link-modal-open" href="#" id="add_another_itemss" data-toggle="modal" data-target="#item_list"><span class="fa fa-plus-square fa-margin-right"></span>Add Items</a>
                                             </div>
@@ -2379,8 +2314,8 @@ border: none;
                                     </div>
 
                                 </div>
-                            </div> -->
-                            </div>
+                            </div> 
+                            </div>-->
 
                             <div class="row">
                                 <div class="col-md-4 form-group">
@@ -2980,6 +2915,7 @@ resizeCanvas();
 
     <script>
     $(document).on("focusout", "#one_time", function () {
+        // alert('test');
         var counter = $(this).val();
         var m_monitoring = $("#m_monitoring").val();
         var subtotal = 0;
@@ -2990,7 +2926,7 @@ resizeCanvas();
 
         grand_tot = parseFloat(counter) + parseFloat(subtotal) + parseFloat(m_monitoring);
         //  alert(grand_tot);
-        var grand = $("#grand_total_input").val(grand_tot.toFixed(2));
+        var grand = $("#grand_total_inputs").val(grand_tot.toFixed(2));
     });
 
     $(document).on("focusout", "#m_monitoring", function () {
@@ -3005,7 +2941,7 @@ resizeCanvas();
 
         grand_tot = parseFloat(counter) + parseFloat(subtotal) + parseFloat(one_time);
         //  alert(grand_tot);
-        var grand = $("#grand_total_input").val(grand_tot.toFixed(2));
+        var grand = $("#grand_total_inputs").val(grand_tot.toFixed(2));
     });
 
     // $(document).on("checked", "#same_as", function () {

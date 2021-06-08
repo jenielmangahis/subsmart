@@ -854,6 +854,38 @@ class Workorder_model extends MY_Model
         return $query->result();
     }
 
+    public function getitemsWorkOrder($id)
+    {
+        $where = array(
+            'type' => 'Work Order',
+            'type_id'   => $id
+          );
+
+        // $where = "type_id='".$id."' AND type='Work Order' OR type='Work Order Alarm'";
+
+        $this->db->select('*');
+		$this->db->from('item_details');
+		$this->db->where($where);
+        $query = $this->db->get();
+        return $query->result();
+    }
+
+    public function getitemsWorkOrderAlarm($id)
+    {
+        $where = array(
+            'type' => 'Work Order Alarm',
+            'type_id'   => $id
+          );
+
+        // $where = "type_id='".$id."' AND type='Work Order' OR type='Work Order Alarm'";
+
+        $this->db->select('*');
+		$this->db->from('item_details');
+		$this->db->where($where);
+        $query = $this->db->get();
+        return $query->result();
+    }
+
     public function delete_custom_fields($id)
     {
         $this->db->where('work_order_id',$id);

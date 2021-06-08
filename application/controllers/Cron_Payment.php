@@ -147,20 +147,32 @@ class Cron_Payment extends MY_Controller {
         exit;
     }
 
-    public function customer_recurring_billing(){
+    public function test(){
+    	echo 45;exit;
+    }
+
+    public function acs_billing_method_cc(){
         include APPPATH . 'libraries/Converge/src/Converge.php';
+
+        ini_set('max_execution_time', 0);
+        
         $this->load->model('General_model', 'general');
-        $date = date("M/d/Y");
-        $get_employee = array(
+        $date = date("n/j/Y");
+        $get_billing = array(
             'where' => array(
-                'recurring_start_date <=' => $date,
-                'total_payments < frequency' => '',
-                'credit_card_num !=' => null
+                //'recurring_start_date <=' => $date,
+                //'recurring_end_date <=' => $date,
+                'next_billing_date' => $date,
+                'last_payment_date <>' => $date, 
+                'bill_method' => 'CC',
+                'is_with_error' => 0
+                //'credit_card_num !=' => null
             ),
             'table' => 'acs_billing',
             'select' => 'acs_billing.*',
+            'limit' => 50
         );
-        $data = $this->general->get_data_with_param($get_employee);
+        $data = $this->general->get_data_with_param($get_billing, true);
 
         $converge = new \wwwroth\Converge\Converge([
             'merchant_id' => CONVERGE_MERCHANTID,
@@ -183,11 +195,12 @@ class Cron_Payment extends MY_Controller {
                     'ssl_avs_address' => $d->card_address,
                     'ssl_avs_zip' => $d->zip,
                 ]);
-
                 if( $createSale['success'] == 1 ){
-                    //Update total payments made
+                    //Update billing
                     $transaction_data = array();
-                    $transaction_data['total_payments'] = $d->total_payments + 1;
+                    $transaction_data['total_payments']    = $d->total_payments + 1;
+                    $transaction_data['last_payment_date'] = date('n/j/Y');
+                    $transaction_data['next_billing_date'] = date("n/j/Y",strtotime("+" . $d->frequency . " months"));
                     $this->general->update_with_key_field($transaction_data, $d->bill_id, 'acs_billing', 'bill_id');
 
                     //Add to payments table
@@ -205,6 +218,9 @@ class Cron_Payment extends MY_Controller {
                     $this->general->add_($transaction_details, 'acs_transaction_history');
 
                     $total_updated++;
+                }else{
+                	$transaction_data['is_with_error'] = 1;
+                    $this->general->update_with_key_field($transaction_data, $d->bill_id, 'acs_billing', 'bill_id');
                 }
             }
             

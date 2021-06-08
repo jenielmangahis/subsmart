@@ -615,11 +615,15 @@ class Trac360 extends MY_Controller
             } else {
                 $url= "";
             }
+            $url='';
+            if (date("Y-m-d", strtotime($job->start_date)) <date("Y-m-d")) {
+                $url=base_url().'/trac360/history/' . $job->id;
+            }
             $scredules[]=array(
                 "title" => $job->FName .' '.$job->LName.' : '.$job->job_number . ' : ' . $job->job_type. ' - ' . $job->tags_name,
                 "start" => $job->start_date.'T'.date('H:i:s', $job->start_time),
                 "end" => $job->end_date.'T'.date('H:i:s', $job->end_time),
-                "url" => base_url().'/trac360/history/' . $job->id
+                "url" => $url
             );
         }
         $data = new stdClass();

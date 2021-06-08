@@ -382,6 +382,15 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                 </tr>';
                         }
                     }
+                    if (count($timehseet_storage) == 0) {
+                        $col_span =9;
+                        if ($est_wage_privacy == 1) {
+                            $col_span = 10;
+                        }
+                        $table .= '<tr style="background-color:#F2F2F2; font-weight:500;">
+                                                    <td colspan="'.$col_span.'"> No timelogs recorded.</td>
+                                                </tr>';
+                    }
                     echo $table;
                     ?>
                         </tbody>

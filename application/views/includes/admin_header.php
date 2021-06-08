@@ -352,7 +352,7 @@ if ($this->session->userdata('usertimezone') == null) {
                     <div class="logo col-lg-3"><a style="position:absolute; top:25%; margin-top:-20px; left:5%;"
                             href="<?php echo url('dashboard'); ?>">
                             <img width="200"
-                                src="<?php echo $url->assets ?>dashboard/images/logo.png"
+                                src="<?php echo $url; ?>dashboard/images/logo.png"
                                 alt=""> </a>
                     </div><!-- End Logo container-->
                     <!-- MENU Start -->
@@ -370,37 +370,35 @@ if ($this->session->userdata('usertimezone') == null) {
                             <li class="menu-item list-inline-item d-inline-flex d-lg-none" style="color:#fff;"><img
                                     class="icon-logo-nav" width="100" height="25"
                                     style="height: 25px !important;width: 100px !important;"
-                                    src="<?php echo $url->assets ?>dashboard/images/logo.png"
+                                    src="<?php echo $url; ?>dashboard/images/logo.png"
                                     alt=""> </a></li>
+                            <li class="dropdown notification-list list-inline-item" style="vertical-align: middle">
+                                <div class="dropdown notification-list nav-pro-img">
+                                    <a class="dropdown-toggle nav-link arrow-none nav-user" data-toggle="dropdown"
+                                        href="index.html#" role="button" aria-haspopup="false" aria-expanded="false">
+                                        <?php /* <img src="<?php //echo (companyProfileImage(logged('company_id'))) ? companyProfileImage(logged('company_id')) : $url->assets ?>" alt="user" class="rounded-circle"> */ ?>
+                                        <?php
+                                                    $image = (userProfile(logged('id'))) ? userProfile(logged('id')) : $url;
+                                                    if (!@getimagesize($image)) {
+                                                        $image = base_url('uploads/users/default.png');
+                                                    }
+                                                    // $image = base_url('uploads/users/default.png');
+                                                    ?>
+                                        <img src="<?php echo $image; ?>"
+                                            alt="user" class="rounded-circle nav-user-img">
+                                    </a>
+                                    <div class="dropdown-menu dropdown-menu-right profile-dropdown">
+                                        <a class="dropdown-item"
+                                            href="<?php echo url('admin/dashboard') ?>"><i
+                                                class="mdi mdi-account-circle m-r-5"></i>Dashboard</a>
+                                        <a class="dropdown-item text-danger"
+                                            href="<?php echo url('/admin/logout') ?>"><i
+                                                class="mdi mdi-power text-danger"></i> Logout</a>
+                                    </div>
+                                </div>
+                            </li>
 
-                <li title="Activity" class="dropdown notification-list list-inline-item ml-auto"
-                    style="vertical-align: middle">
-                    <div class="growth-icon-container dropdown-toggle" data-toggle="dropdown" role="button"
-                        aria-haspopup="false" aria-expanded="false">
-                        <a href="javascript:void (0)">
-                            <img class="growth-icon-static"
-                                src="<?php echo $url->assets; ?>/css/icons/activity.svg"
-                                alt="">
-                            <img class="growth-icon-hover"
-                                src="<?php echo $url->assets; ?>/css/icons/activity.svg"
-                                alt="">
-                        </a>
-                    </div>
-                </li>
-                <li title="Settings" class="dropdown notification-list list-inline-item ml-auto"
-                    style="vertical-align: middle">
-                    <div class="settings-icon-container">
-                        <a
-                            href="<?php echo base_url('settings/email_templates') ?>">
-                            <img class="settings-icon-static"
-                                src="<?php echo $url->assets; ?>/css/icons/settings.svg"
-                                alt="">
-                            <img class="settings-icon-hover"
-                                src="<?php echo $url->assets; ?>/css/icons/settings.svg"
-                                alt="">
-                        </a>
-                    </div>
-                </li>
+                
                 </ul>
             </div><!-- end menu-extras -->
             <div class="clearfix"></div>

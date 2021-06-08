@@ -1030,54 +1030,29 @@ class Users extends MY_Controller {
 		redirect('users');
 	}
 
-
-
-	public function view($id)
-
-	{
-
-
-
+	public function view($id){
 		ifPermissions('users_view');
 
-
-
 		$this->page_data['User'] = $this->users_model->getById($id);
-
 		$this->page_data['User']->role = $this->roles_model->getByWhere([
-
 			'id'=> $this->page_data['User']->role
-
 		])[0];
 
 		$this->page_data['User']->activity = $this->activity_model->getByWhere([
-
 			'user'=> $id
-
 		], [ 'order' => ['id', 'desc'] ]);
 
 		$this->load->view('users/view', $this->page_data);
-
-
-
 	}
 
-
-
 	public function edit($id)
-
 	{
 		// ifPermissions('users_edit');
 		$this->page_data['User'] = $this->users_model->getById($id);
 		$this->load->view('users/edit', $this->page_data);
 	}
 
-
-
-
-
 	public function update($id)
-
 	{
 		// ifPermissions('users_edit');
 		postAllowed();
@@ -1142,12 +1117,7 @@ class Users extends MY_Controller {
 		
 
 		redirect('users');
-
-
-
 	}
-
-
 
 	public function check()
 

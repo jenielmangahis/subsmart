@@ -57,6 +57,8 @@ function Signing(hash) {
     let text = recipient[field_name.toLowerCase()];
     const { pageTop: top, left } = JSON.parse(coordinates);
 
+    const container = document.querySelector(".signing__documentContainer");
+
     if (field_name === "Date Signed") {
       return moment().format("MM/DD/YYYY");
     }
@@ -81,7 +83,10 @@ function Signing(hash) {
           `;
 
       const $element = createElementFromHTML(html);
-      $element.css({ top, left, position: "absolute" });
+
+      const topEm = `${pxToEm(top, container)}em`;
+      const leftEm = `${pxToEm(left, container)}em`;
+      $element.css({ top: topEm, left: leftEm, position: "absolute" });
 
       if (value) {
         $element.find("input").addClass("d-none");
@@ -147,7 +152,9 @@ function Signing(hash) {
         $element.html(createElementFromHTML(valueHtml));
       }
 
-      $element.css({ top: top - 8, left: left + 30, position: "absolute" });
+      const topEm = `${pxToEm(top - 8, container)}em`;
+      const leftEm = `${pxToEm(left + 30, container)}em`;
+      $element.css({ top: topEm, left: leftEm, position: "absolute" });
 
       $element.on("click", () => {
         signaturePad.clear();
@@ -178,7 +185,10 @@ function Signing(hash) {
 
       const html = `<div class="docusignField ${baseClassName}"></div>`;
       const $element = createElementFromHTML(html);
-      $element.css({ top, left, position: "absolute" });
+
+      const topEm = `${pxToEm(top, container)}em`;
+      const leftEm = `${pxToEm(left, container)}em`;
+      $element.css({ top: topEm, left: leftEm, position: "absolute" });
 
       $element.append(`
             <div class="form-check">
@@ -291,7 +301,9 @@ function Signing(hash) {
         storeFieldValue({ value: this.value, id: fieldId });
       });
 
-      $element.css({ top, left, position: "absolute" });
+      const topEm = `${pxToEm(top, container)}em`;
+      const leftEm = `${pxToEm(left, container)}em`;
+      $element.css({ top: topEm, left: leftEm, position: "absolute" });
       return $element;
     }
 
@@ -303,7 +315,10 @@ function Signing(hash) {
           `;
 
       const $element = createElementFromHTML(html);
-      $element.css({ top, left, position: "absolute" });
+
+      const topEm = `${pxToEm(top, container)}em`;
+      const leftEm = `${pxToEm(left, container)}em`;
+      $element.css({ top: topEm, left: leftEm, position: "absolute" });
       return $element;
     }
 
@@ -345,7 +360,8 @@ function Signing(hash) {
       const $input = $element.find("input");
 
       // requires assets/js/esign/docusign/input.autoresize.js
-      $input.autoresize({ minWidth: width ? width : 100 });
+      const widthEm = `${pxToEm(width ? width : 100, container)}em`;
+      $input.autoresize({ minWidth: widthEm });
 
       $input.prop("required", isRequired);
       $input.prop("readonly", isReadOnly);
@@ -401,7 +417,9 @@ function Signing(hash) {
         }
       });
 
-      $element.css({ top: top + 8, left, position: "absolute" });
+      const topEm = `${pxToEm(top + 8, container)}em`;
+      const leftEm = `${pxToEm(left, container)}em`;
+      $element.css({ top: topEm, left: leftEm, position: "absolute" });
       return $element;
     }
 
@@ -925,4 +943,21 @@ function guidGenerator() {
     S4() +
     S4()
   );
+}
+
+// https://stackoverflow.com/a/46741311/8062659
+function pxToEm(px, element) {
+  element =
+    element === null || element === undefined
+      ? document.documentElement
+      : element;
+
+  var temporaryElement = document.createElement("div");
+  temporaryElement.style.setProperty("position", "absolute", "important");
+  temporaryElement.style.setProperty("visibility", "hidden", "important");
+  temporaryElement.style.setProperty("font-size", "1em", "important");
+  element.appendChild(temporaryElement);
+  var baseFontSize = parseFloat(getComputedStyle(temporaryElement).fontSize);
+  temporaryElement.parentNode.removeChild(temporaryElement);
+  return px / baseFontSize;
 }

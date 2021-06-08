@@ -82,6 +82,15 @@ class Business_model extends MY_Model {
         $query = $this->db->get()->row();
         return $query;
     }
+    
+    public function getAll()
+    {
+        $this->db->select('*');
+        $this->db->from($this->table);
+        $query = $this->db->get();
+
+        return $query->result();
+    }
 }
 
 /* End of file Business_model.php */
