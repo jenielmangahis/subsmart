@@ -93,7 +93,7 @@ class Vendors extends MY_Controller {
             1
         ];
 
-        if($postData['inactive'] === '1' || $postData['inactive'] === 1) {
+        if($post['inactive'] === '1' || $post['inactive'] === 1) {
             array_push($status, 0);
         }
 
@@ -102,6 +102,12 @@ class Vendors extends MY_Controller {
         $data = [];
 
         foreach($vendors as $vendor) {
+            if(!is_null($vendor->attachments) && $vendor->attachments !== "") {
+                $attachments = count(json_decode($vendor->attachments, true));
+            } else {
+                $attachments = '';
+            }
+
             if($search !== "") {
                 if(stripos($vendor->display_name, $search) !== false) {
                     $data[] = [
@@ -111,7 +117,7 @@ class Vendors extends MY_Controller {
                         'address' => "$vendor->street<br>$vendor->city $vendor->state $vendor->zip",
                         'phone' => $vendor->phone,
                         'email' => $vendor->email,
-                        'attachments' => '',
+                        'attachments' => $attachments,
                         'open_balance' => '$'.number_format(floatval($vendor->opening_balance), 2, '.', ',')
                     ];
                 }
@@ -123,7 +129,7 @@ class Vendors extends MY_Controller {
                     'address' => "$vendor->street<br>$vendor->city $vendor->state $vendor->zip",
                     'phone' => $vendor->phone,
                     'email' => $vendor->email,
-                    'attachments' => '',
+                    'attachments' => $attachments,
                     'open_balance' => '$'.number_format(floatval($vendor->opening_balance), 2, '.', ',')
                 ];
             }
@@ -245,6 +251,37 @@ class Vendors extends MY_Controller {
         $this->load->view('accounting/vendors/view', $this->page_data);
     }
 
+    public function make_inactive()
+    {
+        $vendors = $this->input->post('vendors');
+
+        if(count($vendors) === 1) {
+            $vendor = $this->vendors_model->get_vendor_by_id($vendors[0]);
+        }
+
+        $data = [];
+        foreach($vendors as $vendorId)
+        {
+            $data[] = [
+                'id' => $vendorId,
+                'status' => 0,
+                'updated_at' => date("Y-m-d H:i:s")
+            ];
+        }
+
+        $update = $this->vendors_model->update_multiple_vendor_by_id($data);
+
+        if($update) {
+            if(count($vendors) === 1) {
+                $this->session->set_flashdata('success', "<b>$vendor->display_name</b> has been successfully set to inactive!");
+            } else {
+                $this->session->set_flashdata('success', "$update vendor/s has been successfully set to inactive!");
+            }
+        } else {
+            $this->session->set_flashdata('error', "Unexpected error, please try again!");
+        }
+    }
+
     public function update($vendorId)
     {
         $data = array(
@@ -298,7 +335,7 @@ class Vendors extends MY_Controller {
             $insert = $this->uploadFile($files);
             $vendor = $this->vendors_model->get_vendor_by_id($vendorId);
 
-            if($vendor->attachments !== null || $vendor->attachments !== "") {
+            if($vendor->attachments !== null && $vendor->attachments !== "") {
                 foreach(json_decode($vendor->attachments, true) as $attachment) {
                     array_unshift($insert, $attachment);
                 }

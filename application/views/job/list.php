@@ -118,17 +118,33 @@ include viewPath('job/css/lists');
                                                     <td class="pl-3"><?php echo $job->name; ?></td>
                                                     <td class="pl-3"><?=$job->priority; ?></td>
                                                     <td class="pl-3">
-                                                        <?php if($job->status=='Draft' || $job->status=='Scheduled') : ?>
-                                                        <a href="javascript:void(0)" id="<?= $job->id; ?>"  class="delete_job btn btn-default btn-sm">
-                                                            <span class="fa fa-trash"></span> Delete
-                                                        </a>
-                                                        <?php endif; ?>
-                                                        <a href="<?= base_url('job/new_job1/').$job->id; ?>" class="editJobTypeBtn btn btn-default btn-sm">
-                                                            <span class="fa fa-pencil"></span> Edit
-                                                        </a>&nbsp;
-                                                        <a href="<?= base_url('job/job_preview/').$job->id; ?>"  class=" btn btn-default btn-sm">
-                                                            <span class="fa fa-search-plus"></span> Preview
-                                                        </a>
+                                                        <div class="dropdown dropdown-btn text-center">
+                                                            <button class="btn btn-default" type="button" id="dropdown-edit"
+                                                                data-toggle="dropdown" aria-expanded="true">
+                                                                <span class="btn-label">Manage <i class="fa fa-caret-down fa-sm"
+                                                                        style="margin-left:10px;"></i></span></span>
+                                                            </button>
+                                                            <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="dropdown-edit">
+                                                                <li role="presentation">
+                                                                    <a role="menuitem" tabindex="-1" href="<?= base_url('job/new_job1/').$job->id; ?>" class="editJobTypeBtn editItemBtn">
+                                                                        <span class="fa fa-pencil"></span> Edit
+                                                                    </a>
+                                                                </li>
+                                                                <li>
+                                                                    <a href="<?= base_url('job/job_preview/').$job->id; ?>"  class="editItemBtn">
+                                                                        <span class="fa fa-search-plus"></span> Preview
+                                                                    </a>
+                                                                </li>
+                                                                <?php if($job->status=='Draft' || $job->status=='Scheduled') : ?>
+                                                                <li>
+                                                                    <a href="javascript:void(0)" id="<?= $job->id; ?>"  class="delete_job editItemBtn">
+                                                                        <span class="fa fa-trash"></span> Delete
+                                                                    </a>
+                                                                </li>
+                                                                <?php endif; ?>
+                                                                <li role="separator" class="divider"></li>
+                                                            </ul>
+                                                        </div>
                                                     </td>
                                                 </tr>
 
@@ -175,17 +191,33 @@ include viewPath('job/css/lists');
                                                 <td class="pl-3"><?php echo $job->name; ?></td>
                                                 <td class="pl-3"><?=$job->priority; ?></td>
                                                 <td class="pl-3">
-                                                    <?php if($job->status=='Draft' || $job->status=='Scheduled') : ?>
-                                                        <a href="javascript:void(0)" id="<?= $job->id; ?>"  class="delete_job btn btn-default btn-sm">
-                                                            <span class="fa fa-trash"></span> Delete
-                                                        </a>
-                                                    <?php endif; ?>
-                                                    <a href="<?= base_url('job/new_job1/').$job->id; ?>" class="editJobTypeBtn btn btn-default btn-sm">
-                                                        <span class="fa fa-pencil"></span> Edit
-                                                    </a>&nbsp;
-                                                    <a href="<?= base_url('job/job_preview/').$job->id; ?>"  class=" btn btn-default btn-sm">
-                                                        <span class="fa fa-search-plus"></span> Preview
-                                                    </a>
+                                                    <div class="dropdown dropdown-btn text-center">
+                                                            <button class="btn btn-default" type="button" id="dropdown-edit"
+                                                                data-toggle="dropdown" aria-expanded="true">
+                                                                <span class="btn-label">Manage <i class="fa fa-caret-down fa-sm"
+                                                                        style="margin-left:10px;"></i></span></span>
+                                                            </button>
+                                                            <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="dropdown-edit">
+                                                                <li role="presentation">
+                                                                    <a role="menuitem" tabindex="-1" href="<?= base_url('job/new_job1/').$job->id; ?>" class="editJobTypeBtn editItemBtn">
+                                                                        <span class="fa fa-pencil"></span> Edit
+                                                                    </a>
+                                                                </li>
+                                                                <li>
+                                                                    <a href="<?= base_url('job/job_preview/').$job->id; ?>"  class="editItemBtn">
+                                                                        <span class="fa fa-search-plus"></span> Preview
+                                                                    </a>
+                                                                </li>
+                                                                <?php if($job->status=='Draft' || $job->status=='Scheduled') : ?>
+                                                                <li>
+                                                                    <a href="javascript:void(0)" id="<?= $job->id; ?>"  class="delete_job editItemBtn">
+                                                                        <span class="fa fa-trash"></span> Delete
+                                                                    </a>
+                                                                </li>
+                                                                <?php endif; ?>
+                                                                <li role="separator" class="divider"></li>
+                                                            </ul>
+                                                        </div>
                                                 </td>
                                             </tr>
                                             <?php endif; ?>
@@ -233,17 +265,33 @@ include viewPath('job/css/lists');
                                                         <td class="pl-3"><?php echo $job->name; ?></td>
                                                         <td class="pl-3"><?=$job->priority; ?></td>
                                                         <td class="pl-3">
-                                                            <?php if($job->status=='Draft' || $job->status=='Scheduled') : ?>
-                                                                <a href="javascript:void(0)" id="<?= $job->id; ?>"  class="delete_job btn btn-default btn-sm">
-                                                                    <span class="fa fa-trash"></span> Delete
-                                                                </a>
-                                                            <?php endif; ?>
-                                                            <a href="<?= base_url('job/new_job1/').$job->id; ?>" class="editJobTypeBtn btn btn-default btn-sm">
-                                                                <span class="fa fa-pencil"></span> Edit
-                                                            </a>&nbsp;
-                                                            <a href="<?= base_url('job/job_preview/').$job->id; ?>"  class=" btn btn-default btn-sm">
-                                                                <span class="fa fa-search-plus"></span> Preview
-                                                            </a>
+                                                        <div class="dropdown dropdown-btn text-center">
+                                                            <button class="btn btn-default" type="button" id="dropdown-edit"
+                                                                data-toggle="dropdown" aria-expanded="true">
+                                                                <span class="btn-label">Manage <i class="fa fa-caret-down fa-sm"
+                                                                        style="margin-left:10px;"></i></span></span>
+                                                            </button>
+                                                            <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="dropdown-edit">
+                                                                <li role="presentation">
+                                                                    <a role="menuitem" tabindex="-1" href="<?= base_url('job/new_job1/').$job->id; ?>" class="editJobTypeBtn editItemBtn">
+                                                                        <span class="fa fa-pencil"></span> Edit
+                                                                    </a>
+                                                                </li>
+                                                                <li>
+                                                                    <a href="<?= base_url('job/job_preview/').$job->id; ?>"  class="editItemBtn">
+                                                                        <span class="fa fa-search-plus"></span> Preview
+                                                                    </a>
+                                                                </li>
+                                                                <?php if($job->status=='Draft' || $job->status=='Scheduled') : ?>
+                                                                <li>
+                                                                    <a href="javascript:void(0)" id="<?= $job->id; ?>"  class="delete_job editItemBtn">
+                                                                        <span class="fa fa-trash"></span> Delete
+                                                                    </a>
+                                                                </li>
+                                                                <?php endif; ?>
+                                                                <li role="separator" class="divider"></li>
+                                                            </ul>
+                                                        </div>
                                                         </td>
                                                     </tr>
                                                 <?php endif; ?>
@@ -291,17 +339,33 @@ include viewPath('job/css/lists');
                                                         <td class="pl-3"><?php echo $job->name; ?></td>
                                                         <td class="pl-3"><?=$job->priority; ?></td>
                                                         <td class="pl-3">
-                                                            <?php if($job->status=='Draft' || $job->status=='Scheduled') : ?>
-                                                                <a href="javascript:void(0)" id="<?= $job->id; ?>"  class="delete_job btn btn-default btn-sm">
-                                                                    <span class="fa fa-trash"></span> Delete
-                                                                </a>
-                                                            <?php endif; ?>
-                                                            <a href="<?= base_url('job/new_job1/').$job->id; ?>" class="editJobTypeBtn btn btn-default btn-sm">
-                                                                <span class="fa fa-pencil"></span> Edit
-                                                            </a>&nbsp;
-                                                            <a href="<?= base_url('job/job_preview/').$job->id; ?>"  class=" btn btn-default btn-sm">
-                                                                <span class="fa fa-search-plus"></span> Preview
-                                                            </a>
+                                                        <div class="dropdown dropdown-btn text-center">
+                                                            <button class="btn btn-default" type="button" id="dropdown-edit"
+                                                                data-toggle="dropdown" aria-expanded="true">
+                                                                <span class="btn-label">Manage <i class="fa fa-caret-down fa-sm"
+                                                                        style="margin-left:10px;"></i></span></span>
+                                                            </button>
+                                                            <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="dropdown-edit">
+                                                                <li role="presentation">
+                                                                    <a role="menuitem" tabindex="-1" href="<?= base_url('job/new_job1/').$job->id; ?>" class="editJobTypeBtn editItemBtn">
+                                                                        <span class="fa fa-pencil"></span> Edit
+                                                                    </a>
+                                                                </li>
+                                                                <li>
+                                                                    <a href="<?= base_url('job/job_preview/').$job->id; ?>"  class="editItemBtn">
+                                                                        <span class="fa fa-search-plus"></span> Preview
+                                                                    </a>
+                                                                </li>
+                                                                <?php if($job->status=='Draft' || $job->status=='Scheduled') : ?>
+                                                                <li>
+                                                                    <a href="javascript:void(0)" id="<?= $job->id; ?>"  class="delete_job editItemBtn">
+                                                                        <span class="fa fa-trash"></span> Delete
+                                                                    </a>
+                                                                </li>
+                                                                <?php endif; ?>
+                                                                <li role="separator" class="divider"></li>
+                                                            </ul>
+                                                        </div>
                                                         </td>
                                                     </tr>
                                                 <?php endif; ?>
@@ -349,17 +413,33 @@ include viewPath('job/css/lists');
                                                         <td class="pl-3"><?php echo $job->name; ?></td>
                                                         <td class="pl-3"><?=$job->priority; ?></td>
                                                         <td class="pl-3">
-                                                            <?php if($job->status=='Draft' || $job->status=='Scheduled') : ?>
-                                                                <a href="javascript:void(0)" id="<?= $job->id; ?>"  class="delete_job btn btn-default btn-sm">
-                                                                    <span class="fa fa-trash"></span> Delete
-                                                                </a>
-                                                            <?php endif; ?>
-                                                            <a href="<?= base_url('job/new_job1/').$job->id; ?>" class="editJobTypeBtn btn btn-default btn-sm">
-                                                                <span class="fa fa-pencil"></span> Edit
-                                                            </a>&nbsp;
-                                                            <a href="<?= base_url('job/job_preview/').$job->id; ?>"  class=" btn btn-default btn-sm">
-                                                                <span class="fa fa-search-plus"></span> Preview
-                                                            </a>
+                                                        <div class="dropdown dropdown-btn text-center">
+                                                            <button class="btn btn-default" type="button" id="dropdown-edit"
+                                                                data-toggle="dropdown" aria-expanded="true">
+                                                                <span class="btn-label">Manage <i class="fa fa-caret-down fa-sm"
+                                                                        style="margin-left:10px;"></i></span></span>
+                                                            </button>
+                                                            <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="dropdown-edit">
+                                                                <li role="presentation">
+                                                                    <a role="menuitem" tabindex="-1" href="<?= base_url('job/new_job1/').$job->id; ?>" class="editJobTypeBtn editItemBtn">
+                                                                        <span class="fa fa-pencil"></span> Edit
+                                                                    </a>
+                                                                </li>
+                                                                <li>
+                                                                    <a href="<?= base_url('job/job_preview/').$job->id; ?>"  class="editItemBtn">
+                                                                        <span class="fa fa-search-plus"></span> Preview
+                                                                    </a>
+                                                                </li>
+                                                                <?php if($job->status=='Draft' || $job->status=='Scheduled') : ?>
+                                                                <li>
+                                                                    <a href="javascript:void(0)" id="<?= $job->id; ?>"  class="delete_job editItemBtn">
+                                                                        <span class="fa fa-trash"></span> Delete
+                                                                    </a>
+                                                                </li>
+                                                                <?php endif; ?>
+                                                                <li role="separator" class="divider"></li>
+                                                            </ul>
+                                                        </div>
                                                         </td>
                                                     </tr>
                                                 <?php endif; ?>
@@ -407,17 +487,33 @@ include viewPath('job/css/lists');
                                                         <td class="pl-3"><?php echo $job->name; ?></td>
                                                         <td class="pl-3"><?=$job->priority; ?></td>
                                                         <td class="pl-3">
-                                                            <?php if($job->status=='Draft' || $job->status=='Scheduled') : ?>
-                                                                <a href="javascript:void(0)" id="<?= $job->id; ?>"  class="delete_job btn btn-default btn-sm">
-                                                                    <span class="fa fa-trash"></span> Delete
-                                                                </a>
-                                                            <?php endif; ?>
-                                                            <a href="<?= base_url('job/new_job1/').$job->id; ?>" class="editJobTypeBtn btn btn-default btn-sm">
-                                                                <span class="fa fa-pencil"></span> Edit
-                                                            </a>&nbsp;
-                                                            <a href="<?= base_url('job/job_preview/').$job->id; ?>"  class=" btn btn-default btn-sm">
-                                                                <span class="fa fa-search-plus"></span> Preview
-                                                            </a>
+                                                        <div class="dropdown dropdown-btn text-center">
+                                                            <button class="btn btn-default" type="button" id="dropdown-edit"
+                                                                data-toggle="dropdown" aria-expanded="true">
+                                                                <span class="btn-label">Manage <i class="fa fa-caret-down fa-sm"
+                                                                        style="margin-left:10px;"></i></span></span>
+                                                            </button>
+                                                            <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="dropdown-edit">
+                                                                <li role="presentation">
+                                                                    <a role="menuitem" tabindex="-1" href="<?= base_url('job/new_job1/').$job->id; ?>" class="editJobTypeBtn editItemBtn">
+                                                                        <span class="fa fa-pencil"></span> Edit
+                                                                    </a>
+                                                                </li>
+                                                                <li>
+                                                                    <a href="<?= base_url('job/job_preview/').$job->id; ?>"  class="editItemBtn">
+                                                                        <span class="fa fa-search-plus"></span> Preview
+                                                                    </a>
+                                                                </li>
+                                                                <?php if($job->status=='Draft' || $job->status=='Scheduled') : ?>
+                                                                <li>
+                                                                    <a href="javascript:void(0)" id="<?= $job->id; ?>"  class="delete_job editItemBtn">
+                                                                        <span class="fa fa-trash"></span> Delete
+                                                                    </a>
+                                                                </li>
+                                                                <?php endif; ?>
+                                                                <li role="separator" class="divider"></li>
+                                                            </ul>
+                                                        </div>
                                                         </td>
                                                     </tr>
                                                 <?php endif; ?>

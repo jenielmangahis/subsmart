@@ -75,7 +75,7 @@ function get_differenct_of_dates($date_start, $date_end)
                             <div id="job-item-selected-view" class="row no-margin">
                                 sapmle
                             </div>
-                            <div class="estimated-calculation">
+                            <div class="estimated-calculation" style="display: none;">
                                 <div class="row no-margin">
                                     <div class="col-md-4">
                                         <div class="est eta">
@@ -142,7 +142,9 @@ function get_differenct_of_dates($date_start, $date_end)
                         <div id="upcomingjobs-collapse-panel" class="collapse show">
                             <?php
                             if (!empty($upcomingJobs)) { ?>
-                            <?php foreach ($upcomingJobs as $jb) { ?>
+                            <?php foreach ($upcomingJobs as $jb) {
+                                if (logged('role') < 5 || logged('id') == $jb->employee_id) {
+                                    ?>
                             <div class="job-item-panel">
                                 <div class="employee-name">
                                     <p><span class="name"><?=$jb->FName .' '.$jb->LName?></span>
@@ -196,7 +198,9 @@ function get_differenct_of_dates($date_start, $date_end)
                                     </div>
                                 </div>
                             </div>
-                            <?php } ?>
+                            <?php
+                                }
+                            } ?>
                             <?php } else { ?>
                             <div class="cue-event-name no-data">No upcoming jobs.</div>
                             <?php } ?>
@@ -204,7 +208,9 @@ function get_differenct_of_dates($date_start, $date_end)
                         <div id="previousjobs-collapse-panel" class="collapse">
                             <?php
                             if (!empty($previousJobs)) { ?>
-                            <?php foreach ($previousJobs as $jb) { ?>
+                            <?php foreach ($previousJobs as $jb) {
+                                if (logged('role') < 5 || logged('id') == $jb->employee_id) {?>
+
                             <div class="job-item-panel"
                                 data-job-id="<?=$jb->id?>">
                                 <div class="employee-name">
@@ -256,7 +262,8 @@ function get_differenct_of_dates($date_start, $date_end)
                                     </div>
                                 </div>
                             </div>
-                            <?php } ?>
+                            <?php }
+                            } ?>
                             <?php } else { ?>
                             <div class="cue-event-name no-data">No previous jobs.</div>
                             <?php } ?>
@@ -285,7 +292,9 @@ function get_differenct_of_dates($date_start, $date_end)
                             <div class="livejobs-section">
                                 <?php
                             if (!empty($liveJobs)) { ?>
-                                <?php foreach ($liveJobs as $jb) { ?>
+                                <?php foreach ($liveJobs as $jb) {
+                                if (logged('role') < 5 || logged('id') == $jb->employee_id) {
+                                    ?>
                                 <div class="job-item-panel"
                                     data-job-id="<?=$jb->id?>"
                                     data-employee-id="<?=$jb->employee_id?>"
@@ -342,7 +351,9 @@ function get_differenct_of_dates($date_start, $date_end)
                                         </div>
                                     </div>
                                 </div>
-                                <?php } ?>
+                                <?php
+                                }
+                            }?>
                                 <?php } else { ?>
                                 <div class="cue-event-name no-data">No live jobs.</div>
                                 <?php } ?>

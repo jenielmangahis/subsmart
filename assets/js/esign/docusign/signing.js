@@ -360,8 +360,7 @@ function Signing(hash) {
       const $input = $element.find("input");
 
       // requires assets/js/esign/docusign/input.autoresize.js
-      const widthEm = `${pxToEm(width ? width : 100, container)}em`;
-      $input.autoresize({ minWidth: widthEm });
+      $input.autoresize({ minWidth: width ? width : 100 });
 
       $input.prop("required", isRequired);
       $input.prop("readonly", isReadOnly);
@@ -793,6 +792,23 @@ function Signing(hash) {
     }
 
     attachEventHandlers();
+
+    const $container = $(".signing__documentContainer");
+    const containerWidth = parseInt($container.css("width"));
+
+    const $canvases = $container.find("canvas");
+    let canvasMaxWidth = 0;
+    $canvases.each((_, c) => {
+      const width = parseInt($(c).attr("width"));
+      if (width > canvasMaxWidth) {
+        canvasMaxWidth = width;
+      }
+    });
+
+    const percent = (16 / canvasMaxWidth) * 100;
+    if ($(window).width() < canvasMaxWidth) {
+      $container.css({ fontSize: (containerWidth * percent) / 100 });
+    }
 
     $(".loader").addClass("d-none");
     if (data.recipient.completed_at) markAsFinished();

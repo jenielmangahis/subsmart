@@ -209,6 +209,11 @@ class Vendors_model extends MY_Model {
 		return $allData;
 	}
 
+	public function update_multiple_vendor_by_id($data)
+	{
+		return $this->db->update_batch($this->table, $data, 'id');
+	}
+
 	public function get_vendor_by_id($id)
 	{
 		$this->db->where('company_id', logged('company_id'));

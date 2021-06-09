@@ -11,10 +11,6 @@
   <script src="https://use.fontawesome.com/f61f458313.js"></script>
 
   <style>
-    .fillAndSign__signatureDraw {
-        max-height: 40px;
-    }
-
     .signing__signatureInput {
         width: 100% !important;
     }

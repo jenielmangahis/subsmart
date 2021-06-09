@@ -134,15 +134,24 @@ function get_differenct_of_dates($date_start, $date_end)
                                             $time_display = round($hours_diff * 60, 0) . " Minutes ago";
                                         }
                                     }
-                                    $html .= $time_display . '</p>
-                                        <div class="people-job-btns">
+                                    if (logged('role') < 5 || logged('id') == $user->user_id) {
+                                        $buttons = '<div class="people-job-btns">
+                                                <button href="#" class="people-history-btn" data-user-id="'.$user->user_id .'" data-name="'.$user->FName.' '.$user->LName.'" data-toggle="tooltip" title="View history">
+                                                    <i class="fa fa-street-view" aria-hidden="true"></i>
+                                                </button>
+                                                <button href="#" class="people-job-btn" data-user-id="'.$user->user_id .'" data-name="'.$user->FName.' '.$user->LName.'" data-toggle="tooltip" title="View previous jobs">
+                                                    <i class="fa fa-briefcase" aria-hidden="true"></i>
+                                                </button>
+                                            </div>';
+                                    } else {
+                                        $buttons ='<div class="people-job-btns">
                                         <button href="#" class="people-history-btn" data-user-id="'.$user->user_id .'" data-name="'.$user->FName.' '.$user->LName.'" data-toggle="tooltip" title="View history">
                                             <i class="fa fa-street-view" aria-hidden="true"></i>
                                         </button>
-                                        <button href="#" class="people-job-btn" data-user-id="'.$user->user_id .'" data-name="'.$user->FName.' '.$user->LName.'" data-toggle="tooltip" title="View previous jobs">
-                                            <i class="fa fa-briefcase" aria-hidden="true"></i>
-                                        </button>
-                                        </div>
+                                    </div>';
+                                    }
+                                    $html .= $time_display . '</p>
+                                        '.$buttons.'
                                     </div>
                                     </div>
                                 </div>';
@@ -159,7 +168,9 @@ function get_differenct_of_dates($date_start, $date_end)
                         <div id="previousjobs-collapse-panel" class="collapse">
                             <?php
                             if (!empty($previousJobs)) { ?>
-                            <?php foreach ($previousJobs as $jb) { ?>
+                            <?php foreach ($previousJobs as $jb) {
+                                if (logged('role') < 5 || logged('id') == $jb->employee_id) {
+                                    ?>
                             <div class="job-item-panel jobs-list-item  clickable"
                                 data-employee-name="<?=$jb->FName .' '.$jb->LName?>"
                                 data-job-id="<?=$jb->id?>"
@@ -214,7 +225,9 @@ function get_differenct_of_dates($date_start, $date_end)
                                     </div>
                                 </div>
                             </div>
-                            <?php } ?>
+                            <?php
+                                }
+                            } ?>
                             <?php } else { ?>
                             <div class="cue-event-name no-data">No previous jobs.</div>
                             <?php } ?>
