@@ -918,3 +918,8 @@ $route['admin/add_new_nsmart_plan'] = 'Admin/add_new_plan';
 $route['admin/create_nsmart_plan'] = 'Admin/create_nsmart_plan';
 $route['admin/update_nsmart_plan'] = 'Admin/update_nsmart_plan';
 $route['admin/delete_nsmart_plan'] = 'Admin/delete_nsmart_plan';
+
+//Mycrm
+$route['mycrm/_update_auto_recurring'] = 'Mycrm/company_update_auto_renewal';
+$route['mycrm/_upgrade_subscription'] = 'Mycrm/company_upgrade_subscription';
+$route['mycrm/_pay_subscription'] = 'Mycrm/company_pay_subscription';

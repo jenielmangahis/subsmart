@@ -1,9 +1,9 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
-class SubscriberNsmartUpgrade_model extends MY_Model
+class CompanySubscriptionPayments_model extends MY_Model
 {
-    public $table = 'subscriber_nsmart_upgrades';
+    public $table = 'company_subscription_payments';
 
     public function getAll($filters=array())
     {
@@ -31,6 +31,34 @@ class SubscriberNsmartUpgrade_model extends MY_Model
         return $query;
     }
 
+    public function getCompanyLastPayment($company_id)
+    {
+        $user_id = logged('id');
+
+        $this->db->select('*');
+        $this->db->from($this->table);
+
+        $this->db->where('company_id', $company_id);
+        $this->db->order_by('id', 'DESC');
+
+        $query = $this->db->get()->row();
+        return $query;
+    }
+
+    public function getCompanyFirstPayment($company_id)
+    {
+        $user_id = logged('id');
+
+        $this->db->select('*');
+        $this->db->from($this->table);
+
+        $this->db->where('company_id', $company_id);
+        $this->db->order_by('id', 'ASC');
+
+        $query = $this->db->get()->row();
+        return $query;
+    }
+
     public function getByClientIdAndNsmartUpgradeId($client_id, $upgrade_id)
     {
         $this->db->select('*');
@@ -45,7 +73,7 @@ class SubscriberNsmartUpgrade_model extends MY_Model
 
     public function getAllByClientId($client_id)
     {
-        $this->db->select('subscriber_nsmart_upgrades.*,plan_upgrades.name, plan_upgrades.description, plan_upgrades.service_fee, plan_upgrades.image_filename');
+        $this->db->select('subscriber_nsmart_upgrades.*,plan_upgrades.name, plan_upgrades.description, plan_upgrades.service_fee');
         $this->db->from($this->table);
         $this->db->join('plan_upgrades', 'subscriber_nsmart_upgrades.plan_upgrade_id = plan_upgrades.id', 'left');
         $this->db->where('subscriber_nsmart_upgrades.client_id', $client_id);
@@ -60,5 +88,5 @@ class SubscriberNsmartUpgrade_model extends MY_Model
 
 }
 
-/* End of file SubscriberNsmartUpgrade_model.php */
-/* Location: ./application/models/SubscriberNsmartUpgrade_model.php */
+/* End of file CompanySubscriptionPayments_model.php */
+/* Location: ./application/models/CompanySubscriptionPayments_model.php */

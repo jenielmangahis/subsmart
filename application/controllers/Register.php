@@ -732,25 +732,32 @@ class Register extends MY_Controller {
         $offerCode = $this->OfferCodes_model->getByOfferCodes($post['offer_code']);
 
         if( $offerCode && $offerCode->status == 0 ){
-            $cid = $this->Clients_model->create([
+            $next_billing_date = date("Y-m-d", strtotime("+1 month"));
+            $today = strtotime(date("Y-m-d"));
+            $cid   = $this->Clients_model->create([
                 'first_name' => $post['firstname'],
                 'last_name'  => $post['lastname'],
                 'email_address' => $post['email'],
                 'phone_number'  => $post['phone'],
                 'business_name' => $post['business_name'],
                 'business_address' => $post['business_address'],
+                'zip_code' => $post['zip_code'],
                 'number_of_employee' => $post['number_of_employee'],
                 'industry_type_id' => $post['industry_type_id'],
                 'password' => $post['password'],
                 'ip_address' => getValidIpAddress(),
                 'plan_date_registered' => date("Y-m-d"),
-                'plan_date_registered' => date("Y-m-d", strtotime("+1 month")),
+                'plan_date_expiration' => date("Y-m-d", strtotime("+1 month")),
                 'date_created'  => date("Y-m-d H:i:s"),
                 'date_modified' => date("Y-m-d H:i:s"),
                 'is_plan_active' => 1,
                 'nsmart_plan_id' => $post['plan_id'],
                 'is_trial' => 1,
-                'is_startup' => 1
+                'is_startup' => 1,
+                'payment_method' => 'offer code',
+                'is_auto_renew' => 0,  
+                'next_billing_date' => $next_billing_date,
+                'num_months_discounted' => 0
             ]);
 
             $uid = $this->users_model->create([
@@ -879,21 +886,43 @@ class Register extends MY_Controller {
 
     public function ajax_create_registration()
     {
+        $this->load->model('CompanySubscriptionPayments_model');
+
         $is_success = true;
         $is_valid   = false;
 
         $post = $this->input->post(); 
-        if( $post['payment_method'] == 'paypal' ){
-            if( $post['payment_method_status'] == 'COMPLETED' ){
-                $is_valid = true;   
+        if( $post['subscription_type'] != 'trial' ){
+            if( $post['payment_method'] == 'paypal' ){
+                if( $post['payment_method_status'] == 'COMPLETED' ){
+                    $is_valid = true;   
+                }
+            }elseif( $post['payment_method'] == 'stripe' ){
+                if( $post['payment_method_status'] == 'COMPLETED' ){
+                    $is_valid = true;   
+                }
+            }elseif( $post['payment_method'] == 'converge' ){
+                $is_valid = true;
             }
-        }elseif( $post['payment_method'] == 'stripe' ){
-            if( $post['payment_method_status'] == 'COMPLETED' ){
-                $is_valid = true;   
-            }
-        }
+            
+            $payment_method = $post['payment_method'];
+        }else{
+            $is_valid = true;
+            $payment_method = 'trial';
+        }        
 
         if( $is_valid ){
+            $is_trial = 0;
+            $plan_amount = 0;
+            $num_months_discounted = 0;
+            if( $post['subscription_type'] == 'trial' ){
+                $is_trial = 1;
+            }else{
+                $num_months_discounted = REGISTRATION_MONTHS_DISCOUNTED - 1;
+                $plan_amount = $post['plan_price_discounted'];
+            }
+
+            $next_billing_date = date("Y-m-d", strtotime("+1 month"));
             $today = strtotime(date("Y-m-d"));
             $cid   = $this->Clients_model->create([
                 'first_name' => $post['firstname'],
@@ -911,11 +940,14 @@ class Register extends MY_Controller {
                 'date_modified' => date("Y-m-d H:i:s"),
                 'is_plan_active' => 1,
                 'nsmart_plan_id' => $post['plan_id'],
-                'payment_method' => $post['payment_method'],
+                'payment_method' => $payment_method,
                 'plan_date_registered' => date("Y-m-d", $today),
                 'plan_date_expiration' => date("Y-m-d", strtotime("+1 month", $today)),
-                'is_trial' => 1,
-                'is_startup' => 1
+                'is_trial' => $is_trial,
+                'is_startup' => 1,              
+                'is_auto_renew' => 0,  
+                'next_billing_date' => $next_billing_date,
+                'num_months_discounted' => $num_months_discounted
             ]);
 
             $uid = $this->users_model->create([
@@ -930,6 +962,20 @@ class Register extends MY_Controller {
                 'password_plain' =>  $post['password'],
                 'password' => hash( "sha256", $post['password'] ),
             ]); 
+
+            if( $is_trial == 0 ){
+                //Record payment
+                $data_payment = [
+                    'company_id' => $cid,
+                    'description' => 'Paid Membership, Monthly',
+                    'payment_date' => date("Y-m-d"),
+                    'total_amount' => $plan_amount,
+                    'date_created' => date("Y-m-d H:i:s")
+                ];
+
+                $this->CompanySubscriptionPayments_model->create($data_payment);
+
+            }
         }
 
         $json_data = ['is_success' => $is_success];
