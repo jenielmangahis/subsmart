@@ -608,16 +608,21 @@ border: none;
 
 														<br>
 
+													<?php if($workorder->work_order_type_id == 1){ ?>
 														<div class="ul-info">
-		         							   			<ul>
-		         							   				<li><b>CUSTOM FIELDS</b></li>
-																<li class="show_mobile_view"><hr></li>
-															<?php foreach($custom_fields as $custom){ ?>
-		         							   				<li><a href="" class="ul-text"><?php echo $custom->name; ?>&emsp; <?php echo $custom->value; ?></a></li>
-															<?php } ?>
-		         							   			
-		         							   			</ul>
-		         							   		</div>
+															<ul>
+																<li><b>CUSTOM FIELDS</b></li>
+																	<li class="show_mobile_view"><hr></li>
+																<?php foreach($custom_fields as $custom){ ?>
+																	<?php if(empty($custom->value)){ }else{ ?>
+																		<li><a href="" class="ul-text"><?php echo $custom->name; ?>&emsp; <?php echo $custom->value; ?></a></li>
+																	<?php } ?>
+																<?php } ?>
+															
+															</ul>
+														</div>
+														<br>
+													<?php }else{ } ?>
 														
 
 		         							   		<!-- <div class="ul-info">
@@ -627,7 +632,7 @@ border: none;
 		         							   				<li><a href="" class="ul-text">Not set </a></li>	
 		         							   			
 		         							   			</ul>
-		         							   		</div> --><br>
+		         							   		</div> -->
 		         							   			<div class="ul-info">
 			         							   			<ul>
 			         							   				<li><a href="#" class="ul-head">Location </a></li>
@@ -664,6 +669,7 @@ border: none;
 											                </tr>
 											            </thead>
 													            <tbody>
+																<?php if($workorder->work_order_type_id == 1){ ?>
 																<?php foreach($items as $item){ ?>
 													                <tr class="table-items__tr">
 													                    <td style="width: 30px; text-align: center;" valign="top">  # </td>
@@ -678,9 +684,28 @@ border: none;
 													                        <!-- $4.43<br>(7.5%)                     -->
 																			$<?php echo $item->tax ?>
 																			</td>
-													                    <td style="width: 90px; padding: 8px 8px 8px 0; text-align: right;" valign="top">$<?php echo $item->total ?></td>
+													                    <td style="width: 90px; text-align: right;" valign="top">$<?php echo $item->total ?></td>
 													                </tr>
 																	<?php } ?>
+																<?php }else{ ?>
+																	<?php foreach($itemsA as $itemA){ ?>
+													                <tr class="table-items__tr">
+													                    <td style="width: 30px; text-align: center;" valign="top">  # </td>
+													                    <td valign="top"> <?php echo $itemA->item ?>   </td>
+													                    <td style="width: 50px; text-align: right;" valign="top"> <?php echo $itemA->qty ?>  </td>
+													                    <td style="width: 80px; text-align: right;" valign="top">$<?php echo $itemA->cost ?></td>
+													                    <td class="hidden_mobile_view" style="width: 80px; text-align: right;" valign="top">
+													                        <!-- $99.99<br>(62.89%)                     -->
+																			$<?php echo $itemA->discount ?>
+																			</td>
+													                    <td class="hidden_mobile_view" style="width: 80px; text-align: right;" valign="top">
+													                        <!-- $4.43<br>(7.5%)                     -->
+																			$<?php echo $itemA->tax ?>
+																			</td>
+													                    <td style="width: 90px; text-align: right;" valign="top">$<?php echo $itemA->total ?></td>
+													                </tr>
+																	<?php } ?>
+																<?php } ?>
 													                <tr class="table-items__tr-last">
 													                    <td></td>
 													                    <td colspan="6"></td>
@@ -703,11 +728,41 @@ border: none;
 													                    <table style="width: 100%; border-collapse: collapse;"> -->
 													                        <tbody>
 													                            <tr>
-													                                <td style="padding: 8px 0; text-align: right; border-bottom: 1px solid #eaeaea;" class="text-right">Subtotal</td>
+																					<td colspan="5"></td>
+													                                <td style="padding: 8px 0; text-align: right; border-bottom: 1px solid #eaeaea;" class="">Subtotal</td>
 													                                <td style="padding: 8px 8px 8px 0; text-align: right; border-bottom: 1px solid #eaeaea;" class="text-right">$<?php echo $workorder->subtotal ?></td>
 													                            </tr>
-													                                                        <tr>
-													                                <td style="padding: 8px 0; text-align: right; background: #f4f4f4;" class="text-right mobile_size"><b>Grand Total ($)</b></td>
+																				<tr>
+																					<td colspan="5"></td>
+													                                <td style="padding: 8px 0; text-align: right; border-bottom: 1px solid #eaeaea;" class="">Taxes</td>
+													                                <td style="padding: 8px 8px 8px 0; text-align: right; border-bottom: 1px solid #eaeaea;" class="text-right">$<?php echo $workorder->taxes ?></td>
+													                            </tr>
+																				<?php if($workorder->work_order_type_id == 1){ ?>
+																				<tr>
+																					<td colspan="5"></td>
+													                                <td style="padding: 8px 0; text-align: right; border-bottom: 1px solid #eaeaea;" class=""><?php echo $workorder->adjustment_name ?></td>
+													                                <td style="padding: 8px 8px 8px 0; text-align: right; border-bottom: 1px solid #eaeaea;" class="text-right">$<?php echo $workorder->adjustment_value ?></td>
+													                            </tr>
+																				<tr>
+																					<td colspan="5"></td>
+													                                <td style="padding: 8px 0; text-align: right; border-bottom: 1px solid #eaeaea;" class="">Voucher</td>
+													                                <td style="padding: 8px 8px 8px 0; text-align: right; border-bottom: 1px solid #eaeaea;" class="text-right">$<?php echo $workorder->voucher_value ?></td>
+													                            </tr>
+																				<?php }else{ ?>
+																				<tr>
+																					<td colspan="5"></td>
+													                                <td style="padding: 8px 0; text-align: right; border-bottom: 1px solid #eaeaea;" class="">One Time Program and Setup</td>
+													                                <td style="padding: 8px 8px 8px 0; text-align: right; border-bottom: 1px solid #eaeaea;" class="text-right">$<?php echo $workorder->otp_setup ?></td>
+													                            </tr>
+																				<tr>
+																					<td colspan="5"></td>
+													                                <td style="padding: 8px 0; text-align: right; border-bottom: 1px solid #eaeaea;" class="">Monthly Monitoring</td>
+													                                <td style="padding: 8px 8px 8px 0; text-align: right; border-bottom: 1px solid #eaeaea;" class="text-right">$<?php echo $workorder->monthly_monitoring ?></td>
+													                            </tr>
+																				<?php } ?>
+													                            <tr>
+																					<td colspan="5"></td>
+													                                <td style="padding: 8px 0; text-align: right; background: #f4f4f4;" class="mobile_size"><b>Grand Total ($)</b></td>
 													                                <td style="width: 90px; padding: 8px 8px 8px 0; text-align: right; background: #f4f4f4;" class="text-right"><b>$<?php echo $workorder->grand_total ?></b></td>
 													                            </tr>
 													                          </tbody>

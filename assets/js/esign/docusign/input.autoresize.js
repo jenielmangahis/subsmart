@@ -20,13 +20,12 @@ $.fn.autoresize = function (options) {
   );
   $(this)
     .on("input", function () {
-      $(this).css(
-        "width",
-        Math.min(
-          options.maxWidth,
-          Math.max(options.minWidth, $(this).textWidth() + options.padding)
-        )
+      const width = Math.min(
+        options.maxWidth,
+        Math.max(options.minWidth, $(this).textWidth() + options.padding)
       );
+
+      $(this).css("width", `${width / 12}em`); // 12 = inputs fontsize in esign signing page
     })
     .trigger("input");
   return this;

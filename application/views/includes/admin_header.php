@@ -357,7 +357,7 @@ if ($this->session->userdata('usertimezone') == null) {
                     </div><!-- End Logo container-->
                     <!-- MENU Start -->
                     <div class="col-lg-6">
-                        <?php include viewPath('includes/nav'); ?>
+                        <?php include viewPath('includes/admin_nav'); ?>
                     </div>
                     <div class="menu-extras topbar-custom col-lg-3 justify-content-end">
                         <ul class="navbar-right list-inline float-right mb-0"
@@ -390,10 +390,10 @@ if ($this->session->userdata('usertimezone') == null) {
                                     <div class="dropdown-menu dropdown-menu-right profile-dropdown">
                                         <a class="dropdown-item"
                                             href="<?php echo url('admin/dashboard') ?>"><i
-                                                class="mdi mdi-account-circle m-r-5"></i>Dashboard</a>
+                                                class="fa fa-circle"></i>Dashboard</a>
                                         <a class="dropdown-item text-danger"
                                             href="<?php echo url('/admin/logout') ?>"><i
-                                                class="mdi mdi-power text-danger"></i> Logout</a>
+                                                class="fa fa-circle"></i> Logout</a>
                                     </div>
                                 </div>
                             </li>

@@ -4,7 +4,7 @@
     <div class="row">
         <div class="col-md-6">
             <label for="">Company</label>
-            <select class="form-control select2-company">
+            <select class="form-control select2-company" name="company_id" id="company_id">
                 <option value="">-Select Company-</option>
                 <?php foreach($companies as $c){ ?>
                     <option <?= $user->company_id === $c->id ? 'selected="selected"' : ''; ?> value="<?= $c->id; ?>"><?= $c->business_name; ?></option>

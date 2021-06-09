@@ -449,7 +449,7 @@
                     </div>
 
                     <div class="main-pdf-render__container" role="region">
-                        <div id="main-pdf-render"></div>
+                        <div id="main-pdf-render" style="display:flex; flex-direction:column; align-items:center;"  ></div>
                     </div>
 
                     <div class="ng-scope content_sidebar content_sidebar-right ml-auto">

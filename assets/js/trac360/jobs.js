@@ -46,6 +46,7 @@ $(document).on("click", ".jobs-list-item", function() {
         $('#single-job-view-directionsRenderer-panel-view').html('');
         $("#single-job-view-directionsRenderer-panel .employee-name").html($(this).parent().children('.employee-name').html());
         $('#map').hide();
+        $("#single-job-view-directionsRenderer-panel .estimated-calculation").hide();
         if (!$("#jobs-map").is(":visible")) {
             $('#map-loader').show();
         }
@@ -124,7 +125,7 @@ $(document).on("click", ".jobs-list-item", function() {
                             $("#single-job-view-directionsRenderer-panel .estimated-calculation .est.eta .value").html(parseFloat(duration).toFixed(2) + "<br> " + variable);
                             $("#single-job-view-directionsRenderer-panel  .estimated-calculation .est.distance .value").html(parseFloat(my_route.legs[0].distance.value / 1609.34).toFixed(2) + "<br> mi");
                             $("#single-job-view-directionsRenderer-panel  .estimated-calculation .est.exp-speed .value").html(parseFloat(((my_route.legs[0].distance.value / 1609.34) / (my_route.legs[0].duration.value / 60 / 60))).toFixed(2) + "<br> mi/hr");
-
+                            $("#single-job-view-directionsRenderer-panel .estimated-calculation").show();
                         } else {
                             if (jobs_map_marker.length > 0) {
                                 for (var i = 0; i < jobs_map_marker.length; i++) {

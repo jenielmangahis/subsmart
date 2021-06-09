@@ -93,8 +93,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                     <span class="sr-only">Toggle Dropdown</span>
                                                 </button>
                                                 <div class="dropdown-menu">
-                                                    <a class="dropdown-item" href="#">Pay bills</a>
-                                                    <a class="dropdown-item" href="#">Order checks</a>
+                                                    <a class="dropdown-item" href="#" id="pay-bills">Pay bills</a>
                                                 </div>
                                             </div>
                                         </div>
@@ -160,8 +159,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                     </button>
 
                                                     <div class="dropdown-menu" aria-labelledby="statusDropdownButton">
-                                                        <a href="#" class="dropdown-item">Email</a>
-                                                        <a href="#" class="dropdown-item">Make inactive</a>
+                                                        <a href="mailto:" class="dropdown-item" id="email-vendor">Email</a>
+                                                        <a href="#" class="dropdown-item" id="make-inactive">Make inactive</a>
                                                     </div>
                                                 </div>
                                             </div>
@@ -207,7 +206,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 <table id="vendors-table" class="table table-bordered table-hover" style="width:100%">
 									<thead>
                                         <tr>
-                                            <th><input type="checkbox"></th>
+                                            <th><input type="checkbox" id="select-all-vendors"></th>
                                             <th>Vendor/Company</th>
                                             <th class="hide address">Address</th>
                                             <th class="phone">Phone</th>

@@ -155,9 +155,9 @@ class Trac360_model extends MY_Model
         $start_date = date('Y-m-d', strtotime(date('Y-m-d') . ' -30 day'));
         $end_date   = date('Y-m-d', strtotime(date('Y-m-d') . ' -1 day'));
         
-        $this->db->where('jobs.start_date BETWEEN "'. $start_date . '" and "'. $end_date .'"');
+        $this->db->where('jobs.start_date < "'. $end_date.'"');
         $this->db->order_by('jobs.start_date', 'DESC');
-
+        $this->db->limit(30);
         $query = $this->db->get();
         return $query->result();
     }
@@ -179,8 +179,9 @@ class Trac360_model extends MY_Model
         $this->db->join('users', 'users.id = jobs.employee_id', 'left');
         $this->db->join('business_profile', 'business_profile.company_id = users.company_id', 'left');
         
-        $this->db->where('jobs.start_date BETWEEN "'. $start_date . '" and "'. $end_date .'"');
+        $this->db->where('jobs.start_date < "'. $end_date.'"');
         $this->db->where('jobs.company_id', $company_id);
+        $this->db->limit(30);
         $this->db->order_by('jobs.start_date', 'DESC');
         $query = $this->db->get();
         //print_r($this->db->last_query());  exit;
@@ -205,9 +206,10 @@ class Trac360_model extends MY_Model
         $this->db->join('users', 'users.id = jobs.employee_id', 'left');
         $this->db->join('business_profile', 'business_profile.company_id = users.company_id', 'left');
         
-        $this->db->where('jobs.start_date BETWEEN "'. $start_date . '" and "'. $end_date .'"');
+        $this->db->where('jobs.start_date > "'. $start_date . '"');
         $this->db->where('jobs.company_id', $company_id);
         $this->db->order_by('jobs.start_date', 'ASC');
+        $this->db->limit(30);
         $query = $this->db->get();
         //print_r($this->db->last_query());  exit;
         return $query->result();

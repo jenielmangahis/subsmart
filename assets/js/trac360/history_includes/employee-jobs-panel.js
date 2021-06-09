@@ -17,6 +17,7 @@ $(document).on("click", ".people-job-btn", function() {
     $("#employee-jobs-to").val(date_today);
     $("#employee-jobs-filter-form").attr("data-user-id", $(this).attr("data-user-id"));
     $("#employees-view-jobs-panel .employee-name .name").html($(this).attr("data-name"));
+    $("#employees-view-jobs-panel .panel-content #jobs-lists-setion").hide();
     get_employee_prev_jobs(date_monday_this_week, date_today, $(this).attr("data-user-id"));
     $(".sec-2-option.current_view").removeClass("current_view");
     $(this).parent().parent().parent().parent(".sec-2-option").addClass("current_view");

@@ -253,7 +253,7 @@ function get_differenct_of_dates($date_start, $date_end)
   var directionsService;
   var directionsRenderer;
 
-  current_user_getLocation();
+  // current_user_getLocation();
 
   function initMap() {
     set_initmap();

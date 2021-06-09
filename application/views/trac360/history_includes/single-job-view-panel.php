@@ -15,7 +15,7 @@
                     alt="">
             </center>
         </div>
-        <div class="estimated-calculation">
+        <div class="estimated-calculation" style="display:none;">
             <div class="row no-margin">
                 <div class="col-md-4">
                     <div class="est eta">

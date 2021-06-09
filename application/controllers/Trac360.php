@@ -610,21 +610,28 @@ class Trac360 extends MY_Controller
         $all_jobs=$this->trac360_model->get_all_jobs($date_from, $date_to, logged('company_id'));
         $scredules = array();
         foreach ($all_jobs as $job) {
-            if (date("Y-m-d", strtotime($job->start_date))< date("Y-m-d")) {
-                $url= base_url().'/trac360/history/' . $job->id;
-            } else {
-                $url= "";
-            }
-            $url='';
-            if (date("Y-m-d", strtotime($job->start_date)) <date("Y-m-d")) {
-                $url=base_url().'/trac360/history/' . $job->id;
-            }
-            $scredules[]=array(
-                "title" => $job->FName .' '.$job->LName.' : '.$job->job_number . ' : ' . $job->job_type. ' - ' . $job->tags_name,
+            if (logged('role') < 5 || logged('id') == $job->employee_id) {
+                if (date("Y-m-d", strtotime($job->start_date))< date("Y-m-d")) {
+                    $url= base_url().'/trac360/history/' . $job->id;
+                } else {
+                    $url= "";
+                }
+                $url='';
+                if (date("Y-m-d", strtotime($job->start_date)) <date("Y-m-d")) {
+                    $url=base_url().'/trac360/history/' . $job->id;
+                }
+                if (!logged('role') < 5) {
+                    $title =  $job->job_number . ' : ' . $job->job_type. ' - ' . $job->tags_name;
+                } else {
+                    $title =  $job->FName .' '.$job->LName.' : '.$job->job_number . ' : ' . $job->job_type. ' - ' . $job->tags_name;
+                }
+                $scredules[]=array(
+                "title" =>$title,
                 "start" => $job->start_date.'T'.date('H:i:s', $job->start_time),
                 "end" => $job->end_date.'T'.date('H:i:s', $job->end_time),
                 "url" => $url
             );
+            }
         }
         $data = new stdClass();
         $data->scredules = $scredules;
@@ -899,7 +906,8 @@ class Trac360 extends MY_Controller
         }
         if (count($liveJobs) > 0) {
             foreach ($liveJobs as $jb) {
-                $html .='<div class="job-item-panel"
+                if (logged("role") < 5 || logged("id") == $jb->employee_id) {
+                    $html .='<div class="job-item-panel"
                     data-job-id="'.$jb->id.'" data-employee-id="'.$jb->employee_id.'" data-customer-address="'.$jb->mail_add .' '. $jb->cust_city.' '.$jb->cust_state.' '.$jb->cust_zip_code.'" data-office-address="'.$jb->office_address.', '.$jb->office_city.', '.$jb->office_state.', '.$jb->office_postal_code.'">
                     <div class="employee-name">
                         <p><span class="name">'.$jb->FName .' '.$jb->LName.'</span>
@@ -933,26 +941,27 @@ class Trac360 extends MY_Controller
                                 <b style="color:#45a73c;">
                                     '.$jb->first_name. ' '. $jb->last_name.'
                                 </b><br>';
-                $html.='<small class="text-muted">'.$jb->mail_add .' '. $jb->cust_city.' '.$jb->cust_state.' '.$jb->cust_zip_code.'</small><br>
+                    $html.='<small class="text-muted">'.$jb->mail_add .' '. $jb->cust_city.' '.$jb->cust_state.' '.$jb->cust_zip_code.'</small><br>
                     <i> <small class="text-muted">'.$jb->job_description.'</small></i><br>';
                 
-                $amount = '0.00';
-                if ($jb->amount != "") {
-                    $amount= number_format((float)$jb->amount, 2, '.', ',') ;
-                }
-                $html.='<small>Amount : $ '.$amount.'</small>
+                    $amount = '0.00';
+                    if ($jb->amount != "") {
+                        $amount= number_format((float)$jb->amount, 2, '.', ',') ;
+                    }
+                    $html.='<small>Amount : $ '.$amount.'</small>
                     <br>';
                 
-                $click_me = "";
-                if ($jb->link!='') {
-                    $click_me ="Click here for the link";
-                }
-                $html.='<a href="'.$jb->link.'" target="">
+                    $click_me = "";
+                    if ($jb->link!='') {
+                        $click_me ="Click here for the link";
+                    }
+                    $html.='<a href="'.$jb->link.'" target="">
                         <small style="color: darkred; width:400px; overflow:hidden">'.$click_me.'</small></a>';
                 
-                $html.='</div>
+                    $html.='</div>
                     </div>
                     </div>';
+                }
             }
         }
         $data = new stdClass();

@@ -1084,8 +1084,39 @@ class Workorder_model extends MY_Model
         //     $company = $q->company_id;
         // // }
 
+        // $where = "type_id='".$id."' AND type='Work Order' OR type='Work Order Alarm'";
+        
         $where = array(
             'type' => 'Work Order',
+            // 'type' => 'Work Order Alarm',
+            'type_id'   => $cus->id
+          );
+
+        $this->db->select('*');
+		$this->db->from('item_details');
+        // $this->db->where('type', 'Work Order');
+		// $this->db->where('type_id', $cus->id);
+        $this->db->where($where);
+        $query2 = $this->db->get();
+        return $query2->result();
+    }
+
+    public function getItemsAlarm($id)
+    {
+        $this->db->select('*');
+		$this->db->from('work_orders');
+		$this->db->where('id', $id);
+        $query = $this->db->get();
+        $cus = $query->row();
+        // // foreach($query as $q){
+        //     $company = $q->company_id;
+        // // }
+
+        // $where = "type_id='".$id."' AND type='Work Order' OR type='Work Order Alarm'";
+        
+        $where = array(
+            // 'type' => 'Work Order',
+            'type' => 'Work Order Alarm',
             'type_id'   => $cus->id
           );
 

@@ -1185,9 +1185,9 @@ add_css(array(
                                         <td><?= $estimate->job_name; ?></td>
                                         <td><?= date('M d, Y', strtotime($estimate->estimate_date)); ?></td>
                                         <td>
-                                            <button id="<?= $estimate->customer_id; ?>" type="button" data-dismiss="modal" class="btn btn-sm btn-default estimate_select">
-                                                <span class="fa fa-plus"></span>
-                                            </button>
+                                            <a href="<?= base_url('job/estimate_job/'. $estimate->id) ?>" id="<?= $estimate->id; ?>" type="button" class="btn btn-sm btn-default">
+                                                <span class="fa fa-briefcase"></span> Convert To Job
+                                            </a>
                                         </td>
                                     </tr>
                                 <?php endforeach; ?>
@@ -1467,10 +1467,10 @@ include viewPath('includes/footer');
     <script>
         window.addEventListener('beforeunload', function (e) {
             // Cancel the event as stated by the standard.
-            e.preventDefault();
+            //e.preventDefault();
             // Chrome requires returnValue to be set.
             //$('#myModal').modal();
-            e.returnValue = '';
+            //e.returnValue = '';
         });
     </script>
 <?php endif; ?>
