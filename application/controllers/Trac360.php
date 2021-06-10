@@ -620,7 +620,7 @@ class Trac360 extends MY_Controller
                 if (date("Y-m-d", strtotime($job->start_date)) <date("Y-m-d")) {
                     $url=base_url().'/trac360/history/' . $job->id;
                 }
-                if (!logged('role') < 5) {
+                if (!(logged('role') < 5)) {
                     $title =  $job->job_number . ' : ' . $job->job_type. ' - ' . $job->tags_name;
                 } else {
                     $title =  $job->FName .' '.$job->LName.' : '.$job->job_number . ' : ' . $job->job_type. ' - ' . $job->tags_name;

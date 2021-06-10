@@ -134,20 +134,20 @@ class Accounting extends MY_Controller {
         $this->load->view('accounting/apply_for_capital', $this->page_data);
     }
 
-    public function expenses()
-    {
-        $this->page_data['users'] = $this->users_model->getUser(logged('id'));
-        $this->page_data['vendors'] = $this->vendors_model->getVendors();
-        $this->page_data['checks'] = $this->expenses_model->getCheck();
-        $this->page_data['transactions'] = $this->expenses_model->getTransaction();
-        $this->page_data['categories'] = $this->expenses_model->getExpenseCategory();
-        $this->page_data['bills'] = $this->expenses_model->getBill();
-        $this->page_data['vendor_credits'] = $this->expenses_model->getVendorCredit();
-        $this->page_data['expenses'] = $this->expenses_model->getExpense();
-        $this->page_data['list_categories'] = $this->categories_model->getCategories();
-        $this->page_data['attachments'] = $this->expenses_model->getAttachment();
-        $this->load->view('accounting/expenses', $this->page_data);
-    }
+    // public function expenses()
+    // {
+    //     $this->page_data['users'] = $this->users_model->getUser(logged('id'));
+    //     $this->page_data['vendors'] = $this->vendors_model->getVendors();
+    //     $this->page_data['checks'] = $this->expenses_model->getCheck();
+    //     $this->page_data['transactions'] = $this->expenses_model->getTransaction();
+    //     $this->page_data['categories'] = $this->expenses_model->getExpenseCategory();
+    //     $this->page_data['bills'] = $this->expenses_model->getBill();
+    //     $this->page_data['vendor_credits'] = $this->expenses_model->getVendorCredit();
+    //     $this->page_data['expenses'] = $this->expenses_model->getExpense();
+    //     $this->page_data['list_categories'] = $this->categories_model->getCategories();
+    //     $this->page_data['attachments'] = $this->expenses_model->getAttachment();
+    //     $this->load->view('accounting/expenses', $this->page_data);
+    // }
     // public function vendors(){
     //     $this->page_data['users'] = $this->users_model->getUser(logged('id'));
     //     $this->page_data['vendors'] = $this->vendors_model->getVendors();

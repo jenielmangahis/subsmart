@@ -2144,14 +2144,14 @@ $("#total_tax2_input").val(subtotaltax.toFixed(2));
 </script>
 
 <script type="text/javascript">
-$(window).on('beforeunload', function(){
-    var c = confirm();
-    if(c){
-        return true;
-    }
-    else
-        return false;
-});
+// $(window).on('beforeunload', function(){
+//     var c = confirm();
+//     if(c){
+//         return true;
+//     }
+//     else
+//         return false;
+// });
 </script>
 
 <script>

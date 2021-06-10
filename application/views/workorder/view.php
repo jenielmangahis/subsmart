@@ -669,43 +669,54 @@ border: none;
 											                </tr>
 											            </thead>
 													            <tbody>
-																<?php if($workorder->work_order_type_id == 1){ ?>
-																<?php foreach($items as $item){ ?>
+																<?php foreach($workorder_items as $item){ ?>
 													                <tr class="table-items__tr">
 													                    <td style="width: 30px; text-align: center;" valign="top">  # </td>
-													                    <td valign="top"> <?php echo $item->item ?>   </td>
+													                    <td valign="top"> <?php echo $item->title; ?>   </td>
 													                    <td style="width: 50px; text-align: right;" valign="top"> <?php echo $item->qty ?>  </td>
-													                    <td style="width: 80px; text-align: right;" valign="top">$<?php echo $item->cost ?></td>
+													                    <td style="width: 80px; text-align: right;" valign="top">$<?php echo $item->costing ?></td>
 													                    <td class="hidden_mobile_view" style="width: 80px; text-align: right;" valign="top">
-													                        <!-- $99.99<br>(62.89%)                     -->
-																			$<?php echo $item->discount ?>
+																			$ 0<?php //echo $item->discount ?>
 																			</td>
 													                    <td class="hidden_mobile_view" style="width: 80px; text-align: right;" valign="top">
-													                        <!-- $4.43<br>(7.5%)                     -->
 																			$<?php echo $item->tax ?>
 																			</td>
-													                    <td style="width: 90px; text-align: right;" valign="top">$<?php echo $item->total ?></td>
+													                    <td style="width: 90px; text-align: right;" valign="top">$<?php $a = $item->qty * $item->cost; $b = $a + $item->tax; echo $b; ?></td>
 													                </tr>
 																	<?php } ?>
-																<?php }else{ ?>
-																	<?php foreach($itemsA as $itemA){ ?>
-													                <tr class="table-items__tr">
+																<?php // if($workorder->work_order_type_id == 1){ ?>
+																<?php //foreach($items as $item){ ?>
+													                <!-- <tr class="table-items__tr">
 													                    <td style="width: 30px; text-align: center;" valign="top">  # </td>
-													                    <td valign="top"> <?php echo $itemA->item ?>   </td>
-													                    <td style="width: 50px; text-align: right;" valign="top"> <?php echo $itemA->qty ?>  </td>
-													                    <td style="width: 80px; text-align: right;" valign="top">$<?php echo $itemA->cost ?></td>
+													                    <td valign="top"> <?php //echo $item->item ?>   </td>
+													                    <td style="width: 50px; text-align: right;" valign="top"> <?php //echo $item->qty ?>  </td>
+													                    <td style="width: 80px; text-align: right;" valign="top">$<?php //echo $item->cost ?></td>
 													                    <td class="hidden_mobile_view" style="width: 80px; text-align: right;" valign="top">
-													                        <!-- $99.99<br>(62.89%)                     -->
-																			$<?php echo $itemA->discount ?>
+																			$<?php //echo $item->discount ?>
 																			</td>
 													                    <td class="hidden_mobile_view" style="width: 80px; text-align: right;" valign="top">
-													                        <!-- $4.43<br>(7.5%)                     -->
-																			$<?php echo $itemA->tax ?>
+																			$<?php //echo $item->tax ?>
 																			</td>
-													                    <td style="width: 90px; text-align: right;" valign="top">$<?php echo $itemA->total ?></td>
-													                </tr>
-																	<?php } ?>
-																<?php } ?>
+													                    <td style="width: 90px; text-align: right;" valign="top">$<?php //echo $item->total ?></td>
+													                </tr> -->
+																	<?php //} ?>
+																<?php // }else{ ?>
+																	<?php //foreach($itemsA as $itemA){ ?>
+													                <!-- <tr class="table-items__tr">
+													                    <td style="width: 30px; text-align: center;" valign="top">  # </td>
+													                    <td valign="top"> <?php //echo $itemA->item ?>   </td>
+													                    <td style="width: 50px; text-align: right;" valign="top"> <?php //echo $itemA->qty ?>  </td>
+													                    <td style="width: 80px; text-align: right;" valign="top">$<?php //echo $itemA->cost ?></td>
+													                    <td class="hidden_mobile_view" style="width: 80px; text-align: right;" valign="top">
+																			$<?php //echo $itemA->discount ?>
+																			</td>
+													                    <td class="hidden_mobile_view" style="width: 80px; text-align: right;" valign="top">
+																			$<?php //echo $itemA->tax ?>
+																			</td>
+													                    <td style="width: 90px; text-align: right;" valign="top">$<?php //echo $itemA->total ?></td>
+													                </tr> -->
+																	<?php //} ?>
+																<?php // } ?>
 													                <tr class="table-items__tr-last">
 													                    <td></td>
 													                    <td colspan="6"></td>

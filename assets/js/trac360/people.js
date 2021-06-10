@@ -146,6 +146,7 @@ $(document).on("click", ".jobs-list-item", function() {
     $("#single-job-view-directionsRenderer-panel").addClass('open');
     $("#job-item-selected-view").html($(this).html());
     $('#single-job-view-directionsRenderer-panel-view').html('');
+    $("#single-job-view-directionsRenderer-panel .estimated-calculation").hide();
 
     $('#map').hide();
     if (!$("#jobs-map").is(":visible")) {
@@ -216,7 +217,19 @@ $(document).on("click", ".jobs-list-item", function() {
                         jobs_map_marker[1].addListener("click", function() {
                             toggleBounce(jobs_map_marker[1]);
                         });
+
                         $(".map-error-message").hide();
+                        $("#single-job-view-directionsRenderer-panel .estimated-calculation").show();
+                        var duration = my_route.legs[0].duration.value / 60;
+                        var variable = "min";
+                        if (duration > 60) {
+                            duration = duration / 60;
+                            variable = "hr";
+                        }
+                        $("#single-job-view-directionsRenderer-panel .estimated-calculation .est.eta .value").html(parseFloat(duration).toFixed(2) + "<br> " + variable);
+                        $("#single-job-view-directionsRenderer-panel  .estimated-calculation .est.distance .value").html(parseFloat(my_route.legs[0].distance.value / 1609.34).toFixed(2) + "<br> mi");
+                        $("#single-job-view-directionsRenderer-panel  .estimated-calculation .est.exp-speed .value").html(parseFloat(((my_route.legs[0].distance.value / 1609.34) / (my_route.legs[0].duration.value / 60 / 60))).toFixed(2) + "<br> mi/hr");
+                        $("#single-job-view-directionsRenderer-panel .estimated-calculation").show();
                     } else {
                         if (jobs_map_marker.length > 0) {
                             for (var i = 0; i < jobs_map_marker.length; i++) {
@@ -247,6 +260,7 @@ $(document).on("click", ".jobs-list-item", function() {
                         $(".map-error-message").html("Directions request failed due to " + status);
                         $(".map-error-message").show();
                     }
+
                 }
             );
 

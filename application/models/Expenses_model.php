@@ -621,4 +621,138 @@ class Expenses_model extends MY_Model
         $query = $this->db->get('accounting_vendor_transaction_items');
         return $query->result();
     }
+
+    public function get_company_expense_transactions($filters = [])
+    {
+        $this->db->where('company_id', logged('company_id'));
+
+        if(isset($filters['start_date']) && isset($filters['end_date'])) {
+            $this->db->where('payment_date >=', $filters['start_date']);
+            $this->db->where('payment_date <=', $filters['end_date']);
+        }
+        
+        if(isset($filters['payee'])) {
+            $this->db->where('payee_type', $filters['payee']['type']);
+            $this->db->where('payee_id', $filters['payee']['id']);
+        }
+
+        if(isset($filters['status'])) {
+            $this->db->where('status', $filters['status']);
+        } else {
+            $this->db->where('status !=', 0);
+        }
+        $query = $this->db->get('accounting_expense');
+        return $query->result();
+    }
+
+    public function get_company_bill_transactions($filters = [])
+    {
+        $this->db->where('company_id', logged('company_id'));
+
+        if(isset($filters['start_date']) && isset($filters['end_date'])) {
+            $this->db->where('bill_date >=', $filters['start_date']);
+            $this->db->where('bill_date <=', $filters['end_date']);
+        }
+
+        if(isset($filters['payee']) && $filters['payee']['type'] === 'vendor') {
+            $this->db->where('vendor_id', $filters['payee']['id']);
+        }
+
+        if(isset($filters['status'])) {
+            $this->db->where('status', $filters['status']);
+        } else {
+            $this->db->where('status !=', 0);
+        }
+        $query = $this->db->get('accounting_bill');
+        return $query->result();
+    }
+
+    public function get_company_check_transactions($filters = [])
+    {
+        $this->db->where('company_id', logged('company_id'));
+
+        if(isset($filters['start_date']) && isset($filters['end_date'])) {
+            $this->db->where('payment_date >=', $filters['start_date']);
+            $this->db->where('payment_date <=', $filters['end_date']);
+        }
+
+        if(isset($filters['payee'])) {
+            $this->db->where('payee_type', $filters['payee']['type']);
+            $this->db->where('payee_id', $filters['payee']['id']);
+        }
+
+        if(isset($filters['status'])) {
+            $this->db->where('status', $filters['status']);
+        } else {
+            $this->db->where('status !=', 0);
+        }
+        $query = $this->db->get('accounting_check');
+        return $query->result();
+    }
+
+    public function get_company_purch_order_transactions($filters = [])
+    {
+        $this->db->where('company_id', logged('company_id'));
+
+        if(isset($filters['start_date']) && isset($filters['end_date'])) {
+            $this->db->where('purchase_order_date >=', $filters['start_date']);
+            $this->db->where('purchase_order_date <=', $filters['end_date']);
+        }
+
+        if(isset($filters['payee']) && $filters['payee']['type'] === 'vendor') {
+            $this->db->where('vendor_id', $filters['payee']['id']);
+        }
+
+        if(isset($filters['status'])) {
+            $this->db->where('status', $filters['status']);
+        } else {
+            $this->db->where('status !=', 0);
+        }
+        $query = $this->db->get('accounting_purchase_order');
+        return $query->result();
+    }
+
+    public function get_company_vendor_credit_transactions($filters = [])
+    {
+        $this->db->where('company_id', logged('company_id'));
+
+        if(isset($filters['start_date']) && isset($filters['end_date'])) {
+            $this->db->where('payment_date >=', $filters['start_date']);
+            $this->db->where('payment_date <=', $filters['end_date']);
+        }
+
+        if(isset($filters['payee']) && $filters['payee']['type'] === 'vendor') {
+            $this->db->where('vendor_id', $filters['payee']['id']);
+        }
+
+        if(isset($filters['status'])) {
+            $this->db->where('status', $filters['status']);
+        } else {
+            $this->db->where('status !=', 0);
+        }
+        $query = $this->db->get('accounting_vendor_credit');
+        return $query->result();
+    }
+
+    public function get_company_cc_payment_transactions($filters = [])
+    {
+        $this->db->where('company_id', logged('company_id'));
+
+        if(isset($filters['start_date']) && isset($filters['end_date'])) {
+            $this->db->where('date >=', $filters['start_date']);
+            $this->db->where('date <=', $filters['end_date']);
+        }
+
+        if(isset($filters['payee']) && $filters['payee']['type'] === 'vendor') {
+            $this->db->where('payee_id', $filters['payee']['id']);
+        }
+
+        if(isset($filters['status'])) {
+            $this->db->where('status', $filters['status']);
+        } else {
+            $this->db->where('status !=', 0);
+        }
+        $query = $this->db->get('accounting_vendor_credit');
+        return $query->result();
+    }
 }

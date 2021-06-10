@@ -260,13 +260,40 @@
                                         <th>Total</th>
                                     </thead>
                                     <tbody>
+                                    <?php foreach($items as $item){ ?>
                                         <tr>
+                                            <td data-column=""><?php echo $item->title; ?></td>
+                                            <td data-column=""><?php echo $item->qty; ?></td>
+                                            <td data-column=""><?php echo $item->costing; ?></td>
+                                            <td data-column=""><?php //echo $item->discount; ?>0</td>
+                                            <td data-column=""><?php echo $item->tax; ?> </td>
+                                            <td data-column=""><?php //echo $item->total; 
+                                            $a = $item->qty * $item->cost; $b = $a + $item->tax; echo $b; ?></td>
+                                        </tr>
+                                        <?php } ?>
+                                        <!-- <tr>
                                             <td data-column="">Residential Smart QSP </td>
                                             <td data-column="">1</td>
                                             <td data-column="">$49.99</td>
                                             <td data-column="">$0.00</td>
                                             <td data-column="">$3.75 </td>
                                             <td data-column="">$53.74</td>
+                                        </tr> -->
+                                        <tr>
+                                            <td data-column="">Subtotal</td>
+                                            <td data-column=""></td>
+                                            <td data-column=""></td>
+                                            <td data-column=""></td>
+                                            <td data-column=""></td>
+                                            <td data-column=""><?php echo $subtotal; ?></td>
+                                        </tr>
+                                        <tr>
+                                            <td data-column="">Taxes</td>
+                                            <td data-column=""></td>
+                                            <td data-column=""></td>
+                                            <td data-column=""></td>
+                                            <td data-column=""></td>
+                                            <td data-column=""><?php echo $taxes; ?></td>
                                         </tr>
                                         <tr>
                                             <td data-column=""><b>Grand Total</b></td>
@@ -274,7 +301,7 @@
                                             <td data-column=""></td>
                                             <td data-column=""></td>
                                             <td data-column=""></td>
-                                            <td data-column=""><b>$53.74</b></td>
+                                            <td data-column=""><b><?php echo $total; ?></b></td>
                                         </tr>
                                     <tbody>
                                 </table>
