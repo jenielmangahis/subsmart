@@ -1460,6 +1460,40 @@ border: none;
                                             <th class="hidden_mobile_view">Total</th>
                                         </tr>
                                         </thead>
+                                        <!-- <tbody id="jobs_items_table_body">
+                                        <tr>
+                                            <td width="30%">
+                                                <input type="text" class="form-control getItems"
+                                                       onKeyup="getItems(this)" name="items[]">
+                                                <ul class="suggestions"></ul>
+                                                <div class="show_mobile_view"><span class="getItems_hidden"></span></div>
+                                                <input type="hidden" name="itemid[]" id="itemid" class="itemid">
+                                            </td>
+                                            <td width="20%">
+                                            <div class="dropdown-wrapper">
+                                                <select name="item_type[]" id="item_typeid" class="form-control">
+                                                    <option value="product">Product</option>
+                                                    <option value="material">Material</option>
+                                                    <option value="service">Service</option>
+                                                    <option value="fee">Fee</option>
+                                                </select>
+                                            </div>
+                                                </td>
+                                            <td width="10%"><input type="number" class="form-control quantity hidden_mobile_view" name="quantity[]"
+                                                       data-counter="0" id="quantity_0" value="1"> <div class="show_mobile_view"><span>1</span><input type="hidden" class="form-control quantity" name="quantity[]"
+                                                       data-counter="0" id="quantity_0" value="1"></div> </td>
+                                            <td width="10%"><input type="number" class="form-control price hidden_mobile_view" name="price[]"
+                                                       data-counter="0" id="price_0" min="0" value="0"> <input type="hidden" class="priceqty" id="priceqty_0"> <div class="show_mobile_view"><span class="price">0</span><input type="hidden" class="form-control price" name="price[]" data-counter="0" id="priceM_0" min="0" value="0"></div><input id="priceM_qty0" value=""  type="hidden" name="price_qty[]" class="form-control hidden_mobile_view price_qty"></td>
+                                            <td width="10%" class="hidden_mobile_view"><input type="number" class="form-control discount" name="discount[]"
+                                                       data-counter="0" id="discount_0" min="0" value="0" ></td>
+                                            <td width="10%" class="hidden_mobile_view"><input type="text" class="form-control tax_change" name="tax[]"
+                                                       data-counter="0" id="tax1_0" min="0" value="0">
+                                                       </td>
+                                            <td width="10%" class="hidden_mobile_view"><input type="hidden" class="form-control " name="total[]"
+                                                       data-counter="0" id="item_total_0" min="0" value="0">
+                                                       $<span id="span_total_0">0.00</span></td>
+                                        </tr>
+                                        </tbody> -->
                                         <tbody id="jobs_items_table_body">
                                         <tr>
                                             <td width="30%">
@@ -1467,6 +1501,7 @@ border: none;
                                                        onKeyup="getItems(this)" name="items[]">
                                                 <ul class="suggestions"></ul>
                                                 <div class="show_mobile_view"><span class="getItems_hidden"></span></div>
+                                                <input type="hidden" name="itemid[]" id="itemid" class="itemid">
                                             </td>
                                             <td width="20%">
                                             <div class="dropdown-wrapper">
@@ -1480,11 +1515,13 @@ border: none;
 
                                             <!-- <div class="show_mobile_view" style="color:green;"><span>Product</span></div> -->
                                                 </td>
-                                            <td width="10%"><input type="number" class="form-control quantity hidden_mobile_view" name="quantity[]"
-                                                       data-counter="0" id="quantity_0" value="1"> <div class="show_mobile_view"><span>1</span><input type="hidden" class="form-control quantity" name="quantity[]"
-                                                       data-counter="0" id="quantity_0" value="1"></div> </td>
+                                            <td width="10%"><input type="number" class="form-control quantity mobile_qty" name="quantity[]"
+                                                       data-counter="0" id="quantity_0" value="1"></td>
                                             <td width="10%"><input type="number" class="form-control price hidden_mobile_view" name="price[]"
-                                                       data-counter="0" id="price_0" min="0" value="0"> <input type="hidden" class="priceqty" id="priceqty_0"> <div class="show_mobile_view"><span class="price">0</span><input type="hidden" class="form-control price" name="price[]" data-counter="0" id="priceM_0" min="0" value="0"></div><input id="priceM_qty0" value=""  type="hidden" name="price_qty[]" class="form-control hidden_mobile_view price_qty"></td>
+                                                       data-counter="0" id="price_0" min="0" value="0"> <input type="hidden" class="priceqty" id="priceqty_0"> 
+                                                       <div class="show_mobile_view"><span class="price">0</span>
+                                                       <!-- <input type="hidden" class="form-control price" name="price[]" data-counter="0" id="priceM_0" min="0" value="0"> -->
+                                                       </div><input id="priceM_qty0" value=""  type="hidden" name="price_qty[]" class="form-control hidden_mobile_view price_qty"></td>
                                             <td width="10%" class="hidden_mobile_view"><input type="number" class="form-control discount" name="discount[]"
                                                        data-counter="0" id="discount_0" min="0" value="0" ></td>
                                             <td width="10%" class="hidden_mobile_view"><input type="text" class="form-control tax_change" name="tax[]"
@@ -1499,6 +1536,8 @@ border: none;
                                     </table>
                                                 <!-- <a href="#" class="btn btn-primary" id="add_another">Add Items</a> -->
                                                 <a class="link-modal-open" href="#" id="add_another_itemss" data-toggle="modal" data-target="#item_list"><span class="fa fa-plus-square fa-margin-right"></span>Add Items</a>
+                                                &emsp;
+                                                <a class="link-modal-open" href="#" id="add_package" data-toggle="modal" data-target=".bd-example-modal-lg"><span class="fa fa-plus-square fa-margin-right"></span>Add Package</a>
                                             </div>
                                         </div><br/>
 
@@ -1523,13 +1562,14 @@ border: none;
                                             <th class="hidden_mobile_view">Total</th>
                                         </tr>
                                         </thead>
-                                        <tbody id="jobs_items_table_body">
+                                        <!-- <tbody id="jobs_items_table_body">
                                         <tr>
                                             <td width="30%">
                                                 <input type="text" class="form-control getItems"
                                                        onKeyup="getItems(this)" name="items[]">
                                                 <ul class="suggestions"></ul>
                                                 <div class="show_mobile_view"><span class="getItems_hidden"></span></div>
+                                                <input type="hidden" name="itemid[]" id="itemid" class="itemid">
                                             </td>
                                             <td width="20%">
                                             <div class="dropdown-wrapper">
@@ -1541,7 +1581,6 @@ border: none;
                                                 </select>
                                             </div>
 
-                                            <!-- <div class="show_mobile_view" style="color:green;"><span>Product</span></div> -->
                                                 </td>
                                             <td width="10%"><input type="number" class="form-control quantity hidden_mobile_view" name="quantity[]"
                                                        data-counter="0" id="quantity_0" value="1"> <div class="show_mobile_view"><span>1</span><input type="hidden" class="form-control quantity" name="quantity[]"
@@ -1552,16 +1591,56 @@ border: none;
                                                        data-counter="0" id="discount_0" min="0" value="0" ></td>
                                             <td width="10%" class="hidden_mobile_view"><input type="text" class="form-control tax_change" name="tax[]"
                                                        data-counter="0" id="tax1_0" min="0" value="0">
-                                                       <!-- <span id="span_tax_0">0.0</span> -->
                                                        </td>
                                             <td width="10%" class="hidden_mobile_view"><input type="hidden" class="form-control " name="total[]"
                                                        data-counter="0" id="item_total_0" min="0" value="0">
                                                        $<span id="span_total_0">0.00</span></td>
                                         </tr>
-                                        </tbody>
-                                    </table>
+                                        </tbody> -->
+                                        <tbody id="jobs_items_table_body">
+                                            <tr>
+                                                <td width="30%">
+                                                    <input type="text" class="form-control getItems"
+                                                        onKeyup="getItems(this)" name="items[]">
+                                                    <ul class="suggestions"></ul>
+                                                    <div class="show_mobile_view"><span class="getItems_hidden"></span></div>
+                                                    <input type="hidden" name="itemid[]" id="itemid" class="itemid">
+                                                </td>
+                                                <td width="20%">
+                                                <div class="dropdown-wrapper">
+                                                    <select name="item_type[]" id="item_typeid" class="form-control">
+                                                        <option value="product">Product</option>
+                                                        <option value="material">Material</option>
+                                                        <option value="service">Service</option>
+                                                        <option value="fee">Fee</option>
+                                                    </select>
+                                                </div>
+
+                                                <!-- <div class="show_mobile_view" style="color:green;"><span>Product</span></div> -->
+                                                    </td>
+                                                <td width="10%"><input type="number" class="form-control quantity mobile_qty" name="quantity[]"
+                                                        data-counter="0" id="quantity_0" value="1"></td>
+                                                <td width="10%"><input type="number" class="form-control price hidden_mobile_view" name="price[]"
+                                                        data-counter="0" id="price_0" min="0" value="0"> <input type="hidden" class="priceqty" id="priceqty_0"> 
+                                                        <div class="show_mobile_view"><span class="price">0</span>
+                                                        <!-- <input type="hidden" class="form-control price" name="price[]" data-counter="0" id="priceM_0" min="0" value="0"> -->
+                                                        </div><input id="priceM_qty0" value=""  type="hidden" name="price_qty[]" class="form-control hidden_mobile_view price_qty"></td>
+                                                <td width="10%" class="hidden_mobile_view"><input type="number" class="form-control discount" name="discount[]"
+                                                        data-counter="0" id="discount_0" min="0" value="0" readonly></td>
+                                                <td width="10%" class="hidden_mobile_view"><input type="text" class="form-control tax_change" name="tax[]"
+                                                        data-counter="0" id="tax1_0" min="0" value="0">
+                                                        <!-- <span id="span_tax_0">0.0</span> -->
+                                                        </td>
+                                                <td width="10%" class="hidden_mobile_view"><input type="hidden" class="form-control " name="total[]"
+                                                        data-counter="0" id="item_total_0" min="0" value="0">
+                                                        $<span id="span_total_0">0.00</span></td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
                                                 <!-- <a href="#" class="btn btn-primary" id="add_another">Add Items</a> -->
                                                 <a class="link-modal-open" href="#" id="add_another_itemss" data-toggle="modal" data-target="#item_list"><span class="fa fa-plus-square fa-margin-right"></span>Add Items</a>
+                                                &emsp;
+                                                <a class="link-modal-open" href="#" id="add_package" data-toggle="modal" data-target=".bd-example-modal-lg"><span class="fa fa-plus-square fa-margin-right"></span>Add Package</a>
                                             </div>
                                         </div><br/>
 
@@ -2561,6 +2640,44 @@ border: none;
                         </div>
                     </div>
                 </div>
+            </div>
+
+            <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Add Package</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body pt-0 pl-3 pb-3">
+                                    <table id="items_table_newWorkorder" class="table table-hover" style="width: 100%;">
+                                        <thead>
+                                        <tr>
+                                            <td> Name</td>
+                                            <td> Action</td>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <?php foreach($packages as $package){ // print_r($item); ?>
+                                            <tr>
+                                                <td><?php echo $package->name; ?></td>
+                                                <td>
+                                                    <button id="<?= $package->item_categories_id ; ?>" type="button" data-dismiss="modal" class="btn btn-sm btn-default select_package"><span class="fa fa-plus"></span> </button>
+                                            </td>
+                                            </tr>
+                                            
+                                        <?php } ?>
+                                        </tbody>
+                                    </table>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
+                        </div>
+                </div>
+            </div>
             </div>
 
              <!-- Modal -->

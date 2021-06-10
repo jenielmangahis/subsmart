@@ -114,12 +114,13 @@ table {
                         </tr>
                         <?php foreach($items as $item){ ?>
                         <tr>
-                            <td data-column=""><?php echo $item->item; ?></td>
+                            <td data-column=""><?php echo $item->title; ?></td>
                             <td data-column=""><?php echo $item->qty; ?></td>
-                            <td data-column=""><?php echo $item->cost; ?></td>
-                            <td data-column=""><?php echo $item->discount; ?></td>
+                            <td data-column=""><?php echo $item->costing; ?></td>
+                            <td data-column=""><?php //echo $item->discount; ?>0</td>
                             <td data-column=""><?php echo $item->tax; ?> </td>
-                            <td data-column=""><?php echo $item->total; ?></td>
+                            <td data-column=""><?php //echo $item->total; 
+                             $a = $item->qty * $item->cost; $b = $a + $item->tax; echo $b; ?></td>
                         </tr>
                         <?php } ?>
                         <tr style="background-color: #F7F4FF !important;">

@@ -469,6 +469,9 @@ $route['accounting/vendors/copy-vendor-credit/(:any)'] = 'accounting_controllers
 $route['accounting/vendors/copy-to-bill/(:any)'] = 'accounting_controllers/vendors/copy_to_bill/$1';
 $route['accounting/vendors/void-transaction/(:any)/(:any)'] = 'accounting_controllers/vendors/void_transaction/$1/$2';
 
+$route['accounting/expenses'] = 'accounting_controllers/expenses/index';
+$route['accounting/expenses/load-transactions']['post'] = 'accounting_controllers/expenses/load_transactions';
+
 $route['accounting/vendor-details/(:any)'] = 'accounting/vendordetails/$1';
 $route['accounting/taxes/edit-settings'] = 'taxes/edit_settings';
 
@@ -918,3 +921,8 @@ $route['admin/add_new_nsmart_plan'] = 'Admin/add_new_plan';
 $route['admin/create_nsmart_plan'] = 'Admin/create_nsmart_plan';
 $route['admin/update_nsmart_plan'] = 'Admin/update_nsmart_plan';
 $route['admin/delete_nsmart_plan'] = 'Admin/delete_nsmart_plan';
+
+//Mycrm
+$route['mycrm/_update_auto_recurring'] = 'Mycrm/company_update_auto_renewal';
+$route['mycrm/_upgrade_subscription'] = 'Mycrm/company_upgrade_subscription';
+$route['mycrm/_pay_subscription'] = 'Mycrm/company_pay_subscription';

@@ -356,6 +356,11 @@
             $profile_data = ['qr_img' => $filename];
             $this->general->update_with_key_field($profile_data, $profile_id,'acs_profile','prof_id');
         }
+
+        public function test_debug(){
+            echo date("Y-m-d", strtotime("+3 months"));
+            exit;
+        }
     }
     /* End of file Debug.php */
 

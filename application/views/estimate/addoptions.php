@@ -2114,14 +2114,14 @@ $(document).on("focusout", ".tax_changeoptions2b", function () {
 </script>
 
 <script type="text/javascript">
-$(window).on('beforeunload', function(){
-    var c = confirm();
-    if(c){
-        return true;
-    }
-    else
-        return false;
-});
+// $(window).on('beforeunload', function(){
+//     var c = confirm();
+//     if(c){
+//         return true;
+//     }
+//     else
+//         return false;
+// });
 </script>
 
 <script>

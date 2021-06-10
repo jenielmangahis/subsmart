@@ -17,10 +17,11 @@ h5.card-title.mb-0, p.card-text.mt-txt {
 .card-deck-upgrades div {
     padding: 20px;
     float: left;
-    width: 33.33%;
+    width: 100%;
 }
 .card-body.align-left {
   width: 100% !important;
+  padding: 0px;
 }
 .card-deck-upgrades div a {
     display: block;
@@ -122,50 +123,27 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                       </div>
                   <div class="col-xl-12">
                       <?php include viewPath('flash'); ?>
-                      <!-- <div class="card">
-                          <div class="card-body">
-                              <p>Add-on Plugins</p>
-                          </div>
-                      </div> -->
-                      <!-- <div class="marketing-card-deck card-deck pl-50 pb-100">
-                          <a href="#" class="card border-gr"> <img
-                                      class="marketing-img" alt="SMS Blast - Flaticons" src="<?php echo base_url('/assets/dashboard/images/online-booking.png') ?>"
-                                      data-holder-rendered="true">
-                              <div class="card-body align-left">
-                                  <h5 class="card-title mb-0">Online Booking</h5>
-                                  <p style="text-align: justify;" class="card-text mt-txt">Set your services with prices and place a booking form on your website and collect leads from your customers.</p>
-                                  <p style="text-align: center;"><strong>Subscribe Now</strong></p>
-                                  <div style="text-align: center;" class="card-price bottom-txt">$0.05/SMS + $5.00 service fee</div>
-                              </div>
-                          </a>
-                      </div> -->
-
-                      <?php  $row = 1;
-                             if($NsmartUpgrades) {  foreach ($NsmartUpgrades as $key => $NsmartUpgrade) { ?>
-
-                             <?php if($row == 1){ ?>
-                               <div class="marketing-card-deck card-deck-upgrades pl-1 pb-30"> <?php } $row++; ?>
+                      <div class="row">                        
+                        <?php foreach ($NsmartUpgrades as $nu) { ?>
+                          <div class="col-md-3 col-sm-12" style="padding: 0px;">
+                            <div class="marketing-card-deck card-deck-upgrades pl-1 pb-30">
                                  <div class="card-container">
-                                    <a href="#" class="card border-gr btn-addon" data-id="<?= $NsmartUpgrade->id; ?>">
-                                        <img class="marketing-img" alt="Add On" src="<?php echo base_url('/assets/img/onboarding/'.$NsmartUpgrade->image_filename) ?>" data-holder-rendered="true">
+                                    <a href="javascript:void(0);" class="card border-gr btn-addon" data-id="<?= $nu->id; ?>">
+                                        <img class="marketing-img" alt="Add On" src="<?php echo base_url('/assets/img/onboarding/'.$nu->image_filename) ?>" data-holder-rendered="true">
                                         <div class="card-body align-left">
-                                            <h5 class="card-title mb-0"><?php echo $NsmartUpgrade->name; ?></h5>
-                                            <p style="text-align: justify;" class="card-text mt-txt"><?php  echo $NsmartUpgrade->description; ?></p>
+                                            <h5 class="card-title mb-0"><?php echo $nu->name; ?></h5>
+                                            <p style="text-align: justify;margin-top: 45px;height: 100px;" class="card-text mt-txt"><?php  echo $nu->description; ?></p>
+                                            <p style="color:#36c12a;text-align: center;font-size: 17px;">
+                                              $<?php  echo $nu->sms_fee; ?>/SMS + $<?php  echo $nu->service_fee; ?> service fee
+                                            </p>
                                             <p style="text-align: center;"><strong>Subscribe Now</strong></p>
-                                            <div style="text-align: center;width:100%;" class="card-price bottom-txt">
-                                              <span style="position: relative;right: 40px;">$<?php  echo $NsmartUpgrade->sms_fee; ?>/SMS + $<?php  echo $NsmartUpgrade->service_fee; ?> service fee</span></div>
                                         </div>
                                     </a>
                                   </div>
-                           <?php if($row == 4){ ?>
-                            </div>
-                          <?php $row = 1; }   ?>
-
-
-                      <?php    }
-                            } ?>
-
-                      <!-- end card -->
+                                </div>
+                          </div>
+                        <?php } ?>
+                      </div>
                   </div>
               </div>
             </div>
@@ -189,8 +167,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             <?php echo form_input(array('name' => 'pid', 'type' => 'hidden', 'value' => '', 'id' => 'pid'));?>
             <div class="modal-body plugin-info-container"></div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
-                <button type="submit" class="btn btn-success">Yes</button>
+                <button type="submit" class="btn btn-success">Add</button>
             </div>
             <?php echo form_close(); ?>
           </div>

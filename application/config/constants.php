@@ -141,3 +141,5 @@ define('MAIL_PORT', 465);
 define('MAIL_USERNAME', 'webmaster@nsmartrac.com');
 define('MAIL_PASSWORD', 'Lol123lol!@#');
 define('MAIL_FROM', 'webmaster@nsmartrac.com');
+
+define('REGISTRATION_MONTHS_DISCOUNTED', 3);

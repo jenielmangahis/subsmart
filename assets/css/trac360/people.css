@@ -411,7 +411,7 @@ div.popup-map-marker:hover h3 {
 
 #single-job-view-directionsRenderer-panel .close-btn {
     position: absolute;
-    left: 0;
+    right: 0;
     z-index: 1;
     cursor: pointer;
     padding: 5px 5px;
@@ -535,4 +535,36 @@ div.popup-map-marker:hover h3 {
 
 #single-job-view-directionsRenderer-panel-view .adp-legal {
     color: #fff;
+}
+
+#single-job-view-directionsRenderer-panel .estimated-calculation {
+    padding-top: 10px;
+}
+
+#single-job-view-directionsRenderer-panel .estimated-calculation .est {
+    color: #565656;
+    background-color: #f7f7f7;
+}
+
+.estimated-calculation .est {
+    border-radius: 50%;
+    height: 100px;
+    width: 100px;
+    padding: 17px 0px;
+    text-align: center;
+    color: #f7f7f7;
+    background-color: #2196F3;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    position: inherit;
+}
+
+.estimated-calculation .est .title {
+    font-size: 12px;
+}
+
+.estimated-calculation .est .value {
+    font-size: 15px;
+    font-weight: bold;
 }

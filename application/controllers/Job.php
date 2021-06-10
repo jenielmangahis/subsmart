@@ -716,7 +716,8 @@ class Job extends MY_Controller
 
         $convergeCred = $this->CompanyOnlinePaymentAccount_model->getByCompanyId();
         if ($convergeCred) {
-            $exp_date = $data['exp_month'] . date("y", strtotime($data['exp_year']));
+            $exp_year = date("m/d/" . $data['exp_year']);
+            $exp_date = $data['exp_month'] . date("y", strtotime($exp_year));
             $converge = new \wwwroth\Converge\Converge([
                 'merchant_id' => $convergeCred->converge_merchant_id,
                 'user_id' => $convergeCred->converge_merchant_user_id,

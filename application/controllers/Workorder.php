@@ -553,6 +553,7 @@ class Workorder extends MY_Controller
 
         $this->page_data['itemsA'] = $this->workorder_model->getItemsAlarm($id);
         $this->page_data['custom_fields'] = $this->workorder_model->getCustomFields($id);
+        $this->page_data['workorder_items'] = $this->workorder_model->getworkorderItems($id);
 
         // $this->page_data['Workorder']->role = $this->roles_model->getByWhere(['id' => $this->page_data['Workorder']->role])[0];
 
@@ -708,6 +709,7 @@ class Workorder extends MY_Controller
         $cliets = $this->workorder_model->get_cliets_data($c_id);
         $customerData = $this->workorder_model->get_customerData_data($p_id);
         $custom = $this->workorder_model->get_custom_data($wo_id);
+        $items = $this->workorder_model->getworkorderItems($wo_id);
 
         $data = array(
             'workorder'             => $workorder,
@@ -733,11 +735,21 @@ class Workorder extends MY_Controller
             'instructions'          => $workData->instructions,
             'date_issued'           => $workData->date_issued,
             'custom'                => $custom,
+            'items'                 => $items,
+
+            'total'                             => $workData->grand_total,
+            'subtotal'                          => $workData->subtotal,
+            'taxes'                             => $workData->taxes,
+            'adjustment_name'                   => $workData->adjustment_name,
+            'adjustment_value'                  => $workData->adjustment_value,
+            'voucher_value'                     => $workData->voucher_value,
+            'otp_setup'                         => $workData->otp_setup,
+            'monthly_monitoring'                => $workData->monthly_monitoring,
             // 'source' => $source
         );
 
-        // $recipient  = "emploucelle@gmail.com";
-        $recipient  = $workData->email;
+        $recipient  = "emploucelle@gmail.com";
+        // $recipient  = $workData->email;
         // $message = "This is a test email";
 
         $message = "<p>This workorder agreement (the 'agreement') is made as of 05-07-2021, by and between ADI Smart Home, (the 'Company') and the ('Customer') as the address shown below (the 'Premise/Service') ";
@@ -1228,7 +1240,8 @@ class Workorder extends MY_Controller
         $customerData = $this->workorder_model->get_customerData_data($p_id);
 
         $customs = $this->workorder_model->get_custom_data($wo_id);
-        $items = $this->workorder_model->getitemsWorkOrder($wo_id);
+        // $items = $this->workorder_model->getitemsWorkOrder($wo_id);
+        $items = $this->workorder_model->getworkorderItems($wo_id);
 
         $data = array(
             'workorder'                         => $workorder,
@@ -1289,7 +1302,7 @@ class Workorder extends MY_Controller
     // $message2 = $this->load->view('workorder/send_email_acs_alarm', $data, true);
     // $filename = $workData->company_representative_signature;
             
-        $filename = "nSmarTrac_work_order_".$wo_id;
+        $filename = "nSmarTrac_work_order_".$wo_id."_standard";
         // $this->load->library('pdf');
         // $this->pdf->load_view('workorder/send_email_acs_alarm', $data, $filename, "portrait");
         $this->load->library('pdf');
@@ -1323,7 +1336,8 @@ class Workorder extends MY_Controller
         $customerData = $this->workorder_model->get_customerData_data($p_id);
 
         $customs = $this->workorder_model->get_custom_data($wo_id);
-        $items = $this->workorder_model->getitemsWorkOrderAlarm($wo_id);
+        // $items = $this->workorder_model->getitemsWorkOrderAlarm($wo_id);
+        $items = $this->workorder_model->getworkorderItems($wo_id);
 
         $data = array(
             'workorder'                         => $workorder,
@@ -1384,7 +1398,7 @@ class Workorder extends MY_Controller
     // $message2 = $this->load->view('workorder/send_email_acs_alarm', $data, true);
     // $filename = $workData->company_representative_signature;
             
-        $filename = "nSmarTrac_work_order_".$wo_id;
+        $filename = "nSmarTrac_work_order_".$wo_id."_alarm";
         // $this->load->library('pdf');
         // $this->pdf->load_view('workorder/send_email_acs_alarm', $data, $filename, "portrait");
         $this->load->library('pdf');
@@ -2869,30 +2883,47 @@ class Workorder extends MY_Controller
             }
 
 
+        // if($addQuery > 0){
+        //     $a = $this->input->post('items');
+        //     $b = $this->input->post('item_type');
+        //     $d = $this->input->post('quantity');
+        //     $f = $this->input->post('price');
+        //     $g = $this->input->post('discount');
+        //     $h = $this->input->post('tax');
+        //     $ii = $this->input->post('total');
+
+        //     $i = 0;
+        //     foreach($a as $row){
+        //         $data['item'] = $a[$i];
+        //         $data['item_type'] = $b[$i];
+        //         $data['qty'] = $d[$i];
+        //         $data['cost'] = $f[$i];
+        //         $data['discount'] = $g[$i];
+        //         $data['tax'] = $h[$i];
+        //         $data['total'] = $ii[$i];
+        //         $data['type'] = 'Work Order';
+        //         $data['type_id'] = $addQuery;
+        //         // $data['status'] = '1';
+        //         $data['created_at'] = date("Y-m-d H:i:s");
+        //         $data['updated_at'] = date("Y-m-d H:i:s");
+        //         $addQuery2 = $this->accounting_invoices_model->additem_details($data);
+        //         $i++;
+        //     }
+
         if($addQuery > 0){
-            $a = $this->input->post('items');
-            $b = $this->input->post('item_type');
-            $d = $this->input->post('quantity');
-            $f = $this->input->post('price');
-            $g = $this->input->post('discount');
-            $h = $this->input->post('tax');
-            $ii = $this->input->post('total');
+            $a          = $this->input->post('itemid');
+            $quantity   = $this->input->post('quantity');
+            $price      = $this->input->post('price');
+            $h          = $this->input->post('tax');
 
             $i = 0;
             foreach($a as $row){
-                $data['item'] = $a[$i];
-                $data['item_type'] = $b[$i];
-                $data['qty'] = $d[$i];
-                $data['cost'] = $f[$i];
-                $data['discount'] = $g[$i];
+                $data['items_id'] = $a[$i];
+                $data['qty'] = $quantity[$i];
+                $data['cost'] = $price[$i];
                 $data['tax'] = $h[$i];
-                $data['total'] = $ii[$i];
-                $data['type'] = 'Work Order';
-                $data['type_id'] = $addQuery;
-                // $data['status'] = '1';
-                $data['created_at'] = date("Y-m-d H:i:s");
-                $data['updated_at'] = date("Y-m-d H:i:s");
-                $addQuery2 = $this->accounting_invoices_model->additem_details($data);
+                $data['work_order_id '] = $addQuery;
+                $addQuery2 = $this->workorder_model->add_work_order_details($data);
                 $i++;
             }
 
@@ -4087,6 +4118,8 @@ class Workorder extends MY_Controller
 
         $this->page_data['items'] = $this->items_model->getItemlist();
         
+        $this->page_data['packages'] = $this->workorder_model->getPackagelist($company_id);
+        
         $this->load->view('workorder/NewworkOrderAlarm', $this->page_data);
     }
 
@@ -4639,30 +4672,49 @@ class Workorder extends MY_Controller
         //     }
 
 
+        // if($addQuery > 0){
+        //     $a = $this->input->post('items');
+        //     $b = $this->input->post('item_type');
+        //     $d = $this->input->post('quantity');
+        //     $f = $this->input->post('price');
+        //     $g = $this->input->post('discount');
+        //     $h = $this->input->post('tax');
+        //     $ii = $this->input->post('total');
+
+        //     $i = 0;
+        //     foreach($a as $row){
+        //         $data['item'] = $a[$i];
+        //         $data['item_type'] = $b[$i];
+        //         $data['qty'] = $d[$i];
+        //         $data['cost'] = $f[$i];
+        //         $data['discount'] = $g[$i];
+        //         $data['tax'] = $h[$i];
+        //         $data['total'] = $ii[$i];
+        //         $data['type'] = 'Work Order Alarm';
+        //         $data['type_id'] = $addQuery;
+        //         // $data['status'] = '1';
+        //         $data['created_at'] = date("Y-m-d H:i:s");
+        //         $data['updated_at'] = date("Y-m-d H:i:s");
+        //         $addQuery2 = $this->accounting_invoices_model->additem_details($data);
+        //         $i++;
+        //     }
+
+        //    redirect('workorder');
+        // }
         if($addQuery > 0){
-            $a = $this->input->post('items');
-            $b = $this->input->post('item_type');
+            $a = $this->input->post('itemid');
             $d = $this->input->post('quantity');
             $f = $this->input->post('price');
-            $g = $this->input->post('discount');
             $h = $this->input->post('tax');
-            $ii = $this->input->post('total');
 
             $i = 0;
             foreach($a as $row){
-                $data['item'] = $a[$i];
-                $data['item_type'] = $b[$i];
+                $data['items_id '] = $a[$i];
+                $data['work_order_id '] = $addQuery;
                 $data['qty'] = $d[$i];
                 $data['cost'] = $f[$i];
-                $data['discount'] = $g[$i];
                 $data['tax'] = $h[$i];
-                $data['total'] = $ii[$i];
-                $data['type'] = 'Work Order Alarm';
-                $data['type_id'] = $addQuery;
-                // $data['status'] = '1';
-                $data['created_at'] = date("Y-m-d H:i:s");
-                $data['updated_at'] = date("Y-m-d H:i:s");
-                $addQuery2 = $this->accounting_invoices_model->additem_details($data);
+                $addQuery2 = $this->workorder_model->add_work_order_details($data);
                 $i++;
             }
 

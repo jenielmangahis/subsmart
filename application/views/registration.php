@@ -298,7 +298,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 				                      			<div class="reg-s1">
 				  						          <h4 class="font-weight-bold pl-0 my-4 sc-pl-2"><strong>Step 1 : Select Plan</strong></h4>
 				  						          <select name="subscription_type" id="subscription_type" class="form-control-dr subscription-type" style="width: 100%;margin: 33px auto;max-width: 380px;">
-				  						          	<option value="prospect">3 months 50% off</option>
+				  						          	<option value="prospect"><?= REGISTRATION_MONTHS_DISCOUNTED; ?> months 50% off</option>
 				  						          	<option value="trial">Free Trial (30 Days)</option>
 				  						          </select>
 				  						          <ul class="plan-list">
@@ -443,7 +443,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 												</div>
 											</div>
 
-		                      			<div class="pl-3 pr-3 float-right">
+		                      			<div class="pl-3 pr-3 float-right">		                      				
 		  						          	<button class="reg-wbtn btn btn-indigo btn-rounded prevBtn" data-key="step-1" type="button">Previous</button>
 		  						          	<button class="reg-wbtn btn btn-indigo btn-rounded nextBtn" data-key="step-3" type="button">Next</button>
 		                      			</div>
@@ -490,8 +490,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 									          	</ul>	
 								          	</div>
 											<a href="javascript:void(0);" class="btn-terms-agreement" style="margin-top: 29px;display: block;">Service Subscription License Agreement</a>
-								      	  </div>
+								      	  </div>								      	  
 								          <button class="btn btn-indigo btn-rounded prevBtn float-left" data-key="step-2" type="button">Previous</button>
+								          <button class="btn btn-indigo btn-rounded trial-register-btn float-left" type="button" style="margin-left: 10px;">Register</button>
 								          <!-- <button type="submit" class="btn btn-default btn-rounded float-right step3-btn-processPayment" data-key="step-4">Proceed to Payment</button> -->
 								        </div>
 							      	</div>
@@ -836,6 +837,9 @@ $(function(){
 
     	if( subscription_type == 'trial' ){
     		$(".total-amount").text("0.00 (Free Trial)");
+    		$("#plan_type").val('trial');
+    		$(".payment-method-container").hide();
+    		$(".trial-register-btn").show();
 
     		//$("#plan_price").val(0);
     		/*step3Container.show(); 
@@ -845,12 +849,13 @@ $(function(){
 	    	$("span.step-2").addClass('btn-indigo');
 
     	}else{
+    		$("#subscription_type").val('discounted');
     		$(".total-amount").text("$" + plan_price_discounted  + " (3 months 50% off)");
+    		$(".payment-method-container").show();
+    		$(".trial-register-btn").hide();
     		step2Container.show();
 	    	$("span.step-2").addClass('btn-indigo');
     	}
-
-
     });
 
     step3bBtnPrcPayment.click(function(e){
@@ -862,6 +867,10 @@ $(function(){
     		$("#step-3").hide();
     		$(".stripe-form").show();
     	}
+   	});
+
+   	$(".trial-register-btn").click(function(){
+   		activate_registration();
    	});
 
     $('div.setup-panel div a.btn-indigo').trigger('click');
@@ -1069,7 +1078,7 @@ $(function(){
         }
     }).render('#paypal-button-container');
 
-    function activate_registration(payment_method){
+    function activate_registration(){
     	$(".payment-method-container").hide();
         var url = base_url + 'registration/_create_registration';
         setTimeout(function () {
@@ -1081,7 +1090,7 @@ $(function(){
 	           success: function(o)
 	           {	
 	           		Swal.fire({
-		                title: 'Payment Successful!',
+		                title: 'Registration Completed!',
 		                text: 'You can now login to your account',
 		                icon: 'success',
 		                showCancelButton: false,

@@ -1101,6 +1101,33 @@ class Workorder_model extends MY_Model
         return $query2->result();
     }
 
+    public function getworkorderItems($id)
+    {
+        // $this->db->select('*');
+		// $this->db->from('work_orders_items');
+		// $this->db->where('work_order_id', $id);
+        // $query = $this->db->get();
+        // $cus = $query->row();
+
+        // $this->db->select('* , work_orders.email AS w_email, work_orders.status AS w_status');
+        // $this->db->from('work_orders');
+        // $this->db->join('acs_profile', 'work_orders.customer_id  = acs_profile.prof_id');
+
+        $this->db->select('*, work_orders_items.cost as costing');
+		$this->db->from('work_orders_items');
+        $this->db->join('items', 'work_orders_items.items_id  = items.id');
+        $this->db->where('work_order_id', $id);
+        $query2 = $this->db->get();
+        return $query2->result();
+    }
+
+    public function add_work_order_details($data)
+    {
+        $vendor = $this->db->insert('work_orders_items', $data);
+	    $insert_id = $this->db->insert_id();
+		return  $insert_id;
+    }
+
     public function getItemsAlarm($id)
     {
         $this->db->select('*');

@@ -186,7 +186,7 @@ var table = $('#vendors-table').DataTable({
     lengthChange: false,
     info: false,
     pageLength: $('#table_rows').val(),
-    order: [[0, 'asc']],
+    order: [[1, 'asc']],
     ajax: {
         url: 'vendors/load/',
         dataType: 'json',

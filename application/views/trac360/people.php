@@ -68,6 +68,31 @@ function get_differenct_of_dates($date_start, $date_end)
               <div id="job-item-selected-view" class="row no-margin">
                 sapmle
               </div>
+              <div class="estimated-calculation" style="">
+                <div class="row no-margin">
+                  <div class="col-md-4">
+                    <div class="est eta">
+                      <span class="title">ATA</span>
+                      <br>
+                      <span class="value">33<br> min</span>
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="est distance">
+                      <span class="title">Distance</span>
+                      <br>
+                      <span class="value">10.89 <br> mi</span>
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="est exp-speed">
+                      <span class="title">Speed</span>
+                      <br>
+                      <span class="value">10.89 <br> mi/hr</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
               <div id="single-job-view-directionsRenderer-panel-view"></div>
             </div>
           </div>

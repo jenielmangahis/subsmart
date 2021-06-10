@@ -31,7 +31,38 @@ class Mycrm extends MY_Controller {
     
     public function membership()
 	{	
+		$this->load->model('Clients_model');
+		$this->load->model('NsmartPlan_model');
+		$this->load->model('SubscriberNsmartUpgrade_model');
+		$this->load->model('CompanySubscriptionPayments_model');
 
+		$company_id = logged('company_id');
+		$client = $this->Clients_model->getById($company_id);
+		$plan   = $this->NsmartPlan_model->getById($client->nsmart_plan_id);
+		$nsPlans  = $this->NsmartPlan_model->getAll(); 
+		$addons   = $this->SubscriberNsmartUpgrade_model->getAllByClientId($client->id);
+		$lastPayment  = $this->CompanySubscriptionPayments_model->getCompanyLastPayment($client->id);
+		$firstPayment = $this->CompanySubscriptionPayments_model->getCompanyFirstPayment($client->id);
+
+		$total_addon_price = 0;
+		foreach($addons as $a){
+			$total_addon_price += $a->service_fee;
+		}
+
+		$date_start = date("Y-m-01");
+		$start_billing_period = date("d-M-Y", strtotime($date_start));
+		$end_billing_period   = date("d-M-Y", strtotime("+1 months ", strtotime($start_billing_period)));
+
+		$this->page_data['lastPayment']  = $lastPayment;
+		$this->page_data['firstPayment'] = $firstPayment;
+		$this->page_data['nsPlans'] = $nsPlans;
+		$this->page_data['start_billing_period'] = $start_billing_period;
+		$this->page_data['end_billing_period'] = $end_billing_period;
+		$this->page_data['total_monthly']      = $plan->price + $total_addon_price;
+		$this->page_data['total_addon_price']  = $total_addon_price;
+		$this->page_data['addons'] = $addons;
+		$this->page_data['plan']   = $plan;
+		$this->page_data['client'] = $client;
 		$this->load->view('mycrm/membership', $this->page_data);
 
     }
@@ -56,6 +87,203 @@ class Mycrm extends MY_Controller {
 		$this->load->view('mycrm/payment_balance', $this->page_data);
 
 	}
+
+	public function company_update_auto_renewal()
+	{
+		$this->load->model('Clients_model');
+
+		$company_id = logged('company_id');
+		$post 		= $this->input->post();
+		if($post['is_active'] == 1){
+			$is_auto_renew = 1;
+		}else{
+			$is_auto_renew = 0;
+		}
+
+		$this->Clients_model->update($company_id, array(
+            'is_auto_renew' => $is_auto_renew
+        ));
+
+        echo json_encode(['is_success' => 1]);
+	}
+
+	public function company_upgrade_subscription()
+	{
+		$this->load->model('Business_model');
+		$this->load->model('NsmartPlan_model');
+		$this->load->model('Clients_model');
+		$this->load->model('CompanySubscriptionPayments_model');
+
+		$is_success = 0;		
+		$message    = '';
+		$company_id = logged('company_id');
+		$post 		= $this->input->post();
+
+		$plan   = $this->NsmartPlan_model->getById($post['plan_id']);
+		if( $plan ){
+			$amount   = $plan->price;
+			$company  = $this->Business_model->getByCompanyId($company_id);
+			$address  = $company->street . " " . $company->city . " " . $company->state;
+			$zip_code = $company->postal_code;
+			$converge_data = [
+                'company_id' => $company->company_id,
+                'amount' => $amount,
+                'card_number' => $post['card_number'],
+                'exp_month' => $post['exp_month'],
+                'exp_year' => $post['exp_year'],
+                'card_cvc' => $post['cvc'],
+                'address' => $address,
+                'zip' => $zip_code
+            ];
+            $result = $this->converge_send_sale($converge_data);
+            if ($result['is_success']) {
+            	$next_billing_date = date("Y-m-d", strtotime("+1 month"));
+            	$data = [           
+	            	'payment_method' => 'converge',     
+	                'plan_date_registered' => date("Y-m-d"),
+	                'plan_date_expiration' => date("Y-m-d", strtotime("+1 month")),                
+	                'date_modified' => date("Y-m-d H:i:s"),
+	                'is_plan_active' => 1,
+	                'nsmart_plan_id' => $plan->nsmart_plans_id,
+	                'is_trial' => 0,
+	                'next_billing_date' => $next_billing_date,
+	                'num_months_discounted' => 0
+            	];
+            	$this->Clients_model->update($company_id, $data);
+
+            	//Record payment
+                $data_payment = [
+                    'company_id' => $company_id,
+                    'description' => 'Paid Membership, Monthly',
+                    'payment_date' => date("Y-m-d"),
+                    'total_amount' => $amount,
+                    'date_created' => date("Y-m-d H:i:s")
+                ];
+
+                $this->CompanySubscriptionPayments_model->create($data_payment);
+
+                $is_success = 1;
+            }else {
+                $message = $result['msg'];
+            }
+		}
+
+		echo json_encode(['is_success' => $is_success, 'message' => $message]);
+
+	}
+
+	public function company_pay_subscription()
+	{
+		$this->load->model('Business_model');
+		$this->load->model('NsmartPlan_model');
+		$this->load->model('Clients_model');
+		$this->load->model('CompanySubscriptionPayments_model');
+
+		$is_success = 0;		
+		$message    = '';
+		$company_id = logged('company_id');
+		$post 		= $this->input->post();
+
+		$client = $this->Clients_model->getById($company_id);
+		$plan   = $this->NsmartPlan_model->getById($client->nsmart_plan_id);
+		if( $plan ){
+			if( $client->num_months_discounted > 0 ){
+				$amount   = $plan->price;
+			}else{
+				$amount   = $plan->discount;	
+			}
+			
+			$company  = $this->Business_model->getByCompanyId($company_id);
+			$address  = $company->street . " " . $company->city . " " . $company->state;
+			$zip_code = $company->postal_code;
+			$converge_data = [
+                'company_id' => $company->company_id,
+                'amount' => $amount,
+                'card_number' => $post['card_number'],
+                'exp_month' => $post['exp_month'],
+                'exp_year' => $post['exp_year'],
+                'card_cvc' => $post['cvc'],
+                'address' => $address,
+                'zip' => $zip_code
+            ];
+            $result = $this->converge_send_sale($converge_data);
+            if ($result['is_success']) {
+            	$num_months_discounted = 0;
+            	if( $client->num_months_discounted > 0 ){
+            		$num_months_discounted = $client->num_months_discounted - 1;	
+            	}
+
+            	$next_billing_date = date("Y-m-d", strtotime("+1 month", strtotime($client->next_billing_date)));
+            	$data = [           
+	            	'payment_method' => 'converge',     
+	                'plan_date_registered' => date("Y-m-d"),
+	                'plan_date_expiration' => date("Y-m-d", strtotime("+1 month")),                
+	                'date_modified' => date("Y-m-d H:i:s"),
+	                'is_plan_active' => 1,
+	                'nsmart_plan_id' => $plan->nsmart_plans_id,
+	                'is_trial' => 0,
+	                'next_billing_date' => $next_billing_date,
+	                'num_months_discounted' => $num_months_discounted
+            	];
+            	$this->Clients_model->update($company_id, $data);
+
+            	//Record payment
+                $data_payment = [
+                    'company_id' => $company_id,
+                    'description' => 'Paid Membership, Monthly',
+                    'payment_date' => date("Y-m-d"),
+                    'total_amount' => $amount,
+                    'date_created' => date("Y-m-d H:i:s")
+                ];
+
+                $this->CompanySubscriptionPayments_model->create($data_payment);
+
+                $is_success = 1;
+            }else {
+                $message = $result['msg'];
+            }
+		}
+
+		echo json_encode(['is_success' => $is_success, 'message' => $message]);
+	}
+
+	public function converge_send_sale($data)
+    {
+    	include APPPATH . 'libraries/Converge/src/Converge.php';
+
+        $this->load->model('CompanyOnlinePaymentAccount_model');
+
+        $is_success = false;
+        $msg = '';
+
+        $exp_year = date("m/d/" . $data['exp_year']);
+        $exp_date = $data['exp_month'] . date("y", strtotime($exp_year));
+        $converge = new \wwwroth\Converge\Converge([
+            'merchant_id' => CONVERGE_MERCHANTID,
+            'user_id' => CONVERGE_MERCHANTUSERID,
+            'pin' => CONVERGE_MERCHANTPIN,
+            'demo' => false,
+        ]);
+        $createSale = $converge->request('ccsale', [
+            'ssl_card_number' => $data['card_number'],
+            'ssl_exp_date' => $exp_date,
+            'ssl_cvv2cvc2' => $data['card_cvc'],
+            'ssl_amount' => $data['amount'],
+            'ssl_avs_address' => $data['address'],
+            'ssl_avs_zip' => $data['zip'],
+        ]);
+
+        if ($createSale['success'] == 1) {
+            $is_success = true;
+            $msg = '';
+        } else {
+            $is_success = false;
+            $msg = $createSale['errorMessage'];
+        }
+
+        $return = ['is_success' => $is_success, 'msg' => $msg];
+        return $return;
+    }
 }
 
 
