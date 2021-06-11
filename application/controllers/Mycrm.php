@@ -80,7 +80,12 @@ class Mycrm extends MY_Controller {
     
     public function orders()
 	{	
+		$this->load->model('CompanySubscriptionPayments_model');
 
+		$company_id = logged('company_id');
+		$payments   = $this->CompanySubscriptionPayments_model->getAllByCompanyId($company_id);
+
+		$this->page_data['payments'] = $payments;
 		$this->load->view('mycrm/order', $this->page_data);
 
     }
@@ -164,7 +169,11 @@ class Mycrm extends MY_Controller {
                     'date_created' => date("Y-m-d H:i:s")
                 ];
 
-                $this->CompanySubscriptionPayments_model->create($data_payment);
+                $id = $this->CompanySubscriptionPayments_model->create($data_payment);
+                $order_number = $this->CompanySubscriptionPayments_model->generateORNumber($id);
+                        
+                $data = ['order_number' => $order_number];
+                $this->CompanySubscriptionPayments_model->update($id, $data);
 
                 $is_success = 1;
             }else {
@@ -240,7 +249,11 @@ class Mycrm extends MY_Controller {
                     'date_created' => date("Y-m-d H:i:s")
                 ];
 
-                $this->CompanySubscriptionPayments_model->create($data_payment);
+                $id = $this->CompanySubscriptionPayments_model->create($data_payment);
+                $order_number = $this->CompanySubscriptionPayments_model->generateORNumber($id);
+                        
+                $data = ['order_number' => $order_number];
+                $this->CompanySubscriptionPayments_model->update($id, $data);
 
                 $is_success = 1;
             }else {
@@ -287,6 +300,42 @@ class Mycrm extends MY_Controller {
 
         $return = ['is_success' => $is_success, 'msg' => $msg];
         return $return;
+    }
+
+    public function company_request_remove_addon(){
+		$this->load->model('SubscriberNsmartUpgrade_model');
+
+		$is_success = 0;
+		$company_id = logged('company_id');
+		$post 		= $this->input->post();
+
+		$addon = $this->SubscriberNsmartUpgrade_model->getAddOnByClientIdAndId($company_id, $post['addon_id']);
+		if( $addon ){
+			$this->SubscriberNsmartUpgrade_model->update($addon->id, ['with_request_removal' => 1]);
+	        $is_success = 1;
+		}
+
+		$json = ['is_success' => $is_success];
+
+		echo json_encode($json);
+    }
+
+    public function company_cancel_remove_addon(){
+		$this->load->model('SubscriberNsmartUpgrade_model');
+
+		$is_success = 0;
+		$company_id = logged('company_id');
+		$post 		= $this->input->post();
+
+		$addon = $this->SubscriberNsmartUpgrade_model->getAddOnByClientIdAndId($company_id, $post['addon_id']);
+		if( $addon ){
+			$this->SubscriberNsmartUpgrade_model->update($addon->id, ['with_request_removal' => 0]);
+	        $is_success = 1;
+		}
+
+		$json = ['is_success' => $is_success];
+
+		echo json_encode($json);
     }
 }
 

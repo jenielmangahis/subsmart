@@ -926,3 +926,5 @@ $route['admin/delete_nsmart_plan'] = 'Admin/delete_nsmart_plan';
 $route['mycrm/_update_auto_recurring'] = 'Mycrm/company_update_auto_renewal';
 $route['mycrm/_upgrade_subscription'] = 'Mycrm/company_upgrade_subscription';
 $route['mycrm/_pay_subscription'] = 'Mycrm/company_pay_subscription';
+$route['mycrm/_request_remove_addon'] = 'Mycrm/company_request_remove_addon';
+$route['mycrm/_cancel_remove_addon'] = 'Mycrm/company_cancel_remove_addon';

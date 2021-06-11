@@ -109,8 +109,16 @@ class Cron_Payment extends MY_Controller {
                             'total_amount' => $amount,
                             'date_created' => date("Y-m-d H:i:s")
                         ];
+                        
+                        $id = $this->CompanySubscriptionPayments_model->create($data_payment);
+                        $order_number = $this->CompanySubscriptionPayments_model->generateORNumber($id);
+                                
+                        $data = ['order_number' => $order_number];
+                        $this->CompanySubscriptionPayments_model->update($id, $data);
 
-                        $this->CompanySubscriptionPayments_model->create($data_payment);
+                        //Request remove addon
+                        $this->SubscriberNsmartUpgrade_model->deleteAllRequestRemovalByClientId($client->id);
+
                     }else{
                         $data = [           
                             //'payment_method' => 'converge',     
@@ -231,7 +239,14 @@ class Cron_Payment extends MY_Controller {
                             'date_created' => date("Y-m-d H:i:s")
                         ];
 
-                        $this->CompanySubscriptionPayments_model->create($data_payment);
+                        $id = $this->CompanySubscriptionPayments_model->create($data_payment);
+                        $order_number = $this->CompanySubscriptionPayments_model->generateORNumber($id);
+                                
+                        $data = ['order_number' => $order_number];
+                        $this->CompanySubscriptionPayments_model->update($id, $data);
+
+                        //Request remove addon
+                        $this->SubscriberNsmartUpgrade_model->deleteAllRequestRemovalByClientId($client->id);
                     }
                 }
             }

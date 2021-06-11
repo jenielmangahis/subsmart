@@ -227,14 +227,30 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 <th>Details</th>
                 <th>Type</th>
                 <th class="text-right">Price</th>
+                <th style="width: 10%;"></th>
             </tr>
         </thead>
         <tbody>
             <?php foreach($addons as $a){ ?>
                 <tr>
-                    <td><?= $a->name; ?></td>
+                    <td>
+                        <?php 
+                            if( $a->with_request_removal == 1 ){
+                                echo $a->name . " " . "<span style='color:#fc0303;'>(Request Removal)</span>";
+                            }else{
+                                echo $a->name;
+                            }
+                        ?>        
+                    </td>
                     <td>monthly <span class="text-ter">(<?= $start_billing_period; ?> <span class="text-ter">&nbsp;to&nbsp;</span> <?= $end_billing_period; ?>)</span></td>
                     <td align="right"><?= number_format($a->service_fee, 2); ?></td>
+                    <td>                        
+                        <?php if( $a->with_request_removal == 1 ){ ?>
+                            <a style="width: 130px;" class="btn-cancel-remove-addon btn btn-sm btn-primary" data-id="<?= $a->id; ?>" data-name="<?= $a->name; ?>" href="javascript:void(0);">Cancel Request</a>
+                        <?php }else{ ?>
+                            <a style="width: 130px;" class="btn-remove-addon btn btn-sm btn-primary" data-id="<?= $a->id; ?>" data-name="<?= $a->name; ?>" href="javascript:void(0);">Request Remove</a>
+                        <?php } ?>
+                    </td>
                 </tr>
             <?php } ?>
         </tbody>
@@ -269,6 +285,49 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         <div class="modal-footer">
             <button class="btn btn-default" type="button" data-dismiss="modal">Close</button>
             <button class="btn btn-primary btn-modal-auto-recurring" type="button">Confirm</button>
+        </div>
+      </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modal-remove-addon" tabindex="-1" role="dialog" aria-labelledby="modalLoadingMsgTitle" aria-hidden="true">
+    <div class="modal-dialog modal-md" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="">Remove Addon</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            <input type="hidden" id="remove_addon_id" value="0">
+            <p>Removing addon will take affect on the next billing.</p>
+            <p>Would you like to proceed removing addon <span class="remove-addon-name" style="font-weight: bold;"></span> ?</p>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-default" type="button" data-dismiss="modal">No</button>
+            <button class="btn btn-primary btn-modal-remove-addon" type="button">Yes</button>
+        </div>
+      </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modal-cancel-remove-addon" tabindex="-1" role="dialog" aria-labelledby="modalLoadingMsgTitle" aria-hidden="true">
+    <div class="modal-dialog modal-md" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="">Cancel Remove Addon</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            <input type="hidden" id="cancel_remove_addon_id" value="0">
+            <p>Would you like to cancel removing addon <span class="cancel-remove-addon-name" style="font-weight: bold;"></span> ?</p>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-default" type="button" data-dismiss="modal">No</button>
+            <button class="btn btn-primary btn-modal-cancel-remove-addon" type="button">Yes</button>
         </div>
       </div>
     </div>
@@ -535,6 +594,24 @@ $(function(){
         $("#modal-auto-recurring").modal('show');
     });
 
+    $(".btn-remove-addon").click(function(){
+        var addon_id = $(this).attr('data-id');
+        var addon_name = $(this).attr('data-name');
+
+        $("#remove_addon_id").val(addon_id);
+        $(".remove-addon-name").html(addon_name)
+        $("#modal-remove-addon").modal('show');
+    });
+
+    $(".btn-cancel-remove-addon").click(function(){
+        var addon_id = $(this).attr('data-id');
+        var addon_name = $(this).attr('data-name');
+
+        $("#cancel_remove_addon_id").val(addon_id);
+        $(".cancel-remove-addon-name").html(addon_name)
+        $("#modal-cancel-remove-addon").modal('show');
+    });
+
     $(".btn-deactivate-auto-renewal").click(function(){
         $("#is_active").val(0);
         $(".on-recurring-renewal-txt").hide();
@@ -545,6 +622,92 @@ $(function(){
     $(".btn-modal-auto-recurring").click(function(){
         var is_active = $("#is_active").val();
         recurring_auto_renewal(is_active);
+    });
+
+    $(".btn-modal-remove-addon").click(function(){
+        var addon_id = $("#remove_addon_id").val();
+        var url = base_url + 'mycrm/_request_remove_addon';
+        $(".btn-modal-remove-addon").html('<span class="spinner-border spinner-border-sm m-0"></span>');
+
+        setTimeout(function () {
+            $.ajax({
+               type: "POST",
+               url: url,
+               dataType: "json",
+               data: {addon_id:addon_id},
+               success: function(o)
+               {
+                    $("#modal-remove-addon").modal('hide'); 
+                    if( o.is_success == 1 ){
+                      
+                      Swal.fire({
+                          title: 'Update Successful!',
+                          text: "Your request for removal of addon was successfully sent",
+                          icon: 'success',
+                          showCancelButton: false,
+                          confirmButtonColor: '#32243d',
+                          cancelButtonColor: '#d33',
+                          confirmButtonText: 'Ok'
+                      }).then((result) => {
+                          if (result.value) {
+                              location.reload();
+                          }
+                      });
+                    }else{
+                      Swal.fire({
+                        icon: 'error',
+                        title: 'Cannot find data',
+                        text: o.message
+                      });
+                    }
+
+                    $(".btn-modal-remove-addon").html('Yes');
+                }
+            });
+        }, 1000);
+    });
+
+    $(".btn-modal-cancel-remove-addon").click(function(){
+        var addon_id = $("#cancel_remove_addon_id").val();
+        var url = base_url + 'mycrm/_cancel_remove_addon';
+        $(".btn-modal-cancel-remove-addon").html('<span class="spinner-border spinner-border-sm m-0"></span>');
+
+        setTimeout(function () {
+            $.ajax({
+               type: "POST",
+               url: url,
+               dataType: "json",
+               data: {addon_id:addon_id},
+               success: function(o)
+               {
+                    $("#modal-cancel-remove-addon").modal('hide'); 
+                    if( o.is_success == 1 ){
+                      
+                      Swal.fire({
+                          title: 'Update Successful!',
+                          text: "Your request for remove addon was successfully cancelled",
+                          icon: 'success',
+                          showCancelButton: false,
+                          confirmButtonColor: '#32243d',
+                          cancelButtonColor: '#d33',
+                          confirmButtonText: 'Ok'
+                      }).then((result) => {
+                          if (result.value) {
+                              location.reload();
+                          }
+                      });
+                    }else{
+                      Swal.fire({
+                        icon: 'error',
+                        title: 'Cannot find data',
+                        text: o.message
+                      });
+                    }
+
+                    $(".btn-modal-cancel-remove-addon").html('Yes');
+                }
+            });
+        }, 1000);
     });
 
     $("#frm-upgrade-subscription").submit(function(e){
@@ -587,7 +750,7 @@ $(function(){
                     $(".btn-modal-upgrade-plan").html('Upgrade');
                 }
             });
-            }, 1000);
+        }, 1000);
     });
 
     $("#frm-pay-subscription").submit(function(e){
