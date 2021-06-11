@@ -279,8 +279,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                                data-toggle="modal"
                                                                                data-target="#modalCloneWorkorder"
                                                                                data-id="<?php echo $workorder->id ?>"
-                                                                               data-wo_num="<?php echo $workorder->work_order_number ?>" class="clone-workorder"><span
-                                                                    class="fa fa-files-o icon clone-workorder">
+                                                                               data-wo_num="<?php echo $workorder->work_order_number ?>" class="clone-workorder">
+                                                                               <span class="fa fa-files-o icon clone-workorder">
 
                                                         </span> Clone Work Order</a>
                                                     </li>

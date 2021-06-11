@@ -624,22 +624,17 @@ class Expenses_model extends MY_Model
 
     public function get_company_expense_transactions($filters = [])
     {
-        $this->db->where('company_id', logged('company_id'));
+        $this->db->where('company_id', $filters['company_id']);
+        $this->db->where('status !=', 0);
 
-        if(isset($filters['start_date']) && isset($filters['end_date'])) {
-            $this->db->where('payment_date >=', $filters['start_date']);
-            $this->db->where('payment_date <=', $filters['end_date']);
+        if(isset($filters['start-date']) && isset($filters['end-date'])) {
+            $this->db->where('payment_date >=', $filters['start-date']);
+            $this->db->where('payment_date <=', $filters['end-date']);
         }
         
         if(isset($filters['payee'])) {
             $this->db->where('payee_type', $filters['payee']['type']);
             $this->db->where('payee_id', $filters['payee']['id']);
-        }
-
-        if(isset($filters['status'])) {
-            $this->db->where('status', $filters['status']);
-        } else {
-            $this->db->where('status !=', 0);
         }
         $query = $this->db->get('accounting_expense');
         return $query->result();
@@ -647,33 +642,45 @@ class Expenses_model extends MY_Model
 
     public function get_company_bill_transactions($filters = [])
     {
-        $this->db->where('company_id', logged('company_id'));
+        $this->db->where('company_id', $filters['company_id']);
 
-        if(isset($filters['start_date']) && isset($filters['end_date'])) {
-            $this->db->where('bill_date >=', $filters['start_date']);
-            $this->db->where('bill_date <=', $filters['end_date']);
+        if(isset($filters['start-date']) && isset($filters['end-date'])) {
+            $this->db->where('bill_date >=', $filters['start-date']);
+            $this->db->where('bill_date <=', $filters['end-date']);
         }
 
         if(isset($filters['payee']) && $filters['payee']['type'] === 'vendor') {
             $this->db->where('vendor_id', $filters['payee']['id']);
         }
 
-        if(isset($filters['status'])) {
-            $this->db->where('status', $filters['status']);
-        } else {
-            $this->db->where('status !=', 0);
+        switch($filters['status']) {
+            case 'open' :
+                $this->db->where('status', 1);
+            break;
+            case 'overdue' :
+                $this->db->where('status', 1);
+                $this->db->where('due_date <', date("Y-m-d"));
+            break;
+            case 'paid' :
+                $this->db->where('status', 2);
+            break;
+            default :
+                $this->db->where('status !=', 0);
+            break;
         }
+
         $query = $this->db->get('accounting_bill');
         return $query->result();
     }
 
     public function get_company_check_transactions($filters = [])
     {
-        $this->db->where('company_id', logged('company_id'));
+        $this->db->where('company_id', $filters['company_id']);
+        $this->db->where('status !=', 0);
 
-        if(isset($filters['start_date']) && isset($filters['end_date'])) {
-            $this->db->where('payment_date >=', $filters['start_date']);
-            $this->db->where('payment_date <=', $filters['end_date']);
+        if(isset($filters['start-date']) && isset($filters['end-date'])) {
+            $this->db->where('payment_date >=', $filters['start-date']);
+            $this->db->where('payment_date <=', $filters['end-date']);
         }
 
         if(isset($filters['payee'])) {
@@ -681,22 +688,17 @@ class Expenses_model extends MY_Model
             $this->db->where('payee_id', $filters['payee']['id']);
         }
 
-        if(isset($filters['status'])) {
-            $this->db->where('status', $filters['status']);
-        } else {
-            $this->db->where('status !=', 0);
-        }
         $query = $this->db->get('accounting_check');
         return $query->result();
     }
 
     public function get_company_purch_order_transactions($filters = [])
     {
-        $this->db->where('company_id', logged('company_id'));
+        $this->db->where('company_id', $filters['company_id']);
 
-        if(isset($filters['start_date']) && isset($filters['end_date'])) {
-            $this->db->where('purchase_order_date >=', $filters['start_date']);
-            $this->db->where('purchase_order_date <=', $filters['end_date']);
+        if(isset($filters['start-date']) && isset($filters['end-date'])) {
+            $this->db->where('purchase_order_date >=', $filters['start-date']);
+            $this->db->where('purchase_order_date <=', $filters['end-date']);
         }
 
         if(isset($filters['payee']) && $filters['payee']['type'] === 'vendor') {
@@ -714,11 +716,11 @@ class Expenses_model extends MY_Model
 
     public function get_company_vendor_credit_transactions($filters = [])
     {
-        $this->db->where('company_id', logged('company_id'));
+        $this->db->where('company_id', $filters['company_id']);
 
-        if(isset($filters['start_date']) && isset($filters['end_date'])) {
-            $this->db->where('payment_date >=', $filters['start_date']);
-            $this->db->where('payment_date <=', $filters['end_date']);
+        if(isset($filters['start-date']) && isset($filters['end-date'])) {
+            $this->db->where('payment_date >=', $filters['start-date']);
+            $this->db->where('payment_date <=', $filters['end-date']);
         }
 
         if(isset($filters['payee']) && $filters['payee']['type'] === 'vendor') {
@@ -736,11 +738,11 @@ class Expenses_model extends MY_Model
 
     public function get_company_cc_payment_transactions($filters = [])
     {
-        $this->db->where('company_id', logged('company_id'));
+        $this->db->where('company_id', $filters['company_id']);
 
-        if(isset($filters['start_date']) && isset($filters['end_date'])) {
-            $this->db->where('date >=', $filters['start_date']);
-            $this->db->where('date <=', $filters['end_date']);
+        if(isset($filters['start-date']) && isset($filters['end-date'])) {
+            $this->db->where('date >=', $filters['start-date']);
+            $this->db->where('date <=', $filters['end-date']);
         }
 
         if(isset($filters['payee']) && $filters['payee']['type'] === 'vendor') {

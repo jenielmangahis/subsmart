@@ -120,7 +120,7 @@ table {
                             <td data-column=""><?php //echo $item->discount; ?>0</td>
                             <td data-column=""><?php echo $item->tax; ?> </td>
                             <td data-column=""><?php //echo $item->total; 
-                             $a = $item->qty * $item->cost; $b = $a + $item->tax; echo $b; ?></td>
+                             $a = $item->qty * $item->costing; $b = $a + $item->tax; echo $b; ?></td>
                         </tr>
                         <?php } ?>
                         <tr style="background-color: #F7F4FF !important;">

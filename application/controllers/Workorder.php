@@ -583,10 +583,12 @@ class Workorder extends MY_Controller
         $this->page_data['customer'] = $this->workorder_model->getcustomerCompanyId($id);
         $this->page_data['job_types'] = $this->workorder_model->getjob_types();
         $this->page_data['items'] = $this->items_model->getItemlist();
-        $this->page_data['items_data'] = $this->items_model->getItemData($id);
+        // $this->page_data['items_data'] = $this->items_model->getItemData($id);
         $this->page_data['custom_fields'] = $this->workorder_model->getCustomFields($id);
         $this->page_data['job_tags'] = $this->workorder_model->getjob_tagsById();
         $this->page_data['lead_source'] = $this->workorder_model->getlead_source($company_id);
+
+        $this->page_data['items_data'] = $this->workorder_model->getworkorderItems($id);
 
         foreach ($this->page_data['workorder'] as $key => $workorder) {
 
@@ -748,8 +750,8 @@ class Workorder extends MY_Controller
             // 'source' => $source
         );
 
-        $recipient  = "emploucelle@gmail.com";
-        // $recipient  = $workData->email;
+        // $recipient  = "emploucelle@gmail.com";
+        $recipient  = $workData->email;
         // $message = "This is a test email";
 
         $message = "<p>This workorder agreement (the 'agreement') is made as of 05-07-2021, by and between ADI Smart Home, (the 'Company') and the ('Customer') as the address shown below (the 'Premise/Service') ";
@@ -3384,31 +3386,50 @@ class Workorder extends MY_Controller
 
 
         // if($addQuery > 0){
-            $a = $this->input->post('items');
-            $b = $this->input->post('item_type');
-            $d = $this->input->post('quantity');
-            $f = $this->input->post('price');
-            $g = $this->input->post('discount');
-            $h = $this->input->post('tax');
-            $ii = $this->input->post('total');
+            // $a = $this->input->post('items');
+            // $b = $this->input->post('item_type');
+            // $d = $this->input->post('quantity');
+            // $f = $this->input->post('price');
+            // $g = $this->input->post('discount');
+            // $h = $this->input->post('tax');
+            // $ii = $this->input->post('total');
 
-            $i = 0;
-            foreach($a as $row){
-                $data['item'] = $a[$i];
-                $data['item_type'] = $b[$i];
-                $data['qty'] = $d[$i];
-                $data['cost'] = $f[$i];
-                $data['discount'] = $g[$i];
-                $data['tax'] = $h[$i];
-                $data['total'] = $ii[$i];
-                $data['type'] = 'Work Order';
-                $data['type_id'] = $id;
-                // $data['status'] = '1';
-                $data['created_at'] = date("Y-m-d H:i:s");
-                $data['updated_at'] = date("Y-m-d H:i:s");
-                $addQuery2 = $this->accounting_invoices_model->additem_details($data);
-                $i++;
-            }
+            // $i = 0;
+            // foreach($a as $row){
+            //     $data['item'] = $a[$i];
+            //     $data['item_type'] = $b[$i];
+            //     $data['qty'] = $d[$i];
+            //     $data['cost'] = $f[$i];
+            //     $data['discount'] = $g[$i];
+            //     $data['tax'] = $h[$i];
+            //     $data['total'] = $ii[$i];
+            //     $data['type'] = 'Work Order';
+            //     $data['type_id'] = $id;
+            //     // $data['status'] = '1';
+            //     $data['created_at'] = date("Y-m-d H:i:s");
+            //     $data['updated_at'] = date("Y-m-d H:i:s");
+            //     $addQuery2 = $this->accounting_invoices_model->additem_details($data);
+            //     $i++;
+            // }
+            // if($addQuery > 0){
+                $a          = $this->input->post('itemid');
+                $quantity   = $this->input->post('quantity');
+                $price      = $this->input->post('price');
+                $h          = $this->input->post('tax');
+    
+                $i = 0;
+                foreach($a as $row){
+                    $data['items_id'] = $a[$i];
+                    $data['qty'] = $quantity[$i];
+                    $data['cost'] = $price[$i];
+                    $data['tax'] = $h[$i];
+                    $data['work_order_id '] = $id;
+                    $addQuery2 = $this->workorder_model->add_work_order_details($data);
+                    $i++;
+                }
+    
+            //    redirect('workorder');
+            // }
 
         //    redirect('workorder');
         // }

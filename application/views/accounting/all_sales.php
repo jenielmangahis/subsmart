@@ -45,9 +45,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 								New Transaction&ensp;<span class="fa fa-caret-down"></span>
 							</button>
 							<div class="dropdown-menu" aria-labelledby="dropNewTraaction">
-								<a class="dropdown-item" href="#" data-toggle="modal" data-target="#add-invoice">Invoice</a>
+								<a class="dropdown-item" href="<?php echo base_url('accounting/addnewInvoice') ?>">Invoice</a>
 								<a class="dropdown-item" href="#" data-toggle="modal" data-target="#receive-payment">Payment</a>
-								<a class="dropdown-item" href="#" data-toggle="modal" data-target="#add-estimate">Estimate</a>
+								<a class="dropdown-item" href="#" data-toggle="modal" data-target="#newJobModal">Estimate</a>
 								<a class="dropdown-item" href="#" data-toggle="modal" data-target="#sales-receipt">Sales Receipt</a>
 								<a class="dropdown-item" href="#" data-toggle="modal" data-target="#credit-memo">Credit Memo</a>
 								<a class="dropdown-item" href="#" data-toggle="modal" data-target="#delayed-charge">Delayed Charge</a>
@@ -131,18 +131,42 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 										</tr>
 										</thead>
 										<tbody>
+                                        <?php foreach ($invoices as $inv):?>
 										<tr>
 											<td><input type="checkbox"></td>
-											<td>06/29/2020</td>
-											<td>Invoice</td>
-											<td>1002</td>
-											<td>John Meyer</td>
-											<td>06/29/2020</td>
-											<td>$32</td>
-											<td>$42</td>
-											<td>Open</td>
-											<td><a href="">View</a></td>
+											<td><?php echo $inv->date_issued; ?></td>
+											<td><?php echo $inv->invoice_type; ?></td>
+											<td><?php echo $inv->invoice_number; ?></td>
+											<td><?php echo $inv->contact_name . '' . $inv->first_name."&nbsp;".$inv->last_name;?></td>
+											<td><?php echo $inv->due_date; ?></td>
+											<td><?php echo $inv->balance; ?></td>
+											<td><?php echo $inv->total_due; ?></td>
+											<td><?php echo $inv->status; ?></td>
+											<td>
+                                            <!-- <a href="">View</a> -->
+
+                                            <div class="dropdown dropdown-btn">
+                                                <a class="dropdown-toggle" type="button" id="dropdown-edit" data-toggle="dropdown" aria-expanded="true">
+                                                    <span class="btn-label">Manage</span><span class="caret-holder"><span class="caret"></span></span>
+                                                </a>
+                                                <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="dropdown-edit">
+                                                    <li role="presentation"><a role="menuitem" tabindex="-1" href="#"><span class="fa fa-file-text-o icon"></span>Send</a></li>
+                                                    <li role="presentation"><a role="menuitem" tabindex="-1" href=""><span class="fa fa-envelope-o icon"></span>Share Invoice Link</a> </li>
+                                                    <li role="separator" class="divider"></li>
+                                                    <li role="presentation"><a role="menuitem" tabindex="-1" href="#" data-toggle="modal" data-target="#modalCloneWorkorder" data-id="" data-name="WO-00433"> <span class="fa fa-print icon"></span>Print Packing Slip</a> </li>
+                                                    <li role="presentation"><a role="menuitem" tabindex="-1" href="#" data-toggle="modal" data-target="#add-invoice" data-convert-to-invoice-modal="open" data-id="161983" data-name="WO-00433"><span class="fa fa-pencil-square-o icon"></span>View/Edit</a> </li>
+                                                    <li role="presentation"> <a role="menuitem" href="#" class=""><span class="fa fa-files-o icon clone-workorder"></span>Copy</a></li>
+                                                    <li role="presentation"> <a role="menuitem" target="_new" href="#" class=""> <span class="fa fa-trash-o icon"></span>Delete</a></li>
+                                                    <li role="presentation"> <a role="menuitem" href="javascript:void(0);" class="btn-send-customer" data-id=""> <span class="fa fa-envelope-open-o icon"></span>Void</a></li>
+                                                    <li><div class="dropdown-divider"></div></li>
+                                                    <!-- <li role="presentation"> <a role="menuitem" href="#" onclick="return confirm('Do you really want to delete this item ?')" data-delete-modal="open"><span class="fa fa-trash-o icon"></span> Delete</a> -->
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                            
+                                            </td>
 										</tr>
+                                        <?php endforeach; ?>
 										</tbody>
 								</table>
 							</div>
@@ -181,9 +205,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 <input type="hidden" id="checkType" class="expenseType" value="Check">
                                 <select name="vendor_id" id="checkVendorID" class="form-control select2-payee">
                                     <option>Select a customer</option>
-                                    <?php foreach ($vendors as $vendor):?>
-                                    <option value="<?php echo $vendor->vendor_id?>"><?php echo $vendor->f_name."&nbsp;".$vendor->l_name;?> </option>
-                                    <?php endforeach; ?>
+                                    <?php foreach ($customers as $customer):?>
+                                        <option value="<?php echo $customer->prof_id?>"><?php echo $customer->contact_name . '' . $customer->first_name."&nbsp;".$customer->last_name;?> </option>
+                                        <?php endforeach; ?>
                                 </select>
                             </div>
                             <div class="col-md-3">
@@ -1579,7 +1603,58 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         </div>
     </div>
 <!--    end of modal-->
+
+<div class="modal fade" id="newEstimateModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">New Estimate</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <!-- <div class="modal-body text-center">
+        <p class="text-lg margin-bottom">
+            What type of estimate you want to create
+        </p>
+        <div class="margin-bottom">
+            <div class="help help-sm">Create a regular estimate with items</div>
+            <a class="btn btn-primary add-modal__btn-primary" href="<?php echo base_url('estimate/add') ?>"><span class="fa fa-file-text-o"></span> Standard Estimate</a>
+        </div>
+        <div class="margin-bottom">
+            <div class="help help-sm">Customers can select all or only certain options</div>
+            <a class="btn btn-primary add-modal__btn-primary" href="<?php echo base_url('estimate/add?type=2') ?>"><span class="fa fa-list-ul fa-margin-right"></span> Options Estimate</a>
+        </div>
+        <div>
+            <div class="help help-sm">Customers can select only one package</div>
+            <a class="btn btn-primary add-modal__btn-primary" href="<?php echo base_url('estimate/add?type=3') ?>"><span class="fa fa-cubes"></span> Packages Estimate</a>
+        </div>
+      </div> -->
+      <div class="modal-body text-center">
+        <p class="text-lg margin-bottom">
+            What type of estimate you want to create
+        </p><center>
+        <div class="margin-bottom text-center" style="width:60%;">
+            <div class="help help-sm">Create a regular estimate with items</div>
+            <a class="btn btn-primary add-modal__btn-success" style="background-color: #2ab363 !important" href="<?php echo base_url('estimate/add') ?>"><span class="fa fa-file-text-o"></span> Standard Estimate</a>
+        </div>
+        <div class="margin-bottom" style="width:60%;">
+            <div class="help help-sm">Customers can select all <br>or only certain options</div>
+            <a class="btn btn-primary add-modal__btn-success" style="background-color: #2ab363 !important" href="<?php echo base_url('estimate/addoptions?type=2') ?>"><span class="fa fa-list-ul fa-margin-right"></span> Options Estimate</a>
+        </div>
+        <div  class="margin-bottom" style="width:60%;">
+            <div class="help help-sm">Customers can select both Bundle Packages to obtain an overall discount</div>
+            <a class="btn btn-primary add-modal__btn-success" style="background-color: #2ab363 !important" href="<?php echo base_url('estimate/addbundle?type=3') ?>"><span class="fa fa-cubes"></span> Bundle Estimate</a>
+        </div></center>
+      </div>
+      <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+    </div>
+</div>
+
 <?php include viewPath('includes/footer_accounting'); ?>
+<?php include viewPath('accounting/estimate_one_modal'); ?>
 
 <script>
 

@@ -10,6 +10,7 @@ class Expenses extends MY_Controller {
         $this->load->model('expenses_model');
         $this->load->model('accounting_customers_model');
         $this->load->model('vendors_model');
+        $this->load->model('accounting_payment_methods_model');
 
         add_css(array(
             "assets/css/accounting/banking.css?v='rand()'",
@@ -115,14 +116,199 @@ class Expenses extends MY_Controller {
         $column = $post['order'][0]['column'];
         $order = $post['order'][0]['dir'];
         $columnName = $post['columns'][$column]['name'];
-        $type = $post['type'];
-        $date = $post['date'];
 
-        $filters = [
-            'type' => $type
+        $filters = $this->set_filters($post);
+
+        $data = $this->get_transactions($filters);
+
+        usort($data, function($a, $b) use ($order, $columnName) {
+            if($columnName !== 'date') {
+                if($columnName !== 'type') {
+                    if($order === 'asc') {
+                        return strcmp($a[$columnName], $b[$columnName]) && strcmp($a['type'], $b['type']);
+                    } else {
+                        return strcmp($b[$columnName], $a[$columnName]) && strcmp($a['type'], $b['type']);
+                    }
+                } else {
+                    if($order === 'asc') {
+                        return strcmp($a[$columnName], $b[$columnName]);
+                    } else {
+                        return strcmp($b[$columnName], $a[$columnName]);
+                    }
+                }
+            } else {
+                if($order === 'asc') {
+                    return strtotime($a[$columnName]) > strtotime($b[$columnName]) && strcmp($a['type'], $b['type']);
+                } else {
+                    return strtotime($a[$columnName]) < strtotime($b[$columnName]) && strcmp($a['type'], $b['type']);
+                }
+            }
+        });
+
+        $result = [
+            'draw' => $post['draw'],
+            'recordsTotal' => count($data),
+            'recordsFiltered' => count($data),
+            'data' => array_slice($data, $start, $limit)
         ];
 
-        switch($date) {
+        echo json_encode($result);
+    }
+
+    private function get_transactions($filters)
+    {
+        switch($filters['type']) {
+            case 'all' :
+                if($filters['status'] === 'all') {
+                    $expenses = $this->expenses_model->get_company_expense_transactions($filters);
+                }
+                if(!isset($filters['payee']) || $filters['payee']['type'] === 'vendor') {
+                    $bills = $this->expenses_model->get_company_bill_transactions($filters);
+                }
+                if($filters['status'] === 'all') {
+                    $checks = $this->expenses_model->get_company_check_transactions($filters);
+                }
+            break;
+        }
+
+        $transactions = [];
+        if(isset($expenses) && count($expenses) > 0) {
+            foreach($expenses as $expense) {
+                if(!is_null($expense->attachments) && $expense->attachments !== "") {
+                    $attachments = count(json_decode($expense->attachments, true));
+                } else {
+                    $attachments = '';
+                }
+
+                switch($expense->payee_type) {
+                    case 'vendor' :
+                        $payee = $this->vendors_model->get_vendor_by_id($expense->payee_id);
+                        $payeeName = $payee->display_name;
+                    break;
+                    case 'customer' :
+                        $payee = $this->accounting_customers_model->get_customer_by_id($expense->payee_id);
+                        $payeeName = $payee->first_name . ' ' . $payee->last_name;
+                    break;
+                    case 'employee' : 
+                        $payee = $this->users_model->getUser($expense->payee_id);
+                        $payeeName = $payee->FName . ' ' . $payee->LName;
+                    break;
+                }
+
+                $method = $this->accounting_payment_methods_model->getById($expense->payment_method_id);
+
+                $transactions[] = [
+                    'id' => $expense->id,
+                    'date' => date("m/d/Y", strtotime($expense->payment_date)),
+                    'type' => 'Expense',
+                    'number' => $expense->ref_no,
+                    'payee' => $payeeName,
+                    'method' => $method->name,
+                    'source' => '',
+                    'category' => $this->category_col($expense->id, 'Expense'),
+                    'memo' => $expense->memo,
+                    'due_date' => '',
+                    'balance' => '$0.00',
+                    'total' => '$'.number_format(floatval($expense->total_amount), 2, '.', ','),
+                    'status' => $expense->status === "1" ? 'Paid' : 'Voided',
+                    'attachments' => $attachments
+                ];
+            }
+        }
+
+        if(isset($bills) && count($bills) > 0) {
+            foreach($bills as $bill) {
+                if(!is_null($bill->attachments) && $bill->attachments !== "") {
+                    $attachments = count(json_decode($bill->attachments, true));
+                } else {
+                    $attachments = '';
+                }
+
+                $payee = $this->vendors_model->get_vendor_by_id($bill->vendor_id);
+
+                $transactions[] = [
+                    'id' => $bill->id,
+                    'date' => date("m/d/Y", strtotime($bill->bill_date)),
+                    'type' => 'Bill',
+                    'number' => $bill->bill_no,
+                    'payee' => $payee->display_name,
+                    'method' => '',
+                    'source' => '',
+                    'category' => $this->category_col($bill->id, 'Bill'),
+                    'memo' => $bill->memo,
+                    'due_date' => '',
+                    'balance' => '$'.number_format(floatval($bill->remaining_balance), 2, '.', ','),
+                    'total' => '$'.number_format(floatval($bill->total_amount), 2, '.', ','),
+                    'status' => $bill->status === "2" ? "Paid" : "Open",
+                    'attachments' => $attachments
+                ];
+            }
+        }
+
+        if(isset($checks) && count($checks) > 0) {
+            foreach($checks as $check) {
+                if(!is_null($check->attachments) && $check->attachments !== "") {
+                    $attachments = count(json_decode($check->attachments, true));
+                } else {
+                    $attachments = '';
+                }
+
+                switch($check->payee_type) {
+                    case 'vendor' :
+                        $payee = $this->vendors_model->get_vendor_by_id($check->payee_id);
+                        $payeeName = $payee->display_name;
+                    break;
+                    case 'customer' :
+                        $payee = $this->accounting_customers_model->get_customer_by_id($check->payee_id);
+                        $payeeName = $payee->first_name . ' ' . $payee->last_name;
+                    break;
+                    case 'employee' : 
+                        $payee = $this->users_model->getUser($check->payee_id);
+                        $payeeName = $payee->FName . ' ' . $payee->LName;
+                    break;
+                }
+
+                $transactions[] = [
+                    'id' => $check->id,
+                    'date' => date("m/d/Y", strtotime($check->payment_date)),
+                    'type' => 'Check',
+                    'number' => $check->check_no,
+                    'payee' => $payeeName,
+                    'method' => '',
+                    'source' => '',
+                    'category' => $this->category_col($check->id, 'Check'),
+                    'memo' => $check->memo,
+                    'due_date' => '',
+                    'balance' => '$0.00',
+                    'total' => '$'.number_format(floatval($check->total_amount), 2, '.', ','),
+                    'status' => $check->status === "1" ? "Paid" : "Voided",
+                    'attachments' => $attachments
+                ];
+            }
+        }
+
+        return $transactions;
+    }
+
+    private function set_filters($post)
+    {
+        $filters = [
+            'company_id' => logged('company_id'),
+            'type' => $post['type'],
+            'status' => $post['status'],
+            'delivery_method' => $post['delivery_method'],
+            'category' => $post['category']
+        ];
+
+        if($post['payee'] !== 'all') {
+            $payee = explode('-', $post['payee']);
+            $filters['payee'] = [
+                'type' => $payee[0],
+                'id' => $payee[1]
+            ];
+        }
+
+        switch($post['date']) {
             case 'today' :
                 $filters['start-date'] = date("Y-m-d");
                 $filters['end-date'] = date("Y-m-d");
@@ -213,5 +399,87 @@ class Expenses extends MY_Controller {
                 $filters['end-date'] = date("Y-m-d", strtotime($post['to_date']));
             break;
         }
+
+        return $filters;
+    }
+
+    private function category_col($transactionId, $transactionType)
+    {
+        $categories = $this->expenses_model->get_transaction_categories($transactionId, $transactionType);
+        $items = $this->expenses_model->get_transaction_items($transactionId, $transactionType);
+
+        $totalCount = count($categories) + count($items);
+
+        if($totalCount > 1) {
+            $category = '-Split-';
+        } else {
+            if($totalCount === 1) {
+                if(count($categories) === 1 && count($items) === 0) {
+                    $expenseAcc = $categories[0]->expense_account_id;
+
+                    $accountTypes = [
+                        'Expenses',
+                        'Bank',
+                        'Accounts receivable (A/R)',
+                        'Other Current Assets',
+                        'Fixed Assets',
+                        'Accounts payable (A/P)',
+                        'Credit Card',
+                        'Other Current Liabilities',
+                        'Long Term Liabilities',
+                        'Equity',
+                        'Income',
+                        'Cost of Goods Sold',
+                        'Other Income',
+                        'Other Expense'
+                    ];
+
+                    $category = '<select class="form-control" name="category[]">';
+
+                    foreach($accountTypes as $typeName) {
+                        $accType = $this->account_model->getAccTypeByName($typeName);
+
+                        $accounts = $this->chart_of_accounts_model->getByAccountType($accType->id, null, logged('company_id'));
+
+                        if(count($accounts) > 0) {
+                            $category .= '<optgroup label="'.$typeName.'">';
+                            foreach($accounts as $account) {
+                                $childAccs = $this->chart_of_accounts_model->getChildAccounts($account->id);
+
+                                if($account->id === $expenseAcc) {
+                                    $category .= '<option value="'.$account->id.'" selected>'.$account->name.'</option>';
+                                } else {
+                                    $category .= '<option value="'.$account->id.'">'.$account->name.'</option>';
+                                }
+
+                                if(count($childAccs) > 0) {
+                                    $category .= '<optgroup label="&nbsp;&nbsp;&nbsp;Sub-account of '.$account->name.'">';
+
+                                    foreach($childAccs as $childAcc) {
+                                        if($childAcc->id === $expenseAcc) {
+                                            $category .= '<option value="'.$childAcc->id.'" selected>&nbsp;&nbsp;&nbsp;'.$childAcc->name.'</option>';
+                                        } else {
+                                            $category .= '<option value="'.$childAcc->id.'">&nbsp;&nbsp;&nbsp;'.$childAcc->name.'</option>';
+                                        }
+                                    }
+
+                                    $category .= '</optgroup>';
+                                }
+                            }
+                            $category .= '</optgroup>';
+                        }
+                    }
+
+                    $category .= '</select>';
+                } else {
+                    $itemId = $items[0]->item_id;
+                    $itemAccDetails = $this->items_model->getItemAccountingDetails($itemId);
+                    $expenseAcc = $itemAccDetails->inv_asset_acc_id;
+                    $category = $this->chart_of_accounts_model->getName($expenseAcc);
+                }
+            }
+        }
+
+        return $category;
     }
 }

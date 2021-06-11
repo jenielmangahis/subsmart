@@ -299,3 +299,7 @@
         color: #565656;
         background-color: #f7f7f7;
     }
+    
+    #from_external_html {
+        display: none;
+    }

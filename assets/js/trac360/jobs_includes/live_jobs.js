@@ -103,7 +103,7 @@ function get_live_job_last_track_location(customer_address, office_address) {
                     autoclockout_checker_loop = setInterval(function() {
                         get_live_job_last_track_location(customer_address, office_address);
                         clearInterval(autoclockout_checker_loop);
-                    }, 5000);
+                    }, 1000);
                     if (live_last_route_id != data.last_route_id) {
                         $(".trac360-live-jobs-modal .route-details-setion .route-details-table .tbody").html(data.html);
                         live_last_route_id = data.last_route_id;

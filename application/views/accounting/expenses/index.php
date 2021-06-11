@@ -198,7 +198,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                             <div class="form-group">
                                                                 <label for="payee">Payee</label>
                                                                 <select id="payee" class="form-control">
-                                                                    <option value="">All</option>
+                                                                    <option value="all">All</option>
                                                                     <?php if(count($dropdown['vendors']) > 0) : ?>
                                                                     <optgroup label="Vendors">
                                                                     <?php foreach($dropdown['vendors'] as $vendor) : ?>
@@ -227,7 +227,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                             <div class="form-group">
                                                                 <label for="category">Category</label>
                                                                 <select id="category" class="form-control">
-                                                                    <option value="">All</option>
+                                                                    <option value="all">All</option>
                                                                     <?php foreach($dropdown['categories'] as $accType => $accounts) : ?>
                                                                         <optgroup label="<?=$accType?>">
                                                                             <?php foreach($accounts as $account) : ?>
@@ -307,7 +307,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                 <option value="300">300</option>
                                                             </select>
                                                         </p>
-                                                        <p class="m-0"><input type="checkbox" id="compact-table" checked> Compact</p>
+                                                        <p class="m-0"><input type="checkbox" id="compact-table"> Compact</p>
                                                     </div>
                                                 </li>
                                             </ul>
@@ -336,7 +336,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             <th>TOTAL</th>
                                             <th>STATUS</th>
                                             <th class="text-center attachments"><i class="fa fa-paperclip"></i></th>
-                                            <th class="text-right">Action</th>
+                                            <th class="text-right">ACTION</th>
                                         </tr>
 									</thead>
 									<tbody class="cursor-pointer"></tbody>

@@ -58,9 +58,11 @@
                                 </div>
                                 <div class="col-lg-2 float-right" style="margin-top:40px !important; ">
                                     <img style="position: absolute;width: 40px;" src="<?= base_url() ?>uploads/users/user-profile/<?= $jb->profile_img; ?>" onerror="this.onerror=null;this.src='<?= base_url() ?>uploads/users/default.png';" alt="user" class="rounded-circle nav-user-img vertical-center">
+                                    <?php if( customerQrCode($jb->prof_id) ){ ?>
+                                        <img src="<?= customerQrCode($jb->prof_id); ?>" style="position: absolute;top: 67px;left: 3px;" />
+                                    <?php } ?>
                                 </div>
                             </div>
-
                             <?php
                         endforeach;
                     }else{

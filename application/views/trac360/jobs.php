@@ -380,7 +380,11 @@ function get_differenct_of_dates($date_start, $date_end)
 </div>
 <?php include viewPath('trac360/calendar'); ?>
 <?php include viewPath('trac360/jobs_includes/live-jobs-modal'); ?>
-
+<div id="from_external_html">
+    <div id="external_upcoming_job">
+        <?=$external_job_item_selected_view_html?>
+    </div>
+</div>
 <!--</div>-->
 <!-- end container-fluid -->
 <!-- </div> -->
@@ -407,6 +411,13 @@ function get_differenct_of_dates($date_start, $date_end)
         $("#jobs-map").show();
         initLiveMap();
     }
+    $(document).ready(function() {
+        <?php
+            if ($external_job_selcted == true) {
+                echo 'external_jobs_list_item_clicked('.$external_job_id.', '.$external_employee_id.', "'.$external_employee_name.'", $("#external_upcoming_job").html(), "'.$item_address.'", "'.$item_job_title.'", "'.$item_office_address.'", "'.$item_business_name.'");';
+            }
+        ?>
+    });
 </script>
 <script
     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBg27wLl6BoSPmchyTRgvWuGHQhUUHE5AU&callback=initMap&libraries=&v=weekly"

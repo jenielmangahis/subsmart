@@ -17,6 +17,7 @@
         });
 
         // hide default
+        $("#print_invoice").hide("slow");
         $("#payment_collected").hide("slow");
         $("#day_of_month").hide("slow");
         $("#account_number").hide("slow");
@@ -55,6 +56,7 @@
         }else if(method === 'Invoicing'){
             hide_all();
             $(".invoicing_field").show("slow");
+            $("#print_invoice").show("slow");
         }
         console.log(method);
     });

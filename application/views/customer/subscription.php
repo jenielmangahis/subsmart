@@ -426,7 +426,12 @@ add_css(array(
                                                                 <td><?= $detail->method; ?></td>
                                                                 <td><?= $detail->transaction_type; ?></td>
                                                                 <td><?= $detail->frequency; ?></td>
-                                                                <td><?= $detail->status; ?></td>
+                                                                <td>
+                                                                    <div class="material-switch">
+                                                                        <input id="someSwitchOptionDanger<?=$detail->id?>" name="someSwitchOption001" type="checkbox" checked/>
+                                                                        <label for="someSwitchOptionDanger<?=$detail->id?>" class="label-danger"></label>
+                                                                    </div>
+                                                                </td>
                                                             </tr>
                                                             <?php
                                                         endforeach;
@@ -454,7 +459,53 @@ add_css(array(
         ));
         ?>
         <?php include viewPath('includes/footer'); ?>
+    <style>
+        .material-switch > input[type="checkbox"] {
+            display: none;
+        }
+
+        .material-switch > label {
+            cursor: pointer;
+            height: 0;
+            position: relative;
+            width: 40px;
+        }
+
+        .material-switch > label::before {
+            background-color: #32243d;
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
+            border-radius: 8px;
+            content: '';
+            height: 16px;
+            margin-top: -8px;
+            position:absolute;
+            opacity: 0.3;
+            transition: all 0.4s ease-in-out;
+            width: 40px;
+        }
+        .material-switch > label::after {
+            background-color: #b7bdba;
+            border-radius: 16px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+            content: '';
+            height: 24px;
+            left: -4px;
+            margin-top: -8px;
+            position: absolute;
+            top: -4px;
+            transition: all 0.3s ease-in-out;
+            width: 24px;
+        }
+        .material-switch > input[type="checkbox"]:checked + label::before {
+            background: inherit;
+            opacity: 0.5;
+        }
+        .material-switch > input[type="checkbox"]:checked + label::after {
+            background: inherit;
+            left: 20px;
+            background-color: #32243d;
+        }
+    </style>
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-timepicker/0.5.2/js/bootstrap-timepicker.min.js" integrity="sha512-2xXe2z/uA+2SyT/sTSt9Uq4jDKsT0lV4evd3eoE/oxKih8DSAsOF6LUb+ncafMJPAimWAXdu9W+yMXGrCVOzQA==" crossorigin="anonymous"></script>
-
         <?php include viewPath('customer/js/subscription_js'); ?>
