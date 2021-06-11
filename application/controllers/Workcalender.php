@@ -951,8 +951,6 @@ class Workcalender extends MY_Controller
                         $bgcolor = $cl->backgroundColor;
                     }
 
-
-
                     foreach ($events->items as $event) {
                         $gevent = $this->event_model->getEventByGoogleEventId($event->id);
 
@@ -969,7 +967,7 @@ class Workcalender extends MY_Controller
                                 $date = new DateTime($event->start->dateTime);
                                 $date->setTimezone($tz);
 
-                                $start_date = $date->format('Y-m-d H:i:s');
+                                $start_date = $date->format('Y-m-d');
                                 $custom_html_start_date = $date->format('g:i a');
                                 $starttime = $start_date . ' ' . $date->format('g:i a');
                                 $is_with_time = true;
@@ -977,7 +975,7 @@ class Workcalender extends MY_Controller
                                 $date = new DateTime($event->start->date);
                                 $date->setTimezone($tz);
 
-                                $start_date = $date->format('Y-m-d') . " 12:00 am";
+                                $start_date = $date->format('Y-m-d') . " 00:00";
                                 $starttime  = $start_date . ' ' . date("g:i A");
                                 $custom_html_start_date = $date->format('Y-m-d');
                             }
@@ -986,7 +984,7 @@ class Workcalender extends MY_Controller
                                 $date = new DateTime($event->end->dateTime);
                                 $date->setTimezone($tz);
                                 //$end_date = $event->end->dateTime;
-                                $end_date = $date->format('Y-m-d H:i:s');
+                                $end_date = $date->format('Y-m-d');
 
                                 $custom_html_end_date = $date->format('g:i a');
                                 $start_time = $date->format('g:i a');
@@ -995,7 +993,7 @@ class Workcalender extends MY_Controller
                                 $date = new DateTime($event->end->date);
                                 $date->setTimezone($tz);
 
-                                $end_date = $date->format('Y-m-d') . " 12:00 am";
+                                $end_date = $date->format('Y-m-d') . " 23:59";
                                 $custom_html_end_date = $date->format('Y-m-d');
                             }
 
@@ -1030,6 +1028,10 @@ class Workcalender extends MY_Controller
                 }
             }
         }
+
+        /*echo "<pre>";
+        print_r($resources_user_events);
+        exit;*/
 
         //Jobs
         $jobs = $this->Jobs_model->get_all_jobs();
@@ -1086,7 +1088,7 @@ class Workcalender extends MY_Controller
         }
 
         //Deals Booking
-        $bookings = $this->DealsBookings_model->getAllByCompanyId($company_id);
+        /*$bookings = $this->DealsBookings_model->getAllByCompanyId($company_id);
         foreach( $bookings as $b ){
 
             $custom_html  = "<i class='fa fa-calendar'></i> " . date("Y-m-d g:i A", strtotime($b->date_created)) . "<br />";
@@ -1104,7 +1106,7 @@ class Workcalender extends MY_Controller
             $resources_user_events[$inc]['backgroundColor'] = '#42b9f5';
 
             $inc++;
-        }
+        }*/
 
         echo json_encode($resources_user_events);
     }
@@ -1453,16 +1455,16 @@ class Workcalender extends MY_Controller
             date_default_timezone_set($settings['calendar_timezone']);
         }
 
+        $company_id = logged('company_id');
         $role_id = logged('role');
         if ($role_id == 1 || $role_id == 2) {
             $upcoming_events = $this->event_model->getAllUpComingEvents();
         } else {
-            $company_id = logged('company_id');
             $upcoming_events = $this->event_model->getAllUpComingEventsByCompanyId($company_id);
         }
 
         //Google Events
-        $settings = $this->settings_model->getByWhere(['key' => DB_SETTINGS_TABLE_KEY_SCHEDULE]);
+        $settings = $this->settings_model->getByWhere(['key' => DB_SETTINGS_TABLE_KEY_SCHEDULE, 'company_id' => $company_id]);
         $a_settings = unserialize($settings[0]->value);
         if ($a_settings) {
             $user_timezone = $a_settings['calendar_timezone'];
@@ -1549,34 +1551,28 @@ class Workcalender extends MY_Controller
                     if (empty($gevent)) {
                         if ($event->start->timeZone != '') {
                             $tz = new DateTimeZone($event->start->timeZone);
-                            $timezone = $event->start->timeZone;
                         } else {
                             $tz = new DateTimeZone($user_timezone);
-                            $timezone = $user_timezone;
                         }
 
                         if ($event->start->dateTime != '') {
                             $date = new DateTime($event->start->dateTime);
                             $date->setTimezone($tz);
-
-                            $start_date = $date->format('Y-m-d H:i:s');
+                            $start_date = $date->format('Y-m-d g:i a');
                         } else {
                             $date = new DateTime($event->start->date);
                             $date->setTimezone($tz);
-
-                            $start_date = $date->format('Y-m-d H:i:s');
+                            $start_date = $date->format('Y-m-d');
                         }
 
                         if ($event->end->dateTime != '') {
                             $date = new DateTime($event->end->dateTime);
                             $date->setTimezone($tz);
-
-                            $end_date = $date->format('Y-m-d H:i:s');
+                            $end_date = $date->format('Y-m-d g:i a');
                         } else {
                             $date = new DateTime($event->end->date);
                             $date->setTimezone($tz);
-
-                            $end_date = $date->format('Y-m-d H:i:s');
+                            $end_date = $date->format('Y-m-d');
                         }
 
                         if ($event->summary != '') {

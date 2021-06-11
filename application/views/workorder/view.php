@@ -681,7 +681,7 @@ border: none;
 													                    <td class="hidden_mobile_view" style="width: 80px; text-align: right;" valign="top">
 																			$<?php echo $item->tax ?>
 																			</td>
-													                    <td style="width: 90px; text-align: right;" valign="top">$<?php $a = $item->qty * $item->cost; $b = $a + $item->tax; echo $b; ?></td>
+													                    <td style="width: 90px; text-align: right;" valign="top">$<?php $a = $item->qty * $item->costing; $b = $a + $item->tax; echo $b; ?></td>
 													                </tr>
 																	<?php } ?>
 																<?php // if($workorder->work_order_type_id == 1){ ?>

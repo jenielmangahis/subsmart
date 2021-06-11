@@ -565,56 +565,19 @@ border: none;
                                         </thead>
                                         <tbody id="jobs_items_table_body">
                                         <?php foreach($items_data as $data){ ?>
-                                        <!-- <tr>
-                                            <td width="30%">
-                                            <div class="hidden_mobile_view">
-                                                <input type="text" class="form-control getItems"
-                                                       onKeyup="getItems(this)" name="items[]" value="<?php echo $data->item; ?>">
-                                                <ul class="suggestions"></ul>
-                                            </div>
-                                            <div class="show_mobile_view">
-                                            <?php echo $data->item; ?>
-                                            </div>
-                                            </td>
-                                            <td width="20%">
-                                            <div class="hidden_mobile_view">
-                                            <select name="item_type[]" class="form-control">
-                                                    <option value="product">Product</option>
-                                                    <option value="material">Material</option>
-                                                    <option value="service">Service</option>
-                                                    <option value="fee">Fee</option>
-                                                </select>
-                                            </div>
-                                            <div class="show_mobile_view">
-                                            <?php echo $data->item_type; ?>
-                                            </div>
-                                            </td>
-                                            <td width="10%"><input type="number" class="form-control quantity hidden_mobile_view" name="quantity[]"
-                                                       data-counter="0" id="quantity_<?php echo $data->id; ?>" value="<?php echo $data->qty; ?>"><div class="show_mobile_view"><span><?php echo $data->qty; ?></span><input type="hidden" class="form-control quantity" name="quantity[]"
-                                                       data-counter="0" id="quantity_0" value="<?php echo $data->qty; ?>"></div></td>
-                                            <td width="10%"><input type="number" class="form-control price hidden_mobile_view" name="price[]"
-                                                       data-counter="0" id="price_<?php echo $data->id; ?>" min="0" value="<?php echo $data->cost; ?>"><div class="show_mobile_view"><?php echo $data->cost; ?></div></td>
-                                            <td class="hidden_mobile_view" width="10%"><input type="number" class="form-control discount" name="discount[]"
-                                                       data-counter="0" id="discount_<?php echo $data->id; ?>" min="0" value="<?php echo $data->discount; ?>" ></td>
-                                            <td class="hidden_mobile_view" width="10%"><input type="text" class="form-control tax_change" name="tax[]"
-                                                       data-counter="0" id="tax1_<?php echo $data->id; ?>" min="0" value="<?php echo $data->tax; ?>">
-                                                       </td>
-                                            <td class="hidden_mobile_view" width="10%"><input type="hidden" class="form-control " name="total[]"
-                                                       data-counter="0" id="item_total_<?php echo $data->id; ?>" min="0" value="<?php echo $data->total; ?>">
-                                                       $<span id="span_total_<?php echo $data->id; ?>"><?php echo $data->total; ?></span></td>
-                                        </tr> -->
 
                                         <tr>
                                             <td width="30%">
                                                 <input type="text" class="form-control getItems"
-                                                       onKeyup="getItems(this)" name="items[]" value="<?php echo $data->item; ?>">
+                                                       onKeyup="getItems(this)" name="items[]" value="<?php echo $data->title; ?>">
                                                 <ul class="suggestions"></ul>
-                                                <div class="show_mobile_view"><span class="getItems_hidden"><?php echo $data->item; ?></span></div>
+                                                <div class="show_mobile_view"><span class="getItems_hidden"><?php echo $data->title; ?></span></div>
+                                                <input type="hidden" name="itemid[]" id="itemid" class="itemid" value="<?php echo $data->items_id; ?>">
                                             </td>
                                             <td width="20%">
                                             <div class="dropdown-wrapper">
                                                 <select name="item_type[]" id="item_typeid" class="form-control">
-                                                    <option value="<?php echo $data->item_type; ?>"><?php echo $data->item_type; ?></option>
+                                                    <option value="<?php echo $data->type; ?>"><?php echo $data->type; ?></option>
                                                     <option value="product">Product</option>
                                                     <option value="material">Material</option>
                                                     <option value="service">Service</option>
@@ -623,32 +586,33 @@ border: none;
                                             </div>
                                                 </td>
                                             <td width="10%"><input type="number" class="form-control quantity mobile_qty hidden_mobile_view" name="quantity[]"
-                                                       data-counter="0" id="quantity_<?php echo $data->id; ?>" value="<?php echo $data->qty; ?>"> 
+                                                       data-counter="0" id="quantity_<?php echo $data->items_id; ?>" value="<?php echo $data->qty; ?>"> 
                                                        <!-- <div class="show_mobile_view"><span>1</span><input type="hidden" class="form-control qtyest2" name="quantity[]"
-                                                       data-counter="0" id="quantity_<?php echo $data->id; ?>" value="<?php echo $data->qty; ?>"></div>  -->
+                                                       data-counter="0" id="quantity_<?php echo $data->items_id; ?>" value="<?php echo $data->qty; ?>"></div>  -->
                                                        </td>
                                             <td width="10%"><input type="number" class="form-control price hidden_mobile_view" name="price[]"
-                                                       data-counter="0" id="price_<?php echo $data->id; ?>" min="0" value="<?php echo $data->cost; ?>"> <input type="hidden" class="priceqty" id="priceqty_<?php echo $data->id; ?>" value="<?php $quantity1 = $data->qty;
-                                                                                    $price1 = $data->cost; 
+                                                       data-counter="0" id="price_<?php echo $data->items_id; ?>" min="0" value="<?php echo $data->costing; ?>"> <input type="hidden" class="priceqty" id="priceqty_<?php echo $data->id; ?>" value="<?php $quantity1 = $data->qty;
+                                                                                    $price1 = $data->costing; 
                                                                                     $total1 = $quantity1*$price1;
                                                                                     echo $total1;
                                                                                                 ?>"> 
                                                        <!-- <div class="show_mobile_view"><span class="price">0</span><input type="hidden" class="form-control price" name="price[]" data-counter="0" id="priceM_<?php echo $data->id; ?>" min="0" value="0"></div> -->
-                                                       <input id="priceM_qty<?php echo $data->id; ?>"  type="hidden" name="price_qty[]" class="form-control hidden_mobile_view price_qty" value="<?php 
+                                                       <input id="priceM_qty<?php echo $data->items_id; ?>"  type="hidden" name="price_qty[]" class="form-control hidden_mobile_view price_qty" value="<?php 
                                                                                                                                                                                                 $quantity = $data->qty;
-                                                                                                                                                                                                $price = $data->cost; 
+                                                                                                                                                                                                $price = $data->costing; 
                                                                                                                                                                                                 $total = $quantity*$price;
                                                                                                                                                                                                 echo $total;
                                                                                                                                                                                                 ?>"></td>
                                             <td width="10%" class="hidden_mobile_view"><input type="number" class="form-control discount" name="discount[]"
-                                                       data-counter="0" id="discount_<?php echo $data->id; ?>" min="0"  value="<?php echo $data->discount; ?>" ></td>
+                                                       data-counter="0" id="discount_<?php echo $data->items_id; ?>" min="0"  value="0" ></td>
                                             <td width="10%" class="hidden_mobile_view"><input type="text" class="form-control tax_change2" name="tax[]"
-                                                       data-counter="0" id="tax1_<?php echo $data->id; ?>" min="0" value="<?php echo $data->tax; ?>">
+                                                       data-counter="0" id="tax1_<?php echo $data->items_id; ?>" min="0" value="<?php echo $data->tax; ?>">
                                                        <!-- <span id="span_tax_0">0.0</span> -->
                                                        </td>
                                             <td width="10%" class="hidden_mobile_view"><input type="hidden" class="form-control " name="total[]"
-                                                       data-counter="0" id="item_total_<?php echo $data->id; ?>" min="0" value="<?php echo $data->total; ?>">
-                                                       $<span id="span_total_<?php echo $data->id; ?>"><?php echo $data->total; ?></span></td>
+                                                       data-counter="0" id="item_total_<?php echo $data->items_id; ?>" min="0" value="<?php $a = $data->qty * $data->costing; $b = $a + $data->tax; echo $b; ?>">
+                                                       $<span id="span_total_<?php echo $data->items_id; ?>"><?php $a = $data->qty * $data->costing; $b = $a + $data->tax; echo $b; ?></span></td>
+                                            <td><a href="#" class="remove btn btn-sm btn-success"><i class="fa fa-trash" aria-hidden="true"></i></a></td>
                                         </tr>
                                         <?php } ?>
                                         </tbody>

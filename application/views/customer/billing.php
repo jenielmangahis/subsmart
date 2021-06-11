@@ -405,6 +405,7 @@ add_css(array(
                                                 </div>
                                                 <button type="submit" class="btn btn-primary">Pre Auth Now</button>
                                                 <button type="submit" class="btn btn-primary">Capture Now</button>
+                                                <button type="button" class="btn btn-primary" id="print_invoice">Print</button>
                                                 <input type="hidden" name="customer_id" id="customer_id" value="<?= $this->uri->segment(3); ?>"/>
                                                 <input type="hidden" name="method" id="method" value="CC"/>
                                                 </form>

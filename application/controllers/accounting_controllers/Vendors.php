@@ -605,7 +605,6 @@ class Vendors extends MY_Controller {
         $transactions = [];
         if(isset($expenses) && count($expenses) > 0) {
             foreach($expenses as $expense) {
-                $category = $this->category_col($expense->id, 'Expense');
                 $method = $this->accounting_payment_methods_model->getById($expense->payment_method_id);
 
                 $transactions[] = [
@@ -616,7 +615,7 @@ class Vendors extends MY_Controller {
                     'payee' => $vendor->display_name,
                     'method' => $method->name,
                     'source' => '',
-                    'category' => $category,
+                    'category' => $this->category_col($expense->id, 'Expense'),
                     'memo' => $expense->memo,
                     'due_date' => '',
                     'balance' => '$0.00',
@@ -629,8 +628,6 @@ class Vendors extends MY_Controller {
 
         if(isset($checks) && count($checks) > 0) {
             foreach($checks as $check) {
-                $category = $this->category_col($check->id, 'Check');
-
                 $transactions[] = [
                     'id' => $check->id,
                     'date' => date("m/d/Y", strtotime($check->payment_date)),
@@ -639,7 +636,7 @@ class Vendors extends MY_Controller {
                     'payee' => $vendor->display_name,
                     'method' => '',
                     'source' => '',
-                    'category' => $category,
+                    'category' => $this->category_col($check->id, 'Check'),
                     'memo' => $check->memo,
                     'due_date' => '',
                     'balance' => '$0.00',
@@ -652,8 +649,6 @@ class Vendors extends MY_Controller {
 
         if(isset($bills) && count($bills) > 0) {
             foreach($bills as $bill) {
-                $category = $this->category_col($bill->id, 'Bill');
-
                 $transactions[] = [
                     'id' => $bill->id,
                     'date' => date("m/d/Y", strtotime($bill->bill_date)),
@@ -662,7 +657,7 @@ class Vendors extends MY_Controller {
                     'payee' => $vendor->display_name,
                     'method' => '',
                     'source' => '',
-                    'category' => $category,
+                    'category' => $this->category_col($bill->id, 'Bill'),
                     'memo' => $bill->memo,
                     'due_date' => date("m/d/Y", strtotime($bill->due_date)),
                     'balance' => '$'.number_format(floatval($bill->remaining_balance), 2, '.', ','),
@@ -696,8 +691,6 @@ class Vendors extends MY_Controller {
 
         if(isset($purchaseOrders) && count($purchaseOrders) > 0) {
             foreach($purchaseOrders as $purchaseOrder) {
-                $category = $this->category_col($purchaseOrder->id, 'Purchase Order');
-
                 $transactions[] = [
                     'id' => $purchaseOrder->id,
                     'date' => date("m/d/Y", strtotime($purchaseOrder->purchase_order_date)),
@@ -706,7 +699,7 @@ class Vendors extends MY_Controller {
                     'payee' => $vendor->display_name,
                     'method' => '',
                     'source' => '',
-                    'category' => $category,
+                    'category' => $this->category_col($purchaseOrder->id, 'Purchase Order'),
                     'memo' => $purchaseOrder->memo,
                     'due_date' => date("m/d/Y", strtotime($purchaseOrder->purchase_order_date)),
                     'balance' => '$0.00',
@@ -744,8 +737,6 @@ class Vendors extends MY_Controller {
 
         if(isset($vendorCredits) && count($vendorCredits) > 0) {
             foreach($vendorCredits as $vendorCredit) {
-                $category = $this->category_col($vendorCredit->id, 'Vendor Credit');
-
                 $transactions[] = [
                     'id' => $vendorCredit->id,
                     'date' => date("m/d/Y", strtotime($vendorCredit->payment_date)),
@@ -754,7 +745,7 @@ class Vendors extends MY_Controller {
                     'payee' => $vendor->display_name,
                     'method' => '',
                     'source' => '',
-                    'category' => $category,
+                    'category' => $this->category_col($vendorCredit->id, 'Vendor Credit'),
                     'memo' => $vendorCredits->memo,
                     'due_date' => date("m/d/Y", strtotime($vendorCredit->payment_date)),
                     'balance' => '$'.number_format(floatval($vendorCredit->total_amount), 2, '.', ','),
@@ -767,8 +758,6 @@ class Vendors extends MY_Controller {
 
         if(isset($creditCardCredits) && count($creditCardCredits) > 0) {
             foreach($creditCardCredits as $creditCardCredit) {
-                $category = $this->category_col($creditCardCredit->id, 'Credit Card Credit');
-
                 $transactions[] = [
                     'id' => $creditCardCredit->id,
                     'date' => date("m/d/Y", strtotime($creditCardCredit->payment_date)),
@@ -777,7 +766,7 @@ class Vendors extends MY_Controller {
                     'payee' => $vendor->display_name,
                     'method' => '',
                     'source' => '',
-                    'category' => $category,
+                    'category' => $this->category_col($creditCardCredit->id, 'Credit Card Credit'),
                     'memo' => $creditCardCredits->memo,
                     'due_date' => '',
                     'balance' => '$0.00',

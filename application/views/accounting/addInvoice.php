@@ -1142,7 +1142,33 @@ $(document).ready(function(){
             success: function(response){
                 // alert('success');
                 // console.log(response['customer']);
-            $("#job_location").val(response['customer'].cross_street + ' ' + response['customer'].city + ' ' + response['customer'].state + ' ' + response['customer'].country);
+
+                if(response['customer'].cross_street.trim().length == 0){
+                    var cross = '';
+                }else{
+                    var cross = response['customer'].cross_street;
+                }
+
+                if(response['customer'].city.trim().length == 0){
+                    var city = '';
+                }else{
+                    var city = response['customer'].city;
+                }
+
+                if(response['customer'].state.trim().length == 0){
+                    var state = '';
+                }else{
+                    var state = response['customer'].state;
+                }
+
+                if(response['customer'].country.trim().length == 0){
+                    var country = '';
+                }else{
+                    var country = response['customer'].country;
+                }
+
+
+            $("#job_location").val(cross + ' ' + city + ' ' + state + ' ' + country);
             $("#customer_email").val(response['customer'].email);
             $("#shipping_address").val(response['customer'].mail_add);
             $("#billing_address").val(response['customer'].mail_add);

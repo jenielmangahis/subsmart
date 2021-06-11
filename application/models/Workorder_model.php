@@ -896,12 +896,12 @@ class Workorder_model extends MY_Model
     public function delete_items($id)
     {
         $where = array(
-            'type' => 'Work Order',
-            'type_id'   => $id
+            // 'type' => 'Work Order',
+            'work_order_id'   => $id
           );
 
         $this->db->where($where);
-        $this->db->delete('item_details');
+        $this->db->delete('work_orders_items');
         return true;
     }
 
