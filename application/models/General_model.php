@@ -38,7 +38,11 @@ class General_model extends MY_Model {
                 if( $val != '' ){
                     $this->db->where($key, $val);    
                 }else{
-                    $this->db->where($key);
+                    if( $val == 0 ){
+                        $this->db->where($key, $val);  
+                    }else{
+                        $this->db->where($key); 
+                    }
                 }
                 
             }

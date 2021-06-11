@@ -35,6 +35,7 @@ class Mycrm extends MY_Controller {
 		$this->load->model('NsmartPlan_model');
 		$this->load->model('SubscriberNsmartUpgrade_model');
 		$this->load->model('CompanySubscriptionPayments_model');
+		$this->load->model('CardsFile_model');
 
 		$company_id = logged('company_id');
 		$client = $this->Clients_model->getById($company_id);
@@ -43,13 +44,15 @@ class Mycrm extends MY_Controller {
 		$addons   = $this->SubscriberNsmartUpgrade_model->getAllByClientId($client->id);
 		$lastPayment  = $this->CompanySubscriptionPayments_model->getCompanyLastPayment($client->id);
 		$firstPayment = $this->CompanySubscriptionPayments_model->getCompanyFirstPayment($client->id);
+		$primaryCard  = $this->CardsFile_model->getCompanyPrimaryCard($client->id);
 
 		$total_addon_price = 0;
 		foreach($addons as $a){
 			$total_addon_price += $a->service_fee;
 		}
 
-		$date_start = date("Y-m-01");
+		$day = date("d", strtotime($client->plan_date_registered));
+		$date_start = date("Y-m-" . $day);
 		$start_billing_period = date("d-M-Y", strtotime($date_start));
 		$end_billing_period   = date("d-M-Y", strtotime("+1 months ", strtotime($start_billing_period)));
 
@@ -60,6 +63,7 @@ class Mycrm extends MY_Controller {
 		$this->page_data['end_billing_period'] = $end_billing_period;
 		$this->page_data['total_monthly']      = $plan->price + $total_addon_price;
 		$this->page_data['total_addon_price']  = $total_addon_price;
+		$this->page_data['primaryCard'] = $primaryCard;
 		$this->page_data['addons'] = $addons;
 		$this->page_data['plan']   = $plan;
 		$this->page_data['client'] = $client;
@@ -215,12 +219,12 @@ class Mycrm extends MY_Controller {
 
             	$next_billing_date = date("Y-m-d", strtotime("+1 month", strtotime($client->next_billing_date)));
             	$data = [           
-	            	'payment_method' => 'converge',     
-	                'plan_date_registered' => date("Y-m-d"),
-	                'plan_date_expiration' => date("Y-m-d", strtotime("+1 month")),                
+	            	//'payment_method' => 'converge',     
+	                //'plan_date_registered' => date("Y-m-d"),
+	                //'plan_date_expiration' => date("Y-m-d", strtotime("+1 month")),                
 	                'date_modified' => date("Y-m-d H:i:s"),
 	                'is_plan_active' => 1,
-	                'nsmart_plan_id' => $plan->nsmart_plans_id,
+	                //'nsmart_plan_id' => $plan->nsmart_plans_id,
 	                'is_trial' => 0,
 	                'next_billing_date' => $next_billing_date,
 	                'num_months_discounted' => $num_months_discounted

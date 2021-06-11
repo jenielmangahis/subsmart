@@ -11,66 +11,233 @@ class Cron_Payment extends MY_Controller {
 		parent::__construct();
 	}
 
-    public function nsmart_recurring_subscription(){
+    public function company_recurring_nsmart_subscription(){
         include APPPATH . 'libraries/Converge/src/Converge.php';
         $this->load->model('Clients_model');
         $this->load->model('NsmartPlan_model');
         $this->load->model('General_model', 'general');
+        $this->load->model('CardsFile_model');
+        $this->load->model('Business_model');
+        $this->load->model('CompanySubscriptionPayments_model');
+        $this->load->model('SubscriberNsmartUpgrade_model');
 
+        ini_set('max_execution_time', 0);
+
+        $converge = new \wwwroth\Converge\Converge([
+            'merchant_id' => CONVERGE_MERCHANTID,
+            'user_id' => CONVERGE_MERCHANTUSERID,
+            'pin' => CONVERGE_MERCHANTPIN,
+            'demo' => false,
+        ]);
 
         $date = date("Y-m-d");
-        $clients = $this->Clients_model->getAllExpiredSubscription($date);
-        
-        foreach($clients as $c){
-            $nsmartPlan = $this->NsmartPlan_model->getById($c->nsmart_plan_id);
-            if( $nsmartPlan ){
-                $ssl_amount     = $nsmartPlan->price;
-                $ssl_first_name = $c->first_name;
-                $ssl_last_name  = $c->last_name;
-                $card_number = '';
-                $exp_date    = $exp_month . date("y",strtotime($exp_year));
+        $get_subscription = array(
+            'where' => array(
+                'next_billing_date' => $date,
+                'is_auto_renew' => 1,
+                'is_with_payment_error' => 0
+            ),
+            'table' => 'clients',
+            'select' => 'clients.*',
+            'limit' => 50
+        );
+        $clients = $this->general->get_data_with_param($get_subscription, true);
+        foreach( $clients as $client ){
+            $primaryCard = $this->CardsFile_model->getCompanyPrimaryCard($client->id);
+            if( $primaryCard ){
+                $plan = $this->NsmartPlan_model->getById($client->nsmart_plan_id);
+                if( $plan ){
 
-                $converge = new \wwwroth\Converge\Converge([
-                    'merchant_id' => CONVERGE_MERCHANTID,
-                    'user_id' => CONVERGE_MERCHANTUSERID,
-                    'pin' => CONVERGE_MERCHANTPIN,
-                    'demo' => false,
-                ]);
+                    $addons = $this->SubscriberNsmartUpgrade_model->getAllByClientId($client->id);
+                    $total_addon_price = 0;
+                    foreach($addons as $a){
+                        $total_addon_price += $a->service_fee;
+                    }
 
-                echo $card_number;exit;
+                    if( $client->num_months_discounted > 0 ){
+                        $amount   = $plan->price;
+                    }else{
+                        $amount   = $plan->discount;    
+                    }
 
-                $createSale = $converge->request('ccsale', [
-                    'ssl_card_number' => $card_number,
-                    'ssl_exp_date' => $exp_date,
-                    'ssl_cvv2cvc2' => $cvc,
-                    'ssl_first_name' => $ssl_first_name,
-                    'ssl_last_name' => $ssl_last_name,
-                    'ssl_amount' => $ssl_amount,
-                    'ssl_avs_address' => $ssl_address,
-                    'ssl_avs_zip' => $ssl_zip,
-                ]);
+                    $amount = $amount + $total_addon_price;
 
-                if( $createSale['success'] == 1 ){
-                    //Update registration
-                    $next_expiration = date("Y-m-d", strtotime("+30 days"));
-                    $this->Clients->updateClient($c->id, ['plan_date_expiration' => $next_expiration]);
+                    $businessProfile  = $this->Business_model->getByCompanyId($client->id);
+                    $address  = $businessProfile->street . " " . $businessProfile->city . " " . $businessProfile->state;
+                    $zip_code = $businessProfile->postal_code;
+                    if( $primaryCard->expiration_month < 10 ){
+                        $exp_month = 0 . $primaryCard->expiration_month;
+                    }else{
+                        $exp_month = $primaryCard->expiration_month;
+                    }
+                    $exp_date = $exp_month . $primaryCard->expiration_year;
+                    $createSale = $converge->request('ccsale', [
+                        'ssl_card_number' => $primaryCard->card_number,
+                        'ssl_exp_date' => $exp_date,
+                        'ssl_cvv2cvc2' => $primaryCard->card_cvv,
+                        'ssl_first_name' => $primaryCard->card_owner_first_name,
+                        'ssl_last_name' => $primaryCard->card_owner_last_name,
+                        'ssl_amount' => $amount,
+                        'ssl_avs_address' => $address,
+                        'ssl_avs_zip' => $zip_code,
+                    ]);
+                    if( $createSale['success'] == 1 ){
+                        $num_months_discounted = 0;
+                        if( $client->num_months_discounted > 0 ){
+                            $num_months_discounted = $client->num_months_discounted - 1;    
+                        }
 
-                    //Add to payments table
-                    $transaction_details = array();
-                    $transaction_details['customer_id'] = $c->id;
-                    $transaction_details['subtotal'] = $ssl_amount;
-                    $transaction_details['tax'] = 0;
-                    $transaction_details['category'] = 'MS';
-                    $transaction_details['method'] = 'CC';
-                    $transaction_details['transaction_type'] = 'Recurring';
-                    $transaction_details['frequency'] = '';
-                    $transaction_details['notes'] = 'Renewed subscription for the month of ' . date("M/Y");
-                    $transaction_details['status'] = 'Approved';
-                    $transaction_details['datetime'] = date("m-d-Y h:i A");
-                    $this->general->add_($transaction_details, 'acs_transaction_history');
-                }    
+                        $next_billing_date = date("Y-m-d", strtotime("+1 month", strtotime($client->next_billing_date)));
+                        $data = [           
+                            //'payment_method' => 'converge',     
+                            //'plan_date_registered' => date("Y-m-d"),
+                            //'plan_date_expiration' => date("Y-m-d", strtotime("+1 month")),                
+                            'date_modified' => date("Y-m-d H:i:s"),
+                            'is_plan_active' => 1,
+                            'nsmart_plan_id' => $plan->nsmart_plans_id,
+                            'is_trial' => 0,
+                            'next_billing_date' => $next_billing_date,
+                            'num_months_discounted' => $num_months_discounted
+                        ];
+                        $this->Clients_model->update($client->id, $data);
+
+                        //Record payment
+                        $data_payment = [
+                            'company_id' => $client->id,
+                            'description' => 'Paid Membership, Monthly',
+                            'payment_date' => date("Y-m-d"),
+                            'total_amount' => $amount,
+                            'date_created' => date("Y-m-d H:i:s")
+                        ];
+
+                        $this->CompanySubscriptionPayments_model->create($data_payment);
+                    }else{
+                        $data = [           
+                            //'payment_method' => 'converge',     
+                            //'plan_date_registered' => date("Y-m-d"),
+                            //'plan_date_expiration' => date("Y-m-d", strtotime("+1 month")),
+                            'recurring_subscription_payment_error' =>  $createSale['errorMessage'],               
+                            'date_modified' => date("Y-m-d H:i:s"),
+                            'is_plan_active' => 0,
+                            'is_with_payment_error' => 1
+                        ];
+                        $this->Clients_model->update($client->id, $data);
+                    }
+                }
             }
         }
+
+        echo "Done";
+    }
+
+    //For checking recurring payments with error - need to set in cron once a day checking
+    public function company_recurring_nsmart_subscription_with_payment_errors(){
+        include APPPATH . 'libraries/Converge/src/Converge.php';
+        $this->load->model('Clients_model');
+        $this->load->model('NsmartPlan_model');
+        $this->load->model('General_model', 'general');
+        $this->load->model('CardsFile_model');
+        $this->load->model('Business_model');
+        $this->load->model('CompanySubscriptionPayments_model');
+        $this->load->model('SubscriberNsmartUpgrade_model');
+
+        ini_set('max_execution_time', 0);
+
+        $converge = new \wwwroth\Converge\Converge([
+            'merchant_id' => CONVERGE_MERCHANTID,
+            'user_id' => CONVERGE_MERCHANTUSERID,
+            'pin' => CONVERGE_MERCHANTPIN,
+            'demo' => false,
+        ]);
+
+        $date = date("Y-m-d");
+        $get_subscription = array(
+            'where' => array(
+                'is_auto_renew' => 1,
+                'is_with_payment_error' => 1
+            ),
+            'table' => 'clients',
+            'select' => 'clients.*',
+            'limit' => 50
+        );
+        $clients = $this->general->get_data_with_param($get_subscription, true);
+        foreach( $clients as $client ){
+            $primaryCard = $this->CardsFile_model->getCompanyPrimaryCard($client->id);
+            if( $primaryCard ){
+                $plan = $this->NsmartPlan_model->getById($client->nsmart_plan_id);
+                if( $plan ){
+
+                    $addons = $this->SubscriberNsmartUpgrade_model->getAllByClientId($client->id);
+                    $total_addon_price = 0;
+                    foreach($addons as $a){
+                        $total_addon_price += $a->service_fee;
+                    }
+
+                    if( $client->num_months_discounted > 0 ){
+                        $amount   = $plan->price;
+                    }else{
+                        $amount   = $plan->discount;    
+                    }
+
+                    $amount = $amount + $total_addon_price;
+
+                    $businessProfile  = $this->Business_model->getByCompanyId($client->id);
+                    $address  = $businessProfile->street . " " . $businessProfile->city . " " . $businessProfile->state;
+                    $zip_code = $businessProfile->postal_code;
+                    if( $primaryCard->expiration_month < 10 ){
+                        $exp_month = 0 . $primaryCard->expiration_month;
+                    }else{
+                        $exp_month = $primaryCard->expiration_month;
+                    }
+                    $exp_date = $exp_month . $primaryCard->expiration_year;
+                    $createSale = $converge->request('ccsale', [
+                        'ssl_card_number' => $primaryCard->card_number,
+                        'ssl_exp_date' => $exp_date,
+                        'ssl_cvv2cvc2' => $primaryCard->card_cvv,
+                        'ssl_first_name' => $primaryCard->card_owner_first_name,
+                        'ssl_last_name' => $primaryCard->card_owner_last_name,
+                        'ssl_amount' => $amount,
+                        'ssl_avs_address' => $address,
+                        'ssl_avs_zip' => $zip_code,
+                    ]);
+                    if( $createSale['success'] == 1 ){
+                        $num_months_discounted = 0;
+                        if( $client->num_months_discounted > 0 ){
+                            $num_months_discounted = $client->num_months_discounted - 1;    
+                        }
+
+                        $next_billing_date = date("Y-m-d", strtotime("+1 month", strtotime($client->next_billing_date)));
+                        $data = [           
+                            //'payment_method' => 'converge',     
+                            //'plan_date_registered' => date("Y-m-d"),
+                            //'plan_date_expiration' => date("Y-m-d", strtotime("+1 month")),                
+                            'date_modified' => date("Y-m-d H:i:s"),
+                            'is_plan_active' => 1,
+                            'nsmart_plan_id' => $plan->nsmart_plans_id,
+                            'is_trial' => 0,
+                            'next_billing_date' => $next_billing_date,
+                            'num_months_discounted' => $num_months_discounted,
+                            'recurring_subscription_payment_error' => '',
+                            'is_with_payment_error' => 0
+                        ];
+                        $this->Clients_model->update($client->id, $data);
+
+                        //Record payment
+                        $data_payment = [
+                            'company_id' => $client->id,
+                            'description' => 'Paid Membership, Monthly',
+                            'payment_date' => date("Y-m-d"),
+                            'total_amount' => $amount,
+                            'date_created' => date("Y-m-d H:i:s")
+                        ];
+
+                        $this->CompanySubscriptionPayments_model->create($data_payment);
+                    }
+                }
+            }
+        }
+
+        echo "Done";
     }
         
     public function customer_recurring_subscription(){

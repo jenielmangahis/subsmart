@@ -2,18 +2,33 @@
 defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <?php include viewPath('includes/header'); ?>
 <style>
-    .input-group-prepend {
-        height: 48px !important;
-    }
-    .form_line{
-        margin-bottom: 10px;
-    }
-    .hide {
-        display:none;
-    }
-    .plan{
-        padding: 0px;
-    }
+.input-group-prepend {
+    height: 48px !important;
+}
+.form_line{
+    margin-bottom: 10px;
+}
+.hide {
+    display:none;
+}
+.plan{
+    padding: 0px;
+}
+.card-type.visa {
+    background-position: 0 0;
+}
+.card-type {
+    display: inline-block;
+    width: 30px;
+    height: 20px;
+    background: url(<?= base_url("/assets/img/credit_cards.png"); ?>) no-repeat 0 0;
+    background-size: cover;
+    vertical-align: middle;
+    margin-right: 10px;
+}
+.card-type.americanexpress {
+    background-position: -83px 0;
+}
 </style>
 <div class="wrapper" role="wrapper">
     <?php include viewPath('includes/sidebars/mycrm'); ?>
@@ -171,7 +186,32 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 <div class="col-md-4">
                     <strong>Primary Card</strong>
                 </div>
-                <div class="col-md-5">Visa ****5898
+
+                <div class="col-md-7">
+                    <?php if($primaryCard){ ?>
+                        <?php 
+                            $card_type = strtolower($primaryCard->cc_type); 
+                            $card_type = str_replace(" ", "", $card_type);
+                          ?>
+                          <span class="card-type <?= $card_type; ?>"></span>                                       
+                          <?php 
+                            $card_number = maskCreditCardNumber($primaryCard->card_number);
+                            echo $card_number;
+                          ?>   
+                          <?php
+                            $today = date("y-m-d");  
+                            $day   = date("d");                                 
+                            $expires = date("y-m-d",strtotime($primaryCard->expiration_year . "-" . $primaryCard->expiration_month . "-" . $day));
+                            $expired = 'expires';
+                            if( strtotime($expires) < strtotime($today) ){
+                              $expired = 'expired';
+                            }
+                            
+                          ?>
+                          <span class="<?= $expired; ?>"> (<?= $expired; ?> <?= $primaryCard->expiration_month . "/" . $primaryCard->expiration_year; ?>)</span>
+                    <?php }else{ ?>
+                        ---
+                    <?php } ?>
                     <a href="<?= base_url("cards_file/list"); ?>" class="btn btn-sm btn-primary">manage card</a>
                 </div>
             </div>
