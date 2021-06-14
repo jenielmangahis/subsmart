@@ -55,7 +55,9 @@ function Signing(hash) {
   function getRenderField({ field, recipient }) {
     const { field_name, coordinates, id: fieldId, value: fieldValue } = field;
     let text = recipient[field_name.toLowerCase()];
-    const { pageTop: top, left } = JSON.parse(coordinates);
+    let { pageTop: top, left } = JSON.parse(coordinates);
+    top = parseInt(top);
+    left = parseInt(left);
 
     const container = document.querySelector(".signing__documentContainer");
 
@@ -335,7 +337,10 @@ function Signing(hash) {
       const isRequired = is_required.toLocaleString() === "true";
       const isReadOnly = is_read_only.toLocaleString() === "true";
 
-      const { workorder_recipient: customer } = data;
+      let { workorder_recipient: customer } = data;
+      if (!customer) {
+        customer = data.job_recipient;
+      }
 
       if (customer && specs.name && !value) {
         value = customer[specs.name] || "";

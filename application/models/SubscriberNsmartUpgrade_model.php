@@ -20,8 +20,6 @@ class SubscriberNsmartUpgrade_model extends MY_Model
 
     public function getById($id)
     {
-        $user_id = logged('id');
-
         $this->db->select('*');
         $this->db->from($this->table);
 
@@ -57,6 +55,24 @@ class SubscriberNsmartUpgrade_model extends MY_Model
     public function deleteClientPlanUpgradeId($client_id, $plan_upgrade_id){
         $this->db->delete($this->table, array('client_id' => $client_id, 'plan_upgrade_id' => $plan_upgrade_id));
     } 
+
+    public function getAddOnByClientIdAndId($client_id, $id){
+        $user_id = logged('id');
+
+        $this->db->select('*');
+        $this->db->from($this->table);
+
+        $this->db->where('client_id', $client_id);
+        $this->db->where('id', $id);
+
+        $query = $this->db->get()->row();
+        return $query;
+    }
+
+    public function deleteAllRequestRemovalByClientId($client_id){
+        $user_id = logged('id');
+        $this->db->delete($this->table, array('client_id' => $client_id, 'with_request_removal' => 1));
+    }
 
 }
 

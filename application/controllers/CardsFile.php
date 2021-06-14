@@ -52,15 +52,14 @@ class CardsFile extends MY_Controller {
 	}
 
 	public function create_new_card(){
-		postAllowed();
-
         $company_id = logged('company_id');
         $post       = $this->input->post();
         $isValid = $this->check_cc($post['card_number']);
         if( $isValid ){
         	$data = [
 				'company_id' => $company_id,
-		        'card_owner_name' => $post['card_owner_name'],
+		        'card_owner_first_name' => $post['card_owner_first_name'],
+		        'card_owner_last_name' => $post['card_owner_last_name'],
 				'card_number' => $post['card_number'],
 				'expiration_month' => $post['expiration_month'],
 				'expiration_year' => $post['expiration_year'],
@@ -157,7 +156,7 @@ class CardsFile extends MY_Controller {
 				  $this->session->set_flashdata('alert_class', 'alert-danger');
                 }else{
                 	$this->CardsFile_model->companyResetAllprimaryCard($company_id);
-					$this->CardsFile_model->updateCardsFile($post['id'], ['is_primary' => 1]);
+					$this->CardsFile_model->updateCardsFile($post['id'], ['is_primary' => $post['primary']]);
 					$is_success = true;
                 }
 			}else{

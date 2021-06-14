@@ -172,7 +172,11 @@
                                         <div class="col-md-12">
                                             <table class="table table-bordered table-hover clickable" id="bills-table">
                                                 <thead>
-                                                    <th></th>
+                                                    <th>
+                                                        <div class="d-flex justify-content-center">
+                                                            <input type="checkbox" id="select-all-bills">
+                                                        </div>
+                                                    </th>
                                                     <th>PAYEE</th>
                                                     <th>REF NO.</th>
                                                     <th>DUE DATE</th>

@@ -38,6 +38,10 @@ add_css(array(
     }
 </style>
 
+<?php if(isset($jobs_data)): ?>
+<input type="hidden" value="<?= $jobs_data->id ?>" id="esignJobId" />
+<?php endif; ?>
+
 <div class="wrapper" role="wrapper">
     <?php include viewPath('includes/sidebars/job'); ?>
     <!-- page wrapper start -->
@@ -80,7 +84,7 @@ add_css(array(
                                             <p><small>Approved</small></p>
                                         </div>
                                         <div class="stepwizard-step col-xs-3">
-                                            <a href="#" <?php if(isset($jobs_data) && $jobs_data->status == 'Approved'): ?> data-toggle="modal" data-target="#finish_modal" data-backdrop="static" data-keyboard="false" <?php endif; ?> type="button" class="btn btn-circle <?= isset($jobs_data) && $jobs_data->status == 'Closed'  ? 'btn-success' : 'btn-default' ; ?>" disabled="disabled">
+                                            <a idx="confirmEsignModalTrigger" href="#" <?php if(isset($jobs_data) && $jobs_data->status == 'Approved'): ?> data-toggle="modal" data-target="#finish_modal" data-backdrop="static" data-keyboard="false" <?php endif; ?> type="button" class="btn btn-circle <?= isset($jobs_data) && $jobs_data->status == 'Closed'  ? 'btn-success' : 'btn-default' ; ?>" disabled="disabled">
                                                 <span style="font-size: 24px;" class="fa fa-stop"></span>
                                             </a>
                                             <p><small>Finish</small></p>
@@ -1083,6 +1087,7 @@ add_css(array(
 <?php include viewPath('job/modals/new_customer'); ?>
 <?php include viewPath('job/modals/inventory_location'); ?>
 <?php include viewPath('job/modals/new_inventory'); ?>
+<?php include viewPath('job/modals/esign'); ?>
 
 <!-- Signature Modal -->
 <div class="modal fade" id="updateSignature" role="dialog">
@@ -1435,6 +1440,9 @@ add_footer_js(array(
     'https://code.jquery.com/ui/1.12.1/jquery-ui.js',
     //'https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.7/dist/loadingoverlay.min.js',
     'assets/textEditor/summernote-bs4.js',
+
+    'assets/js/esign/docusign/workorder.js',
+    'assets/js/esign/jobs/esign.js',
 ));
 include viewPath('includes/footer');
 ?>

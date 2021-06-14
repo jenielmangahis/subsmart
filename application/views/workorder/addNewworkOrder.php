@@ -1832,41 +1832,41 @@ border: none;
             </div>
 
             <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">Add Package</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body pt-0 pl-3 pb-3">
-                                    <table id="items_table_newWorkorder" class="table table-hover" style="width: 100%;">
-                                        <thead>
-                                        <tr>
-                                            <td> Name</td>
-                                            <td> Action</td>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        <?php foreach($packages as $package){ // print_r($item); ?>
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Add Package</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body pt-0 pl-3 pb-3">
+                                        <table id="items_table_newWorkorder" class="table table-hover" style="width: 100%;">
+                                            <thead>
                                             <tr>
-                                                <td><?php echo $package->name; ?></td>
-                                                <td>
-                                                    <button id="<?= $package->item_categories_id ; ?>" type="button" data-dismiss="modal" class="btn btn-sm btn-default select_package"><span class="fa fa-plus"></span> </button>
-                                            </td>
+                                                <td> Name</td>
+                                                <td> Action</td>
                                             </tr>
-                                            
-                                        <?php } ?>
-                                        </tbody>
-                                    </table>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
-                        </div>
+                                            </thead>
+                                            <tbody>
+                                            <?php foreach($packages as $package){ // print_r($item); ?>
+                                                <tr>
+                                                    <td><?php echo $package->name; ?></td>
+                                                    <td>
+                                                        <button id="<?= $package->item_categories_id ; ?>" type="button" data-dismiss="modal" class="btn btn-sm btn-default select_package"><span class="fa fa-plus"></span> </button>
+                                                </td>
+                                                </tr>
+                                                
+                                            <?php } ?>
+                                            </tbody>
+                                        </table>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
+                            </div>
+                    </div>
                 </div>
-            </div>
             </div>
 
              <!-- Modal New Customer -->

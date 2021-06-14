@@ -123,18 +123,10 @@ class Expenses extends MY_Controller {
 
         usort($data, function($a, $b) use ($order, $columnName) {
             if($columnName !== 'date') {
-                if($columnName !== 'type') {
-                    if($order === 'asc') {
-                        return strcmp($a[$columnName], $b[$columnName]) && strcmp($a['type'], $b['type']);
-                    } else {
-                        return strcmp($b[$columnName], $a[$columnName]) && strcmp($a['type'], $b['type']);
-                    }
+                if($order === 'asc') {
+                    return strcmp($a[$columnName], $b[$columnName]);
                 } else {
-                    if($order === 'asc') {
-                        return strcmp($a[$columnName], $b[$columnName]);
-                    } else {
-                        return strcmp($b[$columnName], $a[$columnName]);
-                    }
+                    return strcmp($b[$columnName], $a[$columnName]);
                 }
             } else {
                 if($order === 'asc') {
@@ -159,15 +151,38 @@ class Expenses extends MY_Controller {
     {
         switch($filters['type']) {
             case 'all' :
-                if($filters['status'] === 'all') {
-                    $expenses = $this->expenses_model->get_company_expense_transactions($filters);
-                }
                 if(!isset($filters['payee']) || $filters['payee']['type'] === 'vendor') {
                     $bills = $this->expenses_model->get_company_bill_transactions($filters);
                 }
-                if($filters['status'] === 'all') {
+                if(!isset($filters['status'])) {
+                    $expenses = $this->expenses_model->get_company_expense_transactions($filters);
                     $checks = $this->expenses_model->get_company_check_transactions($filters);
+                    $purchOrders = $this->expenses_model->get_company_purch_order_transactions($filters);
+                    $vendorCredits = $this->expenses_model->get_company_vendor_credit_transactions($filters);
+                    $ccPayments = $this->expenses_model->get_company_cc_payment_transactions($filters);
+                    $billPayments = $this->expenses_model->get_company_bill_payment_items($filters);
                 }
+            break;
+            case 'bill' :
+                $bills = $this->expenses_model->get_company_bill_transactions($filters);
+            break;
+            case 'expenses' :
+                $expenses = $this->expenses_model->get_company_expense_transactions($filters);
+            break;
+            case 'check' :
+                $checks = $this->expenses_model->get_company_check_transactions($filters);
+            break;
+            case 'purchase-order' :
+                $purchOrders = $this->expenses_model->get_company_purch_order_transactions($filters);
+            break;
+            case 'vendor-credit' :
+                $vendorCredits = $this->expenses_model->get_company_vendor_credit_transactions($filters);
+            break;
+            case 'credit-card-payment' :
+                $ccPayments = $this->expenses_model->get_company_cc_payment_transactions($filters);
+            break;
+            case 'bill-payments' :
+                $billPayments = $this->expenses_model->get_company_bill_payment_items($filters);
             break;
         }
 
@@ -287,6 +302,142 @@ class Expenses extends MY_Controller {
             }
         }
 
+        if(isset($purchOrders) && count($purchOrders) > 0) {
+            foreach($purchOrders as $purchOrder) {
+                if(!is_null($purchOrder->attachments) && $purchOrder->attachments !== "") {
+                    $attachments = count(json_decode($purchOrder->attachments, true));
+                } else {
+                    $attachments = '';
+                }
+
+                $payee = $this->vendors_model->get_vendor_by_id($purchOrder->vendor_id);
+
+                $transactions[] = [
+                    'id' => $purchOrder->id,
+                    'date' => date("m/d/Y", strtotime($purchOrder->purchase_order_date)),
+                    'type' => 'Purchase Order',
+                    'number' => $purchOrder->purchase_order_number,
+                    'payee' => $payee->display_name,
+                    'method' => '',
+                    'source' => '',
+                    'category' => $this->category_col($purchOrder->id, 'Purchase Order'),
+                    'memo' => $purchOrder->memo,
+                    'due_date' => '',
+                    'balance' => '$0.00',
+                    'total' => '$'.number_format(floatval($purchOrder->total_amount), 2, '.', ','),
+                    'status' => $purchOrder->status === "1" ? "Open" : "Closed",
+                    'attachments' => $attachments
+                ];
+            }
+        }
+
+        if(isset($vendorCredits) && count($vendorCredits) > 0) {
+            foreach($vendorCredits as $vendorCredit) {
+                if(!is_null($vendorCredit->attachments) && $vendorCredit->attachments !== "") {
+                    $attachments = count(json_decode($vendorCredit->attachments, true));
+                } else {
+                    $attachments = '';
+                }
+
+                $payee = $this->vendors_model->get_vendor_by_id($vendorCredit->vendor_id);
+
+                $transactions[] = [
+                    'id' => $vendorCredit->id,
+                    'date' => date("m/d/Y", strtotime($vendorCredit->payment_date)),
+                    'type' => 'Vendor Credit',
+                    'number' => $vendorCredit->ref_no,
+                    'payee' => $payee->display_name,
+                    'method' => '',
+                    'source' => '',
+                    'category' => $this->category_col($vendorCredit->id, 'Vendor Credit'),
+                    'memo' => $vendorCredit->memo,
+                    'due_date' => '',
+                    'balance' => '$'.number_format(floatval($vendorCredit->remaining_balance), 2, '.', ','),
+                    'total' => '-$'.number_format(floatval($vendorCredit->total_amount), 2, '.', ','),
+                    'status' => $vendorCredit->status === "1" ? "Open" : "Closed",
+                    'attachments' => $attachments
+                ];
+            }
+        }
+
+        if(isset($ccPayments) && count($ccPayments) > 0) {
+            foreach($ccPayments as $ccPayment) {
+                if(!is_null($ccPayment->attachments) && $ccPayment->attachments !== "") {
+                    $attachments = count(json_decode($ccPayment->attachments, true));
+                } else {
+                    $attachments = '';
+                }
+
+                $payee = $this->vendors_model->get_vendor_by_id($ccPayment->payee_id);
+
+                $transactions[] = [
+                    'id' => $ccPayment->id,
+                    'date' => date("m/d/Y", strtotime($ccPayment->date)),
+                    'type' => 'Credit Card Payment',
+                    'number' => '',
+                    'payee' => $payee->display_name,
+                    'method' => '',
+                    'source' => '',
+                    'category' => '',
+                    'memo' => $ccPayment->memo,
+                    'due_date' => '',
+                    'balance' => '$0.00',
+                    'total' => '$'.number_format(floatval($ccPayment->amount), 2, '.', ','),
+                    'status' => '',
+                    'attachments' => $attachments
+                ];
+            }
+        }
+
+        if(isset($billPayments) && count($billPayments) > 0) {
+            foreach($billPayments as $paymentItems) {
+                if(!is_null($paymentItems->attachments) && $paymentItems->attachments !== "") {
+                    $attachments = count(json_decode($paymentItems->attachments, true));
+                } else {
+                    $attachments = '';
+                }
+
+                $payment = $this->vendors_model->get_bill_payment_by_id($paymentItems->bill_payment_id);
+                $bill = $this->vendors_model->get_bill_by_id($paymentItems->bill_id);
+                $payee = $this->vendors_model->get_vendor_by_id($bill->vendor_id);
+
+                $paymentAcc = $this->chart_of_accounts_model->getById($payment->payment_account_id);
+                $paymentAccType = $this->account_model->getById($paymentAcc->account_id);
+                $paymentType = $paymentAccType->account_name === 'Bank' ? 'Check' : 'Credit Card';
+
+                $checkIfExists = array_filter($transactions, function($v, $k) use ($payment, $paymentType) {
+                    return $v['id'] === $payment->id && $v['type'] === "Bill Payment ($paymentType)";
+                }, ARRAY_FILTER_USE_BOTH);
+
+                if(count($checkIfExists) === 0) {
+                    $total = 0.00;
+                    foreach($billPayments as $pItem) {
+                        $pItemBill = $this->vendors_model->get_bill_by_id($paymentItems->bill_id);
+                        if($pItem->bill_payment_id === $paymentItems->bill_payment_id && $bill->vendor_id === $pItemBill->vendor_id) {
+                            $total += floatval($pItem->payment_amount);
+                        }
+                    }
+
+                    $transactions[] = [
+                        'id' => $payment->id,
+                        'date' => date("m/d/Y", strtotime($payment->payment_date)),
+                        'type' => "Bill Payment ($paymentType)",
+                        'number' => $payment->starting_check_no,
+                        'payee' => $payee->display_name,
+                        'method' => '',
+                        'source' => '',
+                        'category' => '',
+                        'memo' => $payment->memo,
+                        'due_date' => '',
+                        'balance' => '$0.00',
+                        'total' => '$'.number_format(floatval($total), 2, '.', ','),
+                        'status' => 'Applied',
+                        'attachments' => $attachments
+                    ];
+                }
+            }
+        }
+
         return $transactions;
     }
 
@@ -295,7 +446,6 @@ class Expenses extends MY_Controller {
         $filters = [
             'company_id' => logged('company_id'),
             'type' => $post['type'],
-            'status' => $post['status'],
             'delivery_method' => $post['delivery_method'],
             'category' => $post['category']
         ];
@@ -306,6 +456,10 @@ class Expenses extends MY_Controller {
                 'type' => $payee[0],
                 'id' => $payee[1]
             ];
+        }
+
+        if($post['status'] !== 'all') {
+            $filters['status'] = $post['status'];
         }
 
         switch($post['date']) {

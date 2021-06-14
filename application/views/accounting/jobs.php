@@ -1,32 +1,51 @@
 <?php
-defined('BASEPATH') or exit('No direct script access allowed');
-// CSS to add only Customer module
-add_css(array(
-    'https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css',
-    'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css',
-    'https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css',
-    //"assets/css/accounting/sidebar.css",
-    'assets/textEditor/summernote-bs4.css',
-));
-// load lists page css
-include viewPath('job/css/lists');
-?>
+defined('BASEPATH') or exit('No direct script access allowed'); ?>
 <?php include viewPath('includes/header'); ?>
 <div class="wrapper" role="wrapper">
-    <?php include viewPath('includes/sidebars/job'); ?>
     <!-- page wrapper start -->
-    <div wrapper__section>
-        <?php include viewPath('includes/notifications'); ?>
-        <div class="container-fluid p-40">
-            <div class="row custom__border">
-                <div class="col-xl-12">
+    <div wrapper__section style="margin-top:1.8%;padding-left:1.4%;">
+        <div class="container-fluid" style="background-color:white;">
+            <div class="page-title-box mx-4">
+                <div class="col-lg-6 px-0">
+                    <h3>Jobs</h3>
+                </div>
+                <div style="background-color:#fdeac3; width:100%;padding:.5%;margin-bottom:5px;margin-top:5px;">
+                    For any business, getting customers is only half the battle; creating a job workflow will help track
+                    each scheduled ticket from draft to receiving payment.
+                </div>
+                <br>
+                <div class="row pb-2">
+                    <div class="col-md-12 banking-tab-container">
+                        <a href="<?php echo url('/accounting/sales-overview')?>"
+                            class="banking-tab">Overview</a>
+                        <a href="<?php echo url('/accounting/all-sales')?>"
+                            class="banking-tab">All Sales</a>
+                        <a href="<?php echo url('/accounting/newEstimateList')?>"
+                            class="banking-tab">Estimates</a>
+                        <a href="<?php echo url('/accounting/customers')?>"
+                            class="banking-tab">Customers</a>
+                        <a href="<?php echo url('/accounting/deposits')?>"
+                            class="banking-tab">Deposits</a>
+                        <a href="<?php echo url('/accounting/listworkOrder')?>"
+                            class="banking-tab">Word Order</a>
+                        <a href="<?php echo url('/accounting/invoices')?>"
+                            class="banking-tab">Invoices</a>
+                        <a href="<?php echo url('/accounting/jobs ')?>"
+                            class="banking-tab-active text-decoration-non">Jobs</a>
+                        <a href="<?php echo url('/accounting/products-and-services')?>"
+                            class="banking-tab">Products and Services</a>
+                    </div>
+                </div>
+
+
+                <!-- end row -->
+                <div class="col-md-12">
                     <div class="card">
                         <div class="card-body hid-desk pt-0"
                             style="padding-bottom:0px; padding-left:0px; padding-right:0px;">
                             <div class="row margin-bottom-ter mb-2 align-items-center"
                                 style="background-color:white; padding:0px;">
                                 <div class="col-auto pl-0">
-                                    <h5 class="page-title pt-0 mb-0 mt-0" style="position:relative;top:2px;">Jobs</h5>
                                 </div>
                                 <div class="col text-right-sm d-flex justify-content-end align-items-center">
                                     <div class="float-right d-md-block">
@@ -35,14 +54,6 @@ include viewPath('job/css/lists');
                                                 class="fa fa-plus"></span> New Job</a>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                        <div class="pl-3 pr-3 mt-0 row">
-                            <div class="col mb-4 left alert alert-warning mt-0 mb-2">
-                                <span
-                                    style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">For
-                                    any business, getting customers is only half the battle; creating a job workflow
-                                    will help track each scheduled ticket from draft to receiving payment.</span>
                             </div>
                         </div>
                         <?php
@@ -639,26 +650,20 @@ include viewPath('job/css/lists');
                             </div>
                         </div>
                     </div>
-                    <!-- end card -->
                 </div>
+                <!-- end row -->
             </div>
         </div>
+        <!-- end container-fluid -->
     </div>
     <!-- page wrapper end -->
+    <?php include viewPath('includes/sidebars/accounting/accounting'); ?>
 </div>
-<?php
-// JS to add only Job module
-add_footer_js(array(
-    'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js',
-    'https://cdn.datatables.net/select/1.3.1/js/dataTables.select.min.js',
-    'https://code.jquery.com/ui/1.12.1/jquery-ui.js',
-    'https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.7/dist/loadingoverlay.min.js',
-));
-?>
-<?php include viewPath('includes/footer'); ?>
+
 <link href="https://nightly.datatables.net/css/jquery.dataTables.css" rel="stylesheet" type="text/css" />
 <script src="https://nightly.datatables.net/js/jquery.dataTables.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+
 <script>
     $(document).ready(function() {
         $('#jobListTable').DataTable({
@@ -731,3 +736,5 @@ add_footer_js(array(
         });
     });
 </script>
+
+<?php include viewPath('includes/footer_accounting');

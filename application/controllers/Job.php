@@ -527,7 +527,7 @@ class Job extends MY_Controller
                 'table' => 'estimates',
                 'select' => '*'
             );
-            $this->page_data['jobs_data'] = $this->general->get_data_with_param($get_estimate_query,FALSE);
+            $this->page_data['jobs_data'] = $this->general->get_data_with_param($get_estimate_query, false);
             $this->page_data['jobs_data_items'] = $this->jobs_model->get_specific_workorder_items($id);
         }
         add_css([

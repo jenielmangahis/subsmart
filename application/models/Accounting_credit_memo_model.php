@@ -42,4 +42,14 @@ class Accounting_credit_memo_model extends MY_Model {
 	    $vendor = $this->db->get_where('accounting_credit_memo', array('id' => $id));
 	    return $vendor->result();
     }
+
+	public function getAllByCompany($company_id)
+	{
+		$this->db->select('*');
+        $this->db->from($this->table);
+        // $this->db->where('company_id', $company_id);
+
+        $query = $this->db->get();
+        return $query->result();
+	}
 }

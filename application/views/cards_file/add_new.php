@@ -46,8 +46,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <?php echo form_open_multipart('cards_file/create_new_card', [ 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
                         <div class="row">
                           <div class="col-md-10">
-                            <label for=""><b>Your Name (as it appears on your card)</b><span class="required_field">*</span></label>
-                            <input type="text" required="" value="" class="form-control" name="card_owner_name" id="card_owner_name" required="">
+                            <label for=""><b>Your Name (as it appears on your card)</b><span class="required_field">*</span></label><br />
+                            <input type="text" required="" value="" placeholder="First Name" class="form-control" name="card_owner_first_name" id="card_owner_first_name" required="" style="width: 40%;display:inline-block;">
+                            <input type="text" required="" value="" placeholder="Last Name" class="form-control" name="card_owner_last_name" id="card_owner_last_name" style="width: 40%;display:inline-block;" required="">
                           </div>
                         </div>
                         <br />

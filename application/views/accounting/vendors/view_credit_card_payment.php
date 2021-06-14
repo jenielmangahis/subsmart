@@ -68,8 +68,14 @@
                                         </div>
 
                                         <div class="col-md-6 text-right">
-                                            <p class="m-0">Total paid</p>
-                                            <h2 class="m-0" id="total-amount-paid">$<?=number_format(floatval($ccPayment->amount), 2, '.', ',')?></h2>
+                                            <p class="m-0"><?=$ccPayment->status === "4" ? "PAYMENT STATUS" : "TOTAL PAID" ?></p>
+                                            <h2 class="m-0" id="total-amount-paid">
+                                            <?php if($ccPayment->status === "4") : ?>
+                                                VOID
+                                            <?php else : ?>
+                                                $<?=number_format(floatval($ccPayment->amount), 2, '.', ',')?>
+                                            <?php endif; ?>
+                                            </h2>
                                         </div>
 
                                         <div class="col-md-4">

@@ -437,7 +437,8 @@ class Vendors extends MY_Controller {
         $date = $post['date'];
 
         $filters = [
-            'type' => $type
+            'type' => $type,
+            'order' => $order
         ];
 
         switch($date) {
@@ -603,26 +604,49 @@ class Vendors extends MY_Controller {
         }
 
         $transactions = [];
-        if(isset($expenses) && count($expenses) > 0) {
-            foreach($expenses as $expense) {
-                $method = $this->accounting_payment_methods_model->getById($expense->payment_method_id);
+        if(isset($bills) && count($bills) > 0) {
+            foreach($bills as $bill) {
+                $transactions[] = [
+                    'id' => $bill->id,
+                    'date' => date("m/d/Y", strtotime($bill->bill_date)),
+                    'type' => 'Bill',
+                    'number' => $bill->bill_number,
+                    'payee' => $vendor->display_name,
+                    'method' => '',
+                    'source' => '',
+                    'category' => $this->category_col($bill->id, 'Bill'),
+                    'memo' => $bill->memo,
+                    'due_date' => date("m/d/Y", strtotime($bill->due_date)),
+                    'balance' => number_format(floatval($bill->remaining_balance), 2, '.', ','),
+                    'total' => number_format(floatval($bill->total_amount), 2, '.', ','),
+                    'status' => $bill->status === "2" ? "Paid" : "Open",
+                    'attachments' => $bill->attachments === null ? [] : json_decode($bill->attachments, true),
+                ];
+            }
+        }
+
+        if(isset($billPayments) && count($billPayments) > 0) {
+            foreach($billPayments as $payment) {
+                $paymentAcc = $this->chart_of_accounts_model->getById($payment->payment_account_id);
+                $paymentAccType = $this->account_model->getById($paymentAcc->account_id);
+                $paymentType = $paymentAccType->account_name === 'Bank' ? 'Check' : 'Credit Card';
 
                 $transactions[] = [
-                    'id' => $expense->id,
-                    'date' => date("m/d/Y", strtotime($expense->payment_date)),
-                    'type' => 'Expense',
-                    'number' => $expense->ref_number,
+                    'id' => $payment->id,
+                    'date' => date("m/d/Y", strtotime($payment->payment_date)),
+                    'type' => "Bill Payment ($paymentType)",
+                    'number' => $payment->check_no,
                     'payee' => $vendor->display_name,
-                    'method' => $method->name,
+                    'method' => '',
                     'source' => '',
-                    'category' => $this->category_col($expense->id, 'Expense'),
-                    'memo' => $expense->memo,
-                    'due_date' => '',
-                    'balance' => '$0.00',
-                    'total' => '$'.number_format(floatval($expense->total_amount), 2, '.', ','),
-                    'status' => $expense->status === '4' ? 'Voided' : 'Paid',
-                    'attachments' => $expense->attachments === null ? [] : json_decode($expense->attachments, true)
-                ];
+                    'category' => '',
+                    'memo' => '',
+                    'due_date' => date("m/d/Y", strtotime($payment->payment_date)),
+                    'balance' => '0.00',
+                    'total' => '-'.number_format(floatval($payment->total_amount), 2, '.', ','),
+                    'status' => $payment->status === "4" ? 'Voided' : 'Applied',
+                    'attachments' => [],
+                ];   
             }
         }
 
@@ -639,119 +663,10 @@ class Vendors extends MY_Controller {
                     'category' => $this->category_col($check->id, 'Check'),
                     'memo' => $check->memo,
                     'due_date' => '',
-                    'balance' => '$0.00',
-                    'total' => '$'.number_format(floatval($check->total_amount), 2, '.', ','),
+                    'balance' => '0.00',
+                    'total' => number_format(floatval($check->total_amount), 2, '.', ','),
                     'status' => $check->status === '4' ? 'Voided' : 'Paid',
-                    'attachments' => $check->attachments === null ? [] : json_decode($check->attachments, true)
-                ];
-            }
-        }
-
-        if(isset($bills) && count($bills) > 0) {
-            foreach($bills as $bill) {
-                $transactions[] = [
-                    'id' => $bill->id,
-                    'date' => date("m/d/Y", strtotime($bill->bill_date)),
-                    'type' => 'Bill',
-                    'number' => $bill->bill_number,
-                    'payee' => $vendor->display_name,
-                    'method' => '',
-                    'source' => '',
-                    'category' => $this->category_col($bill->id, 'Bill'),
-                    'memo' => $bill->memo,
-                    'due_date' => date("m/d/Y", strtotime($bill->due_date)),
-                    'balance' => '$'.number_format(floatval($bill->remaining_balance), 2, '.', ','),
-                    'total' => '$'.number_format(floatval($bill->total_amount), 2, '.', ','),
-                    'status' => $bill->status === "2" ? "Paid" : "Open",
-                    'attachments' => $bill->attachments === null ? [] : json_decode($bill->attachments, true)
-                ];
-            }
-        }
-
-        if(isset($creditCardPayments) && count($creditCardPayments) > 0) {
-            foreach($creditCardPayments as $cardPayment) {
-                $transactions[] = [
-                    'id' => $cardPayment->id,
-                    'date' => date("m/d/Y", strtotime($cardPayment->date)),
-                    'type' => 'Credit Card Payment',
-                    'number' => '',
-                    'payee' => $vendor->display_name,
-                    'method' => '',
-                    'source' => '',
-                    'category' => '',
-                    'memo' => $cardPayment->memo,
-                    'due_date' => '',
-                    'balance' => '$0.00',
-                    'total' => '$'.number_format(floatval($cardPayment->amount), 2, '.', ','),
-                    'status' => '',
-                    'attachments' => $cardPayment->attachments === null ? [] : json_decode($cardPayment->attachments, true)
-                ];
-            }
-        }
-
-        if(isset($purchaseOrders) && count($purchaseOrders) > 0) {
-            foreach($purchaseOrders as $purchaseOrder) {
-                $transactions[] = [
-                    'id' => $purchaseOrder->id,
-                    'date' => date("m/d/Y", strtotime($purchaseOrder->purchase_order_date)),
-                    'type' => 'Purchase Order',
-                    'number' => $purchaseOrder->permit_num,
-                    'payee' => $vendor->display_name,
-                    'method' => '',
-                    'source' => '',
-                    'category' => $this->category_col($purchaseOrder->id, 'Purchase Order'),
-                    'memo' => $purchaseOrder->memo,
-                    'due_date' => date("m/d/Y", strtotime($purchaseOrder->purchase_order_date)),
-                    'balance' => '$0.00',
-                    'total' => '$'.number_format(floatval($purchaseOrder->total_amount), 2, '.', ','),
-                    'status' => $purchaseOrder->status === "1" ? "Open" : "Closed",
-                    'attachments' => $purchaseOrder->attachments === null ? [] : json_decode($purchaseOrder->attachments, true)
-                ];
-            }
-        }
-
-        if(isset($billPayments) && count($billPayments) > 0) {
-            foreach($billPayments as $payment) {
-                $paymentAcc = $this->chart_of_accounts_model->getById($payment->payment_account_id);
-                $paymentAccType = $this->account_model->getById($paymentAcc->account_id);
-                $paymentType = $paymentAccType->account_name === 'Bank' ? 'Check' : 'Credit Card';
-
-                $transactions[] = [
-                    'id' => $payment->id,
-                    'date' => date("m/d/Y", strtotime($payment->payment_date)),
-                    'type' => "Bill Payment ($paymentType)",
-                    'number' => $payment->starting_check_no,
-                    'payee' => $vendor->display_name,
-                    'method' => '',
-                    'source' => '',
-                    'category' => '',
-                    'memo' => '',
-                    'due_date' => date("m/d/Y", strtotime($payment->payment_date)),
-                    'balance' => '$0.00',
-                    'total' => '-$'.number_format(floatval($payment->total_amount), 2, '.', ','),
-                    'status' => 'Applied',
-                    'attachments' => []
-                ];
-            }
-        }
-
-        if(isset($vendorCredits) && count($vendorCredits) > 0) {
-            foreach($vendorCredits as $vendorCredit) {
-                $transactions[] = [
-                    'id' => $vendorCredit->id,
-                    'date' => date("m/d/Y", strtotime($vendorCredit->payment_date)),
-                    'type' => "Vendor Credit",
-                    'number' => $vendorCredit->ref_no,
-                    'payee' => $vendor->display_name,
-                    'method' => '',
-                    'source' => '',
-                    'category' => $this->category_col($vendorCredit->id, 'Vendor Credit'),
-                    'memo' => $vendorCredits->memo,
-                    'due_date' => date("m/d/Y", strtotime($vendorCredit->payment_date)),
-                    'balance' => '$'.number_format(floatval($vendorCredit->total_amount), 2, '.', ','),
-                    'total' => '-$'.number_format(floatval($vendorCredit->total_amount), 2, '.', ','),
-                    'status' => $vendorCredit->status === "1" ? "Unapplied" : "Applied",
-                    'attachments' => $vendorCredit->attachments === null ? [] : json_decode($vendorCredit->attachments, true)
+                    'attachments' => $check->attachments === null ? [] : json_decode($check->attachments, true),
                 ];
             }
         }
@@ -769,10 +684,96 @@ class Vendors extends MY_Controller {
                     'category' => $this->category_col($creditCardCredit->id, 'Credit Card Credit'),
                     'memo' => $creditCardCredits->memo,
                     'due_date' => '',
-                    'balance' => '$0.00',
-                    'total' => '-$'.number_format(floatval($creditCardCredit->total_amount), 2, '.', ','),
+                    'balance' => '0.00',
+                    'total' => '-'.number_format(floatval($creditCardCredit->total_amount), 2, '.', ','),
                     'status' => '',
-                    'attachments' => $creditCardCredit->attachments === null ? [] : json_decode($creditCardCredit->attachments, true)
+                    'attachments' => $creditCardCredit->attachments === null ? [] : json_decode($creditCardCredit->attachments, true),
+                ];
+            }
+        }
+
+        if(isset($creditCardPayments) && count($creditCardPayments) > 0) {
+            foreach($creditCardPayments as $cardPayment) {
+                $transactions[] = [
+                    'id' => $cardPayment->id,
+                    'date' => date("m/d/Y", strtotime($cardPayment->date)),
+                    'type' => 'Credit Card Payment',
+                    'number' => '',
+                    'payee' => $vendor->display_name,
+                    'method' => '',
+                    'source' => '',
+                    'category' => '',
+                    'memo' => $cardPayment->memo,
+                    'due_date' => '',
+                    'balance' => '0.00',
+                    'total' => number_format(floatval($cardPayment->amount), 2, '.', ','),
+                    'status' => '',
+                    'attachments' => $cardPayment->attachments === null ? [] : json_decode($cardPayment->attachments, true),
+                ];
+            }
+        }
+
+        if(isset($expenses) && count($expenses) > 0) {
+            foreach($expenses as $expense) {
+                $method = $this->accounting_payment_methods_model->getById($expense->payment_method_id);
+
+                $transactions[] = [
+                    'id' => $expense->id,
+                    'date' => date("m/d/Y", strtotime($expense->payment_date)),
+                    'type' => 'Expense',
+                    'number' => $expense->ref_number,
+                    'payee' => $vendor->display_name,
+                    'method' => $method->name,
+                    'source' => '',
+                    'category' => $this->category_col($expense->id, 'Expense'),
+                    'memo' => $expense->memo,
+                    'due_date' => '',
+                    'balance' => '0.00',
+                    'total' => number_format(floatval($expense->total_amount), 2, '.', ','),
+                    'status' => $expense->status === '4' ? 'Voided' : 'Paid',
+                    'attachments' => $expense->attachments === null ? [] : json_decode($expense->attachments, true),
+                ];
+            }
+        }
+
+        if(isset($purchaseOrders) && count($purchaseOrders) > 0) {
+            foreach($purchaseOrders as $purchaseOrder) {
+                $transactions[] = [
+                    'id' => $purchaseOrder->id,
+                    'date' => date("m/d/Y", strtotime($purchaseOrder->purchase_order_date)),
+                    'type' => 'Purchase Order',
+                    'number' => $purchaseOrder->purchase_order_no,
+                    'payee' => $vendor->display_name,
+                    'method' => '',
+                    'source' => '',
+                    'category' => $this->category_col($purchaseOrder->id, 'Purchase Order'),
+                    'memo' => $purchaseOrder->memo,
+                    'due_date' => date("m/d/Y", strtotime($purchaseOrder->purchase_order_date)),
+                    'balance' => '0.00',
+                    'total' => number_format(floatval($purchaseOrder->total_amount), 2, '.', ','),
+                    'status' => $purchaseOrder->status === "1" ? "Open" : "Closed",
+                    'attachments' => $purchaseOrder->attachments === null ? [] : json_decode($purchaseOrder->attachments, true),
+                ];
+            }
+        }
+
+        if(isset($vendorCredits) && count($vendorCredits) > 0) {
+            foreach($vendorCredits as $vendorCredit) {
+                $transactions[] = [
+                    'id' => $vendorCredit->id,
+                    'date' => date("m/d/Y", strtotime($vendorCredit->payment_date)),
+                    'type' => "Vendor Credit",
+                    'number' => $vendorCredit->ref_no,
+                    'payee' => $vendor->display_name,
+                    'method' => '',
+                    'source' => '',
+                    'category' => $this->category_col($vendorCredit->id, 'Vendor Credit'),
+                    'memo' => $vendorCredits->memo,
+                    'due_date' => date("m/d/Y", strtotime($vendorCredit->payment_date)),
+                    'balance' => number_format(floatval($vendorCredit->total_amount), 2, '.', ','),
+                    'total' => '-'.number_format(floatval($vendorCredit->total_amount), 2, '.', ','),
+                    'status' => $vendorCredit->status === "1" ? "Unapplied" : "Applied",
+                    'attachments' => $vendorCredit->attachments === null ? [] : json_decode($vendorCredit->attachments, true),
                 ];
             }
         }
@@ -2639,6 +2640,9 @@ class Vendors extends MY_Controller {
             case 'credit-card-payment' :
                 $return = $this->void_cc_payment($transactionId);
             break;
+            case 'bill-payment' :
+                $return = $this->void_bill_payment($transactionId);
+            break;
         }
 
         echo json_encode($return);
@@ -2747,6 +2751,59 @@ class Vendors extends MY_Controller {
 
         return [
             'data' => $ccPaymentId,
+            'success' => $void ? true : false,
+            'message' => $void ? 'Transaction successfully voided!' : 'Unexpected error occurred.'
+        ];
+    }
+
+    private function void_bill_payment($billPaymentId)
+    {
+        $billPayment = $this->vendors_model->get_bill_payment_by_id($billPaymentId);
+
+        $billPaymentData = [
+            'total_amount' => 0.00,
+            'status' => 4,
+            'updated_at' => date("Y-m-d H:i:s")
+        ];
+
+        $paymentAcc = $this->chart_of_accounts_model->getById($billPayment->payment_account_id);
+        $paymentAccType = $this->account_model->getById($paymentAcc->account_id);
+
+        if($paymentAccType->account_name === 'Credit Card') {
+            $newBalance = floatval($paymentAcc->balance) - floatval($billPayment->total_amount);
+        } else {
+            $newBalance = floatval($paymentAcc->balance) + floatval($billPayment->total_amount);
+        }
+
+        $newBalance = number_format($newBalance, 2, '.', ',');
+
+        $paymentAccData = [
+            'id' => $paymentAcc->id,
+            'company_id' => logged('company_id'),
+            'balance' => $newBalance
+        ];
+
+        $this->chart_of_accounts_model->updateBalance($paymentAccData);
+
+        $void = $this->vendors_model->update_bill_payment($billPaymentId, $billPaymentData);
+
+        $paymentItems = $this->vendors_model->get_bill_payment_items($billPaymentId);
+        foreach($paymentItems as $paymentItem) {
+            $bill = $this->expenses_model->get_bill_data($paymentItem->bill_id);
+
+            $billData = [
+                'remaining_balance' => floatval($bill->remaining_balance) + floatval($paymentItem->total_amount),
+                'status' => 1,
+                'updated_at' => date("Y-m-d H:i:s")
+            ];
+
+            $this->expenses_model->update_bill_data($bill->id, $billData);
+        }
+
+        $this->vendors_model->delete_bill_payment_items($billPaymentId);
+
+        return [
+            'data' => $billPaymentId,
             'success' => $void ? true : false,
             'message' => $void ? 'Transaction successfully voided!' : 'Unexpected error occurred.'
         ];

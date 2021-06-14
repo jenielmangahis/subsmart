@@ -39,19 +39,6 @@ div#employees-view-history-panel,
     overflow: hidden;
 }
 
-#employees-view-history-panel .close-btn,
-#employees-view-jobs-panel .close-btn,
-#single-job-view-panel .close-btn {
-    position: absolute;
-    top: 0;
-    right: 0;
-    padding-right: 15px;
-    padding-top: 2px;
-    color: #fff;
-    padding-left: 15px;
-    cursor: pointer;
-}
-
 #employees-view-history-panel .filter-panel,
 #employees-view-jobs-panel .filter-panel {
     padding-left: 10px;
@@ -199,4 +186,17 @@ table.route-details-table {
 .estimated-calculation .est .value {
     font-size: 15px;
     font-weight: bold;
+}
+
+#employees-view-history-panel .close-btn,
+#employees-view-jobs-panel .close-btn,
+#single-job-view-panel .close-btn {
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding-right: 15px;
+    padding-top: 2px;
+    color: #fff;
+    padding-left: 15px;
+    cursor: pointer;
 }

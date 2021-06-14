@@ -96,11 +96,6 @@ function get_employee_jobs(user_id) {
 }
 
 function toggleBounce(the_marker) {
-    // if (the_marker.getAnimation() !== null) {
-    //     the_marker.setAnimation(null);
-    // } else {
-    //     the_marker.setAnimation(google.maps.Animation.BOUNCE);
-    // }
     if (infoWindow != null) {
         if (infoWindow) {
             infoWindow.close();
@@ -263,9 +258,6 @@ $(document).on("click", ".jobs-list-item", function() {
 
                 }
             );
-
-
-
         }
     });
 });

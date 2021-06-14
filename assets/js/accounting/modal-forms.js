@@ -1772,6 +1772,7 @@ $(function() {
         } else {
             var row = $(this).parent().parent().parent().parent();
             var paymentAmount = row.find('input.payment-amount').val();
+            paymentAmount = paymentAmount === '' ? 0.00 : paymentAmount;
             var creditApplied = $(this).val();
         }
 
@@ -1786,8 +1787,17 @@ $(function() {
         computeBillsPaymentTotal();
     });
 
-    $(document).on('change', '#payBillsModal #bills-table input[type="checkbox"]', function() {
+    $(document).on('change', '#payBillsModal #bills-table tbody input[type="checkbox"]', function() {
         computeBillsPaymentTotal();
+    });
+
+    $(document).on('change', '#payBillsModal #bills-table input#select-all-bills', function() {
+        var isChecked = $(this).prop('checked');
+
+        $('#payBillsModal #bills-table tbody tr input[type="checkbox"]').each(function() {
+            $(this).prop('checked', isChecked);
+            $(this).trigger('change');
+        });
     });
 });
 
@@ -2276,6 +2286,7 @@ const submitModalForm = (event, el) => {
 
         $(`${modalId} #bills-table tbody tr`).each(function() {
             var checkbox = $(this).find('td:first-child input');
+            var payee = $(this).find('td:nth-child(2) input').val();
             var credit_applied =  $(this).find('input.credit-applied').length > 0 ? $(this).find('input.credit-applied').val() : 0.00;
             var payment_amount =  $(this).find('input.payment-amount').val();
             var total_amount = parseFloat(parseFloat(credit_applied) + parseFloat(payment_amount)).toFixed(2);
@@ -2283,11 +2294,13 @@ const submitModalForm = (event, el) => {
             if(checkbox.prop('checked')) {
                 if(data.has('bills[]') === false) {
                     data.set('bills[]', checkbox.val());
+                    data.set('payee[]', payee);
                     data.set('credit_applied[]', credit_applied);
                     data.set('payment_amount[]', payment_amount);
                     data.set('total_amount[]', total_amount);
                 } else {
                     data.append('bills[]', checkbox.val());
+                    data.append('payee[]', payee);
                     data.append('credit_applied[]', credit_applied);
                     data.append('payment_amount[]', payment_amount);
                     data.append('total_amount[]', total_amount);
@@ -2568,7 +2581,10 @@ const loadBills = () => {
             },
             {
                 data: 'payee',
-                name: 'payee'
+                name: 'payee',
+                fnCreatedCell: function(td, cellData, rowData, row, col) {
+                    $(td).html(`${cellData} <input type="hidden" value="${rowData.payee_id}">`);
+                }
             },
             {
                 data: 'ref_no',

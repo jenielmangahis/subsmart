@@ -8,7 +8,7 @@ $('.datepicker').each(function() {
     });
 });
 
-$('.dropdown-menu[aria-labelledby="filterDropdown"]').on('click', function(e) {
+$('.dropdown-menu').on('click', function(e) {
     e.stopPropagation();
 });
 
@@ -59,23 +59,58 @@ var table = $('#transactions-table').DataTable({
         },
         {
             data: 'type',
-            name: 'type'
+            name: 'type',
+            fnCreatedCell: function(td, cellData, rowData, row, col) {
+                $(td).addClass('type');
+
+                if($('#trans_type').prop('checked') === false) {
+					$(td).hide();
+				}
+			}
         },
         {
             data: 'number',
-            name: 'number'
+            name: 'number',
+            fnCreatedCell: function(td, cellData, rowData, row, col) {
+                $(td).addClass('number');
+
+                if($('#trans_number').prop('checked') === false) {
+					$(td).hide();
+				}
+			}
         },
         {
             data: 'payee',
-            name: 'payee'
+            name: 'payee',
+            fnCreatedCell: function(td, cellData, rowData, row, col) {
+                $(td).addClass('payee');
+
+                if($('#trans_payee').prop('checked') === false) {
+					$(td).hide();
+				}
+			}
         },
         {
             data: 'method',
-            name: 'method'
+            name: 'method',
+            fnCreatedCell: function(td, cellData, rowData, row, col) {
+                $(td).addClass('method');
+
+                if($('#trans_method').prop('checked') === false) {
+					$(td).hide();
+				}
+			}
         },
         {
             data: 'source',
-            name: 'source'
+            name: 'source',
+            fnCreatedCell: function(td, cellData, rowData, row, col) {
+                $(td).addClass('source');
+
+                if($('#trans_source').prop('checked') === false) {
+					$(td).hide();
+				}
+			}
         },
         {
             data: 'category',
@@ -86,19 +121,46 @@ var table = $('#transactions-table').DataTable({
                 if($(td).find('select').length > 0) {
                     $(td).find('select').select2();
                 }
+                
+                $(td).addClass('category');
+
+                if($('#trans_category').prop('checked') === false) {
+					$(td).hide();
+				}
             }
         },
         {
             data: 'memo',
-            name: 'memo'
+            name: 'memo',
+            fnCreatedCell: function(td, cellData, rowData, row, col) {
+                $(td).addClass('memo');
+
+                if($('#trans_memo').prop('checked') === false) {
+					$(td).hide();
+				}
+			}
         },
         {
             data: 'due_date',
-            name: 'due_date'
+            name: 'due_date',
+            fnCreatedCell: function(td, cellData, rowData, row, col) {
+                $(td).addClass('due_date');
+
+                if($('#trans_due_date').prop('checked') === false) {
+					$(td).hide();
+				}
+			}
         },
         {
             data: 'balance',
-            name: 'balance'
+            name: 'balance',
+            fnCreatedCell: function(td, cellData, rowData, row, col) {
+                $(td).addClass('balance');
+
+                if($('#trans_balance').prop('checked') === false) {
+					$(td).hide();
+				}
+			}
         },
         {
             data: 'total',
@@ -106,12 +168,26 @@ var table = $('#transactions-table').DataTable({
         },
         {
             data: 'status',
-            name: 'status'
+            name: 'status',
+            fnCreatedCell: function(td, cellData, rowData, row, col) {
+                $(td).addClass('status');
+
+                if($('#trans_status').prop('checked') === false) {
+					$(td).hide();
+				}
+			}
         },
         {
             orderable: false,
             data: 'attachments',
-            name: 'attachments'
+            name: 'attachments',
+            fnCreatedCell: function(td, cellData, rowData, row, col) {
+                $(td).addClass('attachments');
+
+                if($('#trans_attachments').prop('checked') === false) {
+					$(td).hide();
+				}
+			}
         },
         {
             orderable: false,
@@ -198,6 +274,7 @@ $(document).on('change', '#type', function() {
             $('#status').next().remove();
             $('#status').children('option:not([value="all"])').remove();
             $('#status').select2();
+            $('#status').parent().show();
             $('#category').parent().hide();
         break;
         default :
@@ -252,3 +329,73 @@ function applybtn()
 {
     table.ajax.reload();
 }
+
+$(document).on('click', 'a#new-time-activity', function(e) {
+    e.preventDefault();
+
+    $('#new-popup #accounting_employees .ajax-single_time_activity_modal').trigger('click');
+});
+
+$(document).on('click', 'a#new-expense-transaction', function(e) {
+    e.preventDefault();
+
+    $('#new-popup #accounting_vendors .ajax-expense_modal').trigger('click');
+});
+
+$(document).on('click', 'a#new-check-transaction', function(e) {
+    e.preventDefault();
+
+    $('#new-popup #accounting_vendors .ajax-check_modal').trigger('click');
+});
+
+$(document).on('click', 'a#new-bill-transaction', function(e) {
+    e.preventDefault();
+
+    $('#new-popup #accounting_vendors .ajax-bill_modal').trigger('click');
+});
+
+$(document).on('click', 'a#new-purchase-order-transaction', function(e) {
+    e.preventDefault();
+
+    $('#new-popup #accounting_vendors .ajax-purchase_order_modal').trigger('click');
+});
+
+$(document).on('click', 'a#new-vendor-credit-transaction', function(e) {
+    e.preventDefault();
+
+    $('#new-popup #accounting_vendors .ajax-vendor_credit_modal').trigger('click');
+});
+
+$(document).on('click', 'a#new-credit-card-pmt', function(e) {
+    e.preventDefault();
+
+    $('#new-popup #accounting_order .ajax-pay_down_credit_card_modal').trigger('click');
+});
+
+$(document).on('click', 'a#pay-bills', function(e) {
+    e.preventDefault();
+
+    $('#new-popup #accounting_vendors .ajax-pay_bills_modal').trigger('click');
+});
+
+$('.action-bar .dropdown-menu .show-more-button').on('click', function(e) {
+	e.preventDefault();
+
+	if($(this).prev().hasClass('hide')) {
+		$(this).prev().removeClass('hide');
+		$(this).html('<i class="fa fa-caret-up text-info"></i> &nbsp; Show less');
+	} else {
+		$(this).prev().addClass('hide');
+		$(this).html('<i class="fa fa-caret-down text-info"></i> &nbsp; Show more');
+	}
+});
+
+$(document).on('change', '.action-bar input[type="checkbox"]', function() {
+    var className = $(this).attr('id').replace('trans_', '');
+
+    if($(this).prop('checked')) {
+        $(`#transactions-table .${className}`).show();
+    } else {
+        $(`#transactions-table .${className}`).hide();
+    }
+});
