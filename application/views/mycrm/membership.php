@@ -118,6 +118,14 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     <?php } ?>                    
                 </div>
             </div>
+            <?php if($client->payment_method == 'offer code'){ ?>
+                <div class="row margin-bottom-sec">
+                    <div class="col-md-4">
+                        <strong>Offer Code Used</strong>
+                    </div>
+                    <div class="col-md-5"><?= $offerCode->offer_code; ?></div>
+                </div>
+            <?php } ?>
             <div class="row margin-bottom-sec">
                 <div class="col-md-4">
                     <strong>Billing Cycle</strong>
@@ -134,7 +142,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             </div>
             <div class="row margin-bottom-sec">
                 <div class="col-md-4">
-                    <strong>Next Bill Date</strong>
+                    <?php if($client->is_trial == 1){ ?>
+                        <strong>Trial Ends</strong>
+                    <?php }else{ ?>
+                        <strong>Next Bill Date</strong>
+                    <?php } ?>
                 </div>
                 <div class="col-md-5"><?= date("d-M-Y",strtotime($client->next_billing_date)); ?></div>
             </div>
@@ -526,6 +538,33 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     </div>
                                 </div>
                             </div>
+                            <hr />
+                            <div class="row form_line">
+                                <div class="col-md-4">
+                                    Plan Amount
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text" id="basic-addon1">$</span>
+                                        </div>
+                                        <input type="number" class="form-control" name="plan_amount" id="" value="<?= number_format($plan->price,2); ?>" disabled="">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row form_line">
+                                <div class="col-md-4">
+                                    Addon Amount
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text" id="basic-addon1">$</span>
+                                        </div>
+                                        <input type="number" class="form-control" name="plan_amount" id="" value="<?= number_format($total_addon_price,2); ?>" disabled="">
+                                    </div>
+                                </div>
+                            </div>
                             <div class="row form_line">
                                 <div class="col-md-4">
                                     Total Amount
@@ -535,7 +574,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         <div class="input-group-prepend">
                                             <span class="input-group-text" id="basic-addon1">$</span>
                                         </div>
-                                        <input type="number" class="form-control" name="plan_amount" id="" value="<?= number_format($plan->price,2); ?>" disabled="">
+                                        <input type="number" class="form-control" name="plan_amount" id="" value="<?= number_format($total_monthly,2); ?>" disabled="">
                                     </div>
                                 </div>
                             </div>

@@ -725,14 +725,15 @@ class Register extends MY_Controller {
         $is_valid = false;
         $msg      = '';
 
-        postAllowed();
+        //postAllowed();
         $post = $this->input->post(); 
 
         //Check if offer code is valid
         $offerCode = $this->OfferCodes_model->getByOfferCodes($post['offer_code']);
 
         if( $offerCode && $offerCode->status == 0 ){
-            $next_billing_date = date("Y-m-d", strtotime("+1 month"));
+            $num_days_trial = $offerCode->trial_days;
+            $next_billing_date = date("Y-m-d", strtotime("+".$num_days_trial." day"));
             $today = strtotime(date("Y-m-d"));
             $cid   = $this->Clients_model->create([
                 'first_name' => $post['firstname'],
@@ -747,7 +748,7 @@ class Register extends MY_Controller {
                 'password' => $post['password'],
                 'ip_address' => getValidIpAddress(),
                 'plan_date_registered' => date("Y-m-d"),
-                'plan_date_expiration' => date("Y-m-d", strtotime("+1 month")),
+                'plan_date_expiration' => date("Y-m-d", strtotime("+".$num_days_trial." day")),
                 'date_created'  => date("Y-m-d H:i:s"),
                 'date_modified' => date("Y-m-d H:i:s"),
                 'is_plan_active' => 1,
