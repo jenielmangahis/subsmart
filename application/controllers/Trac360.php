@@ -557,110 +557,6 @@ class Trac360 extends MY_Controller
         $data->html =$html;
         echo json_encode($data);
     }
-    public function jobs($job_id=0)
-    {
-        add_css(array(
-            "assets/css/trac360/people.css",
-            "assets/css/trac360/jobs.css",
-            "assets/css/trac360/calendar.css",
-            "assets/css/timesheet/calendar/main.css",
-        ));
-        add_footer_js(array(
-            "assets/js/trac360/jobs.js",
-            "assets/js/trac360/jobs_includes/live_jobs.js",
-            "assets/js/trac360/calendar.js",
-            "assets/js/timesheet/calendar/main.js",
-
-        ));
-        $company_id = logged('company_id');
-        $user_id = logged('id');
-        $role    = logged('role');
-
-        $settings = $this->settings_model->getValueByKey(DB_SETTINGS_TABLE_KEY_SCHEDULE);
-        $this->page_data['settings'] = unserialize($settings);
-        if ($role == 1 || $role == 2) {
-            $upcomingJobs = $this->trac360_model->getAllUpcomingJobsByCompanyId($company_id); //$this->trac360_model->getAllUpcomingJobs();
-        } else {
-            $upcomingJobs = $this->trac360_model->getAllUpcomingJobsByCompanyId($company_id);
-        }
-        
-        if ($role == 1 || $role == 2) {
-            $previousJobs = $this->trac360_model->getAllpreviousJobsByCompanyID($company_id);//$this->trac360_model->getAllpreviousJobs();
-        } else {
-            $previousJobs = $this->trac360_model->getAllpreviousJobsByCompanyID($company_id);
-        }
-        
-        $liveJobs = $this->trac360_model->get_all_jobs(date("Y-m-d"), date("Y-m-d"), logged('company_id'), "live");
-        
-
-        $this->page_data['upcomingJobs'] = $upcomingJobs;
-        $this->page_data['previousJobs'] = $previousJobs;
-        $this->page_data['company_id'] = $company_id;
-        $this->page_data['user_id'] = $user_id;
-        $this->page_data['liveJobs'] = $liveJobs;
-
-        if ($job_id > 0) {
-            $jb = $this->trac360_model->get_job_byID($job_id);
-            $this->page_data['external_employee_id'] = $jb->employee_id;
-            $this->page_data['external_employee_name'] = $jb->FName.' '.$jb->LName;
-            $this->page_data['external_job_item_selected_view_html'] ='';
-
-            $this->page_data['external_job_selcted'] = true;
-            $this->page_data['external_job_id'] = $job_id;
-
-            $this->page_data['external_job_item_selected_view_html'] .='<div class="col-md-4 job-sched text-center">
-                                        <a href="#">
-                                            <time style="font-size: 10px; text-align: left;" datetime="2021-02-09"
-                                                class="icon-calendar-live">
-                                                <em>'.date('D', strtotime($jb->start_date)).'</em>
-                                                <strong style="background-color: #58c04e;">'.date('M', strtotime($jb->start_date)) .'</strong>
-                                                <span>'.date('d', strtotime($jb->start_date)) .'</span>
-                                            </time>
-                                        </a>
-                                        <div class="job-status text-center mb-2"
-                                            style="background:'.$jb->event_color.'; color:#ffffff;">
-                                            <b>'.strtoupper($jb->status) .'</b>
-                                        </div>
-                                        <span class="text-center after-status">ARRIVAL TIME</span><br>
-                                        <span class="job-caption text-center">
-                                            '.get_format_time($jb->start_time).' - '. get_format_time_plus_hours($jb->end_time).'
-                                        </span>
-                                    </div>
-                                    <div class="col-md-8 job-details">
-                                        <a style="color: #000!important;" href="#">
-                                            <h6
-                                                style="font-weight:600; margin:0;font-size: 14px;text-transform: uppercase; color:#616161;">
-                                                '.$jb->job_number . ' : ' . $jb->job_type. ' - ' . $jb->tags_name.'
-                                            </h6>
-                                            <b style="color:#45a73c;">
-                                                '.$jb->first_name. ' '. $jb->last_name.'
-                                            </b><br>';
-                                            
-            $this->page_data['external_job_item_selected_view_html'] .='<small class="text-muted">'.$jb->mail_add .' '. $jb->cust_city.' '.$jb->cust_state.' '.$jb->cust_zip_code.'</small><br>
-                <i> <small class="text-muted">'.$jb->job_description.'</small></i><br>';
-                            
-            if ($jb->amount!="") {
-                $amoun =number_format((float)$jb->amount, 2, '.', ',') ;
-            } else {
-                $amount = '0.00';
-            }
-            $this->page_data['external_job_item_selected_view_html'] .='<small>Amount : $ '.$amount .'</small>
-                <br>';
-            if ($jb->link!='') {
-                $this->page_data['external_job_item_selected_view_html'] .='<a href="'.$jb->link.'" target="">
-            <small style="color: darkred; width:400px; overflow:hidden">Click here for the link </small></a>';
-            }
-            // (item_address, item_job_title, item_office_address, item_business_name);
-
-            $this->page_data['item_address'] = $jb->mail_add .' '. $jb->cust_city.' '.$jb->cust_state.' '.$jb->cust_zip_code;
-            $this->page_data['item_job_title'] = $jb->job_number . ' : ' . $jb->job_type. ' - ' . $jb->tags_name;
-            $this->page_data['item_office_address'] = $jb->office_address.', '.$jb->office_city.', '.$jb->office_state.', '.$jb->office_postal_code;
-            $this->page_data['item_business_name'] = $jb->business_name;
-        }
-
-        $this->load->view('trac360/jobs', $this->page_data);
-        // var_dump($data);
-    }
     public function get_jobs_for_calendar()
     {
         $date_from =date('Y-m-d', strtotime('first day of last month', strtotime($this->input->post("date_viewed"))));
@@ -795,6 +691,108 @@ class Trac360 extends MY_Controller
         }
         $this->load->view('trac360/history', $this->page_data);
         // var_dump($data);
+    }
+    
+    public function jobs($job_id=0)
+    {
+        add_css(array(
+            "assets/css/trac360/people.css",
+            "assets/css/trac360/jobs.css",
+            "assets/css/trac360/calendar.css",
+            "assets/css/timesheet/calendar/main.css",
+        ));
+        add_footer_js(array(
+            "assets/js/trac360/jobs.js",
+            "assets/js/trac360/jobs_includes/live_jobs.js",
+            "assets/js/trac360/calendar.js",
+            "assets/js/timesheet/calendar/main.js",
+
+        ));
+        $company_id = logged('company_id');
+        $user_id = logged('id');
+        $role    = logged('role');
+
+        $settings = $this->settings_model->getValueByKey(DB_SETTINGS_TABLE_KEY_SCHEDULE);
+        $this->page_data['settings'] = unserialize($settings);
+        if ($role == 1 || $role == 2) {
+            $upcomingJobs = $this->trac360_model->getAllUpcomingJobsByCompanyId($company_id); //$this->trac360_model->getAllUpcomingJobs();
+        } else {
+            $upcomingJobs = $this->trac360_model->getAllUpcomingJobsByCompanyId($company_id);
+        }
+        
+        if ($role == 1 || $role == 2) {
+            $previousJobs = $this->trac360_model->getAllpreviousJobsByCompanyID($company_id);//$this->trac360_model->getAllpreviousJobs();
+        } else {
+            $previousJobs = $this->trac360_model->getAllpreviousJobsByCompanyID($company_id);
+        }
+        
+        $liveJobs = $this->trac360_model->get_all_jobs(date("Y-m-d"), date("Y-m-d"), logged('company_id'), "live");
+        
+
+        $this->page_data['upcomingJobs'] = $upcomingJobs;
+        $this->page_data['previousJobs'] = $previousJobs;
+        $this->page_data['company_id'] = $company_id;
+        $this->page_data['user_id'] = $user_id;
+        $this->page_data['liveJobs'] = $liveJobs;
+
+        if ($job_id > 0) {
+            $jb = $this->trac360_model->get_job_byID($job_id);
+            $this->page_data['external_employee_id'] = $jb->employee_id;
+            $this->page_data['external_employee_name'] = $jb->FName.' '.$jb->LName;
+            $this->page_data['external_job_item_selected_view_html'] ='';
+
+            $this->page_data['external_job_selcted'] = true;
+            $this->page_data['external_job_id'] = $job_id;
+
+            $this->page_data['external_job_item_selected_view_html'] .='<div class="col-md-4 job-sched text-center">
+                                        <a href="#">
+                                            <time style="font-size: 10px; text-align: left;" datetime="2021-02-09"
+                                                class="icon-calendar-live">
+                                                <em>'.date('D', strtotime($jb->start_date)).'</em>
+                                                <strong style="background-color: #58c04e;">'.date('M', strtotime($jb->start_date)) .'</strong>
+                                                <span>'.date('d', strtotime($jb->start_date)) .'</span>
+                                            </time>
+                                        </a>
+                                        <div class="job-status text-center mb-2"
+                                            style="background:'.$jb->event_color.'; color:#ffffff;">
+                                            <b>'.strtoupper($jb->status) .'</b>
+                                        </div>
+                                        <span class="text-center after-status">ARRIVAL TIME</span><br>
+                                        <span class="job-caption text-center">
+                                            '.get_format_time($jb->start_time).' - '. get_format_time_plus_hours($jb->end_time).'
+                                        </span>
+                                    </div>
+                                    <div class="col-md-8 job-details">
+                                        <a style="color: #000!important;" href="#">
+                                            <h6
+                                                style="font-weight:600; margin:0;font-size: 14px;text-transform: uppercase; color:#616161;">
+                                                '.$jb->job_number . ' : ' . $jb->job_type. ' - ' . $jb->tags_name.'
+                                            </h6>
+                                            <b style="color:#45a73c;">
+                                                '.$jb->first_name. ' '. $jb->last_name.'
+                                            </b><br>';
+                                            
+            $this->page_data['external_job_item_selected_view_html'] .='<small class="text-muted">'.$jb->mail_add .' '. $jb->cust_city.' '.$jb->cust_state.' '.$jb->cust_zip_code.'</small><br>
+                <i> <small class="text-muted">'.$jb->job_description.'</small></i><br>';
+                            
+            if ($jb->amount!="") {
+                $amoun =number_format((float)$jb->amount, 2, '.', ',') ;
+            } else {
+                $amount = '0.00';
+            }
+            $this->page_data['external_job_item_selected_view_html'] .='<small>Amount : $ '.$amount .'</small>
+                <br>';
+            if ($jb->link!='') {
+                $this->page_data['external_job_item_selected_view_html'] .='<a href="'.$jb->link.'" target="">
+            <small style="color: darkred; width:400px; overflow:hidden">Click here for the link </small></a>';
+            }
+            $this->page_data['item_address'] = $jb->mail_add .' '. $jb->cust_city.' '.$jb->cust_state.' '.$jb->cust_zip_code;
+            $this->page_data['item_job_title'] = $jb->job_number . ' : ' . $jb->job_type. ' - ' . $jb->tags_name;
+            $this->page_data['item_office_address'] = $jb->office_address.', '.$jb->office_city.', '.$jb->office_state.', '.$jb->office_postal_code;
+            $this->page_data['item_business_name'] = $jb->business_name;
+        }
+
+        $this->load->view('trac360/jobs', $this->page_data);
     }
     public function get_employee_history()
     {

@@ -622,6 +622,14 @@ class Expenses_model extends MY_Model
         return $query->result();
     }
 
+    public function get_last_purchase_order($companyId)
+    {
+        $this->db->where('company_id', $companyId);
+        $this->db->order_by('created_at', 'desc');
+        $query = $this->db->get('accounting_purchase_order');
+        return $query->row();
+    }
+
     public function get_company_expense_transactions($filters = [])
     {
         $this->db->where('company_id', $filters['company_id']);
@@ -706,7 +714,14 @@ class Expenses_model extends MY_Model
         }
 
         if(isset($filters['status'])) {
-            $this->db->where('status', $filters['status']);
+            switch($filters['status']) {
+                case 'open' :
+                    $this->db->where('status', 1);
+                break;
+                case 'closed' :
+                    $this->db->where('status', 2);
+                break;
+            }
         } else {
             $this->db->where('status !=', 0);
         }
@@ -717,6 +732,7 @@ class Expenses_model extends MY_Model
     public function get_company_vendor_credit_transactions($filters = [])
     {
         $this->db->where('company_id', $filters['company_id']);
+        $this->db->where('status !=', 0);
 
         if(isset($filters['start-date']) && isset($filters['end-date'])) {
             $this->db->where('payment_date >=', $filters['start-date']);
@@ -727,11 +743,6 @@ class Expenses_model extends MY_Model
             $this->db->where('vendor_id', $filters['payee']['id']);
         }
 
-        if(isset($filters['status'])) {
-            $this->db->where('status', $filters['status']);
-        } else {
-            $this->db->where('status !=', 0);
-        }
         $query = $this->db->get('accounting_vendor_credit');
         return $query->result();
     }
@@ -739,6 +750,7 @@ class Expenses_model extends MY_Model
     public function get_company_cc_payment_transactions($filters = [])
     {
         $this->db->where('company_id', $filters['company_id']);
+        $this->db->where('status !=', 0);
 
         if(isset($filters['start-date']) && isset($filters['end-date'])) {
             $this->db->where('date >=', $filters['start-date']);
@@ -749,12 +761,25 @@ class Expenses_model extends MY_Model
             $this->db->where('payee_id', $filters['payee']['id']);
         }
 
-        if(isset($filters['status'])) {
-            $this->db->where('status', $filters['status']);
-        } else {
-            $this->db->where('status !=', 0);
-        }
-        $query = $this->db->get('accounting_vendor_credit');
+        $query = $this->db->get('accounting_pay_down_credit_card');
         return $query->result();
+    }
+
+    public function get_company_bill_payment_items($filters = [])
+    {
+		$this->db->select('accounting_bill_payment_items.*');
+        $this->db->where('accounting_bill_payments.company_id', $filters['company_id']);
+        if(isset($filters['start-date']) && isset($filters['end-date'])) {
+            $this->db->where('accounting_bill_payments.payment_date >=', $filters['start-date']);
+            $this->db->where('accounting_bill_payments.payment_date <=', $filters['end-date']);
+        }
+
+        if(isset($filters['payee']) && $filters['payee']['type'] === 'vendor') {
+            $this->db->where('accounting_bill.vendor_id', $filters['payee']['id']);
+        }
+		$this->db->join('accounting_bill', 'accounting_bill.id = accounting_bill_payment_items.bill_id');
+        $this->db->join('accounting_bill_payments', 'accounting_bill_payments.id = accounting_bill_payment_items.bill_payment_id');
+		$this->db->from('accounting_bill_payment_items');
+        return $this->db->get()->result();
     }
 }

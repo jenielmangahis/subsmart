@@ -18,22 +18,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     .btn-transparent:focus {
         border-color: #6B6C72 !important;
     }
-    #vendors-table tbody td:nth-child(2) a:hover {
-        text-decoration: underline;
-        color: #38a4f8 !important;
-    }
-    #vendors-table .btn-group .btn:hover, #vendors-table .btn-group .btn:focus {
-        color: unset;
-    }
-    #vendors-table .btn-group .btn {
-        padding: 10px;
-    }
-    #vendors-table tbody tr td:first-child {
-        padding-left: 18px;
-        padding-right: 18px;
-    }
-    #vendors-table thead tr th:first-child {
-        width: 1;
+    .action-bar .dropdown-menu a:hover {
+        background: none !important;
     }
 </style>
 <?php include viewPath('includes/header'); ?>
@@ -76,27 +62,26 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         <div class="dropdown show">
                                             <div class="float-right">
                                                 <button type="button" class="btn btn-success" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                    New transaction
+                                                    New transaction &nbsp;&nbsp;<i class="fa fa-caret-down"></i>
                                                 </button>
                                                 <div class="dropdown-menu">
-                                                    <a class="dropdown-item" href="#">Time activity</a>
-                                                    <a class="dropdown-item" href="#">Bill</a>
-                                                    <a class="dropdown-item" href="#">Expense</a>
-                                                    <a class="dropdown-item" href="#">Check</a>
-                                                    <a class="dropdown-item" href="#">Purchase order</a>
-                                                    <a class="dropdown-item" href="#">Vendor Credit</a>
-                                                    <a class="dropdown-item" href="#">Pay down credit card</a>
+                                                    <a class="dropdown-item" href="#" id="new-time-activity">Time activity</a>
+                                                    <a class="dropdown-item" href="#" id="new-bill-transaction">Bill</a>
+                                                    <a class="dropdown-item" href="#" id="new-expense-transaction">Expense</a>
+                                                    <a class="dropdown-item" href="#" id="new-check-transaction">Check</a>
+                                                    <a class="dropdown-item" href="#" id="new-purchase-order-transaction">Purchase order</a>
+                                                    <a class="dropdown-item" href="#" id="new-vendor-credit-transaction">Vendor Credit</a>
+                                                    <a class="dropdown-item" href="#" id="new-credit-card-pmt">Pay down credit card</a>
                                                 </div>
                                             </div>
                                             <div class="btn-group float-right mr-2">
-                                                <a href="javascript:void(0);" class="btn btn-transparent d-flex align-items-center justify-content-center">
+                                                <button type="button" class="btn btn-transparent d-flex align-items-center justify-content-center">
                                                     Print checks
-                                                </a>
+                                                </button>
                                                 <button type="button" class="btn btn-transparent dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                     <span class="sr-only">Toggle Dropdown</span>
                                                 </button>
                                                 <div class="dropdown-menu">
-                                                    <a class="dropdown-item" href="#" id="order-checks">Order checks</a>
                                                     <a class="dropdown-item" href="#" id="pay-bills">Pay bills</a>
                                                 </div>
                                             </div>
@@ -287,16 +272,19 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                     <div class="dropdown-menu p-3" aria-labelledby="dropdownMenuLink">
                                                         <p class="m-0">Columns</p>
                                                         <p class="m-0"><input type="checkbox" id="trans_type" checked> Type</p>
-                                                        <p class="m-0"><input type="checkbox" id="trans_no" checked> No.</p>
+                                                        <p class="m-0"><input type="checkbox" id="trans_number" checked> No.</p>
                                                         <p class="m-0"><input type="checkbox" id="trans_payee" checked> Payee</p>
                                                         <p class="m-0"><input type="checkbox" id="trans_method" checked> Method</p>
                                                         <p class="m-0"><input type="checkbox" id="trans_source" checked> Source</p>
                                                         <p class="m-0"><input type="checkbox" id="trans_category" checked> Category</p>
                                                         <p class="m-0"><input type="checkbox" id="trans_memo" checked> Memo</p>
-                                                        <p class="m-0"><input type="checkbox" id="trans_due_date" checked> Due date</p>
-                                                        <p class="m-0"><input type="checkbox" id="trans_balance" checked> Balance</p>
-                                                        <p class="m-0"><input type="checkbox" id="trans_status" checked> Status</p>
-                                                        <p class="m-0"><input type="checkbox" id="trans_attachments" checked> Attachments</p>
+														<div class="show-more hide">
+                                                            <p class="m-0"><input type="checkbox" id="trans_due_date" checked> Due date</p>
+                                                            <p class="m-0"><input type="checkbox" id="trans_balance" checked> Balance</p>
+                                                            <p class="m-0"><input type="checkbox" id="trans_status" checked> Status</p>
+                                                            <p class="m-0"><input type="checkbox" id="trans_attachments" checked> Attachments</p>
+                                                        </div>
+														<a href="#" class="text-info text-center show-more-button"><i class="fa fa-caret-down text-info"></i> &nbsp;Show more</a>
                                                         <p class="m-0">Rows</p>
                                                         <p class="m-0">
                                                             <select name="table_rows" id="table_rows" class="form-control">
@@ -324,17 +312,17 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                 </div>
                                             </th>
                                             <th>DATE</th>
-                                            <th>TYPE</th>
-                                            <th>NO.</th>
-                                            <th>PAYEE</th>
-                                            <th>METHOD</th>
-                                            <th>SOURCE</th>
-                                            <th>CATEGORY</th>
-                                            <th>MEMO</th>
-                                            <th>DUE DATE</th>
-                                            <th>BALANCE</th>
+                                            <th class="type">TYPE</th>
+                                            <th class="number">NO.</th>
+                                            <th class="payee">PAYEE</th>
+                                            <th class="method">METHOD</th>
+                                            <th class="source">SOURCE</th>
+                                            <th class="category">CATEGORY</th>
+                                            <th class="memo">MEMO</th>
+                                            <th class="due_date">DUE DATE</th>
+                                            <th class="balance">BALANCE</th>
                                             <th>TOTAL</th>
-                                            <th>STATUS</th>
+                                            <th class="status">STATUS</th>
                                             <th class="text-center attachments"><i class="fa fa-paperclip"></i></th>
                                             <th class="text-right">ACTION</th>
                                         </tr>

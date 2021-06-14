@@ -327,6 +327,8 @@ class Vendors_model extends MY_Model {
 		} else {
 			$this->db->where('status !=', 0);
 		}
+
+		$this->db->order_by('created_at', $filters['order']);
 		
 		$query = $this->db->get('accounting_expense');
 
@@ -342,6 +344,7 @@ class Vendors_model extends MY_Model {
 			$this->db->where('date <=', $filters['end-date']);
 		}
 		$this->db->where('status !=', 0);
+		$this->db->order_by('created_at', $filters['order']);
 
 		$query = $this->db->get('accounting_pay_down_credit_card');
 
@@ -356,18 +359,17 @@ class Vendors_model extends MY_Model {
 			$this->db->where('purchase_order_date <=', $filters['end-date']);
 		}
 		$this->db->where('status', 1);
+		$this->db->order_by('created_at', $filters['order']);
 		$query = $this->db->get('accounting_purchase_order');
 		return $query->result();
 	}
 
 	public function get_vendor_bill_payments($vendorId, $filters = [])
 	{
-		$this->db->select('accounting_bill_payments.*');
-		$this->db->where('accounting_bill.vendor_id', $vendorId);
-		$this->db->from('accounting_bill_payments');
-		$this->db->join('accounting_bill_payment_items', 'accounting_bill_payment_items.bill_payment_id = accounting_bill_payments.id');
-		$this->db->join('accounting_bill', 'accounting_bill.id = accounting_bill_payment_items.bill_id');
-		return $this->db->get()->result();
+		$this->db->where('company_id', logged('company_id'));
+		$this->db->where('payee_id', $vendorId);
+		$this->db->order_by('created_at', $filters['order']);
+		return $this->db->get('accounting_bill_payments')->result();
 	}
 
 	public function get_vendor_paid_bills($vendorId)
@@ -375,6 +377,7 @@ class Vendors_model extends MY_Model {
 		$this->db->where('company_id', logged('company_id'));
 		$this->db->where('vendor_id', $vendorId);
 		$this->db->where('status', 2);
+		$this->db->order_by('created_at', $filters['order']);
 
 		$query = $this->db->get('accounting_bill');
 
@@ -390,6 +393,7 @@ class Vendors_model extends MY_Model {
 			$this->db->where('bill_date >=', $filters['start-date']);
 			$this->db->where('bill_date <=', $filters['end-date']);
 		}
+		$this->db->order_by('created_at', $filters['order']);
 
 		$query = $this->db->get('accounting_bill');
 
@@ -405,7 +409,7 @@ class Vendors_model extends MY_Model {
 			$this->db->where('due_date >=', $filters['start-date']);
 			$this->db->where('due_date <=', $filters['end-date']);
 		}
-		// $this->db->where('due_date <', date("Y-m-d"));
+		$this->db->order_by('created_at', $filters['order']);
 
 		$query = $this->db->get('accounting_bill');
 
@@ -421,6 +425,7 @@ class Vendors_model extends MY_Model {
 			$this->db->where('payment_date <=', $filters['end-date']);
 		}
 		$this->db->where('status', 1);
+		$this->db->order_by('created_at', $filters['order']);
 
 		$query = $this->db->get('accounting_vendor_credit');
 
@@ -436,6 +441,7 @@ class Vendors_model extends MY_Model {
 			$this->db->where('payment_date >=', $filters['start-date']);
 			$this->db->where('payment_date <=', $filters['end-date']);
 		}
+		$this->db->order_by('created_at', $filters['order']);
 
 		$query = $this->db->get('accounting_credit_card_credits');
 
@@ -497,6 +503,21 @@ class Vendors_model extends MY_Model {
 		$this->db->where('id', $billPaymentId);
 		$query = $this->db->get('accounting_bill_payments');
 		return $query->row();
+	}
+
+	public function update_bill_payment($billPaymentId, $data)
+	{
+		$this->db->where('company_id', logged('company_id'));
+		$this->db->where('id', $billPaymentId);
+		$update = $this->db->update('accounting_bill_payments', $data);
+		return $update;
+	}
+
+	public function delete_bill_payment_items($billPaymentId)
+	{
+		$this->db->where('bill_payment_id', $billPaymentId);
+		$delete = $this->db->delete('accounting_bill_payment_items');
+		return $delete;
 	}
 
 	public function get_bill_payments_by_bill_id($billId)

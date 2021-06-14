@@ -98,7 +98,6 @@ function get_live_job_last_track_location(customer_address, office_address) {
                     clear_live_map();
                     emeployee_expected_live_calculateAndDisplayRoute(customer_address, office_address);
                     clearInterval(autoclockout_checker_loop);
-
                 } else {
                     autoclockout_checker_loop = setInterval(function() {
                         get_live_job_last_track_location(customer_address, office_address);
@@ -107,7 +106,6 @@ function get_live_job_last_track_location(customer_address, office_address) {
                     if (live_last_route_id != data.last_route_id) {
                         $(".trac360-live-jobs-modal .route-details-setion .route-details-table .tbody").html(data.html);
                         live_last_route_id = data.last_route_id;
-
                         clear_live_map();
                         emeployee_expected_live_calculateAndDisplayRoute(customer_address, office_address);
                         emeployee_live_calculateAndDisplayRoute(data.route_latlng);
@@ -155,7 +153,6 @@ function emeployee_live_calculateAndDisplayRoute(route_latlng) {
                 stopover: true,
             });
         }
-
     }
 
     live_directionsService = new google.maps.DirectionsService();

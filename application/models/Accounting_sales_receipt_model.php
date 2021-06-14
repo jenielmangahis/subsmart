@@ -49,4 +49,14 @@ class Accounting_sales_receipt_model extends MY_Model {
 	    $insert_id = $this->db->insert_id();
 		return  $insert_id;
     }
+
+	public function getAllByCompany($company_id)
+	{
+		$this->db->select('*');
+        $this->db->from($this->table);
+        // $this->db->where('company_id', $company_id);
+
+        $query = $this->db->get();
+        return $query->result();
+	}
 }

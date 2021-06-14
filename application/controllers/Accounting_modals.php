@@ -3045,6 +3045,7 @@ class Accounting_modals extends MY_Controller {
 
             $data[] = [
                 'id' => $bill->id,
+                'payee_id' => $bill->vendor_id,
                 'payee' => $vendor->display_name,
                 'ref_no' => $bill->bill_no !== null && $bill->bill_no !== "" ? $bill->bill_no : "",
                 'due_date' => date("m/d/Y", strtotime($bill->due_date)),
@@ -3107,70 +3108,84 @@ class Accounting_modals extends MY_Controller {
             $return['success'] = false;
             $return['message'] = 'Error';
         } else {
-            $billPayment = [
-                'company_id' => logged('company_id'),
-                'payment_account_id' => $data['payment_account'],
-                'payment_date' => date("Y-m-d", strtotime($data['payment_date'])),
-                'starting_check_no' => $data['starting_check_no'] === "" ? null : $data['starting_check_no'],
-                'to_print_check_no' => $data['print_later'],
-                'total_amount' => $data['total'],
-                'status' => 1,
-                'created_at' => date("Y-m-d H:i:s"),
-                'updated_at' => date("Y-m-d H:i:s")
-            ];
-    
-            $billPaymentId = $this->expenses_model->insert_bill_payment($billPayment);
+            $payees = array_unique($data['payee']);
 
-            $paymentAcc = $this->chart_of_accounts_model->getById($data['payment_account']);
-            $paymentAccType = $this->account_model->getById($paymentAcc->account_id);
+            $startingCheckNo = intval($data['starting_check_no']);
+            foreach($payees as $payee) {
+                $paymentTotal = 0.00;
+                $itemKeys = array_keys($data['payee'], $payee);
+                foreach($itemKeys as $key) {
+                    $paymentTotal += floatval($data['total_amount'][$key]);
+                }
 
-            if($paymentAccType->account_name === 'Credit Card') {
-                $newBalance = floatval($paymentAcc->balance) + floatval($data['total_amount']);
-            } else {
-                $newBalance = floatval($paymentAcc->balance) - floatval($data['total_amount']);
-            }
+                $billPayment = [
+                    'company_id' => logged('company_id'),
+                    'payee_id' => $payee,
+                    'payment_account_id' => $data['payment_account'],
+                    'payment_date' => date("Y-m-d", strtotime($data['payment_date'])),
+                    'check_no' => isset($data['print_later']) ? null : $startingCheckNo,
+                    'to_print_check_no' => $data['print_later'],
+                    'total_amount' => $paymentTotal,
+                    'status' => 1,
+                    'created_at' => date("Y-m-d H:i:s"),
+                    'updated_at' => date("Y-m-d H:i:s")
+                ];
 
-            $newBalance = number_format($newBalance, 2, '.', ',');
+                $billPaymentId = $this->expenses_model->insert_bill_payment($billPayment);
 
-            $paymentAccData = [
-                'id' => $paymentAcc->id,
-                'company_id' => logged('company_id'),
-                'balance' => $newBalance
-            ];
+                if($billPaymentId) {
+                    $paymentAcc = $this->chart_of_accounts_model->getById($data['payment_account']);
+                    $paymentAccType = $this->account_model->getById($paymentAcc->account_id);
 
-            $this->chart_of_accounts_model->updateBalance($paymentAccData);
-    
-            if($billPaymentId) {
-                $billPaymentItems = [];
-                foreach($data['bills'] as $index => $value) {
-                    $billPaymentItems[] = [
-                        'bill_payment_id' => $billPaymentId,
-                        'bill_id' => $value,
-                        'credit_applied_amount' => $data['credit_applied'][$index],
-                        'payment_amount' => $data['payment_amount'][$index],
-                        'total_amount' => $data['total_amount'][$index]
-                    ];
-
-                    $bill = $this->expenses_model->get_bill_data($value);
-
-                    if(floatval($data['total_amount'][$index]) === floatval($bill->remaining_balance)) {
-                        $billData = [
-                            'remaining_balance' => 0.00,
-                            'status' => 2,
-                            'updated_at' => date("Y-m-d H:i:s")
-                        ];
+                    if($paymentAccType->account_name === 'Credit Card') {
+                        $newBalance = floatval($paymentAcc->balance) + floatval($paymentTotal);
                     } else {
-                        $remainingBal = floatval($bill->remaining_balance) - floatval($data['total_amount'][$index]);
-                        $billData = [
-                            'remaining_balance' => number_format($remainingBal, 2, '.', ','),
-                            'updated_at' => date("Y-m-d H:i:s")
-                        ];
+                        $newBalance = floatval($paymentAcc->balance) - floatval($paymentTotal);
                     }
 
-                    $this->expenses_model->update_bill_data($bill->id, $billData);
+                    $newBalance = number_format($newBalance, 2, '.', ',');
+
+                    $paymentAccData = [
+                        'id' => $paymentAcc->id,
+                        'company_id' => logged('company_id'),
+                        'balance' => $newBalance
+                    ];
+
+                    $this->chart_of_accounts_model->updateBalance($paymentAccData);
+
+                    $paymentItems = [];
+                    foreach($itemKeys as $key) {
+                        $paymentItems[] = [
+                            'bill_payment_id' => $billPaymentId,
+                            'bill_id' => $data['bills'][$key],
+                            'credit_applied_amount' => $data['credit_applied'][$key],
+                            'payment_amount' => $data['payment_amount'][$key],
+                            'total_amount' => $data['total_amount'][$key]
+                        ];
+
+                        $bill = $this->expenses_model->get_bill_data($data['bills'][$key]);
+
+                        if(floatval($data['total_amount'][$key]) === floatval($bill->remaining_balance)) {
+                            $billData = [
+                                'remaining_balance' => 0.00,
+                                'status' => 2,
+                                'updated_at' => date("Y-m-d H:i:s")
+                            ];
+                        } else {
+                            $remainingBal = floatval($bill->remaining_balance) - floatval($data['total_amount'][$key]);
+                            $billData = [
+                                'remaining_balance' => number_format($remainingBal, 2, '.', ','),
+                                'updated_at' => date("Y-m-d H:i:s")
+                            ];
+                        }
+    
+                        $this->expenses_model->update_bill_data($bill->id, $billData);
+                    }
+
+                    $this->expenses_model->insert_bill_payment_items($paymentItems);
                 }
-        
-                $this->expenses_model->insert_bill_payment_items($billPaymentItems);
+
+                $startingCheckNo++;
             }
     
             $return = [];
@@ -3220,6 +3235,7 @@ class Accounting_modals extends MY_Controller {
                 'memo' => $data['memo'],
                 'attachments' => $data['attachments'] !== null ? json_encode($data['attachments']) : null,
                 'total_amount' => $data['total_amount'],
+                'remaining_balance' => $data['total_amount'],
                 'status' => 1,
                 'created_at' => date("Y-m-d H:i:s"),
                 'updated_at' => date("Y-m-d H:i:s")
@@ -3386,9 +3402,12 @@ class Accounting_modals extends MY_Controller {
             $return['success'] = false;
             $return['message'] = 'Please enter at least one line item.';
         } else {
+            $lastPO = $this->expenses_model->get_last_purchase_order(logged('company_id'));
+
             $purchaseOrder = [
                 'company_id' => logged('company_id'),
                 'vendor_id' => $data['vendor_id'],
+                'purchase_order_no' => $lastPO === null ? 1 : intval($lastPO->purchase_order_no)+1,
                 'email' => $data['email'],
                 'mailing_address' => $data['mailing_address'],
                 'customer_id' => $data['customer'],

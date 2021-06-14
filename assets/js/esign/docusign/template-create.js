@@ -8,6 +8,7 @@ function TemplateCreate() {
   let template = {};
   let files = [];
   let workorder = undefined;
+  let job = undefined;
 
   const $form = $("#templateForm");
   const $docModal = $("#documentModal");
@@ -268,6 +269,7 @@ function TemplateCreate() {
         subject: $subject.val(),
         message: $message.val(),
         workorder_id: workorder ? workorder.id : null,
+        job_id: job ? job.id : null,
       };
 
       const endpoint = `${prefixURL}/DocuSign/apiSendTemplate/${templateIdParam}`;
@@ -484,11 +486,12 @@ function TemplateCreate() {
 
     let customerSet = false;
     const _recipients = recipients.map((r) => {
-      if (!workorder) return r;
+      if (!workorder && !job) return r;
       if (customerSet || r.name || r.email) return r;
 
-      r.name = workorder.first_name;
-      r.email = workorder.email;
+      const { first_name, last_name, email } = workorder || job;
+      r.name = `${first_name} ${last_name}`;
+      r.email = email;
       customerSet = true;
       return r;
     });
@@ -510,6 +513,13 @@ function TemplateCreate() {
     workorder = data;
   }
 
+  async function getJobCustomer(customerId) {
+    const endpoint = `${prefixURL}/DocuSign/getJobCustomer/${customerId}`;
+    const response = await fetch(endpoint);
+    const { data } = await response.json();
+    job = data;
+  }
+
   async function init() {
     const urlParams = new URLSearchParams(window.location.search);
     templateId = urlParams.get("id");
@@ -517,7 +527,16 @@ function TemplateCreate() {
 
     if (templateId) {
       const workorderId = urlParams.get("workorder_id");
-      await getWorkorderCustomer(workorderId);
+      const jobId = urlParams.get("job_id");
+
+      if (workorderId) {
+        await getWorkorderCustomer(workorderId);
+      }
+
+      if (jobId) {
+        await getJobCustomer(jobId);
+      }
+
       await setFormValues({ isPreparingTemplate });
     } else {
       addRecipient();

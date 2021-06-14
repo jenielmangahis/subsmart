@@ -68,7 +68,7 @@ function get_differenct_of_dates($date_start, $date_end)
               <div id="job-item-selected-view" class="row no-margin">
                 sapmle
               </div>
-              <div class="estimated-calculation" style="">
+              <div class="estimated-calculation">
                 <div class="row no-margin">
                   <div class="col-md-4">
                     <div class="est eta">

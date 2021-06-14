@@ -263,8 +263,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     - <?= date("d", strtotime($date_to))<date("d", strtotime($date_from))?date("M d", strtotime($date_to)):date("d", strtotime($date_to)) ?>
                 </h3>
                 <div class="data-section">
-
-
                     <p class="lead text-muted" style="text-align: left; margin-top:20px;"><label
                             style="padding-bottom: 10px;">Hi <?= $FName ?>,</label><br>Below you'll find the
                         timesheet report you requested for your team at <?= $business_name ?> for the time period <?= date("M d", strtotime($date_from)) ?>

@@ -352,7 +352,6 @@ class Trac360_model extends MY_Model
         $this->db->join('users', 'users.id = jobs.employee_id', 'left');
         $this->db->join('business_profile', 'business_profile.company_id = users.company_id', 'left');
 
-        //echo $start_date . "/" . $end_date;exit;
         $this->db->where('jobs.company_id', $company_id);
         $this->db->like('jobs.job_number', $job_long_id);
         $this->db->where_in('jobs.status', array("Started", "Arrival", "Paused"));

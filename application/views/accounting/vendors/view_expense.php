@@ -74,8 +74,14 @@
                                             </div>
                                         </div>
                                         <div class="col-md-4">
-                                            <h6 class="text-right">AMOUNT</h6>
-                                            <h2 class="text-right">$<span class="transaction-total-amount"><?=number_format(floatval($expense->total_amount), 2, '.', ',')?></span></h2>
+                                            <h6 class="text-right"><?=$expense->status === "4" ? "PAYMENT STATUS" : "AMOUNT" ?></h6>
+                                            <h2 class="text-right">
+                                                <?php if($expense->status === "4") : ?>
+                                                    VOID
+                                                <?php else : ?>
+                                                    $<span class="transaction-total-amount"><?=number_format(floatval($expense->total_amount), 2, '.', ',')?></span>
+                                                <?php endif; ?>
+                                            </h2>
                                         </div>
                                         <?php if($is_copy) : ?>
                                         <div class="col-md-12">

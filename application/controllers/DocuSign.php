@@ -76,6 +76,16 @@ class DocuSign extends MY_Controller
             $workorderRecipient = $this->_getWorkorderCustomer($workorderRecipient->workorder_id);
         }
 
+        $jobRecipient = null;
+        if (!$workorderRecipient) {
+            $this->db->where('user_docfile_recipient_id', $recipientId);
+            $jobRecipient = $this->db->get('user_docfile_job_recipients')->row();
+
+            if ($jobRecipient) {
+                $jobRecipient = $this->_getJobCustomer($jobRecipient->job_id);
+            }
+        }
+
         header('content-type: application/json');
         echo json_encode([
             'document' => $document,
@@ -83,6 +93,7 @@ class DocuSign extends MY_Controller
             'fields' => $fields,
             'files' => $files,
             'workorder_recipient' => $workorderRecipient,
+            'job_recipient' => $jobRecipient,
             'co_recipients' => $coRecipientFields,
             'decrypted' => $decrypted,
         ]);
@@ -852,6 +863,7 @@ SQL;
         $subject = $payload['subject'];
         $recipients = $payload['recipients'];
         $workorderId = $payload['workorder_id'] ?? null;
+        $jobId = $payload['job_id'] ?? null;
 
         // copy template to user_docfile
 
@@ -947,6 +959,13 @@ SQL;
                 $this->db->insert('user_docfile_workorder_recipients', [
                     'user_docfile_recipient_id' => $recipientId,
                     'workorder_id' => $workorderId,
+                ]);
+            }
+
+            if (!is_null($jobId)) {
+                $this->db->insert('user_docfile_job_recipients', [
+                    'user_docfile_recipient_id' => $recipientId,
+                    'job_id' => $jobId,
                 ]);
             }
         }
@@ -1045,6 +1064,22 @@ SQL;
 SQL;
 
         return $this->db->query($query, [$workorderId])->row();
+    }
+
+    public function getJobCustomer($jobId)
+    {
+        header('content-type: application/json');
+        echo json_encode(['data' => $this->_getJobCustomer($jobId)]);
+    }
+
+    private function _getJobCustomer($jobId)
+    {
+        $query = <<<SQL
+        SELECT * FROM `jobs`
+        LEFT JOIN acs_profile ON jobs.customer_id = acs_profile.prof_id WHERE jobs.id = ?
+SQL;
+
+        return $this->db->query($query, [$jobId])->row();
     }
 
     public function apiCopyTemplate($templateId)

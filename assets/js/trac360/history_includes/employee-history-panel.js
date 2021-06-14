@@ -68,8 +68,6 @@ function get_employee_history(the_date_from, the_date_to, the_user_id) {
 }
 
 function emeployee_history_calculateAndDisplayRoute(route_latlng, actual_duration = 0) {
-
-
     if (directionsRenderer != null) {
         directionsRenderer.setMap(null);
         directionsService = null;
