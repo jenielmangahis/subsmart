@@ -178,7 +178,11 @@ $('.notes-container').on('click', function() {
     $('#edit-vendor-modal').modal('show');
 });
 
-$('select').select2();
+$('select:not(#category-id)').select2();
+
+$('#category-id').select2({
+    dropdownParent: $('#select_category_modal')
+});
 
 $('.dropdown-menu').on('click', function(e) {
 	e.stopPropagation();
@@ -211,8 +215,10 @@ $('#transactions-table').DataTable({
 			name: 'checkbox',
             orderable: false,
 			fnCreatedCell: function(td, cellData, rowData, row, col) {
-                $(td).html(`<input type="checkbox" value="${rowData.id}">`);
-                $(td).css('padding', '10px 18px');
+                $(td).html(`
+                <div class="d-flex justify-content-center">
+                    <input type="checkbox" value="${rowData.id}">
+                </div>`);
 			}
 		},
         {
@@ -3183,5 +3189,79 @@ $(document).on('click', '#transactions-table .void-bill-payment', function(e) {
         toast(result.success, result.message);
 
         $('#transactions-table').DataTable().ajax.reload();
+    });
+});
+
+$(document).on('change', '#transactions-table tbody input[type="checkbox"]', function() {
+    var flag = true;
+    var allChecked = true;
+
+    $('#transactions-table tbody input[type="checkbox"]').each(function() {
+        var row = $(this).parent().parent().parent();
+        var categoryCell = row.find('td:nth-child(8)');
+
+        if(categoryCell.find('select').length === 0 && $(this).prop('checked')) {
+            flag = false;
+        }
+
+        if($(this).prop('checked') === false) {
+            allChecked = false;
+        }
+    });
+
+    if(flag) {
+        $('#categorize-selected').removeClass('disabled');
+    } else {
+        $('#categorize-selected').addClass('disabled');
+    }
+
+    $('#transactions-table thead input[type="checkbox"]').prop('checked', allChecked);
+});
+
+$(document).on('change', '#transactions-table thead input[type="checkbox"]', function() {
+    var isChecked = $(this).prop('checked');
+    $('#transactions-table tbody input[type="checkbox"]').each(function() {
+        $(this).prop('checked', isChecked).trigger('change');
+    });
+
+    if(!isChecked) {
+        $('#categorize-selected').addClass('disabled');
+    }
+});
+
+$('#categorize-selected').on('click', function(e) {
+    e.preventDefault();
+
+    $('#select_category_modal').modal('show');
+});
+
+$(document).on('submit', '#categorize-selected-form', function(e) {
+    e.preventDefault();
+
+    var data = new FormData();
+
+    $('#transactions-table tbody input[type="checkbox"]:checked').each(function() {
+        var row = $(this).parent().parent().parent();
+        var categoryCell = row.find('td:nth-child(8)');
+        var rowData = $('#transactions-table').DataTable().row(row).data();
+        var transactionType = rowData.type;
+        transactionType = transactionType.replaceAll(' ', '-');
+        transactionType = transactionType.toLowerCase();
+
+        if(categoryCell.find('select').length > 0) {
+            data.append('transaction_id[]', $(this).val());
+            data.append('transaction_type[]', transactionType);
+        }
+    });
+
+    $.ajax({
+        url: `/accounting/vendors/${vendorId}/categorize-transactions/${$('#category-id').val()}`,
+        data: data,
+        type: 'post',
+        processData: false,
+        contentType: false,
+        success: function(result) {
+            location.reload();
+        }
     });
 });

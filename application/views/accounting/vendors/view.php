@@ -49,6 +49,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     .notes-container:hover {
         border-color: #dee2e6;
     }
+    .dropdown-menu .dropdown-item.disabled {
+        cursor: default;
+        opacity: 0.50;
+        pointer-events: none;
+    }
 </style>
 <?php include viewPath('includes/header'); ?>
 <div class="wrapper" role="wrapper">
@@ -183,8 +188,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                             </button>
 
                                                             <div class="dropdown-menu" aria-labelledby="statusDropdownButton">
-                                                                <a href="#" class="dropdown-item">Print transactions</a>
-                                                                <a href="#" class="dropdown-item">Categorize selected</a>
+                                                                <a href="#" class="dropdown-item disabled" id="print-transactions">Print transactions</a>
+                                                                <a href="#" class="dropdown-item disabled" id="categorize-selected">Categorize selected</a>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -276,7 +281,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                 <table id="transactions-table" class="table table-bordered table-hover" style="width:100%">
                                                     <thead>
                                                         <tr>
-                                                            <th width="3%"><input type="checkbox"></th>
+                                                            <th width="3%">
+                                                                <div class="d-flex justify-content-center">
+                                                                    <input type="checkbox">
+                                                                </div>
+                                                            </th>
                                                             <th>Date</th>
                                                             <th class="type">Type</th>
                                                             <th class="number">No.</th>
@@ -816,6 +825,64 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         </div>
     </div>
     <!-- end add payment term modal -->
+
+    <!-- Select category modal -->
+    <div class="modal fade" id="select_category_modal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered m-auto w-25" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Categorize Selected</h4>
+                    <button type="button" class="close" data-dismiss="modal"><i class="fa fa-times fa-lg"></i></button>
+                </div>
+                <form id="categorize-selected-form">
+                <div class="modal-body" style="max-height: 400px;">
+                    <div class="row">
+                        <div class="col-xl-12">
+                            <div class="card p-0 m-0">
+                                <div class="card-body" style="max-height: 650px; padding-bottom: 1.25rem">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="form-group" style="margin-bottom: 0 !important">
+                                                <select name="category_id" id="category-id" class="form-control" required>
+                                                    <option value="" selected disabled>Select category</option>
+                                                    <?php foreach($categoryAccs as $accType => $accounts) : ?>
+                                                        <optgroup label="<?=$accType?>">
+                                                            <?php foreach($accounts as $account) : ?>
+                                                                <option value="<?=$account->id?>"><?=$account->name?></option>
+
+                                                                <?php if(count($account->childAccs) > 0) : ?>
+                                                                    <optgroup label="&nbsp;&nbsp;&nbsp;Sub-account of <?=$account->name?>">
+                                                                        <?php foreach($account->childAccs as $childAcc) : ?>
+                                                                            <option value="<?=$childAcc->id?>">&nbsp;&nbsp;&nbsp;<?=$childAcc->name?></option>
+                                                                        <?php endforeach; ?>
+                                                                    </optgroup>
+                                                                <?php endif; ?>
+                                                            <?php endforeach; ?>
+                                                        </optgroup>
+                                                    <?php endforeach; ?>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- end card -->
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="col-sm-6">
+                        <button type="button" class="btn btn-secondary btn-rounded border" data-dismiss="modal">Close</button>
+                    </div>
+                    <div class="col-sm-6">
+                        <button type="submit" class="btn btn-success btn-rounded border float-right">Apply</button>
+                    </div>
+                </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- end select category modal -->
 </div>
 
 <!-- page wrapper end -->

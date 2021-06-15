@@ -2186,6 +2186,8 @@ class Timesheet extends MY_Controller
 
         // }
         $execute=true;
+        $user_location_address = "";
+        $usercoords = "";
         if ($entry_type == "Auto") {
             $attendance =$this->timesheet_model->get_attendance_for_clockout($attn_id);
             if ($attendance->overtime_status == 1) {
@@ -2193,6 +2195,8 @@ class Timesheet extends MY_Controller
             } elseif ($attendance->status == 0) {
                 $execute=false;
             }
+            $user_location_address = $this->employeeAddress();
+            $usercoords = $this->timesheet_model->employeeCoordinates();
         }
         $clock_out = date('Y-m-d H:i:s');
 
@@ -2202,7 +2206,11 @@ class Timesheet extends MY_Controller
         // var_dump($check_attn->num_rows());
         if ($check_attn->num_rows() == 1 && $execute) {
             date_default_timezone_set($this->session->userdata('usertimezone'));
-            $content_notification = "Clocked Out in " . $employeeLongnameAddress . " at " . date('m-d-Y h:i A') . " " . $this->session->userdata('offset_zone');
+            if ($entry_type == "Auto") {
+                $content_notification = "Has been auto clocked out at " . date('M d, Y h:i A') . " " . $this->session->userdata('offset_zone');
+            } else {
+                $content_notification = "Clocked Out in " . $employeeLongnameAddress . " at " . date('M d, Y h:i A') . " " . $this->session->userdata('offset_zone');
+            }
             $clock_out_notify = array(
                 'user_id' => $user_id,
                 'title' => 'Clock Out',
@@ -2213,13 +2221,13 @@ class Timesheet extends MY_Controller
             );
             $this->db->insert('user_notification', $clock_out_notify);
             date_default_timezone_set('UTC');
-            $employee_address = $this->employeeAddress();
+
             $out = array(
                 'attendance_id' => $attn_id,
                 'user_id' => $user_id,
                 'action' => 'Check out',
-                'user_location' => $this->timesheet_model->employeeCoordinates(),
-                'user_location_address' => $this->employeeAddress(),
+                'user_location' => $usercoords ,
+                'user_location_address' => $user_location_address,
                 'entry_type' => $entry_type,
                 'company_id' => getLoggedCompanyID()
             );
@@ -2263,7 +2271,12 @@ class Timesheet extends MY_Controller
             $data->FName = $getUserDetail->FName;
             $data->LName = $getUserDetail->LName;
             $data->profile_img = $getUserDetail->profile_img;
-            $data->body = $data->body = $getUserDetail->FName . " " . $getUserDetail->LName . " has Clocked Out today in " . $employeeLongnameAddress . " at " . date('h:i A', time()) . " " . $this->session->userdata('offset_zone');
+            if ($entry_type == "Auto") {
+                $data->body = $getUserDetail->FName . " " . $getUserDetail->LName . " has been Outo clocked out at " . date('h:i A', time()) . " " . $this->session->userdata('offset_zone');
+            } else {
+                $data->body = $getUserDetail->FName . " " . $getUserDetail->LName . " has Clocked Out today in " . $employeeLongnameAddress . " at " . date('h:i A', time()) . " " . $this->session->userdata('offset_zone');
+            }
+            
             $data->device_type =  $getUserDetail->device_type;
             $data->company_id = logged('company_id');
             $data->token = $getUserDetail->device_token;
