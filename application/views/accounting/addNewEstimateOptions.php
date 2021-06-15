@@ -168,6 +168,18 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                     <option value="service">Schedule</option>
                                                 </select>
                                     </div>
+                                    <div class="col-md-3">
+                                        <label for="status" class="required"><b>Estimate Status</b></label>
+                                        <!-- <input type="text" class="form-control" name="zip" id="zip" required
+                                            placeholder="Enter Estimate Status"/> -->
+                                            <select name="status" class="form-control">
+                                                    <option value="Draft">Draft</option>
+                                                    <option value="Submitted">Submitted</option>
+                                                    <option value="Approved">Approved</option>
+                                                    <option value="Declined">Declined</option>
+                                                    <option value="Schedule">Schedule</option>
+                                                </select>
+                                    </div>
                             </div>
 
                             <div class="row" style="background-color:white;font-size:16px;">

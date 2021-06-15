@@ -1,5 +1,6 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed'); ?>
+
 <?php include viewPath('includes/header'); ?>
 <div class="wrapper accounting-sales" role="wrapper">
 	<!-- page wrapper start -->
@@ -128,7 +129,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 					<table id="all_sales_table" class="table table-striped table-bordered w-100">
 						<thead>
 							<tr>
-								<th></th>
+								<th><input type="checkbox" id="checkbox-all-action"></th>
 								<th>Customer/Company</th>
 								<th>Phone</th>
 								<th>Open Balance</th>
@@ -143,9 +144,14 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 											<td>$32</td>
 											<td><a href="">View</a></td>
 										</tr> -->
-							<?php foreach ($customers as $cus) : ?>
+							<?php $counter =0;
+                            foreach ($customers as $cus) :
+                            
+                                 ?>
 							<tr>
-								<td><input type="checkbox"></td>
+								<td><input type="checkbox"
+										name="checkbox<?=$counter?>">
+								</td>
 								<td><?php echo $cus->first_name .' '.  $cus->middle_name .' '. $cus->last_name ?>
 								</td>
 								<td><?php echo $cus->phone_h; ?>
@@ -154,7 +160,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 								</td>
 								<td><a href="" class="btn btn-info">View</a></td>
 							</tr>
-							<?php endforeach; ?>
+							<?php $counter++; endforeach; ?>
 						</tbody>
 					</table>
 				</div>
@@ -170,5 +176,12 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 <!-- page wrapper end -->
 <?php include viewPath('includes/sidebars/accounting/accounting'); ?>
 </div>
+
+<link href="https://nightly.datatables.net/css/jquery.dataTables.css" rel="stylesheet" type="text/css" />
+<script src="https://nightly.datatables.net/js/jquery.dataTables.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+<script>
+	var customer_length = <?=count($customers)?> ;
+</script>
 
 <?php include viewPath('includes/footer_accounting');

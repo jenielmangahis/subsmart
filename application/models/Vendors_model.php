@@ -639,6 +639,11 @@ class Vendors_model extends MY_Model {
 		return $query->result();
 	}
 
+	public function update_multiple_category_by_id($data)
+	{
+		return $this->db->update_batch('accounting_vendor_transaction_categories', $data, 'id');
+	}
+
 	public function update_transaction_category_details($id, $data)
 	{
 		$this->db->where('id', $id);

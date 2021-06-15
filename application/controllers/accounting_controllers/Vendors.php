@@ -245,6 +245,7 @@ class Vendors extends MY_Controller {
         $this->page_data['expenseAccs'] = $this->chart_of_accounts_model->get_expense_accounts();
         $this->page_data['otherExpenseAccs'] = $this->chart_of_accounts_model->get_other_expense_accounts();
         $this->page_data['cogsAccs'] = $this->chart_of_accounts_model->get_cogs_accounts();
+        $this->page_data['categoryAccs'] = $this->get_category_accs();
         $this->page_data['vendor'] = $vendor;
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->page_data['page_title'] = "Vendors";
@@ -2869,5 +2870,192 @@ class Vendors extends MY_Controller {
                 $this->vendors_model->update_transaction_category_details($item->id, $itemDetails);
             }
         }
+    }
+
+    public function categorize_transactions($vendorId, $categoryId)
+    {
+        $post = $this->input->post();
+
+        $categories = [];
+        foreach($post['transaction_id'] as $index => $transactionId) {
+            switch($post['transaction_type'][$index]) {
+                case 'bill' :
+                    $transaction = $this->vendors_model->get_bill_by_id($transactionId);
+                    $category = $this->expenses_model->get_transaction_categories($transactionId, 'Bill');
+                    $category = $category[0];
+
+                    if($category->expense_account_id !== $categoryId) {
+                        $expenseAcc = $this->chart_of_accounts_model->getById($categoryId);
+                        $newBalance = floatval($expenseAcc->balance) + floatval($category->amount);
+                        $newBalance = number_format($newBalance, 2, '.', ',');
+
+                        $expenseAccData = [
+                            'id' => $expenseAcc->id,
+                            'company_id' => logged('company_id'),
+                            'balance' => $newBalance
+                        ];
+
+                        $this->chart_of_accounts_model->updateBalance($expenseAccData);
+
+                        // revert
+                        $expenseAcc = $this->chart_of_accounts_model->getById($category->expense_account_id);
+                        $newBalance = floatval($expenseAcc->balance) - floatval($category->amount);
+                        $newBalance = number_format($newBalance, 2, '.', ',');
+
+                        $expenseAccData = [
+                            'id' => $expenseAcc->id,
+                            'company_id' => logged('company_id'),
+                            'balance' => $newBalance
+                        ];
+
+                        $this->chart_of_accounts_model->updateBalance($expenseAccData);
+                    }
+                break;
+                case 'expense' :
+                    $transaction = $this->vendors_model->get_expense_by_id($transactionId);
+                    $category = $this->expenses_model->get_transaction_categories($transactionId, 'Expense');
+                    $category = $category[0];
+
+                    if($category->expense_account_id !== $categoryId) {
+                        $expenseAcc = $this->chart_of_accounts_model->getById($categoryId);
+                        $newBalance = floatval($expenseAcc->balance) + floatval($category->amount);
+                        $newBalance = number_format($newBalance, 2, '.', ',');
+
+                        $expenseAccData = [
+                            'id' => $expenseAcc->id,
+                            'company_id' => logged('company_id'),
+                            'balance' => $newBalance
+                        ];
+
+                        $this->chart_of_accounts_model->updateBalance($expenseAccData);
+
+                        // revert
+                        $expenseAcc = $this->chart_of_accounts_model->getById($category->expense_account_id);
+                        $newBalance = floatval($expenseAcc->balance) - floatval($category->amount);
+                        $newBalance = number_format($newBalance, 2, '.', ',');
+
+                        $expenseAccData = [
+                            'id' => $expenseAcc->id,
+                            'company_id' => logged('company_id'),
+                            'balance' => $newBalance
+                        ];
+
+                        $this->chart_of_accounts_model->updateBalance($expenseAccData);
+                    }
+                break;
+                case 'check' :
+                    $transaction = $this->vendors_model->get_check_by_id($transactionId);
+                    $category = $this->expenses_model->get_transaction_categories($transactionId, 'Check');
+                    $category = $category[0];
+
+                    if($category->expense_account_id !== $categoryId) {
+                        $expenseAcc = $this->chart_of_accounts_model->getById($categoryId);
+                        $newBalance = floatval($expenseAcc->balance) + floatval($category->amount);
+                        $newBalance = number_format($newBalance, 2, '.', ',');
+
+                        $expenseAccData = [
+                            'id' => $expenseAcc->id,
+                            'company_id' => logged('company_id'),
+                            'balance' => $newBalance
+                        ];
+
+                        $this->chart_of_accounts_model->updateBalance($expenseAccData);
+
+                        // revert
+                        $expenseAcc = $this->chart_of_accounts_model->getById($category->expense_account_id);
+                        $newBalance = floatval($expenseAcc->balance) - floatval($category->amount);
+                        $newBalance = number_format($newBalance, 2, '.', ',');
+
+                        $expenseAccData = [
+                            'id' => $expenseAcc->id,
+                            'company_id' => logged('company_id'),
+                            'balance' => $newBalance
+                        ];
+
+                        $this->chart_of_accounts_model->updateBalance($expenseAccData);
+                    }
+                break;
+                case 'purchase-order' :
+                    $transaction = $this->vendors_model->get_purchase_order_by_id($transactionId);
+                    $category = $this->expenses_model->get_transaction_categories($transactionId, 'Purchase Order');
+                    $category = $category[0];
+                break;
+                case 'vendor-credit' :
+                    $transaction = $this->vendors_model->get_vendor_credit_by_id($transactionId);
+                    $category = $this->expenses_model->get_transaction_categories($transactionId, 'Vendor Credit');
+                    $category = $category[0];
+
+                    if($category->expense_account_id !== $categoryId) {
+                        $expenseAcc = $this->chart_of_accounts_model->getById($categoryId);
+                        $newBalance = floatval($expenseAcc->balance) - floatval($category->amount);
+                        $newBalance = number_format($newBalance, 2, '.', ',');
+
+                        $expenseAccData = [
+                            'id' => $expenseAcc->id,
+                            'company_id' => logged('company_id'),
+                            'balance' => $newBalance
+                        ];
+
+                        $this->chart_of_accounts_model->updateBalance($expenseAccData);
+
+                        // revert
+                        $expenseAcc = $this->chart_of_accounts_model->getById($category->expense_account_id);
+                        $newBalance = floatval($expenseAcc->balance) + floatval($category->amount);
+                        $newBalance = number_format($newBalance, 2, '.', ',');
+
+                        $expenseAccData = [
+                            'id' => $expenseAcc->id,
+                            'company_id' => logged('company_id'),
+                            'balance' => $newBalance
+                        ];
+
+                        $this->chart_of_accounts_model->updateBalance($expenseAccData);
+                    }
+                break;
+                case 'credit-card-credit' :
+                    $transaction = $this->vendors_model->get_credit_card_credit_by_id($transactionId);
+                    $category = $this->expenses_model->get_transaction_categories($transactionId, 'Credit Card Credit');
+                    $category = $category[0];
+
+                    if($category->expense_account_id !== $categoryId) {
+                        $expenseAcc = $this->chart_of_accounts_model->getById($categoryId);
+                        $newBalance = floatval($expenseAcc->balance) - floatval($category->amount);
+                        $newBalance = number_format($newBalance, 2, '.', ',');
+
+                        $expenseAccData = [
+                            'id' => $expenseAcc->id,
+                            'company_id' => logged('company_id'),
+                            'balance' => $newBalance
+                        ];
+
+                        $this->chart_of_accounts_model->updateBalance($expenseAccData);
+
+                        // revert
+                        $expenseAcc = $this->chart_of_accounts_model->getById($category->expense_account_id);
+                        $newBalance = floatval($expenseAcc->balance) + floatval($category->amount);
+                        $newBalance = number_format($newBalance, 2, '.', ',');
+
+                        $expenseAccData = [
+                            'id' => $expenseAcc->id,
+                            'company_id' => logged('company_id'),
+                            'balance' => $newBalance
+                        ];
+
+                        $this->chart_of_accounts_model->updateBalance($expenseAccData);
+                    }
+                break;
+            }
+
+            $categories[] = [
+                'id' => $category->id,
+                'expense_account_id' => $categoryId
+            ];
+        }
+
+        $update = $this->vendors_model->update_multiple_category_by_id($categories);
+        $updatedCount = count($post['transaction_id']);
+        $newCategory = $this->chart_of_accounts_model->getById($categoryId);
+
+        $this->session->set_flashdata("success", "Category updated to $newCategory->name for $updatedCount transactions.");
     }
 }

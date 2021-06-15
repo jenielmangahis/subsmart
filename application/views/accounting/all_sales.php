@@ -282,349 +282,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                             Activity</a>
                     </div>
                 </div>
-				
-				<div class="row">
-					<div class="col-lg-12 px-0">
-						<div class="bg-white p-4">
-							<table id="all_sales_table" class="table table-striped table-bordered w-100">
-										<thead>
-										<tr>
-											<th></th>
-											<th>Date</th>
-											<th>Type</th>
-											<th>No.</th>
-											<th>Customer</th>
-											<th>Due Date</th>
-											<th>Balance</th>
-											<th>Total</th>
-											<th>Status</th>
-											<th>Action</th>
-										</tr>
-										</thead>
-										<tbody>
-                                        <?php foreach ($invoices as $inv):?>
-										<tr>
-											<td><input type="checkbox"></td>
-											<td><?php echo $inv->date_issued; ?></td>
-											<td><?php echo $inv->invoice_type; ?></td>
-											<td><?php echo $inv->invoice_number; ?></td>
-											<td><?php echo $inv->contact_name . '' . $inv->first_name."&nbsp;".$inv->last_name;?></td>
-											<td><?php echo $inv->due_date; ?></td>
-											<td><?php echo $inv->balance; ?></td>
-											<td><?php echo $inv->total_due; ?></td>
-											<td><?php echo $inv->status; ?></td>
-											<td class="text-center">
-                                            <!-- <a href="">View</a> -->
 
-                                            <!-- <div class="dropdown dropdown-btn">
-                                                <a class="dropdown-toggle" type="button" id="dropdown-edit" data-toggle="dropdown" aria-expanded="true">
-                                                    <span class="btn-label">Manage</span><span class="caret-holder"><span class="caret"></span></span>
-                                                </a>
-                                                <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="dropdown-edit">
-                                                    <li role="presentation"><a role="menuitem" tabindex="-1" href="#"><span class="fa fa-file-text-o icon"></span>Send</a></li>
-                                                    <li role="presentation"><a role="menuitem" tabindex="-1" href=""><span class="fa fa-envelope-o icon"></span>Share Invoice Link</a> </li>
-                                                    <li role="separator" class="divider"></li>
-                                                    <li role="presentation"><a role="menuitem" tabindex="-1" href="#" data-toggle="modal" data-target="#modalCloneWorkorder" data-id="" data-name="WO-00433"> <span class="fa fa-print icon"></span>Print Packing Slip</a> </li>
-                                                    <li role="presentation"><a role="menuitem" tabindex="-1" href="#" data-toggle="modal" data-target="#add-invoice" data-convert-to-invoice-modal="open" data-id="161983" data-name="WO-00433"><span class="fa fa-pencil-square-o icon"></span>View/Edit</a> </li>
-                                                    <li role="presentation"> <a role="menuitem" href="#" class=""><span class="fa fa-files-o icon clone-workorder"></span>Copy</a></li>
-                                                    <li role="presentation"> <a role="menuitem" target="_new" href="#" class=""> <span class="fa fa-trash-o icon"></span>Delete</a></li>
-                                                    <li role="presentation"> <a role="menuitem" href="javascript:void(0);" class="btn-send-customer" data-id=""> <span class="fa fa-envelope-open-o icon"></span>Void</a></li>
-                                                    <li><div class="dropdown-divider"></div></li>
-                                                    </li>
-                                                </ul>
-                                            </div> -->
-                                            <div class="dropdown dropdown-btn">
-                                                <button class="btn btn-default dropdown-toggle" type="button" id="dropdown-edit" data-toggle="dropdown" aria-expanded="true">
-                                                    <span class="btn-label">Manage</span><span class="caret-holder"><span class="caret"></span></span>
-                                                </button>
-                                                <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="dropdown-edit">
-                                                <li role="presentation"><a role="menuitem" tabindex="-1" href="#"><span class="fa fa-file-text-o icon"></span>Send</a></li>
-                                                    <li role="presentation"><a role="menuitem" tabindex="-1" href=""><span class="fa fa-envelope-o icon"></span>Share Invoice Link</a> </li>
-                                                    <li role="separator" class="divider"></li>
-                                                    <li role="presentation"><a role="menuitem" tabindex="-1" href="#" data-toggle="modal" data-target="#modalCloneWorkorder" data-id="" data-name="WO-00433"> <span class="fa fa-print icon"></span>Print Packing Slip</a> </li>
-                                                    <li role="presentation"><a role="menuitem" tabindex="-1" href="#" data-toggle="modal" data-target="#add-invoice" data-convert-to-invoice-modal="open" data-id="161983" data-name="WO-00433"><span class="fa fa-pencil-square-o icon"></span>View/Edit</a> </li>
-                                                    <li role="presentation"> <a role="menuitem" href="#" class=""><span class="fa fa-files-o icon clone-workorder"></span>Copy</a></li>
-                                                    <li role="presentation"> <a role="menuitem" target="_new" href="#" class=""> <span class="fa fa-trash-o icon"></span>Delete</a></li>
-                                                    <li role="presentation"> <a role="menuitem" href="javascript:void(0);" class="btn-send-customer" data-id=""> <span class="fa fa-envelope-open-o icon"></span>Void</a></li>
-                                                    <li><div class="dropdown-divider"></div></li>
-                                                </ul>
-                                            </div>
-                                            
-                                            </td>
-										</tr>
-                                        <?php endforeach; ?>
-                                        <?php foreach ($estimates as $estimate) { ?>
-                                        <tr>
-                                        <td><input type="checkbox"></td>
-                                            <td>
-                                                <div class="table-nowrap">
-                                                    <?php echo date('M d, Y', strtotime($estimate->estimate_date)) ?>
-                                                </div>
-                                            </td>
-                                            <td>
-                                            <?php //echo $inv->due_date; ?></td>
-                                            <td>
-                                                <a class="a-default"
-                                                href="#">
-                                                    <?php echo $estimate->estimate_number; ?>
-                                                </a>
-                                            </td>
-                                            <td>
-                                                <div><a href="#"><?php echo $estimate->job_name; ?></a></div>
-                                                <a href="<?php echo base_url('customer/view/' . $estimate->customer_id) ?>">
-                                                    <?php echo get_customer_by_id($estimate->customer_id)->contact_name ?>
-                                                </a>
-                                            </td>
-                                            <td>
-                                                <?php echo $estimate->expiry_date; ?>
-                                            </td>
-                                            <td>
-                                                <?php if (is_serialized($estimate->estimate_eqpt_cost)) { ?>
-                                                    $<?php echo unserialize($estimate->estimate_eqpt_cost)['eqpt_cost'] ?>
-                                                <?php } ?>
-                                            </td>
-                                            <td><?php echo $estimate->grand_total; ?></td>
-                                            <td>
-                                            <?php
-                                                if( $estimate->is_mail_open == 1 ){
-                                                echo "<i class='fa fa-eye'></i>  ";
-                                                }
-                                                echo $estimate->status;
-                                            ?>
-                                            </td>
-                                            <td class="text-center">
-                                                <div class="dropdown dropdown-btn">
-                                                    <button class="btn btn-default dropdown-toggle" type="button" id="dropdown-edit" data-toggle="dropdown" aria-expanded="true">
-                                                        <span class="btn-label">Manage</span><span class="caret-holder"><span class="caret"></span></span>
-                                                    </button>
-                                                    <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="dropdown-edit">
-                                                        <li role="presentation"><a role="menuitem" tabindex="-1"
-                                                                                href="<?php echo base_url('estimate/view/' . $estimate->id) ?>"><span
-                                                                        class="fa fa-file-text-o icon"></span> View Estimate</a></li>
-                                                        <li role="presentation"><a role="menuitem" tabindex="-1"
-                                                                                href="<?php echo base_url('estimate/edit/' . $estimate->id) ?>"><span
-                                                                        class="fa fa-pencil-square-o icon"></span> Edit</a>
-                                                        </li>
-                                                        <li role="separator" class="divider"></li>
-                                                        <li role="presentation"><a role="menuitem"
-                                                                                tabindex="-1"
-                                                                                href="#"
-                                                                                data-toggle="modal"
-                                                                                data-target="#modalCloneWorkorder"
-                                                                                data-id="<?php echo $estimate->id ?>"
-                                                                                data-name="WO-00433"><span
-                                                                        class="fa fa-files-o icon clone-workorder">
-
-                                                            </span> Clone Estimate</a>
-                                                        </li>
-                                                        <li role="presentation"><a role="menuitem" tabindex="-1"
-                                                                                href="<?php echo base_url('invoice') ?>"
-                                                                                data-convert-to-invoice-modal="open"
-                                                                                data-id="161983"
-                                                                                data-name="WO-00433"><span
-                                                                        class="fa fa-money icon"></span> Convert to Invoice</a>
-                                                        </li>
-                                                        <li role="presentation">
-                                                            <a role="menuitem" href="<?php echo base_url('estimate/view_pdf/' . $estimate->id) ?>" class="">
-                                                            <span class="fa fa-file-pdf-o icon"></span>  View PDF</a></li>
-                                                        <li role="presentation">
-                                                            <a role="menuitem" target="_new" href="<?php echo base_url('estimate/print/' . $estimate->id) ?>" class="">
-                                                            <span class="fa fa-print icon"></span>  Print</a></li>
-                                                        <li role="presentation">
-                                                            <a role="menuitem" href="javascript:void(0);" class="btn-send-customer" data-id="<?= $estimate->id; ?>">
-                                                            <span class="fa fa-envelope-open-o icon"></span>  Send to Customer</a></li>
-                                                        <li><div class="dropdown-divider"></div></li>
-                                                        <li role="presentation">
-                                                            <a role="menuitem" href="<?php echo base_url('estimate/delete/' . $estimate->id) ?>>" onclick="return confirm('Do you really want to delete this item ?')" data-delete-modal="open"><span class="fa fa-trash-o icon"></span> Delete</a>
-                                                        </li>
-                                                    </ul>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    <?php } ?>
-                                    <?php foreach ($sales_receipts as $sr) { ?>
-                                        <tr>
-                                        <td><input type="checkbox"></td>
-                                            <td>
-                                                <div class="table-nowrap">
-                                                    <?php echo date('M d, Y', strtotime($sr->sales_receipt_date)) ?>
-                                                </div>
-                                            </td>
-                                            <td>
-                                            <?php //echo $inv->due_date; ?></td>
-                                            <td>
-                                                <a class="a-default"
-                                                href="#">
-                                                    <?php echo $sr->estimate_number; ?>
-                                                </a>
-                                            </td>
-                                            <td>
-                                                <div><a href="#"><?php echo $sr->job_name; ?></a></div>
-                                                <a href="<?php echo base_url('customer/view/' . $sr->customer_id) ?>">
-                                                    <?php echo get_customer_by_id($sr->customer_id)->contact_name ?>
-                                                </a>
-                                            </td>
-                                            <td>
-                                                <?php echo $sr->shipping_date; ?>
-                                            </td>
-                                            <td>
-                                                <?php if (is_serialized($sr->estimate_eqpt_cost)) { ?>
-                                                    $<?php echo unserialize($sr->estimate_eqpt_cost)['eqpt_cost'] ?>
-                                                <?php } ?>
-                                            </td>
-                                            <td><?php echo $sr->grand_total; ?></td>
-                                            <td>
-                                            <?php
-                                                // if( $estimate->is_mail_open == 1 ){
-                                                // echo "<i class='fa fa-eye'></i>  ";
-                                                // }
-                                                // echo $estimate->status;
-                                            ?>
-                                            </td>
-                                            <td class="text-center">
-                                                <div class="dropdown dropdown-btn">
-                                                    <button class="btn btn-default dropdown-toggle" type="button" id="dropdown-edit" data-toggle="dropdown" aria-expanded="true">
-                                                        <span class="btn-label">Manage</span><span class="caret-holder"><span class="caret"></span></span>
-                                                    </button>
-                                                    <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="dropdown-edit">
-                                                        <li role="presentation"><a role="menuitem" tabindex="-1"
-                                                                                href="<?php echo base_url('estimate/view/' . $sr->id) ?>"><span
-                                                                        class="fa fa-file-text-o icon"></span> View Estimate</a></li>
-                                                        <li role="presentation"><a role="menuitem" tabindex="-1"
-                                                                                href="<?php echo base_url('estimate/edit/' . $sr->id) ?>"><span
-                                                                        class="fa fa-pencil-square-o icon"></span> Edit</a>
-                                                        </li>
-                                                        <li role="separator" class="divider"></li>
-                                                        <li role="presentation"><a role="menuitem"
-                                                                                tabindex="-1"
-                                                                                href="#"
-                                                                                data-toggle="modal"
-                                                                                data-target="#modalCloneWorkorder"
-                                                                                data-id="<?php echo $sr->id ?>"
-                                                                                data-name="WO-00433"><span
-                                                                        class="fa fa-files-o icon clone-workorder">
-
-                                                            </span> Clone Estimate</a>
-                                                        </li>
-                                                        <li role="presentation"><a role="menuitem" tabindex="-1"
-                                                                                href="<?php echo base_url('invoice') ?>"
-                                                                                data-convert-to-invoice-modal="open"
-                                                                                data-id="161983"
-                                                                                data-name="WO-00433"><span
-                                                                        class="fa fa-money icon"></span> Convert to Invoice</a>
-                                                        </li>
-                                                        <li role="presentation">
-                                                            <a role="menuitem" href="<?php echo base_url('estimate/view_pdf/' . $estimate->id) ?>" class="">
-                                                            <span class="fa fa-file-pdf-o icon"></span>  View PDF</a></li>
-                                                        <li role="presentation">
-                                                            <a role="menuitem" target="_new" href="<?php echo base_url('estimate/print/' . $estimate->id) ?>" class="">
-                                                            <span class="fa fa-print icon"></span>  Print</a></li>
-                                                        <li role="presentation">
-                                                            <a role="menuitem" href="javascript:void(0);" class="btn-send-customer" data-id="<?= $estimate->id; ?>">
-                                                            <span class="fa fa-envelope-open-o icon"></span>  Send to Customer</a></li>
-                                                        <li><div class="dropdown-divider"></div></li>
-                                                        <li role="presentation">
-                                                            <a role="menuitem" href="<?php echo base_url('estimate/delete/' . $estimate->id) ?>>" onclick="return confirm('Do you really want to delete this item ?')" data-delete-modal="open"><span class="fa fa-trash-o icon"></span> Delete</a>
-                                                        </li>
-                                                    </ul>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    <?php } ?>
-                                    <?php foreach ($credit_memo as $cr) { ?>
-                                        <tr>
-                                        <td><input type="checkbox"></td>
-                                            <td>
-                                                <div class="table-nowrap">
-                                                    <?php echo date('M d, Y', strtotime($cr->credit_memo_date)) ?>
-                                                </div>
-                                            </td>
-                                            <td>
-                                            <?php //echo $inv->due_date; ?></td>
-                                            <td>
-                                                <a class="a-default"
-                                                href="#">
-                                                    <?php echo $cr->estimate_number; ?>
-                                                </a>
-                                            </td>
-                                            <td>
-                                                <div><a href="#"><?php echo $cr->job_name; ?></a></div>
-                                                <a href="<?php echo base_url('customer/view/' . $cr->customer_id) ?>">
-                                                    <?php echo get_customer_by_id($cr->customer_id)->contact_name ?>
-                                                </a>
-                                            </td>
-                                            <td>
-                                                <?php echo $cr->shipping_date; ?>
-                                            </td>
-                                            <td>
-                                                <?php if (is_serialized($cr->estimate_eqpt_cost)) { ?>
-                                                    $<?php echo unserialize($cr->estimate_eqpt_cost)['eqpt_cost'] ?>
-                                                <?php } ?>
-                                            </td>
-                                            <td><?php echo $cr->grand_total; ?></td>
-                                            <td>
-                                            <?php
-                                                // if( $estimate->is_mail_open == 1 ){
-                                                // echo "<i class='fa fa-eye'></i>  ";
-                                                // }
-                                                // echo $estimate->status;
-                                            ?>
-                                            </td>
-                                            <td class="text-center">
-                                                <div class="dropdown dropdown-btn">
-                                                    <button class="btn btn-default dropdown-toggle" type="button" id="dropdown-edit" data-toggle="dropdown" aria-expanded="true">
-                                                        <span class="btn-label">Manage</span><span class="caret-holder"><span class="caret"></span></span>
-                                                    </button>
-                                                    <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="dropdown-edit">
-                                                        <li role="presentation"><a role="menuitem" tabindex="-1"
-                                                                                href="<?php echo base_url('estimate/view/' . $sr->id) ?>"><span
-                                                                        class="fa fa-file-text-o icon"></span> View Estimate</a></li>
-                                                        <li role="presentation"><a role="menuitem" tabindex="-1"
-                                                                                href="<?php echo base_url('estimate/edit/' . $sr->id) ?>"><span
-                                                                        class="fa fa-pencil-square-o icon"></span> Edit</a>
-                                                        </li>
-                                                        <li role="separator" class="divider"></li>
-                                                        <li role="presentation"><a role="menuitem"
-                                                                                tabindex="-1"
-                                                                                href="#"
-                                                                                data-toggle="modal"
-                                                                                data-target="#modalCloneWorkorder"
-                                                                                data-id="<?php echo $sr->id ?>"
-                                                                                data-name="WO-00433"><span
-                                                                        class="fa fa-files-o icon clone-workorder">
-
-                                                            </span> Clone Estimate</a>
-                                                        </li>
-                                                        <li role="presentation"><a role="menuitem" tabindex="-1"
-                                                                                href="<?php echo base_url('invoice') ?>"
-                                                                                data-convert-to-invoice-modal="open"
-                                                                                data-id="161983"
-                                                                                data-name="WO-00433"><span
-                                                                        class="fa fa-money icon"></span> Convert to Invoice</a>
-                                                        </li>
-                                                        <li role="presentation">
-                                                            <a role="menuitem" href="<?php echo base_url('estimate/view_pdf/' . $estimate->id) ?>" class="">
-                                                            <span class="fa fa-file-pdf-o icon"></span>  View PDF</a></li>
-                                                        <li role="presentation">
-                                                            <a role="menuitem" target="_new" href="<?php echo base_url('estimate/print/' . $estimate->id) ?>" class="">
-                                                            <span class="fa fa-print icon"></span>  Print</a></li>
-                                                        <li role="presentation">
-                                                            <a role="menuitem" href="javascript:void(0);" class="btn-send-customer" data-id="<?= $estimate->id; ?>">
-                                                            <span class="fa fa-envelope-open-o icon"></span>  Send to Customer</a></li>
-                                                        <li><div class="dropdown-divider"></div></li>
-                                                        <li role="presentation">
-                                                            <a role="menuitem" href="<?php echo base_url('estimate/delete/' . $estimate->id) ?>>" onclick="return confirm('Do you really want to delete this item ?')" data-delete-modal="open"><span class="fa fa-trash-o icon"></span> Delete</a>
-                                                        </li>
-                                                    </ul>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    <?php } ?>
-										</tbody>
-								</table>
-							</div>
-					</div>
-				</div>
 				<!-- end row -->
 				<div class="row ml-2"></div>
             <!-- end row -->
@@ -707,7 +365,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                             <?php foreach ($invoices as $inv):?>
                             <tr>
                                 <td><input type="checkbox"></td>
-                                <td><?php echo $inv->date_issued; ?>
+                                <td><?php echo  date('m'.'/'.'d'.'/'. 'Y', strtotime($inv->date_issued)); ?>
                                 </td>
                                 <td><?php echo $inv->invoice_type; ?>
                                 </td>
@@ -715,7 +373,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                 </td>
                                 <td><?php echo $inv->contact_name . '' . $inv->first_name."&nbsp;".$inv->last_name;?>
                                 </td>
-                                <td><?php echo $inv->due_date; ?>
+                                <td><?php  echo date('m'.'/'.'d'.'/'. 'Y', strtotime($inv->due_date)); ?>
                                 </td>
                                 <td><?php echo $inv->balance; ?>
                                 </td>
@@ -723,15 +381,13 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                 </td>
                                 <td><?php echo $inv->status; ?>
                                 </td>
-                                <td>
+                                <td class="text-center">
                                     <!-- <a href="">View</a> -->
 
                                     <div class="dropdown dropdown-btn">
-                                        <a class="dropdown-toggle" type="button" id="dropdown-edit"
-                                            data-toggle="dropdown" aria-expanded="true">
-                                            <span class="btn-label">Manage</span><span class="caret-holder"><span
-                                                    class="caret"></span></span>
-                                        </a>
+                                            <button class="btn btn-default dropdown-toggle" type="button" id="dropdown-edit" data-toggle="dropdown" aria-expanded="true">
+                                                <span class="btn-label">Manage</span><span class="caret-holder"><span class="caret"></span></span>
+                                            </button>
                                         <ul class="dropdown-menu dropdown-menu-right" role="menu"
                                             aria-labelledby="dropdown-edit">
                                             <li role="presentation"><a role="menuitem" tabindex="-1" href="#"><span
@@ -767,6 +423,276 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                 </td>
                             </tr>
                             <?php endforeach; ?>
+                            <?php foreach ($estimates as $estimate) { ?>
+                                        <tr>
+                                        <td><input type="checkbox"></td>
+                                            <td>
+                                                <div class="table-nowrap">
+                                                    <?php echo  date('m'.'/'.'d'.'/'. 'Y', strtotime($estimate->estimate_date)) ?>
+                                                </div>
+                                            </td>
+                                            <td>
+                                            <?php //echo $inv->due_date; ?></td>
+                                            <td>
+                                                <a class="a-default"
+                                                href="#">
+                                                    <?php echo $estimate->estimate_number; ?>
+                                                </a>
+                                            </td>
+                                            <td>
+                                                <div><a href="#"><?php echo $estimate->job_name; ?></a></div>
+                                                <a href="<?php echo base_url('customer/view/' . $estimate->customer_id) ?>">
+                                                    <?php echo get_customer_by_id($estimate->customer_id)->contact_name ?>
+                                                </a>
+                                            </td>
+                                            <td>
+                                                <?php echo  date('m'.'/'.'d'.'/'. 'Y', strtotime($estimate->expiry_date)); ?>
+                                            </td>
+                                            <td>
+                                                <?php if (is_serialized($estimate->estimate_eqpt_cost)) { ?>
+                                                    $<?php echo unserialize($estimate->estimate_eqpt_cost)['eqpt_cost'] ?>
+                                                <?php } ?>
+                                            </td>
+                                            <td><?php echo $estimate->grand_total; ?></td>
+                                            <td>
+                                            <?php
+                                                if( $estimate->is_mail_open == 1 ){
+                                                echo "<i class='fa fa-eye'></i>  ";
+                                                }
+                                                echo $estimate->status;
+                                            ?>
+                                            </td>
+                                            <td class="text-center">
+                                                <div class="dropdown dropdown-btn">
+                                                    <button class="btn btn-default dropdown-toggle" type="button" id="dropdown-edit" data-toggle="dropdown" aria-expanded="true">
+                                                        <span class="btn-label">Manage</span><span class="caret-holder"><span class="caret"></span></span>
+                                                    </button>
+                                                    <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="dropdown-edit">
+                                                        <li role="presentation"><a role="menuitem" tabindex="-1"
+                                                                                href="<?php echo base_url('estimate/view/' . $estimate->id) ?>"><span
+                                                                        class="fa fa-file-text-o icon"></span> View Estimate</a></li>
+                                                        <li role="presentation"><a role="menuitem" tabindex="-1"
+                                                                                href="<?php echo base_url('estimate/edit/' . $estimate->id) ?>"><span
+                                                                        class="fa fa-pencil-square-o icon"></span> Edit</a>
+                                                        </li>
+                                                        <li role="separator" class="divider"></li>
+                                                        <li role="presentation"><a role="menuitem"
+                                                                                tabindex="-1"
+                                                                                href="#"
+                                                                                data-toggle="modal"
+                                                                                data-target="#modalCloneWorkorder"
+                                                                                data-id="<?php echo $estimate->id ?>"
+                                                                                data-name="WO-00433"><span
+                                                                        class="fa fa-files-o icon clone-workorder">
+
+                                                            </span> Clone Estimate</a>
+                                                        </li>
+                                                        <li role="presentation"><a role="menuitem" tabindex="-1"
+                                                                                href="<?php echo base_url('invoice') ?>"
+                                                                                data-convert-to-invoice-modal="open"
+                                                                                data-id="161983"
+                                                                                data-name="WO-00433"><span
+                                                                        class="fa fa-money icon"></span> Convert to Invoice</a>
+                                                        </li>
+                                                        <li role="presentation">
+                                                            <a role="menuitem" href="<?php echo base_url('estimate/view_pdf/' . $estimate->id) ?>" class="">
+                                                            <span class="fa fa-file-pdf-o icon"></span>  View PDF</a></li>
+                                                        <li role="presentation">
+                                                            <a role="menuitem" target="_new" href="<?php echo base_url('estimate/print/' . $estimate->id) ?>" class="">
+                                                            <span class="fa fa-print icon"></span>  Print</a></li>
+                                                        <li role="presentation">
+                                                            <a role="menuitem" href="javascript:void(0);" class="btn-send-customer" data-id="<?= $estimate->id; ?>">
+                                                            <span class="fa fa-envelope-open-o icon"></span>  Send to Customer</a></li>
+                                                        <li><div class="dropdown-divider"></div></li>
+                                                        <li role="presentation">
+                                                            <a role="menuitem" href="<?php echo base_url('estimate/delete/' . $estimate->id) ?>>" onclick="return confirm('Do you really want to delete this item ?')" data-delete-modal="open"><span class="fa fa-trash-o icon"></span> Delete</a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    <?php } ?>
+                                    <?php foreach ($sales_receipts as $sr) { ?>
+                                        <tr>
+                                        <td><input type="checkbox"></td>
+                                            <td>
+                                                <div class="table-nowrap">
+                                                    <?php echo  date('m'.'/'.'d'.'/'. 'Y', strtotime($sr->sales_receipt_date)) ?>
+                                                </div>
+                                            </td>
+                                            <td>
+                                            <?php //echo $inv->due_date; ?></td>
+                                            <td>
+                                                <a class="a-default"
+                                                href="#">
+                                                    <?php echo $sr->estimate_number; ?>
+                                                </a>
+                                            </td>
+                                            <td>
+                                                <div><a href="#"><?php //echo $sr->job_name; ?></a></div>
+                                                <a href="<?php echo base_url('customer/view/' . $sr->customer_id) ?>">
+                                                    <?php //echo get_customer_by_id($sr->customer_id)->contact_name 
+                                                    echo $sr->first_name .' ' . $sr->middle_name .' ' . $sr->last_name;
+                                                    ?>
+                                                </a>
+                                            </td>
+                                            <td>
+                                                <?php echo  date('m'.'/'.'d'.'/'. 'Y', strtotime($sr->shipping_date)); ?>
+                                            </td>
+                                            <td>
+                                                <?php if (is_serialized($sr->estimate_eqpt_cost)) { ?>
+                                                    $<?php echo unserialize($sr->estimate_eqpt_cost)['eqpt_cost'] ?>
+                                                <?php } ?>
+                                            </td>
+                                            <td><?php echo $sr->grand_total; ?></td>
+                                            <td>
+                                            <?php
+                                                // if( $estimate->is_mail_open == 1 ){
+                                                // echo "<i class='fa fa-eye'></i>  ";
+                                                // }
+                                                // echo $estimate->status;
+                                            ?>
+                                            </td>
+                                            <td class="text-center">
+                                                <div class="dropdown dropdown-btn">
+                                                    <button class="btn btn-default dropdown-toggle" type="button" id="dropdown-edit" data-toggle="dropdown" aria-expanded="true">
+                                                        <span class="btn-label">Manage</span><span class="caret-holder"><span class="caret"></span></span>
+                                                    </button>
+                                                    <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="dropdown-edit">
+                                                        <li role="presentation"><a role="menuitem" tabindex="-1"
+                                                                                href="<?php echo base_url('estimate/view/' . $sr->id) ?>"><span
+                                                                        class="fa fa-file-text-o icon"></span> View Estimate</a></li>
+                                                        <li role="presentation"><a role="menuitem" tabindex="-1"
+                                                                                href="<?php echo base_url('estimate/edit/' . $sr->id) ?>"><span
+                                                                        class="fa fa-pencil-square-o icon"></span> Edit</a>
+                                                        </li>
+                                                        <li role="separator" class="divider"></li>
+                                                        <li role="presentation"><a role="menuitem"
+                                                                                tabindex="-1"
+                                                                                href="#"
+                                                                                data-toggle="modal"
+                                                                                data-target="#modalCloneWorkorder"
+                                                                                data-id="<?php echo $sr->id ?>"
+                                                                                data-name="WO-00433"><span
+                                                                        class="fa fa-files-o icon clone-workorder">
+
+                                                            </span> Clone Estimate</a>
+                                                        </li>
+                                                        <li role="presentation"><a role="menuitem" tabindex="-1"
+                                                                                href="<?php echo base_url('invoice') ?>"
+                                                                                data-convert-to-invoice-modal="open"
+                                                                                data-id="161983"
+                                                                                data-name="WO-00433"><span
+                                                                        class="fa fa-money icon"></span> Convert to Invoice</a>
+                                                        </li>
+                                                        <li role="presentation">
+                                                            <a role="menuitem" href="<?php echo base_url('estimate/view_pdf/' . $estimate->id) ?>" class="">
+                                                            <span class="fa fa-file-pdf-o icon"></span>  View PDF</a></li>
+                                                        <li role="presentation">
+                                                            <a role="menuitem" target="_new" href="<?php echo base_url('estimate/print/' . $estimate->id) ?>" class="">
+                                                            <span class="fa fa-print icon"></span>  Print</a></li>
+                                                        <li role="presentation">
+                                                            <a role="menuitem" href="javascript:void(0);" class="btn-send-customer" data-id="<?= $estimate->id; ?>">
+                                                            <span class="fa fa-envelope-open-o icon"></span>  Send to Customer</a></li>
+                                                        <li><div class="dropdown-divider"></div></li>
+                                                        <li role="presentation">
+                                                            <a role="menuitem" href="<?php echo base_url('estimate/delete/' . $estimate->id) ?>>" onclick="return confirm('Do you really want to delete this item ?')" data-delete-modal="open"><span class="fa fa-trash-o icon"></span> Delete</a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    <?php } ?>
+                                    <?php foreach ($credit_memo as $cr) { ?>
+                                        <tr>
+                                        <td><input type="checkbox"></td>
+                                            <td>
+                                                <div class="table-nowrap">
+                                                    <?php echo  date('m'.'/'.'d'.'/'. 'Y', strtotime($cr->credit_memo_date)) ?>
+                                                </div>
+                                            </td>
+                                            <td>
+                                            <?php //echo $inv->due_date; ?></td>
+                                            <td>
+                                                <a class="a-default"
+                                                href="#">
+                                                    <?php echo $cr->estimate_number; ?>
+                                                </a>
+                                            </td>
+                                            <td>
+                                                <div><a href="#"><?php //echo $cr->job_name; ?></a></div>
+                                                <a href="<?php echo base_url('customer/view/' . $cr->customer_id) ?>">
+                                                    <?php // echo get_customer_by_id($cr->customer_id)->contact_name 
+                                                     echo $cr->first_name .' ' . $cr->middle_name .' ' . $cr->last_name; ?>
+                                                </a>
+                                            </td>
+                                            <td>
+                                                <?php echo  date('m'.'/'.'d'.'/'. 'Y', strtotime($cr->shipping_date)); ?>
+                                            </td>
+                                            <td>
+                                                <?php if (is_serialized($cr->estimate_eqpt_cost)) { ?>
+                                                    $<?php echo unserialize($cr->estimate_eqpt_cost)['eqpt_cost'] ?>
+                                                <?php } ?>
+                                            </td>
+                                            <td><?php echo $cr->grand_total; ?></td>
+                                            <td>
+                                            <?php
+                                                // if( $estimate->is_mail_open == 1 ){
+                                                // echo "<i class='fa fa-eye'></i>  ";
+                                                // }
+                                                // echo $estimate->status;
+                                            ?>
+                                            </td>
+                                            <td class="text-center">
+                                                <div class="dropdown dropdown-btn">
+                                                    <button class="btn btn-default dropdown-toggle" type="button" id="dropdown-edit" data-toggle="dropdown" aria-expanded="true">
+                                                        <span class="btn-label">Manage</span><span class="caret-holder"><span class="caret"></span></span>
+                                                    </button>
+                                                    <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="dropdown-edit">
+                                                        <li role="presentation"><a role="menuitem" tabindex="-1"
+                                                                                href="<?php echo base_url('estimate/view/' . $sr->id) ?>"><span
+                                                                        class="fa fa-file-text-o icon"></span> View Estimate</a></li>
+                                                        <li role="presentation"><a role="menuitem" tabindex="-1"
+                                                                                href="<?php echo base_url('estimate/edit/' . $sr->id) ?>"><span
+                                                                        class="fa fa-pencil-square-o icon"></span> Edit</a>
+                                                        </li>
+                                                        <li role="separator" class="divider"></li>
+                                                        <li role="presentation"><a role="menuitem"
+                                                                                tabindex="-1"
+                                                                                href="#"
+                                                                                data-toggle="modal"
+                                                                                data-target="#modalCloneWorkorder"
+                                                                                data-id="<?php echo $sr->id ?>"
+                                                                                data-name="WO-00433"><span
+                                                                        class="fa fa-files-o icon clone-workorder">
+
+                                                            </span> Clone Estimate</a>
+                                                        </li>
+                                                        <li role="presentation"><a role="menuitem" tabindex="-1"
+                                                                                href="<?php echo base_url('invoice') ?>"
+                                                                                data-convert-to-invoice-modal="open"
+                                                                                data-id="161983"
+                                                                                data-name="WO-00433"><span
+                                                                        class="fa fa-money icon"></span> Convert to Invoice</a>
+                                                        </li>
+                                                        <li role="presentation">
+                                                            <a role="menuitem" href="<?php echo base_url('estimate/view_pdf/' . $estimate->id) ?>" class="">
+                                                            <span class="fa fa-file-pdf-o icon"></span>  View PDF</a></li>
+                                                        <li role="presentation">
+                                                            <a role="menuitem" target="_new" href="<?php echo base_url('estimate/print/' . $estimate->id) ?>" class="">
+                                                            <span class="fa fa-print icon"></span>  Print</a></li>
+                                                        <li role="presentation">
+                                                            <a role="menuitem" href="javascript:void(0);" class="btn-send-customer" data-id="<?= $estimate->id; ?>">
+                                                            <span class="fa fa-envelope-open-o icon"></span>  Send to Customer</a></li>
+                                                        <li><div class="dropdown-divider"></div></li>
+                                                        <li role="presentation">
+                                                            <a role="menuitem" href="<?php echo base_url('estimate/delete/' . $estimate->id) ?>>" onclick="return confirm('Do you really want to delete this item ?')" data-delete-modal="open"><span class="fa fa-trash-o icon"></span> Delete</a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    <?php } ?>
                         </tbody>
                     </table>
                 </div>
@@ -1470,11 +1396,11 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                         </div>
                         <div class="col-md-3">
                             From
-                            <input type="text" class="form-control">
+                            <input type="text" class="form-control" id="filter_from">
                         </div>
                         <div class="col-md-3">
                             To
-                            <input type="text" class="form-control">
+                            <input type="text" class="form-control" id="filter_to">
                         </div>
                     </div>
                     <br>
@@ -2873,172 +2799,160 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                 class="fa fa-times fa-lg"></i></button>
                     </div>
                     <form action="" method="post" id="addEditCheckmodal">
-                        <div class="modal-body">
+                    <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
                             <div class="row">
                                 <div class="col-md-3">
-                                    <label for="">Customer</label>
-                                    <input type="hidden" name="check_id" id="checkID" value="">
-                                    <input type="hidden" name="transaction_id" class="transaction_id" id="checktransID">
-                                    <input type="hidden" id="checkType" class="expenseType" value="Check">
-                                    <select name="vendor_id" id="checkVendorID" class="form-control select2-payee">
-                                        <option>Select a customer</option>
-                                        <?php foreach ($vendors as $vendor):?>
-                                        <option
-                                            value="<?php echo $vendor->vendor_id?>">
-                                            <?php echo $vendor->f_name."&nbsp;".$vendor->l_name;?>
-                                        </option>
-                                        <?php endforeach; ?>
+                                    Customer
+                                    <select id="sel-customer" name="customer_id" data-customer-source="dropdown" class="form-control searchable-dropdown" placeholder="Select">
+                                        <option value="0">- none -</option>
+                                        <?php foreach($customers as $c){ ?>
+                                            <option value="<?= $c->prof_id; ?>"><?= $c->first_name . ' ' . $c->last_name; ?></option>
+                                        <?php } ?>
                                     </select>
                                 </div>
-                                <div class="col-md-6">
-                                </div>
-                                <div class="col-md-3" style="text-align: right">
-                                    <div>AMOUNT</div>
-                                    <div>
-                                        <h1 id="h1_amount-check">$0.00</h1>
-                                    </div>
+                            </div>
+                            <hr>
+                            <div class="row">
+                                <div class="col-md-3">
+                                    Delayed Credit date<br>
+                                    <input type="text" class="form-control" name="charge_date" id="datepickerinv12">
+                                </div>                                
+                            </div>
+                            <hr>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    Tags <a href="#" style="float:right">Manage tags</a>
+                                    <input type="text" class="form-control" name="tags">
                                 </div>
                             </div>
-                            <div class="row" style="margin-top: 20px">
-                                <div class="col-md-2">
-                                    <label for="">Delayed Charge Date</label>
-                                    <input type="date" name="delayed_charge_date" id="delayed_charge_date"
-                                        class="form-control">
-                                </div>
-                            </div>
-                            <div class="table-container mt-5">
-                                <div class="table-loader">
-                                    <p class="loading-text">Loading records</p>
-                                </div>
-                                <!--                        DataTables-->
-                                <table id="expensesCheckTable" class="table table-striped table-bordered"
-                                    style="width:100%;margin-top: 20px;">
-                                    <thead>
-                                        <tr>
-                                            <th></th>
-                                            <th>#</th>
-                                            <th>PRODUCT/SERVICE</th>
-                                            <th>DESCRIPTION</th>
-                                            <th>QTY</th>
-                                            <th>RATE</th>
-                                            <th>AMOUNT</th>
-                                            <th>TAX</th>
-                                            <th></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="line-container-check">
-                                        <tr id="tableLine">
-                                            <td></td>
-                                            <td><span id="line-counter">1</span></td>
+                            
+                        </div>
+                        <div class="col-md-6" align="right">
+                            AMOUNT<h2><span id="grand_total_dch_total">0.00</span></h2><br>
+                            <input type="hidden" name="grand_total_amount" id="grand_total_dc_total_val_dc">
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-md-12">
+                        <table class="table table-bordered" id="reportstable">
+                                <thead>
+                                    <!-- <th></th>
+                                    <th>#</th>
+                                    <th>PRODUCT/SERVICE</th>
+                                    <th>DESCRIPTION</th>
+                                    <th>QTY</th>
+                                    <th>RATE</th>
+                                    <th>AMOUNT</th>
+                                    <th>TAX</th>
+                                    <th></th> -->
+                                    <th>Name</th>
+                                            <th>Type</th>
+                                            <!-- <th>Description</th> -->
+                                            <th width="150px">Quantity</th>
+                                            <!-- <th>Location</th> -->
+                                            <th width="150px">Price</th>
+                                            <th width="150px">Discount</th>
+                                            <th width="150px">Tax (Change in %)</th>
+                                            <th>Total</th>
+                                </thead>
+                                <tbody id="items_table_body_delayed_charge">
+                                <tr>
                                             <td>
-                                                <div id="" style="display:none;">
-                                                    <input type="hidden" id="prevent_process" value="true">
-                                                    <select name="category[]" id=""
-                                                        class="form-control checkCategory select2-check-category">
-                                                        <option></option>
-                                                        <?php foreach ($list_categories as $list): ?>
-                                                        <option
-                                                            value="<?php echo $list->id?>">
-                                                            <?php echo $list->category_name;?>
-                                                        </option>
-                                                        <?php endforeach;?>
-                                                    </select>
-                                                </div>
+                                                <input type="text" class="form-control getItemCharge"
+                                                       onKeyup="getItemCharge_k(this)" name="items[]">
+                                                <ul class="suggestions"></ul>
                                             </td>
-                                            <td><input type="text" name="description[]"
-                                                    class="form-control checkDescription" id="tbl-input"
-                                                    style="display: none;"></td>
-                                            <td><input type="text" name="qty[]" class="form-control checkAmount"
-                                                    id="tbl-input" style="display: none;"></td>
-                                            <td><input type="text" name="rate[]" class="form-control checkAmount"
-                                                    id="tbl-input" style="display: none;"></td>
-                                            <td><input type="text" name="amount[]" class="form-control checkAmount"
-                                                    id="tbl-input" style="display: none;"></td>
-                                            <td><input type="text" name="tax[]" class="form-control checkAmount"
-                                                    id="tbl-input" style="display: none;"></td>
-                                            <td style="text-align: center"><a href="#" id="delete-line-row"><i
-                                                        class="fa fa-trash"></i></a></td>
+                                            <td><select name="item_type[]" class="form-control">
+                                                    <option value="product">Product</option>
+                                                    <option value="material">Material</option>
+                                                    <option value="service">Service</option>
+                                                    <option value="fee">Fee</option>
+                                                </select></td>
+                                            <td width="150px"><input type="number" class="form-control quantitydch" name="quantity[]"
+                                                       data-counter="0" id="quantity_0" value="1"></td>
+                                            <td width="150px"><input type="number" class="form-control pricedch" name="price[]"
+                                                       data-counter="0" id="price_dch_0" min="0" value="0"></td>
+                                            <td width="150px"><input type="number" class="form-control discountdch" name="discount[]"
+                                                       data-counter="0" id="discount_dch_0" min="0" value="0" ></td>
+                                            <td width="150px"><input type="text" class="form-control tax_change" name="tax[]"
+                                                       data-counter="0" id="tax1_dch_0" min="0" value="0">
+                                                       <!-- <span id="span_tax_0">0.0</span> -->
+                                                       </td>
+                                            <td width="150px"><input type="hidden" class="form-control " name="total[]"
+                                                       data-counter="0" id="item_total_dch_0" min="0" value="0">
+                                                       $<span id="span_total_charge_0">0.00</span></td>
                                         </tr>
-                                        <tr id="tableLine">
-                                            <td></td>
-                                            <td><span id="line-counter">2</span></td>
-                                            <td>
-                                                <div id="" style="display:none;">
-                                                    <input type="hidden" id="prevent_process" value="true">
-                                                    <select name="category[]" id=""
-                                                        class="form-control checkCategory select2-check-category">
-                                                        <option></option>
-                                                        <?php foreach ($list_categories as $list): ?>
-                                                        <option
-                                                            value="<?php echo $list->id?>">
-                                                            <?php echo $list->category_name;?>
-                                                        </option>
-                                                        <?php endforeach;?>
-                                                    </select>
-                                                </div>
-                                            </td>
-                                            <td><input type="text" name="description[]"
-                                                    class="form-control checkDescription" id="tbl-input"
-                                                    style="display: none;"></td>
-                                            <td><input type="text" name="qty[]" class="form-control checkAmount"
-                                                    id="tbl-input" style="display: none;"></td>
-                                            <td><input type="text" name="rate[]" class="form-control checkAmount"
-                                                    id="tbl-input" style="display: none;"></td>
-                                            <td><input type="text" name="amount[]" class="form-control checkAmount"
-                                                    id="tbl-input" style="display: none;"></td>
-                                            <td><input type="text" name="tax[]" class="form-control checkAmount"
-                                                    id="tbl-input" style="display: none;"></td>
-                                            <td style="text-align: center"><a href="#" id="delete-line-row"><i
-                                                        class="fa fa-trash"></i></a></td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                            <div class="addAndRemoveRow">
-                                <div class="total-amount-container">
-                                    <h5>
-                                        <span style="margin-right: 200px;font-size: 20px">Total</span>
-                                        $<span id="total-amount-check">0.00</span>
-                                    </h5>
-                                </div>
-                                <button type="button" class="add-remove-line" id="add-four-line">Add lines</button>
-                                <button type="button" class="add-remove-line" id="clear-all-line">Clear all
-                                    lines</button>
-                            </div>
-                            <div class="form-group">
-                                <label for="">Memo</label>
-                                <textarea name="name" id="checkMemo" cols="30" rows="3" placeholder=""
-                                    style="width: 350px;resize: none;"></textarea>
-                            </div>
-                            <div class="form-group">
-                                <div class="row">
-                                    <div class="col-md-4">
-                                        <label for=""><i class="fa fa-paperclip"></i>&nbsp;Attachment</label>
-                                        <span>Maximum size: 20MB</span>
-                                        <div id="checkAttachment" class="dropzone"
-                                            style="border: 1px solid #e1e2e3;background: #ffffff;width: 423px;overflow: inherit">
-                                            <div class="dz-message" style="margin: 20px;">
-                                                <span
-                                                    style="font-size: 16px;color: rgb(180,132,132);font-style: italic;">Drag
-                                                    and drop files here or</span>
-                                                <span style="font-size: 16px;color: #0b97c4">browse to upload</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-8" style="padding-top: 30px;">
-                                        <div class="file-container-list" id="file-list-check"></div>
+                                </tr>
+                                </tbody>
+                            </table>
+                            </table>
+                        <div>
+                    </div>
+                    <hr>
+                
+                    <div class="row">
+                        <div class="col-md-1">
+                           <!-- <button class="btn1">Add lines</button> -->
+                           <a class="link-modal-open" href="#" id="add_another_items" data-toggle="modal" data-target="#item_list_delayed_charge"><span class="fa fa-plus-square fa-margin-right"></span>Add Items</a>
+                        </div>
+
+                                        <input type="hidden" name="adjustment_name" id="adjustment_name" placeholder="Adjustment Name" class="form-control" style="width:200px; display:inline; border: 1px dashed #d1d1d1">
+                                        <input type="hidden" name="adjustment_value" id="adjustment_input_dch" value="0" class="form-control adjustment_input_dch" style="width:100px; display:inline-block">
+                                        <input type="hidden" name="markup_input_form" id="markup_input_form" class="markup_input" value="0">
+                                        <input type="hidden" name="voucher_value" id="offer_cost_input">
+                                        <input type="hidden" name="grand_total" id="grand_total_dch" value='0'>
+                        <!-- <div class="col-md-1">
+                           <button class="btn1">Clear all lines</button>
+                        </div>
+                        <div class="col-md-1">
+                        </div>
+                        <div class="col-md-7">
+                        </div>
+                        <div class="col-md-1">
+                            <b>Subtotal</b>
+                        </div>
+                        <div class="col-md-1">
+                            <b><input type="text" class="form-control" style="font-size:36px;border: 0px;background: transparent;text-align:right;" name="sub_total" value="0.00" readonly></b>
+                        </div> -->
+                    </div>
+                    <hr>
+
+                    <div class="row">
+                        <div class="col-md-2">
+                            Memo<br>
+                            <textarea style="height:100px;width:100%;" name="memo"></textarea><br>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="file-upload">
+                                <button class="file-upload-btn" type="button" onclick="$('.file-upload-input').trigger( 'click' )">Attachements</button>
+
+                                <div class="image-upload-wrap">
+                                    <input class="file-upload-input" type='file' onchange="readURL(this);" accept="image/*" />
+                                    <div class="drag-text">
+                                    <i>Drag and drop files here or click the icon</i>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="show-existing-file">
-                                    <a href="#" id="showExistingFile">Show existing file</a>
+                                <div class="file-upload-content">
+                                    <img class="file-upload-image" src="#" alt="your image" />
+                                    <div class="image-title-wrap">
+                                    <button type="button" onclick="removeUpload()" class="remove-image">Remove <span class="image-title">Uploaded File</span></button>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="privacy">
-                                <a href="#">Privacy</a>
                             </div>
                         </div>
+                        <div class="col-md-8">
+                        </div>
+                    </div>
+                    <hr>
+
+
+                </div>
                         <div class="modal-footer-check">
                             <div class="row">
                                 <div class="col-md-4">
@@ -3772,214 +3686,10 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             error: function(response) {
                 alert('Error' + response);
 
-<<<<<<< HEAD
         }
 });
 
 });
-=======
-            }
-        });
-
-
-
-        //   if(!$(this).data('quantity')){
-        //     // alert($(this).data('quantity'));
-        //     var qty = 0;
-        //   }else{
-        //     // alert('0');
-        //     var qty = $(this).data('quantity');
-        //   }
-
-        //   var count = parseInt($("#count").val()) + 1;
-        //   $("#count").val(count);
-        //   var total_ = price * qty;
-        //   var tax_ =(parseFloat(total_).toFixed(2) * 7.5) / 100;
-        //   var taxes_t = parseFloat(tax_).toFixed(2);
-        //   var total = parseFloat(total_).toFixed(2);
-        //   var withCommas = Number(total).toLocaleString('en');
-        //   total = '$' + withCommas + '.00';
-        //   // console.log(total);
-        //   // alert(total);
-        //   markup = "<tr id=\"ss\">" +
-        //       "<td width=\"35%\"><input value='"+title+"' type=\"text\" name=\"items[]\" class=\"form-control getItems\" ><input type=\"hidden\" value='"+idd+"' name=\"item_id[]\"><div class=\"show_mobile_view\"><span class=\"getItems_hidden\">"+title+"</span></div></td>\n" +
-        //       "<td width=\"20%\"><div class=\"dropdown-wrapper\"><select name=\"item_type[]\" class=\"form-control\"><option value=\"product\">Product</option><option value=\"material\">Material</option><option value=\"service\">Service</option><option value=\"fee\">Fee</option></select></div></td>\n" +
-        //       "<td width=\"10%\"><input data-itemid='"+idd+"' id='quantity_"+idd+"' value='"+qty+"' type=\"number\" name=\"quantity[]\" data-counter=\"0\"  min=\"0\" class=\"form-control qtyest2 mobile_qty \"></td>\n" +
-        //       // "<td>\n" + '<input type="number" class="form-control qtyest" name="quantity[]" data-counter="' + count + '" id="quantity_' + count + '" min="1" value="1">\n' + "</td>\n" +
-        //       "<td width=\"10%\"><input id='price_"+idd+"' value='"+price+"'  type=\"number\" name=\"price[]\" class=\"form-control hidden_mobile_view \" placeholder=\"Unit Price\"><input type=\"hidden\" class=\"priceqty\" id='priceqty_"+idd+"'><div class=\"show_mobile_view\"><span class=\"price\">"+price+"</span><input type=\"hidden\" class=\"form-control price\" name=\"price[]\" data-counter=\"0\" id=\"priceM_0\" min=\"0\" value='"+price+"'></div></td>\n" +
-        //       // "<td width=\"10%\"><input type=\"number\" class=\"form-control discount\" name=\"discount[]\" data-counter="0" id=\"discount_0\" min="0" value="0" ></td>\n" +
-        //       // "<td width=\"10%\"><small>Unit Cost</small><input type=\"text\" name=\"item_cost[]\" class=\"form-control\"></td>\n" +
-        //       "<td width=\"10%\" class=\"hidden_mobile_view\"><input type=\"number\" name=\"discount[]\" class=\"form-control discount\" id='discount_"+idd+"'></td>\n" +
-        //       // "<td width=\"25%\"><small>Inventory Location</small><input type=\"text\" name=\"item_loc[]\" class=\"form-control\"></td>\n" +
-        //       "<td width=\"20%\" class=\"hidden_mobile_view\"><input type=\"text\" data-itemid='"+idd+"' class=\"form-control tax_change2\" name=\"tax[]\" data-counter=\"0\" id='tax1_"+idd+"' min=\"0\" value='"+taxes_t+"'></td>\n" +
-        //       "<td style=\"text-align: center\" class=\"hidden_mobile_view\" width=\"15%\"><span data-subtotal='"+total_+"' id='span_total_"+idd+"' class=\"total_per_item\">"+total+
-        //       // "</span><a href=\"javascript:void(0)\" class=\"remove_item_row\"><i class=\"fa fa-times-circle\" aria-hidden=\"true\"></i></a>"+
-        //       "</span> <input type=\"hidden\" name=\"total[]\" id='sub_total_text"+idd+"' value='"+total+"'></td>" +
-        //       "</tr>";
-        //   tableBody = $("#jobs_items_table_body");
-        //   tableBody.append(markup);
-        //   markup2 = "<tr id=\"sss\">" +
-        //       "<td >"+title+"</td>\n" +
-        //       "<td ></td>\n" +
-        //       "<td ></td>\n" +
-        //       "<td >"+price+"</td>\n" +
-        //       "<td ></td>\n" +
-        //       "<td >"+qty+"</td>\n" +
-        //       "<td ></td>\n" +
-        //       "<td ></td>\n" +
-        //       "<td >0</td>\n" +
-        //       "<td ></td>\n" +
-        //       "<td ><a href=\"#\" data-name='"+title+"' data-price='"+price+"' data-quantity='"+qty+"' id='"+idd+"' class=\"edit_item_list\"><span class=\"fa fa-edit\"></span></i></a> <a href=\"javascript:void(0)\" class=\"remove_audit_item_row\"><span class=\"fa fa-trash\"></span></i></a></td>\n" +
-        //       "</tr>";
-        //   tableBody2 = $("#device_audit_datas");
-        //   tableBody2.append(markup2);
-        //   // calculate_subtotal();
-        //   // var counter = $(this).data("counter");
-        //   // calculation(idd);
-
-        // var in_id = idd;
-        // var price = $("#price_" + in_id).val();
-        // var quantity = $("#quantity_" + in_id).val();
-        // var discount = $("#discount_" + in_id).val();
-        // var tax = (parseFloat(price) * 7.5) / 100;
-        // var tax1 = (((parseFloat(price) * 7.5) / 100) * parseFloat(quantity)).toFixed(
-        // 2
-        // );
-        // if( discount == '' ){
-        // discount = 0;
-        // }
-
-        // var total = (
-        // (parseFloat(price) + parseFloat(tax)) * parseFloat(quantity) -
-        // parseFloat(discount)
-        // ).toFixed(2);
-
-        // var total_wo_tax = price * quantity;
-
-        // // alert( 'yeah' + total);
-
-
-        // $("#priceqty_" + in_id).val(total_wo_tax);
-        // $("#span_total_" + in_id).text(total);
-        // $("#sub_total_text" + in_id).val(total);
-        // $("#tax_1_" + in_id).text(tax1);
-        // $("#tax1_" + in_id).val(tax1);
-        // $("#discount_" + in_id).val(discount);
-
-        // if( $('#tax_1_'+ in_id).length ){
-        // $('#tax_1_'+in_id).val(tax1);
-        // }
-
-        // if( $('#item_total_'+ in_id).length ){
-        // $('#item_total_'+in_id).val(total);
-        // }
-
-        // var eqpt_cost = 0;
-        // var total_costs = 0;
-        // var cnt = $("#count").val();
-        // var total_discount = 0;
-        // var pquantity = 0;
-        // for (var p = 0; p <= cnt; p++) {
-        // var prc = $("#price_" + p).val();
-        // var quantity = $("#quantity_" + p).val();
-        // var discount = $("#discount_" + p).val();
-        // var pqty = $("#priceqty_" + p).val();
-        // // var discount= $('#discount_' + p).val();
-        // // eqpt_cost += parseFloat(prc) - parseFloat(discount);
-        // pquantity += parseFloat(pqty);
-        // total_costs += parseFloat(prc);
-        // eqpt_cost += parseFloat(prc) * parseFloat(quantity);
-        // total_discount += parseFloat(discount);
-        // }
-        // //   var subtotal = 0;
-        // // $( total ).each( function(){
-        // //   subtotal += parseFloat( $( this ).val() ) || 0;
-        // // });
-
-        // var total_cost = 0;
-        // // $("#span_total_0").each(function(){
-        // $('*[id^="price_"]').each(function(){
-        // total_cost += parseFloat($(this).val());
-        // });
-
-        // // var totalcosting = 0;
-        // // $('*[id^="span_total_"]').each(function(){
-        // //   totalcosting += parseFloat($(this).val());
-        // // });
-
-
-        // // alert(total_cost);
-
-        // var tax_tot = 0;
-        // $('*[id^="tax1_"]').each(function(){
-        // tax_tot += parseFloat($(this).val());
-        // });
-
-        // over_tax = parseFloat(tax_tot).toFixed(2);
-        // // alert(over_tax);
-
-        // $("#sales_taxs").val(over_tax);
-        // $("#total_tax_input").val(over_tax);
-        // $("#total_tax_").text(over_tax);
-
-
-        // eqpt_cost = parseFloat(eqpt_cost).toFixed(2);
-        // total_discount = parseFloat(total_discount).toFixed(2);
-        // stotal_cost = parseFloat(total_cost).toFixed(2);
-        // priceqty = parseFloat(pquantity).toFixed(2);
-        // // var test = 5;
-
-        // var subtotal = 0;
-        // // $("#span_total_0").each(function(){
-        // $('*[id^="span_total_"]').each(function(){
-        // subtotal += parseFloat($(this).text());
-        // });
-        // // $('#sum').text(subtotal);
-
-        // var subtotaltax = 0;
-        // // $("#span_total_0").each(function(){
-        // $('*[id^="tax_1_"]').each(function(){
-        // subtotaltax += parseFloat($(this).text());
-        // });
-
-
-        // var priceqty2 = 0;
-        // $('*[id^="priceqty_"]').each(function(){
-        // priceqty2 += parseFloat($(this).val());
-        // });
-
-        // $("#span_sub_total_invoice").text(priceqty2.toFixed(2));
-        // // $("#span_sub_total_invoice").text(priceqty);
-
-        // $("#eqpt_cost").val(eqpt_cost);
-        // $("#total_discount").val(total_discount);
-        // $("#span_sub_total_0").text(total_discount);
-        // // $("#span_sub_total_invoice").text(stotal_cost);
-        // // $("#item_total").val(subtotal.toFixed(2));
-        // $("#item_total").val(priceqty2.toFixed(2));
-
-        // var s_total = subtotal.toFixed(2);
-        // var adjustment = $("#adjustment_input").val();
-        // var grand_total = s_total - parseFloat(adjustment);
-        // var markup = $("#markup_input_form").val();
-        // var grand_total_w = grand_total + parseFloat(markup);
-
-        // // $("#total_tax_").text(subtotaltax.toFixed(2));
-        // // $("#total_tax_").val(subtotaltax.toFixed(2));
-
-
-
-
-        // $("#grand_total").text(grand_total_w.toFixed(2));
-        // $("#grand_total_input").val(grand_total_w.toFixed(2));
-        // $("#grand_total_inputs").val(grand_total_w.toFixed(2));
-
-        // var sls = (parseFloat(eqpt_cost).toFixed(2) * 7.5) / 100;
-        // sls = parseFloat(sls).toFixed(2);
-        // $("#sales_tax").val(sls);
-        // cal_total_due();
-    });
->>>>>>> staging
 </script>
 
 <script>
@@ -4030,4 +3740,483 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             $('#modalSetMarkup').modal('toggle');
         });
     });
+</script>
+
+<script>
+$(document).ready(function() {
+     
+	$('#filter_from').datepicker({
+		 dateFormat: 'mm/dd/yy',
+		 minDate: 0,
+			 
+	});
+
+    $('#filter_to').datepicker({
+		 dateFormat: 'mm/dd/yy',
+		 minDate: 0,
+			 
+	});
+});
+
+</script>
+<script>
+
+function getItemCharge_k(obj) {
+  var sk = jQuery(obj).val();
+  var site_url = jQuery("#siteurl").val();
+  jQuery.ajax({
+    url: site_url + "items/getitem_Charge",
+    data: { sk: sk },
+    type: "GET",
+    success: function (data) {
+      /* alert(data); */
+      jQuery(obj).parent().find(".suggestions").empty().html(data);
+    },
+    error: function () {
+      alert("An error has occurred");
+    },
+  });
+}
+over_tax = parseFloat(tax_tot).toFixed(2);
+// alert(over_tax);
+
+function setitemCharge(obj, title, price, discount, itemid) {
+  // alert( 'yeah');
+// alert('setitemCM');
+  jQuery(obj).parent().parent().find(".getItemCharge").val(title);
+  jQuery(obj).parent().parent().parent().find(".pricedch").val(price);
+  jQuery(obj).parent().parent().parent().find(".discountdch").val(discount);
+  jQuery(obj).parent().parent().parent().find(".itemid").val(itemid);
+  var counter = jQuery(obj)
+    .parent()
+    .parent()
+    .parent()
+    .find(".pricedch")
+    .data("counter");
+  jQuery(obj).parent().empty();
+  calculationCharge(counter);
+}
+
+$(document).on("focusout", ".pricedch", function () {
+  var counter = $(this).data("counter");
+  calculationCharge(counter);
+});
+
+// $(document).on("focusout", ".quantitycm", function () {
+//   var counter = $(this).data("counter");
+//   calculationcm(counter);
+// });
+$(document).on("focusout", ".discountdch", function () {
+  var counter = $(this).data("counter");
+  calculationCharge(counter);
+});
+
+
+$(document).on("focusout", ".quantitydch2", function () {
+  // var counter = $(this).data("counter");
+//   calculationcm(counter);
+// var idd = this.id;
+var idd = $(this).attr('data-itemid');
+var in_id = idd;
+  var price = $("#price_dch_" + in_id).val();
+  var quantity = $("#quantity_" + in_id).val();
+  var discount = $("#discount_dch_" + in_id).val();
+  var tax = (parseFloat(price) * 7.5) / 100;
+  var tax1 = (((parseFloat(price) * 7.5) / 100) * parseFloat(quantity)).toFixed(
+    2
+  );
+  if( discount == '' ){
+    discount = 0;
+  }
+
+  var total = (
+    (parseFloat(price) + parseFloat(tax)) * parseFloat(quantity) -
+    parseFloat(discount)
+  ).toFixed(2);
+
+//   alert( 'yeah' + total);
+
+  $("#span_total_charge_" + in_id).text(total);
+  $("#tax_1_" + in_id).text(tax1);
+  $("#tax1_dch_" + in_id).val(tax1);
+  $("#discount_dch_" + in_id).val(discount);
+
+  if( $('#tax_1_'+ in_id).length ){
+    $('#tax_1_'+in_id).val(tax1);
+  }
+
+  if( $('#item_total_dch_'+ in_id).length ){
+    $('#item_total_dch_'+in_id).val(total);
+  }
+
+  var eqpt_cost = 0;
+  var cnt = $("#count").val();
+  var total_discount = 0;
+  for (var p = 0; p <= cnt; p++) {
+    var prc = $("#price_dch_" + p).val();
+    var quantity = $("#quantity_" + p).val();
+    var discount = $("#discount_dch_" + p).val();
+    // var discount= $('#discount_' + p).val();
+    // eqpt_cost += parseFloat(prc) - parseFloat(discount);
+    eqpt_cost += parseFloat(prc) * parseFloat(quantity);
+    total_discount += parseFloat(discount);
+  }
+//   var subtotal = 0;
+// $( total ).each( function(){
+//   subtotal += parseFloat( $( this ).val() ) || 0;
+// });
+
+  eqpt_cost = parseFloat(eqpt_cost).toFixed(2);
+  total_discount = parseFloat(total_discount).toFixed(2);
+  // var test = 5;
+
+  var subtotaldch = 0;
+  // $("#span_total_0").each(function(){
+    $('*[id^="span_total_charge_"]').each(function(){
+    subtotaldch += parseFloat($(this).text());
+  });
+  // $('#sum').text(subtotal);
+
+  var subtotaltax = 0;
+  // $("#span_total_0").each(function(){
+    $('*[id^="tax_1_"]').each(function(){
+      subtotaltax += parseFloat($(this).text());
+  });
+
+  // alert(subtotalcm);
+
+  $("#eqpt_cost").val(eqpt_cost);
+  $("#total_discount").val(total_discount);
+  $("#span_sub_total_0").text(total_discount);
+  $("#span_sub_total_dch").text(subtotal.toFixed(2));
+  $("#item_total_dch").val(subtotal.toFixed(2));
+
+  var s_total = subtotal.toFixed(2);
+  var adjustment = $("#adjustment_input_dch").val();
+  var grand_total = s_total - parseFloat(adjustment);
+  var markup = $("#markup_input_form").val();
+  var grand_total_w = grand_total + parseFloat(markup);
+
+  $("#total_tax_dch_").text(subtotaltax.toFixed(2));
+  $("#total_tax_dch_").val(subtotaltax.toFixed(2));
+
+
+  $("#grand_total_dch").text(grand_total_w.toFixed(2));
+  $("#grand_total_dch_total").text(grand_total_w.toFixed(2));
+  $("#grand_total_dc_total_val_dc").val(grand_total_w.toFixed(2));
+  $("#grand_total_input").val(grand_total_w.toFixed(2));
+
+  var sls = (parseFloat(eqpt_cost).toFixed(2) * 7.5) / 100;
+  sls = parseFloat(sls).toFixed(2);
+  $("#sales_tax").val(sls);
+  cal_total_due();
+});
+
+function calculationCharge(counter) {
+  // alert( 'yeah');
+  var price = $("#price_dch_" + counter).val();
+  var quantity = $("#quantity_" + counter).val();
+  var discount = $("#discount_dch_" + counter).val();
+  var tax = (parseFloat(price) * 7.5) / 100;
+  var tax1 = (((parseFloat(price) * 7.5) / 100) * parseFloat(quantity)).toFixed(
+    2
+  );
+  if( discount == '' ){
+    discount = 0;
+  }
+
+  var total = (
+    (parseFloat(price) + parseFloat(tax)) * parseFloat(quantity) -
+    parseFloat(discount)
+  ).toFixed(2);
+
+  // console.log( 'yeah' + total);
+
+  $("#span_total_charge_" + counter).text(total);
+  $("#tax_1_" + counter).text(tax1);
+  $("#tax_111_" + counter).text(tax1);
+  $("#tax_1_" + counter).val(tax1);
+  $("#discount_dch_" + counter).val(discount);
+  $("#tax1_dch_" + counter).val(tax1);
+  // $("#tax1_" + counter).val(tax1);
+  // $("#tax_" + counter).val(tax1);
+  // alert(tax1);
+
+  if( $('#tax_1_'+ counter).length ){
+    $('#tax_1_'+counter).val(tax1);
+  }
+
+  if( $('#item_total_dch_'+ counter).length ){
+    $('#item_total_dch_'+counter).val(total);
+  }
+
+  // alert('dri');
+
+  var eqpt_cost = 0;
+  var cnt = $("#count").val();
+  var total_discount = 0;
+  for (var p = 0; p <= cnt; p++) {
+    var prc = $("#price_dch_" + p).val();
+    var quantity = $("#quantity_" + p).val();
+    var discount = $("#discount_dch_" + p).val();
+    // var discount= $('#discount_' + p).val();
+    // eqpt_cost += parseFloat(prc) - parseFloat(discount);
+    eqpt_cost += parseFloat(prc) * parseFloat(quantity);
+    total_discount += parseFloat(discount);
+  }
+//   var subtotal = 0;
+// $( total ).each( function(){
+//   subtotal += parseFloat( $( this ).val() ) || 0;
+// });
+
+  eqpt_cost = parseFloat(eqpt_cost).toFixed(2);
+  total_discount = parseFloat(total_discount).toFixed(2);
+  // var test = 5;
+
+  var subtotal = 0;
+  // $("#span_total_0").each(function(){
+    $('*[id^="span_total_charge_"]').each(function(){
+    subtotal += parseFloat($(this).text());
+  });
+  // $('#sum').text(subtotal);
+  var subtotaltax = 0;
+  // $("#span_total_0").each(function(){
+    $('*[id^="tax_1_"]').each(function(){
+      subtotaltax += parseFloat($(this).text());
+  });
+
+//   alert(subtotal);
+
+  $("#eqpt_cost").val(eqpt_cost);
+  $("#total_discount").val(total_discount);
+  $("#span_sub_total_0").text(total_discount);
+  $("#span_sub_total_dch").text(subtotal.toFixed(2));
+  $("#item_total_dch").val(subtotal.toFixed(2));
+
+  var s_total = subtotal.toFixed(2);
+  var adjustment = $("#adjustment_input_dch").val();
+  var grand_total = s_total - parseFloat(adjustment);
+  var markup = $("#markup_input_form").val();
+  var grand_total_w = grand_total + parseFloat(markup);
+
+  $("#total_tax_dch_").text(subtotaltax.toFixed(2));
+  $("#total_tax_input_dch").val(subtotaltax.toFixed(2));
+
+
+  $("#grand_total_dch").text(grand_total_w.toFixed(2));
+  $("#grand_total_dch_total").text(grand_total_w.toFixed(2));
+  $("#grand_total_dc_total_val_dc").val(grand_total_w.toFixed(2));
+  $("#grand_total_input").val(grand_total_w.toFixed(2));
+  $("#grandtotal_input").val(grand_total_w.toFixed(2));
+  // alert(grand_total_w);
+
+  if($("#grand_total").length && $("#grand_total").val().length)
+  {
+    // console.log('none');
+    // alert('none');
+  }else{
+    $("#grand_total_dch").text(grand_total_w.toFixed(2));
+    $("#grand_total_input").val(grand_total_w.toFixed(2));
+
+    var bundle1_total = $("#grand_total").text();
+    var bundle2_total = $("#grand_total2").text();
+    var super_grand = parseFloat(bundle1_total) + parseFloat(bundle2_total);
+
+    $("#supergrandtotal").text(super_grand.toFixed(2));
+    $("#supergrandtotal_input").val(super_grand.toFixed(2));
+  }
+
+  var sls = (parseFloat(eqpt_cost).toFixed(2) * 7.5) / 100;
+  sls = parseFloat(sls).toFixed(2);
+  $("#sales_tax").val(sls);
+  cal_total_due();
+}
+
+</script>
+<script>
+
+
+$(".select_item_dch").click(function () {
+            var idd = this.id;
+            console.log(idd);
+            console.log($(this).data('itemname'));
+            var title = $(this).data('itemname');
+            var price = $(this).data('price');
+            
+            if(!$(this).data('quantity')){
+              // alert($(this).data('quantity'));
+              var qty = 0;
+            }else{
+              // alert('0');
+              var qty = $(this).data('quantity');
+            }
+
+            var count = parseInt($("#count").val()) + 1;
+            $("#count").val(count);
+            var total_ = price * qty;
+            var tax_ =(parseFloat(total_).toFixed(2) * 7.5) / 100;
+            var taxes_t = parseFloat(tax_).toFixed(2);
+            var total = parseFloat(total_).toFixed(2);
+            var withCommas = Number(total).toLocaleString('en');
+            total = '$' + withCommas + '.00';
+            // console.log(total);
+            // alert(total);
+            markup = "<tr id=\"ss\">" +
+                "<td width=\"35%\"><input value='"+title+"' type=\"text\" name=\"items[]\" class=\"form-control\" ><input type=\"hidden\" value='"+idd+"' name=\"item_id[]\"></td>\n" +
+                "<td width=\"20%\"><select name=\"item_type[]\" class=\"form-control\"><option value=\"product\">Product</option><option value=\"material\">Material</option><option value=\"service\">Service</option><option value=\"fee\">Fee</option></select></td>\n" +
+                "<td width=\"10%\"><input data-itemid='"+idd+"' id='quantity_"+idd+"' value='"+qty+"' type=\"number\" name=\"quantity[]\" data-counter=\"0\"  min=\"0\" class=\"form-control qtyest\"></td>\n" +
+                // "<td>\n" + '<input type="number" class="form-control qtyest" name="quantity[]" data-counter="' + count + '" id="quantity_' + count + '" min="1" value="1">\n' + "</td>\n" +
+                "<td width=\"10%\"><input id='price_dch_"+idd+"' value='"+price+"'  type=\"number\" name=\"price[]\" class=\"form-control\" placeholder=\"Unit Price\"></td>\n" +
+                // "<td width=\"10%\"><input type=\"number\" class=\"form-control discount\" name=\"discount[]\" data-counter="0" id=\"discount_0\" min="0" value="0" ></td>\n" +
+                // "<td width=\"10%\"><small>Unit Cost</small><input type=\"text\" name=\"item_cost[]\" class=\"form-control\"></td>\n" +
+                "<td width=\"10%\"><input type=\"number\" name=\"discount[]\" class=\"form-control discount\" id='discount_dch_"+idd+"'></td>\n" +
+                // "<td width=\"25%\"><small>Inventory Location</small><input type=\"text\" name=\"item_loc[]\" class=\"form-control\"></td>\n" +
+                "<td width=\"20%\"><input type=\"text\" data-itemid='"+idd+"' class=\"form-control tax_change2\" name=\"tax[]\" data-counter=\"0\" id='tax1_dch_"+idd+"' min=\"0\" value='"+taxes_t+"'></td>\n" +
+                "<td style=\"text-align: center\" class=\"d-flex\" width=\"15%\"><span data-subtotal='"+total_+"' id='span_total_charge_"+idd+"' class=\"total_per_item\">"+total+
+                // "</span><a href=\"javascript:void(0)\" class=\"remove_item_row\"><i class=\"fa fa-times-circle\" aria-hidden=\"true\"></i></a>"+
+                "</span> <input type=\"hidden\" name=\"total[]\" id='sub_total_text"+idd+"' value='"+total+"'></td>" +
+                "</tr>";
+            tableBody = $("#items_table_body_delayed_charge");
+            tableBody.append(markup);
+            markup2 = "<tr id=\"sss\">" +
+                "<td >"+title+"</td>\n" +
+                "<td ></td>\n" +
+                "<td ></td>\n" +
+                "<td >"+price+"</td>\n" +
+                "<td ></td>\n" +
+                "<td >"+qty+"</td>\n" +
+                "<td ></td>\n" +
+                "<td ></td>\n" +
+                "<td >0</td>\n" +
+                "<td ></td>\n" +
+                "<td ><a href=\"#\" data-name='"+title+"' data-price='"+price+"' data-quantity='"+qty+"' id='"+idd+"' class=\"edit_item_list\"><span class=\"fa fa-edit\"></span></i></a> <a href=\"javascript:void(0)\" class=\"remove_audit_item_row\"><span class=\"fa fa-trash\"></span></i></a></td>\n" +
+                "</tr>";
+            tableBody2 = $("#device_audit_datas");
+            tableBody2.append(markup2);
+            // calculate_subtotal();
+            // var counter = $(this).data("counter");
+            // calculation(idd);
+
+  var in_id = idd;
+  var price = $("#price_dch_" + in_id).val();
+  var quantity = $("#quantity_" + in_id).val();
+  var discount = $("#discount_dch_" + in_id).val();
+  var tax = (parseFloat(price) * 7.5) / 100;
+  var tax1 = (((parseFloat(price) * 7.5) / 100) * parseFloat(quantity)).toFixed(
+    2
+  );
+  if( discount == '' ){
+    discount = 0;
+  }
+  
+  var total = (
+    (parseFloat(price) + parseFloat(tax)) * parseFloat(quantity) -
+    parseFloat(discount)
+  ).toFixed(2);
+
+  // alert( 'yeah' + total);
+
+  $("#span_total_charge_" + in_id).text(total);
+  $("#sub_total_text" + in_id).val(total);
+  $("#tax_1_" + in_id).text(tax1);
+  $("#tax1_dch_" + in_id).val(tax1);
+  $("#discount_dch_" + in_id).val(discount);
+
+  if( $('#tax_1_'+ in_id).length ){
+    $('#tax_1_'+in_id).val(tax1);
+  }
+
+  if( $('#item_total_dch_'+ in_id).length ){
+    $('#item_total_dch_'+in_id).val(total);
+  }
+
+  var eqpt_cost = 0;
+  // var total_cost = 0;
+  var cnt = $("#count").val();
+  var total_discount = 0;
+  for (var p = 0; p <= cnt; p++) {
+    var prc = $("#price_dch_" + p).val();
+    var quantity = $("#quantity_" + p).val();
+    var discount = $("#discount_dch_" + p).val();
+    // var discount= $('#discount_' + p).val();
+    // eqpt_cost += parseFloat(prc) - parseFloat(discount);
+    // total_cost += parseFloat(prc);
+    eqpt_cost += parseFloat(prc) * parseFloat(quantity);
+    total_discount += parseFloat(discount);
+  }
+//   var subtotal = 0;
+// $( total ).each( function(){
+//   subtotal += parseFloat( $( this ).val() ) || 0;
+// });
+
+var total_cost = 0;
+  // $("#span_total_0").each(function(){
+    $('*[id^="price_dch_"]').each(function(){
+      total_cost += parseFloat($(this).val());
+  });
+
+var tax_tot = 0;
+$('*[id^="tax1_dch_"]').each(function(){
+  tax_tot += parseFloat($(this).val());
+});
+
+over_tax = parseFloat(tax_tot).toFixed(2);
+// alert(over_tax);
+
+$("#sales_taxs").val(over_tax);
+$("#total_tax_input_dch").val(over_tax);
+$("#total_tax_dch_").text(over_tax);
+
+
+  eqpt_cost = parseFloat(eqpt_cost).toFixed(2);
+  total_discount = parseFloat(total_discount).toFixed(2);
+  stotal_cost = parseFloat(total_cost).toFixed(2);
+  // var test = 5;
+
+  var subtotal = 0;
+  // $("#span_total_0").each(function(){
+    $('*[id^="span_total_charge_"]').each(function(){
+    subtotal += parseFloat($(this).text());
+  });
+  // $('#sum').text(subtotal);
+
+  var subtotaltax = 0;
+  // $("#span_total_0").each(function(){
+    $('*[id^="tax_1_"]').each(function(){
+      subtotaltax += parseFloat($(this).text());
+  });
+
+  // alert(subtotaltax);
+
+  $("#eqpt_cost").val(eqpt_cost);
+  $("#total_discount").val(total_discount);
+  $("#span_sub_total_0").text(total_discount);
+  $("#span_sub_total_invoice_dch").text(subtotal.toFixed(2));
+  // $("#item_total").val(subtotal.toFixed(2));
+  $("#item_total_dch").val(stotal_cost);
+  
+  var s_total = subtotal.toFixed(2);
+  var adjustment = $("#adjustment_input_dch").val();
+  var grand_total = s_total - parseFloat(adjustment);
+  var markup = $("#markup_input_form").val();
+  var grand_total_w = grand_total + parseFloat(markup);
+
+  // $("#total_tax_").text(subtotaltax.toFixed(2));
+  // $("#total_tax_").val(subtotaltax.toFixed(2));
+  
+  
+  
+
+  $("#grand_total_dch").text(grand_total_w.toFixed(2));
+  $("#grand_total_input").val(grand_total_w.toFixed(2));
+  $("#grand_total_dch_total").text(grand_total_w.toFixed(2));
+  $("#grand_total_dc_total_val_dc").val(grand_total_w.toFixed(2));
+  $("#grand_total_dch").text(grand_total_w.toFixed(2));
+  $("#span_sub_total_dch").text(grand_total_w.toFixed(2));
+
+  var sls = (parseFloat(eqpt_cost).toFixed(2) * 7.5) / 100;
+  sls = parseFloat(sls).toFixed(2);
+  $("#sales_tax").val(sls);
+  cal_total_due();
+        });
 </script>
