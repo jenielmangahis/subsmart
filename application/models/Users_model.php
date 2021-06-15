@@ -263,6 +263,11 @@ class Users_model extends MY_Model
 
         $login_token = sha1($row->id.$row->password.$time);
 
+        $this->db->select('id AS client_id, is_plan_active');
+        $this->db->from('clients');
+        $this->db->where('id', $row->company_id);
+        $company = $this->db->get()->row();
+
         if ($remember===false) {
             $array = [
 
@@ -275,7 +280,8 @@ class Users_model extends MY_Model
                     'id' => $row->id,
                     'time' => $time,
                     'role' => $row->role,
-                    'company_id' => $row->company_id
+                    'company_id' => $row->company_id,
+                    'is_plan_active' => $company->is_plan_active
                 ]
 
             ];
@@ -288,7 +294,8 @@ class Users_model extends MY_Model
                 'company_id' => $row->company_id,
                 'role' => $row->role,
                 'usertimezone' => $this->session->userdata('usertimezone'),
-                'offset_zone'=> $this->session->userdata('offset_zone')
+                'offset_zone'=> $this->session->userdata('offset_zone'),
+                'is_plan_active' => $company->is_plan_active
 
             ];
 

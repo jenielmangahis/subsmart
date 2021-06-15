@@ -132,7 +132,15 @@ class Clients_model extends MY_Model
         return $query->result();
     }
 
-    
+    public function deactivateExpiredUnpaidSubscription(){
+        $date = date("Y-m-d");
+
+        $this->db->from($this->table);
+        $this->db->set(['is_plan_active' => 0]);
+        $this->db->where('is_auto_renew', 0);
+        $this->db->where('next_billing_date <=', $date);
+        $this->db->update();
+    }
 }
 
 /* End of file Clients_model.php */

@@ -5,7 +5,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 class Estimate extends MY_Controller
 {
-
     public function __construct()
     {
         parent::__construct();
@@ -25,7 +24,7 @@ class Estimate extends MY_Controller
             'https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css',
             'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css',
             'https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css',
-			"assets/css/accounting/sidebar.css",
+            "assets/css/accounting/sidebar.css",
         ));
 
         add_footer_js(array(
@@ -40,7 +39,7 @@ class Estimate extends MY_Controller
     public function index($tab = '')
     {
         $is_allowed = $this->isAllowedModuleAccess(18);
-        if( !$is_allowed ){
+        if (!$is_allowed) {
             $this->page_data['module'] = 'estimate';
             echo $this->load->view('no_access_module', $this->page_data, true);
             die();
@@ -57,7 +56,7 @@ class Estimate extends MY_Controller
 
         if (!empty($tab)) {
             $query_tab = $tab;
-            if( $tab == 'declined%20by%20customer' ){
+            if ($tab == 'declined%20by%20customer') {
                 $query_tab = 'Declined By Customer';
             }
             $this->page_data['tab'] = $tab;
@@ -65,18 +64,15 @@ class Estimate extends MY_Controller
         } else {
             // search
             if (!empty(get('search'))) {
-
                 $this->page_data['search'] = get('search');
                 $this->page_data['estimates'] = $this->estimate_model->filterBy(array('search' => get('search')), $company_id, $role);
             } elseif (!empty(get('order'))) {
-
                 $this->page_data['search'] = get('search');
                 $this->page_data['estimates'] = $this->estimate_model->filterBy(array('order' => get('order')), $company_id, $role);
-
             } else {
-                if( $role == 1 || $role == 2 ){
+                if ($role == 1 || $role == 2) {
                     $this->page_data['estimates'] = $this->estimate_model->getAllEstimates();
-                }else{
+                } else {
                     $this->page_data['estimates'] = $this->estimate_model->getAllByCompany($company_id);
                 }
             }
@@ -167,7 +163,7 @@ class Estimate extends MY_Controller
         );
 
         $addQuery = $this->estimate_model->save_estimate($new_data);
-        if($addQuery > 0){
+        if ($addQuery > 0) {
             // $new_data2 = array(
             //     'item_type' => $this->input->post('type'),
             //     'description' => $this->input->post('desc'),
@@ -193,7 +189,7 @@ class Estimate extends MY_Controller
             $ii = $this->input->post('total');
 
             $i = 0;
-            foreach($a as $row){
+            foreach ($a as $row) {
                 $data['item'] = $a[$i];
                 $data['item_type'] = $b[$i];
                 // $data['description'] = $c[$i];
@@ -212,9 +208,8 @@ class Estimate extends MY_Controller
                 $i++;
             }
 
-           redirect('estimate');
-        }
-        else{
+            redirect('estimate');
+        } else {
             echo json_encode(0);
         }
     }
@@ -227,16 +222,14 @@ class Estimate extends MY_Controller
         $query_autoincrment = $this->db->query("SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE table_name = 'customer_groups'");
         $result_autoincrement = $query_autoincrment->result_array();
 
-        if(count( $result_autoincrement )) {
-            if($result_autoincrement[0]['AUTO_INCREMENT'])
-            {
+        if (count($result_autoincrement)) {
+            if ($result_autoincrement[0]['AUTO_INCREMENT']) {
                 $this->page_data['auto_increment_estimate_id'] = 0000001;
             } else {
-
                 $this->page_data['auto_increment_estimate_id'] = $result_autoincrement[0]['AUTO_INCREMENT'];
             }
         } else {
-                $this->page_data['auto_increment_estimate_id'] = 0000000;
+            $this->page_data['auto_increment_estimate_id'] = 0000000;
         }
 
         $user_id = logged('id');
@@ -251,10 +244,10 @@ class Estimate extends MY_Controller
         $company_id = logged('company_id');
         $role = logged('role');
         // $this->page_data['workstatus'] = $this->Workstatus_model->getByWhere(['company_id'=>$company_id]);
-        if( $role == 1 || $role == 2 ){
+        if ($role == 1 || $role == 2) {
             // $this->page_data['customers'] = $this->AcsProfile_model->getAllByCompanyId($company_id);
             $this->page_data['customers'] = $this->AcsProfile_model->getAll();
-        }else{
+        } else {
             // $this->page_data['customers'] = $this->AcsProfile_model->getAll();
             $this->page_data['customers'] = $this->AcsProfile_model->getAllByCompanyId($company_id);
         }
@@ -276,12 +269,10 @@ class Estimate extends MY_Controller
         $query_autoincrment = $this->db->query("SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE table_name = 'customer_groups'");
         $result_autoincrement = $query_autoincrment->result_array();
 
-        if(count( $result_autoincrement )) {
-            if($result_autoincrement[0]['AUTO_INCREMENT'])
-            {
+        if (count($result_autoincrement)) {
+            if ($result_autoincrement[0]['AUTO_INCREMENT']) {
                 $this->page_data['auto_increment_estimate_id'] = 1;
             } else {
-
                 $this->page_data['auto_increment_estimate_id'] = $result_autoincrement[0]['AUTO_INCREMENT'];
             }
         } else {
@@ -300,10 +291,10 @@ class Estimate extends MY_Controller
         $company_id = logged('company_id');
         $role = logged('role');
         // $this->page_data['workstatus'] = $this->Workstatus_model->getByWhere(['company_id'=>$company_id]);
-        if( $role == 1 || $role == 2 ){
+        if ($role == 1 || $role == 2) {
             $this->page_data['customers'] = $this->AcsProfile_model->getAll();
-            // $this->page_data['customers'] = $this->AcsProfile_model->getAllByCompanyId($company_id);
-        }else{
+        // $this->page_data['customers'] = $this->AcsProfile_model->getAllByCompanyId($company_id);
+        } else {
             // $this->page_data['customers'] = $this->AcsProfile_model->getAll();
             $this->page_data['customers'] = $this->AcsProfile_model->getAllByCompanyId($company_id);
         }
@@ -324,12 +315,10 @@ class Estimate extends MY_Controller
         $query_autoincrment = $this->db->query("SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE table_name = 'customer_groups'");
         $result_autoincrement = $query_autoincrment->result_array();
 
-        if(count( $result_autoincrement )) {
-            if($result_autoincrement[0]['AUTO_INCREMENT'])
-            {
+        if (count($result_autoincrement)) {
+            if ($result_autoincrement[0]['AUTO_INCREMENT']) {
                 $this->page_data['auto_increment_estimate_id'] = 1;
             } else {
-
                 $this->page_data['auto_increment_estimate_id'] = $result_autoincrement[0]['AUTO_INCREMENT'];
             }
         } else {
@@ -348,10 +337,10 @@ class Estimate extends MY_Controller
         $company_id = logged('company_id');
         $role = logged('role');
         // $this->page_data['workstatus'] = $this->Workstatus_model->getByWhere(['company_id'=>$company_id]);
-        if( $role == 1 || $role == 2 ){
+        if ($role == 1 || $role == 2) {
             // $this->page_data['customers'] = $this->AcsProfile_model->getAllByCompanyId($company_id);
             $this->page_data['customers'] = $this->AcsProfile_model->getAll();
-        }else{
+        } else {
             // $this->page_data['customers'] = $this->AcsProfile_model->getAll();
             $this->page_data['customers'] = $this->AcsProfile_model->getAllByCompanyId($company_id);
         }
@@ -421,7 +410,7 @@ class Estimate extends MY_Controller
         );
 
         $addQuery = $this->estimate_model->save_estimate($new_data);
-        if($addQuery > 0){
+        if ($addQuery > 0) {
             $a = $this->input->post('items');
             $b = $this->input->post('item_type');
             $d = $this->input->post('quantity');
@@ -431,7 +420,7 @@ class Estimate extends MY_Controller
             $ii = $this->input->post('total');
 
             $i = 0;
-            foreach($a as $row){
+            foreach ($a as $row) {
                 $data['item'] = $a[$i];
                 $data['item_type'] = $b[$i];
                 $data['qty'] = $d[$i];
@@ -459,7 +448,7 @@ class Estimate extends MY_Controller
             $p = $this->input->post('total2');
 
             $z = 0;
-            foreach($j as $row2){
+            foreach ($j as $row2) {
                 $data2['item'] = $j[$z];
                 $data2['item_type'] = $k[$z];
                 $data2['qty'] = $l[$z];
@@ -478,9 +467,8 @@ class Estimate extends MY_Controller
                 $z++;
             }
     
-           redirect('estimate');
-        }
-        else{
+            redirect('estimate');
+        } else {
             echo json_encode(0);
         }
     }
@@ -525,7 +513,7 @@ class Estimate extends MY_Controller
         );
 
         $addQuery = $this->estimate_model->save_estimate($new_data);
-        if($addQuery > 0){
+        if ($addQuery > 0) {
             $a = $this->input->post('items');
             $b = $this->input->post('item_type');
             $d = $this->input->post('quantity');
@@ -535,7 +523,7 @@ class Estimate extends MY_Controller
             $ii = $this->input->post('total');
 
             $i = 0;
-            foreach($a as $row){
+            foreach ($a as $row) {
                 $data['item'] = $a[$i];
                 $data['item_type'] = $b[$i];
                 $data['qty'] = $d[$i];
@@ -563,7 +551,7 @@ class Estimate extends MY_Controller
             $p = $this->input->post('total2');
 
             $z = 0;
-            foreach($j as $row2){
+            foreach ($j as $row2) {
                 $data2['item'] = $j[$z];
                 $data2['item_type'] = $k[$z];
                 $data2['qty'] = $l[$z];
@@ -582,9 +570,8 @@ class Estimate extends MY_Controller
                 $z++;
             }
     
-           redirect('estimate');
-        }
-        else{
+            redirect('estimate');
+        } else {
             echo json_encode(0);
         }
     }
@@ -592,7 +579,6 @@ class Estimate extends MY_Controller
 
     public function save()
     {
-
         postAllowed();
 
         // echo '<pre>'; print_r($this->input->post()); die;
@@ -600,7 +586,6 @@ class Estimate extends MY_Controller
         $user = (object)$this->session->userdata('logged');
 
         if (count(post('item')) > 0) {
-
             $items = post('item');
             $quantity = post('quantity');
             $price = post('price');
@@ -609,7 +594,6 @@ class Estimate extends MY_Controller
             $location = post('location');
 
             foreach (post('item') as $key => $val) {
-
                 $itemArray[] = array(
 
                     'item' => $items[$key],
@@ -623,7 +607,6 @@ class Estimate extends MY_Controller
 
             $estimate_items = serialize($itemArray);
         } else {
-
             $estimate_items = '';
         }
 
@@ -665,7 +648,6 @@ class Estimate extends MY_Controller
         $this->session->set_flashdata('alert', 'New Estimate Created Successfully');
 
         redirect('estimate');
-
     }
 
 
@@ -698,7 +680,6 @@ class Estimate extends MY_Controller
 
     public function update($id)
     {
-
         postAllowed();
 
         // echo '<pre>'; print_r($this->input->post()); die;
@@ -706,7 +687,6 @@ class Estimate extends MY_Controller
         $user = (object)$this->session->userdata('logged');
 
         if (count(post('item')) > 0) {
-
             $items = post('item');
             $quantity = post('quantity');
             $price = post('price');
@@ -715,7 +695,6 @@ class Estimate extends MY_Controller
             $location = post('location');
 
             foreach (post('item') as $key => $val) {
-
                 $itemArray[] = array(
 
                     'item' => $items[$key],
@@ -729,7 +708,6 @@ class Estimate extends MY_Controller
 
             $estimate_items = serialize($itemArray);
         } else {
-
             $estimate_items = '';
         }
 
@@ -776,7 +754,6 @@ class Estimate extends MY_Controller
 
     public function tab($index)
     {
-
         $this->index($index);
     }
 
@@ -795,14 +772,11 @@ class Estimate extends MY_Controller
 
                 // search
                 if (!empty(get('search'))) {
-
                     $this->page_data['search'] = get('search');
                     $this->page_data['estimates'] = $this->estimate_model->filterBy(array('search' => get('search')), $company_id);
                 } elseif (!empty(get('order'))) {
-
                     $this->page_data['search'] = get('search');
                     $this->page_data['estimates'] = $this->estimate_model->filterBy(array('order' => get('order')), $company_id);
-
                 } else {
                     $this->page_data['estimates'] = $this->estimate_model->getAllByCompany($company_id);
                 }
@@ -812,22 +786,14 @@ class Estimate extends MY_Controller
         }
 
         if ($role == 4) {
-
             if (!empty($tab)) {
-
                 $this->page_data['tab'] = $tab;
                 $this->page_data['estimates'] = $this->estimate_model->filterBy(array('status' => $tab));
-
-
             } elseif (!empty(get('order'))) {
-
                 $this->page_data['order'] = get('order');
                 $this->page_data['estimates'] = $this->workorder_model->filterBy(array('order' => get('order')), $company_id);
-
             } else {
-
                 if (!empty(get('search'))) {
-
                     $this->page_data['search'] = get('search');
                     $this->page_data['estimates'] = $this->workorder_model->filterBy(array('search' => get('search')), $company_id);
                 } else {
@@ -852,7 +818,7 @@ class Estimate extends MY_Controller
         $post     = $this->input->post();
         $estimate = $this->estimate_model->getEstimate($post['eid']);
 
-        if( $estimate ){
+        if ($estimate) {
             $eid = hashids_encrypt($estimate->id, '', 15);
             $url = base_url('/estimate_customer_view/' . $eid);
             $customer = $this->AcsProfile_model->getByProfId($estimate->customer_id);
@@ -887,16 +853,16 @@ class Estimate extends MY_Controller
             $mail->isHTML(true);
             $mail->Subject = $subject;
             $mail->Body    = $msg;
-            if(!$mail->Send()) {
+            if (!$mail->Send()) {
                 $this->session->set_flashdata('alert-type', 'danger');
                 $this->session->set_flashdata('alert', 'Cannot send email.');
-            }else {
+            } else {
                 $this->estimate_model->update($estimate->id, ['status' => 'Submitted']);
 
                 $this->session->set_flashdata('alert-type', 'success');
                 $this->session->set_flashdata('alert', 'Your estimate was successfully sent');
             }
-        }else{
+        } else {
             $this->session->set_flashdata('alert-type', 'danger');
             $this->session->set_flashdata('alert', 'Cannot find estimate');
         }
@@ -909,15 +875,14 @@ class Estimate extends MY_Controller
         $role    = logged('role');
         $user_id = getLoggedUserID();
 
-        if( $role == 1 || $role == 2 ){
+        if ($role == 1 || $role == 2) {
             $scheduledEstimates = $this->estimate_model->getAllPendingEstimates();
-        }else{
+        } else {
             $scheduledEstimates = $this->estimate_model->getAllPendingEstimatesByUserId($user_id);
         }
 
         $this->page_data['scheduledEstimates'] = $scheduledEstimates;
         $this->load->view('estimate/ajax_load_scheduled_estimates', $this->page_data);
-
     }
 
     public function view($id)
@@ -929,7 +894,7 @@ class Estimate extends MY_Controller
         $estimate = $this->estimate_model->getById($id);
         $company_id = logged('company_id');
 
-        if( $estimate ){
+        if ($estimate) {
             $customer = $this->AcsProfile_model->getByProfId($estimate->customer_id);
             $client   = $this->Clients_model->getById($company_id);
 
@@ -938,8 +903,7 @@ class Estimate extends MY_Controller
             $this->page_data['estimate'] = $estimate;
 
             $this->load->view('estimate/view', $this->page_data);
-
-        }else{
+        } else {
             $this->session->set_flashdata('message', 'Record not found.');
             $this->session->set_flashdata('alert_class', 'alert-danger');
             redirect('estimate');
@@ -948,10 +912,8 @@ class Estimate extends MY_Controller
 
     public function pdf_estimate($id)
     {
-
         $estimate = $this->estimate_model->getById($id);
-        if( $estimate ){
-
+        if ($estimate) {
             $this->load->helper('pdf_helper');
             $this->load->model('AcsProfile_model');
             $this->load->model('Clients_model');
@@ -984,11 +946,11 @@ class Estimate extends MY_Controller
                         <table>
                           <tr>
                             <td>Estimate Date :</td>
-                            <td>'.date("F d, Y",strtotime($estimate->estimate_date)).'</td>
+                            <td>'.date("F d, Y", strtotime($estimate->estimate_date)).'</td>
                           </tr>
                           <tr>
                             <td>Expire Due :</td>
-                            <td>'.date("F d, Y",strtotime($estimate->expiry_date)).'</td>
+                            <td>'.date("F d, Y", strtotime($estimate->expiry_date)).'</td>
                           </tr>
                         </table>
                     </td>
@@ -1011,14 +973,14 @@ class Estimate extends MY_Controller
             $total_amount = 0;
             $total_tax = 0;
             $row = 1;
-            foreach($estimateItems as $item){
+            foreach ($estimateItems as $item) {
                 $html .= '<tr>
                     <td valign="top" style="width:5%;">'.$row.'</td>
                     <td valign="top" style="">'.$item['item'].'</td>
                     <td valign="top" style="">'.ucwords($item['item_type']).'</td>
                     <td valign="top" style="text-align: right;">'.$item['quantity'].'</td>
-                    <td valign="top" style="text-align: right;">'.number_format($item['discount'],2).'</td>
-                    <td valign="top" style="text-align: right;">'.number_format($item['price'],2).'</td>
+                    <td valign="top" style="text-align: right;">'.number_format($item['discount'], 2).'</td>
+                    <td valign="top" style="text-align: right;">'.number_format($item['price'], 2).'</td>
                   </tr>
                 ';
                 $row++;
@@ -1042,19 +1004,18 @@ class Estimate extends MY_Controller
             $obj_pdf->SetTitle($title);
             $obj_pdf->setPrintHeader(false);
             $obj_pdf->setPrintFooter(false);
-            $obj_pdf->setFooterFont(Array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
+            $obj_pdf->setFooterFont(array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
             $obj_pdf->SetDefaultMonospacedFont('helvetica');
             $obj_pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
             $obj_pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
-            $obj_pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
+            $obj_pdf->SetAutoPageBreak(true, PDF_MARGIN_BOTTOM);
             $obj_pdf->SetFont('helvetica', '', 9);
             $obj_pdf->setFontSubsetting(false);
             $obj_pdf->AddPage();
             ob_end_clean();
             $obj_pdf->writeHTML($html, true, false, true, false, '');
             $obj_pdf->Output('credit_note.pdf', 'I');
-
-        }else{
+        } else {
             $this->session->set_flashdata('message', 'Record not found.');
             $this->session->set_flashdata('alert_class', 'alert-danger');
             redirect('credit_notes');
@@ -1070,7 +1031,7 @@ class Estimate extends MY_Controller
         $estimate = $this->estimate_model->getById($id);
         $company_id = logged('company_id');
 
-        if( $estimate ){
+        if ($estimate) {
             $customer = $this->AcsProfile_model->getByProfId($estimate->customer_id);
             $client   = $this->Clients_model->getById($company_id);
 
@@ -1079,15 +1040,15 @@ class Estimate extends MY_Controller
             $this->page_data['estimate'] = $estimate;
 
             $this->load->view('estimate/print_estimate', $this->page_data);
-
-        }else{
+        } else {
             $this->session->set_flashdata('message', 'Record not found.');
             $this->session->set_flashdata('alert_class', 'alert-danger');
             redirect('estimate');
         }
     }
 
-    public function estimate_settings(){
+    public function estimate_settings()
+    {
         $this->load->model('EstimateSettings_model');
 
         $company_id = logged('company_id');
@@ -1097,7 +1058,8 @@ class Estimate extends MY_Controller
         $this->load->view('estimate/settings', $this->page_data);
     }
 
-    public function save_setting(){
+    public function save_setting()
+    {
         $post = $this->input->post();
 
         $this->load->model('EstimateSettings_model');
@@ -1105,9 +1067,9 @@ class Estimate extends MY_Controller
         $company_id = logged('company_id');
         $setting = $this->EstimateSettings_model->getEstimateSettingByCompanyId($company_id);
 
-        if( $setting ){
+        if ($setting) {
             $is_residential_default = 0;
-            if( isset($post['is_residential_default']) ){
+            if (isset($post['is_residential_default'])) {
                 $is_residential_default = 1;
             }
             $data = [
@@ -1120,7 +1082,7 @@ class Estimate extends MY_Controller
                 'is_residential_message_default' => $is_residential_default
             ];
             $this->EstimateSettings_model->update($setting->id, $data);
-        }else{
+        } else {
             $data = [
                 'company_id' => $company_id,
                 'estimate_num_prefix' => $post['prefix'],
@@ -1138,6 +1100,5 @@ class Estimate extends MY_Controller
         $this->session->set_flashdata('alert', 'Settings was successfully updated');
 
         redirect('estimate/settings');
-
     }
 }

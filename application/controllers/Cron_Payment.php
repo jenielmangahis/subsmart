@@ -89,7 +89,7 @@ class Cron_Payment extends MY_Controller {
 
                         $next_billing_date = date("Y-m-d", strtotime("+1 month", strtotime($client->next_billing_date)));
                         $data = [           
-                            //'payment_method' => 'converge',     
+                            'payment_method' => 'converge',     
                             //'plan_date_registered' => date("Y-m-d"),
                             //'plan_date_expiration' => date("Y-m-d", strtotime("+1 month")),                
                             'date_modified' => date("Y-m-d H:i:s"),
@@ -216,7 +216,7 @@ class Cron_Payment extends MY_Controller {
 
                         $next_billing_date = date("Y-m-d", strtotime("+1 month", strtotime($client->next_billing_date)));
                         $data = [           
-                            //'payment_method' => 'converge',     
+                            'payment_method' => 'converge',     
                             //'plan_date_registered' => date("Y-m-d"),
                             //'plan_date_expiration' => date("Y-m-d", strtotime("+1 month")),                
                             'date_modified' => date("Y-m-d H:i:s"),
@@ -252,6 +252,14 @@ class Cron_Payment extends MY_Controller {
             }
         }
 
+        echo "Done";
+    }
+
+    //Disable account if not auto recurring and subscription is already expired
+    public function company_deactivate_expired_unpaid_plan(){
+        $this->load->model('Clients_model');
+
+        $this->Clients_model->deactivateExpiredUnpaidSubscription();
         echo "Done";
     }
         

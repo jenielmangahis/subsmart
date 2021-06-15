@@ -29,6 +29,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 .card-type.americanexpress {
     background-position: -83px 0;
 }
+.expired-text{
+    color: #fff;
+    background-color: #dc3545;
+    font-size: 12px;
+}
 </style>
 <div class="wrapper" role="wrapper">
     <?php include viewPath('includes/sidebars/mycrm'); ?>
@@ -55,7 +60,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         <div class="col-md-6">
             <div class="plan">
                 <strong>
-                    <?= $client->is_trial == 1 ? 'Trial' : 'Paid'; ?> Membership</strong>
+                    <?= $client->is_trial == 1 ? 'Trial' : 'Paid'; ?> Membership
+                    <?= $client->is_plan_active == 0 ? '<span class="expired-text badge badge-danger">(Expired)</span>' : ''; ?>
+                </strong>
                 <p class="margin-bottom">These are your current account options</p>
 
                 <div class="row">
@@ -87,9 +94,17 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         </div>
                     </div>
                     <div class="col-sm-12 col-md-12">
-                        <div class="plan-option-box" style="text-align: center;">                            
+                        <div class="plan-option-box" style="text-align: center;">   
+                            <?php if($client->is_plan_active == 1){ ?>                         
                             <a class="btn btn-primary btn-upgrade-plan" href="javascript:void(0);" style="margin-bottom: 10px;">Upgrade Plan</a>                            
-                            <a class="btn btn-primary btn-pay-subscription" href="javascript:void(0);" style="margin-bottom: 10px;">Pay Subscription</a>
+                            <?php } ?>
+                            <a class="btn btn-primary btn-pay-subscription" href="javascript:void(0);" style="margin-bottom: 10px;">
+                                <?php if($client->is_plan_active == 1){ ?>
+                                    Pay Subscription
+                                <?php }else{ ?>
+                                    Renew Subscription
+                                <?php } ?>
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -118,6 +133,14 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     <?php } ?>                    
                 </div>
             </div>
+            <?php if($client->payment_method == 'offer code'){ ?>
+                <div class="row margin-bottom-sec">
+                    <div class="col-md-4">
+                        <strong>Offer Code Used</strong>
+                    </div>
+                    <div class="col-md-5"><?= $offerCode->offer_code; ?></div>
+                </div>
+            <?php } ?>
             <div class="row margin-bottom-sec">
                 <div class="col-md-4">
                     <strong>Billing Cycle</strong>
@@ -134,7 +157,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             </div>
             <div class="row margin-bottom-sec">
                 <div class="col-md-4">
-                    <strong>Next Bill Date</strong>
+                    <?php if($client->is_trial == 1){ ?>
+                        <strong>Trial Ends</strong>
+                    <?php }else{ ?>
+                        <strong>Next Bill Date</strong>
+                    <?php } ?>
                 </div>
                 <div class="col-md-5"><?= date("d-M-Y",strtotime($client->next_billing_date)); ?></div>
             </div>
@@ -454,7 +481,14 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     <div class="modal-dialog modal-lg" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="">Pay Subscription Plan</h5>
+          <h5 class="modal-title" id="">
+            <?php if($client->is_plan_active == 1){ ?>
+                Pay Subscription Plan
+            <?php }else{ ?>
+                Renew Subscription
+            <?php } ?>
+            
+          </h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
@@ -526,6 +560,33 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     </div>
                                 </div>
                             </div>
+                            <hr />
+                            <div class="row form_line">
+                                <div class="col-md-4">
+                                    Plan Amount
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text" id="basic-addon1">$</span>
+                                        </div>
+                                        <input type="number" class="form-control" name="plan_amount" id="" value="<?= number_format($plan->price,2); ?>" disabled="">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row form_line">
+                                <div class="col-md-4">
+                                    Addon Amount
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text" id="basic-addon1">$</span>
+                                        </div>
+                                        <input type="number" class="form-control" name="plan_amount" id="" value="<?= number_format($total_addon_price,2); ?>" disabled="">
+                                    </div>
+                                </div>
+                            </div>
                             <div class="row form_line">
                                 <div class="col-md-4">
                                     Total Amount
@@ -535,7 +596,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         <div class="input-group-prepend">
                                             <span class="input-group-text" id="basic-addon1">$</span>
                                         </div>
-                                        <input type="number" class="form-control" name="plan_amount" id="" value="<?= number_format($plan->price,2); ?>" disabled="">
+                                        <input type="number" class="form-control" name="plan_amount" id="" value="<?= number_format($total_monthly,2); ?>" disabled="">
                                     </div>
                                 </div>
                             </div>

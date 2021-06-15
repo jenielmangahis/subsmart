@@ -46,8 +46,10 @@ class Accounting_credit_memo_model extends MY_Model {
 	public function getAllByCompany($company_id)
 	{
 		$this->db->select('*');
-        $this->db->from($this->table);
+        $this->db->from('accounting_credit_memo');
         // $this->db->where('company_id', $company_id);
+		$this->db->join('acs_profile', 'accounting_credit_memo.customer_id  = acs_profile.prof_id');
+        $this->db->where('accounting_credit_memo.company_id', $company_id);
 
         $query = $this->db->get();
         return $query->result();

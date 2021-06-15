@@ -36,6 +36,7 @@ class Mycrm extends MY_Controller {
 		$this->load->model('SubscriberNsmartUpgrade_model');
 		$this->load->model('CompanySubscriptionPayments_model');
 		$this->load->model('CardsFile_model');
+		$this->load->model('OfferCodes_model');
 
 		$company_id = logged('company_id');
 		$client = $this->Clients_model->getById($company_id);
@@ -45,6 +46,7 @@ class Mycrm extends MY_Controller {
 		$lastPayment  = $this->CompanySubscriptionPayments_model->getCompanyLastPayment($client->id);
 		$firstPayment = $this->CompanySubscriptionPayments_model->getCompanyFirstPayment($client->id);
 		$primaryCard  = $this->CardsFile_model->getCompanyPrimaryCard($client->id);
+		$offerCode    = $this->OfferCodes_model->getByClientId($company_id);
 
 		$total_addon_price = 0;
 		foreach($addons as $a){
@@ -67,6 +69,7 @@ class Mycrm extends MY_Controller {
 		$this->page_data['addons'] = $addons;
 		$this->page_data['plan']   = $plan;
 		$this->page_data['client'] = $client;
+		$this->page_data['offerCode'] = $offerCode;
 		$this->load->view('mycrm/membership', $this->page_data);
 
     }
@@ -155,6 +158,7 @@ class Mycrm extends MY_Controller {
 	                'is_plan_active' => 1,
 	                'nsmart_plan_id' => $plan->nsmart_plans_id,
 	                'is_trial' => 0,
+	                'payment_method' => 'converge',
 	                'next_billing_date' => $next_billing_date,
 	                'num_months_discounted' => 0
             	];
@@ -191,6 +195,7 @@ class Mycrm extends MY_Controller {
 		$this->load->model('NsmartPlan_model');
 		$this->load->model('Clients_model');
 		$this->load->model('CompanySubscriptionPayments_model');
+		$this->load->model('SubscriberNsmartUpgrade_model');
 
 		$is_success = 0;		
 		$message    = '';
@@ -205,7 +210,15 @@ class Mycrm extends MY_Controller {
 			}else{
 				$amount   = $plan->discount;	
 			}
+
+			$addons   = $this->SubscriberNsmartUpgrade_model->getAllByClientId($client->id);
+			$total_addon_price = 0;
+			foreach($addons as $a){
+				$total_addon_price += $a->service_fee;
+			}
 			
+			$amount = $amount + $total_addon_price;
+
 			$company  = $this->Business_model->getByCompanyId($company_id);
 			$address  = $company->street . " " . $company->city . " " . $company->state;
 			$zip_code = $company->postal_code;
@@ -228,7 +241,7 @@ class Mycrm extends MY_Controller {
 
             	$next_billing_date = date("Y-m-d", strtotime("+1 month", strtotime($client->next_billing_date)));
             	$data = [           
-	            	//'payment_method' => 'converge',     
+	            	'payment_method' => 'converge',     
 	                //'plan_date_registered' => date("Y-m-d"),
 	                //'plan_date_expiration' => date("Y-m-d", strtotime("+1 month")),                
 	                'date_modified' => date("Y-m-d H:i:s"),

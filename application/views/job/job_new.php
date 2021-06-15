@@ -84,7 +84,20 @@ add_css(array(
                                             <p><small>Approved</small></p>
                                         </div>
                                         <div class="stepwizard-step col-xs-3">
-                                            <a idx="confirmEsignModalTrigger" href="#" <?php if(isset($jobs_data) && $jobs_data->status == 'Approved'): ?> data-toggle="modal" data-target="#finish_modal" data-backdrop="static" data-keyboard="false" <?php endif; ?> type="button" class="btn btn-circle <?= isset($jobs_data) && $jobs_data->status == 'Closed'  ? 'btn-success' : 'btn-default' ; ?>" disabled="disabled">
+                                            <a
+                                                href="#"
+                                                id="confirmEsignModalTrigger"
+                                                data-job-status="<?= isset($jobs_data) ? $jobs_data->status : ''  ?>"
+                                                <?php if(isset($jobs_data) && $jobs_data->status == 'Approved'): ?>
+                                                    data-toggle="modal"
+                                                    data-target="##finish_modal"
+                                                    data-backdrop="static"
+                                                    data-keyboard="false"
+                                                <?php endif; ?>
+                                                type="button"
+                                                class="btn btn-circle <?= isset($jobs_data) && $jobs_data->status == 'Closed'  ? 'btn-success' : 'btn-default' ; ?>"
+                                                disabled="disabled"
+                                            >
                                                 <span style="font-size: 24px;" class="fa fa-stop"></span>
                                             </a>
                                             <p><small>Finish</small></p>

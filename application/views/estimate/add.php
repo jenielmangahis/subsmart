@@ -419,6 +419,15 @@ input:checked + .slider:before {
                                             id="purchase_order_number" required placeholder="Enter Purchase Order#"
                                              onChange="jQuery('#customer_name').text(jQuery(this).val());"/>
                                     </div>
+                                    <div class="col-md-3 form-group">
+                                        <label for="estimate_date">Estimate Type <span style="color:red;">*</span></label>
+                                        <select name="estimate_type" class="form-control">
+                                            <option value="Deposit">Deposit</option>
+                                            <option value="Partial Payment">Partial Payment</option>
+                                            <option value="Final Payment">Final Payment</option>
+                                            <option value="Total Due" selected="selected">Total Due</option>
+                                        </select>
+                                    </div>
                                 <!-- </div>
                                 <div class="row" style="background-color:white;"> -->
                                     <div class="col-md-3">

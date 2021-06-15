@@ -60,6 +60,19 @@ class OfferCodes_model extends MY_Model
         return $query;
     }
 
+    public function getByClientId($client_id)
+    {
+        $user_id = logged('id');
+
+        $this->db->select('*');
+        $this->db->from($this->table);
+
+        $this->db->where('client_id', $client_id);
+
+        $query = $this->db->get()->row();
+        return $query;
+    }
+
     public function getByOfferCodes($offer_code)
     {
         $user_id = logged('id');

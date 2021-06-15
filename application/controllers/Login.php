@@ -103,6 +103,7 @@ class Login extends CI_Controller
                         }
 
                         $this->session->set_userdata('userAccessModules', $access_modules);
+                        $this->session->set_userdata('is_plan_active', $client->is_plan_active);
                     }
                 }
             }
@@ -159,7 +160,12 @@ class Login extends CI_Controller
         if ($is_startup == 1) {
             redirect('onboarding/business_info');
         } else {
-            redirect('dashboard');
+            if( $client->is_plan_active == 1 ){
+                redirect('dashboard');
+            }else{
+                redirect('mycrm/membership');    
+            }
+            
         }
     }
 

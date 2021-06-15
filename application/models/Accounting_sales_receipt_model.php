@@ -53,8 +53,10 @@ class Accounting_sales_receipt_model extends MY_Model {
 	public function getAllByCompany($company_id)
 	{
 		$this->db->select('*');
-        $this->db->from($this->table);
-        // $this->db->where('company_id', $company_id);
+        $this->db->from('accounting_sales_receipt');
+		$this->db->join('acs_profile', 'accounting_sales_receipt.customer_id  = acs_profile.prof_id');
+        // $this->db->where('estimates.company_id', $company_id);
+        $this->db->where('accounting_sales_receipt.company_id', $company_id);
 
         $query = $this->db->get();
         return $query->result();
