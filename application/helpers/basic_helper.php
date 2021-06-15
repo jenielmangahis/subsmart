@@ -818,6 +818,18 @@ if (!function_exists('getLoggedUserID')) {
     }
 }
 
+if (!function_exists('getLoggedIsPlanActive')) {
+
+
+    function getLoggedIsPlanActive()
+    {
+
+        $CI = &get_instance();
+        $user = (object)$CI->session->userdata('logged');
+        return $user->is_plan_active;
+    }
+}
+
 if (!function_exists('getLoggedCompanyID')) {
 
 

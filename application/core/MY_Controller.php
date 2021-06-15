@@ -41,9 +41,17 @@ class MY_Controller extends CI_Controller {
 			'submenu' => '',
 		];
 
-		$company_id =  logged('company_id');
+		$company_id     = logged('company_id');
+		$is_plan_active = getLoggedIsPlanActive();
 		if(!empty($company_id)){
 			$company = getCompanyFolder();
+		}
+
+		$method     = $this->router->fetch_method();
+		$controller = $this->router->fetch_class();		
+
+		if( $is_plan_active == 0 && $controller != 'mycrm' && $method != 'membership' ){			
+			redirect('mycrm/membership'); 
 		}
 	}
 
