@@ -469,6 +469,7 @@ $route['accounting/vendors/copy-vendor-credit/(:any)'] = 'accounting_controllers
 $route['accounting/vendors/copy-to-bill/(:any)'] = 'accounting_controllers/vendors/copy_to_bill/$1';
 $route['accounting/vendors/void-transaction/(:any)/(:any)'] = 'accounting_controllers/vendors/void_transaction/$1/$2';
 $route['accounting/vendors/(:any)/categorize-transactions/(:any)']['post'] = 'accounting_controllers/vendors/categorize_transactions/$1/$2';
+$route['accounting/vendors/print-transaction/(:any)/(:any)'] = 'accounting_controllers/vendors/print_transaction/$1/$2';
 
 $route['accounting/expenses'] = 'accounting_controllers/expenses/index';
 $route['accounting/expenses/load-transactions']['post'] = 'accounting_controllers/expenses/load_transactions';

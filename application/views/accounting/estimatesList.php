@@ -210,7 +210,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             <?php if ($key === 1) { ?>
             <li <?php echo (empty($tab)) ? 'class="active"' : '' ?>>
               <a class="nav-link active"
-                href="<?php echo base_url('estimate') ?>"
+                href="<?php echo base_url('accounting/newEstimateList') ?>"
                 aria-controls="tab1" aria-selected="true">All
                 (<?php echo get_estimate_status_total(0, true, $role) ?>)</a>
             </li>

@@ -1,4 +1,4 @@
-$('#all_sales_table').DataTable({
+$('#customers_table1').DataTable({
     "lengthChange": true,
     "searching": true,
     "pageLength": 50,

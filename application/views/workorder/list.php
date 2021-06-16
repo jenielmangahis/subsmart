@@ -200,13 +200,13 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             <div class="table-nowrap">Work Order#</div>
                                         </div>
                                     </th>
-                                    <th>Job</th>
+                                    <!-- <th>Job</th> -->
                                     <th>Date Issued</th>
                                     <th>Customer</th>
                                     <th>Employees</th>
                                     <th>Priority</th>
                                     <th>Status</th>
-                                    <th></th>
+                                    <th class="text-center">Action</th>
                                 </tr>
                                 </thead>
 
@@ -229,12 +229,12 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                 </div>
                                             </div>
                                         </td>
-                                        <td>
+                                        <!-- <td>
                                             <a class="a-default"
                                                href="#">
-                                                <?php echo get_customer_by_id($workorder->customer_id)->contact_name ?>
+                                                <?php //echo get_customer_by_id($workorder->customer_id)->contact_name ?>
                                             </a>
-                                        </td>
+                                        </td> -->
                                         <td>
                                             <div class="table-nowrap">
                                                 <?php echo date('M d, Y', strtotime($workorder->date_created)) ?>
@@ -248,10 +248,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             </a>
                                             <div>Scheduled on: 30 Mar 2020, 2:00 pm to 4:00 pm</div>
                                         </td>
-                                        <td><?php echo get_user_by_id($workorder->user_id)->name ?></td>
-                                        <td><?php echo ($workorder->priority_id > 0)?get_priority_by_id($workorder->priority_id)->title:'' ?></td>
-                                        <td><?php echo ($workorder->status_id > 0)?get_status_by_id($workorder->status_id)->title:''; ?></td>
-                                        <td class="text-right">
+                                        <td><?php echo get_user_by_id($workorder->employee_id)->FName .' '. get_user_by_id($workorder->employee_id)->LName ?></td>
+                                        <td><?php echo $workorder->priority; ?></td>
+                                        <td><?php echo $workorder->w_status;  ?></td>
+                                        <td class="text-center">
                                             <div class="dropdown dropdown-btn">
                                                 <button class="btn btn-default dropdown-toggle" type="button"
                                                         id="dropdown-edit"

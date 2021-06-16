@@ -258,7 +258,7 @@ class Workorder_model extends MY_Model
             'password'              => $password,
             // 'offer_code'            => $offer_code,
             'tags'                  => $tags,
-            'schedule_date_given'   => $schedule_date_given,
+            'date_issued'           => $date_issued,
             'job_type'              => $job_type,
             // 'job_name'              => $job_name,
             // 'job_description'       => $job_description,
@@ -643,9 +643,14 @@ class Workorder_model extends MY_Model
 
     public function getlastInsert($company_id){
 
+        $where = array(
+            'view_flag'     => '0',
+            'company_id'   => $company_id
+          );
+
         $this->db->select('*');
         $this->db->from('work_orders');
-        $this->db->where('company_id', $company_id);
+        $this->db->where($where);
         $this->db->order_by('work_order_number', 'DESC');
         $this->db->limit(1);
 
@@ -764,7 +769,7 @@ class Workorder_model extends MY_Model
 
         // $this->db->select('work_orders.* , acs_profile.first_name,  acs_profile.last_name, acs_profile.middle_name, acs_profile.prof_id, work_order_alarm_details.work_order_id');
 		// $this->db->from('workorders.* , acs_profile.first_name,  acs_profile.last_name, acs_profile.middle_name, acs_profile.prof_id');
-        $this->db->select('*');
+        $this->db->select('*, work_orders.status AS w_status');
         $this->db->from('work_orders');
         $this->db->join('acs_profile', 'work_orders.customer_id  = acs_profile.prof_id');
         // $this->db->join('work_order_alarm_details', 'work_orders.id  = work_order_alarm_details.work_order_id');
@@ -908,12 +913,12 @@ class Workorder_model extends MY_Model
     public function delete_items_alarm($id)
     {
         $where = array(
-            'type' => 'Work Order Alarm',
-            'type_id'   => $id
+            // 'type' => 'Work Order Alarm',
+            'work_order_id'   => $id
           );
 
         $this->db->where($where);
-        $this->db->delete('item_details');
+        $this->db->delete('work_orders_items');
         return true;
     }
 
@@ -944,7 +949,7 @@ class Workorder_model extends MY_Model
             'work_orders.id'   => $id
           );
 
-        $this->db->select('* , work_orders.email AS w_email, work_orders.status AS w_status');
+        $this->db->select('* , work_orders.email AS w_email, work_orders.status AS w_status, acs_profile.first_name AS acs_first_name, acs_profile.last_name AS acs_last_name, acs_profile.middle_name AS acs_middle_name');
         $this->db->from('work_orders');
         $this->db->join('acs_profile', 'work_orders.customer_id  = acs_profile.prof_id');
 		$this->db->where('id',$id);

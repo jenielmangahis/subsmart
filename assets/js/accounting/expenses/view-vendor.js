@@ -388,7 +388,7 @@ $('#transactions-table').DataTable({
                                 </button>
 
                                 <div class="dropdown-menu" aria-labelledby="statusDropdownButton">
-                                    <a class="dropdown-item" href="#">Print</a>
+                                    <a class="dropdown-item" href="/accounting/vendors/print-transaction/expense/${rowData.id}" target="_blank">Print</a>
                                     <a class="dropdown-item copy-expense" href="#">Copy</a>
                                     <a class="dropdown-item delete-transaction" href="#">Delete</a>
                                 </div>
@@ -406,7 +406,7 @@ $('#transactions-table').DataTable({
                                 </button>
 
                                 <div class="dropdown-menu" aria-labelledby="statusDropdownButton">
-                                    <a class="dropdown-item" href="#">Print</a>
+                                    <a class="dropdown-item" href="/accounting/vendors/print-transaction/expense/${rowData.id}" target="_blank">Print</a>
                                     <a class="dropdown-item copy-expense" href="#">Copy</a>
                                     <a class="dropdown-item delete-transaction" href="#">Delete</a>
                                     <a class="dropdown-item void-expense" href="#">Void</a>
@@ -506,7 +506,7 @@ $('#transactions-table').DataTable({
 
                                 <div class="dropdown-menu" aria-labelledby="statusDropdownButton">
                                     <a class="dropdown-item copy-to-bill" href="#">Copy to bill</a>
-                                    <a class="dropdown-item" href="#">Print</a>
+                                    <a class="dropdown-item" href="/accounting/vendors/print-transaction/purchase-order/${rowData.id}" target="_blank">Print</a>
                                     <a class="dropdown-item view-edit-purch-order" href="#">View/Edit</a>
                                     <a class="dropdown-item copy-purchase-order" href="#">Copy</a>
                                     <a class="dropdown-item delete-transaction" href="#">Delete</a>
@@ -516,9 +516,9 @@ $('#transactions-table').DataTable({
                         } else {
                             $(td).html(`
                             <div class="btn-group float-right">
-                                <button class="btn d-flex align-items-center justify-content-center text-info">
+                                <a class="btn d-flex align-items-center justify-content-center text-info" href="/accounting/vendors/print-transaction/purchase-order/${rowData.id}" target="_blank">
                                     Print
-                                </button>
+                                </a>
 
                                 <button type="button" id="statusDropdownButton" class="btn dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     <span class="sr-only">Toggle Dropdown</span>
@@ -3195,10 +3195,12 @@ $(document).on('click', '#transactions-table .void-bill-payment', function(e) {
 $(document).on('change', '#transactions-table tbody input[type="checkbox"]', function() {
     var flag = true;
     var allChecked = true;
+    var printable = true;
 
     $('#transactions-table tbody input[type="checkbox"]').each(function() {
         var row = $(this).parent().parent().parent();
         var categoryCell = row.find('td:nth-child(8)');
+        var data = $('#transactions-table').DataTable().row(row).data();
 
         if(categoryCell.find('select').length === 0 && $(this).prop('checked')) {
             flag = false;
@@ -3207,12 +3209,22 @@ $(document).on('change', '#transactions-table tbody input[type="checkbox"]', fun
         if($(this).prop('checked') === false) {
             allChecked = false;
         }
+
+        if($(this).prop('checked') && data.type !== 'Purchase Order') {
+            printable = false;
+        }
     });
 
     if(flag) {
         $('#categorize-selected').removeClass('disabled');
     } else {
         $('#categorize-selected').addClass('disabled');
+    }
+
+    if(printable) {
+        $('#print-transactions').removeClass('disabled');
+    } else {
+        $('#print-transactions').addClass('disabled');
     }
 
     $('#transactions-table thead input[type="checkbox"]').prop('checked', allChecked);

@@ -3058,4 +3058,134 @@ class Vendors extends MY_Controller {
 
         $this->session->set_flashdata("success", "Category updated to $newCategory->name for $updatedCount transactions.");
     }
+
+    public function print_transaction($transactionType, $transactionId)
+    {
+        $this->load->library('pdf');
+        $view = "accounting/vendors/print_transactions";
+        $fileName = 'print.pdf';
+
+        $data = [
+            'type' => $transactionType,
+        ];
+
+        switch($transactionType) {
+            case 'expense' :
+                $transaction = $this->vendors_model->get_expense_by_id($transactionId);
+                $items = $this->expenses_model->get_transaction_items($transactionId, 'Expense');
+                $categories = $this->expenses_model->get_transaction_categories($transactionId, 'Expense');
+
+                switch($transaction->payee_type) {
+                    case 'vendor' :
+                        $payee = $this->vendors_model->get_vendor_by_id($transaction->payee_id);
+                        $payeeName = $payee->title !== null && $payee->title !== "" ? $payee->title : "";
+                        $payeeName .= $payee->f_name !== null && $payee->f_name !== "" ? " $payee->f_name" : "";
+                        $payeeName .= $payee->m_name !== null && $payee->m_name !== "" ? " $payee->m_name" : "";
+                        $payeeName .= $payee->l_name !== null && $payee->l_name !== "" ? " $payee->l_name" : "";
+                        $payeeName .= $payee->suffix !== null && $payee->suffix !== "" ? " $payee->suffix" : "";
+
+                        $data['payee'] = $payee;
+                        $data['payeeName'] = $payeeName === "" ? $payee->display_name : $payeeName;
+                    break;
+                    case 'customer' :
+                        $payee = $this->accounting_customers_model->get_customer_by_id($transaction->payee_id);
+                        $payeeName = $payee->first_name !== null && $payee->first_name !== ""  ? $payee->first_name : "";
+                        $payeeName .= $payee->middle_name !== null && $payee->middle_name !== ""  ? " $payee->middle_name" : "";
+                        $payeeName .= $payee->last_name !== null && $payee->last_name !== ""  ? " $payee->last_name" : "";
+                        $payeeName .= $payee->suffix !== null && $payee->suffix !== ""  ? " $payee->suffix" : "";
+                        $data['payee'] = $payee;
+                        $data['payeeName'] = $payeeName;
+                    break;
+                    case 'employee' :
+                        $payee = $this->users_model->getUser($expense->payee_id);
+                        $data['payee'] = $payee;
+                        $data['payeeName'] = $payee->FName . ' ' . $payee->LName;
+                    break;
+                }
+            break;
+            case 'purchase-order' :
+                $transaction = $this->vendors_model->get_purchase_order_by_id($transactionId);
+                $items = $this->expenses_model->get_transaction_items($transactionId, 'Purchase Order');
+                $categories = $this->expenses_model->get_transaction_categories($transactionId, 'Purchase Order');
+
+                $payee = $this->vendors_model->get_vendor_by_id($transaction->vendor_id);
+                $payeeName = $payee->title !== null && $payee->title !== "" ? $payee->title : "";
+                $payeeName .= $payee->f_name !== null && $payee->f_name !== "" ? " $payee->f_name" : "";
+                $payeeName .= $payee->m_name !== null && $payee->m_name !== "" ? " $payee->m_name" : "";
+                $payeeName .= $payee->l_name !== null && $payee->l_name !== "" ? " $payee->l_name" : "";
+                $payeeName .= $payee->suffix !== null && $payee->suffix !== "" ? " $payee->suffix" : "";
+
+                $data['payee'] = $payee;
+                $data['payeeName'] = $payeeName === "" ? $payee->display_name : $payeeName;
+            break;
+        }
+
+        $data['transaction'] = $transaction;
+        $data['table_items'] = [];
+
+        foreach($items as $item) {
+            $itemDetails = $this->items_model->getItemById($item->item_id)[0];
+
+            if($transactionType === 'expense') {
+                $data['table_items'][] = [
+                    'name' => $itemDetails->title,
+                    'description' => '',
+                    'amount' => number_format(floatval($item->total), 2, '.', ',')
+                ];
+            } else {
+                $data['table_items'][] = [
+                    'activity' => $itemDetails->title,
+                    'qty' => $item->quantity,
+                    'rate' => number_format(floatval($item->rate), 2, '.', ','),
+                    'amount' => number_format(floatval($item->total), 2, '.', ','),
+                ];
+            }
+        }
+
+        foreach($categories as $category) {
+            $categoryAcc = $this->chart_of_accounts_model->getById($category->expense_account_id);
+
+            if($transactionType === 'expense') {
+                $data['table_items'][] = [
+                    'name' => $categoryAcc->name,
+                    'description' => $category->description,
+                    'amount' => number_format(floatval($category->amount), 2, '.', ',')
+                ];
+            } else {
+                $data['table_items'][] = [
+                    'activity' => '',
+                    'qty' => '',
+                    'rate' => number_format(floatval(1), 2, '.', ','),
+                    'amount' => number_format(floatval($category->amount), 2, '.', ','),
+                ];
+            }
+        }
+
+        usort($data['table_items'], function($a, $b) use ($transactionType) {
+            if($transactionType === 'expense') {
+                return strcmp($a['name'], $b['name']);
+            } else {
+                return strcmp($a['activity'], $b['activity']);
+            }
+        });
+
+        $this->pdf->save_pdf($view, ['data' => $data], $fileName, 'portrait');
+
+        $pdf = file_get_contents(base_url("/assets/pdf/$fileName"));
+
+        if(file_exists(getcwd()."/assets/pdf/$fileName")) {
+            unlink(getcwd()."/assets/pdf/$fileName");
+        }
+        // show pdf
+        // $file = base_url("/assets/pdf/$fileName");
+        
+        // Header content type 
+        header("Content-type: application/pdf"); 
+        header('Content-Disposition: inline; filename="print.pdf";');
+
+        ob_clean(); 
+        flush(); 
+        echo $pdf;
+        exit;
+    }
 }

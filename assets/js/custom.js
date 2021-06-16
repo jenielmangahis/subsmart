@@ -168,10 +168,10 @@ function createUsername(name) {
     .replace(/[^\w-]+/g, "");
 }
 
-$(document).on("focusout", ".price", function () {
-  var counter = $(this).data("counter");
-  calculation(counter);
-});
+// $(document).on("focusout", ".price", function () {
+//   var counter = $(this).data("counter");
+//   calculation(counter);
+// });
 $(document).on("focusout", ".markup_input", function () {
   // alert('yeah');
   var counter = $(this).data("counter");
@@ -440,6 +440,7 @@ var price = $("#price_" + counter).val();
   $("#total_tax_input").val(sls);
   cal_total_due();
 });
+
 $(document).on("focusout", ".discount", function () {
   var counter = $(this).data("counter");
   calculation(counter);
@@ -1014,7 +1015,7 @@ $(".select_item").click(function () {
                 "<td width=\"20%\"><div class=\"dropdown-wrapper\"><select name=\"item_type[]\" class=\"form-control\"><option value=\"product\">Product</option><option value=\"material\">Material</option><option value=\"service\">Service</option><option value=\"fee\">Fee</option></select></div></td>\n" +
                 "<td width=\"10%\"><input data-itemid='"+idd+"' id='quantity_"+idd+"' value='"+qty+"' type=\"number\" name=\"quantity[]\" data-counter=\"0\"  min=\"0\" class=\"form-control qtyest2 mobile_qty \"></td>\n" +
                 // "<td>\n" + '<input type="number" class="form-control qtyest" name="quantity[]" data-counter="' + count + '" id="quantity_' + count + '" min="1" value="1">\n' + "</td>\n" +
-                "<td width=\"10%\"><input id='price_"+idd+"' value='"+price+"'  type=\"number\" name=\"price[]\" class=\"form-control hidden_mobile_view\" placeholder=\"Unit Price\"><input type=\"hidden\" class=\"priceqty\" id='priceqty_"+idd+"'><div class=\"show_mobile_view\"><span class=\"price\">"+price+"</span></div></td>\n" +
+                "<td width=\"10%\"><input data-itemid='"+idd+"' id='price_"+idd+"' value='"+price+"'  type=\"number\" name=\"price[]\" class=\"form-control price2 hidden_mobile_view\" placeholder=\"Unit Price\"><input type=\"hidden\" class=\"priceqty\" id='priceqty_"+idd+"'><div class=\"show_mobile_view\"><span class=\"price\">"+price+"</span></div></td>\n" +
                 // "<td width=\"10%\"><input type=\"number\" class=\"form-control discount\" name=\"discount[]\" data-counter="0" id=\"discount_0\" min="0" value="0" ></td>\n" +
                 // "<td width=\"10%\"><small>Unit Cost</small><input type=\"text\" name=\"item_cost[]\" class=\"form-control\"></td>\n" +
                 "<td width=\"10%\" class=\"hidden_mobile_view\"><input type=\"number\" name=\"discount[]\" class=\"form-control discount\" id='discount_"+idd+"' readonly></td>\n" +
@@ -1220,7 +1221,7 @@ $(document).on("focusout", ".qtyest2", function () {
       subtotaltax += parseFloat($(this).val());
   });
 
-  // alert(subtotaltax);
+  // alert(priceqty);
 
   $("#sales_taxs").val(subtotaltax.toFixed(2));
   $("#total_tax_").text(subtotaltax.toFixed(2));
@@ -1233,7 +1234,66 @@ $(document).on("focusout", ".qtyest2", function () {
   var one_time  = $("#one_time").val();
   var m_monitoring  = $("#m_monitoring").val();
 
-  var grandtotal = priceqty + subtotaltax + one_time + m_monitoring;
+  // var grandtotal = priceqty + subtotaltax + one_time + m_monitoring;
+  var grandtotal = priceqty + subtotaltax + parseFloat(one_time) + parseFloat(m_monitoring);
+
+  $("#grand_total_input").val(grandtotal);
+  $("#grand_total_inputs_a").val(grandtotal);
+  // alert(grandtotal);
+  // standard form
+  var taxtotal  = $("#total_tax_input").val();
+  var pricetotal  = $("#item_total").val();
+  var s_grandtotal = subtotaltax + priceqty;
+  $("#grand_total").text(s_grandtotal.toFixed(2));
+  $("#grand_total_input").val(s_grandtotal.toFixed(2));
+  $("#grand_total_inputs").val(s_grandtotal.toFixed(2));
+  
+});
+
+$(document).on("focusout", ".qtyest3", function () {
+  // alert('yeah');
+  var in_id = $(this).attr('data-itemid');
+  var price = $("#price_" + in_id).val();
+  var quantity = $("#quantity_" + in_id).val();
+  var taxes = (parseFloat(price) * 7.5) / 100;
+  var o_total = (
+    (parseFloat(price) + parseFloat(taxes)) * parseFloat(quantity)
+  ).toFixed(2);
+  var tax1 = (((parseFloat(price) * 7.5) / 100) * parseFloat(quantity)).toFixed(2);
+  $("#tax1_" + in_id).val(tax1);
+  // var o_total = ;
+
+  var total = price * quantity;
+
+  $("#priceqty_" + in_id).val(total);
+
+  var priceqty = 0;
+    $('*[id^="priceqty_"]').each(function(){
+      priceqty += parseFloat($(this).val());
+  });
+
+  var subtotaltax = 0;
+  // $("#span_total_0").each(function(){
+    $('*[id^="tax1_"]').each(function(){
+      subtotaltax += parseFloat($(this).val());
+  });
+
+  // alert(priceqty);
+
+  $("#sales_taxs").val(subtotaltax.toFixed(2));
+  $("#total_tax_").text(subtotaltax.toFixed(2));
+  $("#total_tax_input").val(subtotaltax.toFixed(2));
+  $("#span_total_" + in_id).text(o_total);
+  $("#sub_total_text" + in_id).text(o_total);
+  $("#item_total_" + in_id).val(o_total);
+  $("#span_sub_total_invoice").text(priceqty.toFixed(2));
+  $("#item_total").val(priceqty.toFixed(2));
+
+  var one_time  = $("#one_time").val();
+  var m_monitoring  = $("#m_monitoring").val();
+
+  var grandtotal = priceqty + subtotaltax + parseFloat(one_time) + parseFloat(m_monitoring);
+  // alert(grandtotal);
 
   $("#grand_total_input").val(grandtotal);
   $("#grand_total_inputs").val(grandtotal);
@@ -1244,7 +1304,7 @@ $(document).on("focusout", ".qtyest2", function () {
   var s_grandtotal = subtotaltax + priceqty;
   $("#grand_total").text(s_grandtotal.toFixed(2));
   $("#grand_total_input").val(s_grandtotal.toFixed(2));
-  $("#grand_total_inputs").val(s_grandtotal.toFixed(2));
+  // $("#grand_total_inputs").val(s_grandtotal.toFixed(2));
   
 });
 
@@ -1349,7 +1409,7 @@ $(document).on("focusout", ".qtyest2", function () {
       subtotaltax += parseFloat($(this).text());
   });
 
-  // alert(subtotaltax);
+  // alert(subtotal);
 
   $("#eqpt_cost").val(eqpt_cost);
   $("#total_discount").val(total_discount);
@@ -1705,6 +1765,65 @@ $(document).on("focusout", ".price", function () {
   calculation(counter);
 });
 
+$(document).on("focusout", ".price2", function () {
+  var counter = $(this).data("counter");
+  // calculation(counter);
+  var in_id = $(this).attr('data-itemid');
+  var price = $("#price_" + in_id).val();
+  var quantity = $("#quantity_" + in_id).val();
+  var taxes = (parseFloat(price) * 7.5) / 100;
+  var o_total = (
+    (parseFloat(price) + parseFloat(taxes)) * parseFloat(quantity)
+  ).toFixed(2);
+  var tax1 = (((parseFloat(price) * 7.5) / 100) * parseFloat(quantity)).toFixed(2);
+  $("#tax1_" + in_id).val(tax1);
+  // var o_total = ;
+
+  var total = price * quantity;
+
+  $("#priceqty_" + in_id).val(total);
+
+  var priceqty = 0;
+    $('*[id^="priceqty_"]').each(function(){
+      priceqty += parseFloat($(this).val());
+  });
+
+  var subtotaltax = 0;
+  // $("#span_total_0").each(function(){
+    $('*[id^="tax1_"]').each(function(){
+      subtotaltax += parseFloat($(this).val());
+  });
+
+  // alert(priceqty);
+
+  $("#sales_taxs").val(subtotaltax.toFixed(2));
+  $("#total_tax_").text(subtotaltax.toFixed(2));
+  $("#total_tax_input").val(subtotaltax.toFixed(2));
+  $("#span_total_" + in_id).text(o_total);
+  $("#item_total_" + in_id).val(o_total);
+  $("#sub_total_text" + in_id).text(o_total);
+  $("#span_sub_total_invoice").text(priceqty.toFixed(2));
+  $("#item_total").val(priceqty.toFixed(2));
+
+  var one_time  = $("#one_time").val();
+  var m_monitoring  = $("#m_monitoring").val();
+
+  var grandtotal = priceqty + subtotaltax + parseFloat(one_time) + parseFloat(m_monitoring);
+  // alert(grandtotal);
+
+  $("#grand_total_input").val(grandtotal);
+  $("#grand_total_inputs").val(grandtotal);
+  $("#grand_total_inputs_a").val(grandtotal);
+  // alert(grandtotal);
+  // standard form
+  var taxtotal  = $("#total_tax_input").val();
+  var pricetotal  = $("#item_total").val();
+  var s_grandtotal = subtotaltax + priceqty;
+  $("#grand_total").text(s_grandtotal.toFixed(2));
+  $("#grand_total_input").val(s_grandtotal.toFixed(2));
+  // $("#grand_total_inputs").val(s_grandtotal.toFixed(2));
+});
+
 $(document).on("focusout", ".quantity", function () {
   var counter = $(this).data("counter");
   // calculation(counter);
@@ -1949,7 +2068,7 @@ function calculation(counter) {
   $("#eqpt_cost").val(eqpt_cost);
   $("#total_discount").val(total_discount);
   $("#span_sub_total_0").text(total_discount);
-  // $("#span_sub_total_invoice").text(stotal_cost);
+  $("#span_sub_total_invoice").text(stotal_cost);
   // $("#item_total").val(subtotal.toFixed(2));
   
   var s_total = subtotal.toFixed(2);

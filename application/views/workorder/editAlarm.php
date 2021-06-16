@@ -441,6 +441,10 @@ border: none;
                             </div>
                             <!-- ====== CUSTOMER ====== -->
 							 <div class="row" id="group_area">
+                             <div class="col-md-3 form-group">
+                                    <label for="contact_name" class="label-element">Work Order #</label>
+                                    <input type="text" class="form-control input-element" name="workorder_number" id="" value="<?php echo $workorder->work_order_number; ?>" readonly/>
+                                </div>
 								<div class="col-md-12">
 									<div class="row">
 										<div class="form-group col-md-12">
@@ -461,11 +465,18 @@ border: none;
 											</select>
 										</div>
                                         </div>
-
+                                        
+                                        <?php if(empty($workorder->business_name)){ ?>
                                         <div class="col-md-4" style="display:none;" id="business_name_area">
 											<label for="customer_install_type" class="label-element">Business Name</label><br/>
-											<input type="text" class="form-control input-element" name="business_name" id="business_name" placeholder="Enter Name" />
+											<input type="text" class="form-control input-element" name="business_name" id="business_name" placeholder="Enter Name"/>
 										</div>
+                                        <?php }else{ ?>
+                                        <div class="col-md-4" style="display:;" id="business_name_area">
+											<label for="customer_install_type" class="label-element">Business Name</label><br/>
+											<input type="text" class="form-control input-element" name="business_name" id="business_name" placeholder="Enter Name" value="<?php echo $workorder->business_name; ?>" />
+										</div>
+                                        <?php } ?>
 
 										<div class="col-md-4 form-group">
                                         <div class="select-wrap">
@@ -498,13 +509,13 @@ border: none;
 											<input type="text" class="form-control input-element" name="last_name"
 												   id="last_name"
 												    placeholder="Enter Last Name"
-												   value="<?php echo $workorder->first_name; ?>"/>
+												   value="<?php echo $workorder->acs_last_name; ?>"/>
 										</div>
 										<div class="col-md-3 form-group">
 											<label for="first_name" class="label-element">First Name</label>
 											<input type="text" class="form-control input-element" name="first_name"
 												   id="first_name" 
-												   placeholder="Enter First Name" value="<?php echo $workorder->first_name; ?>" />
+												   placeholder="Enter First Name" value="<?php echo $workorder->acs_first_name; ?>" />
 										</div>
 										<div class="col-md-2 form-group">
 											<label for="contact_mobile" class="label-element">Mobile</label>
@@ -545,7 +556,7 @@ border: none;
 											<input type="text" class="form-control input-element" name="s_first_name"
 												   id="spouse_first_name"
 												    placeholder="Enter Spouse First Name"
-                                                    value="<?php echo $workorder->s_first_name; ?>" />
+                                                    value="<?php echo $workorder->acs_first_name; ?>" />
 										</div>
 										<div class="col-md-2 form-group">
 											<label for="spouse_contact_mobile" class="label-element">Mobile</label>
@@ -709,10 +720,23 @@ border: none;
                                 <div class="col-md-4 form-group">
                                     <!-- <div class=""> -->
                                         <label for="emergency_call_relation" class="label-element">Relation</label>
-                                        <input type="text" class="form-control input-element" name="1st_relation"
+                                        <!-- <input type="text" class="form-control input-element" name="1st_relation"
                                                id="emergency_call_relation"
-                                               value="<?php echo $workorder->first_relation; ?>"
-                                                placeholder="Enter Relation"/>
+                                               value="<?php //echo $workorder->first_relation; ?>"
+                                                placeholder="Enter Relation"/> -->
+                                                <select name="1st_relation" id="1st_relation" class="form-control custom-select m_select">
+                                                    <option value="<?php echo $workorder->first_relation; ?>"><?php echo $workorder->first_relation; ?></option>
+                                                    <option value="Owner">Owner</option>
+                                                    <option value="Relative">Relative</option>
+                                                    <option value="Employee">Employee</option>
+                                                    <option value="Friend">Friend</option>
+                                                    <option value="Manager">Manager</option>
+                                                    <option value="On-site">On-site</option>
+                                                    <option value="Neighbor">Neighbor</option>
+                                                    <option value="Resident">Resident</option>
+                                                    <option value="Maintenance">Maintenance</option>
+                                                    <option value="Other">Other</option>
+                                                </select>
                                     <!-- </div> -->
                                 </div>
                                 <!-- <div class="col-md-3">
@@ -769,10 +793,24 @@ border: none;
                                 <div class="col-md-4 form-group">
                                     <!-- <div class="form-group"> -->
                                         <label for="emergency_call_relation" class="label-element">Relation</label>
-                                        <input type="text" class="form-control input-element" name="2nd_relation"
+                                        <!-- <input type="text" class="form-control input-element" name="2nd_relation"
                                                id="emergency_call_relation"
-                                               value="<?php echo $workorder->second_relation; ?>"
-                                                placeholder="Enter Relation"/>
+                                               value="<?php //echo $workorder->second_relation; ?>"
+                                                placeholder="Enter Relation"/> -->
+
+                                                <select name="2nd_relation" id="2nd_relation" class="form-control custom-select m_select">
+                                                    <option value="<?php echo $workorder->second_relation; ?>"><?php echo $workorder->second_relation; ?></option>
+                                                    <option value="Owner">Owner</option>
+                                                    <option value="Relative">Relative</option>
+                                                    <option value="Employee">Employee</option>
+                                                    <option value="Friend">Friend</option>
+                                                    <option value="Manager">Manager</option>
+                                                    <option value="On-site">On-site</option>
+                                                    <option value="Neighbor">Neighbor</option>
+                                                    <option value="Resident">Resident</option>
+                                                    <option value="Maintenance">Maintenance</option>
+                                                    <option value="Other">Other</option>
+                                                </select>
                                     <!-- </div> -->
                                 </div>
                                 <!-- <div class="col-md-3">
@@ -829,10 +867,24 @@ border: none;
                                 <div class="col-md-4 form-group">
                                     <!-- <div class="form-group"> -->
                                         <label for="emergency_call_relation" class="label-element">Relation</label>
-                                        <input type="text" class="form-control input-element" name="3rd_relation"
+                                        <!-- <input type="text" class="form-control input-element" name="3rd_relation"
                                                id="emergency_call_relation"
-                                               value="<?php echo $workorder->third_relation; ?>"
-                                                placeholder="Enter Relation"/>
+                                               value="<?php //echo $workorder->third_relation; ?>"
+                                                placeholder="Enter Relation"/> -->
+
+                                                <select name="3rd_relation" id="3rd_relation" class="form-control custom-select m_select">
+                                                    <option value="<?php echo $workorder->third_relation; ?>"><?php echo $workorder->third_relation; ?></option>
+                                                    <option value="Owner">Owner</option>
+                                                    <option value="Relative">Relative</option>
+                                                    <option value="Employee">Employee</option>
+                                                    <option value="Friend">Friend</option>
+                                                    <option value="Manager">Manager</option>
+                                                    <option value="On-site">On-site</option>
+                                                    <option value="Neighbor">Neighbor</option>
+                                                    <option value="Resident">Resident</option>
+                                                    <option value="Maintenance">Maintenance</option>
+                                                    <option value="Other">Other</option>
+                                                </select>
                                     <!-- </div> -->
                                 </div>
 
@@ -881,10 +933,24 @@ border: none;
                                 <div class="col-md-4 form-group">
                                     <!-- <div class=""> -->
                                         <label for="emergency_call_relation" class="label-element">Relation</label>
-                                        <input type="text" class="form-control input-element" name="4th_relation"
+                                        <!-- <input type="text" class="form-control input-element" name="4th_relation"
                                                id="emergency_call_relation"
-                                               value="<?php echo $workorder->fourth_relation; ?>"
-                                                placeholder="Enter Relation"/>
+                                               value="<?php //echo $workorder->fourth_relation; ?>"
+                                                placeholder="Enter Relation"/> -->
+
+                                                <select name="4th_relation" id="4th_relation" class="form-control custom-select m_select">
+                                                    <option value="<?php echo $workorder->fourth_relation; ?>"><?php echo $workorder->fourth_relation; ?></option>
+                                                    <option value="Owner">Owner</option>
+                                                    <option value="Relative">Relative</option>
+                                                    <option value="Employee">Employee</option>
+                                                    <option value="Friend">Friend</option>
+                                                    <option value="Manager">Manager</option>
+                                                    <option value="On-site">On-site</option>
+                                                    <option value="Neighbor">Neighbor</option>
+                                                    <option value="Resident">Resident</option>
+                                                    <option value="Maintenance">Maintenance</option>
+                                                    <option value="Other">Other</option>
+                                                </select>
                                     <!-- </div> -->
                                 </div>
                             </div>
@@ -904,28 +970,28 @@ border: none;
                                             <option>Select Plan Type</option>
                                         </select> -->
                                         <select name="plan_type" id="plan_types" class="form-control custom-select m_select">
-                                            <option value="<?php echo $workorder->plan_type; ?>"><?php echo $workorder->plan_type; ?></option>
-                                            <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == 'DIGI'){echo "selected";} } ?> value="DIGI">Landline</option>
-                                            <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == 'DW2W'){echo "selected";} } ?> value="DW2W">Landline W/ 2-Way</option>
-                                            <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == 'DWCB'){echo "selected";} } ?> value="DWCB">Landline W/ Cell Backup</option>
-                                            <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == 'D2CB'){echo "selected";} } ?> value="D2CB">Landline W/ 2-Way &amp; Cell Backup</option>
-                                            <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == 'CPDB'){echo "selected";} } ?> value="CPDB">Cell Primary</option>
-                                            <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == 'CP2W'){echo "selected";} } ?> value="CP2W">Cell Primary w/2Way</option>
-                                            <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == 'WSF'){echo "selected";} } ?> value="WSF">Wireless Signal Forwarding</option>
-                                            <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == 'C'){echo "selected";} } ?> value="C">Commercial</option>
-                                            <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == 'CP'){echo "selected";} } ?> value="CP">Commercial Plus</option>
-                                            <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == 'I'){echo "selected";} } ?> value="I">Interactive</option>
-                                            <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == 'IG'){echo "selected";} } ?> value="IG">Interactive Gold</option>
-                                            <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == 'IPA'){echo "selected";} } ?> value="IPA">Interactive Plus Automation</option>
-                                            <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == 'IwDVR'){echo "selected";} } ?> value="IwDVR">Interactive w/DVR</option>
-                                            <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == 'IwDB'){echo "selected";} } ?> value="IwDB">Interactive w/Dbell</option>
-                                            <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == 'IwDBIP'){echo "selected";} } ?> value="IwDBIP">Interactive w/Dbell & IP Camera</option>
-                                            <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == 'PERS'){echo "selected";} } ?> value="PERS">PERS</option>
-                                            <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == 'WIFI'){echo "selected";} } ?> value="WIFI">WIFI</option>
-                                            <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == 'CPwWIFI'){echo "selected";} } ?> value="CPwWIFI">Cell Primary w/WIFI</option>
-                                            <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == 'CPwAC'){echo "selected";} } ?> value="CPwAC">Cell Primary w/Access Control</option>
-                                            <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == 'IwAC'){echo "selected";} } ?> value="IwAC">Interactive w/Access Control</option>
-                                            <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == 'IwACwA'){echo "selected";} } ?> value="IwACwA">Interactive w/Access Control w/Automn</option>
+                                            <!-- <option value="<?php //echo $workorder->plan_type; ?>"><?php //echo $workorder->plan_type; ?></option> -->
+                                            <option <?php if(isset($workorder)){ if($workorder->plan_type == 'DIGI'){echo "selected";} } ?> value="DIGI">Landline</option>
+                                            <option <?php if(isset($workorder)){ if($workorder->plan_type == 'DW2W'){echo "selected";} } ?> value="DW2W">Landline W/ 2-Way</option>
+                                            <option <?php if(isset($workorder)){ if($workorder->plan_type == 'DWCB'){echo "selected";} } ?> value="DWCB">Landline W/ Cell Backup</option>
+                                            <option <?php if(isset($workorder)){ if($workorder->plan_type == 'D2CB'){echo "selected";} } ?> value="D2CB">Landline W/ 2-Way &amp; Cell Backup</option>
+                                            <option <?php if(isset($workorder)){ if($workorder->plan_type == 'CPDB'){echo "selected";} } ?> value="CPDB">Cell Primary</option>
+                                            <option <?php if(isset($workorder)){ if($workorder->plan_type == 'CP2W'){echo "selected";} } ?> value="CP2W">Cell Primary w/2Way</option>
+                                            <option <?php if(isset($workorder)){ if($workorder->plan_type == 'WSF'){echo "selected";} } ?> value="WSF">Wireless Signal Forwarding</option>
+                                            <option <?php if(isset($workorder)){ if($workorder->plan_type == 'C'){echo "selected";} } ?> value="C">Commercial</option>
+                                            <option <?php if(isset($workorder)){ if($workorder->plan_type == 'CP'){echo "selected";} } ?> value="CP">Commercial Plus</option>
+                                            <option <?php if(isset($workorder)){ if($workorder->plan_type == 'I'){echo "selected";} } ?> value="I">Interactive</option>
+                                            <option <?php if(isset($workorder)){ if($workorder->plan_type == 'IG'){echo "selected";} } ?> value="IG">Interactive Gold</option>
+                                            <option <?php if(isset($workorder)){ if($workorder->plan_type == 'IPA'){echo "selected";} } ?> value="IPA">Interactive Plus Automation</option>
+                                            <option <?php if(isset($workorder)){ if($workorder->plan_type == 'IwDVR'){echo "selected";} } ?> value="IwDVR">Interactive w/DVR</option>
+                                            <option <?php if(isset($workorder)){ if($workorder->plan_type == 'IwDB'){echo "selected";} } ?> value="IwDB">Interactive w/Dbell</option>
+                                            <option <?php if(isset($workorder)){ if($workorder->plan_type == 'IwDBIP'){echo "selected";} } ?> value="IwDBIP">Interactive w/Dbell & IP Camera</option>
+                                            <option <?php if(isset($workorder)){ if($workorder->plan_type == 'PERS'){echo "selected";} } ?> value="PERS">PERS</option>
+                                            <option <?php if(isset($workorder)){ if($workorder->plan_type == 'WIFI'){echo "selected";} } ?> value="WIFI">WIFI</option>
+                                            <option <?php if(isset($workorder)){ if($workorder->plan_type == 'CPwWIFI'){echo "selected";} } ?> value="CPwWIFI">Cell Primary w/WIFI</option>
+                                            <option <?php if(isset($workorder)){ if($workorder->plan_type == 'CPwAC'){echo "selected";} } ?> value="CPwAC">Cell Primary w/Access Control</option>
+                                            <option <?php if(isset($workorder)){ if($workorder->plan_type == 'IwAC'){echo "selected";} } ?> value="IwAC">Interactive w/Access Control</option>
+                                            <option <?php if(isset($workorder)){ if($workorder->plan_type == 'IwACwA'){echo "selected";} } ?> value="IwACwA">Interactive w/Access Control w/Automn</option>
                                         </select>
                                 </div>
                                 </div>
@@ -974,7 +1040,7 @@ border: none;
                                             <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'Honeywell'){echo "selected";} } ?> value="Honeywell Touch">Honeywell Touch</option>
                                             <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'Honeywell'){echo "selected";} } ?> value="Honeywell 3000">Honeywell 3000</option>
                                             <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'Honeywell'){echo "selected";} } ?> value="Honeywell Vista">Honeywell Vista</option>
-                                            <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'Honeywell'){echo "selected";} } ?> value="Honeywell Vista with Sim">Honeywell Vista with Sim</option>
+                                            <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'Honeywell'){echo "selected";} } ?> value="Honeywell Vista with Sem">Honeywell Vista with Sem</option>
                                             <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'Honeywell'){echo "selected";} } ?> value="Honeywell Lyric">Honeywell Lyric</option>
                                             <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'IEI'){echo "selected";} } ?> value="IEI">IEI</option>
                                             <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'MIER'){echo "selected";} } ?> value="MIER">MIER</option>
@@ -1113,10 +1179,10 @@ border: none;
                                 </div>
 
                             </div>
-
+                            
                             <!-- ====== ENHANCED SERVICES ====== -->
-                            <div class="row" id="group_area">
-                                <div class="form-group col-md-12">
+                            <div class="row" id="group_area" style="margin-left:10px;">
+                                <div class="form-group col-md-12"><br>
                                     <h5 class="box-title">Enhanced Services</h5>
                                 </div>
                                 <div class="col-sm-12 col-md-6">
@@ -1191,6 +1257,7 @@ border: none;
                                         </div>
                                     </div>
                                 </div>
+                            <!-- </div> -->
 
                                 <div class="col-sm-12 col-md-6">
                                     <div class="panel-group">
@@ -1413,18 +1480,14 @@ border: none;
                                     </div>
                                 </div>
                             </div>
+                            </div>
 
                             <!-- ====== Additional Equipment/Services ====== -->
                             <div class="row" id="group_area">
-                                <div class="form-group col-md-12">
+                                <div class="form-group col-md-12"><br><br>
                                     <h5 class="box-title">Additional Equipment/Services</h5>
                                 </div>
                                 <div class=" col-md-12">
-                                        <br/>
-
-
-                                    <?php //} else { ?>
-
                                         <div class="row" id="plansItemDiv">
 
                                             <div class="col-md-12 table-responsive">
@@ -1448,8 +1511,9 @@ border: none;
                                                             <td width="30%">
                                                             <div class="hidden_mobile_view">
                                                                 <input type="text" class="form-control getItems"
-                                                                    onKeyup="getItems(this)" name="items[]" value="<?php echo $data->item; ?>">
+                                                                    onKeyup="getItems(this)" name="items[]" value="<?php echo $data->title; ?>">
                                                                 <ul class="suggestions"></ul>
+                                                                <input type="hidden" name="itemid[]" id="itemid" class="itemid" value="<?php echo $data->items_id; ?>">
                                                             </div>
                                                             <div class="show_mobile_view">
                                                             <?php echo $data->item; ?>
@@ -1468,20 +1532,21 @@ border: none;
                                                             <?php echo $data->item_type; ?>
                                                             </div>
                                                             </td>
-                                                            <td width="10%"><input type="number" class="form-control quantity hidden_mobile_view" name="quantity[]"
-                                                                    data-counter="0" id="quantity_<?php echo $data->id; ?>" value="<?php echo $data->qty; ?>"><div class="show_mobile_view"><span><?php echo $data->qty; ?></span><input type="hidden" class="form-control quantity" name="quantity[]"
+                                                            <td width="10%"><input type="number" class="form-control qtyest3 hidden_mobile_view" name="quantity[]"
+                                                                    data-counter="0" data-itemid="<?php echo $data->id; ?>" id="quantity_<?php echo $data->id; ?>" value="<?php echo $data->qty; ?>"><div class="show_mobile_view"><span><?php echo $data->qty; ?></span><input type="hidden" class="form-control quantity" name="quantity[]"
                                                                     data-counter="0" id="quantity_0" value="<?php echo $data->qty; ?>"></div></td>
-                                                            <td width="10%"><input type="number" class="form-control price hidden_mobile_view" name="price[]"
-                                                                    data-counter="0" id="price_<?php echo $data->id; ?>" min="0" value="<?php echo $data->cost; ?>"><div class="show_mobile_view"><?php echo $data->cost; ?></div></td>
+                                                            <td width="10%"><input type="number" class="form-control price2 hidden_mobile_view" name="price[]"
+                                                                    data-counter="0" data-itemid="<?php echo $data->id; ?>" id="price_<?php echo $data->id; ?>" min="0" value="<?php echo $data->iCost; ?>"><input type="hidden" class="priceqty" id="priceqty_<?php echo $data->id; ?>" value="<?php echo $aaa = $data->iCost * $data->qty; ?>"><div class="show_mobile_view"><?php echo $data->iCost; ?></div></td>
                                                             <td class="hidden_mobile_view" width="10%"><input type="number" class="form-control discount" name="discount[]"
-                                                                    data-counter="0" id="discount_<?php echo $data->id; ?>" min="0" value="<?php echo $data->discount; ?>" ></td>
+                                                                    data-counter="0" id="discount_<?php echo $data->id; ?>" min="0" value="<?php echo $data->discount; ?>" readonly ></td>
                                                             <td class="hidden_mobile_view" width="10%"><input type="text" class="form-control tax_change" name="tax[]"
-                                                                    data-counter="0" id="tax1_<?php echo $data->id; ?>" min="0" value="<?php echo $data->tax; ?>">
+                                                                    data-counter="0" id="tax1_<?php echo $data->id; ?>" min="0" value="<?php echo $data->itax; ?>">
                                                                     <!-- <span id="span_tax_0">0.0</span> -->
                                                                     </td>
                                                             <td class="hidden_mobile_view" width="10%"><input type="hidden" class="form-control " name="total[]"
-                                                                    data-counter="0" id="item_total_<?php echo $data->id; ?>" min="0" value="<?php echo $data->total; ?>">
-                                                                    $<span id="span_total_<?php echo $data->id; ?>"><?php echo $data->total; ?></span></td>
+                                                                    data-counter="0" id="item_total_<?php echo $data->id; ?>" min="0" value="<?php echo $data->iTotal; ?>">
+                                                                    $<span id="span_total_<?php echo $data->id; ?>"><?php echo $data->iTotal; ?></span></td>
+                                                            <td><a href="#" class="remove btn btn-sm btn-success"><i class="fa fa-trash" aria-hidden="true"></i></a></td>
                                                         </tr>
                                                     <?php } ?>
                                                     </tbody>
@@ -1489,9 +1554,7 @@ border: none;
                                                 <!-- <a href="#" class="btn btn-primary" id="add_another">Add Items</a> -->
                                                 <a class="link-modal-open" href="#" id="add_another_itemss" data-toggle="modal" data-target="#item_list"><span class="fa fa-plus-square fa-margin-right"></span>Add Items</a>
                                             </div>
-                                        </div><br/>
-
-                                    <?php //} ?>
+                                        </div>
                                 </div>
                             </div>
 
@@ -1544,7 +1607,7 @@ border: none;
                                                 <td>Total Due</td>
                                                  <td class="d-flex align-items-center">$ 
                                                             <input type="hidden" name="adjustment_value" id="adjustment_input" value="0" class="form-control adjustment_input" style="width:100px; display:inline-block"><input type="hidden" name="markup_input_form" id="markup_input_form" class="markup_input" value="0"> 
-                                                            <input type="text" name="grand_total" id="grand_total_inputs" class="form-control" value="<?php echo $workorder->grand_total; ?>">
+                                                            <input type="text" name="grand_total" id="grand_total_inputs_a" class="form-control" value="<?php echo $workorder->grand_total; ?>">
                                                 </td>
                                             </tr>
                                         </table>
@@ -1978,7 +2041,7 @@ border: none;
                                             and you authorize payment and confirmation with nSmarTrac. </p>
                                     </div>
                                 </div>
-                            </div>
+                            </div> <br><br>
                             <div class="row">
                                 <div class="col-md-4">
                                     <h6>Company Representative Approval &emsp; <a data-toggle="modal" data-target=".companySignature"><i class="fa fa-pencil" aria-hidden="true"></i></a> </h6>
@@ -2190,7 +2253,7 @@ border: none;
                                 </div>
                             </div> -->
 
-                            </div>
+                            <!-- </div> -->
                             <div class="row">
                                 <div class="col-md-4">
                                     <!-- <button type="button" onClick="validatecard();"
@@ -2539,7 +2602,9 @@ border: none;
 
     <script>
   $( function() {
-    $( "#datepicker" ).datepicker();
+    $( "#datepicker" ).datepicker({
+        format: 'yyyy-mm-dd'
+    });
   } );
 </script>
     <script>

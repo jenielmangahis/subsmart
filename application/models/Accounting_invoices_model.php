@@ -192,4 +192,12 @@ class Accounting_invoices_model extends MY_Model
         $vendor = $this->db->get('payment_term');
         return $vendor->result();
     }
+    public function getCustomers_receive_payment($customer_id)
+    {
+        $this->db->select('*');
+        $this->db->from('accounting_receive_payment');
+        $this->db->where('customer_id', $customer_id);
+        $vendor = $this->db->get();
+        return $vendor->result();
+    }
 }

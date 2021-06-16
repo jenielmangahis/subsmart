@@ -564,6 +564,45 @@ border: none;
                                         </tr>
                                         </thead>
                                         <tbody id="jobs_items_table_body">
+                                        <?php if(empty($items_data)){ ?>
+                                        <tr>
+                                            <td width="30%">
+                                                <input type="text" class="form-control getItems"
+                                                       onKeyup="getItems(this)" name="items[]">
+                                                <ul class="suggestions"></ul>
+                                                <div class="show_mobile_view"><span class="getItems_hidden"></span></div>
+                                                <input type="hidden" name="itemid[]" id="itemid" class="itemid">
+                                            </td>
+                                            <td width="20%">
+                                            <div class="dropdown-wrapper">
+                                                <select name="item_type[]" id="item_typeid" class="form-control">
+                                                    <option value="product">Product</option>
+                                                    <option value="material">Material</option>
+                                                    <option value="service">Service</option>
+                                                    <option value="fee">Fee</option>
+                                                </select>
+                                            </div>
+
+                                            <!-- <div class="show_mobile_view" style="color:green;"><span>Product</span></div> -->
+                                                </td>
+                                            <td width="10%"><input type="number" class="form-control quantity mobile_qty" name="quantity[]"
+                                                       data-counter="0" id="quantity_0" value="1"></td>
+                                            <td width="10%"><input type="number" class="form-control price hidden_mobile_view" name="price[]"
+                                                       data-counter="0" id="price_0" min="0" value="0"> <input type="hidden" class="priceqty" id="priceqty_0"> 
+                                                       <div class="show_mobile_view"><span class="price">0</span>
+                                                       <!-- <input type="hidden" class="form-control price" name="price[]" data-counter="0" id="priceM_0" min="0" value="0"> -->
+                                                       </div><input id="priceM_qty0" value=""  type="hidden" name="price_qty[]" class="form-control hidden_mobile_view price_qty"></td>
+                                            <td width="10%" class="hidden_mobile_view"><input type="number" class="form-control discount" name="discount[]"
+                                                       data-counter="0" id="discount_0" min="0" value="0"  readonly></td>
+                                            <td width="10%" class="hidden_mobile_view"><input type="text" class="form-control tax_change" name="tax[]"
+                                                       data-counter="0" id="tax1_0" min="0" value="0">
+                                                       <!-- <span id="span_tax_0">0.0</span> -->
+                                                       </td>
+                                            <td width="10%" class="hidden_mobile_view"><input type="hidden" class="form-control " name="total[]"
+                                                       data-counter="0" id="item_total_0" min="0" value="0">
+                                                       $<span id="span_total_0">0.00</span></td>
+                                        </tr>
+                                        <?php } ?>
                                         <?php foreach($items_data as $data){ ?>
 
                                         <tr>
@@ -663,14 +702,12 @@ border: none;
                                     <table class="table" style="text-align:left;">
                                         <tr>
                                             <td>Subtotal</td>
-                                            <!-- <td></td> -->
-                                            <td colspan="2" align="center">$ <span id="span_sub_total_invoice"><?php echo $workorder->subtotal; ?></span>
+                                            <td colspan="2" align="center">$ <span id="span_sub_total_invoice">0<?php echo $workorder->subtotal; ?></span>
                                                 <input type="hidden" name="subtotal" id="item_total" value="<?php echo $workorder->subtotal; ?>"></td>
                                         </tr>
                                         <tr>
                                             <td>Taxes</td>
-                                            <!-- <td></td> -->
-                                            <td colspan="2" align="center">$ <span id="total_tax_"><?php echo $workorder->taxes; ?></span><input type="hidden" name="taxes" id="total_tax_input" value="<?php echo $workorder->taxes; ?>"></td>
+                                            <td colspan="2" align="center">$ <span id="total_tax_"><?php echo $workorder->taxes; ?>0</span><input type="hidden" name="taxes" id="total_tax_input" value="<?php echo $workorder->taxes; ?>"></td>
                                         </tr>
                                         <tr>
                                             <td style="width:;"><input type="text" name="adjustment_name" id="adjustment_name" placeholder="Adjustment Name" class="form-control" style="width:; display:inline; border: 1px dashed #d1d1d1" value="<?php echo $workorder->adjustment_name; ?>"></td>
@@ -680,11 +717,7 @@ border: none;
                                             </td>
                                             <td><?php echo $workorder->adjustment_value; ?></td>
                                         </tr>
-                                        <!-- <tr>
-                                            <td>Markup $<span id="span_markup"></td> -->
-                                            <!-- <td><a href="#" data-toggle="modal" data-target="#modalSetMarkup" style="color:#02A32C;">set markup</a></td> -->
                                             <input type="hidden" name="markup_input_form" id="markup_input_form" class="markup_input" value="0">
-                                        <!-- </tr> -->
                                         <?php if(empty($workorder->voucher_value)){ ?>
                                         <tr id="saved" style="color:green;font-weight:bold;display:none;">
                                             <td>Amount Saved</td>
@@ -700,13 +733,53 @@ border: none;
                                         <?php } ?>
                                         <tr style="color:blue;font-weight:bold;font-size:18px;">
                                             <td><b>Grand Total ($)</b></td>
-                                            <!-- <td></td> -->
                                             <td colspan="2" align="center"><b><span id="grand_total"><?php echo $workorder->grand_total; ?></span>
                                                 <input type="hidden" name="grand_total" id="grand_total_input" value='<?php echo $workorder->grand_total; ?>'></b></td>
                                         </tr>
                                     </table>
                                 </div>
                             </div>
+
+                            <!-- <div class="row" style="background-color:white;font-size:16px;">
+                                <div class="col-md-7">
+                                </div>
+                                <div class="col-md-5">
+                                    <table class="table table_mobile" style="text-align:left;">
+                                        <tr>
+                                            <td>Subtotal</td>
+                                            <td colspan="2" align="right">$ <span id="span_sub_total_invoice">0.00</span>
+                                                <input type="hidden" name="subtotal" id="item_total"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Taxes</td>
+                                            <td colspan="2" align="right">$ <span id="total_tax_">0.00</span><input type="hidden" name="taxes" id="total_tax_input"></td>
+                                        </tr>
+                                        <tr>
+                                            <td style="width:;"><input type="text" name="adjustment_name" id="adjustment_name" placeholder="Adjustment Name" class="form-control" style="width:; display:inline; border: 1px dashed #d1d1d1"></td>
+                                            <td align="center">
+                                            <input type="number" name="adjustment_value" id="adjustment_input" value="0" class="form-control adjustment_input" style="width:50%;display:inline;">
+                                                <span class="fa fa-question-circle" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Optional it allows you to adjust the total amount Eg. +10 or -10." data-original-title="" title=""></span>
+                                            </td>
+                                            <td><span id="adjustmentText">0.00</span></td>
+                                        </tr>
+                                            <input type="hidden" name="markup_input_form" id="markup_input_form" class="markup_input" value="0">
+                                        <tr id="saved" style="color:green;font-weight:bold;display:none;">
+                                            <td>Amount Saved</td>
+                                            <td></td>
+                                            <td><span id="offer_cost">0.00</span><input type="hidden" name="voucher_value" id="offer_cost_input"></td>
+                                        </tr>
+                                        <tr style="color:blue;font-weight:bold;font-size:16px;">
+                                            <td><b>Grand Total ($)</b></td>
+                                            <td></td>
+                                            <td><b><span id="grand_total">0.00</span>
+                                                <input type="hidden" name="grand_total" id="grand_total_input" value='0'></b></td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div> -->
+
+
+
                             <!-- <div class="row">
                                 <div class=" col-md-9">
                                     <div class="work_nore">

@@ -126,7 +126,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 		<div class="row pt-3">
 			<div class="col-lg-12 px-0">
 				<div class="bg-white p-4">
-					<table id="all_sales_table" class="table table-striped table-bordered w-100">
+					<table id="customers_table" class="table table-striped table-bordered w-100">
 						<thead>
 							<tr>
 								<th><input type="checkbox" id="checkbox-all-action"></th>
@@ -146,7 +146,13 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 										</tr> -->
 							<?php $counter =0;
                             foreach ($customers as $cus) :
-                            
+                                $receive_payment=$this->accounting_invoices_model->getCustomers_receive_payment($cus->prof_id);
+                                $amount =0.00;
+                                $first_option ="Create Invoice";
+                                foreach ($receive_payment as $payment) {
+                                    $amount += $payment->amount;
+                                    $first_option = "Receive Payment";
+                                }
                                  ?>
 							<tr>
 								<td><input type="checkbox"
@@ -156,9 +162,61 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 								</td>
 								<td><?php echo $cus->phone_h; ?>
 								</td>
-								<td><?php //echo $cus->created_at;?>
+								<td><?php echo "$".$amount;?>
 								</td>
-								<td><a href="" class="btn btn-info">View</a></td>
+								<td>
+									<div class="dropdown dropdown-btn text-right">
+										<a href="" class="first-option"><?=$first_option?> </a>
+										<a type="button" id="dropdown-button-icon" data-toggle="dropdown">
+											<span class="btn-label"><i class="fa fa-caret-down fa-sm"></i></span></span>
+										</a>
+										<ul class="dropdown-menu dropdown-menu-right" role="menu"
+											aria-labelledby="dropdown-edit">
+											<li>
+												<a role="menuitem" tabindex="-1" href="javascript:void(0)" class="">
+													Send Reminder
+												</a>
+											</li>
+											<li>
+												<a href="javascript:void(0)" class="">
+													Create Statement
+												</a>
+											</li>
+											<?php if ($amount > 0) {?>
+											<li>
+												<a href="javascript:void(0)"
+													id="<?= $job->id; ?>"
+													class="">
+													Create Invoice
+												</a>
+											</li>
+											<?php } ?>
+
+											<li>
+												<a href="javascript:void(0)"
+													id="<?= $job->id; ?>"
+													class="">
+													Create Sales Receipt
+												</a>
+											</li>
+											<li>
+												<a href="javascript:void(0)"
+													id="<?= $job->id; ?>"
+													class="">
+													Create extimate
+												</a>
+											</li>
+											<li>
+												<a href="javascript:void(0)"
+													id="<?= $job->id; ?>"
+													class="">
+													Send Payment Link
+												</a>
+											</li>
+											<li role="separator" class="divider"></li>
+										</ul>
+									</div>
+								</td>
 							</tr>
 							<?php $counter++; endforeach; ?>
 						</tbody>

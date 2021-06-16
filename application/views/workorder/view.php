@@ -437,12 +437,15 @@ border: none;
 						<div class="col-md-8">
 								<div class="order-right text-right">
 									<div class="user-menu">
-										<a class="btn sand-btn margin-right-sec" href="#"><span class="fa fa-money fa-margin-right"></span> Create Invoice</a>
+										<a class="btn sand-btn margin-right-sec" href="<?php echo base_url('job/work_order_job/'. $workorder->id) ?>"><span class="fa fa-money fa-margin-right"></span> Create Job</a>
 									</div> 
 									
 									<div class="user-menu mobile_btn"><br>
-										<a class="btn btn-sec" href=""><span class="fa fa-edit"></span> Edit</a>
-
+										<?php if($workorder->work_order_type_id == '2'){ ?>
+											<a class="btn btn-sec" href="<?php echo base_url('workorder/editAlarm/' . $workorder->id) ?>"><span class="fa fa-edit"></span> Edit</a>
+										<?php }else{ ?>
+                                        	<a class="btn btn-sec" href="<?php echo base_url('workorder/edit/' . $workorder->id) ?>"><span class="fa fa-edit"></span> Edit</a>
+                                        <?php } ?>
 									<?php if($workorder->work_order_type_id == 1){ ?>
                        					<a href="<?php echo base_url('workorder/work_order_pdf/' . $workorder->id) ?>" class="btn btn-sec download_work_order_pdfsss" acs-id="<?php echo $workorder->customer_id; ?>" workorder-id="<?php echo $workorder->id; ?>"><span class="fa fa-file-pdf-o"></span> PDF</a>
 									<?php } else{ ?>
@@ -469,9 +472,9 @@ border: none;
                                                                     class="fa fa-files-o icon clone-workorder">
 
                                                         </span> Clone Work Order</a>
-												<li ><a href="#" ><span class="fa fa-file-text-o icon"></span> Convert to Estimate</a></li>
+												<li ><a href="<?php echo base_url('job/work_order_job/'. $workorder->id) ?>" ><span class="fa fa-file-text-o icon"></span> Convert to Job</a></li>
 												<li ><a href="" acs-id="<?php echo $workorder->customer_id; ?>" workorder-id="<?php echo $workorder->id; ?>" class="send_to_customer"><span class="fa fa-envelope-o icon"></span> Send to Customer</a></li>
-												<li ><a href="" acs-id="<?php echo $workorder->customer_id; ?>" workorder-id="<?php echo $workorder->id; ?>" class="send_to_customer_alarm"><span class="fa fa-envelope-o icon"></span> Send to Company</a></li>
+												<li ><a href="" acs-id="<?php echo $workorder->customer_id; ?>" workorder-id="<?php echo $workorder->id; ?>" class="send_to_company"><span class="fa fa-envelope-o icon"></span> Send to Company</a></li>
 												<li class="divider"></li>
 												<!-- <li ><a   href="#" ><span class="fa fa-trash-o icon"></span> Delete Work Order</a></li> -->
 												<li role="presentation">
@@ -488,69 +491,58 @@ border: none;
 
 
 			<div class="row" style="padding:1%;margin-top:-30px;">
-				<div class="col-md-8">
+				<div class="col-md-12">
 					<div role="white__holder" style="background-color:;padding:5%;border:solid #F4F2F6 3px;box-shadow: 10px 5px 5px #DEDEDE;">
 					<div class="ribbon ribbon-top-left"><span><?php echo $workorder->status ?></span></div>
 					<div class="mobile_header"><?php echo $workorder->header; ?></div>
-					<hr>
+					<!-- <hr> -->
 							<div class="workorder-inner">
+							<div align="right">
+								<span class="presenter-title mobile_size"><b>WORK ORDER</b></span> <br> <span style="font-size:16px;"># <?php echo $workorder->work_order_number ?></span><br>
+							</div>
+							<hr style="border: 2px solid gray;">
 								<div clas="row">
 										<div class="col-sm-12 col-sm-push-12 text-right-sm ">
 										<div class="row">
-											<div class="col-md-6">
+											<div class="col-md-3">
 												<div style="margin-bottom: 20px;">
-													<img class="presenter-print-logo" style="max-width: 230px; max-height: 200px;" src="http://nsmartrac.com/assets/dashboard/images/logo.png">
+													<!-- <img class="presenter-print-logo" style="max-width: 230px; max-height: 200px;" src="http://nsmartrac.com/assets/dashboard/images/logo.png"> -->
+													<img src="<?= getCompanyBusinessProfileImage(); ?>" class="company-logo"/>
 												</div>
 											</div>
-											<div class="col-md-6">
-											<div class="workorder-text" style="margin-top: 10px; margin-bottom: 20px;">
-											    <span class="presenter-title mobile_size">WORK ORDER</span><br>
-											    
+											<div class="col-md-9">
+											<div class="workorder-text" style="margin-top: 10px; margin-bottom: 20px;">											    
 												<!-- </div>	-->
 												<div align="right" class="mobile_size"> 
 													<table>
 														<tbody>
 														<tr>
-															<td colspan="2"><span># <?php echo $workorder->work_order_number ?></span></td>
+															<!-- <td colspan="2"><span># <?php// echo $workorder->work_order_number ?></span></td> -->
 														</tr>
 														<tr>
 															<td align="left"><div style="">Date: </div></td>
-															<td align="left"><?php $wDate = $workorder->date_created; echo date("m-d-Y", strtotime($wDate) ); ?></td>
+															<td align="right"><?php $wDate = $workorder->date_created; echo date("m-d-Y", strtotime($wDate) ); ?></td>
 														</tr>
 														<tr>
 															<td align="left"><div style="">Type: </div></td>
-															<td align="left"><?php echo $workorder->job_type ?></td>
+															<td align="right"><?php echo $workorder->job_type ?></td>
 														</tr>
 															<td align="left"><div style="">Priority: </div></td>
-															<td align="left"><?php echo $workorder->priority ?></td>
-														</tr>
-														<?php if($workorder->work_order_type_id == 2){ ?>
-														<tr>
-															<td align="left"><div style="">Contacts:</div></td>
+															<td align="right"><?php echo $workorder->priority ?></td>
 														</tr>
 														</tr>
-															<td align="left"></td>
-															<td align="left"><?php echo $customer->first_verification_name ?> <br> <?php echo $customer->first_number ?> <br> <?php echo $customer->first_relation ?></td>
+															<td align="left"><div style="">Password: </div></td>
+															<td align="right"><?php echo $workorder->password ?></td>
 														</tr>
-														<tr>
-															<td align="left"><br></td>
-															<td align="left"></td>
 														</tr>
-														<tr>
-															<td align="left"></td>
-															<td align="left"><?php echo $customer->second_verification_name ?> <br> <?php echo $customer->second_number ?> <br> <?php echo $customer->second_relation ?></td>
+															<td align="left"><div style="">Security Number: </div></td>
+															<td align="right"><?php echo $workorder->security_number ?></td>
 														</tr>
-														<tr>
-															<td align="left"><br></td>
-															<td align="left"></td>
 														</tr>
-														<tr>
-															<td align="left"></td>
-															<td align="left"><?php echo $customer->third_verification_name ?> <br> <?php echo $customer->third_number ?> <br> <?php echo $customer->third_relation ?></td>
+															<td align="left"><div style="">Source: </div></td>
+															<td align="right"><?php echo $workorder->lead_source_id ?></td>
 														</tr>
-														<?php }else{ ?>
-
-														<?php } ?>
+														
 														</tbody>
 													</table>
 												</div>
@@ -577,7 +569,7 @@ border: none;
 		         							   		<div class="ul-info">
 		         							   			<ul>
 		         							   				<li><a href="" class="ul-head"> FROM:</a></li>
-															<li class="show_mobile_view"><hr></li>
+															<hr style="border: 1px solid gray;">
 		         							   				<li><a href="" class="ul-head"><?php echo $company->business_name ?></a></li>
 		         							   				<li><a href="" class="ul-text">License: EF, AL, MS</a></li>
 		         							   				<li><a href="" class="ul-text"><?php echo $company->business_address ?></a></li>
@@ -589,8 +581,10 @@ border: none;
 		         							   		<div class="ul-info">
 		         							   			<ul>
 		         							   				<li><a href="" class="ul-head">TO:</a></li>
-															<li class="show_mobile_view"><hr></li>
-		         							   				<li><span class="ul-head line"><?php echo $customer->contact_name .''. $customer->first_name .' '. $customer->middle_name .' '. $customer->last_name ?></span><a href="" class="line ul-btns-text" style="color:green;">view</a></li>
+															<hr style="border: 1px solid gray;">
+		         							   				<li><span class="ul-head line"><?php echo $customer->contact_name .''. $customer->first_name .' '. $customer->middle_name .' '. $customer->last_name ?></span>
+																<!-- <a href="" class="line ul-btns-text" style="color:green;">view</a> -->
+																</li>
 															<li><a href="" class="ul-text"><?php echo $customer->mail_add .' '. $customer->city .' '. $customer->state .', '. $customer->country .', '. $customer->zip_code ?></a></li>
 															<li><a href="" class="ul-text">Phone: <?php echo $customer->phone_h ?></a></li>
 		         							   			
@@ -620,6 +614,28 @@ border: none;
 																<?php } ?>
 															
 															</ul>
+															<br>
+														</div>
+														<br>
+													<?php }else{ } ?>
+
+													<?php if($workorder->work_order_type_id == 2){ ?>
+														<div class="ul-info">
+															<ul>
+																<li><b>Contacts</b></li>
+																<li class="show_mobile_view"><hr></li>
+																<?php if(!empty($customer->first_verification_name)){ ?>
+																<li><a href="" class="ul-text"><?php echo $customer->first_verification_name ?> <br> <?php echo $customer->first_number ?> <br> <?php echo $customer->first_relation ?></a></li>
+																<?php } ?>
+																<?php if(!empty($customer->second_verification_name)){ ?>
+																<li><a href="" class="ul-text"><?php echo $customer->second_verification_name ?> <br> <?php echo $customer->second_number ?> <br> <?php echo $customer->second_relation ?></a></li>
+																<?php } ?>
+																<?php if(!empty($customer->third_verification_name)){ ?>
+																<li><a href="" class="ul-text"> <?php echo $customer->third_verification_name ?> <br> <?php echo $customer->third_number ?> <br> <?php echo $customer->third_relation ?></a></li>
+																<?php } ?>
+																
+															
+															</ul>
 														</div>
 														<br>
 													<?php }else{ } ?>
@@ -637,7 +653,9 @@ border: none;
 			         							   			<ul>
 			         							   				<li><a href="#" class="ul-head">Location </a></li>
 																<li class="show_mobile_view"><hr></li>
-																<li><?php echo $workorder->job_location .' '. $workorder->city .' '. $workorder->state .', '. $workorder->zip_code .', '. $workorder->cross_street  ?> &emsp; <a href="#" style="color:green;">Show Map</a></li>	
+																<li><?php echo $workorder->job_location .' '. $workorder->city .' '. $workorder->state .', '. $workorder->zip_code .', '. $workorder->cross_street  ?> &emsp; 
+																<!-- <a href="#" style="color:green;">Show Map</a> -->
+																</li>	
 			         							   				<!-- <li></li>	 -->
 			         							   			
 			         							   			</ul>
@@ -842,7 +860,7 @@ border: none;
 							</div>
 					</div>
 				</div>
-				<div class="col-md-4">
+				<!-- <div class="col-md-4">
 					<div class="user-order-box">
 						<div class="several-box">
 							<div class="sand-heading margin-bottom-sec">Schedule Work Order</div>
@@ -936,21 +954,18 @@ border: none;
 		           		 </div>
 						</div>
 					</div>
-
-					<!--  second box-->
 					
 					
-				</div>
+				</div> -->
 			</div>
 
-			<div class="row" style="padding:1%;">
+			<!-- <div class="row" style="padding:1%;">
 				<div class="col-md-6">
 					<h6>Location on Map</h6>
 					<hr>
-					<!-- aaa<div id="googleMap"></div> -->
 					<div class="mapouter"><div class="gmap_canvas map_area_mobile"><iframe width="100%" height="500" id="gmap_canvas" src="https://maps.google.com/maps?q=2880%20Broadway,%20New%20York&t=&z=13&ie=UTF8&iwloc=&output=embed" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"></iframe><a href="https://123movies-to.org"></a><br><style>.mapouter{position:relative;text-align:right;height:500px;width:600px;}</style><a href="https://www.embedgooglemap.net"></a><style>.gmap_canvas {overflow:hidden;background:none!important;height:500px;width:600px;}</style></div></div>
 				</div>
-			</div>
+			</div> -->
 			<br>
 			<div class="row">
 				<div class="col-md-4">
@@ -963,7 +978,7 @@ border: none;
 	 
 
  
-<div class="mdc-top-app-bar-fixed-adjust demo-container demo-container-1 d-flex d-lg-none">
+<!-- <div class="mdc-top-app-bar-fixed-adjust demo-container demo-container-1 d-flex d-lg-none">
   <div class="mdc-bottom-navigation">
       <nav class="mdc-bottom-navigation__list">
         <span class="mdc-bottom-navigation__list-item mdc-ripple-surface mdc-ripple-surface--primary" data-mdc-auto-init="MDCRipple" data-mdc-ripple-is-unbounded>
@@ -984,7 +999,7 @@ border: none;
         </span>
       </nav>
     </div> 
-</div>
+</div> -->
 
 <!-- MODAL CLONE WORKORDER -->
 <div class="modal fade" id="modalCloneWorkorder" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
@@ -1089,10 +1104,10 @@ if (r == true) {
 	});
 
 	} 
-else 
-{
-	alert('no');
-}
+// else 
+// {
+// 	alert('no');
+// }
 
 });
 </script>
@@ -1121,10 +1136,10 @@ if (r == true) {
 	});
 
 	} 
-else 
-{
-	alert('no');
-}
+// else 
+// {
+// 	alert('no');
+// }
 
 });
 </script>

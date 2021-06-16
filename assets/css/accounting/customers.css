@@ -6,3 +6,36 @@
 input[type=checkbox] {
     cursor: pointer;
 }
+
+#customers_table ul.dropdown-menu li:hover {
+    background-color: #E8EAED;
+}
+
+#customers_table ul.dropdown-menu li:hover a {
+    color: #28A745;
+}
+
+#customers_table ul.dropdown-menu li a {
+    font-size: 13px;
+}
+
+#customers_table ul.dropdown-menu li {
+    text-align: right;
+}
+
+#customers_table td div.dropdown a.first-option {
+    text-decoration: underline;
+    font-weight: 700;
+    font-size: 13px;
+    color: #0077C5;
+}
+
+#customers_table td div.dropdown #dropdown-button-icon {
+    padding: 1px 5px;
+    margin-left: 10px;
+    border: solid 1px transparent;
+}
+
+#customers_table td div.dropdown #dropdown-button-icon[aria-expanded="true"] {
+    border: solid 1px #E8EAED;
+}
