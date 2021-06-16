@@ -637,13 +637,13 @@ class Workorder extends MY_Controller
         $this->page_data['automation'] = $this->workorder_model->getenhanced_services_automation($id);
         $this->page_data['pers'] = $this->workorder_model->getenhanced_services_pers($id);
 
-        foreach ($this->page_data['workorder'] as $key => $workorder) {
+        // foreach ($this->page_data['workorder'] as $key => $workorder) {
 
-            if (is_serialized($workorder)) {
+        //     if (is_serialized($workorder)) {
 
-                $this->page_data['workorder']->$key = unserialize($workorder);
-            }
-        }
+        //         $this->page_data['workorder']->$key = unserialize($workorder);
+        //     }
+        // }
 
         // echo '<pre>'; print_r($this->page_data['workorder']); die;
 
@@ -2945,9 +2945,20 @@ class Workorder extends MY_Controller
 
         $datas = $this->workorder_model->getDataByWO($wo_num);
 
+        $number = $this->workorder_model->getlastInsert($company_id);
+        foreach ($number as $num){
+            $next = $num->work_order_number;
+            $arr = explode("-", $next);
+            $date_start = $arr[0];
+            $nextNum = $arr[1];
+        //    echo $number;
+        }
+       $val = $nextNum + 1;
+       $work_order_number = 'WO-'.str_pad($val,7,"0",STR_PAD_LEFT);
+
         $new_data = array(
             
-            'work_order_number'                     => $datas->work_order_number,
+            'work_order_number'                     => $work_order_number,
             'customer_id'                           => $datas->customer_id,
             'security_number'                       => $datas->security_number,
             'birthdate'                             => $datas->birthdate,
@@ -2960,7 +2971,7 @@ class Workorder extends MY_Controller
             'zip_code'                              => $datas->zip_code,
             'cross_street'                          => $datas->cross_street,
             'password'                              => $datas->password,
-            'offer_code'                            => $datas->work_order_number,//
+            'offer_code'                            => $datas->offer_code,//
             'tags'                                  => $datas->tags,
             'schedule_date_given'                   => $datas->schedule_date_given,
             'job_type'                              => $datas->job_type,
@@ -3575,7 +3586,7 @@ class Workorder extends MY_Controller
             'password'              => $this->input->post('password'),
             // 'offer_code'            => $this->input->post('offer_code'),
             'tags'                  => $this->input->post('job_tag'),
-            'schedule_date_given'   => $this->input->post('date_issued'),
+            'date_issued'           => $this->input->post('date_issued'),
             'job_type'              => $this->input->post('job_type'),
             // 'job_name'              => $this->input->post('job_name'),
             // 'job_description'       => $this->input->post('job_description'),
@@ -3963,30 +3974,50 @@ class Workorder extends MY_Controller
         $delete2 = $this->workorder_model->delete_items_alarm($id);
 
 
-        // if($addQuery > 0){
-            $a = $this->input->post('items');
-            $b = $this->input->post('item_type');
+        // if($delete2 > 0){
+            // $a = $this->input->post('items');
+            // $b = $this->input->post('item_type');
+            // $d = $this->input->post('quantity');
+            // $f = $this->input->post('price');
+            // $g = $this->input->post('discount');
+            // $h = $this->input->post('tax');
+            // $ii = $this->input->post('total');
+
+            // $i = 0;
+            // foreach($a as $row){
+            //     $data['item'] = $a[$i];
+            //     $data['item_type'] = $b[$i];
+            //     $data['qty'] = $d[$i];
+            //     $data['cost'] = $f[$i];
+            //     $data['discount'] = $g[$i];
+            //     $data['tax'] = $h[$i];
+            //     $data['total'] = $ii[$i];
+            //     $data['type'] = 'Work Order Alarm';
+            //     $data['type_id'] = $id;
+            //     // $data['status'] = '1';
+            //     $data['created_at'] = date("Y-m-d H:i:s");
+            //     $data['updated_at'] = date("Y-m-d H:i:s");
+            //     $addQuery2 = $this->accounting_invoices_model->additem_details($data);
+            //     $i++;
+            // }
+
+            $a = $this->input->post('itemid');
             $d = $this->input->post('quantity');
             $f = $this->input->post('price');
-            $g = $this->input->post('discount');
             $h = $this->input->post('tax');
-            $ii = $this->input->post('total');
+            $discount = $this->input->post('discount');
+            $total = $this->input->post('total');
 
             $i = 0;
             foreach($a as $row){
-                $data['item'] = $a[$i];
-                $data['item_type'] = $b[$i];
+                $data['items_id '] = $a[$i];
+                $data['work_order_id '] = $id;
                 $data['qty'] = $d[$i];
                 $data['cost'] = $f[$i];
-                $data['discount'] = $g[$i];
                 $data['tax'] = $h[$i];
-                $data['total'] = $ii[$i];
-                $data['type'] = 'Work Order Alarm';
-                $data['type_id'] = $id;
-                // $data['status'] = '1';
-                $data['created_at'] = date("Y-m-d H:i:s");
-                $data['updated_at'] = date("Y-m-d H:i:s");
-                $addQuery2 = $this->accounting_invoices_model->additem_details($data);
+                $data['discount'] = $discount[$i];
+                $data['total'] = $total[$i];
+                $addQuery2 = $this->workorder_model->add_work_order_details($data);
                 $i++;
             }
 
@@ -4267,6 +4298,7 @@ class Workorder extends MY_Controller
         
 
         $new_data = array(
+            'work_order_number'                     => $this->input->post('workorder_number'),
             'customer_id'                           => $w_acs,
             'security_number'                       => $this->input->post('security_number'),
             'mobile_number'                         => $this->input->post('mobile_number'),
@@ -4727,6 +4759,8 @@ class Workorder extends MY_Controller
             $d = $this->input->post('quantity');
             $f = $this->input->post('price');
             $h = $this->input->post('tax');
+            $discount = $this->input->post('discount');
+            $total = $this->input->post('total');
 
             $i = 0;
             foreach($a as $row){
@@ -4735,6 +4769,8 @@ class Workorder extends MY_Controller
                 $data['qty'] = $d[$i];
                 $data['cost'] = $f[$i];
                 $data['tax'] = $h[$i];
+                $data['discount'] = $discount[$i];
+                $data['total'] = $total[$i];
                 $addQuery2 = $this->workorder_model->add_work_order_details($data);
                 $i++;
             }

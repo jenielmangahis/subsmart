@@ -439,6 +439,20 @@ border: none;
                             </div>
                             <!-- ====== CUSTOMER ====== -->
 							 <div class="row" id="group_area">
+                                <div class="col-md-3 form-group">
+                                    <label for="contact_name" class="label-element">Work Order #</label>
+                                    <input type="text" class="form-control input-element" name="workorder_number" id="contact_name" value="<?php echo "WO-"; 
+                                            foreach ($number as $num):
+                                                    $next = $num->work_order_number;
+                                                    $arr = explode("-", $next);
+                                                    $date_start = $arr[0];
+                                                    $nextNum = $arr[1];
+                                                //    echo $number;
+                                            endforeach;
+                                            $val = $nextNum + 1;
+                                            echo str_pad($val,7,"0",STR_PAD_LEFT);
+                                            ?>" required readonly/>
+                                </div>
 								<div class="col-md-12">
 									<div class="row">
 										<div class="form-group col-md-12">
@@ -705,10 +719,23 @@ border: none;
                                 <div class="col-md-4 form-group">
                                     <!-- <div class=""> -->
                                         <label for="emergency_call_relation" class="label-element">Relation <small class="help help-sm">(optional)</small></label>
-                                        <input type="text" class="form-control input-element" name="1st_relation"
+                                        <!-- <input type="text" class="form-control input-element" name="1st_relation"
                                                id="emergency_call_relation"
-                                               value="<?php echo (!empty($workorder->emergency_call_list['relation'][0])) ? $workorder->emergency_call_list['relation'][0] : '' ?>"
-                                                placeholder="Enter Relation"/>
+                                               value="<?php //echo (!empty($workorder->emergency_call_list['relation'][0])) ? $workorder->emergency_call_list['relation'][0] : '' ?>"
+                                                placeholder="Enter Relation"/> -->
+                                                <select name="1st_relation" id="1st_relation" class="form-control custom-select m_select">
+                                                    <option value="">Choose Relation</option>
+                                                    <option value="Owner">Owner</option>
+                                                    <option value="Relative">Relative</option>
+                                                    <option value="Employee">Employee</option>
+                                                    <option value="Friend">Friend</option>
+                                                    <option value="Manager">Manager</option>
+                                                    <option value="On-site">On-site</option>
+                                                    <option value="Neighbor">Neighbor</option>
+                                                    <option value="Resident">Resident</option>
+                                                    <option value="Maintenance">Maintenance</option>
+                                                    <option value="Other">Other</option>
+                                                </select>
                                     <!-- </div> -->
                                 </div>
                                 <!-- <div class="col-md-3">
@@ -765,10 +792,23 @@ border: none;
                                 <div class="col-md-4 form-group">
                                     <!-- <div class="form-group"> -->
                                         <label for="emergency_call_relation" class="label-element">Relation <small class="help help-sm">(optional)</small></label>
-                                        <input type="text" class="form-control input-element" name="2nd_relation"
+                                        <!-- <input type="text" class="form-control input-element" name="2nd_relation"
                                                id="emergency_call_relation"
-                                               value="<?php echo (!empty($workorder->emergency_call_list['relation'][1])) ? $workorder->emergency_call_list['relation'][1] : '' ?>"
-                                                placeholder="Enter Relation"/>
+                                               value="<?php //echo (!empty($workorder->emergency_call_list['relation'][1])) ? $workorder->emergency_call_list['relation'][1] : '' ?>"
+                                                placeholder="Enter Relation"/> -->
+                                                <select name="2nd_relation" id="2nd_relation" class="form-control custom-select m_select">
+                                                    <option value="">Choose Relation</option>
+                                                    <option value="Owner">Owner</option>
+                                                    <option value="Relative">Relative</option>
+                                                    <option value="Employee">Employee</option>
+                                                    <option value="Friend">Friend</option>
+                                                    <option value="Manager">Manager</option>
+                                                    <option value="On-site">On-site</option>
+                                                    <option value="Neighbor">Neighbor</option>
+                                                    <option value="Resident">Resident</option>
+                                                    <option value="Maintenance">Maintenance</option>
+                                                    <option value="Other">Other</option>
+                                                </select>
                                     <!-- </div> -->
                                 </div>
                                 <!-- <div class="col-md-3">
@@ -825,10 +865,23 @@ border: none;
                                 <div class="col-md-4 form-group">
                                     <!-- <div class="form-group"> -->
                                         <label for="emergency_call_relation" class="label-element">Relation <small class="help help-sm">(optional)</small></label>
-                                        <input type="text" class="form-control input-element" name="3rd_relation"
+                                        <!-- <input type="text" class="form-control input-element" name="3rd_relation"
                                                id="emergency_call_relation"
-                                               value="<?php echo (!empty($workorder->emergency_call_list['relation'][2])) ? $workorder->emergency_call_list['relation'][2] : '' ?>"
-                                                placeholder="Enter Relation"/>
+                                               value="<?php //echo (!empty($workorder->emergency_call_list['relation'][2])) ? $workorder->emergency_call_list['relation'][2] : '' ?>"
+                                                placeholder="Enter Relation"/> -->
+                                                <select name="3rd_relation" id="3rd_relation" class="form-control custom-select m_select">
+                                                    <option value="">Choose Relation</option>
+                                                    <option value="Owner">Owner</option>
+                                                    <option value="Relative">Relative</option>
+                                                    <option value="Employee">Employee</option>
+                                                    <option value="Friend">Friend</option>
+                                                    <option value="Manager">Manager</option>
+                                                    <option value="On-site">On-site</option>
+                                                    <option value="Neighbor">Neighbor</option>
+                                                    <option value="Resident">Resident</option>
+                                                    <option value="Maintenance">Maintenance</option>
+                                                    <option value="Other">Other</option>
+                                                </select>
                                     <!-- </div> -->
                                 </div>
 
@@ -877,10 +930,23 @@ border: none;
                                 <div class="col-md-4 form-group">
                                     <!-- <div class=""> -->
                                         <label for="emergency_call_relation" class="label-element">Relation <small class="help help-sm">(optional)</small></label>
-                                        <input type="text" class="form-control input-element" name="4th_relation"
+                                        <!-- <input type="text" class="form-control input-element" name="4th_relation"
                                                id="emergency_call_relation"
-                                               value="<?php echo (!empty($workorder->emergency_call_list['relation'][3])) ? $workorder->emergency_call_list['relation'][3] : '' ?>"
-                                                placeholder="Enter Relation"/>
+                                               value="<?php //echo (!empty($workorder->emergency_call_list['relation'][3])) ? $workorder->emergency_call_list['relation'][3] : '' ?>"
+                                                placeholder="Enter Relation"/> -->
+                                                <select name="4th_relation" id="4th_relation" class="form-control custom-select m_select">
+                                                    <option value="">Choose Relation</option>
+                                                    <option value="Owner">Owner</option>
+                                                    <option value="Relative">Relative</option>
+                                                    <option value="Employee">Employee</option>
+                                                    <option value="Friend">Friend</option>
+                                                    <option value="Manager">Manager</option>
+                                                    <option value="On-site">On-site</option>
+                                                    <option value="Neighbor">Neighbor</option>
+                                                    <option value="Resident">Resident</option>
+                                                    <option value="Maintenance">Maintenance</option>
+                                                    <option value="Other">Other</option>
+                                                </select>
                                     <!-- </div> -->
                                 </div>
                             </div>
@@ -978,7 +1044,7 @@ border: none;
                                             <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'Honeywell'){echo "selected";} } ?> value="Honeywell Touch">Honeywell Touch</option>
                                             <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'Honeywell'){echo "selected";} } ?> value="Honeywell 3000">Honeywell 3000</option>
                                             <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'Honeywell'){echo "selected";} } ?> value="Honeywell Vista">Honeywell Vista</option>
-                                            <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'Honeywell'){echo "selected";} } ?> value="Honeywell Vista with Sim">Honeywell Vista with Sim</option>
+                                            <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'Honeywell'){echo "selected";} } ?> value="Honeywell Vista with Sem">Honeywell Vista with Sem</option>
                                             <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'Honeywell'){echo "selected";} } ?> value="Honeywell Lyric">Honeywell Lyric</option>
                                             <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'IEI'){echo "selected";} } ?> value="IEI">IEI</option>
                                             <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'MIER'){echo "selected";} } ?> value="MIER">MIER</option>

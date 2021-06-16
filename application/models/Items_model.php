@@ -384,12 +384,13 @@ class Items_model extends MY_Model
     public function getItemDataAlarm($id)
     {
         $where = array(
-            'type' => 'Work Order Alarm',
-            'type_id'   => $id
+            // 'type' => 'Work Order Alarm',
+            'work_orders_items.work_order_id'   => $id
           );
 
-        $this->db->select('*');
-        $this->db->from('item_details');
+        $this->db->select('*, work_orders_items.total AS iTotal, work_orders_items.cost AS iCost, work_orders_items.tax AS itax');
+        $this->db->from('work_orders_items');
+        $this->db->join('items', 'items.id = work_orders_items.items_id');
         $this->db->where($where);
         $query = $this->db->get();
         return $query->result();
