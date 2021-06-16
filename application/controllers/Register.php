@@ -1067,7 +1067,7 @@ class Register extends MYF_Controller {
             'exp_month' => $post['expmonth'],
             'exp_year' => $post['expyear'],
             'card_cvc' => $post['cvc'],
-            'address' => $address,
+            'address' => $post['address'],
             'zip' => $post['zipcode']
         ];
         $result = $this->converge_send_sale($converge_data);
@@ -1076,16 +1076,16 @@ class Register extends MYF_Controller {
             //Capture card
             $data_cc = [
                 'card_owner_first_name' => $post['firstname'],
-                'card_owner_last_name' => $post['firstname'],
-                'card_number' => $post['firstname'],
-                'expiration_month' => $post['firstname'],
-                'expiration_year' => $post['firstname'],
-                'card_cvv' => $post['firstname'],
+                'card_owner_last_name' => $post['lastname'],
+                'card_number' => $post['ccnumber'],
+                'expiration_month' => $post['expmonth'],
+                'expiration_year' => $post['expyear'],
+                'card_cvv' => $post['cvc'],
                 'cc_type' => check_cc_type($post['ccnumber']),
                 'is_primary' => 1
             ];
 
-            $cardsFile  = $this->CardsFile_model->create($data);
+            $cardsFile  = $this->CardsFile_model->create($data_cc);
             $is_success = 1;
 
         }else{

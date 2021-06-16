@@ -825,6 +825,7 @@ $(function(){
         var expyear   = $("#exp_year").val();
         var cvc       = $("#cvc").val();
         var plan_id   = $("#plan_id").val();
+        var address   = $("#business_address").val();
         var url 	  = base_url + 'registration/_pay_subscription';
 
         $(".btn-modal-pay-subscription").html('<span class="spinner-border spinner-border-sm m-0"></span>');
@@ -840,6 +841,7 @@ $(function(){
                	lastname:lastname,
                	email_add:email_add,
                	zipcode:zipcode,
+               	address:address,
                	ccnumber:ccnumber,
                	expmonth:expmonth,
                	expyear:expyear,
@@ -851,6 +853,7 @@ $(function(){
                     $("#frm-pay-subscription").modal('hide'); 
 
                     if( o.is_success == 1 ){
+                      $("#modal-converge-subscribe").modal('hide');
                       $("#payment-method").val('converge');
 			          $("#payment-method-status").val('COMPLETED');
 			          activate_registration();
