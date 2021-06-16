@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class MY_Controller extends CI_Controller {
+class MYF_Controller extends CI_Controller {
 
 	public $page_data;
 
@@ -49,10 +49,11 @@ class MY_Controller extends CI_Controller {
 
 		$method     = $this->router->fetch_method();
 		$controller = $this->router->fetch_class();		
-		
-		if( $is_plan_active == 0 && $controller != 'mycrm' && $method != 'membership' ){			
-			//redirect('mycrm/membership'); 
-		}
+
+		//if( $controller != '' )
+		/*if( $is_plan_active == 0 && $controller != 'mycrm' && $method != 'membership' ){			
+			redirect('mycrm/membership'); 
+		}*/
 	}
 
 	public function gtMyIpGlobal(){

@@ -232,6 +232,12 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 	.has-error{
 		border: 1px solid red;
 	}
+	.input-group-prepend {
+	    height: 48px !important;
+	}
+	.form_line{
+	    margin-bottom: 10px;
+	}
 </style>
 <section page="register" message="" class="ng-isolate-scope">
 	<div class="f-height-v2">
@@ -674,6 +680,103 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 		</div>
 	</div>
 </div>
+
+<div class="modal fade" id="modal-converge-subscribe" tabindex="-1" role="dialog" aria-labelledby="modalLoadingMsgTitle" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="">Pay Subscription Plan</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <form id="frm-pay-subscription" method="post">
+        <div class="modal-body">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card-body">                            
+                        <div id="credit_card">
+                            <div class="row form_line">
+                                <div class="col-md-4">
+                                    Card Number
+                                </div>
+                                <div class="col-md-8">
+                                    <input type="text" class="form-control" name="card_number" id="cardnumber" value="" required/>
+                                </div>
+                            </div>
+                            <div class="row form_line">
+                                <div class="col-md-4">
+                                    <label for="">Expiration 
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <select id="exp_month" name="exp_month" class="form-control exp_month" required>
+                                                <option  value="">Month</option>
+                                                <option  value="01">01</option>
+                                                <option  value="02">02</option>
+                                                <option  value="03">03</option>
+                                                <option  value="04">04</option>
+                                                <option  value="05">05</option>
+                                                <option  value="06">06</option>
+                                                <option  value="07">07</option>
+                                                <option  value="08">08</option>
+                                                <option  value="09">09</option>
+                                                <option  value="10">10</option>
+                                                <option  value="11">11</option>
+                                                <option  value="12">12</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <select id="exp_year" name="exp_year" class="form-control exp_year" required>
+                                                <option  value="">Year</option>
+                                                <option  value="2021">2021</option>
+                                                <option  value="2022">2022</option>
+                                                <option  value="2023">2023</option>
+                                                <option  value="2024">2024</option>
+                                                <option  value="2025">2025</option>
+                                                <option  value="2026">2026</option>
+                                                <option  value="2027">2027</option>
+                                                <option  value="2028">2028</option>
+                                                <option  value="2029">2029</option>
+                                                <option  value="2030">2030</option>
+                                                <option  value="2031">2031</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <input type="text" maxlength="3" class="form-control" name="cvc" id="cvc" value="" placeholder="CVC" required/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr />
+                            <div class="row form_line">
+                                <div class="col-md-4">
+                                    Total Amount
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text" id="basic-addon1">$</span>
+                                        </div>
+                                        <input type="number" class="form-control" name="plan_amount" id="plan_amount" value="<?= number_format($plan->price,2); ?>" disabled="">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-indigo" type="button" data-dismiss="modal">Close</button>
+            <button class="btn btn-indigo btn-modal-pay-subscription" type="submit">Pay</button>
+        </div>
+        </form>
+      </div>
+    </div>
+</div>
+
 </section>
 <?php include viewPath('frontcommon/footer'); ?>
 <script>
@@ -707,6 +810,62 @@ $(function(){
 
     $(".btn-terms-agreement").click(function(){
     	$("#modalTermsAgreement").modal('show');
+    });
+
+    $("#frm-pay-subscription").submit(function(e){
+    	e.preventDefault();
+
+    	var total_amount = $("#plan_price_discounted").val();
+        var firstname = $("#firstname").val();
+        var lastname  = $("#lastname").val();
+        var email_add = $("#email_address").val();
+        var zipcode   = $("#zip_code").val();
+        var ccnumber  = $("#cardnumber").val();
+        var expmonth  = $("#exp_month").val();
+        var expyear   = $("#exp_year").val();
+        var cvc       = $("#cvc").val();
+        var plan_id   = $("#plan_id").val();
+        var url 	  = base_url + 'registration/_pay_subscription';
+
+        $(".btn-modal-pay-subscription").html('<span class="spinner-border spinner-border-sm m-0"></span>');
+
+        setTimeout(function () {
+            $.ajax({
+               type: "POST",
+               url: url,
+               dataType: "json",
+               data: {
+               	total_amount:total_amount,
+               	firstname:firstname,
+               	lastname:lastname,
+               	email_add:email_add,
+               	zipcode:zipcode,
+               	ccnumber:ccnumber,
+               	expmonth:expmonth,
+               	expyear:expyear,
+               	plan_id:plan_id,
+               	cvc:cvc
+               },
+               success: function(o)
+               {
+                    $("#frm-pay-subscription").modal('hide'); 
+
+                    if( o.is_success == 1 ){
+                      $("#payment-method").val('converge');
+			          $("#payment-method-status").val('COMPLETED');
+			          activate_registration();
+                    }else{
+                      Swal.fire({
+                        icon: 'error',
+                        title: 'Cannot process payment',
+                        text: o.message
+                      });
+                    }
+
+                    $(".btn-modal-pay-subscription").html('Pay');
+                }
+            });
+        }, 1000);
     });
 
     allNextBtn.click(function(){
@@ -965,7 +1124,10 @@ $(function(){
 
 	//Converge payment
 	$("#converge-button").click(function(){
-		initiateLightbox();
+		//initiateLightbox();
+		var total_amount = $("#plan_price_discounted").val();
+		$("#plan_amount").val(total_amount);
+		$("#modal-converge-subscribe").modal('show');
 	});
 
 	function initiateLightbox () {

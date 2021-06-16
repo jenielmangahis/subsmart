@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Pricing extends MY_Controller {
+class Pricing extends MYF_Controller {
 	public function __construct(){
 		parent::__construct();
 		//$this->checkLogin(1);

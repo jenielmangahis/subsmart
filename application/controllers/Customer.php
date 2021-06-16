@@ -167,7 +167,7 @@ class Customer extends MY_Controller
                     'card_number' => $input['card_number'],
                     'exp_month' => $input['exp_month'],
                     'exp_year' => $input['exp_year'],
-                    'card_cvc' => $input['card_cvc'],
+                    'card_cvc' => $input['cvc'],
                     'address' => $customer->mail_add,
                     'zip' => $customer->zip_code
                 ];
@@ -700,6 +700,26 @@ class Customer extends MY_Controller
     public function save_billing_information($input,$id){
         $input_billing = array();
         // billing data
+        switch ($input['bill_freq']) {
+            case 'One Time Only':
+                $billing_frequency = 1;
+                break;
+            case 'Every 1 Month':
+                $billing_frequency = 1;
+                break;
+            case 'Every 3 Months':
+                $billing_frequency = 3;
+                break;
+            case 'Every 6 Months':
+                $billing_frequency = 6;
+                break;
+            case 'Every 1 Year':
+                $billing_frequency = 12;
+                break;
+            default:
+                $billing_frequency = 0;
+                break;
+        }
         $input_billing['fk_prof_id'] = $id;
         $input_billing['card_fname'] = $input['card_fname'];
         $input_billing['card_lname'] = $input['card_lname'];
@@ -733,9 +753,9 @@ class Customer extends MY_Controller
         $input_billing['transaction_amount'] = $input['transaction_amount'];
         $input_billing['transaction_category'] = $input['transaction_category'];
         $input_billing['frequency'] = $input['frequency'];
-        $input_billing['last_payment_date'] = '';
-        $input_billing['total_payments']    = 0;
-        $input_billing['next_billing_date'] = date("n/j/Y",strtotime("+" . $input['frequency'] . " months"));
+        $input_billing['billing_frequency'] = $input['billing_frequency'];
+        $input_billing['next_billing_date'] = date("n/j/Y",strtotime("+" . $billing_frequency . " months"));
+        $input_billing['next_subscription_billing_date'] = date("n/j/Y",strtotime("+" . $input['frequency'] . " months"));
 
         $check = array(
             'where' => array(
