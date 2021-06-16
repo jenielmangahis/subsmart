@@ -911,6 +911,9 @@ $route['eSign/manage'] = 'DocuSign/manage';
 
 // Cron Payment
 $route['cron/acs_billing_method_cc'] = 'Cron_Payment/acs_billing_method_cc';
+$route['cron/acs_subscription_method_cc'] = 'Cron_Payment/acs_subscription_method_cc';
+$route['cron/company_recurring_nsmart_subscription'] = 'Cron_Payment/company_recurring_nsmart_subscription';
+$route['cron/company_recurring_nsmart_subscription_with_payment_errors'] = 'Cron_Payment/company_recurring_nsmart_subscription_with_payment_errors';
 
 //Admin Users
 $route['admin/_update_employee'] = 'Admin/ajaxUpdateEmployee';
