@@ -659,6 +659,31 @@ class Workorder_model extends MY_Model
         return $result->result();
     }
 
+    public function getname($id)
+    {
+        $this->db->select('*');
+		$this->db->from('users');
+		$this->db->where('id', $id);
+        $query = $this->db->get();
+        return $query->row();
+    }
+
+    public function save_notification($data)
+    {
+        $vendor = $this->db->insert('user_notification', $data);
+	    $insert = $this->db->insert_id();
+		return  $insert;
+    }
+
+    public function companyDet($cid)
+    {
+        $this->db->select('*');
+		$this->db->from('clients');
+		$this->db->where('id', $cid);
+        $query = $this->db->get();
+        return $query->row();
+    }
+
     public function getCustomFields($id)
     {
         $this->db->select('*');

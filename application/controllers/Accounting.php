@@ -5357,4 +5357,20 @@ class Accounting extends MY_Controller
         // file_put_contents('./uploads/image.png', $data);
         // echo "1";
     }
+    public function get_customer_search_result()
+    {
+        $value = $this->input->post("value");
+        $search_results = $this->accounting_invoices_model->get_customer_search_result($value);
+        $html="";
+        foreach ($search_results as $customer) {
+            $html.='<li>
+                <a href="javascript:void(0)" class="">
+                    '.$customer->name.'
+                </a>
+            </li>';
+        }
+        $data = new stdClass();
+        $data->html = $html;
+        echo json_encode($data);
+    }
 }

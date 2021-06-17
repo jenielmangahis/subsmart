@@ -8,7 +8,7 @@
             Card First Name
         </div>
         <div class="col-md-6">
-            <input type="text" class="form-control" name="card_fname" id="card_fname" value="<?php if(isset($billing_info)){ echo $billing_info->card_fname; } ?>" />
+            <input type="text" class="form-control" name="card_fname" id="card_fname" value="<?= isset($billing_info) && !empty($billing_info->card_fname) ? $billing_info->card_fname : $profile_info->first_name;  ?>" />
         </div>
     </div>
     <div class="row form_line">
@@ -16,7 +16,7 @@
             Card Last Name
         </div>
         <div class="col-md-6">
-            <input type="text" class="form-control" name="card_lname" id="card_lname" value="<?php if(isset($billing_info)){ echo $billing_info->card_lname; } ?>"/>
+            <input type="text" class="form-control" name="card_lname" id="card_lname" value="<?= isset($billing_info) && !empty($billing_info->card_lname) ? $billing_info->card_lname : $profile_info->last_name ?>"/>
         </div>
     </div>
     <div class="row form_line">
@@ -29,20 +29,27 @@
     </div>
     <div class="row form_line">
         <div class="col-md-6">
-            City State ZIP
+            City
+        </div>
+
+        <div class="col-md-6">
+            <input type="text" class="form-control" name="billing_city" id="billing_city" value="<?php if(isset($billing_info)){ echo $billing_info->city; } ?>" />
+        </div>
+    </div>
+    <div class="row form_line">
+        <div class="col-md-6">
+            State
         </div>
         <div class="col-md-6">
-            <div class="row">
-                <div class="col-md-8">
-                    <input type="text" class="form-control" name="billing_city" id="billing_city" value="<?php if(isset($billing_info)){ echo $billing_info->city; } ?>" />
-                </div>
-                <div class="col-md-4">
-                    <input type="text" class="form-control" name="billing_state" id="billing_state" value="<?php if(isset($billing_info)){ echo $billing_info->state; } ?>"/>
-                </div>
-                <div class="col-md-6">
-                    <input type="text" class="form-control" name="billing_zip" id="billing_zip" value="<?php if(isset($billing_info)){ echo $billing_info->zip; } ?>"/>
-                </div>
-            </div>
+             <input type="text" class="form-control" name="billing_state" id="billing_state" value="<?php if(isset($billing_info)){ echo $billing_info->state; } ?>"/>
+        </div>
+    </div>
+    <div class="row form_line">
+        <div class="col-md-6">
+            ZIP
+        </div>
+        <div class="col-md-6">
+            <input type="text" class="form-control" name="billing_zip" id="billing_zip" value="<?php if(isset($billing_info)){ echo $billing_info->zip; } ?>"/>
         </div>
     </div>
     <div class="row form_line">
@@ -77,16 +84,16 @@
         </div>
         <div class="col-md-6">
             <div class="row">
-                <div class="col-md-6">
-                <select id="mmr" name="mmr" data-customer-source="dropdown" class="input_select searchable-dropdown" required>
-                    <option value="0.00">0.00</option>
-                    <?php foreach($rate_plans as $rate_plan): ?>
-                        <option <?= isset($billing_info->mmr) ? 'selected' : ''; ?> value="<?= $rate_plan->amount; ?>"><?= $rate_plan->amount; ?></option>
-                    <?php endforeach; ?>
-                </select>
-            </div>
-                <div class="col-md-6">
-                    <a href="<?= base_url() ?>customer/settings/ratePlan" target="_blank"  style="color:#58bc4f;margin-top:5px;font-size: 10px;position: absolute;">
+                <div class="col-md-12">
+                    <select id="mmr" name="mmr" data-customer-source="dropdown" class="input_select searchable-dropdown" required>
+                        <option value="0.00">0.00</option>
+                        <?php foreach($rate_plans as $rate_plan): ?>
+                            <option <?= isset($billing_info->mmr) ? 'selected' : ''; ?> value="<?= $rate_plan->amount; ?>"><?= $rate_plan->amount; ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+                <div class="col-md-12">
+                    <a href="<?= base_url() ?>customer/settings/ratePlan" target="_blank"  style="color:#58bc4f;margin-top:5px;font-size: 12px;position: absolute;">
                         <span class="fa fa-plus"></span> Manage Rate Plan </a>&nbsp;&nbsp;
                 </div>
             </div>
@@ -388,6 +395,15 @@
                 <option <?= isset($billing_info) && $billing_info->frequency == 11 ?  'selected' : '';?> value="11">11 months</option>
                 <option <?= isset($billing_info) && $billing_info->frequency == 12 ?  'selected' : '';?> value="12">12 months</option>
             </select>
+        </div>
+    </div>
+    <hr>
+    <div class="row form_line">
+        <div class="col-md-12">
+            Customer Shareable Link
+        </div>
+        <div class="col-md-12">
+            <input type="url" placeholder="https://sample.com" class="form-control" name="url" id="url" value="<?php if(isset($office_info)){ echo  $office_info->url; } ?>" />
         </div>
     </div>
 </div>

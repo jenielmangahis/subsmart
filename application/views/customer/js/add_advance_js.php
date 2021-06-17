@@ -143,6 +143,26 @@
 <script>
     $(document).ready(function () {
 
+        $("#bill_start_date").datepicker({
+            onselect: function(dateText) {
+                console.log('adsfsdf');
+                //console.log("Selected date: " + dateText + "; input's current value: " + this.value);
+            },
+            dateFormat: 'dd/mm/yy'
+        }).on("changeDate", function (e) {
+            console.log(e.date);
+            var selected_data = moment(e.date).format('L');
+            var contract = $('#contract_term').val();
+            var plus_date = moment.utc(selected_data).add(contract,'months');
+            console.log( moment(plus_date).format('l'));
+            //console.log( moment(plus_date).format('D'));
+            $('#bill_end_date').val(moment(plus_date).format('L'));
+            $('#bill_day ').val(moment(plus_date).format('D'));
+        });
+        $( ".datepicker" ).datepicker();
+        $("#recurring_end_date").datepicker();
+        $("#bill_end_date").datepicker();
+
 
         $("#first_name").on("keyup change", function(e) {
             $('#card_fname').val(this.value);
@@ -248,43 +268,7 @@
 
 
 
-        $("#date_picker").datetimepicker({
-            format: "l",
-            //minDate: new Date(),
-        });
-        $("#recurring_start_date").datetimepicker({
-            format: "l",
-            //minDate: new Date(),
-        });
-        $("#recurring_end_date").datetimepicker({
-            format: "l",
-            //minDate: new Date(),
-        });
-        $("#bill_start_date").datetimepicker({
-            format: "l",
-            //minDate: new Date(),
-        }); 
-        // .on('dp.change', function (e) {
-        //     var selected_data = moment(e.date._d).format('L');
-        //     var contract = $('#contract_term').val();
-        //     var plus_date = moment.utc(selected_data).add(contract,'months');
-        //     console.log( moment(plus_date).format('l'));
-        //     //console.log( moment(plus_date).format('D'));
-        //     $('#bill_end_date').val(moment(plus_date).format('l'));
-        //     $('#bill_day ').val(moment(plus_date).format('D'));
-        //     //$('#bill_day option[value='+moment(plus_date).format('D')+']').prop('selected',true);
-        //     //var billDay = moment(plus_date).format('D');
-        // });
 
-        $("#bill_end_date").datetimepicker({
-            format: "l",
-            //minDate: new Date(),
-        });
-        $(".date_picker").datetimepicker({
-            format: "l",
-            //'setDate': new Date(),
-            //minDate: new Date(),
-        });
         //$('.date_picker').val(new Date().toLocaleDateString());
 
         //$('.time_picker').val(new Date().toLocaleTimeString());

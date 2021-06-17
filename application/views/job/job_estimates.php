@@ -69,7 +69,7 @@ add_css(array(
                             <hr>
                             <div class="form-group label-width d-flex align-items-center">
                                 <label>From</label>
-                                <input type="date" name="start_date" id="start_date" class="form-control" value="<?= isset($jobs_data) ?  $jobs_data->start_date : '';  ?>" required>&nbsp;&nbsp;
+                                <input type="date" name="start_date" id="start_date" class="form-control" value="<?= $jobs_data->estimate_date!='' ?  $jobs_data->estimate_date : '';  ?>" required>&nbsp;&nbsp;
                                 <select id="start_time" name="start_time" class="form-control" required>
                                     <option value="">Start time</option>
                                     <?php for($x=0;$x<time_availability(0,TRUE);$x++){ ?>
@@ -79,7 +79,7 @@ add_css(array(
                             </div>
                             <div class="form-group label-width d-flex align-items-center">
                                 <label >To</label>
-                                <input type="date" name="end_date" id="end_date" class="form-control mr-2" value="<?= isset($jobs_data) ?  $jobs_data->end_date : '';  ?>" required>
+                                <input type="date" name="end_date" id="end_date" class="form-control mr-2" value="<?= $jobs_data->expiry_date!='' ?  $jobs_data->expiry_date : '';  ?>" required>
                                 <select id="end_time" name="end_time" class="form-control" required>
                                     <option value="">End time</option>
                                     <?php for($x=0;$x<time_availability(0,TRUE);$x++){ ?>
@@ -189,19 +189,15 @@ add_css(array(
                             </button>
                             <a href="javascript:void(0);" id="notes_left"><span class="fa fa-columns" style="float: right;padding-right: 40px;font-size: 20px;display: block;margin-top: -38px;"></span></a>
                         </div>
-                        <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#collapseOne">
+                        <div id="collapseOne" class="" aria-labelledby="headingOne" data-parent="#collapseOne">
                             <div class="card-body">
                                 <div class="row">
-                                    <!--<div style="background-color: #32243d; width: 32px; height: 32px;">
-                                    <img alt="Vance Wayne" src="https://housecall-attachments-production.s3.amazonaws.com/service_pros/avatars/000/137/270/original/avatar_1565038188.jpeg?1565038188" class="MuiAvatar-img">
-                                     </div>
-                                    <p>&nbsp; 01/27/2021, 5:36pm</p>-->
                                     <div id="notes_edit_btn" class="pencil" style="width:100%; height:100px;cursor: pointer;">
-                                        <?= isset($jobs_data) ? $jobs_data->message : ''; ?>
+                                        <?= isset($jobs_data) ? $jobs_data->customer_message : ''; ?>
                                     </div>
                                     <div id="notes_input_div" style="display:none;">
-                                        <div style=" height:70px;margin-bottom: 10px;">
-                                            <textarea name="message" cols="40" style="width: 100%;" rows="3" id="note_txt" class="input"><?= isset($jobs_data) ? $jobs_data->message : ''; ?></textarea>
+                                        <div style="height:70px;margin-bottom: 10px;">
+                                            <textarea name="message"  style="width: 100%;" cols="50" rows="3" id="note_txt" class="input"><?= isset($jobs_data) ? $jobs_data->customer_message : ''; ?></textarea>
                                             <button type="button" class="btn btn-primary btn-sm" id="save_memo" style="color: #ffffff;"><span class="fa fa-save"></span> Save</button>
                                         </div>
                                     </div>
@@ -229,11 +225,11 @@ add_css(array(
                             </a>-->
                         </div>
                         <div class="card-body">
-                            <div id="photos_attachment" class="collapse" aria-labelledby="headingTwo" data-parent="#photos_attachment">
+                            <div id="photos_attachment" class="" aria-labelledby="headingTwo" data-parent="#photos_attachment">
                                 <div class="card-body">
                                     <div class="form-group">
                                         <div class="form-group col-md-12">
-                                            <img style="width: 100%" id="attachment-image" alt="Attachment" src="<?= isset($jobs_data) ? $jobs_data->attachment : "/uploads/jobs/placeholder.jpg"; ?> ">
+                                            <img style="width: 100%" id="attachment-image" alt="Attachment" src="<?= $jobs_data->attachment!="" ? $jobs_data->attachment : "/uploads/jobs/placeholder.jpg"; ?> ">
                                             <small>Optionally attach files to this Job. Allowed type: pdf, doc, docx, png, jpg, gif.</small>
                                             <input type="file" class="form-control" name="attachment-file" id="attachment-file">
                                         </div>
@@ -253,7 +249,7 @@ add_css(array(
                             </a>
                         </div>
                         <div class="card-body">
-                            <div id="url_link_form" class="collapse" aria-labelledby="headingThree" data-parent="#url_link_form">
+                            <div id="url_link_form" class="" aria-labelledby="headingThree" data-parent="#url_link_form">
                                 <div class="card-body">
                                     <?php
                                     if(isset($jobs_data) && $jobs_data->link != NULL) {
@@ -280,6 +276,7 @@ add_css(array(
                                 <div style="display: flex; margin: 0;margin-right: auto;" >
                                     <b>Created By: </b>&nbsp;&nbsp; <span> <?= ' '.$logged_in_user->FName.' '.$logged_in_user->LName; ?></span>
                                 </div>
+                                <b>Status: </b>&nbsp;&nbsp;Draft
                                 <hr>
                                 <div class="col-md-4">
                                     <h6>Customer Info</h6>
@@ -336,7 +333,7 @@ add_css(array(
                             <tr>
                                 <td>
                                     <small>Job Type</small>
-                                    <input type="text" id="job_type" name="job_type" value="<?= isset($jobs_data) ? $jobs_data->job_type : ''; ?>" class="form-control" readonly>
+                                    <input type="text" id="job_type" name="job_type" value="" class="form-control" readonly>
                                 </td>
                                 <td></td>
                                 <td>
@@ -353,6 +350,7 @@ add_css(array(
                                 $subtotal = 0.00;
                                 foreach ($jobs_data_items as $item):
                                     $total = $item->price * $item->qty;
+                                    $unique_id = rand(1,10000);
                                     ?>
                                     <tr id=ss>
                                         <td width="35%"><small>Item name</small>
@@ -360,16 +358,16 @@ add_css(array(
                                             <input type="hidden" value='<?= $item->id; ?>' name="item_id[]">
                                         </td>
                                         <td width="10%"><small>Qty</small>
-                                            <input value='<?= $item->qty; ?>' type="number" name="item_qty[]" class="form-control qty">
+                                            <input value='<?= $item->qty; ?>' id="<?= $unique_id; ?>" min="1" type="number" name="item_qty[]" class="form-control qty">
                                         </td>
                                         <td width="20%"><small>Unit Price</small>
-                                            <input id='price"+idd+"' value='<?= $item->price; ?>'  type="number" name="item_price[]" class="form-control" placeholder="Unit Price">
+                                            <input id='price<?= $unique_id; ?>' value='<?= $item->price; ?>'  type="number" name="item_price[]" class="form-control" placeholder="Unit Price">
                                         </td>
                                         <td width="20%"><small>Item Type</small>
                                             <input readonly type="text" class="form-control" value='<?=ucfirst($item->type);?>'>
                                         </td>
                                         <td  style="text-align: center;margin-top: 20px;" class="d-flex" width="15%">
-                                            <b style="font-size: 16px;" class="total_per_item">$<?= number_format((float)$total,2,'.',',');?></b>
+                                            <b style="font-size: 16px;" data-subtotal='<?= $total; ?>' id='sub_total<?= $unique_id; ?>' class="total_per_item">$<?= number_format((float)$total,2,'.',',');?></b>
                                         </td>
                                         <td width="20%">
                                             <button style="margin-top: 20px;" type="button" class="btn btn-primary btn-sm items_remove_btn remove_item_row"><span class="fa fa-trash-o"></span></button>
@@ -511,24 +509,6 @@ add_css(array(
                             </div>
                         </div>
                     </div>
-                    <!--<div class="card">
-                        <div class="card-body">
-                            <div class="card box_right">
-                                <div class="row">
-                                    <div class="col-md-12 ">
-                                        <div class="card-header">
-                                            <h5 style="padding-left: 20px;" class="mb-0">Activity Feeds</h5>
-                                        </div>
-                                        <div class="card-body">
-                                            <span class="help help-sm help-block">History log of customer</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <br>
-
-                        </div>
-                    </div>-->
                 </div>
 
         </div>
@@ -615,110 +595,6 @@ add_css(array(
     </div>
 </div>
 
-<!-- Modal -->
-<div class="modal fade" id="estimates_import" tabindex="-1" role="dialog" aria-labelledby="newcustomerLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="newcustomerLabel">Select Estimate To Make a Job</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="row">
-                    <div class="col-md-12">
-                        <table id="estimates_table" class="table table-hover" style="width: 100%;">
-                            <thead>
-                            <tr>
-                                <td> Estimate #</td>
-                                <td> Job & Customer</td>
-                                <td> Date</td>
-                                <td> </td>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <?php if(!empty($estimates)): ?>
-                                <?php foreach ($estimates as $estimate): ?>
-                                    <tr>
-                                        <td><?= $estimate->estimate_number; ?></td>
-                                        <td><?= $estimate->job_name; ?></td>
-                                        <td><?= date('M d, Y', strtotime($estimate->estimate_date)); ?></td>
-                                        <td>
-                                            <button id="<?= $estimate->customer_id; ?>" type="button" data-dismiss="modal" class="btn btn-sm btn-default estimate_select">
-                                                <span class="fa fa-plus"></span>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                <?php endforeach; ?>
-                            <?php endif; ?>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer modal-footer-detail">
-                <div class="button-modal-list">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal"><span class="fa fa-remove"></span> Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<?php include viewPath('job/modals/wordorder_import'); ?>
-
-<!-- Invoice Modal -->
-<div class="modal fade" id="invoice_import" tabindex="-1" role="dialog" aria-labelledby="newcustomerLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="newcustomerLabel">Select Invoice To Make a Job</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="row">
-                    <div class="col-md-12">
-                        <table id="invoices_table" class="table table-hover" style="width: 100%;">
-                            <thead>
-                            <tr>
-                                <td> Invoice #</td>
-                                <td> Job Name</td>
-                                <td> Date</td>
-                                <td> </td>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <?php if(!empty($invoices)): ?>
-                                <?php foreach ($invoices as $invoice): ?>
-                                    <tr>
-                                        <td><?= $invoice->invoice_number; ?></td>
-                                        <td><?= $invoice->job_name; ?></td>
-                                        <td><?= date('M d, Y', strtotime($invoice->date_issued)); ?></td>
-                                        <td>
-                                            <button id="<?= $invoice->customer_id; ?>" type="button" data-dismiss="modal" class="btn btn-sm btn-default invoice_select">
-                                                <span class="fa fa-plus"></span>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                <?php endforeach; ?>
-                            <?php endif; ?>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer modal-footer-detail">
-                <div class="button-modal-list">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal"><span class="fa fa-remove"></span> Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
 <!-- Signature Modal -->
 <div class="modal fade" id="share_job_modal" role="dialog">
     <div class="close-modal" data-dismiss="modal">&times;</div>
@@ -767,118 +643,6 @@ add_css(array(
     </div>
 </div>
 
-<!-- On My Way Modal -->
-<div class="modal fade" id="omw_modal" role="dialog">
-    <div class="close-modal" data-dismiss="modal">&times;</div>
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">Arrival</h4>
-            </div>
-            <form id="update_status_to_omw">
-                <div class="modal-body">
-                    <p>This will start travel duration tracking.</p>
-                    <p>Arrive at:</p>
-                    <input type="date" name="omw_date" id="omw_date" class="form-control" required>
-                    <input type="hidden" name="id" id="jobid" value="<?php if(isset($jobs_data)){echo $jobs_data->job_unique_id;} ?>">
-                    <input type="hidden" name="status" id="status" value="Arrival">
-                    <select id="omw_time" name="omw_time" class="form-control" required>
-                        <?php for($x=0;$x<time_availability(0,TRUE);$x++){ ?>
-                            <option <?= isset($jobs_data) && strtolower($jobs_data->start_time) == time_availability($x) ?  'selected' : '';  ?> value="<?= time_availability($x); ?>"><?= time_availability($x); ?></option>
-                        <?php } ?>
-                    </select>
-                </div>
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary">
-                        <span class="fa fa-paper-plane-o"></span> Save
-                    </button>
-                    <button type="button" id="" class="btn btn-default" data-dismiss="modal">
-                        <span class="fa fa-remove"></span> Close
-                    </button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-
-<!-- Start Job Modal -->
-<div class="modal fade" id="start_modal" role="dialog">
-    <div class="close-modal" data-dismiss="modal">&times;</div>
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">Start Job</h4>
-            </div>
-            <form id="update_status_to_started">
-                <div class="modal-body">
-                    <p>This will stop travel duration tracking and start on job duration tracking.</p>
-                    <p>Start job at:</p>
-                    <input type="date" name="job_start_date" id="job_start_date" class="form-control" required>
-                    <input type="hidden" name="id" id="jobid" value="<?php if(isset($jobs_data)){echo $jobs_data->job_unique_id;} ?>">
-                    <input type="hidden" name="status" id="status" value="Started">
-                    <select id="job_start_time" name="job_start_time" class="form-control" required>
-                        <?php for($x=0;$x<time_availability(0,TRUE);$x++){ ?>
-                            <option <?= isset($jobs_data) && strtolower($jobs_data->start_time) == time_availability($x) ?  'selected' : '';  ?> value="<?= time_availability($x); ?>"><?= time_availability($x); ?></option>
-                        <?php } ?>
-                    </select>
-                </div>
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary">
-                        <span class="fa fa-paper-plane-o"></span> Save
-                    </button>
-                    <button type="button" id="" class="btn btn-default" data-dismiss="modal">
-                        <span class="fa fa-remove"></span> Close
-                    </button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-
-<!-- Finish Job Modal -->
-<div class="modal fade" id="finish_modal" role="dialog">
-    <div class="close-modal" data-dismiss="modal">&times;</div>
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">Finish Job</h4>
-            </div>
-            <form id="update_status_to_closed">
-                <div class="modal-body">
-                    <p>This will stop on job duration tracking and mark the job end time.</p>
-                    <p>Finish job at:</p>
-                    <input type="date" name="job_start_date" id="job_start_date" class="form-control" required>
-                    <input type="hidden" name="id" id="jobid" value="<?php if(isset($jobs_data)){echo $jobs_data->job_unique_id;} ?>"> <br>
-                    <input type="hidden" name="status" id="status" value="Closed">
-                    <select id="job_start_time" name="job_start_time" class="form-control" required>
-                        <?php for($x=0;$x<time_availability(0,TRUE);$x++){ ?>
-                            <option <?= isset($jobs_data) && strtolower($jobs_data->start_time) == time_availability($x) ?  'selected' : '';  ?> value="<?= time_availability($x); ?>"><?= time_availability($x); ?></option>
-                        <?php } ?>
-                    </select>
-                </div>
-                <div class="col-sm-12">
-                    <div class="col-md-12">
-                        <a href="<?= base_url('job/billing/').$jobs_data->job_unique_id; ?>">
-                            <button type="button" class="btn btn-primary">
-                                <span class="fa fa-money"></span> Pay Now
-                            </button>
-                        </a>
-
-                        <a href="<?= base_url('job/send_customer_invoice_email/').$jobs_data->job_unique_id; ?>" class="btn btn-primary">
-                            <span class="fa fa-paper-plane-o"></span> Send Invoice
-                        </a>
-                    </div>
-                </div>
-                <br>
-                <div class="modal-footer">
-                    <button type="button" id="" class="btn btn-default" data-dismiss="modal">
-                        <span class="fa fa-remove"></span> Cancel
-                    </button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
 
 <style>
     .dataTables_empty{

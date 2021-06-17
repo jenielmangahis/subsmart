@@ -386,7 +386,7 @@ border: none;
                 </div>
             </div>
             <br> -->
-            <?php echo form_open_multipart('workorder/savenewWorkorder', [ 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?> 
+            <?php echo form_open_multipart('workorder/savenewWorkorder', [ 'class' => 'form-validate', 'autocomplete' => 'off', 'target' => '_blank' ]); ?> 
                     <div class="row">
                         <div class="col-md-12">
                             <div id="header_area">
@@ -413,7 +413,7 @@ border: none;
                     <div class="row">                   
                             <div class="col-md-3 form-group">
                                 <label for="contact_name" class="label-element">Work Order #</label>
-                                <input type="text" class="form-control input-element" name="workorder_number" id="contact_name" value="<?php echo "WO-"; 
+                                <input type="text" class="form-control input-element" name="workorder_number" id="workorder_number" value="<?php echo "WO-"; 
                                            foreach ($number as $num):
                                                 $next = $num->work_order_number;
                                                 $arr = explode("-", $next);
@@ -496,6 +496,10 @@ border: none;
                                 </label>
                                     <input type="text" class="form-control input-element" name="cross_street" id="cross_street" />
                             </div>
+                            <input type="hidden" name="acs_fullname" id="acs_fullname">
+                            <input type="hidden" name="company_name" id="company_name" value="<?php echo $companyDet->first_name.' '.$companyDet->last_name; ?>">
+                            <input type="hidden" name="business_address" id="business_address" value="<?php echo $companyDet->business_address; ?>">
+                            <input type="hidden" name="acs_phone_number" id="acs_phone_number" value="<?php echo $companyDet->phone_number; ?>">
                         </div>
                         <!-- <div class="row">
                             <div class="col-md-12 form-group">
@@ -1369,8 +1373,8 @@ border: none;
                 <div>
 
                      <div class="form-group">
-                                <button type="submit" class="btn btn-flat btn-success">Submit</button>
-                                <button type="submit" class="btn btn-flat btn-success">Preview</button>
+                                <button type="submit" name="action" class="btn btn-flat btn-success" value="submit">Submit</button>
+                                <button type="submit" name="action" class="btn btn-flat btn-success pdf_sheet" target="_blank" value="preview">Preview</button>
                                 <button type="submit" class="btn btn-flat btn-success" style="background-color: #32243d !important"><b>Save Template</b></button>
                                 <a href="<?php echo url('workorder') ?>" class="btn ">Cancel this</a>
                     </div>
@@ -1713,18 +1717,22 @@ border: none;
                                         <div class="row">
                                         <div class="col-md-12" style="padding:1%;">
                                         <center>
+                                        <div id="signArea" >
                                             <canvas id="canvasb" style="border: solid gray 1px;"></canvas>
                                             <input type="hidden" class="form-control mb-3" name="company_representative_printed_name" id="comp_rep_approval1" value="Company Representative"/>
                                             <input type="hidden" id="saveCompanySignatureDB1aMb" name="company_representative_approval_signature1aM">
                                             </div>
                                             </div>
                                             <br>
+                                        </div>
                                         </center>
                                         </div>
                                     
                                     </div>
                         
                         <div class="modal-footer">
+                        
+                            <button id="clear" class="btn btn-danger">Clear</button>
                             <button type="button" class="btn btn-success edit_first_signature" id="enter_signature">Update</button>
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                             <!-- <input type="submit" value="save" id="btnSaveSign"> -->
@@ -1749,18 +1757,21 @@ border: none;
                                         <div class="row">
                                         <div class="col-md-12" style="padding:1%;">
                                         <center>
+                                        <div id="signArea2" >
                                             <canvas id="canvas2b" style="border: solid gray 1px;"></canvas>
                                             <input type="hidden" class="form-control mb-3" name="primary_representative_printed_name" id="comp_rep_approval2" value="Primary Account Holder"/>
                                             <input type="hidden" id="savePrimaryAccountSignatureDB2aMb" name="primary_account_holder_signature2aM">
                                             </div>
                                             </div>
                                             <br>
+                                            </div>
                                         </center>
                                         </div>
                                     
                                     </div>
                         
                         <div class="modal-footer">
+                            <button id="clear2" class="btn btn-danger">Clear</button>
                             <button type="button" class="btn btn-success edit_second_signature" id="enter_signature">Update</button>
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                             <!-- <input type="submit" value="save" id="btnSaveSign"> -->
@@ -1785,18 +1796,21 @@ border: none;
                                         <div class="row">
                                         <div class="col-md-12" style="padding:1%;">
                                         <center>
+                                        <div id="signArea3" >
                                             <canvas id="canvas3b" style="border: solid gray 1px;"></canvas>
                                             <input type="hidden" class="form-control mb-3" name="secondary_representative_printed_name" id="comp_rep_approval3" value="Secondary Account Holder"/>
                                             <input type="hidden" id="saveSecondaryAccountSignatureDB3aMb" name="secondary_account_holder_signature3aM">
                                             </div>
                                             </div>
                                             <br>
+                                        </div>
                                         </center>
                                         </div>
                                     
                                     </div>
                         
                         <div class="modal-footer">
+                            <button id="clear3" class="btn btn-danger">Clear</button>
                             <button type="button" class="btn btn-success edit_third_signature" id="enter_signature">Update</button>
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                             <!-- <input type="submit" value="save" id="btnSaveSign"> -->
@@ -3031,6 +3045,7 @@ $(document).ready(function(){
             $("#state").val(response['customer'].state);
             $("#zip").val(response['customer'].zip_code);
             $("#cross_street").val(response['customer'].cross_street);
+            $("#acs_fullname").val(response['customer'].first_name +' '+ response['customer'].last_name);
         
             },
                 error: function(response){
@@ -4134,5 +4149,50 @@ $.ajax({
 // sls = parseFloat(sls).toFixed(2);
 // $("#sales_tax").val(sls);
 // cal_total_due();
+});
+</script>
+
+<script>
+// $(document).on("click",".pdf_sheet", function(){
+//     // window.open(url, '_blank');
+//     // alert('yes!');
+//     var subjectID = $("#workorder_number").val();
+//     // $("#workorder_number").val();view_workorder_number
+//     // var session = $("#SessionFrom").val()+"-"+$("#SessionTo").val();
+//     // var courseID = $("#classesID").val();
+//     // var yearsOrSemester = $("#yearSemesterID").val();
+//     // var form = '';
+//     // form += '<input type="hidden" name="subjectID" value="' + subjectID + '">';
+//     // form += '<input type="hidden" name="session" value="' + session + '">';
+//     // form += '<input type="hidden" name="courseID" value="' + courseID + '">';
+//     // form += '<input type="hidden" name="yearsOrSemester" value="' + yearsOrSemester+ '">';
+//     // form += '</form>';
+//     // $('body').append(form);
+//     // $('#static_form').submit();
+//     $.ajax({
+//         type : 'POST',
+//         url : "<?php echo base_url(); ?>workorder/preview",
+//         // data : {dataURL: dataURL},
+//         success: function(result){
+//         // $('#res').html('Signature Uploaded successfully');
+//         alert('yes');
+//         // console.log(dataURL)
+//         // location.reload();
+        
+//         },
+//     });
+
+
+// });
+$('#clear').click(function() {
+  $('#signArea').signaturePad().clearCanvas();
+});
+
+$('#clear2').click(function() {
+  $('#signArea2').signaturePad().clearCanvas();
+});
+
+$('#clear3').click(function() {
+  $('#signArea3').signaturePad().clearCanvas();
 });
 </script>

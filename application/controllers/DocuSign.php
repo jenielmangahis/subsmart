@@ -844,6 +844,11 @@ SQL;
         return $this->templateCreate();
     }
 
+    public function templateEdit()
+    {
+        return $this->templateCreate();
+    }
+
     public function apiSendTemplate($templateId)
     {
         header('content-type: application/json');

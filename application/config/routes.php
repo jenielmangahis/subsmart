@@ -470,6 +470,7 @@ $route['accounting/vendors/copy-to-bill/(:any)'] = 'accounting_controllers/vendo
 $route['accounting/vendors/void-transaction/(:any)/(:any)'] = 'accounting_controllers/vendors/void_transaction/$1/$2';
 $route['accounting/vendors/(:any)/categorize-transactions/(:any)']['post'] = 'accounting_controllers/vendors/categorize_transactions/$1/$2';
 $route['accounting/vendors/print-transaction/(:any)/(:any)'] = 'accounting_controllers/vendors/print_transaction/$1/$2';
+$route['accounting/vendors/print-multiple-transactions']['post'] = 'accounting_controllers/vendors/print_multiple';
 
 $route['accounting/expenses'] = 'accounting_controllers/expenses/index';
 $route['accounting/expenses/load-transactions']['post'] = 'accounting_controllers/expenses/load_transactions';
@@ -720,6 +721,7 @@ $route['offer_codes/update_edit_offer'] = 'Offer_Codes/update_edit_offer';
 $route['registration/_use_offer_code'] = 'Register/registration_use_code';
 $route['registration/_create_registration'] = 'Register/ajax_create_registration';
 $route['registration/_converge_request_token'] = 'Register/ajax_converge_token_request';
+$route['registration/_pay_subscription'] = 'Register/ajax_converge_payment';
 
 //Public Add Employee
 $route['add_company_employee/(:any)'] = 'Pages/front_add_employee/$1';
@@ -905,11 +907,15 @@ $route['admin/login'] = 'Admin/login';
 // Removes DocuSign in URLs
 $route['eSign/templateCreate'] = 'DocuSign/templateCreate';
 $route['eSign/templatePrepare'] = 'DocuSign/templatePrepare';
+$route['eSign/templateEdit'] = 'DocuSign/templateEdit';
 $route['eSign/signing'] = 'DocuSign/signing';
 $route['eSign/manage'] = 'DocuSign/manage';
 
 // Cron Payment
 $route['cron/acs_billing_method_cc'] = 'Cron_Payment/acs_billing_method_cc';
+$route['cron/acs_subscription_method_cc'] = 'Cron_Payment/acs_subscription_method_cc';
+$route['cron/company_recurring_nsmart_subscription'] = 'Cron_Payment/company_recurring_nsmart_subscription';
+$route['cron/company_recurring_nsmart_subscription_with_payment_errors'] = 'Cron_Payment/company_recurring_nsmart_subscription_with_payment_errors';
 
 //Admin Users
 $route['admin/_update_employee'] = 'Admin/ajaxUpdateEmployee';

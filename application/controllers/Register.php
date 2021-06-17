@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Register extends MY_Controller {
+class Register extends MYF_Controller {
 
     public function __construct(){
         parent::__construct();
@@ -1050,6 +1050,88 @@ class Register extends MY_Controller {
 
         echo json_encode($json_data);
         //echo $sessiontoken;  //shows the session token.
+    }
+
+    public function ajax_converge_payment(){
+        $this->load->model('CardsFile_model');
+
+        $is_success = 0;        
+        $message    = '';
+
+        $post   = $this->input->post();
+        $plan   = $this->NsmartPlan_model->getById($post['plan_id']);
+        $amount = $plan->discount;
+        $converge_data = [
+            'amount' => $amount,
+            'card_number' => $post['ccnumber'],
+            'exp_month' => $post['expmonth'],
+            'exp_year' => $post['expyear'],
+            'card_cvc' => $post['cvc'],
+            'address' => $post['address'],
+            'zip' => $post['zipcode']
+        ];
+        $result = $this->converge_send_sale($converge_data);
+        if ($result['is_success']) {
+            $is_success = 1;
+            //Capture card
+            $data_cc = [
+                'card_owner_first_name' => $post['firstname'],
+                'card_owner_last_name' => $post['lastname'],
+                'card_number' => $post['ccnumber'],
+                'expiration_month' => $post['expmonth'],
+                'expiration_year' => $post['expyear'],
+                'card_cvv' => $post['cvc'],
+                'cc_type' => check_cc_type($post['ccnumber']),
+                'is_primary' => 1
+            ];
+
+            $cardsFile  = $this->CardsFile_model->create($data_cc);
+            $is_success = 1;
+
+        }else{
+            $message = $result['msg'];
+        }
+
+        echo json_encode(['is_success' => $is_success, 'message' => $message]);
+        exit;
+    }
+
+    public function converge_send_sale($data)
+    {
+        include APPPATH . 'libraries/Converge/src/Converge.php';
+
+        $this->load->model('CompanyOnlinePaymentAccount_model');
+
+        $is_success = false;
+        $msg = '';
+
+        $exp_year = date("m/d/" . $data['exp_year']);
+        $exp_date = $data['exp_month'] . date("y", strtotime($exp_year));
+        $converge = new \wwwroth\Converge\Converge([
+            'merchant_id' => CONVERGE_MERCHANTID,
+            'user_id' => CONVERGE_MERCHANTUSERID,
+            'pin' => CONVERGE_MERCHANTPIN,
+            'demo' => false,
+        ]);
+        $createSale = $converge->request('ccsale', [
+            'ssl_card_number' => $data['card_number'],
+            'ssl_exp_date' => $exp_date,
+            'ssl_cvv2cvc2' => $data['card_cvc'],
+            'ssl_amount' => $data['amount'],
+            'ssl_avs_address' => $data['address'],
+            'ssl_avs_zip' => $data['zip'],
+        ]);
+
+        if ($createSale['success'] == 1) {
+            $is_success = true;
+            $msg = '';
+        } else {
+            $is_success = false;
+            $msg = $createSale['errorMessage'];
+        }
+
+        $return = ['is_success' => $is_success, 'msg' => $msg];
+        return $return;
     }
 }
 

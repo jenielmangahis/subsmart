@@ -527,8 +527,9 @@ class Job extends MY_Controller
                 'table' => 'estimates',
                 'select' => '*'
             );
-            $this->page_data['jobs_data'] = $this->general->get_data_with_param($get_estimate_query, false);
-            $this->page_data['jobs_data_items'] = $this->jobs_model->get_specific_workorder_items($id);
+
+            $this->page_data['jobs_data'] = $this->general->get_data_with_param($get_estimate_query,FALSE);
+            $this->page_data['jobs_data_items'] = $this->jobs_model->get_specific_estimate_items($id);
         }
         add_css([
             'assets/css/esign/fill-and-sign/fill-and-sign.css',
@@ -1255,7 +1256,7 @@ class Job extends MY_Controller
             'select' => '*',
         );
         $job_settings = $this->general->get_data_with_param($get_job_settings);
-        $job_number = $job_settings[0]->job_num_prefix.' - 000000'.$job_settings[0]->job_num_next;
+        $job_number = $job_settings[0]->job_num_prefix.'-000000'.$job_settings[0]->job_num_next;
 
         $jobs_data = array(
             'job_number' => $job_number,
@@ -1313,7 +1314,7 @@ class Job extends MY_Controller
         $this->general->add_($jobs_approval_data, 'jobs_approval');
 
         $job_payment_query = array(
-            'amount' => $input['amount'],
+            'amount' => $input['total_amount'],
             'job_id' => $jobs_id,
         );
         $this->general->add_($job_payment_query, 'job_payments');
@@ -2170,6 +2171,7 @@ class Job extends MY_Controller
                     'item_qty' => $ji->qty
                 ];
             }
+            $msg="";
             $subject = "NsmarTrac : Job Invoice";
             $img_source = base_url('/uploads/users/business_profile/'.$company->id.'/'.$company->business_image);
             $msg .= "<img style='width: 300px;margin-top:41px;margin-bottom:24px;' alt='Logo' src='".$img_source."' /><br />";
@@ -2183,7 +2185,7 @@ class Job extends MY_Controller
             $msg .= "<tr><td><b>Service Date</b></td><td>: ".date('m/d/Y', strtotime($job->start_date))."</td></tr>";
             $msg .= "<tr><td colspan='2'><br /></td></tr>";
             $msg .= "<tr><td><b>Customer Name</b></td><td>: ".$job->first_name.' '.$job->last_name."</td></tr>";
-            $msg .= "<tr><td><b>Service Address</b></td><td>: ".$jobs_data->cust_city.' '.$jobs_data->cust_state.' '.$jobs_data->cust_zip_code."</td></tr>";
+            $msg .= "<tr><td><b>Service Address</b></td><td>: ".$job->cust_city.' '.$job->cust_state.' '.$job->cust_zip_code."</td></tr>";
             $msg .= "</table>";
             
             $grand_total = 0;
@@ -2316,7 +2318,7 @@ class Job extends MY_Controller
         // set some language-dependent strings (optional)
         if (@file_exists(dirname(__FILE__) . '/lang/eng.php')) {
             require_once(dirname(__FILE__) . '/lang/eng.php');
-            $pdf->setLanguageArray($l);
+            $obj_pdf->setLanguageArray($l);
         }
         $obj_pdf->AddPage('P');
         $html = '';

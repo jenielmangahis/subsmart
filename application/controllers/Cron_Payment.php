@@ -293,7 +293,8 @@ class Cron_Payment extends MY_Controller {
 
         $total_updated = 0;
         foreach( $data as $d ){
-            if( $d->transaction_amount > 0 ){
+            $total_amount = $d->equipment + $d->mmr;
+            if( $total_amount > 0 ){
                 $exp_date = str_replace("/", "", $d->credit_card_exp);
                 $createSale = $converge->request('ccsale', [
                     'ssl_card_number' => $d->credit_card_num,
@@ -341,7 +342,7 @@ class Cron_Payment extends MY_Controller {
     	echo 45;exit;
     }
 
-    public function acs_billing_method_cc(){
+    public function acs_subscription_method_cc(){
         include APPPATH . 'libraries/Converge/src/Converge.php';
 
         ini_set('max_execution_time', 0);
@@ -351,9 +352,8 @@ class Cron_Payment extends MY_Controller {
         $get_billing = array(
             'where' => array(
                 //'recurring_start_date <=' => $date,
-                //'recurring_end_date <=' => $date,
-                'next_billing_date' => $date,
-                'last_payment_date <>' => $date, 
+                'next_subscription_billing_date' => $date,
+                'recurring_end_date >=' => $date,
                 'bill_method' => 'CC',
                 'is_with_error' => 0
                 //'credit_card_num !=' => null
@@ -373,7 +373,7 @@ class Cron_Payment extends MY_Controller {
 
         $total_updated = 0;
         foreach( $data as $d ){
-            if( $d->transaction_amount > 0 ){
+            if( $d->transaction_amount > 0 ){                
                 $exp_date = str_replace("/", "", $d->credit_card_exp);
                 $createSale = $converge->request('ccsale', [
                     'ssl_card_number' => $d->credit_card_num,
@@ -388,9 +388,7 @@ class Cron_Payment extends MY_Controller {
                 if( $createSale['success'] == 1 ){
                     //Update billing
                     $transaction_data = array();
-                    $transaction_data['total_payments']    = $d->total_payments + 1;
-                    $transaction_data['last_payment_date'] = date('n/j/Y');
-                    $transaction_data['next_billing_date'] = date("n/j/Y",strtotime("+" . $d->frequency . " months"));
+                    $transaction_data['next_subscription_billing_date'] = date("n/j/Y",strtotime("+" . $d->frequency . " months"));
                     $this->general->update_with_key_field($transaction_data, $d->bill_id, 'acs_billing', 'bill_id');
 
                     //Add to payments table
@@ -401,8 +399,105 @@ class Cron_Payment extends MY_Controller {
                     $transaction_details['category'] = $d->transaction_category;
                     $transaction_details['method'] = 'CC';
                     $transaction_details['transaction_type'] = 'Recurring';
-                    $transaction_details['frequency'] = $d->frequency;
-                    $transaction_details['notes'] = 'Payment for ' .$d->transaction_category. ' for the month of ' . date("M/Y");
+                    $transaction_details['frequency'] = 'Every '.$d->frequency.' Month(s)';
+                    $transaction_details['notes'] = 'Payment for subscription ' . $d->transaction_category . ' for the month of ' . date("M/Y");
+                    $transaction_details['status'] = 'Approved';
+                    $transaction_details['datetime'] = date("m-d-Y h:i A");
+                    $this->general->add_($transaction_details, 'acs_transaction_history');
+
+                    //Add to subscriptions table
+                    $subscription_details = array();
+                    $subscription_details['customer_id'] = $d->fk_prof_id;
+                    $subscription_details['category'] = $d->transaction_category;
+                    $subscription_details['total_amount'] = $d->transaction_amount;
+                    $subscription_details['method'] = 'CC';
+                    $subscription_details['transaction_type'] = 'Recurring';
+                    $subscription_details['frequency'] = 'Every '.$d->frequency.' Month(s)';
+                    $subscription_details['num_frequency'] = $d->frequency;
+                    $subscription_details['notes'] = 'Payment for subscription ' . $d->transaction_category . ' for the month of ' . date("M/Y");
+                    $subscription_details['status'] = 'Approved';
+                    $this->general->add_($subscription_details, 'acs_subscriptions');
+
+                    $total_updated++;
+                }else{
+                    $transaction_data['is_with_error'] = 1;
+                    $this->general->update_with_key_field($transaction_data, $d->bill_id, 'acs_billing', 'bill_id');
+                }
+            }
+            
+        }
+        
+        echo "Total updated " . $total_updated . " record(s)";
+        exit;
+    }
+
+    public function acs_billing_method_cc(){
+        include APPPATH . 'libraries/Converge/src/Converge.php';
+
+        ini_set('max_execution_time', 0);
+        
+        $this->load->model('General_model', 'general');
+        $date = date("n/j/Y");
+        $get_billing = array(
+            'where' => array(
+                'next_billing_date' => $date,
+                'bill_end_date >=' => $date, 
+                'bill_method' => 'CC',
+                'is_with_error' => 0
+                //'credit_card_num !=' => null
+            ),
+            'table' => 'acs_billing',
+            'select' => 'acs_billing.*',
+            'limit' => 50
+        );
+        $data = $this->general->get_data_with_param($get_billing, true);
+
+        $converge = new \wwwroth\Converge\Converge([
+            'merchant_id' => CONVERGE_MERCHANTID,
+            'user_id' => CONVERGE_MERCHANTUSERID,
+            'pin' => CONVERGE_MERCHANTPIN,
+            'demo' => false,
+        ]);
+
+        $total_updated = 0;
+        foreach( $data as $d ){
+            $total_amount = $d->equipment + $d->mmr;
+            if( $total_amount > 0 ){
+                $exp_date = str_replace("/", "", $d->credit_card_exp);
+                $createSale = $converge->request('ccsale', [
+                    'ssl_card_number' => $d->credit_card_num,
+                    'ssl_exp_date' => $exp_date,
+                    'ssl_cvv2cvc2' => $d->credit_card_exp_mm_yyyy,
+                    'ssl_first_name' => $d->card_fname,
+                    'ssl_last_name' => $d->card_lname,
+                    'ssl_amount' => $total_amount,
+                    'ssl_avs_address' => $d->card_address,
+                    'ssl_avs_zip' => $d->zip,
+                ]);
+                if( $createSale['success'] == 1 ){
+                    //Update billing
+                    $transaction_data = array();
+                    $transaction_data['is_with_error']     = 0;
+                    $transaction_data['next_billing_date'] = date("n/j/Y",strtotime("+" . $d->billing_frequency . " months"));
+                    $this->general->update_with_key_field($transaction_data, $d->bill_id, 'acs_billing', 'bill_id');
+
+                    //Add to payments table
+                    if( $d->billing_frequency == 1 ){
+                        $frequency = 'One Time Only';
+                    }elseif( $d->billing_frequency == '12' ){
+                        $frequency = 'Every 1 Year';
+                    }else{
+                        $frequency = 'Every '.$d->billing_frequency.' Month(s)';
+                    }
+                    $transaction_details = array();
+                    $transaction_details['customer_id'] = $d->fk_prof_id;
+                    $transaction_details['subtotal'] = $total_amount;
+                    $transaction_details['tax'] = 0;
+                    $transaction_details['category'] = $d->transaction_category;
+                    $transaction_details['method'] = 'CC';
+                    $transaction_details['transaction_type'] = 'Recurring';
+                    $transaction_details['frequency'] = $frequency;
+                    $transaction_details['notes'] = 'Payment for equipment/plan for the month of ' . date("M/Y");
                     $transaction_details['status'] = 'Approved';
                     $transaction_details['datetime'] = date("m-d-Y h:i A");
                     $this->general->add_($transaction_details, 'acs_transaction_history');

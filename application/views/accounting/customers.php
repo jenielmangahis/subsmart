@@ -126,14 +126,67 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 		<div class="row pt-3">
 			<div class="col-lg-12 px-0">
 				<div class="bg-white p-4">
+					<div class="section-above-table">
+						<div class="batch-actiom-icon-holder">
+							<img src="<?=base_url('assets/img/trac360/batch_arrow_down.png')?>"
+								class="batch-actiom-icon">
+						</div>
+						<div class="dropdown-holder">
+							<button class="btn btn-default rounded-20" type="button" id="dropNewTraaction"
+								data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+								Batch action <span class="fa fa-caret-down"></span>
+							</button>
+							<ul class="dropdown-menu dropdown-menu-right" role="menu"
+								aria-labelledby="dropNewTraaction">
+								<li>
+									<a href="javascript:void(0)" class="">
+										Create statement
+									</a>
+								</li>
+								<li>
+									<a href="javascript:void(0)" class="">
+										Email
+									</a>
+								</li>
+								<li>
+									<a href="javascript:void(0)" class="">
+										Make inactive
+									</a>
+								</li>
+								<li>
+									<a href="javascript:void(0)" class="">
+										Select customer type
+									</a>
+								</li>
+								<li role="separator" class="divider"></li>
+							</ul>
+						</div>
+						<div class="search-holder">
+							<div class="search-field">
+								<input type="text" class="search" placeholder="Find a customer or company">
+								<i class="fa fa-search" aria-hidden="true"></i>
+							</div>
+							<div class="search-result">
+								<ul class="dropdown-menu dropdown-menu-right overflow-auto" role="menu"
+									aria-labelledby="dropNewTraaction">
+									<li>
+										<a href="javascript:void(0)" class="">
+											Create statement
+										</a>
+									</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+
 					<table id="customers_table" class="table table-striped table-bordered w-100">
 						<thead>
 							<tr>
-								<th><input type="checkbox" id="checkbox-all-action"></th>
+								<th class="center"><input type="checkbox" id="checkbox-all-action"></th>
 								<th>Customer/Company</th>
 								<th>Phone</th>
-								<th>Open Balance</th>
-								<th>Action</th>
+								<th class="text-right">Open Balance</th>
+								<th class="text-right">Action</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -148,21 +201,21 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                             foreach ($customers as $cus) :
                                 $receive_payment=$this->accounting_invoices_model->getCustomers_receive_payment($cus->prof_id);
                                 $amount =0.00;
-                                $first_option ="Create Invoice";
+                                $first_option ="Create invoice";
                                 foreach ($receive_payment as $payment) {
                                     $amount += $payment->amount;
-                                    $first_option = "Receive Payment";
+                                    $first_option = "Receive rayment";
                                 }
                                  ?>
 							<tr>
-								<td><input type="checkbox"
+								<td class="center"><input type="checkbox"
 										name="checkbox<?=$counter?>">
 								</td>
 								<td><?php echo $cus->first_name .' '.  $cus->middle_name .' '. $cus->last_name ?>
 								</td>
 								<td><?php echo $cus->phone_h; ?>
 								</td>
-								<td><?php echo "$".$amount;?>
+								<td class="text-right"><?php echo "$".number_format($amount, 2);?>
 								</td>
 								<td>
 									<div class="dropdown dropdown-btn text-right">
@@ -172,17 +225,17 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 										</a>
 										<ul class="dropdown-menu dropdown-menu-right" role="menu"
 											aria-labelledby="dropdown-edit">
+											<?php if ($amount > 0) {?>
 											<li>
 												<a role="menuitem" tabindex="-1" href="javascript:void(0)" class="">
-													Send Reminder
+													Send reminder
 												</a>
 											</li>
 											<li>
 												<a href="javascript:void(0)" class="">
-													Create Statement
+													Create statement
 												</a>
 											</li>
-											<?php if ($amount > 0) {?>
 											<li>
 												<a href="javascript:void(0)"
 													id="<?= $job->id; ?>"
@@ -196,7 +249,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 												<a href="javascript:void(0)"
 													id="<?= $job->id; ?>"
 													class="">
-													Create Sales Receipt
+													Create sales receipt
 												</a>
 											</li>
 											<li>
@@ -210,9 +263,39 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 												<a href="javascript:void(0)"
 													id="<?= $job->id; ?>"
 													class="">
-													Send Payment Link
+													Send payment link
 												</a>
 											</li>
+											<?php if ($amount == 0) {?>
+											<li>
+												<a href="javascript:void(0)"
+													id="<?= $job->id; ?>"
+													class="">
+													Create charge
+												</a>
+											</li>
+											<li>
+												<a href="javascript:void(0)"
+													id="<?= $job->id; ?>"
+													class="">
+													Create time activity
+												</a>
+											</li>
+											<li>
+												<a href="javascript:void(0)"
+													id="<?= $job->id; ?>"
+													class="">
+													Make inactive
+												</a>
+											</li>
+											<li>
+												<a href="javascript:void(0)"
+													id="<?= $job->id; ?>"
+													class="">
+													Create statement
+												</a>
+											</li>
+											<?php } ?>
 											<li role="separator" class="divider"></li>
 										</ul>
 									</div>
