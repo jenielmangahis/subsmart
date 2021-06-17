@@ -86,7 +86,7 @@ include viewPath('job/css/settings');
                                                 <tr>
                                                     <td><?= $rate->name; ?></td>
                                                     <td><?= $rate->rate; ?> %</td>
-                                                    <td><?= date("d-m-Y h:i A",strtotime($rate->date_created)); ?></td>
+                                                    <td><?= date("m-d-Y h:i A",strtotime($rate->date_created)); ?></td>
                                                     <td class="pl-3">
                                                         <a href="javascript:void(0)" id="<?= $rate->id; ?>"  class="delete_tax_rate btn btn-primary btn-sm">
                                                             <span class="fa fa-trash"></span> Delete

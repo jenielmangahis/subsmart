@@ -18,6 +18,7 @@
 */
 
 require_once APPPATH.'third_party/dompdf/autoload.inc.php';
+// require_once(dirname(__FILE__) . '/dompdf/autoload.inc.php');
 
 use Dompdf\Dompdf;
 class Pdf extends DOMPDF
@@ -41,39 +42,52 @@ protected function ci()
  * @param   array   $data The view data
  * @return  void
  */
-public function load_view($view, $data = array(), $filename, $orientation)
-{
-    $dompdf = new Dompdf();
-    $html = $this->ci()->load->view($view, $data, true);
+    public function load_view($view, $data = array(), $filename, $orientation)
+    {
+        $dompdf = new Dompdf();
+        $html = $this->ci()->load->view($view, $data, true);
 
-    $dompdf->loadHtml($html);
+        $dompdf->loadHtml($html);
 
-    // (Optional) Setup the paper size and orientation
-    $dompdf->setPaper('A4', $orientation);
+        // (Optional) Setup the paper size and orientation
+        $dompdf->setPaper('A4', $orientation);
 
-    // Render the HTML as PDF
-    $dompdf->render();
+        // Render the HTML as PDF
+        $dompdf->render();
 
-    // Output the generated PDF to Browser
-    $dompdf->stream($filename);
-}
+        // Output the generated PDF to Browser
+        $dompdf->stream($filename);
+    }
 
-public function save_pdf($view, $data = array(), $filename, $orientation)
-{
-    $dompdf = new Dompdf();
-    $html = $this->ci()->load->view($view, $data, true);
+    public function save_pdf($view, $data = array(), $filename, $orientation)
+    {
+        $dompdf = new Dompdf();
+        $html = $this->ci()->load->view($view, $data, true);
 
-    $dompdf->loadHtml($html);
+        $dompdf->loadHtml($html);
 
-    // (Optional) Setup the paper size and orientation
-    $dompdf->setPaper('Letter', $orientation);
+        // (Optional) Setup the paper size and orientation
+        $dompdf->setPaper('Letter', $orientation);
 
-    // Render the HTML as PDF
-    $dompdf->render();
-    $content = $dompdf->output(array("Attachment" => 0));
-    
-    // Output the generated PDF to Browser
-    // $dompdf->stream($filename, array("Attachment" => false));
-    file_put_contents(FCPATH.'/assets/pdf/'.$filename, $content);
-}
+        // Render the HTML as PDF
+        $dompdf->render();
+        $content = $dompdf->output(array("Attachment" => 0));
+        
+        // Output the generated PDF to Browser
+        // $dompdf->stream($filename, array("Attachment" => false));
+        file_put_contents(FCPATH.'/assets/pdf/'.$filename, $content);
+    }
+
+    function createPDF($html, $filename='', $download=FALSE, $paper='A4', $orientation='portrait'){
+        $dompdf = new Dompdf();
+        $dompdf->load_html($html);
+        $dompdf->set_paper($paper, $orientation);
+        $dompdf->render();
+        ob_end_clean();
+        if($download)
+            $dompdf->stream($filename.'.pdf', array('Attachment' => 1));
+        else
+            $dompdf->stream($filename.'.pdf', array('Attachment' => 0));
+    }
+
 }

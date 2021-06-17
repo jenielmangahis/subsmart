@@ -84,6 +84,16 @@ class Jobs_model extends MY_Model
         return $query->result();
     }
 
+    public function get_specific_estimate_items($id)
+    {
+        $this->db->from('estimates_items');
+        $this->db->select('items.id,items.title,items.price,items.type,estimates_items.qty');
+        $this->db->join('items', 'items.id = estimates_items.items_id', 'left');
+        $this->db->where("estimates_items.estimates_id", $id);
+        $query = $this->db->get();
+        return $query->result();
+    }
+
     public function get_customer_job_items($id)
     {
         $this->db->from($this->table_items);

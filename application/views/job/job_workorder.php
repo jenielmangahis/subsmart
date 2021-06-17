@@ -189,7 +189,7 @@ add_css(array(
                             </button>
                             <a href="javascript:void(0);" id="notes_left"><span class="fa fa-columns" style="float: right;padding-right: 40px;font-size: 20px;display: block;margin-top: -38px;"></span></a>
                         </div>
-                        <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#collapseOne">
+                        <div id="collapseOne" class="" aria-labelledby="headingOne" data-parent="#collapseOne">
                             <div class="card-body">
                                 <div class="row">
                                     <!--<div style="background-color: #32243d; width: 32px; height: 32px;">
@@ -229,7 +229,7 @@ add_css(array(
                             </a>-->
                         </div>
                         <div class="card-body">
-                            <div id="photos_attachment" class="collapse" aria-labelledby="headingTwo" data-parent="#photos_attachment">
+                            <div id="photos_attachment" class="" aria-labelledby="headingTwo" data-parent="#photos_attachment">
                                 <div class="card-body">
                                     <div class="form-group">
                                         <div class="form-group col-md-12">
@@ -253,7 +253,7 @@ add_css(array(
                             </a>
                         </div>
                         <div class="card-body">
-                            <div id="url_link_form" class="collapse" aria-labelledby="headingThree" data-parent="#url_link_form">
+                            <div id="url_link_form" class="" aria-labelledby="headingThree" data-parent="#url_link_form">
                                 <div class="card-body">
                                     <?php
                                     if(isset($jobs_data) && $jobs_data->link != NULL) {
@@ -353,23 +353,24 @@ add_css(array(
                                 $subtotal = 0.00;
                                 foreach ($jobs_data_items as $item):
                                     $total = $item->price * $item->qty;
+                                    $unique_id = rand(1,10000);
                                     ?>
                                     <tr id=ss>
                                         <td width="35%"><small>Item name</small>
-                                            <input value="<?= $item->title; ?>" type="text" name="item_name[]" class="form-control" >
+                                            <input value="<?= $item->title; ?>" type="text" name="item_name[]" class="form-control" readonly>
                                             <input type="hidden" value='<?= $item->id; ?>' name="item_id[]">
                                         </td>
                                         <td width="10%"><small>Qty</small>
-                                            <input value='<?= $item->qty; ?>' type="number" name="item_qty[]" class="form-control qty">
+                                            <input value='<?= $item->qty; ?>' id="<?= $unique_id; ?>" type="number" name="item_qty[]" class="form-control qty">
                                         </td>
                                         <td width="20%"><small>Unit Price</small>
-                                            <input id='price"+idd+"' value='<?= $item->price; ?>'  type="number" name="item_price[]" class="form-control" placeholder="Unit Price">
+                                            <input id='price<?= $unique_id; ?>' value='<?= $item->price; ?>'  type="number" name="item_price[]" class="form-control" placeholder="Unit Price" readonly>
                                         </td>
                                         <td width="20%"><small>Item Type</small>
                                             <input readonly type="text" class="form-control" value='<?=ucfirst($item->type);?>'>
                                         </td>
                                         <td  style="text-align: center;margin-top: 20px;" class="d-flex" width="15%">
-                                            <b style="font-size: 16px;" class="total_per_item">$<?= number_format((float)$total,2,'.',',');?></b>
+                                            <b style="font-size: 16px;" data-subtotal='<?= $total; ?>' id='sub_total<?= $unique_id; ?>' class="total_per_item">$<?= number_format((float)$total,2,'.',',');?></b>
                                         </td>
                                         <td width="20%">
                                             <button style="margin-top: 20px;" type="button" class="btn btn-primary btn-sm items_remove_btn remove_item_row"><span class="fa fa-trash-o"></span></button>
@@ -497,7 +498,7 @@ add_css(array(
                         </div>
                         <div class="row">
                             <input class="form-control" id="pay_amount" value="<?= isset($jobs_data) ? $subtotal : '0'; ?>" name="amount" type="hidden" placeholder="0.00">
-                            <input id="total_amount" type="hidden" name="total_amount">
+                            <input id="total_amount" type="hidden" name="total_amount" value="<?= isset($jobs_data) ? $subtotal : '0'; ?>">
                             <input id="signature_link" type="hidden" name="signature_link">
                             <input id="name" type="hidden" name="authorize_name">
                             <input id="datetime_signed" type="hidden" name="datetime_signed">

@@ -20,7 +20,7 @@ var table = $('#transactions-table').DataTable({
     lengthChange: false,
     info: false,
     pageLength: $('#table_rows').val(),
-    order: [[1, 'asc']],
+    order: [[1, 'desc']],
     ajax: {
         url: 'expenses/load-transactions/',
         dataType: 'json',
@@ -397,5 +397,55 @@ $(document).on('change', '.action-bar input[type="checkbox"]', function() {
         $(`#transactions-table .${className}`).show();
     } else {
         $(`#transactions-table .${className}`).hide();
+    }
+});
+
+$(document).on('change', '#transactions-table tbody input[type="checkbox"]', function() {
+    var flag = true;
+    var allChecked = true;
+    var printable = true;
+
+    $('#transactions-table tbody input[type="checkbox"]').each(function() {
+        var row = $(this).parent().parent().parent();
+        var categoryCell = row.find('td:nth-child(8)');
+        var data = $('#transactions-table').DataTable().row(row).data();
+
+        console.log($(this).prop('checked'));
+        if(categoryCell.find('select').length === 0 && $(this).prop('checked')) {
+            flag = false;
+        }
+
+        if($(this).prop('checked') === false) {
+            allChecked = false;
+        }
+
+        if($(this).prop('checked') && data.type !== 'Purchase Order') {
+            printable = false;
+        }
+    });
+
+    if(flag) {
+        $('#categorize-selected').removeClass('disabled');
+    } else {
+        $('#categorize-selected').addClass('disabled');
+    }
+
+    if(printable) {
+        $('#print-transactions').removeClass('disabled');
+    } else {
+        $('#print-transactions').addClass('disabled');
+    }
+
+    $('#transactions-table thead input[type="checkbox"]').prop('checked', allChecked);
+});
+
+$(document).on('change', '#transactions-table thead input#select-all-transactions', function() {
+    var isChecked = $(this).prop('checked');
+    $('#transactions-table tbody input[type="checkbox"]').each(function() {
+        $(this).prop('checked', isChecked).trigger('change');
+    });
+
+    if(!isChecked) {
+        $('#categorize-selected').addClass('disabled');
     }
 });

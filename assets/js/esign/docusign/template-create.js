@@ -15,6 +15,12 @@ function TemplateCreate() {
   const $formList = $("#setup-recipient-list");
   const $addRecipientButton = $("#add-recipient-button");
 
+  const ACTIONS = {
+    CREATE: "CREATE",
+    UPDATE: "UPDATE",
+    PREPARE: "PREPARE",
+  };
+
   async function createFilePreview(event, file) {
     await sleep(1000);
     const fileId = Date.now();
@@ -191,24 +197,35 @@ function TemplateCreate() {
     await Promise.all(promises);
   }
 
-  function prepareForm() {
+  function prepareForm({ action }) {
     const dateNow = moment().format("MM/DD/YYYY");
     const timeNow = moment().format("hh:mm:ss A");
 
     $form.find("#name").attr("placeholder", `Untitled ${dateNow} | ${timeNow}`);
 
-    if (templateId) {
-      $("#pageTitle").text(template.name);
-      // $("#templateInfo").hide();
-      // $("#templateDocument").hide();
-
-      const $saveAndClose = $("#saveandclose");
-      $saveAndClose.removeClass("d-none");
-      $saveAndClose.addClass("d-flex");
-      $("#discardChanges").removeClass("d-none");
-
-      // $addRecipientButton.hide();
+    if (action === ACTIONS.CREATE) {
+      return;
     }
+
+    $("#pageTitle").text(template.name);
+    const $submitBtn = $form.find("[type=submit]");
+    const $submitBtnText = $submitBtn.find(".text");
+
+    if (action === ACTIONS.PREPARE) {
+      $("#templateInfo").hide();
+      $("#templateDocument").hide();
+      $("#add-recipient-button").hide();
+      $submitBtnText.text("Send");
+      return;
+    }
+
+    const $saveAndClose = $("#saveandclose");
+    const $discardChanges = $("#discardChanges");
+
+    $saveAndClose.removeClass("d-none");
+    $saveAndClose.addClass("d-flex");
+    $discardChanges.removeClass("d-none");
+    $submitBtnText.text("Next");
   }
 
   async function showDocument(event) {
@@ -238,29 +255,30 @@ function TemplateCreate() {
     $docModal.modal("show");
   }
 
-  function attachEventHandlers({ templateId: templateIdParam = null }) {
+  function attachEventHandlers({ templateId: templateIdParam = null, action }) {
     $form.find("#docFile").on("change", onChangeFile);
     // $docPreview.on("click", showDocument);
 
     $addRecipientButton.on("click", () => addRecipient());
 
-    $form.on("submit", (e) => sendForm(e, templateIdParam));
-    $("#saveandclose").on("click", (e) => sendForm(e, templateIdParam));
+    $form.on("submit", (e) => sendForm(e, templateIdParam, action));
+    $("#saveandclose").on("click", (e) => sendForm(e, templateIdParam, action));
   }
 
-  async function sendForm(event, templateIdParam) {
+  async function sendForm(event, templateIdParam, action) {
     event.preventDefault();
-
-    const shouldUpdate =
-      templateIdParam && $(event.currentTarget).prop("id") === "saveandclose";
 
     const $name = $form.find("#name");
     const $description = $form.find("#description");
     const $subject = $form.find("#subject");
     const $message = $form.find("#message");
 
-    if (templateIdParam && !shouldUpdate) {
-      $button = $form.find(".btn-primary");
+    if (!templateIdParam && action !== ACTIONS.CREATE) {
+      return;
+    }
+
+    if (action === ACTIONS.PREPARE) {
+      const $button = $form.find(".btn-primary");
       $button.attr("disabled", true);
       $button.find(".spinner-border").removeClass("d-none");
 
@@ -310,7 +328,10 @@ function TemplateCreate() {
       formData.append("files[]", file);
     });
 
-    $button = shouldUpdate ? $(event.target) : $form.find(".btn-primary");
+    let $button = $(event.currentTarget);
+    if (event.type.toLowerCase() === "submit") {
+      $button = $form.find(".btn-primary");
+    }
 
     $button.attr("disabled", true);
     $button.find(".spinner-border").removeClass("d-none");
@@ -326,12 +347,12 @@ function TemplateCreate() {
     $button.attr("disabled", false);
     $button.find(".spinner-border").addClass("d-none");
 
-    if (shouldUpdate) {
-      window.location = `${prefixURL}/vault/mylibrary`;
-      return;
+    let nextUrl = `${prefixURL}/vault/mylibrary`;
+    if ($button.hasClass("btn-primary")) {
+      nextUrl = `${prefixURL}/esign/Files?template_id=${templateId}&next_step=3`;
     }
 
-    window.location = `${prefixURL}/esign/Files?template_id=${templateId}&next_step=3`;
+    window.location = nextUrl;
   }
 
   function removeRecipient(id) {
@@ -446,18 +467,22 @@ function TemplateCreate() {
     template.recipients = data;
   }
 
-  async function setFormValues({ isPreparingTemplate = false }) {
-    // await Promise.all([
-    //   fetchTemplate(),
-    //   fetchTemplateFile(),
-    //   fetchTemplateRecipients(),
-    // ]);
-
+  async function setFormValues({ isPreparingTemplate = false, action }) {
     await fetchTemplate();
-    await fetchTemplateFile();
     await fetchTemplateRecipients();
 
-    const { name, description, subject, message, files, recipients } = template;
+    if (action === ACTIONS.UPDATE) {
+      await fetchTemplateFile();
+    }
+
+    const {
+      name,
+      description,
+      subject,
+      message,
+      recipients,
+      files = [],
+    } = template;
 
     let templateFiles = files.map(async (file) => {
       const { path: filePath, name: fileName } = file;
@@ -502,8 +527,6 @@ function TemplateCreate() {
         isPreparingTemplate,
       })
     );
-
-    $form.find("[type=submit] .text").text("Send");
   }
 
   async function getWorkorderCustomer(workorderId) {
@@ -523,7 +546,13 @@ function TemplateCreate() {
   async function init() {
     const urlParams = new URLSearchParams(window.location.search);
     templateId = urlParams.get("id");
-    const isPreparingTemplate = Boolean(templateId);
+
+    const { pathname } = window.location;
+    let action = ACTIONS.CREATE;
+    if (/edit/i.test(pathname)) action = ACTIONS.UPDATE;
+    if (/prepare/i.test(pathname)) action = ACTIONS.PREPARE;
+
+    const isPreparingTemplate = action === ACTIONS.PREPARE;
 
     if (templateId) {
       const workorderId = urlParams.get("workorder_id");
@@ -537,13 +566,13 @@ function TemplateCreate() {
         await getJobCustomer(jobId);
       }
 
-      await setFormValues({ isPreparingTemplate });
+      await setFormValues({ isPreparingTemplate, action });
     } else {
       addRecipient();
     }
 
-    prepareForm();
-    attachEventHandlers({ templateId });
+    prepareForm({ action });
+    attachEventHandlers({ templateId, action });
     $(".card--loading").removeClass("card--loading");
   }
 

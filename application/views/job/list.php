@@ -130,7 +130,7 @@ include viewPath('job/css/lists');
                                                 </td>
                                                 <td class="pl-3"><?= $job->status; ?>
                                                 </td>
-                                                <td class="pl-3">$<?= number_format((float)$job->amount, 2, '.', ','); ?>
+                                                <td class="pl-3">$<?= number_format((float)$job->amount, 2, '.', ',');  ?>
                                                 </td>
                                                 <td class="pl-3"><?php echo $job->job_type; ?>
                                                 </td>

@@ -130,9 +130,9 @@ class Expenses extends MY_Controller {
                 }
             } else {
                 if($order === 'asc') {
-                    return strtotime($a[$columnName]) > strtotime($b[$columnName]) && strcmp($a['type'], $b['type']);
+                    return strtotime($a[$columnName]) > strtotime($b[$columnName]);
                 } else {
-                    return strtotime($a[$columnName]) < strtotime($b[$columnName]) && strcmp($a['type'], $b['type']);
+                    return strtotime($a[$columnName]) < strtotime($b[$columnName]);
                 }
             }
         });
@@ -161,6 +161,7 @@ class Expenses extends MY_Controller {
                     $vendorCredits = $this->expenses_model->get_company_vendor_credit_transactions($filters);
                     $ccPayments = $this->expenses_model->get_company_cc_payment_transactions($filters);
                     $billPayments = $this->expenses_model->get_company_bill_payment_items($filters);
+                    $creditCardCredits = $this->expenses_model->get_company_cc_credit_transactions($filters);
                 }
             break;
             case 'bill' :
@@ -187,50 +188,6 @@ class Expenses extends MY_Controller {
         }
 
         $transactions = [];
-        if(isset($expenses) && count($expenses) > 0) {
-            foreach($expenses as $expense) {
-                if(!is_null($expense->attachments) && $expense->attachments !== "") {
-                    $attachments = count(json_decode($expense->attachments, true));
-                } else {
-                    $attachments = '';
-                }
-
-                switch($expense->payee_type) {
-                    case 'vendor' :
-                        $payee = $this->vendors_model->get_vendor_by_id($expense->payee_id);
-                        $payeeName = $payee->display_name;
-                    break;
-                    case 'customer' :
-                        $payee = $this->accounting_customers_model->get_customer_by_id($expense->payee_id);
-                        $payeeName = $payee->first_name . ' ' . $payee->last_name;
-                    break;
-                    case 'employee' : 
-                        $payee = $this->users_model->getUser($expense->payee_id);
-                        $payeeName = $payee->FName . ' ' . $payee->LName;
-                    break;
-                }
-
-                $method = $this->accounting_payment_methods_model->getById($expense->payment_method_id);
-
-                $transactions[] = [
-                    'id' => $expense->id,
-                    'date' => date("m/d/Y", strtotime($expense->payment_date)),
-                    'type' => 'Expense',
-                    'number' => $expense->ref_no,
-                    'payee' => $payeeName,
-                    'method' => $method->name,
-                    'source' => '',
-                    'category' => $this->category_col($expense->id, 'Expense'),
-                    'memo' => $expense->memo,
-                    'due_date' => '',
-                    'balance' => '$0.00',
-                    'total' => '$'.number_format(floatval($expense->total_amount), 2, '.', ','),
-                    'status' => $expense->status === "1" ? 'Paid' : 'Voided',
-                    'attachments' => $attachments
-                ];
-            }
-        }
-
         if(isset($bills) && count($bills) > 0) {
             foreach($bills as $bill) {
                 if(!is_null($bill->attachments) && $bill->attachments !== "") {
@@ -255,6 +212,39 @@ class Expenses extends MY_Controller {
                     'balance' => '$'.number_format(floatval($bill->remaining_balance), 2, '.', ','),
                     'total' => '$'.number_format(floatval($bill->total_amount), 2, '.', ','),
                     'status' => $bill->status === "2" ? "Paid" : "Open",
+                    'attachments' => $attachments
+                ];
+            }
+        }
+
+        if(isset($billPayments) && count($billPayments) > 0) {
+            foreach($billPayments as $billPayment) {
+                if(!is_null($billPayment->attachments) && $billPayment->attachments !== "") {
+                    $attachments = count(json_decode($billPayment->attachments, true));
+                } else {
+                    $attachments = '';
+                }
+
+                $paymentAcc = $this->chart_of_accounts_model->getById($billPayment->payment_account_id);
+                $paymentAccType = $this->account_model->getById($paymentAcc->account_id);
+                $paymentType = $paymentAccType->account_name === 'Bank' ? 'Check' : 'Credit Card';
+
+                $payee = $this->vendors_model->get_vendor_by_id($billPayment->payee_id);
+
+                $transactions[] = [
+                    'id' => $billPayment->id,
+                    'date' => date("m/d/Y", strtotime($billPayment->payment_date)),
+                    'type' => "Bill Payment ($paymentType)",
+                    'number' => $billPayment->check_no,
+                    'payee' => $payee->display_name,
+                    'method' => '',
+                    'source' => '',
+                    'category' => '',
+                    'memo' => $billPayment->memo,
+                    'due_date' => '',
+                    'balance' => '$0.00',
+                    'total' => '$'.number_format(floatval($total), 2, '.', ','),
+                    'status' => 'Applied',
                     'attachments' => $attachments
                 ];
             }
@@ -297,6 +287,121 @@ class Expenses extends MY_Controller {
                     'balance' => '$0.00',
                     'total' => '$'.number_format(floatval($check->total_amount), 2, '.', ','),
                     'status' => $check->status === "1" ? "Paid" : "Voided",
+                    'attachments' => $attachments
+                ];
+            }
+        }
+
+        if(isset($creditCardCredits) && count($creditCardCredits) > 0) {
+            foreach($creditCardCredits as $creditCardCredit) {
+                if(!is_null($creditCardCredit->attachments) && $creditCardCredit->attachments !== "") {
+                    $attachments = count(json_decode($creditCardCredit->attachments, true));
+                } else {
+                    $attachments = '';
+                }
+
+                switch($creditCardCredit->payee_type) {
+                    case 'vendor' :
+                        $payee = $this->vendors_model->get_vendor_by_id($creditCardCredit->payee_id);
+                        $payeeName = $payee->display_name;
+                    break;
+                    case 'customer' :
+                        $payee = $this->accounting_customers_model->get_customer_by_id($creditCardCredit->payee_id);
+                        $payeeName = $payee->first_name . ' ' . $payee->last_name;
+                    break;
+                    case 'employee' : 
+                        $payee = $this->users_model->getUser($creditCardCredit->payee_id);
+                        $payeeName = $payee->FName . ' ' . $payee->LName;
+                    break;
+                }
+
+                $transactions[] = [
+                    'id' => $creditCardCredit->id,
+                    'date' => date("m/d/Y", strtotime($creditCardCredit->payment_date)),
+                    'type' => 'Credit Card Credit',
+                    'number' => $creditCardCredit->ref_no,
+                    'payee' => $payeeName,
+                    'method' => '',
+                    'source' => '',
+                    'category' => $this->category_col($creditCardCredit->id, 'Credit Card Credit'),
+                    'memo' => $creditCardCredit->memo,
+                    'due_date' => '',
+                    'balance' => '$0.00',
+                    'total' => '-$'.number_format(floatval($creditCardCredit->total_amount), 2, '.', ','),
+                    'status' => '',
+                    'attachments' => $attachments
+                ];
+            }
+        }
+
+        if(isset($ccPayments) && count($ccPayments) > 0) {
+            foreach($ccPayments as $ccPayment) {
+                if(!is_null($ccPayment->attachments) && $ccPayment->attachments !== "") {
+                    $attachments = count(json_decode($ccPayment->attachments, true));
+                } else {
+                    $attachments = '';
+                }
+
+                $payee = $this->vendors_model->get_vendor_by_id($ccPayment->payee_id);
+
+                $transactions[] = [
+                    'id' => $ccPayment->id,
+                    'date' => date("m/d/Y", strtotime($ccPayment->date)),
+                    'type' => 'Credit Card Payment',
+                    'number' => '',
+                    'payee' => $payee->display_name,
+                    'method' => '',
+                    'source' => '',
+                    'category' => '',
+                    'memo' => $ccPayment->memo,
+                    'due_date' => '',
+                    'balance' => '$0.00',
+                    'total' => '$'.number_format(floatval($ccPayment->amount), 2, '.', ','),
+                    'status' => '',
+                    'attachments' => $attachments
+                ];
+            }
+        }
+
+        if(isset($expenses) && count($expenses) > 0) {
+            foreach($expenses as $expense) {
+                if(!is_null($expense->attachments) && $expense->attachments !== "") {
+                    $attachments = count(json_decode($expense->attachments, true));
+                } else {
+                    $attachments = '';
+                }
+
+                switch($expense->payee_type) {
+                    case 'vendor' :
+                        $payee = $this->vendors_model->get_vendor_by_id($expense->payee_id);
+                        $payeeName = $payee->display_name;
+                    break;
+                    case 'customer' :
+                        $payee = $this->accounting_customers_model->get_customer_by_id($expense->payee_id);
+                        $payeeName = $payee->first_name . ' ' . $payee->last_name;
+                    break;
+                    case 'employee' : 
+                        $payee = $this->users_model->getUser($expense->payee_id);
+                        $payeeName = $payee->FName . ' ' . $payee->LName;
+                    break;
+                }
+
+                $method = $this->accounting_payment_methods_model->getById($expense->payment_method_id);
+
+                $transactions[] = [
+                    'id' => $expense->id,
+                    'date' => date("m/d/Y", strtotime($expense->payment_date)),
+                    'type' => 'Expense',
+                    'number' => $expense->ref_no,
+                    'payee' => $payeeName,
+                    'method' => $method->name,
+                    'source' => '',
+                    'category' => $this->category_col($expense->id, 'Expense'),
+                    'memo' => $expense->memo,
+                    'due_date' => '',
+                    'balance' => '$0.00',
+                    'total' => '$'.number_format(floatval($expense->total_amount), 2, '.', ','),
+                    'status' => $expense->status === "1" ? 'Paid' : 'Voided',
                     'attachments' => $attachments
                 ];
             }
@@ -357,84 +462,6 @@ class Expenses extends MY_Controller {
                     'status' => $vendorCredit->status === "1" ? "Open" : "Closed",
                     'attachments' => $attachments
                 ];
-            }
-        }
-
-        if(isset($ccPayments) && count($ccPayments) > 0) {
-            foreach($ccPayments as $ccPayment) {
-                if(!is_null($ccPayment->attachments) && $ccPayment->attachments !== "") {
-                    $attachments = count(json_decode($ccPayment->attachments, true));
-                } else {
-                    $attachments = '';
-                }
-
-                $payee = $this->vendors_model->get_vendor_by_id($ccPayment->payee_id);
-
-                $transactions[] = [
-                    'id' => $ccPayment->id,
-                    'date' => date("m/d/Y", strtotime($ccPayment->date)),
-                    'type' => 'Credit Card Payment',
-                    'number' => '',
-                    'payee' => $payee->display_name,
-                    'method' => '',
-                    'source' => '',
-                    'category' => '',
-                    'memo' => $ccPayment->memo,
-                    'due_date' => '',
-                    'balance' => '$0.00',
-                    'total' => '$'.number_format(floatval($ccPayment->amount), 2, '.', ','),
-                    'status' => '',
-                    'attachments' => $attachments
-                ];
-            }
-        }
-
-        if(isset($billPayments) && count($billPayments) > 0) {
-            foreach($billPayments as $paymentItems) {
-                if(!is_null($paymentItems->attachments) && $paymentItems->attachments !== "") {
-                    $attachments = count(json_decode($paymentItems->attachments, true));
-                } else {
-                    $attachments = '';
-                }
-
-                $payment = $this->vendors_model->get_bill_payment_by_id($paymentItems->bill_payment_id);
-                $bill = $this->vendors_model->get_bill_by_id($paymentItems->bill_id);
-                $payee = $this->vendors_model->get_vendor_by_id($bill->vendor_id);
-
-                $paymentAcc = $this->chart_of_accounts_model->getById($payment->payment_account_id);
-                $paymentAccType = $this->account_model->getById($paymentAcc->account_id);
-                $paymentType = $paymentAccType->account_name === 'Bank' ? 'Check' : 'Credit Card';
-
-                $checkIfExists = array_filter($transactions, function($v, $k) use ($payment, $paymentType) {
-                    return $v['id'] === $payment->id && $v['type'] === "Bill Payment ($paymentType)";
-                }, ARRAY_FILTER_USE_BOTH);
-
-                if(count($checkIfExists) === 0) {
-                    $total = 0.00;
-                    foreach($billPayments as $pItem) {
-                        $pItemBill = $this->vendors_model->get_bill_by_id($paymentItems->bill_id);
-                        if($pItem->bill_payment_id === $paymentItems->bill_payment_id && $bill->vendor_id === $pItemBill->vendor_id) {
-                            $total += floatval($pItem->payment_amount);
-                        }
-                    }
-
-                    $transactions[] = [
-                        'id' => $payment->id,
-                        'date' => date("m/d/Y", strtotime($payment->payment_date)),
-                        'type' => "Bill Payment ($paymentType)",
-                        'number' => $payment->starting_check_no,
-                        'payee' => $payee->display_name,
-                        'method' => '',
-                        'source' => '',
-                        'category' => '',
-                        'memo' => $payment->memo,
-                        'due_date' => '',
-                        'balance' => '$0.00',
-                        'total' => '$'.number_format(floatval($total), 2, '.', ','),
-                        'status' => 'Applied',
-                        'attachments' => $attachments
-                    ];
-                }
             }
         }
 

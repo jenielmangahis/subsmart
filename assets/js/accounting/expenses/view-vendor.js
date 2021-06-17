@@ -3277,3 +3277,29 @@ $(document).on('submit', '#categorize-selected-form', function(e) {
         }
     });
 });
+
+$('#print-transactions').on('click', function(e) {
+    e.preventDefault();
+
+    $('#transactions-table').parent().parent().append('<form id="print-transactions-form" action="/accounting/vendors/print-multiple-transactions" method="post" class="d-none" target="_blank"></form>');
+
+    $('#transactions-table tbody input[type="checkbox"]').each(function() {
+        var row = $(this).parent().parent().parent();
+        var rowData = $('#transactions-table').DataTable().row(row).data();
+        var transactionType = rowData.type;
+        transactionType = transactionType.replaceAll(' ', '-');
+        transactionType = transactionType.toLowerCase();
+
+        if($(this).prop('checked') && rowData.type === 'Purchase Order') {
+            if($(`#print-transactions-form input[value="${$(this).val()}"]`).length === 0) {
+                $('#print-transactions-form').append(`<input type="hidden" value ="${transactionType+'_'+$(this).val()}" name="transactions[]">`);
+            }
+        } else {
+            $('#print-transactions-form').find(`input[value="${$(this).val()}"]`).remove();;
+        }
+    });
+
+    $('#print-transactions-form').submit();
+
+    $('#print-transactions-form').remove();
+});

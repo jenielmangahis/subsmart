@@ -1,8 +1,7 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 add_css(array(
-    'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css',
-    'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css',
+    'assets/plugins/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css',
 ));
 ?>
 
@@ -55,18 +54,17 @@ add_css(array(
             <?php
             // JS to add only Customer module
             add_footer_js(array(
-                'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js',
                 'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js',
-                'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js',
                 'https://code.jquery.com/ui/1.12.1/jquery-ui.js',
+                'assets/plugins/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js',
             ));
             ?>
-<?php include viewPath('includes/footer'); ?>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-timepicker/0.5.2/js/bootstrap-timepicker.min.js" integrity="sha512-2xXe2z/uA+2SyT/sTSt9Uq4jDKsT0lV4evd3eoE/oxKih8DSAsOF6LUb+ncafMJPAimWAXdu9W+yMXGrCVOzQA==" crossorigin="anonymous"></script>
-<script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
-<script async defer src="https://maps.googleapis.com/maps/api/js?key=<?= google_credentials()['api_key'] ?>&callback=initMap&libraries=places&v=weekly&sensor=false"></script>
-<script src="https://momentjs.com/downloads/moment-with-locales.js"></script>
-<script >
+    <?php include viewPath('includes/footer'); ?>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-timepicker/0.5.2/js/bootstrap-timepicker.min.js" integrity="sha512-2xXe2z/uA+2SyT/sTSt9Uq4jDKsT0lV4evd3eoE/oxKih8DSAsOF6LUb+ncafMJPAimWAXdu9W+yMXGrCVOzQA==" crossorigin="anonymous"></script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=<?= google_credentials()['api_key'] ?>&callback=initMap&libraries=places&v=weekly&sensor=false"></script>
+    <script src="https://momentjs.com/downloads/moment-with-locales.js"></script>
+    <script >
     var autocomplete;
         function initMap() {
             var input = document.getElementById('mail_add');

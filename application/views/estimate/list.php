@@ -306,6 +306,10 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                                     <li role="presentation">
                                                         <a role="menuitem" href="<?php echo base_url('estimate/delete/' . $estimate->id) ?>>" onclick="return confirm('Do you really want to delete this item ?')" data-delete-modal="open"><span class="fa fa-trash-o icon"></span> Delete</a>
                                                     </li>
+                                                    <li role="presentation">
+                                                        <a role="menuitem" href="<?= base_url('job/estimate_job/'. $estimate->id) ?>">
+                                                            <span class="fa fa-briefcase icon"></span> Convert to Job</a>
+                                                    </li>
                                                 </ul>
                                             </div>
                                         </td>

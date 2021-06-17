@@ -200,4 +200,10 @@ class Accounting_invoices_model extends MY_Model
         $vendor = $this->db->get();
         return $vendor->result();
     }
+    public function get_customer_search_result($value)
+    {
+        $query = "SELECT * FROM  (SELECT CONCAT(first_name, ' ', last_name) name FROM acs_profile ) a WHERE name LIKE '%".$value."%'";
+        $qry = $this->db->query($query);
+        return $qry->result();
+    }
 }

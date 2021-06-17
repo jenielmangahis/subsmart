@@ -747,6 +747,20 @@ class Expenses_model extends MY_Model
         return $query->result();
     }
 
+    public function get_company_cc_credit_transactions($filters = [])
+    {
+        $this->db->where('company_id', $filters['company_id']);
+        $this->db->where('status !=', 0);
+
+        if(isset($filters['payee'])) {
+            $this->db->where('payee_type', $filters['payee']['type']);
+            $this->db->where('payee_id', $filters['payee']['id']);
+        }
+
+        $query = $this->db->get('accounting_credit_card_credits');
+        return $query->result();
+    }
+
     public function get_company_cc_payment_transactions($filters = [])
     {
         $this->db->where('company_id', $filters['company_id']);
@@ -767,19 +781,16 @@ class Expenses_model extends MY_Model
 
     public function get_company_bill_payment_items($filters = [])
     {
-		$this->db->select('accounting_bill_payment_items.*');
-        $this->db->where('accounting_bill_payments.company_id', $filters['company_id']);
+        $this->db->where('company_id', $filters['company_id']);
         if(isset($filters['start-date']) && isset($filters['end-date'])) {
-            $this->db->where('accounting_bill_payments.payment_date >=', $filters['start-date']);
-            $this->db->where('accounting_bill_payments.payment_date <=', $filters['end-date']);
+            $this->db->where('payment_date >=', $filters['start-date']);
+            $this->db->where('payment_date <=', $filters['end-date']);
         }
 
         if(isset($filters['payee']) && $filters['payee']['type'] === 'vendor') {
-            $this->db->where('accounting_bill.vendor_id', $filters['payee']['id']);
+            $this->db->where('payee_id', $filters['payee']['id']);
         }
-		$this->db->join('accounting_bill', 'accounting_bill.id = accounting_bill_payment_items.bill_id');
-        $this->db->join('accounting_bill_payments', 'accounting_bill_payments.id = accounting_bill_payment_items.bill_payment_id');
-		$this->db->from('accounting_bill_payment_items');
-        return $this->db->get()->result();
+        $query = $this->db->get('accounting_bill_payments');
+        return $query->result();
     }
 }

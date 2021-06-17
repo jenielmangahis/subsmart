@@ -3152,10 +3152,11 @@ function createDocusignTemplate(file, options = {}) {
                       </button>
 
                       <div class="dropdown-menu dropdown-menu-right">
-                        <a class="dropdown-item" href="${templateUrl}">Use template</a>
-                        <a class="dropdown-item" href="#" data-action="share">Share with users</a>
+                        <a class="dropdown-item" href="${templateUrl}">Use</a>
+                        <a class="dropdown-item" href="#" data-action="edit">Edit</a>
                         <a class="dropdown-item" href="#" data-action="copy">Copy</a>
                         <a class="dropdown-item" href="#" data-action="delete">Delete</a>
+                        <a class="dropdown-item" href="#" data-action="share">Share with users</a>
                         <a class="dropdown-item" href="#" data-action="uploadThumbnail">Change thumbnail</a>
                       </div>
                     </div>
@@ -3241,6 +3242,9 @@ function createDocusignTemplate(file, options = {}) {
         const backgroundImage = base_url + filepath.replace(/\//, "");
         $preview.css({ "--bg-image": `url('${backgroundImage}')` });
         $preview.find("span").css({ display: "none" });
+      },
+      edit: function () {
+        window.location = `${prefixURL}/eSign/templateEdit?id=${id}`;
       }
     }
 

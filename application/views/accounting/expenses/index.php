@@ -21,6 +21,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     .action-bar .dropdown-menu a:hover {
         background: none !important;
     }
+    .dropdown-menu .dropdown-item.disabled {
+        cursor: default;
+        opacity: 0.50;
+        pointer-events: none;
+    }
 </style>
 <?php include viewPath('includes/header'); ?>
 <div class="wrapper" role="wrapper">
@@ -253,8 +258,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                     </button>
 
                                                     <div class="dropdown-menu" aria-labelledby="statusDropdownButton">
-                                                        <a href="mailto:" class="dropdown-item" id="print-transactions">Print transactions</a>
-                                                        <a href="#" class="dropdown-item" id="categorized-selected">Categorize selected</a>
+                                                        <a href="#" class="dropdown-item disabled" id="print-transactions">Print transactions</a>
+                                                        <a href="#" class="dropdown-item disabled" id="categorize-selected">Categorize selected</a>
                                                     </div>
                                                 </div>
                                             </div>

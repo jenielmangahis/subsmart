@@ -452,7 +452,7 @@ border: none;
 										<a href="<?php echo base_url('workorder/work_order_pdf_alarm/' . $workorder->id) ?>" class="btn btn-sec download_work_order_pdfsss" acs-id="<?php echo $workorder->customer_id; ?>" workorder-id="<?php echo $workorder->id; ?>"><span class="fa fa-file-pdf-o"></span> PDF</a>
 									<?php } ?>
 
-          								<a class="btn btn-sec" data-print-modal="open" href="#" target="_blank"><span class="fa fa-print"></span> Print</a>
+          								<a class="btn btn-sec" data-print-modal="open" href="#" onclick="printDiv('printableArea')" value="Print Work Order"><span class="fa fa-print"></span> Print</a>
 										  <div class="user-menu">
 									<div class="dropdown dropdown-btn dropdown-inline margin-left-sec"><br>
 											<button class="btn btn-sec btn-regular dropdown-toggle" type="button" id="dropdown-edit" data-toggle="dropdown" aria-expanded="false">
@@ -491,7 +491,7 @@ border: none;
 
 
 			<div class="row" style="padding:1%;margin-top:-30px;">
-				<div class="col-md-12">
+				<div class="col-md-12" id="printableArea">
 					<div role="white__holder" style="background-color:;padding:5%;border:solid #F4F2F6 3px;box-shadow: 10px 5px 5px #DEDEDE;">
 					<div class="ribbon ribbon-top-left"><span><?php echo $workorder->status ?></span></div>
 					<div class="mobile_header"><?php echo $workorder->header; ?></div>
@@ -1315,4 +1315,14 @@ function sucess(information,$id){
                 }
             });
         }
+</script>
+
+<script>
+function printDiv(divName) {
+    var printContents = document.getElementById(divName).innerHTML;
+    var originalContents = document.body.innerHTML;
+    document.body.innerHTML = printContents;
+    window.print();
+    document.body.innerHTML = originalContents;
+}
 </script>

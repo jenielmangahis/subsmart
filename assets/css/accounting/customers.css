@@ -17,6 +17,7 @@ input[type=checkbox] {
 
 #customers_table ul.dropdown-menu li a {
     font-size: 13px;
+    text-align: left;
 }
 
 #customers_table ul.dropdown-menu li {
@@ -38,4 +39,111 @@ input[type=checkbox] {
 
 #customers_table td div.dropdown #dropdown-button-icon[aria-expanded="true"] {
     border: solid 1px #E8EAED;
+}
+
+#customers_table thead th {
+    font-weight: 700;
+}
+
+#customers_table thead th:first-child {
+    border: none;
+}
+
+#customers_table {
+    border: none;
+}
+
+.section-above-table {
+    padding-bottom: 10px;
+    height: 45px;
+}
+
+.section-above-table .dropdown-holder,
+.section-above-table .search-holder,
+.section-above-table .batch-actiom-icon-holder {
+    float: left;
+    position: relative;
+    margin-right: 10px;
+}
+
+.section-above-table .batch-actiom-icon-holder img.batch-actiom-icon {
+    width: 20px;
+    position: inherit;
+    bottom: -15px;
+}
+
+.section-above-table .batch-actiom-icon-holder {
+    padding-left: 15px;
+}
+
+.section-above-table .dropdown-holder button {
+    font-size: 13px;
+    padding: 5px 25px;
+    font-weight: 700;
+    border: solid 2px #000;
+    height: auto;
+}
+
+.section-above-table .search-holder input.search {
+    padding: 4px;
+    width: 250px;
+    padding-right: 30px;
+    font-style: italic;
+    padding-left: 10px;
+    border: solid 1px #BABEC5;
+    cursor: text;
+    font-size: 12px;
+    height: 33px;
+    color: #6B6C71;
+}
+
+.section-above-table .search-holder input.search::placeholder {
+    font-style: italic;
+    color: #BABEC5;
+}
+
+.section-above-table .search-holder input.search:focus,
+.section-above-table .search-holder input.search:hover {
+    border-color: rgba(126, 239, 104, 0.8);
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 8px rgba(126, 239, 104, 0.6);
+    outline: 0 none;
+    box-shadow: none;
+    border: solid 1px #80CF03;
+    font-style: normal;
+}
+
+.section-above-table .search-holder .search-field i.fa {
+    position: absolute;
+    right: 0;
+    padding: 9px;
+}
+
+.section-above-table .search-holder .search-field {
+    color: #989897;
+}
+
+.section-above-table .dropdown-holder ul li {
+    font-size: 12px;
+    text-align: left;
+}
+
+.section-above-table .dropdown-holder ul li:hover,
+.section-above-table .dropdown-holder ul li:hover a,
+.section-above-table .search-holder .search-result ul.dropdown-menu li:hover,
+.section-above-table .search-holder .search-result ul.dropdown-menu li:hover a {
+    background: #E8EAED;
+    cursor: pointer;
+    color: #2BA01D;
+}
+
+.section-above-table .search-holder .search-result ul.dropdown-menu {
+    width: 200%;
+    left: 0;
+    border-radius: 0;
+    font-size: 12px;
+    margin: 0;
+}
+
+.section-above-table .search-holder .search-result .dropdown-menu {
+    max-height: 500px;
 }

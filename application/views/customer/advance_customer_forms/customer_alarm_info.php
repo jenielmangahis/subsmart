@@ -336,13 +336,13 @@
                 <textarea type="text" class="form-controls" name="notes" id="notes" cols="100%" rows="5"></textarea>
             </div>
         </div>
+    <?php if(isset($customer_notes)) :?>
         <div class="card-header">
             <span style="position: absolute;right: 0;margin-right: 25px;font-size: 20px;padding-top:10px;" class="fa fa-ellipsis-v"></span>
 
             <h6 ><span class="fa fa-user"></span>&nbsp; Existing&nbsp;Notes</h6>
         </div>
         <div class="card-body">
-            <?php if(isset($customer_notes)) :?>
                 <div class="row">
                     <table width="100%" cellpadding="0" cellspacing="0">
                         <tbody>
@@ -361,8 +361,86 @@
                         </tbody>
                     </table>
                 </div>
-            <?php endif; ?>
         </div>
+    <?php endif; ?>
+    <div class="card-header">
+        <span style="position: absolute;right: 0;margin-right: 25px;font-size: 20px;padding-top:10px;" class="fa fa-ellipsis-v"></span>
+        <h6 ><span class="fa fa-user"></span>&nbsp; &nbsp;Emergency Contacts</h6>
+    </div>
+    <div class="card-body">
+        <div class="row form_line">
+            <div class="col-md-4 ">
+                <label for="">Contact Name 1
+            </div>
+            <div class="col-md-8">
+                <input type="text" class="form-control" name="contact_name1" id="contact_name1" value="<?php if(isset($profile_info)){ echo $profile_info->contact_name1; } ?>"/>
+            </div>
+        </div>
+        <div class="row form_line">
+            <div class="col-md-4 ">
+                <label for="">Relationship
+            </div>
+            <div class="col-md-8">
+                <input type="text" class="form-control" name="relationship1" id="relationship1" value="<?php if(isset($profile_info)){ echo $profile_info->contact_name1; } ?>"/>
+            </div>
+        </div>
+        <div class="row form_line">
+            <div class="col-md-4">
+                <label for="">Phone Number
+            </div>
+            <div class="col-md-8">
+                <input type="text" class="form-control phone_number" maxlength="12" placeholder="xxx-xxx-xxxx" name="contact_phone1" id="contact_phone1" value="<?php if(isset($profile_info)){ echo $profile_info->contact_phone1; } ?>"/>
+            </div>
+        </div>
+        <div class="row form_line">
+            <div class="col-md-4">
+                <label for="">Contact Name 2
+            </div>
+            <div class="col-md-8">
+                <input type="text" class="form-control" name="contact_name2" id="contact_name2" value="<?php if(isset($profile_info)){ echo $profile_info->contact_name2; } ?>"/>
+            </div>
+        </div>
+        <div class="row form_line">
+            <div class="col-md-4 ">
+                <label for="">Relationship
+            </div>
+            <div class="col-md-8">
+                <input type="text" class="form-control" name="relationship2" id="relationship2" value="<?php if(isset($profile_info)){ echo $profile_info->contact_name1; } ?>"/>
+            </div>
+        </div>
+        <div class="row form_line">
+            <div class="col-md-4">
+                <label for="">Phone Number
+            </div>
+            <div class="col-md-8">
+                <input type="text" class="form-control phone_number" maxlength="12" placeholder="xxx-xxx-xxxx" name="contact_phone2" id="contact_phone2" value="<?php if(isset($profile_info)){ echo $profile_info->contact_phone2; } ?>"/>
+            </div>
+        </div>
+        <div class="row form_line">
+            <div class="col-md-4">
+                <label for="">Contact Name 3
+            </div>
+            <div class="col-md-8">
+                <input type="text" class="form-control" name="contact_name3" id="contact_name3" value="<?php if(isset($profile_info)){ echo $profile_info->contact_name3; } ?>" />
+            </div>
+        </div>
+        <div class="row form_line">
+            <div class="col-md-4 ">
+                <label for="">Relationship
+            </div>
+            <div class="col-md-8">
+                <input type="text" class="form-control" name="relationship3" id="relationship3" value="<?php if(isset($profile_info)){ echo $profile_info->contact_name1; } ?>"/>
+            </div>
+        </div>
+        <div class="row form_line">
+            <div class="col-md-4">
+                <label for="">Phone Number
+            </div>
+            <div class="col-md-8">
+                <input type="text" class="form-control phone_number" maxlength="12" placeholder="xxx-xxx-xxxx" name="contact_phone3" id="contact_phone3" value="<?php if(isset($profile_info)){ echo $profile_info->contact_phone3; } ?>"/>
+            </div>
+        </div>
+    </div>
         <div class="row" style="margin: 0 0 0 5px;">
             <a href="<?php echo base_url('customer') ?>">
                 <button type="button" class="btn btn-primary"><span class="fa fa-remove"></span> Cancel </button> &nbsp;

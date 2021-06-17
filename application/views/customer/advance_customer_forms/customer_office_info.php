@@ -34,7 +34,6 @@
             </div>
             <div class="col-md-6">
                 <select id="credit_score" name="credit_score" data-customer-source="dropdown" class="input_select" >
-                    <option  value=""></option>
                     <option <?= isset($office_info) && $office_info->credit_score == 'A' ?  'selected' : '';?> value="A">A</option>
                     <option <?= isset($office_info) && $office_info->credit_score == 'B' ?  'selected' : '';?> value="B">B</option>
                     <option <?= isset($office_info) && $office_info->credit_score == 'C' ?  'selected' : '';?> value="C">C</option>
@@ -648,13 +647,6 @@
             </div>
         </div>
         <br>
-        <div class="row form_line">
-            <div class="col-md-12">
-                Shareable Url Link
-            </div>
-            <div class="col-md-12">
-                <input type="url" placeholder="https://sample.com" class="form-control" name="url" id="url" value="<?php if(isset($office_info)){ echo  $office_info->url; } ?>" />
-            </div>
-        </div>
+
     </div>
 </div>

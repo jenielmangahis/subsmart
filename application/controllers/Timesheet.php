@@ -1840,10 +1840,10 @@ class Timesheet extends MY_Controller
         $check_attendance = $this->db->get_where('timesheet_attendance', array('id' => $attn_id));
         date_default_timezone_set($this->session->userdata('usertimezone'));
         if ($entry_type == "Manual") {
-            $content_notification = 'Manually clocked In ' . " at " . date('m-d-Y h:i A') . " " . $this->session->userdata('offset_zone');
+            $content_notification = 'Manually clocked In ' . " at " . date('M d, Y h:i A') . " " . $this->session->userdata('offset_zone');
             $approved_by = logged('id');
         } else {
-            $content_notification = "Clocked In in " . $employeeLongnameAddress . " at " . date('m-d-Y h:i A') . " " . $this->session->userdata('offset_zone');
+            $content_notification = "Clocked In in " . $employeeLongnameAddress . " at " . date('M d, Y h:i A') . " " . $this->session->userdata('offset_zone');
             $approved_by = 0;
         }
 
@@ -2130,12 +2130,24 @@ class Timesheet extends MY_Controller
                 }
                 $date_created = date('m-d-Y h:i A', strtotime($notify->date_created));
 
-                $html .= '<a href="' . site_url() . 'timesheet/attendance" id="notificationDP"
-            data-id=' . $notify->id . '" class="dropdown-item notify-item active"
-            style="background-color:' . $bg . '">
-            <img style="width:40px;height:40px;border-radius: 20px;margin-bottom:-40px" class="profile-user-img img-responsive img-circle" src="' . $image . '" alt="User profile picture" />
-            <p class="notify-details" style="margin-left: 50px;">' . $notify->FName . " " . $notify->LName . '<span class="text-muted">' . $notify->content . '</span></p>
-            </a>';
+                if($notify->title == 'New Work Order'){
+
+
+                    $html .= '<a href="' . site_url() . 'workorder" id="notificationDP"
+                            data-id=' . $notify->id . '" class="dropdown-item notify-item active"
+                            style="background-color:' . $bg . '">
+                            <img style="width:40px;height:40px;border-radius: 20px;margin-bottom:-40px" class="profile-user-img img-responsive img-circle" src="' . $image . '" alt="User profile picture" />
+                            <p class="notify-details" style="margin-left: 50px;">' . $notify->FName . " " . $notify->LName . '<span class="text-muted">' . $notify->content . '</span></p>
+                            </a>';
+                }else{
+
+                    $html .= '<a href="' . site_url() . 'timesheet/attendance" id="notificationDP"
+                            data-id=' . $notify->id . '" class="dropdown-item notify-item active"
+                            style="background-color:' . $bg . '">
+                            <img style="width:40px;height:40px;border-radius: 20px;margin-bottom:-40px" class="profile-user-img img-responsive img-circle" src="' . $image . '" alt="User profile picture" />
+                            <p class="notify-details" style="margin-left: 50px;">' . $notify->FName . " " . $notify->LName . '<span class="text-muted">' . $notify->content . '</span></p>
+                            </a>';
+                }
             }
         }
 

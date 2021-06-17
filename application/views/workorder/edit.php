@@ -712,7 +712,7 @@ border: none;
                                         <tr>
                                             <td style="width:;"><input type="text" name="adjustment_name" id="adjustment_name" placeholder="Adjustment Name" class="form-control" style="width:; display:inline; border: 1px dashed #d1d1d1" value="<?php echo $workorder->adjustment_name; ?>"></td>
                                             <td style="width:;">
-                                            <input type="number" name="adjustment_value" id="adjustment_input" value="<?php echo $workorder->adjustment_value; ?>" class="form-control adjustment_input" style="width:100px; display:inline-block">
+                                            <input type="number" name="adjustment_value" id="adjustment_input" value="<?php if(empty($workorder->adjustment_value)){ echo "0"; }else{ echo $workorder->adjustment_value; } ?>" class="form-control adjustment_input" style="width:100px; display:inline-block">
                                                 <span class="fa fa-question-circle" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Optional it allows you to adjust the total amount Eg. +10 or -10." data-original-title="" title=""></span>
                                             </td>
                                             <td><?php echo $workorder->adjustment_value; ?></td>
@@ -722,7 +722,7 @@ border: none;
                                         <tr id="saved" style="color:green;font-weight:bold;display:none;">
                                             <td>Amount Saved</td>
                                             <td></td>
-                                            <td><span id="offer_cost">0.00</span><input type="hidden" name="voucher_value" id="offer_cost_input"></td>
+                                            <td><span id="offer_cost">0.00</span><input type="hidden" name="voucher_value" id="offer_cost_input" value="0"></td>
                                         </tr>
                                         <?php }else{ ?>
                                             <tr id="saved" style="color:green;font-weight:bold;">

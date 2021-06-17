@@ -116,6 +116,7 @@
 <script src="<?php echo $url->assets ?>js/sign2.js"></script> -->
 <script src="<?php echo $url->assets ?>js/sidebar_badges.js"></script>
 <script src="<?php echo $url->assets ?>js/custom.js"></script>
+<script src="<?php echo $url->assets ?>js/work_order_pdf.js"></script>
 <script type="text/javascript"
     src="<?php echo $url->assets?>ckeditor/ckeditor.js"></script>
 <script>

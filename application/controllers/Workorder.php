@@ -2483,6 +2483,7 @@ class Workorder extends MY_Controller
         $this->page_data['packages'] = $this->workorder_model->getPackagelist($company_id);
 
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
+        $this->page_data['companyDet'] = $this->workorder_model->companyDet($company_id);
         $this->page_data['page_title'] = "Work Order";
         // print_r($this->page_data['lead_source']);
 
@@ -2568,7 +2569,7 @@ class Workorder extends MY_Controller
             $file2_save          = NULL;
         }
 
-        if(!empty($this->input->post('primary_representative_approval_signature1aM_web')))
+        if(!empty($this->input->post('secondary_representative_approval_signature1aM_web')))
         {
             $datasig3           = $this->input->post('secondary_representative_approval_signature1aM_web');
             $folderPath3        = "./uploads/Signatures/1/";
@@ -2584,6 +2585,10 @@ class Workorder extends MY_Controller
         {
             $file3_save          = NULL;
         }
+
+
+        $action = $this->input->post('action');
+        if($action == 'submit') {
 
         $new_data = array(
             
@@ -2912,27 +2917,52 @@ class Workorder extends MY_Controller
         //         $i++;
         //     }
 
-        if($addQuery > 0){
-            $a          = $this->input->post('itemid');
-            $quantity   = $this->input->post('quantity');
-            $price      = $this->input->post('price');
-            $h          = $this->input->post('tax');
+            if($addQuery > 0){
+                $a          = $this->input->post('itemid');
+                $quantity   = $this->input->post('quantity');
+                $price      = $this->input->post('price');
+                $h          = $this->input->post('tax');
 
-            $i = 0;
-            foreach($a as $row){
-                $data['items_id'] = $a[$i];
-                $data['qty'] = $quantity[$i];
-                $data['cost'] = $price[$i];
-                $data['tax'] = $h[$i];
-                $data['work_order_id '] = $addQuery;
-                $addQuery2 = $this->workorder_model->add_work_order_details($data);
-                $i++;
+                $i = 0;
+                foreach($a as $row){
+                    $data['items_id'] = $a[$i];
+                    $data['qty'] = $quantity[$i];
+                    $data['cost'] = $price[$i];
+                    $data['tax'] = $h[$i];
+                    $data['work_order_id '] = $addQuery;
+                    $addQuery2 = $this->workorder_model->add_work_order_details($data);
+                    $i++;
+                }
+
+                $getname = $this->workorder_model->getname($user_id);
+
+                $notif = array(
+            
+                    'user_id'               => $user_id,
+                    'title'                 => 'New Work Order',
+                    'content'               => $getname->FName. ' has created new Work Order.'. $this->input->post('workorder_number'),
+                    'date_created'          => date("Y-m-d H:i:s"),
+                    'status'                => '1',
+                    'company_id'            => getLoggedCompanyID()
+                );
+    
+                $notification = $this->workorder_model->save_notification($notif);
+
+
+            redirect('workorder');
             }
-
-           redirect('workorder');
+            else{
+                echo json_encode(0);
+            }
         }
-        else{
-            echo json_encode(0);
+        if($action == 'preview') {
+            $dataaa = $this->input->post('workorder_number');
+            $this->page_data['users'] = $this->users_model->getUser(logged('id'));
+
+            $this->load->library('pdf');
+            $html = $this->load->view('workorder/preview', [], true);
+            $this->pdf->createPDF($html, 'mypdf', false);
+            exit(0);
         }
     }
 
@@ -4245,6 +4275,9 @@ class Workorder extends MY_Controller
         // file_put_contents($file3, $image_base643);
         /////////////////////////////////////////////////////////////////////////////////////////////
 
+    $action = $this->input->post('action');
+    if($action == 'submit') {
+
         $acs = array(
             'fk_user_id'                => $user_id,
             'customer_type'             => $this->input->post('customer_type'),
@@ -4775,12 +4808,49 @@ class Workorder extends MY_Controller
                 $i++;
             }
 
+            $notif = array(
+            
+                'user_id'               => $user_id,
+                'title'                 => 'New Work Order',
+                'content'               => $getname->FName. ' has created new Work Order.'. $this->input->post('workorder_number'),
+                'date_created'          => date("Y-m-d H:i:s"),
+                'status'                => '1',
+                'company_id'            => getLoggedCompanyID()
+            );
+
+            $notification = $this->workorder_model->save_notification($notif);
+
+
            redirect('workorder');
         }
         else{
             echo json_encode(0);
             // print_r($file_put_contents);die;
         }
+    }
+    
+    if($action == 'preview') {
+        $dataaa = $this->input->post('workorder_number');
+        $this->page_data['users'] = $this->users_model->getUser(logged('id'));
+
+        $this->load->library('pdf');
+        $html = $this->load->view('workorder/preview', [], true);
+        $this->pdf->createPDF($html, 'mypdf', false);
+        exit(0);
+    }
+    
+    }
+
+    public function preview()
+    {
+        // $filename = "nSmarTrac_work_order";
+        // $data = "test";
+        // $this->load->library('pdf');
+        // $this->pdf->load_view('workorder/work_order_pdf_template', $data, $filename, "portrait");
+        $this->load->library('pdf');
+        $html = $this->load->view('workorder/preview', [], true);
+        $this->pdf->createPDF($html, 'mypdf', false);
+        exit(0);
     }
 }
 

@@ -39,7 +39,7 @@
                 <label>First Name 
             </div>
             <div class="col-md-6">
-                <?= isset($profile_info) && !empty($profile_info->first_name) ? $profile_info->first_name : '---';?>
+                <?= isset($profile_info) && !empty($profile_info->first_name) ? $profile_info->first_name : 'n/a';?>
             </div>
         </div>
         <div class="row form_line">
