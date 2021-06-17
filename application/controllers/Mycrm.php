@@ -350,6 +350,98 @@ class Mycrm extends MY_Controller {
 
 		echo json_encode($json);
     }
+
+    public function view_payment($id){
+        $this->load->model('CompanySubscriptionPayments_model');
+        $this->load->model('Business_model');
+
+        $company_id = logged('company_id');
+        $payment    = $this->CompanySubscriptionPayments_model->getById($id);
+        $company    = $this->Business_model->getByCompanyId($payment->company_id);
+        if($payment->company_id == $company_id){
+        	$this->page_data['payment'] = $payment;
+        	$this->page_data['company'] = $company;
+	        $this->load->view('mycrm/view_payment_details', $this->page_data);     
+        }else{
+        	redirect('mycrm/orders');
+        }
+    }
+
+    public function order_pdf($id){
+
+        $this->load->model('CompanySubscriptionPayments_model');
+        $this->load->model('Business_model');
+        
+        $company_id = logged('company_id');
+        $payment    = $this->CompanySubscriptionPayments_model->getById($id);
+        $company    = $this->Business_model->getByCompanyId($payment->company_id);
+        $this->page_data['payment']   = $payment;
+        $this->page_data['company'] = $company;
+        $content = $this->load->view('mycrm/subscription_order_pdf_template_a', $this->page_data, TRUE);  
+            
+        $this->load->library('Reportpdf');
+
+        $title = 'subscription_order';
+
+        $obj_pdf = new Reportpdf('P', 'mm', 'A4', true, 'UTF-8', false);
+        $obj_pdf->SetTitle($title);
+        $obj_pdf->setPrintHeader(false);
+        $obj_pdf->setPrintFooter(false);
+        $obj_pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);        
+        $obj_pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
+        $obj_pdf->setFontSubsetting(false);
+        // set some language-dependent strings (optional)
+        if (@file_exists(dirname(__FILE__) . '/lang/eng.php')) {
+            require_once(dirname(__FILE__) . '/lang/eng.php');
+            $pdf->setLanguageArray($l);
+        }
+        $obj_pdf->AddPage('P');
+        $html = '';
+        $obj_pdf->writeHTML($html . $content, true, false, true, false, '');
+        //echo $display;
+        $content = ob_get_contents();
+        ob_end_clean();
+        $obj_pdf->writeHTML($content, true, false, true, false, '');
+        $obj_pdf->Output($title, 'I');
+    }
+
+    public function invoice_pdf($id){
+
+        $this->load->model('CompanySubscriptionPayments_model');
+        $this->load->model('Business_model');
+        
+        $company_id = logged('company_id');
+        $payment    = $this->CompanySubscriptionPayments_model->getById($id);
+        $company    = $this->Business_model->getByCompanyId($payment->company_id);
+        $this->page_data['payment']   = $payment;
+        $this->page_data['company'] = $company;
+        $content = $this->load->view('mycrm/subscription_invoice_pdf_template_a', $this->page_data, TRUE);  
+            
+        $this->load->library('Reportpdf');
+
+        $title = 'subscription_invoice';
+
+        $obj_pdf = new Reportpdf('P', 'mm', 'A4', true, 'UTF-8', false);
+        $obj_pdf->SetTitle($title);
+        $obj_pdf->setPrintHeader(false);
+        $obj_pdf->setPrintFooter(false);
+        $obj_pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);        
+        $obj_pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
+        $obj_pdf->setFontSubsetting(false);
+        // set some language-dependent strings (optional)
+        if (@file_exists(dirname(__FILE__) . '/lang/eng.php')) {
+            require_once(dirname(__FILE__) . '/lang/eng.php');
+            $pdf->setLanguageArray($l);
+        }
+        $obj_pdf->AddPage('P');
+        $html = '';
+        $obj_pdf->writeHTML($html . $content, true, false, true, false, '');
+        //echo $display;
+        $content = ob_get_contents();
+        ob_end_clean();
+        $obj_pdf->writeHTML($content, true, false, true, false, '');
+        $obj_pdf->Output($title, 'I');
+    }
 }
 
 

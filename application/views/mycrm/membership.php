@@ -204,7 +204,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     <?php }else{ ?>
                         $<?= number_format($lastPayment->total_amount,2); ?>
                         <span class="text-ter">on <?= date("d-M-Y", strtotime($lastPayment->payment_date)); ?></span> 
-                        <a href="https://www.markate.com/pro/account/orders/view/id/19800">view</a>
+                        <a href="<?= url('mycrm/view_payment/' . $lastPayment->id); ?>">view</a>
                     <?php } ?>
                     
                 </div>
