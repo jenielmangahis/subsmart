@@ -20,13 +20,7 @@ class Taskhub extends MY_Controller {
         }
 
 	public function index(){
-	$is_allowed = true;//$this->isAllowedModuleAccess(6);
-        if( !$is_allowed ){
-            $this->page_data['module'] = 'taskhub';
-            echo $this->load->view('no_access_module', $this->page_data, true);
-            die();
-        }
-
+		$this->hasAccessModule(6); 
 		$this->page_data['tasks'] = getTasks();
 		$this->page_data['status_selection'] = $this->taskhub_status_model->get();
 
@@ -34,7 +28,7 @@ class Taskhub extends MY_Controller {
 	}
 
 	public function entry($id = 0){
-
+		$this->hasAccessModule(6);
 		$uid = logged('id');
 		$company_id = logged('company_id');
 

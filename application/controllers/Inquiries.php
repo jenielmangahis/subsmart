@@ -149,6 +149,7 @@ class Inquiries extends MY_Controller {
     }
 
     public function online_lead() {
+        $this->hasAccessModule(14);
         $company_id = logged('company_id');
         $this->page_data['lead_forms'] = $this->inquiry_model->getAllLeadFormByCompany($company_id);
         $this->page_data['customize_lead_forms'] = $this->inquiry_model->getAllCustomizeLeadFormByCompany($company_id, 'lead_form');

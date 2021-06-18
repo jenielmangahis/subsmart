@@ -48,13 +48,9 @@ class Customer extends MY_Controller
 
     public function index()
     {
-        $this->load->library('wizardlib');
-        $is_allowed = $this->isAllowedModuleAccess(9);
-        if( !$is_allowed ){
-            $this->page_data['module'] = 'customer';
-            echo $this->load->view('no_access_module', $this->page_data, true);
-            die();
-        }
+        $this->hasAccessModule(9);
+
+        $this->load->library('wizardlib');        
         $input = $this->input->post();
         if($input){
             $this->page_data['profiles'] = $this->customer_ad_model->get_customer_data($input);
@@ -117,13 +113,7 @@ class Customer extends MY_Controller
     }
 
     public function billing($id=null){
-        // check if customer is allowed to view this page
-        $is_allowed = $this->isAllowedModuleAccess(9);
-        if( !$is_allowed ){
-            $this->page_data['module'] = 'customer';
-            echo $this->load->view('no_access_module', $this->page_data, true);
-            die();
-        }
+        $this->hasAccessModule(9);
 
         $userid = $id;
         $user_id = logged('id');
@@ -150,7 +140,8 @@ class Customer extends MY_Controller
             );
             $this->page_data['logged_in_user'] = $this->general->get_data_with_param($get_login_user,FALSE);
         }
-        print_r($this->page_data['transaction_details']);
+        //print_r($this->page_data['transaction_details']);
+        $this->page_data['transaction_details'];
 
         $this->load->view('customer/billing', $this->page_data);
     }
@@ -286,13 +277,7 @@ class Customer extends MY_Controller
     }
 
     public function subscription($id=null){
-        // check if customer is allowed to view this page
-        $is_allowed = $this->isAllowedModuleAccess(9);
-        if( !$is_allowed ){
-            $this->page_data['module'] = 'customer';
-            echo $this->load->view('no_access_module', $this->page_data, true);
-            die();
-        }
+        $this->hasAccessModule(9);
 
         $userid = $id;
         $user_id = logged('id');
@@ -486,6 +471,8 @@ class Customer extends MY_Controller
 
     public function add_advance($id=null)
     {
+        $this->hasAccessModule(9);
+
         $userid = $id;
         $user_id = logged('id');
         if(isset($userid) || !empty($userid)){
@@ -553,13 +540,9 @@ class Customer extends MY_Controller
     }
 
     public function leads()
-    {   $is_allowed = $this->isAllowedModuleAccess(14);
-        if( !$is_allowed ){
-            $this->page_data['module'] = 'customer_leads';
-            echo $this->load->view('no_access_module', $this->page_data, true);
-            die();
-        }
-
+    {   
+        $this->hasAccessModule(14);
+        
         $user_id = logged('id');
         $this->page_data['leads'] = $this->customer_ad_model->get_leads_data();
         $this->load->view('customer/leads', $this->page_data);
@@ -1088,13 +1071,9 @@ class Customer extends MY_Controller
 
     public function add_lead($lead_id=0)
     {
-        $is_allowed = $this->isAllowedModuleAccess(43);
-        if( !$is_allowed ){
-            $this->page_data['module'] = 'customer_add_leads';
-            echo $this->load->view('no_access_module', $this->page_data, true);
-            die();
-        }
-
+        //$this->hasAccessModule(9);
+        $this->hasAccessModule(43);
+        
         if(isset($lead_id)){
             $this->page_data['leads_data'] = $this->customer_ad_model->get_data_by_id('leads_id',$lead_id,"ac_leads");
         }
@@ -2416,12 +2395,7 @@ class Customer extends MY_Controller
 
     public function group()
     {
-        $is_allowed = $this->isAllowedModuleAccess(11);
-        if( !$is_allowed ){
-            $this->page_data['module'] = 'customer_group';
-            echo $this->load->view('no_access_module', $this->page_data, true);
-            die();
-        }
+        $this->hasAccessModule(9);
         // pass the $this so that we can use it to load view, model, library or helper classes
        // $customerGroup = new CustomerGroup($this);
         $this->page_data['customerGroups'] =  $this->customer_ad_model->get_all_by_id('user_id',logged('id'),'customer_groups');

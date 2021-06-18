@@ -57,8 +57,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
 <div class="card">
     <div class="row">
+        <?php include viewPath('flash'); ?>
         <div class="col-md-6">
-            <div class="plan">
+            <div class="plan">                
                 <strong>
                     <?= $client->is_trial == 1 ? 'Trial' : 'Paid'; ?> Membership
                     <?= $client->is_plan_active == 0 ? '<span class="expired-text badge badge-danger">(Expired)</span>' : ''; ?>
