@@ -26,6 +26,16 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         opacity: 0.50;
         pointer-events: none;
     }
+    #transactions-table tbody td:nth-child(2) a:hover {
+        text-decoration: underline;
+        color: #38a4f8 !important;
+    }
+    #transactions-table .btn-group .btn:hover, #transactions-table .btn-group .btn:focus {
+        color: #38a4f8 !important;
+    }
+    #transactions-table .btn-group .btn {
+        padding: 10px;
+    }
 </style>
 <?php include viewPath('includes/header'); ?>
 <div class="wrapper" role="wrapper">
@@ -329,7 +339,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             <th>TOTAL</th>
                                             <th class="status">STATUS</th>
                                             <th class="text-center attachments"><i class="fa fa-paperclip"></i></th>
-                                            <th class="text-right">ACTION</th>
+                                            <th class="text-right" width="10%">ACTION</th>
                                         </tr>
 									</thead>
 									<tbody class="cursor-pointer"></tbody>
@@ -349,345 +359,15 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 </div>
 
 <div class="append-modal">
-    <!--    Add vendor modal-->
-    <div id="new-vendor-modal" class="modal fade" role="dialog">
-        <div class="modal-dialog modal-dialog-centered modal-lg m-auto">
-            <!-- Modal content-->
-            <form action="/accounting/vendors/add" method="post" class="form-validate" novalidate="novalidate" enctype="multipart/form-data">
-            <div class="modal-content max-width">
-                <div class="modal-header" style="border-bottom: 0">
-                    <div class="modal-title">Vendor Information</div>
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                </div>
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="col-xl-12">
-                            <div class="card p-0 m-0">
-                                <div class="card-body">
-                                    <div class="row">
-                                        <div class="col-md-7">
-                                            <div class="form-ib-group">
-                                                <div class="form-row">
-                                                    <div class="col-sm-2">
-                                                        <div class="form-ib">
-                                                            <label for="title">Title</label>
-                                                            <input type="text" name="title" id="title" class="form-control">
-                                                        </div>
-                                                    </div>
-                                                    <div class="col">
-                                                        <div class="form-ib">
-                                                            <label for="f_name">First name</label>
-                                                            <input type="text" name="f_name" id="f_name" class="form-control">
-                                                        </div>
-                                                    </div>
-                                                    <div class="col">
-                                                        <div class="form-ib">
-                                                            <label for="m_name">Middle name</label>
-                                                            <input type="text" name="m_name" id="m_name" class="form-control">
-                                                        </div>
-                                                    </div>
-                                                    <div class="col">
-                                                        <div class="form-ib">
-                                                            <label for="l_name">Last name</label>
-                                                            <input type="text" name="l_name" id="l_name" class="form-control">
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-sm-2">
-                                                        <div class="form-ib">
-                                                            <label for="suffix">Suffix</label>
-                                                            <input type="text" name="suffix" id="suffix" class="form-control">
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="form-ib-group">
-                                                <div class="form-row">
-                                                    <div class="col">
-                                                        <div class="form-ib">
-                                                            <label for="company">Company</label>
-                                                            <input type="text" name="company" id="company" class="form-control">
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="form-ib-group">
-                                                <div class="form-row">
-                                                    <div class="col">
-                                                        <div class="form-ib">
-                                                            <label for="display_name"><span class="text-danger">*</span> Display name as</label>
-                                                            <input type="text" name="display_name" id="display_name" class="form-control" required>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="form-ib-group">
-                                                <div class="form-row">
-                                                    <div class="col">
-                                                        <div class="form-ib">
-                                                            <label for="print_on_check_name" style="margin-right: 10px">Print on check as </label>
-                                                            <input type="checkbox" value="1" name="use_display_name" id="use_display_name" checked><label for="use_display_name" class="ml-3">Use display name</label>
-                                                            <input type="text" name="print_on_check_name" id="print_on_check_name" class="form-control" disabled>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="form-ib-group">
-                                                <div class="form-row">
-                                                    <div class="col-12">
-                                                        <div class="form-ib">
-                                                            <label for="street" style="margin-right: 10px">Address</label>
-                                                            <a href="https://www.google.com/maps?q=++++" target="_blank" style="color: #0b97c4;">map</a>
-                                                            <textarea name="street" id="street" cols="30" rows="2" class="form-control" placeholder="Street" required></textarea>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-6">
-                                                        <div class="form-ib mt-1">
-                                                            <input name="city" type="text" class="form-control" placeholder="City/Town" required>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-6">
-                                                        <div class="form-ib mt-1">
-                                                            <input name="state" type="text" class="form-control" placeholder="State/Province" required>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-6">
-                                                        <div class="form-ib mt-1">
-                                                            <input name="zip" type="text" class="form-control" placeholder="ZIP Code" required>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-6">
-                                                        <div class="form-ib mt-1">
-                                                            <input name="country" type="text" class="form-control" placeholder="Country" required>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="form-ib-group">
-                                                <div class="form-row">
-                                                    <div class="col">
-                                                        <div class="form-ib">
-                                                            <label for="notes">Notes</label>
-                                                            <textarea name="notes" id="notes" cols="30" rows="2" class="form-control"></textarea>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="form-ib-group">
-                                                <div class="form-row">
-                                                    <div class="col">
-                                                        <div class="form-ib">
-                                                            <label for="attachment" style="margin-right: 15px"><i class="fa fa-paperclip"></i>&nbsp;Attachment</label> 
-                                                            <span>Maximum size: 20MB</span>
-                                                            <div id="vendorAttachments" class="dropzone" style="border: 1px solid #e1e2e3;background: #ffffff;width: 100%;">
-                                                                <div class="dz-message" style="margin: 20px;border">
-                                                                    <span style="font-size: 16px;color: rgb(180,132,132);font-style: italic;">Drag and drop files here or</span>
-                                                                    <a href="#" style="font-size: 16px;color: #0b97c4">browse to upload</a>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="form-ib-group">
-                                                <h4>Get custom fields with Advanced</h4>
-                                                <p>Custom fields let you add more detailed info about your customers and transactions.
-                                                    Sort, track, and report info that's important to you.
-                                                </p>
-                                                <a href="#" style="color: #0b97c4;">Learn more</a>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-5">
-                                            <div class="form-ib-group">
-                                                <div class="form-row">
-                                                    <div class="col">
-                                                        <div class="form-ib">
-                                                            <label for="email">Email</label>
-                                                            <input type="text" class="form-control" name="email" id="email" placeholder="Separate multiple emails with commas">
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="form-ib-group">
-                                                <div class="form-row">
-                                                    <div class="col">
-                                                        <div class="form-ib">
-                                                            <label for="phone">Phone</label>
-                                                            <input type="text" name="phone" id="phone" class="form-control">
-                                                        </div>
-                                                    </div>
-                                                    <div class="col">
-                                                        <div class="form-ib">
-                                                            <label for="mobile">Mobile</label>
-                                                            <input type="text" name="mobile" id="mobile" class="form-control">
-                                                        </div>
-                                                    </div>
-                                                    <div class="col">
-                                                        <div class="form-ib">
-                                                            <label for="fax">Fax</label>
-                                                            <input type="text" name="fax" id="fax" class="form-control">
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="form-ib-group">
-                                                <div class="form-row">
-                                                    <div class="col">
-                                                        <div class="form-ib">
-                                                            <label for="website">Website</label>
-                                                            <input type="text" name="website" id="website" class="form-control">
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="form-ib-group">
-                                                <div class="form-row">
-                                                    <div class="col">
-                                                        <div class="form-ib">
-                                                            <label for="billing_rate">Billing rate (/hr)</label>
-                                                            <input type="text" name="billing_rate" id="billing_rate" class="form-control">
-                                                        </div>
-                                                    </div>
-                                                    <div class="col">
-                                                        <div class="form-ib">
-                                                            <label for="terms">Terms</label>
-                                                            <select class="form-control" name="terms" id="terms">
-                                                                <option value="" selected disabled>&nbsp;</option>
-                                                                <option value="add-new">&plus; Add new</option>
-                                                                <?php if(count($terms) > 0) : ?>
-                                                                <?php foreach($terms as $term) : ?>
-                                                                    <option value="<?=$term->id?>"><?=$term->name?></option>
-                                                                <?php endforeach; ?>
-                                                                <?php endif; ?>
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="form-ib-group">
-                                                <div class="form-row">
-                                                    <div class="col">
-                                                        <div class="form-ib">
-                                                            <label for="opening_balance">Opening balance</label>
-                                                            <input type="text" name="opening_balance" id="opening_balance" class="form-control">
-                                                        </div>
-                                                    </div>
-                                                    <div class="col">
-                                                        <div class="form-ib">
-                                                            <label for="opening_balance_as_of_date">as of</label>
-                                                            <input type="text" name="opening_balance_as_of_date" id="opening_balance_as_of_date" class="form-control datepicker" value="<?=date("m/d/Y")?>" required>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="form-ib-group">
-                                                <div class="form-row">
-                                                    <div class="col">
-                                                        <div class="form-ib">
-                                                            <label for="account_number">Account no.</label>
-                                                            <input type="text" name="account_number" id="account_number" class="form-control" placeholder="Appears in the memo of all payment" required>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="form-ib-group">
-                                                <div class="form-row">
-                                                    <div class="col">
-                                                        <div class="form-ib">
-                                                            <label for="">Business ID No. / Social Security No.</label>
-                                                            <input type="text" name="tax_id" id="tax_id" class="form-control" required>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="form-ib-group">
-                                                <div class="form-row">
-                                                    <div class="col">
-                                                        <div class="form-ib">
-                                                            <label for="expense_account">Default expense account</label>
-                                                            <select name="default_expense_account" id="expense_account" class="form-control">
-                                                                <option value="" selected disabled>Choose Account</option>
-                                                                <?php if(count($expenseAccs) > 0) : ?>
-                                                                    <optgroup label="Expenses">
-                                                                    <?php foreach($expenseAccs as $expenseAcc) : ?>
-                                                                        <option value="<?=$expenseAcc->id?>"><?=$expenseAcc->name?></option>
-
-                                                                        <?php $childAccs = $this->chart_of_accounts_model->getChildAccounts($expenseAcc->id); ?>
-                                                                        <?php if(count($childAccs) > 0) : ?>
-                                                                            <optgroup label="&nbsp;&nbsp;&nbsp;&nbsp;Sub-accounts of <?=$expenseAcc->name?>">
-                                                                            <?php foreach($childAccs as $childAcc) : ?>
-                                                                                <option value="<?=$childAcc->id?>">&nbsp;&nbsp;&nbsp;<?=$childAcc->name?></option>
-                                                                            <?php endforeach; ?>
-                                                                            </optgroup>
-                                                                        <?php endif; ?>
-                                                                    <?php endforeach; ?>
-                                                                    </optgroup>
-                                                                <?php endif; ?>
-                                                                <?php if(count($otherExpenseAccs) > 0) : ?>
-                                                                    <optgroup label="Other Expenses">
-                                                                    <?php foreach($otherExpenseAccs as $otherExpenseAcc) : ?>
-                                                                        <option value="<?=$otherExpenseAcc->id?>"><?=$otherExpenseAcc->name?></option>
-
-                                                                        <?php $childAccs = $this->chart_of_accounts_model->getChildAccounts($otherExpenseAcc->id); ?>
-                                                                        <?php if(count($childAccs) > 0) : ?>
-                                                                            <optgroup label="&nbsp;&nbsp;&nbsp;&nbsp;Sub-accounts of <?=$otherExpenseAcc->name?>">
-                                                                            <?php foreach($childAccs as $childAcc) : ?>
-                                                                                <option value="<?=$childAcc->id?>">&nbsp;&nbsp;&nbsp;<?=$childAcc->name?></option>
-                                                                            <?php endforeach; ?>
-                                                                            </optgroup>
-                                                                        <?php endif; ?>
-                                                                    <?php endforeach; ?>
-                                                                    </optgroup>
-                                                                <?php endif; ?>
-                                                                <?php if(count($cogsAccs) > 0) : ?>
-                                                                    <optgroup label="Cost of Goods Sold">
-                                                                    <?php foreach($cogsAccs as $cogsAcc) : ?>
-                                                                        <option value="<?=$cogsAcc->id?>">&nbsp;<?=$cogsAcc->name?></option>
-
-                                                                        <?php $childAccs = $this->chart_of_accounts_model->getChildAccounts($cogsAcc->id); ?>
-                                                                        <?php if(count($childAccs) > 0) : ?>
-                                                                            <optgroup label="&nbsp;&nbsp;&nbsp;&nbsp;Sub-accounts of <?=$cogsAcc->name?>">
-                                                                            <?php foreach($childAccs as $childAcc) : ?>
-                                                                                <option value="<?=$childAcc->id?>">&nbsp;&nbsp;&nbsp;&nbsp;<?=$childAcc->name?></option>
-                                                                            <?php endforeach; ?>
-                                                                            </optgroup>
-                                                                        <?php endif; ?>
-                                                                    <?php endforeach; ?>
-                                                                    </optgroup>
-                                                                <?php endif; ?>
-                                                            </select>
-                                                            <!-- <input type="text" name="default_expense_amount" id="expense_account" class="form-control" placeholder="Choose Account" required> -->
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <div class="row w-100">
-                        <div class="col-md-6"><button type="button" class="btn btn-transparent" data-dismiss="modal">Cancel</button></div>
-                        <div class="col-md-6"><button type="submit" name="save" class="btn btn-success float-right">Save</button></div>
-                    </div>
-                </div>
-            </div>
-            </form>
-        </div>
-    </div>
-    <!--    end of modal-->
-
-    <!-- Add payment term modal -->
-    <div class="modal fade" id="payment_term_modal" tabindex="-1" role="dialog" aria-hidden="true">
+    <!-- Select category modal -->
+    <div class="modal fade" id="select_category_modal" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered m-auto w-25" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title">New Term</h4>
+                    <h4 class="modal-title">Categorize Selected</h4>
                     <button type="button" class="close" data-dismiss="modal"><i class="fa fa-times fa-lg"></i></button>
                 </div>
-                <form id="payment-term-form">
+                <form id="categorize-selected-form">
                 <div class="modal-body" style="max-height: 400px;">
                     <div class="row">
                         <div class="col-xl-12">
@@ -695,48 +375,25 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 <div class="card-body" style="max-height: 650px; padding-bottom: 1.25rem">
                                     <div class="row">
                                         <div class="col-md-12">
-                                            <div class="form-group">
-                                                <label for="name">Name</label>
-                                                <input type="text" name="name" id="name" class="form-control">
-                                            </div>
-                                            <div class="form-check mb-3">
-                                                <input class="form-check-input" type="radio" name="type" id="type1" value="1" checked>
-                                                <label class="form-check-label" for="type1">
-                                                    Due in fixed number of days
-                                                </label>
-                                            </div>
-                                            <div class="form-group row m-0">
-                                                <div class="col-sm-3">
-                                                    <input type="number" class="form-control" id="net_due_days" name="net_due_days">
-                                                </div>
-                                                <div class="col-sm-9 d-flex align-items-center pl-0">
-                                                    <label for="net_due_days">days</label>
-                                                </div>
-                                            </div>
-                                            <div class="form-check mb-3">
-                                                <input class="form-check-input" type="radio" name="type" id="type2" value="2">
-                                                <label class="form-check-label" for="type2">
-                                                    Due by certain day of the month
-                                                </label>
-                                            </div>
-                                            <div class="form-group row m-0">
-                                                <div class="col-sm-3">
-                                                    <input type="number" class="form-control" id="day_of_month_due" name="day_of_month_due" disabled>
-                                                </div>
-                                                <div class="col-sm-9 d-flex align-items-center pl-0">
-                                                    <label for="day_of_month_due">day of month</label>
-                                                </div>
-                                            </div>
-                                            <div class="form-group row m-0">
-                                                <div class="col-sm-12">
-                                                    <p>Due the next month if issued within</p>
-                                                </div>
-                                                <div class="col-sm-3">
-                                                    <input type="number" class="form-control" id="minimum_days_to_pay" name="minimum_days_to_pay" disabled>
-                                                </div>
-                                                <div class="col-sm-9 d-flex align-items-center pl-0">
-                                                    <label for="minimum_days_to_pay">days of due date</label>
-                                                </div>
+                                            <div class="form-group" style="margin-bottom: 0 !important">
+                                                <select name="category_id" id="category-id" class="form-control" required>
+                                                    <option value="" selected disabled>Select category</option>
+                                                    <?php foreach($categoryAccs as $accType => $accounts) : ?>
+                                                        <optgroup label="<?=$accType?>">
+                                                            <?php foreach($accounts as $account) : ?>
+                                                                <option value="<?=$account->id?>"><?=$account->name?></option>
+
+                                                                <?php if(count($account->childAccs) > 0) : ?>
+                                                                    <optgroup label="&nbsp;&nbsp;&nbsp;Sub-account of <?=$account->name?>">
+                                                                        <?php foreach($account->childAccs as $childAcc) : ?>
+                                                                            <option value="<?=$childAcc->id?>">&nbsp;&nbsp;&nbsp;<?=$childAcc->name?></option>
+                                                                        <?php endforeach; ?>
+                                                                    </optgroup>
+                                                                <?php endif; ?>
+                                                            <?php endforeach; ?>
+                                                        </optgroup>
+                                                    <?php endforeach; ?>
+                                                </select>
                                             </div>
                                         </div>
                                     </div>
@@ -751,14 +408,14 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         <button type="button" class="btn btn-secondary btn-rounded border" data-dismiss="modal">Close</button>
                     </div>
                     <div class="col-sm-6">
-                        <button type="submit" class="btn btn-success btn-rounded border float-right">Save</button>
+                        <button type="submit" class="btn btn-success btn-rounded border float-right">Apply</button>
                     </div>
                 </div>
                 </form>
             </div>
         </div>
     </div>
-    <!-- end add payment term modal -->
+    <!-- end select category modal -->
 </div>
 
 <!-- page wrapper end -->

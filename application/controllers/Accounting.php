@@ -61,7 +61,6 @@ class Accounting extends MY_Controller
 
         add_footer_js(array(
             "assets/plugins/dropzone/dist/dropzone.js",
-            "assets/js/accounting/sweetalert2@9.js",
             "assets/js/accounting/accounting.js",
             "assets/js/accounting/modal-forms.js",
             "assets/plugins/jquery-toast-plugin-master/dist/jquery.toast.min.js"
@@ -236,10 +235,11 @@ class Accounting extends MY_Controller
             'assets/css/accounting/customers.css',
         ));
         add_footer_js(array(
-            "assets/js/accounting/sales/customers.js"
+            "assets/js/accounting/sales/customers.js",
+            "assets/js/accounting/sales/customer_includes/send_reminder.js"
         ));
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
-        $this->page_data['customers'] = $this->accounting_invoices_model->getCustomers();
+        $this->page_data['customers'] = $this->accounting_customers_model->getAllByCompany();
         $this->page_data['page_title'] = "Customers";
         $this->load->view('accounting/customers', $this->page_data);
     }
@@ -5372,5 +5372,71 @@ class Accounting extends MY_Controller
         $data = new stdClass();
         $data->html = $html;
         echo json_encode($data);
+    }
+    public function get_info_customer_reminder()
+    {
+        $customer_id = $this->input->post("customer_id");
+        $customer_info = $this->accounting_customers_model->get_customer_by_id($customer_id);
+        $invoices = $this->accounting_invoices_model->get_payements_by_customer_id($customer_id);
+        $data = new stdClass();
+        $data->cutsomer_email = $customer_info->email;
+        $data->name = $customer_info->first_name ." ".$customer_info->last_name ." ";
+        $data->invoice_count = count($invoices);
+        $data->business_name = $customer_info->business_name;
+        echo json_encode($data);
+    }
+    public function send_customer_reminder()
+    {
+        $customer_email = $this->input->post("customer-email");
+        $subject = $this->input->post("subject");
+        $message = $this->input->post("message");
+        $server = MAIL_SERVER;
+        $port = MAIL_PORT;
+        $username = MAIL_USERNAME;
+        $password = MAIL_PASSWORD;
+        $from = MAIL_FROM;
+
+        $mail = new PHPMailer(true);
+        $mail->isSMTP();
+        $mail->getSMTPInstance()->Timelimit = 5;
+        $mail->Host = $server;
+        $mail->SMTPAuth = true;
+        $mail->Username = $username;
+        $mail->Password = $password;
+        $mail->SMTPSecure = 'ssl';
+        $mail->Timeout = 10; // seconds
+        $mail->Port = $port;
+        $mail->From = $from;
+        $mail->FromName = 'nSmarTrac';
+        $mail->Subject = $subject;
+
+        //get job data
+
+        $this->page_data['company_name'] = $company_name;
+        $this->page_data['date_from'] = $date_from;
+        $this->page_data['date_to'] = date("Y-m-d", strtotime('saturday this week', strtotime(date('Y-m-d'))));
+        $this->page_data['business_name'] = $business_name;
+        $this->page_data['FName'] = $FName;
+        $this->page_data['file_info'] = $file_info;
+        $this->page_data['file_link'] = base_url() . '/timesheet/timelogs/' . $filename;
+        $this->page_data['has_logo'] = false;
+        $this->page_data['est_wage_privacy'] = $est_wage_privacy;
+        $mail->IsHTML(true);
+        $mail->AddEmbeddedImage(dirname(__DIR__, 2) . '/assets/dashboard/images/logo.png', 'logo_2u', 'logo.png');
+        $filePath = base_url() . '/uploads/users/business_profile/'.$logo_folder.'/'.$company_logo;
+        if (@getimagesize($filePath)) {
+            $mail->AddEmbeddedImage(dirname(__DIR__, 2) . '/uploads/users/business_profile/'.$logo_folder.'/'.$company_logo, 'company_logo', $company_logo);
+            $this->page_data['has_logo'] = true;
+        }
+
+        $mail->Body =  'Timesheet Report.';
+        $content = $this->load->view('users/timesheet/emails/weekly_timelogs_report', $this->page_data, true);
+        $mail->MsgHTML($content);
+        $mail->addAddress($receiver);
+        if (!$mail->Send()) {
+            echo 'Message could not be sent.';
+            echo 'Mailer Error: ' . $mail->ErrorInfo;
+            exit;
+        }
     }
 }

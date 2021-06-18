@@ -202,8 +202,20 @@ class Accounting_invoices_model extends MY_Model
     }
     public function get_customer_search_result($value)
     {
-        $query = "SELECT * FROM  (SELECT CONCAT(first_name, ' ', last_name) name FROM acs_profile ) a WHERE name LIKE '%".$value."%'";
+        $query = "SELECT * FROM  (SELECT *, CONCAT(first_name, ' ', last_name) name FROM acs_profile ) a WHERE name LIKE '%".$value."%' AND company_id = ".logged('company_id');
         $qry = $this->db->query($query);
         return $qry->result();
+    }
+    public function get_payements_by_customer_id($customer_id)
+    {
+        $this->db->select('*');
+
+        $this->db->from('accounting_receive_payment');
+        $this->db->join('invoices', 'accounting_receive_payment.invoice_number = invoices.invoice_number');
+        
+        $this->db->where('accounting_receive_payment.customer_id', $customer_id);
+
+        $query = $this->db->get();
+        return $query->result();
     }
 }

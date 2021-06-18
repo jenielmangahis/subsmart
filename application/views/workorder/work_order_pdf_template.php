@@ -16,8 +16,8 @@ table {
 }
     </style>
 </head>
-<body style="font-family: Gill Sans, sans-serif; font-size: 16px;" >
-    <div style="box-shadow:0 2px 8px 0 rgba(0,0,0,.2);background-color: #fff;border: 1px solid #d4d7dc;-webkit-transition: all .3s ease;position:relative;top:20px;width: 95%;margin: 0 auto; padding:5%;">
+<body style="font-family: Gill Sans, sans-serif; font-size: 11px;" >
+    <div style="box-shadow:0 2px 8px 0 rgba(0,0,0,.2);background-color: #fff;border: 1px solid #d4d7dc;-webkit-transition: all .3s ease;position:relative;top:20px;width: 95%;margin: 0 auto; padding:1%;">
         <div style="text-align: justify; text-justify: inter-word;">
             This workorder agreement (the "agreement") is made as of 05-07-2021, by and between ADI Smart Home, (the "Company") and the ("Customer") as the address shown below (the "Premise/Service")
         </div>
@@ -32,22 +32,12 @@ table {
             Security Number: <?php echo $security_number; ?> <br>
             <!-- Custom Field: <?php //echo $security_number; ?> <br> -->
             Source: <?php echo $source_name; ?> <br>
-            Contacts: <br>
-				&emsp;  <?php echo $first_verification_name ?> <br> 
-                &emsp;  <?php echo $first_number ?> <br>
-                &emsp;  <?php echo $first_relation ?><br><br>
-
-				&emsp;  <?php echo $second_verification_name ?> <br> 
-                &emsp;  <?php echo $second_number ?> <br> 
-                &emsp;  <?php echo $second_relation ?><br><br>
-
-				&emsp;  <?php echo $third_verification_name ?> <br> 
-                &emsp;  <?php echo $third_number ?> <br> 
-                &emsp;  <?php echo $third_relation ?>
+            <!-- Contacts: <br> -->
+				
         </div>
 
 
-        <div style="padding: 10%;">
+        <div style="padding: 2%;">
             <img src="<?php //echo" $company_representative_signature"; ?>">
         </div>
 
@@ -66,8 +56,9 @@ table {
                 <b>CUSTOMER:</b><br>
                 <!-- <hr style="width: 50% !important; align:left !important;"> -->
                 <?php echo $acs_name; ?><br>
-                <?php echo $job_location; ?><br>
-                <?php echo $job_location2; ?><br>
+                <?php if(!empty($business_name)){ echo $business_name.'<br>'; } ?>
+                <?php if(!empty($job_location)){ echo $job_location.'<br>'; } ?>
+                <?php if(!empty($job_location2)){ echo $job_location2.'<br>'; } ?>
                 Email: <?php echo $email; ?><br>
                 Phone: <?php echo $phone; ?><br>
                 Mobile: <?php echo $mobile; ?><br><br>
@@ -76,11 +67,29 @@ table {
             <div>
                 <b>ADDITIONAL:</b>
                 <hr><br>
+                <?php if($template == '1'){ ?>
                 <?php foreach($customs as $c){ ?>
                     <?php if(empty($c->value)){ }else{ ?>
                         <?php echo $c->name; ?>: <?php echo $c->value; ?><br>
                     <?php } ?>
-                <?php } ?>
+                <?php } 
+                }
+                else{ ?>
+                <?php if(!empty($first_verification_name)){ echo $first_verification_name.'<br>'; } ?> 
+                <?php if(!empty($first_number)){ echo $first_number.'<br>'; } ?>
+                <?php if(!empty($first_relation)){ echo $first_relation.'<br><br>'; } ?>
+
+				<?php if(!empty($second_verification_name)){ echo $second_verification_name.'<br>'; } ?>
+                <?php if(!empty($second_number)){ echo $second_number.'<br>'; } ?>
+                <?php if(!empty($second_relation)){ echo $second_relation.'<br><br>'; } ?>
+
+				<?php if(!empty($third_verification_name)){ echo $third_verification_name.'<br>'; } ?>
+                <?php if(!empty($third_number)){ echo $third_number.'<br>'; } ?>
+                <?php if(!empty($third_relation)){ echo $third_relation.'<br><br>'; } ?>
+
+
+                <?php }
+                ?>
                 <br><br>
             </div>
 
@@ -212,32 +221,149 @@ table {
             <div style="text-align: justify; text-justify: inter-word;">
                 <b>ACCEPTED PAYMENT METHODS:</b>
                 <hr>
-                <br>
+                <ul>
+                    <li>Cash</li>
+                    <li>Check</li>
+                    <li>Credit Card</li>
+                    <li>Debit Card</li>
+                    <li>ACH</li>
+                    <li>Venmo</li>
+                    <li>Paypal</li>
+                    <li>Square</li>
+                    <li>Invoicing</li>
+                    <li>Warranty Work</li>
+                    <li>Home Owner Financing</li>
+                    <li>Home Owner Financing</li>
+                    <li>e-Transfer</li>
+                    <li>Other Credit Card Professor</li>
+                    <li>Other Payment Type</li>
+                </ul> 
+                <br><br><br>
             </div>
 
             <div style="text-align: justify; text-justify: inter-word;">
                 <b>PAYMENT DETAILS:</b>
                 <hr>
-                <br>
+                    <?php echo 'Amount: '.$amount; ?><br>
+                    <?php 
+                    if($payment_method ==  'Cash'){
+                        echo 'Payment Method: Cash';
+                    }
+                    elseif($payment_method ==  'Check')
+                    {
+                        echo 'Payment Method: Check';
+                        echo '<br> Check Number: '. $check_number;
+                        echo '<br> Rounting Number: '. $routing_number;
+                        echo '<br> Account Number: '. $account_number;
+                    }
+                    elseif($payment_method ==  'Credit Card')
+                    {
+                        echo 'Payment Method: Credit Card';
+                        echo '<br> Credit Number: '. $credit_number;
+                        echo '<br> Credit Expiry: '. $credit_expiry;
+                        echo '<br> CVC: '. $credit_cvc;
+                    }
+                    elseif($payment_method ==  'Debit Card')
+                    {
+                        echo 'Payment Method: Debit Card';
+                        echo '<br> Credit Number: '. $credit_number;
+                        echo '<br> Credit Expiry: '. $credit_expiry;
+                        echo '<br> CVC: '. $credit_cvc;
+                    }
+                    elseif($payment_method ==  'ACH')
+                    {
+                        echo 'Payment Method: Debit Card';
+                        echo '<br> Routing Number: '. $routing_number;
+                        echo '<br> Account Number: '. $account_number;
+                    }
+                    elseif($payment_method ==  'Venmo')
+                    {
+                        echo 'Payment Method: Venmo';
+                        echo '<br> Account Credential: '. $account_credentials;
+                        echo '<br> Account Note: '. $account_note;
+                        echo '<br> Confirmation: '. $confirmation;
+                    }
+                    elseif($payment_method ==  'Paypal')
+                    {
+                        echo 'Payment Method: Paypal';
+                        echo '<br> Account Credential: '. $account_credentials;
+                        echo '<br> Account Note: '. $account_note;
+                        echo '<br> Confirmation: '. $confirmation;
+                    }
+                    elseif($payment_method ==  'Square')
+                    {
+                        echo 'Payment Method: Square';
+                        echo '<br> Account Credential: '. $account_credentials;
+                        echo '<br> Account Note: '. $account_note;
+                        echo '<br> Confirmation: '. $confirmation;
+                    }
+                    elseif($payment_method ==  'Invoicing')
+                    {
+                        echo 'Payment Method: Invoicing';
+                        echo '<br> Address: '. $mail_address.' '. $mail_locality.' '. $mail_state.' '. $mail_postcode.' '. $mail_cross_street;
+                    }
+                    elseif($payment_method ==  'Warranty Work')
+                    {
+                        echo 'Payment Method: Warranty Work';
+                        echo '<br> Account Credential: '. $account_credentials;
+                        echo '<br> Account Note: '. $account_note;
+                    }
+                    elseif($payment_method ==  'Home Owner Financing')
+                    {
+                        echo 'Payment Method: Home Owner Financing';
+                        echo '<br> Account Credential: '. $account_credentials;
+                        echo '<br> Account Note: '. $account_note;
+                    }
+                    elseif($payment_method ==  'e-Transfer')
+                    {
+                        echo 'Payment Method: e-Transfer';
+                        echo '<br> Account Credential: '. $account_credentials;
+                        echo '<br> Account Note: '. $account_note;
+                    }
+                    elseif($payment_method ==  'Other Credit Card Professor')
+                    {
+                        echo 'Payment Method: Other Credit Card Professor';
+                        echo '<br> Credit Number: '. $credit_number;
+                        echo '<br> Credit Expiry: '. $credit_expiry;
+                        echo '<br> CVC: '. $credit_cvc;
+                    }
+                    elseif($payment_method ==  'Other Payment Type')
+                    {
+                        echo 'Payment Method: Other Payment Type';
+                        echo '<br> Account Credential: '. $account_credentials;
+                        echo '<br> Account Note: '. $account_note;
+                    }
+                    ?>
+                <br><br><br>
             </div>
 
-            <div style="text-align: justify; text-justify: inter-word;">
+            <div>
                 <b>ASSIGNED TO:</b>
-                <hr>
-                    <?php if(empty($company_representative_signature) || empty($company_representative_name)){ } else{ ?>
-                    <img src="<?php echo " $company_representative_signature"; ?>" style="width: 50%;"><br>
-                    <?php echo $company_representative_name; ?><br><br>
-                    <?php } ?>
-
-                    <?php if(empty($primary_account_holder_signature) || empty($primary_account_holder_name)){ } else{ ?>
-                    <img src="<?php echo " $primary_account_holder_signature"; ?>" style="width: 50%;"><br>
-                    <?php echo $primary_account_holder_name; ?><br><br>
-                    <?php } ?>
-
-                    <?php if(empty($secondary_account_holder_signature) || empty($secondary_account_holder_name)){ } else{ ?>
-                    <img src="<?php echo " $secondary_account_holder_signature"; ?>" style="width: 50%;"><br>
-                    <?php echo $secondary_account_holder_name; ?><br><br>
-                    <?php } ?>
+                <hr><br>
+                <table>
+                    <tr>
+                        <td align="center">
+                            <?php if(empty($company_representative_signature)){ } else{ ?>
+                            <img src="<?php echo " $company_representative_signature"; ?>" style="width:30%;height:80px;"><br>
+                            <?php echo $company_representative_name; ?>
+                            <?php } ?>
+                        </td>
+                        
+                        <td align="center">
+                            <?php if(empty($primary_account_holder_signature)){ } else{ ?>
+                            <img src="<?php echo " $primary_account_holder_signature"; ?>" style="width:30%;height:80px;"><br>
+                            <?php echo $primary_account_holder_name; ?>
+                            <?php } ?>
+                        </td>
+                        
+                        <td align="center">
+                            <?php if(empty($secondary_account_holder_signature)){ } else{ ?>
+                            <img src="<?php echo " $secondary_account_holder_signature"; ?>" style="width:30%;height:80px;"><br>
+                            <?php echo $secondary_account_holder_name; ?>
+                            <?php } ?>
+                        </td>
+                    </tr>
+                </table>
                 <br>
             </div>
 

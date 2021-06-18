@@ -441,6 +441,7 @@ border: none;
 									</div> 
 									
 									<div class="user-menu mobile_btn"><br>
+										<a class="btn btn-success" href="#" data-toggle="modal" data-target="#sharePreview"><span class="fa fa-edit"></span> Share</a>
 										<?php if($workorder->work_order_type_id == '2'){ ?>
 											<a class="btn btn-sec" href="<?php echo base_url('workorder/editAlarm/' . $workorder->id) ?>"><span class="fa fa-edit"></span> Edit</a>
 										<?php }else{ ?>
@@ -1027,6 +1028,31 @@ border: none;
                     <button id="clone_workorder" class="btn btn-primary" type="button" data-clone-modal="submit">Clone
                         Work Order
                     </button>
+                </div>
+            </div>
+        </div>
+    </div>
+	
+	<div class="modal fade" id="sharePreview" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Share This Link</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form name="clone-modal-form">
+                        <div class="validation-error" style="display: none;"></div>
+                        <p>
+                            <input type="text" class="form-control" value="<?php echo base_url('workorder/preview/'.$workorder->id) ?>">
+                        </p>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-default" type="button" data-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>

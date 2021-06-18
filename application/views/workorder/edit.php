@@ -948,7 +948,7 @@ border: none;
                                     <select id="lead_source" name="lead_source" class="form-control custom-select m_select">
                                         <option value="0">- none -</option>
                                         <?php foreach($lead_source as $lead){ ?>
-                                            <option value="<?php echo $lead->ls_id; ?>"><?php echo $lead->ls_name; ?></option>
+                                            <option <?php if(isset($workorder)){ if($workorder->lead_source_id == $lead->ls_id){echo "selected";} } ?> value="<?php echo $lead->ls_id; ?>"><?php echo $lead->ls_name; ?></option>
                                         <?php } ?>
                                     </select>
                                 </div>    
@@ -961,7 +961,7 @@ border: none;
                                 <div class="form-group col-md-4">
                                     <label for="job_type">Payment Method</label>
                                     <select name="payment_method" id="payment_method" class="form-control custom-select">
-                                        <option value="">Choose method</option>
+                                        <option value="<?php echo $workorder->payment_method; ?>"><?php echo $workorder->payment_method; ?></option>
                                         <option value="Cash">Cash</option>
                                         <option value="Check">Check</option>
                                         <option value="Credit Card">Credit Card</option>
@@ -990,17 +990,17 @@ border: none;
                                 <div class="row">                   
                                     <div class="form-group col-md-4">
                                         <label for="job_type">Check Number</label>
-                                        <input type="text" class="form-control" name="check_number" id="check_number"/>
+                                        <input type="text" class="form-control" name="check_number" id="check_number" value="<?php echo $payment->check_number; ?>" />
                                     </div>
                                     <div class="form-group col-md-4">
                                         <label for="job_type">Routing Number</label>
-                                        <input type="text" class="form-control" name="routing_number" id="routing_number"/>
+                                        <input type="text" class="form-control" name="routing_number" id="routing_number" value="<?php echo $payment->routing_number; ?>" />
                                     </div>                                             
                                 </div>
                                 <div class="row">
                                     <div class="form-group col-md-4">
                                         <label for="job_type">Account Number</label>
-                                        <input type="text" class="form-control" name="account_number" id="account_number"/>
+                                        <input type="text" class="form-control" name="account_number" id="account_number" value="<?php echo $payment->account_number; ?>" />
                                     </div>                                       
                                 </div>
                             </div>
@@ -1008,31 +1008,31 @@ border: none;
                                 <div class="row">                   
                                     <div class="form-group col-md-4">
                                         <label for="job_type">Credit Card Number</label>
-                                        <input type="text" class="form-control" name="credit_number" id="credit_number" placeholder="0000 0000 0000 000" />
+                                        <input type="text" class="form-control" name="credit_number" id="credit_number" placeholder="0000 0000 0000 000"  value="<?php echo $payment->credit_number; ?>" />
                                     </div>
                                     <div class="form-group col-md-3">
                                         <label for="job_type">Credit Card Expiration</label>
-                                        <input type="text" class="form-control" name="credit_expiry" id="credit_expiry" placeholder="MM/YYYY"/>
+                                        <input type="text" class="form-control" name="credit_expiry" id="credit_expiry" placeholder="MM/YYYY" value="<?php echo $payment->credit_expiry; ?>" />
                                     </div>  
                                     <div class="form-group col-md-3">
                                         <label for="job_type">CVC</label>
-                                        <input type="text" class="form-control" name="credit_cvc" id="credit_cvc" placeholder="CVC"/>
+                                        <input type="text" class="form-control" name="credit_cvc" id="credit_cvc" placeholder="CVC" value="<?php echo $payment->credit_cvc; ?>" />
                                     </div>                                             
                                 </div>
                             </div>
                             <div id="debit_card" style="display:none;">
                                 <div class="row">                   
                                     <div class="form-group col-md-4">
-                                        <label for="job_type">Credit Card Number</label>
-                                        <input type="text" class="form-control" name="debit_credit_number" id="credit_number" placeholder="0000 0000 0000 000" />
+                                        <label for="job_type">Debit Card Number</label>
+                                        <input type="text" class="form-control" name="debit_credit_number" id="credit_number" placeholder="0000 0000 0000 000"  value="<?php echo $payment->credit_number; ?>" />
                                     </div>
                                     <div class="form-group col-md-3">
                                         <label for="job_type">Credit Card Expiration</label>
-                                        <input type="text" class="form-control" name="debit_credit_expiry" id="credit_expiry" placeholder="MM/YYYY"/>
+                                        <input type="text" class="form-control" name="debit_credit_expiry" id="credit_expiry" placeholder="MM/YYYY" value="<?php echo $payment->credit_expiry; ?>" />
                                     </div>  
                                     <div class="form-group col-md-3">
                                         <label for="job_type">CVC</label>
-                                        <input type="text" class="form-control" name="debit_credit_cvc" id="credit_cvc" placeholder="CVC"/>
+                                        <input type="text" class="form-control" name="debit_credit_cvc" id="credit_cvc" placeholder="CVC" value="<?php echo $payment->credit_cvc; ?>" />
                                     </div>                                            
                                 </div>
                             </div>
@@ -1040,11 +1040,11 @@ border: none;
                                 <div class="row">                   
                                     <div class="form-group col-md-4">
                                         <label for="job_type">Routing Number</label>
-                                        <input type="text" class="form-control" name="ach_routing_number" id="ach_routing_number" />
+                                        <input type="text" class="form-control" name="ach_routing_number" id="ach_routing_number" value="<?php echo $payment->routing_number; ?>"  />
                                     </div>
                                     <div class="form-group col-md-3">
                                         <label for="job_type">Account Number</label>
-                                        <input type="text" class="form-control" name="ach_account_number" id="ach_account_number" />
+                                        <input type="text" class="form-control" name="ach_account_number" id="ach_account_number" value="<?php echo $payment->account_number; ?>"  />
                                     </div>  
                                 </div>
                             </div>
@@ -1052,15 +1052,15 @@ border: none;
                                 <div class="row">                   
                                     <div class="form-group col-md-4">
                                         <label for="job_type">Account Credential</label>
-                                        <input type="text" class="form-control" name="account_credentials" id="account_credentials"/>
+                                        <input type="text" class="form-control" name="account_credentials" id="account_credentials" value="<?php echo $payment->account_credentials; ?>" />
                                     </div>
                                     <div class="form-group col-md-3">
                                         <label for="job_type">Account Note</label>
-                                        <input type="text" class="form-control" name="account_note" id="account_note"/>
+                                        <input type="text" class="form-control" name="account_note" id="account_note" value="<?php echo $payment->account_note; ?>" />
                                     </div>  
                                     <div class="form-group col-md-3">
                                         <label for="job_type">Confirmation</label>
-                                        <input type="text" class="form-control" name="confirmation" id="confirmation"/>
+                                        <input type="text" class="form-control" name="confirmation" id="confirmation" value="<?php echo $payment->confirmation; ?>" />
                                     </div>                                            
                                 </div>
                             </div>
@@ -1068,15 +1068,15 @@ border: none;
                                 <div class="row">                   
                                     <div class="form-group col-md-4">
                                         <label for="job_type">Account Credential</label>
-                                        <input type="text" class="form-control" name="paypal_account_credentials" id="paypal_account_credentials"/>
+                                        <input type="text" class="form-control" name="paypal_account_credentials" id="paypal_account_credentials" value="<?php echo $payment->account_credentials; ?>" />
                                     </div>
                                     <div class="form-group col-md-3">
                                         <label for="job_type">Account Note</label>
-                                        <input type="text" class="form-control" name="paypal_account_note" id="paypal_account_note"/>
+                                        <input type="text" class="form-control" name="paypal_account_note" id="paypal_account_note" value="<?php echo $payment->account_note; ?>" />
                                     </div>  
                                     <div class="form-group col-md-3">
                                         <label for="job_type">Confirmation</label>
-                                        <input type="text" class="form-control" name="paypal_confirmation" id="paypal_confirmation"/>
+                                        <input type="text" class="form-control" name="paypal_confirmation" id="paypal_confirmation" value="<?php echo $payment->confirmation; ?>" />
                                     </div>                                            
                                 </div>
                             </div>
@@ -1084,15 +1084,15 @@ border: none;
                                 <div class="row">                   
                                     <div class="form-group col-md-4">
                                         <label for="job_type">Account Credential</label>
-                                        <input type="text" class="form-control" name="square_account_credentials" id="square_account_credentials"/>
+                                        <input type="text" class="form-control" name="square_account_credentials" id="square_account_credentials" value="<?php echo $payment->account_credentials; ?>" />
                                     </div>
                                     <div class="form-group col-md-3">
                                         <label for="job_type">Account Note</label>
-                                        <input type="text" class="form-control" name="square_account_note" id="square_account_note"/>
+                                        <input type="text" class="form-control" name="square_account_note" id="square_account_note" value="<?php echo $payment->account_note; ?>" />
                                     </div>  
                                     <div class="form-group col-md-3">
                                         <label for="job_type">Confirmation</label>
-                                        <input type="text" class="form-control" name="square_confirmation" id="square_confirmation"/>
+                                        <input type="text" class="form-control" name="square_confirmation" id="square_confirmation" value="<?php echo $payment->confirmation; ?>" />
                                     </div>                                            
                                 </div>
                             </div>
@@ -1100,11 +1100,11 @@ border: none;
                                 <div class="row">                   
                                     <div class="form-group col-md-4">
                                         <label for="job_type">Account Credential</label>
-                                        <input type="text" class="form-control" name="warranty_account_credentials" id="warranty_account_credentials"/>
+                                        <input type="text" class="form-control" name="warranty_account_credentials" id="warranty_account_credentials" value="<?php echo $payment->account_credentials; ?>" />
                                     </div>
                                     <div class="form-group col-md-3">
                                         <label for="job_type">Account Note</label>
-                                        <input type="text" class="form-control" name="warranty_account_note" id="warranty_account_note"/>
+                                        <input type="text" class="form-control" name="warranty_account_note" id="warranty_account_note" value="<?php echo $payment->account_note; ?>" />
                                     </div>                                         
                                 </div>
                             </div>
@@ -1112,11 +1112,11 @@ border: none;
                                 <div class="row">                   
                                     <div class="form-group col-md-4">
                                         <label for="job_type">Account Credential</label>
-                                        <input type="text" class="form-control" name="home_account_credentials" id="home_account_credentials"/>
+                                        <input type="text" class="form-control" name="home_account_credentials" id="home_account_credentials" value="<?php echo $payment->account_credentials; ?>" />
                                     </div>
                                     <div class="form-group col-md-3">
                                         <label for="job_type">Account Note</label>
-                                        <input type="text" class="form-control" name="home_account_note" id="home_account_note"/>
+                                        <input type="text" class="form-control" name="home_account_note" id="home_account_note" value="<?php echo $payment->account_note; ?>" />
                                     </div>                                         
                                 </div>
                             </div>
@@ -1124,11 +1124,11 @@ border: none;
                                 <div class="row">                   
                                     <div class="form-group col-md-4">
                                         <label for="job_type">Account Credential</label>
-                                        <input type="text" class="form-control" name="e_account_credentials" id="e_account_credentials"/>
+                                        <input type="text" class="form-control" name="e_account_credentials" id="e_account_credentials" value="<?php echo $payment->account_credentials; ?>" />
                                     </div>
                                     <div class="form-group col-md-3">
                                         <label for="job_type">Account Note</label>
-                                        <input type="text" class="form-control" name="e_account_note" id="e_account_note"/>
+                                        <input type="text" class="form-control" name="e_account_note" id="e_account_note" value="<?php echo $payment->account_note; ?>" />
                                     </div>                                         
                                 </div>
                             </div>
@@ -1136,15 +1136,15 @@ border: none;
                                 <div class="row">                   
                                     <div class="form-group col-md-4">
                                         <label for="job_type">Credit Card Number</label>
-                                        <input type="text" class="form-control" name="other_credit_number" id="other_credit_number" placeholder="0000 0000 0000 000" />
+                                        <input type="text" class="form-control" name="other_credit_number" id="other_credit_number" placeholder="0000 0000 0000 000"  value="<?php echo $payment->credit_number; ?>" />
                                     </div>
                                     <div class="form-group col-md-3">
                                         <label for="job_type">Credit Card Expiration</label>
-                                        <input type="text" class="form-control" name="other_credit_expiry" id="other_credit_expiry" placeholder="MM/YYYY"/>
+                                        <input type="text" class="form-control" name="other_credit_expiry" id="other_credit_expiry" placeholder="MM/YYYY" value="<?php echo $payment->credit_expiry; ?>" />
                                     </div>  
                                     <div class="form-group col-md-3">
                                         <label for="job_type">CVC</label>
-                                        <input type="text" class="form-control" name="other_credit_cvc" id="other_credit_cvc" placeholder="CVC"/>
+                                        <input type="text" class="form-control" name="other_credit_cvc" id="other_credit_cvc" placeholder="CVC" value="<?php echo $payment->credit_cvc; ?>" />
                                     </div>                                             
                                 </div>
                             </div>
@@ -1152,11 +1152,11 @@ border: none;
                                 <div class="row">                   
                                     <div class="form-group col-md-4">
                                         <label for="job_type">Account Credential</label>
-                                        <input type="text" class="form-control" name="other_payment_account_credentials" id="other_payment_account_credentials"/>
+                                        <input type="text" class="form-control" name="other_payment_account_credentials" id="other_payment_account_credentials" value="<?php echo $payment->account_credentials; ?>" />
                                     </div>
                                     <div class="form-group col-md-3">
                                         <label for="job_type">Account Note</label>
-                                        <input type="text" class="form-control" name="other_payment_account_note" id="other_payment_account_note"/>
+                                        <input type="text" class="form-control" name="other_payment_account_note" id="other_payment_account_note" value="<?php echo $payment->account_note; ?>" />
                                     </div>                                         
                                 </div>
                             </div>
@@ -1299,8 +1299,8 @@ border: none;
 
                      <div class="form-group">
                                 <button type="submit" class="btn btn-flat btn-danger">Update</button>
-                                <button type="submit" class="btn btn-flat btn-success">Preview</button>
-                                <button type="submit" class="btn btn-flat btn-success" style="background-color: #32243d !important"><b>Save Template</b></button>
+                                <!-- <button type="submit" class="btn btn-flat btn-success">Preview</button> -->
+                                <!-- <button type="submit" class="btn btn-flat btn-success" style="background-color: #32243d !important"><b>Save Template</b></button> -->
                                 <button type="submit" class="btn btn-flat btn-success" id="esignButton">eSign</button>
                                 <a href="<?php echo url('workorder') ?>" class="btn ">Cancel this</a>
                     </div>
@@ -1374,18 +1374,21 @@ border: none;
                                         <div class="row">
                                         <div class="col-md-12" style="padding:1%;">
                                         <center>
+                                        <div id="signArea" >
                                             <canvas id="canvas" style="border: solid gray 1px;"></canvas>
                                             <input type="hidden" class="form-control mb-3" name="company_representative_printed_name" id="comp_rep_approval1" value="Company Representative"/>
                                             <input type="hidden" id="saveCompanySignatureDB1aM" name="company_representative_approval_signature1aM">
                                             </div>
                                             </div>
                                             <br>
+                                        </div>
                                         </center>
                                         </div>
                                     
                                     </div>
                         
                         <div class="modal-footer">
+                            <button id="clear" class="btn btn-danger">Clear</button>
                             <button type="button" class="btn btn-success edit_first_signature" id="enter_signature">Update</button>
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                             <!-- <input type="submit" value="save" id="btnSaveSign"> -->
@@ -1408,18 +1411,21 @@ border: none;
                                         <div class="row">
                                         <div class="col-md-12" style="padding:1%;">
                                         <center>
+                                        <div id="signArea2" >
                                             <canvas id="canvas2" style="border: solid gray 1px;"></canvas>
                                             <input type="hidden" class="form-control mb-3" name="primary_representative_printed_name" id="comp_rep_approval2" value="Primary Account Holder"/>
                                             <input type="hidden" id="savePrimaryAccountSignatureDB2aM" name="primary_account_holder_signature2aM">
                                             </div>
                                             </div>
                                             <br>
+                                        </div>
                                         </center>
                                         </div>
                                     
                                     </div>
                         
                         <div class="modal-footer">
+                            <button id="clear2" class="btn btn-danger">Clear</button>
                             <button type="button" class="btn btn-success edit_second_signature" id="enter_signature">Update</button>
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                             <!-- <input type="submit" value="save" id="btnSaveSign"> -->
@@ -1442,18 +1448,21 @@ border: none;
                                         <div class="row">
                                         <div class="col-md-12" style="padding:1%;">
                                         <center>
+                                        <div id="signArea3" >
                                             <canvas id="canvas3" style="border: solid gray 1px;"></canvas>
                                             <input type="hidden" class="form-control mb-3" name="secondary_representative_printed_name" id="comp_rep_approval3" value="Secondary Account Holder"/>
                                             <input type="hidden" id="saveSecondaryAccountSignatureDB3aM" name="secondary_account_holder_signature3aM">
                                             </div>
                                             </div>
                                             <br>
+                                        </div>
                                         </center>
                                         </div>
                                     
                                     </div>
                         
                         <div class="modal-footer">
+                            <button id="clear3" class="btn btn-danger">Clear</button>
                             <button type="button" class="btn btn-success edit_third_signature" id="enter_signature">Update</button>
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                             <!-- <input type="submit" value="save" id="btnSaveSign"> -->
@@ -3032,4 +3041,296 @@ document.getElementById("payment_method").onchange = function() {
         $('#other_payment_area').show();
     }
 }
+</script>
+
+<script>
+// $(document).on("click",".pdf_sheet", function(){
+//     // window.open(url, '_blank');
+//     // alert('yes!');
+//     var subjectID = $("#workorder_number").val();
+//     // $("#workorder_number").val();view_workorder_number
+//     // var session = $("#SessionFrom").val()+"-"+$("#SessionTo").val();
+//     // var courseID = $("#classesID").val();
+//     // var yearsOrSemester = $("#yearSemesterID").val();
+//     // var form = '';
+//     // form += '<input type="hidden" name="subjectID" value="' + subjectID + '">';
+//     // form += '<input type="hidden" name="session" value="' + session + '">';
+//     // form += '<input type="hidden" name="courseID" value="' + courseID + '">';
+//     // form += '<input type="hidden" name="yearsOrSemester" value="' + yearsOrSemester+ '">';
+//     // form += '</form>';
+//     // $('body').append(form);
+//     // $('#static_form').submit();
+//     $.ajax({
+//         type : 'POST',
+//         url : "<?php echo base_url(); ?>workorder/preview",
+//         // data : {dataURL: dataURL},
+//         success: function(result){
+//         // $('#res').html('Signature Uploaded successfully');
+//         alert('yes');
+//         // console.log(dataURL)
+//         // location.reload();
+        
+//         },
+//     });
+
+
+// });
+$('#clear').click(function() {
+  $('#signArea').signaturePad().clearCanvas();
+});
+
+$('#clear2').click(function() {
+  $('#signArea2').signaturePad().clearCanvas();
+});
+
+$('#clear3').click(function() {
+  $('#signArea3').signaturePad().clearCanvas();
+});
+</script>
+
+<script>
+$(document).ready(function(){
+    var payment_method = $('#payment_method').val();
+    
+    if (payment_method == 'Cash') {
+        // alert('cash');
+		// $('#exampleModal').modal('toggle');
+        $('#cash_area').show();
+        $('#check_area').hide();
+        $('#credit_card').hide();
+        $('#debit_card').hide();
+        $('#ach_area').hide();
+        $('#venmo_area').hide();
+        $('#paypal_area').hide();
+        $('#invoicing').hide();
+        $('#square_area').hide();
+        $('#warranty_area').hide();
+        $('#home_area').hide();
+        $('#e_area').hide();
+        $('#other_credit_card').hide();
+        $('#other_payment_area').hide();
+    	}
+    else if(payment_method == 'Invoicing'){
+
+        $('#cash_area').hide();
+        $('#check_area').hide();
+        $('#invoicing').show();
+        $('#credit_card').hide();
+        $('#debit_card').hide();
+        $('#ach_area').hide();
+        $('#venmo_area').hide();
+        $('#paypal_area').hide();
+        $('#square_area').hide();
+        $('#warranty_area').hide();
+        $('#home_area').hide();
+        $('#e_area').hide();
+        $('#other_credit_card').hide();
+        $('#other_payment_area').hide();
+    }
+	
+    else if(payment_method == 'Check'){
+        // alert('Check');
+        $('#cash_area').hide();
+        $('#check_area').show();
+        $('#credit_card').hide();
+        $('#debit_card').hide();
+        $('#invoicing').hide();
+        $('#ach_area').hide();
+        $('#venmo_area').hide();
+        $('#paypal_area').hide();
+        $('#square_area').hide();
+        $('#warranty_area').hide();
+        $('#home_area').hide();
+        $('#e_area').hide();
+        $('#other_credit_card').hide();
+        $('#other_payment_area').hide();
+    }
+    else if(payment_method == 'Credit Card'){
+        // alert('Credit card');
+        $('#cash_area').hide();
+        $('#check_area').hide();
+        $('#credit_card').show();
+        $('#debit_card').hide();
+        $('#invoicing').hide();
+        $('#ach_area').hide();
+        $('#venmo_area').hide();
+        $('#paypal_area').hide();
+        $('#square_area').hide();
+        $('#warranty_area').hide();
+        $('#home_area').hide();
+        $('#e_area').hide();
+        $('#other_credit_card').hide();
+        $('#other_payment_area').hide();
+    }
+    else if(payment_method == 'Debit Card'){
+        // alert('Credit card');
+        $('#cash_area').hide();
+        $('#check_area').hide();
+        $('#credit_card').hide();
+        $('#debit_card').show();
+        $('#ach_area').hide();
+        $('#venmo_area').hide();
+        $('#invoicing').hide();
+        $('#paypal_area').hide();
+        $('#square_area').hide();
+        $('#warranty_area').hide();
+        $('#home_area').hide();
+        $('#e_area').hide();
+        $('#other_credit_card').hide();
+        $('#other_payment_area').hide();
+    }
+    else if(payment_method == 'ACH'){
+        // alert('Credit card');
+        $('#cash_area').hide();
+        $('#check_area').hide();
+        $('#credit_card').hide();
+        $('#debit_card').hide();
+        $('#invoicing').hide();
+        $('#ach_area').show();
+        $('#venmo_area').hide();
+        $('#paypal_area').hide();
+        $('#square_area').hide();
+        $('#warranty_area').hide();
+        $('#home_area').hide();
+        $('#e_area').hide();
+        $('#other_credit_card').hide();
+        $('#other_payment_area').hide();
+    }
+    else if(payment_method == 'Venmo'){
+        // alert('Credit card');
+        $('#cash_area').hide();
+        $('#check_area').hide();
+        $('#credit_card').hide();
+        $('#debit_card').hide();
+        $('#ach_area').hide();
+        $('#invoicing').hide();
+        $('#venmo_area').show();
+        $('#paypal_area').hide();
+        $('#square_area').hide();
+        $('#warranty_area').hide();
+        $('#home_area').hide();
+        $('#e_area').hide();
+        $('#other_credit_card').hide();
+        $('#other_payment_area').hide();
+    }
+    else if(payment_method == 'Paypal'){
+        // alert('Credit card');
+        $('#cash_area').hide();
+        $('#check_area').hide();
+        $('#credit_card').hide();
+        $('#debit_card').hide();
+        $('#invoicing').hide();
+        $('#ach_area').hide();
+        $('#venmo_area').hide();
+        $('#paypal_area').show();
+        $('#square_area').hide();
+        $('#warranty_area').hide();
+        $('#home_area').hide();
+        $('#e_area').hide();
+        $('#other_credit_card').hide();
+        $('#other_payment_area').hide();
+    }
+    else if(payment_method == 'Square'){
+        // alert('Credit card');
+        $('#cash_area').hide();
+        $('#check_area').hide();
+        $('#credit_card').hide();
+        $('#invoicing').hide();
+        $('#debit_card').hide();
+        $('#ach_area').hide();
+        $('#venmo_area').hide();
+        $('#paypal_area').hide();
+        $('#square_area').show();
+        $('#warranty_area').hide();
+        $('#home_area').hide();
+        $('#e_area').hide();
+        $('#other_credit_card').hide();
+        $('#other_payment_area').hide();
+    }
+    else if(payment_method == 'Warranty Work'){
+        // alert('Credit card');
+        $('#cash_area').hide();
+        $('#check_area').hide();
+        $('#credit_card').hide();
+        $('#invoicing').hide();
+        $('#debit_card').hide();
+        $('#ach_area').hide();
+        $('#venmo_area').hide();
+        $('#paypal_area').hide();
+        $('#square_area').hide();
+        $('#warranty_area').show();
+        $('#home_area').hide();
+        $('#e_area').hide();
+        $('#other_credit_card').hide();
+        $('#other_payment_area').hide();
+    }
+    else if(payment_method == 'Home Owner Financing'){
+        // alert('Credit card');
+        $('#cash_area').hide();
+        $('#check_area').hide();
+        $('#credit_card').hide();
+        $('#debit_card').hide();
+        $('#invoicing').hide();
+        $('#ach_area').hide();
+        $('#venmo_area').hide();
+        $('#paypal_area').hide();
+        $('#square_area').hide();
+        $('#warranty_area').hide();
+        $('#home_area').show();
+        $('#e_area').hide();
+        $('#other_credit_card').hide();
+        $('#other_payment_area').hide();
+    }
+    else if(payment_method == 'e-Transfer'){
+        // alert('Credit card');
+        $('#cash_area').hide();
+        $('#check_area').hide();
+        $('#credit_card').hide();
+        $('#debit_card').hide();
+        $('#invoicing').hide();
+        $('#ach_area').hide();
+        $('#venmo_area').hide();
+        $('#paypal_area').hide();
+        $('#square_area').hide();
+        $('#warranty_area').hide();
+        $('#home_area').hide();
+        $('#e_area').show();
+        $('#other_credit_card').hide();
+        $('#other_payment_area').hide();
+    }
+    else if(payment_method == 'Other Credit Card Professor'){
+        // alert('Credit card');
+        $('#cash_area').hide();
+        $('#check_area').hide();
+        $('#credit_card').hide();
+        $('#debit_card').hide();
+        $('#invoicing').hide();
+        $('#ach_area').hide();
+        $('#venmo_area').hide();
+        $('#paypal_area').hide();
+        $('#square_area').hide();
+        $('#warranty_area').hide();
+        $('#home_area').hide();
+        $('#e_area').hide();
+        $('#other_credit_card').show();
+        $('#other_payment_area').hide();
+    }
+    else if(payment_method == 'Other Payment Type'){
+        // alert('Credit card');
+        $('#cash_area').hide();
+        $('#check_area').hide();
+        $('#credit_card').hide();
+        $('#debit_card').hide();
+        $('#invoicing').hide();
+        $('#ach_area').hide();
+        $('#venmo_area').hide();
+        $('#paypal_area').hide();
+        $('#square_area').hide();
+        $('#warranty_area').hide();
+        $('#home_area').hide();
+        $('#e_area').hide();
+        $('#other_credit_card').hide();
+        $('#other_payment_area').show();
+    }
+});
 </script>

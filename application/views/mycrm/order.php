@@ -38,11 +38,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     <tbody>
         <?php foreach($payments as $p){ ?>
             <tr>
-                <td><a class="a-default" href="https://www.markate.com/pro/account/orders/view/id/19800"><?= $p->order_number; ?></a></td>
+                <td><a class="a-default" href="<?= url('mycrm/view_payment/' . $p->id); ?>"><?= $p->order_number; ?></a></td>
                 <td><?= $p->description; ?></td>
                 <td><?= date("d/M/Y g:i A", strtotime($p->date_created)); ?></td>
                 <td class="text-right">$<?= number_format($p->total_amount,2); ?></td>                
-                <td class="text-right"><a href="<?= base_url("mycrm/view_order_payment/" . $p->id); ?>"><span class="fa fa-file-text-o icon"></span> View</a></td>
+                <td class="text-right"><a href="<?= base_url("mycrm/view_payment/" . $p->id); ?>"><span class="fa fa-file-text-o icon"></span> View</a></td>
             </tr>
         <?php } ?>
     </tbody>

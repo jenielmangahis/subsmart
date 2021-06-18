@@ -16,8 +16,8 @@ table {
 }
     </style>
 </head>
-<body style="font-family: Gill Sans, sans-serif; font-size: 12px;" >
-    <div style="box-shadow:0 2px 8px 0 rgba(0,0,0,.2);background-color: #fff;border: 1px solid #d4d7dc;-webkit-transition: all .3s ease;position:relative;top:20px;width: 98%;margin: 0 auto; padding:;">
+<body style="font-family: Gill Sans, sans-serif; font-size: 11px;" >
+    <div style="box-shadow:0 2px 8px 0 rgba(0,0,0,.2);background-color: #fff;border: 1px solid #d4d7dc;-webkit-transition: all .3s ease;position:relative;top:10px;width: 100%;margin: 0 auto; padding:;">
         <div style="text-align: justify; text-justify: inter-word;">
             This workorder agreement (the "agreement") is made as of 05-07-2021, by and between ADI Smart Home, (the "Company") and the ("Customer") as the address shown below (the "Premise/Service")
         </div>
@@ -26,7 +26,7 @@ table {
         <!-- </div> -->
         <div class="" style="float: right;">
             <h3>WORK ORDER <br> # <?php echo $this->input->post('workorder_number'); ?></h3>
-            <br> <?php echo $id.'test'; ?>
+            <br>
             Job Tags: <?php echo $this->input->post('job_tag'); ?> <br>
             Date Issued: <?php echo $this->input->post('schedule_date_given'); ?> <br>
             Priority: <?php echo $this->input->post('priority'); ?> <br>
@@ -55,8 +55,9 @@ table {
             <div>
                 <b>CUSTOMER:</b><br>
                 <!-- <hr style="width: 50% !important; align:left !important;"> -->
-                <?php echo $this->input->post('acs_fullname'); ?><br>
+                <?php echo $this->input->post('first_name').' '.$this->input->post('last_name'); ?><br>
                 <?php //echo $job_location; ?>
+                <?php echo $this->input->post('business_name').'<br>'; ?>
                 <?php echo $this->input->post('job_location') .' '. $this->input->post('city') .' '. $this->input->post('state') .' '. $this->input->post('zip_code') .' '. $this->input->post('cross_street'); ?><br>
                 Email: <?php echo $this->input->post('email'); ?><br>
                 Phone: <?php echo $this->input->post('phone_number'); ?><br>
@@ -66,19 +67,20 @@ table {
             <div>
                 <b>ADDITIONAL:</b>
                 <hr><br>
-                <?php 
-                $name = $this->input->post('custom_field');
-                $value = $this->input->post('custom_value');
-
-                if($value != NULL ){
-                    $c = 0;
-                    foreach($name as $row2){ ?>
-                        <?php echo $name[$c]; ?>: <?php echo $value[$c]; ?> <br>
-                        
-                    <?php $c++;
-                    }
-                }
-                ?>
+                <table class="pure-table" style="border-color:  white ;">
+                    <tr>
+                        <td><?php echo $this->input->post('1st_verification_name').' <br> '.$this->input->post('1st_number').' <br> '.$this->input->post('1st_relation'); ?> </td>
+                    <!-- </tr>
+                    <tr> -->
+                        <td><?php echo $this->input->post('2nd_verification_name').' <br> '.$this->input->post('2nd_number').' <br> '.$this->input->post('2nd_relation'); ?>  </td>
+                    <!-- </tr>
+                    <tr> -->
+                        <td><?php echo $this->input->post('3rd_verification_name').' <br> '.$this->input->post('3rd_number').' <br> '.$this->input->post('3rd_relation'); ?> </td>
+                    <!-- </tr>
+                    <tr> -->
+                        <td><?php echo $this->input->post('4th_verification_name').' <br> '.$this->input->post('4th_number').' <br> '.$this->input->post('4th_relation'); ?> </td>
+                    </tr>
+                </table>
                 <br><br>
             </div>
 
@@ -126,10 +128,10 @@ table {
                         <tr>
                             <td data-column=""> <?php echo $itemS[$i]; ?> </td>
                             <td data-column=""> <?php echo $quantity[$i]; ?> </td>
-                            <td data-column=""> <?php echo $price[$i]; ?> </td>
-                            <td data-column=""> <?php echo $discount[$i]; ?> </td>
-                            <td data-column=""> <?php echo $h[$i]; ?> </td>
-                            <td data-column=""> <?php echo $total[$i]; ?> </td>
+                            <td data-column="">$  <?php echo $price[$i]; ?> </td>
+                            <td data-column="">$  <?php echo $discount[$i]; ?> </td>
+                            <td data-column="">$  <?php echo $h[$i]; ?> </td>
+                            <td data-column="">$  <?php echo $total[$i]; ?> </td>
                         </tr>
 
                         <?php
@@ -137,6 +139,47 @@ table {
                          }
                         
                         ?>
+
+                        <tr style="background-color: #F7F4FF !important;">
+                            <td colspan="5" style="background-color: #F8F8F8 !important;">Subtotal</td>
+                            <!-- <td data-column=""></td>
+                            <td data-column=""></td>
+                            <td data-column=""></td>
+                            <td data-column=""></td> -->
+                            <td style="background-color: #F8F8F8 !important;">$ <?php echo $this->input->post('subtotal'); ?></td>
+                        </tr>
+                        <tr style="background-color: #E9DDFF !important;">
+                            <td colspan="5" style="background-color: #F8F8F8 !important;">Taxes</td>
+                            <!-- <td data-column=""></td>
+                            <td data-column=""></td>
+                            <td data-column=""></td> 
+                            <td data-column=""></td>-->
+                            <td style="background-color: #F8F8F8 !important;">$ <?php echo $this->input->post('taxes'); ?></td>
+                        </tr>
+                        <tr style="background-color: #F3F3F3 !important;">
+                            <td style="background-color: #F8F8F8 !important;" colspan="5">One Time Program and Setup</td>
+                            <!-- <td data-column=""></td>
+                            <td data-column=""></td> 
+                            <td data-column=""></td>
+                            <td data-column=""></td>-->
+                            <td style="background-color: #F8F8F8 !important;">$ <?php echo $this->input->post('otp_setup'); ?></td>
+                        </tr>
+                        <tr style="background-color: #F3F3F3 !important;">
+                            <td style="background-color: #F8F8F8 !important;" colspan="5">Monthly Monitoring</td>
+                            <!-- <td data-column=""></td>
+                            <td data-column=""></td> 
+                            <td data-column=""></td>
+                            <td data-column=""></td>-->
+                            <td style="background-color: #F8F8F8 !important;">$ <?php echo $this->input->post('monthly_monitoring'); ?></td>
+                        </tr>
+                        <tr style="background-color: #F3F3F3 !important;">
+                            <td style="background-color: #F8F8F8 !important;" colspan="5"><b>Grand Total</b></td>
+                            <!-- <td data-column=""></td>
+                            <td data-column=""></td>
+                            <td data-column=""></td>
+                            <td data-column=""></td> -->
+                            <td style="background-color: #F8F8F8 !important;"><b>$ <?php echo $this->input->post('grand_total_text'); ?></b></td>
+                        </tr>
                        
                     </tbody>
                 </table>

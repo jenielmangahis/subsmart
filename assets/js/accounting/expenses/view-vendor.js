@@ -1212,6 +1212,8 @@ $(document).on('change', '#transactions-table select[name="category[]"]', functi
             var res = JSON.parse(result);
 
             toast(res.success, res.message);
+
+            $('#transactions-table').DataTable().ajax.reload();
         }
     });
 });

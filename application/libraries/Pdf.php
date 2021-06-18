@@ -79,7 +79,7 @@ protected function ci()
     }
 
     function createPDF($html, $filename='', $download=FALSE, $paper='A4', $orientation='portrait'){
-        $dompdf = new Dompdf();
+        $dompdf = new Dompdf(array('enable_remote' => true));
         $dompdf->load_html($html);
         $dompdf->set_paper($paper, $orientation);
         $dompdf->render();

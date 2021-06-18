@@ -230,6 +230,7 @@ class Workorder_model extends MY_Model
             'adjustment_value'      => $adjustment_value,
             'voucher_value'         => $voucher_value,
             'grand_total'           => $grand_total,
+            'lead_source_id'        => $lead_source_id,
             'company_representative_signature'      => $company_representative_signature,
             'company_representative_name'           => $company_representative_name,
             'primary_account_holder_signature'      => $primary_account_holder_signature,
@@ -279,6 +280,7 @@ class Workorder_model extends MY_Model
             // 'adjustment_value'      => $adjustment_value,
             // 'voucher_value'         => $voucher_value,
             'grand_total'           => $grand_total,
+            'lead_source_id'        => $lead_source_id,
             'company_representative_signature'      => $company_representative_signature,
             'company_representative_name'           => $company_representative_name,
             'primary_account_holder_signature'      => $primary_account_holder_signature,
@@ -292,6 +294,9 @@ class Workorder_model extends MY_Model
             'panel_type'            => $panel_type,
             'panel_location'        => $panel_location,
             'panel_communication'   => $panel_communication,
+
+            'billing_date'                  => $billing_date,
+            'billing_frequency'             => $billing_frequency,
         ));
         return true;
     }
@@ -414,11 +419,222 @@ class Workorder_model extends MY_Model
         return true;
     }
 
+    public function update_cash($data)
+    {
+        extract($data);
+        $this->db->where('work_order_id', $work_order_id);
+        $this->db->update('work_order_payments', array(
+            'payment_method'        => $payment_method,
+            'amount'                => $amount,
+            'is_collected'          => $is_collected,
+            'date_updated'          => $date_updated,
+        ));
+        return true;
+    }
+
+    public function update_check($data)
+    {
+        extract($data);
+        $this->db->where('work_order_id', $work_order_id);
+        $this->db->update('work_order_payments', array(
+            'payment_method'        => $payment_method,
+            'amount'                => $amount,
+            'check_number'          => $check_number,
+            'routing_number'        => $routing_number,
+            'date_updated'          => $date_updated,
+        ));
+        return true;
+    }
+
+    public function update_creditCard($data)
+    {
+        extract($data);
+        $this->db->where('work_order_id', $work_order_id);
+        $this->db->update('work_order_payments', array(
+            'payment_method'        => $payment_method,
+            'amount'                => $amount,
+            'credit_number'         => $credit_number,
+            'credit_expiry'         => $credit_expiry,
+            'credit_cvc'            => $credit_cvc,
+            'date_updated'          => $date_updated,
+        ));
+        return true;
+    }
+
+    public function update_debitCard($data)
+    {
+        extract($data);
+        $this->db->where('work_order_id', $work_order_id);
+        $this->db->update('work_order_payments', array(
+            'payment_method'        => $payment_method,
+            'amount'                => $amount,
+            'credit_number'         => $credit_number,
+            'credit_expiry'         => $credit_expiry,
+            'credit_cvc'            => $credit_cvc,
+            'date_updated'          => $date_updated,
+        ));
+        return true;
+    }
+
+    public function update_ACH($data)
+    {
+        extract($data);
+        $this->db->where('work_order_id', $work_order_id);
+        $this->db->update('work_order_payments', array(
+            'payment_method'        => $payment_method,
+            'amount'                => $amount,
+            'routing_number'        => $credit_number,
+            'account_number'        => $credit_expiry,
+            'date_updated'          => $date_updated,
+        ));
+        return true;
+    }
+
+    public function update_Venmo($data)
+    {
+        extract($data);
+        $this->db->where('work_order_id', $work_order_id);
+        $this->db->update('work_order_payments', array(
+            'payment_method'        => $payment_method,
+            'amount'                => $amount,
+            'account_credentials'   => $account_credentials,
+            'account_note'          => $account_note,
+            'confirmation'          => $confirmation,
+            'date_updated'          => $date_updated,
+        ));
+        return true;
+    }
+
+    public function update_Paypal($data)
+    {
+        extract($data);
+        $this->db->where('work_order_id', $work_order_id);
+        $this->db->update('work_order_payments', array(
+            'payment_method'        => $payment_method,
+            'amount'                => $amount,
+            'account_credentials'   => $account_credentials,
+            'account_note'          => $account_note,
+            'confirmation'          => $confirmation,
+            'date_updated'          => $date_updated,
+        ));
+        return true;
+    }
+
+    public function update_Square($data)
+    {
+        extract($data);
+        $this->db->where('work_order_id', $work_order_id);
+        $this->db->update('work_order_payments', array(
+            'payment_method'        => $payment_method,
+            'amount'                => $amount,
+            'account_credentials'   => $account_credentials,
+            'account_note'          => $account_note,
+            'confirmation'          => $confirmation,
+            'date_updated'          => $date_updated,
+        ));
+        return true;
+    }
+
+    public function update_Warranty($data)
+    {
+        extract($data);
+        $this->db->where('work_order_id', $work_order_id);
+        $this->db->update('work_order_payments', array(
+            'payment_method'        => $payment_method,
+            'amount'                => $amount,
+            'account_credentials'   => $account_credentials,
+            'account_note'          => $account_note,
+            'date_updated'          => $date_updated,
+        ));
+        return true;
+    }
+
+    public function update_Home($data)
+    {
+        extract($data);
+        $this->db->where('work_order_id', $work_order_id);
+        $this->db->update('work_order_payments', array(
+            'payment_method'        => $payment_method,
+            'amount'                => $amount,
+            'account_credentials'   => $account_credentials,
+            'account_note'          => $account_note,
+            'date_updated'          => $date_updated,
+        ));
+        return true;
+    }
+
+    public function update_Transfer($data)
+    {
+        extract($data);
+        $this->db->where('work_order_id', $work_order_id);
+        $this->db->update('work_order_payments', array(
+            'payment_method'        => $payment_method,
+            'amount'                => $amount,
+            'account_credentials'   => $account_credentials,
+            'account_note'          => $account_note,
+            'date_updated'          => $date_updated,
+        ));
+        return true;
+    }
+
+    public function update_Professor($data)
+    {
+        extract($data);
+        $this->db->where('work_order_id', $work_order_id);
+        $this->db->update('work_order_payments', array(
+            'payment_method'        => $payment_method,
+            'amount'                => $amount,
+            'credit_number'         => $credit_number,
+            'credit_expiry'         => $credit_expiry,
+            'credit_cvc'            => $credit_cvc,
+            'date_updated'          => $date_updated,
+        ));
+        return true;
+    }
+
+    public function update_Other($data)
+    {
+        extract($data);
+        $this->db->where('work_order_id', $work_order_id);
+        $this->db->update('work_order_payments', array(
+            'payment_method'        => $payment_method,
+            'amount'                => $amount,
+            'account_credentials'   => $account_credentials,
+            'account_note'          => $account_note,
+            'date_updated'          => $date_updated,
+        ));
+        return true;
+    }
+
+    public function save_contact($data){
+        $custom = $this->db->insert('contacts', $data);
+	    $insert = $this->db->insert_id();
+		return  $insert;
+    }
+
+    public function get_contacts($customer_id)
+    {
+        $this->db->select('*');
+		$this->db->from('contacts');
+		$this->db->where('customer_id', $customer_id);
+		$query = $this->db->get();
+		return $query->result();
+    }
+
     public function getDataByWO($wo_num)
     {
         $this->db->select('*');
 		$this->db->from('work_orders');
 		$this->db->where('id', $wo_num);
+		$query = $this->db->get();
+		return $query->row();
+    }
+
+    public function getpayment($id)
+    {
+        $this->db->select('*');
+		$this->db->from('work_order_payments');
+		$this->db->where('work_order_id', $id);
 		$query = $this->db->get();
 		return $query->row();
     }
@@ -1063,6 +1279,15 @@ class Workorder_model extends MY_Model
         $this->db->select('*');
 		$this->db->from('company_work_order_used');
 		$this->db->where('company_id', $company_id);
+        $query = $this->db->get();
+        return $query->row();
+    }
+
+    public function getcompany_data($id)
+    {
+        $this->db->select('*');
+		$this->db->from('clients');
+		$this->db->where('id', $id);
         $query = $this->db->get();
         return $query->row();
     }

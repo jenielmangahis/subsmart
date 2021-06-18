@@ -169,11 +169,6 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 							<div class="search-result">
 								<ul class="dropdown-menu dropdown-menu-right overflow-auto" role="menu"
 									aria-labelledby="dropNewTraaction">
-									<li>
-										<a href="javascript:void(0)" class="">
-											Create statement
-										</a>
-									</li>
 								</ul>
 							</div>
 						</div>
@@ -219,15 +214,19 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 								</td>
 								<td>
 									<div class="dropdown dropdown-btn text-right">
-										<a href="" class="first-option"><?=$first_option?> </a>
+										<a href="" class="first-option"
+											data-customer-id="<?=$cus->prof_id?>"><?=$first_option?> </a>
 										<a type="button" id="dropdown-button-icon" data-toggle="dropdown">
 											<span class="btn-label"><i class="fa fa-caret-down fa-sm"></i></span></span>
 										</a>
-										<ul class="dropdown-menu dropdown-menu-right" role="menu"
+										<ul class="dropdown-menu dropdown-menu-right customer-dropdown-menu" role="menu"
 											aria-labelledby="dropdown-edit">
 											<?php if ($amount > 0) {?>
 											<li>
-												<a role="menuitem" tabindex="-1" href="javascript:void(0)" class="">
+												<a role="menuitem" tabindex="-1" href="javascript:void(0)"
+													class="send-reminder"
+													data-customer-id="<?=$cus->prof_id?>"
+													data-customer-name="<?=$cus->first_name .' '.  $cus->middle_name .' '. $cus->last_name?>">
 													Send reminder
 												</a>
 											</li>
@@ -315,12 +314,15 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 <!-- end container-fluid -->
 </div>
 <!-- page wrapper end -->
+
 <?php include viewPath('includes/sidebars/accounting/accounting'); ?>
 </div>
 
+<?php include viewPath('accounting/customer_includes/send_reminder'); ?>
+
 <link href="https://nightly.datatables.net/css/jquery.dataTables.css" rel="stylesheet" type="text/css" />
 <script src="https://nightly.datatables.net/js/jquery.dataTables.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 <script>
 	var customer_length = <?=count($customers)?> ;
 </script>
