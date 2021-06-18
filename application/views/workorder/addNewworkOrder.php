@@ -882,7 +882,7 @@ border: none;
                             <div class="row">                        
                                 <div class="form-group col-md-4">
                                     <label for="contact_name" class="label-element">Schedule Date Given</label>
-                                    <input type="text" class="form-control input-element" name="schedule_date_given" id="schedule_date_given" />
+                                    <input type="text" class="form-control input-element" name="schedule_date_given" id="datepicker_dateissued" />
                                 </div>      
                                 <div class="form-group col-md-4">
                                 <div class="select-wrap">
@@ -4196,3 +4196,11 @@ $('#clear3').click(function() {
   $('#signArea3').signaturePad().clearCanvas();
 });
 </script>
+<script>
+  $( function() {
+    $( "#datepicker_dateissued" ).datepicker({
+        format: 'yyyy-mm-dd'
+    });
+  } );
+</script>
+

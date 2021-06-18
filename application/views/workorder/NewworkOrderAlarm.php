@@ -535,7 +535,7 @@ border: none;
 										<div class="col-md-2 form-group">
 											<label for="contact_ssn" class="label-element">SSN <span class="form-required">*</span></label>
 											<input type="text" class="form-control input-element" name="security_number"
-												   id="contact_ssn"
+												   id="ssn"
 												   value="<?php echo (!empty($workorder->customer['contact_ssn'])) ? $workorder->customer['contact_ssn'] : '' ?>"
                                                    required
 												   placeholder="Enter SSN"/>
@@ -1112,7 +1112,7 @@ border: none;
                                             <input type="text"
                                                    name="date_issued"
                                                    class="form-control input-element"
-                                                   id="datepicker"/>
+                                                   id="datepicker_dateissued"/>
                                         <!-- </div> -->
                                     <!-- </div> -->
                                 </div>
@@ -1150,7 +1150,7 @@ border: none;
                                 </div>
                                 
 
-                                <div class="col-md-6 form-group">
+                                <div class="col-md-4 form-group">
                                 <div class="select-wrap">
                                     <!-- <div class=""> -->
                                         <label for="status_id"> Status:</label>
@@ -1169,7 +1169,7 @@ border: none;
                                 </div>
                                 </div>
 
-                                <div class="col-md-6 form-group">
+                                <div class="col-md-4 form-group">
                                 <div class="select-wrap">
                                     <!-- <div class=""> -->
                                         <label for="job_priority"> Priority:</label> 
@@ -1182,6 +1182,19 @@ border: none;
                                     <!-- </div> -->
                                 </div>
                                 </div>
+                                <!-- <div class="row">                         -->
+                                    <div class="form-group col-md-4">
+                                    <div class="select-wrap">
+                                        <label for="lead_source">Lead Source</label>
+                                        <select id="lead_source" name="lead_source" class="form-control custom-select m_select">
+                                            <option value="0">- none -</option>
+                                            <?php foreach($lead_source as $lead){ ?>
+                                                <option value="<?php echo $lead->ls_id; ?>"><?php echo $lead->ls_name; ?></option>
+                                            <?php } ?>
+                                        </select>
+                                    </div>    
+                                    </div>                                     
+                                <!-- </div> -->
 
                             </div>
 
@@ -2042,11 +2055,11 @@ border: none;
                                     <div id="debit_card" style="display:none;">
                                         <div class="row">                   
                                             <div class="form-group col-md-4">
-                                                <label for="job_type" class="label-element">Credit Card Number</label>
+                                                <label for="job_type" class="label-element">Debit Card Number</label>
                                                 <input type="text" class="form-control input-element" name="debit_credit_number" id="credit_number" placeholder="0000 0000 0000 000" />
                                             </div>
                                             <div class="form-group col-md-4">
-                                                <label for="job_type" class="label-element">Credit Card Expiration</label>
+                                                <label for="job_type" class="label-element">Debit Card Expiration</label>
                                                 <input type="text" class="form-control input-element" name="debit_credit_expiry" id="credit_expiry" placeholder="MM/YYYY"/>
                                             </div>  
                                             <div class="form-group col-md-4">
@@ -4566,5 +4579,21 @@ $('#clear2').click(function() {
 
 $('#clear3').click(function() {
   $('#signArea3').signaturePad().clearCanvas();
+});
+</script>
+<script>
+  $( function() {
+    $( "#datepicker_dateissued" ).datepicker({
+        format: 'yyyy-mm-dd'
+    });
+  } );
+</script>
+<script>
+$('#ssn').keyup(function() {
+  var foo = $(this).val().split("-").join(""); // remove hyphens
+  if (foo.length > 0) {
+    foo = foo.match(new RegExp('.{1,4}', 'g')).join("-");
+  }
+  $(this).val(foo);
 });
 </script>
