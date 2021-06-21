@@ -12,6 +12,7 @@ class Accounting extends MY_Controller
         parent::__construct();
 
         $this->checkLogin();
+        $this->hasAccessModule(45); 
         $this->load->model('vendors_model');
         $this->load->model('terms_model');
         $this->load->model('expenses_model');
@@ -108,12 +109,6 @@ class Accounting extends MY_Controller
     }
     public function banking()
     {
-        $is_allowed = $this->isAllowedModuleAccess(45);
-        if (!$is_allowed) {
-            $this->page_data['module'] = 'accounting';
-            echo $this->load->view('no_access_module', $this->page_data, true);
-            die();
-        }
 
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->page_data['alert'] = 'accounting/alert_promt';
@@ -217,8 +212,6 @@ class Accounting extends MY_Controller
         $this->load->view('accounting/receipts', $this->page_data);
     }
 
-    //---->
-
     public function salesoverview()
     {
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
@@ -263,7 +256,6 @@ class Accounting extends MY_Controller
         $this->load->view('accounting/deposits', $this->page_data);
     }
 
-<<<<<<< HEAD
 
     // private function uploadFile($files)
     // {
@@ -301,7 +293,6 @@ class Accounting extends MY_Controller
 
     //     return $insert;
     // }
-=======
     public function jobs()
     {
         add_css(array(
@@ -313,7 +304,6 @@ class Accounting extends MY_Controller
         $this->page_data['jobs'] = $this->jobs_model->get_all_jobs();
         $this->load->view('accounting/jobs', $this->page_data);
     }
->>>>>>> staging-master
 
     public function invoice_edit($id)
     {
@@ -483,15 +473,12 @@ class Accounting extends MY_Controller
     //         mkdir($filePath);
     //     }
 
-<<<<<<< HEAD
 	// 	$config['upload_path']  =  $filePath;
     //  $config['allowed_types']   = 'gif|jpg|png|jpeg|doc|docx|pdf|xlx|xls|csv';
     //  $config['max_size']        = '20000';
-=======
     // 	$config['upload_path']  =  $filePath;
     //     $config['allowed_types']   = 'gif|jpg|png|jpeg|doc|docx|pdf|xlx|xls|csv';
     //     $config['max_size']        = '20000';
->>>>>>> staging-master
 
     //     $this->load->library('upload', $config);
 
@@ -922,13 +909,8 @@ class Accounting extends MY_Controller
         echo json_encode($data);
     }
 
-<<<<<<< HEAD
-    public function editBillData(){
-
-=======
     public function editBillData()
     {
->>>>>>> staging-master
         $new_data = array(
             'bill_id' => $this->input->post('id'),
             'mailing_address' => $this->input->post('mailing_address'),
@@ -1428,11 +1410,8 @@ class Accounting extends MY_Controller
     //         'category' => $this->input->post('category'),
     //         'description' => $this->input->post('description'),
     //         'amount' => $this->input->post('amount'),
-<<<<<<< HEAD
     //      'total' => $this->input->post('total'),
-=======
     // 		'total' => $this->input->post('total'),
->>>>>>> staging-master
     //         'file_name' => $this->input->post('filename'),
     //         'original_fname' => $this->input->post('original_fname')
     //     );
@@ -2313,12 +2292,8 @@ class Accounting extends MY_Controller
             echo json_encode(0);
         }
     }
-<<<<<<< HEAD
-    public function deleteInvoice(){
-=======
     public function deleteInvoice()
     {
->>>>>>> staging-master
         $id = $this->input->post('id');
         $query = $this->accounting_invoices_model->deleteInvoice($id);
 
@@ -2407,12 +2382,8 @@ class Accounting extends MY_Controller
             echo json_encode(0);
         }
     }
-<<<<<<< HEAD
-    public function deleteReceivePayment(){
-=======
     public function deleteReceivePayment()
     {
->>>>>>> staging-master
         $id = $this->input->post('id');
         $query = $this->accounting_receive_payment_model->deleteReceivePayment($id);
 
@@ -3121,13 +3092,8 @@ class Accounting extends MY_Controller
             echo json_encode(0);
         }
     }
-
-<<<<<<< HEAD
-    public function deleteSalesReceipt(){
-=======
     public function deleteSalesReceipt()
     {
->>>>>>> staging-master
         $id = $this->input->post('id');
         $query = $this->accounting_sales_receipt_model->deleteSalesReceipt($id);
 
@@ -3559,12 +3525,8 @@ class Accounting extends MY_Controller
         }
     }
 
-<<<<<<< HEAD
-    public function deleteCreditMemo(){
-=======
     public function deleteCreditMemo()
     {
->>>>>>> staging-master
         $id = $this->input->post('id');
         $query = $this->accounting_credit_memo_model->deleteCreditMemo($id);
 
@@ -3665,12 +3627,8 @@ class Accounting extends MY_Controller
         }
     }
 
-<<<<<<< HEAD
-    public function deleteDelayedCharge(){
-=======
     public function deleteDelayedCharge()
     {
->>>>>>> staging-master
         $id = $this->input->post('id');
         $query = $this->accounting_delayed_charge_model->deleteDelayedCharge($id);
 
@@ -3680,13 +3638,8 @@ class Accounting extends MY_Controller
             echo json_encode(0);
         }
     }
-
-<<<<<<< HEAD
-    public function addSalesTimeActivity(){
-=======
     public function addSalesTimeActivity()
     {
->>>>>>> staging-master
         $new_data = array(
             'vendor_id' => $this->input->post('vendor_id'),
             'date' => $this->input->post('date'),
@@ -3733,12 +3686,8 @@ class Accounting extends MY_Controller
         }
     }
 
-<<<<<<< HEAD
-    public function deleteSalesTimeActivity(){
-=======
     public function deleteSalesTimeActivity()
     {
->>>>>>> staging-master
         $id = $this->input->post('id');
         $query = $this->accounting_sales_time_activity_model->deleteTimeActivity($id);
 
@@ -3748,13 +3697,8 @@ class Accounting extends MY_Controller
             echo json_encode(0);
         }
     }
-
-<<<<<<< HEAD
-    public function addCustomersAccounting(){
-=======
     public function addCustomersAccounting()
     {
->>>>>>> staging-master
         $new_data = array(
             'prof_id' => $this->input->post('prof_id'),
             'first_name' => $this->input->post('first_name'),
@@ -3787,13 +3731,8 @@ class Accounting extends MY_Controller
             echo json_encode(0);
         }
     }
-
-<<<<<<< HEAD
-    public function updateCustomersAccounting(){
-=======
     public function updateCustomersAccounting()
-    {
->>>>>>> staging-master
+    {   
         $new_data = array(
             'prof_id' => $this->input->post('prof_id'),
             'first_name' => $this->input->post('first_name'),
@@ -3826,12 +3765,8 @@ class Accounting extends MY_Controller
             echo json_encode(0);
         }
     }
-<<<<<<< HEAD
-    public function deleteCustomersAccounting(){
-=======
     public function deleteCustomersAccounting()
     {
->>>>>>> staging-master
         $id = $this->input->post('id');
         $query = $this->accounting_customer_model->deleteCustomer($id);
 
@@ -3841,12 +3776,8 @@ class Accounting extends MY_Controller
             echo json_encode(0);
         }
     }
-<<<<<<< HEAD
-    public function searchCustomersAccounting(){
-=======
     public function searchCustomersAccounting()
     {
->>>>>>> staging-master
         $id = $this->input->post('id');
         $searchCustomer = $this->input->post('word');
         $query = $this->accounting_customer_model->searchCustomer($id, $searchCustomer);

@@ -9,6 +9,7 @@ class Inventory extends MY_Controller
     {
         parent::__construct();
         $this->checkLogin();
+        $this->hasAccessModule(51);
 
         $this->page_data['page']->title = 'Inventory Management';
         $this->page_data['page']->menu = 'items';

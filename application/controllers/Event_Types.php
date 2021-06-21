@@ -7,7 +7,7 @@ class Event_Types extends MY_Controller {
 
 		parent::__construct();
 		$this->checkLogin();
-
+        $this->hasAccessModule(4);
 		$this->load->model('EventType_model');
 		$this->load->helper(array('form', 'url', 'hashids_helper'));
 		$this->load->library('session');

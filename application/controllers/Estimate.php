@@ -8,7 +8,7 @@ class Estimate extends MY_Controller
     public function __construct()
     {
         parent::__construct();
-
+        $this->hasAccessModule(19); 
         $this->page_data['page']->title = 'My Estimates';
         $this->page_data['page']->menu = 'estimates';
         $this->load->model('Estimate_model', 'estimate_model');
@@ -586,7 +586,6 @@ class Estimate extends MY_Controller
     
             redirect('estimate');
         } else {
->>>>>>> staging-master
             echo json_encode(0);
         }
     }

@@ -9,6 +9,7 @@ class Items extends MY_Controller
     {
         parent::__construct();
         $this->checkLogin();
+        $this->hasAccessModule(20);
         $this->page_data['page']->title = 'items Management';
         $this->page_data['page']->menu = 'items';
     }

@@ -48,12 +48,7 @@ class Workorder extends MY_Controller
 
     public function index($tab_index = 0)
     {
-        $is_allowed = $this->isAllowedModuleAccess(24);
-        if( !$is_allowed ){
-            $this->page_data['module'] = 'workorder';
-            echo $this->load->view('no_access_module', $this->page_data, true);
-            die();
-        }
+        $this->hasAccessModule(24); 
 
         $role = logged('role');
         $this->page_data['workorderStatusFilters'] = array ();
@@ -1567,6 +1562,8 @@ class Workorder extends MY_Controller
      */
     public function map()
     {
+        $this->hasAccessModule(25); 
+
         $this->load->model('Event_model');
         $this->load->model('Users_model');
         $this->load->model('Jobs_model');
@@ -2115,12 +2112,6 @@ class Workorder extends MY_Controller
 
     public function priority()
     {
-        $is_allowed = $this->isAllowedModuleAccess(27);
-        if( !$is_allowed ){
-            $this->page_data['module'] = 'priority_list';
-            echo $this->load->view('no_access_module', $this->page_data, true);
-            die();
-        }
         new Priority($this);
     }
 
