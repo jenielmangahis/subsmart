@@ -203,7 +203,7 @@ var table = $('#transactions-table').DataTable({
                         if(rowData.status === 'Voided') {
                             $(td).html(`
                             <div class="btn-group float-right">
-                                <button class="btn d-flex align-items-center justify-content-center text-info">
+                                <button class="btn d-flex align-items-center justify-content-center text-info attach-file">
                                     Attach a file
                                 </button>
 
@@ -212,17 +212,17 @@ var table = $('#transactions-table').DataTable({
                                 </button>
 
                                 <div class="dropdown-menu" aria-labelledby="statusDropdownButton">
-                                    <a class="dropdown-item" href="#">View/Edit</a>
+                                    <a class="dropdown-item view-edit-expense" href="#">View/Edit</a>
                                     <a class="dropdown-item" href="/accounting/expenses/print-transaction/expense/${rowData.id}" target="_blank">Print</a>
                                     <a class="dropdown-item" href="#">Copy</a>
-                                    <a class="dropdown-item" href="#">Delete</a>
+                                    <a class="dropdown-item delete-transaction" href="#">Delete</a>
                                 </div>
                             </div>
                             `);
                         } else {
                             $(td).html(`
                             <div class="btn-group float-right">
-                                <button class="btn d-flex align-items-center justify-content-center text-info">
+                                <button class="btn d-flex align-items-center justify-content-center text-info attach-file">
                                     Attach a file
                                 </button>
 
@@ -231,11 +231,11 @@ var table = $('#transactions-table').DataTable({
                                 </button>
 
                                 <div class="dropdown-menu" aria-labelledby="statusDropdownButton">
-                                    <a class="dropdown-item" href="#">View/Edit</a>
+                                    <a class="dropdown-item view-edit-expense" href="#">View/Edit</a>
                                     <a class="dropdown-item" href="/accounting/expenses/print-transaction/expense/${rowData.id}" target="_blank">Print</a>
                                     <a class="dropdown-item" href="#">Copy</a>
-                                    <a class="dropdown-item" href="#">Delete</a>
-                                    <a class="dropdown-item" href="#">Void</a>
+                                    <a class="dropdown-item delete-transaction" href="#">Delete</a>
+                                    <a class="dropdown-item void-expense" href="#">Void</a>
                                 </div>
                             </div>
                             `);
@@ -245,7 +245,7 @@ var table = $('#transactions-table').DataTable({
                         if(rowData.status === 'Voided') {
                             $(td).html(`
                             <div class="btn-group float-right">
-                                <button class="btn d-flex align-items-center justify-content-center text-info">
+                                <button class="btn d-flex align-items-center justify-content-center text-info attach-file">
                                     Attach a file
                                 </button>
 
@@ -254,16 +254,16 @@ var table = $('#transactions-table').DataTable({
                                 </button>
 
                                 <div class="dropdown-menu" aria-labelledby="statusDropdownButton">
-                                    <a class="dropdown-item" href="#">View/Edit</a>
+                                    <a class="dropdown-item view-edit-check" href="#">View/Edit</a>
                                     <a class="dropdown-item" href="#">Copy</a>
-                                    <a class="dropdown-item" href="#">Delete</a>
+                                    <a class="dropdown-item delete-transaction" href="#">Delete</a>
                                 </div>
                             </div>
                             `);
                         } else {
                             $(td).html(`
                             <div class="btn-group float-right">
-                                <button class="btn d-flex align-items-center justify-content-center text-info">
+                                <button class="btn d-flex align-items-center justify-content-center text-info attach-file">
                                     Attach a file
                                 </button>
 
@@ -272,10 +272,10 @@ var table = $('#transactions-table').DataTable({
                                 </button>
 
                                 <div class="dropdown-menu" aria-labelledby="statusDropdownButton">
-                                    <a class="dropdown-item" href="#">View/Edit</a>
+                                    <a class="dropdown-item view-edit-check" href="#">View/Edit</a>
                                     <a class="dropdown-item" href="#">Copy</a>
-                                    <a class="dropdown-item" href="#">Delete</a>
-                                    <a class="dropdown-item" href="#">Void</a>
+                                    <a class="dropdown-item delete-transaction" href="#">Delete</a>
+                                    <a class="dropdown-item void-check" href="#">Void</a>
                                 </div>
                             </div>
                             `);
@@ -295,17 +295,17 @@ var table = $('#transactions-table').DataTable({
 
                                 <div class="dropdown-menu" aria-labelledby="statusDropdownButton">
                                     <a class="dropdown-item" href="#">Mark as paid</a>
-                                    <a class="dropdown-item" href="#">View/Edit</a>
+                                    <a class="dropdown-item view-edit-bill" href="#">View/Edit</a>
                                     <a class="dropdown-item" href="#">Copy</a>
-                                    <a class="dropdown-item" href="#">Delete</a>
-                                    <a class="dropdown-item" href="#">Attach a file</a>
+                                    <a class="dropdown-item delete-transaction" href="#">Delete</a>
+                                    <a class="dropdown-item attach-file" href="#">Attach a file</a>
                                 </div>
                             </div>
                             `);
                         } else {
                             $(td).html(`
                             <div class="btn-group float-right">
-                                <button class="btn d-flex align-items-center justify-content-center text-info">
+                                <button class="btn d-flex align-items-center justify-content-center text-info view-edit-bill">
                                     View/Edit
                                 </button>
 
@@ -315,8 +315,8 @@ var table = $('#transactions-table').DataTable({
 
                                 <div class="dropdown-menu" aria-labelledby="statusDropdownButton">
                                     <a class="dropdown-item" href="#">Copy</a>
-                                    <a class="dropdown-item" href="#">Delete</a>
-                                    <a class="dropdown-item" href="#">Attach a file</a>
+                                    <a class="dropdown-item delete-transaction" href="#">Delete</a>
+                                    <a class="dropdown-item attach-file" href="#">Attach a file</a>
                                 </div>
                             </div>
                             `);
@@ -326,7 +326,7 @@ var table = $('#transactions-table').DataTable({
                         if(rowData.status === 'Voided') {
                             $(td).html(`
                             <div class="btn-group float-right">
-                                <button class="btn d-flex align-items-center justify-content-center text-info">
+                                <button class="btn d-flex align-items-center justify-content-center text-info attach-file">
                                     Attach a file
                                 </button>
 
@@ -336,14 +336,14 @@ var table = $('#transactions-table').DataTable({
 
                                 <div class="dropdown-menu" aria-labelledby="statusDropdownButton">
                                     <a class="dropdown-item" href="#">View/Edit</a>
-                                    <a class="dropdown-item" href="#">Delete</a>
+                                    <a class="dropdown-item delete-transaction" href="#">Delete</a>
                                 </div>
                             </div>
                             `);
                         } else {
                             $(td).html(`
                             <div class="btn-group float-right">
-                                <button class="btn d-flex align-items-center justify-content-center text-info">
+                                <button class="btn d-flex align-items-center justify-content-center text-info attach-file">
                                     Attach a file
                                 </button>
 
@@ -353,8 +353,8 @@ var table = $('#transactions-table').DataTable({
 
                                 <div class="dropdown-menu" aria-labelledby="statusDropdownButton">
                                     <a class="dropdown-item" href="#">View/Edit</a>
-                                    <a class="dropdown-item" href="#">Delete</a>
-                                    <a class="dropdown-item" href="#">Void</a>
+                                    <a class="dropdown-item delete-transaction" href="#">Delete</a>
+                                    <a class="dropdown-item void-bill-payment" href="#">Void</a>
                                 </div>
                             </div>
                             `);
@@ -364,7 +364,7 @@ var table = $('#transactions-table').DataTable({
                         if(rowData.status === 'Voided') {
                             $(td).html(`
                             <div class="btn-group float-right">
-                                <button class="btn d-flex align-items-center justify-content-center text-info">
+                                <button class="btn d-flex align-items-center justify-content-center text-info attach-file">
                                     Attach a file
                                 </button>
 
@@ -374,14 +374,14 @@ var table = $('#transactions-table').DataTable({
 
                                 <div class="dropdown-menu" aria-labelledby="statusDropdownButton">
                                     <a class="dropdown-item" href="#">View/Edit</a>
-                                    <a class="dropdown-item" href="#">Delete</a>
+                                    <a class="dropdown-item delete-transaction" href="#">Delete</a>
                                 </div>
                             </div>
                             `);
                         } else {
                             $(td).html(`
                             <div class="btn-group float-right">
-                                <button class="btn d-flex align-items-center justify-content-center text-info">
+                                <button class="btn d-flex align-items-center justify-content-center text-info attach-file">
                                     Attach a file
                                 </button>
 
@@ -391,8 +391,8 @@ var table = $('#transactions-table').DataTable({
 
                                 <div class="dropdown-menu" aria-labelledby="statusDropdownButton">
                                     <a class="dropdown-item" href="#">View/Edit</a>
-                                    <a class="dropdown-item" href="#">Delete</a>
-                                    <a class="dropdown-item" href="#">Void</a>
+                                    <a class="dropdown-item delete-transaction" href="#">Delete</a>
+                                    <a class="dropdown-item void-bill-payment" href="#">Void</a>
                                 </div>
                             </div>
                             `);
@@ -401,7 +401,7 @@ var table = $('#transactions-table').DataTable({
                     case 'Credit Card Payment' :
                         $(td).html(`
                         <div class="btn-group float-right">
-                            <button class="btn d-flex align-items-center justify-content-center text-info">
+                            <button class="btn d-flex align-items-center justify-content-center text-info view-edit-cc-payment">
                                 View/Edit
                             </button>
 
@@ -410,8 +410,8 @@ var table = $('#transactions-table').DataTable({
                             </button>
 
                             <div class="dropdown-menu" aria-labelledby="statusDropdownButton">
-                                <a class="dropdown-item" href="#">Delete</a>
-                                <a class="dropdown-item" href="#">Void</a>
+                                <a class="dropdown-item delete-transaction" href="#">Delete</a>
+                                <a class="dropdown-item void-cc-payment" href="#">Void</a>
                             </div>
                         </div>
                         `);
@@ -431,10 +431,10 @@ var table = $('#transactions-table').DataTable({
                                 <div class="dropdown-menu" aria-labelledby="statusDropdownButton">
                                     <a class="dropdown-item" href="#">Copy to bill</a>
                                     <a class="dropdown-item" href="/accounting/expenses/print-transaction/purchase-order/${rowData.id}" target="_blank">Print</a>
-                                    <a class="dropdown-item" href="#">View/Edit</a>
+                                    <a class="dropdown-item view-edit-purch-order" href="#">View/Edit</a>
                                     <a class="dropdown-item" href="#">Copy</a>
-                                    <a class="dropdown-item" href="#">Delete</a>
-                                    <a class="dropdown-item" href="#">Attach a file</a>
+                                    <a class="dropdown-item delete-transaction" href="#">Delete</a>
+                                    <a class="dropdown-item attach-file" href="#">Attach a file</a>
                                 </div>
                             </div>
                             `);
@@ -450,10 +450,10 @@ var table = $('#transactions-table').DataTable({
                                 </button>
 
                                 <div class="dropdown-menu" aria-labelledby="statusDropdownButton">
-                                    <a class="dropdown-item" href="#">View/Edit</a>
+                                    <a class="dropdown-item view-edit-purch-order" href="#">View/Edit</a>
                                     <a class="dropdown-item" href="#">Copy</a>
-                                    <a class="dropdown-item" href="#">Delete</a>
-                                    <a class="dropdown-item" href="#">Attach a file</a>
+                                    <a class="dropdown-item delete-transaction" href="#">Delete</a>
+                                    <a class="dropdown-item attach-file" href="#">Attach a file</a>
                                 </div>
                             </div>
                             `);
@@ -462,7 +462,7 @@ var table = $('#transactions-table').DataTable({
                     case 'Vendor Credit' :
                         $(td).html(`
                         <div class="btn-group float-right">
-                            <button class="btn d-flex align-items-center justify-content-center text-info">
+                            <button class="btn d-flex align-items-center justify-content-center text-info attach-file">
                                 Attach a file
                             </button>
 
@@ -471,16 +471,16 @@ var table = $('#transactions-table').DataTable({
                             </button>
 
                             <div class="dropdown-menu" aria-labelledby="statusDropdownButton">
-                                <a class="dropdown-item" href="#">View/Edit</a>
+                                <a class="dropdown-item view-edit-vendor-credit" href="#">View/Edit</a>
                                 <a class="dropdown-item" href="#">Copy</a>
-                                <a class="dropdown-item" href="#">Delete</a>
+                                <a class="dropdown-item delete-transaction" href="#">Delete</a>
                             </div>
                         </div>
                         `);
                     break;
                     case 'Credit Card Credit' :
                         $(td).html(`
-                        <button class="btn d-flex align-items-center justify-content-center text-info float-right">
+                        <button class="btn d-flex align-items-center justify-content-center text-info float-right attach-file">
                             Attach a file
                         </button>
                         `);
@@ -624,49 +624,49 @@ function applybtn()
     table.ajax.reload();
 }
 
-$(document).on('click', 'a#new-time-activity', function(e) {
+$('a#new-time-activity').on('click', function(e) {
     e.preventDefault();
 
     $('#new-popup #accounting_employees .ajax-single_time_activity_modal').trigger('click');
 });
 
-$(document).on('click', 'a#new-expense-transaction', function(e) {
+$('a#new-expense-transaction').on('click', function(e) {
     e.preventDefault();
 
     $('#new-popup #accounting_vendors .ajax-expense_modal').trigger('click');
 });
 
-$(document).on('click', 'a#new-check-transaction', function(e) {
+$('a#new-check-transaction').on('click', function(e) {
     e.preventDefault();
 
     $('#new-popup #accounting_vendors .ajax-check_modal').trigger('click');
 });
 
-$(document).on('click', 'a#new-bill-transaction', function(e) {
+$('a#new-bill-transaction').on('click', function(e) {
     e.preventDefault();
 
     $('#new-popup #accounting_vendors .ajax-bill_modal').trigger('click');
 });
 
-$(document).on('click', 'a#new-purchase-order-transaction', function(e) {
+$('a#new-purchase-order-transaction').on('click', function(e) {
     e.preventDefault();
 
     $('#new-popup #accounting_vendors .ajax-purchase_order_modal').trigger('click');
 });
 
-$(document).on('click', 'a#new-vendor-credit-transaction', function(e) {
+$('a#new-vendor-credit-transaction').on('click', function(e) {
     e.preventDefault();
 
     $('#new-popup #accounting_vendors .ajax-vendor_credit_modal').trigger('click');
 });
 
-$(document).on('click', 'a#new-credit-card-pmt', function(e) {
+$('a#new-credit-card-pmt').on('click', function(e) {
     e.preventDefault();
 
     $('#new-popup #accounting_order .ajax-pay_down_credit_card_modal').trigger('click');
 });
 
-$(document).on('click', 'a#pay-bills', function(e) {
+$('a#pay-bills').on('click', function(e) {
     e.preventDefault();
 
     $('#new-popup #accounting_vendors .ajax-pay_bills_modal').trigger('click');
@@ -830,4 +830,579 @@ $(document).on('change', '#transactions-table select[name="category[]"]', functi
             $('#transactions-table').DataTable().ajax.reload();
         }
     });
+});
+
+$(document).on('click', '#transactions-table tbody tr td:not(:first-child, :last-child)', function() {
+    var row = $(this).parent();
+    var data = $('#transactions-table').DataTable().row(row).data();
+    
+    if($(this).find('select').length === 0) {
+        switch(data.type) {
+            case 'Expense' :
+                $(this).parent().find('.view-edit-expense').trigger('click');
+            break;
+            case 'Check' :
+                $(this).parent().find('.view-edit-check').trigger('click');
+            break;
+            case 'Bill' :
+                $(this).parent().find('.view-edit-bill').trigger('click');
+            break;
+            case 'Purchase Order' :
+                $(this).parent().find('.view-edit-purch-order').trigger('click');
+            break;
+            case 'Vendor Credit' :
+                $(this).parent().find('.view-edit-vendor-credit').trigger('click');
+            break;
+            case 'Credit Card Payment' :
+                $(this).parent().find('.view-edit-cc-payment').trigger('click');
+            break;
+            case 'Credit Card Credit' :
+                viewCreditCardCredit(data);
+            break;
+            case 'Bill Payment (Check)' :
+                viewBillPayment(data);
+            break;
+            case 'Bill Payment (Credit Card)' :
+                viewBillPayment(data);
+            break;
+        }
+    }
+});
+
+function initFormFields(modalName, data) {
+    var transactionType = data.type;
+    transactionType = transactionType.replace(' (Check)', '');
+    transactionType = transactionType.replace(' (Credit Card)', '');
+    transactionType = transactionType.replaceAll(' ', '-');
+    transactionType = transactionType.toLowerCase();
+
+    if($(`#${modalName} table#category-details-table`).length > 0) {
+        rowCount = 2;
+        catDetailsInputs = $(`#${modalName} table#category-details-table tbody tr:first-child()`).html();
+        catDetailsBlank = $(`#${modalName} table#category-details-table tbody tr:last-child`).html();
+    }
+
+    if($(`#${modalName} table#category-details-table tbody tr`).length === 2) {
+        $(`#${modalName} table#category-details-table tbody tr:first-child()`).html(catDetailsBlank);
+        $(`#${modalName} table#category-details-table tbody tr:first-child() td:nth-child(2)`).html(1);
+    } else {
+        $(`#${modalName} table#category-details-table tbody tr:first-child()`).remove();
+    }
+
+    if($(`#${modalName} select`).length > 0) {
+        $(`#${modalName} select`).select2();
+    }
+
+    if($(`div#${modalName} select#tags`).length > 0) {
+        $(`div#${modalName} select#tags`).select2({
+            placeholder: 'Start typing to add a tag',
+            allowClear: true,
+            ajax: {
+                url: '/accounting/get-job-tags',
+                dataType: 'json'
+            }
+        });
+    }
+
+    if($(`div#${modalName} .date`).length > 0) {
+        $(`div#${modalName} .date`).each(function(){
+            $(this).datepicker({
+                uiLibrary: 'bootstrap'
+            });
+        });
+    }
+
+    if($(`#${modalName} .attachments`).length > 0) {
+        var attachmentContId = $(`#${modalName} .attachments .dropzone`).attr('id');
+        var viewExpenseAtta = new Dropzone(`#${attachmentContId}`, {
+            url: '/accounting/attachments/attach',
+            maxFilesize: 20,
+            uploadMultiple: true,
+            // maxFiles: 1,
+            addRemoveLinks: true,
+            init: function() {
+                $.getJSON('/accounting/vendors/get-transaction-attachments/'+transactionType+'/'+data.id, function(data) {
+                    if(data.length > 0) {
+                        $.each(data, function(index, val) {
+                            $(`#${modalName}`).find('.attachments').parent().append(`<input type="hidden" name="attachments[]" value="${val.id}">`);
+
+                            modalAttachmentId.push(val.id);
+                            var mockFile = {
+                                name: `${val.uploaded_name}.${val.file_extension}`,
+                                size: parseInt(val.size),
+                                dataURL: base_url+"uploads/accounting/attachments/" + val.stored_name,
+                                // size: val.size / 1000000,
+                                accepted: true
+                            };
+                            viewExpenseAtta.emit("addedfile", mockFile);
+                            modalAttachedFiles.push(mockFile);
+        
+                            viewExpenseAtta.createThumbnailFromUrl(mockFile, viewExpenseAtta.options.thumbnailWidth, viewExpenseAtta.options.thumbnailHeight, viewExpenseAtta.options.thumbnailMethod, true, function(thumbnail) {
+                                viewExpenseAtta.emit('thumbnail', mockFile, thumbnail);
+                            });
+                            viewExpenseAtta.emit("complete", mockFile);
+                        });
+                    }
+                });
+
+                this.on("success", function(file, response) {
+                    var ids = JSON.parse(response)['attachment_ids'];
+                    var modal = $(`#${modalName}`);
+
+                    for(i in ids) {
+                        if(modal.find(`input[name="attachments[]"][value="${ids[i]}"]`).length === 0) {
+                            modal.find('.attachments').parent().append(`<input type="hidden" name="attachments[]" value="${ids[i]}">`);
+                        }
+
+                        modalAttachmentId.push(ids[i]);
+                    }
+                    modalAttachedFiles.push(file);
+                });
+            },
+            removedfile: function(file) {
+                var ids = modalAttachmentId;
+                var index = modalAttachedFiles.map(function(d, index) {
+                    if (d == file) return index;
+                }).filter(isFinite)[0];
+        
+                $(`#${modalName} .attachments`).parent().find(`input[name="attachments[]"][value="${ids[index]}"]`).remove();
+
+                //remove thumbnail
+                var previewElement;
+
+                if((previewElement = file.previewElement) !== null) {
+                    var remove = (previewElement.parentNode.removeChild(file.previewElement));
+        
+                    if($(`#${attachmentContId} .dz-preview`).length > 0) {
+                        $(`#${attachmentContId} .dz-message`).hide();
+                    } else {
+                        $(`#${attachmentContId} .dz-message`).show();
+                    }
+        
+                    return remove;
+                } else {
+                    return (void 0);
+                }
+            }
+        });
+    }
+}
+
+$(document).on('click', '#transactions-table .view-edit-expense', function() {
+    var row = $(this).parent().parent().parent().parent();
+    var data = $('#transactions-table').DataTable().row(row).data();
+
+    $.get('/accounting/vendors/view-expense/'+data.id, function(res) {
+        if ($('div#modal-container').length > 0) {
+            $('div#modal-container').html(res);
+        } else {
+            $('body').append(`
+                <div id="modal-container"> 
+                    ${res}
+                </div>
+            `);
+        }
+
+        initFormFields('expenseModal', data);
+
+        $('#expenseModal').modal('show');
+    });
+});
+
+$(document).on('click', '#transactions-table .view-edit-check', function() {
+    var row = $(this).parent().parent().parent().parent();
+    var data = $('#transactions-table').DataTable().row(row).data();
+
+    $.get('/accounting/vendors/view-check/'+data.id, function(res) {
+        if ($('div#modal-container').length > 0) {
+            $('div#modal-container').html(res);
+        } else {
+            $('body').append(`
+                <div id="modal-container"> 
+                    ${res}
+                </div>
+            `);
+        }
+
+        initFormFields('checkModal', data);
+
+        $('#checkModal').modal('show');
+    });
+});
+
+$(document).on('click', '#transactions-table .view-edit-bill', function() {
+    if($(this).hasClass('dropdown-item')) {
+        var row = $(this).parent().parent().parent().parent();
+    } else {
+        var row = $(this).parent().parent().parent();
+    }
+    var data = $('#transactions-table').DataTable().row(row).data();
+
+    $.get('/accounting/vendors/view-bill/'+data.id, function(res) {
+        if ($('div#modal-container').length > 0) {
+            $('div#modal-container').html(res);
+        } else {
+            $('body').append(`
+                <div id="modal-container"> 
+                    ${res}
+                </div>
+            `);
+        }
+
+        initFormFields('billModal', data);
+
+        $('#billModal').modal('show');
+    });
+});
+
+$(document).on('click', '#transactions-table .view-edit-purch-order', function() {
+    var row = $(this).parent().parent().parent().parent();
+    var data = $('#transactions-table').DataTable().row(row).data();
+
+    $.get('/accounting/vendors/view-purchase-order/'+data.id, function(res) {
+        if ($('div#modal-container').length > 0) {
+            $('div#modal-container').html(res);
+        } else {
+            $('body').append(`
+                <div id="modal-container"> 
+                    ${res}
+                </div>
+            `);
+        }
+
+        initFormFields('purchaseOrderModal', data);
+
+        $('#purchaseOrderModal').modal('show');
+    });
+});
+
+$(document).on('click', '#transactions-table .view-edit-vendor-credit', function() {
+    var row = $(this).parent().parent().parent().parent();
+    var data = $('#transactions-table').DataTable().row(row).data();
+
+    $.get('/accounting/vendors/view-vendor-credit/'+data.id, function(res) {
+        if ($('div#modal-container').length > 0) {
+            $('div#modal-container').html(res);
+        } else {
+            $('body').append(`
+                <div id="modal-container"> 
+                    ${res}
+                </div>
+            `);
+        }
+
+        initFormFields('vendorCreditModal', data);
+
+        $('#vendorCreditModal').modal('show');
+    });
+});
+
+$(document).on('click', '#transactions-table .view-edit-cc-payment', function() {
+    var row = $(this).parent().parent().parent();
+    var data = $('#transactions-table').DataTable().row(row).data();
+
+    $.get('/accounting/vendors/view-cc-payment/'+data.id, function(res) {
+        if ($('div#modal-container').length > 0) {
+            $('div#modal-container').html(res);
+        } else {
+            $('body').append(`
+                <div id="modal-container"> 
+                    ${res}
+                </div>
+            `);
+        }
+
+        initFormFields('payDownCreditModal', data);
+
+        $('#payDownCreditModal').modal('show');
+    });
+});
+
+function viewCreditCardCredit(data) {
+    $.get('/accounting/vendors/view-cc-credit/'+data.id, function(res) {
+        if ($('div#modal-container').length > 0) {
+            $('div#modal-container').html(res);
+        } else {
+            $('body').append(`
+                <div id="modal-container"> 
+                    ${res}
+                </div>
+            `);
+        }
+
+        initFormFields('creditCardCreditModal', data);
+
+        $('#creditCardCreditModal').modal('show');
+    });
+}
+
+function viewBillPayment(data) {
+    $.get('/accounting/expenses/view-bill-payment/'+data.id, function(res) {
+        if ($('div#modal-container').length > 0) {
+            $('div#modal-container').html(res);
+        } else {
+            $('body').append(`
+                <div id="modal-container"> 
+                    ${res}
+                </div>
+            `);
+        }
+
+        initFormFields('billPaymentModal', data);
+
+        initBillsTable(data);
+
+        $('#billPaymentModal .dropdown-menu').on('click', function(e) {
+            e.stopPropagation();
+        });
+
+        $('#billPaymentModal').modal('show');
+    });
+}
+
+function initBillsTable(data)
+{
+    $('#billPaymentModal #bills-table').DataTable({
+        autoWidth: false,
+        searching: false,
+        processing: true,
+        serverSide: true,
+        lengthChange: false,
+        info: false,
+        pageLength: parseInt($('#billPaymentModal #table_rows').val()),
+        ordering: false,
+        ajax: {
+            url: `/accounting/expenses/load-bill-payment-bills/${data.id}`,
+            dataType: 'json',
+            contentType: 'application/json',
+            type: 'POST',
+            data: function(d) {
+                d.search = $('#billPaymentModal #search').val();
+                d.from = $('#billPaymentModal #bills-from').val();
+                d.to = $('#billPaymentModal #bills-to').val();
+                d.overdue = $('#billPaymentModal #overdue_bills_only').prop('checked');
+                d.length = parseInt($('#billPaymentModal #table_rows').val());
+                return JSON.stringify(d);
+            },
+            pagingType: 'full_numbers'
+        },
+        columns: [
+            {
+                data: null,
+                name: 'checkbox',
+                fnCreatedCell: function(td, cellData, rowData, row, col) {
+                    $(td).html(`<input type="checkbox" value="${rowData.id}">`);
+                    $(td).css('padding', '10px 18px');
+                }
+            },
+            {
+                data: 'description',
+                name: 'description'
+            },
+            {
+                data: 'due_date',
+                name: 'due_date'
+            },
+            {
+                data: 'original_amount',
+                name: 'original_amount'
+            },
+            {
+                data: 'open_balance',
+                name: 'open_balance'
+            },
+            {
+                data: 'payment',
+                name: 'payment',
+                fnCreatedCell: function(td, cellData, rowData, row, col) {
+                    $(td).html(`<input type="number" value="${cellData}" class="form-control text-right" onchange="convertToDecimal(this)">`);
+                }
+            }
+        ]
+    });
+}
+
+function applyBillsFilter() {
+    $('#billPaymentModal #bills-table').DataTable().ajax.reload();
+}
+
+function resetBillsFilter() {
+    $('#billPaymentModal #bills-from').val('');
+    $('#billPaymentModal #bills-to').val('');
+    $('#billPaymentModal #overdue_bills_only').prop('checked', false);
+
+    applyBillsFilter();
+}
+
+$(document).on('keyup', '#billPaymentModal #search', function() {
+    $('#billPaymentModal #bills-table').DataTable().ajax.reload();
+});
+
+$(document).on('click', '#transactions-table a.delete-transaction', function(e) {
+    e.preventDefault();
+    var row = $(this).parent().parent().parent().parent();
+    var data = $('#transactions-table').DataTable().row(row).data();
+    var transactionType = data.type;
+    transactionType = transactionType.replaceAll(' (Check)', '');
+    transactionType = transactionType.replaceAll(' (Credit Card)', '');
+    transactionType = transactionType.replaceAll(' ', '-');
+    transactionType = transactionType.toLowerCase();
+
+    $.ajax({
+        url: `/accounting/vendors/delete-transaction/${transactionType}/${data.id}`,
+        type: 'DELETE',
+        success: function(result) {
+            location.reload();
+        }
+    });
+});
+
+$(document).on('click', '#transactions-table .void-expense', function(e) {
+    e.preventDefault();
+
+    var row = $(this).parent().parent().parent().parent();
+    var data = $('#transactions-table').DataTable().row(row).data();
+    var transactionType = data.type;
+    transactionType = transactionType.replaceAll(' ', '-');
+    transactionType = transactionType.toLowerCase();
+
+    $.get('/accounting/vendors/void-transaction/'+transactionType+'/'+data.id, function(res) {
+        var result = JSON.parse(res);
+
+        toast(result.success, result.message);
+
+        $('#transactions-table').DataTable().ajax.reload();
+    });
+});
+
+$(document).on('click', '#transactions-table .void-check', function(e) {
+    e.preventDefault();
+
+    var row = $(this).parent().parent().parent().parent();
+    var data = $('#transactions-table').DataTable().row(row).data();
+    var transactionType = data.type;
+    transactionType = transactionType.replaceAll(' ', '-');
+    transactionType = transactionType.toLowerCase();
+
+    $.get('/accounting/vendors/void-transaction/'+transactionType+'/'+data.id, function(res) {
+        var result = JSON.parse(res);
+
+        toast(result.success, result.message);
+
+        $('#transactions-table').DataTable().ajax.reload();
+    });
+});
+
+$(document).on('click', '#transactions-table .void-cc-payment', function(e) {
+    e.preventDefault();
+
+    var row = $(this).parent().parent().parent().parent();
+    var data = $('#transactions-table').DataTable().row(row).data();
+    var transactionType = data.type;
+    transactionType = transactionType.replaceAll(' ', '-');
+    transactionType = transactionType.toLowerCase();
+
+    $.get('/accounting/vendors/void-transaction/'+transactionType+'/'+data.id, function(res) {
+        var result = JSON.parse(res);
+
+        toast(result.success, result.message);
+
+        $('#transactions-table').DataTable().ajax.reload();
+    });
+});
+
+$(document).on('click', '#transactions-table .void-bill-payment', function(e) {
+    e.preventDefault();
+
+    var row = $(this).parent().parent().parent().parent();
+    var data = $('#transactions-table').DataTable().row(row).data();
+    var transactionType = 'bill-payment';
+
+    $.get('/accounting/vendors/void-transaction/'+transactionType+'/'+data.id, function(res) {
+        var result = JSON.parse(res);
+
+        toast(result.success, result.message);
+
+        $('#transactions-table').DataTable().ajax.reload();
+    });
+});
+
+$(document).on('click', '#transactions-table .attach-file', function(e) {
+    e.preventDefault();
+
+    if($(this).hasClass('dropdown-item')) {
+        var row = $(this).parent().parent().parent().parent();
+    } else {
+        var row = $(this).parent().parent().parent();
+
+        if($(this).hasClass('float-right')) {
+            var row = $(this).parent().parent()
+        }
+    }
+    var data = $('#transactions-table').DataTable().row(row).data();
+    var transactionType = data.type;
+    transactionType = transactionType.replaceAll(' (Check)', '');
+    transactionType = transactionType.replaceAll(' (Credit Card)', '');
+    transactionType = transactionType.replaceAll(' ', '-');
+    transactionType = transactionType.toLowerCase();
+
+    $.get(`/accounting/expenses/get-attach-file-modal/${transactionType}/${data.id}`, function(res) {
+        if($('.append-modal #attach_file_modal').length > 0) {
+            $('.append-modal #attach_file_modal').remove()
+        }
+
+        $('.append-modal').append(res);
+
+        $('.append-modal #attach_file_modal select').select2({
+            minimumResultsForSearch: -1
+        });
+
+        var attachmentContId = $(`#attach_file_modal .attachments .dropzone`).attr('id');
+        var viewExpenseAtta = new Dropzone(`#${attachmentContId}`, {
+            url: `/accounting/expenses/attach-files/${transactionType}/${data.id}`,
+            maxFilesize: 20,
+            uploadMultiple: true,
+            // maxFiles: 1,
+            addRemoveLinks: true,
+            init: function() {
+                this.on("success", function(file, response) {
+                    location.reload();
+                });
+            },
+        });
+
+        $('#attach_file_modal').modal('show');
+    });
+});
+
+$(document).on('change', '#attachments-filter', function() {
+    $.get(`/accounting/attachments/get-${$(this).val()}-attachments-ajax`, function(res) {
+        var attachments = JSON.parse(res);
+
+        $('#attach_file_modal .attachments-container').html('');
+        $.each(attachments, function(index, attachment) {
+            var date = new Date(attachment.created_at.split(' ')[0]);
+            $('#attach_file_modal .attachments-container').append(`
+            <div class="col-md-3">
+                <div class="card border p-0">
+                    <img class="card-img-top m-0" src="/uploads/accounting/attachments/${attachment.stored_name}" alt="${attachment.uploaded_name}.${attachment.file_extension}">
+                    <div class="card-body p-2">
+                        <h6 class="card-title">${attachment.uploaded_name}.${attachment.file_extension}</h6>
+                        <p class="card-subtitle mb-2 text-muted">${String(date.getMonth() + 1).padStart(2, '0')+'/'+String(date.getDate()).padStart(2, '0')+'/'+date.getFullYear()}</p>
+                        <ul class="d-flex justify-content-around">
+                            <li><a href="#" class="text-info attach-to-transaction" data-id="${attachment.id}">Add</a></li>
+                            <li><a href="/uploads/accounting/attachments/${attachment.stored_name}" target="_blank" class="text-info">Preview</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>`);
+        });
+    });
+});
+
+$(document).on('click', '#attach_file_modal a.attach-to-transaction', function(e) {
+    e.preventDefault();
+
+    $('#attach_file_modal #attach-file-form').prepend(`<input type="hidden" name="id" value="${e.currentTarget.dataset.id}">`);
+    $('#attach_file_modal #attach-file-form').submit();
 });

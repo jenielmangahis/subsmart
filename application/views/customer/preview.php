@@ -28,6 +28,9 @@ add_css(array(
         background-color: #E5EBF2;
         height: 20px;
     }
+    .form_line{
+        line-height: 23px !important;
+    }
 </style>
 <div class="wrapper" role="wrapper">
     <?php include viewPath('includes/sidebars/customer'); ?>

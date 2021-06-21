@@ -537,7 +537,7 @@ border: none;
 														</tr>
 														</tr>
 															<td align="left"><div style="">Security Number: </div></td>
-															<td align="right"><?php echo $workorder->security_number ?></td>
+															<td align="right"> <?php echo $workorder->security_number ?></td>
 														</tr>
 														</tr>
 															<td align="left"><div style="">Source: </div></td>
@@ -1047,7 +1047,7 @@ border: none;
                     <form name="clone-modal-form">
                         <div class="validation-error" style="display: none;"></div>
                         <p>
-                            <input type="text" class="form-control" value="<?php echo base_url('workorder/preview/'.$workorder->id) ?>">
+                            <input type="text" class="form-control" value="<?php echo base_url('share_Link/preview/'.$workorder->id) ?>">
                         </p>
                     </form>
                 </div>

@@ -83,7 +83,7 @@ class Accounting extends MY_Controller
                 array('/accounting/banking',array()),
                 array("",	array('/accounting/link_bank','/accounting/rules','/accounting/receipts','/accounting/tags')),
                 array("",	array('/accounting/expenses','/accounting/vendors')),
-                array("",	array('/accounting/sales-overview','/accounting/all-sales','/accounting/newEstimateList','/accounting/customers','/accounting/deposits','/accounting/listworkOrder','/accounting/invoices', 'credit_notes')),
+                array("",	array('/accounting/sales-overview','/accounting/all-sales','/accounting/newEstimateList','/accounting/customers','/accounting/deposits','/accounting/listworkOrder','/accounting/invoices', '/accounting/jobs')),
                 array("",	array('/accounting/payroll-overview','/accounting/employees','/accounting/contractors','/accounting/workers-comp','#')),
                 array('/accounting/reports',array()),
                 array("",	array('/accounting/salesTax','/accounting/payrollTax')),
@@ -101,11 +101,10 @@ class Accounting extends MY_Controller
         $this->page_data['credit_memo'] = $this->accounting_credit_memo_model->getAllByCompany(logged('company_id'));
     }
 
-    /*public function index()
+    public function index()
     {
-        $this->page_data['users'] = $this->users_model->getUser(logged('id'));
-        $this->load->view('tools/business_tools', $this->page_data);
-    }*/
+        redirect('/accounting/sales-overview', 'refresh');
+    }
     public function banking()
     {
         $is_allowed = $this->isAllowedModuleAccess(45);
@@ -236,7 +235,8 @@ class Accounting extends MY_Controller
         ));
         add_footer_js(array(
             "assets/js/accounting/sales/customers.js",
-            "assets/js/accounting/sales/customer_includes/send_reminder.js"
+            "assets/js/accounting/sales/customer_includes/send_reminder.js",
+            "assets/js/accounting/sales/customer_includes/receive_payment.js"
         ));
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->page_data['customers'] = $this->accounting_customers_model->getAllByCompany();
@@ -5380,14 +5380,15 @@ class Accounting extends MY_Controller
         $invoices = $this->accounting_invoices_model->get_payements_by_customer_id($customer_id);
         $data = new stdClass();
         $data->cutsomer_email = $customer_info->email;
-        $data->name = $customer_info->first_name ." ".$customer_info->last_name ." ";
+        $data->name = $customer_info->first_name ." ".$customer_info->last_name ."";
         $data->invoice_count = count($invoices);
         $data->business_name = $customer_info->business_name;
         echo json_encode($data);
     }
     public function send_customer_reminder()
     {
-        $customer_email = $this->input->post("customer-email");
+        $customer_name = $this->input->post("customer_name");
+        $customer_email = $this->input->post("customer_email");
         $subject = $this->input->post("subject");
         $message = $this->input->post("message");
         $server = MAIL_SERVER;
@@ -5412,31 +5413,26 @@ class Accounting extends MY_Controller
 
         //get job data
 
-        $this->page_data['company_name'] = $company_name;
-        $this->page_data['date_from'] = $date_from;
-        $this->page_data['date_to'] = date("Y-m-d", strtotime('saturday this week', strtotime(date('Y-m-d'))));
-        $this->page_data['business_name'] = $business_name;
-        $this->page_data['FName'] = $FName;
-        $this->page_data['file_info'] = $file_info;
-        $this->page_data['file_link'] = base_url() . '/timesheet/timelogs/' . $filename;
-        $this->page_data['has_logo'] = false;
-        $this->page_data['est_wage_privacy'] = $est_wage_privacy;
+        $this->page_data['customer_name'] = $customer_name;
+        $this->page_data['message'] = $message;
+        $this->page_data['subject'] = $subject;
+        
         $mail->IsHTML(true);
         $mail->AddEmbeddedImage(dirname(__DIR__, 2) . '/assets/dashboard/images/logo.png', 'logo_2u', 'logo.png');
-        $filePath = base_url() . '/uploads/users/business_profile/'.$logo_folder.'/'.$company_logo;
-        if (@getimagesize($filePath)) {
-            $mail->AddEmbeddedImage(dirname(__DIR__, 2) . '/uploads/users/business_profile/'.$logo_folder.'/'.$company_logo, 'company_logo', $company_logo);
-            $this->page_data['has_logo'] = true;
-        }
 
-        $mail->Body =  'Timesheet Report.';
-        $content = $this->load->view('users/timesheet/emails/weekly_timelogs_report', $this->page_data, true);
+        $mail->Body =  'Send Reminders';
+        $content = $this->load->view('accounting/customer_includes/send_reminder_email_layout', $this->page_data, true);
         $mail->MsgHTML($content);
-        $mail->addAddress($receiver);
+        $mail->addAddress($customer_email);
+        $data = new stdClass();
+        $data->status = "success";
+        
         if (!$mail->Send()) {
-            echo 'Message could not be sent.';
-            echo 'Mailer Error: ' . $mail->ErrorInfo;
+            $data->status = "error";
+            $data->status = "Mailer Error: ".$mail->ErrorInfo;
             exit;
         }
+        echo json_encode($data);
+        // $this->load->view('accounting/customer_includes/send_reminder_email_layout', $this->page_data);
     }
 }

@@ -44,4 +44,13 @@ class Accounting_attachments_model extends MY_Model {
 		$query = $this->db->get($this->table);
         return $query->row();
 	}
+
+	public function get_unlinked_attachments()
+	{
+		$this->db->where('company_id', getLoggedCompanyID());
+		$this->db->where('linked_to_count', 0);
+
+		$query = $this->db->get($this->table);
+		return $query->result_array();
+	}
 }

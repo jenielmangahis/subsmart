@@ -639,6 +639,30 @@ class Vendors_model extends MY_Model {
 		return $query->result();
 	}
 
+	public function get_bill_payment_bills($billPaymentId, $filters = [])
+	{
+		$this->db->select('accounting_bill.*');
+		$this->db->where('accounting_bill_payment_items.bill_payment_id', $billPaymentId);
+
+		if(isset($filters['from']) && !is_null($filters['from'])) {
+			$this->db->where('accounting_bill.bill_date >=', $filters['from']);
+		}
+
+		if(isset($filters['to'])  && !is_null($filters['to'])) {
+			$this->db->where('accounting_bill.bill_date <=', $filters['to']);
+		}
+
+		if($filters['overdue']) {
+			$this->db->where('accounting_bill.due_date <', date("Y-m-d"));
+		}
+
+		$this->db->order_by('accounting_bill.bill_date', 'asc');
+		$this->db->from('accounting_bill');
+		$this->db->join('accounting_bill_payment_items', 'accounting_bill_payment_items.bill_id = accounting_bill.id');
+		$query = $this->db->get();
+		return $query->result();
+	}
+
 	public function update_multiple_category_by_id($data)
 	{
 		return $this->db->update_batch('accounting_vendor_transaction_categories', $data, 'id');

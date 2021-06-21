@@ -14,7 +14,7 @@ class Workorder extends MY_Controller
 
         parent::__construct();
 
-        // $this->checkLogin();
+        $this->checkLogin();
 
         $this->page_data['page']->title = 'Workorder Management';
 
@@ -3657,7 +3657,7 @@ class Workorder extends MY_Controller
             'password'              => $this->input->post('password'),
             // 'offer_code'            => $this->input->post('offer_code'),
             'tags'                  => $this->input->post('job_tag'),
-            'date_issued'           => $this->input->post('date_issued'),
+            'date_issued'           => $this->input->post('schedule_date_given'),
             'job_type'              => $this->input->post('job_type'),
             // 'job_name'              => $this->input->post('job_name'),
             // 'job_description'       => $this->input->post('job_description'),

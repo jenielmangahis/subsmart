@@ -452,7 +452,7 @@ border: none;
 										</div>
 										<div class="col-md-4 form-group">
                                         <div class="select-wrap">
-											<label for="">Customer Type</label><br/>
+											<label for="">Customer Type</label><span class="form-required">*</span><br/>
 											<select name="customer_type"
 													class="form-control custom-select m_select"
 													id="customer_type">
@@ -480,7 +480,7 @@ border: none;
 
 										<div class="col-md-4 form-group">
                                         <div class="select-wrap">
-											<label for="customer_install_type">Install Type</label><br/>
+											<label for="customer_install_type">Install Type</label><span class="form-required">*</span><br/>
 											<select name="install_type"
 													class="form-control custom-select m_select"
 													id="customer_install_type">
@@ -505,27 +505,27 @@ border: none;
 
 									<div class="row">
 										<div class="col-md-3 form-group">
-											<label for="last_name" class="label-element">Last Name</label>
+											<label for="last_name" class="label-element">Last Name</label><span class="form-required">*</span>
 											<input type="text" class="form-control input-element" name="last_name"
 												   id="last_name"
 												    placeholder="Enter Last Name"
 												   value="<?php echo $workorder->acs_last_name; ?>"/>
 										</div>
 										<div class="col-md-3 form-group">
-											<label for="first_name" class="label-element">First Name</label>
+											<label for="first_name" class="label-element">First Name</label><span class="form-required">*</span>
 											<input type="text" class="form-control input-element" name="first_name"
 												   id="first_name" 
 												   placeholder="Enter First Name" value="<?php echo $workorder->acs_first_name; ?>" />
 										</div>
 										<div class="col-md-2 form-group">
-											<label for="contact_mobile" class="label-element">Mobile</label>
+											<label for="contact_mobile" class="label-element">Mobile</label><span class="form-required">*</span>
 											<input type="text" class="form-control input-element" name="mobile_number" value="<?php echo $workorder->phone_m; ?>"
 												   id="contact_mobile" />
 
 										</div>
 
 										<div class="col-md-2 form-group">
-											<label for="contact_dob" class="label-element">DOB</label>
+											<label for="contact_dob" class="label-element">DOB</label><span class="form-required">*</span>
 											<input type="text" class="form-control input-element" name="dob"
 												   id="customer_contact_dob" 
                                                    value="<?php echo $workorder->date_of_birth; ?>"
@@ -533,7 +533,7 @@ border: none;
 										</div>
 
 										<div class="col-md-2 form-group">
-											<label for="contact_ssn" class="label-element">SSN</label>
+											<label for="contact_ssn" class="label-element">SSN</label><span class="form-required">*</span>
 											<input type="text" class="form-control input-element" name="security_number"
 												   id="ssn"
 												   value="<?php echo $workorder->ssn; ?>"
@@ -586,24 +586,24 @@ border: none;
 
 									<div class="row">
 										<div class="col-md-3 form-group">
-											<label for="monitored_location" class="label-element">Monitored Location</label>
+											<label for="monitored_location" class="label-element">Monitored Location</label><span class="form-required">*</span>
 											<input type="text" class="form-control input-element" name="monitored_location"
 												   id="ship-address"
 												   value="<?php echo $workorder->mail_add; ?>" />
 										</div>
 										<div class="col-md-3 form-group">
-											<label for="city" class="label-element">City</label> 
+											<label for="city" class="label-element">City</label> <span class="form-required">*</span>
                                                    <input type="text" class="form-control input-element" name="city" id="locality" placeholder="Enter City" value="<?php echo $workorder->city; ?>"/>
 										</div>
 										<div class="col-md-2 form-group">
-											<label for="state" class="label-element">State</label>
+											<label for="state" class="label-element">State</label><span class="form-required">*</span>
 											<input type="text" class="form-control input-element" name="state"
 												   id="state"  placeholder="Enter State" value="<?php echo $workorder->state; ?>"/>
 
 										</div>
 
 										<div class="col-md-2 form-group">
-											<label for="zip" class="label-element">ZIP</label> 
+											<label for="zip" class="label-element">ZIP</label> <span class="form-required">*</span>
                                                    <input type="text" id="postcode" name="zip_code" class="form-control input-element"  value="<?php echo $workorder->zip_code; ?>"/>
 										</div>
 
@@ -619,7 +619,7 @@ border: none;
 
 									<div class="row">
 										<div class="col-md-3 form-group">
-											<label for="email" class="label-element">Email</label>
+											<label for="email" class="label-element">Email</label><span class="form-required">*</span>
 											<input type="email" class="form-control input-element" name="email"
 												   id="email" 
 												   value="<?php echo $workorder->email; 
@@ -627,7 +627,7 @@ border: none;
 												    placeholder="Enter Email"/>
 										</div>
 										<div class="col-md-2 form-group">
-											<label for="password" class="label-element">Password</label>
+											<label for="password" class="label-element">Password</label><span class="form-required">*</span>
 											<input type="text" class="form-control input-element" name="password" value="<?php echo $workorder->password; ?>"
 												   id="password" >
 										</div>
@@ -962,7 +962,7 @@ border: none;
                                 </div>
                                 <div class="col-md-6 form-group">
                                 <div class="select-wrap">
-                                    <label for="street_address"> Plan Type:</label>
+                                    <label for="street_address"> Plan Type:</label><span class="form-required">*</span>
                                         <!-- <select
                                                 name="plan_type"
                                                 id="plan_type"
@@ -998,7 +998,7 @@ border: none;
                                 <div class="form-group col-md-6">
                                 <div class="select-wrap">
                                     <!-- <div class="col-md-12"> -->
-                                        <label>Account Type</label>
+                                        <label>Account Type</label><span class="form-required">*</span>
                                     <!-- </div> -->
                                     <!-- <div class="col-md-12"> -->
                                         <select name="account_type"
@@ -1023,7 +1023,7 @@ border: none;
                                 <!-- <div class="row"> -->
                                     <div class="col-md-4">
                                     <div class="select-wrap">
-                                        <label>Panel Type</label>
+                                        <label>Panel Type</label><span class="form-required">*</span>
                                         <select name="panel_type" id="panel_type" class="form-control custom-select m_select" >
                                             <option value="<?php echo $workorder->panel_type; ?>"><?php echo $workorder->panel_type; ?></option>
                                             <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'AERIONICS'){echo "selected";} } ?> value="AERIONICS">AERIONICS</option>

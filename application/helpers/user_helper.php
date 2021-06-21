@@ -2,6 +2,7 @@
 //$this->CI->load->helper('date');
 
 function validateUserAccessModule($module_id){
+	echo 45;exit;
     $ci = &get_instance();
     $ci->load->library('session');
 

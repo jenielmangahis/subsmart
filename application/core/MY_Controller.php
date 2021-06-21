@@ -134,6 +134,22 @@ class MY_Controller extends CI_Controller {
 
 		return $is_allowed;
 	}
+
+	public function hasAccessModule($module_id){
+		// check if customer is allowed to view this page
+		$company_id = logged('company_id');
+		if( $company_id != 1 ){
+			$ci = &get_instance();
+	        $ci->load->library('session');
+
+	        $allowed_modules = $ci->session->userdata('userAccessModules');
+	        if( !in_array($module_id, $allowed_modules) ){
+	            $this->session->set_flashdata('alert_class', 'alert-danger');
+	            $this->session->set_flashdata('message', 'You have no access to this module');
+	            redirect('mycrm/membership');
+	        }
+		}        
+    }
 }
 
 /* End of file My_Controller.php */

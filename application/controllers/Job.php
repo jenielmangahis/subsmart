@@ -349,6 +349,14 @@ class Job extends MY_Controller
         );
         $this->page_data['tax_rates'] = $this->general->get_data_with_param($get_settings);
 
+
+        // lead source data
+        $get_leadsource = array(
+            'table' => 'ac_leadsource',
+            'select' => '*',
+        );
+        $this->page_data['lead_source'] = $this->general->get_data_with_param($get_leadsource);
+
         $settings = $this->settings_model->getValueByKey(DB_SETTINGS_TABLE_KEY_SCHEDULE);
         $this->page_data['settings'] = unserialize($settings);
 
@@ -1319,11 +1327,37 @@ class Job extends MY_Controller
         );
         $this->general->add_($job_payment_query, 'job_payments');
 
-
         $jobs_settings_data = array(
             'job_num_next' => $job_settings[0]->job_num_next + 1
         );
         $this->general->update_with_key($jobs_settings_data, $job_settings[0]->id, 'job_settings');
+
+        if(isset($input['wo_id'])){
+            $get_work_order_data = array(
+                'where' => array(
+                    'id' => $input['wo_id']
+                ),
+                'table' => 'work_orders',
+                'select' => '*',
+            );
+            $workorder_data = $this->general->get_data_with_param($get_work_order_data);
+
+            $check_exist = array(
+                'where' => array('fk_prof_id' => $input['customer_id']),
+                'table' => 'acs_alarm'
+            );
+            $is_exist = $this->general->get_data_with_param($check_exist);
+
+            $customer_data = array();
+            $customer_data['passcode'] = $workorder_data->password;
+            if(empty($is_exist)){
+                $customer_data['fk_prof_id'] = $input['customer_id'];
+                $this->general->add_($customer_data, 'acs_alarm');
+            }else{
+                $this->general->update_with_key_field($customer_data, $input['customer_id'], 'acs_alarm','fk_prof_id');
+            }
+        }
+
         echo $jobs_id;
     }
 

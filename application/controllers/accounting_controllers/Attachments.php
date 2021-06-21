@@ -227,4 +227,18 @@ class Attachments extends MY_Controller {
             echo json_encode('error');
         }
     }
+
+    public function get_all_attachments()
+    {
+        $attachments = $this->accounting_attachments_model->getCompanyAttachments();
+
+        echo json_encode($attachments);
+    }
+
+    public function get_unlinked_attachments()
+    {
+        $attachments = $this->accounting_attachments_model->get_unlinked_attachments();
+
+        echo json_encode($attachments);
+    }
 }

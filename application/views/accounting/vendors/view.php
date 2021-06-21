@@ -8,10 +8,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         background-color: #32243D;
         border: 1px solid #32243D;
     }
-    #transactions-table tbody td:nth-child(2) a:hover {
-        text-decoration: underline;
-        color: #38a4f8 !important;
-    }
     #transactions-table .btn-group .btn:hover, #transactions-table .btn-group .btn:focus {
         color: unset;
     }

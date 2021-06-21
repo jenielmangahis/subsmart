@@ -53,8 +53,8 @@
                                             </div>
                                         </div>
                                         <div class="col-md-4">
-                                            <h6 class="text-right">AMOUNT PAID</h6>
-                                            <h2 class="text-right">$0.00</h2>
+                                            <h6 class="text-right"><?=$billPayment->status === "4" ? "PAYMENT STATUS" : "AMOUNT PAID" ?></h6>
+                                            <h2 class="text-right"><?=$billPayment->status === "4" ? "VOID" : "$0.00" ?></h2>
                                         </div>
                                         <div class="col-md-2">
                                             <div class="form-group">

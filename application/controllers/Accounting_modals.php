@@ -40,6 +40,7 @@ class Accounting_modals extends MY_Controller {
         $this->load->model('accounting_recurring_transactions_model');
         $this->load->model('accounting_payment_methods_model');
         $this->load->model('accounting_terms_model');
+        $this->load->model('accounting_attachments_model');
 		$this->load->library('form_validation');
     }
 
@@ -1460,8 +1461,6 @@ class Accounting_modals extends MY_Controller {
             $return['success'] = false;
             $return['message'] = 'Error';
         } else {
-            $filenames = $this->move_files($files, 'transfer');
-
             $insertData = [
                 'company_id' => logged('company_id'),
                 'transfer_from_account_id' => $data['transfer_from'],
@@ -1469,7 +1468,7 @@ class Accounting_modals extends MY_Controller {
                 'transfer_amount' => $data['transfer_amount'],
                 'transfer_date' => isset($data['date']) ? date('Y-m-d', strtotime($data['date'])) : null,
                 'transfer_memo' => $data['memo'],
-                'transfer_attachments' => json_encode($filenames),
+                'attachments' => $data['attachments'] !== null ? json_encode($data['attachments']) : null,
                 'recurring' => isset($data['template_name']) ? 1 : 0,
                 'created_by' => logged('id'),
                 'status' => 1,
@@ -1479,56 +1478,54 @@ class Accounting_modals extends MY_Controller {
     
             $transferId = $this->accounting_transfer_funds_model->create($insertData);
 
-            if(isset($data['template_name'])) {
-                $recurringData = [
-                    'company_id' => getLoggedCompanyID(),
-                    'template_name' => $data['template_name'],
-                    'recurring_type' => $data['recurring_type'],
-                    'days_in_advance' => $data['recurring_type'] !== 'unscheduled' ? $data['days_in_advance'] !== '' ? $data['days_in_advance'] : null : null,
-                    'txn_type' => 'transfer',
-                    'txn_id' => $transferId,
-                    'recurring_interval' => $data['recurring_interval'],
-                    'recurring_month' => $data['recurring_mode'] === 'yearly' ? $data['recurring_month'] : null,
-                    'recurring_week' => $data['recurring_mode'] === 'monthly' ? $data['recurring_week'] : null,
-                    'recurring_day' => $data['recurring_mode'] !== 'daily' ? $data['recurring_day'] : null,
-                    'recurr_every' => $data['recurring_mode'] !== 'yearly' ? $data['recurr_every'] : null,
-                    'start_date' => $data['recurring_type'] !== 'unscheduled' ? date('Y-m-d', strtotime($data['start_date'])) : null,
-                    'end_type' => $data['end_type'],
-                    'end_date' => $data['end_type'] === 'by' ? date('Y-m-d', strtotime($data['end_date'])) : null,
-                    'max_occurences' => $data['end_type'] === 'after' ? $data['max_occurence'] : null,
-                    'status' => 1,
-                    'created_at' => date('Y-m-d h:i:s'),
-                    'updated_at' => date('Y-m-d h:i:s')
-                ];
+            if($transferId) {
+                if(isset($data['attachments']) && is_array($data['attachments'])) {
+                    foreach($data['attachments'] as $attachmentId) {
+                        $attachment = $this->accounting_attachments_model->getById($attachmentId);
+                        $attachmentData = [
+                            'linked_to_count' => intval($attachment->linked_to_count) + 1
+                        ];
+        
+                        $this->accounting_attachments_model->updateAttachment($attachmentId, $attachmentData);
+                    }
+                }
 
-                $recurringId = $this->accounting_recurring_transactions_model->create($recurringData);
-
-                $return['data'] = $transferId;
-                $return['success'] = $transferId && $recurringId ? true : false;
-                $return['message'] = $transferId && $recurringId ? 'Template saved!' : 'An unexpected error occured!';
-            } else {
-                $return['data'] = $transferId;
-                $return['success'] = $transferId ? true : false;
-                $return['message'] = $transferId ? 'Transfer Successfully!' : 'An unexpected error occured!';
+                if(isset($data['template_name'])) {
+                    $recurringData = [
+                        'company_id' => getLoggedCompanyID(),
+                        'template_name' => $data['template_name'],
+                        'recurring_type' => $data['recurring_type'],
+                        'days_in_advance' => $data['recurring_type'] !== 'unscheduled' ? $data['days_in_advance'] !== '' ? $data['days_in_advance'] : null : null,
+                        'txn_type' => 'transfer',
+                        'txn_id' => $transferId,
+                        'recurring_interval' => $data['recurring_interval'],
+                        'recurring_month' => $data['recurring_mode'] === 'yearly' ? $data['recurring_month'] : null,
+                        'recurring_week' => $data['recurring_mode'] === 'monthly' ? $data['recurring_week'] : null,
+                        'recurring_day' => $data['recurring_mode'] !== 'daily' ? $data['recurring_day'] : null,
+                        'recurr_every' => $data['recurring_mode'] !== 'yearly' ? $data['recurr_every'] : null,
+                        'start_date' => $data['recurring_type'] !== 'unscheduled' ? date('Y-m-d', strtotime($data['start_date'])) : null,
+                        'end_type' => $data['end_type'],
+                        'end_date' => $data['end_type'] === 'by' ? date('Y-m-d', strtotime($data['end_date'])) : null,
+                        'max_occurences' => $data['end_type'] === 'after' ? $data['max_occurence'] : null,
+                        'status' => 1,
+                        'created_at' => date('Y-m-d h:i:s'),
+                        'updated_at' => date('Y-m-d h:i:s')
+                    ];
+    
+                    $recurringId = $this->accounting_recurring_transactions_model->create($recurringData);
+    
+                    $return['data'] = $transferId;
+                    $return['success'] = $transferId && $recurringId ? true : false;
+                    $return['message'] = $transferId && $recurringId ? 'Template saved!' : 'An unexpected error occured!';
+                }
             }
+
+            $return['data'] = $transferId;
+            $return['success'] = $transferId ? true : false;
+            $return['message'] = $transferId ? 'Transfer Successfully!' : 'An unexpected error occured!';
         }
 
         return $return;
-    }
-
-    private function move_files($files, $folder) {
-        $filenames = [];
-        $path = $this->upload_path . '' . $folder;
-
-        if(count($files) > 0) {
-            foreach ($files['name'] as $key => $value) {
-                move_uploaded_file($files['tmp_name'][$key], $path . '/' . $value);
-
-                $filenames[] = $value;
-            }
-        }
-
-        return $filenames;
     }
 
     private function pay_down_credit_card($data, $files) {
@@ -1564,19 +1561,32 @@ class Accounting_modals extends MY_Controller {
 
             $payDownId = $this->accounting_pay_down_credit_card_model->create($insertData);
 
-            $creditAcc = $this->chart_of_accounts_model->getById($data['credit_card']);
+            if($payDownId) {
+                if(isset($data['attachments']) && is_array($data['attachments'])) {
+                    foreach($data['attachments'] as $attachmentId) {
+                        $attachment = $this->accounting_attachments_model->getById($attachmentId);
+                        $attachmentData = [
+                            'linked_to_count' => intval($attachment->linked_to_count) + 1
+                        ];
+        
+                        $this->accounting_attachments_model->updateAttachment($attachmentId, $attachmentData);
+                    }
+                }
 
-            $newBalance = floatval($creditAcc->balance) - floatval($data['amount']);
-            $newBalance = number_format($newBalance, 2, '.', ',');
+                $creditAcc = $this->chart_of_accounts_model->getById($data['credit_card']);
 
-            $this->chart_of_accounts_model->updateBalance(['id' => $creditAcc->id, 'company_id' => logged('company_id'), 'balance' => $newBalance]);
+                $newBalance = floatval($creditAcc->balance) - floatval($data['amount']);
+                $newBalance = number_format($newBalance, 2, '.', ',');
 
-            $bankAcc = $this->chart_of_accounts_model->getById($data['bank_account']);
+                $this->chart_of_accounts_model->updateBalance(['id' => $creditAcc->id, 'company_id' => logged('company_id'), 'balance' => $newBalance]);
 
-            $newBalance = floatval($bankAcc->balance) - floatval($data['amount']);
-            $newBalance = number_format($newBalance, 2, '.', ',');
+                $bankAcc = $this->chart_of_accounts_model->getById($data['bank_account']);
 
-            $this->chart_of_accounts_model->updateBalance(['id' => $bankAcc->id, 'company_id' => logged('company_id'), 'balance' => $newBalance]);
+                $newBalance = floatval($bankAcc->balance) - floatval($data['amount']);
+                $newBalance = number_format($newBalance, 2, '.', ',');
+
+                $this->chart_of_accounts_model->updateBalance(['id' => $bankAcc->id, 'company_id' => logged('company_id'), 'balance' => $newBalance]);
+            }
 
             $return['data'] = $payDownId;
             $return['success'] = $payDownId ? true : false;
@@ -1696,14 +1706,12 @@ class Accounting_modals extends MY_Controller {
             $return['success'] = false;
             $return['message'] = 'Please balance debits and credits.';
         } else {
-            $filenames = $this->move_files($files, 'journal_entry');
-
             $insertData = [
                 'company_id' => logged('company_id'),
                 'journal_no' => (!isset($data['template_name'])) ? $data['journal_no'] : null,
                 'journal_date' => (!isset($data['template_name'])) ? date('Y-m-d', strtotime($data['journal_date'])) : null,
                 'memo' => $data['memo'],
-                'attachments' => json_encode($filenames),
+                'attachments' => $data['attachments'] !== null ? json_encode($data['attachments']) : null,
                 'created_by' => logged('id'),
                 'status' => 1,
                 'created_at' => date('Y-m-d h:i:s'),
@@ -1736,6 +1744,17 @@ class Accounting_modals extends MY_Controller {
                     ];
     
                     $recurringId = $this->accounting_recurring_transactions_model->create($recurringData);
+                }
+
+                if(isset($data['attachments']) && is_array($data['attachments'])) {
+                    foreach($data['attachments'] as $attachmentId) {
+                        $attachment = $this->accounting_attachments_model->getById($attachmentId);
+                        $attachmentData = [
+                            'linked_to_count' => intval($attachment->linked_to_count) + 1
+                        ];
+        
+                        $this->accounting_attachments_model->updateAttachment($attachmentId, $attachmentData);
+                    }
                 }
 
                 $entryItems = [];
@@ -1820,8 +1839,6 @@ class Accounting_modals extends MY_Controller {
             $return['success'] = false;
             $return['message'] = 'Please enter at least one line item.';
         } else {
-            $filenames = $this->move_files($files, 'bank_deposit');
-
             $totalAmount = array_sum(array_map(function($item) {
                 return floatval($item);
             }, $data['amount']));
@@ -1838,7 +1855,7 @@ class Accounting_modals extends MY_Controller {
                 'cash_back_memo' => $data['cash_back_memo'],
                 'cash_back_amount' => $data['cash_back_amount'],
                 'memo' => $data['memo'],
-                'attachments' => json_encode($filenames),
+                'attachments' => $data['attachments'] !== null ? json_encode($data['attachments']) : null,
                 'recurring' => isset($data['template_name']) ? 1 : 0,
                 'created_by' => logged('id'),
                 'status' => 1,
@@ -1872,6 +1889,17 @@ class Accounting_modals extends MY_Controller {
                     ];
     
                     $recurringId = $this->accounting_recurring_transactions_model->create($recurringData);
+                }
+
+                if(isset($data['attachments']) && is_array($data['attachments'])) {
+                    foreach($data['attachments'] as $attachmentId) {
+                        $attachment = $this->accounting_attachments_model->getById($attachmentId);
+                        $attachmentData = [
+                            'linked_to_count' => intval($attachment->linked_to_count) + 1
+                        ];
+        
+                        $this->accounting_attachments_model->updateAttachment($attachmentId, $attachmentData);
+                    }
                 }
 
                 $fundsData = [];
@@ -2543,22 +2571,33 @@ class Accounting_modals extends MY_Controller {
                 'created_at' => date("Y-m-d H:i:s"),
                 'updated_at' => date("Y-m-d H:i:s")
             ];
-
+    
             $expenseId = $this->expenses_model->addExpense($expenseData);
 
-            $paymentAcc = $this->chart_of_accounts_model->getById($data['payment_account']);
-            $newBalance = floatval($paymentAcc->balance) + floatval($data['total_amount']);
-            $newBalance = number_format($newBalance, 2, '.', ',');
-
-            $paymentAccData = [
-                'id' => $paymentAcc->id,
-                'company_id' => logged('company_id'),
-                'balance' => $newBalance
-            ];
-
-            $this->chart_of_accounts_model->updateBalance($paymentAccData);
-    
             if($expenseId) {
+                if(isset($data['attachments']) && is_array($data['attachments'])) {
+                    foreach($data['attachments'] as $attachmentId) {
+                        $attachment = $this->accounting_attachments_model->getById($attachmentId);
+                        $attachmentData = [
+                            'linked_to_count' => intval($attachment->linked_to_count) + 1
+                        ];
+        
+                        $this->accounting_attachments_model->updateAttachment($attachmentId, $attachmentData);
+                    }
+                }
+
+                $paymentAcc = $this->chart_of_accounts_model->getById($data['payment_account']);
+                $newBalance = floatval($paymentAcc->balance) + floatval($data['total_amount']);
+                $newBalance = number_format($newBalance, 2, '.', ',');
+
+                $paymentAccData = [
+                    'id' => $paymentAcc->id,
+                    'company_id' => logged('company_id'),
+                    'balance' => $newBalance
+                ];
+
+                $this->chart_of_accounts_model->updateBalance($paymentAccData);
+
                 if(isset($data['expense_name'])) {
                     $categoryDetails = [];
                     foreach($data['expense_name'] as $index => $value) {
@@ -2689,20 +2728,31 @@ class Accounting_modals extends MY_Controller {
             ];
     
             $checkId = $this->expenses_model->addCheck($checkData);
-
-            $bankAcc = $this->chart_of_accounts_model->getById($data['bank_account']);
-            $newBalance = floatval($bankAcc->balance) - floatval($data['total_amount']);
-            $newBalance = number_format($newBalance, 2, '.', ',');
-
-            $bankAccData = [
-                'id' => $bankAcc->id,
-                'company_id' => logged('company_id'),
-                'balance' => $newBalance
-            ];
-
-            $this->chart_of_accounts_model->updateBalance($bankAccData);
     
             if($checkId) {
+                if(isset($data['attachments']) && is_array($data['attachments'])) {
+                    foreach($data['attachments'] as $attachmentId) {
+                        $attachment = $this->accounting_attachments_model->getById($attachmentId);
+                        $attachmentData = [
+                            'linked_to_count' => intval($attachment->linked_to_count) + 1
+                        ];
+        
+                        $this->accounting_attachments_model->updateAttachment($attachmentId, $attachmentData);
+                    }
+                }
+
+                $bankAcc = $this->chart_of_accounts_model->getById($data['bank_account']);
+                $newBalance = floatval($bankAcc->balance) - floatval($data['total_amount']);
+                $newBalance = number_format($newBalance, 2, '.', ',');
+
+                $bankAccData = [
+                    'id' => $bankAcc->id,
+                    'company_id' => logged('company_id'),
+                    'balance' => $newBalance
+                ];
+
+                $this->chart_of_accounts_model->updateBalance($bankAccData);
+
                 if(isset($data['expense_name'])) {
                     $categoryDetails = [];
                     foreach($data['expense_name'] as $index => $value) {
@@ -2836,6 +2886,17 @@ class Accounting_modals extends MY_Controller {
             $billId = $this->expenses_model->addBill($billData);
     
             if($billId) {
+                if(isset($data['attachments']) && is_array($data['attachments'])) {
+                    foreach($data['attachments'] as $attachmentId) {
+                        $attachment = $this->accounting_attachments_model->getById($attachmentId);
+                        $attachmentData = [
+                            'linked_to_count' => intval($attachment->linked_to_count) + 1
+                        ];
+        
+                        $this->accounting_attachments_model->updateAttachment($attachmentId, $attachmentData);
+                    }
+                }
+
                 if(isset($data['expense_name'])) {
                     $categoryDetails = [];
                     foreach($data['expense_name'] as $index => $value) {
@@ -3244,6 +3305,17 @@ class Accounting_modals extends MY_Controller {
             $vendorCreditId = $this->expenses_model->add_vendor_credit($vendorCredit);
     
             if($vendorCreditId) {
+                if(isset($data['attachments']) && is_array($data['attachments'])) {
+                    foreach($data['attachments'] as $attachmentId) {
+                        $attachment = $this->accounting_attachments_model->getById($attachmentId);
+                        $attachmentData = [
+                            'linked_to_count' => intval($attachment->linked_to_count) + 1
+                        ];
+        
+                        $this->accounting_attachments_model->updateAttachment($attachmentId, $attachmentData);
+                    }
+                }
+
                 $vendor = $this->vendors_model->get_vendor_by_id($data['vendor_id']);
 
                 if($vendor->vendor_credits === null & $vendor->vendor_credits === "") {
@@ -3427,6 +3499,17 @@ class Accounting_modals extends MY_Controller {
             $purchaseOrderId = $this->expenses_model->add_purchase_order($purchaseOrder);
     
             if($purchaseOrderId) {
+                if(isset($data['attachments']) && is_array($data['attachments'])) {
+                    foreach($data['attachments'] as $attachmentId) {
+                        $attachment = $this->accounting_attachments_model->getById($attachmentId);
+                        $attachmentData = [
+                            'linked_to_count' => intval($attachment->linked_to_count) + 1
+                        ];
+        
+                        $this->accounting_attachments_model->updateAttachment($attachmentId, $attachmentData);
+                    }
+                }
+
                 if(isset($data['expense_name'])) {
                     $categoryDetails = [];
                     foreach($data['expense_name'] as $index => $value) {
@@ -3557,6 +3640,17 @@ class Accounting_modals extends MY_Controller {
             $this->chart_of_accounts_model->updateBalance(['id' => $creditAcc->id, 'company_id' => logged('company_id'), 'balance' => $newBalance]);
     
             if($creditId) {
+                if(isset($data['attachments']) && is_array($data['attachments'])) {
+                    foreach($data['attachments'] as $attachmentId) {
+                        $attachment = $this->accounting_attachments_model->getById($attachmentId);
+                        $attachmentData = [
+                            'linked_to_count' => intval($attachment->linked_to_count) + 1
+                        ];
+        
+                        $this->accounting_attachments_model->updateAttachment($attachmentId, $attachmentData);
+                    }
+                }
+
                 if(isset($data['expense_name'])) {
                     $categoryDetails = [];
                     foreach($data['expense_name'] as $index => $value) {

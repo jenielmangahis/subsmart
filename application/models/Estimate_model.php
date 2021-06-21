@@ -12,6 +12,7 @@ class Estimate_model extends MY_Model
         $this->db->select('*');
         $this->db->from($this->table);
         $this->db->where('company_id', $company_id);
+        $this->db->order_by('id', 'DESC');
 
         $query = $this->db->get();
         return $query->result();
@@ -30,6 +31,15 @@ class Estimate_model extends MY_Model
         return $result->result();
     }
 
+    public function getPackagelist($id)
+    {
+        $this->db->select('*');
+		$this->db->from('item_categories');
+		$this->db->where('company_id', $id);
+        $query = $this->db->get();
+        return $query->result();
+    }
+
     public function getAllEstimates()
     {
 
@@ -37,6 +47,13 @@ class Estimate_model extends MY_Model
         $this->db->from($this->table);
         $query = $this->db->get();
         return $query->result();
+    }
+
+    public function add_estimate_items($data)
+    {
+        $vendor = $this->db->insert('estimates_items', $data);
+	    $insert_id = $this->db->insert_id();
+		return  $insert_id;
     }
 
     public function getAllByUserId($type = '', $status = '', $emp_id = 0, $uid = 0)

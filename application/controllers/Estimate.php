@@ -178,35 +178,52 @@ class Estimate extends MY_Controller
             //     'created_at' => date("Y-m-d H:i:s"),
             //     'updated_at' => date("Y-m-d H:i:s")
             // );
-            $a = $this->input->post('items');
-            $b = $this->input->post('item_type');
-            // $c = $this->input->post('desc');
-            $d = $this->input->post('quantity');
-            // $e = $this->input->post('location');
-            $f = $this->input->post('price');
-            $g = $this->input->post('discount');
-            $h = $this->input->post('tax');
-            $ii = $this->input->post('total');
+            // $a = $this->input->post('items');
+            // $b = $this->input->post('item_type');
+            // // $c = $this->input->post('desc');
+            // $d = $this->input->post('quantity');
+            // // $e = $this->input->post('location');
+            // $f = $this->input->post('price');
+            // $g = $this->input->post('discount');
+            // $h = $this->input->post('tax');
+            // $ii = $this->input->post('total');
 
-            $i = 0;
-            foreach ($a as $row) {
-                $data['item'] = $a[$i];
-                $data['item_type'] = $b[$i];
-                // $data['description'] = $c[$i];
-                $data['qty'] = $d[$i];
-                // $data['location'] = $e[$i];
-                $data['cost'] = $f[$i];
-                $data['discount'] = $g[$i];
-                $data['tax'] = $h[$i];
-                $data['total'] = $ii[$i];
-                $data['type'] = 'Standard Estimate';
-                $data['type_id'] = $addQuery;
-                $data['status'] = '1';
-                $data['created_at'] = date("Y-m-d H:i:s");
-                $data['updated_at'] = date("Y-m-d H:i:s");
-                $addQuery2 = $this->accounting_invoices_model->additem_details($data);
-                $i++;
-            }
+            // $i = 0;
+            // foreach ($a as $row) {
+            //     $data['item'] = $a[$i];
+            //     $data['item_type'] = $b[$i];
+            //     // $data['description'] = $c[$i];
+            //     $data['qty'] = $d[$i];
+            //     // $data['location'] = $e[$i];
+            //     $data['cost'] = $f[$i];
+            //     $data['discount'] = $g[$i];
+            //     $data['tax'] = $h[$i];
+            //     $data['total'] = $ii[$i];
+            //     $data['type'] = 'Standard Estimate';
+            //     $data['type_id'] = $addQuery;
+            //     $data['status'] = '1';
+            //     $data['created_at'] = date("Y-m-d H:i:s");
+            //     $data['updated_at'] = date("Y-m-d H:i:s");
+            //     $addQuery2 = $this->accounting_invoices_model->additem_details($data);
+            //     $i++;
+
+                $a          = $this->input->post('itemid');
+                $quantity   = $this->input->post('quantity');
+                $price      = $this->input->post('price');
+                $h          = $this->input->post('tax');
+
+                $i = 0;
+                foreach($a as $row){
+                    $data['items_id'] = $a[$i];
+                    $data['qty'] = $quantity[$i];
+                    $data['cost'] = $price[$i];
+                    $data['tax'] = $h[$i];
+                    $data['estimates_id '] = $addQuery;
+                    $addQuery2 = $this->estimate_model->add_estimate_items($data);
+                    $i++;
+                }
+
+            // }
 
             redirect('estimate');
         } else {
@@ -256,6 +273,7 @@ class Estimate extends MY_Controller
         $this->page_data['plans'] = $this->plans_model->getByWhere(['company_id' => $company_id]);
         $this->page_data['number'] = $this->estimate_model->getlastInsert();
         $this->page_data['items'] = $this->items_model->getItemlist();
+        $this->page_data['packages'] = $this->estimate_model->getPackagelist($company_id);
 
         // $this->page_data['file_selection'] = $this->load->view('modals/file_vault_selection', array(), TRUE);
         $this->load->view('estimate/add', $this->page_data);

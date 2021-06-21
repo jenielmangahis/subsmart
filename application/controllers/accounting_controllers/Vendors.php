@@ -2921,6 +2921,7 @@ class Vendors extends MY_Controller {
 
         $billPaymentData = [
             'total_amount' => 0.00,
+            'memo' => 'Voided',
             'status' => 4,
             'updated_at' => date("Y-m-d H:i:s")
         ];

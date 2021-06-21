@@ -2664,3 +2664,64 @@ const computeBillsPaymentTotal = () => {
 
     $('#payBillsModal span.transaction-total-amount').html(parseFloat(total).toFixed(2));
 }
+
+const updateTransaction = (event, el) => {
+    event.preventDefault();
+
+    var data = new FormData(document.getElementById($(el).attr('id')));
+    var modalId = '#'+$(el).children().attr('id');
+
+    var totalAmount = $(`${modalId} span.transaction-total-amount`).html();
+    data.append('total_amount', totalAmount);
+
+    var count = 0;
+    if($(`${modalId} table#category-details-table`).length > 0) {
+        $(`${modalId} table#category-details-table tbody tr`).each(function() {
+            var billable = $(this).find('input[name="category_billable[]"]');
+            var tax = $(this).find('input[name="category_tax[]"]');
+    
+            if(billable.length > 0 && tax.length > 0) {
+                if(count === 0) {
+                    data.set('category_billable[]', billable.prop('checked') ? "1" : "0");
+                    data.set('category_tax[]', tax.prop('checked') ? "1" : "0");
+                } else {
+                    data.append('category_billable[]', billable.prop('checked') ? "1" : "0");
+                    data.append('category_tax[]', tax.prop('checked') ? "1" : "0");
+                }
+            }
+    
+            count++;
+        });
+    }
+
+    if($(`${modalId} table#item-details-table`).length > 0) {
+        count = 0;
+        $(`${modalId} table#item-details-table tbody tr`).each(function() {
+            if(count === 0) {
+                data.set('item_total[]', $(this).find('td span.row-total').html());
+            } else {
+                data.append('item_total[]', $(this).find('td span.row-total').html());
+            }
+
+            count++;
+        });
+    }
+
+    $.ajax({
+        url: $(el).attr('data-href'),
+        data: data,
+        type: 'post',
+        processData: false,
+        contentType: false,
+        success: function(result) {
+            var res = JSON.parse(result);
+
+            if(res.success === true) {
+                $('#transactions-table').DataTable().ajax.reload();
+                $(el).children().modal('hide');
+            }
+
+            toast(res.success, res.message);
+        }
+    });
+}

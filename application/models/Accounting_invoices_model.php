@@ -211,7 +211,7 @@ class Accounting_invoices_model extends MY_Model
         $this->db->select('*');
 
         $this->db->from('accounting_receive_payment');
-        $this->db->join('invoices', 'accounting_receive_payment.invoice_number = invoices.invoice_number');
+        $this->db->join('invoices', 'accounting_receive_payment.invoice_number = invoices.invoice_number and accounting_receive_payment.customer_id = invoices.customer_id');
         
         $this->db->where('accounting_receive_payment.customer_id', $customer_id);
 
