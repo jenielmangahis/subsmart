@@ -101,19 +101,27 @@ if(isset($jobs_data)){
     $(document).ready(function() {
         $("#jobs_form").submit(function(e) {
             e.preventDefault(); // avoid to execute the actual submit of the form.
-            var form = $(this);
-            //var url = form.attr('action');
-            $.ajax({
-                type: "POST",
-                url: "<?= base_url() ?>/job/save_job",
-                data: form.serialize(), // serializes the form's elements.
-                success: function(data) {
-                    console.log(data);
-                    sucess_add_job(data);
-                }
-            });
+            if($('#job_color_id').val()=== ""){
+                error('Sorry!','Event Color is required!','warning');
+            }else{
+
+                var form = $(this);
+                //var url = form.attr('action');
+                $.ajax({
+                    type: "POST",
+                    url: "<?= base_url() ?>/job/save_job",
+                    data: form.serialize(), // serializes the form's elements.
+                    success: function(data) {
+                        document.getElementById('overlay').style.display = "none";
+                        console.log(data);
+                        sucess_add_job(data);
+                    }, beforeSend: function() {
+                        document.getElementById('overlay').style.display = "flex";
+                    }
+                });
+            }
         });
-        function sucess_add_job($id){
+        function sucess_add_job(){
             Swal.fire({
                 title: 'Nice!',
                 text: 'Job has been added!',
@@ -126,6 +134,19 @@ if(isset($jobs_data)){
                 if (result.value) {
                     window.location.href='<?= base_url(); ?>job/';
                 }
+            });
+        }
+        function error(title,text,icon){
+            Swal.fire({
+                title: title,
+                text: text,
+                icon: icon,
+                showCancelButton: false,
+                confirmButtonColor: '#32243d',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ok'
+            }).then((result) => {
+
             });
         }
         $("#fill_esign_btn").click(function () {

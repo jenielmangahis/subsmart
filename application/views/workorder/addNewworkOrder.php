@@ -396,7 +396,7 @@ border: none;
                                         <ol class="breadcrumb" style="margin-top:-30px;"> <i class="fa fa-pencil" aria-hidden="true"></i>
                                             <li class="breadcrumb-item active">
                                                 <label style="background-color:#E8E8E9;" id="headerContent"><?php echo $headers->content; ?></label>
-                                                <input type="hidden" name="header" value="<?php echo $headers->content; ?>">
+                                                <input type="hidden" name="header" id="headerID" value="<?php echo $headers->content; ?>">
                                             </li>
                                         </ol>
                                     </div> 
@@ -643,10 +643,10 @@ border: none;
                                             <td width="10%"><input type="number" class="form-control quantity mobile_qty" name="quantity[]"
                                                        data-counter="0" id="quantity_0" value="1"></td>
                                             <td width="10%"><input type="number" class="form-control price hidden_mobile_view" name="price[]"
-                                                       data-counter="0" id="price_0" min="0" value="0"> <input type="hidden" class="priceqty" id="priceqty_0"> 
+                                                       data-counter="0" id="price_0" min="0" value="0"> <input type="hidden" class="priceqty" id="priceqty_0" value="0"> 
                                                        <div class="show_mobile_view"><span class="price">0</span>
                                                        <!-- <input type="hidden" class="form-control price" name="price[]" data-counter="0" id="priceM_0" min="0" value="0"> -->
-                                                       </div><input id="priceM_qty0" value=""  type="hidden" name="price_qty[]" class="form-control hidden_mobile_view price_qty"></td>
+                                                       </div><input id="priceM_qty0" value="0"  type="hidden" name="price_qty[]" class="form-control hidden_mobile_view price_qty"></td>
                                             <td width="10%" class="hidden_mobile_view"><input type="number" class="form-control discount" name="discount[]"
                                                        data-counter="0" id="discount_0" min="0" value="0"  readonly></td>
                                             <td width="10%" class="hidden_mobile_view"><input type="text" class="form-control tax_change" name="tax[]"
@@ -656,6 +656,7 @@ border: none;
                                             <td width="10%" class="hidden_mobile_view"><input type="hidden" class="form-control " name="total[]"
                                                        data-counter="0" id="item_total_0" min="0" value="0">
                                                        $<span id="span_total_0">0.00</span></td>
+                                            <td><a href="#" class="remove btn btn-sm btn-success" id="0"><i class="fa fa-trash" aria-hidden="true"></i></a></td>
                                         </tr>
                                         </tbody>
                                     </table>
@@ -1026,7 +1027,7 @@ border: none;
                                 <div class="row">                   
                                     <div class="form-group col-md-4">
                                         <label for="job_type" class="label-element">Credit Card Number</label>
-                                        <input type="text" class="form-control input-element" name="debit_credit_number" id="credit_number" placeholder="0000 0000 0000 000" />
+                                        <input type="text" class="form-control input-element" name="debit_credit_number" id="credit_number2" placeholder="0000 0000 0000 000" />
                                     </div>
                                     <div class="form-group col-md-3">
                                         <label for="job_type" class="label-element">Credit Card Expiration</label>
@@ -2809,6 +2810,30 @@ $("#headerContent").html(function() {
 jQuery(function($){
 
 // Replace 'td' with your html tag
+$("#headerID").val(function() { 
+
+// Replace 'ok' with string you want to change, you can delete 'hello everyone' to remove the text
+ var currentDate = $('#current_date').val();
+      return $(this).val().replace("{curr_date}", currentDate);  
+
+});
+});
+
+jQuery(function($){
+
+// Replace 'td' with your html tag
+$("#headerID").val(function() { 
+
+    var companyName = $('#company_name').val();
+// Replace 'ok' with string you want to change, you can delete 'hello everyone' to remove the text
+      return $(this).val().replace("{comp_name}", companyName);  
+
+});
+});
+
+jQuery(function($){
+
+// Replace 'td' with your html tag
 $("#headerContent").html(function() { 
 
     var companyName = $('#company_name').val();
@@ -4202,5 +4227,29 @@ $('#clear3').click(function() {
         format: 'yyyy-mm-dd'
     });
   } );
+
+  $('#credit_number').keyup(function() {
+  var foo = $(this).val().split("-").join(""); // remove hyphens
+  if (foo.length > 0) {
+    foo = foo.match(new RegExp('.{1,4}', 'g')).join("-");
+  }
+  $(this).val(foo);
+});
+
+$('#credit_number2').keyup(function() {
+  var foo = $(this).val().split("-").join(""); // remove hyphens
+  if (foo.length > 0) {
+    foo = foo.match(new RegExp('.{1,4}', 'g')).join("-");
+  }
+  $(this).val(foo);
+});
+
+$('#other_credit_number').keyup(function() {
+  var foo = $(this).val().split("-").join(""); // remove hyphens
+  if (foo.length > 0) {
+    foo = foo.match(new RegExp('.{1,4}', 'g')).join("-");
+  }
+  $(this).val(foo);
+});
 </script>
 

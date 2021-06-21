@@ -377,7 +377,7 @@
     </div>
     <div class="row form_line">
         <div class="col-md-6">
-            Frequency
+            Billing Frequency
         </div>
         <div class="col-md-6">
             <select id="frequency" name="frequency" data-customer-source="dropdown" class="input_select" >
@@ -398,6 +398,11 @@
         </div>
     </div>
     <hr>
+    <?php if(isset($billing_info)): ?>
+    <a href="<?= base_url('customer/subscription/'.$this->uri->segment(3)) ?>">
+        <button type="button" class="btn btn-primary">Add Subscription Plan</button>
+    </a>
+    <?php endif; ?>
     <div class="row form_line">
         <div class="col-md-12">
             Customer Shareable Link

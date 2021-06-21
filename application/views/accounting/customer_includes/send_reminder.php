@@ -2,15 +2,25 @@
     <div class="monal-body">
         <div class="modal-title">
             <h2>Send Reminders</h2>
-            <p class>You are sending reminders for <span class="invoice-count">6</span> invoices to the original
+            <p class="normal">You are sending reminders for <span class="invoice-count">6</span> invoices to the
+                original
                 recipients. Please compose your
                 message below.</p>
+            <div class="error-found">
+                <div class="error-title">
+                    <i class="fa fa-exclamation-circle" aria-hidden="true"></i> Email addresses missing
+                </div>
+                <div class="error-description">
+                    <span class="invoice-count">155</span> invoices are missing valid email addresses and will not be
+                    sent.
+                </div>
+            </div>
             <div class="close-btn">
                 <img src="<?=base_url('assets/img/accounting/customers/close.png')?>"
                     alt="">
             </div>
         </div>
-        <form action="#" id="send-reminder-form">
+        <form id="send-reminder-form">
             <div class="send-reminder-modal-content">
                 <div class="form-group">
                     <div class="label" for="receint-email">Email</div>

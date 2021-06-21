@@ -918,7 +918,7 @@ border: none;
                             <div class="row">                        
                                 <div class="form-group col-md-4">
                                     <label for="contact_name">Schedule Date Given</label>
-                                    <input type="text" class="form-control" name="schedule_date_given" id="datepicker2" value="<?php echo $workorder->schedule_date_given; ?>" />
+                                    <input type="text" class="form-control" name="schedule_date_given" id="datepicker_dateissued" value="<?php echo $workorder->date_issued; ?>" />
                                 </div>      
                                 <div class="form-group col-md-4">
                                     <label for="workorder_priority">Priority</label>
@@ -3333,4 +3333,12 @@ $(document).ready(function(){
         $('#other_payment_area').show();
     }
 });
+</script>
+
+<script>
+  $( function() {
+    $( "#datepicker_dateissued" ).datepicker({
+        format: 'yyyy-mm-dd'
+    });
+  } );
 </script>

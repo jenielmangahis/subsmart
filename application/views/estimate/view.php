@@ -313,6 +313,229 @@ span.sc-item {
 .badge-danger{
     background-color: #ec4561 !important;
   }
+
+
+  .signature_mobile
+{
+    display: none;
+}
+
+.show_mobile_view
+{
+    display: none;
+}
+
+@media only screen and (max-device-width: 600px) {
+    .label-element{
+        position:absolute;
+        top:-8px;
+        left:25px;
+        font-size:12px;
+        color:#666;
+        }
+    .input-element{
+        padding:30px 5px 10px 8px;
+        width:100%;
+        height:55px;
+        /* border:1px solid #CCC; */
+        font-weight: bold;
+        margin-top: -15px;
+        }
+
+    .select-wrap 
+    {
+    border: 2px solid #e0e0e0;
+    /* border-radius: 4px; */
+    margin-top: -10px;
+    /* margin-bottom: 10px; */
+    padding: 0 5px 5px;
+    width:100%;
+    /* background-color:#ebebeb; */
+    }
+
+    .select-wrap label
+    {
+    font-size:10px;
+    text-transform: uppercase;
+    color: #777;
+    padding: 2px 8px 0;
+    }
+
+    .m_select
+    {
+    /* background-color: #ebebeb;
+    border:0px; */
+    border-color: white !important;
+    border:0px !important;
+    outline:0px !important;
+    }
+    .select2 .select2-container .select2-container--default{
+        /* background-color: #ebebeb;
+    border:0px; */
+    border-color: white !important;
+    border:0px !important;
+    outline:0px !important;
+    }
+
+    .select2-container--default .select2-selection--single {
+    background-color: #fff;
+    border: 1px solid #fff !important;
+    border-radius: 4px;
+    }
+
+    .sub_label{
+        font-size:12px !important;
+    }
+
+    .signature_web
+    {
+        display: none;
+    }
+
+    .signature_mobile
+    {
+        display: block;
+        margin-bottom:10px;
+    }
+
+    .hidden_mobile_view{
+        display: none;
+    }
+
+    .show_mobile_view
+    {
+        display: block;
+    }
+
+    .table_mobile
+    {
+        font-size:14px;
+    }
+
+    div.dropdown-wrapper select { 
+    width:115% /* This hides the arrow icon */; 
+    background-color:transparent /* This hides the background */; 
+    background-image:none; 
+    -webkit-appearance: none /* Webkit Fix */; 
+    border:none; 
+    box-shadow:none; 
+    padding:0.3em 0.5em; 
+    font-size:13px;
+    }
+    .signature-pad-canvas-wrapper {
+    margin: 15px 0 0;
+    border: 1px solid #cbcbcb;
+    border-radius: 3px;
+    overflow: hidden;
+    position: relative;
+}
+
+    .signature-pad-canvas-wrapper::after {
+        content: 'Name';
+        border-top: 1px solid #cbcbcb;
+        color: #cbcbcb;
+        width: 100%;
+        margin: 0 15px;
+        display: inline-flex;
+        position: absolute;
+        bottom: 10px;
+        font-size: 13px;
+        z-index: -1;
+    }
+
+    .mobile_view
+    {
+        font-size:12px;
+    }
+
+    .sigWrapper
+    {
+        overflow: hidden; 
+    }
+
+    .mobile_view_table
+    {
+        min-width: 350px !important;
+        margin-left: -20px !important;
+    }
+
+    .add_mobile
+    {
+        margin-left: -22px !important;
+    }
+
+    .mobile_qty
+    {
+        background: transparent !important;
+        border: none !important;
+        outline: none !important;
+        padding: 0px 0px 0px 0px !important;
+        text-align: center;
+    }
+
+
+.tabs { list-style: none; }
+.tabs li { display: inline; }
+.tabs li a 
+{ 
+    color: black; 
+    float: left; 
+    display: block; 
+    /* padding: 4px 10px;  */
+    /* margin-left: -1px;  */
+    position: relative; 
+    /* left: 1px;  */
+    background: #a2a5a3; 
+    text-decoration: none; 
+}
+.tabs li a:hover 
+{ 
+    background: #ccc; 
+}
+.group:after 
+{ 
+    visibility: hidden; 
+    display: block; 
+    font-size: 0; 
+    content: " "; 
+    clear: both; 
+    height: 0; 
+}
+
+.box-wrap 
+{ 
+    position: relative; 
+    min-height: 250px; 
+}
+.tabbed-area div div 
+{ 
+    background: white; 
+    padding: 20px; 
+    min-height: 250px; 
+    position: absolute; 
+    top: -1px; 
+    left: 0; 
+    width: 100%; 
+}
+
+.tabbed-area div div, .tabs li a 
+{ 
+    border: 1px solid #ccc; 
+}
+
+#box-one:target, #box-two:target, #box-three:target {
+  z-index: 1;
+}
+
+.group li.active a,
+.group li a:hover,
+.group li.active a:focus,
+.group li.active a:hover{
+  background-color: #52cc6e;
+  color: black; 
+}
+
+}
 </style>
 <?php include viewPath('includes/header'); ?>
 <div class="wrapper" role="wrapper">

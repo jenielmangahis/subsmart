@@ -21,7 +21,6 @@ class Customer extends MY_Controller
 
         //load library
         $this->load->library('session');
-
         // load helper
         $this->load->helper('functions');
         // concept
@@ -104,6 +103,15 @@ class Customer extends MY_Controller
                 'select' => '*',
             );
             $this->page_data['papers'] = $this->general->get_data_with_param($customer_papers_query);
+
+            $customer_contacts = array(
+                'where' => array(
+                    'customer_id' => $userid
+                ),
+                'table' => 'contacts',
+                'select' => '*',
+            );
+            $this->page_data['contacts'] = $this->general->get_data_with_param($customer_contacts);
         }
         $this->page_data['sales_area'] = $this->customer_ad_model->get_all(FALSE,"","ASC","ac_salesarea","sa_id");
         $this->page_data['employees'] = $this->customer_ad_model->get_all(FALSE,"","ASC","users","id");

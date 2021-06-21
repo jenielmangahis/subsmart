@@ -421,7 +421,7 @@ border: none;
                                 <ol class="breadcrumb" style="margin-top:-30px;"> <i class="fa fa-pencil" aria-hidden="true"></i>
                                             <li class="breadcrumb-item active">
                                                 <label style="background-color:#E8E8E9;" id="headerContent"><?php echo $headers->content; ?></label>
-                                                <input type="hidden" name="header" value="<?php echo $headers->content; ?>">
+                                                <input type="hidden" id="headerID" name="header" value="<?php echo $headers->content; ?>">
                                             </li>
                                         </ol>
 
@@ -520,14 +520,14 @@ border: none;
 										<div class="col-md-2 form-group">
 											<label for="contact_mobile" class="label-element">Mobile <span class="form-required">*</span></label>
 											<input type="text" class="form-control input-element" name="mobile_number" required
-												   id="contact_mobile" />
+												   id="contact_mobile" placeholder="Enter Mobile No"/>
 
 										</div>
 
 										<div class="col-md-2 form-group">
-											<label for="contact_dob" class="label-element">DOB <span class="form-required">*</span></label>
+											<label for="contact_dob" class="label-element">DOB </label>
 											<input type="text" class="form-control input-element" name="dob"
-												   id="customer_contact_dob" required
+												   id="customer_contact_dob"
 												   value="<?php echo (!empty($workorder->customer['contact_dob'])) ? date('m/d/Y', strtotime($workorder->customer['contact_dob'])) : '' ?>"
 												   placeholder="Enter DOB"/>
 										</div>
@@ -972,7 +972,7 @@ border: none;
                                             <option>Select Plan Type</option>
                                         </select> -->
                                         <select name="plan_type" id="plan_types" class="form-control custom-select m_select" required>
-                                            <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == ''){echo "selected";} } ?> value=""></option>
+                                            <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == ''){echo "selected";} } ?> value="">--SELECT--</option>
                                             <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == 'DIGI'){echo "selected";} } ?> value="DIGI">Landline</option>
                                             <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == 'DW2W'){echo "selected";} } ?> value="DW2W">Landline W/ 2-Way</option>
                                             <option <?php if(isset($alarm_info)){ if($alarm_info->system_type == 'DWCB'){echo "selected";} } ?> value="DWCB">Landline W/ Cell Backup</option>
@@ -1035,7 +1035,7 @@ border: none;
                                     <div class="select-wrap">
                                         <label>Panel Type <span class="form-required">*</span></label>
                                         <select name="panel_type" id="panel_type" class="form-control custom-select m_select" required>
-                                            <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == ''){echo "selected";} } ?> value=""></option>
+                                            <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == ''){echo "selected";} } ?> value="">--SELECT--</option>
                                             <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'AERIONICS'){echo "selected";} } ?> value="AERIONICS">AERIONICS</option>
                                             <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'AlarmNet'){echo "selected";} } ?> value="AlarmNet">AlarmNet</option>
                                             <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'Alarm.com'){echo "selected";} } ?> value="Alarm.com">Alarm.com</option>
@@ -1603,10 +1603,10 @@ border: none;
                                             <td width="10%"><input type="number" class="form-control quantity mobile_qty" name="quantity[]"
                                                        data-counter="0" id="quantity_0" value="1"></td>
                                             <td width="10%"><input type="number" class="form-control price hidden_mobile_view" name="price[]"
-                                                       data-counter="0" id="price_0" min="0" value="0"> <input type="hidden" class="priceqty" id="priceqty_0"> 
+                                                       data-counter="0" id="price_0" min="0" value="0"> <input type="hidden" class="priceqty" value="0" id="priceqty_0"> 
                                                        <div class="show_mobile_view"><span class="price">0</span>
                                                        <!-- <input type="hidden" class="form-control price" name="price[]" data-counter="0" id="priceM_0" min="0" value="0"> -->
-                                                       </div><input id="priceM_qty0" value=""  type="hidden" name="price_qty[]" class="form-control hidden_mobile_view price_qty"></td>
+                                                       </div><input id="priceM_qty0" value="0"  type="hidden" name="price_qty[]" class="form-control hidden_mobile_view price_qty"></td>
                                             <td width="10%" class="hidden_mobile_view"><input type="number" class="form-control discount" name="discount[]"
                                                        data-counter="0" id="discount_0" min="0" value="0" ></td>
                                             <td width="10%" class="hidden_mobile_view"><input type="text" class="form-control tax_change" name="tax[]"
@@ -1616,6 +1616,7 @@ border: none;
                                             <td width="10%" class="hidden_mobile_view"><input type="hidden" class="form-control " name="total[]"
                                                        data-counter="0" id="item_total_0" min="0" value="0">
                                                        $<span id="span_total_0">0.00</span></td>
+                                            <td><a href="#" class="remove btn btn-sm btn-success" id="0"><i class="fa fa-trash" aria-hidden="true"></i></a></td>
                                         </tr>
                                         </tbody>
                                     </table>
@@ -1706,10 +1707,10 @@ border: none;
                                                 <td width="10%"><input type="number" class="form-control quantity mobile_qty" name="quantity[]"
                                                         data-counter="0" id="quantity_0" value="1"></td>
                                                 <td width="10%"><input type="number" class="form-control price hidden_mobile_view" name="price[]"
-                                                        data-counter="0" id="price_0" min="0" value="0"> <input type="hidden" class="priceqty" id="priceqty_0"> 
+                                                        data-counter="0" id="price_0" min="0" value="0"> <input type="hidden" class="priceqty" value="0" id="priceqty_0"> 
                                                         <div class="show_mobile_view"><span class="price">0</span>
                                                         <!-- <input type="hidden" class="form-control price" name="price[]" data-counter="0" id="priceM_0" min="0" value="0"> -->
-                                                        </div><input id="priceM_qty0" value=""  type="hidden" name="price_qty[]" class="form-control hidden_mobile_view price_qty"></td>
+                                                        </div><input id="priceM_qty0" value="0"  type="hidden" name="price_qty[]" class="form-control hidden_mobile_view price_qty"></td>
                                                 <td width="10%" class="hidden_mobile_view"><input type="number" class="form-control discount" name="discount[]"
                                                         data-counter="0" id="discount_0" min="0" value="0" readonly></td>
                                                 <td width="10%" class="hidden_mobile_view"><input type="text" class="form-control tax_change" name="tax[]"
@@ -1719,6 +1720,7 @@ border: none;
                                                 <td width="10%" class="hidden_mobile_view"><input type="hidden" class="form-control " name="total[]"
                                                         data-counter="0" id="item_total_0" min="0" value="0">
                                                         $<span id="span_total_0">0.00</span></td>
+                                                <td><a href="#" class="remove btn btn-sm btn-success" id="0"><i class="fa fa-trash" aria-hidden="true"></i></a></td>
                                             </tr>
                                             </tbody>
                                         </table>
@@ -1743,7 +1745,7 @@ border: none;
                                         <table class="table table-bordered" style="width:80%;">
                                             <tr>
                                                 <td>Equipment Cost</td>
-                                                 <td class="d-flex align-items-center">$  <input type="text" name="subtotal" id="item_total" class="form-control" >
+                                                 <td class="d-flex align-items-center">$  <input type="text" name="subtotal" id="item_total" class="form-control" value="0" >
                                                 </td>
                                             </tr>
                                             <tr>
@@ -1751,7 +1753,7 @@ border: none;
                                                 <td class="d-flex align-items-center">$ <input type="text" 
                                                                                                name="taxes"
                                                                                                id="sales_taxs"
-                                                                                               class="form-control">
+                                                                                               class="form-control" value="0">
                                                 </td>
                                             </tr>
                                             <tr>
@@ -2056,7 +2058,7 @@ border: none;
                                         <div class="row">                   
                                             <div class="form-group col-md-4">
                                                 <label for="job_type" class="label-element">Debit Card Number</label>
-                                                <input type="text" class="form-control input-element" name="debit_credit_number" id="credit_number" placeholder="0000 0000 0000 000" />
+                                                <input type="text" class="form-control input-element" name="debit_credit_number" id="credit_number2" placeholder="0000 0000 0000 000" />
                                             </div>
                                             <div class="form-group col-md-4">
                                                 <label for="job_type" class="label-element">Debit Card Expiration</label>
@@ -3595,6 +3597,30 @@ $("#headerContent").html(function() {
 jQuery(function($){
 
 // Replace 'td' with your html tag
+$("#headerID").val(function() { 
+
+// Replace 'ok' with string you want to change, you can delete 'hello everyone' to remove the text
+ var currentDate = $('#current_date').val();
+      return $(this).val().replace("{curr_date}", currentDate);  
+
+});
+});
+
+jQuery(function($){
+
+// Replace 'td' with your html tag
+$("#headerID").val(function() { 
+
+    var companyName = $('#company_name').val();
+// Replace 'ok' with string you want to change, you can delete 'hello everyone' to remove the text
+      return $(this).val().replace("{comp_name}", companyName);  
+
+});
+});
+
+jQuery(function($){
+
+// Replace 'td' with your html tag
 $("#thisdiv3").html(function() { 
 
     // var companyName = $('#company_name').val();
@@ -4151,18 +4177,21 @@ $.ajax({
 
                     
                   markup = "<tr id=\"ss\">" +
-                      "<td width=\"35%\"><input value='"+v.title+"' type=\"text\" name=\"items[]\" class=\"form-control getItems\" ><input type=\"hidden\" value='"+idd+"' name=\"item_id[]\"><div class=\"show_mobile_view\"><span class=\"getItems_hidden\">"+v.title+"</span></div></td>\n" +
+                      "<td width=\"35%\"><input value='"+v.title+"' type=\"text\" name=\"items[]\" class=\"form-control getItems\" ><input type=\"hidden\" value='"+v.id+"' name=\"item_id[]\"><div class=\"show_mobile_view\"><span class=\"getItems_hidden\">"+v.title+"</span></div></td>\n" +
                       "<td width=\"20%\"><div class=\"dropdown-wrapper\"><select name=\"item_type[]\" class=\"form-control\"><option value=\"product\">Product</option><option value=\"material\">Material</option><option value=\"service\">Service</option><option value=\"fee\">Fee</option></select></div></td>\n" +
-                      "<td width=\"10%\"><input data-itemid='"+idd+"' id='quantity_"+idd+"' value='"+v.units+"' type=\"number\" name=\"quantity[]\" data-counter=\"0\"  min=\"0\" class=\"form-control qtyest2 mobile_qty \"></td>\n" +
-                      "<td width=\"10%\"><input id='price_"+idd+"' value='"+v.price+"'  type=\"number\" name=\"price[]\" class=\"form-control hidden_mobile_view \" placeholder=\"Unit Price\"><input type=\"hidden\" class=\"priceqty\" id='priceqty_"+idd+"' value='"+total_pu+"'><div class=\"show_mobile_view\"><span class=\"price\">"+v.price+"</span><input type=\"hidden\" class=\"form-control price\" name=\"price[]\" data-counter=\"0\" id=\"priceM_0\" min=\"0\" value='"+v.price+"'></div></td>\n" +
+                      "<td width=\"10%\"><input data-itemid='"+v.id+"' id='quantity_"+v.id+"' value='"+v.units+"' type=\"number\" name=\"quantity[]\" data-counter=\"0\"  min=\"0\" class=\"form-control qtyest2 mobile_qty \"></td>\n" +
+                      "<td width=\"10%\"><input id='price_"+v.id+"' value='"+v.price+"'  type=\"number\" name=\"price[]\" class=\"form-control hidden_mobile_view \" placeholder=\"Unit Price\"><input type=\"hidden\" class=\"priceqty\" id='priceqty_"+v.id+"' value='"+total_pu+"'><div class=\"show_mobile_view\"><span class=\"price\">"+v.price+"</span><input type=\"hidden\" class=\"form-control price\" name=\"price[]\" data-counter=\"0\" id=\"priceM_0\" min=\"0\" value='"+v.price+"'></div></td>\n" +
                     //   "<td width=\"10%\"><input type=\"number\" class=\"form-control discount\" name=\"discount[]\" data-counter=\"0\" id=\"discount_0\" value=\"0\" ></td>\n" +
                     // //  "<td width=\"10%\"><small>Unit Cost</small><input type=\"text\" name=\"item_cost[]\" class=\"form-control\"></td>\n" +
-                      "<td width=\"10%\" class=\"hidden_mobile_view\"><input type=\"number\" name=\"discount[]\" class=\"form-control discount\" id='discount_"+idd+"' value=\"0\"></td>\n" +
+                      "<td width=\"10%\" class=\"hidden_mobile_view\"><input type=\"number\" name=\"discount[]\" class=\"form-control discount\" id='discount_"+v.id+"' value=\"0\"></td>\n" +
                     // "<td width=\"25%\"><small>Inventory Location</small><input type=\"text\" name=\"item_loc[]\" class=\"form-control\"></td>\n" +
-                      "<td width=\"20%\" class=\"hidden_mobile_view\"><input type=\"text\" data-itemid='"+idd+"' class=\"form-control tax_change2\" name=\"tax[]\" data-counter=\"0\" id='tax1_"+idd+"' min=\"0\" value='"+total_tax+"'></td>\n" +
-                      "<td style=\"text-align: center\" class=\"hidden_mobile_view\" width=\"15%\"><span data-subtotal='"+total+"' id='span_total_"+idd+"' class=\"total_per_item\">"+total+
+                      "<td width=\"20%\" class=\"hidden_mobile_view\"><input type=\"text\" data-itemid='"+v.id+"' class=\"form-control tax_change2\" name=\"tax[]\" data-counter=\"0\" id='tax1_"+v.id+"' min=\"0\" value='"+total_tax+"'></td>\n" +
+                      "<td style=\"text-align: center\" class=\"hidden_mobile_view\" width=\"15%\"><span data-subtotal='"+total+"' id='span_total_"+v.id+"' class=\"total_per_item\">"+total+
                     // "</span><a href=\"javascript:void(0)\" class=\"remove_item_row\"><i class=\"fa fa-times-circle\" aria-hidden=\"true\"></i></a>"+
-                      "</span> <input type=\"hidden\" name=\"total[]\" id='sub_total_text"+idd+"' value='"+total+"'></td>" +
+                      "</span> <input type=\"hidden\" name=\"total[]\" id='sub_total_text"+v.id+"' value='"+total+"'></td>" +
+                      "<td>\n" +
+                        "<a href=\"#\" class=\"remove btn btn-sm btn-success\" id='"+v.id+"'><i class=\"fa fa-trash\" aria-hidden=\"true\"></i></a>\n" +
+                        "</td>\n" +
                       "</tr>";
                     tableBody = $("#jobs_items_table_body");
                     tableBody.append(markup);
@@ -4584,12 +4613,43 @@ $('#clear3').click(function() {
 <script>
   $( function() {
     $( "#datepicker_dateissued" ).datepicker({
-        format: 'yyyy-mm-dd'
+        format: 'M dd, yyyy'
     });
   } );
 </script>
 <script>
 $('#ssn').keyup(function() {
+  var foo = $(this).val().split("-").join(""); // remove hyphens
+  if (foo.length > 0) {
+    foo = foo.match(new RegExp('.{1,4}', 'g')).join("-");
+  }
+  $(this).val(foo);
+});
+
+$('#credit_number').keyup(function() {
+  var foo = $(this).val().split("-").join(""); // remove hyphens
+  if (foo.length > 0) {
+    foo = foo.match(new RegExp('.{1,4}', 'g')).join("-");
+  }
+  $(this).val(foo);
+});
+
+$('#credit_number2').keyup(function() {
+  var foo = $(this).val().split("-").join(""); // remove hyphens
+  if (foo.length > 0) {
+    foo = foo.match(new RegExp('.{1,4}', 'g')).join("-");
+  }
+  $(this).val(foo);
+});
+
+$('#other_credit_number').keyup(function() {
+  var foo = $(this).val().split("-").join(""); // remove hyphens
+  if (foo.length > 0) {
+    foo = foo.match(new RegExp('.{1,4}', 'g')).join("-");
+  }
+  $(this).val(foo);
+});
+$('#spouse_contact_ssn').keyup(function() {
   var foo = $(this).val().split("-").join(""); // remove hyphens
   if (foo.length > 0) {
     foo = foo.match(new RegExp('.{1,4}', 'g')).join("-");

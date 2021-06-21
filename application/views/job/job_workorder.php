@@ -1,15 +1,13 @@
 <?php
-defined('BASEPATH') or exit('No direct script access allowed');
-add_css(array(
-    'https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css',
-    'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css',
-    'https://cdn.datatables.net/select/1.3.1/css/select.dataTables.min.css',
-    'https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css',
-    //'assets/frontend/css/workorder/main.css',
-    // 'assets/css/beforeafter.css',
-));
-
-
+    defined('BASEPATH') or exit('No direct script access allowed');
+    add_css(array(
+        'https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css',
+        'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css',
+        'https://cdn.datatables.net/select/1.3.1/css/select.dataTables.min.css',
+        'https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css',
+        //'assets/frontend/css/workorder/main.css',
+        // 'assets/css/beforeafter.css',
+    ));
 ?>
 <?php include viewPath('includes/header'); ?>
 
@@ -36,14 +34,32 @@ add_css(array(
     .card{
         box-shadow: 0 0 13px 0 rgb(116 116 117 / 44%) !important;
     }
+    #overlay {
+        display: none;
+        background: rgba(255, 255, 255, 0.7);
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        top: 0;
+        z-index: 9998;
+        align-items: center;
+        justify-content: center;
+        margin: auto;
+    }
 </style>
-
+<div id="overlay">
+    <div>
+    <img src="<?=base_url()?>/assets/img/uploading.gif" class="" style="width: 80px;" alt="" />
+    <center><p>Processing...</p></center></div>
+</div>
 <div class="wrapper" role="wrapper">
     <?php include viewPath('includes/sidebars/job'); ?>
     <!-- page wrapper start -->
     <div wrapper__section>
         <?php include viewPath('includes/notifications'); ?>
         <div class="container-fluid">
+
             <form method="post" name="myform" id="jobs_form">
                 <div class="row">
                     <div class="col-md-12">
@@ -119,7 +135,7 @@ add_css(array(
                                         <?php endforeach; ?>
                                     <?php endif; ?>
                                 </ul>
-                                <input value="<?= (isset($jobs_data) && $jobs_data->event_color == $color->id) ? $jobs_data->event_color : ''; ?>" id="job_color_id" name="event_color" type="hidden" />
+                                <input required value="<?= (isset($jobs_data) && $jobs_data->event_color == $color->id) ? $jobs_data->event_color : ''; ?>" id="job_color_id" name="event_color" type="hidden" />
                             </div>
                             <h6>Customer Reminder Notification</h6>
                             <select name="customer_reminder_notification" class="form-control">
@@ -158,6 +174,16 @@ add_css(array(
                                 <?php if(!empty($tags)): ?>
                                     <?php foreach ($tags as $tag): ?>
                                         <option <?php if(isset($jobs_data) && $jobs_data->tags == $tag->name) {echo 'selected'; } ?> value="<?= $tag->id; ?>"><?= $tag->name; ?></option>
+                                    <?php endforeach; ?>
+                                <?php endif; ?>
+                            </select>
+
+                            <h6>Lead Source</h6>
+                            <select id="lead_source" name="lead_source" class="form-control" required>
+                                <option value="">Select Lead Source</option>
+                                <?php if(!empty($lead_source)): ?>
+                                    <?php foreach ($lead_source as $source): ?>
+                                        <option <?php if(isset($jobs_data) && $jobs_data->lead_source_id == $source->ls_id) {echo 'selected'; } ?> value="<?= $source->ls_id; ?>"><?= $source->ls_name; ?></option>
                                     <?php endforeach; ?>
                                 <?php endif; ?>
                             </select>
@@ -233,7 +259,7 @@ add_css(array(
                                 <div class="card-body">
                                     <div class="form-group">
                                         <div class="form-group col-md-12">
-                                            <img style="width: 100%" id="attachment-image" alt="Attachment" src="<?= isset($jobs_data) ? $jobs_data->attachment : "/uploads/jobs/placeholder.jpg"; ?> ">
+                                            <img style="width: 100%" id="attachment-image" alt="Attachment" src="<?= isset($jobs_data->attachment) && $jobs_data->attachment!="" ? $jobs_data->attachment : "/uploads/jobs/placeholder.jpg"; ?> ">
                                             <small>Optionally attach files to this Job. Allowed type: pdf, doc, docx, png, jpg, gif.</small>
                                             <input type="file" class="form-control" name="attachment-file" id="attachment-file">
                                         </div>
@@ -507,6 +533,7 @@ add_css(array(
                             <input id="employee2_id" type="hidden" name="employee2_id" value="<?= isset($jobs_data) ? $jobs_data->employee2_id : ''; ?>">
                             <input id="employee3_id" type="hidden" name="employee3_id" value="<?= isset($jobs_data) ? $jobs_data->employee3_id : ''; ?>">
                             <input id="employee4_id" type="hidden" name="employee4_id" value="<?= isset($jobs_data) ? $jobs_data->employee4_id : ''; ?>">
+                            <input id="wo_id" type="hidden" name="wo_id" value="<?= $jobs_data->id; ?>">
                             <div class="col-sm-12">
                                  <button type="submit" class="btn btn-primary"><span class="fa fa-calendar-check-o"></span> Schedule</button>
                             </div>

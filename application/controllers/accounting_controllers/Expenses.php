@@ -11,6 +11,8 @@ class Expenses extends MY_Controller {
         $this->load->model('accounting_customers_model');
         $this->load->model('vendors_model');
         $this->load->model('accounting_payment_methods_model');
+        $this->load->model('accounting_attachments_model');
+        $this->load->model('items_model');
 
         add_css(array(
             "assets/css/accounting/banking.css?v='rand()'",
@@ -244,7 +246,7 @@ class Expenses extends MY_Controller {
                     'memo' => $billPayment->memo,
                     'due_date' => '',
                     'balance' => '$0.00',
-                    'total' => '$'.number_format(floatval($total), 2, '.', ','),
+                    'total' => '$'.number_format(floatval($billPayment->total_amount), 2, '.', ','),
                     'status' => 'Applied',
                     'attachments' => $attachments
                 ];
@@ -1281,5 +1283,305 @@ class Expenses extends MY_Controller {
             'success' => $update ? true : false,
             'message' => $update ? "Successfully updated!" : "Unexpected Error"
         ]);
+    }
+
+    public function view_bill_payment($billPaymentId)
+    {
+        $paymentAccs = [];
+        $accountTypes = [
+            'Bank',
+            'Credit Card'
+        ];
+
+        foreach($accountTypes as $typeName) {
+            $accType = $this->account_model->getAccTypeByName($typeName);
+
+            $accounts = $this->chart_of_accounts_model->getByAccountType($accType->id, null, logged('company_id'));
+
+            $count = 0;
+            if(count($accounts) > 0) {
+                foreach($accounts as $account) {
+                    $childAccs = $this->chart_of_accounts_model->getChildAccounts($account->id);
+
+                    $account->childAccs = $childAccs;
+
+                    $paymentAccs[$typeName][] = $account;
+
+                    if($count === 1) {
+                        $selectedBalance = $account->balance;
+                    }
+
+                    $count++;
+                }
+            }
+        }
+
+        if(strpos($selectedBalance, '-') !== false) {
+            $balance = str_replace('-', '', $selectedBalance);
+            $selectedBalance = '-$'.number_format($balance, 2, '.', ',');
+        } else {
+            $selectedBalance = '$'.number_format($selectedBalance, 2, '.', ',');
+        }
+
+        $this->page_data['billPayment'] = $this->vendors_model->get_bill_payment_by_id($billPaymentId);
+        $this->page_data['vendor'] = $this->vendors_model->get_vendor_by_id($vendorId);
+        $this->page_data['dropdown']['payment_accounts'] = $paymentAccs;
+        $this->page_data['balance'] = $selectedBalance;
+        $this->page_data['dropdown']['payees'] = $this->vendors_model->getAllByCompany();
+
+        $this->load->view('accounting/vendors/view_bill_payment', $this->page_data);
+    }
+
+    public function load_bill_payment_bills($billPaymentId)
+    {
+        $post = json_decode(file_get_contents('php://input'), true);
+        $start = $post['start'];
+        $limit = $post['length'];
+        $fromDate = $post['from'];
+        $toDate = $post['to'];
+        $search = $post['search'];
+
+        $filters = [
+            'from' => $fromDate !== "" ? date("Y-m-d", strtotime($fromDate)) : null,
+            'to' => $toDate !== "" ? date("Y-m-d", strtotime($toDate)) : null,
+            'overdue' => $post['overdue']
+        ];
+
+        $bills = $this->vendors_model->get_bill_payment_items($billPaymentId, $filters);
+
+        $data = [];
+        foreach($bills as $bill) {
+            $paymentDetails = $this->vendors_model->get_bill_payment_item_by_bill_id($billPaymentId, $bill->id);
+
+            $openBalance = floatval($bill->remaining_balance) + floatval($paymentDetails->total_amount);
+
+            $description = 'Bill ';
+            $description .= $bill->bill_no !== "" && !is_null($bill->bill_no) ? '# '.$bill->bill_no.' ' : '';
+            $description .= '('.date("m/d/Y", strtotime($bill->bill_date)).')';
+
+            if($search !== "") {
+                if(stripos($bill->bill_no, $search) !== false) {
+                    $data[] = [
+                        'id' => $bill->id,
+                        'description' => $description,
+                        'due_date' => date("m/d/Y", strtotime($bill->due_date)),
+                        'original_amount' => number_format(floatval($bill->total_amount), 2, '.', ','),
+                        'open_balance' => number_format(floatval($openBalance), 2, '.', ','),
+                        'payment' => number_format(floatval($paymentDetails->total_amount), 2, '.', ',')
+                    ];
+                }
+            } else {
+                $data[] = [
+                    'id' => $bill->id,
+                    'description' => $description,
+                    'due_date' => date("m/d/Y", strtotime($bill->due_date)),
+                    'original_amount' => number_format(floatval($bill->total_amount), 2, '.', ','),
+                    'open_balance' => number_format(floatval($openBalance), 2, '.', ','),
+                    'payment' => number_format(floatval($paymentDetails->total_amount), 2, '.', ',')
+                ];
+            }
+        }
+
+        $result = [
+            'draw' => $post['draw'],
+            'recordsTotal' => count($bills),
+            'recordsFiltered' => count($data),
+            'data' => array_slice($data, $start, $limit)
+        ];
+
+        echo json_encode($result);
+    }
+
+    public function attach_file_modal($transactionType, $transactionId)
+    {
+        $transaction = $this->get_transaction($transactionType, $transactionId);
+
+        if($transaction->attachments !== "" && $transaction->attachments !== null) {
+            $attachmentIds = json_decode($transaction->attachments, true);
+        } else {
+            $attachmentIds = null;
+        }
+
+        $this->page_data['id'] = $transactionId;
+        $this->page_data['transactionType'] = $transactionType;
+        $this->page_data['attachments'] = $this->accounting_attachments_model->get_unlinked_attachments();
+
+        $this->load->view('accounting/expenses/attach_file_modal', $this->page_data);
+    }
+
+    public function attach_files($transactionType, $transactionId)
+    {
+        $transaction = $this->get_transaction($transactionType, $transactionId);
+        $attachments = json_decode($transaction->attachments, true);
+
+        $files = $_FILES['file'];
+
+        if(count($files['name']) > 0) {
+            $insert = $this->uploadFile($files);
+
+            if($attachments === null) {
+                $attachments = $insert;
+            } else {
+                foreach($insert as $id) {
+                    $attachments[] = $id;
+                }
+            }
+
+            $attachments = json_encode($attachments);
+
+            switch($transactionType) {
+                case 'expense' :
+                    $update = $this->vendors_model->update_expense($transactionId, ['attachments' => $attachments]);
+                break;
+                case 'check' :
+                    $update = $this->vendors_model->update_check($transactionId, ['attachments' => $attachments]);
+                break;
+                case 'bill' :
+                    $update = $this->vendors_model->update_bill($transactionId, ['attachments' => $attachments]);
+                break;
+                case 'bill-payment' :
+                    $update = $this->vendors_model->update_bill_payment($transactionId, ['attachments' => $attachments]);
+                break;
+                case 'purchase-order' :
+                    $update = $this->vendors_model->update_purchase_order($transactionId, ['attachments' => $attachments]);
+                break;
+                case 'vendor-credit' :
+                    $update = $this->vendors_model->update_vendor_credit($transactionId, ['attachments' => $attachments]);
+                break;
+                case 'credit-card-credit' :
+                    $update = $this->vendors_model->update_credit_card_credit($transactionId, ['attachments' => $attachments]);
+                break;
+            }
+            
+            if($update) {
+                $this->session->set_flashdata('success', count($insert)." attachments sucessfully attached.");
+                echo json_encode('success');
+            } else {
+                $this->session->set_flashdata('error', "Unexpected error, please try again!");
+                echo json_encode('error');
+            }
+        } else {
+            echo json_encode('error');
+        }
+    }
+
+    private function get_transaction($transactionType, $transactionId)
+    {
+        switch($transactionType) {
+            case 'expense' :
+                $transaction = $this->vendors_model->get_expense_by_id($transactionId);
+            break;
+            case 'check' :
+                $transaction = $this->vendors_model->get_check_by_id($transactionId);
+            break;
+            case 'bill' :
+                $transaction = $this->vendors_model->get_bill_by_id($transactionId);
+            break;
+            case 'bill-payment' :
+                $transaction = $this->vendors_model->get_bill_payment_by_id($transactionId);
+            break;
+            case 'purchase-order' :
+                $transaction = $this->vendors_model->get_purchase_order_by_id($transactionId);
+            break;
+            case 'vendor-credit' :
+                $transaction = $this->vendors_model->get_vendor_credit_by_id($transactionId);
+            break;
+            case 'credit-card-credit' :
+                $transaction = $this->vendors_model->get_credit_card_credit_by_id($transactionId);
+            break;
+        }
+
+        return $transaction;
+    }
+
+    private function uploadFile($files)
+    {
+        $this->load->helper('string');
+        $data = [];
+        foreach($files['name'] as $key => $name)
+        {
+            $extension = end(explode('.', $name));
+
+            do {
+                $randomString = random_string('alnum');
+                $fileNameToStore = $randomString . '.' .$extension;
+                $exists = file_exists('./uploads/accounting/attachments/'.$fileNameToStore);
+            } while ($exists);
+
+            $fileType = explode('/', $files['type'][$key]);
+            $uploadedName = str_replace('.'.$extension, '', $name);
+
+            $data[] = [
+                'company_id' => getLoggedCompanyID(),
+                'type' => $fileType[0] === 'application' ? ucfirst($fileType[1]) : ucfirst($fileType[0]),
+                'uploaded_name' => $uploadedName,
+                'stored_name' => $fileNameToStore,
+                'file_extension' => $extension,
+                'size' => $files['size'][$key],
+                'notes' => null,
+                'linked_to_count' => 1,
+                'status' => 1,
+                'created_at' => date('Y-m-d h:i:s'),
+                'updated_at' => date('Y-m-d h:i:s')
+            ];
+
+            move_uploaded_file($files['tmp_name'][$key], './uploads/accounting/attachments/'.$fileNameToStore);
+        }
+
+        $attachmentIds = [];
+        foreach($data as $attachment) {
+            $attachmentIds[] = $this->accounting_attachments_model->create($attachment);
+        }
+
+        return $attachmentIds;
+    }
+
+    public function attach($transactionType, $transactionId)
+    {
+        $attachmentId = $this->input->post('id');
+
+        $transaction = $this->get_transaction($transactionType, $transactionId);
+        $attachments = json_decode($transaction->attachments, true);
+        $attachments[] = $attachmentId;
+        $attachments = json_encode($attachments);
+
+        switch($transactionType) {
+            case 'expense' :
+                $update = $this->vendors_model->update_expense($transactionId, ['attachments' => $attachments]);
+            break;
+            case 'check' :
+                $update = $this->vendors_model->update_check($transactionId, ['attachments' => $attachments]);
+            break;
+            case 'bill' :
+                $update = $this->vendors_model->update_bill($transactionId, ['attachments' => $attachments]);
+            break;
+            case 'bill-payment' :
+                $update = $this->vendors_model->update_bill_payment($transactionId, ['attachments' => $attachments]);
+            break;
+            case 'purchase-order' :
+                $update = $this->vendors_model->update_purchase_order($transactionId, ['attachments' => $attachments]);
+            break;
+            case 'vendor-credit' :
+                $update = $this->vendors_model->update_vendor_credit($transactionId, ['attachments' => $attachments]);
+            break;
+            case 'credit-card-credit' :
+                $update = $this->vendors_model->update_credit_card_credit($transactionId, ['attachments' => $attachments]);
+            break;
+        }
+
+        if($update) {
+            $attachment = $this->accounting_attachments_model->getById($attachmentId);
+            $attachmentData = [
+                'linked_to_count' => intval($attachment->linked_to_count) + 1
+            ];
+
+            $this->accounting_attachments_model->updateAttachment($attachmentId, $attachmentData);
+
+            $this->session->set_flashdata('success', "$attachment->uploaded_name.$attachment->file_extension sucessfully attached.");
+        } else {
+            $this->session->set_flashdata('error', "Unexpected error, please try again!");
+        }
+
+        redirect('accounting/expenses');
     }
 }

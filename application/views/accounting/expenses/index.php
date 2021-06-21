@@ -26,12 +26,11 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         opacity: 0.50;
         pointer-events: none;
     }
-    #transactions-table tbody td:nth-child(2) a:hover {
-        text-decoration: underline;
-        color: #38a4f8 !important;
-    }
     #transactions-table .btn-group .btn:hover, #transactions-table .btn-group .btn:focus {
         color: #38a4f8 !important;
+    }
+    #transactions-table .btn-group .btn.dropdown-toggle:hover, #transactions-table .btn-group .btn.dropdown-toggle:focus {
+        color: unset !important;
     }
     #transactions-table .btn-group .btn {
         padding: 10px;

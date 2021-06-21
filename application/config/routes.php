@@ -317,6 +317,8 @@ $route['accounting/attachments/download'] = "accounting_controllers/attachments/
 $route['accounting/attachments/update/(:any)']['post'] = "accounting_controllers/attachments/edit/$1";
 $route['accounting/attachments/delete/(:any)']['DELETE'] = "accounting_controllers/attachments/delete/$1";
 $route['accounting/attachments/attach']['post'] = 'accounting_controllers/attachments/attach';
+$route['accounting/attachments/get-all-attachments-ajax'] = 'accounting_controllers/attachments/get_all_attachments';
+$route['accounting/attachments/get-unlinked-attachments-ajax'] = 'accounting_controllers/attachments/get_unlinked_attachments';
 
 // Accounting payment methods
 $route['accounting/payment-methods'] = 'accounting_controllers/payment_methods/index';
@@ -478,6 +480,11 @@ $route['accounting/expenses/categorize-transactions/(:any)']['post'] = 'accounti
 $route['accounting/expenses/print-multiple-transactions']['post'] = 'accounting_controllers/expenses/print_multiple';
 $route['accounting/expenses/print-transaction/(:any)/(:any)'] = 'accounting_controllers/expenses/print_transaction/$1/$2';
 $route['accounting/expenses/update-transaction-category']['post'] = 'accounting_controllers/expenses/update_transaction_category';
+$route['accounting/expenses/view-bill-payment/(:any)'] = 'accounting_controllers/expenses/view_bill_payment/$1';
+$route['accounting/expenses/load-bill-payment-bills/(:any)']['post'] = 'accounting_controllers/expenses/load_bill_payment_bills/$1';
+$route['accounting/expenses/get-attach-file-modal/(:any)/(:any)'] = 'accounting_controllers/expenses/attach_file_modal/$1/$2';
+$route['accounting/expenses/attach-files/(:any)/(:any)']['post'] = 'accounting_controllers/expenses/attach_files/$1/$2';
+$route['accounting/expenses/attach/(:any)/(:any)']['post'] = 'accounting_controllers/expenses/attach/$1/$2';
 
 $route['accounting/vendor-details/(:any)'] = 'accounting/vendordetails/$1';
 $route['accounting/taxes/edit-settings'] = 'taxes/edit_settings';

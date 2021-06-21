@@ -319,6 +319,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 </div>
 
 <?php include viewPath('accounting/customer_includes/send_reminder'); ?>
+<?php include viewPath('accounting/customer_includes/receive_payment'); ?>
 
 <link href="https://nightly.datatables.net/css/jquery.dataTables.css" rel="stylesheet" type="text/css" />
 <script src="https://nightly.datatables.net/js/jquery.dataTables.js"></script>
