@@ -12,6 +12,7 @@ class Timesheet extends MY_Controller
     {
         parent::__construct();
         $this->checkLogin();
+        $this->hasAccessModule(77);
 
         $this->page_data['page']->title = 'Timesheet Management';
 

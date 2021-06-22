@@ -2291,6 +2291,7 @@ class Workorder extends MY_Controller
     }
 
     public function checklists(){
+        $this->hasAccessModule(29); 
         $this->load->helper(array('hashids_helper'));
         $this->load->model('Checklist_model');
 

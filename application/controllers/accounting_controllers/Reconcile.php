@@ -7,6 +7,7 @@ class Reconcile extends MY_Controller {
     {
 		parent::__construct();
 		$this->checkLogin();
+        $this->hasAccessModule(45);
         add_css(array(
             "assets/css/accounting/banking.css?v=".rand(),
             "assets/css/accounting/accounting.css",

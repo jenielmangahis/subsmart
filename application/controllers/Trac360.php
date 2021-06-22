@@ -8,6 +8,7 @@ class Trac360 extends MY_Controller
         parent::__construct();
 
         $this->checkLogin();
+        $this->hasAccessModule(59);
         $this->page_data['page']->title = 'Trac360';
         $this->load->model('trac360_model');
         $this->load->model('jobs_model');

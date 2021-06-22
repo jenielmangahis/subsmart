@@ -1092,6 +1092,8 @@ class Job extends MY_Controller
 
     public function job_types()
     {
+        $this->hasAccessModule(26); 
+
         $get_job_types = array(
             'where' => array(
                 'company_id' => logged('company_id'),

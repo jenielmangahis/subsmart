@@ -163,7 +163,11 @@ class Login extends CI_Controller
             if( $client->is_plan_active == 1 ){
                 redirect('dashboard');
             }else{
-                redirect('mycrm/membership');    
+                if( $client->id == 1 ){
+                    redirect('dashboard');
+                }else{
+                    redirect('mycrm/membership');  
+                }
             }
             
         }

@@ -719,6 +719,7 @@ class Users extends MY_Controller {
 
 	public function tracklocation()
 	{	
+		$this->hasAccessModule(63);
 //		ifPermissions('users_list');
 		add_css(array(
 			"assets/css/timesheet/tracklocation.css"
@@ -1508,6 +1509,7 @@ class Users extends MY_Controller {
 
     public function pay_scale()
 	{	
+		$this->hasAccessModule(63);
 		$company_id = logged('company_id');
 		$role_id    = logged('role');
 		$this->page_data['users1'] = $this->users_model->getById(getLoggedUserID());

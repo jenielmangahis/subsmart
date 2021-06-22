@@ -10,6 +10,7 @@ class Invoice extends MY_Controller {
         parent::__construct();
 
         $this->checkLogin();
+        $this->hasAccessModule(35);
 
         $this->page_data['page']->title = 'Invoice Management';
 

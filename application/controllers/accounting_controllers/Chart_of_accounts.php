@@ -7,6 +7,7 @@ class Chart_of_accounts extends MY_Controller {
     {
 		parent::__construct();
         $this->checkLogin();
+        $this->hasAccessModule(45);
         $this->load->model('chart_of_accounts_model');
         $this->load->model('accounting_invoices_model');
         $this->load->model('accounting_receive_payment_model');
