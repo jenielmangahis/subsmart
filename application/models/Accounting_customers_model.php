@@ -44,7 +44,7 @@ class Accounting_customers_model extends MY_Model
     }
     public function getCustomerDetails($id)
     {
-        $customer = $this->db->get_where('acs_profile', array('id' => $id));
+        $customer = $this->db->get_where('acs_profile', array('prof_id' => $id));
         return $customer->result();
     }
     public function getAllByCompany()

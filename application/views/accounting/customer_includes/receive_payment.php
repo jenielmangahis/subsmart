@@ -20,8 +20,9 @@
                                         <div class="label">Customer</div>
                                         <select class="form-control" name="customer_id">
                                             <option></option>
-                                            <option value="4822">Brannon Nguyen</option>
-                                            <option value="4823">TestA TestA</option>
+                                            <?php foreach ($customers as $cus) {
+    echo '<option value="'.$cus->prof_id.'">'.$cus->first_name .' '.  $cus->middle_name .' '. $cus->last_name.'</option>';
+} ?>
                                         </select>
                                     </div>
                                 </div>
@@ -65,7 +66,7 @@
                                 <div class="col-md-4 no-padding">
                                     <div class="form-group" style="margin-bottom: 5px!important;">
                                         <div class="label">Payment method</div>
-                                        <select class="form-control" name="customer_id">
+                                        <select class="form-control" name="">
                                             <option disabled selected>Choose a payment method</option>
                                             <option value="4822">Add new</option>
                                         </select>
@@ -79,8 +80,7 @@
                                 </div>
                                 <div class="col-md-4 no-padding">
                                     <div class="form-group" style="margin-bottom: 5px!important;">
-                                        <div class="label">Deposit to</div><select class="form-control"
-                                            name="customer_id">
+                                        <div class="label">Deposit to</div><select class="form-control" name="">
                                             <option></option>
                                             <option value="4822">Cash on hand</option>
                                             <option value="4823">Cash</option>
@@ -117,7 +117,7 @@
                                     <div class="row no-margin">
                                         <div class="col-md-5 no-padding">
                                             <div class="form-group">
-                                                <input type="text" class="" name="payment_date"
+                                                <input type="text" class="" name="invoice_number"
                                                     placeholder="Find invoice no.">
                                             </div>
                                         </div>
@@ -133,22 +133,22 @@
                                                     <div class="date-filter">
                                                         <div class="date-from">
                                                             <div class="label">Invoice from</div>
-                                                            <input type="text" class="datepicker" name="">
+                                                            <input type="text" class="datepicker" name="filter_from">
                                                         </div>
                                                         <div class="date-to">
                                                             <div class="label">To</div>
-                                                            <input type="text" class="datepicker" name="">
+                                                            <input type="text" class="datepicker" name="filter_to">
                                                         </div>
                                                     </div>
 
                                                     <div class="checkbox-filter">
-                                                        <input type="checkbox"> Overdue invoices only
+                                                        <input type="checkbox" name="overdue"> Overdue invoices only
                                                     </div>
                                                     <div class="buttons">
                                                         <button href=""
-                                                            class="default-button float-left">Cancel</button>
+                                                            class="default-button float-left cancel-btn">Cancel</button>
                                                         <button href=""
-                                                            class="success-button float-right">Apply</button>
+                                                            class="success-button float-right apply-btn">Apply</button>
                                                     </div>
 
                                                 </div>
@@ -166,7 +166,7 @@
                             </div>
                         </div>
                         <div class="customer-table-part">
-                            <table id="one_customers_table" class="table table-striped table-bordered w-100">
+                            <table id="customer_invoice_table" class="table table-striped table-bordered w-100">
                                 <thead>
                                     <tr>
                                         <th class="center"><input type="checkbox" id="checkbox-all-action"></th>
@@ -177,7 +177,7 @@
                                         <th class="text-right">PAYMENT</th>
                                     </tr>
                                 </thead>
-                                <tbody>
+                                <tbody class="table-body">
                                     <!-- <tr>
 											<td><input type="checkbox"></td>
 											<td>John Meyer</td>
@@ -285,14 +285,19 @@
                     <a href="#" class="btn-print">Print</a>
                 </div>
                 <div class="col-md-4 no-padding text-right">
-                    <div class="sub-option">
-                        <ul>
-                            <li><a href="">Save and close</a></li>
-                            <li><a href="">Save and send</a></li>
-                        </ul>
+                    <div class="right-option">
+                        <div class="sub-option">
+                            <ul>
+                                <li><a href="">Save and close</a></li>
+                                <li><a href="">Save and send</a></li>
+                            </ul>
+                        </div>
+                        <button href="#" class="btn-save-new">Save and new</button>
+                        <button href="#" class="btn-save-dropdown">
+                            <i class="fa fa-angle-down" aria-hidden="true"></i>
+                        </button>
+
                     </div>
-                    <button href="#" class="btn-save-new">Save and new <i class="fa fa-angle-down"
-                            aria-hidden="true"></i></button>
                 </div>
             </div>
         </div>

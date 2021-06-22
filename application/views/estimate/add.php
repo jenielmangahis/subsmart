@@ -343,7 +343,7 @@ input:checked + .slider:before {
                             </div>
                             <div class="row" style="background-color:white;margin-top:-2%;">
                                 <div class="col-md-6">
-                                    <label for="job_location"><b>Job Location</b> (optional)</label>
+                                    <label for="job_location"><b>Job Location</b></label>
                                     <!-- <input
                                         id="autocomplete"
                                         placeholder="Enter Location"
@@ -366,7 +366,7 @@ input:checked + .slider:before {
                                 <div class="col-md-6">
                                     <label for="job_name"><b>Job Name</b> (optional)</label>
                                     <input type="text" class="form-control" name="job_name" id="job_name"
-                                           placeholder="Enter Job Name" required/>
+                                           placeholder="Enter Job Name" />
                                 </div>
                             </div>
                             <hr>
@@ -416,7 +416,7 @@ input:checked + .slider:before {
                                     <div class="col-md-3">
                                         <label for="purchase_order_number"><b>Purchase Order#</b><small class="help help-sm">(optional)</small></label>
                                         <input type="text" class="form-control" name="purchase_order_number"
-                                            id="purchase_order_number" required placeholder="Enter Purchase Order#"
+                                            id="purchase_order_number" placeholder="Enter Purchase Order#"
                                              onChange="jQuery('#customer_name').text(jQuery(this).val());"/>
                                     </div>
                                     <div class="col-md-3 form-group">
@@ -654,14 +654,14 @@ input:checked + .slider:before {
                                 <div class="col-md-6 col-sm-12">
                                     <div class="form-group">
                                         <label><h6>Message to Customer</h6></label> <span class="help help-sm help-block">Add a message that will be displayed on the estimate.</span>
-                                        <textarea name="customer_message" cols="40" rows="2" class="form-control">I would be happy to have an opportunity to work with you.</textarea>
+                                        <textarea name="customer_message" id="message_est" cols="40" rows="2" class="form-control">I would be happy to have an opportunity to work with you.</textarea>
                                     </div>
                                 </div>
                                 <div class="col-md-6 col-sm-12">
                                     <div class="form-group">
                                         <label><h6>Terms &amp; Conditions</h6></label> <span class="help help-sm help-block">Mention your company's T&amp;C that will appear on the estimate.</span>
                                         <textarea name="terms_conditions" cols="40" rows="2"
-                                                  class="form-control"></textarea>
+                                                  class="form-control" id="terms_conditions_est"></textarea>
                                     </div>
                                 </div>
 
@@ -682,7 +682,7 @@ input:checked + .slider:before {
                                     <div class="form-group">
                                         <label><h6>Instructions</h6></label><span class="help help-sm help-block">Optional internal notes, will not appear to customer</span>
                                         <textarea name="instructions" cols="40" rows="2"
-                                                  class="form-control"></textarea>
+                                                  class="form-control" id="instructions_est"></textarea>
                                     </div>
                                 </div>
                             </div>
@@ -931,6 +931,17 @@ input:checked + .slider:before {
 
 <?php echo $file_selection; ?>
 <?php include viewPath('includes/footer'); ?>
+
+<script>
+    CKEDITOR.replace('terms_conditions_est');
+</script>
+<script>
+    CKEDITOR.replace('message_est');
+</script>
+<script>
+    CKEDITOR.replace('instructions_est');
+</script>
+
 
 <script type="text/javascript">
     var base_url = "<?php echo base_url();?>";

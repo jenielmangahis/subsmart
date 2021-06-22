@@ -108,8 +108,14 @@ function Step3() {
       }
     }
 
-    let key = $element.find(".subData").data("key");
+    const $subdata = $element.find(".subData");
+    let key = $subdata.data("key");
     let fieldName = $element.text().trim();
+
+    if ($subdata.attr("data-field-name")) {
+      fieldName = $subdata.attr("data-field-name");
+    }
+
     const recipientId = $("#recipientsSelect").get(0).dataset.recipientId;
 
     if (specs === null) {
@@ -200,6 +206,7 @@ function Step3() {
     const $noteInput = $optionsSidebar.find("#noteInput");
     const $optionInputs = $optionsSidebar.find(".esignBuilder__optionInput");
     const $fieldNameInput = $optionsSidebar.find("#textFieldName");
+    const $fieldValueInput = $optionsSidebar.find("#textFieldValue");
 
     $fieldId.html("");
     if (event && $(event.target).hasClass("subData--isSubCheckbox")) {
@@ -214,6 +221,7 @@ function Step3() {
     $noteInput.val("");
     $optionInputs.remove();
     $fieldNameInput.val("");
+    $fieldValueInput.val("");
 
     const fieldTypeWithOptions = ["Checkbox", "Dropdown", "Radio"];
     let fieldType = "field";
@@ -226,7 +234,29 @@ function Step3() {
       $noteInput.val(specs.note || "");
     } else if (fieldTypeWithOptions.includes(field_name)) {
       fieldType = "options";
-      const { options = [] } = specs;
+      const { options = [], subCheckbox = [] } = specs;
+
+      if (subCheckbox.length) {
+        $(".options__valuesSubItems").empty();
+        subCheckbox.forEach((item) => {
+          const $valueItem = $(".options__valuesItem:first").clone();
+          $valueItem.attr("data-key", item.id);
+          $(".options__valuesSubItems").append($valueItem);
+        });
+
+        $("input[type=checkbox]").change(function (event) {
+          const $parent = $(event.target).parent(".options__valuesItem");
+          const id = $parent.attr("data-key");
+          const $field = $(`.esignBuilder__fieldCheckbox[data-key=${id}]`);
+
+          if (this.checked) {
+            $field.addClass("esignBuilder__fieldCheckbox--checked");
+          } else {
+            $field.removeClass("esignBuilder__fieldCheckbox--checked");
+          }
+        })
+      }
+
       if (options.length) {
         const $inputs = options.map((value) => createDropdownInput({ value })); // prettier-ignore
         $optionsSidebar.append($inputs);
@@ -239,6 +269,7 @@ function Step3() {
       $("#readOnlyText").prop("checked", specs.is_read_only);
       $("#textFieldName").prop("checked", specs.is_read_only);
       $fieldNameInput.val(specs.name ? specs.name : "");
+      $fieldValueInput.val(specs.value ? specs.value : "");
     }
 
     $optionsSidebar.attr("data-field-type", fieldType);
@@ -367,6 +398,9 @@ function Step3() {
           ? "esignBuilder__fieldCheckbox"
           : "esignBuilder__fieldRadio";
 
+      $(".options__valuesItem:first").attr("data-key", uniqueKey);
+      $subData.append('<i class="subData__check fa fa-check"></i>');
+
       async function storeSubCheckbox($subCheckbox) {
         const updatedField = fields.find((f) => f.unique_key == field.unique_key); // prettier-ignore
         const specs = updatedField.specs ? JSON.parse(updatedField.specs) : {};
@@ -397,7 +431,9 @@ function Step3() {
         const { id, top, left } = data;
 
         const $currElement = createElementFromHTML(
-          `<div class="subData subData--isSubCheckbox ${baseClassName}"></div>`
+          `<div class="subData subData--isSubCheckbox ${baseClassName}">
+            <i class="subData__check fa fa-check"></i>
+          </div>`
         );
 
         $currElement.attr("data-key", id);
@@ -434,18 +470,25 @@ function Step3() {
 
       $adder = $element.find(`.${baseClassName}Adder`);
       $adder.on("click", async function () {
+        const id = Date.now()
         const $currElement = createSubCheckbox({
+          id,
           top: 0,
           left: "calc(100% + 10px)",
-          id: Date.now(),
         });
 
         $element.append($currElement);
+
+        const $valueItem = $(".options__valuesItem:first").clone();
+        $valueItem.attr("data-key", id);
+        $(".options__valuesSubItems").append($valueItem);
+
         await storeSubCheckbox($currElement);
       });
     }
 
     $subData.attr("data-key", uniqueKey);
+    $subData.attr("data-field-name", field.field_name);
 
     const activeClass = "esignBuilder__field--active";
     const hasOption = true;
@@ -453,6 +496,11 @@ function Step3() {
     if (fieldName === "Text") {
       let { specs } = field;
       specs = specs ? JSON.parse(specs) : { width: "initial" };
+
+      if (specs.value) {
+        $subData.text(specs.value);
+      }
+
       $element.css({ width: specs.width });
 
       $element.resizable({
@@ -682,10 +730,13 @@ function Step3() {
         specs = { note: $noteInput.val() };
       } else if (fieldType === "text") {
         const fieldName = $("#textFieldName").val().trim();
+        const fieldValue = $("#textFieldValue").val().trim();
+
         specs = {
           is_required: $("#requiredText").is(":checked"),
           is_read_only: $("#readOnlyText").is(":checked"),
           name: !isEmpty(fieldName) ? fieldName : null,
+          value: fieldValue
         };
       } else {
         if (!$optionInputs.length) {
@@ -765,6 +816,7 @@ function Step3() {
 
         await apiStoreField({
           ...field,
+          field: field.field_name,
           coordinates: JSON.parse(field.coordinates),
           specs: { subCheckbox },
         });
@@ -815,6 +867,11 @@ function Step3() {
 
       $(".esignBuilder__field--active")
         .removeClass("esignBuilder__field--active"); // prettier-ignore
+    });
+
+    $("#textFieldValue").on("input propertychange", function (event) {
+      const activeInputId = $(".esignBuilder__optionsSidebarFieldId span").text();
+      $(`[data-key=${activeInputId}]`).text(event.target.value);
     });
   }
 

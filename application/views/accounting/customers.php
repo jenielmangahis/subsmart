@@ -197,9 +197,11 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                 $receive_payment=$this->accounting_invoices_model->getCustomers_receive_payment($cus->prof_id);
                                 $amount =0.00;
                                 $first_option ="Create invoice";
+                                $first_option_class="customer_craete_invoice";
                                 foreach ($receive_payment as $payment) {
                                     $amount += $payment->amount;
                                     $first_option = "Receive rayment";
+                                    $first_option_class="customer_receive_payment_btn";
                                 }
                                  ?>
 							<tr>
@@ -214,7 +216,8 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 								</td>
 								<td>
 									<div class="dropdown dropdown-btn text-right">
-										<a href="" class="first-option"
+										<a href=""
+											class="first-option <?=$first_option_class?>"
 											data-customer-id="<?=$cus->prof_id?>"><?=$first_option?> </a>
 										<a type="button" id="dropdown-button-icon" data-toggle="dropdown">
 											<span class="btn-label"><i class="fa fa-caret-down fa-sm"></i></span></span>

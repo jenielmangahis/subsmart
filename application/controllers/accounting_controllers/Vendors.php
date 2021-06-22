@@ -2015,9 +2015,10 @@ class Vendors extends MY_Controller {
         $purchOrder = [
             'vendor_id' => $data['vendor_id'],
             'email' => $data['email'],
-            'mailing_address' => $data['mailing_address'],
+            'permit_no' => $data['permit_number'] === "" ? null : $data['permit_number'],
+            'mailing_address' => nl2br($data['mailing_address']),
             'customer_id' => $data['customer'],
-            'shipping_address' => $data['shipping_address'],
+            'shipping_address' => nl2br($data['shipping_address']),
             'purchase_order_date' => date("Y-m-d", strtotime($data['purchase_order_date'])),
             'ship_via' => $data['ship_via'],
             'tags' => $data['tags'] !== null ? json_encode($data['tags']) : null,

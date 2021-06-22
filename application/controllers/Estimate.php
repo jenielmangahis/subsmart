@@ -326,6 +326,20 @@ class Estimate extends MY_Controller
         $this->load->view('estimate/addoptions', $this->page_data);
     }
 
+    public function delete_estimate()
+    {
+        $id = $this->input->post('id');
+
+        $data = array(
+            'id' => $id,
+            'view_flag' => '1',
+        );
+
+        $delete = $this->estimate_model->deleteEstimate($data);
+
+        echo json_encode($delete);
+    }
+
     public function addbundle()
     {
         $this->load->model('AcsProfile_model');
@@ -688,6 +702,7 @@ class Estimate extends MY_Controller
         $this->page_data['estimate'] = $this->estimate_model->getById($id);
         $this->page_data['estimate']->customer = $this->customer_model->getCustomer($this->page_data['estimate']->customer_id);
         $this->page_data['plans'] = $this->plans_model->getByWhere(['company_id' => $company_id]);
+        $this->page_data['items_data'] = $this->estimate_model->getEstimatesItems($id);
         $this->load->view('estimate/edit', $this->page_data);
     }
 

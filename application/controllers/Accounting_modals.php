@@ -3171,7 +3171,7 @@ class Accounting_modals extends MY_Controller {
         } else {
             $payees = array_unique($data['payee']);
 
-            $startingCheckNo = intval($data['starting_check_no']);
+            $startingCheckNo = $data['starting_check_no'] === "" ? null : intval($data['starting_check_no']);
             foreach($payees as $payee) {
                 $paymentTotal = 0.00;
                 $itemKeys = array_keys($data['payee'], $payee);
@@ -3246,7 +3246,9 @@ class Accounting_modals extends MY_Controller {
                     $this->expenses_model->insert_bill_payment_items($paymentItems);
                 }
 
-                $startingCheckNo++;
+                if($data['starting_check_no'] !== "") {
+                    $startingCheckNo++;
+                }
             }
     
             $return = [];
@@ -3480,10 +3482,11 @@ class Accounting_modals extends MY_Controller {
                 'company_id' => logged('company_id'),
                 'vendor_id' => $data['vendor_id'],
                 'purchase_order_no' => $lastPO === null ? 1 : intval($lastPO->purchase_order_no)+1,
+                'permit_no' => $data['permit_number'] === "" ? null : $data['permit_number'],
                 'email' => $data['email'],
-                'mailing_address' => $data['mailing_address'],
+                'mailing_address' => nl2br($data['mailing_address']),
                 'customer_id' => $data['customer'],
-                'shipping_address' => $data['shipping_address'],
+                'shipping_address' => nl2br($data['shipping_address']),
                 'purchase_order_date' => date("Y-m-d", strtotime($data['purchase_order_date'])),
                 'ship_via' => $data['ship_via'],
                 'tags' => $data['tags'] !== null ? json_encode($data['tags']) : null,
@@ -3491,7 +3494,7 @@ class Accounting_modals extends MY_Controller {
                 'memo' => $data['memo'],
                 'attachments' => $data['attachments'] !== null ? json_encode($data['attachments']) : null,
                 'total_amount' => $data['total_amount'],
-                'status' => 1,
+                'status' => $data['status'] === "open" ? 1 : 2,
                 'created_at' => date("Y-m-d H:i:s"),
                 'updated_at' => date("Y-m-d H:i:s")
             ];
@@ -3573,9 +3576,9 @@ class Accounting_modals extends MY_Controller {
 
     public function get_customer_details($customerId)
     {
-        $customer = $this->accounting_customers_model->get_customer_by_id($customerId);
+        $customer = $this->accounting_customers_model->getCustomerDetails($customerId);
 
-        echo json_encode($customer);
+        echo json_encode($customer[0]);
     }
 
     public function get_employee_details($employeeId)

@@ -5487,4 +5487,48 @@ class Accounting extends MY_Controller
         echo json_encode($data);
         // $this->load->view('accounting/customer_includes/send_reminder_email_layout', $this->page_data);
     }
+    public function get_customer_info_for_receive_payment()
+    {
+        $customer_id = $this->input->post("customer_id");
+        $customer_info = $this->accounting_customers_model->get_customer_by_id($customer_id);
+        $invoices = $this->accounting_invoices_model->get_invoices_by_customer_id($customer_id);
+        $payments = $this->accounting_invoices_model->get_payements_by_customer_id($customer_id);
+        $receivable_payment = 0;
+        $html='';
+        $counter =0;
+        foreach ($invoices as $inv) {
+            $customer_id = $inv->customer_id;
+            $total_amount_received =0;
+
+            $payment_received = $this->accounting_invoices_model->get_payements_by_invoice($inv->invoice_number);
+            foreach ($payment_received as $received) {
+                $total_amount_received+=$received->amount;
+            }
+            $html.='<tr>
+            <td class="center" style="width: 0;"><input type="checkbox" name="checkbox0">
+            </td>
+            <td>'.$inv->invoice_number.'</td>
+            <td>
+            '.$inv->due_date.'
+            </td>
+            <td class="text-right">'.number_format($inv->grand_total, 2).'</td>
+            <td class="text-right">
+            '.number_format($inv->grand_total-$total_amount_received, 2).'
+            </td>
+            <td>
+                <div class="form-group">
+                    <input type="text" class="text-right inv_grand_amount" name="inv_'.$counter.'" value="'.number_format($inv->grand_total-$total_amount_received, 2).'">
+                </div>
+            </td>
+        </tr>';
+            $counter++;
+            $receivable_payment +=$inv->grand_total-$total_amount_received;
+        }
+        $data = new stdClass();
+        $data->html = $html;
+        $data->receivable_payment = $receivable_payment;
+        $data->display_receivable_payment = number_format($receivable_payment, 2);
+        $data->inv_count = $counter;
+        echo json_encode($data);
+    }
 }

@@ -218,4 +218,26 @@ class Accounting_invoices_model extends MY_Model
         $query = $this->db->get();
         return $query->result();
     }
+    public function get_invoices_by_customer_id($customer_id)
+    {
+        $this->db->select('*');
+
+        $this->db->from('invoices');
+        
+        $this->db->where('customer_id', $customer_id);
+
+        $query = $this->db->get();
+        return $query->result();
+    }
+    public function get_payements_by_invoice($invoice_number)
+    {
+        $this->db->select('*');
+
+        $this->db->from('accounting_receive_payment');
+        
+        $this->db->where('invoice_number', $invoice_number);
+
+        $query = $this->db->get();
+        return $query->result();
+    }
 }
