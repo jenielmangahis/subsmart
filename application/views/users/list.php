@@ -668,7 +668,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                         <label for="role_4"><span>Standard User</span></label>
                                     </div>
                                     <div class="help help-sm help-block">
-                                        Can not add or delete employees, can not manage subscriptions
+                                        Cannot add or delete employees, can not manage subscriptions
                                     </div>
                                 </div>
                                 <div>
