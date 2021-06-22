@@ -106,22 +106,27 @@
                     <tbody>
                         <tr style="font-size: 13px">
                             <td width="33.3%" style="padding: 5px"><strong>Vendor</strong></td>
-                            <td width="33.3%" style="padding: 5px"><?php if($transac['transaction']->shipping_address !== "" && $transact['transaction']->shipping_address !== null) : ?><strong>SHIP TO</strong><?php endif; ?></td>
+                            <td width="33.3%" style="padding: 5px">
+                                <?php if($transac['transaction']->shipping_address !== "" && $transac['transaction']->shipping_address !== null) : ?>
+                                    <strong>SHIP TO</strong>
+                                <?php endif; ?>
+                            </td>
                             <td width="33.3%" style="padding: 5px"><strong>P.O. NO.</strong> <?=$transac['transaction']->purchase_order_no?></td>
                         </tr>
                         <tr style="font-size: 13px">
                             <td style="padding: 5px">
-                                <p style="margin: 0"><?=$transac['payeeName']?></p>
-                                <?php if($transac['payee']->street !== null && $transac['payee']->street !== "") : ?>
-                                <p style="margin: 0"><?=$transac['payee']->street?></p>
+                                <?php if($transac['transaction']->mailing_address !== null && $transac['payee']->mailing_address !== "") : ?>
+                                    <p style="margin: 0"><?=$transac['transaction']->mailing_address?></p>
                                 <?php endif; ?>
-                                <p style="margin: 0"><?=$transac['payee']->city !== null && $transac['payee']->city !== "" ? $transac['payee']->city.', ' : ""?><?=$transac['payee']->state !== null && $transac['payee']->state !== "" ? $transac['payee']->state.' ' : ""?><?=$transac['payee']->zip !== null && $transac['payee']->zip !== "" ? $transac['payee']->zip : ""?></p>
                             </td>
                             <td style="padding: 5px">
-                            <?php if($transac['transaction']->shipping_address !== "" && $transac['transaction']->shipping_address !== null) : ?>
-                                <p style="margin: 0"><?=$transac['transaction']->shipping_address?></p>
-                            <?php endif;?></td>
-                            <td style="padding: 5px"><strong>DATE</strong> <?=date("m/d/Y", strtotime($transac['transaction']->purchase_order_date))?></td>
+                                <?php if($transac['transaction']->shipping_address !== "" && $transac['transaction']->shipping_address !== null) : ?>
+                                    <p style="margin: 0"><?=$transac['transaction']->shipping_address?></p>
+                                <?php endif;?>
+                            </td>
+                            <td style="padding: 5px">
+                                <p style="margin: 0"><strong>DATE</strong> <?=date("m/d/Y", strtotime($transac['transaction']->purchase_order_date))?><br><br><br></p>
+                            </td>
                         </tr>
                     </tbody>
                 </table>

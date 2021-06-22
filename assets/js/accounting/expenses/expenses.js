@@ -214,7 +214,7 @@ var table = $('#transactions-table').DataTable({
                                 <div class="dropdown-menu" aria-labelledby="statusDropdownButton">
                                     <a class="dropdown-item view-edit-expense" href="#">View/Edit</a>
                                     <a class="dropdown-item" href="/accounting/expenses/print-transaction/expense/${rowData.id}" target="_blank">Print</a>
-                                    <a class="dropdown-item" href="#">Copy</a>
+                                    <a class="dropdown-item copy-expense" href="#">Copy</a>
                                     <a class="dropdown-item delete-transaction" href="#">Delete</a>
                                 </div>
                             </div>
@@ -233,7 +233,7 @@ var table = $('#transactions-table').DataTable({
                                 <div class="dropdown-menu" aria-labelledby="statusDropdownButton">
                                     <a class="dropdown-item view-edit-expense" href="#">View/Edit</a>
                                     <a class="dropdown-item" href="/accounting/expenses/print-transaction/expense/${rowData.id}" target="_blank">Print</a>
-                                    <a class="dropdown-item" href="#">Copy</a>
+                                    <a class="dropdown-item copy-expense" href="#">Copy</a>
                                     <a class="dropdown-item delete-transaction" href="#">Delete</a>
                                     <a class="dropdown-item void-expense" href="#">Void</a>
                                 </div>
@@ -255,7 +255,7 @@ var table = $('#transactions-table').DataTable({
 
                                 <div class="dropdown-menu" aria-labelledby="statusDropdownButton">
                                     <a class="dropdown-item view-edit-check" href="#">View/Edit</a>
-                                    <a class="dropdown-item" href="#">Copy</a>
+                                    <a class="dropdown-item copy-check" href="#">Copy</a>
                                     <a class="dropdown-item delete-transaction" href="#">Delete</a>
                                 </div>
                             </div>
@@ -273,7 +273,7 @@ var table = $('#transactions-table').DataTable({
 
                                 <div class="dropdown-menu" aria-labelledby="statusDropdownButton">
                                     <a class="dropdown-item view-edit-check" href="#">View/Edit</a>
-                                    <a class="dropdown-item" href="#">Copy</a>
+                                    <a class="dropdown-item copy-check" href="#">Copy</a>
                                     <a class="dropdown-item delete-transaction" href="#">Delete</a>
                                     <a class="dropdown-item void-check" href="#">Void</a>
                                 </div>
@@ -296,7 +296,7 @@ var table = $('#transactions-table').DataTable({
                                 <div class="dropdown-menu" aria-labelledby="statusDropdownButton">
                                     <a class="dropdown-item" href="#">Mark as paid</a>
                                     <a class="dropdown-item view-edit-bill" href="#">View/Edit</a>
-                                    <a class="dropdown-item" href="#">Copy</a>
+                                    <a class="dropdown-item copy-bill" href="#">Copy</a>
                                     <a class="dropdown-item delete-transaction" href="#">Delete</a>
                                     <a class="dropdown-item attach-file" href="#">Attach a file</a>
                                 </div>
@@ -314,7 +314,7 @@ var table = $('#transactions-table').DataTable({
                                 </button>
 
                                 <div class="dropdown-menu" aria-labelledby="statusDropdownButton">
-                                    <a class="dropdown-item" href="#">Copy</a>
+                                    <a class="dropdown-item copy-bill" href="#">Copy</a>
                                     <a class="dropdown-item delete-transaction" href="#">Delete</a>
                                     <a class="dropdown-item attach-file" href="#">Attach a file</a>
                                 </div>
@@ -432,7 +432,7 @@ var table = $('#transactions-table').DataTable({
                                     <a class="dropdown-item" href="#">Copy to bill</a>
                                     <a class="dropdown-item" href="/accounting/expenses/print-transaction/purchase-order/${rowData.id}" target="_blank">Print</a>
                                     <a class="dropdown-item view-edit-purch-order" href="#">View/Edit</a>
-                                    <a class="dropdown-item" href="#">Copy</a>
+                                    <a class="dropdown-item copy-purchase-order" href="#">Copy</a>
                                     <a class="dropdown-item delete-transaction" href="#">Delete</a>
                                     <a class="dropdown-item attach-file" href="#">Attach a file</a>
                                 </div>
@@ -451,7 +451,7 @@ var table = $('#transactions-table').DataTable({
 
                                 <div class="dropdown-menu" aria-labelledby="statusDropdownButton">
                                     <a class="dropdown-item view-edit-purch-order" href="#">View/Edit</a>
-                                    <a class="dropdown-item" href="#">Copy</a>
+                                    <a class="dropdown-item copy-purchase-order" href="#">Copy</a>
                                     <a class="dropdown-item delete-transaction" href="#">Delete</a>
                                     <a class="dropdown-item attach-file" href="#">Attach a file</a>
                                 </div>
@@ -472,7 +472,7 @@ var table = $('#transactions-table').DataTable({
 
                             <div class="dropdown-menu" aria-labelledby="statusDropdownButton">
                                 <a class="dropdown-item view-edit-vendor-credit" href="#">View/Edit</a>
-                                <a class="dropdown-item" href="#">Copy</a>
+                                <a class="dropdown-item copy-vendor-credit" href="#">Copy</a>
                                 <a class="dropdown-item delete-transaction" href="#">Delete</a>
                             </div>
                         </div>
@@ -1405,4 +1405,135 @@ $(document).on('click', '#attach_file_modal a.attach-to-transaction', function(e
 
     $('#attach_file_modal #attach-file-form').prepend(`<input type="hidden" name="id" value="${e.currentTarget.dataset.id}">`);
     $('#attach_file_modal #attach-file-form').submit();
+});
+
+$(document).on('click', '#transactions-table .copy-expense', function(e) {
+    e.preventDefault();
+
+    var row = $(this).parent().parent().parent().parent();
+    var data = $('#transactions-table').DataTable().row(row).data();
+
+    $.get('/accounting/vendors/copy-expense/'+data.id, function(res) {
+        if ($('div#modal-container').length > 0) {
+            $('div#modal-container').html(res);
+        } else {
+            $('body').append(`
+                <div id="modal-container"> 
+                    ${res}
+                </div>
+            `);
+        }
+
+        $('#expenseModal').parent().attr('onsubmit', 'submitModalForm(event, this)');
+
+        initFormFields('expenseModal', data);
+
+        $('#expenseModal').modal('show');
+    });
+});
+
+$(document).on('click', '#transactions-table .copy-check', function(e) {
+    e.preventDefault();
+
+    var row = $(this).parent().parent().parent().parent();
+    var data = $('#transactions-table').DataTable().row(row).data();
+
+    $.get('/accounting/vendors/copy-check/'+data.id, function(res) {
+        if ($('div#modal-container').length > 0) {
+            $('div#modal-container').html(res);
+        } else {
+            $('body').append(`
+                <div id="modal-container"> 
+                    ${res}
+                </div>
+            `);
+        }
+
+        $('#checkModal').parent().attr('onsubmit', 'submitModalForm(event, this)');
+
+        initFormFields('checkModal', data);
+
+        $('#checkModal').modal('show');
+    });
+});
+
+$(document).on('click', '#transactions-table .copy-bill', function(e) {
+    e.preventDefault();
+
+    var row = $(this).parent().parent().parent().parent();
+    var data = $('#transactions-table').DataTable().row(row).data();
+
+    $.get('/accounting/vendors/copy-bill/'+data.id, function(res) {
+        if ($('div#modal-container').length > 0) {
+            $('div#modal-container').html(res);
+        } else {
+            $('body').append(`
+                <div id="modal-container"> 
+                    ${res}
+                </div>
+            `);
+        }
+
+        $('#billModal').parent().attr('onsubmit', 'submitModalForm(event, this)');
+
+        initFormFields('billModal', data);
+
+        $('#billModal').modal('show');
+    });
+});
+
+$(document).on('click', '#transactions-table .copy-purchase-order', function(e) {
+    e.preventDefault();
+
+    var row = $(this).parent().parent().parent().parent();
+    var data = $('#transactions-table').DataTable().row(row).data();
+    var transactionType = data.type;
+    transactionType = transactionType.replaceAll(' ', '-');
+    transactionType = transactionType.toLowerCase();
+
+    $.get('/accounting/vendors/copy-purchase-order/'+data.id, function(res) {
+        if ($('div#modal-container').length > 0) {
+            $('div#modal-container').html(res);
+        } else {
+            $('body').append(`
+                <div id="modal-container"> 
+                    ${res}
+                </div>
+            `);
+        }
+
+        $('#purchaseOrderModal').parent().attr('onsubmit', 'submitModalForm(event, this)');
+
+        initFormFields('purchaseOrderModal', data);
+
+        $('#purchaseOrderModal').modal('show');
+    });
+});
+
+$(document).on('click', '#transactions-table .copy-vendor-credit', function(e) {
+    e.preventDefault();
+
+    var row = $(this).parent().parent().parent().parent();
+    var data = $('#transactions-table').DataTable().row(row).data();
+    var transactionType = data.type;
+    transactionType = transactionType.replaceAll(' ', '-');
+    transactionType = transactionType.toLowerCase();
+
+    $.get('/accounting/vendors/copy-vendor-credit/'+data.id, function(res) {
+        if ($('div#modal-container').length > 0) {
+            $('div#modal-container').html(res);
+        } else {
+            $('body').append(`
+                <div id="modal-container"> 
+                    ${res}
+                </div>
+            `);
+        }
+
+        $('#vendorCreditModal').parent().attr('onsubmit', 'submitModalForm(event, this)');
+
+        initFormFields('vendorCreditModal', data);
+
+        $('#vendorCreditModal').modal('show');
+    });
 });

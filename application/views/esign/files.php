@@ -480,9 +480,21 @@
             </p>
 
             <div class="options mt-3">
-                <button type="button" class="btn btn-primary btn-block" id="addOption">
-                    + Add Option
-                </button>
+                <div class="mt-2 mb-2">
+                    <div>
+                        <label for="textFieldName">Field name</label>
+                        <input type="text" name="textFieldName" id="textFieldName" class="w-100">
+                    </div>
+
+                    <div class="options__values">
+                        <label>Values</label>
+                        <div class="options__valuesItem d-flex align-items-center">
+                            <input class="mt-0 mr-2" type="checkbox">
+                            <input style="flex-grow: 1;" type="text">
+                        </div>
+                        <div class="options__valuesSubItems"></div>
+                    </div>
+                </div>
             </div>
 
             <div class="text">
@@ -501,6 +513,11 @@
                     <div>
                         <label for="textFieldName">Field name</label>
                         <input type="text" name="textFieldName" id="textFieldName" class="w-100">
+                    </div>
+
+                    <div>
+                        <label for="textFieldValue">Add Text</label>
+                        <textarea  class="w-100" id="textFieldValue"></textarea>
                     </div>
                 </div>
             </div>

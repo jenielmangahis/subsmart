@@ -35,6 +35,17 @@
                                                     </div>
                                                 </div>
                                             </div>
+                                            <div class="row">
+                                                <div class="col-md-2">
+                                                    <div class="form-group">
+                                                        <label for="status">Purchase Order status</label>
+                                                        <select name="status" id="status" class="form-control">
+                                                            <option value="open" <?=$purchaseOrder->status === "1" ? 'selected' : ''?>>Open</option>
+                                                            <option value="closed" <?=$purchaseOrder->status === "2" ? 'selected' : ''?>>Closed</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                         <div class="col-md-4">
                                             <h6 class="text-right">AMOUNT</h6>
@@ -52,7 +63,7 @@
                                         <div class="col-md-2">
                                             <div class="form-group">
                                                 <label for="mailing_address">Mailing address</label>
-                                                <textarea name="mailing_address" id="mailing_address" class="form-control"><?=$purchaseOrder->mailing_address?></textarea>
+                                                <textarea name="mailing_address" id="mailing_address" class="form-control"><?=str_replace("<br />", "", $purchaseOrder->mailing_address)?></textarea>
                                             </div>
                                         </div>
                                         <div class="col-md-2">
@@ -69,7 +80,7 @@
                                             </div>
                                             <div class="form-group">
                                                 <label for="shipping_address">Shipping address</label>
-                                                <textarea name="shipping_address" id="shipping_address" class="form-control"><?=$purchaseOrder->shipping_address?></textarea>
+                                                <textarea name="shipping_address" id="shipping_address" class="form-control"><?=str_replace("<br />", "", $purchaseOrder->shipping_address)?></textarea>
                                             </div>
                                         </div>
                                         <div class="col-md-2">
@@ -80,6 +91,12 @@
                                             <div class="form-group">
                                                 <label for="ship_via">Ship via</label>
                                                 <input type="text" class="form-control" name="ship_via" id="ship_via" value="<?=$purchaseOrder->ship_via?>">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2 offset-md-4">
+                                            <div class="form-group">
+                                                <label for="permit_number">Permit no.</label>
+                                                <input type="number" class="form-control" name="permit_number" id="permit_number" value="<?=$purchaseOrder->permit_no?>">
                                             </div>
                                         </div>
                                         <div class="col-md-8">

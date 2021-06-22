@@ -8,7 +8,7 @@ class Settings extends MY_Controller {
 		parent::__construct();
 
 		$this->checkLogin();
-        $this->isAllowedModuleAccess(8);
+        $this->hasAccessModule(8);
 
 		$this->page_data['page_title'] = 'Settings';
 		$this->load->helper(array('form', 'url', 'hashids_helper'));
@@ -29,13 +29,6 @@ class Settings extends MY_Controller {
 
     public function schedule()
     {
-        $is_allowed = $this->isAllowedModuleAccess(8);
-        $company_id = logged('company_id');
-        if( !$is_allowed ){
-            $this->page_data['module'] = 'settings';
-            echo $this->load->view('no_access_module', $this->page_data, true);
-            die();
-        }
 
         $this->page_data['google_credentials'] = google_credentials();
         $this->page_data['module'] = 'calendar';

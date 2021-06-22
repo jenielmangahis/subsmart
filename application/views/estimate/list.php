@@ -257,9 +257,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 
                                         </td>
                                         <td>
-                                            <?php if (is_serialized($estimate->estimate_eqpt_cost)) { ?>
-                                                $<?php echo unserialize($estimate->estimate_eqpt_cost)['eqpt_cost'] ?>
-                                            <?php } ?>
+                                                $<?php echo $estimate->grand_total; ?>
                                         </td>
                                         <td class="text-right">
                                             <div class="dropdown dropdown-btn">
@@ -304,7 +302,8 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                                         <span class="fa fa-envelope-open-o icon"></span>  Send to Customer</a></li>
                                                     <li><div class="dropdown-divider"></div></li>
                                                     <li role="presentation">
-                                                        <a role="menuitem" href="<?php echo base_url('estimate/delete/' . $estimate->id) ?>>" onclick="return confirm('Do you really want to delete this item ?')" data-delete-modal="open"><span class="fa fa-trash-o icon"></span> Delete</a>
+                                                        <!-- <a role="menuitem" href="<?php //echo base_url('estimate/delete/' . $estimate->id) ?>>" onclick="return confirm('Do you really want to delete this item ?')" data-delete-modal="open"><span class="fa fa-trash-o icon"></span> Delete</a> -->
+                                                        <a href="#" est-id="<?php echo $estimate->id; ?>" id="delete_estimate"><span class="fa fa-trash-o icon"></span> Delete </a>
                                                     </li>
                                                     <li role="presentation">
                                                         <a role="menuitem" href="<?= base_url('job/estimate_job/'. $estimate->id) ?>">
@@ -509,4 +508,61 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             location.href = $(this).attr('data-link');
         });
     });
+</script>
+
+<script>
+// $(document).on('click','#delete_workorder',function(){
+//     // alert('test');
+    
+// });
+
+// function myFunction() {
+// $('#delete_workorder').on('click', function(){
+$(document).on('click touchstart','#delete_estimate',function(){
+
+    var id = $(this).attr('est-id');
+    // alert(id);
+  
+  var r = confirm("Are you sure you want to delete this Estimate?");
+
+  if (r == true) {
+    $.ajax({
+    type : 'POST',
+    url : "<?php echo base_url(); ?>estimate/delete_estimate",
+    data : {id: id},
+    success: function(result){
+        // $('#res').html('Signature Uploaded successfully');
+        // if (confirm('Some message')) {
+        //     alert('Thanks for confirming');
+        // } else {
+        //     alert('Why did you press cancel? You should have confirmed');
+        // }
+
+        // location.reload();
+        sucess("Data Deleted Successfully!");
+    },
+    });
+  } 
+  else 
+  {
+    alert('no');
+  }
+
+});
+
+function sucess(information,$id){
+            Swal.fire({
+                title: 'Good job!',
+                text: information,
+                icon: 'success',
+                showCancelButton: false,
+                confirmButtonColor: '#32243d',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ok'
+            }).then((result) => {
+                if (result.value) {
+                    location.reload();
+                }
+            });
+        }
 </script>

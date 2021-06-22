@@ -8,7 +8,7 @@ class Estimate extends MY_Controller
     public function __construct()
     {
         parent::__construct();
-
+        $this->hasAccessModule(19); 
         $this->page_data['page']->title = 'My Estimates';
         $this->page_data['page']->menu = 'estimates';
         $this->load->model('Estimate_model', 'estimate_model');
@@ -326,6 +326,20 @@ class Estimate extends MY_Controller
         $this->load->view('estimate/addoptions', $this->page_data);
     }
 
+    public function delete_estimate()
+    {
+        $id = $this->input->post('id');
+
+        $data = array(
+            'id' => $id,
+            'view_flag' => '1',
+        );
+
+        $delete = $this->estimate_model->deleteEstimate($data);
+
+        echo json_encode($delete);
+    }
+
     public function addbundle()
     {
         $this->load->model('AcsProfile_model');
@@ -410,15 +424,12 @@ class Estimate extends MY_Controller
             // 'created_by' => logged('id'),
 
             // 'sub_total' => $this->input->post('sub_total'),
-            // 'deposit_request' => '$',
+            'deposit_request' => '$',
             'deposit_amount' => $this->input->post('adjustment_input'),//
             'grand_total' => $this->input->post('supergrandtotal'),//
 
             'adjustment_name' => $this->input->post('adjustment_name'),//
             'adjustment_value' => $this->input->post('adjustment_input'),//
-
-            'tax1_total' => $this->input->post('total_tax_'),
-            'tax2_total' => $this->input->post('total_tax2_'),
 
             'markup_type' => '$',//
             'markup_amount' => $this->input->post('markup_input_form'),//
@@ -484,7 +495,6 @@ class Estimate extends MY_Controller
                 $addQuery3 = $this->accounting_invoices_model->additem_details($data2);
                 $z++;
             }
-    
             redirect('estimate');
         } else {
             echo json_encode(0);
@@ -692,6 +702,7 @@ class Estimate extends MY_Controller
         $this->page_data['estimate'] = $this->estimate_model->getById($id);
         $this->page_data['estimate']->customer = $this->customer_model->getCustomer($this->page_data['estimate']->customer_id);
         $this->page_data['plans'] = $this->plans_model->getByWhere(['company_id' => $company_id]);
+        $this->page_data['items_data'] = $this->estimate_model->getEstimatesItems($id);
         $this->load->view('estimate/edit', $this->page_data);
     }
 

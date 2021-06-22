@@ -24,10 +24,6 @@ class Mycrm extends MY_Controller {
 
 	public function index()
 	{	
-		$user = (object)$this->session->userdata('userAccessModules');
-		echo "<pre>";
-		print_r($user);
-		exit;
 		$this->load->view('mycrm/index', $this->page_data);
 
     }

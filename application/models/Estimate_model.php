@@ -8,10 +8,14 @@ class Estimate_model extends MY_Model
 
     public function getAllByCompany($company_id)
     {
+        $where = array(
+            'view_flag'     => '0',
+            'company_id'    => $company_id
+          );
 
         $this->db->select('*');
         $this->db->from($this->table);
-        $this->db->where('company_id', $company_id);
+        $this->db->where($where);
         $this->db->order_by('id', 'DESC');
 
         $query = $this->db->get();
@@ -40,11 +44,40 @@ class Estimate_model extends MY_Model
         return $query->result();
     }
 
+    public function deleteEstimate($data)
+    {
+        extract($data);
+        $this->db->where('id', $id);
+        $this->db->update('estimates', array('view_flag' => $view_flag));
+        return true;
+    }
+
+    public function getEstimatesItems($id)
+    {
+        // $this->db->select('*');
+		// $this->db->from('work_orders_items');
+		// $this->db->where('work_order_id', $id);
+        // $query = $this->db->get();
+        // $cus = $query->row();
+
+        // $this->db->select('* , work_orders.email AS w_email, work_orders.status AS w_status');
+        // $this->db->from('work_orders');
+        // $this->db->join('acs_profile', 'work_orders.customer_id  = acs_profile.prof_id');
+
+        $this->db->select('*, estimates_items.cost as iCost, estimates_items.tax as itax, estimates_items.total as iTotal');
+		$this->db->from('estimates_items');
+        $this->db->join('items', 'estimates_items.items_id  = items.id');
+        $this->db->where('estimates_id', $id);
+        $query2 = $this->db->get();
+        return $query2->result();
+    }
+
     public function getAllEstimates()
     {
 
         $this->db->select('*');
         $this->db->from($this->table);
+        $this->db->where('view_flag', '0');
         $query = $this->db->get();
         return $query->result();
     }

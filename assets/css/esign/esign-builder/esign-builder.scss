@@ -447,6 +447,12 @@
     display: flex;
     align-items: center;
     justify-content: center;
+
+    &__check {
+      position: absolute;
+      color: #333;
+      display: none;
+    }
   }
 
   .ui-resizable-handle {
@@ -479,8 +485,8 @@
       display: block;
     }
 
-    .esignBuilder__fieldCheckbox:empty,
-    .esignBuilder__fieldRadio:empty {
+    .subData--isSubCheckbox,
+    .esignBuilder__fieldRadio {
       border: inherit;
     }
   }
@@ -543,5 +549,11 @@
 
   .esignBuilder__docPreview {
     min-height: var(--size);
+  }
+}
+
+.esignBuilder__fieldCheckbox--checked {
+  .subData__check {
+    display: block;
   }
 }

@@ -748,7 +748,7 @@ class Users extends MY_Controller {
 	public function index()
 
 	{	
-
+		$this->hasAccessModule(63);
 		//ifPermissions('users_list');
 		$this->load->helper(array('form', 'url', 'hashids_helper'));
 

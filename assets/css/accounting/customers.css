@@ -261,6 +261,7 @@
         height: 100vh;
         top: 0;
         color: #333333;
+        display: none;
     }
     
     div#customer_receive_payment_modal .customer_receive_payment_modal_content {
@@ -297,7 +298,7 @@
         bottom: 0;
         height: 100vh;
         padding-top: 66px;
-        padding-bottom: 66px;
+        padding-bottom: 50px;
     }
     
     div#customer_receive_payment_modal .customer_receive_payment_modal_content .customer_receive_payment_modal_body .payment-field-part {
@@ -379,6 +380,7 @@
         padding-bottom: 20px;
         box-shadow: 3px 6px 20px #adb1b4;
         top: 50px;
+        display: none;
     }
     
     #receive_payment_form .form-group .filter-panel .filter-panel-anchor {
@@ -480,10 +482,29 @@
         box-shadow: none;
         border-right: none;
         font-size: 13px;
-        border-radius: 28px;
+        border-radius: 28px 0 0 28px;
         padding: 5px 15px;
         height: auto;
         border: solid 1px #2CA01C;
+        margin-right: -5px;
+    }
+    
+    div#customer_receive_payment_modal .customer_receive_payment_modal_content .customer_receive_payment_modal_footer .btn-save-dropdown {
+        background-image: none;
+        background-color: #2CA01C;
+        color: #FFFFFF;
+        box-shadow: none;
+        border-right: none;
+        font-size: 13px;
+        border-radius: 0 28px 28px 0;
+        padding: 5px 15px;
+        height: auto;
+        border: solid 1px #2CA01C;
+    }
+    
+    div#customer_receive_payment_modal .customer_receive_payment_modal_content .customer_receive_payment_modal_footer .btn-save-dropdown:hover,
+    div#customer_receive_payment_modal .customer_receive_payment_modal_content .customer_receive_payment_modal_footer .btn-save-new :hover {
+        background-color: #108000;
     }
     
     div#customer_receive_payment_modal .customer_receive_payment_modal_content .customer_receive_payment_modal_footer .btn-save-new:hover {
@@ -495,14 +516,15 @@
         position: absolute;
         z-index: 1;
         right: 0;
-        top: -76px;
+        top: -80px;
         background: #fff;
         font-size: 12px;
         width: 180px;
         text-align: left;
         border: solid 1px #BABEC5;
         border-radius: 3px;
-        box-shadow: 3px 6px 20px #000;
+        box-shadow: 3px 6px 20px #282929;
+        display: none;
     }
     
     div#customer_receive_payment_modal .customer_receive_payment_modal_content .sub-option ul li {
@@ -596,7 +618,7 @@
         font-size: 13px;
     }
     
-    div#customer_receive_payment_modal .customer_receive_payment_modal_content #one_customers_table td input {
+    div#customer_receive_payment_modal .customer_receive_payment_modal_content #customer_invoice_table td input {
         width: 130px;
         float: right;
     }

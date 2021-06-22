@@ -35,6 +35,17 @@
                                                     </div>
                                                 </div>
                                             </div>
+                                            <div class="row">
+                                                <div class="col-md-2">
+                                                    <div class="form-group">
+                                                        <label for="status">Purchase Order status</label>
+                                                        <select name="status" id="status" class="form-control">
+                                                            <option value="open">Open</option>
+                                                            <option value="closed">Closed</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                         <div class="col-md-4">
                                             <h6 class="text-right">AMOUNT</h6>
@@ -71,6 +82,12 @@
                                             <div class="form-group">
                                                 <label for="ship_via">Ship via</label>
                                                 <input type="text" class="form-control" name="ship_via" id="ship_via">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2 offset-md-4">
+                                            <div class="form-group">
+                                                <label for="permit_number">Permit no.</label>
+                                                <input type="number" class="form-control" name="permit_number" id="permit_number">
                                             </div>
                                         </div>
                                         <div class="col-md-8">

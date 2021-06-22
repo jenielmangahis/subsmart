@@ -9,7 +9,7 @@ class Events extends MY_Controller
     {
         parent::__construct();
         $this->checkLogin();
-        
+        $this->hasAccessModule(4);
         //$this->load->library('paypal_lib');
         $this->load->model('Event_model', 'event_model');
         //$this->load->model('Invoice_model', 'invoice_model');
@@ -26,12 +26,6 @@ class Events extends MY_Controller
     }
 
     public function index() {
-        $is_allowed = true; //$this->isAllowedModuleAccess(15);
-        if( !$is_allowed ){
-            $this->page_data['module'] = 'job';
-            echo $this->load->view('no_access_module', $this->page_data, true);
-            die();
-        }
         $this->page_data['events'] = $this->event_model->get_all_events();
         $this->page_data['title'] = 'Events';
         $this->load->view('events/list', $this->page_data);
