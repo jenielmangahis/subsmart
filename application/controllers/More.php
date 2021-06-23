@@ -13,6 +13,7 @@ class More extends MY_Controller {
 
 		parent::__construct();
 		$this->checkLogin();
+		$this->hasAccessModule(65); 
 		$this->page_data['page']->title = 'More ';
 		$this->page_data['page']->menu = 'more';
 		$this->load->model('NsmartUpgrades_model');

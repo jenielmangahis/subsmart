@@ -7,6 +7,7 @@ class Tools extends MY_Controller {
     public function __construct() {
         parent::__construct();
         $this->checkLogin();
+        $this->hasAccessModule(53);
         $this->load->model('ApiGoogleContact_model', 'api_gc');
         $this->load->model('UserDetails_model', 'user_details');
         $this->load->config('api_credentials');        
