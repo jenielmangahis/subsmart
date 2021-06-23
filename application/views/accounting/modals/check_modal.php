@@ -87,13 +87,17 @@
                                         </div>
                                         <div class="col-md-2"></div>
                                         <div class="col-md-2">
-                                            <div class="form-group">
+                                            <div class="form-group" style="margin: 0 !important">
                                                 <label for="check_no">Check no.</label>
                                                 <input type="text" name="check_no" id="check_no" class="form-control">
                                                 <div class="form-check">
                                                     <input type="checkbox" name="print_later" id="print_later" class="form-check-input">
                                                     <label for="print_later" class="form-check-label">Print later</label>
                                                 </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="permit_number">Permit no.</label>
+                                                <input type="number" class="form-control" name="permit_number" id="permit_number"> 
                                             </div>
                                         </div>
                                         <div class="col-md-6">

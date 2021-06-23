@@ -1799,6 +1799,15 @@ $(function() {
             $(this).trigger('change');
         });
     });
+
+    $(document).on('change', '#expenseModal #payee', function() {
+        var split = $(this).val().split('-');
+        if(split[0] === 'vendor') {
+            $.get('/accounting/get-linkable-transactions/expense/'+split[1], function(res) {
+                console.log(res);
+            });
+        }
+    });
 });
 
 const convertToDecimal = (el) => {

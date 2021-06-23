@@ -793,4 +793,31 @@ class Expenses_model extends MY_Model
         $query = $this->db->get('accounting_bill_payments');
         return $query->result();
     }
+
+    public function get_vendor_open_purchase_orders($vendorId)
+    {
+        $this->db->where('company_id', logged('company_id'));
+        $this->db->where('vendor_id', $vendorId);
+        $this->db->order_by('purchase_order_date', 'desc');
+        $query = $this->db->get('accounting_purchase_order');
+        return $query->result();
+    }
+
+    public function get_vendor_open_bills($vendorId)
+    {
+        $this->db->where('company_id', logged('company_id'));
+        $this->db->where('vendor_id', $vendorId);
+        $this->db->order_by('due_date', 'desc');
+        $query = $this->db->get('accounting_bill');
+        return $query->result();
+    }
+
+    public function get_vendor_unapplied_vendor_credits($vendorId)
+    {
+        $this->db->where('company_id', logged('company_id'));
+        $this->db->where('vendor_id', $vendorId);
+        $this->db->order_by('payment_date', 'desc');
+        $query = $this->db->get('accounting_vendor_credit');
+        return $query->result();
+    }
 }

@@ -48,3 +48,9 @@ $(document).on('.section-above-table .search-holder input.search-field', 'input'
 $(".section-above-table .search-holder input").focusout(function() {
     $(".section-above-table .search-holder ul.dropdown-menu").removeClass("show");
 });
+$(".section-above-table .search-field input[name='filter_customers_table']").on("keyup", function() {
+    var value = $(this).val().toLowerCase();
+    $("#customers_table tbody tr").filter(function() {
+        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+    });
+});

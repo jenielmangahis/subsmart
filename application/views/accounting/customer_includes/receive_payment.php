@@ -1,16 +1,17 @@
 <div id="customer_receive_payment_modal">
     <div class="customer_receive_payment_modal_content">
-        <div class="customer_receive_payment_modal_header">
-            <div class="tittle">
-                <i class="fa fa-history" aria-hidden="true"></i> Receive Payment
+        <form action="" id="receive_payment_form">
+            <div class="customer_receive_payment_modal_header">
+                <div class="tittle">
+                    <i class="fa fa-history" aria-hidden="true"></i> Receive Payment
+                </div>
+                <div class="close-btn">
+                    <img src="<?=base_url('assets/img/accounting/customers/close.png')?>"
+                        alt="">
+                </div>
             </div>
-            <div class="close-btn">
-                <img src="<?=base_url('assets/img/accounting/customers/close.png')?>"
-                    alt="">
-            </div>
-        </div>
-        <div class="customer_receive_payment_modal_body overflow-auto">
-            <form action="" id="receive_payment_form">
+            <div class="customer_receive_payment_modal_body overflow-auto">
+
                 <div class="payment-field-part">
                     <div class="row no-margin">
                         <div class="col-md-6 no-padding">
@@ -18,7 +19,7 @@
                                 <div class="col-md-5 no-padding">
                                     <div class="form-group">
                                         <div class="label">Customer</div>
-                                        <select class="form-control" name="customer_id">
+                                        <select class="form-control required" name="customer_id" required>
                                             <option></option>
                                             <?php foreach ($customers as $cus) {
     echo '<option value="'.$cus->prof_id.'">'.$cus->first_name .' '.  $cus->middle_name .' '. $cus->last_name.'</option>';
@@ -54,7 +55,7 @@
                                 <div class="col-md-4 no-padding">
                                     <div class="form-group" style="margin-bottom: 0!important;">
                                         <div class="label">Payment date</div>
-                                        <input type="text" class="datepicker" name="payment_date">
+                                        <input type="text" class="datepicker required" name="payment_date" required>
                                     </div>
                                 </div>
                             </div>
@@ -66,8 +67,8 @@
                                 <div class="col-md-4 no-padding">
                                     <div class="form-group" style="margin-bottom: 5px!important;">
                                         <div class="label">Payment method</div>
-                                        <select class="form-control" name="">
-                                            <option disabled selected>Choose a payment method</option>
+                                        <select class="form-control required" name="payment_method" required>
+                                            <option value="" disabled selected>Choose a payment method</option>
                                             <option value="4822">Add new</option>
                                         </select>
                                     </div>
@@ -75,16 +76,17 @@
                                 <div class="col-md-4 no-padding">
                                     <div class="form-group" style="margin-bottom: 5px!important;">
                                         <div class="label">Reference no.</div>
-                                        <input type="text" class="" name="payment_date">
+                                        <input type="text" class="required" name="ref_no" required>
                                     </div>
                                 </div>
                                 <div class="col-md-4 no-padding">
                                     <div class="form-group" style="margin-bottom: 5px!important;">
-                                        <div class="label">Deposit to</div><select class="form-control" name="">
-                                            <option></option>
-                                            <option value="4822">Cash on hand</option>
-                                            <option value="4823">Cash</option>
-                                            <option value="4823">Credit</option>
+                                        <div class="label">Deposit to</div><select class="form-control required"
+                                            name="deposite_to" required>
+                                            <option value=""></option>
+                                            <option value="Cash on Hand">Cash on hand</option>
+                                            <option value="Cash">Cash</option>
+                                            <option value="Credit">Credit</option>
                                         </select>
                                     </div>
                                 </div>
@@ -101,7 +103,7 @@
                                 <div class="col-md-4 no-padding">
                                     <div class="form-group" style="margin-bottom: 5px!important;">
                                         <div class="label text-right">Amount received</div>
-                                        <input type="text" class="text-right" name="amount_received">
+                                        <input type="text" class="text-right required" name="amount_received" required>
                                     </div>
                                 </div>
                             </div>
@@ -133,16 +135,18 @@
                                                     <div class="date-filter">
                                                         <div class="date-from">
                                                             <div class="label">Invoice from</div>
-                                                            <input type="text" class="datepicker" name="filter_from">
+                                                            <input type="text" class="datepicker"
+                                                                name="filter_date_from">
                                                         </div>
                                                         <div class="date-to">
                                                             <div class="label">To</div>
-                                                            <input type="text" class="datepicker" name="filter_to">
+                                                            <input type="text" class="datepicker" name="filter_date_to">
                                                         </div>
                                                     </div>
 
                                                     <div class="checkbox-filter">
-                                                        <input type="checkbox" name="overdue"> Overdue invoices only
+                                                        <input type="checkbox" name="filter_overdue"> Overdue invoices
+                                                        only
                                                     </div>
                                                     <div class="buttons">
                                                         <button href=""
@@ -169,7 +173,9 @@
                             <table id="customer_invoice_table" class="table table-striped table-bordered w-100">
                                 <thead>
                                     <tr>
-                                        <th class="center"><input type="checkbox" id="checkbox-all-action"></th>
+                                        <th class="center">
+                                            <input type="checkbox" name="checkbox-all-action" id="checkbox-all-action">
+                                        </th>
                                         <th>DESCRIPTION</th>
                                         <th>DUE DATE</th>
                                         <th class="text-right">ORIGINAL AMOUNT</th>
@@ -273,33 +279,33 @@
                         </div>
                     </div>
                 </div>
-            </form>
-        </div>
-        <div class="customer_receive_payment_modal_footer">
-            <div class="row no-margin">
-                <div class="col-md-4 no-padding">
-                    <button href="#" class="left-btn">Cancel</button>
-                    <button href="#" class="left-btn">Clear</button>
-                </div>
-                <div class="col-md-4 no-padding text-center">
-                    <a href="#" class="btn-print">Print</a>
-                </div>
-                <div class="col-md-4 no-padding text-right">
-                    <div class="right-option">
-                        <div class="sub-option">
-                            <ul>
-                                <li><a href="">Save and close</a></li>
-                                <li><a href="">Save and send</a></li>
-                            </ul>
-                        </div>
-                        <button href="#" class="btn-save-new">Save and new</button>
-                        <button href="#" class="btn-save-dropdown">
-                            <i class="fa fa-angle-down" aria-hidden="true"></i>
-                        </button>
+            </div>
+            <div class="customer_receive_payment_modal_footer">
+                <div class="row no-margin">
+                    <div class="col-md-4 no-padding">
+                        <button href="#" class="left-btn close-btn">Cancel</button>
+                        <button href="#" class="left-btn clear-btn">Clear</button>
+                    </div>
+                    <div class="col-md-4 no-padding text-center">
+                        <a href="#" class="btn-print">Print</a>
+                    </div>
+                    <div class="col-md-4 no-padding text-right">
+                        <div class="right-option">
+                            <div class="sub-option">
+                                <ul>
+                                    <li><button type="submit" data-submit-type="save-close">Save and close</button></li>
+                                    <li><button type="submit" data-submit-type="save-send">Save and send</button></li>
+                                </ul>
+                            </div>
+                            <button type="submit" class="btn-save-new" data-submit-type="save-new">Save and new</button>
+                            <button href="#" class="btn-save-dropdown">
+                                <i class="fa fa-angle-down" aria-hidden="true"></i>
+                            </button>
 
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </form>
     </div>
 </div>
