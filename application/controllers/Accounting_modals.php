@@ -2563,6 +2563,7 @@ class Accounting_modals extends MY_Controller {
                 'payment_date' => date("Y-m-d", strtotime($data['payment_date'])),
                 'payment_method_id' => $data['payment_method'],
                 'ref_no' => $data['ref_no'] === '' ? null : $data['ref_no'],
+                'permit_no' => $data['permit_number'] === "" ? null : $data['permit_number'],
                 'tags' => $data['tags'] !== null ? json_encode($data['tags']) : null,
                 'memo' => $data['memo'],
                 'attachments' => $data['attachments'] !== null ? json_encode($data['attachments']) : null,
@@ -2718,6 +2719,7 @@ class Accounting_modals extends MY_Controller {
                 'mailing_address' => $data['mailing_address'],
                 'payment_date' => date("Y-m-d", strtotime($data['payment_date'])),
                 'check_no' => $data['check_no'] === 'To print' ? null : $data['check_no'],
+                'permit_no' => $data['permit_number'] === "" ? null : $data['permit_number'],
                 'tags' => $data['tags'] !== null ? json_encode($data['tags']) : null,
                 'memo' => $data['memo'],
                 'attachments' => $data['attachments'] !== null ? json_encode($data['attachments']) : null,
@@ -2873,6 +2875,7 @@ class Accounting_modals extends MY_Controller {
                 'bill_date' => date("Y-m-d", strtotime($data['bill_date'])),
                 'due_date' => date("Y-m-d", strtotime($data['due_date'])),
                 'bill_no' => $data['bill_no'] !== "" ? $data['bill_no'] : null,
+                'permit_no' => $data['permit_number'] === "" ? null : $data['permit_number'],
                 'tags' => $data['tags'] !== null ? json_encode($data['tags']) : null,
                 'memo' => $data['memo'],
                 'attachments' => $data['attachments'] !== null ? json_encode($data['attachments']) : null,
@@ -3294,6 +3297,7 @@ class Accounting_modals extends MY_Controller {
                 'mailing_address' => $data['mailing_address'],
                 'payment_date' => date("Y-m-d", strtotime($data['payment_date'])),
                 'ref_no' => $data['ref_no'] === '' ? null : $data['ref_no'],
+                'permit_no' => $data['permit_number'] === "" ? null : $data['permit_number'],
                 'tags' => $data['tags'] !== null ? json_encode($data['tags']) : null,
                 'memo' => $data['memo'],
                 'attachments' => $data['attachments'] !== null ? json_encode($data['attachments']) : null,
@@ -3624,6 +3628,7 @@ class Accounting_modals extends MY_Controller {
                 'bank_credit_account_id' => $data['bank_credit_account'],
                 'payment_date' => date("Y-m-d", strtotime($data['payment_date'])),
                 'ref_no' => $data['ref_no'] === "" ? null : $data['ref_no'],
+                'permit_no' => $data['permit_number'] === "" ? null : $data['permit_number'],
                 'tags' => $data['tags'] !== null ? json_encode($data['tags']) : null,
                 'memo' => $data['memo'],
                 'attachments' => $data['attachments'] !== null ? json_encode($data['attachments']) : null,
@@ -3747,5 +3752,57 @@ class Accounting_modals extends MY_Controller {
         }
 
         return $return;
+    }
+
+    public function get_linkable_transactions($transactionType, $vendorId)
+    {
+        $this->load->model('expenses_model');
+        switch($transactionType) {
+            case 'expense' :
+                $purchaseOrders = $this->expenses_model->get_vendor_open_purchase_orders($vendorId);
+                $bills = $this->expenses_model->get_vendor_open_bills($vendorId);
+                $vendorCredits = $this->expenses_model->get_vendor_unapplied_vendor_credits($vendorId);
+            break;
+        }
+
+        $transactions = [];
+
+        if(isset($purchaseOrders) && count($purchaseOrders) > 0) {
+            foreach($purchaseOrders as $purchaseOrder) {
+                $transactions[] = [
+                    'type' => 'Purchase Order',
+                    'id' => $purchaseOrder->id,
+                    'date' => date("F j", strtotime($purchaseOrder->purchase_order_date)),
+                    'total' => '$'.number_format(floatval($purchaseOrder->total_amount), 2, '.', ','),
+                    'balance' => '$'.number_format(floatval($purchaseOrder->total_amount), 2, '.', ',')
+                ];
+            }
+        }
+
+        if(isset($bills) && count($bills) > 0) {
+            foreach($bills as $bill) {
+                $transactions[] = [
+                    'type' => 'Bill',
+                    'id' => $bill->id,
+                    'date' => date("F j", strtotime($bill->due_date)),
+                    'total' => '$'.number_format(floatval($bill->total_amount), 2, '.', ','),
+                    'balance' => '$'.number_format(floatval($bill->remaining_balance), 2, '.', ',')
+                ];
+            }
+        }
+
+        if(isset($vendorCredits) && count($vendorCredits) > 0) {
+            foreach($vendorCredits as $vendorCredit) {
+                $transactions[] = [
+                    'type' => 'Vendor Credit',
+                    'id' => $vendorCredit->id,
+                    'date' => date("F j", strtotime($vendorCredit->payment_date)),
+                    'total' => '$'.number_format(floatval($vendorCredit->total_amount), 2, '.', ','),
+                    'balance' => '$'.number_format(floatval($vendorCredit->remaining_balance), 2, '.', ',')
+                ];
+            }
+        }
+
+        echo json_encode($transactions);
     }
 }

@@ -123,6 +123,7 @@ function setitem2(obj, title, price, discount, itemid) {
   jQuery(obj).parent().parent().parent().find(".price2").val(price);
   jQuery(obj).parent().parent().parent().find(".discount2").val(discount);
   jQuery(obj).parent().parent().parent().find(".itemid").val(itemid);
+  jQuery(obj).parent().parent().parent().find(".itemid2").val(itemid);
   var counter = jQuery(obj)
     .parent()
     .parent()
@@ -2152,12 +2153,14 @@ function calculation2(counter) {
   var eqpt_cost = 0;
   var cnt = $("#count2").val();
   var total_discount = 0;
+  var total_cost = 0;
   for (var p = 0; p <= cnt; p++) {
     var prc = $("#price2_" + p).val();
     var quantity = $("#quantity2_" + p).val();
     var discount = $("#discount2_" + p).val();
     // var discount= $('#discount_' + p).val();
     // eqpt_cost += parseFloat(prc) - parseFloat(discount);
+    total_cost += parseFloat(prc);
     eqpt_cost += parseFloat(prc) * parseFloat(quantity);
     total_discount += parseFloat(discount);
   }
@@ -2168,6 +2171,7 @@ function calculation2(counter) {
 
   eqpt_cost = parseFloat(eqpt_cost).toFixed(2);
   total_discount = parseFloat(total_discount).toFixed(2);
+  stotal_cost = parseFloat(total_cost).toFixed(2);
   // var test = 5;
 
   var subtotal = 0;
@@ -2190,7 +2194,7 @@ function calculation2(counter) {
   $("#eqpt_cost").val(eqpt_cost);
   $("#total_discount").val(total_discount);
   $("#span_sub_total_0").text(total_discount);
-  $("#span_sub_total_invoice2").text(subtotal.toFixed(2));
+  $("#span_sub_total_invoice2").text(stotal_cost);
   $("#item_total2").val(subtotal.toFixed(2));
   
   var s_total = subtotal.toFixed(2);

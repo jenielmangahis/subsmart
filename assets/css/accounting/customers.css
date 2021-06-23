@@ -533,8 +533,14 @@
         cursor: pointer;
     }
     
+    div#customer_receive_payment_modal .customer_receive_payment_modal_content .sub-option ul li button {
+        height: auto;
+        background: transparent;
+        border: none;
+    }
+    
     div#customer_receive_payment_modal .customer_receive_payment_modal_content .sub-option ul li:hover,
-    div#customer_receive_payment_modal .customer_receive_payment_modal_content .sub-option ul li:hover a {
+    div#customer_receive_payment_modal .customer_receive_payment_modal_content .sub-option ul li:hover button {
         background: #ECEEF1;
         color: #2BA01D;
     }
@@ -621,4 +627,8 @@
     div#customer_receive_payment_modal .customer_receive_payment_modal_content #customer_invoice_table td input {
         width: 130px;
         float: right;
+    }
+    
+    #customer_receive_payment_modal .customer_receive_payment_modal_content .invoicing-part .invoices .filter input.empty {
+        border: solid 1px orangered;
     }

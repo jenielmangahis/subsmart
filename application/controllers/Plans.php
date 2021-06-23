@@ -8,19 +8,13 @@ class Plans extends MY_Controller {
 	{
 		parent::__construct();
 		$this->checkLogin();
+		$this->hasAccessModule(22); 
 		$this->page_data['page']->title = 'Plans Management';
 		$this->page_data['page']->menu = 'Plans';
 	}
 	 
 	public function index()
-	{
- 		$is_allowed = $this->isAllowedModuleAccess(22);
-        if( !$is_allowed ){
-            $this->page_data['module'] = 'plans';
-            echo $this->load->view('no_access_module', $this->page_data, true);
-            die();
-        }
-
+	{ 		
         $role = logged('role');
         if( $role == 1 || $role == 2 ){
         	$this->page_data['plans'] = $this->plans_model->getByWhere([]);

@@ -163,7 +163,8 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 						</div>
 						<div class="search-holder">
 							<div class="search-field">
-								<input type="text" class="search" placeholder="Find a customer or company">
+								<input type="text" class="search" name="filter_customers_table"
+									placeholder="Find a customer or company">
 								<i class="fa fa-search" aria-hidden="true"></i>
 							</div>
 							<div class="search-result">
@@ -194,12 +195,19 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 										</tr> -->
 							<?php $counter =0;
                             foreach ($customers as $cus) :
-                                $receive_payment=$this->accounting_invoices_model->getCustomers_receive_payment($cus->prof_id);
-                                $amount =0.00;
+                                $invoices = $this->accounting_invoices_model->get_invoices_by_customer_id($cus->prof_id);
+                                $receivable_payment = 0;
+                                $total_amount_received =0;
+                                foreach ($invoices as $inv) {
+                                    $receivable_payment+=$inv->grand_total;
+                                    $receive_payment=$this->accounting_invoices_model->get_payements_by_invoice($inv->invoice_number);
+                                    foreach ($receive_payment as $payment) {
+                                        $total_amount_received += $payment->amount;
+                                    }
+                                }
                                 $first_option ="Create invoice";
                                 $first_option_class="customer_craete_invoice";
-                                foreach ($receive_payment as $payment) {
-                                    $amount += $payment->amount;
+                                if (($receivable_payment - $total_amount_received) > 0) {
                                     $first_option = "Receive rayment";
                                     $first_option_class="customer_receive_payment_btn";
                                 }
@@ -212,7 +220,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 								</td>
 								<td><?php echo $cus->phone_h; ?>
 								</td>
-								<td class="text-right"><?php echo "$".number_format($amount, 2);?>
+								<td class="text-right"><?php echo "$".number_format(($receivable_payment - $total_amount_received), 2);?>
 								</td>
 								<td>
 									<div class="dropdown dropdown-btn text-right">

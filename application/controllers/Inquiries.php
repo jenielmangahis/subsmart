@@ -149,7 +149,7 @@ class Inquiries extends MY_Controller {
     }
 
     public function online_lead() {
-        $this->hasAccessModule(14);
+        $this->hasAccessModule(68);
         $company_id = logged('company_id');
         $this->page_data['lead_forms'] = $this->inquiry_model->getAllLeadFormByCompany($company_id);
         $this->page_data['customize_lead_forms'] = $this->inquiry_model->getAllCustomizeLeadFormByCompany($company_id, 'lead_form');
@@ -158,6 +158,7 @@ class Inquiries extends MY_Controller {
     }
 
     public function video_estimate() {
+        $this->hasAccessModule(76); 
         $this->load->view('inquiry/video_estimate', $this->page_data);
     }
 

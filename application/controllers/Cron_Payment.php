@@ -412,8 +412,9 @@ class Cron_Payment extends MY_Controller {
                     $subscription_details['total_amount'] = $d->transaction_amount;
                     $subscription_details['method'] = 'CC';
                     $subscription_details['transaction_type'] = 'Recurring';
-                    $subscription_details['frequency'] = 'Every '.$d->frequency.' Month(s)';
-                    $subscription_details['num_frequency'] = $d->frequency;
+                    //$subscription_details['frequency'] = 'Every '.$d->frequency.' Month(s)';
+                    $subscription_details['frequency'] = $d->frequency;
+                    //$subscription_details['num_frequency'] = $d->frequency;
                     $subscription_details['notes'] = 'Payment for subscription ' . $d->transaction_category . ' for the month of ' . date("M/Y");
                     $subscription_details['status'] = 'Approved';
                     $this->general->add_($subscription_details, 'acs_subscriptions');

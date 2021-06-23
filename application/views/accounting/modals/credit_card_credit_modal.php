@@ -81,9 +81,13 @@
                                         </div>
                                         <div class="col-md-3"></div>
                                         <div class="col-md-2">
-                                            <div class="form-group">
+                                            <div class="form-group" style="margin: 0 !important">
                                                 <label for="ref_no">Ref no.</label>
                                                 <input type="text" name="ref_no" id="ref_no" class="form-control">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="permit_number">Permit no.</label>
+                                                <input type="number" class="form-control" name="permit_number" id="permit_number"> 
                                             </div>
                                         </div>
                                         <div class="col-md-8">

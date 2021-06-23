@@ -229,7 +229,7 @@ class Customer extends MY_Controller
                 $subscription_details['method'] = $input['method'];
                 $subscription_details['transaction_type'] = 'Pre-Auth and Capture';
                 $subscription_details['frequency'] = $input['frequency'];
-                $subscription_details['num_frequency'] = $input['num_frequency'];
+                //$subscription_details['num_frequency'] = $input['num_frequency'];
                 $subscription_details['notes'] = $input['notes'];
                 $subscription_details['status'] = 'Approved';
 
@@ -2539,6 +2539,7 @@ class Customer extends MY_Controller
     }
 
     public function ticketslist(){
+        $this->hasAccessModule(39);
         // $user_id = logged('id');
         // $this->page_data['leads'] = $this->customer_ad_model->get_leads_data();
         $this->load->view('tickets/list', $this->page_data);
@@ -2546,6 +2547,7 @@ class Customer extends MY_Controller
 
     public function addTicket()
     {
+        $this->hasAccessModule(39);
         $this->load->model('AcsProfile_model');
 
         $query_autoincrment = $this->db->query("SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE table_name = 'customer_groups'");

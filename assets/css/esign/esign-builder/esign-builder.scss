@@ -485,8 +485,7 @@
       display: block;
     }
 
-    .subData--isSubCheckbox,
-    .esignBuilder__fieldRadio {
+    .subData--isSubCheckbox {
       border: inherit;
     }
   }
@@ -552,7 +551,8 @@
   }
 }
 
-.esignBuilder__fieldCheckbox--checked {
+.esignBuilder__fieldCheckbox--checked,
+.esignBuilder__fieldRadio--checked {
   .subData__check {
     display: block;
   }

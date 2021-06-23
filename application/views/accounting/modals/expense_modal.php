@@ -11,7 +11,7 @@
                 </div>
                 <div class="modal-body">
                     <div class="row">
-                        <div class="col-xl-12">
+                        <div class="col">
                             <div class="card p-0 m-0">
                                 <div class="card-body" style="padding-bottom: 1.25rem">
                                     <div class="row">
@@ -98,6 +98,10 @@
                                             <div class="form-group">
                                                 <label for="ref_no">Ref no.</label>
                                                 <input type="text" name="ref_no" id="ref_no" class="form-control">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="permit_number">Permit no.</label>
+                                                <input type="number" class="form-control" name="permit_number" id="permit_number"> 
                                             </div>
                                         </div>
                                         <div class="col-md-8">

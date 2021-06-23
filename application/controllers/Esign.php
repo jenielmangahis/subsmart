@@ -9,6 +9,7 @@ class Esign extends MY_Controller {
     {
         parent::__construct();
 		$this->checkLogin();
+		$this->hasAccessModule(49);
 		$this->load->model('Esign_model', 'Esign_model');
 		$this->load->model('Activity_model', 'activity');
 		add_css(array(
@@ -694,7 +695,7 @@ SQL;
 		}
 
 		foreach ($payload['recipients'] as $recipient) {
-			['id' => $id, 'name' => $name, 'email' => $email, 'color' => $color, 'role' => $role] = $recipient;
+			$recipient = ['id' => $id, 'name' => $name, 'email' => $email, 'color' => $color, 'role' => $role];
 
 			$this->db->where('id', $id);
 			$this->db->where('docfile_id', $docId);
@@ -799,7 +800,7 @@ SQL;
             return;
         }
 
-		['subject' => $subject, 'message' => $message] = $this->input->post();
+		//['subject' => $subject, 'message' => $message] = $this->input->post();
 
 		$this->db->insert('user_docfile', [
 			'name' => $subject,

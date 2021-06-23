@@ -429,7 +429,7 @@ var table = $('#transactions-table').DataTable({
                                 </button>
 
                                 <div class="dropdown-menu" aria-labelledby="statusDropdownButton">
-                                    <a class="dropdown-item" href="#">Copy to bill</a>
+                                    <a class="dropdown-item copy-to-bill" href="#">Copy to bill</a>
                                     <a class="dropdown-item" href="/accounting/expenses/print-transaction/purchase-order/${rowData.id}" target="_blank">Print</a>
                                     <a class="dropdown-item view-edit-purch-order" href="#">View/Edit</a>
                                     <a class="dropdown-item copy-purchase-order" href="#">Copy</a>
@@ -1535,5 +1535,33 @@ $(document).on('click', '#transactions-table .copy-vendor-credit', function(e) {
         initFormFields('vendorCreditModal', data);
 
         $('#vendorCreditModal').modal('show');
+    });
+});
+
+$(document).on('click', '#transactions-table .copy-to-bill', function(e) {
+    e.preventDefault();
+
+    var row = $(this).parent().parent().parent().parent();
+    var data = $('#transactions-table').DataTable().row(row).data();
+    var transactionType = data.type;
+    transactionType = transactionType.replaceAll(' ', '-');
+    transactionType = transactionType.toLowerCase();
+
+    $.get('/accounting/vendors/copy-to-bill/'+data.id, function(res) {
+        if ($('div#modal-container').length > 0) {
+            $('div#modal-container').html(res);
+        } else {
+            $('body').append(`
+                <div id="modal-container"> 
+                    ${res}
+                </div>
+            `);
+        }
+
+        $('#billModal').parent().attr('onsubmit', 'submitModalForm(event, this)');
+
+        initFormFields('billModal', data);
+
+        $('#billModal').modal('show');
     });
 });

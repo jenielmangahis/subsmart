@@ -240,4 +240,23 @@ class Accounting_invoices_model extends MY_Model
         $query = $this->db->get();
         return $query->result();
     }
+    public function get_filtered_invoices_by_customer_id($filter_date_from, $filter_date_to, $filter_overdue, $customer_id)
+    {
+        $this->db->select('*');
+
+        $this->db->from('invoices');
+        
+        $this->db->where('customer_id', $customer_id);
+        if ($filter_date_from != "") {
+            $this->db->where('due_date >=', date("Y-m-d", strtotime($filter_date_from)));
+        }
+        if ($filter_date_to) {
+            $this->db->where('due_date <=', date("Y-m-d", strtotime($filter_date_to)));
+        }
+        if ($filter_overdue == "true") {
+            $this->db->where('due_date >', date("Y-m-d"));
+        }
+        $query = $this->db->get();
+        return $query->result();
+    }
 }

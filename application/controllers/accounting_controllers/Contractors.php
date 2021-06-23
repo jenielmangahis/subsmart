@@ -57,6 +57,8 @@ class Contractors extends MY_Controller {
 
     public function index()
     {
+        $this->hasAccessModule(77); 
+        
         add_footer_js(array(
             "assets/js/accounting/payroll/contractors.js"
         ));

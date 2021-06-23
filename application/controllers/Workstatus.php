@@ -8,6 +8,7 @@ class Workstatus extends MY_Controller {
 	{
 		parent::__construct();
 		$this->checkLogin();
+		$this->hasAccessModule(30); 
 		$cid  = logged('id');
 		$profiledata = $this->business_model->getByWhere(array('user_id'=>$cid));
 		$this->page_data['profiledata'] = ($profiledata) ? $profiledata[0] : null;

@@ -3362,7 +3362,8 @@ function userTypes(){
         3 => 'Team Leader',
         4 => 'Standard User',
         5 => 'Field Sales',
-        6 => 'Field Tech'
+        6 => 'Field Tech',
+        7 => 'Admin'
     ];
 
     return $types;

@@ -285,7 +285,7 @@ input:checked + .slider:before {
             <div class="page-title-box">
                 <div class="row align-items-center">
                     <div class="col-sm-6">
-                        <h4 style="font-family: Sarabun, sans-serif">Submit Standard Estimate</h4>
+                        <h4 style="font-family: Sarabun, sans-serif">Update Estimate</h4>
                         <!-- <ol class="breadcrumb">
                             <li class="breadcrumb-item active">Submit your estimate. Include a breakdown of all costs
                                 for this job.
