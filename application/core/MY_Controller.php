@@ -138,7 +138,8 @@ class MY_Controller extends CI_Controller {
 	public function hasAccessModule($module_id){
 		// check if customer is allowed to view this page
 		$company_id = logged('company_id');
-		if( $company_id != 1 && $company_id != 31 ){
+		//if( $company_id != 1 && $company_id != 31 ){
+		if( $company_id != 1 ){			
 			$ci = &get_instance();
 	        $ci->load->library('session');
 

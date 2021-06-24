@@ -97,7 +97,7 @@ class Login extends CI_Controller
 
                     $industryType = $this->IndustryType_model->getById($client->industry_type_id);
                     if ($industryType) {
-                        $industryModules = $this->IndustryTemplateModules_model->getAllByTemplateId($industryType->id);
+                        $industryModules = $this->IndustryTemplateModules_model->getAllByTemplateId($industryType->industry_template_id);
                         foreach ($industryModules as $im) {
                             $access_modules[] = $im->industry_module_id;
                         }

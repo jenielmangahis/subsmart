@@ -26,19 +26,21 @@ class More extends MY_Controller {
 
 	public function upgrades(){
 
-		$is_allowed = $this->isAllowedModuleAccess(66);
+		/*$is_allowed = $this->isAllowedModuleAccess(66);
         if( !$is_allowed ){
             $this->page_data['module'] = 'plan_builder';
             echo $this->load->view('no_access_module', $this->page_data, true);
             die();
-        }
+        }*/
 
 		$user = (object)$this->session->userdata('logged');
 		$cid  = logged('company_id');
 
+		$companyAddons  = $this->SubscriberNsmartUpgrade_model->getAllByClientId($cid);
 		$NsmartUpgrades = $this->NsmartUpgrades_model->getAll();
 		$profiledata = $this->business_model->getByWhere(array('id'=>$cid));
 		$this->page_data['NsmartUpgrades'] = $NsmartUpgrades;
+		$this->page_data['companyAddons']  = $companyAddons;
 		/*$this->page_data['userid'] = $user->id;
 		$this->page_data['profiledata'] = $profiledata[0];*/
 

@@ -134,6 +134,7 @@ class Mycrm extends MY_Controller {
 		if( $plan ){
 			$amount   = $plan->price;
 			$company  = $this->Business_model->getByCompanyId($company_id);
+            $client   = $this->Clients_model->getById($company_id);
 			$address  = $company->street . " " . $company->city . " " . $company->state;
 			$zip_code = $company->postal_code;
 			$converge_data = [
@@ -162,6 +163,18 @@ class Mycrm extends MY_Controller {
 	                'num_months_discounted' => 0
             	];
             	$this->Clients_model->update($company_id, $data);
+
+                //Update access modules
+                $industryType = $this->IndustryType_model->getById($client->industry_type_id);
+                if ($industryType) {
+                    $industryModules = $this->IndustryTemplateModules_model->getAllByTemplateId($industryType->id);
+                    foreach ($industryModules as $im) {
+                        $access_modules[] = $im->industry_module_id;
+                    }
+
+                    $this->session->set_userdata('userAccessModules', $access_modules);
+                    $this->session->set_userdata('is_plan_active', 1);
+                }
 
             	//Record payment
                 $data_payment = [
@@ -251,6 +264,18 @@ class Mycrm extends MY_Controller {
 	                'num_months_discounted' => $num_months_discounted
             	];
             	$this->Clients_model->update($company_id, $data);
+
+                //Update access modules
+                $industryType = $this->IndustryType_model->getById($client->industry_type_id);
+                if ($industryType) {
+                    $industryModules = $this->IndustryTemplateModules_model->getAllByTemplateId($industryType->id);
+                    foreach ($industryModules as $im) {
+                        $access_modules[] = $im->industry_module_id;
+                    }
+
+                    $this->session->set_userdata('userAccessModules', $access_modules);
+                    $this->session->set_userdata('is_plan_active', 1);
+                }
 
             	//Record payment
                 $data_payment = [
