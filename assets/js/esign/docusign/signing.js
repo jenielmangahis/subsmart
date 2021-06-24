@@ -169,15 +169,23 @@ function Signing(hash) {
     }
 
     if (["Checkbox", "Radio"].includes(field_name)) {
-      const { subCheckbox = [] } = JSON.parse(field.specs) || {};
+      let { subCheckbox = [], isChecked } = JSON.parse(field.specs) || {};
 
       let { value } = fieldValue || {};
       value = value ? JSON.parse(value) : {};
-      const { isChecked = false } = value;
 
-      const getSubCheckboxValues = () => {
-        return value.subCheckbox ?? [];
-      };
+      let hasRequested = false;
+      const getSubCheckboxes = () => {
+        if (value.subCheckbox && value.subCheckbox.length) {
+          return value.subCheckbox;
+        }
+
+        return hasRequested ? value.subCheckbox : subCheckbox;
+      }
+
+      if (value.hasOwnProperty("isChecked")) {
+        isChecked = value.isChecked;
+      }
 
       const inputType = field_name.toLowerCase();
       const baseClassName =
@@ -211,12 +219,15 @@ function Signing(hash) {
       if (subCheckbox.length) {
         $element.append(
           subCheckbox.map((option) => {
-            const { id, top = 0, left = 0 } = option;
-            const _value = getSubCheckboxValues().find((s) => s.id === id);
-            const isChecked = _value ? _value.isChecked : false;
+            const { id, top = 0, left = 0, } = option;
+            let isChecked = false;
+            if (value.subCheckbox) {
+              const f = value.subCheckbox.find(({ id: _id }) => _id === id) || {};
+              isChecked = Boolean(f.isChecked);
+            }
 
             // prettier-ignore
-            const $currElement = createElementFromHTML( `
+            const $currElement = createElementFromHTML(`
                   <div class="form-check">
                     <span class="form-check-indicator">x</span>
                     <input class="form-check-input" type="${inputType}" id="${id}" ${isChecked ? "checked" : ""}>
@@ -239,23 +250,23 @@ function Signing(hash) {
           const { data } = await storeFieldValue({
             id: fieldId,
             value: JSON.stringify({
-              subCheckbox: getSubCheckboxValues(),
+              subCheckbox: getSubCheckboxes(),
               isChecked: _isChecked,
             }),
           });
 
           value = JSON.parse(data.value);
         } else {
-          const subCheckboxValues = getSubCheckboxValues();
           let newSubCheckbox = [];
+          const subCheckbox = getSubCheckboxes();
 
-          if (subCheckboxValues.find((s) => s.id === id)) {
-            newSubCheckbox = subCheckboxValues.map((s) => {
+          if (subCheckbox.find((s) => s.id === id)) {
+            newSubCheckbox = subCheckbox.map((s) => {
               return s.id !== id ? s : { ...s, isChecked: _isChecked };
             });
           } else {
             newSubCheckbox = [
-              ...subCheckboxValues,
+              ...subCheckbox,
               { id, isChecked: _isChecked },
             ];
           }
@@ -270,6 +281,8 @@ function Signing(hash) {
 
           value = JSON.parse(data.value);
         }
+
+        hasRequested = true;
       });
 
       return $element;

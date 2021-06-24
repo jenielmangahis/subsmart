@@ -3498,6 +3498,7 @@ class Accounting_modals extends MY_Controller {
                 'memo' => $data['memo'],
                 'attachments' => $data['attachments'] !== null ? json_encode($data['attachments']) : null,
                 'total_amount' => $data['total_amount'],
+                'remaining_balance' => $data['status'] === "open" ? $data['total_amount'] : 0.00,
                 'status' => $data['status'] === "open" ? 1 : 2,
                 'created_at' => date("Y-m-d H:i:s"),
                 'updated_at' => date("Y-m-d H:i:s")
@@ -3763,6 +3764,11 @@ class Accounting_modals extends MY_Controller {
                 $bills = $this->expenses_model->get_vendor_open_bills($vendorId);
                 $vendorCredits = $this->expenses_model->get_vendor_unapplied_vendor_credits($vendorId);
             break;
+            case 'check' :
+                $purchaseOrders = $this->expenses_model->get_vendor_open_purchase_orders($vendorId);
+                $bills = $this->expenses_model->get_vendor_open_bills($vendorId);
+                $vendorCredits = $this->expenses_model->get_vendor_unapplied_vendor_credits($vendorId);
+            break;
         }
 
         $transactions = [];
@@ -3772,7 +3778,9 @@ class Accounting_modals extends MY_Controller {
                 $transactions[] = [
                     'type' => 'Purchase Order',
                     'id' => $purchaseOrder->id,
-                    'date' => date("F j", strtotime($purchaseOrder->purchase_order_date)),
+                    'number' => $purchaseOrder->purchase_order_no === null || $purchaseOrder->purchase_order_no === '' ? '' : $purchaseOrder->purchase_order_no,
+                    'date' => date("m/d/Y", strtotime($purchaseOrder->purchase_order_date)),
+                    'formatted_date' => date("F j", strtotime($purchaseOrder->purchase_order_date)),
                     'total' => '$'.number_format(floatval($purchaseOrder->total_amount), 2, '.', ','),
                     'balance' => '$'.number_format(floatval($purchaseOrder->total_amount), 2, '.', ',')
                 ];
@@ -3784,7 +3792,9 @@ class Accounting_modals extends MY_Controller {
                 $transactions[] = [
                     'type' => 'Bill',
                     'id' => $bill->id,
-                    'date' => date("F j", strtotime($bill->due_date)),
+                    'number' => $bill->bill_no === null || $bill->bill_no === '' ? '' : $bill->bill_no,
+                    'date' => date("m/d/Y", strtotime($bill->due_date)),
+                    'formatted_date' => date("F j", strtotime($bill->due_date)),
                     'total' => '$'.number_format(floatval($bill->total_amount), 2, '.', ','),
                     'balance' => '$'.number_format(floatval($bill->remaining_balance), 2, '.', ',')
                 ];
@@ -3796,7 +3806,9 @@ class Accounting_modals extends MY_Controller {
                 $transactions[] = [
                     'type' => 'Vendor Credit',
                     'id' => $vendorCredit->id,
-                    'date' => date("F j", strtotime($vendorCredit->payment_date)),
+                    'number' => $vendorCredit->ref_no === null || $vendorCredit->ref_no === '' ? '' : $vendorCredit->ref_no,
+                    'date' => date("m/d/Y", strtotime($vendorCredit->payment_date)),
+                    'formatted_date' => date("F j", strtotime($vendorCredit->payment_date)),
                     'total' => '$'.number_format(floatval($vendorCredit->total_amount), 2, '.', ','),
                     'balance' => '$'.number_format(floatval($vendorCredit->remaining_balance), 2, '.', ',')
                 ];

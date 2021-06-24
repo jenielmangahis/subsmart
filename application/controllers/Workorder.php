@@ -541,8 +541,9 @@ class Workorder extends MY_Controller
     {
 
         $this->page_data['workorder'] = $this->workorder_model->getById($id);
+        $work =  $this->workorder_model->getById($id);
         
-        $this->page_data['company'] = $this->workorder_model->getCompanyCompanyId($id);
+        $this->page_data['company'] = $this->workorder_model->getCompanyCompanyId($work->company_id);
         $this->page_data['customer'] = $this->workorder_model->getcustomerCompanyId($id);
         $this->page_data['items'] = $this->workorder_model->getItems($id);
 
@@ -1246,6 +1247,7 @@ class Workorder extends MY_Controller
         // $items = $this->workorder_model->getitemsWorkOrder($wo_id);
         $items = $this->workorder_model->getworkorderItems($wo_id);
         $payment = $this->workorder_model->getpayment($wo_id);
+        $business = $this->workorder_model->getbusiness($c_id);
 
         $data = array(
             'workorder'                         => $workorder,
@@ -1321,6 +1323,7 @@ class Workorder extends MY_Controller
             'billing_frequency'                 => $payment->billing_frequency,
 
             'template'                          => '1',
+            'business'                          => '../../'.$business,
             
             // 'source' => $source
         );
@@ -1366,6 +1369,8 @@ class Workorder extends MY_Controller
         // $items = $this->workorder_model->getitemsWorkOrderAlarm($wo_id);
         $items = $this->workorder_model->getworkorderItems($wo_id);
         $payment = $this->workorder_model->getpayment($wo_id);
+        $business = $this->workorder_model->getbusiness($c_id);
+        $business_logo = $business->business_image;
 
         $data = array(
             'workorder'                         => $workorder,
@@ -1442,6 +1447,7 @@ class Workorder extends MY_Controller
             'billing_frequency'                 => $payment->billing_frequency,
 
             'template'                          => '2',
+            'business_logo'                     => '../../'.$business_logo,
         );
 
 
@@ -4981,8 +4987,8 @@ class Workorder extends MY_Controller
                                 Security Number: '.$data->security_number.' <br>
                                 Source: '.$data->source_name.' <br></div>';
 
-        $html .= '<div style="margin-top:12%;"><b>FROM:</b><hr> <br>'.$company->first_name.' '.$company->last_name.'<br>Address: '.$company->business_address.'<br> Phone: '.$company->phone_number.'</div><br><br>';
-        $html .= '<div><b>TO:</b><hr> <br>'.$acs->first_name.' '.$acs->last_name.'<br>'.$acs->business_name.'<br>Address: '.$acs->mail_add.' '.$acs->city.' '.$acs->state.' '.$acs->country.' '.$acs->zip_code.' '.$acs->cross_street.' '.'<br>Email: '.$acs->email.'<br>Phone:'.$acs->phone_h.'<br> Mobile: '.$acs->phone_m.'</div><br><br>';
+        $html .= '<div style="margin-top:12%;"><b>FROM:</b> <br>'.$company->first_name.' '.$company->last_name.'<br>Address: '.$company->business_address.'<br> Phone: '.$company->phone_number.'</div><br><br>';
+        $html .= '<div><b>TO:</b> <br>'.$acs->first_name.' '.$acs->last_name.'<br>'.$acs->business_name.'<br>Address: '.$acs->mail_add.' '.$acs->city.' '.$acs->state.' '.$acs->country.' '.$acs->zip_code.' '.$acs->cross_street.' '.'<br>Email: '.$acs->email.'<br>Phone:'.$acs->phone_h.'<br> Mobile: '.$acs->phone_m.'</div><br><br>';
 
         $html .= '<div><b>ADDITIONAL:</b><hr> <br>'.$data->instructions.'</div><br><br>';
         $html .= '<div><b>TERMS & CONDITIONS:</b><hr> <br>'.$data->terms_and_conditions.'</div><br><br>';
@@ -5066,25 +5072,25 @@ class Workorder extends MY_Controller
         $html .= '<div><b>JOB DESCRIPTION:</b><hr> <br>'.$data->job_description.'</div><br><br>';
         $html .= '<div><b>INSTRUCTIONS:</b><hr> <br>'.$data->instructions.'</div><br><br>';
 
-        $html .= '<div><b>ACCEPTED PAYMENT METHODS:</b><hr>
-                <ul>
-                    <li>Cash</li>
-                    <li>Check</li>
-                    <li>Credit Card</li>
-                    <li>Debit Card</li>
-                    <li>ACH</li>
-                    <li>Venmo</li>
-                    <li>Paypal</li>
-                    <li>Square</li>
-                    <li>Invoicing</li>
-                    <li>Warranty Work</li>
-                    <li>Home Owner Financing</li>
-                    <li>Home Owner Financing</li>
-                    <li>e-Transfer</li>
-                    <li>Other Credit Card Professor</li>
-                    <li>Other Payment Type</li>
-                </ul> </div>
-                ';
+        // $html .= '<div><b>ACCEPTED PAYMENT METHODS:</b><hr>
+        //         <ul>
+        //             <li>Cash</li>
+        //             <li>Check</li>
+        //             <li>Credit Card</li>
+        //             <li>Debit Card</li>
+        //             <li>ACH</li>
+        //             <li>Venmo</li>
+        //             <li>Paypal</li>
+        //             <li>Square</li>
+        //             <li>Invoicing</li>
+        //             <li>Warranty Work</li>
+        //             <li>Home Owner Financing</li>
+        //             <li>Home Owner Financing</li>
+        //             <li>e-Transfer</li>
+        //             <li>Other Credit Card Professor</li>
+        //             <li>Other Payment Type</li>
+        //         </ul> </div>
+        //         ';
             
         $html .= '<div><b>PAYMENT DETAILS:</b><hr> <br>Amount: '.$data->payment_amount.'<br>Payment Method: '.$data->payment_method.'</div><br><br>';
                     

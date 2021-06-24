@@ -175,7 +175,21 @@ add_css(array(
                                                     <div class="col-md-8">
                                                         <div class="row">
                                                             <div class="col-md-12">
-                                                                <input type="text" class="form-control" name="frequency" id="frequency" value="<?= 'Every '.$billing_info->frequency.' month(s)';  ?>" readonly/>
+                                                                <select id="frequency" name="frequency" data-customer-source="dropdown" class="input_select" >
+                                                                    <option  value=""></option>
+                                                                    <option <?= isset($billing_info) && $billing_info->frequency == 1 ?  'selected' : '';?> value="1">1 month</option>
+                                                                    <option <?= isset($billing_info) && $billing_info->frequency == 2 ?  'selected' : '';?> value="2">2 months</option>
+                                                                    <option <?= isset($billing_info) && $billing_info->frequency == 3 ?  'selected' : '';?> value="3">3 months</option>
+                                                                    <option <?= isset($billing_info) && $billing_info->frequency == 4 ?  'selected' : '';?> value="4">4 months</option>
+                                                                    <option <?= isset($billing_info) && $billing_info->frequency == 5 ?  'selected' : '';?> value="5">5 months</option>
+                                                                    <option <?= isset($billing_info) && $billing_info->frequency == 6 ?  'selected' : '';?> value="6">6 months</option>
+                                                                    <option <?= isset($billing_info) && $billing_info->frequency == 7 ?  'selected' : '';?> value="7">7 months</option>
+                                                                    <option <?= isset($billing_info) && $billing_info->frequency == 8 ?  'selected' : '';?> value="8">8 months</option>
+                                                                    <option <?= isset($billing_info) && $billing_info->frequency == 9 ?  'selected' : '';?> value="8">9 months</option>
+                                                                    <option <?= isset($billing_info) && $billing_info->frequency == 10 ?  'selected' : '';?> value="10">10 months</option>
+                                                                    <option <?= isset($billing_info) && $billing_info->frequency == 11 ?  'selected' : '';?> value="11">11 months</option>
+                                                                    <option <?= isset($billing_info) && $billing_info->frequency == 12 ?  'selected' : '';?> value="12">12 months</option>
+                                                                </select>
                                                                 <input type="hidden" class="form-control" name="num_frequency" id="num_frequency" value="<?= $billing_info->frequency; ?>" readonly/>
                                                             </div>
                                                         </div>

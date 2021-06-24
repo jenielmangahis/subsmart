@@ -60,7 +60,7 @@ class Customer extends MY_Controller
         $this->load->view('customer/list', $this->page_data);
     }
 
-    public function preview($id=null){
+    public function preview_($id=null){
         $this->load->model('jobs_model');
         $is_allowed = $this->isAllowedModuleAccess(9);
         if( !$is_allowed ){
@@ -120,6 +120,66 @@ class Customer extends MY_Controller
         $this->load->view('customer/preview', $this->page_data);
     }
 
+    public function preview($id=null){
+        $this->load->model('jobs_model');
+        $is_allowed = $this->isAllowedModuleAccess(9);
+        if( !$is_allowed ){
+            $this->page_data['module'] = 'customer';
+            echo $this->load->view('no_access_module', $this->page_data, true);
+            die();
+        }
+        $userid = $id;
+        $user_id = logged('id');
+        if(isset($userid) || !empty($userid)){
+            $this->page_data['profile_info'] = $this->customer_ad_model->get_data_by_id('prof_id',$userid,"acs_profile");
+            $this->page_data['access_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_access");
+            $this->page_data['office_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_office");
+            $this->page_data['billing_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_billing");
+            $this->page_data['alarm_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_alarm");
+            $get_customer_notes = array(
+                'where' => array(
+                    'fk_prof_id' => $userid
+                ),
+                'table' => 'acs_notes',
+                'select' => '*',
+            );
+            $this->page_data['customer_notes'] = $this->general->get_data_with_param($get_customer_notes);
+
+            $get_login_user = array(
+                'where' => array(
+                    'id' => $user_id
+                ),
+                'table' => 'users',
+                'select' => 'id,FName,LName',
+            );
+            $this->page_data['logged_in_user'] = $this->general->get_data_with_param($get_login_user,FALSE);
+            $this->page_data['jobs_data_items'] = $this->jobs_model->get_customer_job_items($id);
+
+            $customer_papers_query = array(
+                'where' => array(
+                    'customer_id' => $userid
+                ),
+                'table' => 'acs_papers',
+                'select' => '*',
+            );
+            $this->page_data['papers'] = $this->general->get_data_with_param($customer_papers_query);
+
+            $customer_contacts = array(
+                'where' => array(
+                    'customer_id' => $userid
+                ),
+                'table' => 'contacts',
+                'select' => '*',
+            );
+            $this->page_data['contacts'] = $this->general->get_data_with_param($customer_contacts);
+        }
+        $this->page_data['sales_area'] = $this->customer_ad_model->get_all(FALSE,"","ASC","ac_salesarea","sa_id");
+        $this->page_data['employees'] = $this->customer_ad_model->get_all(FALSE,"","ASC","users","id");
+        $this->page_data['users'] = $this->users_model->getUsers();
+
+        $this->load->view('customer/preview_pdf', $this->page_data);
+    }
+
     public function billing($id=null){
         $this->hasAccessModule(9);
 
@@ -150,7 +210,6 @@ class Customer extends MY_Controller
         }
         //print_r($this->page_data['transaction_details']);
         $this->page_data['transaction_details'];
-
         $this->load->view('customer/billing', $this->page_data);
     }
 
@@ -642,12 +701,12 @@ class Customer extends MY_Controller
             $input_profile['date_of_birth'] = $input['date_of_birth'];
             $input_profile['phone_h'] = $input['phone_h'];
             $input_profile['phone_m'] = $input['phone_m'];
-            $input_profile['contact_name1'] = $input['contact_name1'];
-            $input_profile['contact_name2'] = $input['contact_name2'];
-            $input_profile['contact_name3'] = $input['contact_name3'];
-            $input_profile['contact_phone1'] = $input['contact_phone1'];
-            $input_profile['contact_phone2'] = $input['contact_phone2'];
-            $input_profile['contact_phone3'] = $input['contact_phone3'];
+//            $input_profile['contact_name1'] = $input['contact_name1'];
+//            $input_profile['contact_name2'] = $input['contact_name2'];
+//            $input_profile['contact_name3'] = $input['contact_name3'];
+//            $input_profile['contact_phone1'] = $input['contact_phone1'];
+//            $input_profile['contact_phone2'] = $input['contact_phone2'];
+//            $input_profile['contact_phone3'] = $input['contact_phone3'];
             //$input_profile['notes'] = $input['notes'];
             if(isset($input['customer_id'])){
                 $this->general->update_with_key_field($input_profile, $input['customer_id'],'acs_profile','prof_id');

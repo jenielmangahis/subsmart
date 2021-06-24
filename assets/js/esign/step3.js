@@ -261,7 +261,6 @@ function Step3() {
           selector = "esignBuilder__fieldRadio";
         }
 
-
         const $field = $(`.${selector}[data-key=${id}]`);
         if (this.checked) {
           $field.addClass(`${selector}--checked`);
@@ -471,10 +470,14 @@ function Step3() {
         return $currElement;
       }
 
-      if (specs.subCheckbox) {
+      if (specs.subCheckbox && specs.subCheckbox.length) {
         specs.subCheckbox.forEach((subCheckbox) => {
           $element.append(createSubCheckbox(subCheckbox));
         });
+      } else {
+        if (specs.name) {
+          $element.attr("data-field-name", specs.name);
+        }
       }
 
       $element.css({ minWidth: "unset" });
@@ -781,7 +784,6 @@ function Step3() {
           if (key === field.unique_key) {
             specs.isChecked = $checkbox.is(":checked");
             specs.value = $inputText.val();
-            console.log(key, fieldKey, specs)
           } else {
             subCheckbox = subCheckbox.map((c) => {
               if (c.id !== key) return c;
@@ -904,11 +906,7 @@ function Step3() {
         return;
       }
 
-      $(".esignBuilder__optionsSidebar--show")
-        .removeClass("esignBuilder__optionsSidebar--show"); // prettier-ignore
-
-      $(".esignBuilder__field--active")
-        .removeClass("esignBuilder__field--active"); // prettier-ignore
+      hideFieldSidebar();
     });
 
     $("#textFieldValue").on("input propertychange", function (event) {

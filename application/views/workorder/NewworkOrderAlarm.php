@@ -4613,7 +4613,7 @@ $('#clear3').click(function() {
 <script>
   $( function() {
     $( "#datepicker_dateissued" ).datepicker({
-        format: 'M dd, yyyy'
+        format: 'mm/dd/yyyy'
     });
   } );
 </script>

@@ -318,7 +318,7 @@
     
     #receive_payment_form .form-group select:focus,
     #receive_payment_form .form-group textarea:focus,
-    #receive_payment_form .form-group input[type="text"]:focus,
+    #receive_payment_form input[type="text"]:focus,
     #receive_payment_form .form-group input[type="password"]:focus,
     #receive_payment_form .form-group input[type="datetime"]:focus,
     #receive_payment_form .form-group input[type="datetime-local"]:focus,
@@ -355,7 +355,7 @@
         padding: 5px;
     }
     
-    #receive_payment_form .form-group .find-by-invoice-no {
+    #receive_payment_form .form-group button.find-by-invoice-no {
         border: solid 1px #8C9094;
         padding: 6px 40px;
         height: auto;
@@ -365,7 +365,7 @@
         font-weight: 600;
     }
     
-    #receive_payment_form .form-group .find-by-invoice-no:hover {
+    #receive_payment_form .form-group button.find-by-invoice-no:hover {
         background: rgba(107, 108, 114, .25);
         color: #393a3d;
     }
@@ -631,4 +631,83 @@
     
     #customer_receive_payment_modal .customer_receive_payment_modal_content .invoicing-part .invoices .filter input.empty {
         border: solid 1px orangered;
+    }
+    
+    #loader-modal {
+        position: fixed;
+        z-index: 1060;
+        background: #ffffffb2;
+        height: 100vh;
+        width: 100%;
+        top: 0;
+    }
+    
+    #loader-modal .loader-modal-content {
+        width: 100px;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+    
+    #customer_receive_payment_modal .find-by-invoice-no-panel {
+        width: 300px;
+        position: absolute;
+        background: #fff;
+        padding: 10px;
+        border-radius: 2px;
+        border: solid 1px #BABEC5;
+        padding-bottom: 20px;
+        box-shadow: 3px 6px 20px #adb1b4;
+        top: 75px;
+        z-index: 1;
+        display: none;
+    }
+    
+    #customer_receive_payment_modal .find-by-invoice-no-section {
+        position: relative;
+    }
+    
+    #customer_receive_payment_modal .find-by-invoice-no-section .find-by-invoice-no-panel img {
+        position: absolute;
+        width: 20px;
+        top: -13px;
+    }
+    
+    #customer_receive_payment_modal .find-by-invoice-no-section .find-by-invoice-no-panel input[name="find-by-invoice-no"] {
+        width: 100%;
+        padding: 5px 10px;
+        border: solid 1px #BABEC5;
+    }
+    
+    #customer_receive_payment_modal .find-by-invoice-no-section .find-by-invoice-no-panel label {
+        font-size: 13px;
+        font-weight: 700;
+        padding-top: 15px;
+    }
+    
+    #customer_receive_payment_modal .find-by-invoice-no-section .find-by-invoice-no-panel .buttons .cancel-btn,
+    #customer_receive_payment_modal .find-by-invoice-no-section .find-by-invoice-no-panel .buttons .find-btn {
+        font-size: 13px;
+        font-weight: 700;
+        border: solid 1px #8E9095;
+        padding: 5px 20px;
+        background: transparent;
+        border-radius: 24px;
+        height: auto;
+        margin-top: 15px;
+    }
+    
+    #customer_receive_payment_modal .find-by-invoice-no-section .find-by-invoice-no-panel .buttons .cancel-btn:hover,
+    #customer_receive_payment_modal .find-by-invoice-no-section .find-by-invoice-no-panel .buttons .find-btn:hover {
+        background: rgba(107, 108, 114, .25);
+        color: #393a3d;
+    }
+    
+    #customer_receive_payment_modal .find-by-invoice-no-section .find-by-invoice-no-panel label.error {
+        font-size: 10px;
+        font-weight: normal;
+        padding-top: 5px;
+        color: #CE2035;
+        display: none;
     }

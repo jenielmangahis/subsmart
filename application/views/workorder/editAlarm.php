@@ -421,7 +421,7 @@ border: none;
                                 <ol class="breadcrumb" style="margin-top:-30px;"> <i class="fa fa-pencil" aria-hidden="true"></i>
                                             <li class="breadcrumb-item active">
                                                 <label style="background-color:#E8E8E9;" id="headerContent"><?php echo $headers->content; ?></label>
-                                                <input type="hidden" name="header" value="<?php echo $headers->content; ?>">
+                                                <input type="hidden" name="header" id="headerID" value="<?php echo $headers->content; ?>">
                                             </li>
                                         </ol>
 
@@ -1103,7 +1103,7 @@ border: none;
                                                    name="date_issued"
                                                    class="form-control input-element"
                                                    value="<?php echo $workorder->date_issued; ?>"
-                                                   id="datepicker"/>
+                                                   id="datepicker_dateissued"/>
                                         <!-- </div> -->
                                     <!-- </div> -->
                                 </div>
@@ -3275,6 +3275,30 @@ $("#headerContent").html(function() {
 jQuery(function($){
 
 // Replace 'td' with your html tag
+$("#headerID").val(function() { 
+
+// Replace 'ok' with string you want to change, you can delete 'hello everyone' to remove the text
+ var currentDate = $('#current_date').val();
+      return $(this).val().replace("{curr_date}", currentDate);  
+
+});
+});
+
+jQuery(function($){
+
+// Replace 'td' with your html tag
+$("#headerID").val(function() { 
+
+    var companyName = $('#company_name').val();
+// Replace 'ok' with string you want to change, you can delete 'hello everyone' to remove the text
+      return $(this).val().replace("{comp_name}", companyName);  
+
+});
+});
+
+jQuery(function($){
+
+// Replace 'td' with your html tag
 $("#thisdiv3").html(function() { 
 
     // var companyName = $('#company_name').val();
@@ -4091,4 +4115,11 @@ $('#ssn').keyup(function() {
   }
   $(this).val(foo);
 });
+</script>
+<script>
+  $( function() {
+    $( "#datepicker_dateissued" ).datepicker({
+        format: 'mm/dd/yyyy'
+    });
+  } );
 </script>

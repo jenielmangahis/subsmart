@@ -15,6 +15,9 @@
         $("#invoice_term").select2({
             placeholder: ""
         });
+        $("#frequency").select2({
+            placeholder: ""
+        });
 
         // hide default
         $("#payment_collected").hide("slow");

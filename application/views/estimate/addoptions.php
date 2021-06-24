@@ -1312,6 +1312,7 @@ $(document).ready(function(){
 //         });
 
 $(".select_item22").click(function () {
+    // alert('test');
             var idd = this.id;
             console.log(idd);
             console.log($(this).data('itemname'));
@@ -1330,7 +1331,7 @@ $(".select_item22").click(function () {
             markup = "<tr id=\"ss\">" +
                 "<td width=\"35%\"><input value='"+title+"' type=\"text\" name=\"items2[]\" class=\"form-control\" ><input type=\"hidden\" value='"+idd+"' name=\"item_id2[]\"></td>\n" +
                 "<td width=\"20%\"><select name=\"item_type2[]\" class=\"form-control\"><option value=\"product\">Product</option><option value=\"material\">Material</option><option value=\"service\">Service</option><option value=\"fee\">Fee</option></select></td>\n" +
-                "<td width=\"10%\"><input data-itemid='"+idd+"' id='quantity2_"+idd+"' value='"+qty+"' type=\"number\" name=\"quantity2[]\" class=\"form-control qtyest2\"></td>\n" +
+                "<td width=\"10%\"><input data-itemid='"+idd+"' id='quantity2_"+idd+"' value='"+qty+"' type=\"number\" name=\"quantity2[]\" class=\"form-control qtyest2b\"></td>\n" +
                 // "<td>\n" + '<input type="number" class="form-control qtyest" name="quantity[]" data-counter="' + count + '" id="quantity_' + count + '" min="1" value="1">\n' + "</td>\n" +
                 "<td width=\"10%\"><input id='price2_"+idd+"' value='"+price+"'  type=\"number\" name=\"price2[]\" class=\"form-control\" placeholder=\"Unit Price\"></td>\n" +
                 // "<td width=\"10%\"><input type=\"number\" class=\"form-control discount\" name=\"discount[]\" data-counter="0" id=\"discount_0\" min="0" value="0" ></td>\n" +
@@ -1399,14 +1400,14 @@ $(".select_item22").click(function () {
   var eqpt_cost = 0;
   var cnt = $("#count2").val();
   var total_discount = 0;
-  var total_cost = 0;
+  var total_costss = 0;
   for (var p = 0; p <= cnt; p++) {
     var prc = $("#price2_" + p).val();
     var quantity = $("#quantity2_" + p).val();
     var discount = $("#discount2_" + p).val();
     // var discount= $('#discount_' + p).val();
     // eqpt_cost += parseFloat(prc) - parseFloat(discount);
-    total_cost += parseFloat(prc);
+    total_costss += parseFloat(prc);
     eqpt_cost += parseFloat(prc) * parseFloat(quantity);
     total_discount += parseFloat(discount);
   }
@@ -1414,11 +1415,11 @@ $(".select_item22").click(function () {
 // $( total ).each( function(){
 //   subtotal += parseFloat( $( this ).val() ) || 0;
 // });
-alert( 'yeah' + prc);
+// alert( 'yeah' + total_costss);
 
   eqpt_cost = parseFloat(eqpt_cost).toFixed(2);
   total_discount = parseFloat(total_discount).toFixed(2);
-  stotal_cost = parseFloat(total_cost).toFixed(2);
+  stotal_cost = parseFloat(total_costss).toFixed(2);
   // var test = 5;
 
   var subtotal = 0;
@@ -1594,12 +1595,12 @@ alert( 'yeah' + prc);
             cal_total_due();
         });
 
-    $(document).on("focusout", ".qtyest2", function () {
+    $(document).on("focusout", ".qtyest2b", function () {
         // alert('two');
         var id = this.id;
         var in_id = $(this).attr('data-itemid');
             var qty=this.value;
-            var cost = $('#price_'+in_id).val();
+            var cost = $('#price2_'+in_id).val();
             var new_sub_total = Number(qty) * Number(cost);
             var new_sub_total_val = Number(qty) * Number(cost);
             var tax = '0.075';
@@ -1655,14 +1656,16 @@ alert( 'yeah' + prc);
             }
 
             var eqpt_cost = 0;
-            var cnt = $("#count").val();
+            var cnt = $("#count2").val();
             var total_discount = 0;
+            var total_cost = 0;
             for (var p = 0; p <= cnt; p++) {
                 var prc = $("#price2_" + p).val();
                 var quantity = $("#quantity2_" + p).val();
                 var discount = $("#discount2_" + p).val();
                 // var discount= $('#discount_' + p).val();
                 // eqpt_cost += parseFloat(prc) - parseFloat(discount);
+                total_cost += parseFloat(prc);
                 eqpt_cost += parseFloat(prc) * parseFloat(quantity);
                 total_discount += parseFloat(discount);
             }
@@ -1673,7 +1676,9 @@ alert( 'yeah' + prc);
 
             eqpt_cost = parseFloat(eqpt_cost).toFixed(2);
             total_discount = parseFloat(total_discount).toFixed(2);
+            stotal_cost = parseFloat(total_cost).toFixed(2);
             // var test = 5;
+            alert(total_cost);
 
             var subtotal = 0;
             // $("#span_total_0").each(function(){
@@ -1688,12 +1693,12 @@ alert( 'yeah' + prc);
                 subtotaltaxx += parseFloat($(this).val());
             });
 
-            //   alert(subtotaltaxx);
+            //   alert(stotal_cost);
 
             $("#eqpt_cost").val(eqpt_cost);
             $("#total_discount").val(total_discount);
             $("#span_sub_total_0").text(total_discount);
-            $("#span_sub_total_invoice2").text(subtotal.toFixed(2));
+            $("#span_sub_total_invoice2").text(total_cost);
             $("#item_total2").val(subtotal.toFixed(2));
             
             var s_total = subtotal.toFixed(2);

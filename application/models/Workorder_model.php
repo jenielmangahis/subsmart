@@ -1292,6 +1292,15 @@ class Workorder_model extends MY_Model
         return $query->row();
     }
 
+    public function getbusiness($cid)
+    {
+        $this->db->select('*');
+		$this->db->from('business_profile');
+		$this->db->where('company_id', $cid);
+        $query = $this->db->get();
+        return $query->row();
+    }
+
     public function getCompanyCompanyId($id)
     {
         $this->db->select('company_id');

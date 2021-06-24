@@ -506,9 +506,9 @@ border: none;
 										<div class="col-sm-12 col-sm-push-12 text-right-sm ">
 										<div class="row">
 											<div class="col-md-3">
-												<div style="margin-bottom: 20px;">
+												<div style="margin-bottom: 20px;margin-left: 0px !important;">
 													<!-- <img class="presenter-print-logo" style="max-width: 230px; max-height: 200px;" src="http://nsmartrac.com/assets/dashboard/images/logo.png"> -->
-													<img src="<?= getCompanyBusinessProfileImage(); ?>" class="company-logo"/>
+													<img src="<?= getCompanyBusinessProfileImage(); ?>"  style="max-width: 230px; max-height: 200px;" />
 												</div>
 											</div>
 											<div class="col-md-9">
@@ -570,7 +570,7 @@ border: none;
 		         							   		<div class="ul-info">
 		         							   			<ul>
 		         							   				<li><a href="" class="ul-head"> FROM:</a></li>
-															<hr style="border: 1px solid gray;">
+															<!-- <hr style="border: 1px solid gray;"> -->
 		         							   				<li><a href="" class="ul-head"><?php echo $company->business_name ?></a></li>
 		         							   				<li><a href="" class="ul-text">License: EF, AL, MS</a></li>
 		         							   				<li><a href="" class="ul-text"><?php echo $company->business_address ?></a></li>
@@ -582,7 +582,7 @@ border: none;
 		         							   		<div class="ul-info">
 		         							   			<ul>
 		         							   				<li><a href="" class="ul-head">TO:</a></li>
-															<hr style="border: 1px solid gray;">
+															<!-- <hr style="border: 1px solid gray;"> -->
 		         							   				<li><span class="ul-head line"><?php echo $customer->contact_name .''. $customer->first_name .' '. $customer->middle_name .' '. $customer->last_name ?></span>
 																<!-- <a href="" class="line ul-btns-text" style="color:green;">view</a> -->
 																</li>
@@ -595,9 +595,9 @@ border: none;
 		         							   		<div class="ul-info">
 		         							   			<ul>
 		         							   				<li><a href="" class="ul-head">JOB:</a></li>
-		         							   				<li><a href="" class="ul-text">Job for Estimate #EST-000010</a></li>
-		         							   				<li><a href="" class="ul-text">Estimate #EST-000010 </a></li>	
-		         							   			
+		         							   				<!-- <li><a href="" class="ul-text">Job for Estimate #EST-000010</a></li> -->
+		         							   				<!-- <li><a href="" class="ul-text">Estimate #EST-000010 </a></li>	 -->
+		         							   			<br>
 		         							   			</ul>
 		         							   		</div>
 
@@ -638,7 +638,7 @@ border: none;
 															
 															</ul>
 														</div>
-														<br>
+														<br><br>
 													<?php }else{ } ?>
 														
 
@@ -652,7 +652,7 @@ border: none;
 		         							   		</div> -->
 		         							   			<div class="ul-info">
 			         							   			<ul>
-			         							   				<li><a href="#" class="ul-head">Location </a></li>
+			         							   				<li><a href="#" class="ul-head">Lob Location </a></li>
 																<li class="show_mobile_view"><hr></li>
 																<li><?php echo $workorder->job_location .' '. $workorder->city .' '. $workorder->state .', '. $workorder->zip_code .', '. $workorder->cross_street  ?> &emsp; 
 																<!-- <a href="#" style="color:green;">Show Map</a> -->
@@ -832,19 +832,19 @@ border: none;
 			         							   			<b class="ul-head">ASSIGNED TO</b><br><br>
 																<div class="row">
 																	<div class="col-md-4">
-																		<img src="<?php echo $workorder->company_representative_signature; ?>">
+																		<img src="<?php echo $workorder->company_representative_signature; ?>" style="height: 150px;">
 																		<hr>
-																		<?php echo $workorder->company_representative_name; ?>
+																		<center><?php echo $workorder->company_representative_name; ?></center>
 																	</div>
 																	<div class="col-md-4">
-																		<img src="<?php echo $workorder->primary_account_holder_signature; ?>">
+																		<img src="<?php echo $workorder->primary_account_holder_signature; ?>" style="height: 150px;">
 																		<hr>
-																		<?php echo $workorder->primary_account_holder_name; ?>
+																		<center><?php echo $workorder->primary_account_holder_name; ?></center>
 																	</div>
 																	<div class="col-md-4">
-																		<img src="<?php echo $workorder->secondary_account_holder_signature; ?>">
+																		<img src="<?php echo $workorder->secondary_account_holder_signature; ?>" style="height: 150px;">
 																		<hr>
-																		<?php echo $workorder->secondary_account_holder_name; ?>
+																		<center><?php echo $workorder->secondary_account_holder_name; ?></center>
 																	</div>
 																</div>
 		         							   			</div>

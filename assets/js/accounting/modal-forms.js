@@ -1802,11 +1802,149 @@ $(function() {
 
     $(document).on('change', '#expenseModal #payee', function() {
         var split = $(this).val().split('-');
+
         if(split[0] === 'vendor') {
             $.get('/accounting/get-linkable-transactions/expense/'+split[1], function(res) {
-                console.log(res);
+                var transactions = JSON.parse(res);
+
+                if(transactions.length > 0) {
+                    if($('#expensesModal .transactions-container').length > 0) {
+                        $('#expensesModal .transactions-container').parent().remove();
+                    }
+
+                    $('#expenseModal .modal-body .row .col .card .card-body').children('.row:first-child').prepend(`
+                        <div class="col-md-12 px-0 pb-2">
+                            <a href="#" class="float-right btn btn-transparent rounded-0 close-transactions-container" style="padding:12px 15px !important">
+                                <i class="fa fa-chevron-right"></i>
+                            </a>
+                        </div>
+                    `);
+
+                    $('#expenseModal .modal-body').children('.row').append(`
+                        <div class="col-xl-2">
+                            <div class="transactions-container bg-white h-100" style="padding: 15px">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <h4>Add to Expense</h4>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `);
+
+                    $.each(transactions, function(index, transaction) {
+                        var title = transaction.type;
+                        title += transaction.number !== '' ? '#'+transaction.number : '';
+                        $('#expenseModal .modal-body .row .col-xl-2 .transactions-container .row').append(`
+                            <div class="col-12">
+                                <div class="card border">
+                                    <div class="card-body p-0">
+                                        <h5 class="card-title">${title}</h5>
+                                        <p class="card-subtitle">${transaction.formatted_date}</p>
+                                        <p class="card-text">
+                                            <strong>Total</strong> ${transaction.total}
+                                            ${transaction.type === 'Purchase Order' ? '<br><strong>Balance</strong> '+transaction.balance : ''}
+                                        </p>
+                                        <ul class="d-flex justify-content-around">
+                                            <li><a href="#" class="text-info"><strong>Add</strong></a></li>
+                                            <li><a href="#" class="text-info">Open</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        `);
+                    });
+                } else {
+                    $('#expenseModal .transactions-container').parent().remove();
+                    $('#expenseModal a.close-transactions-container').parent().remove();
+                    $('#expenseModal a.open-transactions-container').parent().remove();
+                }
             });
         }
+    });
+
+    $(document).on('change', '#checkModal #payee', function() {
+        var split = $(this).val().split('-');
+        if(split[0] === 'vendor') {
+            $.get('/accounting/get-linkable-transactions/check/'+split[1], function(res) {
+                var transactions = JSON.parse(res);
+
+                if(transactions.length > 0) {
+                    if($('#expensesModal .transactions-container').length > 0) {
+                        $('#expensesModal .transactions-container').parent().remove();
+                    }
+
+                    $('#checkModal .modal-body .row .col .card .card-body').children('.row:first-child').prepend(`
+                        <div class="col-md-12 px-0 pb-2">
+                            <a href="#" class="float-right btn btn-transparent rounded-0 close-transactions-container" style="padding:12px 15px !important">
+                                <i class="fa fa-chevron-right"></i>
+                            </a>
+                        </div>
+                    `);
+
+                    $('#checkModal .modal-body').children('.row').append(`
+                        <div class="col-xl-2">
+                            <div class="transactions-container bg-white h-100" style="padding: 15px">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <h4>Add to Expense</h4>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `);
+
+                    $.each(transactions, function(index, transaction) {
+                        var title = transaction.type;
+                        title += transaction.number !== '' ? '#'+transaction.number : '';
+                        $('#checkModal .modal-body .row .col-xl-2 .transactions-container .row').append(`
+                            <div class="col-12">
+                                <div class="card border">
+                                    <div class="card-body p-0">
+                                        <h5 class="card-title">${title}</h5>
+                                        <p class="card-subtitle">${transaction.formatted_date}</p>
+                                        <p class="card-text">
+                                            <strong>Total</strong> ${transaction.total}
+                                            ${transaction.type === 'Purchase Order' ? '<br><strong>Balance</strong> '+transaction.balance : ''}
+                                        </p>
+                                        <ul class="d-flex justify-content-around">
+                                            <li><a href="#" class="text-info"><strong>Add</strong></a></li>
+                                            <li><a href="#" class="text-info">Open</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        `);
+                    });
+                } else {
+                    $('#checkModal .transactions-container').parent().remove();
+                    $('#checkModal a.close-transactions-container').parent().remove();
+                    $('#checkModal a.open-transactions-container').parent().remove();
+                }
+            });
+        }
+    });
+
+    $(document).on('click', '#modal-container .modal a.close-transactions-container', function(e) {
+        e.preventDefault();
+
+        $('#modal-container .modal .transactions-container').parent().hide();
+
+        $(this).removeClass('close-transactions-container');
+        $(this).addClass('open-transactions-container');
+        $(this).children().removeClass('fa-chevron-right');
+        $(this).children().addClass('fa-chevron-left');
+    });
+
+    $(document).on('click', '#modal-container .modal a.open-transactions-container', function(e) {
+        e.preventDefault();
+
+        $('#modal-container .modal .transactions-container').parent().show();
+
+        $(this).removeClass('open-transactions-container');
+        $(this).addClass('close-transactions-container');
+        $(this).children().removeClass('fa-chevron-left');
+        $(this).children().addClass('fa-chevron-right');
     });
 });
 
