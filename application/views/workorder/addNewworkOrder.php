@@ -4224,7 +4224,7 @@ $('#clear3').click(function() {
 <script>
   $( function() {
     $( "#datepicker_dateissued" ).datepicker({
-        format: 'yyyy-mm-dd'
+        format: 'mm/dd/yyyy'
     });
   } );
 

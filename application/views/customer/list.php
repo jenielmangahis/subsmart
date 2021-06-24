@@ -559,7 +559,7 @@ add_css(array(
                                         <?php foreach ($profiles as $customer) : ?>
                                         <tr>
                                             <td>
-                                                <a href="<?= base_url('/customer/preview/' . $customer->prof_id); ?>"
+                                                <a href="<?= base_url('/customer/preview_/' . $customer->prof_id); ?>"
                                                     style="color:#1E5DA9;">
                                                     <?= ($customer) ? $customer->first_name . ' ' . $customer->last_name : ''; ?>
                                                 </a>
@@ -597,7 +597,7 @@ add_css(array(
                                                         aria-labelledby="dropdown-edit">
                                                         <li role="presentation">
                                                             <a role="menuitem" tabindex="-1"
-                                                                href="<?php echo base_url('customer/preview/'.$customer->prof_id); ?>"
+                                                                href="<?php echo base_url('customer/preview_/'.$customer->prof_id); ?>"
                                                                 class="editItemBtn">
                                                                 <span class="fa fa-search-plus icon"></span>
                                                                 Preview

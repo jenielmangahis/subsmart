@@ -259,4 +259,24 @@ class Accounting_invoices_model extends MY_Model
         $query = $this->db->get();
         return $query->result();
     }
+    public function insert_receive_payment($data)
+    {
+        $customer = $this->db->insert('accounting_receive_payment', $data);
+        $insert_id = $this->db->insert_id();
+
+        return  $insert_id;
+    }
+    public function get_invoice_by_invoice_no($find_inv)
+    {
+        $company_id = logged('company_id');
+        $this->db->select('*');
+
+        $this->db->from('invoices');
+        
+        $this->db->where('company_id', $company_id);
+        $this->db->like('invoice_number', $find_inv);
+
+        $query = $this->db->get();
+        return $query->row();
+    }
 }

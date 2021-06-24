@@ -22,6 +22,36 @@ $(document).on("click", "#receive_payment_form .form-group .find-by-invoice-no",
     event.preventDefault();
     $("#customer_receive_payment_modal .customer_receive_payment_modal_content .invoicing-part .invoices .filter .filter-panel").show();
 });
+$(document).on("click", "#customer_receive_payment_modal .find-by-invoice-no-section button.find-by-invoice-no", function(event) {
+    event.preventDefault();
+    $("#customer_receive_payment_modal .find-by-invoice-no-panel").show();
+});
+$(document).on("click", "#customer_receive_payment_modal .find-by-invoice-no-section button.cancel-btn", function(event) {
+    event.preventDefault();
+    $("#customer_receive_payment_modal .find-by-invoice-no-panel").hide();
+});
+
+$(document).on("click", "#customer_receive_payment_modal .find-by-invoice-no-section button.find-btn", function(event) {
+    event.preventDefault();
+    $.ajax({
+        url: baseURL + "/accounting/find_cutsomer_by_invoice_number",
+        type: "POST",
+        dataType: "json",
+        data: {
+            find_inv_no: $("#customer_receive_payment_modal .find-by-invoice-no-section .find-by-invoice-no-panel input[name='find-by-invoice-no']").val()
+        },
+        success: function(data) {
+            if (data.customer_id != "") {
+                $("#customer_receive_payment_modal .find-by-invoice-no-section .find-by-invoice-no-panel label.error").hide();
+                $("#customer_receive_payment_modal #receive_payment_form select[name='customer_id']").val(data.customer_id);
+                get_customer_info_for_receive_payment_modal(data.customer_id);
+            } else {
+                $("#customer_receive_payment_modal .find-by-invoice-no-section .find-by-invoice-no-panel label.error").show();
+            }
+        },
+    });
+});
+
 $(document).on("click", "#customer_receive_payment_modal .customer_receive_payment_modal_content .invoicing-part .invoices .filter .filter-panel .buttons .cancel-btn", function(event) {
     event.preventDefault();
     $("#customer_receive_payment_modal .customer_receive_payment_modal_content .invoicing-part .invoices .filter .filter-panel").hide();
@@ -42,6 +72,10 @@ $(document).on("click", function(event) {
     }
     if ($(event.target).closest("#customer_receive_payment_modal .customer_receive_payment_modal_content .invoicing-part .invoices .filter").length === 0) {
         $("#customer_receive_payment_modal .customer_receive_payment_modal_content .invoicing-part .invoices .filter .filter-panel").hide();
+    }
+
+    if ($(event.target).closest("#customer_receive_payment_modal .find-by-invoice-no-section").length === 0) {
+        $("#customer_receive_payment_modal .find-by-invoice-no-panel").hide();
     }
 });
 $(document).on("click", "#customer_receive_payment_modal .customer_receive_payment_modal_content .invoicing-part .invoices .filter .filter-panel .buttons .apply-btn", function(event) {
@@ -94,17 +128,24 @@ $(document).on("click", ".customer_receive_payment_btn", function(event) {
 var invoice_count = 0;
 
 function get_customer_info_for_receive_payment_modal(customer_id) {
+    $("#loader-modal").show();
     $.ajax({
         url: baseURL + "/accounting/get_customer_info_for_receive_payment",
         type: "POST",
         dataType: "json",
         data: { customer_id: customer_id },
         success: function(data) {
+            if (data.html == "") {
+                $("#customer_receive_payment_modal .invoices .outstanding-transactions").hide();
+            } else {
+                $("#customer_receive_payment_modal .invoices .outstanding-transactions").show();
+            }
             $('#customer_receive_payment_modal #customer_invoice_table .table-body').html(data.html);
             $('#receive_payment_form .total-receive-payment .amount').html("$" + data.display_receivable_payment);
             $('div#customer_receive_payment_modal .customer_receive_payment_modal_content .invoicing-part .total-amount .amount-to-apply .amount').html("$" + data.display_receivable_payment);
             $("#customer_receive_payment_modal #receive_payment_form input[name='amount_received']").val(data.display_receivable_payment);
             invoice_count = parseFloat(data.inv_count);
+            $("#customer_receive_payment_modal #receive_payment_form input[name='invoice_count']").val(data.inv_count);
 
             $("#customer_receive_payment_modal .customer_receive_payment_modal_content .invoicing-part .invoices input[name='checkbox-all-action']").prop("checked", true);
             $("#customer_receive_payment_modal .customer_receive_payment_modal_content .invoicing-part .invoices .filter input[name='filter_date_from']").val("");
@@ -115,11 +156,15 @@ function get_customer_info_for_receive_payment_modal(customer_id) {
             $("#customer_receive_payment_modal .customer_receive_payment_modal_content select[name='payment_method']").val("");
             $("#customer_receive_payment_modal .customer_receive_payment_modal_content input[name='ref_no']").val("");
             $("#customer_receive_payment_modal .customer_receive_payment_modal_content select[name='deposite_to']").val("");
+
+            $("#loader-modal").hide();
         },
     });
 }
 
 function get_customer_filtered_info_for_receive_payment_modal(filter_date_from, filter_date_to, filter_overdue, customer_id) {
+
+    $("#loader-modal").show();
     $.ajax({
         url: baseURL + "/accounting/get_customer_filtered_info_for_receive_payment_modal",
         type: "POST",
@@ -136,7 +181,10 @@ function get_customer_filtered_info_for_receive_payment_modal(filter_date_from, 
             $('div#customer_receive_payment_modal .customer_receive_payment_modal_content .invoicing-part .total-amount .amount-to-apply .amount').html("$" + data.display_receivable_payment);
             $("#customer_receive_payment_modal #receive_payment_form input[name='amount_received']").val(data.display_receivable_payment);
             invoice_count = parseFloat(data.inv_count);
+            $("#customer_receive_payment_modal #receive_payment_form input[name='invoice_count']").val(data.inv_count);
             $("#customer_receive_payment_modal .customer_receive_payment_modal_content .invoicing-part .invoices input[name='checkbox-all-action']").prop("checked", true);
+
+            $("#loader-modal").hide();
         },
     });
 }
@@ -178,6 +226,8 @@ $("#customer_receive_payment_modal #receive_payment_form").submit(function(event
 });
 
 $(document).on("click", "#customer_receive_payment_modal #receive_payment_form button[type='submit']", function(event) {
+    var submit_type = $(this).attr('data-submit-type');
+
     var empty_flds = 0;
     $("#customer_receive_payment_modal #receive_payment_form  .required").each(function() {
         if (!$.trim($(this).val())) {
@@ -195,17 +245,38 @@ $(document).on("click", "#customer_receive_payment_modal #receive_payment_form b
             confirmButtonColor: "#2ca01c",
             confirmButtonText: $(this).html(),
         }).then((result) => {
+            $("#loader-modal").show();
             $.ajax({
                 url: baseURL + "/accounting/save_receive_payment_from_modal",
                 type: "POST",
                 dataType: "json",
                 data: $("#customer_receive_payment_modal #receive_payment_form").serialize(),
                 success: function(data) {
-                    var submit_type = $(this).attr('data-submit-type');
+                    if (data.count_save > 0) {
+                        get_load_customers_table();
+                        Swal.fire({
+                            showConfirmButton: false,
+                            timer: 2000,
+                            title: "Success",
+                            html: "Payment has been saved.",
+                            icon: "success",
+                        });
+                    } else {
+                        Swal.fire({
+                            showConfirmButton: false,
+                            timer: 2000,
+                            title: "Error",
+                            html: "No payment saved. Please double check your inputs.",
+                            icon: "error",
+                        });
+                    }
                     if (submit_type == "save-new") {
                         $("#customer_receive_payment_modal #receive_payment_form select[name='customer_id']").val("");
                         get_customer_info_for_receive_payment_modal('');
+                    } else if (submit_type == "save-close") {
+                        $("#customer_receive_payment_modal").fadeOut();
                     }
+                    console.log(submit_type);
                 },
             });
         });

@@ -38,10 +38,10 @@ table {
 
 
         <div style="padding: 2%;">
-            <img src="<?php //echo" $company_representative_signature"; ?>">
+        <img src="<?php echo "$business_logo"; ?>" style="width:80px;height:80px;">
         </div>
 
-        <div style="margin-top:10%">
+        <div style="margin-top:5%">
 
             <div>
                 <b>FROM:</b><br>
@@ -102,8 +102,9 @@ table {
 
             <div class=""><br>
                 <b>JOB DETAILS:</b>
-                <hr>
-                <table class="pure-table" style="border-collapse: collapse !important;">
+                <hr><center>
+                <div align="center">
+                <table class="pure-table" style="border-collapse: collapse !important;align:center !important;width:100%;">
                     <tr style="background-color: #E9DDFF !important;">
                         <th>Items</th>
                         <th>Qty</th>
@@ -196,7 +197,7 @@ table {
                             <td style="background-color: #F8F8F8 !important;"><b><?php echo $total; ?></b></td>
                         </tr>
                     </tbody>
-                </table>
+                </table></div></center>
             </div>
 
             <br><br>
@@ -218,7 +219,7 @@ table {
                 <?php echo $instructions; ?><br><br>
             </div>
 
-            <div style="text-align: justify; text-justify: inter-word;">
+            <!-- <div style="text-align: justify; text-justify: inter-word;">
                 <b>ACCEPTED PAYMENT METHODS:</b>
                 <hr>
                 <ul>
@@ -239,7 +240,7 @@ table {
                     <li>Other Payment Type</li>
                 </ul> 
                 <br><br><br>
-            </div>
+            </div> -->
 
             <div style="text-align: justify; text-justify: inter-word;">
                 <b>PAYMENT DETAILS:</b>

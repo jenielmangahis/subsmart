@@ -624,6 +624,10 @@ function applybtn()
     table.ajax.reload();
 }
 
+$(document).on('change', '#table_rows', function() {
+    applybtn();
+});
+
 $('a#new-time-activity').on('click', function(e) {
     e.preventDefault();
 
@@ -1005,6 +1009,8 @@ $(document).on('click', '#transactions-table .view-edit-expense', function() {
 
         initFormFields('expenseModal', data);
 
+        $('#expenseModal #payee').trigger('change');
+
         $('#expenseModal').modal('show');
     });
 });
@@ -1025,6 +1031,8 @@ $(document).on('click', '#transactions-table .view-edit-check', function() {
         }
 
         initFormFields('checkModal', data);
+
+        $('#checkModal #payee').trigger('change');
 
         $('#checkModal').modal('show');
     });

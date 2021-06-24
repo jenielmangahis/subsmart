@@ -5505,7 +5505,10 @@ class Accounting extends MY_Controller
                 $html.='<tr>
                     <td class="center" style="width: 0;"><input type="checkbox" class="inv_cb" name="inv_cb_'.$counter.'" checked>
                     </td>
-                    <td>'.$inv->invoice_number.'</td>
+                    <td>
+                    '.$inv->invoice_number.'
+                    <input type="text" class="hide" name="inv_number_'.$counter.'" value="'.$inv->invoice_number.'">
+                    </td>
                     <td>
                     '.$inv->due_date.'
                     </td>
@@ -5554,7 +5557,10 @@ class Accounting extends MY_Controller
                 $html.='<tr>
                     <td class="center" style="width: 0;"><input type="checkbox" class="inv_cb" name="inv_cb_'.$counter.'" checked>
                     </td>
-                    <td>'.$inv->invoice_number.'</td>
+                    <td>
+                    '.$inv->invoice_number.'
+                    <input type="text" class="hide" name="inv_number_'.$counter.'" value="'.$inv->invoice_number.'">
+                    </td>
                     <td>
                     '.$inv->due_date.'
                     </td>
@@ -5581,6 +5587,168 @@ class Accounting extends MY_Controller
     }
     public function save_receive_payment_from_modal()
     {
-        var_dump($this->input->post());
+        $inv_count=$this->input->post("invoice_count");
+        $customer_id=$this->input->post("customer_id");
+
+        $customer_info = $this->accounting_customers_model->get_customer_by_id($customer_id);
+        // var_dump($this->input->post());
+        $count_save =0;
+        for ($i =0;$i<$inv_count;$i++) {
+            if ($this->input->post("inv_cb_".$i) == "on") {
+                $insert=array(
+                    "customer_id" => $customer_id,
+                    "invoice_number" => $this->input->post("inv_number_".$i),
+                    "payment_date" => $this->input->post("payment_date"),
+                    "payment_method" => $this->input->post("payment_method"),
+                    "ref_no" => $this->input->post("ref_no"),
+                    "deposit_to" => $this->input->post("deposite_to"),
+                    "amount" => str_replace(',', '', $this->input->post("inv_".$i)),
+                    "memo" => $this->input->post("memo"),
+                    "attachments" => "",
+                    "status" => "1",
+                    "user_id" =>  logged('id'),
+                    "company_id" => $customer_info->company_id,
+                    "created_by" => logged('id'),
+                );
+                $this->accounting_invoices_model->insert_receive_payment($insert);
+                $count_save++;
+            }
+        }
+        $data = new stdClass();
+        $data->count_save = $count_save;
+        echo json_encode($data);
+    }
+    public function get_load_customers_table()
+    {
+        $counter =0;
+        $html='';
+        $customers = $this->accounting_customers_model->getAllByCompany();
+        foreach ($customers as $cus) {
+            $invoices = $this->accounting_invoices_model->get_invoices_by_customer_id($cus->prof_id);
+            $receivable_payment = 0;
+            $total_amount_received =0;
+            foreach ($invoices as $inv) {
+                $receivable_payment+=$inv->grand_total;
+                $receive_payment=$this->accounting_invoices_model->get_payements_by_invoice($inv->invoice_number);
+                foreach ($receive_payment as $payment) {
+                    $total_amount_received += $payment->amount;
+                }
+            }
+            $first_option ="Create invoice";
+            $first_option_class="customer_craete_invoice";
+            $amount =($receivable_payment - $total_amount_received);
+            if ($amount > 0) {
+                $first_option = "Receive rayment";
+                $first_option_class="customer_receive_payment_btn";
+            }
+            $html .= '<tr>
+								<td class="center"><input type="checkbox"
+										name="checkbox'.$counter.'">
+								</td>
+								<td>'.$cus->first_name .' '.  $cus->middle_name .' '. $cus->last_name .'
+								</td>
+								<td>'. $cus->phone_h.'
+								</td>
+								<td class="text-right">'."$".number_format(($receivable_payment - $total_amount_received), 2).'
+								</td>
+								<td>
+									<div class="dropdown dropdown-btn text-right">
+										<a href=""
+											class="first-option '.$first_option_class.'"
+											data-customer-id="'.$cus->prof_id.'">'.$first_option.' </a>
+										<a type="button" id="dropdown-button-icon" data-toggle="dropdown">
+											<span class="btn-label"><i class="fa fa-caret-down fa-sm"></i></span></span>
+										</a>
+										<ul class="dropdown-menu dropdown-menu-right customer-dropdown-menu" role="menu"
+											aria-labelledby="dropdown-edit">
+											';
+            if ($amount > 0) {
+                $html.='<li>
+												<a role="menuitem" tabindex="-1" href="javascript:void(0)"
+													class="send-reminder"
+													data-customer-id="'.$cus->prof_id.'"
+													data-customer-name="'.$cus->first_name .' '.  $cus->middle_name .' '. $cus->last_name.'">
+													Send reminder
+												</a>
+											</li>
+											<li>
+												<a href="javascript:void(0)" class="">
+													Create statement
+												</a>
+											</li>
+											<li>
+												<a href="javascript:void(0)"
+													class="">
+													Create Invoice
+												</a>
+											</li>';
+            }
+
+            $html.='<li>
+												<a href="javascript:void(0)"
+													class="">
+													Create sales receipt
+												</a>
+											</li>
+											<li>
+												<a href="javascript:void(0)"
+													class="">
+													Create extimate
+												</a>
+											</li>
+											<li>
+												<a href="javascript:void(0)"
+													class="">
+													Send payment link
+												</a>
+											</li>';
+            if ($amount == 0) {
+                $html.='<li>
+												<a href="javascript:void(0)"
+													class="">
+													Create charge
+												</a>
+											</li>
+											<li>
+												<a href="javascript:void(0)"
+													class="">
+													Create time activity
+												</a>
+											</li>
+											<li>
+												<a href="javascript:void(0)"
+													class="">
+													Make inactive
+												</a>
+											</li>
+											<li>
+												<a href="javascript:void(0)"
+													class="">
+													Create statement
+												</a>
+											</li>';
+            }
+            $html.='<li role="separator" class="divider"></li>
+										</ul>
+									</div>
+								</td>
+							</tr>';
+            $counter++;
+        }
+        $data = new stdClass();
+        $data->html = $html;
+        echo json_encode($data);
+    }
+    public function find_cutsomer_by_invoice_number()
+    {
+        $find_inv=$this->input->post("find_inv_no");
+        $invoice_info = $this->accounting_invoices_model->get_invoice_by_invoice_no($find_inv);
+        $customer_id = "";
+        if($invoice_info != null){
+            $customer_id = $invoice_info->customer_id;
+        }
+        $data = new stdClass();
+        $data->customer_id = $customer_id;
+        echo json_encode($data);
     }
 }
