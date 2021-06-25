@@ -2246,9 +2246,15 @@ border: none;
                                     <br>
 
                                     <label for="comp_rep_approval">Printed Name</label>
-                                    <input type="text6" class="form-control mb-3"
+                                    <!-- <input type="text6" class="form-control mb-3"
                                            name="company_representative_printed_name"
-                                           id="company_representative_printed_name" placeholder=""/>
+                                           id="company_representative_printed_name" placeholder=""/> -->
+                                        <select class="form-control mb-3" name="company_representative_printed_name">
+                                            <option value="0">Select Name</option>
+                                            <?php foreach($users_lists as $ulist){ ?>
+                                                <option value="<?php echo $ulist->id ?>"><?php echo $ulist->FName .' '.$ulist->LName; ?></option>
+                                            <?php } ?>
+                                        </select>
                                             <input type="hidden" id="saveCompanySignatureDB1aM_web" name="company_representative_approval_signature1aM_web">
 
                                 </div>
@@ -2277,8 +2283,14 @@ border: none;
                                     <br>
 
                                     <label for="comp_rep_approval">Printed Name</label>
-                                    <input type="text6" class="form-control mb-3" name="primary_account_holder_name"
-                                           id="primary_account_holder_name" placeholder=""/>
+                                    <!-- <input type="text6" class="form-control mb-3" name="primary_account_holder_name"
+                                           id="primary_account_holder_name" placeholder=""/> -->
+                                        <select class="form-control mb-3" name="primary_account_holder_name">
+                                            <option value="0">Select Name</option>
+                                            <?php foreach($users_lists as $ulist){ ?>
+                                                <option value="<?php echo $ulist->id ?>"><?php echo $ulist->FName .' '.$ulist->LName; ?></option>
+                                            <?php } ?>
+                                        </select>
                                     
                                            <input type="hidden" id="saveCompanySignatureDB1aM_web2" name="primary_representative_approval_signature1aM_web">
 
@@ -2308,8 +2320,14 @@ border: none;
                                     <br>
 
                                     <label for="comp_rep_approval">Printed Name</label>
-                                    <input type="text6" class="form-control mb-3" name="secondery_account_holder_name"
-                                           id="secondery_account_holder_name" placeholder=""/>
+                                    <!-- <input type="text6" class="form-control mb-3" name="secondery_account_holder_name"
+                                           id="secondery_account_holder_name" placeholder=""/> -->
+                                        <select class="form-control mb-3" name="secondery_account_holder_name">
+                                            <option value="0">Select Name</option>
+                                            <?php foreach($users_lists as $ulist){ ?>
+                                                <option value="<?php echo $ulist->id ?>"><?php echo $ulist->FName .' '.$ulist->LName; ?></option>
+                                            <?php } ?>
+                                        </select>
 
                                            <input type="hidden" id="saveCompanySignatureDB1aM_web3" name="secondary_representative_approval_signature1aM_web">
 

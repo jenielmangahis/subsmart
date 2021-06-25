@@ -1543,7 +1543,7 @@ border: none;
                                                             <?php echo $data->item_type; ?>
                                                             </div>
                                                             </td>
-                                                            <td width="10%"><input type="number" class="form-control qtyest3 hidden_mobile_view" name="quantity[]"
+                                                            <td width="10%"><input type="number" class="form-control qtyest2 hidden_mobile_view" name="quantity[]"
                                                                     data-counter="0" data-itemid="<?php echo $data->id; ?>" id="quantity_<?php echo $data->id; ?>" value="<?php echo $data->qty; ?>"><div class="show_mobile_view"><span><?php echo $data->qty; ?></span><input type="hidden" class="form-control quantity" name="quantity[]"
                                                                     data-counter="0" id="quantity_0" value="<?php echo $data->qty; ?>"></div></td>
                                                             <td width="10%"><input type="number" class="form-control price2 hidden_mobile_view" name="price[]"
@@ -2059,9 +2059,15 @@ border: none;
                                     <br>
 
                                     <label for="comp_rep_approval">Printed Name</label>
-                                    <input type="text6" class="form-control mb-3"
+                                    <!-- <input type="text6" class="form-control mb-3"
                                            name="company_representative_printed_name"
-                                           id="comp_rep_approval" value="<?php echo $workorder->company_representative_name; ?>" />
+                                           id="comp_rep_approval" value="<?php //echo $workorder->company_representative_name; ?>" /> -->
+                                        <select class="form-control mb-3" name="company_representative_printed_name">
+                                            <option value="0">Select Name</option>
+                                            <?php foreach($users_lists as $ulist){ ?>
+                                                <option <?php if(isset($workorder)){ if($workorder->company_representative_name == $ulist->id){echo "selected";} } ?>  value="<?php echo $ulist->id ?>"><?php echo $ulist->FName .' '.$ulist->LName; ?></option>
+                                            <?php } ?>
+                                        </select>
                                            <input type="hidden" id="saveCompanySignatureDB1aM_web" name="company_representative_approval_signature1aM_web">
 
                                 </div>
@@ -2072,8 +2078,14 @@ border: none;
                                     <br>
 
                                     <label for="comp_rep_approval">Printed Name</label>
-                                    <input type="text6" class="form-control mb-3" name="primary_account_holder_name"
-                                           id="comp_rep_approval" placeholder="" value="<?php echo $workorder->primary_account_holder_name; ?>"/>
+                                    <!-- <input type="text6" class="form-control mb-3" name="primary_account_holder_name"
+                                           id="comp_rep_approval" placeholder="" value="<?php //echo $workorder->primary_account_holder_name; ?>"/> -->
+                                        <select class="form-control mb-3" name="primary_account_holder_name">
+                                            <option value="0">Select Name</option>
+                                            <?php foreach($users_lists as $ulist){ ?>
+                                                <option <?php if(isset($workorder)){ if($workorder->primary_account_holder_name == $ulist->id){echo "selected";} } ?>  value="<?php echo $ulist->id ?>"><?php echo $ulist->FName .' '.$ulist->LName; ?></option>
+                                            <?php } ?>
+                                        </select>
                                            <input type="hidden" id="saveCompanySignatureDB1aM_web2" name="primary_representative_approval_signature1aM_web">
 
                                 </div>
@@ -2084,8 +2096,14 @@ border: none;
                                     <br>
 
                                     <label for="comp_rep_approval">Printed Name</label>
-                                    <input type="text6" class="form-control mb-3" name="secondery_account_holder_name"
-                                           id="comp_rep_approval" placeholder="" value="<?php echo $workorder->secondary_account_holder_name; ?>"/>
+                                    <!-- <input type="text6" class="form-control mb-3" name="secondery_account_holder_name"
+                                           id="comp_rep_approval" placeholder="" value="<?php //echo $workorder->secondary_account_holder_name; ?>"/> -->
+                                        <select class="form-control mb-3" name="secondery_account_holder_name">
+                                            <option value="0">Select Name</option>
+                                            <?php foreach($users_lists as $ulist){ ?>
+                                                <option <?php if(isset($workorder)){ if($workorder->secondary_account_holder_name == $ulist->id){echo "selected";} } ?>  value="<?php echo $ulist->id ?>"><?php echo $ulist->FName .' '.$ulist->LName; ?></option>
+                                            <?php } ?>
+                                        </select>
                                            <input type="hidden" id="saveCompanySignatureDB1aM_web3" name="secondary_representative_approval_signature1aM_web">
 
                                 </div>
@@ -3057,8 +3075,9 @@ window.onresize = resizeCanvas;
 resizeCanvas();
 </script>
 
-    <script>
+<script>
     $(document).on("focusout", "#one_time", function () {
+        // alert('test');
         var counter = $(this).val();
         var m_monitoring = $("#m_monitoring").val();
         var subtotal = 0;
@@ -3069,8 +3088,7 @@ resizeCanvas();
 
         grand_tot = parseFloat(counter) + parseFloat(subtotal) + parseFloat(m_monitoring);
         //  alert(grand_tot);
-        var grand = $("#grand_total_input").val(grand_tot.toFixed(2));
-        var grand = $("#grand_total_inputs").val(grand_tot.toFixed(2));
+        var grand = $("#grand_total_inputs_a").val(grand_tot.toFixed(2));
     });
 
     $(document).on("focusout", "#m_monitoring", function () {
@@ -3085,8 +3103,7 @@ resizeCanvas();
 
         grand_tot = parseFloat(counter) + parseFloat(subtotal) + parseFloat(one_time);
         //  alert(grand_tot);
-        var grand = $("#grand_total_input").val(grand_tot.toFixed(2));
-        var grand = $("#grand_total_inputs").val(grand_tot.toFixed(2));
+        var grand = $("#grand_total_inputs_a").val(grand_tot.toFixed(2));
     });
 
     // $(document).on("checked", "#same_as", function () {

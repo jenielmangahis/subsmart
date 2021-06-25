@@ -361,6 +361,27 @@
             echo date("Y-m-d", strtotime("+3 months"));
             exit;
         }
+
+        public function createIndustryTypeTemplates(){
+            $this->load->model('IndustryType_model');
+            $this->load->model('IndustryTemplateModules_model');
+
+            $modelTemplateModules = $this->IndustryTemplateModules_model->getAllByTemplateId(3);
+            $industryTypes = $this->IndustryType_model->getAll();
+
+            foreach($industryTypes as $i){
+                $isTemplateExists = $this->IndustryTemplateModules_model->getAllByTemplateId($i->id);
+                if( empty($isTemplateExists) )
+                foreach( $modelTemplateModules as $mt ){
+                    $data[] = ['industry_template_id' => $i->id, 'industry_module_id' => $mt->industry_module_id];
+                }                
+            }
+
+            echo "<pre>";
+            print_r($data);
+            exit;
+
+        }
     }
     /* End of file Debug.php */
 

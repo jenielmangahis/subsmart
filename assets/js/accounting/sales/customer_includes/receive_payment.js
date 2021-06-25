@@ -62,22 +62,16 @@ $(document).on("click", "#customer_receive_payment_modal .customer_receive_payme
     get_customer_info_for_receive_payment_modal(customer_id);
 });
 
-$(document).on("click", "div#customer_receive_payment_modal .customer_receive_payment_modal_content .customer_receive_payment_modal_footer .btn-save-dropdown", function(event) {
-    event.preventDefault();
-    $("div#customer_receive_payment_modal .customer_receive_payment_modal_content .customer_receive_payment_modal_footer .right-option .sub-option").show();
-});
-$(document).on("click", function(event) {
-    if ($(event.target).closest("div#customer_receive_payment_modal .customer_receive_payment_modal_content .customer_receive_payment_modal_footer .right-option").length === 0) {
-        $("div#customer_receive_payment_modal .customer_receive_payment_modal_content .customer_receive_payment_modal_footer .right-option .sub-option").hide();
-    }
-    if ($(event.target).closest("#customer_receive_payment_modal .customer_receive_payment_modal_content .invoicing-part .invoices .filter").length === 0) {
-        $("#customer_receive_payment_modal .customer_receive_payment_modal_content .invoicing-part .invoices .filter .filter-panel").hide();
-    }
 
-    if ($(event.target).closest("#customer_receive_payment_modal .find-by-invoice-no-section").length === 0) {
-        $("#customer_receive_payment_modal .find-by-invoice-no-panel").hide();
-    }
+
+$(document).on("click", ".customer_receive_payment_btn", function(event) {
+    $("#customer_receive_payment_modal").fadeIn();
+    event.preventDefault();
+    var customer_id = $(this).attr("data-customer-id");
+    $("#customer_receive_payment_modal #receive_payment_form select[name='customer_id']").val(customer_id);
+    get_customer_info_for_receive_payment_modal(customer_id);
 });
+
 $(document).on("click", "#customer_receive_payment_modal .customer_receive_payment_modal_content .invoicing-part .invoices .filter .filter-panel .buttons .apply-btn", function(event) {
     event.preventDefault();
     var filter_date_from = $("#customer_receive_payment_modal .customer_receive_payment_modal_content .invoicing-part .invoices .filter input[name='filter_date_from']").val();
@@ -117,14 +111,22 @@ $(document).on("change", "#customer_receive_payment_modal .customer_receive_paym
     }
 })
 
-$(document).on("click", ".customer_receive_payment_btn", function(event) {
-    $("#customer_receive_payment_modal").fadeIn();
+$(document).on("click", "div#customer_receive_payment_modal .customer_receive_payment_modal_content .customer_receive_payment_modal_footer .btn-save-dropdown", function(event) {
     event.preventDefault();
-    var customer_id = $(this).attr("data-customer-id");
-    $("#customer_receive_payment_modal #receive_payment_form select[name='customer_id']").val(customer_id);
-    get_customer_info_for_receive_payment_modal(customer_id);
+    $("div#customer_receive_payment_modal .customer_receive_payment_modal_content .customer_receive_payment_modal_footer .right-option .sub-option").show();
 });
+$(document).on("click", function(event) {
+    if ($(event.target).closest("div#customer_receive_payment_modal .customer_receive_payment_modal_content .customer_receive_payment_modal_footer .right-option").length === 0) {
+        $("div#customer_receive_payment_modal .customer_receive_payment_modal_content .customer_receive_payment_modal_footer .right-option .sub-option").hide();
+    }
+    if ($(event.target).closest("#customer_receive_payment_modal .customer_receive_payment_modal_content .invoicing-part .invoices .filter").length === 0) {
+        $("#customer_receive_payment_modal .customer_receive_payment_modal_content .invoicing-part .invoices .filter .filter-panel").hide();
+    }
 
+    if ($(event.target).closest("#customer_receive_payment_modal .find-by-invoice-no-section").length === 0) {
+        $("#customer_receive_payment_modal .find-by-invoice-no-panel").hide();
+    }
+});
 var invoice_count = 0;
 
 function get_customer_info_for_receive_payment_modal(customer_id) {
@@ -196,35 +198,6 @@ $("#customer_receive_payment_modal #receive_payment_form .filter input[name='inv
 });
 
 
-$(document).on("change", "div#customer_receive_payment_modal .customer_receive_payment_modal_content #customer_invoice_table td .inv_grand_amount", function(event) {
-    var receivable_payment = 0;
-    console.log(invoice_count);
-    for (var i = 0; i < invoice_count; i++) {
-        if ($("div#customer_receive_payment_modal .customer_receive_payment_modal_content #customer_invoice_table td input[name='inv_cb_" + i + "']").is(":checked")) {
-            var inv_amount = $("div#customer_receive_payment_modal .customer_receive_payment_modal_content #customer_invoice_table td input[name='inv_" + i + "']").val();
-            receivable_payment += parseFloat(inv_amount.replace(/,/g, ''));
-            console.log(receivable_payment);
-        }
-    }
-    const formatter = new Intl.NumberFormat('en-US', {
-        notation: "scientific",
-        minimumFractionDigits: 2
-    })
-    $('#receive_payment_form .total-receive-payment .amount').html("$" + formatMoney(receivable_payment));
-    $('div#customer_receive_payment_modal .customer_receive_payment_modal_content .invoicing-part .total-amount .amount-to-apply .amount').html("$" + formatMoney(receivable_payment));
-    $("#customer_receive_payment_modal #receive_payment_form input[name='amount_received']").val(formatMoney(receivable_payment));
-    $(this).val(formatMoney($(this).val().replace(/,/g, '')));
-});
-
-
-function formatMoney(n) {
-    return "" + (Math.round(n * 100) / 100).toLocaleString();
-}
-
-$("#customer_receive_payment_modal #receive_payment_form").submit(function(event) {
-    event.preventDefault();
-});
-
 $(document).on("click", "#customer_receive_payment_modal #receive_payment_form button[type='submit']", function(event) {
     var submit_type = $(this).attr('data-submit-type');
 
@@ -282,4 +255,33 @@ $(document).on("click", "#customer_receive_payment_modal #receive_payment_form b
         });
 
     }
+});
+
+$(document).on("change", "div#customer_receive_payment_modal .customer_receive_payment_modal_content #customer_invoice_table td .inv_grand_amount", function(event) {
+    var receivable_payment = 0;
+    console.log(invoice_count);
+    for (var i = 0; i < invoice_count; i++) {
+        if ($("div#customer_receive_payment_modal .customer_receive_payment_modal_content #customer_invoice_table td input[name='inv_cb_" + i + "']").is(":checked")) {
+            var inv_amount = $("div#customer_receive_payment_modal .customer_receive_payment_modal_content #customer_invoice_table td input[name='inv_" + i + "']").val();
+            receivable_payment += parseFloat(inv_amount.replace(/,/g, ''));
+            console.log(receivable_payment);
+        }
+    }
+    const formatter = new Intl.NumberFormat('en-US', {
+        notation: "scientific",
+        minimumFractionDigits: 2
+    })
+    $('#receive_payment_form .total-receive-payment .amount').html("$" + formatMoney(receivable_payment));
+    $('div#customer_receive_payment_modal .customer_receive_payment_modal_content .invoicing-part .total-amount .amount-to-apply .amount').html("$" + formatMoney(receivable_payment));
+    $("#customer_receive_payment_modal #receive_payment_form input[name='amount_received']").val(formatMoney(receivable_payment));
+    $(this).val(formatMoney($(this).val().replace(/,/g, '')));
+});
+
+
+function formatMoney(n) {
+    return "" + (Math.round(n * 100) / 100).toLocaleString();
+}
+
+$("#customer_receive_payment_modal #receive_payment_form").submit(function(event) {
+    event.preventDefault();
 });

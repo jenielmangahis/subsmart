@@ -1006,7 +1006,7 @@ class Workcalender extends MY_Controller
 
                                 $resources_user_events[$inc]['googleCalendarLink'] = $event->htmlLink;
                                 $resources_user_events[$inc]['geventID'] = $event->id;
-                                $resources_user_events[$inc]['eventType'] = 'events';
+                                $resources_user_events[$inc]['eventType'] = 'google_events';
                                 $resources_user_events[$inc]['resourceId'] = "user17";
                                 $resources_user_events[$inc]['title'] = $event->summary;
                                 $resources_user_events[$inc]['customHtml'] = $custom_html;

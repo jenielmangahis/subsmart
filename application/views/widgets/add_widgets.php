@@ -16,7 +16,7 @@
                 <hr />
                 <div class="justify-content-center text-center">
                     <span>Track stats important to your business</span><br />
-                    <button onclick="document.location = '<?= base_url('nsmart_plans/index') ?>'" class="btn btn-primary mt-2">Upgrade Plan</button>
+                    <button onclick="document.location = '<?= base_url('mycrm/membership') ?>'" class="btn btn-primary mt-2">Upgrade Plan</button>
                 </div>
             </div>
         </div>

@@ -5424,16 +5424,38 @@ class Accounting extends MY_Controller
         $data->html = $html;
         echo json_encode($data);
     }
-    public function get_info_customer_reminder()
+
+    public function save_receive_payment_from_modal()
     {
-        $customer_id = $this->input->post("customer_id");
+        $inv_count=$this->input->post("invoice_count");
+        $customer_id=$this->input->post("customer_id");
+
         $customer_info = $this->accounting_customers_model->get_customer_by_id($customer_id);
-        $invoices = $this->accounting_invoices_model->get_payements_by_customer_id($customer_id);
+        // var_dump($this->input->post());
+        $count_save =0;
+        for ($i =0;$i<$inv_count;$i++) {
+            if ($this->input->post("inv_cb_".$i) == "on") {
+                $insert=array(
+                    "customer_id" => $customer_id,
+                    "invoice_number" => $this->input->post("inv_number_".$i),
+                    "payment_date" => $this->input->post("payment_date"),
+                    "payment_method" => $this->input->post("payment_method"),
+                    "ref_no" => $this->input->post("ref_no"),
+                    "deposit_to" => $this->input->post("deposite_to"),
+                    "amount" => str_replace(',', '', $this->input->post("inv_".$i)),
+                    "memo" => $this->input->post("memo"),
+                    "attachments" => "",
+                    "status" => "1",
+                    "user_id" =>  logged('id'),
+                    "company_id" => $customer_info->company_id,
+                    "created_by" => logged('id'),
+                );
+                $this->accounting_invoices_model->insert_receive_payment($insert);
+                $count_save++;
+            }
+        }
         $data = new stdClass();
-        $data->cutsomer_email = $customer_info->email;
-        $data->name = $customer_info->first_name ." ".$customer_info->last_name ."";
-        $data->invoice_count = count($invoices);
-        $data->business_name = $customer_info->business_name;
+        $data->count_save = $count_save;
         echo json_encode($data);
     }
     public function send_customer_reminder()
@@ -5485,138 +5507,6 @@ class Accounting extends MY_Controller
         }
         echo json_encode($data);
         // $this->load->view('accounting/customer_includes/send_reminder_email_layout', $this->page_data);
-    }
-    public function get_customer_info_for_receive_payment()
-    {
-        $customer_id = $this->input->post("customer_id");
-        $invoices = $this->accounting_invoices_model->get_invoices_by_customer_id($customer_id);
-        $receivable_payment = 0;
-        $html='';
-        $counter =0;
-        foreach ($invoices as $inv) {
-            $customer_id = $inv->customer_id;
-            $total_amount_received =0;
-
-            $payment_received = $this->accounting_invoices_model->get_payements_by_invoice($inv->invoice_number);
-            foreach ($payment_received as $received) {
-                $total_amount_received+=$received->amount;
-            }
-            if (($inv->grand_total-$total_amount_received) > 0) {
-                $html.='<tr>
-                    <td class="center" style="width: 0;"><input type="checkbox" class="inv_cb" name="inv_cb_'.$counter.'" checked>
-                    </td>
-                    <td>
-                    '.$inv->invoice_number.'
-                    <input type="text" class="hide" name="inv_number_'.$counter.'" value="'.$inv->invoice_number.'">
-                    </td>
-                    <td>
-                    '.$inv->due_date.'
-                    </td>
-                    <td class="text-right">'.number_format($inv->grand_total, 2).'</td>
-                    <td class="text-right">
-                    '.number_format($inv->grand_total-$total_amount_received, 2).'
-                    </td>
-                    <td>
-                        <div class="form-group">
-                            <input type="text" class="text-right inv_grand_amount" name="inv_'.$counter.'" value="'.number_format($inv->grand_total-$total_amount_received, 2).'">
-                        </div>
-                    </td>
-                </tr>';
-                $counter++;
-                $receivable_payment +=$inv->grand_total-$total_amount_received;
-            }
-        }
-        $data = new stdClass();
-        $data->html = $html;
-        $data->receivable_payment = $receivable_payment;
-        $data->display_receivable_payment = number_format($receivable_payment, 2);
-        $data->inv_count = $counter;
-        echo json_encode($data);
-    }
-    public function get_customer_filtered_info_for_receive_payment_modal()
-    {
-        $customer_id = $this->input->post("customer_id");
-        $filter_date_from =$this->input->post("filter_date_from");
-        $filter_date_to =$this->input->post("filter_date_to");
-        $filter_overdue =$this->input->post("filter_overdue");
-
-        $invoices = $this->accounting_invoices_model->get_filtered_invoices_by_customer_id($filter_date_from, $filter_date_to, $filter_overdue, $customer_id);
-
-        $receivable_payment = 0;
-        $html='';
-        $counter =0;
-        foreach ($invoices as $inv) {
-            $customer_id = $inv->customer_id;
-            $total_amount_received =0;
-
-            $payment_received = $this->accounting_invoices_model->get_payements_by_invoice($inv->invoice_number);
-            foreach ($payment_received as $received) {
-                $total_amount_received+=$received->amount;
-            }
-            if (($inv->grand_total-$total_amount_received) > 0) {
-                $html.='<tr>
-                    <td class="center" style="width: 0;"><input type="checkbox" class="inv_cb" name="inv_cb_'.$counter.'" checked>
-                    </td>
-                    <td>
-                    '.$inv->invoice_number.'
-                    <input type="text" class="hide" name="inv_number_'.$counter.'" value="'.$inv->invoice_number.'">
-                    </td>
-                    <td>
-                    '.$inv->due_date.'
-                    </td>
-                    <td class="text-right">'.number_format($inv->grand_total, 2).'</td>
-                    <td class="text-right">
-                    '.number_format($inv->grand_total-$total_amount_received, 2).'
-                    </td>
-                    <td>
-                        <div class="form-group">
-                            <input type="text" class="text-right inv_grand_amount" name="inv_'.$counter.'" value="'.number_format($inv->grand_total-$total_amount_received, 2).'">
-                        </div>
-                    </td>
-                </tr>';
-                $counter++;
-                $receivable_payment +=$inv->grand_total-$total_amount_received;
-            }
-        }
-        $data = new stdClass();
-        $data->html = $html;
-        $data->receivable_payment = $receivable_payment;
-        $data->display_receivable_payment = number_format($receivable_payment, 2);
-        $data->inv_count = $counter;
-        echo json_encode($data);
-    }
-    public function save_receive_payment_from_modal()
-    {
-        $inv_count=$this->input->post("invoice_count");
-        $customer_id=$this->input->post("customer_id");
-
-        $customer_info = $this->accounting_customers_model->get_customer_by_id($customer_id);
-        // var_dump($this->input->post());
-        $count_save =0;
-        for ($i =0;$i<$inv_count;$i++) {
-            if ($this->input->post("inv_cb_".$i) == "on") {
-                $insert=array(
-                    "customer_id" => $customer_id,
-                    "invoice_number" => $this->input->post("inv_number_".$i),
-                    "payment_date" => $this->input->post("payment_date"),
-                    "payment_method" => $this->input->post("payment_method"),
-                    "ref_no" => $this->input->post("ref_no"),
-                    "deposit_to" => $this->input->post("deposite_to"),
-                    "amount" => str_replace(',', '', $this->input->post("inv_".$i)),
-                    "memo" => $this->input->post("memo"),
-                    "attachments" => "",
-                    "status" => "1",
-                    "user_id" =>  logged('id'),
-                    "company_id" => $customer_info->company_id,
-                    "created_by" => logged('id'),
-                );
-                $this->accounting_invoices_model->insert_receive_payment($insert);
-                $count_save++;
-            }
-        }
-        $data = new stdClass();
-        $data->count_save = $count_save;
-        echo json_encode($data);
     }
     public function get_load_customers_table()
     {
@@ -5739,12 +5629,124 @@ class Accounting extends MY_Controller
         $data->html = $html;
         echo json_encode($data);
     }
+    public function get_customer_info_for_receive_payment()
+    {
+        $customer_id = $this->input->post("customer_id");
+        $invoices = $this->accounting_invoices_model->get_invoices_by_customer_id($customer_id);
+        $receivable_payment = 0;
+        $html='';
+        $counter =0;
+        foreach ($invoices as $inv) {
+            $customer_id = $inv->customer_id;
+            $total_amount_received =0;
+
+            $payment_received = $this->accounting_invoices_model->get_payements_by_invoice($inv->invoice_number);
+            foreach ($payment_received as $received) {
+                $total_amount_received+=$received->amount;
+            }
+            if (($inv->grand_total-$total_amount_received) > 0) {
+                $html.='<tr>
+                    <td class="center" style="width: 0;"><input type="checkbox" class="inv_cb" name="inv_cb_'.$counter.'" checked>
+                    </td>
+                    <td>
+                    '.$inv->invoice_number.'
+                    <input type="text" class="hide" name="inv_number_'.$counter.'" value="'.$inv->invoice_number.'">
+                    </td>
+                    <td>
+                    '.$inv->due_date.'
+                    </td>
+                    <td class="text-right">'.number_format($inv->grand_total, 2).'</td>
+                    <td class="text-right">
+                    '.number_format($inv->grand_total-$total_amount_received, 2).'
+                    </td>
+                    <td>
+                        <div class="form-group">
+                            <input type="text" class="text-right inv_grand_amount" name="inv_'.$counter.'" value="'.number_format($inv->grand_total-$total_amount_received, 2).'">
+                        </div>
+                    </td>
+                </tr>';
+                $counter++;
+                $receivable_payment +=$inv->grand_total-$total_amount_received;
+            }
+        }
+        $data = new stdClass();
+        $data->html = $html;
+        $data->receivable_payment = $receivable_payment;
+        $data->display_receivable_payment = number_format($receivable_payment, 2);
+        $data->inv_count = $counter;
+        echo json_encode($data);
+    }
+    public function get_customer_filtered_info_for_receive_payment_modal()
+    {
+        $customer_id = $this->input->post("customer_id");
+        $filter_date_from =$this->input->post("filter_date_from");
+        $filter_date_to =$this->input->post("filter_date_to");
+        $filter_overdue =$this->input->post("filter_overdue");
+
+        $invoices = $this->accounting_invoices_model->get_filtered_invoices_by_customer_id($filter_date_from, $filter_date_to, $filter_overdue, $customer_id);
+
+        $receivable_payment = 0;
+        $html='';
+        $counter =0;
+        foreach ($invoices as $inv) {
+            $customer_id = $inv->customer_id;
+            $total_amount_received =0;
+
+            $payment_received = $this->accounting_invoices_model->get_payements_by_invoice($inv->invoice_number);
+            foreach ($payment_received as $received) {
+                $total_amount_received+=$received->amount;
+            }
+            if (($inv->grand_total-$total_amount_received) > 0) {
+                $html.='<tr>
+                    <td class="center" style="width: 0;"><input type="checkbox" class="inv_cb" name="inv_cb_'.$counter.'" checked>
+                    </td>
+                    <td>
+                    '.$inv->invoice_number.'
+                    <input type="text" class="hide" name="inv_number_'.$counter.'" value="'.$inv->invoice_number.'">
+                    </td>
+                    <td>
+                    '.$inv->due_date.'
+                    </td>
+                    <td class="text-right">'.number_format($inv->grand_total, 2).'</td>
+                    <td class="text-right">
+                    '.number_format($inv->grand_total-$total_amount_received, 2).'
+                    </td>
+                    <td>
+                        <div class="form-group">
+                            <input type="text" class="text-right inv_grand_amount" name="inv_'.$counter.'" value="'.number_format($inv->grand_total-$total_amount_received, 2).'">
+                        </div>
+                    </td>
+                </tr>';
+                $counter++;
+                $receivable_payment +=$inv->grand_total-$total_amount_received;
+            }
+        }
+        $data = new stdClass();
+        $data->html = $html;
+        $data->receivable_payment = $receivable_payment;
+        $data->display_receivable_payment = number_format($receivable_payment, 2);
+        $data->inv_count = $counter;
+        echo json_encode($data);
+    }
+    
+    public function get_info_customer_reminder()
+    {
+        $customer_id = $this->input->post("customer_id");
+        $customer_info = $this->accounting_customers_model->get_customer_by_id($customer_id);
+        $invoices = $this->accounting_invoices_model->get_payements_by_customer_id($customer_id);
+        $data = new stdClass();
+        $data->cutsomer_email = $customer_info->email;
+        $data->name = $customer_info->first_name ." ".$customer_info->last_name ."";
+        $data->invoice_count = count($invoices);
+        $data->business_name = $customer_info->business_name;
+        echo json_encode($data);
+    }
     public function find_cutsomer_by_invoice_number()
     {
         $find_inv=$this->input->post("find_inv_no");
         $invoice_info = $this->accounting_invoices_model->get_invoice_by_invoice_no($find_inv);
         $customer_id = "";
-        if($invoice_info != null){
+        if ($invoice_info != null) {
             $customer_id = $invoice_info->customer_id;
         }
         $data = new stdClass();

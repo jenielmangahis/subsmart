@@ -307,6 +307,7 @@ $route['accounting/get-vendor-details/(:any)'] = 'accounting_modals/get_vendor_d
 $route['accounting/get-customer-details/(:any)'] = 'accounting_modals/get_customer_details/$1';
 $route['accounting/get-employee-details/(:any)'] = 'accounting_modals/get_employee_details/$1';
 $route['accounting/get-linkable-transactions/(:any)/(:any)'] = 'accounting_modals/get_linkable_transactions/$1/$2';
+$route['accounting/get-transaction-details/(:any)/(:any)'] = 'accounting_modals/get_transaction_categories/$1/$2';
 
 $route['accounting/lists'] = 'accounting/lists';
 
@@ -948,3 +949,7 @@ $route['mycrm/_upgrade_subscription'] = 'Mycrm/company_upgrade_subscription';
 $route['mycrm/_pay_subscription'] = 'Mycrm/company_pay_subscription';
 $route['mycrm/_request_remove_addon'] = 'Mycrm/company_request_remove_addon';
 $route['mycrm/_cancel_remove_addon'] = 'Mycrm/company_cancel_remove_addon';
+
+//Addons
+$route['more/_load_addons_list'] = 'More/ajax_load_addons_list';
+$route['more/_load_active_addons_list'] = 'More/ajax_load_active_addons_list';

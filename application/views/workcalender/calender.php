@@ -558,57 +558,6 @@ a.top-1 {
                                     <div id='calendar'></div>
                                     <a class="btn btn-primary btn-add-gcalendar" title="Add Calendar" href="javascript:void(0);" style="margin-top: 15px;"><i class="far fa-calendar-plus"></i> Add Calendar</a>
                                 </div>
-
-
-                              <div class="row cus-dashboard-div">
-                                  <!--<div class="col-widget" id="widget_3">
-                                  <div style="width: 300px; border: 1px solid #58c04e; background: #58c04e; color:white;  border-radius: 10px; text-align: center;padding: 5px;position: relative;margin: 0 auto;top: 21px;z-index: 1000;">
-                                     <i class="fa fa-calendar" aria-hidden="true"></i> Upcoming Jobs
-                                  </div>
-
-                                  <div class="card" style="border: 2px solid #30233d; margin-top:0; border-radius: 40px; padding:5px;">
-                                    <div style="border: 5px solid #30233d; margin-top:0; border-radius: 40px; box-shadow: 1px 0px 15px 5px rgb(48, 35, 61);">
-                                      <div class="card-body mt-3" style="padding:5px 10px; height: 300px;">
-                                        <div style="height: 280px;">
-                                          <div class="mb-2 col-lg-12 float-left jobsRow" style="padding-bottom: 5px; cursor: pointer;height:250px;">
-                                            <div class="row d-lg-flex">
-                                                <div class="col-md-12">
-                                                    <div class="cus-dashboard-div">
-
-                                                    </div>
-                                                </div>
-                                            </div>
-                                          </div>
-                                          <div class="text-center">
-                                              <a class="text-info" href="<?= base_url()?>job">SEE ALL JOBS</a>
-                                          </div>
-                                        </div>
-                                      </div>
-                                    </div>
-                                </div>
-                              </div>-->
-                                  <!--<div class="col-widget" id="widget_3">
-                                    <div style="width: 300px; border: 1px solid #58c04e; background: #58c04e; color:white;  border-radius: 10px; text-align: center;padding: 5px;position: relative;margin: 0 auto;top: 21px;z-index: 1000;">
-                                       <i class="fa fa-paper-plane" aria-hidden="true"></i> Upcoming Events
-                                    </div>
-                                    <div class="card" style="border: 2px solid #30233d; margin-top:0; border-radius: 40px; padding:5px;">
-                                      <div style="border: 5px solid #30233d; margin-top:0; border-radius: 40px; box-shadow: 1px 0px 15px 5px rgb(48, 35, 61);">
-                                        <div class="card-body mt-3" style="padding:5px 10px; height: 300px;">
-                                          <div style="height: 280px;">
-                                            <div class="mb-2 col-lg-12 float-left jobsRow" style="padding-bottom: 5px; cursor: pointer;height:250px;">
-                                              <div class="row d-lg-flex">
-                                                  <div class="col-md-12">
-                                                      <div class="cus-dashboard-div">
-                                                      </div>
-                                                  </div>
-                                              </div>
-                                            </div>
-                                          </div>
-                                        </div>
-                                      </div>
-                                  </div>
-                                </div>-->
-                            </div>
                                 <div class="calendar-menu" style="text-align: left;">
                                     <div style="background: #f2f2f2; padding: 20px;">
                                         <div class="margin-bottom">
@@ -1238,16 +1187,50 @@ a.top-1 {
                   element.find('.fc-event-title').html(event.title);
               },*/
           defaultDate: "<?php echo date('Y-m-d') ?>",
-            editable: false,
+            editable: true,
+            eventDrop: function(info) {
+              console.log(info.event);
+              //alert(info.event.extendedProps.eventType);
+              //alert(info.event.title + " was dropped on " + info.event.start.toDateString());
+              if( info.event.extendedProps.eventType != 'google_events' ){
+                var new_date   = info.event.start.toDateString();
+                var event_id   = info.event.extendedProps.eventId;
+                var event_type = info.event.extendedProps.eventType;
+                var url        = base_url + 'calendar/_updte_drop_event';
+                $.ajax({
+                   type: "POST",
+                   url: url,
+                   data: $("#create-google-event").serialize(),
+                   dataType: 'json',
+                   success: function(o)
+                   {
+
+
+                      if( o.is_success ){
+                        var msg = "<div class='alert alert-success'>"+ o.message +"</div>";
+                        $(".create-gevent-validation-error").html(msg);
+
+                        $("#modalCreateGoogleEvent").modal("hide");
+
+                        //Reload calendar
+                        load_calendar();
+                        var calendarEl = document.getElementById('calendar');
+                        var timeZoneSelectorEl = document.getElementById('time-zone-selector');
+                        render_calender(calendarEl, timeZoneSelectorEl);
+                      }else{
+                        var msg = "<div class='alert alert-danger'>"+ o.message +"</div>";
+                        $(".create-gevent-validation-error").html(msg);
+                      }
+                   }
+                });
+              }else{
+
+              }
+            },
             navLinks: true, // can click day/week names to navigate views
             eventLimit: true, // allow "more" link when too many events
             events: events,
             eventClick: function (arg) {
-                //console.log(arg.event._def.extendedProps);
-
-                /*$("#modalEventDetails").modal('show');
-                $('#modalEventDetails .modal-body').html("loading...");*/
-
                 var apiUrl = '';
                 var isGet  = 1;
                 if (typeof arg.event._def.extendedProps.eventId != 'undefined') {
@@ -1259,74 +1242,12 @@ a.top-1 {
                     }else{
                         location.href = base_url + 'events/event_preview/' + arg.event._def.extendedProps.eventId;
                     }
-                    /*apiUrl = base_url + 'event/modal_details/' + arg.event._def.extendedProps.eventId;
-
-                    $("#edit_schedule").show();
-                    //$("#edit_workorder").hide();
-
-                    $("#edit_schedule").attr('data-event-id', arg.event._def.extendedProps.eventId);*/
                 }else if( typeof arg.event._def.extendedProps.geventID != 'undefined' ){
                   window.open(
                     arg.event._def.extendedProps.googleCalendarLink,
                     '_blank' // <- This is what makes it open in a new window.
                   );
-                 /* $("#modalEventDetails").modal('show');
-                  $('#modalEventDetails .modal-body').html("loading...");
-
-                    apiUrl = base_url + 'workcalender/modal_gevent_details';
-                    isGet = 0;
-                    var gData = {
-                      'gevent_id' : arg.event._def.extendedProps.geventID,
-                      'title' : arg.event._def.extendedProps.customHtml,
-                      'start_date' : arg.event._def.extendedProps.start,
-                      'end_date' : arg.event._def.extendedProps.end,
-                    };*/
-                } /*else {
-
-                    apiUrl = base_url + 'workcalender/short_details/' + arg.event._def.extendedProps.wordOrderId;
-
-                    $("#edit_schedule").hide();
-                    //$("#edit_workorder").show();
-
-                    //$("#edit_workorder").attr('data-workorder-id', arg.event._def.extendedProps.wordOrderId);
-                }*/
-
-                /*if( isGet == 1 ){
-                  jQuery.ajax({
-                      url: apiUrl,
-                      // dataType: 'json',
-                      data: '',
-                      beforeSend: function () {
-                          jQuery('.tiva-calendar').html('<div class="loading"><img src="./assets/img/loading.gif" /></div>');
-                      },
-                      success: function (response) {
-
-                          // console.log(response);
-                          $(".btn-event-edit").show();
-                          $(".btn-event-delete").show();
-                          $(".btn-event-edit-workorder").show();
-                          $("#modalEventDetails").find('.modal-body').html(response);
-                      }
-                  });
-                }else{
-                  jQuery.ajax({
-                      url: apiUrl,
-                      type: "POST",
-                      data: gData,
-                      beforeSend: function () {
-                          jQuery('.tiva-calendar').html('<div class="loading"><img src="./assets/img/loading.gif" /></div>');
-                      },
-                      success: function (response) {
-
-                          // console.log(response);
-                          $(".btn-event-edit").hide();
-                          $(".btn-event-delete").hide();
-                          $(".btn-event-edit-workorder").hide();
-                          $("#modalEventDetails").find('.modal-body').html(response);
-                      }
-                  });
-                }*/
-
+                }
             },
             loading: function (isLoading) {
               if (isLoading) {
@@ -1350,8 +1271,6 @@ a.top-1 {
 
             },
             eventOrder: ["starttime"]
-            //events: <?php echo json_encode($resources_user_events); ?>,
-
         });
 
         calendar.render();
