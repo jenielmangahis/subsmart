@@ -1808,8 +1808,8 @@ $(function() {
                 var transactions = JSON.parse(res);
 
                 if(transactions.length > 0) {
-                    if($('#expensesModal .transactions-container').length > 0) {
-                        $('#expensesModal .transactions-container').parent().remove();
+                    if($('#expenseModal .transactions-container').length > 0) {
+                        $('#expenseModal .transactions-container').parent().remove();
                     }
 
                     $('#expenseModal .modal-body .row .col .card .card-body').children('.row:first-child').prepend(`
@@ -1846,8 +1846,8 @@ $(function() {
                                             ${transaction.type === 'Purchase Order' ? '<br><strong>Balance</strong> '+transaction.balance : ''}
                                         </p>
                                         <ul class="d-flex justify-content-around">
-                                            <li><a href="#" class="text-info"><strong>Add</strong></a></li>
-                                            <li><a href="#" class="text-info">Open</a></li>
+                                            <li><a href="#" class="text-info add-transaction" data-id="${transaction.id}" data-type="${transaction.data_type}"><strong>Add</strong></a></li>
+                                            <li><a href="#" class="text-info open-transaction" data-id="${transaction.id}" data-type="${transaction.data_type}">Open</a></li>
                                         </ul>
                                     </div>
                                 </div>
@@ -1870,8 +1870,8 @@ $(function() {
                 var transactions = JSON.parse(res);
 
                 if(transactions.length > 0) {
-                    if($('#expensesModal .transactions-container').length > 0) {
-                        $('#expensesModal .transactions-container').parent().remove();
+                    if($('#checkModal .transactions-container').length > 0) {
+                        $('#checkModal .transactions-container').parent().remove();
                     }
 
                     $('#checkModal .modal-body .row .col .card .card-body').children('.row:first-child').prepend(`
@@ -1908,8 +1908,8 @@ $(function() {
                                             ${transaction.type === 'Purchase Order' ? '<br><strong>Balance</strong> '+transaction.balance : ''}
                                         </p>
                                         <ul class="d-flex justify-content-around">
-                                            <li><a href="#" class="text-info"><strong>Add</strong></a></li>
-                                            <li><a href="#" class="text-info">Open</a></li>
+                                            <li><a href="#" class="text-info add-transaction" data-id="${transaction.id}" data-type="${transaction.data_type}"><strong>Add</strong></a></li>
+                                            <li><a href="#" class="text-info open-transaction" data-id="${transaction.id}" data-type="${transaction.data_type}">Open</a></li>
                                         </ul>
                                     </div>
                                 </div>
@@ -1923,6 +1923,284 @@ $(function() {
                 }
             });
         }
+    });
+
+    $(document).on('change', '#billModal #vendor', function() {
+        $.get('/accounting/get-linkable-transactions/bill/'+$(this).val(), function(res) {
+            var transactions = JSON.parse(res);
+
+            if(transactions.length > 0) {
+                if($('#billModal .transactions-container').length > 0) {
+                    $('#billModal .transactions-container').parent().remove();
+                }
+
+                $('#billModal .modal-body .row .col .card .card-body').children('.row:first-child').prepend(`
+                    <div class="col-md-12 px-0 pb-2">
+                        <a href="#" class="float-right btn btn-transparent rounded-0 close-transactions-container" style="padding:12px 15px !important">
+                            <i class="fa fa-chevron-right"></i>
+                        </a>
+                    </div>
+                `);
+
+                $('#billModal .modal-body').children('.row').append(`
+                    <div class="col-xl-2">
+                        <div class="transactions-container bg-white h-100" style="padding: 15px">
+                            <div class="row">
+                                <div class="col-12">
+                                    <h4>Add to Expense</h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `);
+
+                $.each(transactions, function(index, transaction) {
+                    var title = transaction.type;
+                    title += transaction.number !== '' ? '#'+transaction.number : '';
+                    $('#billModal .modal-body .row .col-xl-2 .transactions-container .row').append(`
+                        <div class="col-12">
+                            <div class="card border">
+                                <div class="card-body p-0">
+                                    <h5 class="card-title">${title}</h5>
+                                    <p class="card-subtitle">${transaction.formatted_date}</p>
+                                    <p class="card-text">
+                                        <strong>Total</strong> ${transaction.total}
+                                        ${transaction.type === 'Purchase Order' ? '<br><strong>Balance</strong> '+transaction.balance : ''}
+                                    </p>
+                                    <ul class="d-flex justify-content-around">
+                                        <li><a href="#" class="text-info add-transaction" data-id="${transaction.id}" data-type="${transaction.data_type}"><strong>Add</strong></a></li>
+                                        <li><a href="#" class="text-info open-transaction" data-id="${transaction.id}" data-type="${transaction.data_type}">Open</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    `);
+                });
+            } else {
+                $('#billModal .transactions-container').parent().remove();
+                $('#billModal a.close-transactions-container').parent().remove();
+                $('#billModal a.open-transactions-container').parent().remove();
+            }
+        });
+    });
+
+    $(document).on('click', '#modal-container .modal .transactions-container a.add-transaction', function(e) {
+        e.preventDefault();
+        var data = e.currentTarget.dataset;
+
+        $.get(`/accounting/get-transaction-details/${data.type}/${data.id}`, function(res) {
+            var result = JSON.parse(res);
+            var categories = result.categories;
+            var items = result.items;
+
+            var count = 0;
+            $('#modal-container .modal table#category-details-table tbody tr').each(function() {
+                if($(this).find('select').length === 0) {
+                    $(this).remove();
+                } else {
+                    count++;
+                }
+            });
+
+            $.each(categories, function(index, category) {
+                count++;
+                $('#modal-container .modal table#category-details-table tbody').append(`<tr>${catDetailsInputs}</tr>`);
+                $('#modal-container .modal table#category-details-table tbody tr:last-child td:nth-child(2)').html(count);
+                $('#modal-container .modal table#category-details-table tbody tr:last-child select[name="expense_name[]"]').val(category.expense_account_id);
+                $('#modal-container .modal table#category-details-table tbody tr:last-child select[name="category[]"]').val(category.category);
+                $('#modal-container .modal table#category-details-table tbody tr:last-child input[name="description[]"]').val(category.description);
+                $('#modal-container .modal table#category-details-table tbody tr:last-child input[name="category_amount[]"]').val(parseFloat(category.amount).toFixed(2));
+                $('#modal-container .modal table#category-details-table tbody tr:last-child input[name="category_billable[]"]').prop('checked', category.billable === "1");
+                $('#modal-container .modal table#category-details-table tbody tr:last-child input[name="category_markup[]"]').val(parseFloat(category.markup_percentage).toFixed(2));
+                $('#modal-container .modal table#category-details-table tbody tr:last-child input[name="category_tax[]"]').prop('checked', category.tax === "1");
+                $('#modal-container .modal table#category-details-table tbody tr:last-child select[name="category_customer[]"]').val(category.customer_id);
+            });
+
+            $('#modal-container .modal table#category-details-table tbody select').select2();
+
+            if($('#modal-container .modal table#category-details-table tbody tr').length === 1) {
+                $('#modal-container .modal table#category-details-table tbody').append(`<tr>${catDetailsBlank}</tr>`);
+                $('#modal-container .modal table#category-details-table tbody tr:last-child td:nth-child(2)').html(count+1);
+            }
+
+            $.each(items, function(index, item) {
+                var locs = '';
+                for(var i in item.locations) {
+                    locs += `<option value="${item.locations[i].id}" data-quantity="${item.locations[i].qty === "null" ? 0 : item.locations[i].qty}" ${item.locations[i].id === item.location_id ? 'selected' : ''}>${item.locations[i].name}</option>`;
+                }
+
+                if($('#modal-container form#modal-form .modal').attr('id') === 'creditCardCreditModal' || $('#modal-container form#modal-form .modal').attr('id') === 'vendorCreditModal') {
+                    var qtyField = `<input type="number" name="quantity[]" class="form-control text-right" required value="0" max="${item.locations[0].qty}">`;
+                } else {
+                    var qtyField = `<input type="number" name="quantity[]" class="form-control text-right" required value="0">`;
+                }
+
+                $('#modal-container .modal table#item-details-table tbody').append(`
+                    <tr>
+                        <td>${item.details.title}<input type="hidden" name="item[]" value="${item.item_id}"></td>
+                        <td>Product</td>
+                        <td><select name="location[]" class="form-control" required>${locs}</select></td>
+                        <td><input type="number" name="quantity[]" class="form-control text-right" required value="${item.quantity}"></td>
+                        <td><input type="number" name="item_amount[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" value="${parseFloat(item.rate).toFixed(2)}"></td>
+                        <td><input type="number" name="discount[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" value="${parseFloat(item.discount).toFixed(2)}"></td>
+                        <td><input type="number" name="item_tax[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" value="${parseFloat(item.tax).toFixed(2)}"></td>
+                        <td>$<span class="row-total">${parseFloat(item.total).toFixed(2)}</span></td>
+                        <td><a href="#" class="deleteRow"><i class="fa fa-trash"></i></a></td>
+                    </tr>
+                `);
+            });
+
+            $('#modal-container .modal table#category-details-table tbody input[name="category_amount[]"]').trigger('change');
+
+            $('#modal-container .modal .transactions-container').parent().remove();
+            $('#modal-container .modal a.close-transactions-container').parent().remove();
+            $('#modal-container .modal a.open-transactions-container').parent().remove();
+        });
+    });
+
+    $(document).on('click', '#modal-container .modal .transactions-container a.open-transaction', function(e) {
+        e.preventDefault();
+        var id = e.currentTarget.dataset.id;
+        var type = e.currentTarget.dataset.type;
+
+        $('#modal-container .modal').modal('hide');
+
+        switch(type) {
+            case 'purchase-order' :
+                var modalName = 'purchaseOrderModal';
+            break;
+            case 'bill' :
+                var modalName = 'billModal';
+            break;
+            case 'vendor-credit' :
+                var modalName = 'vendorCreditModal';
+            break;
+        }
+
+        $.get(`/accounting/vendors/view-${type}/`+id, function(res) {
+            if ($('div#modal-container').length > 0) {
+                $('div#modal-container').html(res);
+            } else {
+                $('body').append(`
+                    <div id="modal-container"> 
+                        ${res}
+                    </div>
+                `);
+            }
+    
+            rowCount = 2;
+            catDetailsInputs = $(`#${modalName} table#category-details-table tbody tr:first-child()`).html();
+            catDetailsBlank = $(`#${modalName} table#category-details-table tbody tr:last-child`).html();
+
+            if($(`#${modalName} table#category-details-table tbody tr`).length === 2) {
+                $(`#${modalName} table#category-details-table tbody tr:first-child()`).html(catDetailsBlank);
+                $(`#${modalName} table#category-details-table tbody tr:first-child() td:nth-child(2)`).html(1);
+            } else {
+                $(`#${modalName} table#category-details-table tbody tr:first-child()`).remove();
+            }
+
+            if($(`#${modalName} select`).length > 0) {
+                $(`#${modalName} select`).select2();
+            }
+
+            if($(`div#${modalName} select#tags`).length > 0) {
+                $(`div#${modalName} select#tags`).select2({
+                    placeholder: 'Start typing to add a tag',
+                    allowClear: true,
+                    ajax: {
+                        url: '/accounting/get-job-tags',
+                        dataType: 'json'
+                    }
+                });
+            }
+        
+            if($(`div#${modalName} .date`).length > 0) {
+                $(`div#${modalName} .date`).each(function(){
+                    $(this).datepicker({
+                        uiLibrary: 'bootstrap'
+                    });
+                });
+            }
+        
+            if($(`#${modalName} .attachments`).length > 0) {
+                var attachmentContId = $(`#${modalName} .attachments .dropzone`).attr('id');
+                var transactionAttach = new Dropzone(`#${attachmentContId}`, {
+                    url: '/accounting/attachments/attach',
+                    maxFilesize: 20,
+                    uploadMultiple: true,
+                    // maxFiles: 1,
+                    addRemoveLinks: true,
+                    init: function() {
+                        $.getJSON('/accounting/vendors/get-transaction-attachments/'+type+'/'+id, function(data) {
+                            if(data.length > 0) {
+                                $.each(data, function(index, val) {
+                                    $(`#${modalName}`).find('.attachments').parent().append(`<input type="hidden" name="attachments[]" value="${val.id}">`);
+        
+                                    modalAttachmentId.push(val.id);
+                                    var mockFile = {
+                                        name: `${val.uploaded_name}.${val.file_extension}`,
+                                        size: parseInt(val.size),
+                                        dataURL: base_url+"uploads/accounting/attachments/" + val.stored_name,
+                                        // size: val.size / 1000000,
+                                        accepted: true
+                                    };
+                                    transactionAttach.emit("addedfile", mockFile);
+                                    modalAttachedFiles.push(mockFile);
+
+                                    transactionAttach.createThumbnailFromUrl(mockFile, transactionAttach.options.thumbnailWidth, transactionAttach.options.thumbnailHeight, transactionAttach.options.thumbnailMethod, true, function(thumbnail) {
+                                        transactionAttach.emit('thumbnail', mockFile, thumbnail);
+                                    });
+                                    transactionAttach.emit("complete", mockFile);
+                                });
+                            }
+                        });
+
+                        this.on("success", function(file, response) {
+                            var ids = JSON.parse(response)['attachment_ids'];
+                            var modal = $(`#${modalName}`);
+        
+                            for(i in ids) {
+                                if(modal.find(`input[name="attachments[]"][value="${ids[i]}"]`).length === 0) {
+                                    modal.find('.attachments').parent().append(`<input type="hidden" name="attachments[]" value="${ids[i]}">`);
+                                }
+        
+                                modalAttachmentId.push(ids[i]);
+                            }
+                            modalAttachedFiles.push(file);
+                        });
+                    },
+                    removedfile: function(file) {
+                        var ids = modalAttachmentId;
+                        var index = modalAttachedFiles.map(function(d, index) {
+                            if (d == file) return index;
+                        }).filter(isFinite)[0];
+                
+                        $(`#${modalName} .attachments`).parent().find(`input[name="attachments[]"][value="${ids[index]}"]`).remove();
+        
+                        //remove thumbnail
+                        var previewElement;
+        
+                        if((previewElement = file.previewElement) !== null) {
+                            var remove = (previewElement.parentNode.removeChild(file.previewElement));
+                
+                            if($(`#${attachmentContId} .dz-preview`).length > 0) {
+                                $(`#${attachmentContId} .dz-message`).hide();
+                            } else {
+                                $(`#${attachmentContId} .dz-message`).show();
+                            }
+                
+                            return remove;
+                        } else {
+                            return (void 0);
+                        }
+                    }
+                });
+            }
+    
+            $(`#${modalName} #payee`).trigger('change');
+    
+            $(`#${modalName}`).modal('show');
+        });
     });
 
     $(document).on('click', '#modal-container .modal a.close-transactions-container', function(e) {

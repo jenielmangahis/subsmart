@@ -584,6 +584,7 @@ class Workorder extends MY_Controller
         $this->page_data['job_tags'] = $this->workorder_model->getjob_tagsById();
         $this->page_data['lead_source'] = $this->workorder_model->getlead_source($company_id);
         $this->page_data['payment'] = $this->workorder_model->getpayment($id);
+        $this->page_data['users_lists'] = $this->users_model->getAllUsersByCompanyID($company_id);
 
         $this->page_data['items_data'] = $this->workorder_model->getworkorderItems($id);
 
@@ -634,6 +635,7 @@ class Workorder extends MY_Controller
         $this->page_data['dvr'] = $this->workorder_model->getenhanced_services_dvr($id);
         $this->page_data['automation'] = $this->workorder_model->getenhanced_services_automation($id);
         $this->page_data['pers'] = $this->workorder_model->getenhanced_services_pers($id);
+        $this->page_data['users_lists'] = $this->users_model->getAllUsersByCompanyID($company_id);
 
         $work = $this->workorder_model->getworkorder($id);
 
@@ -2534,6 +2536,7 @@ class Workorder extends MY_Controller
         $this->page_data['packages'] = $this->workorder_model->getPackagelist($company_id);
 
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
+        $this->page_data['users_lists'] = $this->users_model->getAllUsersByCompanyID($company_id);
         $this->page_data['companyDet'] = $this->workorder_model->companyDet($company_id);
         $this->page_data['page_title'] = "Work Order";
         // print_r($this->page_data['lead_source']);
@@ -4232,6 +4235,7 @@ class Workorder extends MY_Controller
         $this->page_data['lead_source'] = $this->workorder_model->getlead_source($company_id);
         
         $this->page_data['packages'] = $this->workorder_model->getPackagelist($company_id);
+        $this->page_data['users_lists'] = $this->users_model->getAllUsersByCompanyID($company_id);
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->page_data['companyDet'] = $this->workorder_model->companyDet($company_id);
         

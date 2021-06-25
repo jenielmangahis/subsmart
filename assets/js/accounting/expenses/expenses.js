@@ -918,7 +918,7 @@ function initFormFields(modalName, data) {
 
     if($(`#${modalName} .attachments`).length > 0) {
         var attachmentContId = $(`#${modalName} .attachments .dropzone`).attr('id');
-        var viewExpenseAtta = new Dropzone(`#${attachmentContId}`, {
+        var transactionAttach = new Dropzone(`#${attachmentContId}`, {
             url: '/accounting/attachments/attach',
             maxFilesize: 20,
             uploadMultiple: true,
@@ -938,13 +938,13 @@ function initFormFields(modalName, data) {
                                 // size: val.size / 1000000,
                                 accepted: true
                             };
-                            viewExpenseAtta.emit("addedfile", mockFile);
+                            transactionAttach.emit("addedfile", mockFile);
                             modalAttachedFiles.push(mockFile);
         
-                            viewExpenseAtta.createThumbnailFromUrl(mockFile, viewExpenseAtta.options.thumbnailWidth, viewExpenseAtta.options.thumbnailHeight, viewExpenseAtta.options.thumbnailMethod, true, function(thumbnail) {
-                                viewExpenseAtta.emit('thumbnail', mockFile, thumbnail);
+                            transactionAttach.createThumbnailFromUrl(mockFile, transactionAttach.options.thumbnailWidth, transactionAttach.options.thumbnailHeight, transactionAttach.options.thumbnailMethod, true, function(thumbnail) {
+                                transactionAttach.emit('thumbnail', mockFile, thumbnail);
                             });
-                            viewExpenseAtta.emit("complete", mockFile);
+                            transactionAttach.emit("complete", mockFile);
                         });
                     }
                 });

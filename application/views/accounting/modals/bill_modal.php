@@ -10,9 +10,9 @@
                     <button type="button" class="close" data-dismiss="modal"><i class="fa fa-times fa-lg"></i></button>
                 </div>
                 <div class="modal-body">
-                    <div class="row">
-                        <div class="col-xl-12">
-                            <div class="card p-0 m-0">
+                    <div class="row"  style="min-height: 100%">
+                        <div class="col">
+                            <div class="card p-0 m-0"  style="min-height: 100%">
                                 <div class="card-body" style="padding-bottom: 1.25rem">
                                     <div class="row">
                                         <div class="col-md-8">

@@ -169,7 +169,7 @@ function Signing(hash) {
     }
 
     if (["Checkbox", "Radio"].includes(field_name)) {
-      let { subCheckbox = [], isChecked } = JSON.parse(field.specs) || {};
+      let { subCheckbox = [], isChecked, name } = JSON.parse(field.specs) || {};
 
       let { value } = fieldValue || {};
       value = value ? JSON.parse(value) : {};
@@ -202,13 +202,14 @@ function Signing(hash) {
 
       $element.append(`
             <div class="form-check">
-              <span class="form-check-indicator">x</span>
               <input
                 class="form-check-input"
                 type="${inputType}"
                 id="${field.unique_key}"
                 ${isChecked ? "checked" : ""}
+                ${name ? `name=${name}` : ""}
               >
+              <span class="form-check-indicator">x</span>
               <label
                 class="form-check-label invisible"
                 for="${field.unique_key}"
@@ -229,8 +230,14 @@ function Signing(hash) {
             // prettier-ignore
             const $currElement = createElementFromHTML(`
                   <div class="form-check">
+                    <input
+                      class="form-check-input"
+                      type="${inputType}"
+                      id="${id}"
+                      ${isChecked ? "checked" : ""}
+                      ${name ? `name=${name}` : ""}
+                    >
                     <span class="form-check-indicator">x</span>
-                    <input class="form-check-input" type="${inputType}" id="${id}" ${isChecked ? "checked" : ""}>
                     <label class="form-check-label invisible" for="${id}"></label>
                   </div>
                 `);
@@ -280,6 +287,27 @@ function Signing(hash) {
           });
 
           value = JSON.parse(data.value);
+        }
+
+        if ((!subCheckbox || !subCheckbox.length) && name) {
+          const $duplicate = $(`[type=checkbox][name=${name}]:not([id=${field.unique_key}])`);
+          const id = $duplicate.attr("id");
+          const duplicateField = data.fields.find(f => f.unique_key === id);
+
+          if (duplicateField) {
+            const { subCheckbox } = JSON.parse(duplicateField.specs) || {};
+            if (!subCheckbox || !subCheckbox.length) {
+              $duplicate.prop('checked', Boolean(value.isChecked));
+              await storeFieldValue({
+                id: duplicateField.id,
+                value: JSON.stringify({
+                  subCheckbox,
+                  isChecked: Boolean(value.isChecked),
+                }),
+              });
+
+            }
+          }
         }
 
         hasRequested = true;
@@ -734,8 +762,8 @@ function Signing(hash) {
 
           if (!checkboxSelected.length && !radioSelected.length) {
             // no checkbox selected
-            scrollToElement();
-            return;
+            // scrollToElement();
+            // return;
           }
         }
       }

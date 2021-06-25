@@ -21,6 +21,8 @@ require_once APPPATH.'third_party/dompdf/autoload.inc.php';
 // require_once(dirname(__FILE__) . '/dompdf/autoload.inc.php');
 
 use Dompdf\Dompdf;
+use Dompdf\Options;
+
 class Pdf extends DOMPDF
 {
 /**
@@ -44,7 +46,11 @@ protected function ci()
  */
     public function load_view($view, $data = array(), $filename, $orientation)
     {
-        $dompdf = new Dompdf();
+        $options = new Options();
+        $options->set('isHtml5ParserEnabled', true);
+        $options->set('isRemoteEnabled', true);
+
+        $dompdf = new Dompdf($options);
         $html = $this->ci()->load->view($view, $data, true);
 
         $dompdf->loadHtml($html);
@@ -79,9 +85,20 @@ protected function ci()
     }
 
     function createPDF($html, $filename='', $download=FALSE, $paper='A4', $orientation='portrait'){
-        $dompdf = new Dompdf(array('enable_remote' => true));
+        
+        // $options = $dompdf->getOptions(); 
+        // $options->set('isRemoteEnabled', TRUE);
+        // $dompdf->setOptions($options);
+
+        $options = new Options();
+        $options->set('isHtml5ParserEnabled', true);
+        $options->set('isRemoteEnabled', true);
+        // $dompdf = new Dompdf($options);
+        
+        $dompdf = new Dompdf();
         $dompdf->load_html($html);
         $dompdf->set_paper($paper, $orientation);
+        // $dompdf->set_option('isRemoteEnabled', TRUE);
         $dompdf->render();
         ob_end_clean();
         if($download)

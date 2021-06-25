@@ -41,6 +41,7 @@ class Accounting_modals extends MY_Controller {
         $this->load->model('accounting_payment_methods_model');
         $this->load->model('accounting_terms_model');
         $this->load->model('accounting_attachments_model');
+        $this->load->model('expenses_model');
 		$this->load->library('form_validation');
     }
 
@@ -2528,8 +2529,6 @@ class Accounting_modals extends MY_Controller {
 
     private function expense($data)
     {
-        $this->load->model('expenses_model');
-
         $this->form_validation->set_rules('payment_account', 'Payment account', 'required');
         $this->form_validation->set_rules('payment_date', 'Payment date', 'required');
 
@@ -2683,8 +2682,6 @@ class Accounting_modals extends MY_Controller {
 
     private function check($data)
     {
-        $this->load->model('expenses_model');
-
         $this->form_validation->set_rules('bank_account', 'Bank account', 'required');
         $this->form_validation->set_rules('payment_date', 'Payment date', 'required');
 
@@ -2840,8 +2837,6 @@ class Accounting_modals extends MY_Controller {
 
     private function bill($data)
     {
-        $this->load->model('expenses_model');
-
         $this->form_validation->set_rules('vendor_id', 'Vendor', 'required');
         $this->form_validation->set_rules('bill_date', 'Bill date', 'required');
         $this->form_validation->set_rules('due_date', 'Due date', 'required');
@@ -2984,8 +2979,6 @@ class Accounting_modals extends MY_Controller {
 
     public function load_bills()
     {
-        $this->load->model('expenses_model');
-
         $post = json_decode(file_get_contents('php://input'), true);
         $column = $post['order'][0]['column'];
         $order = $post['order'][0]['dir'];
@@ -3160,8 +3153,6 @@ class Accounting_modals extends MY_Controller {
 
     private function pay_bills($data)
     {
-        $this->load->model('expenses_model');
-
         $this->form_validation->set_rules('payment_account', 'Payment account', 'required');
         $this->form_validation->set_rules('payment_date', 'Payment date', 'required');
         $this->form_validation->set_rules('bills[]', 'Bill', 'required');
@@ -3265,8 +3256,6 @@ class Accounting_modals extends MY_Controller {
 
     private function vendor_credit($data)
     {
-        $this->load->model('expenses_model');
-
         $this->form_validation->set_rules('vendor_id', 'Vendor', 'required');
         $this->form_validation->set_rules('payment_date', 'Payment date', 'required');
 
@@ -3453,8 +3442,6 @@ class Accounting_modals extends MY_Controller {
 
     private function purchase_order($data)
     {
-        $this->load->model('expenses_model');
-
         $this->form_validation->set_rules('vendor_id', 'Vendor', 'required');
         $this->form_validation->set_rules('email', 'Email', 'required');
         $this->form_validation->set_rules('purchase_order_date', 'Purchase order date', 'required');
@@ -3595,8 +3582,6 @@ class Accounting_modals extends MY_Controller {
 
     private function credit_card_credit($data)
     {
-        $this->load->model('expenses_model');
-
         $this->form_validation->set_rules('bank_credit_account', 'Bank/Credit account', 'required');
         $this->form_validation->set_rules('payment_date', 'Payment date', 'required');
 
@@ -3757,7 +3742,6 @@ class Accounting_modals extends MY_Controller {
 
     public function get_linkable_transactions($transactionType, $vendorId)
     {
-        $this->load->model('expenses_model');
         switch($transactionType) {
             case 'expense' :
                 $purchaseOrders = $this->expenses_model->get_vendor_open_purchase_orders($vendorId);
@@ -3769,6 +3753,9 @@ class Accounting_modals extends MY_Controller {
                 $bills = $this->expenses_model->get_vendor_open_bills($vendorId);
                 $vendorCredits = $this->expenses_model->get_vendor_unapplied_vendor_credits($vendorId);
             break;
+            case 'bill' :
+                $purchaseOrders = $this->expenses_model->get_vendor_open_purchase_orders($vendorId);
+            break;
         }
 
         $transactions = [];
@@ -3777,6 +3764,7 @@ class Accounting_modals extends MY_Controller {
             foreach($purchaseOrders as $purchaseOrder) {
                 $transactions[] = [
                     'type' => 'Purchase Order',
+                    'data_type' => 'purchase-order',
                     'id' => $purchaseOrder->id,
                     'number' => $purchaseOrder->purchase_order_no === null || $purchaseOrder->purchase_order_no === '' ? '' : $purchaseOrder->purchase_order_no,
                     'date' => date("m/d/Y", strtotime($purchaseOrder->purchase_order_date)),
@@ -3791,6 +3779,7 @@ class Accounting_modals extends MY_Controller {
             foreach($bills as $bill) {
                 $transactions[] = [
                     'type' => 'Bill',
+                    'data_type' => 'bill',
                     'id' => $bill->id,
                     'number' => $bill->bill_no === null || $bill->bill_no === '' ? '' : $bill->bill_no,
                     'date' => date("m/d/Y", strtotime($bill->due_date)),
@@ -3805,6 +3794,7 @@ class Accounting_modals extends MY_Controller {
             foreach($vendorCredits as $vendorCredit) {
                 $transactions[] = [
                     'type' => 'Vendor Credit',
+                    'data_type' => 'vendor-credit',
                     'id' => $vendorCredit->id,
                     'number' => $vendorCredit->ref_no === null || $vendorCredit->ref_no === '' ? '' : $vendorCredit->ref_no,
                     'date' => date("m/d/Y", strtotime($vendorCredit->payment_date)),
@@ -3816,5 +3806,33 @@ class Accounting_modals extends MY_Controller {
         }
 
         echo json_encode($transactions);
+    }
+
+    public function get_transaction_categories($transactionType, $transactionId)
+    {
+        switch($transactionType) {
+            case 'purchase-order' :
+                $type = 'Purchase Order';
+            break;
+            case 'bill' :
+                $type = 'Bill';
+            break;
+        }
+
+        $categories = $this->expenses_model->get_transaction_categories($transactionId, $type);
+        $items = $this->expenses_model->get_transaction_items($transactionId, $type);
+
+        foreach($items as $index => $item) {
+            $details = $this->items_model->getItemById($item->item_id);
+            $locations = $this->items_model->getLocationByItemId($item->item_id);
+
+            $items[$index]->details = $details[0];
+            $items[$index]->locations = $locations;
+        }
+
+        echo json_encode([
+            'categories' => $categories,
+            'items' => $items
+        ]);
     }
 }

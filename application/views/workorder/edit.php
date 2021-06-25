@@ -624,12 +624,12 @@ border: none;
                                                 </select>
                                             </div>
                                                 </td>
-                                            <td width="10%"><input type="number" class="form-control quantity mobile_qty hidden_mobile_view" name="quantity[]"
+                                            <td width="10%"><input type="number" data-itemid="<?php echo $data->items_id; ?>" class="form-control qtyest2 mobile_qty hidden_mobile_view" name="quantity[]"
                                                        data-counter="0" id="quantity_<?php echo $data->items_id; ?>" value="<?php echo $data->qty; ?>"> 
                                                        <!-- <div class="show_mobile_view"><span>1</span><input type="hidden" class="form-control qtyest2" name="quantity[]"
                                                        data-counter="0" id="quantity_<?php echo $data->items_id; ?>" value="<?php echo $data->qty; ?>"></div>  -->
                                                        </td>
-                                            <td width="10%"><input type="number" class="form-control price hidden_mobile_view" name="price[]"
+                                            <td width="10%"><input type="number" data-itemid="<?php echo $data->items_id; ?>" class="form-control price2 hidden_mobile_view" name="price[]"
                                                        data-counter="0" id="price_<?php echo $data->items_id; ?>" min="0" value="<?php echo $data->costing; ?>"> <input type="hidden" class="priceqty" id="priceqty_<?php echo $data->id; ?>" value="<?php $quantity1 = $data->qty;
                                                                                     $price1 = $data->costing; 
                                                                                     $total1 = $quantity1*$price1;
@@ -1247,10 +1247,16 @@ border: none;
                                     <br>
 
                                     <label for="comp_rep_approval">Printed Name</label>
-                                    <input type="text" class="form-control mb-3"
+                                    <!-- <input type="text" class="form-control mb-3"
                                            name="company_representative_printed_name"
-                                           id="comp_rep_approval" value="<?php echo $workorder->company_representative_name; ?>" />
-                                           <input type="hidden" id="saveCompanySignatureDB1aM_web" name="company_representative_approval_signature1aM_web">
+                                           id="comp_rep_approval" value="<?php //echo $workorder->company_representative_name; ?>" />-->
+                                        <select class="form-control mb-3" name="company_representative_printed_name">
+                                            <option value="0">Select Name</option>
+                                            <?php foreach($users_lists as $ulist){ ?>
+                                                <option <?php if(isset($workorder)){ if($workorder->company_representative_name == $ulist->id){echo "selected";} } ?>  value="<?php echo $ulist->id ?>"><?php echo $ulist->FName .' '.$ulist->LName; ?></option>
+                                            <?php } ?>
+                                        </select>
+                                           <input type="hidden" id="saveCompanySignatureDB1aM_web" name="company_representative_approval_signature1aM_web"> 
 
                                 </div>
                                 <div class="col-md-4">
@@ -1260,8 +1266,16 @@ border: none;
                                     <br>
 
                                     <label for="comp_rep_approval">Printed Name</label>
-                                    <input type="text" class="form-control mb-3" name="primary_account_holder_name"
-                                           id="comp_rep_approval" placeholder="" value="<?php echo $workorder->primary_account_holder_name; ?>"/>
+                                    <!-- <input type="text" class="form-control mb-3" name="primary_account_holder_name"
+                                           id="comp_rep_approval" placeholder="" value="<?php //echo $workorder->primary_account_holder_name; ?>"/> -->
+
+                                        <select class="form-control mb-3" name="primary_account_holder_name">
+                                            <option value="0">Select Name</option>
+                                            <?php foreach($users_lists as $ulist){ ?>
+                                                <option <?php if(isset($workorder)){ if($workorder->primary_account_holder_name == $ulist->id){echo "selected";} } ?>  value="<?php echo $ulist->id ?>"><?php echo $ulist->FName .' '.$ulist->LName; ?></option>
+                                            <?php } ?>
+                                        </select>
+
                                            <input type="hidden" id="saveCompanySignatureDB1aM_web2" name="primary_representative_approval_signature1aM_web">
 
                                 </div>
@@ -1272,8 +1286,15 @@ border: none;
                                     <br>
 
                                     <label for="comp_rep_approval">Printed Name</label>
-                                    <input type="text" class="form-control mb-3" name="secondery_account_holder_name"
-                                           id="comp_rep_approval" placeholder="" value="<?php echo $workorder->secondary_account_holder_name; ?>"/>
+                                    <!-- <input type="text" class="form-control mb-3" name="secondery_account_holder_name"
+                                           id="comp_rep_approval" placeholder="" value="<?php //echo $workorder->secondary_account_holder_name; ?>"/> -->
+                                        <select class="form-control mb-3" name="secondery_account_holder_name">
+                                            <option value="0">Select Name</option>
+                                            <?php foreach($users_lists as $ulist){ ?>
+                                                <option <?php if(isset($workorder)){ if($workorder->secondary_account_holder_name == $ulist->id){echo "selected";} } ?>  value="<?php echo $ulist->id ?>"><?php echo $ulist->FName .' '.$ulist->LName; ?></option>
+                                            <?php } ?>
+                                        </select>
+
                                            <input type="hidden" id="saveCompanySignatureDB1aM_web3" name="secondary_representative_approval_signature1aM_web">
 
                                 </div>

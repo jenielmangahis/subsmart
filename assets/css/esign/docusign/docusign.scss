@@ -113,7 +113,7 @@ body {
 
   input[type="checkbox"],
   input[type="radio"] {
-    outline: #{em(2)} var(--border-style) #bf1e2e;
+    // outline: #{em(2)} var(--border-style) #bf1e2e;
   }
 
   &--finished,
@@ -170,10 +170,10 @@ body {
 
       &-input {
         display: none;
-      }
 
-      &-indicator {
-        display: inline-flex;
+        &:checked + .form-check-indicator {
+          display: inline-flex;
+        }
       }
     }
   }
