@@ -52,6 +52,10 @@ class Login extends CI_Controller
     }
     public function check()
     {
+        $this->load->model('Clients_model');
+        $this->load->model('IndustryType_model');
+        $this->load->model('IndustryTemplateModules_model');
+                
         $this->load->library('form_validation');
 
         $this->form_validation->set_rules('username', 'Username', 'trim|required|min_length[5]|xss_clean|callback_validate_username');
@@ -80,16 +84,12 @@ class Login extends CI_Controller
             $user = $this->db->where('username', $username)->or_where('email', $username)->get($this->users_model->table)->row();
             $this->users_model->login($user, post('remember_me'));
 
+            $client = $this->Clients_model->getById($user->company_id);
+
             // Get all access modules
             if ($user->role == 1 || $user->role == 2) { //Admin and nsmart tech
                 $access_modules = array(0 => 'all');
-            } else {
-                $this->load->model('Clients_model');
-                $this->load->model('IndustryType_model');
-                $this->load->model('IndustryTemplateModules_model');
-
-                $client = $this->Clients_model->getById($user->company_id);
-
+            } else {                
                 if ($client) {
                     if ($client->is_startup == 1) {
                         $is_startup = 1;
@@ -101,12 +101,13 @@ class Login extends CI_Controller
                         foreach ($industryModules as $im) {
                             $access_modules[] = $im->industry_module_id;
                         }
-
-                        $this->session->set_userdata('userAccessModules', $access_modules);
-                        $this->session->set_userdata('is_plan_active', $client->is_plan_active);
                     }
                 }
             }
+
+            $this->session->set_userdata('userAccessModules', $access_modules);
+            $this->session->set_userdata('is_plan_active', $client->is_plan_active);
+
         } elseif ($attempt == 'invalid_password') {
 
             // Show Message if invalid password
@@ -157,6 +158,7 @@ class Login extends CI_Controller
         $activity['user_id'] = logged('id');
 
         $isUserInserted = $this->activity->addEsignActivity($activity);
+
         if ($is_startup == 1) {
             redirect('onboarding/business_info');
         } else {
