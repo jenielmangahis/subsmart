@@ -70,7 +70,7 @@ class Accounting_customers_model extends MY_Model
     public function get_customer_by_id($id)
     {
         $this->db->reset_query();
-        $query = $this->db->query("SELECT * FROM acs_profile JOIN business_profile ON acs_profile.company_id = business_profile.company_id WHERE acs_profile.prof_id = ".$id);
+        $query = $this->db->query("SELECT *,business_profile.id as business_id FROM acs_profile JOIN business_profile ON acs_profile.company_id = business_profile.company_id WHERE acs_profile.prof_id = ".$id);
         return $query->row();
     }
 }

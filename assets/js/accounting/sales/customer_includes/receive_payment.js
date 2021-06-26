@@ -193,14 +193,34 @@ function get_customer_filtered_info_for_receive_payment_modal(filter_date_from, 
 $("#customer_receive_payment_modal #receive_payment_form .filter input[name='invoice_number']").on("keyup", function() {
     var value = $(this).val().toLowerCase();
     $("#customer_receive_payment_modal #customer_invoice_table tbody tr").filter(function() {
-        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
     });
 });
 
 
-$(document).on("click", "#customer_receive_payment_modal #receive_payment_form button[type='submit']", function(event) {
+$(document).on("click", "#customer_receive_payment_modal #receive_payment_form button[data-action='print']", function(event) {
     var submit_type = $(this).attr('data-submit-type');
+    $("#customer_receive_payment_modal #receive_payment_form input[name='submit_option']").val(submit_type);
+    var empty_flds = 0;
+    $("#customer_receive_payment_modal #receive_payment_form  .required").each(function() {
+        if (!$.trim($(this).val())) {
+            empty_flds++;
+        }
+    });
 
+    if (empty_flds == 0) {
+        $("#customer_receive_payment_modal #receive_payment_form").attr("action", baseURL + "/accounting/print_receive_payment");
+        $("#customer_receive_payment_modal #receive_payment_form").attr("target", "_blank");
+        $("#customer_receive_payment_modal #receive_payment_form").attr("method", "POST");
+        $("#customer_receive_payment_modal #receive_payment_form").submit();
+
+    }
+});
+$(document).on("click", "#customer_receive_payment_modal #receive_payment_form button[data-action='save']", function(event) {
+    $("#customer_receive_payment_modal #receive_payment_form").removeAttr("target");
+    $("#customer_receive_payment_modal #receive_payment_form").removeAttr("action");
+    var submit_type = $(this).attr('data-submit-type');
+    $("#customer_receive_payment_modal #receive_payment_form input[name='submit_option']").val(submit_type);
     var empty_flds = 0;
     $("#customer_receive_payment_modal #receive_payment_form  .required").each(function() {
         if (!$.trim($(this).val())) {
@@ -218,40 +238,51 @@ $(document).on("click", "#customer_receive_payment_modal #receive_payment_form b
             confirmButtonColor: "#2ca01c",
             confirmButtonText: $(this).html(),
         }).then((result) => {
-            $("#loader-modal").show();
-            $.ajax({
-                url: baseURL + "/accounting/save_receive_payment_from_modal",
-                type: "POST",
-                dataType: "json",
-                data: $("#customer_receive_payment_modal #receive_payment_form").serialize(),
-                success: function(data) {
-                    if (data.count_save > 0) {
-                        get_load_customers_table();
-                        Swal.fire({
-                            showConfirmButton: false,
-                            timer: 2000,
-                            title: "Success",
-                            html: "Payment has been saved.",
-                            icon: "success",
-                        });
-                    } else {
-                        Swal.fire({
-                            showConfirmButton: false,
-                            timer: 2000,
-                            title: "Error",
-                            html: "No payment saved. Please double check your inputs.",
-                            icon: "error",
-                        });
-                    }
-                    if (submit_type == "save-new") {
-                        $("#customer_receive_payment_modal #receive_payment_form select[name='customer_id']").val("");
-                        get_customer_info_for_receive_payment_modal('');
-                    } else if (submit_type == "save-close") {
-                        $("#customer_receive_payment_modal").fadeOut();
-                    }
-                    console.log(submit_type);
-                },
-            });
+            if (result.value) {
+                $("#loader-modal").show();
+                $.ajax({
+                    url: baseURL + "/accounting/save_receive_payment_from_modal",
+                    type: "POST",
+                    dataType: "json",
+                    data: $("#customer_receive_payment_modal #receive_payment_form").serialize(),
+                    success: function(data) {
+                        if (data.count_save > 0) {
+                            get_load_customers_table();
+                            if (submit_type == "save-send" && data.email_sending_status == "success") {
+                                Swal.fire({
+                                    showConfirmButton: false,
+                                    timer: 2000,
+                                    title: "Success",
+                                    html: "Receive payment has been saved and sent.",
+                                    icon: "success",
+                                });
+                            } else {
+                                Swal.fire({
+                                    showConfirmButton: false,
+                                    timer: 2000,
+                                    title: "Success",
+                                    html: "Receive payment has been saved.",
+                                    icon: "success",
+                                });
+                            }
+                        } else {
+                            Swal.fire({
+                                showConfirmButton: false,
+                                timer: 2000,
+                                title: "Error",
+                                html: "No payment saved. Please double check your inputs.",
+                                icon: "error",
+                            });
+                        }
+                        if (submit_type == "save-new") {
+                            $("#customer_receive_payment_modal #receive_payment_form select[name='customer_id']").val("");
+                            get_customer_info_for_receive_payment_modal('');
+                        } else {
+                            $("#customer_receive_payment_modal").fadeOut();
+                        }
+                    },
+                });
+            }
         });
 
     }
@@ -283,5 +314,7 @@ function formatMoney(n) {
 }
 
 $("#customer_receive_payment_modal #receive_payment_form").submit(function(event) {
-    event.preventDefault();
+    if ($("#customer_receive_payment_modal #receive_payment_form").attr("target") == "") {
+        event.preventDefault();
+    }
 });

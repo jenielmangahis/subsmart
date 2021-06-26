@@ -832,19 +832,19 @@ border: none;
 			         							   			<b class="ul-head">ASSIGNED TO</b><br><br>
 																<div class="row">
 																	<div class="col-md-4">
-																		<img src="<?php echo $workorder->company_representative_signature; ?>" style="height: 150px;">
+																		<img src="<?php echo base_url($workorder->company_representative_signature); ?>" style="height: 150px;">
 																		<hr>
-																		<center><?php echo $workorder->company_representative_name; ?></center>
+																		<center><?php echo $first->FName.' '.$first->LName; ?></center>
 																	</div>
 																	<div class="col-md-4">
-																		<img src="<?php echo $workorder->primary_account_holder_signature; ?>" style="height: 150px;">
+																		<img src="<?php echo base_url($workorder->primary_account_holder_signature); ?>" style="height: 150px;">
 																		<hr>
-																		<center><?php echo $workorder->primary_account_holder_name; ?></center>
+																		<center><?php echo $second->FName.' '.$second->LName; ?></center>
 																	</div>
 																	<div class="col-md-4">
-																		<img src="<?php echo $workorder->secondary_account_holder_signature; ?>" style="height: 150px;">
+																		<img src="<?php echo base_url($workorder->secondary_account_holder_signature); ?>" style="height: 150px;">
 																		<hr>
-																		<center><?php echo $workorder->secondary_account_holder_name; ?></center>
+																		<center><?php echo $third->FName.' '.$third->LName; ?></center>
 																	</div>
 																</div>
 		         							   			</div>
