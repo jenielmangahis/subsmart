@@ -169,7 +169,7 @@ function Signing(hash) {
     }
 
     if (["Checkbox", "Radio"].includes(field_name)) {
-      let { subCheckbox = [], isChecked, name } = JSON.parse(field.specs) || {};
+      let { subCheckbox = [], isChecked, name, is_required } = JSON.parse(field.specs) || {};
 
       let { value } = fieldValue || {};
       value = value ? JSON.parse(value) : {};
@@ -200,6 +200,10 @@ function Signing(hash) {
       const leftEm = `${pxToEm(left, container)}em`;
       $element.css({ top: topEm, left: leftEm, position: "absolute" });
 
+      if (is_required) {
+        $element.addClass(`${baseClassName}--isRequired`);
+      }
+
       $element.append(`
             <div class="form-check">
               <input
@@ -221,7 +225,7 @@ function Signing(hash) {
         $element.append(
           subCheckbox.map((option) => {
             const { id, top = 0, left = 0, } = option;
-            let isChecked = false;
+            let { isChecked = false } = option;
             if (value.subCheckbox) {
               const f = value.subCheckbox.find(({ id: _id }) => _id === id) || {};
               isChecked = Boolean(f.isChecked);
@@ -249,15 +253,24 @@ function Signing(hash) {
       }
 
       $element.find(`input:${inputType}`).on("change", async function () {
+        /**
+         * if not checkbox, make sure to have only one checked
+         */
+
         const $this = $(this);
         const id = $this.attr("id");
         const _isChecked = $this.is(":checked");
 
         if (id === field.unique_key) {
+          let _subCheckbox = getSubCheckboxes();
+          if (field_name !== "Checkbox") {
+            _subCheckbox = _subCheckbox.map(f => ({ ...f, isChecked: false }))
+          }
+
           const { data } = await storeFieldValue({
             id: fieldId,
             value: JSON.stringify({
-              subCheckbox: getSubCheckboxes(),
+              subCheckbox: _subCheckbox,
               isChecked: _isChecked,
             }),
           });
@@ -269,6 +282,10 @@ function Signing(hash) {
 
           if (subCheckbox.find((s) => s.id === id)) {
             newSubCheckbox = subCheckbox.map((s) => {
+              if (s.id !== id && field_name !== "Checkbox") {
+                return { ...s, isChecked: false };
+              }
+
               return s.id !== id ? s : { ...s, isChecked: _isChecked };
             });
           } else {
@@ -278,12 +295,21 @@ function Signing(hash) {
             ];
           }
 
+          let payload = {
+            subCheckbox: newSubCheckbox,
+            isChecked: Boolean(value.isChecked),
+          };
+
+          if (field_name !== "Checkbox") {
+            payload = {
+              subCheckbox: newSubCheckbox,
+              isChecked: false,
+            }
+          }
+
           const { data } = await storeFieldValue({
             id: fieldId,
-            value: JSON.stringify({
-              subCheckbox: newSubCheckbox,
-              isChecked: Boolean(value.isChecked),
-            }),
+            value: JSON.stringify(payload),
           });
 
           value = JSON.parse(data.value);
@@ -753,17 +779,18 @@ function Signing(hash) {
           return;
         }
 
-        const hasCheckbox = $input.is("input:checkbox");
-        const hasRadio = $input.is("input:radio");
+        let inputType = undefined;
+        if ($input.is("input:radio")) {
+          inputType = "radio";
+        } else if ($input.is("input:checkbox")) {
+          inputType = "checkbox";
+        }
 
-        if (hasCheckbox || hasRadio) {
-          const checkboxSelected = $element.find("input:checkbox:checked");
-          const radioSelected = $element.find("input:radio:checked");
-
-          if (!checkboxSelected.length && !radioSelected.length) {
-            // no checkbox selected
-            // scrollToElement();
-            // return;
+        if (inputType !== undefined) {
+          const $parent = $input.closest(`.docusignField__${inputType}--isRequired`);
+          if ($parent.length && !$element.find(`input:${inputType}:checked`).length) {
+            scrollToElement();
+            return;
           }
         }
       }

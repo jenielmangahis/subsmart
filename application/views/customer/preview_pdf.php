@@ -38,7 +38,7 @@ add_css(array(
     <div wrapper__section>
         <div class="container-fluid p-40">
             <div class="row ">
-                <div class="col-md-10">
+                <div class="col-md-12">
                     <div class="card">
                         <div class="row ">
                             <div class="col-md-12">
@@ -50,7 +50,7 @@ add_css(array(
                                     <b>Equipment: </b><span> <?= !empty($alarm_info->equipment) ? $alarm_info->equipment : '---';?> </span>&nbsp;&nbsp;&nbsp;
                                     <b>Collections: </b><span><?= !empty($alarm_info->collections) ? $alarm_info->collections : '---';?> </span>
 
-                                    <a style="position:absolute; right: 10px;text-align: right;margin-top: -5px;" class="btn btn-primary btn-md" href="<?php echo url('customer/add_lead') ?>"><span class="fa fa-print"></span> Print</a>
+                                    <a style="position:absolute; right: 10px;text-align: right;margin-top: -5px;" onclick="printDiv('printableArea')" class="btn btn-primary btn-md" href="#"><span class="fa fa-print"></span> Print</a>
                                 </div>
                             </div>
                         </div>
@@ -91,31 +91,90 @@ add_css(array(
                                     </tr>
                                     <tr>
                                         <td align="center" class="table_body_customer">
-
+                                            <div class="row">
+                                                <div class="col-md-2 header_checkbox" >
+                                                    <input type="checkbox" class="form-controls date_checkbox" value="rep_paper_date"  id="rep_paper" disabled>
+                                                </div>
+                                                <div class="col-md-8">
+                                                    <input type="text" class="mini-input date_picker" name="rep_paper_date" id="rep_paper_date" disabled/>
+                                                </div>
+                                            </div>
                                         </td>
                                         <td align="center" class="table_body_customer">
-
+                                            <div class="row">
+                                                <div class="col-md-2 header_checkbox" >
+                                                    <input type="checkbox" name="rep_paper" class="form-controls date_checkbox" value="tech_paper_date" disabled>
+                                                </div>
+                                                <div class="col-md-8">
+                                                    <input type="text" class="mini-input date_picker" name="tech_paper_date" id="tech_paper_date" disabled/>
+                                                </div>
+                                            </div>
                                         </td>
                                         <td align="center" class="table_body_customer">
-
+                                            <div class="row">
+                                                <div class="col-md-2 header_checkbox" >
+                                                    <input type="checkbox" name="rep_paper" class="form-controls date_checkbox" value="scanned_date" disabled>
+                                                </div>
+                                                <div class="col-md-8">
+                                                    <input type="text" class="mini-input date_picker" name="scanned_date" id="scanned_date" disabled/>
+                                                </div>
+                                            </div>
                                         </td>
                                         <td align="center" class="table_body_customer">
-
+                                            <select id="paperwork" name="paperwork" data-customer-source="dropdown" class="input_selects" >
+                                                <option  value=""></option>
+                                                <option value="Approved">Approved</option>
+                                                <option value="Rejected">Rejected</option>
+                                                <option value="Pending Kept">Pending Kept</option>
+                                                <option value="Pending Sent">Pending Sent</option>
+                                                <option value="None">None</option>
+                                            </select>
                                         </td>
                                         <td align="center" class="table_body_customer">
-
+                                            <div class="row">
+                                                <div class="col-md-2 header_checkbox">
+                                                    <input type="checkbox" name="rep_paper" class="form-controls date_checkbox" value="submitted" disabled>
+                                                </div>
+                                                <div class="col-md-8">
+                                                    <input type="text" class="mini-input date_picker" name="submitted" id="submitted" disabled/>
+                                                </div>
+                                            </div>
                                         </td>
                                         <td align="center" class="table_body_customer">
-
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text" id="basic-addon1">$</span>
+                                                </div>
+                                                <input type="number" step="0.01" class="form-control input_select" id="rep_paid" name="rep_paid" min="0" disabled>
+                                            </div>
                                         </td>
                                         <td align="center" class="table_body_customer">
-
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text" id="basic-addon1">$</span>
+                                                </div>
+                                                <input type="number" class="form-control input_select" id="tech_paid" name="tech_paid" min="0" disabled>
+                                            </div>
                                         </td>
                                         <td align="center" class="table_body_customer">
-
+                                            <div class="row">
+                                                <div class="col-md-2 header_checkbox">
+                                                    <input type="checkbox" name="rep_paper" class="form-controls date_checkbox" value="funded" disabled>
+                                                </div>
+                                                <div class="col-md-8">
+                                                    <input type="text" class="mini-input date_picker" name="funded" id="funded" disabled/>
+                                                </div>
+                                            </div>
                                         </td>
                                         <td align="center" class="table_body_customer">
-
+                                            <div class="row">
+                                                <div class="col-md-2 header_checkbox" >
+                                                    <input type="checkbox" name="rep_paper" class="form-controls date_checkbox" value="charged_back" disabled>
+                                                </div>
+                                                <div class="col-md-8">
+                                                    <input type="text" class="mini-input date_picker" name="charged_back" id="charged_back" disabled/>
+                                                </div>
+                                            </div>
                                         </td>
                                     </tr>
                                     </tbody>
@@ -125,10 +184,9 @@ add_css(array(
                     </div>
                 </div>
             </div>
-            <div class="col-md-"></div>
-            <div class="row mt-2">
-                <div class="col-md-10">
-                    <div class="row ">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="row" id="printableArea">
                         <div class="col-md-4">
                             <?php include viewPath('customer/advance_customer_forms/preview_customer_info'); ?>
                         </div>
@@ -146,7 +204,6 @@ add_css(array(
                         </div>
                     </div>
                 </div>
-                <div class="col-md-1"></div>
             </div>
 
         </div>
@@ -163,3 +220,13 @@ add_css(array(
         ?>
         <?php include viewPath('includes/footer'); ?>
         <?php include viewPath('customer/js/preview_js'); ?>
+        <script>
+            function printDiv(divName) {
+                var printContents = document.getElementById(divName).innerHTML;
+                var originalContents = document.body.innerHTML;
+                document.body.innerHTML = printContents;
+                window.print();
+                document.body.innerHTML = originalContents;
+            }
+        </script>
+

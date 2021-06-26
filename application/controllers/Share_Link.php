@@ -257,19 +257,19 @@ class Share_Link extends MY_Controller
                     <tr>
                         <td align="center">';
                             if(empty($data->company_representative_signature)){ } else{ 
-        $html .=            '<img src="'.$data->company_representative_signature.'" style="width:30%;height:80px;"><br>
+        $html .=            '<img src="'.base_url($data->company_representative_signature).'" style="width:30%;height:80px;"><br>
                             '.$data->company_representative_name.'';
                             }
         $html .=    '</td>
                         <td align="center">';
                             if(empty($data->primary_account_holder_signature)){ } else{ 
-        $html .=             '<img src="'.$data->primary_account_holder_signature.'" style="width:30%;height:80px;"><br>
+        $html .=             '<img src="'.base_url($data->primary_account_holder_signature).'" style="width:30%;height:80px;"><br>
                             '.$data->primary_account_holder_name.'';
                              }
         $html .=        '</td>
                         <td align="center">';
                             if(empty($data->secondary_account_holder_signature)){ } else{ 
-        $html .=        '<img src="'.$data->secondary_account_holder_signature.'" style="width:30%;height:80px;"><br>
+        $html .=        '<img src="'.base_url($data->secondary_account_holder_signature).'" style="width:30%;height:80px;"><br>
                             '.$data->secondary_account_holder_name.'';
                             }
         $html .=        '</td>

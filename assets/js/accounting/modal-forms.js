@@ -19,8 +19,6 @@ var modalAttachedFiles = [];
 
 var catDetailsInputs = '';
 var catDetailsBlank = '';
-var itemDetailsInputs = '';
-var itemDetailsBlank = '';
 
 $(function() {
     $(document).on('change', '#adjust-starting-value-modal #location', function() {
@@ -537,6 +535,10 @@ $(function() {
             $(this).html(catDetailsInputs);
             $(this).children('td:nth-child(2)').html(rowNum);
 
+            if($('#modal-container #category-details-table thead tr th').length === 12) {
+                $(`<td></td>`).insertBefore($('#modal-container .modal table#category-details-table tbody tr:last-child td:last-child'));
+            }
+
             $(this).find('select').select2();
         }
     });
@@ -575,6 +577,9 @@ $(function() {
 
         if($('#category-details-table tbody tr').length < rowCount) {
             $('#category-details-table tbody').append(`<tr>${catDetailsBlank}</tr>`);
+            if($('#category-details-table thead tr th').length > $('#category-details-table tbody tr:last-child td').length) {
+                $('<td></td>').insertBefore($('#category-details-table tbody tr:last-child td:last-child'));
+            }
         }
 
         var num = 1;
@@ -1559,9 +1564,9 @@ $(function() {
             }
 
             if($('#modal-container form#modal-form .modal').attr('id') === 'creditCardCreditModal' || $('#modal-container form#modal-form .modal').attr('id') === 'vendorCreditModal') {
-                var qtyField = `<input type="number" name="quantity[]" class="form-control text-right" required value="0" max="${locations[0].qty}">`;
+                var qtyField = `<input type="number" name="quantity[]" class="form-control text-right" required value="0" max="${locations[0].qty}" min="0">`;
             } else {
-                var qtyField = `<input type="number" name="quantity[]" class="form-control text-right" required value="0">`;
+                var qtyField = `<input type="number" name="quantity[]" class="form-control text-right" required value="0" min="0">`;
             }
 
             if($('#modal-container form#modal-form .modal').attr('id') === 'purchaseOrderModal' && $('#modal-container #item-details-table thead th').length > 9) {
@@ -1598,6 +1603,9 @@ $(function() {
 
             $('#modal-container form#modal-form .modal #item-details-table tbody').append(`<tr></tr>`);
             $('#modal-container form#modal-form .modal #item-details-table tbody tr:last-child').append(fields);
+            if($('#modal-container #item-details-table thead tr th').length > $('#modal-container #item-details-table tbody tr:last-child td')) {
+                $(`<td></td>`).insertBefore($('#modal-container .modal table#item-details-table tbody tr:last-child td:last-child'));
+            }
             $('#modal-container form#modal-form .modal #item-details-table tbody tr:last-child select').select2();
         });
     });
@@ -1802,6 +1810,7 @@ $(function() {
 
     $(document).on('change', '#expenseModal #payee', function() {
         var split = $(this).val().split('-');
+        unlinkTransaction();
 
         if(split[0] === 'vendor') {
             $.get('/accounting/get-linkable-transactions/expense/'+split[1], function(res) {
@@ -1865,6 +1874,8 @@ $(function() {
 
     $(document).on('change', '#checkModal #payee', function() {
         var split = $(this).val().split('-');
+        unlinkTransaction();
+
         if(split[0] === 'vendor') {
             $.get('/accounting/get-linkable-transactions/check/'+split[1], function(res) {
                 var transactions = JSON.parse(res);
@@ -1926,6 +1937,8 @@ $(function() {
     });
 
     $(document).on('change', '#billModal #vendor', function() {
+        unlinkTransaction();
+
         $.get('/accounting/get-linkable-transactions/bill/'+$(this).val(), function(res) {
             var transactions = JSON.parse(res);
 
@@ -1992,73 +2005,137 @@ $(function() {
             var result = JSON.parse(res);
             var categories = result.categories;
             var items = result.items;
+            var details = result.details;
 
             var count = 0;
+
+            $('#modal-container .modal table#category-details-table thead tr').append('<th></th>');
             $('#modal-container .modal table#category-details-table tbody tr').each(function() {
                 if($(this).find('select').length === 0) {
                     $(this).remove();
                 } else {
+                    $(this).find('td:last-child').html('');
+                    $(this).append('<td><a href="#" class="deleteRow"><i class="fa fa-trash"></i></a></td>');
                     count++;
                 }
             });
 
-            $.each(categories, function(index, category) {
-                count++;
-                $('#modal-container .modal table#category-details-table tbody').append(`<tr>${catDetailsInputs}</tr>`);
-                $('#modal-container .modal table#category-details-table tbody tr:last-child td:nth-child(2)').html(count);
-                $('#modal-container .modal table#category-details-table tbody tr:last-child select[name="expense_name[]"]').val(category.expense_account_id);
-                $('#modal-container .modal table#category-details-table tbody tr:last-child select[name="category[]"]').val(category.category);
-                $('#modal-container .modal table#category-details-table tbody tr:last-child input[name="description[]"]').val(category.description);
-                $('#modal-container .modal table#category-details-table tbody tr:last-child input[name="category_amount[]"]').val(parseFloat(category.amount).toFixed(2));
-                $('#modal-container .modal table#category-details-table tbody tr:last-child input[name="category_billable[]"]').prop('checked', category.billable === "1");
-                $('#modal-container .modal table#category-details-table tbody tr:last-child input[name="category_markup[]"]').val(parseFloat(category.markup_percentage).toFixed(2));
-                $('#modal-container .modal table#category-details-table tbody tr:last-child input[name="category_tax[]"]').prop('checked', category.tax === "1");
-                $('#modal-container .modal table#category-details-table tbody tr:last-child select[name="category_customer[]"]').val(category.customer_id);
-            });
+            if(categories.length > 0) {
+                $.each(categories, function(index, category) {
+                    count++;
+                    $('#modal-container .modal table#category-details-table tbody').append(`<tr>${catDetailsInputs}</tr>`);
+                    $('#modal-container .modal table#category-details-table tbody tr:last-child td:nth-child(2)').html(count);
+                    $(`<td><i class="fa fa-link"></i></td>`).insertBefore($('#modal-container .modal table#category-details-table tbody tr:last-child td:last-child'));
+                    $('#modal-container .modal table#category-details-table tbody tr:last-child select[name="expense_name[]"]').val(category.expense_account_id);
+                    $('#modal-container .modal table#category-details-table tbody tr:last-child select[name="category[]"]').val(category.category);
+                    $('#modal-container .modal table#category-details-table tbody tr:last-child input[name="description[]"]').val(category.description);
+                    $('#modal-container .modal table#category-details-table tbody tr:last-child input[name="category_amount[]"]').val(parseFloat(category.amount).toFixed(2));
+                    $('#modal-container .modal table#category-details-table tbody tr:last-child input[name="category_billable[]"]').prop('checked', category.billable === "1");
+                    $('#modal-container .modal table#category-details-table tbody tr:last-child input[name="category_markup[]"]').val(parseFloat(category.markup_percentage).toFixed(2));
+                    $('#modal-container .modal table#category-details-table tbody tr:last-child input[name="category_tax[]"]').prop('checked', category.tax === "1");
+                    $('#modal-container .modal table#category-details-table tbody tr:last-child select[name="category_customer[]"]').val(category.customer_id);
+                });
+            }
 
             $('#modal-container .modal table#category-details-table tbody select').select2();
 
             if($('#modal-container .modal table#category-details-table tbody tr').length === 1) {
                 $('#modal-container .modal table#category-details-table tbody').append(`<tr>${catDetailsBlank}</tr>`);
                 $('#modal-container .modal table#category-details-table tbody tr:last-child td:nth-child(2)').html(count+1);
+                $(`<td></td>`).insertBefore($('#modal-container .modal table#category-details-table tbody tr:last-child td:last-child'));
             }
 
-            $.each(items, function(index, item) {
-                var locs = '';
-                for(var i in item.locations) {
-                    locs += `<option value="${item.locations[i].id}" data-quantity="${item.locations[i].qty === "null" ? 0 : item.locations[i].qty}" ${item.locations[i].id === item.location_id ? 'selected' : ''}>${item.locations[i].name}</option>`;
+            $('#modal-container .modal table#item-details-table thead tr').append('<th></th>');
+            if(items.length > 0) {
+                if($('#modal-container .modal #item-details').hasClass('show') === false) {
+                    $('#modal-container .modal button[data-target="#item-details"]').trigger('click');
                 }
 
-                if($('#modal-container form#modal-form .modal').attr('id') === 'creditCardCreditModal' || $('#modal-container form#modal-form .modal').attr('id') === 'vendorCreditModal') {
-                    var qtyField = `<input type="number" name="quantity[]" class="form-control text-right" required value="0" max="${item.locations[0].qty}">`;
-                } else {
-                    var qtyField = `<input type="number" name="quantity[]" class="form-control text-right" required value="0">`;
-                }
-
-                $('#modal-container .modal table#item-details-table tbody').append(`
-                    <tr>
-                        <td>${item.details.title}<input type="hidden" name="item[]" value="${item.item_id}"></td>
-                        <td>Product</td>
-                        <td><select name="location[]" class="form-control" required>${locs}</select></td>
-                        <td><input type="number" name="quantity[]" class="form-control text-right" required value="${item.quantity}"></td>
-                        <td><input type="number" name="item_amount[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" value="${parseFloat(item.rate).toFixed(2)}"></td>
-                        <td><input type="number" name="discount[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" value="${parseFloat(item.discount).toFixed(2)}"></td>
-                        <td><input type="number" name="item_tax[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" value="${parseFloat(item.tax).toFixed(2)}"></td>
-                        <td>$<span class="row-total">${parseFloat(item.total).toFixed(2)}</span></td>
-                        <td><a href="#" class="deleteRow"><i class="fa fa-trash"></i></a></td>
-                    </tr>
-                `);
-            });
+                $.each(items, function(index, item) {
+                    var locs = '';
+                    for(var i in item.locations) {
+                        locs += `<option value="${item.locations[i].id}" data-quantity="${item.locations[i].qty === "null" ? 0 : item.locations[i].qty}" ${item.locations[i].id === item.location_id ? 'selected' : ''}>${item.locations[i].name}</option>`;
+                    }
+    
+                    if($('#modal-container form#modal-form .modal').attr('id') === 'creditCardCreditModal' || $('#modal-container form#modal-form .modal').attr('id') === 'vendorCreditModal') {
+                        var qtyField = `<input type="number" name="quantity[]" class="form-control text-right" required value="0" max="${item.locations[0].qty}">`;
+                    } else {
+                        var qtyField = `<input type="number" name="quantity[]" class="form-control text-right" required value="0">`;
+                    }
+    
+                    $('#modal-container .modal table#item-details-table tbody').append(`
+                        <tr>
+                            <td>${item.details.title}<input type="hidden" name="item[]" value="${item.item_id}"></td>
+                            <td>Product</td>
+                            <td><select name="location[]" class="form-control" required>${locs}</select></td>
+                            <td><input type="number" name="quantity[]" class="form-control text-right" required value="${item.quantity}" min="0"></td>
+                            <td><input type="number" name="item_amount[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" value="${parseFloat(item.rate).toFixed(2)}"></td>
+                            <td><input type="number" name="discount[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" value="${parseFloat(item.discount).toFixed(2)}"></td>
+                            <td><input type="number" name="item_tax[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" value="${parseFloat(item.tax).toFixed(2)}"></td>
+                            <td>$<span class="row-total">${parseFloat(item.total).toFixed(2)}</span></td>
+                            <td><i class="fa fa-link"></i></td>
+                            <td><a href="#" class="deleteRow"><i class="fa fa-trash"></i></a></td>
+                        </tr>
+                    `);
+                });
+            }
 
             $('#modal-container .modal table#category-details-table tbody input[name="category_amount[]"]').trigger('change');
+            $('#modal-container .modal table#item-details-table tbody input[name="item_amount[]"]').trigger('change');
 
             $('#modal-container .modal .transactions-container').parent().remove();
-            $('#modal-container .modal a.close-transactions-container').parent().remove();
-            $('#modal-container .modal a.open-transactions-container').parent().remove();
+
+            if($('#modal-container .modal a.close-transactions-container').length > 0) {
+                var button = $('#modal-container .modal a.close-transactions-container');
+            } else {
+                var button = $('#modal-container .modal a.open-transactions-container');
+            }
+
+            var dataType = data.type.replace('-', ' ').replace(/(?:^|\s)\S/g, function(a) { return a.toUpperCase(); });
+            var date = new Date(details.purchase_order_date);
+            var dateString = String(date.getMonth() + 1).padStart(2, '0')+'/'+String(date.getDate()).padStart(2, '0')+'/'+date.getFullYear();
+
+            button.parent().removeClass('px-0');
+            button.parent().append(`
+                <div class="dropdown">
+                    <a href="#" class="text-info" id="linked-transaction" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">1 linked ${dataType}</a>
+                    <div class="dropdown-menu p-2" aria-labelledby="linked-transaction" style="min-width: 500px">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Date</th>
+                                    <th>Amount</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><a class="text-info open-transaction" href="#" data-id="${data.id}" data-type="${data.type}">${dataType}</a></td>
+                                    <td>${dateString}</td>
+                                    <td>$${parseFloat(details.remaining_balance).toFixed(2)}</td>
+                                    <td><button class="btn btn-transparent unlink-transaction">Remove</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            `);
+
+            button.remove();
         });
     });
 
-    $(document).on('click', '#modal-container .modal .transactions-container a.open-transaction', function(e) {
+    $(document).on('click', '#modal-container .modal .unlink-transaction', function(e) {
+        e.preventDefault();
+
+        unlinkTransaction();
+
+        $('#modal-container .modal #payee').trigger('change');
+        $('#modal-container .modal #vendor').trigger('change');
+    });
+
+    $(document).on('click', '#modal-container .modal a.open-transaction', function(e) {
         e.preventDefault();
         var id = e.currentTarget.dataset.id;
         var type = e.currentTarget.dataset.type;
@@ -2627,10 +2704,10 @@ const addTableLines = (e) => {
         if(table !== '#category-details-table' && table !== '#item-details-table') {
             $(`table${table} tbody`).append(`<tr>${blankRow}</tr>`);
         } else {
-            if(table === '#category-details-table') {
-                $(`table${table} tbody`).append(`<tr>${catDetailsBlank}</tr>`);
-            } else {
-                $(`table${table} tbody`).append(`<tr>${itemDetailsBlank}</tr>`);
+            $(`table${table} tbody`).append(`<tr>${catDetailsBlank}</tr>`);
+
+            if($(`table${table} thead tr th`).length > $(`table${table} tbody tr:last-child td`).length) {
+                $(`<td></td>`).insertBefore($(`table${table} tbody tr:last-child td:last-child`));
             }
         }
         $(`table${table} tbody tr:last-child() td:nth-child(2)`).html(lastRowCount);
@@ -2640,6 +2717,12 @@ const addTableLines = (e) => {
 const clearTableLines = (e) => {
     e.preventDefault();
     var table = e.currentTarget.dataset.target;
+
+    if($('#modal-container .modal a#linked-transaction').length > 0) {
+        unlinkTransaction();
+        $('#modal-container .modal #payee').trigger('change');
+        $('#modal-container .modal #vendor').trigger('change');
+    }
 
     $(`table${table} tbody tr`).each(function(index, value) {
         var count = $(this).find('td:nth-child(2)').html();
@@ -3149,4 +3232,39 @@ const updateTransaction = (event, el) => {
             toast(res.success, res.message);
         }
     });
+}
+
+const unlinkTransaction = () =>  {
+    if($('#modal-container .modal a#linked-transaction').length > 0) {
+        $('#modal-container .modal a#linked-transaction').parent().parent().remove();
+        $('#modal-container .modal #category-details-table thead tr th:last-child').remove();
+        $('#modal-container .modal #item-details-table thead tr th:last-child').remove();
+
+        var count = 1;
+        $('#modal-container .modal #category-details-table tbody tr').each(function(index, value) {
+            if($(this).find('i.fa.fa-link').length > 0) {
+                $(this).remove();
+            } else {
+                $(this).find('td:nth-child(2)').html(count);
+                $(this).find('td:nth-child(11)').remove();
+                count++;
+            }
+        });
+
+        if($('#modal-container .modal #category-details-table tbody tr').length < rowCount) {
+            do {
+                $('#modal-container .modal #category-details-table tbody').append(`<tr>${catDetailsBlank}</tr>`);
+                $('#modal-container .modal #category-details-table tbody tr:last-child td:nth-child(2)').html(count);
+                count++;
+            } while($('#modal-container .modal #category-details-table tbody tr').length < rowCount)
+        }
+
+        $('#modal-container .modal #item-details-table tbody tr').each(function() {
+            if($(this).find('i.fa.fa-link').length > 0) {
+                $(this).remove();
+            }
+        });
+
+        computeTransactionTotal();
+    }
 }

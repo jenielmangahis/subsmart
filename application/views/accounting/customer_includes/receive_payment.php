@@ -1,7 +1,8 @@
 <div id="customer_receive_payment_modal">
     <div class="customer_receive_payment_modal_content">
-        <form action="" id="receive_payment_form">
+        <form id="receive_payment_form">
             <input type="text" name="invoice_count" style="display: none;">
+            <input type="text" name="submit_option" style="display: none;">
             <div class="customer_receive_payment_modal_header">
                 <div class="tittle">
                     <i class="fa fa-history" aria-hidden="true"></i> Receive Payment
@@ -42,7 +43,7 @@
                                             <label for="find-by-invoice-no"> Invoice no.</label>
                                             <input type="text" name="find-by-invoice-no"
                                                 placeholder="Find by invoice no.">
-                                                <label class="error">Invoice not found.</label>
+                                            <label class="error">Invoice not found.</label>
                                             <div class="buttons">
                                                 <button href=""
                                                     class="default-button float-left cancel-btn">Cancel</button>
@@ -309,17 +310,20 @@
                         <button href="#" class="left-btn clear-btn">Clear</button>
                     </div>
                     <div class="col-md-4 no-padding text-center">
-                        <a href="#" class="btn-print">Print</a>
+                        <button type="submit" data-action="print" class="btn-print">Print</button>
                     </div>
                     <div class="col-md-4 no-padding text-right">
                         <div class="right-option">
                             <div class="sub-option">
                                 <ul>
-                                    <li><button type="submit" data-submit-type="save-close">Save and close</button></li>
-                                    <li><button type="submit" data-submit-type="save-send">Save and send</button></li>
+                                    <li><button type="submit" data-action="save" data-submit-type="save-close">Save and
+                                            close</button></li>
+                                    <li><button type="submit" data-action="save" data-submit-type="save-send">Save and
+                                            send</button></li>
                                 </ul>
                             </div>
-                            <button type="submit" class="btn-save-new" data-submit-type="save-new">Save and new</button>
+                            <button type="submit" class="btn-save-new" data-action="save"
+                                data-submit-type="save-new">Save and new</button>
                             <button href="#" class="btn-save-dropdown">
                                 <i class="fa fa-angle-down" aria-hidden="true"></i>
                             </button>

@@ -482,6 +482,13 @@
             <div class="options mt-3">
                 <div class="mt-2 mb-2">
                     <div>
+                        <input type="checkbox" name="requiredText" id="requiredText">
+                        <label for="requiredText">Required Field</label>
+                    </div>
+
+                    <hr/>
+
+                    <div>
                         <label for="textFieldName">Field name</label>
                         <input type="text" name="textFieldName" id="textFieldName" class="w-100">
                     </div>

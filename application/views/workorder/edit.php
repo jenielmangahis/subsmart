@@ -1242,7 +1242,7 @@ border: none;
                             <div class="row">
                                 <div class="col-md-4">
                                     <h6>Company Representative Approval &emsp; <a data-toggle="modal" data-target=".companySignature"><i class="fa fa-pencil" aria-hidden="true"></i></a> </h6>
-                                    <img src="<?php echo $workorder->company_representative_signature; ?>" class="img1">
+                                    <img src="<?php echo base_url($workorder->company_representative_signature); ?>" class="img1">
                                     <div id="companyrep"></div>
                                     <br>
 
@@ -1261,7 +1261,7 @@ border: none;
                                 </div>
                                 <div class="col-md-4">
                                     <h6>Primary Account Holder &emsp; <a data-toggle="modal" data-target=".primarySignature"><i class="fa fa-pencil" aria-hidden="true"></i></a></h6>
-                                    <img src="<?php echo $workorder->primary_account_holder_signature; ?>" class="img2">
+                                    <img src="<?php echo base_url($workorder->primary_account_holder_signature); ?>" class="img2">
                                     <div id="primaryrep"></div>
                                     <br>
 
@@ -1281,7 +1281,7 @@ border: none;
                                 </div>
                                 <div class="col-md-4">
                                     <h6>Secondary Account Holder &emsp; <a data-toggle="modal" data-target=".secondarySignature"><i class="fa fa-pencil" aria-hidden="true"></i></a></h6>
-                                    <img src="<?php echo $workorder->secondary_account_holder_signature; ?>" class="img3">
+                                    <img src="<?php echo base_url($workorder->secondary_account_holder_signature); ?>" class="img3">
                                     <div id="secondaryrep"></div>
                                     <br>
 

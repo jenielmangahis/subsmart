@@ -381,19 +381,13 @@
         </div>
         <div class="col-md-6">
             <select id="frequency" name="frequency" data-customer-source="dropdown" class="input_select" >
-                <option  value=""></option>
-                <option <?= isset($billing_info) && $billing_info->frequency == 1 ?  'selected' : '';?> value="1">1 month</option>
-                <option <?= isset($billing_info) && $billing_info->frequency == 2 ?  'selected' : '';?> value="2">2 months</option>
-                <option <?= isset($billing_info) && $billing_info->frequency == 3 ?  'selected' : '';?> value="3">3 months</option>
-                <option <?= isset($billing_info) && $billing_info->frequency == 4 ?  'selected' : '';?> value="4">4 months</option>
-                <option <?= isset($billing_info) && $billing_info->frequency == 5 ?  'selected' : '';?> value="5">5 months</option>
-                <option <?= isset($billing_info) && $billing_info->frequency == 6 ?  'selected' : '';?> value="6">6 months</option>
-                <option <?= isset($billing_info) && $billing_info->frequency == 7 ?  'selected' : '';?> value="7">7 months</option>
-                <option <?= isset($billing_info) && $billing_info->frequency == 8 ?  'selected' : '';?> value="8">8 months</option>
-                <option <?= isset($billing_info) && $billing_info->frequency == 9 ?  'selected' : '';?> value="8">9 months</option>
-                <option <?= isset($billing_info) && $billing_info->frequency == 10 ?  'selected' : '';?> value="10">10 months</option>
-                <option <?= isset($billing_info) && $billing_info->frequency == 11 ?  'selected' : '';?> value="11">11 months</option>
-                <option <?= isset($billing_info) && $billing_info->frequency == 12 ?  'selected' : '';?> value="12">12 months</option>
+                <option  value="">Select</option>
+                <option <?php if(isset($billing_info)){ if($billing_info->frequency == ""){echo "selected";} } ?> value="">- Select -</option>
+                <option <?php if(isset($billing_info)){ if($billing_info->frequency == "0"){echo "selected";} } ?> value="0">One Time Only</option>
+                <option <?php if(isset($billing_info)){ if($billing_info->frequency == "1"){echo "selected";} } ?> value="1">Every 1 Month</option>
+                <option <?php if(isset($billing_info)){ if($billing_info->frequency == "3"){echo "selected";} } ?> value="3">Every 3 Months</option>
+                <option <?php if(isset($billing_info)){ if($billing_info->frequency == "6"){echo "selected";} } ?> value="6">Every 6 Months</option>
+                <option <?php if(isset($billing_info)){ if($billing_info->frequency == "12"){echo "selected";} } ?> value="12">Every 1 Year</option>
             </select>
         </div>
     </div>

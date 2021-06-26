@@ -3770,7 +3770,7 @@ class Accounting_modals extends MY_Controller {
                     'date' => date("m/d/Y", strtotime($purchaseOrder->purchase_order_date)),
                     'formatted_date' => date("F j", strtotime($purchaseOrder->purchase_order_date)),
                     'total' => '$'.number_format(floatval($purchaseOrder->total_amount), 2, '.', ','),
-                    'balance' => '$'.number_format(floatval($purchaseOrder->total_amount), 2, '.', ',')
+                    'balance' => '$'.number_format(floatval($purchaseOrder->remaining_balance), 2, '.', ',')
                 ];
             }
         }
@@ -3813,9 +3813,11 @@ class Accounting_modals extends MY_Controller {
         switch($transactionType) {
             case 'purchase-order' :
                 $type = 'Purchase Order';
+                $transaction = $this->vendors_model->get_purchase_order_by_id($transactionId);
             break;
             case 'bill' :
                 $type = 'Bill';
+                $transaction = $this->vendors_model->get_bill_by_id($transactionId);
             break;
         }
 
@@ -3831,6 +3833,7 @@ class Accounting_modals extends MY_Controller {
         }
 
         echo json_encode([
+            'details' => $transaction,
             'categories' => $categories,
             'items' => $items
         ]);

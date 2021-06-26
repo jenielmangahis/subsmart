@@ -259,7 +259,7 @@
                     <span>Off</span>
                 </div>
             </div>
-
+            <?php if(isset($access_info)): ?>
             <div class="row form_line">
                 <div class="col-md-6">
                     Reset Password 
@@ -268,6 +268,7 @@
                     <button type="button" class="btn btn-primary btn-md" name="reset_password" id="reset_password" >Send Email Reset </button>
                 </div>
             </div>
+            <?php endif; ?>
             <div class="row form_line">
                 <div class="col-md-6">
                     Login
@@ -288,42 +289,26 @@
 
         <div class="card-header">
             <span style="position: absolute;right: 0;margin-right: 25px;font-size: 20px;padding-top:10px;" class="fa fa-ellipsis-v"></span>
-
             <h6 ><span class="fa fa-user"></span>&nbsp; &nbsp;Custom Field</h6>
         </div>
-        <div class="card-body">
+        <div class="card-body" id="custom_field">
+            <a href="javascript:void;" id="add_field" style="color:#58bc4f;font-size: 12px;"><span class="fa fa-plus"></span> Add Field</a>
+
             <div class="row form_line">
-                <div class="col-md-6">
-                    Custom Field 1
+                <div class="col-md-5">
+                    Name
+                    <input type="text" class="form-control" name="office_custom_field1" id="office_custom_field1" value="" />
                 </div>
-                <div class="col-md-6">
-                    <input type="text" class="form-control" name="office_custom_field1" id="office_custom_field1" value="<?php if(isset($office_info)){ echo  $office_info->office_custom_field1; } ?>" />
+                <div class="col-md-5">
+                    Value
+                    <input type="text" class="form-control" name="office_custom_field1" id="office_custom_field1" value="" />
+                </div>
+                <div class="col-md-2">
+                    <button style="margin-top: 30px;" type="button" class="btn btn-primary btn-sm items_remove_btn remove_item_row"><span class="fa fa-trash-o"></span></button>
                 </div>
             </div>
-            <div class="row form_line">
-                <div class="col-md-6">
-                    Custom Field 2
-                </div>
-                <div class="col-md-6">
-                    <input type="text" class="form-control" name="office_custom_field1" id="office_custom_field1" value="<?php if(isset($office_info)){ echo  $office_info->office_custom_field1; } ?>" />
-                </div>
-            </div>
-            <div class="row form_line">
-                <div class="col-md-6">
-                    Custom Field 3
-                </div>
-                <div class="col-md-6">
-                    <input type="text" class="form-control" name="office_custom_field1" id="office_custom_field1" value="<?php if(isset($office_info)){ echo  $office_info->office_custom_field1; } ?>" />
-                </div>
-            </div>
-            <div class="row form_line">
-                <div class="col-md-6">
-                    Custom Field 4
-                </div>
-                <div class="col-md-6">
-                    <input type="text" class="form-control" name="office_custom_field1" id="office_custom_field1" value="<?php if(isset($office_info)){ echo  $office_info->office_custom_field1; } ?>" />
-                </div>
-            </div>
+
+
         </div>
 
         <div class="card-header">

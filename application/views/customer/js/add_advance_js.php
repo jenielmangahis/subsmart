@@ -16,7 +16,7 @@
             placeholder: "Select Month Rate"
         });
         $("#bill_freq").select2({
-            placeholder: "Select Billing Frequency"
+            placeholder: "Select"
         });
         $("#bill_day").select2({
             placeholder: "Select Billing Day"
@@ -94,7 +94,7 @@
             placeholder: "Select Month"
         });
         $("#frequency").select2({
-            placeholder: "Select Month"
+            placeholder: "Select"
         });
         $("#transaction_category").select2({
             placeholder: "Select Category"
@@ -142,6 +142,27 @@
 
 <script>
     $(document).ready(function () {
+
+        $("body").delegate(".remove_item_row", "click", function(){
+            $(this).parent().parent().remove();
+        });
+
+        $("#add_field").click(function () {
+            const custom_field_form= "<div class=\"row form_line\">\n" +
+                "                <div class=\"col-md-5\">\n" +
+                "                    Name\n" +
+                "                    <input type=\"text\" class=\"form-control\" name=\"office_custom_field1\" id=\"office_custom_field1\" value=\"\" />\n" +
+                "                </div>\n" +
+                "                <div class=\"col-md-5\">\n" +
+                "                    Value\n" +
+                "                    <input type=\"text\" class=\"form-control\" name=\"office_custom_field1\" id=\"office_custom_field1\" value=\"\" />\n" +
+                "                </div>\n" +
+                "                <div class=\"col-md-2\">\n" +
+                "                    <button style=\"margin-top: 30px;\" type=\"button\" class=\"btn btn-primary btn-sm items_remove_btn remove_item_row\"><span class=\"fa fa-trash-o\"></span></button>\n" +
+                "                </div>\n" +
+                "            </div>";
+            $("#custom_field").append(custom_field_form);
+        });
 
         $("#bill_start_date").datepicker({
             onselect: function(dateText) {

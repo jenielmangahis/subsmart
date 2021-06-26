@@ -5425,39 +5425,7 @@ class Accounting extends MY_Controller
         echo json_encode($data);
     }
 
-    public function save_receive_payment_from_modal()
-    {
-        $inv_count=$this->input->post("invoice_count");
-        $customer_id=$this->input->post("customer_id");
-
-        $customer_info = $this->accounting_customers_model->get_customer_by_id($customer_id);
-        // var_dump($this->input->post());
-        $count_save =0;
-        for ($i =0;$i<$inv_count;$i++) {
-            if ($this->input->post("inv_cb_".$i) == "on") {
-                $insert=array(
-                    "customer_id" => $customer_id,
-                    "invoice_number" => $this->input->post("inv_number_".$i),
-                    "payment_date" => $this->input->post("payment_date"),
-                    "payment_method" => $this->input->post("payment_method"),
-                    "ref_no" => $this->input->post("ref_no"),
-                    "deposit_to" => $this->input->post("deposite_to"),
-                    "amount" => str_replace(',', '', $this->input->post("inv_".$i)),
-                    "memo" => $this->input->post("memo"),
-                    "attachments" => "",
-                    "status" => "1",
-                    "user_id" =>  logged('id'),
-                    "company_id" => $customer_info->company_id,
-                    "created_by" => logged('id'),
-                );
-                $this->accounting_invoices_model->insert_receive_payment($insert);
-                $count_save++;
-            }
-        }
-        $data = new stdClass();
-        $data->count_save = $count_save;
-        echo json_encode($data);
-    }
+    
     public function send_customer_reminder()
     {
         $customer_name = $this->input->post("customer_name");
@@ -5752,5 +5720,116 @@ class Accounting extends MY_Controller
         $data = new stdClass();
         $data->customer_id = $customer_id;
         echo json_encode($data);
+    }
+    public function save_receive_payment_from_modal()
+    {
+        $inv_count=$this->input->post("invoice_count");
+        $customer_id=$this->input->post("customer_id");
+        if ($this->input->post("submit_option") == "save-send") {
+            $email_sending_status =$this->send_email_receive_payment($customer_id);
+        }
+        $customer_info = $this->accounting_customers_model->get_customer_by_id($customer_id);
+        // var_dump($this->input->post());
+        $count_save =0;
+        for ($i =0;$i<$inv_count;$i++) {
+            if ($this->input->post("inv_cb_".$i) == "on") {
+                $insert=array(
+                    "customer_id" => $customer_id,
+                    "invoice_number" => $this->input->post("inv_number_".$i),
+                    "payment_date" => $this->input->post("payment_date"),
+                    "payment_method" => $this->input->post("payment_method"),
+                    "ref_no" => $this->input->post("ref_no"),
+                    "deposit_to" => $this->input->post("deposite_to"),
+                    "amount" => str_replace(',', '', $this->input->post("inv_".$i)),
+                    "memo" => $this->input->post("memo"),
+                    "attachments" => "",
+                    "status" => "1",
+                    "user_id" =>  logged('id'),
+                    "company_id" => $customer_info->company_id,
+                    "created_by" => logged('id'),
+                );
+                $this->accounting_invoices_model->insert_receive_payment($insert);
+                $count_save++;
+            }
+        }
+
+        $data = new stdClass();
+        $data->email_sending_status = $email_sending_status;
+        $data->count_save = $count_save;
+        echo json_encode($data);
+    }
+    public function send_email_receive_payment($customer_id)
+    {
+        $customer_info = $this->accounting_customers_model->get_customer_by_id($customer_id);
+        
+        $server = MAIL_SERVER;
+        $port = MAIL_PORT;
+        $username = MAIL_USERNAME;
+        $password = MAIL_PASSWORD;
+        $from = MAIL_FROM;
+        $subject = 'nSmarTrac: Receive Payment || '.$customer_info->first_name ." ".$customer_info->last_name ."";
+
+        $mail = new PHPMailer(true);
+        $mail->isSMTP();
+        $mail->getSMTPInstance()->Timelimit = 5;
+        $mail->Host = $server;
+        $mail->SMTPAuth = true;
+        $mail->Username = $username;
+        $mail->Password = $password;
+        $mail->SMTPSecure = 'ssl';
+        $mail->Timeout = 10; // seconds
+        $mail->Port = $port;
+        $mail->From = $from;
+        $mail->FromName = 'nSmarTrac';
+        $mail->Subject = $subject;
+
+        //get job data
+
+        $this->page_data['company_name'] = $customer_info->business_name;
+        $this->page_data['payement_date'] = $this->input->post("payment_date");
+        $this->page_data['customer_name'] = $customer_info->first_name ." ".$customer_info->last_name;
+        $this->page_data['amount_received'] = $this->input->post("amount_received");
+        $this->page_data['payment_method'] = $this->input->post("payment_method");
+        $this->page_data['ref_no'] = $this->input->post("ref_no");
+        $this->page_data['deposite_to'] = $this->input->post("deposite_to");
+        $this->page_data['memo'] = $this->input->post("memo");
+        $this->page_data['action_request'] = "email";
+        $this->page_data['has_logo'] = false;
+        // $this->load->view('accounting/customer_includes/html_email_print', $this->page_data);
+        $mail->IsHTML(true);
+        $mail->AddEmbeddedImage(dirname(__DIR__, 2) . '/assets/dashboard/images/logo.png', 'logo_2u', 'logo.png');
+        $filePath = base_url() . '/uploads/users/business_profile/'.$customer_info->business_id.'/'.$customer_info->business_image;
+        if (@getimagesize($filePath)) {
+            $mail->AddEmbeddedImage(dirname(__DIR__, 2) . '/uploads/users/business_profile/'.$customer_info->business_id.'/'.$customer_info->business_image, 'company_logo', $customer_info->business_image);
+            $this->page_data['has_logo'] = true;
+        }
+
+        $mail->Body =  'Receive Payment.';
+        $content = $this->load->view('accounting/customer_includes/html_email_print', $this->page_data, true);
+        $mail->MsgHTML($content);
+        $mail->addAddress($customer_info->email);
+        if (!$mail->Send()) {
+            return  "Message could not be sent. <br> ".'Mailer Error: ' . $mail->ErrorInfo;
+            exit;
+        } else {
+            return "success";
+        }
+    }
+    public function print_receive_payment()
+    {
+        $customer_info = $this->accounting_customers_model->get_customer_by_id($this->input->post("customer_id"));
+        $this->page_data['company_name'] = $customer_info->business_name;
+        $this->page_data['payement_date'] = $this->input->post("payment_date");
+        $this->page_data['customer_name'] = $customer_info->first_name ." ".$customer_info->last_name;
+        $this->page_data['amount_received'] = $this->input->post("amount_received");
+        $this->page_data['payment_method'] = $this->input->post("payment_method");
+        $this->page_data['ref_no'] = $this->input->post("ref_no");
+        $this->page_data['deposite_to'] = $this->input->post("deposite_to");
+        $this->page_data['memo'] = $this->input->post("memo");
+        $this->page_data['action_request'] = "print";
+        $this->page_data['business_id'] = $customer_info->business_id;
+        $this->page_data['business_image'] = $customer_info->business_image;
+        $this->page_data['has_logo'] = false;
+        $this->load->view('accounting/customer_includes/html_email_print', $this->page_data);
     }
 }

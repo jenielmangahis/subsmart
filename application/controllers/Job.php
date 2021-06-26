@@ -1352,12 +1352,18 @@ class Job extends MY_Controller
 
             $customer_data = array();
             $customer_data['passcode'] = $workorder_data->password;
+            $customer_data['panel_type'] = $workorder_data->panel_type;
+            $customer_data['system_type'] = $workorder_data->plan_type;
             if(empty($is_exist)){
                 $customer_data['fk_prof_id'] = $input['customer_id'];
                 $this->general->add_($customer_data, 'acs_alarm');
             }else{
                 $this->general->update_with_key_field($customer_data, $input['customer_id'], 'acs_alarm','fk_prof_id');
             }
+
+            $customer_data_office = array();
+
+
         }
 
         echo $jobs_id;
