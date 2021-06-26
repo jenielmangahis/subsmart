@@ -324,3 +324,12 @@ body {
 .fillAndSign__signatureDraw {
   max-height: #{em(40)};
 }
+
+.docusignField__checkbox,
+.docusignField__radio {
+  &--isRequired {
+    input {
+      outline: #{em(2)} var(--border-style) #bf1e2e;
+    }
+  }
+}

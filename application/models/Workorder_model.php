@@ -1301,6 +1301,33 @@ class Workorder_model extends MY_Model
         return $query->row();
     }
 
+    public function getuserfirst($id)
+    {
+        $this->db->select('*');
+		$this->db->from('users');
+		$this->db->where('id', $id);
+        $query = $this->db->get();
+        return $query->row();
+    }
+
+    public function getusersecond($id)
+    {
+        $this->db->select('*');
+		$this->db->from('users');
+		$this->db->where('id', $id);
+        $query = $this->db->get();
+        return $query->row();
+    }
+
+    public function getuserthird($id)
+    {
+        $this->db->select('*');
+		$this->db->from('users');
+		$this->db->where('id', $id);
+        $query = $this->db->get();
+        return $query->row();
+    }
+
     public function getCompanyCompanyId($id)
     {
         $this->db->select('company_id');

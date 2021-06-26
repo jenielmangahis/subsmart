@@ -235,24 +235,40 @@ function Step3() {
     } else if (fieldTypeWithOptions.includes(field_name)) {
       fieldType = "options";
       const { options = [], subCheckbox = [] } = specs;
+      const isCheckbox = field_name === "Checkbox";
 
       $(".options__valuesItem:first").attr("data-key", field.unique_key);
+      $(".options__valuesItem:first").children(":first").attr("type", "checkbox");
+
       $(".options__valuesSubItems").empty();
       $(".options #textFieldName").val(specs.name ? specs.name : "");
 
       const $valueItem = $(`.options__valuesItem[data-key=${field.unique_key}]`);
-      $valueItem.find("[type=checkbox]").prop("checked", Boolean(specs.isChecked));
+
+      const $checkbox = $valueItem.find("[type=checkbox]");
+      $checkbox.attr("type", isCheckbox ? "checkbox" : "radio");
+      if (specs.name) $checkbox.attr("name", specs.name);
+      $checkbox.prop("checked", Boolean(specs.isChecked));
+
       $valueItem.find("[type=text]").val(specs.value || "");
 
       subCheckbox.forEach((item) => {
         const $valueItem = $(".options__valuesItem:first").clone();
+
+        $valueItem.attr("type", "radio");
         $valueItem.attr("data-key", item.id);
-        $valueItem.find("[type=checkbox]").prop("checked", item.isChecked);
+
+        const $checkbox = $valueItem.find(`[type=${isCheckbox ? "checkbox" : "radio"}]`);
+        $checkbox.attr("type", isCheckbox ? "checkbox" : "radio");
+        $checkbox.prop("checked", item.isChecked);
+        if (specs.name) $checkbox.attr("name", specs.name);
+
         $valueItem.find("[type=text]").val(item.value || "");
         $(".options__valuesSubItems").append($valueItem);
       });
 
-      $(".options input[type=checkbox]").change(function (event) {
+      $checks = $(`.options input[type=${isCheckbox ? "checkbox" : "radio"}]`);
+      $checks.change(function (event) {
         const $parent = $(event.target).parent(".options__valuesItem");
         const id = $parent.attr("data-key");
 
@@ -262,12 +278,18 @@ function Step3() {
         }
 
         const $field = $(`.${selector}[data-key=${id}]`);
+
+        if (field_name === "Radio") {
+          const $fieldParent = $field.parent(".esignBuilder__field");
+          $fieldParent.find(`.${selector}--checked`).removeClass(`${selector}--checked`);
+        }
+
         if (this.checked) {
           $field.addClass(`${selector}--checked`);
         } else {
           $field.removeClass(`${selector}--checked`);
         }
-      })
+      });
 
       if (options.length) {
         const $inputs = options.map((value) => createDropdownInput({ value })); // prettier-ignore
@@ -771,13 +793,15 @@ function Step3() {
           return subCheckbox.find(({ id }) => id === fieldKey);
         });
 
+        const isCheckbox = field.field_name === "Checkbox";
+
         const { specs: fieldSpecs } = field;
         let { subCheckbox = [] } = JSON.parse(fieldSpecs) || {};
         specs = {};
 
         $(".options__valuesItem").each(function (_, element) {
           const $element = $(element);
-          const $checkbox = $element.find("[type=checkbox]");
+          const $checkbox = $element.find(`[type=${isCheckbox ? "checkbox" : "radio"}]`);
           const $inputText = $element.find("[type=text]");
           const key = $element.attr("data-key");
 
@@ -801,6 +825,7 @@ function Step3() {
           ...specs,
           subCheckbox,
           name: !isEmpty(fieldName) ? fieldName : null,
+          is_required: $(".options #requiredText").is(":checked"),
         };
       }
 

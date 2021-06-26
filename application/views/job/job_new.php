@@ -171,8 +171,7 @@ add_css(array(
 
                             <h6>Select Employee</h6>
                             <select id="employee_id" name="employee_id" class="form-control" required>
-                                <option value="">Select Employee</option>
-                                <option value="10001">Select All Employees</option>
+                                <option value="10001">Select All</option>
                                 <?php if(!empty($employees)): ?>
                                     <?php foreach ($employees as $employee): ?>
                                         <option <?= isset($jobs_data) && $jobs_data->employee_id == $employee->id ? 'selected' : '';  ?> value="<?= $employee->id; ?>"><?= $employee->FName.','.$employee->LName; ?></option>
@@ -224,7 +223,6 @@ add_css(array(
                                     <?php endforeach; ?>
                                 <?php endif; ?>
                             </select>
-
                             <h6>Select Job Tag</h6>
                             <select id="job_tags" name="tags" class="form-control" required>
                                 <option value="">Select Tags</option>
@@ -234,7 +232,7 @@ add_css(array(
                                     <?php endforeach; ?>
                                 <?php endif; ?>
                             </select>
-                            <hr>
+                            <h6>Assigned To</h6>
                             <div class="row">
                                 <div class="col-md-4">
                                     <input type="text" placeholder="Employee 1" id="emp2_id" name="emp2_id"  class="form-control" readonly>

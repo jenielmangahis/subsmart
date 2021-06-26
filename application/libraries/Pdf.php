@@ -50,7 +50,7 @@ protected function ci()
         $options->set('isHtml5ParserEnabled', true);
         $options->set('isRemoteEnabled', true);
 
-        $dompdf = new Dompdf($options);
+        $dompdf = new Dompdf(array('enable_remote' => true));
         $html = $this->ci()->load->view($view, $data, true);
 
         $dompdf->loadHtml($html);

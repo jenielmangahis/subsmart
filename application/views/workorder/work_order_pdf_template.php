@@ -38,7 +38,7 @@ table {
 
 
         <div style="padding: 2%;">
-        <img src="<?php echo "$business_logo"; ?>" style="width:80px;height:80px;">
+        <img src="<?php echo base_url('uploads/users/business_profile/'.$company_id.'/'.$business_logo); ?>" style="width:110px;height:80px;">
         </div>
 
         <div style="margin-top:5%">
@@ -345,22 +345,22 @@ table {
                     <tr>
                         <td align="center">
                             <?php if(empty($company_representative_signature)){ } else{ ?>
-                            <img src="<?php echo " $company_representative_signature"; ?>" style="width:30%;height:80px;"><br>
-                            <?php echo $company_representative_name; ?>
+                            <img src="<?php echo base_url($company_representative_signature); ?>" style="width:30%;height:80px;"><br>
+                            <?php echo $first->FName.' '.$first->LName; ?>
                             <?php } ?>
                         </td>
                         
                         <td align="center">
                             <?php if(empty($primary_account_holder_signature)){ } else{ ?>
-                            <img src="<?php echo " $primary_account_holder_signature"; ?>" style="width:30%;height:80px;"><br>
-                            <?php echo $primary_account_holder_name; ?>
+                            <img src="<?php echo base_url($primary_account_holder_signature); ?>" style="width:30%;height:80px;"><br>
+                            <?php echo $second->FName.' '.$second->LName; ?>
                             <?php } ?>
                         </td>
                         
                         <td align="center">
                             <?php if(empty($secondary_account_holder_signature)){ } else{ ?>
-                            <img src="<?php echo " $secondary_account_holder_signature"; ?>" style="width:30%;height:80px;"><br>
-                            <?php echo $secondary_account_holder_name; ?>
+                            <img src="<?php echo base_url($secondary_account_holder_signature); ?>" style="width:30%;height:80px;"><br>
+                            <?php echo $third->FName.' '.$third->LName; ?>
                             <?php } ?>
                         </td>
                     </tr>
