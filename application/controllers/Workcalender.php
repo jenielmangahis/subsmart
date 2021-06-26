@@ -831,7 +831,7 @@ class Workcalender extends MY_Controller
                         }
 
                         if (isset($a_settings['work_order_show_details'])) {
-                            $custom_html .= "<br /><small>" . $event->mail_add . " " . $event->cus_city . " " . $event->cus_state . " - " . $event->description . "</small>";
+                            $custom_html .= "<br /><small>" . $event->mail_add . " " . $event->cus_city . " " . $event->cus_state . " - " . $event->event_description . "</small>";
                         }
 
                         if (isset($a_settings['work_order_show_link'])) {
@@ -1695,6 +1695,29 @@ class Workcalender extends MY_Controller
             echo "<pre>";
             print_r($calendarListEntry);
             exit;
+        }
+    }
+
+    public function ajax_update_event()
+    {
+        $this->load->model('General_model', 'general');
+
+        $post = $this->input->post();
+        $new_start_date = date("Y-m-d",strtotime($post['start_date']));
+        $new_end_date   = date("Y-m-d",strtotime($post['end_date']));
+
+        if( $post['event_type'] == 'jobs' ){
+            $jobs_data = [
+                'start_date' => $new_start_date,
+                'end_date' => $new_end_date
+            ];
+            $this->general->update_with_key_field($jobs_data, $post['event_id'], 'jobs', 'id');
+        }else{
+            $events_data = [
+                'start_date' => $new_start_date,
+                'end_date' => $new_end_date
+            ];
+            $this->general->update_with_key_field($events_data, $post['event_id'], 'events', 'id');
         }
     }
 }
