@@ -1898,7 +1898,7 @@ $(function() {
                             <div class="transactions-container bg-white h-100" style="padding: 15px">
                                 <div class="row">
                                     <div class="col-12">
-                                        <h4>Add to Expense</h4>
+                                        <h4>Add to Check</h4>
                                     </div>
                                 </div>
                             </div>
@@ -1960,7 +1960,7 @@ $(function() {
                         <div class="transactions-container bg-white h-100" style="padding: 15px">
                             <div class="row">
                                 <div class="col-12">
-                                    <h4>Add to Expense</h4>
+                                    <h4>Add to Bill</h4>
                                 </div>
                             </div>
                         </div>
@@ -2001,129 +2001,150 @@ $(function() {
         e.preventDefault();
         var data = e.currentTarget.dataset;
 
-        $.get(`/accounting/get-transaction-details/${data.type}/${data.id}`, function(res) {
-            var result = JSON.parse(res);
-            var categories = result.categories;
-            var items = result.items;
-            var details = result.details;
-
-            var count = 0;
-
-            $('#modal-container .modal table#category-details-table thead tr').append('<th></th>');
-            $('#modal-container .modal table#category-details-table tbody tr').each(function() {
-                if($(this).find('select').length === 0) {
-                    $(this).remove();
-                } else {
-                    $(this).find('td:last-child').html('');
-                    $(this).append('<td><a href="#" class="deleteRow"><i class="fa fa-trash"></i></a></td>');
-                    count++;
-                }
-            });
-
-            if(categories.length > 0) {
-                $.each(categories, function(index, category) {
-                    count++;
-                    $('#modal-container .modal table#category-details-table tbody').append(`<tr>${catDetailsInputs}</tr>`);
-                    $('#modal-container .modal table#category-details-table tbody tr:last-child td:nth-child(2)').html(count);
-                    $(`<td><i class="fa fa-link"></i></td>`).insertBefore($('#modal-container .modal table#category-details-table tbody tr:last-child td:last-child'));
-                    $('#modal-container .modal table#category-details-table tbody tr:last-child select[name="expense_name[]"]').val(category.expense_account_id);
-                    $('#modal-container .modal table#category-details-table tbody tr:last-child select[name="category[]"]').val(category.category);
-                    $('#modal-container .modal table#category-details-table tbody tr:last-child input[name="description[]"]').val(category.description);
-                    $('#modal-container .modal table#category-details-table tbody tr:last-child input[name="category_amount[]"]').val(parseFloat(category.amount).toFixed(2));
-                    $('#modal-container .modal table#category-details-table tbody tr:last-child input[name="category_billable[]"]').prop('checked', category.billable === "1");
-                    $('#modal-container .modal table#category-details-table tbody tr:last-child input[name="category_markup[]"]').val(parseFloat(category.markup_percentage).toFixed(2));
-                    $('#modal-container .modal table#category-details-table tbody tr:last-child input[name="category_tax[]"]').prop('checked', category.tax === "1");
-                    $('#modal-container .modal table#category-details-table tbody tr:last-child select[name="category_customer[]"]').val(category.customer_id);
-                });
-            }
-
-            $('#modal-container .modal table#category-details-table tbody select').select2();
-
-            if($('#modal-container .modal table#category-details-table tbody tr').length === 1) {
-                $('#modal-container .modal table#category-details-table tbody').append(`<tr>${catDetailsBlank}</tr>`);
-                $('#modal-container .modal table#category-details-table tbody tr:last-child td:nth-child(2)').html(count+1);
-                $(`<td></td>`).insertBefore($('#modal-container .modal table#category-details-table tbody tr:last-child td:last-child'));
-            }
-
-            $('#modal-container .modal table#item-details-table thead tr').append('<th></th>');
-            if(items.length > 0) {
-                if($('#modal-container .modal #item-details').hasClass('show') === false) {
-                    $('#modal-container .modal button[data-target="#item-details"]').trigger('click');
-                }
-
-                $.each(items, function(index, item) {
-                    var locs = '';
-                    for(var i in item.locations) {
-                        locs += `<option value="${item.locations[i].id}" data-quantity="${item.locations[i].qty === "null" ? 0 : item.locations[i].qty}" ${item.locations[i].id === item.location_id ? 'selected' : ''}>${item.locations[i].name}</option>`;
+        switch(data.type) {
+            case 'purchase-order' :
+                $.get(`/accounting/get-transaction-details/${data.type}/${data.id}`, function(res) {
+                    var result = JSON.parse(res);
+                    var categories = result.categories;
+                    var items = result.items;
+                    var details = result.details;
+        
+                    var count = 0;
+        
+                    var dataType = data.type.replace('-', ' ').replace(/(?:^|\s)\S/g, function(a) { return a.toUpperCase(); });
+                    var date = new Date(details.purchase_order_date);
+                    var dateString = String(date.getMonth() + 1).padStart(2, '0')+'/'+String(date.getDate()).padStart(2, '0')+'/'+date.getFullYear();
+        
+                    var link = `
+                    <td>
+                        <div class="dropdown">
+                            <a href="#" class="text-info" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-link"></i></a>
+                            <div class="dropdown-menu dropdown-menu-right p-2" aria-labelledby="linked-transaction" style="min-width: 500px; font-size: 13px">
+                                <div class="row">
+                                    <div class="col-3"><strong>Type</strong></div>
+                                    <div class="col-3"><strong>Date</strong></div>
+                                    <div class="col-3"><strong>Amount</strong></div>
+                                    <div class="col-3"></div>
+                                    <div class="col-3 d-flex align-items-center"><a class="text-info open-transaction" href="#" data-id="${data.id}" data-type="${data.type}">${dataType}</a></div>
+                                    <div class="col-3 d-flex align-items-center">${dateString}</div>
+                                    <div class="col-3 d-flex align-items-center">$${parseFloat(details.remaining_balance).toFixed(2)}</div>
+                                    <div class="col-3 d-flex align-items-center"><button class="btn btn-transparent unlink-transaction" style="font-size: 13px !important">Remove</button></div>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                    `;
+        
+                    $('#modal-container .modal table#category-details-table thead tr').append('<th></th>');
+                    $('#modal-container .modal table#category-details-table tbody tr').each(function() {
+                        if($(this).find('select').length === 0) {
+                            $(this).remove();
+                        } else {
+                            $(this).find('td:last-child').html('');
+                            $(this).append('<td><a href="#" class="deleteRow"><i class="fa fa-trash"></i></a></td>');
+                            count++;
+                        }
+                    });
+        
+                    if(categories.length > 0) {
+                        $.each(categories, function(index, category) {
+                            count++;
+                            $('#modal-container .modal table#category-details-table tbody').append(`<tr>${catDetailsInputs}</tr>`);
+                            $('#modal-container .modal table#category-details-table tbody tr:last-child td:nth-child(2)').html(count);
+                            $(link).insertBefore($('#modal-container .modal table#category-details-table tbody tr:last-child td:last-child'));
+                            $('#modal-container .modal table#category-details-table tbody tr:last-child select[name="expense_name[]"]').val(category.expense_account_id);
+                            $('#modal-container .modal table#category-details-table tbody tr:last-child select[name="category[]"]').val(category.category);
+                            $('#modal-container .modal table#category-details-table tbody tr:last-child input[name="description[]"]').val(category.description);
+                            $('#modal-container .modal table#category-details-table tbody tr:last-child input[name="category_amount[]"]').val(parseFloat(category.amount).toFixed(2));
+                            $('#modal-container .modal table#category-details-table tbody tr:last-child input[name="category_billable[]"]').prop('checked', category.billable === "1");
+                            $('#modal-container .modal table#category-details-table tbody tr:last-child input[name="category_markup[]"]').val(parseFloat(category.markup_percentage).toFixed(2));
+                            $('#modal-container .modal table#category-details-table tbody tr:last-child input[name="category_tax[]"]').prop('checked', category.tax === "1");
+                            $('#modal-container .modal table#category-details-table tbody tr:last-child select[name="category_customer[]"]').val(category.customer_id);
+                        });
+        
+                        $('#modal-container .modal table#category-details-table tbody select').select2();
                     }
-    
-                    if($('#modal-container form#modal-form .modal').attr('id') === 'creditCardCreditModal' || $('#modal-container form#modal-form .modal').attr('id') === 'vendorCreditModal') {
-                        var qtyField = `<input type="number" name="quantity[]" class="form-control text-right" required value="0" max="${item.locations[0].qty}">`;
+        
+                    if(count === 1) {
+                        $('#modal-container .modal table#category-details-table tbody').append(`<tr>${catDetailsBlank}</tr>`);
+                        $('#modal-container .modal table#category-details-table tbody tr:last-child td:nth-child(2)').html(count+1);
+                        $(`<td></td>`).insertBefore($('#modal-container .modal table#category-details-table tbody tr:last-child td:last-child'));
+                    }
+        
+                    $('#modal-container .modal table#item-details-table thead tr').append('<th></th>');
+                    if(items.length > 0) {
+                        if($('#modal-container .modal #item-details').hasClass('show') === false) {
+                            $('#modal-container .modal button[data-target="#item-details"]').trigger('click');
+                        }
+        
+                        $.each(items, function(index, item) {
+                            var locs = '';
+                            for(var i in item.locations) {
+                                locs += `<option value="${item.locations[i].id}" data-quantity="${item.locations[i].qty === "null" ? 0 : item.locations[i].qty}" ${item.locations[i].id === item.location_id ? 'selected' : ''}>${item.locations[i].name}</option>`;
+                            }
+            
+                            if($('#modal-container form#modal-form .modal').attr('id') === 'creditCardCreditModal' || $('#modal-container form#modal-form .modal').attr('id') === 'vendorCreditModal') {
+                                var qtyField = `<input type="number" name="quantity[]" class="form-control text-right" required value="0" max="${item.locations[0].qty}">`;
+                            } else {
+                                var qtyField = `<input type="number" name="quantity[]" class="form-control text-right" required value="0">`;
+                            }
+            
+                            $('#modal-container .modal table#item-details-table tbody').append(`
+                                <tr>
+                                    <td>${item.details.title}<input type="hidden" name="item[]" value="${item.item_id}"></td>
+                                    <td>Product</td>
+                                    <td><select name="location[]" class="form-control" required>${locs}</select></td>
+                                    <td><input type="number" name="quantity[]" class="form-control text-right" required value="${item.quantity}" min="0"></td>
+                                    <td><input type="number" name="item_amount[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" value="${parseFloat(item.rate).toFixed(2)}"></td>
+                                    <td><input type="number" name="discount[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" value="${parseFloat(item.discount).toFixed(2)}"></td>
+                                    <td><input type="number" name="item_tax[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" value="${parseFloat(item.tax).toFixed(2)}"></td>
+                                    <td>$<span class="row-total">${parseFloat(item.total).toFixed(2)}</span></td>
+                                    ${link}
+                                    <td><a href="#" class="deleteRow"><i class="fa fa-trash"></i></a></td>
+                                </tr>
+                            `);
+                        });
+        
+                        $('#modal-container .modal table#item-details-table tbody select').select2();
+                    }
+        
+                    computeTransactionTotal();
+        
+                    $('#modal-container .modal .transactions-container').parent().remove();
+        
+                    if($('#modal-container .modal a.close-transactions-container').length > 0) {
+                        var button = $('#modal-container .modal a.close-transactions-container');
                     } else {
-                        var qtyField = `<input type="number" name="quantity[]" class="form-control text-right" required value="0">`;
+                        var button = $('#modal-container .modal a.open-transactions-container');
                     }
-    
-                    $('#modal-container .modal table#item-details-table tbody').append(`
-                        <tr>
-                            <td>${item.details.title}<input type="hidden" name="item[]" value="${item.item_id}"></td>
-                            <td>Product</td>
-                            <td><select name="location[]" class="form-control" required>${locs}</select></td>
-                            <td><input type="number" name="quantity[]" class="form-control text-right" required value="${item.quantity}" min="0"></td>
-                            <td><input type="number" name="item_amount[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" value="${parseFloat(item.rate).toFixed(2)}"></td>
-                            <td><input type="number" name="discount[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" value="${parseFloat(item.discount).toFixed(2)}"></td>
-                            <td><input type="number" name="item_tax[]" onchange="convertToDecimal(this)" class="form-control text-right" step=".01" value="${parseFloat(item.tax).toFixed(2)}"></td>
-                            <td>$<span class="row-total">${parseFloat(item.total).toFixed(2)}</span></td>
-                            <td><i class="fa fa-link"></i></td>
-                            <td><a href="#" class="deleteRow"><i class="fa fa-trash"></i></a></td>
-                        </tr>
+        
+                    button.parent().removeClass('px-0');
+                    button.parent().append(`<input type="hidden" value="${data.type.replace('-', '_')+'-'+details.id}" name="linked_transaction">`);
+                    button.parent().append(`
+                        <div class="dropdown">
+                            <a href="#" class="text-info" id="linked-transaction" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">1 linked ${dataType}</a>
+                            <div class="dropdown-menu p-2" aria-labelledby="linked-transaction" style="min-width: 500px; font-size: 13px">
+                                <div class="row">
+                                    <div class="col-3"><strong>Type</strong></div>
+                                    <div class="col-3"><strong>Date</strong></div>
+                                    <div class="col-3"><strong>Amount</strong></div>
+                                    <div class="col-3"></div>
+                                    <div class="col-3 d-flex align-items-center"><a class="text-info open-transaction" href="#" data-id="${data.id}" data-type="${data.type}">${dataType}</a></div>
+                                    <div class="col-3 d-flex align-items-center">${dateString}</div>
+                                    <div class="col-3 d-flex align-items-center">$${parseFloat(details.remaining_balance).toFixed(2)}</div>
+                                    <div class="col-3 d-flex align-items-center"><button class="btn btn-transparent unlink-transaction" style="font-size: 13px !important">Remove</button></div>
+                                </div>
+                            </div>
+                        </div>
                     `);
+        
+                    button.remove();
                 });
-            }
+            break;
+            case 'vendor-credit' :
 
-            $('#modal-container .modal table#category-details-table tbody input[name="category_amount[]"]').trigger('change');
-            $('#modal-container .modal table#item-details-table tbody input[name="item_amount[]"]').trigger('change');
-
-            $('#modal-container .modal .transactions-container').parent().remove();
-
-            if($('#modal-container .modal a.close-transactions-container').length > 0) {
-                var button = $('#modal-container .modal a.close-transactions-container');
-            } else {
-                var button = $('#modal-container .modal a.open-transactions-container');
-            }
-
-            var dataType = data.type.replace('-', ' ').replace(/(?:^|\s)\S/g, function(a) { return a.toUpperCase(); });
-            var date = new Date(details.purchase_order_date);
-            var dateString = String(date.getMonth() + 1).padStart(2, '0')+'/'+String(date.getDate()).padStart(2, '0')+'/'+date.getFullYear();
-
-            button.parent().removeClass('px-0');
-            button.parent().append(`
-                <div class="dropdown">
-                    <a href="#" class="text-info" id="linked-transaction" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">1 linked ${dataType}</a>
-                    <div class="dropdown-menu p-2" aria-labelledby="linked-transaction" style="min-width: 500px">
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th>Type</th>
-                                    <th>Date</th>
-                                    <th>Amount</th>
-                                    <th></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td><a class="text-info open-transaction" href="#" data-id="${data.id}" data-type="${data.type}">${dataType}</a></td>
-                                    <td>${dateString}</td>
-                                    <td>$${parseFloat(details.remaining_balance).toFixed(2)}</td>
-                                    <td><button class="btn btn-transparent unlink-transaction">Remove</button></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            `);
-
-            button.remove();
-        });
+            break;
+        }
     });
 
     $(document).on('click', '#modal-container .modal .unlink-transaction', function(e) {
@@ -2769,9 +2790,11 @@ const submitModalForm = (event, el) => {
                 if(count === 0) {
                     data.set('category_billable[]', billable.prop('checked') ? "1" : "0");
                     data.set('category_tax[]', tax.prop('checked') ? "1" : "0");
+                    data.set('category_linked[]', $(this).find('i.fa.fa-link').length > 0);
                 } else {
                     data.append('category_billable[]', billable.prop('checked') ? "1" : "0");
                     data.append('category_tax[]', tax.prop('checked') ? "1" : "0");
+                    data.append('category_linked[]', $(this).find('i.fa.fa-link').length > 0);
                 }
             }
 
@@ -2782,8 +2805,10 @@ const submitModalForm = (event, el) => {
         $(`${modalId} table#item-details-table tbody tr`).each(function() {
             if(count === 0) {
                 data.set('item_total[]', $(this).find('td span.row-total').html());
+                data.set('item_linked[]', $(this).find('i.fa.fa-link').length > 0);
             } else {
                 data.append('item_total[]', $(this).find('td span.row-total').html());
+                data.append('item_linked[]', $(this).find('i.fa.fa-link').length > 0);
             }
 
             count++;

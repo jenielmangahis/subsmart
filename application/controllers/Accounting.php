@@ -3053,7 +3053,11 @@ class Accounting extends MY_Controller
                 $i++;
             }
 
-            redirect('accounting/banking');
+            
+            $data = new stdClass();
+            $data->email_sending_status = "not sent";
+            $data->count_save = 1;
+            echo json_encode($data);
         } else {
             echo json_encode(0);
             // print_r($file_put_contents);die;
@@ -5544,7 +5548,7 @@ class Accounting extends MY_Controller
 
             $html.='<li>
 												<a href="javascript:void(0)"
-													class="">
+													class="created-sales-receipt" data-toggle="modal" data-target="#addsalesreceiptModal" data-email-add="'.$cus->email.'" data-customer-id="'.$cus->prof_id.'">
 													Create sales receipt
 												</a>
 											</li>

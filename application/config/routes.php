@@ -308,6 +308,7 @@ $route['accounting/get-customer-details/(:any)'] = 'accounting_modals/get_custom
 $route['accounting/get-employee-details/(:any)'] = 'accounting_modals/get_employee_details/$1';
 $route['accounting/get-linkable-transactions/(:any)/(:any)'] = 'accounting_modals/get_linkable_transactions/$1/$2';
 $route['accounting/get-transaction-details/(:any)/(:any)'] = 'accounting_modals/get_transaction_categories/$1/$2';
+$route['accounting/bill-payment-form/(:any)'] = 'accounting_modals/bill_payment_form/$1';
 
 $route['accounting/lists'] = 'accounting/lists';
 
@@ -702,6 +703,7 @@ $route['calendar/_get_main_calendar_events'] = 'Workcalender/main_calendar_event
 $route['calendar/_create_google_event'] = 'Workcalender/ajax_create_google_event';
 $route['calendar/_create_google_calendar'] = 'Workcalender/ajax_create_google_calendar';
 $route['calendar/_load_upcoming_events'] = 'Workcalender/ajax_load_upcoming_events';
+$route['calendar/_updte_drop_event'] = 'Workcalender/ajax_update_event';
 
 //workorder
 $route['workorder/_update_workorder_settings'] = 'Workorder/ajax_update_workoder_settings';

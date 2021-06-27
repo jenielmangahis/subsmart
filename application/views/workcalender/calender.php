@@ -1193,34 +1193,19 @@ a.top-1 {
               //alert(info.event.extendedProps.eventType);
               //alert(info.event.title + " was dropped on " + info.event.start.toDateString());
               if( info.event.extendedProps.eventType != 'google_events' ){
-                var new_date   = info.event.start.toDateString();
+                var start_date = info.event.start.toDateString();
+                var end_date   = info.event.end.toDateString();
                 var event_id   = info.event.extendedProps.eventId;
                 var event_type = info.event.extendedProps.eventType;
                 var url        = base_url + 'calendar/_updte_drop_event';
                 $.ajax({
                    type: "POST",
                    url: url,
-                   data: $("#create-google-event").serialize(),
+                   data: {event_id:event_id,event_type:event_type,start_date:start_date,end_date:end_date},
                    dataType: 'json',
                    success: function(o)
                    {
 
-
-                      if( o.is_success ){
-                        var msg = "<div class='alert alert-success'>"+ o.message +"</div>";
-                        $(".create-gevent-validation-error").html(msg);
-
-                        $("#modalCreateGoogleEvent").modal("hide");
-
-                        //Reload calendar
-                        load_calendar();
-                        var calendarEl = document.getElementById('calendar');
-                        var timeZoneSelectorEl = document.getElementById('time-zone-selector');
-                        render_calender(calendarEl, timeZoneSelectorEl);
-                      }else{
-                        var msg = "<div class='alert alert-danger'>"+ o.message +"</div>";
-                        $(".create-gevent-validation-error").html(msg);
-                      }
                    }
                 });
               }else{

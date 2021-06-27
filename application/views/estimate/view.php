@@ -603,15 +603,16 @@ span.sc-item {
                                 <th style="background: #f4f4f4; text-align: center; padding: 5px 0;">#</th>
                                 <th style="background: #f4f4f4; text-align: left; padding: 5px 0;">Items</th>
                                 <th style="background: #f4f4f4; text-align: left; padding: 5px 0;">Item Type</th>
+                                <th style="background: #f4f4f4; text-align: right; padding: 5px 0;">Price</th>
                                 <th style="background: #f4f4f4; text-align: right; padding: 5px 0;">Qty</th>
                                 <th style="background: #f4f4f4; text-align: right; padding: 5px 0;">Discount</th>
                                 <th style="background: #f4f4f4; text-align: right; padding: 5px 8px 5px 0;" class="text-right">Total</th>
                             </tr>
                         </thead>
                         <tbody>
-                        <?php $estimateItems = unserialize($estimate->estimate_items); ?>
-                        <?php if( $estimateItems ){ ?>
-                          <?php $total_amount = 0; $row = 1; foreach($estimateItems as $item){ ?>
+                        <!-- <?php //$estimateItems = unserialize($estimate->estimate_items); ?>
+                        <?php //if( $estimateItems ){ ?>
+                          <?php //$total_amount = 0; $row = 1; foreach($estimateItems as $item){ ?>
                             <tr class="table-items__tr">
                               <td valign="top" style="width:30px; text-align:center;"><?= $row; ?></td>
                               <td valign="top" style="width:45%;"><?= $item['item']; ?></td>
@@ -621,15 +622,26 @@ span.sc-item {
                               <td valign="top" style="width: 80px; text-align: right;"><?= number_format($item['price'],2); ?></td>
                             </tr>
                           <?php 
-                            $total_amount += $item['price'];
-                            $row++;
+                            // $total_amount += $item['price'];
+                            // $row++;
                           ?>
+                          <?php //} ?>
+                        <?php //} ?> -->
+                        <?php foreach($items as $item){ ?>
+                            <tr class="table-items__tr">
+                              <td valign="top" style="width:30px; text-align:center;"></td>
+                              <td valign="top" style="width:45%;"><?= $item->title; ?></td>
+                              <td valign="top" style="width:20%;"><?= $item->type; ?></td>
+                              <td valign="top" style="width: 80px; text-align: right;"><?= number_format($item->icost,2); ?></td>
+                              <td valign="top" style="width: 50px; text-align: right;"><?= $item->qty; ?></td>
+                              <td valign="top" style="width: 50px; text-align: right;"><?= $item->discount; ?></td>
+                              <td valign="top" style="width: 80px; text-align: right;"><?= number_format($item->itotal,2); ?></td>
+                            </tr>
                           <?php } ?>
-                        <?php } ?>
                         
                         <tr><td colspan="6"><hr/></td></tr>
                         <tr>
-                          <td colspan="5" style="text-align: right;"><b>TOTAL AMOUNT</b></td>
+                          <td colspan="6" style="text-align: right;"><b>TOTAL AMOUNT</b></td>
                           <td style="text-align: right;"><b>$<?= number_format($total_amount, 2); ?></b></td>
                         </tr>
                       </tbody>

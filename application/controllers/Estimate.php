@@ -931,6 +931,8 @@ class Estimate extends MY_Controller
             $this->page_data['client'] = $client;
             $this->page_data['estimate'] = $estimate;
 
+            $this->page_data['items'] = $this->estimate_model->getItems($id);
+
             $this->load->view('estimate/view', $this->page_data);
         } else {
             $this->session->set_flashdata('message', 'Record not found.');
