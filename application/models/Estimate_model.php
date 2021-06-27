@@ -44,6 +44,16 @@ class Estimate_model extends MY_Model
         return $query->result();
     }
 
+    public function getItems($id)
+    {
+        $this->db->select('*, estimates_items.cost AS icost, estimates_items.tax AS itax, estimates_items.total AS itotal');
+		$this->db->from('estimates_items');
+        $this->db->join('items', 'estimates_items.estimates_id  = items.id');
+		$this->db->where('estimates_items.estimates_id', $id);
+        $query = $this->db->get();
+        return $query->result();
+    }
+
     public function deleteEstimate($data)
     {
         extract($data);

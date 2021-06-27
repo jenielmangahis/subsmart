@@ -6,7 +6,7 @@
             <!-- Modal content-->
             <div class="modal-content" style="height: 100%;">
                 <div class="modal-header" style="background: #f4f5f8;border-bottom: 0">
-                    <h4 class="modal-title"><a href="#"><i class="fa fa-history fa-lg" style="margin-right: 10px"></i></a>Bill Payment #<span><?=$billPayment->to_print_check_no === "1" ? "To print" : $billPayment->check_no?></span></h4>
+                    <h4 class="modal-title"><a href="#"><i class="fa fa-history fa-lg" style="margin-right: 10px"></i></a>Bill Payment #<span><?=$billPayment->to_print_check_no === "1" ? "To print" : $billPayment->starting_check_no?></span></h4>
                     <button type="button" class="close" data-dismiss="modal"><i class="fa fa-times fa-lg"></i></button>
                 </div>
                 <div class="modal-body">
@@ -23,7 +23,7 @@
                                                         <select name="payee_id" id="payee" class="form-control" required>
                                                             <option value="" disabled selected>&nbsp;</option>
                                                             <?php foreach($dropdown['payees'] as $payee) : ?>
-                                                                <option value="<?=$payee->id?>" <?=$payee->id === $vendor->id ? 'selected' : ''?>><?=$payee->display_name?></option>
+                                                                <option value="<?=$payee->id?>" <?=$payee->id === $bill->vendor_id ? 'selected' : ''?>><?=$payee->display_name?></option>
                                                             <?php endforeach; ?>
                                                         </select>
                                                     </div>
@@ -50,11 +50,14 @@
                                                         </select>
                                                     </div>
                                                 </div>
+                                                <div class="col-md-3 d-flex ">
+                                                    <p style="align-self: flex-end; margin-bottom: 30px">Balance <span id="account-balance"><?= $balance ?></span></p>
+                                                </div>
                                             </div>
                                         </div>
                                         <div class="col-md-4">
-                                            <h6 class="text-right"><?=$billPayment->status === "4" ? "PAYMENT STATUS" : "AMOUNT PAID" ?></h6>
-                                            <h2 class="text-right"><?=$billPayment->status === "4" ? "VOID" : "$0.00" ?></h2>
+                                            <h6 class="text-right">AMOUNT PAID</h6>
+                                            <h2 class="text-right">$<?=$bill->total_amount?></h2>
                                         </div>
                                         <div class="col-md-2">
                                             <div class="form-group">
@@ -75,18 +78,27 @@
                                         <div class="col-md-2">
                                             <div class="form-group">
                                                 <label for="payment_date">Payment date</label>
-                                                <input type="text" name="payment_date" id="payment_date" class="form-control date" value="<?=date("m/d/Y", strtotime($billPayment->payment_date))?>" required>
+                                                <input type="text" name="payment_date" id="payment_date" class="form-control date" value="<?=date("m/d/Y")?>" required>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="permit_number">Permit no.</label>
+                                                <input type="number" class="form-control" name="permit_number" id="permit_number"> 
                                             </div>
                                         </div>
                                         <div class="col-md-2"></div>
                                         <div class="col-md-2">
                                             <div class="form-group">
-                                                <label for="starting_check_no">Ref no.</label>
-                                                <input type="text" name="starting_check_no" id="starting_check_no" class="form-control" value="<?=$billPayment->to_print_check_no === "1" ? "To print" : $billPayment->starting_check_no?>" <?=$billPayment->to_print_check_no === "1" ? "disabled" : ""?>>
-                                                <div class="form-check">
-                                                    <input type="checkbox" name="print_later" id="print_later" class="form-check-input" <?=$billPayment->to_print_check_no === "1" ? "checked" : ""?>>
-                                                    <label for="print_later" class="form-check-label">Print later</label>
+                                                <label for="ref_no">Ref no.</label>
+                                                <input type="text" name="ref_no" id="ref_no" class="form-control">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-8">
+                                            <div class="form-group">
+                                                <div id="label">
+                                                    <label for="tags">Tags</label>
+                                                    <span class="float-right"><a href="#" class="text-info" data-toggle="modal" data-target="#tags-modal" id="open-tags-modal">Manage tags</a></span>
                                                 </div>
+                                                <select name="tags[]" id="tags" class="form-control" multiple="multiple"></select>
                                             </div>
                                         </div>
                                     </div>

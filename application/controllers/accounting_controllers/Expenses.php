@@ -1351,33 +1351,33 @@ class Expenses extends MY_Controller {
 
         $data = [];
         foreach($bills as $bill) {
-            $paymentDetails = $this->vendors_model->get_bill_payment_item_by_bill_id($billPaymentId, $bill->id);
+            $billData = $this->vendors_model->get_bill_by_id($bill->bill_id);
 
-            $openBalance = floatval($bill->remaining_balance) + floatval($paymentDetails->total_amount);
+            $openBalance = floatval($billData->remaining_balance) + floatval($billData->total_amount);
 
             $description = 'Bill ';
-            $description .= $bill->bill_no !== "" && !is_null($bill->bill_no) ? '# '.$bill->bill_no.' ' : '';
-            $description .= '('.date("m/d/Y", strtotime($bill->bill_date)).')';
+            $description .= $billData->bill_no !== "" && !is_null($billData->bill_no) ? '# '.$billData->bill_no.' ' : '';
+            $description .= '('.date("m/d/Y", strtotime($billData->bill_date)).')';
 
             if($search !== "") {
-                if(stripos($bill->bill_no, $search) !== false) {
+                if(stripos($billData->bill_no, $search) !== false) {
                     $data[] = [
-                        'id' => $bill->id,
+                        'id' => $billData->id,
                         'description' => $description,
-                        'due_date' => date("m/d/Y", strtotime($bill->due_date)),
-                        'original_amount' => number_format(floatval($bill->total_amount), 2, '.', ','),
+                        'due_date' => date("m/d/Y", strtotime($billData->due_date)),
+                        'original_amount' => number_format(floatval($billData->total_amount), 2, '.', ','),
                         'open_balance' => number_format(floatval($openBalance), 2, '.', ','),
-                        'payment' => number_format(floatval($paymentDetails->total_amount), 2, '.', ',')
+                        'payment' => number_format(floatval($billData->total_amount), 2, '.', ',')
                     ];
                 }
             } else {
                 $data[] = [
-                    'id' => $bill->id,
+                    'id' => $billData->id,
                     'description' => $description,
-                    'due_date' => date("m/d/Y", strtotime($bill->due_date)),
-                    'original_amount' => number_format(floatval($bill->total_amount), 2, '.', ','),
+                    'due_date' => date("m/d/Y", strtotime($billData->due_date)),
+                    'original_amount' => number_format(floatval($billData->total_amount), 2, '.', ','),
                     'open_balance' => number_format(floatval($openBalance), 2, '.', ','),
-                    'payment' => number_format(floatval($paymentDetails->total_amount), 2, '.', ',')
+                    'payment' => number_format(floatval($billData->total_amount), 2, '.', ',')
                 ];
             }
         }

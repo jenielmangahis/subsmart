@@ -70,3 +70,10 @@ function get_load_customers_table() {
         },
     });
 }
+
+$(document).on("click", "#customers_table ul li a.created-sales-receipt", function(event) {
+    $('#addsalesreceiptModal form').trigger("reset");
+    $("#addsalesreceiptModal form #sel-customer2").val($(this).attr('data-customer-id'));
+    $("#addsalesreceiptModal form #email2").val($(this).attr('data-email-add'));
+    event.preventDefault();
+});

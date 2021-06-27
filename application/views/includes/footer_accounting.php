@@ -14,6 +14,8 @@
 	var base_url = "<?php echo base_url();?>";
 </script>
 <!-- jQuery  -->
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 <script src="<?php echo $url->assets ?>dashboard/js/jquery.min.js"></script>
 <script
 	src="<?php echo $url->assets ?>plugins/jquery-initialize/jquery.initialize.min.js">
@@ -85,6 +87,7 @@ Chartist Chart-->
 </script>
 <link href="https://cdn.rawgit.com/atatanasov/gijgo/master/dist/combined/css/gijgo.min.css" rel="stylesheet"
 	type="text/css" />
+
 
 
 <!--Accounting JS-->

@@ -839,12 +839,12 @@ border: none;
 																	<div class="col-md-4">
 																		<img src="<?php echo base_url($workorder->primary_account_holder_signature); ?>" style="height: 150px;">
 																		<hr>
-																		<center><?php echo $second->FName.' '.$second->LName; ?></center>
+																		<center><?php echo $workorder->primary_account_holder_name; ?></center>
 																	</div>
 																	<div class="col-md-4">
 																		<img src="<?php echo base_url($workorder->secondary_account_holder_signature); ?>" style="height: 150px;">
 																		<hr>
-																		<center><?php echo $third->FName.' '.$third->LName; ?></center>
+																		<center><?php echo $workorder->secondary_account_holder_name; ?></center>
 																	</div>
 																</div>
 		         							   			</div>

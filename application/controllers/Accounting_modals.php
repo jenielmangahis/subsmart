@@ -2553,6 +2553,31 @@ class Accounting_modals extends MY_Controller {
             $return['message'] = 'Please enter at least one line item.';
         } else {
             $payee = explode('-', $data['payee']);
+            $linkedTransaction = isset($data['linked_transaction']) ? explode('-', $data['linked_transaction']) : null;
+
+            $purchaseOrder = $this->vendors_model->get_purchase_order_by_id($linkedTransaction[1]);
+
+            $total = 0.00;
+
+            foreach($data['category_linked'] as $index => $linked) {
+                if($linked === "true") {
+                    $total += floatval($data['category_amount'][$index]);
+                }
+            }
+
+            foreach($data['item_linked'] as $index => $linked) {
+                if($linked === "true") {
+                    $total += floatval($data['item_total'][$index]);
+                }
+            }
+
+            $purchaseOrderData = [
+                'remaining_balance' => floatval($purchaseOrder->remaining_balance) - $total,
+                'status' => $total < floatval($purchaseOrder->remaining_balance) ? 1 : 2,
+                'updated_at' => date("Y-m-d H:i:s")
+            ];
+
+            $updatePurch = $this->vendors_model->update_purchase_order($linkedTransaction[1], $purchaseOrderData);
 
             $expenseData = [
                 'company_id' => logged('company_id'),
@@ -2567,6 +2592,7 @@ class Accounting_modals extends MY_Controller {
                 'memo' => $data['memo'],
                 'attachments' => $data['attachments'] !== null ? json_encode($data['attachments']) : null,
                 'total_amount' => $data['total_amount'],
+                'linked_purchase_order_id' => !is_null($linkedTransaction) ? $linkedTransaction[1] : null,
                 'status' => 1,
                 'created_at' => date("Y-m-d H:i:s"),
                 'updated_at' => date("Y-m-d H:i:s")
@@ -2612,6 +2638,8 @@ class Accounting_modals extends MY_Controller {
                             'markup_percentage' => $data['category_markup'][$index],
                             'tax' => $data['category_tax'][$index],
                             'customer_id' => $data['category_customer'][$index],
+                            'linked_transaction_type' => $data['category_linked'][$index] ? $linkedTransaction[0] : null,
+                            'linked_transaction_id' => $data['category_linked'][$index] ? $linkedTransaction[1] : null
                         ];
 
                         $expenseAcc = $this->chart_of_accounts_model->getById($value);
@@ -2642,7 +2670,9 @@ class Accounting_modals extends MY_Controller {
                             'rate' => $data['item_amount'][$index],
                             'discount' => $data['discount'][$index],
                             'tax' => $data['item_tax'][$index],
-                            'total' => $data['item_total'][$index]
+                            'total' => $data['item_total'][$index],
+                            'linked_transaction_type' => $data['item_linked'][$index] ? $linkedTransaction[0] : null,
+                            'linked_transaction_id' => $data['item_linked'][$index] ? $linkedTransaction[1] : null
                         ];
 
                         $location = $this->items_model->getItemLocation($data['location'][$index], $value);
@@ -2707,6 +2737,31 @@ class Accounting_modals extends MY_Controller {
             $return['message'] = 'Please enter at least one line item.';
         } else {
             $payee = explode('-', $data['payee']);
+            $linkedTransaction = isset($data['linked_transaction']) ? explode('-', $data['linked_transaction']) : null;
+
+            $purchaseOrder = $this->vendors_model->get_purchase_order_by_id($linkedTransaction[1]);
+
+            $total = 0.00;
+
+            foreach($data['category_linked'] as $index => $linked) {
+                if($linked === "true") {
+                    $total += floatval($data['category_amount'][$index]);
+                }
+            }
+
+            foreach($data['item_linked'] as $index => $linked) {
+                if($linked === "true") {
+                    $total += floatval($data['item_total'][$index]);
+                }
+            }
+
+            $purchaseOrderData = [
+                'remaining_balance' => floatval($purchaseOrder->remaining_balance) - $total,
+                'status' => $total < floatval($purchaseOrder->remaining_balance) ? 1 : 2,
+                'updated_at' => date("Y-m-d H:i:s")
+            ];
+
+            $updatePurch = $this->vendors_model->update_purchase_order($linkedTransaction[1], $purchaseOrderData);
 
             $checkData = [
                 'company_id' => logged('company_id'),
@@ -2721,6 +2776,7 @@ class Accounting_modals extends MY_Controller {
                 'memo' => $data['memo'],
                 'attachments' => $data['attachments'] !== null ? json_encode($data['attachments']) : null,
                 'total_amount' => $data['total_amount'],
+                'linked_purchase_order_id' => !is_null($linkedTransaction) ? $linkedTransaction[1] : null,
                 'status' => 1,
                 'created_at' => date("Y-m-d H:i:s"),
                 'updated_at' => date("Y-m-d H:i:s")
@@ -2766,6 +2822,8 @@ class Accounting_modals extends MY_Controller {
                             'markup_percentage' => $data['category_markup'][$index],
                             'tax' => $data['category_tax'][$index],
                             'customer_id' => $data['category_customer'][$index],
+                            'linked_transaction_type' => $data['category_linked'][$index] ? $linkedTransaction[0] : null,
+                            'linked_transaction_id' => $data['category_linked'][$index] ? $linkedTransaction[1] : null
                         ];
 
                         $expenseAcc = $this->chart_of_accounts_model->getById($value);
@@ -2796,7 +2854,9 @@ class Accounting_modals extends MY_Controller {
                             'rate' => $data['item_amount'][$index],
                             'discount' => $data['discount'][$index],
                             'tax' => $data['item_tax'][$index],
-                            'total' => $data['item_total'][$index]
+                            'total' => $data['item_total'][$index],
+                            'linked_transaction_type' => $data['item_linked'][$index] ? $linkedTransaction[0] : null,
+                            'linked_transaction_id' => $data['item_linked'][$index] ? $linkedTransaction[1] : null
                         ];
 
                         $location = $this->items_model->getItemLocation($data['location'][$index], $value);
@@ -2862,10 +2922,36 @@ class Accounting_modals extends MY_Controller {
             $return['success'] = false;
             $return['message'] = 'Please enter at least one line item.';
         } else {
+            $linkedTransaction = isset($data['linked_transaction']) ? explode('-', $data['linked_transaction']) : null;
+
+            $purchaseOrder = $this->vendors_model->get_purchase_order_by_id($linkedTransaction[1]);
+
+            $total = 0.00;
+
+            foreach($data['category_linked'] as $index => $linked) {
+                if($linked === "true") {
+                    $total += floatval($data['category_amount'][$index]);
+                }
+            }
+
+            foreach($data['item_linked'] as $index => $linked) {
+                if($linked === "true") {
+                    $total += floatval($data['item_total'][$index]);
+                }
+            }
+
+            $purchaseOrderData = [
+                'remaining_balance' => floatval($purchaseOrder->remaining_balance) - $total,
+                'status' => $total < floatval($purchaseOrder->remaining_balance) ? 1 : 2,
+                'updated_at' => date("Y-m-d H:i:s")
+            ];
+
+            $updatePurch = $this->vendors_model->update_purchase_order($linkedTransaction[1], $purchaseOrderData);
+
             $billData = [
                 'company_id' => logged('company_id'),
                 'vendor_id' => $data['vendor_id'],
-                'mailing_address' => $data['mailing_address'],
+                'mailing_address' => nl2br($data['mailing_address']),
                 'term_id' => $data['term_id'],
                 'bill_date' => date("Y-m-d", strtotime($data['bill_date'])),
                 'due_date' => date("Y-m-d", strtotime($data['due_date'])),
@@ -2876,6 +2962,7 @@ class Accounting_modals extends MY_Controller {
                 'attachments' => $data['attachments'] !== null ? json_encode($data['attachments']) : null,
                 'remaining_balance' => $data['total_amount'],
                 'total_amount' => $data['total_amount'],
+                'linked_purchase_order_id' => !is_null($linkedTransaction) ? $linkedTransaction[1] : null,
                 'status' => 1,
                 'created_at' => date("Y-m-d H:i:s"),
                 'updated_at' => date("Y-m-d H:i:s")
@@ -2909,6 +2996,8 @@ class Accounting_modals extends MY_Controller {
                             'markup_percentage' => $data['category_markup'][$index],
                             'tax' => $data['category_tax'][$index],
                             'customer_id' => $data['category_customer'][$index],
+                            'linked_transaction_type' => $data['category_linked'] ? $linkedTransaction[0] : null,
+                            'linked_transaction_id' => $data['category_linked'] ? $linkedTransaction[1] : null
                         ];
 
                         $expenseAcc = $this->chart_of_accounts_model->getById($value);
@@ -2939,7 +3028,9 @@ class Accounting_modals extends MY_Controller {
                             'rate' => $data['item_amount'][$index],
                             'discount' => $data['discount'][$index],
                             'tax' => $data['item_tax'][$index],
-                            'total' => $data['item_total'][$index]
+                            'total' => $data['item_total'][$index],
+                            'linked_transaction_type' => $data['item_linked'] ? $linkedTransaction[0] : null,
+                            'linked_transaction_id' => $data['item_linked'] ? $linkedTransaction[1] : null
                         ];
 
                         $location = $this->items_model->getItemLocation($data['location'][$index], $value);
@@ -3837,5 +3928,50 @@ class Accounting_modals extends MY_Controller {
             'categories' => $categories,
             'items' => $items
         ]);
+    }
+
+    public function bill_payment_form($billId)
+    {
+        $paymentAccs = [];
+        $accountTypes = [
+            'Bank',
+            'Credit Card'
+        ];
+
+        foreach($accountTypes as $typeName) {
+            $accType = $this->account_model->getAccTypeByName($typeName);
+
+            $accounts = $this->chart_of_accounts_model->getByAccountType($accType->id, null, logged('company_id'));
+
+            $count = 0;
+            if(count($accounts) > 0) {
+                foreach($accounts as $account) {
+                    $childAccs = $this->chart_of_accounts_model->getChildAccounts($account->id);
+
+                    $account->childAccs = $childAccs;
+
+                    $paymentAccs[$typeName][] = $account;
+
+                    if($count === 1) {
+                        $selectedBalance = $account->balance;
+                    }
+
+                    $count++;
+                }
+            }
+        }
+
+        if(strpos($selectedBalance, '-') !== false) {
+            $balance = str_replace('-', '', $selectedBalance);
+            $selectedBalance = '-$'.number_format($balance, 2, '.', ',');
+        } else {
+            $selectedBalance = '$'.number_format($selectedBalance, 2, '.', ',');
+        }
+
+        $this->page_data['dropdown']['payment_accounts'] = $paymentAccs;
+        $this->page_data['balance'] = $selectedBalance;
+        $this->page_data['dropdown']['payees'] = $this->vendors_model->getAllByCompany();
+        $this->page_data['bill'] = $this->vendors_model->get_bill_by_id($billId);
+        $this->load->view('accounting/modal/bill_payment_modal', $this->page_data);
     }
 }

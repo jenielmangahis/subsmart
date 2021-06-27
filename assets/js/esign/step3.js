@@ -789,7 +789,7 @@ function Step3() {
 
         const field = fields.find(({ unique_key, specs }) => {
           if (unique_key === fieldKey) return true;
-          const { subCheckbox = [] } = JSON.parse(specs);
+          const { subCheckbox = [] } = JSON.parse(specs) || {};
           return subCheckbox.find(({ id }) => id === fieldKey);
         });
 

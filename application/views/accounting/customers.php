@@ -340,7 +340,6 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 
 <link href="https://nightly.datatables.net/css/jquery.dataTables.css" rel="stylesheet" type="text/css" />
 <script src="https://nightly.datatables.net/js/jquery.dataTables.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 <script>
 	var customer_length = <?=count($customers)?> ;
 </script>
