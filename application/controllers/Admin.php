@@ -589,6 +589,7 @@ class Admin extends CI_Controller
         $this->load->model('NsmartPlan_model');
         $this->load->model('PlanHeadings_model');
         $this->load->model('NsmartFeature_model');
+        $this->load->model('NsmartPlanModules_model');
         
         $post = $this->input->post();
 
@@ -626,6 +627,147 @@ class Admin extends CI_Controller
         }
 
         redirect('admin/nsmart_features');
+    }
+
+    public function edit_nsmart_feature($feature_id) {
+        $this->load->model('NsmartPlan_model');
+        $this->load->model('PlanHeadings_model');
+        $this->load->model('NsmartFeature_model');
+        $this->load->model('NsmartPlanModules_model');
+
+        $nSmartFeature = $this->NsmartFeature_model->getById($feature_id);
+        $option_plan = $this->NsmartPlanModules_model->getByFeatureId($feature_id);
+        $planHeadings   = $this->PlanHeadings_model->getAll();
+        $plans   = $this->NsmartPlan_model->getAll();
+
+        $option_plan_id_array = array();
+        if($option_plan) {
+            foreach($option_plan as $op) {
+                $option_plan_id_array[] = $op->nsmart_plans_id;
+            }
+        }       
+
+        if( $nSmartFeature ){
+            if($_POST){
+
+                foreach( $post['plans'] as $id => $value ){
+                    $data_plan_modules = [
+                        'nsmart_plans_id' => $id,
+                        'nsmart_feature_id' => $post['id'],
+                        'plan_heading_id' => $post['feature_heading']
+                    ];
+
+                    $nsPlanFeature = $this->NsmartPlanModules_model->create($data_plan_modules);
+                }
+
+                $data = [
+                        'feature_name' => $post['feature_name'],
+                        'feature_description' => $post['feature_description'],
+                        'feature_heading_id' => $post['feature_heading'],
+                        'date_updated' => date("Y-m-d H:i:s")
+                        ];
+
+                $nsPlan = $this->NsmartFeature_model->updateFeature($post['id'],$data);
+                $this->session->set_flashdata('message', 'Feature was successfully updated');
+                $this->session->set_flashdata('alert_class', 'alert-success');
+            }
+
+            $this->page_data['planHeadings'] = $planHeadings;
+            $this->page_data['nSmartFeature'] = $nSmartFeature;
+            $this->page_data['plans'] = $plans;
+            $this->page_data['option_plan'] = $option_plan;
+            $this->page_data['default_option_plans'] = $option_plan_id_array;
+            $this->load->view('admin/nsmart_features/edit_feature', $this->page_data);
+        }else{
+            $this->session->set_flashdata('message', 'Cannot find data');
+            $this->session->set_flashdata('alert_class', 'alert-danger');
+            redirect('admin/nsmart_features',$this->page_data);
+        }
+    }
+
+    public function update_nsmart_feature() {
+        $this->load->model('NsmartPlanModules_model');
+        $this->load->model('NsmartFeature_model');
+
+        if($_POST){
+            $this->NsmartPlanModules_model->deletePlanModules($_POST['id']);
+            $data_plan_modules = array();
+
+            foreach( $_POST['plans'] as $key => $value ){
+                $data_plan_modules = [
+                    'nsmart_plans_id' => $key,
+                    'nsmart_feature_id' => $_POST['id'],
+                    'plan_heading_id' => $_POST['feature_heading']
+                ];
+                $nsPlanFeature = $this->NsmartPlanModules_model->save($data_plan_modules);
+            }
+
+            $data = array();
+            $data = ['feature_name' => $_POST['feature_name'],
+                    'feature_description' => $_POST['feature_description'],
+                    'plan_heading_id' => $_POST['feature_heading'],
+                    'date_updated' => date("Y-m-d H:i:s")
+                    ];
+            $nsPlan = $this->NsmartFeature_model->updateFeature($_POST['id'],$data);
+            $this->session->set_flashdata('message', 'Feature was successfully updated');
+            $this->session->set_flashdata('alert_class', 'alert-success');
+        }
+
+         redirect('admin/edit_nsmart_feature/'. $_POST['id'] );
+    }
+
+    public function delete_nsmart_plan_feature(){
+        $this->load->model('NsmartFeature_model');
+        $this->load->model('NsmartPlanModules_model');
+
+        $this->NsmartPlanModules_model->deletePlanModules(post('fid'));
+        $id = $this->NsmartFeature_model->deleteFeature(post('fid'));
+
+        $this->session->set_flashdata('message', 'Plan feature has been deleted successfully');
+        $this->session->set_flashdata('alert_class', 'alert-success');
+
+        redirect('admin/nsmart_features');
+    }
+
+    public function add_new_plan_headings() {
+        $this->load->view('admin/plan_headings/add_new_headings', $this->page_data);
+    }
+
+    public function create_plan_headings() {
+        $this->load->model('PlanHeadings_model');
+
+        $post = $this->input->post();
+
+        if( $post['plan_heading_name'] != '' ){
+            if( $this->PlanHeadings_model->isTitle($post['plan_heading_name']) ){
+                $this->session->set_flashdata('message', 'Title already exists');
+                $this->session->set_flashdata('alert_class', 'alert-danger');
+            }else{
+                $data = [
+                    'title' => $post['plan_heading_name'],
+                    'date_created' => date("Y-m-d H:i:s")
+                ];
+
+                $planHeading = $this->PlanHeadings_model->create($data);
+
+                $this->session->set_flashdata('message', 'Add new plan heading was successful');
+                $this->session->set_flashdata('alert_class', 'alert-success');
+            }
+        }else{
+            $this->session->set_flashdata('message', 'Please enter title');
+            $this->session->set_flashdata('alert_class', 'alert-danger');
+        }
+
+        redirect('admin/nsmart_features');
+    }
+
+    public function nsmart_addons() {
+        $this->load->model('NsmartAddons_model');
+
+        $nSmartAddons   = $this->NsmartAddons_model->getAll();
+        
+        $this->page_data['nSmartAddons'] = $nSmartAddons;
+        $this->load->view('admin/nsmart_addons/list', $this->page_data);
     }
 }
 
