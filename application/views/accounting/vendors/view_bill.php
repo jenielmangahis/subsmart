@@ -100,9 +100,7 @@
                                         <div class="col-md-2">
                                             <div class="form-group">
                                                 <label for="mailing_address">Mailing address</label>
-                                                <textarea name="mailing_address" id="mailing_address" class="form-control">
-                                                    <?=$bill->mailing_address?>
-                                                </textarea>
+                                                <textarea name="mailing_address" id="mailing_address" class="form-control"><?=str_replace("<br />", "", $bill->mailing_address)?></textarea>
                                             </div>
                                         </div>
                                         <div class="col-md-2">
@@ -131,6 +129,10 @@
                                             <div class="form-group">
                                                 <label for="bill_no">Bill no.</label>
                                                 <input type="text" name="bill_no" id="bill_no" class="form-control" value="<?=$bill->bill_no?>">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="permit_number">Permit no.</label>
+                                                <input type="number" class="form-control" name="permit_number" id="permit_number" value="<?=$bill->permit_no?>"> 
                                             </div>
                                         </div>
                                         <div class="col-md-6">

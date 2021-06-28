@@ -46,7 +46,7 @@
                                         <div class="col-md-2">
                                             <div class="form-group">
                                                 <label for="mailing_address">Mailing address</label>
-                                                <textarea name="mailing_address" id="mailing_address" class="form-control"><?=$vendorCredit->mailing_address?></textarea>
+                                                <textarea name="mailing_address" id="mailing_address" class="form-control"><?=str_replace("<br />", "", $vendorCredit->mailing_address)?></textarea>
                                             </div>
                                         </div>
                                         <div class="col-md-2">
@@ -60,6 +60,10 @@
                                             <div class="form-group">
                                                 <label for="ref_no">Ref no.</label>
                                                 <input type="text" name="ref_no" id="ref_no" class="form-control" value="<?=$vendorCredit->ref_no?>">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="permit_number">Permit no.</label>
+                                                <input type="number" class="form-control" name="permit_number" id="permit_number" value="<?=$vendorCredit->permit_no?>"> 
                                             </div>
                                         </div>
                                         <div class="col-md-6">

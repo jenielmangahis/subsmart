@@ -34,7 +34,6 @@ class Customer extends MY_Controller
         }
     }
 
-
     public function getModulesList()
     {
         $user_id = logged('id');
@@ -675,6 +674,14 @@ class Customer extends MY_Controller
             $check_customer= $this->customer_ad_model->check_customer($input);
         }
         if(empty($check_customer)){
+            $custom_field_name = $input['custom_name'];
+            $custom_field_value = $input['custom_value'];
+            $custom_fields_array = array();
+            for ($xx=0;$xx<count($custom_field_name);$xx++) {
+                $custom_fields_array[$xx]['name'] = $custom_field_name[$xx];
+                $custom_fields_array[$xx]['value'] = $custom_field_value[$xx];
+            }
+
             // customer profile info
             $input_profile = array();
             $input_profile['fk_user_id'] = logged('id');
@@ -701,6 +708,7 @@ class Customer extends MY_Controller
             $input_profile['date_of_birth'] = $input['date_of_birth'];
             $input_profile['phone_h'] = $input['phone_h'];
             $input_profile['phone_m'] = $input['phone_m'];
+            $input_profile['custom_fields'] = json_encode($custom_fields_array);
 //            $input_profile['contact_name1'] = $input['contact_name1'];
 //            $input_profile['contact_name2'] = $input['contact_name2'];
 //            $input_profile['contact_name3'] = $input['contact_name3'];

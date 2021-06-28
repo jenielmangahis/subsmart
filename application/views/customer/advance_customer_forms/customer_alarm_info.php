@@ -293,21 +293,38 @@
         </div>
         <div class="card-body" id="custom_field">
             <a href="javascript:void;" id="add_field" style="color:#58bc4f;font-size: 12px;"><span class="fa fa-plus"></span> Add Field</a>
-
-            <div class="row form_line">
-                <div class="col-md-5">
-                    Name
-                    <input type="text" class="form-control" name="office_custom_field1" id="office_custom_field1" value="" />
+            <?php if(isset($profile_info)):  ?>
+                <?php $custom_fields = json_decode($profile_info->custom_fields); ?>
+                <?php foreach ($custom_fields as $field): ?>
+                    <div class="row form_line">
+                        <div class="col-md-5">
+                            Name
+                            <input type="text" class="form-control" name="custom_name[]" value="<?= $field->name; ?>" />
+                        </div>
+                        <div class="col-md-5">
+                            Value
+                            <input type="text" class="form-control" name="custom_value[]" value="<?= $field->value; ?>" />
+                        </div>
+                        <div class="col-md-2">
+                            <button style="margin-top: 30px;" type="button" class="btn btn-primary btn-sm items_remove_btn remove_item_row"><span class="fa fa-trash-o"></span></button>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <div class="row form_line">
+                    <div class="col-md-5">
+                        Name
+                        <input type="text" class="form-control" name="custom_name[]" value="" />
+                    </div>
+                    <div class="col-md-5">
+                        Value
+                        <input type="text" class="form-control" name="custom_value[]" value="" />
+                    </div>
+                    <div class="col-md-2">
+                        <button style="margin-top: 30px;" type="button" class="btn btn-primary btn-sm items_remove_btn remove_item_row"><span class="fa fa-trash-o"></span></button>
+                    </div>
                 </div>
-                <div class="col-md-5">
-                    Value
-                    <input type="text" class="form-control" name="office_custom_field1" id="office_custom_field1" value="" />
-                </div>
-                <div class="col-md-2">
-                    <button style="margin-top: 30px;" type="button" class="btn btn-primary btn-sm items_remove_btn remove_item_row"><span class="fa fa-trash-o"></span></button>
-                </div>
-            </div>
-
+            <?php endif; ?>
 
         </div>
 
@@ -355,7 +372,7 @@
     <div class="card-body">
         <div class="row form_line">
             <div class="col-md-4 ">
-                <label for="">Contact Name 1
+                Contact Name 1
             </div>
             <div class="col-md-8">
                 <input type="text" class="form-control" name="contact_name1" id="contact_name1" value="<?php if(isset($profile_info)){ echo $profile_info->contact_name1; } ?>"/>
@@ -363,7 +380,7 @@
         </div>
         <div class="row form_line">
             <div class="col-md-4 ">
-                <label for="">Relationship
+                Relationship
             </div>
             <div class="col-md-8">
                 <input type="text" class="form-control" name="relationship1" id="relationship1" value="<?php if(isset($profile_info)){ echo $profile_info->contact_name1; } ?>"/>
@@ -371,7 +388,7 @@
         </div>
         <div class="row form_line">
             <div class="col-md-4">
-                <label for="">Phone Number
+                Phone Number
             </div>
             <div class="col-md-8">
                 <input type="text" class="form-control phone_number" maxlength="12" placeholder="xxx-xxx-xxxx" name="contact_phone1" id="contact_phone1" value="<?php if(isset($profile_info)){ echo $profile_info->contact_phone1; } ?>"/>
@@ -379,7 +396,7 @@
         </div>
         <div class="row form_line">
             <div class="col-md-4">
-                <label for="">Contact Name 2
+                Contact Name 2
             </div>
             <div class="col-md-8">
                 <input type="text" class="form-control" name="contact_name2" id="contact_name2" value="<?php if(isset($profile_info)){ echo $profile_info->contact_name2; } ?>"/>
@@ -387,7 +404,7 @@
         </div>
         <div class="row form_line">
             <div class="col-md-4 ">
-                <label for="">Relationship
+                Relationship
             </div>
             <div class="col-md-8">
                 <input type="text" class="form-control" name="relationship2" id="relationship2" value="<?php if(isset($profile_info)){ echo $profile_info->contact_name1; } ?>"/>
@@ -395,7 +412,7 @@
         </div>
         <div class="row form_line">
             <div class="col-md-4">
-                <label for="">Phone Number
+                Phone Number
             </div>
             <div class="col-md-8">
                 <input type="text" class="form-control phone_number" maxlength="12" placeholder="xxx-xxx-xxxx" name="contact_phone2" id="contact_phone2" value="<?php if(isset($profile_info)){ echo $profile_info->contact_phone2; } ?>"/>
@@ -403,7 +420,7 @@
         </div>
         <div class="row form_line">
             <div class="col-md-4">
-                <label for="">Contact Name 3
+                Contact Name 3
             </div>
             <div class="col-md-8">
                 <input type="text" class="form-control" name="contact_name3" id="contact_name3" value="<?php if(isset($profile_info)){ echo $profile_info->contact_name3; } ?>" />
@@ -411,7 +428,7 @@
         </div>
         <div class="row form_line">
             <div class="col-md-4 ">
-                <label for="">Relationship
+                Relationship
             </div>
             <div class="col-md-8">
                 <input type="text" class="form-control" name="relationship3" id="relationship3" value="<?php if(isset($profile_info)){ echo $profile_info->contact_name1; } ?>"/>
@@ -419,7 +436,7 @@
         </div>
         <div class="row form_line">
             <div class="col-md-4">
-                <label for="">Phone Number
+                Phone Number
             </div>
             <div class="col-md-8">
                 <input type="text" class="form-control phone_number" maxlength="12" placeholder="xxx-xxx-xxxx" name="contact_phone3" id="contact_phone3" value="<?php if(isset($profile_info)){ echo $profile_info->contact_phone3; } ?>"/>

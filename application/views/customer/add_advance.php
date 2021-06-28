@@ -8,6 +8,11 @@ add_css(array(
 <?php include viewPath('includes/header'); ?>
 <?php include viewPath('customer/css/add_advance_css'); ?>
     <div class="wrapper" role="wrapper">
+        <div id="overlay">
+            <div>
+                <img src="<?=base_url()?>/assets/img/uploading.gif" class="" style="width: 80px;" alt="" />
+                <center><p>Processing...</p></center></div>
+        </div>
         <?php include viewPath('includes/sidebars/customer'); ?>
         <!-- page wrapper start -->
         <div wrapper__section>

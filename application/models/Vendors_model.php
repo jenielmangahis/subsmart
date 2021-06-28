@@ -368,6 +368,7 @@ class Vendors_model extends MY_Model {
 	{
 		$this->db->where('company_id', logged('company_id'));
 		$this->db->where('payee_id', $vendorId);
+		$this->db->where('status !=', 0);
 		$this->db->order_by('created_at', $filters['order']);
 		return $this->db->get('accounting_bill_payments')->result();
 	}

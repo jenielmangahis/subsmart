@@ -2559,15 +2559,19 @@ class Accounting_modals extends MY_Controller {
 
             $total = 0.00;
 
-            foreach($data['category_linked'] as $index => $linked) {
-                if($linked === "true") {
-                    $total += floatval($data['category_amount'][$index]);
+            if(isset($data['category_linked'])) {
+                foreach($data['category_linked'] as $index => $linked) {
+                    if($linked === "true") {
+                        $total += floatval($data['category_amount'][$index]);
+                    }
                 }
             }
 
-            foreach($data['item_linked'] as $index => $linked) {
-                if($linked === "true") {
-                    $total += floatval($data['item_total'][$index]);
+            if(isset($data['item_linked'])) {
+                foreach($data['item_linked'] as $index => $linked) {
+                    if($linked === "true") {
+                        $total += floatval($data['item_total'][$index]);
+                    }
                 }
             }
 
@@ -2743,15 +2747,19 @@ class Accounting_modals extends MY_Controller {
 
             $total = 0.00;
 
-            foreach($data['category_linked'] as $index => $linked) {
-                if($linked === "true") {
-                    $total += floatval($data['category_amount'][$index]);
+            if(isset($data['category_linked'])) {
+                foreach($data['category_linked'] as $index => $linked) {
+                    if($linked === "true") {
+                        $total += floatval($data['category_amount'][$index]);
+                    }
                 }
             }
 
-            foreach($data['item_linked'] as $index => $linked) {
-                if($linked === "true") {
-                    $total += floatval($data['item_total'][$index]);
+            if(isset($data['item_linked'])) {
+                foreach($data['item_linked'] as $index => $linked) {
+                    if($linked === "true") {
+                        $total += floatval($data['item_total'][$index]);
+                    }
                 }
             }
 
@@ -2928,15 +2936,19 @@ class Accounting_modals extends MY_Controller {
 
             $total = 0.00;
 
-            foreach($data['category_linked'] as $index => $linked) {
-                if($linked === "true") {
-                    $total += floatval($data['category_amount'][$index]);
+            if(isset($data['category_linked'])) {
+                foreach($data['category_linked'] as $index => $linked) {
+                    if($linked === "true") {
+                        $total += floatval($data['category_amount'][$index]);
+                    }
                 }
             }
 
-            foreach($data['item_linked'] as $index => $linked) {
-                if($linked === "true") {
-                    $total += floatval($data['item_total'][$index]);
+            if(isset($data['item_linked'])) {
+                foreach($data['item_linked'] as $index => $linked) {
+                    if($linked === "true") {
+                        $total += floatval($data['item_total'][$index]);
+                    }
                 }
             }
 
@@ -3260,8 +3272,30 @@ class Accounting_modals extends MY_Controller {
             foreach($payees as $payee) {
                 $paymentTotal = 0.00;
                 $itemKeys = array_keys($data['payee'], $payee);
+                $payeeTotal = 0.00;
                 foreach($itemKeys as $key) {
-                    $paymentTotal += floatval($data['total_amount'][$key]);
+                    $paymentTotal += floatval($data['payment_amount'][$key]);
+                    $payeeTotal += floatval($data['total_amount'][$key]);
+                }
+
+                $vendor = $this->vendors_model->get_vendor_by_id($payee);
+                $openVCredits = $this->expenses_model->get_vendor_unapplied_vendor_credits($payee);
+                $vCreditPercentage = number_format($payeeTotal / floatval($vendor->vendor_credits) * 100, 2, '.', ',');
+
+                $appliedVCredits = [];
+                foreach($openVCredits as $vCredit) {
+                    $balance = floatval($vCredit->remaining_balance);
+                    $subtracted = number_format($balance / 100 * $vCreditPercentage, 2, '.', ',');
+                    $appliedVCredits[$vCredit->id] = $subtracted;
+                    $remainingBal = $balance - $subtracted;
+
+                    $vCreditData = [
+                        'status' => $remainingBal === 0 ? 2 : 1,
+                        'remaining_balance' => $remainingBal,
+                        'updated_at' => date("Y-m-d H:i:s")
+                    ];
+
+                    $this->vendors_model->update_vendor_credit($vCredit->id, $vCreditData);
                 }
 
                 $billPayment = [
@@ -3272,6 +3306,7 @@ class Accounting_modals extends MY_Controller {
                     'check_no' => isset($data['print_later']) ? null : $startingCheckNo,
                     'to_print_check_no' => $data['print_later'],
                     'total_amount' => $paymentTotal,
+                    'vendor_credits_applied' => count($appliedVCredits) > 0 ? json_encode($appliedVCredits) : null,
                     'status' => 1,
                     'created_at' => date("Y-m-d H:i:s"),
                     'updated_at' => date("Y-m-d H:i:s")
@@ -3374,7 +3409,7 @@ class Accounting_modals extends MY_Controller {
             $vendorCredit = [
                 'company_id' => logged('company_id'),
                 'vendor_id' => $data['vendor_id'],
-                'mailing_address' => $data['mailing_address'],
+                'mailing_address' => nl2br($data['mailing_address']),
                 'payment_date' => date("Y-m-d", strtotime($data['payment_date'])),
                 'ref_no' => $data['ref_no'] === '' ? null : $data['ref_no'],
                 'permit_no' => $data['permit_number'] === "" ? null : $data['permit_number'],
@@ -3972,6 +4007,6 @@ class Accounting_modals extends MY_Controller {
         $this->page_data['balance'] = $selectedBalance;
         $this->page_data['dropdown']['payees'] = $this->vendors_model->getAllByCompany();
         $this->page_data['bill'] = $this->vendors_model->get_bill_by_id($billId);
-        $this->load->view('accounting/modal/bill_payment_modal', $this->page_data);
+        $this->load->view('accounting/modals/bill_payment_modal', $this->page_data);
     }
 }

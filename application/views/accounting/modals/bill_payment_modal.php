@@ -6,7 +6,7 @@
             <!-- Modal content-->
             <div class="modal-content" style="height: 100%;">
                 <div class="modal-header" style="background: #f4f5f8;border-bottom: 0">
-                    <h4 class="modal-title"><a href="#"><i class="fa fa-history fa-lg" style="margin-right: 10px"></i></a>Bill Payment #<span><?=$billPayment->to_print_check_no === "1" ? "To print" : $billPayment->starting_check_no?></span></h4>
+                    <h4 class="modal-title"><a href="#"><i class="fa fa-history fa-lg" style="margin-right: 10px"></i></a>Bill Payment</h4>
                     <button type="button" class="close" data-dismiss="modal"><i class="fa fa-times fa-lg"></i></button>
                 </div>
                 <div class="modal-body">
@@ -57,32 +57,12 @@
                                         </div>
                                         <div class="col-md-4">
                                             <h6 class="text-right">AMOUNT PAID</h6>
-                                            <h2 class="text-right">$<?=$bill->total_amount?></h2>
-                                        </div>
-                                        <div class="col-md-2">
-                                            <div class="form-group">
-                                                <label for="mailing_address">Mailing address</label>
-                                                <textarea name="mailing_address" id="mailing_address" class="form-control">
-                                                    <?=$vendor->title !== "" ? $vendor->title." " : ""?>
-                                                    <?=$vendor->f_name !== "" ? $vendor->f_name." " : ""?>
-                                                    <?=$vendor->m_name !== "" ? $vendor->m_name." " : ""?>
-                                                    <?=$vendor->l_name !== "" ? $vendor->l_name." " : ""?>
-                                                    <?=$vendor->suffix !== "" ? $vendor->suffix."\n" : ""?>
-                                                    <?=$vendor->street !== "" ? $vendor->street : ""?>
-                                                    <?=$vendor->city !== "" ? "\n".$vendor->city : ""?>
-                                                    <?=$vendor->state !== "" ? ", ".$vendor->state : ""?>
-                                                    <?=$vendor->zip !== "" ? " ".$vendor->zip : ""?>
-                                                </textarea>
-                                            </div>
+                                            <h2 class="text-right">$<?=number_format($bill->total_amount, 2, '.', ',')?></h2>
                                         </div>
                                         <div class="col-md-2">
                                             <div class="form-group">
                                                 <label for="payment_date">Payment date</label>
                                                 <input type="text" name="payment_date" id="payment_date" class="form-control date" value="<?=date("m/d/Y")?>" required>
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="permit_number">Permit no.</label>
-                                                <input type="number" class="form-control" name="permit_number" id="permit_number"> 
                                             </div>
                                         </div>
                                         <div class="col-md-2"></div>
@@ -90,6 +70,10 @@
                                             <div class="form-group">
                                                 <label for="ref_no">Ref no.</label>
                                                 <input type="text" name="ref_no" id="ref_no" class="form-control">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="permit_number">Permit no.</label>
+                                                <input type="number" class="form-control" name="permit_number" id="permit_number"> 
                                             </div>
                                         </div>
                                         <div class="col-md-8">
@@ -110,7 +94,7 @@
                                                 <div class="col-md-3">
                                                     <div class="form-group">
                                                         <label for="amount">Amount</label>
-                                                        <input type="number" class="form-control" value="" onchange="convertToDecimal(this)">
+                                                        <input type="number" class="form-control" value="<?=number_format($bill->total_amount, 2, '.', ',')?>" onchange="convertToDecimal(this)">
                                                     </div>
                                                 </div>
                                             </div>
@@ -137,13 +121,13 @@
                                                                                     <div class="col-6">
                                                                                         <div class="form-group">
                                                                                             <label for="bills-from">Bills from</label>
-                                                                                            <input type="text" name="bills_from" id="bills-from" class="form-control date">
+                                                                                            <input type="text" name="bills_from" id="bills-from" class="form-control date" value="<?=date("m/d/Y", strtotime($bill->bill_date))?>">
                                                                                         </div>
                                                                                     </div>
                                                                                     <div class="col-6">
                                                                                         <div class="form-group">
                                                                                             <label for="bills-to">To</label>
-                                                                                            <input type="text" name="bills_to" id="bills-to" class="form-control date">
+                                                                                            <input type="text" name="bills_to" id="bills-to" class="form-control date" value="<?=date("m/d/Y", strtotime($bill->bill_date))?>">
                                                                                         </div>
                                                                                     </div>
                                                                                 </div>
