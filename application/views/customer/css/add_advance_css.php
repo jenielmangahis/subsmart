@@ -22,8 +22,6 @@
     .header_checkbox{
         margin: 5px 0 0 8px;
     }
-</style>
-<style>
     .select2-container .select2-selection--single {
         height: 35px !important;
     }
@@ -111,5 +109,18 @@
     }
     .card{
         box-shadow: 0 0 13px 0 rgb(116 116 117 / 44%) !important;
+    }
+    #overlay {
+        display: none;
+        background: rgba(255, 255, 255, 0.7);
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        top: 0;
+        z-index: 9998;
+        align-items: center;
+        justify-content: center;
+        margin: auto;
     }
 </style>

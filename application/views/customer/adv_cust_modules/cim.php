@@ -13,19 +13,18 @@ defined('BASEPATH') or exit('No direct script access allowed');
                             <?php
                                 $custom_fields = json_decode($profile_info->custom_fields);
                                 if (!empty($custom_fields)) {
-                                    foreach ($custom_fields as $key => $custom) {
+                                    foreach ($custom_fields as $field):
                                         ?>
                                         <tr>
                                             <td width="40%" align="left" valign="top">
-                                                <label class="alarm_label"> <span ><?= !empty($custom->field_name) ? $custom->field_name : '' ; ?> :</span> </label>
+                                                <label class="alarm_label"> <span ><?=  $field->name ?> :</span> </label>
                                             </td>
                                             <td width="60%" align="left" valign="top">
-                                                <label class="alarm_answer"><?= !empty($custom->field_value) ? $custom->field_value : '' ; ?> </label>
-                                                <a href="<?php echo url('customer/index/tab3/'.$profile_info->prof_id.'/mt12') ?>" class=""><span class="fa fa-pencil"></span></a>
+                                                <label class="alarm_answer"><?=  $field->value ?> </label>
                                             </td>
                                         </tr>
                                         <?php
-                                    }
+                                    endforeach;
                                 }
                             ?>
                         <?php endif; ?>

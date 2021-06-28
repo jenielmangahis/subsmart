@@ -148,8 +148,8 @@ class Estimate extends MY_Controller
             // 'created_by' => logged('id'),
 
             'sub_total' => $this->input->post('sub_total'),//
-            'deposit_request' => $this->input->post('adjustment_name'),//
-            'deposit_amount' => $this->input->post('adjustment_input'),//
+            // 'deposit_request' => $this->input->post('adjustment_name'),//
+            // 'deposit_amount' => $this->input->post('adjustment_input'),//
             'grand_total' => $this->input->post('grand_total'),//
 
             'adjustment_name' => $this->input->post('adjustment_name'),//
@@ -211,6 +211,7 @@ class Estimate extends MY_Controller
                 $quantity   = $this->input->post('quantity');
                 $price      = $this->input->post('price');
                 $h          = $this->input->post('tax');
+                $gtotal     = $this->input->post('total');
 
                 $i = 0;
                 foreach($a as $row){
@@ -218,6 +219,7 @@ class Estimate extends MY_Controller
                     $data['qty'] = $quantity[$i];
                     $data['cost'] = $price[$i];
                     $data['tax'] = $h[$i];
+                    $data['total'] = $gtotal[$i];
                     $data['estimates_id '] = $addQuery;
                     $addQuery2 = $this->estimate_model->add_estimate_items($data);
                     $i++;
@@ -931,7 +933,8 @@ class Estimate extends MY_Controller
             $this->page_data['client'] = $client;
             $this->page_data['estimate'] = $estimate;
 
-            $this->page_data['items'] = $this->estimate_model->getItems($id);
+            // $this->page_data['items_data'] = $this->estimate_model->getItems($id);
+            $this->page_data['items_data'] = $this->estimate_model->getEstimatesItems($id);
 
             $this->load->view('estimate/view', $this->page_data);
         } else {

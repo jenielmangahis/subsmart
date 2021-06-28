@@ -1054,6 +1054,9 @@ class Vendors extends MY_Controller {
             case 'credit-card-payment' :
                 $delete = $this->delete_cc_payment($transactionId);
             break;
+            case 'bill-payment' :
+                $delete = $this->delete_bill_payment($transactionId);
+            break;
         }
 
         if($delete) {
@@ -1353,6 +1356,70 @@ class Vendors extends MY_Controller {
 
 
         $update = $this->vendors_model->update_credit_card_payment($ccPaymentId, ['status' => 0]);
+
+        return $update;
+    }
+
+    private function delete_bill_payment($billPaymentId)
+    {
+        $billPayment = $this->vendors_model->get_bill_payment_by_id($billPaymentId);
+
+        $billPaymentData = [
+            'vendor_credits_applied' => null,
+            'status' => 0,
+            'updated_at' => date("Y-m-d H:i:s")
+        ];
+
+        $update = $this->vendors_model->update_bill_payment($billPaymentId, $billPaymentData);
+
+        if($update) {
+            $vCredits = !is_null($billPayment->vendor_credits_applied) ? json_decode($billPayment->vendor_credits_applied, true) : null;
+            if(!is_null($vCredits)) {
+                foreach($vCredits as $vCreditId => $amount) {
+                    $vCredit = $this->vendors_model->get_vendor_credit_by_id($vCreditId);
+                    $vCreditData = [
+                        'status' => 1,
+                        'remaining_balance' => floatval($vCredit->remaining_balance) + floatval($amount),
+                        'updated_at' => date("Y-m-d H:i:s")
+                    ];
+
+                    $this->vendors_model->update_vendor_credit($vCredit->id, $vCreditData);
+                }
+            }
+
+            $bills = $this->vendors_model->get_bill_payment_bills($billPaymentId);
+
+            foreach($bills as $bill) {
+                $payment = $this->vendors_model->get_bill_payment_item_by_bill_id($billPaymentId, $bill->id);
+
+                $billData = [
+                    'remaining_balance' => floatval($bill->remaining_balance) + floatval($payment->total_amount),
+                    'status' => 1,
+                    'updated_at' => date("Y-m-d H:i:s")
+                ];
+
+                $this->expenses_model->update_bill_data($bill->id, $billData);
+            }
+    
+            $paymentAcc = $this->chart_of_accounts_model->getById($billPayment->payment_account_id);
+            $paymentAccType = $this->account_model->getById($paymentAcc->account_id);
+    
+            if($paymentAccType->account_name === 'Credit Card') {
+                $newBalance = floatval($paymentAcc->balance) - floatval($paymentTotal);
+            } else {
+                $newBalance = floatval($paymentAcc->balance) + floatval($paymentTotal);
+            }
+    
+            $newBalance = number_format($newBalance, 2, '.', ',');
+    
+            $paymentAccData = [
+                'id' => $paymentAcc->id,
+                'company_id' => logged('company_id'),
+                'balance' => $newBalance
+            ];
+    
+            $this->chart_of_accounts_model->updateBalance($paymentAccData);
+        }
 
         return $update;
     }

@@ -2141,8 +2141,98 @@ $(function() {
                     button.remove();
                 });
             break;
-            case 'vendor-credit' :
+            case 'bill' :
+                $('#modal-container .modal').modal('hide');
 
+                $.get('/accounting/bill-payment-form/'+data.id, function(res) {
+                    if ($('div#modal-container').length > 0) {
+                        $('div#modal-container').html(res);
+                    } else {
+                        $('body').append(`
+                            <div id="modal-container"> 
+                                ${res}
+                            </div>
+                        `);
+                    }
+
+                    if($(`#billPaymentModal select`).length > 0) {
+                        $(`#billPaymentModal select`).select2();
+                    }
+        
+                    if($(`div#billPaymentModal select#tags`).length > 0) {
+                        $(`div#billPaymentModal select#tags`).select2({
+                            placeholder: 'Start typing to add a tag',
+                            allowClear: true,
+                            ajax: {
+                                url: '/accounting/get-job-tags',
+                                dataType: 'json'
+                            }
+                        });
+                    }
+                
+                    if($(`div#billPaymentModal .date`).length > 0) {
+                        $(`div#billPaymentModal .date`).each(function(){
+                            $(this).datepicker({
+                                uiLibrary: 'bootstrap'
+                            });
+                        });
+                    }
+                
+                    if($(`#billPaymentModal .attachments`).length > 0) {
+                        var attachmentContId = $(`#billPaymentModal .attachments .dropzone`).attr('id');
+                        var transactionAttach = new Dropzone(`#${attachmentContId}`, {
+                            url: '/accounting/attachments/attach',
+                            maxFilesize: 20,
+                            uploadMultiple: true,
+                            // maxFiles: 1,
+                            addRemoveLinks: true,
+                            init: function() {
+                                this.on("success", function(file, response) {
+                                    var ids = JSON.parse(response)['attachment_ids'];
+                                    var modal = $(`#billPaymentModal`);
+
+                                    for(i in ids) {
+                                        if(modal.find(`input[name="attachments[]"][value="${ids[i]}"]`).length === 0) {
+                                            modal.find('.attachments').parent().append(`<input type="hidden" name="attachments[]" value="${ids[i]}">`);
+                                        }
+                
+                                        modalAttachmentId.push(ids[i]);
+                                    }
+                                    modalAttachedFiles.push(file);
+                                });
+                            },
+                            removedfile: function(file) {
+                                var ids = modalAttachmentId;
+                                var index = modalAttachedFiles.map(function(d, index) {
+                                    if (d == file) return index;
+                                }).filter(isFinite)[0];
+                        
+                                $(`#billPaymentModal .attachments`).parent().find(`input[name="attachments[]"][value="${ids[index]}"]`).remove();
+                
+                                //remove thumbnail
+                                var previewElement;
+                
+                                if((previewElement = file.previewElement) !== null) {
+                                    var remove = (previewElement.parentNode.removeChild(file.previewElement));
+
+                                    if($(`#${attachmentContId} .dz-preview`).length > 0) {
+                                        $(`#${attachmentContId} .dz-message`).hide();
+                                    } else {
+                                        $(`#${attachmentContId} .dz-message`).show();
+                                    }
+
+                                    return remove;
+                                } else {
+                                    return (void 0);
+                                }
+                            }
+                        });
+                    }
+
+                    $(`#billPaymentModal #payee`).trigger('change');
+
+                    $(`#billPaymentModal`).modal('show');
+                });
             break;
         }
     });

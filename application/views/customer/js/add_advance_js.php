@@ -382,6 +382,7 @@
                 data: form.serialize(), // serializes the form's elements.
                 success: function(data)
                 {
+                    document.getElementById('overlay').style.display = "none";
                     if(isNaN(data)){
                         error(data);
                     }else{
@@ -392,6 +393,11 @@
                         <?php endif; ?>
                     }
                     console.log(data);
+                }, beforeSend: function() {
+                    document.getElementById('overlay').style.display = "flex";
+                },error: function (xhr, ajaxOptions, thrownError) {
+                    console.log(thrownError);
+                    document.getElementById('overlay').style.display = "none";
                 }
             });
         });
@@ -428,7 +434,7 @@
                 confirmButtonText: 'Ok'
             }).then((result) => {
                 if (result.value) {
-                    window.location.href="<?= base_url(); ?>customer/preview/"+$id;
+                    window.location.href="<?= base_url(); ?>customer/preview_/"+$id;
                 }
             });
         }

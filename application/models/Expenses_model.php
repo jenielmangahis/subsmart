@@ -782,6 +782,7 @@ class Expenses_model extends MY_Model
     public function get_company_bill_payment_items($filters = [])
     {
         $this->db->where('company_id', $filters['company_id']);
+        $this->db->where('status !=', 0);
         if(isset($filters['start-date']) && isset($filters['end-date'])) {
             $this->db->where('payment_date >=', $filters['start-date']);
             $this->db->where('payment_date <=', $filters['end-date']);
@@ -798,6 +799,7 @@ class Expenses_model extends MY_Model
     {
         $this->db->where('company_id', logged('company_id'));
         $this->db->where('vendor_id', $vendorId);
+        $this->db->where('status', 1);
         $this->db->order_by('purchase_order_date', 'desc');
         $query = $this->db->get('accounting_purchase_order');
         return $query->result();
@@ -807,6 +809,7 @@ class Expenses_model extends MY_Model
     {
         $this->db->where('company_id', logged('company_id'));
         $this->db->where('vendor_id', $vendorId);
+        $this->db->where('status', 1);
         $this->db->order_by('due_date', 'desc');
         $query = $this->db->get('accounting_bill');
         return $query->result();
@@ -816,6 +819,7 @@ class Expenses_model extends MY_Model
     {
         $this->db->where('company_id', logged('company_id'));
         $this->db->where('vendor_id', $vendorId);
+        $this->db->where('status', 1);
         $this->db->order_by('payment_date', 'desc');
         $query = $this->db->get('accounting_vendor_credit');
         return $query->result();
