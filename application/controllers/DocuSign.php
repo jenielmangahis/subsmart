@@ -1029,12 +1029,14 @@ SQL;
             'is_self_signed' => $isSelfSigned,
         ]);
         $hash = encrypt($message, $this->password);
+        $companyLogo = $this->getCompanyProfile();
 
         $data = [
             '%link%' => $this->getSigningUrl() . '/signing?hash=' . $hash,
             '%inviter%' => $inviterName,
             '%message%' => nl2br(htmlentities($envelope['message'], ENT_QUOTES, 'UTF-8')),
             '%inviter_email%' => $inviter->email,
+            '%company_logo%' => is_null($companyLogo) ? 'https://nsmartrac.com/uploads/users/business_profile/1/logo.jpg?1624851442' : $companyLogo,
         ];
 
         $message = strtr($template, $data);
@@ -1495,6 +1497,20 @@ SQL;
                 'recipients' => $recipients,
             ],
         ]);
+    }
+
+    private function getCompanyProfile()
+    {
+        $this->db->where('company_id', logged('company_id'));
+        $this->db->where('business_image is NOT NULL', null, false);
+        $this->db->select('business_image, id');
+        $companyProfile = $this->db->get('business_profile')->row();
+
+        if ($companyProfile) {
+            return urlUpload('users/business_profile/' . $companyProfile->id . '/' . $companyProfile->business_image . '?' . time());
+        }
+
+        return null;
     }
 }
 

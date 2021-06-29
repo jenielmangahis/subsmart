@@ -147,13 +147,14 @@ class Estimate extends MY_Controller
             'company_id' => $company_id,
             // 'created_by' => logged('id'),
 
-            'sub_total' => $this->input->post('sub_total'),//
+            'sub_total' => $this->input->post('subtotal'),//
             // 'deposit_request' => $this->input->post('adjustment_name'),//
             // 'deposit_amount' => $this->input->post('adjustment_input'),//
             'grand_total' => $this->input->post('grand_total'),//
+            'tax1_total' => $this->input->post('taxes'),
 
             'adjustment_name' => $this->input->post('adjustment_name'),//
-            'adjustment_value' => $this->input->post('adjustment_input'),//
+            'adjustment_value' => $this->input->post('adjustment_value'),//
 
             'markup_type' => '$',//
             'markup_amount' => $this->input->post('markup_input_form'),//
@@ -705,11 +706,15 @@ class Estimate extends MY_Controller
         $this->page_data['estimate']->customer = $this->customer_model->getCustomer($this->page_data['estimate']->customer_id);
         $this->page_data['plans'] = $this->plans_model->getByWhere(['company_id' => $company_id]);
         $this->page_data['items_data'] = $this->estimate_model->getEstimatesItems($id);
+        
+        $this->page_data['items'] = $this->items_model->getItemlist();
+        $this->page_data['packages'] = $this->estimate_model->getPackagelist($company_id);
+
         $this->load->view('estimate/edit', $this->page_data);
     }
 
 
-    public function update($id)
+    public function update_old($id)
     {
         postAllowed();
 
@@ -780,6 +785,132 @@ class Estimate extends MY_Controller
         $this->session->set_flashdata('alert', 'Estimate has been Updated Successfully');
 
         redirect('estimate');
+    }
+
+    public function update($id)
+    {
+        $company_id  = getLoggedCompanyID();
+        $user_id  = getLoggedUserID();
+
+        $new_data = array(
+            'id'        => $id,
+            'customer_id' => $this->input->post('customer_id'),
+            'job_location' => $this->input->post('job_location'),
+            'job_name' => $this->input->post('job_name'),
+            'estimate_number' => $this->input->post('estimate_number'),
+            // 'email' => $this->input->post('email'),
+            // 'billing_address' => $this->input->post('billing_address'),
+            'estimate_date' => $this->input->post('estimate_date'),
+            'expiry_date' => $this->input->post('expiry_date'),
+            'purchase_order_number' => $this->input->post('purchase_order_number'),
+            'status' => $this->input->post('status'),
+            'estimate_type' => 'Standard',
+            // 'ship_via' => $this->input->post('ship_via'),
+            // 'ship_date' => $this->input->post('ship_date'),
+            // 'tracking_no' => $this->input->post('tracking_no'),
+            // 'ship_to' => $this->input->post('ship_to'),
+            // 'tags' => $this->input->post('tags'),
+            'attachments' => 'testing',
+            // 'message_invoice' => $this->input->post('message_invoice'),
+            // 'message_statement' => $this->input->post('message_statement'),
+            'status' => $this->input->post('status'),
+            'deposit_request' => $this->input->post('deposit_request'),
+            'deposit_amount' => $this->input->post('deposit_amount'),
+            'customer_message' => $this->input->post('customer_message'),
+            'terms_conditions' => $this->input->post('terms_conditions'),
+            'instructions' => $this->input->post('instructions'),
+            'user_id' => $user_id,
+            'company_id' => $company_id,
+            // 'created_by' => logged('id'),
+
+            'sub_total' => $this->input->post('subtotal'),//
+            // 'deposit_request' => $this->input->post('adjustment_name'),//
+            // 'deposit_amount' => $this->input->post('adjustment_input'),//
+            'grand_total' => $this->input->post('grand_total'),//
+            'tax1_total' => $this->input->post('taxes'),
+
+            'adjustment_name' => $this->input->post('adjustment_name'),//
+            'adjustment_value' => $this->input->post('adjustment_value'),//
+
+            'markup_type' => '$',//
+            'markup_amount' => $this->input->post('markup_input_form'),//
+
+            // 'created_at' => date("Y-m-d H:i:s"),
+            'updated_at' => date("Y-m-d H:i:s")
+        );
+
+        $addQuery = $this->estimate_model->update_estimate($new_data);
+
+        // if ($addQuery > 0) {
+            // $new_data2 = array(
+            //     'item_type' => $this->input->post('type'),
+            //     'description' => $this->input->post('desc'),
+            //     'qty' => $this->input->post('qty'),
+            //     'location' => $this->input->post('location'),
+            //     'cost' => $this->input->post('cost'),
+            //     'discount' => $this->input->post('discount'),
+            //     'tax' => $this->input->post('tax'),
+            //     'type' => '1',
+            //     'type_id' => $addQuery,
+            //     'status' => '1',
+            //     'created_at' => date("Y-m-d H:i:s"),
+            //     'updated_at' => date("Y-m-d H:i:s")
+            // );
+            // $a = $this->input->post('items');
+            // $b = $this->input->post('item_type');
+            // // $c = $this->input->post('desc');
+            // $d = $this->input->post('quantity');
+            // // $e = $this->input->post('location');
+            // $f = $this->input->post('price');
+            // $g = $this->input->post('discount');
+            // $h = $this->input->post('tax');
+            // $ii = $this->input->post('total');
+
+            // $i = 0;
+            // foreach ($a as $row) {
+            //     $data['item'] = $a[$i];
+            //     $data['item_type'] = $b[$i];
+            //     // $data['description'] = $c[$i];
+            //     $data['qty'] = $d[$i];
+            //     // $data['location'] = $e[$i];
+            //     $data['cost'] = $f[$i];
+            //     $data['discount'] = $g[$i];
+            //     $data['tax'] = $h[$i];
+            //     $data['total'] = $ii[$i];
+            //     $data['type'] = 'Standard Estimate';
+            //     $data['type_id'] = $addQuery;
+            //     $data['status'] = '1';
+            //     $data['created_at'] = date("Y-m-d H:i:s");
+            //     $data['updated_at'] = date("Y-m-d H:i:s");
+            //     $addQuery2 = $this->accounting_invoices_model->additem_details($data);
+            //     $i++;
+
+            $delete2 = $this->estimate_model->delete_items($id);
+
+                $a          = $this->input->post('item_id');
+                $quantity   = $this->input->post('quantity');
+                $price      = $this->input->post('price');
+                $h          = $this->input->post('tax');
+                $gtotal     = $this->input->post('total');
+
+                $i = 0;
+                foreach($a as $row){
+                    $data['items_id'] = $a[$i];
+                    $data['qty'] = $quantity[$i];
+                    $data['cost'] = $price[$i];
+                    $data['tax'] = $h[$i];
+                    $data['total'] = $gtotal[$i];
+                    $data['estimates_id '] = $id;
+                    $addQuery2 = $this->estimate_model->add_estimate_items($data);
+                    $i++;
+                }
+
+            // }
+
+            redirect('estimate');
+        // } else {
+        //     echo json_encode(0);
+        // }
     }
 
 

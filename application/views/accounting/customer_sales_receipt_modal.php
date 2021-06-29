@@ -33,7 +33,7 @@
                                     <div class="col-md-6">
                                         Email
                                         <input type="email" class="form-control" name="email" id="email2">
-                                        <input type="checkbox"> Send later
+                                        <div style="margin-top:5px;"><input type="checkbox"> Send later</div>
                                     </div>
                                 </div>
                                 <hr>
@@ -457,25 +457,25 @@
                             <hr>
 
                             <div class="row">
-                                <div class="col-md-1">
+                                <div class="col-md-3">
                                     <!-- <button class="btn1">Add lines</button> -->
                                     <a class="link-modal-open" href="#" id="add_another_items" data-toggle="modal"
                                         data-target="#item_list2"><span
                                             class="fa fa-plus-square fa-margin-right"></span>Add Items</a>
                                 </div>
                                 <!-- <div class="col-md-1">
-                           <button class="btn1">Clear all lines</button>
-                        </div>
-                        <div class="col-md-1">
-                        </div>
-                        <div class="col-md-7">
-                        </div>
-                        <div class="col-md-1">
-                            <b>Subtotal</b>
-                        </div>
-                        <div class="col-md-1">
-                            <b>$0.00</b>
-                        </div> -->
+                                    <button class="btn1">Clear all lines</button>
+                                    </div>
+                                    <div class="col-md-1">
+                                    </div>
+                                    <div class="col-md-7">
+                                    </div>
+                                    <div class="col-md-1">
+                                        <b>Subtotal</b>
+                                    </div>
+                                    <div class="col-md-1">
+                                        <b>$0.00</b>
+                                    </div> -->
                             </div>
                             <hr>
 
@@ -1570,4 +1570,7 @@
                 }
             });
         });
+    $(document).on("click", "#addsalesreceiptModal .modal-footer-check  #closeCheckModal", function() {
+        $("#addsalesreceiptModal").modal('hide');
+    });
 </script>

@@ -1,0 +1,93 @@
+#addsalesreceiptModal .middle-links a {
+    color: #ffffff;
+    font-size: 12px;
+}
+
+#addsalesreceiptModal form textarea {
+    resize: none;
+}
+
+#addsalesreceiptModal select,
+#addsalesreceiptModal input[type="text"],
+#addsalesreceiptModal input[type="email"],
+#addsalesreceiptModal input[type="number"],
+#addsalesreceiptModal textarea {
+    font-size: 12px;
+    font-weight: lighter;
+    padding: 8px;
+    height: auto;
+    border: solid 1px #BABEC5;
+    border-radius: 2px;
+    width: 100%;
+    resize: none;
+}
+
+#addsalesreceiptModal input:focus,
+#addsalesreceiptModal textarea:focus {
+    border-color: rgba(126, 239, 104, 0.8);
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 8px rgba(126, 239, 104, 0.6);
+    outline: 0 none;
+    box-shadow: none;
+    border: solid 1px #80CF03;
+    font-style: normal;
+}
+
+div#addsalesreceiptModal {
+    font-size: 12px;
+}
+
+div#addsalesreceiptModal form {
+    max-width: 1500px;
+    margin: 0 auto;
+}
+
+#addsalesreceiptModal #add_another_items {
+    font: 12px;
+}
+
+#addsalesreceiptModal .modal-footer-check {
+    left: 0;
+}
+
+#addsalesreceiptModal .modal-footer-check button {
+    font-size: 12px;
+    height: auto;
+    padding: 5px 10px;
+}
+
+#addsalesreceiptModal .modal-footer-check button[data-submit-type='save-new'],
+#addsalesreceiptModal .modal-footer-check button[data-toggle='dropdown'] {
+    background-image: none;
+    background-color: #2CA01C;
+    color: #FFFFFF;
+    box-shadow: none;
+    border-right: none;
+    font-size: 13px;
+    border-radius: 28px 0 0 28px;
+    padding: 5px 15px;
+    height: auto;
+    border: solid 1px #2CA01C;
+    margin-right: -5px;
+}
+
+#addsalesreceiptModal .modal-footer-check button[data-submit-type='save-new']:hover,
+#addsalesreceiptModal .modal-footer-check button[data-toggle='dropdown']:hover {
+    background-image: none;
+    background-color: #108000;
+}
+
+#addsalesreceiptModal .modal-footer-check button.cancel-button {
+    background-color: transparent;
+    background: transparent;
+    font-size: 13px;
+    color: #ffffff;
+    border: solid 1px #6A6C71;
+    padding: 5px 25px;
+    height: auto;
+    border-radius: 15px;
+    font-weight: 700;
+}
+
+#addsalesreceiptModal .modal-footer-check button.cancel-button:hover {
+    background-color: #2A2B2D;
+}

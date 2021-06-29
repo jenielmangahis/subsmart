@@ -57,7 +57,8 @@ class Accounting extends MY_Controller
             "assets/css/accounting/sales.css",
             "assets/plugins/dropzone/dist/dropzone.css",
             "assets/css/accounting/accounting-modal-forms.css",
-            "assets/plugins/jquery-toast-plugin-master/dist/jquery.toast.min.css"
+            "assets/plugins/jquery-toast-plugin-master/dist/jquery.toast.min.css",
+            "assets/css/accounting/accounting_includes/customer_sales_receipt_modal.css",
         ));
 
         add_footer_js(array(
@@ -5835,5 +5836,14 @@ class Accounting extends MY_Controller
         $this->page_data['business_image'] = $customer_info->business_image;
         $this->page_data['has_logo'] = false;
         $this->load->view('accounting/customer_includes/html_email_print', $this->page_data);
+    }
+    public function get_customer_info_for_sales_receipt()
+    {
+        $customer_info = $this->accounting_customers_model->get_customer_by_id($this->input->post("customer_id"));
+        $data = new stdClass();
+        $data->customer_address=$customer_info->acs_mail_add." ".$customer_info->acs_city.", ".$customer_info->acs_state." ".$customer_info->acs_zip_code;
+        $data->business_address=$customer_info->bus_street." ".$customer_info->bus_city.", ".$customer_info->bus_state." ".$customer_info->bus_postal_code;
+        $data->date_now=date('m/d/Y');
+        echo json_encode($data);
     }
 }

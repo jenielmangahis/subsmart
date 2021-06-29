@@ -1774,17 +1774,27 @@ $(function() {
     $(document).on('change', '#payBillsModal #bills-table .payment-amount, #payBillsModal #bills-table .credit-applied', function() {
         if($(this).hasClass('payment-amount')) {
             var row = $(this).parent().parent();
-            var paymentAmount = $(this).val();
+            var payment = $(this).val();
             var creditApplied = row.find('input.credit-applied');
-            creditApplied = creditApplied.length > 0 ? creditApplied.val() : 0.00;
+            creditApplied = creditApplied.length > 0 && creditApplied.val() !== '' ? parseFloat(creditApplied.val()) : 0.00;
         } else {
             var row = $(this).parent().parent().parent().parent();
-            var paymentAmount = row.find('input.payment-amount').val();
-            paymentAmount = paymentAmount === '' ? 0.00 : paymentAmount;
-            var creditApplied = $(this).val();
+            var rowData = $('#payBillsModal #bills-table').DataTable().row(row).data();
+            var balance = parseFloat(rowData.open_balance);
+            var paymentAmount = row.find('input.payment-amount');
+            var creditApplied = parseFloat($(this).val());
+
+            var payment = parseFloat(balance - creditApplied).toFixed(2);
+            paymentAmount.val(payment);
+            paymentAmount = payment;
+
+            var totalVCredit = parseFloat(rowData.vendor_credits);
+            var remaining_vcredit = totalVCredit - creditApplied;
+
+            $(this).parent().next().children('span').html(parseFloat(remaining_vcredit).toFixed(2));
         }
 
-        var total = parseFloat(paymentAmount) + parseFloat(creditApplied);
+        var total = parseFloat(payment) + parseFloat(creditApplied);
 
         row.find('td:last-child span').html(parseFloat(total).toFixed(2));
 
@@ -2155,79 +2165,9 @@ $(function() {
                         `);
                     }
 
-                    if($(`#billPaymentModal select`).length > 0) {
-                        $(`#billPaymentModal select`).select2();
-                    }
-        
-                    if($(`div#billPaymentModal select#tags`).length > 0) {
-                        $(`div#billPaymentModal select#tags`).select2({
-                            placeholder: 'Start typing to add a tag',
-                            allowClear: true,
-                            ajax: {
-                                url: '/accounting/get-job-tags',
-                                dataType: 'json'
-                            }
-                        });
-                    }
-                
-                    if($(`div#billPaymentModal .date`).length > 0) {
-                        $(`div#billPaymentModal .date`).each(function(){
-                            $(this).datepicker({
-                                uiLibrary: 'bootstrap'
-                            });
-                        });
-                    }
-                
-                    if($(`#billPaymentModal .attachments`).length > 0) {
-                        var attachmentContId = $(`#billPaymentModal .attachments .dropzone`).attr('id');
-                        var transactionAttach = new Dropzone(`#${attachmentContId}`, {
-                            url: '/accounting/attachments/attach',
-                            maxFilesize: 20,
-                            uploadMultiple: true,
-                            // maxFiles: 1,
-                            addRemoveLinks: true,
-                            init: function() {
-                                this.on("success", function(file, response) {
-                                    var ids = JSON.parse(response)['attachment_ids'];
-                                    var modal = $(`#billPaymentModal`);
+                    loadBillPaymentBills(data);
 
-                                    for(i in ids) {
-                                        if(modal.find(`input[name="attachments[]"][value="${ids[i]}"]`).length === 0) {
-                                            modal.find('.attachments').parent().append(`<input type="hidden" name="attachments[]" value="${ids[i]}">`);
-                                        }
-                
-                                        modalAttachmentId.push(ids[i]);
-                                    }
-                                    modalAttachedFiles.push(file);
-                                });
-                            },
-                            removedfile: function(file) {
-                                var ids = modalAttachmentId;
-                                var index = modalAttachedFiles.map(function(d, index) {
-                                    if (d == file) return index;
-                                }).filter(isFinite)[0];
-                        
-                                $(`#billPaymentModal .attachments`).parent().find(`input[name="attachments[]"][value="${ids[index]}"]`).remove();
-                
-                                //remove thumbnail
-                                var previewElement;
-                
-                                if((previewElement = file.previewElement) !== null) {
-                                    var remove = (previewElement.parentNode.removeChild(file.previewElement));
-
-                                    if($(`#${attachmentContId} .dz-preview`).length > 0) {
-                                        $(`#${attachmentContId} .dz-message`).hide();
-                                    } else {
-                                        $(`#${attachmentContId} .dz-message`).show();
-                                    }
-
-                                    return remove;
-                                } else {
-                                    return (void 0);
-                                }
-                            }
-                        });
-                    }
+                    initModalFields('billPaymentModal');
 
                     $(`#billPaymentModal #payee`).trigger('change');
 
@@ -2276,114 +2216,7 @@ $(function() {
                 `);
             }
     
-            rowCount = 2;
-            catDetailsInputs = $(`#${modalName} table#category-details-table tbody tr:first-child()`).html();
-            catDetailsBlank = $(`#${modalName} table#category-details-table tbody tr:last-child`).html();
-
-            if($(`#${modalName} table#category-details-table tbody tr`).length === 2) {
-                $(`#${modalName} table#category-details-table tbody tr:first-child()`).html(catDetailsBlank);
-                $(`#${modalName} table#category-details-table tbody tr:first-child() td:nth-child(2)`).html(1);
-            } else {
-                $(`#${modalName} table#category-details-table tbody tr:first-child()`).remove();
-            }
-
-            if($(`#${modalName} select`).length > 0) {
-                $(`#${modalName} select`).select2();
-            }
-
-            if($(`div#${modalName} select#tags`).length > 0) {
-                $(`div#${modalName} select#tags`).select2({
-                    placeholder: 'Start typing to add a tag',
-                    allowClear: true,
-                    ajax: {
-                        url: '/accounting/get-job-tags',
-                        dataType: 'json'
-                    }
-                });
-            }
-        
-            if($(`div#${modalName} .date`).length > 0) {
-                $(`div#${modalName} .date`).each(function(){
-                    $(this).datepicker({
-                        uiLibrary: 'bootstrap'
-                    });
-                });
-            }
-        
-            if($(`#${modalName} .attachments`).length > 0) {
-                var attachmentContId = $(`#${modalName} .attachments .dropzone`).attr('id');
-                var transactionAttach = new Dropzone(`#${attachmentContId}`, {
-                    url: '/accounting/attachments/attach',
-                    maxFilesize: 20,
-                    uploadMultiple: true,
-                    // maxFiles: 1,
-                    addRemoveLinks: true,
-                    init: function() {
-                        $.getJSON('/accounting/vendors/get-transaction-attachments/'+type+'/'+id, function(data) {
-                            if(data.length > 0) {
-                                $.each(data, function(index, val) {
-                                    $(`#${modalName}`).find('.attachments').parent().append(`<input type="hidden" name="attachments[]" value="${val.id}">`);
-        
-                                    modalAttachmentId.push(val.id);
-                                    var mockFile = {
-                                        name: `${val.uploaded_name}.${val.file_extension}`,
-                                        size: parseInt(val.size),
-                                        dataURL: base_url+"uploads/accounting/attachments/" + val.stored_name,
-                                        // size: val.size / 1000000,
-                                        accepted: true
-                                    };
-                                    transactionAttach.emit("addedfile", mockFile);
-                                    modalAttachedFiles.push(mockFile);
-
-                                    transactionAttach.createThumbnailFromUrl(mockFile, transactionAttach.options.thumbnailWidth, transactionAttach.options.thumbnailHeight, transactionAttach.options.thumbnailMethod, true, function(thumbnail) {
-                                        transactionAttach.emit('thumbnail', mockFile, thumbnail);
-                                    });
-                                    transactionAttach.emit("complete", mockFile);
-                                });
-                            }
-                        });
-
-                        this.on("success", function(file, response) {
-                            var ids = JSON.parse(response)['attachment_ids'];
-                            var modal = $(`#${modalName}`);
-        
-                            for(i in ids) {
-                                if(modal.find(`input[name="attachments[]"][value="${ids[i]}"]`).length === 0) {
-                                    modal.find('.attachments').parent().append(`<input type="hidden" name="attachments[]" value="${ids[i]}">`);
-                                }
-        
-                                modalAttachmentId.push(ids[i]);
-                            }
-                            modalAttachedFiles.push(file);
-                        });
-                    },
-                    removedfile: function(file) {
-                        var ids = modalAttachmentId;
-                        var index = modalAttachedFiles.map(function(d, index) {
-                            if (d == file) return index;
-                        }).filter(isFinite)[0];
-                
-                        $(`#${modalName} .attachments`).parent().find(`input[name="attachments[]"][value="${ids[index]}"]`).remove();
-        
-                        //remove thumbnail
-                        var previewElement;
-        
-                        if((previewElement = file.previewElement) !== null) {
-                            var remove = (previewElement.parentNode.removeChild(file.previewElement));
-                
-                            if($(`#${attachmentContId} .dz-preview`).length > 0) {
-                                $(`#${attachmentContId} .dz-message`).hide();
-                            } else {
-                                $(`#${attachmentContId} .dz-message`).show();
-                            }
-                
-                            return remove;
-                        } else {
-                            return (void 0);
-                        }
-                    }
-                });
-            }
+            initModalFields(modalName, {id:id,type:type});
     
             $(`#${modalName} #payee`).trigger('change');
     
@@ -3228,10 +3061,12 @@ const loadBills = () => {
                 orderable: false,
                 fnCreatedCell: function(td, cellData, rowData, row, col) {
                     if(rowData.vendor_credits !== null && rowData.vendor_credits !== "" && rowData.vendor_credits !== "0.00") {
+                        var max = parseFloat(rowData.vendor_credits) > parseFloat(rowData.open_balance) ? rowData.open_balance : rowData.vendorCredits;
+
                         $(td).html(`
                         <div class="row">
                             <div class="col-sm-9">
-                                <input type="number" class="form-control text-right credit-applied" step=".01" max="${rowData.vendor_credits}" onchange="convertToDecimal(this)">
+                                <input type="number" class="form-control text-right credit-applied" step=".01" max="${max}" onchange="convertToDecimal(this)">
                             </div>
                             <div class="col-sm-3 d-flex align-items-center">
                                 <span class="available-credit">${rowData.vendor_credits}</span> &nbsp;available
@@ -3382,4 +3217,199 @@ const unlinkTransaction = () =>  {
 
         computeTransactionTotal();
     }
+}
+
+const initModalFields = (modalName, data = {}) => {
+    if(!$.isEmptyObject(data)) {
+        var transactionType = data.type;
+        transactionType = transactionType.replaceAll(' (Check)', '');
+        transactionType = transactionType.replaceAll(' (Credit Card)', '');
+        transactionType = transactionType.replaceAll(' ', '-');
+        transactionType = transactionType.toLowerCase();
+    }
+
+    if($(`#${modalName} table#category-details-table`).length > 0) {
+        rowCount = 2;
+        catDetailsInputs = $(`#${modalName} table#category-details-table tbody tr:first-child()`).html();
+        catDetailsBlank = $(`#${modalName} table#category-details-table tbody tr:last-child`).html();
+    }
+
+    if($(`#${modalName} table#category-details-table tbody tr`).length === 2) {
+        $(`#${modalName} table#category-details-table tbody tr:first-child()`).html(catDetailsBlank);
+        $(`#${modalName} table#category-details-table tbody tr:first-child() td:nth-child(2)`).html(1);
+    } else {
+        $(`#${modalName} table#category-details-table tbody tr:first-child()`).remove();
+    }
+
+    if($(`#${modalName} select`).length > 0) {
+        $(`#${modalName} select`).select2();
+    }
+
+    if($(`div#${modalName} select#tags`).length > 0) {
+        $(`div#${modalName} select#tags`).select2({
+            placeholder: 'Start typing to add a tag',
+            allowClear: true,
+            ajax: {
+                url: '/accounting/get-job-tags',
+                dataType: 'json'
+            }
+        });
+    }
+
+    if($(`div#${modalName} .date`).length > 0) {
+        $(`div#${modalName} .date`).each(function(){
+            $(this).datepicker({
+                uiLibrary: 'bootstrap'
+            });
+        });
+    }
+
+    if($(`#${modalName} .attachments`).length > 0) {
+        var attachmentContId = $(`#${modalName} .attachments .dropzone`).attr('id');
+        var viewExpenseAtta = new Dropzone(`#${attachmentContId}`, {
+            url: '/accounting/attachments/attach',
+            maxFilesize: 20,
+            uploadMultiple: true,
+            // maxFiles: 1,
+            addRemoveLinks: true,
+            init: function() {
+                if(!$.isEmptyObject(data)) {
+                    $.getJSON('/accounting/vendors/get-transaction-attachments/'+transactionType+'/'+data.id, function(attachments) {
+                        if(attachments.length > 0) {
+                            $.each(attachments, function(index, val) {
+                                $('#${modalName}').find('.attachments').parent().append(`<input type="hidden" name="attachments[]" value="${val.id}">`);
+
+                                modalAttachmentId.push(val.id);
+                                var mockFile = {
+                                    name: `${val.uploaded_name}.${val.file_extension}`,
+                                    size: parseInt(val.size),
+                                    dataURL: base_url+"uploads/accounting/attachments/" + val.stored_name,
+                                    // size: val.size / 1000000,
+                                    accepted: true
+                                };
+                                viewExpenseAtta.emit("addedfile", mockFile);
+                                modalAttachedFiles.push(mockFile);
+            
+                                viewExpenseAtta.createThumbnailFromUrl(mockFile, viewExpenseAtta.options.thumbnailWidth, viewExpenseAtta.options.thumbnailHeight, viewExpenseAtta.options.thumbnailMethod, true, function(thumbnail) {
+                                    viewExpenseAtta.emit('thumbnail', mockFile, thumbnail);
+                                });
+                                viewExpenseAtta.emit("complete", mockFile);
+                            });
+                        }
+                    });
+                }
+
+                this.on("success", function(file, response) {
+                    var ids = JSON.parse(response)['attachment_ids'];
+                    var modal = $(`#${modalName}`);
+
+                    for(i in ids) {
+                        if(modal.find(`input[name="attachments[]"][value="${ids[i]}"]`).length === 0) {
+                            modal.find('.attachments').parent().append(`<input type="hidden" name="attachments[]" value="${ids[i]}">`);
+                        }
+
+                        modalAttachmentId.push(ids[i]);
+                    }
+                    modalAttachedFiles.push(file);
+                });
+            },
+            removedfile: function(file) {
+                var ids = modalAttachmentId;
+                var index = modalAttachedFiles.map(function(d, index) {
+                    if (d == file) return index;
+                }).filter(isFinite)[0];
+        
+                $(`#${modalName} .attachments`).parent().find(`input[name="attachments[]"][value="${ids[index]}"]`).remove();
+
+                //remove thumbnail
+                var previewElement;
+
+                if((previewElement = file.previewElement) !== null) {
+                    var remove = (previewElement.parentNode.removeChild(file.previewElement));
+        
+                    if($(`#${attachmentContId} .dz-preview`).length > 0) {
+                        $(`#${attachmentContId} .dz-message`).hide();
+                    } else {
+                        $(`#${attachmentContId} .dz-message`).show();
+                    }
+        
+                    return remove;
+                } else {
+                    return (void 0);
+                }
+            }
+        });
+    }
+}
+
+const loadBillPaymentBills = (data = {}) => {
+    $('#billPaymentModal table#bills-table').DataTable({
+        autoWidth: false,
+        searching: false,
+        processing: true,
+        serverSide: true,
+        lengthChange: false,
+        info: false,
+        pageLength: $('#billPaymentModal #table_rows').val(),
+        ordering: false,
+        ajax: {
+            url: '/accounting/load-bill-payment-bills/',
+            dataType: 'json',
+            contentType: 'application/json',
+            type: 'POST',
+            data: function(d) {
+                d.search = $('#billPaymentModal #search').val();
+                d.from = $('#billPaymentModal #bills-from').val();
+                d.to = $('#billPaymentModal #bills-to').val();
+                d.overdue = $('#billPaymentModal #overdue_bills_only').prop('checked');
+                d.length = parseInt($('#billPaymentModal #table_rows').val());
+                d.vendor = $('#billPaymentModal #payee').val();
+                d.bills = [];
+
+                $('#billPaymentModal #bills-table tbody tr input[type="checkbox"]').each(function() {
+                    d.bills.push($(this).val());
+                });
+
+                return JSON.stringify(d);
+            },
+            pagingType: 'full_numbers'
+        },
+        columns: [
+            {
+                data: 'id',
+                name: 'id',
+                orderable: false,
+                fnCreatedCell: function(td, cellData, rowData, row, col) {
+                    $(td).html(`
+                    <div class="d-flex align-items-center justify-content-center">
+                        <input type="checkbox" value="${cellData}" checked>
+                    </div>
+                    `);
+                }
+            },
+            {
+                data: 'description',
+                name: 'description'
+            },
+            {
+                data: 'due_date',
+                name: 'due_date'
+            },
+            {
+                data: 'original_amount',
+                name: 'original_amount'
+            },
+            {
+                data: 'open_balance',
+                name: 'open_balance'
+            },
+            {
+                data: 'payment',
+                name: 'payment',
+                fnCreatedCell: function(td, cellData, rowData, row, col) {
+                    $(td).html(`<input type="number" value="${cellData}" class="form-control text-right" onchange="convertToDecimal(this)">`);
+                }
+            }
+        ]
+    });
 }

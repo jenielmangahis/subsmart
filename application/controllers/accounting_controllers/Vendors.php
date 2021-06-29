@@ -1387,13 +1387,12 @@ class Vendors extends MY_Controller {
                 }
             }
 
-            $bills = $this->vendors_model->get_bill_payment_bills($billPaymentId);
-
-            foreach($bills as $bill) {
-                $payment = $this->vendors_model->get_bill_payment_item_by_bill_id($billPaymentId, $bill->id);
+            $paymentItems = $this->vendors_model->get_bill_payment_items($billPaymentId);
+            foreach($paymentItems as $paymentItem) {
+                $bill = $this->expenses_model->get_bill_data($paymentItem->bill_id);
 
                 $billData = [
-                    'remaining_balance' => floatval($bill->remaining_balance) + floatval($payment->total_amount),
+                    'remaining_balance' => floatval($bill->remaining_balance) + floatval($paymentItem->total_amount),
                     'status' => 1,
                     'updated_at' => date("Y-m-d H:i:s")
                 ];
@@ -1417,8 +1416,10 @@ class Vendors extends MY_Controller {
                 'company_id' => logged('company_id'),
                 'balance' => $newBalance
             ];
-    
+
             $this->chart_of_accounts_model->updateBalance($paymentAccData);
+
+            $this->vendors_model->delete_bill_payment_items($billPaymentId);
         }
 
         return $update;
@@ -1832,8 +1833,6 @@ class Vendors extends MY_Controller {
         foreach($bills as $bill) {
             $billData = $this->vendors_model->get_bill_by_id($bill->bill_id);
 
-            $openBalance = floatval($billData->remaining_balance) + floatval($billData->total_amount);
-
             $description = 'Bill ';
             $description .= $billData->bill_no !== "" && !is_null($billData->bill_no) ? '# '.$billData->bill_no.' ' : '';
             $description .= '('.date("m/d/Y", strtotime($billData->bill_date)).')';
@@ -1845,8 +1844,8 @@ class Vendors extends MY_Controller {
                         'description' => $description,
                         'due_date' => date("m/d/Y", strtotime($billData->due_date)),
                         'original_amount' => number_format(floatval($billData->total_amount), 2, '.', ','),
-                        'open_balance' => number_format(floatval($openBalance), 2, '.', ','),
-                        'payment' => number_format(floatval($billData->total_amount), 2, '.', ',')
+                        'open_balance' => number_format(floatval($billData->remaining_balance), 2, '.', ','),
+                        'payment' => number_format(floatval($bill->payment_amount), 2, '.', ',')
                     ];
                 }
             } else {
@@ -1855,8 +1854,8 @@ class Vendors extends MY_Controller {
                     'description' => $description,
                     'due_date' => date("m/d/Y", strtotime($billData->due_date)),
                     'original_amount' => number_format(floatval($billData->total_amount), 2, '.', ','),
-                    'open_balance' => number_format(floatval($openBalance), 2, '.', ','),
-                    'payment' => number_format(floatval($billData->total_amount), 2, '.', ',')
+                    'open_balance' => number_format(floatval($billData->remaining_balance), 2, '.', ','),
+                    'payment' => number_format(floatval($bill->payment_amount), 2, '.', ',')
                 ];
             }
         }
@@ -3014,6 +3013,20 @@ class Vendors extends MY_Controller {
         $this->chart_of_accounts_model->updateBalance($paymentAccData);
 
         $void = $this->vendors_model->update_bill_payment($billPaymentId, $billPaymentData);
+
+        $vCredits = !is_null($billPayment->vendor_credits_applied) ? json_decode($billPayment->vendor_credits_applied, true) : null;
+        if(!is_null($vCredits)) {
+            foreach($vCredits as $vCreditId => $amount) {
+                $vCredit = $this->vendors_model->get_vendor_credit_by_id($vCreditId);
+                $vCreditData = [
+                    'status' => 1,
+                    'remaining_balance' => floatval($vCredit->remaining_balance) + floatval($amount),
+                    'updated_at' => date("Y-m-d H:i:s")
+                ];
+
+                $this->vendors_model->update_vendor_credit($vCredit->id, $vCreditData);
+            }
+        }
 
         $paymentItems = $this->vendors_model->get_bill_payment_items($billPaymentId);
         foreach($paymentItems as $paymentItem) {

@@ -564,35 +564,37 @@ span.sc-item {
                         </div>
                       </div>
 
-                      <div id="printableArea">
-                          <div style="margin-bottom: 20px;margin-left: 0px !important;">
+                      <div id="printableArea" style="">
+                          <div style="margin-bottom: 20px;margin-left: 0px !important;margin-top:100px;">
                             <!-- <img class="presenter-print-logo" style="max-width: 230px; max-height: 200px;" src="http://nsmartrac.com/assets/dashboard/images/logo.png"> -->
                             <img src="<?= getCompanyBusinessProfileImage(); ?>"  style="max-width: 230px; max-height: 200px;" />
                           </div>
+                          
+                            <div class="col-xl-5 right" style="float: right">
+                                <div style="text-align: right;">
+                                  <h5 style="font-size:30px;margin:0px;">ESTIMATE</h5>
+                                  <small style="font-size: 14px;">#<?= $estimate->estimate_number; ?></small>
+                                </div>
+                                <div class="" style="float: right;margin-top: 20px;">
+                                  <table style="text-align: right;">
+                                    <tr>
+                                      <td style="text-align: right;">Estimate Date: &emsp;</td>
+                                      <td><?= date("F d, Y",strtotime($estimate->estimate_date)); ?></td>
+                                    </tr>
+                                    <tr>
+                                      <td style="text-align: right;">Expiry Date: &emsp;</td>
+                                      <td><?= date("F d, Y",strtotime($estimate->expiry_date)); ?></td>
+                                    </tr>
+                                  </table>
+                                </div>
+                            </div>
+
                             <div class="col-xl-5 left" style="margin-bottom: 33px;">
                               <h5><span class="fa fa-user-o fa-margin-right"></span> From <span class="invoice-txt"> <?= $client->business_name; ?></span></h5>
                               <div class="col-xl-5 ml-0 pl-0">
                                 <span class=""><?= $client->business_address; ?></span><br />
                                 <span class="">EMAIL: <?= $client->email_address; ?></span><br />
                                 <span class="">PHONE: <?= $client->phone_number; ?></span>
-                              </div>
-                            </div>
-                            <div class="col-xl-5 right" style="float: right">
-                              <div style="text-align: right;">
-                                <h5 style="font-size:30px;margin:0px;">ESTIMATE</h5>
-                                <small style="font-size: 14px;">#<?= $estimate->estimate_number; ?></small>
-                              </div>
-                              <div class="" style="text-align: right;margin-top: 20px;">
-                                <table style="width: 100%;text-align: right;">
-                                  <tr>
-                                    <td style="text-align: right;width: 70%;">Estimate Date :</td>
-                                    <td><?= date("F d, Y",strtotime($estimate->estimate_date)); ?></td>
-                                  </tr>
-                                  <tr>
-                                    <td style="text-align: right;width: 70%;">Expiry Date :</td>
-                                    <td><?= date("F d, Y",strtotime($estimate->expiry_date)); ?></td>
-                                  </tr>
-                                </table>
                               </div>
                             </div>
                             <div class="clear"></div>
@@ -647,14 +649,26 @@ span.sc-item {
                                 </tr>
                               <?php } ?>
                             
-                            <tr><td colspan="6"><hr/></td></tr>
+                            <tr><td colspan="7"><hr/></td></tr>
                             <tr>
-                              <td colspan="6" style="text-align: right;"><b>Subtotal</b></td>
-                              <td style="text-align: right;"><b>$<?= number_format($estimate->sub_total, 2); ?></b></td>
+                              <td colspan="5" style="text-align: right;"><p>Subtotal</p></td>
+                              <td colspan="2" style="text-align: right;"><p>$ <?= number_format($estimate->sub_total, 2); ?></p></td>
                             </tr>
                             <tr>
-                              <td colspan="6" style="text-align: right;"><b>TOTAL AMOUNT</b></td>
-                              <td style="text-align: right;"><b>$<?= number_format($estimate->grand_total, 2); ?></b></td>
+                              <td colspan="5" style="text-align: right;"><p>Taxes</p></td>
+                              <td colspan="2" style="text-align: right;"><p>$ <?= number_format($estimate->tax1_total, 2); ?></p></td>
+                            </tr>
+                            <tr>
+                              <td colspan="5" style="text-align: right;"><p><?= $estimate->adjustment_name; ?></p></td>
+                              <td colspan="2" style="text-align: right;"><p>$ <?= number_format($estimate->adjustment_value, 2); ?></p></td>
+                            </tr>
+                            <tr>
+                              <td colspan="5" style="text-align: right;"><p>Markup</p></td>
+                              <td colspan="2" style="text-align: right;"><p>$ <?= number_format($estimate->markup_amount, 2); ?></p></td>
+                            </tr>
+                            <tr>
+                              <td colspan="5" style="text-align: right;"><b>TOTAL AMOUNT</b></td>
+                              <td colspan="2" style="text-align: right;"><b>$ <?= number_format($estimate->grand_total, 2); ?></b></td>
                             </tr>
                             </tbody>
                             </table>

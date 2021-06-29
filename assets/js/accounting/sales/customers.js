@@ -76,4 +76,18 @@ $(document).on("click", "#customers_table ul li a.created-sales-receipt", functi
     $("#addsalesreceiptModal form #sel-customer2").val($(this).attr('data-customer-id'));
     $("#addsalesreceiptModal form #email2").val($(this).attr('data-email-add'));
     event.preventDefault();
+    $.ajax({
+        url: baseURL + "/accounting/get_customer_info_for_sales_receipt",
+        type: "POST",
+        dataType: "json",
+        data: {
+            customer_id: $(this).attr('data-customer-id'),
+        },
+        success: function(data) {
+            $("#addsalesreceiptModal form #billing_address2").html(data.customer_address);
+            $("#addsalesreceiptModal form #datepickerinv8").val(data.date_now);
+            $("#addsalesreceiptModal form textarea[name='shipping_to']").html(data.customer_address);
+            $("#addsalesreceiptModal form input[name='location_scale']").val(data.business_address);
+        },
+    });
 });

@@ -319,6 +319,7 @@ input:checked + .slider:before {
             <style>
 
             </style>
+            <input type="hidden" name="est_id" value="<?php echo $estimate->id; ?>">
             <div class="row custom__border" style="margin-top: -20px;">
                 <div class="col-xl-12">
                     <div class="card">
@@ -375,7 +376,7 @@ input:checked + .slider:before {
                                     <label for="estimate_date" class="required"><b>Estimate#</b></label>
                                     <!-- <input type="text" class="form-control" name="estimate_number" id="estimate_date"
                                            required placeholder="Enter Estimate#"  value="<?php echo "EST-".date("YmdHis"); ?>" /> -->
-                                    <input type="text" class="form-control" name="estimate_number" id="estimate_date"  value="<?php echo $estimate->estimate_number; ?>" />
+                                    <input type="text" class="form-control" name="estimate_number" id="estimate_date"  value="<?php echo $estimate->estimate_number; ?>" readonly/>
                                 </div>
                                 <div class="col-md-3">
                                     <label for="estimate_date" class="required"><b>Estimate Date</b></label>
@@ -403,9 +404,9 @@ input:checked + .slider:before {
                             
                             <div class="row" style="background-color:white;">
                                     <div class="col-md-3">
-                                        <label for="purchase_order_number"><b>Purchase Order#</b><small class="help help-sm">(optional)</small></label>
+                                        <label for="purchase_order_number"><b>Purchase Order# </b><small class="help help-sm">(optional)</small></label>
                                         <input type="text" class="form-control" name="purchase_order_number"
-                                            id="purchase_order_number" required placeholder="Enter Purchase Order#"
+                                            id="purchase_order_number" placeholder="Enter Purchase Order#"
                                              onChange="jQuery('#customer_name').text(jQuery(this).val());" value="<?php echo $estimate->purchase_order_number; ?>"/>
                                     </div>
                                     <div class="col-md-3 form-group">
@@ -580,7 +581,7 @@ input:checked + .slider:before {
                                     </table>
                                     <!-- <a href="#" id="add_another_estimate" style="color:#02A32C;"><i class="fa fa-plus-square" aria-hidden="true"></i> Add another line</a> &emsp; -->
                                     <!-- <a href="#" id="add_another" style="color:#02A32C;"><i class="fa fa-plus-square" aria-hidden="true"></i> Add Items in bulk</a> -->
-                                    <a class="link-modal-open" href="#" id="add_another_items" data-toggle="modal" data-target="#item_list"><span class="fa fa-plus-square fa-margin-right"></span>Add Items</a> 
+                                    <a class="link-modal-open" href="#" id="add_another_items" data-toggle="modal" data-target="#item_list"><span class="fa fa-plus-square fa-margin-right"></span>Add Items</a>  &emsp;
                                     <a class="link-modal-open" href="#" id="add_package" data-toggle="modal" data-target=".bd-example-modal-lg"><span class="fa fa-plus-square fa-margin-right"></span>Add Package</a>
                                     <hr>
                                 </div>
@@ -622,15 +623,15 @@ input:checked + .slider:before {
                                         <tr>
                                             <td>Taxes</td>
                                             <!-- <td></td> -->
-                                            <td colspan="2" align="right">$ <span id="total_tax_">0.00</span><input type="hidden" name="taxes" id="total_tax_input"></td>
+                                            <td colspan="2" align="right">$ <span id="total_tax_"><?php echo $estimate->tax1_total; ?></span><input type="hidden" name="taxes" id="total_tax_input" value="<?php echo $estimate->tax1_total; ?>"></td>
                                         </tr>
                                         <tr>
-                                            <td style="width:;"><input type="text" name="adjustment_name" id="adjustment_name" placeholder="Adjustment Name" class="form-control" style="width:; display:inline; border: 1px dashed #d1d1d1"></td>
+                                            <td style="width:;"><input type="text" name="adjustment_name" id="adjustment_name" placeholder="Adjustment Name" class="form-control" style="width:; display:inline; border: 1px dashed #d1d1d1" value="<?php echo $estimate->adjustment_name; ?>"></td>
                                             <td align="center">
-                                            <input type="number" name="adjustment_value" id="adjustment_input" value="0" class="form-control adjustment_input" style="width:50%;display:inline;">
+                                            <input type="number" name="adjustment_value" id="adjustment_input" value="<?php echo $estimate->adjustment_value; ?>" class="form-control adjustment_input" style="width:50%;display:inline;">
                                                 <span class="fa fa-question-circle" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Optional it allows you to adjust the total amount Eg. +10 or -10." data-original-title="" title=""></span>
                                             </td>
-                                            <td>$ <span id="adjustmentText">0.00</span></td>
+                                            <td>$ <span id="adjustmentText"><?php echo $estimate->adjustment_value; ?></span></td>
                                         </tr>
                                         <!-- <tr>
                                             <td>Markup $<span id="span_markup"></td> -->
@@ -645,7 +646,7 @@ input:checked + .slider:before {
                                         <tr>
                                             <td>Markup $<span id="span_markup">0.00</span></td>
                                             <td><a href="#" data-toggle="modal" data-target="#modalSetMarkup" style="color:#02A32C;">set markup</a></td>
-                                            <td><input type="hidden" name="markup_input_form" id="markup_input_form" class="markup_input" value="0"><span id="span_markup_input_form">0.00</span></td>
+                                            <td><input type="hidden" name="markup_input_form" id="markup_input_form" class="markup_input" value="<?php echo $estimate->markup_amount; ?>"><span id="span_markup_input_form"><?php echo $estimate->markup_amount; ?></span></td>
                                         </tr>
                                         <tr style="color:blue;font-weight:bold;font-size:16px;">
                                             <td><b>Grand Total ($)</b></td>
@@ -719,7 +720,7 @@ input:checked + .slider:before {
                             
                             <div class="row" style="background-color:white;">
                                 <div class="col-md-12 form-group">
-                                    <button type="submit" class="btn btn-light but" style="border-radius: 0 !important;border:solid gray 1px;">Save as Draft</button>
+                                    <button type="submit" class="btn btn-danger but" style="border-radius: 0 !important;border:solid gray 1px;">Update</button>
                                     <button type="button" class="btn btn-success but" style="border-radius: 0 !important;">Preview</button>
                                     <a href="<?php echo url('accounting/newEstimateList') ?>" class="btn but-red">Cancel this</a>
                                 </div>
