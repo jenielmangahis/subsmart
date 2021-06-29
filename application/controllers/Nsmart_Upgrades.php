@@ -27,7 +27,7 @@ class Nsmart_Upgrades extends MY_Controller {
 
 	public function add_new_upgrade() {
 		
-		$this->load->view('nsmart_upgrades/add_new_upgrade', $this->page_data);
+		$this->load->view('admin/nsmart_upgrades/add_new_upgrade', $this->page_data);
 	}
 
 	public function create_upgrade() {
