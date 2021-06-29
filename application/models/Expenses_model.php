@@ -824,4 +824,13 @@ class Expenses_model extends MY_Model
         $query = $this->db->get('accounting_vendor_credit');
         return $query->result();
     }
+
+    public function get_bills_by_ids_and_vendor($billIds, $vendor)
+    {
+        $this->db->where('company_id', logged('company_id'));
+        $this->db->where('vendor_id', $vendor);
+        $this->db->where_in('id', $billIds);
+        $query = $this->db->get('accounting_bill');
+        return $query->result();
+    }
 }

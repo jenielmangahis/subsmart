@@ -547,7 +547,6 @@
     
     div#customer_receive_payment_modal .customer_receive_payment_modal_content .invoicing-part {
         background-color: #ffffff;
-        height: 100%;
     }
     
     div#customer_receive_payment_modal .customer_receive_payment_modal_content .invoicing-part .invoices {

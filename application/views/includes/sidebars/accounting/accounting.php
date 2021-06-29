@@ -106,14 +106,7 @@
                                 <li><a href="#" class="ajax-purchase_order_modal" data-view="purchase_order_modal" data-toggle="modal" data-target="#purchaseOrderModal">Purchase order</a></li>
                                 <li><a href="#" class="ajax-vendor_credit_modal" data-view="vendor_credit_modal" data-toggle="modal" data-target="#vendorCreditModal">Vendor credit</a></li>
                                 <li><a href="#" class="ajax-credit_card_credit_modal" data-view="credit_card_credit_modal" data-toggle="modal" data-target="#creditCardCreditModal">Credit card credit</a></li>
-                                <!-- <li><a href="#" data-toggle="modal" data-target="#expense-modal" id="addExpense">Expense</a></li>
-                                <li><a href="#" data-toggle="modal" data-target="#edit-expensesCheck" id="addCheck">Check</a></li>
-                                <li><a href="#" data-toggle="modal" data-target="#bill-modal" id="addBill">Bill</a></li>
-                                <li><a href="#" data-toggle="modal" data-target="#pay-bills" id="payBills">Pay bills</a></li>
-                                <li><a href="#" data-toggle="modal" data-target="#purchase-order" id="purchaseorder">Purchase order</a></li>
-                                <li><a href="#" class="ajax-" data-toggle="modal" data-target="#addvendorcreditModal">Vendor credit</a></li>
-                                <li><a href="#" class="ajax-" data-toggle="modal" data-target="#addvendorcreditcardModal">Credit card credit</a></li>
-                                <li><a href="#" class="ajax-" data-toggle="modal" data-target="#addvendorprintchecksModal">Print checks</a></li> -->
+                                <!-- <li><a href="#" class="ajax-" data-toggle="modal" data-target="#addvendorprintchecksModal">Print checks</a></li> -->
                             </ul>
                         </div>
                     </div>

@@ -4009,4 +4009,60 @@ class Accounting_modals extends MY_Controller {
         $this->page_data['bill'] = $this->vendors_model->get_bill_by_id($billId);
         $this->load->view('accounting/modals/bill_payment_modal', $this->page_data);
     }
+
+    public function load_bill_payment_bills()
+    {
+        $post = json_decode(file_get_contents('php://input'), true);
+        $start = $post['start'];
+        $limit = $post['length'];
+        $fromDate = $post['from'];
+        $toDate = $post['to'];
+        $search = $post['search'];
+
+        $filters = [
+            'from' => $fromDate !== "" ? date("Y-m-d", strtotime($fromDate)) : null,
+            'to' => $toDate !== "" ? date("Y-m-d", strtotime($toDate)) : null,
+            'overdue' => $post['overdue']
+        ];
+
+        $bills = $this->expenses_model->get_bills_by_ids_and_vendor($post['bills'], $post['vendor']);
+
+        $data = [];
+        foreach($bills as $bill) {
+            $description = 'Bill ';
+            $description .= $bill->bill_no !== "" && !is_null($bill->bill_no) ? '# '.$bill->bill_no.' ' : '';
+            $description .= '('.date("m/d/Y", strtotime($bill->bill_date)).')';
+
+            if($search !== "") {
+                if(stripos($bill->bill_no, $search) !== false) {
+                    $data[] = [
+                        'id' => $bill->id,
+                        'description' => $description,
+                        'due_date' => date("m/d/Y", strtotime($bill->due_date)),
+                        'original_amount' => number_format(floatval($bill->total_amount), 2, '.', ','),
+                        'open_balance' => number_format(floatval($remaining_balance), 2, '.', ','),
+                        'payment' => number_format(floatval($bill->remaining_balance), 2, '.', ',')
+                    ];
+                }
+            } else {
+                $data[] = [
+                    'id' => $bill->id,
+                    'description' => $description,
+                    'due_date' => date("m/d/Y", strtotime($bill->due_date)),
+                    'original_amount' => number_format(floatval($bill->total_amount), 2, '.', ','),
+                    'open_balance' => number_format(floatval($bill->remaining_balance), 2, '.', ','),
+                    'payment' => number_format(floatval($bill->remaining_balance), 2, '.', ',')
+                ];
+            }
+        }
+
+        $result = [
+            'draw' => $post['draw'],
+            'recordsTotal' => count($bills),
+            'recordsFiltered' => count($data),
+            'data' => array_slice($data, $start, $limit)
+        ];
+
+        echo json_encode($result);
+    }
 }

@@ -68,6 +68,50 @@ class Estimate_model extends MY_Model
         return true;
     }
 
+    public function delete_items($id)
+    {
+        $where = array(
+            'estimates_id'   => $id
+          );
+
+        $this->db->where($where);
+        $this->db->delete('estimates_items');
+        return true;
+    }
+
+    public function update_estimate($data)
+    {
+        extract($data);
+        $this->db->where('id', $id);
+        $this->db->update('estimates', array(
+            'customer_id'               => $customer_id,
+            'job_location'              => $job_location,
+            'job_name'                  => $job_name,
+            'estimate_number'           => $estimate_number,
+            'estimate_date'             => $estimate_date,
+            'expiry_date'               => $expiry_date,
+            'purchase_order_number'     => $purchase_order_number,
+            'status'                    => $status,
+            'estimate_type'             => $estimate_type,
+            'status'                    => $status,
+            'deposit_request'           => $deposit_request,
+            'deposit_amount'            => $deposit_amount,
+            'customer_message'          => $customer_message,
+            'terms_conditions'          => $terms_conditions,
+            'instructions'              => $instructions,
+            'sub_total'                 => $sub_total,
+            'grand_total'               => $grand_total,
+            'tax1_total'                => $tax1_total,
+            'adjustment_name'           => $adjustment_name,
+            'adjustment_value'          => $adjustment_value,
+            'markup_type'               => $markup_type,
+            'markup_amount'             => $markup_amount,
+            'updated_at'                => $updated_at,
+            
+        ));
+        return true;
+    }
+
     public function getEstimatesItems($id)
     {
         // $this->db->select('*');
