@@ -41,23 +41,29 @@ a.btn-add {
     margin-right: 0px;
   }
 }
+.btn{
+    border-radius: 0px !important;
+}
 </style>
 <div class="wrapper" role="wrapper">
     <?php include viewPath('includes/sidebars/admin/nsmart_plans'); ?>
     <!-- page wrapper start -->
     <div wrapper__section>
         <div class="container-fluid">
-            <div class="page-title-box">
-                <div class="row align-items-center">
-                    <div class="col-sm-6 mt-3">
-                        <h1 class="page-title">Nsmart Plans</h1>
-                    </div>
-                </div>
-            </div>
-            <!-- end row -->
             <div class="row">
                 <div class="col-xl-12">
                     <div class="card" style="min-height: 400px !important;">
+                        <div class="row align-items-center">
+                            <div class="col-sm-12">
+                                <h3 class="page-title" style="margin-top: 5px;margin-bottom:10px;">Plans</h3>
+                            </div>
+                        </div>
+                        <div class="pl-3 pr-3 mt-0 row">
+                            <div class="col mb-4 left alert alert-warning mt-0 mb-2">
+                                <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">Manage Nsmart Plans.</span>
+                            </div>
+                        </div>
+
                         <div class="row dashboard-container-1">
                             <div class="col-md-12 text-right">
                                 <a class="btn btn-primary" href="<?php echo base_url('admin/add_new_nsmart_plan'); ?>"><i class="fa fa-plus"></i> New Plan</a>
@@ -73,7 +79,7 @@ a.btn-add {
                                     <th style="width: 8%;">Price</th>
                                     <th style="width: 15%;">Discount Price</th>
                                     <th style="width: 5%;">Is Active</th>
-                                    <th style="width: 15%;"></th>
+                                    <th style="width: 10%;"></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -92,8 +98,8 @@ a.btn-add {
                                         <td><?= $p->discount . " / " . $option_discount_types[$p->discount_type]; ?></td>
                                         <td><span class="<?= $cell; ?>"><?= $option_status[$p->status]; ?><span></td>
                                         <td>
-                                            <a class="btn btn-info btn-sm mr-1" href="<?php echo base_url('admin/edit_nsmart_plan/'.$p->nsmart_plans_id); ?>"><i class="fa fa-edit"></i> Edit</a>
-                                            <a class="btn btn-sm btn-danger btn-delete-plan" data-name="<?= $p->plan_name; ?>" href="javascript:void(0);" data-id="<?= $p->nsmart_plans_id; ?>"><i class="fa fa-trash"></i> Delete</a>
+                                            <a class="btn btn-primary btn-sm" href="<?php echo base_url('admin/edit_nsmart_plan/'.$p->nsmart_plans_id); ?>"><i class="fa fa-edit"></i> Edit</a>
+                                            <a class="btn btn-sm btn-primary btn-delete-plan" data-name="<?= $p->plan_name; ?>" href="javascript:void(0);" data-id="<?= $p->nsmart_plans_id; ?>"><i class="fa fa-trash"></i> Delete</a>
                                         </td>
                                     </tr>
                                 <?php } ?>

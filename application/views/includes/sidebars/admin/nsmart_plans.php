@@ -96,7 +96,7 @@
             <span class="fa fa-list"></span>Features</a>
         </li>
 
-        <li class="submenus <?= $is_active_addons; ?>"><a href="<?php echo base_url('nsmart_addons/index') ?>" title="Addons" style="color: #fff;">
+        <li class="submenus <?= $is_active_addons; ?>"><a href="<?php echo base_url('admin/nsmart_addons') ?>" title="Addons" style="color: #fff;">
             <span class="fa fa-list"></span>Addons</a>
         </li>
 

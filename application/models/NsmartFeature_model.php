@@ -69,6 +69,11 @@ class NsmartFeature_model extends MY_Model
         $this->db->where('id', $plan_id);
         $this->db->update();
     }
+
+    public function deleteFeature($id){
+        $user_id = logged('id');
+        $this->db->delete($this->table, array('id' => $id));
+    } 
 }
 
 /* End of file NsmartFeature_model.php */
