@@ -557,3 +557,9 @@
     display: block;
   }
 }
+
+.docPageContainer {
+  canvas {
+    max-width: 900px;
+  }
+}

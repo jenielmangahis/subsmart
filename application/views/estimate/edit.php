@@ -561,8 +561,7 @@ input:checked + .slider:before {
                                                             </div>
                                                             </td>
                                                             <td width="10%"><input type="number" class="form-control qtyest3 hidden_mobile_view" name="quantity[]"
-                                                                    data-counter="0" data-itemid="<?php echo $data->id; ?>" id="quantity_<?php echo $data->id; ?>" value="<?php echo $data->qty; ?>"><div class="show_mobile_view"><span><?php echo $data->qty; ?></span><input type="hidden" class="form-control quantity" name="quantity[]"
-                                                                    data-counter="0" id="quantity_0" value="<?php echo $data->qty; ?>"></div></td>
+                                                                    data-counter="0" data-itemid="<?php echo $data->id; ?>" id="quantity_<?php echo $data->id; ?>" value="<?php echo $data->qty; ?>"></td>
                                                             <td width="10%"><input type="number" class="form-control price2 hidden_mobile_view" name="price[]"
                                                                     data-counter="0" data-itemid="<?php echo $data->id; ?>" id="price_<?php echo $data->id; ?>" min="0" value="<?php echo $data->iCost; ?>"><input type="hidden" class="priceqty" id="priceqty_<?php echo $data->id; ?>" value="<?php echo $aaa = $data->iCost * $data->qty; ?>"><div class="show_mobile_view"><?php echo $data->iCost; ?></div></td>
                                                             <td class="hidden_mobile_view" width="10%"><input type="number" class="form-control discount" name="discount[]"

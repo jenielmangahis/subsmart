@@ -292,7 +292,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                                                     class="fa fa-money icon"></span> Convert to Invoice</a>
                                                     </li>
                                                     <li role="presentation">
-                                                        <a role="menuitem" href="<?php echo base_url('estimate/view_pdf/' . $estimate->id) ?>" class="">
+                                                        <a role="menuitem" target="_new" href="<?php echo base_url('estimate/view_pdf/' . $estimate->id) ?>" class="">
                                                         <span class="fa fa-file-pdf-o icon"></span>  View PDF</a></li>
                                                     <li role="presentation">
                                                         <a role="menuitem" target="_new" href="<?php echo base_url('estimate/print/' . $estimate->id) ?>" class="">

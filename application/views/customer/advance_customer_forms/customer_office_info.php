@@ -646,7 +646,13 @@
                 </div>
             </div>
         </div>
-        <br>
-
+        <div class="row form_line">
+            <div class="col-md-12">
+                Customer Shareable Link
+            </div>
+            <div class="col-md-12">
+                <input type="url" placeholder="https://sample.com" class="form-control" name="url" id="url" value="<?php if(isset($office_info)){ echo  $office_info->url; } ?>" />
+            </div>
+        </div>
     </div>
 </div>

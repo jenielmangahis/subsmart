@@ -2,7 +2,7 @@
     <div class="card-body hid-desk">
         <div class="col-lg-12 table-responsive">
             <h6>Lead Types</h6>
-            <button id="add_ls" data-toggle="modal" data-target="#modal_lead_type"  class="btn btn-sm btn-default pull-right" title="New Lead Type" style="margin-bottom: 10px;">
+            <button id="add_ls" data-toggle="modal" data-target="#modal_lead_type"  class="btn btn-sm btn-primary pull-right" title="New Lead Type" style="margin-bottom: 10px;">
                 <i class="fa fa-plus"></i> New Lead Type
             </button>
             <table id="leadtype" class="table table-bordered table-striped">

@@ -307,7 +307,7 @@ $route['accounting/get-vendor-details/(:any)'] = 'accounting_modals/get_vendor_d
 $route['accounting/get-customer-details/(:any)'] = 'accounting_modals/get_customer_details/$1';
 $route['accounting/get-employee-details/(:any)'] = 'accounting_modals/get_employee_details/$1';
 $route['accounting/get-linkable-transactions/(:any)/(:any)'] = 'accounting_modals/get_linkable_transactions/$1/$2';
-$route['accounting/get-transaction-details/(:any)/(:any)'] = 'accounting_modals/get_transaction_categories/$1/$2';
+$route['accounting/get-transaction-details/(:any)/(:any)'] = 'accounting_modals/get_transaction_details/$1/$2';
 $route['accounting/bill-payment-form/(:any)'] = 'accounting_modals/bill_payment_form/$1';
 $route['accounting/load-bill-payment-bills']['post'] = 'accounting_modals/load_bill_payment_bills';
 

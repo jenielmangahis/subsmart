@@ -2,7 +2,7 @@
     <div class="card-body hid-desk" style="padding-bottom:0px;">
         <div class="col-lg-12 table-responsive">
             <h6>System Package Type</h6>
-            <button data-toggle="modal" data-target="#modal_spt" class="btn btn-sm btn-default pull-right sa" title="Add Sales Area" style="margin-bottom: 10px;">
+            <button data-toggle="modal" data-target="#modal_spt" class="btn btn-sm btn-primary pull-right sa" title="Add Sales Area" style="margin-bottom: 10px;">
                 <i class="fa fa-plus"></i> New Package Type
             </button>
             <table id="rate_plan" class="table table-bordered table-striped">

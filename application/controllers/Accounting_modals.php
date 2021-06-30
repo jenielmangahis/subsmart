@@ -3882,6 +3882,10 @@ class Accounting_modals extends MY_Controller {
             case 'bill' :
                 $purchaseOrders = $this->expenses_model->get_vendor_open_purchase_orders($vendorId);
             break;
+            case 'bill-payment' :
+                $bills = $this->expenses_model->get_vendor_open_bills($vendorId);
+                $vendorCredits = $this->expenses_model->get_vendor_unapplied_vendor_credits($vendorId);
+            break;
         }
 
         $transactions = [];
@@ -3934,7 +3938,7 @@ class Accounting_modals extends MY_Controller {
         echo json_encode($transactions);
     }
 
-    public function get_transaction_categories($transactionType, $transactionId)
+    public function get_transaction_details($transactionType, $transactionId)
     {
         switch($transactionType) {
             case 'purchase-order' :
@@ -4022,15 +4026,18 @@ class Accounting_modals extends MY_Controller {
         $filters = [
             'from' => $fromDate !== "" ? date("Y-m-d", strtotime($fromDate)) : null,
             'to' => $toDate !== "" ? date("Y-m-d", strtotime($toDate)) : null,
-            'overdue' => $post['overdue']
+            'overdue' => $post['overdue'],
+            'bill_ids' => $post['bills'],
+            'vendor_id' => $post['vendor']
         ];
 
-        $bills = $this->expenses_model->get_bills_by_ids_and_vendor($post['bills'], $post['vendor']);
+        $bills = $this->expenses_model->get_bills_by_ids_and_vendor($post['bills'], $post['vendor'], $filters);
 
         $data = [];
         foreach($bills as $bill) {
-            $description = 'Bill ';
+            $description = '<a href="#" class="text-info" data-id="'.$bill->id.'">Bill ';
             $description .= $bill->bill_no !== "" && !is_null($bill->bill_no) ? '# '.$bill->bill_no.' ' : '';
+            $description .= '</a>';
             $description .= '('.date("m/d/Y", strtotime($bill->bill_date)).')';
 
             if($search !== "") {
