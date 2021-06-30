@@ -887,7 +887,7 @@ class Estimate extends MY_Controller
 
             $delete2 = $this->estimate_model->delete_items($id);
 
-                $a          = $this->input->post('item_id');
+                $a          = $this->input->post('itemid');
                 $quantity   = $this->input->post('quantity');
                 $price      = $this->input->post('price');
                 $h          = $this->input->post('tax');
@@ -1086,10 +1086,11 @@ class Estimate extends MY_Controller
             $company_id = $estimate->company_id;
             $customer = $this->AcsProfile_model->getByProfId($estimate->customer_id);
             $client   = $this->Clients_model->getById($company_id);
-            $estimateItems = unserialize($estimate->estimate_items);
+            // $estimateItems = unserialize($estimate->estimate_items);
+            $estimateItems = $this->estimate_model->getEstimatesItems($id);
 
             $html = '
-            <table>
+            <table style="padding-top:-40px;">
                 <tr>
                     <td>
                         <h5 style="font-size:12px;"><span class="fa fa-user-o"></span> From <br/><span>'.$client->business_name.'</span></h5>
@@ -1127,11 +1128,12 @@ class Estimate extends MY_Controller
             <thead>
                 <tr>
                     <th style="width:5%;"><b>#</b></th>
-                    <th><b>Items</b></th>
-                    <th><b>Item Type</b></th>
-                    <th style="text-align: right;"><b>Qty</b></th>
-                    <th style="text-align: right;"><b>Discount</b></th>
-                    <th style="text-align: right;"><b>Total</b></th>
+                    <th style="width:35%;"><b>Items</b></th>
+                    <th style="width:12%;"><b>Item Type</b></th>
+                    <th style="width:12%;text-align: right;"><b>Qty</b></th>
+                    <th style="width:12%;text-align: right;"><b>Price</b></th>
+                    <th style="width:12%;text-align: right;"><b>Discount</b></th>
+                    <th style="width:12%;text-align: right;"><b>Total</b></th>
                 </tr>
             </thead>
             <tbody>';
@@ -1141,31 +1143,46 @@ class Estimate extends MY_Controller
             foreach ($estimateItems as $item) {
                 $html .= '<tr>
                     <td valign="top" style="width:5%;">'.$row.'</td>
-                    <td valign="top" style="">'.$item['item'].'</td>
-                    <td valign="top" style="">'.ucwords($item['item_type']).'</td>
-                    <td valign="top" style="text-align: right;">'.$item['quantity'].'</td>
-                    <td valign="top" style="text-align: right;">'.number_format($item['discount'], 2).'</td>
-                    <td valign="top" style="text-align: right;">'.number_format($item['price'], 2).'</td>
+                    <td valign="top" style="width:35%;">'.$item->title.'</td>
+                    <td valign="top" style="width:12%;">'.$item->type.'</td>
+                    <td valign="top" style="width:12%;text-align: right;">'.$item->qty.'</td>
+                    <td valign="top" style="width:12%;text-align: right;">'.number_format($item->iCost, 2).'</td>
+                    <td valign="top" style="width:12%;text-align: right;">'.number_format($item->discount, 2).'</td>
+                    <td valign="top" style="width:12%;text-align: right;">'.number_format($item->iTotal, 2).'</td>
                   </tr>
                 ';
                 $row++;
-                $total_amount += $item['price'];
+                $total_amount += $item->iTotal;
             }
 
-            $html .= '<tr>
-              <td colspan="5" style="text-align: right;"><b>Grand Total</b></td>
+            $html .= '
+            <tr><br><br>
+              <td colspan="6" style="text-align: right;"><b>Subtotal</b></td>
+              <td style="text-align: right;"><b>$'.number_format($estimate->sub_total, 2).'</b></td>
+            </tr>
+            <tr>
+              <td colspan="6" style="text-align: right;"><b>Taxes</b></td>
+              <td style="text-align: right;"><b>$'.number_format($estimate->tax1_total, 2).'</b></td>
+            </tr>
+            <tr>
+              <td colspan="6" style="text-align: right;"><b>'.$estimate->adjustment_name.'</b></td>
+              <td style="text-align: right;"><b>$'.number_format($estimate->adjustment_value, 2).'</b></td>
+            </tr>
+            <tr>
+              <td colspan="6" style="text-align: right;"><b>Grand Total</b></td>
               <td style="text-align: right;"><b>$'.number_format($total_amount, 2).'</b></td>
             </tr>
           </tbody>
           </table>
           <br /><br /><br />
+          <p><b>Instructions</b><br /><br />'.$estimate->instructions.'</p>
           <p><b>Message</b><br /><br />'.$estimate->customer_message.'</p>
-          <p><b>Terms</b><br /><Br />'.$creditNote->terms_conditions.'</p>
+          <p><b>Terms</b><br /><Br />'.$estimate->terms_conditions.'</p>
             ';
 
             tcpdf();
             $obj_pdf = new TCPDF('P', PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
-            $title = "Credit Note";
+            $title = "Estimates";
             $obj_pdf->SetTitle($title);
             $obj_pdf->setPrintHeader(false);
             $obj_pdf->setPrintFooter(false);
@@ -1179,11 +1196,12 @@ class Estimate extends MY_Controller
             $obj_pdf->AddPage();
             ob_end_clean();
             $obj_pdf->writeHTML($html, true, false, true, false, '');
-            $obj_pdf->Output('credit_note.pdf', 'I');
+            $obj_pdf->Output('Estimates.pdf', 'I');
         } else {
             $this->session->set_flashdata('message', 'Record not found.');
             $this->session->set_flashdata('alert_class', 'alert-danger');
-            redirect('credit_notes');
+            // redirect('Estimates');
+            redirect('estimate');
         }
     }
 
@@ -1203,6 +1221,7 @@ class Estimate extends MY_Controller
             $this->page_data['customer'] = $customer;
             $this->page_data['client'] = $client;
             $this->page_data['estimate'] = $estimate;
+            $this->page_data['Items'] = $this->estimate_model->getEstimatesItems($id);
 
             $this->load->view('estimate/print_estimate', $this->page_data);
         } else {

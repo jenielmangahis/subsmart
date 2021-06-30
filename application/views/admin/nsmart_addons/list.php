@@ -31,7 +31,7 @@
                         <br />
                         <div class="row dashboard-container-1">
                             <div class="col-md-12 text-right">
-                                <a class="btn btn-primary" href="<?php echo base_url('nsmart_addons/add_new_addon'); ?>"><i class="fa fa-file"></i> New Addon</a>
+                                <a class="btn btn-primary" href="<?php echo base_url('admin/add_new_addon'); ?>"><i class="fa fa-file"></i> New Addon</a>
                             </div>
                         </div>       
                         <hr />
@@ -64,7 +64,7 @@
                                         <td><?= "$" . number_format($addon->price,2); ?></td>
                                         <td class="<?= $cell; ?>" style="text-align: center;"><?= $status; ?></td>
                                         <td>
-                                            <a class="btn btn-primary btn-sm" href="<?php echo base_url('nsmart_addons/edit_addon/'.$addon->id); ?>"><i class="fa fa-edit"></i> Edit</a>
+                                            <a class="btn btn-primary btn-sm" href="<?php echo base_url('admin/edit_addon/'.$addon->id); ?>"><i class="fa fa-edit"></i> Edit</a>
                                             <a class="btn btn-sm btn-primary btn-delete-addon" href="javascript:void(0);" data-id="<?= $addon->id; ?>"><i class="fa fa-trash"></i> Delete</a>
                                         </td>
                                     </tr>
@@ -78,9 +78,40 @@
             <!-- end row -->
         </div>
         <!-- end container-fluid -->
+
+        <!-- Modal Delete Addon  -->
+        <div class="modal fade bd-example-modal-sm" id="modalDeleteAddon" tabindex="-1" role="dialog" aria-labelledby="modalDeleteAddonTitle" aria-hidden="true">
+          <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle"><i class="fa fa-trash"></i> Delete</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <?php echo form_open_multipart('admin/delete_plan_addon', ['class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
+              <?php echo form_input(array('name' => 'pid', 'type' => 'hidden', 'value' => '', 'id' => 'aid'));?>
+              <div class="modal-body">        
+                  <p>Delete selected addon?</p>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                <button type="submit" class="btn btn-danger">Yes</button>
+              </div>
+              <?php echo form_close(); ?>
+            </div>
+          </div>
+        </div>
+
     </div>
     <!-- page wrapper end -->
 </div>
-<?php include viewPath('includes/plan_builder_modals'); ?> 
 <?php include viewPath('includes/admin_footer'); ?>
-<?php //include viewPath('includes/footer'); ?>
+<script>
+$(document).on('click', '.btn-delete-addon', function(){
+    var addon_id = $(this).attr("data-id");
+    $("#aid").val(addon_id);
+
+    $("#modalDeleteAddon").modal("show");
+});
+</script>

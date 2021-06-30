@@ -83,81 +83,65 @@ add_css(array(
                                             <div class="card-body">
                                                 <div class="row form_line">
                                                     <div class="col-md-2">
-                                                        <label>First Name</label>
+                                                        <label>First Name
                                                     </div>
                                                     <div class="col-md-10">
-                                                        <input type="text" class="form-control" name="first_name" id="first_name" value="<?php if(isset($profile_info->first_name)){ echo $profile_info->first_name; } ?>" required/>
+                                                        <input type="text" readonly class="form-control" name="first_name" id="first_name" value="<?php if(isset($profile_info->first_name)){ echo $profile_info->first_name; } ?>" required/>
                                                     </div>
                                                 </div>
                                                 <div class="row form_line">
                                                     <div class="col-md-2">
-                                                        <label for="">Last Name </label>
+                                                        Last Name 
                                                     </div>
                                                     <div class="col-md-10">
-                                                        <input type="text" class="form-control" name="last_name" id="last_name" value="<?php if(isset($profile_info)){ echo $profile_info->last_name; } ?>" required/>
+                                                        <input type="text" readonly class="form-control" name="last_name" id="last_name" value="<?php if(isset($profile_info)){ echo $profile_info->last_name; } ?>" required/>
                                                     </div>
                                                 </div>
                                                 <div class="row form_line">
                                                     <div class="col-md-2">
-                                                        <label for="">Address </label>
+                                                        Address 
                                                     </div>
                                                     <div class="col-md-10">
-                                                        <input type="text" class="form-control" name="mail_add" id="mail_add" value="<?php if(isset($profile_info->mail_add)){ echo $profile_info->mail_add; } ?>" required/>
+                                                        <input type="text" readonly class="form-control" name="mail_add" id="mail_add" value="<?php if(isset($profile_info->mail_add)){ echo $profile_info->mail_add; } ?>" required/>
                                                     </div>
                                                 </div>
                                                 <div class="row form_line">
                                                     <div class="col-md-2">
-                                                        <label for="">City </label>
+                                                        City 
                                                     </div>
                                                     <div class="col-md-4">
-                                                        <input type="text" class="form-control" name="city" id="city" value="<?php if(isset($profile_info->city)){ echo $profile_info->city; } ?>" />
+                                                        <input type="text" readonly class="form-control" name="city" id="city" value="<?php if(isset($profile_info->city)){ echo $profile_info->city; } ?>" />
                                                     </div>
 
                                                     <div class="col-md-2">
-                                                        <label for="">State </label>
+                                                        State 
                                                     </div>
                                                     <div class="col-md-4">
-                                                        <input type="text" class="form-control" name="city" id="city" value="<?php if(isset($profile_info->city)){ echo $profile_info->state; } ?>" />
+                                                        <input type="text" readonly class="form-control" name="city" id="city" value="<?php if(isset($profile_info->city)){ echo $profile_info->state; } ?>" />
                                                     </div>
                                                 </div>
                                                 <div class="row form_line">
                                                     <div class="col-md-2">
-                                                        <label for="">Zip </label>
+                                                        Zip 
                                                     </div>
                                                     <div class="col-md-4">
-                                                        <input type="text" class="form-control" name="state" id="state" value="<?php if(isset($profile_info->state)){ echo $profile_info->zip_code; } ?>" />
+                                                        <input type="text" readonly class="form-control" name="state" id="state" value="<?php if(isset($profile_info->state)){ echo $profile_info->zip_code; } ?>" />
                                                     </div>
                                                 </div>
                                                 <div class="row form_line">
                                                     <div class="col-md-2">
-                                                        <label for="">Email </label>
+                                                        Email 
                                                     </div>
                                                     <div class="col-md-10">
-                                                        <input type="email" class="form-control" name="email" id="email" value="<?php if(isset($profile_info)){ echo $profile_info->email; } ?>" />
+                                                        <input type="email" readonly class="form-control" name="email" id="email" value="<?php if(isset($profile_info)){ echo $profile_info->email; } ?>" />
                                                     </div>
                                                 </div>
                                                 <div class="row form_line">
                                                     <div class="col-md-2">
-                                                        <label for="">Phone </label>
+                                                        Phone 
                                                     </div>
                                                     <div class="col-md-10">
-                                                        <input type="text" class="form-control" name="phone" id="phone" value="<?php if(isset($profile_info)){ echo $profile_info->phone_m; } ?>" />
-                                                    </div>
-                                                </div>
-                                                <div class="row form_line">
-                                                    <div class="col-md-2">
-                                                        <label for="">Date of Birth </label>
-                                                    </div>
-                                                    <div class="col-md-10">
-                                                        <input type="text" disabled class="form-control" name="date_of_birth" id="date_of_birth" value="<?php if(isset($profile_info)){ echo $profile_info->date_of_birth; } ?>" />
-                                                    </div>
-                                                </div>
-                                                <div class="row form_line">
-                                                    <div class="col-md-2">
-                                                        <label for="">Customer Type </label>
-                                                    </div>
-                                                    <div class="col-md-10">
-                                                        <input  disabled class="form-control" name="customer_type" id="customer_type" value="<?php if(isset($profile_info)){ echo $profile_info->customer_type; } ?>" />
+                                                        <input type="text" readonly class="form-control" name="phone" id="phone" value="<?php if(isset($profile_info)){ echo $profile_info->phone_m; } ?>" />
                                                     </div>
                                                 </div>
                                             </div>
@@ -229,7 +213,7 @@ add_css(array(
                                                     </div>
                                                     <div class="row form_line">
                                                         <div class="col-md-4">
-                                                            <label for="">Expiration 
+                                                            Expiration 
                                                         </div>
                                                         <div class="col-md-8">
                                                             <div class="row">
@@ -308,7 +292,7 @@ add_css(array(
                                                 </div>
                                                 <div class="row form_line" id="day_of_month">
                                                     <div class="col-md-4">
-                                                        <label for="">Day of Month
+                                                        Day of Month
                                                     </div>
                                                     <div class="col-md-8">
                                                         <select id="day_of_month_ach" name="day_of_month" class="form-control">
@@ -322,7 +306,7 @@ add_css(array(
 
                                                 <div class="row form_line account_cred" >
                                                     <div class="col-md-4">
-                                                        <label for="">Account Credential
+                                                        Account Credential
                                                     </div>
                                                     <div class="col-md-8">
                                                         <input type="number" class="form-control" name="account_credential" id="account_credential" value="<?= isset($billing_info) ? $billing_info->account_credential : ''; ?>" />
@@ -330,7 +314,7 @@ add_css(array(
                                                 </div>
                                                 <div class="row form_line account_cred" >
                                                     <div class="col-md-4">
-                                                        <label for="">Account Note
+                                                        Account Note
                                                     </div>
                                                     <div class="col-md-8">
                                                         <input type="number" class="form-control" name="account_note" id="account_note" value="<?= isset($billing_info) ? $billing_info->account_note : ''; ?>"/>
@@ -338,7 +322,7 @@ add_css(array(
                                                 </div>
                                                 <div class="row form_line account_cred" id="confirmationPD">
                                                     <div class="col-md-4">
-                                                        <label for="">Confirmation
+                                                        Confirmation
                                                     </div>
                                                     <div class="col-md-8">
                                                         <input type="number" class="form-control" name="confirmation" id="confirmation" value="<?= isset($billing_info) ? $billing_info->confirmation : ''; ?>"/>
@@ -354,7 +338,7 @@ add_css(array(
                                                 </div>
                                                 <div class="row form_line">
                                                     <div class="col-md-4">
-                                                        <label for="">Total Amount 
+                                                        Total Amount 
                                                     </div>
                                                     <div class="col-md-8">
                                                         <div class="input-group">
@@ -367,7 +351,7 @@ add_css(array(
                                                 </div>
                                                 <div class="row form_line">
                                                     <div class="col-md-4">
-                                                        <label for="">Transaction Category
+                                                        Transaction Category
                                                     </div>
                                                     <div class="col-md-8">
                                                         <select id="transaction_category" name="transaction_category" data-customer-source="dropdown" class="input_select" >
@@ -385,18 +369,26 @@ add_css(array(
                                                 </div>
                                                 <div class="row form_line">
                                                     <div class="col-md-4">
-                                                        <label for="">Notes
+                                                        Notes
                                                     </div>
                                                     <div class="col-md-8">
-                                                        <textarea type="text" style="background-color: #fdeac3;width: 100%;" class="form-controls" rows="5" cols="50" name="notes" id="notes" ></textarea>
+                                                        <textarea type="text" style="background-color: #fdeac3;width: 100%;" class="form-controls" rows="3" cols="50" name="notes" id="notes" ></textarea>
                                                     </div>
                                                 </div>
-                                                <button type="submit" class="btn btn-primary">Pre Auth Now</button>
-                                                <button type="submit" class="btn btn-primary">Capture Now</button>
-                                                <input type="hidden" name="customer_id" id="customer_id" value="<?= $this->uri->segment(3); ?>"/>
-                                                <input type="hidden" name="method" id="method" value="CC"/>
-                                                <button style="right:0;" type="button" class="btn btn-primary">Add New Subcription Plan</button>
-                                                </form>
+                                                <div>
+                                                    <div style="position: absolute; margin: 0;left: 40px;display: block;">
+                                                        <a href="<?= base_url('customer/subscription_new/'.$this->uri->segment(3)) ?>">
+                                                            <button  type="button" class="btn btn-primary"><span class="fa fa-plus"></span> Add New Subcription Plan</button>
+                                                        </a>
+                                                    </div>
+                                                    <div style="position: absolute; margin: 0;right: 40px;display: block;" >
+                                                        <button type="submit" class="btn btn-primary"><span class="fa fa-money"></span> Pre Auth Now</button>
+                                                        <button type="submit" class="btn btn-primary"><span class="fa fa-money"></span> Capture Now</button>
+                                                        <input type="hidden" name="customer_id" id="customer_id" value="<?= $this->uri->segment(3); ?>"/>
+                                                        <input type="hidden" name="method" id="method" value="CC"/>
+                                                    </div>
+                                                </div>
+                                            </form>
                                         </div>
                                     </div>
                                 </div>
@@ -437,7 +429,7 @@ add_css(array(
                                                                 <td>
                                                                     <div class="material-switch">
                                                                         <input id="someSwitchOptionDanger<?=$detail->id?>" name="someSwitchOption001" type="checkbox" checked/>
-                                                                        <label for="someSwitchOptionDanger<?=$detail->id?>" class="label-danger"></label>
+                                                                        <label for="someSwitchOptionDanger<?=$detail->id?>" class="label-danger">
                                                                     </div>
                                                                 </td>
                                                             </tr>

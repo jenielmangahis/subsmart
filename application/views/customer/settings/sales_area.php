@@ -2,7 +2,7 @@
     <div class="card-body hid-desk" style="padding-bottom:0px;">
         <div class="col-lg-12 table-responsive">
             <h6>Sales Area</h6>
-            <button data-toggle="modal" data-target="#modal_sales_area" class="btn btn-sm btn-default pull-right sa" title="Add Sales Area" style="margin-bottom: 10px;">
+            <button data-toggle="modal" data-target="#modal_sales_area" class="btn btn-sm btn-primary pull-right sa" title="Add Sales Area" style="margin-bottom: 10px;">
                 <i class="fa fa-plus"></i> New Sales Area
             </button>
             <table id="salesarea" class="table table-bordered table-striped">

@@ -825,11 +825,28 @@ class Expenses_model extends MY_Model
         return $query->result();
     }
 
-    public function get_bills_by_ids_and_vendor($billIds, $vendor)
+    public function get_bills_by_ids_and_vendor($billIds, $vendor, $filters = [])
     {
         $this->db->where('company_id', logged('company_id'));
         $this->db->where('vendor_id', $vendor);
-        $this->db->where_in('id', $billIds);
+
+        if(count($billIds) > 0) {
+            $this->db->where_in('id', $billIds);
+        }
+
+        if($filters['overdue'] === 'true') {
+            $this->db->where('status', 1);
+            $this->db->where('due_date <', date("Y-m-d"));
+        }
+
+        if(isset($filters['from']) && !is_null($filters['from'])) {
+            $this->db->where('bill_date >=', $filters['from']);
+        }
+
+        if(isset($filters['to']) && !is_null($filters['to'])) {
+            $this->db->where('bill_date <=', $filters['to']);
+        }
+
         $query = $this->db->get('accounting_bill');
         return $query->result();
     }

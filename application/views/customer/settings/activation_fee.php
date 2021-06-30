@@ -2,7 +2,7 @@
     <div class="card-body hid-desk" style="padding-bottom:0px;">
         <div class="col-lg-12 table-responsive">
             <h6>Activation Fee</h6>
-            <button data-toggle="modal" data-target="#modal_activation_fee" class="btn btn-sm btn-default pull-right sa" title="Add Sales Area" style="margin-bottom: 10px;">
+            <button data-toggle="modal" data-target="#modal_activation_fee" class="btn btn-sm btn-primary pull-right sa" title="Add Sales Area" style="margin-bottom: 10px;">
                 <i class="fa fa-plus"></i> New Activation Fee
             </button>
             <table id="activation_fee" class="table table-bordered table-striped">

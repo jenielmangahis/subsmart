@@ -323,23 +323,11 @@ span.sc-item {
    <div wrapper__section style="margin: 0px;">
         <div class="card" style="margin: 0 auto; width:68%;">
             <div class="col-md-12" style="text-align: right;margin-bottom: 60px;">
-              <a class="btn btn-success btn-print" href="javascript:void(0);"><span class="fa fa-print icon"></span> PRINT</a>
+              <a class="btn btn-success btn-print" href="#" onclick="printDiv('printable-container')"><span class="fa fa-print icon"></span> PRINT</a>
             </div>
             <br class="clear"/>
-            <div class="row" id="printable-container">        
-                <div class="col-xl-12">
-                    <div class="card">
-                      <?php if($estimate){ ?>
-                      <div class="d-block">
-                        <div class="col-xl-5 left" style="margin-bottom: 33px;">
-                          <h5><span class="fa fa-user-o fa-margin-right"></span> From <span class="invoice-txt"> <?= $client->business_name; ?></span></h5>
-                          <div class="col-xl-5 ml-0 pl-0">
-                            <span class=""><?= $client->business_address; ?></span><br />
-                            <span class="">EMAIL: <?= $client->email_address; ?></span><br />
-                            <span class="">PHONE: <?= $client->phone_number; ?></span>
-                          </div>
-                        </div>
-                        <div class="col-xl-5 right" style="float: right">
+            <div class="row" id="printable-container">    
+                        <!-- <div class="col-xl-12" style="float: right;">
                           <div style="text-align: right;">
                             <h5 style="font-size:30px;margin:0px;">ESTIMATE</h5>
                             <small style="font-size: 14px;">#<?= $estimate->estimate_number; ?></small>
@@ -356,8 +344,44 @@ span.sc-item {
                               </tr>
                             </table>
                           </div>
+                        </div> -->
+                        <div style="margin-bottom: 20px;margin-left: 5% !important;">
+                            <!-- <img class="presenter-print-logo" style="max-width: 230px; max-height: 200px;" src="http://nsmartrac.com/assets/dashboard/images/logo.png"> -->
+                            <img src="<?= getCompanyBusinessProfileImage(); ?>"  style="max-width: 230px; max-height: 200px;margin-left: 5% !important;" />
+                          </div>
+                          
+                            <div class="col-xl-12 right" style="float: right">
+                                <div style="text-align: right;">
+                                  <h5 style="font-size:30px;margin:0px;">ESTIMATE</h5>
+                                  <small style="font-size: 14px;">#<?= $estimate->estimate_number; ?></small>
+                                </div>
+                                <div class="" style="float: right;margin-top: 20px;">
+                                  <table style="text-align: right;">
+                                    <tr>
+                                      <td style="text-align: right;">Estimate Date: &emsp;</td>
+                                      <td><?= date("F d, Y",strtotime($estimate->estimate_date)); ?></td>
+                                    </tr>
+                                    <tr>
+                                      <td style="text-align: right;">Expiry Date: &emsp;</td>
+                                      <td><?= date("F d, Y",strtotime($estimate->expiry_date)); ?></td>
+                                    </tr>
+                                  </table>
+                                </div>
+                            </div>
+
+                <div class="col-xl-12">
+                    <div class="card">
+                      <?php if($estimate){ ?>
+                      <div class="d-block">
+                        <div class="col-xl-5 left" style="margin-bottom: 33px;">
+                          <h5><span class="fa fa-user-o fa-margin-right"></span> From <span class="invoice-txt"> <?= $client->business_name; ?></span></h5>
+                          <div class="col-xl-5 ml-0 pl-0">
+                            <span class=""><?= $client->business_address; ?></span><br />
+                            <span class="">EMAIL: <?= $client->email_address; ?></span><br />
+                            <span class="">PHONE: <?= $client->phone_number; ?></span>
+                          </div>
                         </div>
-                        <div class="clear"></div>
+                        <div class="clear"></div>    
                         <div class="col-xl-5 left">
                           <h5><span class="fa fa-user-o fa-margin-right"></span> To <span class="invoice-txt"> <?= $customer->first_name . ' ' . $customer->last_name; ?></span></h5> 
                           <div class="col-xl-5 ml-0 pl-0">
@@ -374,31 +398,49 @@ span.sc-item {
                                 <th style="background: #f4f4f4; text-align: left; padding: 5px 0;">Items</th>
                                 <th style="background: #f4f4f4; text-align: left; padding: 5px 0;">Item Type</th>
                                 <th style="background: #f4f4f4; text-align: right; padding: 5px 0;">Qty</th>
+                                <th style="background: #f4f4f4; text-align: right; padding: 5px 0;">Price</th>
                                 <th style="background: #f4f4f4; text-align: right; padding: 5px 0;">Discount</th>
                                 <th style="background: #f4f4f4; text-align: right; padding: 5px 8px 5px 0;" class="text-right">Total</th>
                             </tr>
                         </thead>
                         <tbody>
-                        <?php $estimateItems = unserialize($estimate->estimate_items); ?>
-                        <?php $total_amount = 0; $row = 1; foreach($estimateItems as $item){ ?>
+                        <?php //$estimateItems = unserialize($estimate->estimate_items); ?>
+                        <?php $total_amount = 0; $row = 1; foreach($Items as $item){ ?>
                           <tr class="table-items__tr">
                             <td valign="top" style="width:30px; text-align:center;"><?= $row; ?></td>
-                            <td valign="top" style="width:45%;"><?= $item['item']; ?></td>
-                            <td valign="top" style="width:20%;"><?= ucwords($item['item_type']); ?></td>
-                            <td valign="top" style="width: 50px; text-align: right;"><?= $item['quantity']; ?></td>
-                            <td valign="top" style="width: 80px; text-align: right;"><?= number_format($item['discount'],2); ?></td>
-                            <td valign="top" style="width: 80px; text-align: right;"><?= number_format($item['price'],2); ?></td>
+                            <td valign="top" style="width:45%;"><?= $item->title; ?></td>
+                            <td valign="top" style="width:20%;"><?= $item->type; ?></td>
+                            <td valign="top" style="width: 50px; text-align: right;"><?= $item->qty; ?></td>
+                            <td valign="top" style="width: 80px; text-align: right;"><?= number_format($item->iCost,2); ?></td>
+                            <td valign="top" style="width: 80px; text-align: right;"><?= number_format($item->discount,2); ?></td>
+                            <td valign="top" style="width: 80px; text-align: right;"><?= number_format($item->iTotal,2); ?></td>
                           </tr>
                         <?php 
-                          $total_amount += $item['price'];
+                          $total_amount += $item->iTotal;
                           $row++;
                         ?>
                         <?php } ?>
-                        <tr><td colspan="6"><hr/></td></tr>
-                        <tr>
-                          <td colspan="5" style="text-align: right;"><b>TOTAL AMOUNT</b></td>
-                          <td style="text-align: right;"><b>$<?= number_format($total_amount, 2); ?></b></td>
-                        </tr>
+                        <tr><td colspan="7"><hr/></td></tr>
+                            <tr>
+                              <td colspan="5" style="text-align: right;"><p>Subtotal</p></td>
+                              <td colspan="2" style="text-align: right;"><p>$ <?= number_format($estimate->sub_total, 2); ?></p></td>
+                            </tr>
+                            <tr>
+                              <td colspan="5" style="text-align: right;"><p>Taxes</p></td>
+                              <td colspan="2" style="text-align: right;"><p>$ <?= number_format($estimate->tax1_total, 2); ?></p></td>
+                            </tr>
+                            <tr>
+                              <td colspan="5" style="text-align: right;"><p><?= $estimate->adjustment_name; ?></p></td>
+                              <td colspan="2" style="text-align: right;"><p>$ <?= number_format($estimate->adjustment_value, 2); ?></p></td>
+                            </tr>
+                            <tr>
+                              <td colspan="5" style="text-align: right;"><p>Markup</p></td>
+                              <td colspan="2" style="text-align: right;"><p>$ <?= number_format($estimate->markup_amount, 2); ?></p></td>
+                            </tr>
+                            <tr>
+                              <td colspan="5" style="text-align: right;"><b>TOTAL AMOUNT</b></td>
+                              <td colspan="2" style="text-align: right;"><b>$ <?= number_format($estimate->grand_total, 2); ?></b></td>
+                            </tr>
                       </tbody>
                       </table>
                       </div>
@@ -425,20 +467,30 @@ span.sc-item {
 </div>
 <?php include viewPath('includes/footer_print'); ?>
 <script>
-$(function(){
-  $(".btn-print").click(function(e){
-    printdiv('printable-container');
-  });
+// $(function(){
+//   $(".btn-print").click(function(e){
+//     printdiv('printable-container');
+//   });
 
-  function printdiv(printdivname) {
-    var headstr = "<html><head><title>Credit Note</title></head><body>";
-    var footstr = "</body>";
-    var newstr = document.getElementById(printdivname).innerHTML;
-    var oldstr = document.body.innerHTML;
-    document.body.innerHTML = headstr+newstr+footstr;
-    window.print();
-    document.body.innerHTML = oldstr;
-    return false;
-  }
-});
+//   // function printdiv(printdivname) {
+//   //   var headstr = "<html><head><title>Estimate</title></head><body>";
+//   //   var footstr = "</body>";
+//   //   var newstr = document.getElementById(printdivname).innerHTML;
+//   //   var oldstr = document.body.innerHTML;
+//   //   document.body.innerHTML = headstr+newstr+footstr;
+//   //   window.print();
+//   //   document.body.innerHTML = oldstr;
+//   //   return false;
+//   // }
+// });
 </script>
+<script>
+function printDiv(divName) {
+    var printContents = document.getElementById(divName).innerHTML;
+    var originalContents = document.body.innerHTML;
+    document.body.innerHTML = printContents;
+    window.print();
+    document.body.innerHTML = originalContents;
+}
+</script>
+

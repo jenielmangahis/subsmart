@@ -1197,7 +1197,7 @@ a.top-1 {
                 var end_date   = info.event.end.toDateString();
                 var event_id   = info.event.extendedProps.eventId;
                 var event_type = info.event.extendedProps.eventType;
-                var url        = base_url + 'calendar/_updte_drop_event';
+                var url        = base_url + 'calendar/_update_drop_event';
                 $.ajax({
                    type: "POST",
                    url: url,
@@ -1209,7 +1209,33 @@ a.top-1 {
                    }
                 });
               }else{
-
+                var start_date  = info.event.start.toDateString();
+                if( info.event.end !== null ){
+                  var end_date    = info.event.end.toDateString();  
+                }else{
+                  var end_date    = info.event.start.toDateString();
+                }
+                
+                var event_id    = info.event.extendedProps.geventID;
+                var calendar_id = info.event.extendedProps.calendarID;
+                var url         = base_url + 'calendar/_update_drop_google_event';
+                $.ajax({
+                   type: "POST",
+                   url: url,
+                   data: {event_id:event_id,calendar_id:calendar_id,start_date:start_date,end_date:end_date},
+                   dataType: 'json',
+                   success: function(o)
+                   {
+                     if( o.is_success == false ){
+                      Swal.fire({
+                        icon: 'error',
+                        title: 'This calendar is read-only. Cannot change start and end date.',
+                        text: o.msg
+                      });
+                      info.revert();
+                     }
+                   }
+                });
               }
             },
             navLinks: true, // can click day/week names to navigate views

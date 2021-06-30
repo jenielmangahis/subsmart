@@ -333,3 +333,9 @@ body {
     }
   }
 }
+
+.signing__documentPDF {
+  canvas {
+    max-width: 900px;
+  }
+}

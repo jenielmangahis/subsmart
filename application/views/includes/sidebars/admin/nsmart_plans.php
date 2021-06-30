@@ -100,7 +100,7 @@
             <span class="fa fa-list"></span>Addons</a>
         </li>
 
-        <li class="submenus <?= $is_active_upgrades; ?>"><a href="<?php echo base_url('nsmart_upgrades/index') ?>" title="Addons" style="color: #fff;">
+        <li class="submenus <?= $is_active_upgrades; ?>"><a href="<?php echo base_url('admin/plan_upgrades') ?>" title="Addons" style="color: #fff;">
             <span class="fa fa-list"></span>Upgrades</a>
         </li>
 

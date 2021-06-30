@@ -10,9 +10,9 @@
                     <button type="button" class="close" data-dismiss="modal"><i class="fa fa-times fa-lg"></i></button>
                 </div>
                 <div class="modal-body">
-                    <div class="row">
-                        <div class="col-xl-12">
-                            <div class="card p-0 m-0">
+                    <div class="row" style="min-height: 100%">
+                        <div class="col">
+                            <div class="card p-0 m-0" style="min-height: 100%">
                                 <div class="card-body" style="padding-bottom: 1.25rem">
                                     <div class="row">
                                         <div class="col-md-8">
@@ -57,7 +57,7 @@
                                         </div>
                                         <div class="col-md-4">
                                             <h6 class="text-right">AMOUNT PAID</h6>
-                                            <h2 class="text-right">$<?=number_format($bill->remaining_balance, 2, '.', ',')?></h2>
+                                            <h2 class="text-right">$<span class="payment-total-amount"><?=number_format($bill->remaining_balance, 2, '.', ',')?></span></h2>
                                         </div>
                                         <div class="col-md-2">
                                             <div class="form-group">
@@ -94,7 +94,7 @@
                                                 <div class="col-md-3">
                                                     <div class="form-group">
                                                         <label for="amount">Amount</label>
-                                                        <input type="number" class="form-control" value="<?=number_format($bill->remaining_balance, 2, '.', ',')?>" onchange="convertToDecimal(this)">
+                                                        <input type="number" class="form-control" id="bill-payment-amount" value="<?=number_format($bill->remaining_balance, 2, '.', ',')?>" onchange="convertToDecimal(this)">
                                                     </div>
                                                 </div>
                                             </div>
@@ -107,7 +107,7 @@
                                                 <div class="col-md-6">
                                                     <div class="form-row">
                                                         <div class="col-3">
-                                                            <input type="text" name="search" id="search" class="form-control" placeholder="Find Bill no.">
+                                                            <input type="text" name="search" id="search-bill-no" class="form-control" placeholder="Find Bill no.">
                                                         </div>
                                                         <div class="col-3">
                                                             <div class="dropdown d-inline-block d-flex align-items-center h-100">
@@ -139,8 +139,8 @@
                                                                         </div>
 
                                                                         <div class="btn-group">
-                                                                            <a href="#" class="btn-main" id="reset-btn" onclick="resetBillsFilter()">Reset</a>
-                                                                            <a href="#" id="apply-btn" class="btn-main apply-btn" onclick="applyBillsFilter()">Apply</a>
+                                                                            <a href="#" class="btn-main" id="reset-btn">Reset</a>
+                                                                            <a href="#" id="apply-btn" class="btn-main apply-btn">Apply</a>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -158,7 +158,7 @@
                                                                 <div class="dropdown-menu p-3" aria-labelledby="dropdownMenuLink" x-placement="bottom-start" style="position: absolute; transform: translate3d(970px, 33px, 0px); top: 0px; left: 0px; will-change: transform;">
                                                                     <p class="m-0">Rows</p>
                                                                     <p class="m-0">
-                                                                        <select name="table_rows" id="table_rows" class="form-control select2-hidden-accessible" tabindex="-1" aria-hidden="true">
+                                                                        <select name="table_rows" id="bills_table_rows" class="form-control select2-hidden-accessible" tabindex="-1" aria-hidden="true">
                                                                             <option value="50">50</option>
                                                                             <option value="75">75</option>
                                                                             <option value="100">100</option>
@@ -186,20 +186,7 @@
                                                             <th>OPEN BALANCE</th>
                                                             <th>PAYMENT</th>
                                                         </thead>
-                                                        <tbody>
-                                                            <tr>
-                                                                <td>
-                                                                    <div class="d-flex justify-content-center">
-                                                                        <input type="checkbox" value="<?=$bill->id?>" checked>
-                                                                    </div>
-                                                                </td>
-                                                                <td>Bill <?=$bill->bill_no !== "" && !is_null($bill->bill_no) ? '# '.$bill->bill_no.' ' : ''?> (<?=date("m/d/Y", strtotime($bill->bill_date))?>)</td>
-                                                                <td><?=date("m/d/Y", strtotime($bill->due_date))?></td>
-                                                                <td><?=number_format($bill->total_amount, 2, '.', ',')?></td>
-                                                                <td><?=number_format($bill->remaining_balance, 2, '.', ',')?></td>
-                                                                <td><input type="number" value="<?=number_format($bill->remaining_balance, 2, '.', ',')?>" class="form-control text-right" onchange="convertToDecimal(this)"></td>
-                                                            </tr>
-                                                        </tbody>
+                                                        <tbody></tbody>
                                                     </table>
                                                 </div>
                                             </div>

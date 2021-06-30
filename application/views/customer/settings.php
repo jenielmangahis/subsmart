@@ -67,9 +67,6 @@ add_css(array(
                                                         <li class="nav-item">
                                                             <a class="h6 mb-0 nav-link banking-sub-tab <?= $active_tab == 'spt' ?   "active" : '';  ?>" data-toggle="tab" href="#spt">System Package Type</a>
                                                         </li>
-                                                        <li class="nav-item">
-                                                            <a class="h6 mb-0 nav-link banking-sub-tab <?= $active_tab == 'custom' ?   "active" : '';  ?>" data-toggle="tab" href="#custom">Customizable</a>
-                                                        </li>
                                                     </ul>
                                                 </div>
                                             </div>

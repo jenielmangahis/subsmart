@@ -393,16 +393,12 @@
     </div>
     <hr>
     <?php if(isset($billing_info)): ?>
-    <a href="<?= base_url('customer/subscription/'.$this->uri->segment(3)) ?>">
-        <button type="button" class="btn btn-primary">Add Subscription Plan</button>
-    </a>
+        <a href="<?= base_url('customer/subscription_new/'.$this->uri->segment(3)) ?>">
+            <button type="button" class="btn btn-primary"><span class="fa fa-plus"></span> Add Subscription</button>
+        </a>
+        <a href="<?= base_url('customer/subscription/'.$this->uri->segment(3)) ?>">
+            <button type="button" class="btn btn-primary"><span class="fa fa-list"></span> View Subscription</button>
+        </a>
     <?php endif; ?>
-    <div class="row form_line">
-        <div class="col-md-12">
-            Customer Shareable Link
-        </div>
-        <div class="col-md-12">
-            <input type="url" placeholder="https://sample.com" class="form-control" name="url" id="url" value="<?php if(isset($office_info)){ echo  $office_info->url; } ?>" />
-        </div>
-    </div>
+
 </div>

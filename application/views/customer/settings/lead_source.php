@@ -2,7 +2,7 @@
     <div class="card-body hid-desk">
         <div class="col-lg-12 table-responsive">
             <h6>Lead Source</h6>
-            <button id="add_ls" class="btn btn-sm btn-default pull-right sa" title="New Lead Source" style="margin-bottom: 10px;">
+            <button id="add_ls" class="btn btn-sm btn-primary pull-right sa" title="New Lead Source" style="margin-bottom: 10px;">
                 <i class="fa fa-plus"></i> New Lead Source
             </button>
             <table id="leadsource" class="table table-bordered table-striped">

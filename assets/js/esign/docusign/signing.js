@@ -171,6 +171,10 @@ function Signing(hash) {
     if (["Checkbox", "Radio"].includes(field_name)) {
       let { subCheckbox = [], isChecked, name, is_required } = JSON.parse(field.specs) || {};
 
+      if (!name) {
+        name = field.unique_key;
+      }
+
       let { value } = fieldValue || {};
       value = value ? JSON.parse(value) : {};
 
@@ -196,8 +200,8 @@ function Signing(hash) {
       const html = `<div class="docusignField ${baseClassName}"></div>`;
       const $element = createElementFromHTML(html);
 
-      const topEm = `${pxToEm(top, container)}em`;
-      const leftEm = `${pxToEm(left, container)}em`;
+      const topEm = `${pxToEm(top + 2.5, container)}em`;
+      const leftEm = `${pxToEm(left + 7, container)}em`;
       $element.css({ top: topEm, left: leftEm, position: "absolute" });
 
       if (is_required) {

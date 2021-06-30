@@ -660,7 +660,7 @@ span.sc-item {
                             </tr>
                             <tr>
                               <td colspan="5" style="text-align: right;"><p><?= $estimate->adjustment_name; ?></p></td>
-                              <td colspan="2" style="text-align: right;"><p>$ <?= number_format($estimate->adjustment_value, 2); ?></p></td>
+                              <td colspan="2" style="text-align: right;"><p>$ <?= $estimate->adjustment_value; ?></p></td>
                             </tr>
                             <tr>
                               <td colspan="5" style="text-align: right;"><p>Markup</p></td>

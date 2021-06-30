@@ -1008,6 +1008,7 @@ class Workcalender extends MY_Controller
                                 $resources_user_events[$inc]['geventID'] = $event->id;
                                 $resources_user_events[$inc]['eventType'] = 'google_events';
                                 $resources_user_events[$inc]['resourceId'] = "user17";
+                                $resources_user_events[$inc]['calendarID'] = $cl['id'];
                                 $resources_user_events[$inc]['title'] = $event->summary;
                                 $resources_user_events[$inc]['customHtml'] = $custom_html;
                                 $resources_user_events[$inc]['description'] = $event->summary . "<br />" . "<i class='fa fa-calendar'></i> " . $start_date . " - " . $end_date;
@@ -1704,7 +1705,11 @@ class Workcalender extends MY_Controller
 
         $post = $this->input->post();
         $new_start_date = date("Y-m-d",strtotime($post['start_date']));
-        $new_end_date   = date("Y-m-d",strtotime($post['end_date']));
+        if( $post['end_date'] ){
+            $new_end_date = date("Y-m-d",strtotime($post['end_date']));
+        }else{
+            $new_end_date = $new_start_date;
+        }        
 
         if( $post['event_type'] == 'jobs' ){
             $jobs_data = [
@@ -1719,6 +1724,85 @@ class Workcalender extends MY_Controller
             ];
             $this->general->update_with_key_field($events_data, $post['event_id'], 'events', 'id');
         }
+    }
+
+    public function ajax_update_google_event()
+    {
+        $is_success = false;
+
+        $post = $this->input->post();
+        $google_user_api  = $this->GoogleAccounts_model->getByAuthUser();
+        if ($google_user_api) {
+            $company_id = logged('company_id');
+            $settings   = $this->settings_model->getByWhere(['key' => DB_SETTINGS_TABLE_KEY_SCHEDULE, 'company_id' => $company_id]);
+            $a_settings = unserialize($settings[0]->value);
+            if ($a_settings) {
+                $user_timezone = $a_settings['calendar_timezone'];
+            } else {
+                $user_timezone = 'UTC';
+            }
+
+            $google_credentials = google_credentials();
+
+            $access_token = "";
+            $refresh_token = "";
+            $google_client_id = "";
+            $google_secrect = "";
+            $calendar_list = array();
+
+            if (isset($google_user_api->google_access_token)) {
+                $access_token = $google_user_api->google_access_token;
+            }
+
+            if (isset($google_user_api->google_refresh_token)) {
+                $refresh_token = $google_user_api->google_refresh_token;
+            }
+
+            if (isset($google_credentials['client_id'])) {
+                $google_client_id = $google_credentials['client_id'];
+            }
+
+            if (isset($google_credentials['client_secret'])) {
+                $google_secrect = $google_credentials['client_secret'];
+            }
+
+            $new_start_date = new DateTime($post['start_date']);
+            if( $post['end_date'] ){
+                $new_end_date = new DateTime($post['end_date']);
+            }else{
+                $new_end_date = new DateTime($post['start_date']);
+            }
+
+            try{
+                //Set Client
+                $client = new Google_Client();
+                $client->setClientId($google_client_id);
+                $client->setClientSecret($google_secrect);
+                $client->setAccessToken($access_token);
+                $client->refreshToken($refresh_token);
+
+                //Request
+                $service = new Google_Service_Calendar($client);
+                $event   = $service->events->get($post['calendar_id'],$post['event_id']);
+                print_r($event);
+
+                $start = new Google_Service_Calendar_EventDateTime();
+                $start->setTimeZone($user_timezone);
+                $start->setDateTime($new_start_date->format(\DateTime::RFC3339));  
+                $event->setStart($start);
+                $end = new Google_Service_Calendar_EventDateTime();
+                $end->setDateTime($new_end_date->format(\DateTime::RFC3339));  
+                $event->setEnd($end);
+
+                $service->events->update($post['calendar_id'],$event->getId(),$event);
+                $is_success = true;
+            }catch(Exception $e){
+                $is_success = false;
+            }
+        }
+
+        $json_data = ['is_success' => $is_success];
+        echo json_encode($json_data);
     }
 }
 
