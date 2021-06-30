@@ -21,7 +21,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         </div>
                         <br />
                         <?php include viewPath('flash'); ?>
-                        <?php echo form_open_multipart('nsmart_upgrades/update_upgrade', [ 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
+                        <?php echo form_open_multipart('admin/update_plan_upgrade', [ 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
                           <input type="hidden" name="upgrade_id" value="<?= $nSmartUpgrades->id; ?>">
                           <div class="form-group">
                               <label>Name</label> <span class="form-required">*</span>

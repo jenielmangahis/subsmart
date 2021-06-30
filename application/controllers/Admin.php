@@ -966,13 +966,127 @@ class Admin extends CI_Controller
                 $this->session->set_flashdata('alert_class', 'alert-danger');
             }
 
-            redirect('admin/edit_upgrade/'.$post['upgrade_id']);
+            redirect('admin/edit_plan_upgrade/'.$post['upgrade_id']);
 
         }else{
             $this->session->set_flashdata('message', 'Cannot find data');
             $this->session->set_flashdata('alert_class', 'alert-danger');
 
             redirect('admin/plan_upgrades');
+        }
+    }
+
+    public function delete_nsmart_upgrade()
+    {
+        $this->load->model('NsmartUpgrades_model');
+
+        $post = $this->input->post();
+
+        $id = $this->NsmartUpgrades_model->deleteUpgrade(post('u_id'));
+
+        $this->session->set_flashdata('message', 'Upgrade has been Deleted Successfully');
+        $this->session->set_flashdata('alert_class', 'alert-success');
+
+        redirect('admin/plan_upgrades');
+    }
+
+    public function industry_modules()
+    {
+        $this->load->model('IndustryModules_model');
+
+        $industryModules   = $this->IndustryModules_model->getAll();
+        
+        $this->page_data['industryModules'] = $industryModules;
+        $this->load->view('admin/industry_modules/list', $this->page_data);
+    }
+
+    public function add_new_industry_module()
+    {
+        
+        $this->load->view('admin/industry_modules/add_new_module', $this->page_data);
+    }
+
+    public function create_industry_module()
+    {
+        $this->load->model('IndustryModules_model');
+
+        $user = $this->session->userdata('logged');
+        $post = $this->input->post();
+
+        if( $post['name'] != '' ){
+            if( $this->IndustryModules_model->getByName($post['name']) ){
+                $this->session->set_flashdata('message', 'Module name already exists');
+                $this->session->set_flashdata('alert_class', 'alert-danger');
+            }else{
+                $data = [
+                    'name' => $post['name'],
+                    'description' => $post['description'],
+                    'status' => 1,
+                    'date_created' => date("Y-m-d H:i:s")
+                ];
+
+                $industry_modules = $this->IndustryModules_model->create($data);
+
+                $this->session->set_flashdata('message', 'Add new modules was successful');
+                $this->session->set_flashdata('alert_class', 'alert-success');
+            }
+        }else{
+            $this->session->set_flashdata('message', 'Please enter module name');
+            $this->session->set_flashdata('alert_class', 'alert-danger');
+        }
+
+        redirect('admin/industry_modules');
+    }
+
+    public function edit_industry_module($module_id)
+    {
+        $this->load->model('IndustryModules_model');
+
+        $industryModules = $this->IndustryModules_model->getById($module_id);
+
+        if( $industryModules ){
+            $this->page_data['industryModules'] = $industryModules;
+            $this->load->view('admin/industry_modules/edit_module', $this->page_data);
+        }else{
+            $this->session->set_flashdata('message', 'Cannot find data');
+            $this->session->set_flashdata('alert_class', 'alert-danger');
+            redirect('admin/industry_modules');
+        }
+    }
+
+    public function update_industry_module()
+    {
+        $this->load->model('IndustryModules_model');
+
+        $user = $this->session->userdata('logged');
+        $post = $this->input->post();
+
+        $industryModules = $this->IndustryModules_model->getById($post['module_id']);
+
+        if( $industryModules ){
+            if( $post['name'] != '' ){
+                $data = [
+                    'name' => $post['name'],
+                    'description' => $post['description'],
+                    'status' => $post['status'],
+                    'date_modified' => date("Y-m-d H:i:s")
+                ];
+                $industryModulesUpdate = $this->IndustryModules_model->updateIndustryModules($post['module_id'],$data);
+
+                $this->session->set_flashdata('message', 'Module was successfully updated');
+                $this->session->set_flashdata('alert_class', 'alert-success');
+            }else{
+                $this->session->set_flashdata('message', 'Please enter module name');
+                $this->session->set_flashdata('alert_class', 'alert-danger');
+            }
+
+            redirect('admin/edit_industry_module/'.$post['module_id']);
+
+        }else{
+            $this->session->set_flashdata('message', 'Cannot find data');
+            $this->session->set_flashdata('alert_class', 'alert-danger');
+
+            redirect('admin/industry_modules');
         }
     }
 }
