@@ -1089,6 +1089,140 @@ class Admin extends CI_Controller
             redirect('admin/industry_modules');
         }
     }
+
+    public function delete_industry_module()
+    {
+        $this->load->model('IndustryModules_model');
+
+        $post = $this->input->post();
+
+        $id = $this->IndustryModules_model->deleteIndustryModules(post('mid'));
+
+        $this->session->set_flashdata('message', 'Module has been Deleted Successfully');
+        $this->session->set_flashdata('alert_class', 'alert-success');
+
+        redirect('admin/industry_modules');
+    }
+
+    public function industry_template() 
+    {
+        $this->load->model('IndustryTemplate_model');
+
+        $industryTemplate   = $this->IndustryTemplate_model->getAll();
+        
+        $this->page_data['industryTemplate'] = $industryTemplate;
+        $this->load->view('admin/industry_template/list', $this->page_data);
+    }
+
+    public function add_new_industry_template()
+    {
+        
+        $this->load->view('admin/industry_template/add_new_template', $this->page_data);
+    }
+
+    public function create_industry_template() 
+    {
+        $this->load->model('IndustryTemplate_model');
+
+        $user = $this->session->userdata('logged');
+        $post = $this->input->post();
+
+        if( $post['name'] != '' ){
+            if( $this->IndustryTemplate_model->getByName($post['name']) ){
+                $this->session->set_flashdata('message', 'Template name already exists');
+                $this->session->set_flashdata('alert_class', 'alert-danger');
+            }else{
+                $data = [
+                    'name' => $post['name'],
+                    'status' => 1,
+                    'date_created' => date("Y-m-d H:i:s")
+                ];
+
+                $industry_template = $this->IndustryTemplate_model->create($data);
+
+                $this->session->set_flashdata('message', 'Add new template was successful');
+                $this->session->set_flashdata('alert_class', 'alert-success');
+            }
+        }else{
+            $this->session->set_flashdata('message', 'Please enter module name');
+            $this->session->set_flashdata('alert_class', 'alert-danger');
+        }
+
+        redirect('admin/industry_template');
+    }
+
+    public function edit_industry_template($template_id) 
+    {
+        $this->load->model('IndustryTemplate_model');
+
+        $industryTemplate = $this->IndustryTemplate_model->getById($template_id);
+
+        if( $industryTemplate ){
+            $this->page_data['industryTemplate'] = $industryTemplate;
+            $this->load->view('admin/industry_template/edit_template', $this->page_data);
+        }else{
+            $this->session->set_flashdata('message', 'Cannot find data');
+            $this->session->set_flashdata('alert_class', 'alert-danger');
+            redirect('admin/industry_template');
+        }
+    }
+
+    public function update_industry_template() 
+    {
+        $this->load->model('IndustryTemplate_model');
+
+        $user = $this->session->userdata('logged');
+        $post = $this->input->post();
+
+        $industryTemplate = $this->IndustryTemplate_model->getById($post['template_id']);
+
+        if( $industryTemplate ){
+            if( $post['name'] != '' ){
+                $data = [
+                    'name' => $post['name'],
+                    'status' => $post['status'],
+                    'date_modified' => date("Y-m-d H:i:s")
+                ];
+                $industryTemplateUpdate = $this->IndustryTemplate_model->updateIndustryTemplate($post['template_id'],$data);
+
+                $this->session->set_flashdata('message', 'Template was successfully updated');
+                $this->session->set_flashdata('alert_class', 'alert-success');
+            }else{
+                $this->session->set_flashdata('message', 'Please enter module name');
+                $this->session->set_flashdata('alert_class', 'alert-danger');
+            }
+
+            redirect('admin/edit_industry_template/'.$post['template_id']);
+
+        }else{
+            $this->session->set_flashdata('message', 'Cannot find data');
+            $this->session->set_flashdata('alert_class', 'alert-danger');
+
+            redirect('admin/industry_template');
+        }
+    }
+
+    public function assign_industry_template_modules($template_id) 
+    {
+        $this->load->model('IndustryTemplate_model');
+        $this->load->model('IndustryModules_model');
+        $this->load->model('IndustryTemplateModules_model');
+
+        $industryTemplate = $this->IndustryTemplate_model->getById($template_id);
+        $industryModules = $this->IndustryModules_model->getAll();
+        $industryTemplateModules = $this->IndustryTemplateModules_model->getAllByTemplateId($template_id);
+
+        if( $industryTemplate ){
+            $this->page_data['industryTemplate'] = $industryTemplate;
+            $this->page_data['industryModules'] = $industryModules;
+            $this->page_data['industryTemplateModules']  = $industryTemplateModules;
+            $this->load->view('admin/industry_template/assign_template_modules', $this->page_data);
+        }else{
+            $this->session->set_flashdata('message', 'Cannot find data');
+            $this->session->set_flashdata('alert_class', 'alert-danger');
+            redirect('admin/industry_template');
+        }
+    }
 }
 
 /* End of file Admin.php */
