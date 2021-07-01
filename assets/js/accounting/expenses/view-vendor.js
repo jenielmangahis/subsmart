@@ -826,66 +826,9 @@ $('a#new-expense-transaction').on('click', function(e) {
             `);
         }
 
-        $('#expenseModal #payee').val('vendor-'+vendorId);
+        $('#expenseModal #payee').val('vendor-'+vendorId).trigger('change');
 
-        rowCount = 2;
-        catDetailsInputs = $(`#expenseModal table#category-details-table tbody tr:first-child()`).html();
-        catDetailsBlank = $(`#expenseModal table#category-details-table tbody tr:nth-child(2)`).html();
-        $(`#expenseModal table#category-details-table tbody tr:first-child()`).html(catDetailsBlank);
-        $(`#expenseModal table#category-details-table tbody tr:first-child() td:nth-child(2)`).html(1);
-
-        $(`#expenseModal select`).select2();
-
-        $('div#expenseModal select#tags').select2({
-            placeholder: 'Start typing to add a tag',
-            allowClear: true,
-            ajax: {
-                url: '/accounting/get-job-tags',
-                dataType: 'json'
-            }
-        });
-
-        $(`#expenseModal .date`).each(function(){
-            $(this).datepicker({
-                uiLibrary: 'bootstrap'
-            });
-        });
-
-        var attachmentContId = $(`#expenseModal .attachments .dropzone`).attr('id');
-        var expenseAttachments = new Dropzone(`#${attachmentContId}`, {
-            url: '/accounting/attachments/attach',
-            maxFilesize: 20,
-            uploadMultiple: true,
-            // maxFiles: 1,
-            addRemoveLinks: true,
-            init: function() {
-                this.on("success", function(file, response) {
-                    var ids = JSON.parse(response)['attachment_ids'];
-                    var modal = $(`#expenseModal`);
-
-                    for(i in ids) {
-                        if(modal.find(`input[name="attachments[]"][value="${ids[i]}"]`).length === 0) {
-                            modal.find('.attachments').parent().append(`<input type="hidden" name="attachments[]" value="${ids[i]}">`);
-                        }
-
-                        modalAttachmentId.push(ids[i]);
-                    }
-                    modalAttachedFiles.push(file);
-                });
-            },
-            removedfile: function(file) {
-                var ids = modalAttachmentId;
-                var index = modalAttachedFiles.map(function(d, index) {
-                    if (d == file) return index;
-                }).filter(isFinite)[0];
-
-                $(`#expenseModal .attachments`).find(`input[name="attachments[]"][value="${ids[index]}"]`).remove();
-
-                //remove thumbnail
-                var previewElement;
-                return (previewElement = file.previewElement) !== null ? (previewElement.parentNode.removeChild(file.previewElement)) : (void 0);
-            }
-        });
+        initModalFields('expenseModal');
 
         $('#expenseModal').modal('show');
     });
@@ -907,64 +850,7 @@ $('a#new-check-transaction').on('click', function(e) {
 
         $('#checkModal #payee').val('vendor-'+vendorId).trigger('change');
 
-        rowCount = 2;
-        catDetailsInputs = $(`#checkModal table#category-details-table tbody tr:first-child()`).html();
-        catDetailsBlank = $(`#checkModal table#category-details-table tbody tr:nth-child(2)`).html();
-        $(`#checkModal table#category-details-table tbody tr:first-child()`).html(catDetailsBlank);
-        $(`#checkModal table#category-details-table tbody tr:first-child() td:nth-child(2)`).html(1);
-
-        $(`#checkModal select`).select2();
-
-        $('div#checkModal select#tags').select2({
-            placeholder: 'Start typing to add a tag',
-            allowClear: true,
-            ajax: {
-                url: '/accounting/get-job-tags',
-                dataType: 'json'
-            }
-        });
-
-        $(`#checkModal .date`).each(function(){
-            $(this).datepicker({
-                uiLibrary: 'bootstrap'
-            });
-        });
-
-        var attachmentContId = $(`#checkModal .attachments .dropzone`).attr('id');
-        var checkAttachments = new Dropzone(`#${attachmentContId}`, {
-            url: '/accounting/attachments/attach',
-            maxFilesize: 20,
-            uploadMultiple: true,
-            // maxFiles: 1,
-            addRemoveLinks: true,
-            init: function() {
-                this.on("success", function(file, response) {
-                    var ids = JSON.parse(response)['attachment_ids'];
-                    var modal = $(`#checkModal`);
-
-                    for(i in ids) {
-                        if(modal.find(`input[name="attachments[]"][value="${ids[i]}"]`).length === 0) {
-                            modal.find('.attachments').parent().append(`<input type="hidden" name="attachments[]" value="${ids[i]}">`);
-                        }
-
-                        modalAttachmentId.push(ids[i]);
-                    }
-                    modalAttachedFiles.push(file);
-                });
-            },
-            removedfile: function(file) {
-                var ids = modalAttachmentId;
-                var index = modalAttachedFiles.map(function(d, index) {
-                    if (d == file) return index;
-                }).filter(isFinite)[0];
-
-                $(`#checkModal .attachments`).find(`input[name="attachments[]"][value="${ids[index]}"]`).remove();
-
-                //remove thumbnail
-                var previewElement;
-                return (previewElement = file.previewElement) !== null ? (previewElement.parentNode.removeChild(file.previewElement)) : (void 0);
-            }
-        });
+        initModalFields('checkModal');
 
         $('#checkModal').modal('show');
     });
@@ -1252,7 +1138,7 @@ $(document).on('click', '#transactions-table .view-edit-expense', function() {
             `);
         }
 
-        initFormFields('expenseModal', data);
+        initModalFields('expenseModal', data);
 
         $('#expenseModal').modal('show');
     });
@@ -1295,125 +1181,6 @@ $(document).on('click', '#transactions-table tbody tr td:not(:first-child, :last
     }
 });
 
-function initFormFields(modalName, data) {
-    var transactionType = data.type;
-    transactionType = transactionType.replaceAll(' (Check)', '');
-    transactionType = transactionType.replaceAll(' (Credit Card)', '');
-    transactionType = transactionType.replaceAll(' ', '-');
-    transactionType = transactionType.toLowerCase();
-
-    if($(`#${modalName} table#category-details-table`).length > 0) {
-        rowCount = 2;
-        catDetailsInputs = $(`#${modalName} table#category-details-table tbody tr:first-child()`).html();
-        catDetailsBlank = $(`#${modalName} table#category-details-table tbody tr:last-child`).html();
-    }
-
-    if($(`#${modalName} table#category-details-table tbody tr`).length === 2) {
-        $(`#${modalName} table#category-details-table tbody tr:first-child()`).html(catDetailsBlank);
-        $(`#${modalName} table#category-details-table tbody tr:first-child() td:nth-child(2)`).html(1);
-    } else {
-        $(`#${modalName} table#category-details-table tbody tr:first-child()`).remove();
-    }
-
-    if($(`#${modalName} select`).length > 0) {
-        $(`#${modalName} select`).select2();
-    }
-
-    if($(`div#${modalName} select#tags`).length > 0) {
-        $(`div#${modalName} select#tags`).select2({
-            placeholder: 'Start typing to add a tag',
-            allowClear: true,
-            ajax: {
-                url: '/accounting/get-job-tags',
-                dataType: 'json'
-            }
-        });
-    }
-
-    if($(`div#${modalName} .date`).length > 0) {
-        $(`div#${modalName} .date`).each(function(){
-            $(this).datepicker({
-                uiLibrary: 'bootstrap'
-            });
-        });
-    }
-
-    if($(`#${modalName} .attachments`).length > 0) {
-        var attachmentContId = $(`#${modalName} .attachments .dropzone`).attr('id');
-        var viewExpenseAtta = new Dropzone(`#${attachmentContId}`, {
-            url: '/accounting/attachments/attach',
-            maxFilesize: 20,
-            uploadMultiple: true,
-            // maxFiles: 1,
-            addRemoveLinks: true,
-            init: function() {
-                $.getJSON('/accounting/vendors/get-transaction-attachments/'+transactionType+'/'+data.id, function(data) {
-                    if(data.length > 0) {
-                        $.each(data, function(index, val) {
-                            $('#${modalName}').find('.attachments').parent().append(`<input type="hidden" name="attachments[]" value="${val.id}">`);
-
-                            modalAttachmentId.push(val.id);
-                            var mockFile = {
-                                name: `${val.uploaded_name}.${val.file_extension}`,
-                                size: parseInt(val.size),
-                                dataURL: base_url+"uploads/accounting/attachments/" + val.stored_name,
-                                // size: val.size / 1000000,
-                                accepted: true
-                            };
-                            viewExpenseAtta.emit("addedfile", mockFile);
-                            modalAttachedFiles.push(mockFile);
-        
-                            viewExpenseAtta.createThumbnailFromUrl(mockFile, viewExpenseAtta.options.thumbnailWidth, viewExpenseAtta.options.thumbnailHeight, viewExpenseAtta.options.thumbnailMethod, true, function(thumbnail) {
-                                viewExpenseAtta.emit('thumbnail', mockFile, thumbnail);
-                            });
-                            viewExpenseAtta.emit("complete", mockFile);
-                        });
-                    }
-                });
-
-                this.on("success", function(file, response) {
-                    var ids = JSON.parse(response)['attachment_ids'];
-                    var modal = $(`#${modalName}`);
-
-                    for(i in ids) {
-                        if(modal.find(`input[name="attachments[]"][value="${ids[i]}"]`).length === 0) {
-                            modal.find('.attachments').parent().append(`<input type="hidden" name="attachments[]" value="${ids[i]}">`);
-                        }
-
-                        modalAttachmentId.push(ids[i]);
-                    }
-                    modalAttachedFiles.push(file);
-                });
-            },
-            removedfile: function(file) {
-                var ids = modalAttachmentId;
-                var index = modalAttachedFiles.map(function(d, index) {
-                    if (d == file) return index;
-                }).filter(isFinite)[0];
-        
-                $(`#${modalName} .attachments`).parent().find(`input[name="attachments[]"][value="${ids[index]}"]`).remove();
-
-                //remove thumbnail
-                var previewElement;
-
-                if((previewElement = file.previewElement) !== null) {
-                    var remove = (previewElement.parentNode.removeChild(file.previewElement));
-        
-                    if($(`#${attachmentContId} .dz-preview`).length > 0) {
-                        $(`#${attachmentContId} .dz-message`).hide();
-                    } else {
-                        $(`#${attachmentContId} .dz-message`).show();
-                    }
-        
-                    return remove;
-                } else {
-                    return (void 0);
-                }
-            }
-        });
-    }
-}
-
 $(document).on('click', '#transactions-table .view-edit-check', function() {
     var row = $(this).parent().parent().parent();
     var data = $('#transactions-table').DataTable().row(row).data();
@@ -1429,7 +1196,7 @@ $(document).on('click', '#transactions-table .view-edit-check', function() {
             `);
         }
 
-        initFormFields('checkModal', data);
+        initModalFields('checkModal', data);
 
         $('#checkModal').modal('show');
     });
@@ -1450,7 +1217,7 @@ $(document).on('click', '#transactions-table .view-edit-bill', function() {
             `);
         }
 
-        initFormFields('billModal', data);
+        initModalFields('billModal', data);
 
         $('#billModal').modal('show');
     });
@@ -1471,7 +1238,7 @@ $(document).on('click', '#transactions-table .view-edit-purch-order', function()
             `);
         }
 
-        initFormFields('purchaseOrderModal', data);
+        initModalFields('purchaseOrderModal', data);
 
         $('#purchaseOrderModal').modal('show');
     });
@@ -1492,7 +1259,7 @@ $(document).on('click', '#transactions-table .view-edit-vendor-credit', function
             `);
         }
 
-        initFormFields('vendorCreditModal', data);
+        initModalFields('vendorCreditModal', data);
 
         $('#vendorCreditModal').modal('show');
     });
@@ -1513,7 +1280,7 @@ $(document).on('click', '#transactions-table .view-edit-cc-payment', function() 
             `);
         }
 
-        initFormFields('payDownCreditModal', data);
+        initModalFields('payDownCreditModal', data);
 
         $('#payDownCreditModal').modal('show');
     });
@@ -1531,7 +1298,7 @@ function viewCreditCardCredit(data) {
             `);
         }
 
-        initFormFields('creditCardCreditModal', data);
+        initModalFields('creditCardCreditModal', data);
 
         $('#creditCardCreditModal').modal('show');
     });
@@ -1549,7 +1316,7 @@ function viewBillPayment(data) {
             `);
         }
 
-        initFormFields('billPaymentModal', data);
+        initModalFields('billPaymentModal', data);
 
         initBillsTable(data);
 
@@ -1661,7 +1428,7 @@ $(document).on('click', '#transactions-table .copy-expense', function(e) {
 
         $('#expenseModal').parent().attr('onsubmit', 'submitModalForm(event, this)');
 
-        initFormFields('expenseModal', data);
+        initModalFields('expenseModal', data);
 
         $('#expenseModal').modal('show');
     });
@@ -1689,7 +1456,7 @@ $(document).on('click', '#transactions-table .copy-check', function(e) {
 
         $('#checkModal').parent().attr('onsubmit', 'submitModalForm(event, this)');
 
-        initFormFields('checkModal', data);
+        initModalFields('checkModal', data);
 
         $('#checkModal').modal('show');
     });
@@ -1717,7 +1484,7 @@ $(document).on('click', '#transactions-table .copy-bill', function(e) {
 
         $('#billModal').parent().attr('onsubmit', 'submitModalForm(event, this)');
 
-        initFormFields('billModal', data);
+        initModalFields('billModal', data);
 
         $('#billModal').modal('show');
     });
@@ -1745,7 +1512,7 @@ $(document).on('click', '#transactions-table .copy-purchase-order', function(e) 
 
         $('#purchaseOrderModal').parent().attr('onsubmit', 'submitModalForm(event, this)');
 
-        initFormFields('purchaseOrderModal', data);
+        initModalFields('purchaseOrderModal', data);
 
         $('#purchaseOrderModal').modal('show');
     });
@@ -1773,7 +1540,7 @@ $(document).on('click', '#transactions-table .copy-vendor-credit', function(e) {
 
         $('#vendorCreditModal').parent().attr('onsubmit', 'submitModalForm(event, this)');
 
-        initFormFields('vendorCreditModal', data);
+        initModalFields('vendorCreditModal', data);
 
         $('#vendorCreditModal').modal('show');
     });
@@ -1801,7 +1568,7 @@ $(document).on('click', '#transactions-table .copy-to-bill', function(e) {
 
         $('#billModal').parent().attr('onsubmit', 'submitModalForm(event, this)');
 
-        initFormFields('billModal', data);
+        initModalFields('billModal', data);
 
         $('#billModal').modal('show');
     });

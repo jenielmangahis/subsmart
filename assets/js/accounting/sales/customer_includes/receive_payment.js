@@ -1,3 +1,9 @@
+$('#addsalesreceiptModal .recurring-form-part.below .date-part .input-field-1 .datepicker').datepicker({
+    uiLibrary: 'bootstrap'
+});
+$('#addsalesreceiptModal .recurring-form-part.below .date-part .input-field-3 .by-end-date .datepicker').datepicker({
+    uiLibrary: 'bootstrap'
+});
 $('#receive_payment_form .form-group .datepicker').datepicker({
     uiLibrary: 'bootstrap'
 });

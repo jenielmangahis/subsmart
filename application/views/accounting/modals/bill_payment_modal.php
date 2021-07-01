@@ -107,13 +107,13 @@
                                                 <div class="col-md-6">
                                                     <div class="form-row">
                                                         <div class="col-3">
-                                                            <input type="text" name="search" id="search-bill-no" class="form-control" placeholder="Find Bill no.">
+                                                            <input type="text" name="search" id="search-bill-no" class="form-control" placeholder="Find Bill No.">
                                                         </div>
                                                         <div class="col-3">
                                                             <div class="dropdown d-inline-block d-flex align-items-center h-100">
-                                                                <a href="javascript:void(0);" class="btn btn-transparent dropdown-toggle hide-toggle" id="filterDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Filter <i class="fa fa-chevron-right"></i></a>
+                                                                <a href="javascript:void(0);" class="btn btn-transparent dropdown-toggle hide-toggle" id="billsFilterDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Filter <i class="fa fa-chevron-right"></i></a>
 
-                                                                <div class="dropdown-menu p-3 w-auto" aria-labelledby="filterDropdown" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 40px, 0px); top: 0px; left: 0px; will-change: transform;">
+                                                                <div class="dropdown-menu p-3 w-auto" aria-labelledby="billsFilterDropdown" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 40px, 0px); top: 0px; left: 0px; will-change: transform;">
                                                                     <div class="inner-filter-list">
                                                                         <div class="row">
                                                                             <div class="col-sm-12">
@@ -121,13 +121,13 @@
                                                                                     <div class="col-6">
                                                                                         <div class="form-group">
                                                                                             <label for="bills-from">Bills from</label>
-                                                                                            <input type="text" name="bills_from" id="bills-from" class="form-control date" value="<?=date("m/d/Y", strtotime($bill->bill_date))?>">
+                                                                                            <input type="text" name="bills_from" id="bills-from" class="form-control date" value="">
                                                                                         </div>
                                                                                     </div>
                                                                                     <div class="col-6">
                                                                                         <div class="form-group">
                                                                                             <label for="bills-to">To</label>
-                                                                                            <input type="text" name="bills_to" id="bills-to" class="form-control date" value="<?=date("m/d/Y", strtotime($bill->bill_date))?>">
+                                                                                            <input type="text" name="bills_to" id="bills-to" class="form-control date" value="">
                                                                                         </div>
                                                                                     </div>
                                                                                 </div>
@@ -152,10 +152,10 @@
                                                     <div class="action-bar h-100 d-flex align-items-center">
                                                         <ul class="ml-auto">
                                                             <li class="">
-                                                                <a class="hide-toggle dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                                <a class="hide-toggle dropdown-toggle" type="button" id="billsRows" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                                     <i class="fa fa-cog"></i>
                                                                 </a>
-                                                                <div class="dropdown-menu p-3" aria-labelledby="dropdownMenuLink" x-placement="bottom-start" style="position: absolute; transform: translate3d(970px, 33px, 0px); top: 0px; left: 0px; will-change: transform;">
+                                                                <div class="dropdown-menu p-3" aria-labelledby="billsRows" x-placement="bottom-start" style="position: absolute; transform: translate3d(970px, 33px, 0px); top: 0px; left: 0px; will-change: transform;">
                                                                     <p class="m-0">Rows</p>
                                                                     <p class="m-0">
                                                                         <select name="table_rows" id="bills_table_rows" class="form-control select2-hidden-accessible" tabindex="-1" aria-hidden="true">
@@ -182,6 +182,93 @@
                                                             </th>
                                                             <th>DESCRIPTION</th>
                                                             <th>DUE DATE</th>
+                                                            <th>ORIGINAL AMOUNT</th>
+                                                            <th>OPEN BALANCE</th>
+                                                            <th>PAYMENT</th>
+                                                        </thead>
+                                                        <tbody></tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <h4>Credits</h4>
+                                                </div>
+
+                                                <div class="col-md-6">
+                                                    <div class="form-row">
+                                                        <div class="col-3">
+                                                            <input type="text" name="search" id="search-vcredit-no" class="form-control" placeholder="Find Vendor Credit No.">
+                                                        </div>
+                                                        <div class="col-3">
+                                                            <div class="dropdown d-inline-block d-flex align-items-center h-100">
+                                                                <a href="javascript:void(0);" class="btn btn-transparent dropdown-toggle hide-toggle" id="vCreditFilterDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Filter <i class="fa fa-chevron-right"></i></a>
+
+                                                                <div class="dropdown-menu p-3 w-auto" aria-labelledby="vCreditFilterDropdown" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 40px, 0px); top: 0px; left: 0px; will-change: transform;">
+                                                                    <div class="inner-filter-list">
+                                                                        <div class="row">
+                                                                            <div class="col-sm-12">
+                                                                                <div class="form-row">
+                                                                                    <div class="col-6">
+                                                                                        <div class="form-group">
+                                                                                            <label for="vcredit-from">Vendor Credit from</label>
+                                                                                            <input type="text" name="vcredit_from" id="vcredit-from" class="form-control date" value="">
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div class="col-6">
+                                                                                        <div class="form-group">
+                                                                                            <label for="vcredit-to">To</label>
+                                                                                            <input type="text" name="vcredit_to" id="vcredit-to" class="form-control date" value="">
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+
+                                                                        <div class="btn-group">
+                                                                            <a href="#" class="btn-main" id="vcredits-reset-btn">Reset</a>
+                                                                            <a href="#" id="vcredits-apply-btn" class="btn-main apply-btn">Apply</a>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="action-bar h-100 d-flex align-items-center">
+                                                        <ul class="ml-auto">
+                                                            <li class="">
+                                                                <a class="hide-toggle dropdown-toggle" type="button" id="vCreditsRows" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                                    <i class="fa fa-cog"></i>
+                                                                </a>
+                                                                <div class="dropdown-menu p-3" aria-labelledby="vCreditsRows" x-placement="bottom-start" style="position: absolute; transform: translate3d(970px, 33px, 0px); top: 0px; left: 0px; will-change: transform;">
+                                                                    <p class="m-0">Rows</p>
+                                                                    <p class="m-0">
+                                                                        <select name="table_rows" id="vcredits_table_rows" class="form-control select2-hidden-accessible" tabindex="-1" aria-hidden="true">
+                                                                            <option value="50">50</option>
+                                                                            <option value="75">75</option>
+                                                                            <option value="100">100</option>
+                                                                            <option value="150" selected>150</option>
+                                                                            <option value="300">300</option>
+                                                                        </select>
+                                                                    </p>
+                                                                </div>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-12 my-3">
+                                                    <table class="table table-bordered table-hover clickable" id="vendor-credits-table">
+                                                        <thead>
+                                                            <th>
+                                                                <div class="d-flex justify-content-center">
+                                                                    <input type="checkbox" id="select-all-bills">
+                                                                </div>
+                                                            </th>
+                                                            <th>DESCRIPTION</th>
                                                             <th>ORIGINAL AMOUNT</th>
                                                             <th>OPEN BALANCE</th>
                                                             <th>PAYMENT</th>

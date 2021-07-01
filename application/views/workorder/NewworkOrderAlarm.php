@@ -6,6 +6,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 <?php include viewPath('includes/sidebars/workorder'); ?>
 <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
 <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
+<link href="<?php echo $url->assets ?>sass/styles.scss" rel="stylesheet" type="text/css">
     <style>
    .but:hover {
     font-weight: 900;
@@ -380,6 +381,122 @@ border: none;
 }
 
 }
+
+.blockHead:after {
+  color: #00bcd4;
+  border-left: 20px solid;
+  border-top: 20px solid transparent;
+  border-bottom: 20px solid transparent;
+  display: inline-block;
+  content: '';
+  position: absolute;
+  right: -20px;
+  top: 0;
+}
+.blockHead {
+  background-color: #00bcd4;
+  /*width: 150px; */
+  height: 40px;
+  line-height: 40px;
+  display: inline-block;
+  position: relative;
+}
+.blocktext {
+  color: white;
+  font-weight: bold;
+  padding-left: 10px;
+  font-family: Arial;
+  font-size: 11;
+}
+
+.right-arrow {
+	display: inline-block;
+	position: relative;
+	background: #00bcd4;
+	padding: 15px;
+    color: white;
+}
+.right-arrow:after {
+	content: '';
+	display: block;  
+	position: absolute;
+	left: 100%;
+	top: 50%;
+	margin-top: -10px;
+	width: 0;
+	height: 0;
+	border-top: 10px solid transparent;
+	border-right: 10px solid transparent;
+	border-bottom: 10px solid transparent;
+	border-left: 10px solid #00bcd4;
+}
+
+.down-arrow {
+	display: inline-block;
+	position: relative;
+	background: darkcyan;
+	padding: 7px 0;
+	width: 150px;
+	text-align: center;
+}
+.down-arrow:after {
+	content: '';
+	display: block;  
+	position: absolute;
+	left: 0;
+	top: 100%;
+	width: 0;
+	height: 0;
+	border-top: 10px solid darkcyan;
+	border-right: 75px solid transparent;
+	border-bottom: 0 solid transparent;
+	border-left: 75px solid transparent;
+}
+
+.down-arrow2 {
+	display: inline-block;
+	position: relative;
+	background: #81167B;
+	padding: 7px 0;
+	width: 150px;
+	text-align: center;
+}
+.down-arrow2:after {
+	content: '';
+	display: block;  
+	position: absolute;
+	left: 0;
+	top: 100%;
+	width: 0;
+	height: 0;
+	border-top: 10px solid #81167B;
+	border-right: 75px solid transparent;
+	border-bottom: 0 solid transparent;
+	border-left: 75px solid transparent;
+}
+
+.down-arrow3 {
+	display: inline-block;
+	position: relative;
+	background: #F6B343;
+	padding: 7px 0;
+	width: 150px;
+	text-align: center;
+}
+.down-arrow3:after {
+	content: '';
+	display: block;  
+	position: absolute;
+	left: 0;
+	top: 100%;
+	width: 0;
+	height: 0;
+	border-top: 10px solid #F6B343;
+	border-right: 75px solid transparent;
+	border-bottom: 0 solid transparent;
+	border-left: 75px solid transparent;
+}
+
    </style>
     <!-- page wrapper start -->
     <div wrapper__section>
@@ -1217,12 +1334,12 @@ border: none;
                                                 <table class="table" style="width:50%;">
                                                     <tr>
                                                         <th></th>
-                                                        <th>WO</th>
-                                                        <th>WI</th>
-                                                        <th>Doorbell Cam</th>
+                                                        <th><div class="down-arrow"><span class="blocktext">WO</span></div></th>
+                                                        <th><div class="down-arrow2"><span class="blocktext">WI</span></div></th>
+                                                        <th><div class="down-arrow3"><span class="blocktext">Doorbell Cam</span></div></th>
                                                     </tr>
                                                     <tr>
-                                                        <td>Honeywell</td>
+                                                        <td><div class="right-arrow"><span class="blocktext">Honeywell</span></div> </td>
                                                         <td style="min-width:10%;"><input type="text" class="form-control"
                                                                    name="honeywell_wo"
                                                                    value="<?php echo (!empty($workorder->ip_cameras)) ? $workorder->ip_cameras['honeywell']['wo'] : '' ?>"
@@ -1239,7 +1356,7 @@ border: none;
                                                         </td>
                                                     </tr>
                                                     <tr>
-                                                        <td>Alarm.com</td>
+                                                        <td><div class="right-arrow"><span class="blocktext">Alarm.com</span></div></td>
                                                         <td style="min-width:80px;"><input type="text" class="form-control"
                                                                    value="<?php echo (!empty($workorder->ip_cameras)) ? $workorder->ip_cameras['avycon']['wo'] : '' ?>"
                                                                    name="alarm_wo" placeholder=""/>
@@ -1255,7 +1372,7 @@ border: none;
                                                         </td>
                                                     </tr>
                                                     <tr>
-                                                        <td>Other</td>
+                                                        <td><div class="right-arrow"><span class="blocktext">Other</span></div></td>
                                                         <td style="min-width:80px;"><input type="text" class="form-control"
                                                                    value="<?php echo (!empty($workorder->ip_cameras)) ? $workorder->ip_cameras['other']['wo'] : '' ?>"
                                                                    name="other_wo" placeholder=""/>
@@ -1291,12 +1408,12 @@ border: none;
                                                     <table class="table" style="width:50%;">
                                                         <tr>
                                                             <th></th>
-                                                            <th>Brass</th>
-                                                            <th>Nickel</th>
-                                                            <th>Bronze</th>
+                                                            <th><div class="down-arrow"><span class="blocktext">Brass</span></div></th>
+                                                            <th><div class="down-arrow2"><span class="blocktext">Nickel</span></div></th>
+                                                            <th><div class="down-arrow3"><span class="blocktext">Bronze</span></div></th>
                                                         </tr>
                                                         <tr>
-                                                            <td>Deadbolt</td>
+                                                            <td><div class="right-arrow"><span class="blocktext">Deadbolt</span></div></td>
                                                             <td style="min-width:80px;"><input type="text" class="form-control"
                                                                        name="deadbolt_brass"
                                                                        value="<?php echo (!empty($workorder->doorlocks)) ? $workorder->doorlocks['deadbolt']['brass'] : '' ?>"
@@ -1314,7 +1431,7 @@ border: none;
                                                             </td>
                                                         </tr>
                                                         <tr>
-                                                            <td>Handle</td>
+                                                            <td><div class="right-arrow"><span class="blocktext">Handle</span></div></td>
                                                             <td style="min-width:80px;"><input type="text" class="form-control"
                                                                        value="<?php echo (!empty($workorder->doorlocks)) ? $workorder->doorlocks['handle']['brass'] : '' ?>"
                                                                        name="handle_brass" placeholder=""/>
@@ -1349,12 +1466,12 @@ border: none;
                                                 <table class="table" style="width:50%;">
                                                     <tr>
                                                         <th></th>
-                                                        <th>4 Channel</th>
-                                                        <th>8 Channel</th>
-                                                        <th>16 Channel</th>
+                                                        <th><div class="down-arrow"><span class="blocktext">4 Channel</span></div></th>
+                                                        <th><div class="down-arrow2"><span class="blocktext">8 Channel</span></div></th>
+                                                        <th><div class="down-arrow3"><span class="blocktext">16 Channel</span></div></th>
                                                     </tr>
                                                     <tr>
-                                                        <td>Honeywell</td>
+                                                        <td><div class="right-arrow"><span class="blocktext">Honeywell</span></div></td>
                                                         <td><input type="text" class="form-control"
                                                                    value="<?php echo (!empty($workorder->dvr_nvr)) ? $workorder->dvr_nvr['honeywell']['4_channel'] : '' ?>"
                                                                    name="honeywell_4ch" placeholder=""/>
@@ -1370,7 +1487,7 @@ border: none;
                                                         </td>
                                                     </tr>
                                                     <tr>
-                                                        <td>Alarm.com</td>
+                                                        <td><div class="right-arrow"><span class="blocktext">Alarm.com</span></div></td>
                                                         <td><input type="text" class="form-control"
                                                                    value="<?php echo (!empty($workorder->dvr_nvr)) ? $workorder->dvr_nvr['avycon']['4_channel'] : '' ?>"
                                                                    name="alarm_4ch" placeholder=""/>
@@ -1385,7 +1502,7 @@ border: none;
                                                         </td>
                                                     </tr>
                                                     <tr>
-                                                        <td>Other</td>
+                                                        <td><div class="right-arrow"><span class="blocktext">Other</span></div></td>
                                                         <td><input type="text" class="form-control"
                                                                    value="<?php echo (!empty($workorder->dvr_nvr)) ? $workorder->dvr_nvr['other']['4_channel'] : '' ?>"
                                                                    name="other_4ch" placeholder=""/>
@@ -1419,8 +1536,8 @@ border: none;
                                                 <table class="table" style="width:30%;">
                                                     <tr>
                                                         <!-- <th></th> -->
-                                                        <th>Thermostats</th>
-                                                        <th>Lights & Bulbs</th>
+                                                        <th><div class="down-arrow"><span class="blocktext">Thermostats</span></div></th>
+                                                        <th><div class="down-arrow2"><span class="blocktext">Lights & Bulbs</span></div></th>
                                                     </tr>
                                                     <tr>
                                                         <!-- <td></td> -->
@@ -1475,8 +1592,8 @@ border: none;
                                                 <table class="table" style="width:50%;">
                                                     <tr>
                                                         <th></th>
-                                                        <th>Fall Detection</th>
-                                                        <th>W/O Fall Protection</th>
+                                                        <th><div class="down-arrow"><span class="blocktext">Fall Detection</span></div></th>
+                                                        <th><div class="down-arrow2"><span class="blocktext">W/O Fall Protection</span></div></th>
                                                     </tr>
                                                     <tr>
                                                         <td></td>
@@ -1623,7 +1740,8 @@ border: none;
                                                 <!-- <a href="#" class="btn btn-primary" id="add_another">Add Items</a> -->
                                                 <a class="link-modal-open" href="#" id="add_another_itemss" data-toggle="modal" data-target="#item_list"><span class="fa fa-plus-square fa-margin-right"></span>Add Items</a>
                                                 &emsp;
-                                                <a class="link-modal-open" href="#" id="add_package" data-toggle="modal" data-target=".bd-example-modal-lg"><span class="fa fa-plus-square fa-margin-right"></span>Add Package</a>
+                                                <a class="link-modal-open" href="#" id="add_package" data-toggle="modal" data-target=".bd-example-modal-lg"><span class="fa fa-plus-square fa-margin-right"></span>Add Package</a> &emsp;
+                                                <a class="link-modal-open" href="#" id="create_package" data-toggle="modal" data-target=".createPackage"><span class="fa fa-plus-square fa-margin-right"></span>Create Package</a>
                                             </div>
                                         </div><br/>
 
@@ -1727,7 +1845,8 @@ border: none;
                                                 <!-- <a href="#" class="btn btn-primary" id="add_another">Add Items</a> -->
                                                 <a class="link-modal-open" href="#" id="add_another_itemss" data-toggle="modal" data-target="#item_list"><span class="fa fa-plus-square fa-margin-right"></span>Add Items</a>
                                                 &emsp;
-                                                <a class="link-modal-open" href="#" id="add_package" data-toggle="modal" data-target=".bd-example-modal-lg"><span class="fa fa-plus-square fa-margin-right"></span>Add Package</a>
+                                                <a class="link-modal-open" href="#" id="add_package" data-toggle="modal" data-target=".bd-example-modal-lg"><span class="fa fa-plus-square fa-margin-right"></span>Add Package</a> &emsp;
+                                                <a class="link-modal-open" href="#" id="create_package" data-toggle="modal" data-target=".createPackage"><span class="fa fa-plus-square fa-margin-right"></span>Create Package</a>
                                             </div>
                                         </div><br/>
 
@@ -2797,6 +2916,91 @@ border: none;
                 </div>
             </div>
             </div>
+
+            <!-- add manual package -->
+            <div class="modal fade createPackage" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Create Package</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body pt-0 pl-3 pb-3">
+                                    <table class="table table-hover">
+                                        <input type="hidden" name="count" value="0" id="count">
+                                        <thead style="background-color:#E9E8EA;">
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Group</th>
+                                            <!-- <th>Description</th> -->
+                                            <th width="150px">Quantity</th>
+                                            <!-- <th>Location</th> -->
+                                            <th width="150px">Price</th>
+                                            <!-- <th class="hidden_mobile_view" width="150px">Discount</th>
+                                            <th class="hidden_mobile_view" width="150px">Tax (Change in %)</th> -->
+                                            <!-- <th class="hidden_mobile_view">Total</th> -->
+                                            <th></th>
+                                        </tr>
+                                        </thead>
+                                        <tbody id="jobs_items_table_body">
+                                            <tr>
+                                                <td width="35%">
+                                                    <input type="text" class="form-control getItems"
+                                                        onKeyup="getItems(this)" name="items[]">
+                                                    <ul class="suggestions"></ul>
+                                                    <div class="show_mobile_view"><span class="getItems_hidden"></span></div>
+                                                    <input type="hidden" name="itemid[]" id="itemid" class="itemid" value="0">
+                                                </td>
+                                                <td width="25%">
+                                                <div class="dropdown-wrapper">
+                                                    <select name="item_type[]" id="item_typeid" class="form-control">
+                                                        <option value="product">Product</option>
+                                                        <option value="material">Material</option>
+                                                        <option value="service">Service</option>
+                                                        <option value="fee">Fee</option>
+                                                    </select>
+                                                </div>
+                                                </td>
+                                                <td width=""><input type="number" class="form-control quantity mobile_qty" name="quantity[]"
+                                                        data-counter="0" id="quantity_0" value="1"></td>
+                                                <td width=""><input type="number" class="form-control price hidden_mobile_view" name="price[]"
+                                                        data-counter="0" id="price_0" min="0" value="0"> <input type="hidden" class="priceqty" value="0" id="priceqty_0"> 
+                                                        <div class="show_mobile_view"><span class="price">0</span>
+                                                        </div><input id="priceM_qty0" value="0"  type="hidden" name="price_qty[]" class="form-control hidden_mobile_view price_qty"></td>
+                                                <!-- <td width="10%" class="hidden_mobile_view"><input type="number" class="form-control discount" name="discount[]"
+                                                        data-counter="0" id="discount_0" min="0" value="0" readonly></td>
+                                                <td width="10%" class="hidden_mobile_view"><input type="text" class="form-control tax_change" name="tax[]"
+                                                        data-counter="0" id="tax1_0" min="0" value="0">
+                                                        </td> -->
+                                                <!-- <td width="10%" class="hidden_mobile_view"><input type="hidden" class="form-control " name="total[]"
+                                                        data-counter="0" id="item_total_0" min="0" value="0">
+                                                        $<span id="span_total_0">0.00</span></td> -->
+                                                <td><a href="#" class="remove btn btn-sm btn-success" id="0"><i class="fa fa-trash" aria-hidden="true"></i></a></td>
+                                            </tr>
+                                            </tbody>
+                                    </table>
+                                    <a class="link-modal-open" href="#" id="add_another_itemss" data-toggle="modal" data-target="#item_list"><span class="fa fa-plus-square fa-margin-right"></span>Add Items</a>
+                                <br>
+                                <br>
+                                <div class="row">
+                                            <div class="col-md-6">
+                                            </div>
+                                            <div class="col-md-6" align="right">
+                                                <b>Set Package Price</b> <input type="text" class="form-control" style="width:50%;">
+                                            </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-primary">Create and Add Package</button>
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- edd package -->
 
              <!-- Modal -->
              <div class="modal fade" id="terms_conditions_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
@@ -4198,7 +4402,7 @@ $.ajax({
                       "<td width=\"35%\"><input value='"+v.title+"' type=\"text\" name=\"items[]\" class=\"form-control getItems\" ><input type=\"hidden\" value='"+v.id+"' name=\"itemid[]\" id=\"itemid\"><div class=\"show_mobile_view\"><span class=\"getItems_hidden\">"+v.title+"</span></div></td>\n" +
                       "<td width=\"20%\"><div class=\"dropdown-wrapper\"><select name=\"item_type[]\" class=\"form-control\"><option value=\"product\">Product</option><option value=\"material\">Material</option><option value=\"service\">Service</option><option value=\"fee\">Fee</option></select></div></td>\n" +
                       "<td width=\"10%\"><input data-itemid='"+v.id+"' id='quantity_"+v.id+"' value='"+v.units+"' type=\"number\" name=\"quantity[]\" data-counter=\"0\"  min=\"0\" class=\"form-control qtyest2 mobile_qty \"></td>\n" +
-                      "<td width=\"10%\"><input id='price_"+v.id+"' value='"+v.price+"'  type=\"number\" name=\"price[]\" class=\"form-control hidden_mobile_view \" placeholder=\"Unit Price\"><input type=\"hidden\" class=\"priceqty\" id='priceqty_"+v.id+"' value='"+total_pu+"'><div class=\"show_mobile_view\"><span class=\"price\">"+v.price+"</span><input type=\"hidden\" class=\"form-control price\" name=\"price[]\" data-counter=\"0\" id=\"priceM_0\" min=\"0\" value='"+v.price+"'></div></td>\n" +
+                      "<td width=\"10%\"><input id='price_"+v.id+"' value='"+v.price+"'  type=\"number\" name=\"price[]\" class=\"form-control hidden_mobile_view \" placeholder=\"Unit Price\"><input type=\"hidden\" class=\"priceqty\" id='priceqty_"+v.id+"' value='"+total_pu+"'><div class=\"show_mobile_view\"><span class=\"price\">"+v.price+"</span><input type=\"hidden\" class=\"form-control price\" name=\"price_[]\" data-counter=\"0\" id=\"priceM_0\" min=\"0\" value='"+v.price+"'></div></td>\n" +
                     //   "<td width=\"10%\"><input type=\"number\" class=\"form-control discount\" name=\"discount[]\" data-counter=\"0\" id=\"discount_0\" value=\"0\" ></td>\n" +
                     // //  "<td width=\"10%\"><small>Unit Cost</small><input type=\"text\" name=\"item_cost[]\" class=\"form-control\"></td>\n" +
                       "<td width=\"10%\" class=\"hidden_mobile_view\"><input type=\"number\" name=\"discount[]\" class=\"form-control discount\" id='discount_"+v.id+"' value=\"0\"></td>\n" +
