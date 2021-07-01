@@ -1829,6 +1829,8 @@ $(function() {
                 if(transactions.length > 0) {
                     if($('#expenseModal .transactions-container').length > 0) {
                         $('#expenseModal .transactions-container').parent().remove();
+                        $('#expenseModal a.close-transactions-container').parent().remove();
+                        $('#expenseModal a.open-transactions-container').parent().remove();
                     }
 
                     $('#expenseModal .modal-body .row .col .card .card-body').children('.row:first-child').prepend(`
@@ -1893,6 +1895,8 @@ $(function() {
                 if(transactions.length > 0) {
                     if($('#checkModal .transactions-container').length > 0) {
                         $('#checkModal .transactions-container').parent().remove();
+                        $('#checkModal a.close-transactions-container').parent().remove();
+                        $('#checkModal a.open-transactions-container').parent().remove();
                     }
 
                     $('#checkModal .modal-body .row .col .card .card-body').children('.row:first-child').prepend(`
@@ -1955,6 +1959,8 @@ $(function() {
             if(transactions.length > 0) {
                 if($('#billModal .transactions-container').length > 0) {
                     $('#billModal .transactions-container').parent().remove();
+                    $('#billModal a.close-transactions-container').parent().remove();
+                    $('#billModal a.open-transactions-container').parent().remove();
                 }
 
                 $('#billModal .modal-body .row .col .card .card-body').children('.row:first-child').prepend(`
@@ -2016,6 +2022,8 @@ $(function() {
             if(transactions.length > 0) {
                 if($('#billPaymentModal .transactions-container').length > 0) {
                     $('#billPaymentModal .transactions-container').parent().remove();
+                    $('#billPaymentModal a.close-transactions-container').parent().remove();
+                    $('#billPaymentModal a.open-transactions-container').parent().remove();
                 }
 
                 $('#billPaymentModal .modal-body .row .col .card .card-body').children('.row:first-child').prepend(`
@@ -2031,7 +2039,7 @@ $(function() {
                         <div class="transactions-container bg-white h-100" style="padding: 15px">
                             <div class="row">
                                 <div class="col-12">
-                                    <h4>Add to Bill</h4>
+                                    <h4>Add to Bill Payment</h4>
                                 </div>
                             </div>
                         </div>
@@ -2039,7 +2047,7 @@ $(function() {
                 `);
 
                 $.each(transactions, function(index, transaction) {
-                    if(transaction.type === 'Bill' && $(`#billPaymentModal #bills-table input[type="checkbox"][value="${transaction.id}"]`).length === 0) {
+                    if(transaction.type === 'Bill' && $(`#billPaymentModal input[name="bills[]"][value="${transaction.id}"]`).length === 0) {
                         var title = transaction.type;
                         title += transaction.number !== '' ? '#'+transaction.number : '';
                         $('#billPaymentModal .modal-body .row .col-xl-2 .transactions-container .row').append(`
@@ -2062,7 +2070,7 @@ $(function() {
                         `);
                     }
 
-                    if(transaction.type === 'Vendor Credit' && $(`#billPaymentModal #vendor-credits-table input[type="checkbox"][value="${transaction.id}"]`).length === 0) {
+                    if(transaction.type === 'Vendor Credit' && $(`#billPaymentModal input[name="credits[]"][value="${transaction.id}"]`).length === 0) {
                         var title = transaction.type;
                         title += transaction.number !== '' ? '#'+transaction.number : '';
                         $('#billPaymentModal .modal-body .row .col-xl-2 .transactions-container .row').append(`
@@ -2110,7 +2118,7 @@ $(function() {
                     var dataType = data.type.replace('-', ' ').replace(/(?:^|\s)\S/g, function(a) { return a.toUpperCase(); });
                     var date = new Date(details.purchase_order_date);
                     var dateString = String(date.getMonth() + 1).padStart(2, '0')+'/'+String(date.getDate()).padStart(2, '0')+'/'+date.getFullYear();
-        
+
                     var link = `
                     <td>
                         <div class="dropdown">
@@ -2256,12 +2264,30 @@ $(function() {
 
                         $(`#billPaymentModal #payee`).trigger('change');
 
-                        $('#billPaymentModal .card-body').children('.row:first-child').append(`<input type="hidden" name="bills[]" value="${data.id}">`);
+                        $('#billPaymentModal .card-body').children('.row:first-child').prepend(`<input type="hidden" name="bills[]" value="${data.id}">`);
 
-                        loadBillPaymentBills(data);
+                        loadBillPaymentBills();
+                        loadBillPaymentCredits();
 
                         $(`#billPaymentModal`).modal('show');
                     });
+                } else {
+                    $('#billPaymentModal .card-body').children('.row:first-child').prepend(`<input type="hidden" name="bills[]" value="${data.id}">`);
+
+                    $('#billPaymentModal #bills-table').DataTable().ajax.reload();
+
+                    $(this).parent().parent().parent().parent().parent().remove();
+                }
+            break;
+            case 'vendor-credit' :
+                if($('#modal-container .modal').attr('id') === 'billPaymentModal') {
+                    $('#billPaymentModal .card-body').children('.row:first-child').prepend(`<input type="hidden" name="credits[]" value="${data.id}">`);
+
+                    $('#billPaymentModal #vendor-credits-table').DataTable().ajax.reload();
+
+                    $(this).parent().parent().parent().parent().parent().remove();
+                } else {
+
                 }
             break;
         }
@@ -2375,6 +2401,152 @@ $(function() {
         });
 
         $('#billPaymentModal #bills-table').DataTable().ajax.reload();
+    });
+
+    $(document).on('click', '#billPaymentModal #bills-table tbody a', function(e) {
+        e.preventDefault();
+        var id = e.currentTarget.dataset.id;
+
+        $('#modal-container .modal').modal('hide');
+
+        $.get(`/accounting/vendors/view-bill/`+id, function(res) {
+            if ($('div#modal-container').length > 0) {
+                $('div#modal-container').html(res);
+            } else {
+                $('body').append(`
+                    <div id="modal-container"> 
+                        ${res}
+                    </div>
+                `);
+            }
+
+            initModalFields('billModal', {id:id,type:'bill'});
+    
+            $(`#billModal #payee`).trigger('change');
+    
+            $(`#billModal`).modal('show');
+        });
+    });
+
+    $(document).on('click', '#billPaymentModal #vendor-credits-table tbody a', function(e) {
+        e.preventDefault();
+        var id = e.currentTarget.dataset.id;
+
+        $('#modal-container .modal').modal('hide');
+
+        $.get(`/accounting/vendors/view-vendor-credit/`+id, function(res) {
+            if ($('div#modal-container').length > 0) {
+                $('div#modal-container').html(res);
+            } else {
+                $('body').append(`
+                    <div id="modal-container"> 
+                        ${res}
+                    </div>
+                `);
+            }
+
+            initModalFields('vendorCreditModal', {id:id,type:'vendor-credit'});
+
+            $(`#vendorCreditModal #payee`).trigger('change');
+
+            $(`#vendorCreditModal`).modal('show');
+        });
+    });
+
+    $(document).on('change', '#billPaymentModal #bills-table tbody input[type="checkbox"]', function() {
+        var value = $(this).val();
+
+        if($(this).prop('checked') === false) {
+            $(`#billPaymentModal input[type="hidden"][value="${value}"]`).remove();
+        } else {
+            $('#billPaymentModal .card-body').children('.row:first-child').prepend(`<input type="hidden" name="bills[]" value="${$(this).val()}">`);
+        }
+
+        $('#billPaymentModal #bills-table').DataTable().ajax.reload();
+
+        $.get('/accounting/get-linkable-transactions/bill-payment/'+$('#billPaymentModal #payee').val(), function(res) {
+            var transactions = JSON.parse(res);
+
+            if(transactions.length > 0) {
+                if($('#billPaymentModal .transactions-container').length > 0) {
+                    $('#billPaymentModal .transactions-container').parent().remove();
+                    $('#billPaymentModal a.close-transactions-container').parent().remove();
+                    $('#billPaymentModal a.open-transactions-container').parent().remove();
+                }
+
+                $('#billPaymentModal .modal-body .row .col .card .card-body').children('.row:first-child').prepend(`
+                    <div class="col-md-12 px-0 pb-2">
+                        <a href="#" class="float-right btn btn-transparent rounded-0 close-transactions-container" style="padding:12px 15px !important">
+                            <i class="fa fa-chevron-right"></i>
+                        </a>
+                    </div>
+                `);
+
+                $('#billPaymentModal .modal-body').children('.row').append(`
+                    <div class="col-xl-2">
+                        <div class="transactions-container bg-white h-100" style="padding: 15px">
+                            <div class="row">
+                                <div class="col-12">
+                                    <h4>Add to Bill</h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `);
+
+                $.each(transactions, function(index, transaction) {
+                    if(transaction.type === 'Bill' && $(`#billPaymentModal input[name="bills[]"][value="${transaction.id}"]`).length === 0) {
+                        var title = transaction.type;
+                        title += transaction.number !== '' ? '#'+transaction.number : '';
+                        $('#billPaymentModal .modal-body .row .col-xl-2 .transactions-container .row').append(`
+                            <div class="col-12">
+                                <div class="card border">
+                                    <div class="card-body p-0">
+                                        <h5 class="card-title">${title}</h5>
+                                        <p class="card-subtitle">${transaction.formatted_date}</p>
+                                        <p class="card-text">
+                                            <strong>Total</strong> ${transaction.total}
+                                            ${transaction.type === 'Purchase Order' ? '<br><strong>Balance</strong> '+transaction.balance : ''}
+                                        </p>
+                                        <ul class="d-flex justify-content-around">
+                                            <li><a href="#" class="text-info add-transaction" data-id="${transaction.id}" data-type="${transaction.data_type}"><strong>Add</strong></a></li>
+                                            <li><a href="#" class="text-info open-transaction" data-id="${transaction.id}" data-type="${transaction.data_type}">Open</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        `);
+                    }
+
+                    if(transaction.type === 'Vendor Credit' && $(`#billPaymentModal input[name="credits[]"][value="${transaction.id}"]`).length === 0) {
+                        var title = transaction.type;
+                        title += transaction.number !== '' ? '#'+transaction.number : '';
+                        $('#billPaymentModal .modal-body .row .col-xl-2 .transactions-container .row').append(`
+                            <div class="col-12">
+                                <div class="card border">
+                                    <div class="card-body p-0">
+                                        <h5 class="card-title">${title}</h5>
+                                        <p class="card-subtitle">${transaction.formatted_date}</p>
+                                        <p class="card-text">
+                                            <strong>Total</strong> ${transaction.total}
+                                            ${transaction.type === 'Purchase Order' ? '<br><strong>Balance</strong> '+transaction.balance : ''}
+                                        </p>
+                                        <ul class="d-flex justify-content-around">
+                                            <li><a href="#" class="text-info add-transaction" data-id="${transaction.id}" data-type="${transaction.data_type}"><strong>Add</strong></a></li>
+                                            <li><a href="#" class="text-info open-transaction" data-id="${transaction.id}" data-type="${transaction.data_type}">Open</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        `);
+                    }
+                });
+            } else {
+                $('#billPaymentModal .transactions-container').parent().remove();
+                $('#billPaymentModal a.close-transactions-container').parent().remove();
+                $('#billPaymentModal a.open-transactions-container').parent().remove();
+            }
+        });
     });
 });
 
@@ -3350,7 +3522,7 @@ const unlinkTransaction = () =>  {
             computeTransactionTotal();
         }
     } else {
-        if($('#billPaymentModal input[name="bills[]"]').length > 0) {
+        if($('#billPaymentModal input[name="bills[]"]').length > 0 && $('#billPaymentModal #bills-table tbody tr').length > 0) {
             $('#billPaymentModal input[name="bills[]"]').remove();
             $('#billPaymentModal #search-bill-no').val('');
             $('#billPaymentModal #bills-from').val('');
@@ -3487,7 +3659,7 @@ const initModalFields = (modalName, data = {}) => {
     }
 }
 
-const loadBillPaymentBills = (data = {}) => {
+const loadBillPaymentBills = () => {
     $('#billPaymentModal table#bills-table').DataTable({
         autoWidth: false,
         searching: false,
@@ -3495,7 +3667,7 @@ const loadBillPaymentBills = (data = {}) => {
         serverSide: true,
         lengthChange: false,
         info: false,
-        pageLength: $('#billPaymentModal #table_rows').val(),
+        pageLength: $('#billPaymentModal #bills_table_rows').val(),
         ordering: false,
         ajax: {
             url: '/accounting/load-bill-payment-bills/',
@@ -3527,7 +3699,7 @@ const loadBillPaymentBills = (data = {}) => {
                 fnCreatedCell: function(td, cellData, rowData, row, col) {
                     $(td).html(`
                     <div class="d-flex align-items-center justify-content-center">
-                        <input type="checkbox" value="${cellData}" checked>
+                        <input type="checkbox" value="${cellData}" ${rowData.selected ? 'checked' : ''}>
                     </div>
                     `);
                 }
@@ -3552,7 +3724,74 @@ const loadBillPaymentBills = (data = {}) => {
                 data: 'payment',
                 name: 'payment',
                 fnCreatedCell: function(td, cellData, rowData, row, col) {
-                    $(td).html(`<input type="number" value="${cellData}" class="form-control text-right" onchange="convertToDecimal(this)">`);
+                    $(td).html(`<input type="number" value="${rowData.selected ? cellData : ''}" name="payment[]" class="form-control text-right" onchange="convertToDecimal(this)" max="${rowData.open_balance}">`);
+                }
+            }
+        ]
+    });
+}
+
+const loadBillPaymentCredits = () => {
+    $('#billPaymentModal table#vendor-credits-table').DataTable({
+        autoWidth: false,
+        searching: false,
+        processing: true,
+        serverSide: true,
+        lengthChange: false,
+        info: false,
+        pageLength: $('#billPaymentModal #vcredits_table_rows').val(),
+        ordering: false,
+        ajax: {
+            url: '/accounting/load-bill-payment-credits/',
+            dataType: 'json',
+            contentType: 'application/json',
+            type: 'POST',
+            data: function(d) {
+                d.search = $('#billPaymentModal #search-vcredit-no').val();
+                d.from = $('#billPaymentModal #vcredit-from').val();
+                d.to = $('#billPaymentModal #vcredit-to').val();
+                d.length = parseInt($('#billPaymentModal #vcredits_table_rows').val());
+                d.vendor = $('#billPaymentModal #payee').val();
+                d.credits = [];
+
+                $('#billPaymentModal input[name="credits[]"]').each(function() {
+                    d.credits.push($(this).val());
+                });
+
+                return JSON.stringify(d);
+            },
+            pagingType: 'full_numbers'
+        },
+        columns: [
+            {
+                data: 'id',
+                name: 'id',
+                orderable: false,
+                fnCreatedCell: function(td, cellData, rowData, row, col) {
+                    $(td).html(`
+                    <div class="d-flex align-items-center justify-content-center">
+                        <input type="checkbox" value="${cellData}" ${rowData.selected ? 'checked' : ''}>
+                    </div>
+                    `);
+                }
+            },
+            {
+                data: 'description',
+                name: 'description'
+            },
+            {
+                data: 'original_amount',
+                name: 'original_amount'
+            },
+            {
+                data: 'open_balance',
+                name: 'open_balance'
+            },
+            {
+                data: 'payment',
+                name: 'payment',
+                fnCreatedCell: function(td, cellData, rowData, row, col) {
+                    $(td).html(`<input type="number" value="${rowData.selected ? cellData : ''}" name="payment[]" class="form-control text-right" onchange="convertToDecimal(this)" max="${rowData.open_balance}">`);
                 }
             }
         ]

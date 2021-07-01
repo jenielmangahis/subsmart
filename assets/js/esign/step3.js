@@ -237,6 +237,9 @@ function Step3() {
       const { options = [], subCheckbox = [] } = specs;
       const isCheckbox = field_name === "Checkbox";
 
+      $(".options #requiredText").removeAttr("checked");
+      $(".options #requiredText").prop("checked", Boolean(specs.is_required));
+
       $(".options__valuesItem:first").attr("data-key", field.unique_key);
       $(".options__valuesItem:first").children(":first").attr("type", "checkbox");
 

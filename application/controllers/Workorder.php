@@ -3086,7 +3086,7 @@ class Workorder extends MY_Controller
             'password'                              => $datas->password,
             'offer_code'                            => $datas->offer_code,//
             'tags'                                  => $datas->tags,
-            'schedule_date_given'                   => $datas->schedule_date_given,
+            'date_issued'                           => $datas->date_issued,
             'job_type'                              => $datas->job_type,
             'job_name'                              => $datas->job_name,
             'job_description'                       => $datas->job_description,
