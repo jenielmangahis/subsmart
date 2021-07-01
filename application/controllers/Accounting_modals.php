@@ -4022,16 +4022,15 @@ class Accounting_modals extends MY_Controller {
         $fromDate = $post['from'];
         $toDate = $post['to'];
         $search = $post['search'];
+        $selectedBills = $post['bills'];
 
         $filters = [
             'from' => $fromDate !== "" ? date("Y-m-d", strtotime($fromDate)) : null,
             'to' => $toDate !== "" ? date("Y-m-d", strtotime($toDate)) : null,
-            'overdue' => $post['overdue'],
-            'bill_ids' => $post['bills'],
-            'vendor_id' => $post['vendor']
+            'overdue' => $post['overdue']
         ];
 
-        $bills = $this->expenses_model->get_bills_by_ids_and_vendor($post['bills'], $post['vendor'], $filters);
+        $bills = $this->expenses_model->get_bills_by_vendor($post['vendor'], $filters);
 
         $data = [];
         foreach($bills as $bill) {
@@ -4047,8 +4046,9 @@ class Accounting_modals extends MY_Controller {
                         'description' => $description,
                         'due_date' => date("m/d/Y", strtotime($bill->due_date)),
                         'original_amount' => number_format(floatval($bill->total_amount), 2, '.', ','),
-                        'open_balance' => number_format(floatval($remaining_balance), 2, '.', ','),
-                        'payment' => number_format(floatval($bill->remaining_balance), 2, '.', ',')
+                        'open_balance' => number_format(floatval($bill->remaining_balance), 2, '.', ','),
+                        'payment' => number_format(floatval($bill->remaining_balance), 2, '.', ','),
+                        'selected' => in_array($bill->id, $selectedBills)
                     ];
                 }
             } else {
@@ -4058,7 +4058,8 @@ class Accounting_modals extends MY_Controller {
                     'due_date' => date("m/d/Y", strtotime($bill->due_date)),
                     'original_amount' => number_format(floatval($bill->total_amount), 2, '.', ','),
                     'open_balance' => number_format(floatval($bill->remaining_balance), 2, '.', ','),
-                    'payment' => number_format(floatval($bill->remaining_balance), 2, '.', ',')
+                    'payment' => number_format(floatval($bill->remaining_balance), 2, '.', ','),
+                    'selected' => in_array($bill->id, $selectedBills)
                 ];
             }
         }
@@ -4066,6 +4067,65 @@ class Accounting_modals extends MY_Controller {
         $result = [
             'draw' => $post['draw'],
             'recordsTotal' => count($bills),
+            'recordsFiltered' => count($data),
+            'data' => array_slice($data, $start, $limit)
+        ];
+
+        echo json_encode($result);
+    }
+
+    public function load_bill_payment_credits()
+    {
+        $post = json_decode(file_get_contents('php://input'), true);
+        $start = $post['start'];
+        $limit = $post['length'];
+        $fromDate = $post['from'];
+        $toDate = $post['to'];
+        $search = $post['search'];
+        $selectedCredits = $post['credits'];
+
+        $filters = [
+            'from' => $fromDate !== "" ? date("Y-m-d", strtotime($fromDate)) : null,
+            'to' => $toDate !== "" ? date("Y-m-d", strtotime($toDate)) : null
+        ];
+
+        $credits = $this->expenses_model->get_credits_by_vendor($post['vendor'], $filters);
+
+        $data = [];
+        foreach($credits as $credit) {
+            $description = '<a href="#" class="text-info" data-id="'.$credit->id.'">Vendor Credit ';
+            $description .= $credit->ref_no !== "" && !is_null($credit->ref_no) ? '# '.$credit->ref_no.' ' : '';
+            $description .= '</a>';
+            $description .= '('.date("m/d/Y", strtotime($credit->payment_date)).')';
+
+            if($search !== "") {
+                if(stripos($credit->ref_no, $search) !== false) {
+                    $data[] = [
+                        'id' => $credit->id,
+                        'description' => $description,
+                        'due_date' => date("m/d/Y", strtotime($credit->due_date)),
+                        'original_amount' => number_format(floatval($credit->total_amount), 2, '.', ','),
+                        'open_balance' => number_format(floatval($credit->remaining_balance), 2, '.', ','),
+                        'payment' => number_format(floatval($credit->remaining_balance), 2, '.', ','),
+                        'selected' => in_array($credit->id, $selectedCredits)
+                    ];
+                }
+            } else {
+                $data[] = [
+                    'id' => $credit->id,
+                    'description' => $description,
+                    'due_date' => date("m/d/Y", strtotime($credit->due_date)),
+                    'original_amount' => number_format(floatval($credit->total_amount), 2, '.', ','),
+                    'open_balance' => number_format(floatval($credit->remaining_balance), 2, '.', ','),
+                    'payment' => number_format(floatval($credit->remaining_balance), 2, '.', ','),
+                    'selected' => in_array($credit->id, $selectedCredits)
+                ];
+            }
+        }
+
+        $result = [
+            'draw' => $post['draw'],
+            'recordsTotal' => count($credits),
             'recordsFiltered' => count($data),
             'data' => array_slice($data, $start, $limit)
         ];

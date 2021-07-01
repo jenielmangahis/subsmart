@@ -17,6 +17,41 @@
                     <div class="modal-body">
                         <div class="row">
                             <div class="col-md-6">
+                                <div class="recurring-form-part">
+                                    <div class="recurring-title">Recurring Sales Receipt</div>
+                                    <div class="row no-margin">
+                                        <div class="col-md-8 no-padding">
+                                            <div class="row no-margin">
+                                                <div class="col-md-3  no-padding">
+                                                    Template name
+                                                    <input type="email" class="form-control"
+                                                        name="recurring-template-name">
+                                                </div>
+                                                <div class="col-md-8">
+                                                    <div>Type</div>
+                                                    <div class="recurring-type">
+                                                        <select class="form-control" name="recurring-type">
+                                                            <option>Schedule</option>
+                                                            <option>Reminder</option>
+                                                            <option>Unschedule</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="recuring-label-type">
+                                                        Create
+                                                    </div>
+                                                    <div class="recurring-days-in-advance">
+                                                        <input type="number" class="form-control"
+                                                            name="recurring-days-in-advance">
+                                                    </div>
+                                                    <div class="recuring-label-recurring-days-in-advance">
+                                                        days in advance
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
                                 <div class="row">
                                     <div class="col-md-3">
                                         Customer
@@ -34,6 +69,113 @@
                                         Email
                                         <input type="email" class="form-control" name="email" id="email2">
                                         <div style="margin-top:5px;"><input type="checkbox"> Send later</div>
+                                    </div>
+                                </div>
+                                <div class="recurring-form-part below">
+                                    <div class="row no-margin">
+                                        <div class="col-md-12 no-padding">
+                                            <div class="row no-margin">
+                                                <div class="col-md-3  no-padding">
+                                                    Interval
+                                                    <select class="form-control" name="recurring-type">
+                                                        <option>Daily</option>
+                                                        <option>Weekly</option>
+                                                        <option>Monthly</option>
+                                                        <option>Yearly</option>
+                                                    </select>
+                                                </div>
+                                                <div class="col-md-9">
+                                                    <div class="interval-part">
+                                                        <div class="monthly">
+                                                            <div class="label" style="color:transparent;">transparent
+                                                            </div>
+                                                            <div class="label-1">on</div>
+                                                            <div class="monthly-day-of-week">
+                                                                <select class="form-control" name="monthly-day-of-week">
+                                                                    <option>Day</option>
+                                                                    <option>First</option>
+                                                                    <option>Second</option>
+                                                                    <option>Second</option>
+                                                                    <option>Third</option>
+                                                                    <option>Forth</option>
+                                                                    <option>Last</option>
+                                                                </select>
+                                                            </div>
+                                                            <div class="monthly-day">
+                                                                <select class="form-control" name="monthly-day">
+                                                                    <option>1st</option>
+                                                                    <option>2nd</option>
+                                                                    <option>3rd</option>
+                                                                    <option>4th</option>
+                                                                    <option>5th</option>
+                                                                    <option>6th</option>
+                                                                    <option>7th</option>
+                                                                    <option>8th</option>
+                                                                    <option>9th</option>
+                                                                    <option>10th</option>
+                                                                    <option>11th</option>
+                                                                    <option>12th</option>
+                                                                    <option>13th</option>
+                                                                    <option>14th</option>
+                                                                    <option>15th</option>
+                                                                    <option>16th</option>
+                                                                    <option>17th</option>
+                                                                    <option>18th</option>
+                                                                    <option>19th</option>
+                                                                    <option>20th</option>
+                                                                    <option>21st</option>
+                                                                    <option>22nd</option>
+                                                                    <option>23rd</option>
+                                                                    <option>24th</option>
+                                                                    <option>25th</option>
+                                                                    <option>26th</option>
+                                                                    <option>27th</option>
+                                                                    <option>28th</option>
+                                                                    <option>Last</option>
+                                                                </select>
+                                                            </div>
+                                                            <div class="label-2">of every</div>
+                                                            <div class="monthly-months">
+                                                                <input type="number" class="form-control"
+                                                                    name="monthly-months">
+                                                            </div>
+                                                            <div class="label-3">
+                                                                months
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="date-part" style="display: none;">
+                                                        <div class="input-field-1">
+                                                            <div class="label">Start Date</div>
+                                                            <input type="text" class="datepicker"
+                                                                name="recurring-start-date">
+                                                        </div>
+                                                        <div class="input-field-2">
+                                                            <div class="label">End</div>
+                                                            <select class="form-control" name="monthly-day">
+                                                                <option>None</option>
+                                                                <option>By</option>
+                                                                <option>After</option>
+                                                            </select>
+                                                        </div>
+                                                        <div class="input-field-3">
+                                                            <div class="by-end-date">
+                                                                <div class="label">Start Date</div>
+                                                                <input type="text" class="datepicker"
+                                                                    name="by-end-date">
+                                                            </div>
+                                                            <div class="after-occurrences">
+                                                                <input type="text" class="datepicker"
+                                                                    name="after-occurrences">
+                                                                <div class="label">occurrences</div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+
+                                        </div>
                                     </div>
                                 </div>
                                 <hr>

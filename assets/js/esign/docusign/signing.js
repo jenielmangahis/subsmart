@@ -514,7 +514,7 @@ function Signing(hash) {
         const { pageTop: top, left } = JSON.parse(coordinates);
 
         context.font = "12px monospace";
-        context.fillText(isString ? $element : text, left, top);
+        context.fillText(isString ? $element : text, left + (isString ? 40 : 0), top + 30);
         return;
       }
 

@@ -825,17 +825,13 @@ class Expenses_model extends MY_Model
         return $query->result();
     }
 
-    public function get_bills_by_ids_and_vendor($billIds, $vendor, $filters = [])
+    public function get_bills_by_vendor($vendor, $filters = [])
     {
         $this->db->where('company_id', logged('company_id'));
         $this->db->where('vendor_id', $vendor);
-
-        if(count($billIds) > 0) {
-            $this->db->where_in('id', $billIds);
-        }
+        $this->db->where('status', 1);
 
         if($filters['overdue'] === 'true') {
-            $this->db->where('status', 1);
             $this->db->where('due_date <', date("Y-m-d"));
         }
 
@@ -848,6 +844,24 @@ class Expenses_model extends MY_Model
         }
 
         $query = $this->db->get('accounting_bill');
+        return $query->result();
+    }
+
+    public function get_credits_by_vendor($vendor, $filters = [])
+    {
+        $this->db->where('company_id', logged('company_id'));
+        $this->db->where('vendor_id', $vendor);
+        $this->db->where('status', 1);
+
+        if(isset($filters['from']) && !is_null($filters['from'])) {
+            $this->db->where('payment_date >=', $filters['from']);
+        }
+
+        if(isset($filters['to']) && !is_null($filters['to'])) {
+            $this->db->where('payment_date <=', $filters['to']);
+        }
+
+        $query = $this->db->get('accounting_vendor_credit');
         return $query->result();
     }
 }

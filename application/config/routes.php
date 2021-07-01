@@ -310,6 +310,7 @@ $route['accounting/get-linkable-transactions/(:any)/(:any)'] = 'accounting_modal
 $route['accounting/get-transaction-details/(:any)/(:any)'] = 'accounting_modals/get_transaction_details/$1/$2';
 $route['accounting/bill-payment-form/(:any)'] = 'accounting_modals/bill_payment_form/$1';
 $route['accounting/load-bill-payment-bills']['post'] = 'accounting_modals/load_bill_payment_bills';
+$route['accounting/load-bill-payment-credits']['post'] = 'accounting_modals/load_bill_payment_credits';
 
 $route['accounting/lists'] = 'accounting/lists';
 
