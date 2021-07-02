@@ -1,6 +1,6 @@
 <!-- Modal for bank deposit-->
 <div class="full-screen-modal">
-<form onsubmit="updateTransaction(event, this)" id="modal-form" data-href="/accounting/vendors/<?=$vendor->id?>/update-transaction/bill-payment/<?=$billPayment->id?>">
+<form onsubmit="submitModalForm(event, this)" id="modal-form">
     <div id="billPaymentModal" class="modal fade modal-fluid" role="dialog">
         <div class="modal-dialog">
             <!-- Modal content-->
@@ -94,7 +94,7 @@
                                                 <div class="col-md-3">
                                                     <div class="form-group">
                                                         <label for="amount">Amount</label>
-                                                        <input type="number" class="form-control" id="bill-payment-amount" value="<?=number_format($bill->remaining_balance, 2, '.', ',')?>" onchange="convertToDecimal(this)">
+                                                        <input type="number" name="payment_amount" class="form-control text-right" id="bill-payment-amount" value="<?=number_format($bill->remaining_balance, 2, '.', ',')?>" onchange="convertToDecimal(this)">
                                                     </div>
                                                 </div>
                                             </div>
@@ -265,7 +265,7 @@
                                                         <thead>
                                                             <th>
                                                                 <div class="d-flex justify-content-center">
-                                                                    <input type="checkbox" id="select-all-bills">
+                                                                    <input type="checkbox" id="select-all-credits">
                                                                 </div>
                                                             </th>
                                                             <th>DESCRIPTION</th>

@@ -425,7 +425,7 @@ class Vendors_model extends MY_Model {
 			$this->db->where('payment_date >=', $filters['start-date']);
 			$this->db->where('payment_date <=', $filters['end-date']);
 		}
-		$this->db->where('status', 1);
+		$this->db->where('status !=', 0);
 		$this->db->order_by('created_at', $filters['order']);
 
 		$query = $this->db->get('accounting_vendor_credit');

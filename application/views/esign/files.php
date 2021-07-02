@@ -482,15 +482,15 @@
             <div class="options mt-3">
                 <div class="mt-2 mb-2">
                     <div>
-                        <input type="checkbox" name="requiredText" id="requiredText">
-                        <label for="requiredText">Required Field</label>
+                        <input type="checkbox" name="optionsRequired" id="optionsRequired">
+                        <label for="optionsRequired">Required Field</label>
                     </div>
 
                     <hr/>
 
                     <div>
-                        <label for="textFieldName">Field name</label>
-                        <input type="text" name="textFieldName" id="textFieldName" class="w-100">
+                        <label for="optionsFieldName">Field name</label>
+                        <input type="text" name="optionsFieldName" id="optionsFieldName" class="w-100">
                     </div>
 
                     <div class="options__values">
@@ -500,6 +500,31 @@
                             <input style="flex-grow: 1;" type="text">
                         </div>
                         <div class="options__valuesSubItems"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dropdown mt-3">
+                <div class="mt-2 mb-2">
+                    <div>
+                        <input type="checkbox" name="requiredDropdown" id="requiredDropdown">
+                        <label for="requiredDropdown">Required Field</label>
+                    </div>
+
+                    <hr/>
+
+                    <div>
+                        <label for="dropdownName">Field name</label>
+                        <input type="text" name="dropdownName" id="dropdownName" class="w-100">
+                    </div>
+
+                    <div>
+                        <label>Options</label>
+                        <div class="options__values"></div>
+                    </div>
+
+                    <div>
+                        <button class="btn btn-block btn-primary mt-2" id="addDropdownOption">+ Add Option</button>
                     </div>
                 </div>
             </div>

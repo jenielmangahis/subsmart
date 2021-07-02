@@ -366,8 +366,8 @@ add_css(array(
                         </div>
                         <br>
                         <div class="col-sm-12">
-                            <p>Description of Event (optional)</p>
-                            <textarea name="event_description" class="form-control"><?= isset($jobs_data) ? $jobs_data->job_description : ''; ?></textarea>
+                            <p>Description of Event</p>
+                            <textarea name="event_description" required="" class="form-control"><?= isset($jobs_data) ? $jobs_data->job_description : ''; ?></textarea>
                             <hr/>
                         </div>
                         <div class="col-md-12 table-responsive">

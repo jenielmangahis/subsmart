@@ -65,7 +65,8 @@ class Accounting extends MY_Controller
             "assets/plugins/dropzone/dist/dropzone.js",
             "assets/js/accounting/accounting.js",
             "assets/js/accounting/modal-forms.js",
-            "assets/plugins/jquery-toast-plugin-master/dist/jquery.toast.min.js"
+            "assets/plugins/jquery-toast-plugin-master/dist/jquery.toast.min.js",
+            "assets/js/accounting/sales/customer_sales_receipt_modal.js"
         ));
 
         $this->page_data['menu_name'] =
@@ -3023,7 +3024,6 @@ class Accounting extends MY_Controller
 
             $pay = $this->accounting_sales_receipt_model->save_payment($payment_data);
         }
-
         // if($addQuery > 0){
         //     echo json_encode($addQuery);
         // }

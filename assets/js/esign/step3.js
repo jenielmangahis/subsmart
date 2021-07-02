@@ -223,7 +223,7 @@ function Step3() {
     $fieldNameInput.val("");
     $fieldValueInput.val("");
 
-    const fieldTypeWithOptions = ["Checkbox", "Dropdown", "Radio"];
+    const fieldTypeWithOptions = ["Checkbox", "Radio"];
     let fieldType = "field";
 
     if (field_name === "Formula") {
@@ -237,20 +237,20 @@ function Step3() {
       const { options = [], subCheckbox = [] } = specs;
       const isCheckbox = field_name === "Checkbox";
 
-      $(".options #requiredText").removeAttr("checked");
-      $(".options #requiredText").prop("checked", Boolean(specs.is_required));
+      $(".options #optionsRequired").removeAttr("checked");
+      $(".options #optionsRequired").prop("checked", Boolean(specs.is_required));
 
       $(".options__valuesItem:first").attr("data-key", field.unique_key);
       $(".options__valuesItem:first").children(":first").attr("type", "checkbox");
 
       $(".options__valuesSubItems").empty();
-      $(".options #textFieldName").val(specs.name ? specs.name : "");
+      $(".options #optionsFieldName").val(specs.name ? specs.name : "");
 
       const $valueItem = $(`.options__valuesItem[data-key=${field.unique_key}]`);
 
       const $checkbox = $valueItem.find("[type=checkbox]");
       $checkbox.attr("type", isCheckbox ? "checkbox" : "radio");
-      if (specs.name) $checkbox.attr("name", specs.name);
+      $checkbox.attr("name", specs.name ? specs.name : field.unique_key);
       $checkbox.prop("checked", Boolean(specs.isChecked));
 
       $valueItem.find("[type=text]").val(specs.value || "");
@@ -264,7 +264,7 @@ function Step3() {
         const $checkbox = $valueItem.find(`[type=${isCheckbox ? "checkbox" : "radio"}]`);
         $checkbox.attr("type", isCheckbox ? "checkbox" : "radio");
         $checkbox.prop("checked", item.isChecked);
-        if (specs.name) $checkbox.attr("name", specs.name);
+        $checkbox.attr("name", specs.name ? specs.name : field.unique_key);
 
         $valueItem.find("[type=text]").val(item.value || "");
         $(".options__valuesSubItems").append($valueItem);
@@ -304,6 +304,22 @@ function Step3() {
       $(".text #readOnlyText").prop("checked", specs.is_read_only);
       $(".text #textFieldName").val(specs.name ? specs.name : "");
       $(".text #textFieldValue").val(specs.value ? specs.value : "");
+    } else if (field_name === "Dropdown") {
+      fieldType = "dropdown";
+
+      $(".dropdown #dropdownName").val(specs.name ? specs.name : "");
+      $(".dropdown .options__values").empty();
+      $(".dropdown #requiredDropdown").removeAttr("checked");
+      $(".dropdown #requiredDropdown").prop("checked", Boolean(specs.is_required));
+
+      if (specs && specs.values && specs.values.length) {
+        const $elements = specs.values.map(v => createDropdownInput({ value: v }));
+        $(".dropdown .options__values").append($elements);
+      } else {
+        const $element = createDropdownInput({ value: "" });
+        $(".dropdown .options__values").append($element);
+        $element.find("input").focus();
+      }
     }
 
     $optionsSidebar.attr("data-field-type", fieldType);
@@ -625,18 +641,16 @@ function Step3() {
 
   function createDropdownInput({ value = null }) {
     const html = `
-        <div class="esignBuilder__optionInput">
-            <input class="form-control">
-            <button type="button" class="btn esignBuilder__dropdownClose" tabindex="-1">
-              <i class="fa fa-times"></i>
-            </button>
-        </div>
+      <div class="options__valuesItem d-flex align-items-center">
+          <input style="flex-grow: 1;" type="text">
+          <button class="btn btn-secondary options__close"><i class="fa fa-times"></i></button>
+      </div>
       `;
 
     const $element = createElementFromHTML(html);
     $element.find("input").val(value);
 
-    const $close = $element.find(".esignBuilder__dropdownClose");
+    const $close = $element.find(".options__close");
 
     $close.on("click", function () {
       $(this).parent().remove();
@@ -757,10 +771,10 @@ function Step3() {
       window.location = nextUrl;
     });
 
-    const $addOption = $optionsSidebar.find("#addOption");
+    const $addOption = $optionsSidebar.find("#addDropdownOption");
     $addOption.on("click", function () {
       const $element = createDropdownInput({ value: "" });
-      $optionsSidebar.append($element);
+      $(".dropdown .options__values").append($element);
       $element.find("input").focus();
     });
 
@@ -785,8 +799,28 @@ function Step3() {
           name: !isEmpty(fieldName) ? fieldName : null,
           value: fieldValue
         };
-      } else {
+      } else if (fieldType === "dropdown") {
+        const $options = $(".dropdown .options__valuesItem input");
+        const fieldName = $(".dropdown #dropdownName").val().trim();
+        const values = [];
 
+        for (let index = 0; index < $options.length; index++) {
+          const $element = $($options.get(index));
+          if (isEmpty($element.val())) {
+            $element.focus();
+            alert("Please enter value.");
+            return;
+          }
+
+          values.push($element.val());
+        }
+
+        specs = {
+          values,
+          name: !isEmpty(fieldName) ? fieldName : null,
+          is_required: $(".dropdown #requiredDropdown").is(":checked"),
+        };
+      } else {
         const $fieldKey = $(".esignBuilder__optionsSidebarFieldId span");
         const fieldKey = $fieldKey.text();
 
@@ -823,12 +857,12 @@ function Step3() {
           }
         });
 
-        const fieldName = $(".options #textFieldName").val().trim();
+        const fieldName = $(".options #optionsFieldName").val().trim();
         specs = {
           ...specs,
           subCheckbox,
           name: !isEmpty(fieldName) ? fieldName : null,
-          is_required: $(".options #requiredText").is(":checked"),
+          is_required: $(".options #optionsRequired").is(":checked"),
         };
       }
 
@@ -931,6 +965,10 @@ function Step3() {
       }
 
       if ($target.closest(".esignBuilder__optionsSidebar").length) {
+        return;
+      }
+
+      if ($target.closest(".options__close").length) {
         return;
       }
 

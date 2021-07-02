@@ -769,6 +769,460 @@ class Admin extends CI_Controller
         $this->page_data['nSmartAddons'] = $nSmartAddons;
         $this->load->view('admin/nsmart_addons/list', $this->page_data);
     }
+
+    public function add_new_addon(){
+        $this->load->model('NsmartPlan_model');
+
+        $option_status = $this->NsmartPlan_model->getPlanStatus();
+
+        $this->page_data['option_status'] = $option_status;
+        $this->load->view('admin/nsmart_addons/add_new_addon', $this->page_data);
+    }
+
+    public function create_plan_addon() {
+        $this->load->model('NsmartAddons_model');
+
+        $user = $this->session->userdata('logged');
+        $post = $this->input->post();
+
+        if( $post['addon_name'] != '' ){
+            if( $this->NsmartAddons_model->isAddonNameExists($post['addon_name']) ){
+                $this->session->set_flashdata('message', 'Addon name already exists');
+                $this->session->set_flashdata('alert_class', 'alert-danger');
+            }else{
+                $data = [
+                    'name' => $post['addon_name'],
+                    'description' => $post['description'],
+                    'price' => $post['price'],
+                    'status' => $post['status'],
+                    'date_created' => date("Y-m-d H:i:s")
+                ];
+
+                $nsPlan = $this->NsmartAddons_model->create($data);
+
+                $this->session->set_flashdata('message', 'Add new addon was successful');
+                $this->session->set_flashdata('alert_class', 'alert-success');
+            }
+        }else{
+            $this->session->set_flashdata('message', 'Please enter addon name');
+            $this->session->set_flashdata('alert_class', 'alert-danger');
+        }
+
+        redirect('admin/nsmart_addons');
+    }
+
+    public function edit_addon($addon_id) {
+        $this->load->model('NsmartAddons_model');
+        $this->load->model('NsmartPlan_model');
+
+        $nSmartAddon = $this->NsmartAddons_model->getById($addon_id);
+
+        if( $nSmartAddon ){
+            $option_status = $this->NsmartPlan_model->getPlanStatus();
+
+            $this->page_data['nSmartAddon'] = $nSmartAddon;
+            $this->page_data['option_status'] = $option_status;
+            $this->load->view('admin/nsmart_addons/edit_addon', $this->page_data);
+        }else{
+            $this->session->set_flashdata('message', 'Cannot find data');
+            $this->session->set_flashdata('alert_class', 'alert-danger');
+            redirect('admin/nsmart_addons');
+        }
+    }
+
+    public function update_plan_addon() {
+        $this->load->model('NsmartAddons_model');
+
+        $user = $this->session->userdata('logged');
+        $post = $this->input->post();
+
+        $nSmartAddon = $this->NsmartAddons_model->getById($post['addon_id']);
+
+        if( $nSmartAddon ){
+            if( $post['addon_name'] != '' ){
+                $data = [
+                    'name' => $post['addon_name'],
+                    'description' => $post['description'],
+                    'price' => $post['price'],
+                    'status' => $post['status'],
+                    'date_updated' => date("Y-m-d H:i:s")
+                ];
+                $nsAddon = $this->NsmartAddons_model->updateAddon($post['addon_id'],$data);
+
+                $this->session->set_flashdata('message', 'Addon was successfully updated');
+                $this->session->set_flashdata('alert_class', 'alert-success');
+            }else{
+                $this->session->set_flashdata('message', 'Please enter addon name');
+                $this->session->set_flashdata('alert_class', 'alert-danger');
+            }
+
+            redirect('admin/edit_addon/'.$post['addon_id']);
+
+        }else{
+            $this->session->set_flashdata('message', 'Cannot find data');
+            $this->session->set_flashdata('alert_class', 'alert-danger');
+
+            redirect('admin/nsmart_addons');
+        }
+    }
+
+    public function delete_plan_addon(){
+        $this->load->model('NsmartAddons_model');
+        $post = $this->input->post();
+
+        $id = $this->NsmartAddons_model->deleteAddon(post('pid'));
+
+        $this->session->set_flashdata('message', 'Addon has been Deleted Successfully');
+        $this->session->set_flashdata('alert_class', 'alert-success');
+
+        redirect('admin/nsmart_addons');
+    }
+
+    public function plan_upgrades() {
+        $this->load->model('NsmartUpgrades_model');
+        $nSmartUpgrades   = $this->NsmartUpgrades_model->getAll();
+        
+        $this->page_data['nSmartUpgrades'] = $nSmartUpgrades;
+        $this->load->view('admin/nsmart_upgrades/list', $this->page_data);
+    }
+
+    public function add_new_upgrade() {
+        
+        $this->load->view('admin/nsmart_upgrades/add_new_upgrade', $this->page_data);
+    }
+
+    public function create_plan_upgrade() {
+        $this->load->model('NsmartUpgrades_model');
+
+        $user = $this->session->userdata('logged');
+        $post = $this->input->post();
+
+        if( $post['upgrade_name'] != '' ){
+            if( $this->NsmartUpgrades_model->isUpgradeNameExists($post['upgrade_name']) ){
+                $this->session->set_flashdata('message', 'Upgrade name already exists');
+                $this->session->set_flashdata('alert_class', 'alert-danger');
+            }else{
+                $data = [
+                    'name' => $post['upgrade_name'],
+                    'description' => $post['description'],
+                    'sms_fee' => $post['sms_fee'],
+                    'service_fee' => $post['service_fee'],
+                    'status' => $post['status'],
+                    'date_created' => date("Y-m-d H:i:s")
+                ];
+
+                $nsPlan = $this->NsmartUpgrades_model->create($data);
+
+                $this->session->set_flashdata('message', 'Add new upgrade was successful');
+                $this->session->set_flashdata('alert_class', 'alert-success');
+            }
+        }else{
+            $this->session->set_flashdata('message', 'Please enter upgrade name');
+            $this->session->set_flashdata('alert_class', 'alert-danger');
+        }
+
+        redirect('admin/plan_upgrades');
+    }
+
+    public function edit_plan_upgrade($upgrade_id) {
+        $this->load->model('NsmartUpgrades_model');
+        
+        $nSmartUpgrades = $this->NsmartUpgrades_model->getById($upgrade_id);
+
+        if( $nSmartUpgrades ){
+            $this->page_data['nSmartUpgrades'] = $nSmartUpgrades;
+            $this->load->view('admin/nsmart_upgrades/edit_upgrade', $this->page_data);
+        }else{
+            $this->session->set_flashdata('message', 'Cannot find data');
+            $this->session->set_flashdata('alert_class', 'alert-danger');
+            redirect('admin/plan_upgrades');
+        }
+    }
+
+    public function update_plan_upgrade() {
+        $this->load->model('NsmartUpgrades_model');
+
+        $user = $this->session->userdata('logged');
+        $post = $this->input->post();
+
+        $NsmartUpgrades = $this->NsmartUpgrades_model->getById($post['upgrade_id']);
+
+        if( $NsmartUpgrades ){
+            if( $post['upgrade_name'] != '' ){
+                $data = [
+                    'name' => $post['upgrade_name'],
+                    'description' => $post['description'],
+                    'sms_fee' => $post['sms_fee'],
+                    'service_fee' => $post['service_fee'],
+                    'status' => $post['status'],
+                    'date_modified' => date("Y-m-d H:i:s")
+                ];
+                $nsAddon = $this->NsmartUpgrades_model->updateUpgrade($post['upgrade_id'],$data);
+
+                $this->session->set_flashdata('message', 'Upgrade was successfully updated');
+                $this->session->set_flashdata('alert_class', 'alert-success');
+            }else{
+                $this->session->set_flashdata('message', 'Please enter Upgrade name');
+                $this->session->set_flashdata('alert_class', 'alert-danger');
+            }
+
+            redirect('admin/edit_plan_upgrade/'.$post['upgrade_id']);
+
+        }else{
+            $this->session->set_flashdata('message', 'Cannot find data');
+            $this->session->set_flashdata('alert_class', 'alert-danger');
+
+            redirect('admin/plan_upgrades');
+        }
+    }
+
+    public function delete_nsmart_upgrade()
+    {
+        $this->load->model('NsmartUpgrades_model');
+
+        $post = $this->input->post();
+
+        $id = $this->NsmartUpgrades_model->deleteUpgrade(post('u_id'));
+
+        $this->session->set_flashdata('message', 'Upgrade has been Deleted Successfully');
+        $this->session->set_flashdata('alert_class', 'alert-success');
+
+        redirect('admin/plan_upgrades');
+    }
+
+    public function industry_modules()
+    {
+        $this->load->model('IndustryModules_model');
+
+        $industryModules   = $this->IndustryModules_model->getAll();
+        
+        $this->page_data['industryModules'] = $industryModules;
+        $this->load->view('admin/industry_modules/list', $this->page_data);
+    }
+
+    public function add_new_industry_module()
+    {
+        
+        $this->load->view('admin/industry_modules/add_new_module', $this->page_data);
+    }
+
+    public function create_industry_module()
+    {
+        $this->load->model('IndustryModules_model');
+
+        $user = $this->session->userdata('logged');
+        $post = $this->input->post();
+
+        if( $post['name'] != '' ){
+            if( $this->IndustryModules_model->getByName($post['name']) ){
+                $this->session->set_flashdata('message', 'Module name already exists');
+                $this->session->set_flashdata('alert_class', 'alert-danger');
+            }else{
+                $data = [
+                    'name' => $post['name'],
+                    'description' => $post['description'],
+                    'status' => 1,
+                    'date_created' => date("Y-m-d H:i:s")
+                ];
+
+                $industry_modules = $this->IndustryModules_model->create($data);
+
+                $this->session->set_flashdata('message', 'Add new modules was successful');
+                $this->session->set_flashdata('alert_class', 'alert-success');
+            }
+        }else{
+            $this->session->set_flashdata('message', 'Please enter module name');
+            $this->session->set_flashdata('alert_class', 'alert-danger');
+        }
+
+        redirect('admin/industry_modules');
+    }
+
+    public function edit_industry_module($module_id)
+    {
+        $this->load->model('IndustryModules_model');
+
+        $industryModules = $this->IndustryModules_model->getById($module_id);
+
+        if( $industryModules ){
+            $this->page_data['industryModules'] = $industryModules;
+            $this->load->view('admin/industry_modules/edit_module', $this->page_data);
+        }else{
+            $this->session->set_flashdata('message', 'Cannot find data');
+            $this->session->set_flashdata('alert_class', 'alert-danger');
+            redirect('admin/industry_modules');
+        }
+    }
+
+    public function update_industry_module()
+    {
+        $this->load->model('IndustryModules_model');
+
+        $user = $this->session->userdata('logged');
+        $post = $this->input->post();
+
+        $industryModules = $this->IndustryModules_model->getById($post['module_id']);
+
+        if( $industryModules ){
+            if( $post['name'] != '' ){
+                $data = [
+                    'name' => $post['name'],
+                    'description' => $post['description'],
+                    'status' => $post['status'],
+                    'date_modified' => date("Y-m-d H:i:s")
+                ];
+                $industryModulesUpdate = $this->IndustryModules_model->updateIndustryModules($post['module_id'],$data);
+
+                $this->session->set_flashdata('message', 'Module was successfully updated');
+                $this->session->set_flashdata('alert_class', 'alert-success');
+            }else{
+                $this->session->set_flashdata('message', 'Please enter module name');
+                $this->session->set_flashdata('alert_class', 'alert-danger');
+            }
+
+            redirect('admin/edit_industry_module/'.$post['module_id']);
+
+        }else{
+            $this->session->set_flashdata('message', 'Cannot find data');
+            $this->session->set_flashdata('alert_class', 'alert-danger');
+
+            redirect('admin/industry_modules');
+        }
+    }
+
+    public function delete_industry_module()
+    {
+        $this->load->model('IndustryModules_model');
+
+        $post = $this->input->post();
+
+        $id = $this->IndustryModules_model->deleteIndustryModules(post('mid'));
+
+        $this->session->set_flashdata('message', 'Module has been Deleted Successfully');
+        $this->session->set_flashdata('alert_class', 'alert-success');
+
+        redirect('admin/industry_modules');
+    }
+
+    public function industry_template() 
+    {
+        $this->load->model('IndustryTemplate_model');
+
+        $industryTemplate   = $this->IndustryTemplate_model->getAll();
+        
+        $this->page_data['industryTemplate'] = $industryTemplate;
+        $this->load->view('admin/industry_template/list', $this->page_data);
+    }
+
+    public function add_new_industry_template()
+    {
+        
+        $this->load->view('admin/industry_template/add_new_template', $this->page_data);
+    }
+
+    public function create_industry_template() 
+    {
+        $this->load->model('IndustryTemplate_model');
+
+        $user = $this->session->userdata('logged');
+        $post = $this->input->post();
+
+        if( $post['name'] != '' ){
+            if( $this->IndustryTemplate_model->getByName($post['name']) ){
+                $this->session->set_flashdata('message', 'Template name already exists');
+                $this->session->set_flashdata('alert_class', 'alert-danger');
+            }else{
+                $data = [
+                    'name' => $post['name'],
+                    'status' => 1,
+                    'date_created' => date("Y-m-d H:i:s")
+                ];
+
+                $industry_template = $this->IndustryTemplate_model->create($data);
+
+                $this->session->set_flashdata('message', 'Add new template was successful');
+                $this->session->set_flashdata('alert_class', 'alert-success');
+            }
+        }else{
+            $this->session->set_flashdata('message', 'Please enter module name');
+            $this->session->set_flashdata('alert_class', 'alert-danger');
+        }
+
+        redirect('admin/industry_template');
+    }
+
+    public function edit_industry_template($template_id) 
+    {
+        $this->load->model('IndustryTemplate_model');
+
+        $industryTemplate = $this->IndustryTemplate_model->getById($template_id);
+
+        if( $industryTemplate ){
+            $this->page_data['industryTemplate'] = $industryTemplate;
+            $this->load->view('admin/industry_template/edit_template', $this->page_data);
+        }else{
+            $this->session->set_flashdata('message', 'Cannot find data');
+            $this->session->set_flashdata('alert_class', 'alert-danger');
+            redirect('admin/industry_template');
+        }
+    }
+
+    public function update_industry_template() 
+    {
+        $this->load->model('IndustryTemplate_model');
+
+        $user = $this->session->userdata('logged');
+        $post = $this->input->post();
+
+        $industryTemplate = $this->IndustryTemplate_model->getById($post['template_id']);
+
+        if( $industryTemplate ){
+            if( $post['name'] != '' ){
+                $data = [
+                    'name' => $post['name'],
+                    'status' => $post['status'],
+                    'date_modified' => date("Y-m-d H:i:s")
+                ];
+                $industryTemplateUpdate = $this->IndustryTemplate_model->updateIndustryTemplate($post['template_id'],$data);
+
+                $this->session->set_flashdata('message', 'Template was successfully updated');
+                $this->session->set_flashdata('alert_class', 'alert-success');
+            }else{
+                $this->session->set_flashdata('message', 'Please enter module name');
+                $this->session->set_flashdata('alert_class', 'alert-danger');
+            }
+
+            redirect('admin/edit_industry_template/'.$post['template_id']);
+
+        }else{
+            $this->session->set_flashdata('message', 'Cannot find data');
+            $this->session->set_flashdata('alert_class', 'alert-danger');
+
+            redirect('admin/industry_template');
+        }
+    }
+
+    public function assign_industry_template_modules($template_id) 
+    {
+        $this->load->model('IndustryTemplate_model');
+        $this->load->model('IndustryModules_model');
+        $this->load->model('IndustryTemplateModules_model');
+
+        $industryTemplate = $this->IndustryTemplate_model->getById($template_id);
+        $industryModules = $this->IndustryModules_model->getAll();
+        $industryTemplateModules = $this->IndustryTemplateModules_model->getAllByTemplateId($template_id);
+
+        if( $industryTemplate ){
+            $this->page_data['industryTemplate'] = $industryTemplate;
+            $this->page_data['industryModules'] = $industryModules;
+            $this->page_data['industryTemplateModules']  = $industryTemplateModules;
+            $this->load->view('admin/industry_template/assign_template_modules', $this->page_data);
+        }else{
+            $this->session->set_flashdata('message', 'Cannot find data');
+            $this->session->set_flashdata('alert_class', 'alert-danger');
+            redirect('admin/industry_template');
+        }
+    }
 }
 
 /* End of file Admin.php */
