@@ -1410,6 +1410,9 @@ class Accounting_modals extends MY_Controller {
                 case 'creditCardCreditModal' :
                     $this->result = $this->credit_card_credit($data);
                 break;
+                case 'billPaymentModal' :
+                    $this->result = $this->bill_payment($data);
+                break;
             }
         } catch (\Exception $e) {
             $this->result = $e->getMessage();
@@ -3861,6 +3864,114 @@ class Accounting_modals extends MY_Controller {
             $return['data'] = $creditId;
             $return['success'] = $creditId ? true : false;
             $return['message'] = $creditId ? 'Entry Successful!' : 'An unexpected error occured!';
+        }
+
+        return $return;
+    }
+
+    private function bill_payment($data)
+    {
+        $this->form_validation->set_rules('payment_account', 'Payment account', 'required');
+        $this->form_validation->set_rules('payment_date', 'Payment date', 'required');
+        $this->form_validation->set_rules('bills[]', 'Bill', 'required');
+        $this->form_validation->set_rules('payment_amount[]', 'Payment amount', 'required');
+
+        if($this->form_validation->run() === false) {
+            $return['data'] = null;
+            $return['success'] = false;
+            $return['message'] = 'Error';
+        } else {
+            $paymentTotal = floatval($data['payment_amount']);
+
+            $appliedVCredits = [];
+            foreach($data['credits'] as $index => $credit) {
+                $vCredit = $this->vendors_model->get_vendor_credit_by_id($credit);
+                $balance = floatval($vCredit->remaining_balance);
+                $subtracted = floatval($data['credit_payment'][$index]);
+                $appliedVCredits[$vCredit->id] = $subtracted;
+                $remainingBal = $balance - $subtracted;
+
+                $vCreditData = [
+                    'status' => $remainingBal === 0.00 ? 2 : 1,
+                    'remaining_balance' => $remainingBal,
+                    'updated_at' => date("Y-m-d H:i:s")
+                ];
+
+                $this->vendors_model->update_vendor_credit($vCredit->id, $vCreditData);
+            }
+
+            $billPayment = [
+                'company_id' => logged('company_id'),
+                'payee_id' => $data['payee_id'],
+                'payment_account_id' => $data['payment_account'],
+                'payment_date' => date("Y-m-d", strtotime($data['payment_date'])),
+                'check_no' => $data['ref_no'] === "" ? null : $data['ref_no'],
+                'to_print_check_no' => null,
+                'total_amount' => $paymentTotal,
+                'vendor_credits_applied' => count($appliedVCredits) > 0 ? json_encode($appliedVCredits) : null,
+                'status' => 1,
+                'created_at' => date("Y-m-d H:i:s"),
+                'updated_at' => date("Y-m-d H:i:s")
+            ];
+
+            $billPaymentId = $this->expenses_model->insert_bill_payment($billPayment);
+
+            if($billPaymentId) {
+                $paymentAcc = $this->chart_of_accounts_model->getById($data['payment_account']);
+                $paymentAccType = $this->account_model->getById($paymentAcc->account_id);
+
+                if($paymentAccType->account_name === 'Credit Card') {
+                    $newBalance = floatval($paymentAcc->balance) + floatval($paymentTotal);
+                } else {
+                    $newBalance = floatval($paymentAcc->balance) - floatval($paymentTotal);
+                }
+
+                $newBalance = number_format($newBalance, 2, '.', ',');
+
+                $paymentAccData = [
+                    'id' => $paymentAcc->id,
+                    'company_id' => logged('company_id'),
+                    'balance' => $newBalance
+                ];
+
+                $this->chart_of_accounts_model->updateBalance($paymentAccData);
+
+                $paymentItems = [];
+                foreach($data['bills'] as $index => $bill) {
+                    $paymentItems[] = [
+                        'bill_payment_id' => $billPaymentId,
+                        'bill_id' => $bill,
+                        'credit_applied_amount' => null,
+                        'payment_amount' => null,
+                        'total_amount' => $data['payment_amount'][$index]
+                    ];
+
+                    $bill = $this->expenses_model->get_bill_data($bill);
+
+                    if(floatval($data['payment_amount'][$key]) === floatval($bill->remaining_balance)) {
+                        $billData = [
+                            'remaining_balance' => 0.00,
+                            'status' => 2,
+                            'updated_at' => date("Y-m-d H:i:s")
+                        ];
+                    } else {
+                        $remainingBal = floatval($bill->remaining_balance) - floatval($data['payment_amount'][$key]);
+                        $billData = [
+                            'remaining_balance' => number_format($remainingBal, 2, '.', ','),
+                            'updated_at' => date("Y-m-d H:i:s")
+                        ];
+                    }
+
+                    $this->expenses_model->update_bill_data($bill->id, $billData);
+                }
+
+                $this->expenses_model->insert_bill_payment_items($paymentItems);
+            }
+
+            $return = [];
+            $return['data'] = $billPaymentId;
+            $return['success'] = $billPaymentId ? true : false;
+            $return['message'] = $billPaymentId ? 'Entry Successful!' : 'An unexpected error occured!';
         }
 
         return $return;

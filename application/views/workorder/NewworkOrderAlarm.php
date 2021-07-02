@@ -2928,6 +2928,13 @@ border: none;
                                 </button>
                             </div>
                             <div class="modal-body pt-0 pl-3 pb-3">
+                                <input type="hidden" name="count" value="0" id="count">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                    <h6>Package Name</h6> <input type="text" class="form-control" style="width:80%;">
+                                    </div>
+                                </div>
+                                <br>
                                     <table class="table table-hover">
                                         <input type="hidden" name="count" value="0" id="count">
                                         <thead style="background-color:#E9E8EA;">
@@ -2944,18 +2951,18 @@ border: none;
                                             <th></th>
                                         </tr>
                                         </thead>
-                                        <tbody id="jobs_items_table_body">
+                                        <tbody id="items_package_table">
                                             <tr>
                                                 <td width="35%">
-                                                    <input type="text" class="form-control getItems"
-                                                        onKeyup="getItems(this)" name="items[]">
+                                                    <input type="text" class="form-control getItemsPackage"
+                                                        onKeyup="getItemsPackage(this)" name="itemsPackage[]">
                                                     <ul class="suggestions"></ul>
                                                     <div class="show_mobile_view"><span class="getItems_hidden"></span></div>
-                                                    <input type="hidden" name="itemid[]" id="itemid" class="itemid" value="0">
+                                                    <input type="hidden" name="itemid[]" id="itemid" class="itemid_package" value="0">
                                                 </td>
                                                 <td width="25%">
                                                 <div class="dropdown-wrapper">
-                                                    <select name="item_type[]" id="item_typeid" class="form-control">
+                                                    <select name="item_typePackage[]" id="item_typeid" class="form-control">
                                                         <option value="product">Product</option>
                                                         <option value="material">Material</option>
                                                         <option value="service">Service</option>
@@ -2963,12 +2970,12 @@ border: none;
                                                     </select>
                                                 </div>
                                                 </td>
-                                                <td width=""><input type="number" class="form-control quantity mobile_qty" name="quantity[]"
-                                                        data-counter="0" id="quantity_0" value="1"></td>
-                                                <td width=""><input type="number" class="form-control price hidden_mobile_view" name="price[]"
-                                                        data-counter="0" id="price_0" min="0" value="0"> <input type="hidden" class="priceqty" value="0" id="priceqty_0"> 
+                                                <td width=""><input type="number" class="form-control quantityPackage" name="quantityPackage[]"
+                                                        data-counter="0" id="quantity_package_0" value="1"></td>
+                                                <td width=""><input type="number" class="form-control price_package hidden_mobile_view" name="pricePackage[]"
+                                                        data-counter="0" id="price_package_0" min="0" value="0"> <input type="hidden" class="priceqty priceqty_package" value="0" id="priceqty_0"> 
                                                         <div class="show_mobile_view"><span class="price">0</span>
-                                                        </div><input id="priceM_qty0" value="0"  type="hidden" name="price_qty[]" class="form-control hidden_mobile_view price_qty"></td>
+                                                        </div><input id="priceqty_package_0" value="0"  type="hidden" name="price_qty[]" class="form-control hidden_mobile_view priceqty_package"></td>
                                                 <!-- <td width="10%" class="hidden_mobile_view"><input type="number" class="form-control discount" name="discount[]"
                                                         data-counter="0" id="discount_0" min="0" value="0" readonly></td>
                                                 <td width="10%" class="hidden_mobile_view"><input type="text" class="form-control tax_change" name="tax[]"
@@ -2981,19 +2988,24 @@ border: none;
                                             </tr>
                                             </tbody>
                                     </table>
-                                    <a class="link-modal-open" href="#" id="add_another_itemss" data-toggle="modal" data-target="#item_list"><span class="fa fa-plus-square fa-margin-right"></span>Add Items</a>
+                                    <a class="link-modal-open" href="#" id="add_another_itemss" data-toggle="modal" data-target="#item_list_package"><span class="fa fa-plus-square fa-margin-right"></span>Add Items</a>
                                 <br>
                                 <br>
                                 <div class="row">
                                             <div class="col-md-6">
                                             </div>
-                                            <div class="col-md-6" align="right">
-                                                <b>Set Package Price</b> <input type="text" class="form-control" style="width:50%;">
+                                            <div class="col-md-6">
+                                                <table>
+                                                    <tr>
+                                                        <td><b>Total Price</b> <input type="text" class="form-control" style="width:90%;" name="package_price" id="package_price"></td>
+                                                        <td><b>Set Package Price</b> <input type="text" class="form-control" style="width:90%;"></td>
+                                                    <tr>
+                                                </table>
                                             </div>
                                 </div>
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-primary">Create and Add Package</button>
+                                <button type="button" class="btn btn-primary">Add Package</button>
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                             </div>
                     </div>
@@ -3001,6 +3013,57 @@ border: none;
             </div>
             
             <!-- edd package -->
+
+            
+
+            <!-- Modal -->
+            <div class="modal fade" id="item_list_package" tabindex="-1" role="dialog" aria-labelledby="newcustomerLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg" role="document" >
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="newcustomerLabel">Item Lists</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <table id="items_table_package" class="table table-hover" style="width: 100%;">
+                                        <thead>
+                                        <tr>
+                                            <td> Name</td>
+                                            <!-- <td> Rebatable</td> -->
+                                            <td> Qty</td>
+                                            <td> Price</td>
+                                            <td> Action</td>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <?php foreach($items as $item){ // print_r($item); ?>
+                                            <tr>
+                                                <td><?php echo $item->title; ?></td>
+                                                <td></td>
+                                                <td><?php echo $item->price; ?></td>
+                                                <td><button id="<?= $item->id; ?>" data-quantity="<?= $item->units; ?>" data-itemname="<?= $item->title; ?>" data-price="<?= $item->price; ?>" type="button" data-dismiss="modal" class="btn btn-sm btn-default select_item_package">
+                                                <span class="fa fa-plus"></span>
+                                            </button></td>
+                                            </tr>
+                                            
+                                        <?php } ?>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer modal-footer-detail">
+                            <div class="button-modal-list">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal"><span class="fa fa-remove"></span> Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
              <!-- Modal -->
              <div class="modal fade" id="terms_conditions_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">

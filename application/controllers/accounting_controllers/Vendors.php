@@ -771,7 +771,7 @@ class Vendors extends MY_Controller {
                     'category' => $this->category_col($vendorCredit->id, 'Vendor Credit'),
                     'memo' => $vendorCredits->memo,
                     'due_date' => date("m/d/Y", strtotime($vendorCredit->payment_date)),
-                    'balance' => number_format(floatval($vendorCredit->total_amount), 2, '.', ','),
+                    'balance' => number_format(floatval($vendorCredit->remaining_balance), 2, '.', ','),
                     'total' => '-'.number_format(floatval($vendorCredit->total_amount), 2, '.', ','),
                     'status' => $vendorCredit->status === "1" ? "Unapplied" : "Applied",
                     'attachments' => $vendorCredit->attachments === null ? [] : json_decode($vendorCredit->attachments, true),

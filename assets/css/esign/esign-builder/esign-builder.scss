@@ -372,7 +372,8 @@
     .options,
     .note,
     .formula,
-    .text {
+    .text,
+    .dropdown {
       display: none;
     }
 
@@ -396,6 +397,12 @@
 
     &[data-field-type="text"] {
       .text {
+        display: block;
+      }
+    }
+
+    &[data-field-type="dropdown"] {
+      .dropdown {
         display: block;
       }
     }
@@ -561,5 +568,17 @@
 .docPageContainer {
   canvas {
     max-width: 900px;
+  }
+}
+
+.dropdown {
+  .options__close {
+    height: 28px;
+    width: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    margin-left: 5px;
   }
 }
