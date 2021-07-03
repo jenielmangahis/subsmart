@@ -76,7 +76,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         <td>
                                             <a class="btn btn-primary btn-sm" href="<?php echo base_url('admin/assign_industry_template_modules/'.$indTemplate->id); ?>"><i class="fa fa-check"></i> Assign Template Modules</a>
                                             <a class="btn btn-primary btn-sm" href="<?php echo base_url('admin/edit_industry_template/'.$indTemplate->id); ?>"><i class="fa fa-edit"></i> Edit</a>
-                                            <a class="btn btn-sm btn-primary btn-delete-template" href="javascript:void(0);" data-id="<?= $indTemplate->id; ?>"><i class="fa fa-trash"></i> Delete</a>
+                                            <a class="btn btn-sm btn-primary btn-delete-template" href="javascript:void(0);" data-name="<?= $indTemplate->name; ?>" data-id="<?= $indTemplate->id; ?>"><i class="fa fa-trash"></i> Delete</a>
                                         </td>
                                     </tr>
                                 <?php } ?>
@@ -86,6 +86,30 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     <!-- end card -->
                 </div>
             </div>
+
+            <div class="modal fade bd-example-modal-sm" id="modalDeleteIndustryTemplate" tabindex="-1" role="dialog" aria-labelledby="modalDeletePlanTitle" aria-hidden="true">
+              <div class="modal-dialog modal-md" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle"><i class="fa fa-trash"></i> Delete</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <?php echo form_open_multipart('admin/delete_industry_template', ['class' => 'form-validate', 'autocomplete' => 'off' ]); ?>
+                  <?php echo form_input(array('name' => 'tid', 'type' => 'hidden', 'value' => '', 'id' => 'tid'));?>
+                  <div class="modal-body">        
+                      <p>Are you sure you want to delete selected industry template <span class="delete-template-name" style="font-weight: bold;"></span></p>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                    <button type="submit" class="btn btn-danger">Yes</button>
+                  </div>
+                  <?php echo form_close(); ?>
+                </div>
+              </div>
+            </div>
+
             <!-- end row -->
         </div>
         <!-- end container-fluid -->
@@ -98,6 +122,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 $(function(){
     $(".btn-delete-template").click(function(){
         var template_id = $(this).attr("data-id");
+        var template_name = $(this).attr("data-name");
+
+        $(".delete-template-name").html(template_name);
         $("#tid").val(template_id);
 
         $("#modalDeleteIndustryTemplate").modal("show");
