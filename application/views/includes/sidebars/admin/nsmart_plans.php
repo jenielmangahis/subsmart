@@ -116,7 +116,7 @@
         <li class="submenus <?= $is_active_admin_management; ?>"><a href="<?php echo base_url('admin/subscribers') ?>" title="Industry Modules" style="color: #fff;">
             <span class="fa fa-list"></span>Admin Management</a>
         </li>
-         <li class="submenus <?= $is_active_offer_code; ?>"><a href="<?php echo base_url('offer_codes/index') ?>" title="Industry Modules" style="color: #fff;">
+         <li class="submenus <?= $is_active_offer_code; ?>"><a href="<?php echo base_url('admin/offer_codes') ?>" title="Industry Modules" style="color: #fff;">
             <span class="fa fa-list"></span>Offer Code</a>
         </li>
     </ul>

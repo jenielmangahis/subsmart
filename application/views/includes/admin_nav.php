@@ -229,17 +229,11 @@ $user_id = getLoggedUserID();
                     </div>
                     <div class="dropdown-menu dropdown-menu-right profile-dropdown">
 
-                        <a class="dropdown-item" href="<?php echo url('/users/businessview') ?>">
-                            <i class="mdi mdi-wallet m-r-5"></i><b> My Business </b>
+                        <a class="dropdown-item" href="<?php echo url('/admin/companies') ?>">
+                            <i class="mdi mdi-wallet m-r-5"></i><b> List </b>
                         </a>
-                        <a class="dropdown-item" href="<?php echo base_url('/settings/email_templates') ?>">
-                            <i class="mdi mdi-wallet m-r-5"></i><b> Settings </b>
-                        </a>
-                        <a class="dropdown-item" href="<?php echo base_url('/users') ?>">
+                        <a class="dropdown-item" href="<?php echo base_url('admin/users') ?>">
                             <i class="mdi mdi-wallet m-r-5"></i><b> Employees </b>
-                        </a>
-                        <a class="dropdown-item" href="<?php echo base_url('/mycrm') ?>">
-                            <i class="mdi mdi-wallet m-r-5"></i><b> My CRM </b>
                         </a>
                     </div>
                 </li>
