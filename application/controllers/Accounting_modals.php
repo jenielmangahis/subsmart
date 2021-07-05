@@ -3943,19 +3943,19 @@ class Accounting_modals extends MY_Controller {
                         'bill_id' => $bill,
                         'credit_applied_amount' => null,
                         'payment_amount' => null,
-                        'total_amount' => $data['payment_amount'][$index]
+                        'total_amount' => $data['bill_payment'][$index]
                     ];
 
                     $bill = $this->expenses_model->get_bill_data($bill);
 
-                    if(floatval($data['payment_amount'][$key]) === floatval($bill->remaining_balance)) {
+                    if(floatval($data['bill_payment'][$index]) === floatval($bill->remaining_balance)) {
                         $billData = [
                             'remaining_balance' => 0.00,
                             'status' => 2,
                             'updated_at' => date("Y-m-d H:i:s")
                         ];
                     } else {
-                        $remainingBal = floatval($bill->remaining_balance) - floatval($data['payment_amount'][$key]);
+                        $remainingBal = floatval($bill->remaining_balance) - floatval($data['bill_payment'][$index]);
                         $billData = [
                             'remaining_balance' => number_format($remainingBal, 2, '.', ','),
                             'updated_at' => date("Y-m-d H:i:s")
@@ -4133,7 +4133,7 @@ class Accounting_modals extends MY_Controller {
         $fromDate = $post['from'];
         $toDate = $post['to'];
         $search = $post['search'];
-        $selectedBills = $post['bills'];
+        // $selectedBills = $post['bills'];
 
         $filters = [
             'from' => $fromDate !== "" ? date("Y-m-d", strtotime($fromDate)) : null,
@@ -4159,7 +4159,7 @@ class Accounting_modals extends MY_Controller {
                         'original_amount' => number_format(floatval($bill->total_amount), 2, '.', ','),
                         'open_balance' => number_format(floatval($bill->remaining_balance), 2, '.', ','),
                         'payment' => number_format(floatval($bill->remaining_balance), 2, '.', ','),
-                        'selected' => in_array($bill->id, $selectedBills)
+                        // 'selected' => in_array($bill->id, $selectedBills)
                     ];
                 }
             } else {
@@ -4170,7 +4170,7 @@ class Accounting_modals extends MY_Controller {
                     'original_amount' => number_format(floatval($bill->total_amount), 2, '.', ','),
                     'open_balance' => number_format(floatval($bill->remaining_balance), 2, '.', ','),
                     'payment' => number_format(floatval($bill->remaining_balance), 2, '.', ','),
-                    'selected' => in_array($bill->id, $selectedBills)
+                    // 'selected' => in_array($bill->id, $selectedBills)
                 ];
             }
         }
@@ -4218,7 +4218,7 @@ class Accounting_modals extends MY_Controller {
                         'original_amount' => number_format(floatval($credit->total_amount), 2, '.', ','),
                         'open_balance' => number_format(floatval($credit->remaining_balance), 2, '.', ','),
                         'payment' => number_format(floatval($credit->remaining_balance), 2, '.', ','),
-                        'selected' => in_array($credit->id, $selectedCredits)
+                        // 'selected' => in_array($credit->id, $selectedCredits)
                     ];
                 }
             } else {
@@ -4229,7 +4229,7 @@ class Accounting_modals extends MY_Controller {
                     'original_amount' => number_format(floatval($credit->total_amount), 2, '.', ','),
                     'open_balance' => number_format(floatval($credit->remaining_balance), 2, '.', ','),
                     'payment' => number_format(floatval($credit->remaining_balance), 2, '.', ','),
-                    'selected' => in_array($credit->id, $selectedCredits)
+                    // 'selected' => in_array($credit->id, $selectedCredits)
                 ];
             }
         }

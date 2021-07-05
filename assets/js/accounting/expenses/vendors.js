@@ -196,6 +196,7 @@ var table = $('#vendors-table').DataTable({
             d.inactive = $('#inc_inactive').prop('checked') === true ? 1 : 0;
             d.length = $('#table_rows').val();
             d.columns[0].search.value = $('input#search').val();
+            d.transaction = $('.selected').attr('id');
             return JSON.stringify(d);
         },
         pagingType: 'full_numbers'
@@ -645,4 +646,15 @@ $(document).on('click', '#pay-bills', function(e) {
     e.preventDefault();
 
     $('#new-popup ul#accounting_vendors li a[data-view="pay_bills_modal"]').trigger('click');
+});
+
+$(document).on('click', '.open-purchase-orders-cont, .overdue-bills, .open-bills, .payments-cont', function() {
+    var selected = $(this).hasClass('selected');
+    $('.open-purchase-orders-cont.selected, .overdue-bills.selected, .open-bills.selected, .payments-cont.selected').removeClass('selected');
+    if(selected) {
+        $(this).removeClass('selected');
+    } else {
+        $(this).addClass('selected');
+    }
+    $('#vendors-table').DataTable().ajax.reload(null, true);
 });

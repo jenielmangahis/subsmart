@@ -18,6 +18,55 @@ class Vendors_model extends MY_Model {
 
 		return $query->result();
 	}
+	public function get_vendors_with_unbilled_po($status = [1])
+	{
+		$companyId = logged('company_id');
+
+		$this->db->select('accounting_vendors.*');
+		$this->db->where('accounting_vendors.company_id', $companyId);
+		$this->db->where_in('accounting_vendors.status', $status);
+		$this->db->where('accounting_purchase_order.status', 1);
+		$this->db->where('accounting_purchase_order.purchase_order_date >=', date("Y-m-d", strtotime("-365 days")));
+		$this->db->order_by('accounting_vendors.f_name', 'asc');
+		$this->db->from($this->table);
+		$this->db->join('accounting_purchase_order', 'accounting_purchase_order.vendor_id = accounting_vendors.id');
+		$query = $this->db->get();
+
+		return $query->result();
+	}
+	public function get_vendors_with_open_bills($status = [1])
+	{
+		$companyId = logged('company_id');
+
+		$this->db->select('accounting_vendors.*');
+		$this->db->where('accounting_vendors.company_id', $companyId);
+		$this->db->where_in('accounting_vendors.status', $status);
+		$this->db->where('accounting_bill.status', 1);
+		$this->db->where('accounting_bill.bill_date >=', date("Y-m-d", strtotime("-365 days")));
+		$this->db->order_by('accounting_vendors.f_name', 'asc');
+		$this->db->from($this->table);
+		$this->db->join('accounting_bill', 'accounting_bill.vendor_id = accounting_vendors.id');
+		$query = $this->db->get();
+
+		return $query->result();
+	}
+	public function get_vendors_with_overdue_bills($status = [1])
+	{
+		$companyId = logged('company_id');
+
+		$this->db->select('accounting_vendors.*');
+		$this->db->where('accounting_vendors.company_id', $companyId);
+		$this->db->where_in('accounting_vendors.status', $status);
+		$this->db->where('accounting_bill.status', 1);
+        $this->db->where('accounting_bill.due_date <', date("Y-m-d"));
+		$this->db->where('accounting_bill.bill_date >=', date("Y-m-d", strtotime("-365 days")));
+		$this->db->order_by('accounting_vendors.f_name', 'asc');
+		$this->db->from($this->table);
+		$this->db->join('accounting_bill', 'accounting_bill.vendor_id = accounting_vendors.id');
+		$query = $this->db->get();
+
+		return $query->result();
+	}
 	public function getVendors(){
 	    $vendor = $this->db->get('accounting_vendors');
 	    return $vendor->result();

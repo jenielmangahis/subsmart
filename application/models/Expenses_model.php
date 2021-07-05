@@ -557,7 +557,33 @@ class Expenses_model extends MY_Model
         if(isset($filters['vendor_id'])) {
             $this->db->where('vendor_id', $filters['vendor_id']);
         }
+        if(isset($filters['bill-date-start'])) {
+            $this->db->where('bill_date >=', $filters['bill-date-start']);
+        }
         $query = $this->db->get('accounting_bill');
+        return $query->result();
+    }
+
+    public function get_overdue_bills($filters = [])
+    {
+        $this->db->where('company_id', logged('company_id'));
+        $this->db->where('status', 1);
+        $this->db->where('due_date <', date("Y-m-d"));
+        if(isset($filters['bill-date-start'])) {
+            $this->db->where('bill_date >=', $filters['bill-date-start']);
+        }
+        $query = $this->db->get('accounting_bill');
+        return $query->result();
+    }
+
+    public function get_unbilled_purchase_orders($filters = [])
+    {
+        $this->db->where('company_id', logged('company_id'));
+        $this->db->where('status', 1);
+        if(isset($filters['start-date'])) {
+            $this->db->where('purchase_order_date >=', $filters['start-date']);
+        }
+        $query = $this->db->get('accounting_purchase_order');
         return $query->result();
     }
 
@@ -635,8 +661,11 @@ class Expenses_model extends MY_Model
         $this->db->where('company_id', $filters['company_id']);
         $this->db->where('status !=', 0);
 
-        if(isset($filters['start-date']) && isset($filters['end-date'])) {
+        if(isset($filters['start-date'])) {
             $this->db->where('payment_date >=', $filters['start-date']);
+        }
+
+        if(isset($filters['end-date'])) {
             $this->db->where('payment_date <=', $filters['end-date']);
         }
         
@@ -686,8 +715,11 @@ class Expenses_model extends MY_Model
         $this->db->where('company_id', $filters['company_id']);
         $this->db->where('status !=', 0);
 
-        if(isset($filters['start-date']) && isset($filters['end-date'])) {
+        if(isset($filters['start-date'])) {
             $this->db->where('payment_date >=', $filters['start-date']);
+        }
+
+        if(isset($filters['end-date'])) {
             $this->db->where('payment_date <=', $filters['end-date']);
         }
 
@@ -766,8 +798,11 @@ class Expenses_model extends MY_Model
         $this->db->where('company_id', $filters['company_id']);
         $this->db->where('status !=', 0);
 
-        if(isset($filters['start-date']) && isset($filters['end-date'])) {
+        if(isset($filters['start-date'])) {
             $this->db->where('date >=', $filters['start-date']);
+        }
+
+        if(isset($filters['end-date'])) {
             $this->db->where('date <=', $filters['end-date']);
         }
 
@@ -783,8 +818,11 @@ class Expenses_model extends MY_Model
     {
         $this->db->where('company_id', $filters['company_id']);
         $this->db->where('status !=', 0);
-        if(isset($filters['start-date']) && isset($filters['end-date'])) {
+        if(isset($filters['start-date'])) {
             $this->db->where('payment_date >=', $filters['start-date']);
+        }
+
+        if(isset($filters['end-date'])) {
             $this->db->where('payment_date <=', $filters['end-date']);
         }
 

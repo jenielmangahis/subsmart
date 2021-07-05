@@ -281,6 +281,304 @@ class Share_Link extends MY_Controller
         $this->pdf->createPDF($html, 'mypdf', false);
         exit(0);
     }
+
+    public function public_view($id)
+    {
+
+        $this->page_data['workorder'] = $this->workorder_model->getById($id);
+        $work =  $this->workorder_model->getById($id);
+        
+        $this->page_data['company'] = $this->workorder_model->getCompanyCompanyId($work->company_id);
+        $this->page_data['customer'] = $this->workorder_model->getcustomerCompanyId($id);
+        $this->page_data['items'] = $this->workorder_model->getItems($id);
+
+        $this->page_data['itemsA'] = $this->workorder_model->getItemsAlarm($id);
+        $this->page_data['custom_fields'] = $this->workorder_model->getCustomFields($id);
+        $this->page_data['workorder_items'] = $this->workorder_model->getworkorderItems($id);
+
+        $this->page_data['first'] = $this->workorder_model->getuserfirst($work->company_representative_name);
+        $this->page_data['second'] = $this->workorder_model->getusersecond($work->primary_account_holder_name);
+        $this->page_data['third'] = $this->workorder_model->getuserthird($work->secondary_account_holder_name);
+
+        // $this->page_data['Workorder']->role = $this->roles_model->getByWhere(['id' => $this->page_data['Workorder']->role])[0];
+
+        // $this->page_data['Workorder']->activity = $this->activity_model->getByWhere(['user' => $id], ['order' => ['id', 'desc']]);
+
+        // print_r($this->page_data['items']);
+        add_footer_js('assets/js/esign/docusign/workorder.js');
+        $this->load->view('workorder/public_view', $this->page_data);
+    }
+
+    
+    public function work_order_pdf($wo_id)
+    {
+        // $id = $this->input->post('id');
+        // $wo_id = $this->input->post('wo_id');
+
+        $workData = $this->workorder_model->get_workorder_data($wo_id);
+        // var_dump($workData);
+
+        $source_id = $workData->lead_source_id;
+        // $sourcea = $this->workorder_model->get_source_data($source_id);
+        
+        $workorder = $workData->work_order_number;
+        $c_id = $workData->company_id;
+        $p_id = $workData->customer_id;
+        // $source = $source->ls_name;
+
+        $cliets = $this->workorder_model->get_cliets_data($c_id);
+        $customerData = $this->workorder_model->get_customerData_data($p_id);
+
+        $customs = $this->workorder_model->get_custom_data($wo_id);
+        // $items = $this->workorder_model->getitemsWorkOrder($wo_id);
+        $items = $this->workorder_model->getworkorderItems($wo_id);
+        $payment = $this->workorder_model->getpayment($wo_id);
+        $business = $this->workorder_model->getbusiness($c_id);
+        $business_logo = $business->business_image;
+        $company_id = $workData->company_id;
+
+        $first = $this->workorder_model->getuserfirst($workData->company_representative_name);
+        $second = $this->workorder_model->getusersecond($workData->primary_account_holder_name);
+        $third = $this->workorder_model->getuserthird($workData->secondary_account_holder_name);
+
+        $data = array(
+            'workorder'                         => $workorder,
+            'tags'                              => $workData->tags,
+            'job_type'                          => $workData->job_type,
+            'priority'                          => $workData->priority,
+            'header'                            => $workData->header,
+            'password'                          => $workData->password,
+            'security_number'                   => $workData->security_number,
+            'source_name'                       => $workData->lead_source_id,
+            'company_representative_signature'  => $workData->company_representative_signature,
+            'company_representative_name'       => $workData->company_representative_name,
+            'primary_account_holder_signature'  => $workData->primary_account_holder_signature,
+            'primary_account_holder_name'       => $workData->primary_account_holder_name,
+            'secondary_account_holder_signature'=> $workData->secondary_account_holder_signature,
+            'secondary_account_holder_name'     => $workData->secondary_account_holder_name,
+
+            'company'                           => $cliets->business_name,
+            'business_address'                  => $cliets->business_address,
+            'phone_number'                      => $cliets->phone_number,
+            'acs_name'                          => $customerData->first_name.' '.$customerData->middle_name.' '.$customerData->last_name,
+            'job_location'                      => $workData->job_location,
+            'job_location2'                     => $workData->city.', '.$workData->state.', '.$workData->zip_code.', '.$workData->cross_street,
+            'email'                             => $workData->email,
+            'phone'                             => $workData->phone_number,
+            'mobile'                            => $workData->mobile_number,
+            'terms_and_conditions'              => $workData->terms_and_conditions,
+            'terms_of_use'                      => $workData->terms_of_use,
+            'job_description'                   => $workData->job_description,
+            'instructions'                      => $workData->instructions,
+            'first_verification_name'           => $customerData->first_verification_name,
+            'first_number'                      => $customerData->first_number,
+            'first_relation'                    => $customerData->first_relation,
+            'second_verification_name'          => $customerData->second_verification_name,
+            'second_number'                     => $customerData->second_number,
+            'second_relation'                   => $customerData->second_relation,
+            'third_verification_name'           => $customerData->third_verification_name,
+            'third_number'                      => $customerData->third_number,
+            'third_relation'                    => $customerData->third_relation,
+            'date_issued'                       => $workData->date_issued,
+            'secondary_account_holder_signature'=> $workData->secondary_account_holder_signature,
+            'secondary_account_holder_name'     => $workData->secondary_account_holder_name,
+            'business_name'                     => $customerData->business_name,
+
+            'customs'                           => $customs,
+            'items'                             => $items,
+
+            'total'                             => $workData->grand_total,
+            'subtotal'                          => $workData->subtotal,
+            'taxes'                             => $workData->taxes,
+            'adjustment_name'                   => $workData->adjustment_name,
+            'adjustment_value'                  => $workData->adjustment_value,
+            'voucher_value'                     => $workData->voucher_value,
+            'otp_setup'                         => $workData->otp_setup,
+            'monthly_monitoring'                => $workData->monthly_monitoring,
+
+            'payment_method'                    => $payment->payment_method,
+            'amount'                            => $payment->amount, //
+            'check_number'                      => $payment->check_number,
+            'routing_number'                    => $payment->routing_number,
+            'account_number'                    => $payment->account_number,
+            'credit_number'                     => $payment->credit_number,
+            'credit_expiry'                     => $payment->credit_expiry,
+            'credit_cvc'                        => $payment->credit_cvc,
+            'account_credentials'               => $payment->account_credentials,
+            'account_note'                      => $payment->account_note,
+            'confirmation'                      => $payment->confirmation,
+            'mail_address'                      => $payment->mail_address,
+            'mail_locality'                     => $payment->mail_locality,
+            'mail_state'                        => $payment->mail_state,
+            'mail_postcode'                     => $payment->mail_postcode,
+            'mail_cross_street'                 => $payment->mail_cross_street,
+            'billing_date'                      => $payment->billing_date,
+            'billing_frequency'                 => $payment->billing_frequency,
+
+            'template'                          => '1',
+            'business'                          => $business,
+
+            'business_logo'                     => $business_logo,
+
+            'first'                             => $first,
+            'second'                            => $second,
+            'third'                             => $third,
+            'company_id'                        => $company_id,
+            
+            // 'source' => $source
+        );
+
+
+    // $message2 = $this->load->view('workorder/send_email_acs_alarm', $data, true);
+    // $filename = $workData->company_representative_signature;
+            
+        $filename = "nSmarTrac_work_order_".$wo_id."_standard";
+        // $this->load->library('pdf');
+        // $this->pdf->load_view('workorder/send_email_acs_alarm', $data, $filename, "portrait");
+        $this->load->library('pdf');
+
+
+        $this->pdf->load_view('workorder/work_order_pdf_template', $data, $filename, "portrait");
+        // $this->pdf->render();
+
+
+        // $this->pdf->stream($filename);
+    }
+
+    public function work_order_pdf_alarm($wo_id)
+    {
+        
+        // $id = $this->input->post('id');
+        // $wo_id = $this->input->post('wo_id');
+
+        $workData = $this->workorder_model->get_workorder_data($wo_id);
+        // var_dump($workData);
+
+        $source_id = $workData->lead_source_id;
+        // $sourcea = $this->workorder_model->get_source_data($source_id);
+        
+        $workorder = $workData->work_order_number;
+        $c_id = $workData->company_id;
+        $p_id = $workData->customer_id;
+        // $source = $source->ls_name;
+
+        $cliets = $this->workorder_model->get_cliets_data($c_id);
+        $customerData = $this->workorder_model->get_customerData_data($p_id);
+
+        $customs = $this->workorder_model->get_custom_data($wo_id);
+        // $items = $this->workorder_model->getitemsWorkOrderAlarm($wo_id);
+        $items = $this->workorder_model->getworkorderItems($wo_id);
+        $payment = $this->workorder_model->getpayment($wo_id);
+        $business = $this->workorder_model->getbusiness($c_id);
+        $business_logo = $business->business_image;
+
+        $company_id = $workData->company_id;
+
+        $first = $this->workorder_model->getuserfirst($workData->company_representative_name);
+        $second = $this->workorder_model->getusersecond($workData->primary_account_holder_name);
+        $third = $this->workorder_model->getuserthird($workData->secondary_account_holder_name);
+
+        $data = array(
+            'workorder'                         => $workorder,
+            'tags'                              => $workData->tags,
+            'job_type'                          => $workData->job_type,
+            'priority'                          => $workData->priority,
+            'header'                            => $workData->header,
+            'password'                          => $workData->password,
+            'security_number'                   => $workData->security_number,
+            'source_name'                       => $workData->lead_source_id,
+            'company_representative_signature'  => $workData->company_representative_signature,
+            'company_representative_name'       => $workData->company_representative_name,
+            'primary_account_holder_signature'  => $workData->primary_account_holder_signature,
+            'primary_account_holder_name'       => $workData->primary_account_holder_name,
+            'secondary_account_holder_signature'=> $workData->secondary_account_holder_signature,
+            'secondary_account_holder_name'     => $workData->secondary_account_holder_name,
+
+            'company'                           => $cliets->business_name,
+            'business_address'                  => $cliets->business_address,
+            'phone_number'                      => $cliets->phone_number,
+            'acs_name'                          => $customerData->first_name.' '.$customerData->middle_name.' '.$customerData->last_name,
+            'job_location'                      => $workData->job_location,
+            'job_location2'                     => $workData->city.', '.$workData->state.', '.$workData->zip_code.', '.$workData->cross_street,
+            'email'                             => $workData->email,
+            'phone'                             => $workData->phone_number,
+            'mobile'                            => $workData->mobile_number,
+            'terms_and_conditions'              => $workData->terms_and_conditions,
+            'terms_of_use'                      => $workData->terms_of_use,
+            'job_description'                   => $workData->job_description,
+            'instructions'                      => $workData->instructions,
+            'first_verification_name'           => $customerData->first_verification_name,
+            'first_number'                      => $customerData->first_number,
+            'first_relation'                    => $customerData->first_relation,
+            'second_verification_name'          => $customerData->second_verification_name,
+            'second_number'                     => $customerData->second_number,
+            'second_relation'                   => $customerData->second_relation,
+            'third_verification_name'           => $customerData->third_verification_name,
+            'third_number'                      => $customerData->third_number,
+            'third_relation'                    => $customerData->third_relation,
+            'date_issued'                       => $workData->date_issued,
+            'secondary_account_holder_signature'=> $workData->secondary_account_holder_signature,
+            'secondary_account_holder_name'     => $workData->secondary_account_holder_name,
+            'business_name'                     => $customerData->business_name,
+
+            'customs'                           => $customs,
+            'items'                             => $items,
+
+            'total'                             => $workData->grand_total,
+            'subtotal'                          => $workData->subtotal,
+            'taxes'                             => $workData->taxes,
+            'adjustment_name'                   => $workData->adjustment_name,
+            'adjustment_value'                  => $workData->adjustment_value,
+            'voucher_value'                     => $workData->voucher_value,
+            'otp_setup'                         => $workData->otp_setup,
+            'monthly_monitoring'                => $workData->monthly_monitoring,
+            // 'source' => $source
+
+            'payment_method'                    => $payment->payment_method,
+            'amount'                            => $payment->amount, //
+            'check_number'                      => $payment->check_number,
+            'routing_number'                    => $payment->routing_number,
+            'account_number'                    => $payment->account_number,
+            'credit_number'                     => $payment->credit_number,
+            'credit_expiry'                     => $payment->credit_expiry,
+            'credit_cvc'                        => $payment->credit_cvc,
+            'account_credentials'               => $payment->account_credentials,
+            'account_note'                      => $payment->account_note,
+            'confirmation'                      => $payment->confirmation,
+            'mail_address'                      => $payment->mail_address,
+            'mail_locality'                     => $payment->mail_locality,
+            'mail_state'                        => $payment->mail_state,
+            'mail_postcode'                     => $payment->mail_postcode,
+            'mail_cross_street'                 => $payment->mail_cross_street,
+            'billing_date'                      => $payment->billing_date,
+            'billing_frequency'                 => $payment->billing_frequency,
+
+            'template'                          => '2',
+            'business_logo'                     => $business_logo,
+
+            'first'                             => $first,
+            'second'                            => $second,
+            'third'                             => $third,
+
+            'company_id'                        => $company_id,
+        );
+
+
+    // $message2 = $this->load->view('workorder/send_email_acs_alarm', $data, true);
+    // $filename = $workData->company_representative_signature;
+            
+        $filename = "nSmarTrac_work_order_".$wo_id."_alarm";
+        // $this->load->library('pdf');
+        // $this->pdf->load_view('workorder/send_email_acs_alarm', $data, $filename, "portrait");
+        $this->load->library('pdf');
+
+
+        $this->pdf->load_view('workorder/work_order_pdf_template', $data, $filename, "portrait");
+        // $this->pdf->render();
+
+
+        // $this->pdf->stream("welcome.pdf");
+    }
 }
 
 

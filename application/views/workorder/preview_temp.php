@@ -1035,7 +1035,7 @@ border: none;
 	
 	<div class="modal fade" id="sharePreview" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
          aria-hidden="true">
-        <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h4 class="modal-title">Share This Link</h4>
@@ -1047,9 +1047,7 @@ border: none;
                     <form name="clone-modal-form">
                         <div class="validation-error" style="display: none;"></div>
                         <p>
-                            <input type="text" class="form-control" value="<?php echo base_url('share_Link/public_view/'.$workorder->id) ?>" id="myInput" readonly>
-							<br>
-							<a href="#" class="btn btn-success" onclick="myCopyFunction()">Copy link to Clipboard</a>
+                            <input type="text" class="form-control" value="<?php echo base_url('share_Link/preview/'.$workorder->id) ?>">
                         </p>
                     </form>
                 </div>
@@ -1104,16 +1102,6 @@ function initMap() {
 	center: { lat: -34.397, lng: 150.644 },
 	zoom: 8,
   });
-}
-</script>
-
-<script>
-function myCopyFunction() {
-  var copyText = document.getElementById("myInput");
-  copyText.select();
-  copyText.setSelectionRange(0, 99999)
-  document.execCommand("copy");
-//   alert("Copied the text: " + copyText.value);
 }
 </script>
 

@@ -526,6 +526,16 @@
                     <div>
                         <button class="btn btn-block btn-primary mt-2" id="addDropdownOption">+ Add Option</button>
                     </div>
+
+                    <!-- <div>
+                        <label>Default Value</label>
+                        <select class="custom-select" id="dropdownDefaultValue">
+                            <option selected>Select</option>
+                            <option value="1">One</option>
+                            <option value="2">Two</option>
+                            <option value="3">Three</option>
+                        </select>
+                    </div> -->
                 </div>
             </div>
 

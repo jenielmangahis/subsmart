@@ -1393,7 +1393,7 @@ border: none;
 
                      <div class="form-group">
                                 <button type="submit" name="action" class="btn btn-flat btn-success" value="submit">Submit</button>
-                                <button type="submit" name="action" class="btn btn-flat btn-success pdf_sheet" target="_blank" value="preview">Preview</button>
+                                <!-- <button type="submit" name="action" class="btn btn-flat btn-success pdf_sheet" target="_blank" value="preview">Preview</button> -->
                                 <button type="submit" class="btn btn-flat btn-success" style="background-color: #32243d !important"><b>Save Template</b></button>
                                 <a href="<?php echo url('workorder') ?>" class="btn ">Cancel this</a>
                     </div>

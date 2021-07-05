@@ -70,6 +70,23 @@ class Vendors extends MY_Controller {
             "assets/js/accounting/expenses/vendors.js"
         ));
 
+        $paymentsFilter = [
+            'start-date' => date("Y-m-d", strtotime("-30 days")),
+            'company_id' => logged('company_id')
+        ];
+
+        $openBills = $this->expenses_model->get_open_bills(['bill-date-start' => date("Y-m-d", strtotime("-365 days"))]);
+        $overdueBills = $this->expenses_model->get_overdue_bills(['bill-date-start' => date("Y-m-d", strtotime("-365 days"))]);
+        $openPurchaseOrders = $this->expenses_model->get_unbilled_purchase_orders(['start-date' => date("Y-m-d", strtotime("-365 days"))]);
+        $billPayments = $this->expenses_model->get_company_bill_payment_items($paymentsFilter);
+        $expenses = $this->expenses_model->get_company_expense_transactions($paymentsFilter);
+        $checks = $this->expenses_model->get_company_check_transactions($paymentsFilter);
+        $creditCardPayments = $this->expenses_model->get_company_cc_payment_transactions($paymentsFilter);
+
+        $this->page_data['paidTransactions'] = count($billPayments) + count($expenses) + count($checks) + count($creditCardPayments);
+        $this->page_data['purchaseOrders'] = count($openPurchaseOrders);
+        $this->page_data['openBills'] = count($openBills);
+        $this->page_data['overdueBills'] = count($overdueBills);
         $this->page_data['terms'] = $this->accounting_terms_model->getActiveCompanyTerms(logged('company_id'));
         $this->page_data['expenseAccs'] = $this->chart_of_accounts_model->get_expense_accounts();
         $this->page_data['otherExpenseAccs'] = $this->chart_of_accounts_model->get_other_expense_accounts();
@@ -97,7 +114,21 @@ class Vendors extends MY_Controller {
             array_push($status, 0);
         }
 
-        $vendors = $this->vendors_model->getAllByCompany($status);
+        if(!isset($post['transaction'])) {
+            $vendors = $this->vendors_model->getAllByCompany($status);
+        } else {
+            switch($post['transaction']) {
+                case 'purchase-orders' :
+                    $vendors = $this->vendors_model->get_vendors_with_unbilled_po($status);
+                break;
+                case 'open-bills' :
+                    $vendors = $this->vendors_model->get_vendors_with_open_bills($status);
+                break;
+                case 'overdue-bills' :
+                    $vendors = $this->vendors_model->get_vendors_with_overdue_bills($status);
+                break;
+            }
+        }
 
         $data = [];
 
@@ -209,6 +240,24 @@ class Vendors extends MY_Controller {
         ));
 
         $vendor = $this->vendors_model->get_vendor_by_id($vendorId);
+
+        $bills = $this->expenses_model->get_vendor_open_bills($vendorId);
+        $credits = $this->expenses_model->get_vendor_unapplied_vendor_credits($vendorId);
+
+        $openBal = 0.00;
+        $overdueBal = 0.00;
+        foreach($bills as $bill) {
+            $openBal += floatval($bill->remaining_balance);
+
+            if(strtotime($bill->due_date) < strtotime(date("m/d/Y"))) {
+                $overdueBal += floatval($bill->remaining_balance);
+            }
+        }
+
+        foreach($credits as $credit) {
+            $openBal -= floatval($credit->remaining_balance);
+        }
+
         $not = ['', null];
         $vendorAddress = '';
         $vendorAddress .= in_array($vendor->street, $not) ? "" : $vendor->street;
@@ -240,6 +289,8 @@ class Vendors extends MY_Controller {
             $vendorAddress .= $vendor->country;
         }
 
+        $this->page_data['openBalance'] = $openBal;
+        $this->page_data['overdueBalance'] = $overdueBal;
         $this->page_data['vendorAddress'] = $vendorAddress;
         $this->page_data['terms'] = $this->accounting_terms_model->getActiveCompanyTerms(logged('company_id'));
         $this->page_data['expenseAccs'] = $this->chart_of_accounts_model->get_expense_accounts();
@@ -611,7 +662,7 @@ class Vendors extends MY_Controller {
                     'id' => $bill->id,
                     'date' => date("m/d/Y", strtotime($bill->bill_date)),
                     'type' => 'Bill',
-                    'number' => $bill->bill_number,
+                    'number' => $bill->bill_no,
                     'payee' => $vendor->display_name,
                     'method' => '',
                     'source' => '',

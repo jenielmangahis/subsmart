@@ -1319,8 +1319,9 @@ border: none;
                 <div>
 
                      <div class="form-group">
-                                <button type="submit" class="btn btn-flat btn-danger">Update</button>
+                                <button type="submit" class="btn btn-flat btn-danger" value="submit">Update</button>
                                 <!-- <button type="submit" class="btn btn-flat btn-success">Preview</button> -->
+                                <button type="submit" name="action" class="btn btn-flat btn-success pdf_sheet" target="_blank" value="preview">Preview as PDF</button>
                                 <!-- <button type="submit" class="btn btn-flat btn-success" style="background-color: #32243d !important"><b>Save Template</b></button> -->
                                 <button type="submit" class="btn btn-flat btn-success" id="esignButton">eSign</button>
                                 <a href="<?php echo url('workorder') ?>" class="btn ">Cancel this</a>

@@ -107,7 +107,7 @@ body {
   select {
     font-size: #{em(12)};
     font-family: monospace;
-    border: #{em(2)} var(--border-style) var(--border-color, #bf1e2e);
+    // border: #{em(2)} var(--border-style) var(--border-color, #bf1e2e);
     outline: 0;
   }
 
@@ -127,7 +127,7 @@ body {
     select,
     .signing__fieldSignature,
     .signing__fieldAttachment {
-      border: 0;
+      border: 0 !important;
       cursor: initial;
       background-color: inherit;
     }
@@ -332,6 +332,14 @@ body {
       outline: #{em(2)} var(--border-style) #bf1e2e;
     }
   }
+}
+
+select.docusignField__dropdown--isRequired {
+  border: #{em(2)} var(--border-style) var(--border-color, #bf1e2e);
+}
+
+.docusignField__input--isRequired input {
+  border: #{em(2)} var(--border-style) var(--border-color, #bf1e2e);
 }
 
 .signing__documentPDF {

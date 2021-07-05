@@ -70,7 +70,7 @@
             <a href="<?php echo base_url('inventory?type=itemgroup') ?>" id="addItemGroups"><i class="fa fa-th-list" style="margin-right: 20px"></i>Item Groups</a>
         </li>
         <li class="submenus dropright">
-            <a href="<?php echo base_url('plans') ?>"><i class="fa fa-tasks" style="margin-right: 20px"></i>Plans</a>
+            <a href="<?php echo base_url('plans') ?>"><i class="fa fa-tasks" style="margin-right: 20px"></i>Package</a>
         </li>
     </ul>
 </nav>

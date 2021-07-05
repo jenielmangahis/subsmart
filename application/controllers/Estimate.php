@@ -1231,6 +1231,27 @@ class Estimate extends MY_Controller
         }
     }
 
+    public function duplicate_estimate()
+    {
+        $company_id     = getLoggedCompanyID();
+        // $user_id        = getLoggedUserID();
+        $user_id        = logged('id');
+        $wo_num = $this->input->post('wo_num');
+
+        $datas = $this->estimate_model->getDataByWO($wo_num);
+
+        $number = $this->estimate_model->getlastInsert($company_id);
+        foreach ($number as $num){
+            $next = $num->estimate_number;
+            $arr = explode("-", $next);
+            $date_start = $arr[0];
+            $nextNum = $arr[1];
+        //    echo $number;
+        }
+       $val = $nextNum + 1;
+       $estimate_number = 'WO-'.str_pad($val,7,"0",STR_PAD_LEFT);
+    }
+
     public function estimate_settings()
     {
         $this->load->model('EstimateSettings_model');

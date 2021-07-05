@@ -2744,7 +2744,8 @@ class Workorder extends MY_Controller
             'company_id'                            => $company_id,
             'date_created'                          => date("Y-m-d H:i:s"),
             'date_updated'                          => date("Y-m-d H:i:s"),
-            'work_order_type_id'                    => '1'
+            'work_order_type_id'                    => '1',
+            'industry_template_id'                  => '0'
         );
 
         // var_dump($new_data);
@@ -3038,6 +3039,7 @@ class Workorder extends MY_Controller
                 echo json_encode(0);
             }
         }
+        
         if($action == 'preview') {
             $dataaa = $this->input->post('workorder_number');
             $this->page_data['users'] = $this->users_model->getUser(logged('id'));
@@ -3212,6 +3214,9 @@ class Workorder extends MY_Controller
             $file3_save = $three->secondary_account_holder_signature;
         }
         
+
+        $action = $this->input->post('action');
+        if($action == 'submit') {
 
         $update_data = array(
             'id'                    => $this->input->post('wo_id'),
@@ -3551,6 +3556,18 @@ class Workorder extends MY_Controller
 
         redirect('workorder');
     }
+    
+        if($action == 'preview') {
+            $dataaa = $this->input->post('workorder_number');
+            $this->page_data['users'] = $this->users_model->getUser(logged('id'));
+
+            $this->load->library('pdf');
+            $html = $this->load->view('workorder/preview', [], true);
+            $this->pdf->createPDF($html, 'mypdf', false);
+            exit(0);
+
+        }
+    }
 
     public function UpdateWorkorderAlarm(){
         $company_id  = getLoggedCompanyID();
@@ -3614,6 +3631,9 @@ class Workorder extends MY_Controller
             $three = $this->workorder_model->getById($id);
             $file3_save = $three->secondary_account_holder_signature;
         }
+        
+        $action = $this->input->post('action');
+        if($action == 'submit') {
 
         $acs = array(
             'prof_id'                   => $this->input->post('acs_id'),
@@ -4121,6 +4141,18 @@ class Workorder extends MY_Controller
 
         redirect('workorder');
     }
+    
+        if($action == 'preview') {
+            $dataaa = $this->input->post('workorder_number');
+            $this->page_data['users'] = $this->users_model->getUser(logged('id'));
+
+            $this->load->library('pdf');
+            $html = $this->load->view('workorder/previewAlarm', [], true);
+            $this->pdf->createPDF($html, 'mypdf', false);
+            exit(0);
+
+        }
+    }
 
     public function delete_workorder()
     {
@@ -4543,7 +4575,8 @@ class Workorder extends MY_Controller
             'company_id'                            => $company_id,
             'date_created'                          => date("Y-m-d H:i:s"),
             'date_updated'                          => date("Y-m-d H:i:s"),
-            'work_order_type_id'                    => '2'
+            'work_order_type_id'                    => '2',
+            'industry_template_id'                  => '1'
             
         );
 
@@ -4990,6 +5023,7 @@ class Workorder extends MY_Controller
         $html = $this->load->view('workorder/previewAlarm', [], true);
         $this->pdf->createPDF($html, 'mypdf', false);
         exit(0);
+
     }
     
     }

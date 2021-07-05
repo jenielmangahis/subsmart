@@ -1,3 +1,22 @@
+<div class="modal  fade modal-fluid" tabindex="-1" role="dialog" id="sales_receipt_pdf_preview_modal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Modal title</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Modal body text goes here.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary">Save changes</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
 <div class="full-screen-modal">
     <div id="addsalesreceiptModal" class="modal fade modal-fluid" role="dialog">
         <div class="modal-dialog">
@@ -25,7 +44,7 @@
                                             <div class="row no-margin">
                                                 <div class="col-md-3  no-padding">
                                                     Template name
-                                                    <input type="email" class="form-control"
+                                                    <input type="text" class="form-control"
                                                         name="recurring-template-name">
                                                 </div>
                                                 <div class="col-md-9">
@@ -74,32 +93,40 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="row">
-                                    <div class="col-md-3">
-                                        Customer
-                                        <select class="form-control" name="customer_id" id="sel-customer2">
-                                            <option></option>
-                                            <?php foreach ($customers as $customer) : ?>
-                                            <option
-                                                value="<?php echo $customer->prof_id; ?>">
-                                                <?php echo $customer->first_name . ' ' . $customer->last_name; ?>
-                                            </option>
-                                            <?php endforeach; ?>
-                                        </select>
-                                    </div>
-                                    <div class="col-md-6">
-                                        Email
-                                        <input type="email" class="form-control" name="email" id="email2">
-                                        <div style="margin-top:5px;"><input type="checkbox"> Send later</div>
-                                    </div>
+                            </div>
+                        </div>
+                        <div class="customer-info">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="row">
+                                        <div class="col-md-3 divided">
+                                            Customer
+                                            <select class="form-control" name="customer_id" id="sel-customer2">
+                                                <option></option>
+                                                <?php foreach ($customers as $customer) : ?>
+                                                <option
+                                                    value="<?php echo $customer->prof_id; ?>">
+                                                    <?php echo $customer->first_name . ' ' . $customer->last_name; ?>
+                                                </option>
+                                                <?php endforeach; ?>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-6 divided">
+                                            Email
+                                            <input type="email" class="form-control" name="email" id="email2">
+                                            <div style="margin-top:5px;"><input type="checkbox"> Send later</div>
+                                        </div>
 
-                                    <div class="col-md-3">
-                                        <div class="recurring-form-part">
-                                            <div class="label-1">Options</div>
-                                            <div style="margin-top:5px;"><input type="checkbox"
-                                                    name="recurring_option_1"> Automatically send emails</div>
-                                            <div style="margin-top:5px;"><input type="checkbox"
-                                                    name="recurring_option_2"> Print later</div>
+                                        <div class="col-md-3 option-part">
+                                            <div class="recurring-form-part">
+                                                <div class="label-1">Options</div>
+                                                <div style="margin-top:5px;"><input type="checkbox"
+                                                        name="recurring_option_1">
+                                                    Automatically send emails</div>
+                                                <div style="margin-top:5px;"><input type="checkbox"
+                                                        name="recurring_option_2">
+                                                    Print later</div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -211,7 +238,7 @@
                                                     </div>
                                                     <div class="label-1">on</div>
                                                     <div class="monthly-day-of-week">
-                                                        <select class="form-control" name="monthly-day-of-week">
+                                                        <select class="form-control" name="monthly-week-order">
                                                             <option>Day</option>
                                                             <option>First</option>
                                                             <option>Second</option>
@@ -222,36 +249,14 @@
                                                         </select>
                                                     </div>
                                                     <div class="monthly-day">
-                                                        <select class="form-control" name="monthly-day">
-                                                            <option>1st</option>
-                                                            <option>2nd</option>
-                                                            <option>3rd</option>
-                                                            <option>4th</option>
-                                                            <option>5th</option>
-                                                            <option>6th</option>
-                                                            <option>7th</option>
-                                                            <option>8th</option>
-                                                            <option>9th</option>
-                                                            <option>10th</option>
-                                                            <option>11th</option>
-                                                            <option>12th</option>
-                                                            <option>13th</option>
-                                                            <option>14th</option>
-                                                            <option>15th</option>
-                                                            <option>16th</option>
-                                                            <option>17th</option>
-                                                            <option>18th</option>
-                                                            <option>19th</option>
-                                                            <option>20th</option>
-                                                            <option>21st</option>
-                                                            <option>22nd</option>
-                                                            <option>23rd</option>
-                                                            <option>24th</option>
-                                                            <option>25th</option>
-                                                            <option>26th</option>
-                                                            <option>27th</option>
-                                                            <option>28th</option>
-                                                            <option>Last</option>
+                                                        <select class="form-control" name="monthly-day-of-the-week">
+                                                            <option>Monday</option>
+                                                            <option>Tuesday</option>
+                                                            <option>Wednesday</option>
+                                                            <option>Thursday</option>
+                                                            <option>Friday</option>
+                                                            <option>Saturday</option>
+                                                            <option>Sunday</option>
                                                         </select>
                                                     </div>
                                                     <div class="label-2">of every</div>
@@ -271,7 +276,7 @@
                                                 </div>
                                                 <div class="input-field-2">
                                                     <div class="label">End</div>
-                                                    <select class="form-control" name="monthly-day">
+                                                    <select class="form-control" name="recurring-end-type">
                                                         <option>None</option>
                                                         <option>By</option>
                                                         <option>After</option>
@@ -381,7 +386,8 @@
 
                             </div>
                             <div class="col-md-6" align="right">
-                                AMOUNT<h2><span id="grand_total_sr_t">0.00</span></h2><br>
+                                <div class="label-grand_total_sr_t">AMOUNT</div>
+                                <h2><span id="grand_total_sr_t">0.00</span></h2><br>
                                 Location of sale<br>
                                 <input type="text" class="form-control" style="width:200px;" name="location_scale">
                             </div>
@@ -878,7 +884,21 @@
                                 </div>
                                 <div class="col-md-5" align="center">
                                     <div class="middle-links">
-                                        <a href="">Print or Preview</a>
+                                        <div class="pint-pries-option-section">
+                                            <ul>
+                                                <li>
+                                                    <a href="#" class="print-preview">Print or Preview </a>
+                                                </li>
+                                                <li>
+                                                    <a href="#" class="print-slip">Print packing slip</a>
+                                                </li>
+                                            </ul>
+                                            <div class="anchor-holder">
+                                                <img src="<?=base_url('assets/img/accounting/customers/anchor_down.png')?>"
+                                                    alt="">
+                                            </div>
+                                        </div>
+                                        <a href="" class="print-preview-option">Print or Preview</a>
                                     </div>
                                     <div class="middle-links end">
                                         <a href="">Make recurring</a>
@@ -979,6 +999,8 @@
         </div>
     </div>
 </div>
+
+
 
 <script>
     $(document).ready(function() {
