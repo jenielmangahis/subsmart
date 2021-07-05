@@ -35,6 +35,25 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     #vendors-table thead tr th:first-child {
         width: 1;
     }
+    .open-purchase-orders-cont, .open-bills-cont, .payments-cont {
+        color: #fff;
+        cursor: pointer;
+    }
+    .open-purchase-orders-cont p, .open-bills-cont p, .payments-cont p {
+        margin-bottom: 10px;
+    }
+    .open-purchase-orders-cont .row .col-12 {
+        background-color: #0077C5;
+    }
+    .open-bills-cont .row .col-6:first-child {
+        background-color: #FF8000;
+    }
+    .open-bills-cont .row .col-6:nth-child(2) {
+        background-color: #BABEC5;
+    }
+    .payments-cont .row .col-12 {
+        background-color: #7FD000;
+    }
 </style>
 <?php include viewPath('includes/header'); ?>
 <div class="wrapper" role="wrapper">
@@ -100,32 +119,41 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                     </div>
                                 </div>
                                 <div class="col-md-12 mt-3">
-                                    <div class="tableContainer moneyBar">
-                                        <div class="unpaid-bar-container">
-                                            <div class="unpaid-bar-header">
-                                                Unpaid 365 days
-                                            </div>
-                                            <div class="overdue-bar">
-                                                <div class="overdue-bar-header">
-                                                    <h4>0</h4>
-                                                    <span>OPEN BILLS</span>
-                                                </div>
-                                                <div class="openbills-bar">
-                                                    <div class="openbills-bar-header">
-                                                        <h4>0</h4>
-                                                        <span>OVERDUE</span>
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <p>Unbilled Last 365 Days</p>
+                                            <div class="open-purchase-orders-cont" id="purchase-orders">
+                                                <div class="row mr-0">
+                                                    <div class="col-12">
+                                                        <h4><?=$purchaseOrders?></h4>
+                                                        <p>PURCHASE ORDERS</p>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="paid-bar-container">
-                                            <div class="paid-header">
-                                                Paid
+                                        <div class="col-md-4">
+                                            <p>Unpaid Last 365 Days</p>
+                                            <div class="open-bills-cont">
+                                                <div class="row mr-0">
+                                                    <div class="col-6 overdue-bills" id="overdue-bills">
+                                                        <h4><?=$overdueBills?></h4>
+                                                        <p>OVERDUE</p>
+                                                    </div>
+                                                    <div class="col-6 open-bills" id="open-bills">
+                                                        <h4><?=$openBills?></h4>
+                                                        <p>OPEN BILLS</p>
+                                                    </div>
+                                                </div>
                                             </div>
-                                            <div class="paid-bar">
-                                                <div class="paid-bar-header">
-                                                    <h4>39</h4>
-                                                    <span>PAID LAST 30 DAYS</span>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <p>Paid</p>
+                                            <div class="payments-cont" id="payments">
+                                                <div class="row">
+                                                    <div class="col-12">
+                                                        <h4><?=$paidTransactions?></h4>
+                                                        <p>PAID LAST 30 DAYS</p>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>

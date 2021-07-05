@@ -250,7 +250,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         </td>
                                         <td><?php echo get_user_by_id($workorder->employee_id)->FName .' '. get_user_by_id($workorder->employee_id)->LName ?></td>
                                         <td><?php echo $workorder->priority; ?></td>
-                                        <td><?php echo $workorder->w_status;  ?></td>
+                                        <td><?php  if( $workorder->is_mail_open == 1 ){
+                                              echo "<i class='fa fa-eye'></i>  ";
+                                            } echo $workorder->w_status;  ?></td>
                                         <td class="text-center">
                                             <div class="dropdown dropdown-btn">
                                                 <button class="btn btn-default dropdown-toggle" type="button"

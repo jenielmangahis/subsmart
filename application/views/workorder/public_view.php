@@ -1,7 +1,51 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed'); ?>
+<link rel="stylesheet"
+        href="<?php echo $url->assets ?>plugins/font-awesome/css/font-awesome.min.css">
+    <!-- <link rel="stylesheet" href="<?php echo $url->assets ?>fa-5/css/all.min.css">
+    -->
+    <!--Morris Chart CSS -->
+    <link rel="stylesheet"
+        href="<?php echo $url->assets ?>plugins/morris.js/morris.css">
+    <link
+        href="<?php echo $url->assets ?>dashboard/css/bootstrap.min.css"
+        rel="stylesheet" type="text/css">
 
-<?php include viewPath('includes/header'); ?>
+    <!-- DataTables -->
+    <!--<link rel="stylesheet" href="//cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css" />-->
+    <link rel="stylesheet"
+        href="<?php echo $url->assets ?>plugins/switchery/switchery.min.css">
+    <link rel="stylesheet"
+        href="<?php echo $url->assets ?>plugins/select2/dist/css/select2.min.css" />
+    <link rel="stylesheet"
+        href="<?php echo $url->assets ?>plugins/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css" />
+    <link rel="stylesheet"
+        href="<?php echo $url->assets ?>css/jquery.signaturepad.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;500;700&display=swap" rel="stylesheet">
+    <!--<script src="//cdn.tiny.cloud/1/s4us18xf53yysd7r07a6wxqkmlmkl3byiw6c9wl6z42n0egg/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>-->
+    <!-- <link href="<?php echo $url->assets ?>libs/jcanvas/global.css"
+    rel="stylesheet"> -->
+
+    <!--<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>-->
+    <link
+        href="<?php echo $url->assets ?>css/jquery.dataTables.min.css"
+        rel="stylesheet" type="text/css">
+
+    <script src="<?php echo $url->assets ?>push_notification/push.js"></script>
+    <script
+        src="<?php echo $url->assets ?>push_notification/serviceWorker.min.js">
+    </script>
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Material+Icons" type="text/css">
+    <!--    ICONS CSS-->
+    <link href="<?php echo $url->assets ?>css/icons/icon.navbar.css"
+        rel="stylesheet" type="text/css">
+
+
+    <script src="<?php echo $url->assets ?>dashboard/js/jquery.min.js"></script>
+    <script src="https://js.pusher.com/7.0/pusher.min.js"></script>
 <style>
 /* common */
 .ribbon {
@@ -416,13 +460,23 @@ border: none;
 		margin:5% !important;
 	}
 }
+
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+body
+{
+    color: black;
+}
 </style>
     <!-- page wrapper start -->
     <input type="hidden" value="<?= $workorder->id; ?>" id="workorderId"/>
-	<div class="wrapper" role="wrapper">
-    <?php include viewPath('includes/sidebars/workorder'); ?>
+	<div class="wrapper" role="wrapper" style="margin:1% 10% 0 10%; background-color:white;">
     <div wrapper__section>
-        <?php include viewPath('includes/notifications'); ?>
 				<!-- <div class="order-heading">
 					<h3>Work Order # <?php //echo $workorder->work_order_number ?></h3>
 				</div> -->
@@ -430,61 +484,25 @@ border: none;
 				<div class="order-menu">
 					<div class="row">
 						<div class="col-md-4">
-										<div class="user-return">
+										<!-- <div class="user-return">
 											<a href="<?php echo base_url('workorder'); ?>"><i class="fa fa-angle-left" aria-hidden="true"></i> Return to Work Orders</a>
-										</div>
+										</div> -->
 						</div>
 						<div class="col-md-8">
 								<div class="order-right text-right">
-									<div class="user-menu">
+									<!-- <div class="user-menu">
 										<a class="btn sand-btn margin-right-sec" href="<?php echo base_url('job/work_order_job/'. $workorder->id) ?>"><span class="fa fa-money fa-margin-right"></span> Create Job</a>
-									</div> 
+									</div>  -->
 									
 									<div class="user-menu mobile_btn"><br>
-										<a class="btn btn-success" href="#" data-toggle="modal" data-target="#sharePreview"><span class="fa fa-edit"></span> Share</a>
-										<?php if($workorder->work_order_type_id == '2'){ ?>
-											<a class="btn btn-sec" href="<?php echo base_url('workorder/editAlarm/' . $workorder->id) ?>"><span class="fa fa-edit"></span> Edit</a>
-										<?php }else{ ?>
-                                        	<a class="btn btn-sec" href="<?php echo base_url('workorder/edit/' . $workorder->id) ?>"><span class="fa fa-edit"></span> Edit</a>
-                                        <?php } ?>
-									<?php if($workorder->work_order_type_id == 1){ ?>
-                       					<a href="<?php echo base_url('workorder/work_order_pdf/' . $workorder->id) ?>" class="btn btn-sec download_work_order_pdfsss" acs-id="<?php echo $workorder->customer_id; ?>" workorder-id="<?php echo $workorder->id; ?>"><span class="fa fa-file-pdf-o"></span> PDF</a>
+                                    <?php if($workorder->work_order_type_id == 1){ ?>
+                       					<a href="<?php echo base_url('share_Link/work_order_pdf/' . $workorder->id) ?>" class="btn btn-sec download_work_order_pdfsss" acs-id="<?php echo $workorder->customer_id; ?>" workorder-id="<?php echo $workorder->id; ?>"><span class="fa fa-file-pdf-o"></span> PDF</a>
 									<?php } else{ ?>
-										<a href="<?php echo base_url('workorder/work_order_pdf_alarm/' . $workorder->id) ?>" class="btn btn-sec download_work_order_pdfsss" acs-id="<?php echo $workorder->customer_id; ?>" workorder-id="<?php echo $workorder->id; ?>"><span class="fa fa-file-pdf-o"></span> PDF</a>
+										<a href="<?php echo base_url('share_Link/work_order_pdf_alarm/' . $workorder->id) ?>" class="btn btn-sec download_work_order_pdfsss" acs-id="<?php echo $workorder->customer_id; ?>" workorder-id="<?php echo $workorder->id; ?>"><span class="fa fa-file-pdf-o"></span> PDF</a>
 									<?php } ?>
-
-          								<a class="btn btn-sec" data-print-modal="open" href="#" onclick="printDiv('printableArea')" value="Print Work Order"><span class="fa fa-print"></span> Print</a>
-										  <div class="user-menu">
-									<div class="dropdown dropdown-btn dropdown-inline margin-left-sec"><br>
-											<button class="btn btn-sec btn-regular dropdown-toggle" type="button" id="dropdown-edit" data-toggle="dropdown" aria-expanded="false">
-												<span class="btn-label">More</span><span class="caret-holder"><span class="caret"></span></span>
-											</button>
-											<ul class="dropdown-menu dropdown-menu-right usermenu-dropdown" role="menu" aria-labelledby="dropdown-edit">
-												<li ><a  href="#" ><span class="fa fa-flag-o icon"></span> Change Status</a></li>
-												<li class="divider"></li>
-												<!-- <li ><a  href="#" ><span class="fa fa-files-o icon"></span> Clone Work Order</a></li> -->
-												<li role="presentation"><a role="menuitem"
-                                                                               tabindex="-1"
-                                                                               href="#"
-                                                                               data-toggle="modal"
-                                                                               data-target="#modalCloneWorkorder"
-                                                                               data-id="<?php echo $workorder->id ?>"
-                                                                               data-wo_num="<?php echo $workorder->work_order_number ?>" class="clone-workorder"><span
-                                                                    class="fa fa-files-o icon clone-workorder">
-
-                                                        </span> Clone Work Order</a>
-												<li ><a href="<?php echo base_url('job/work_order_job/'. $workorder->id) ?>" ><span class="fa fa-file-text-o icon"></span> Convert to Job</a></li>
-												<li ><a href="" acs-id="<?php echo $workorder->customer_id; ?>" workorder-id="<?php echo $workorder->id; ?>" class="send_to_customer"><span class="fa fa-envelope-o icon"></span> Send to Customer</a></li>
-												<li ><a href="" acs-id="<?php echo $workorder->customer_id; ?>" workorder-id="<?php echo $workorder->id; ?>" class="send_to_company"><span class="fa fa-envelope-o icon"></span> Send to Company</a></li>
-												<li class="divider"></li>
-												<!-- <li ><a   href="#" ><span class="fa fa-trash-o icon"></span> Delete Work Order</a></li> -->
-												<li role="presentation">
-                                                        <a href="#" work-id="<?php echo $workorder->id; ?>" id="delete_workorder"><span class="fa fa-trash-o icon"></span> Delete Work Order </a></li>
-												<li ><a   href="#" id="esignButton"><span class="fa fa-envelope-o icon"></span> eSign</a></li>
-											</ul>
-										</div>
+          								<a class="btn btn-success" data-print-modal="open" href="#" onclick="printDiv('printableArea')" value="Print Work Order"><span class="fa fa-print"></span> Print</a>
 									</div>
-								</div>
+								</div><br><br>
 						</div>
 					</div>
 				</div>
@@ -499,7 +517,7 @@ border: none;
 					<!-- <hr> -->
 							<div class="workorder-inner">
 							<div align="right">
-								<span class="presenter-title mobile_size"><b>WORK ORDER</b></span> <br> <span style="font-size:16px;"># <?php echo $workorder->work_order_number ?></span><br>
+								<span class="presenter-title mobile_size"><h4>WORK ORDER</h4></span> <h6><span style="font-size:16px;"># <?php echo $workorder->work_order_number ?></span></h6>
 							</div>
 							<hr style="border: 2px solid gray;">
 								<div clas="row">
@@ -569,32 +587,32 @@ border: none;
 		         							   <div class="user-info">
 		         							   		<div class="ul-info">
 		         							   			<ul>
-		         							   				<li><a href="" class="ul-head"> FROM:</a></li>
+		         							   				<li><b>FROM:</b></li>
 															<!-- <hr style="border: 1px solid gray;"> -->
-		         							   				<li><a href="" class="ul-head"><?php echo $company->business_name ?></a></li>
-		         							   				<li><a href="" class="ul-text">License: EF, AL, MS</a></li>
-		         							   				<li><a href="" class="ul-text"><?php echo $company->business_address ?></a></li>
+		         							   				<li><?php echo $company->business_name ?></li>
+		         							   				<li>License: EF, AL, MS</li>
+		         							   				<li><?php echo $company->business_address ?></li>
 		         							   				<!-- <li><a href="" class="ul-text">Pensacola, FL, 32526</a></li> -->
-		         							   				<li><a href="" class="ul-text">Email: <?php echo $company->email_address ?></a></li>
-		         							   				<li><a href="" class="ul-text">Phone: <?php echo $company->phone_number ?> </a></li>			   			
+		         							   				<li>Email: <?php echo $company->email_address ?></li>
+		         							   				<li>Phone: <?php echo $company->phone_number ?> </li>			   			
 		         							   			</ul>
 		         							   		</div><br>
 		         							   		<div class="ul-info">
 		         							   			<ul>
-		         							   				<li><a href="" class="ul-head">TO:</a></li>
+		         							   				<li><b>TO:</b></li>
 															<!-- <hr style="border: 1px solid gray;"> -->
 		         							   				<li><span class="ul-head line"><?php echo $customer->contact_name .''. $customer->first_name .' '. $customer->middle_name .' '. $customer->last_name ?></span>
 																<!-- <a href="" class="line ul-btns-text" style="color:green;">view</a> -->
 																</li>
-															<li><a href="" class="ul-text"><?php echo $customer->mail_add .' '. $customer->city .' '. $customer->state .', '. $customer->country .', '. $customer->zip_code ?></a></li>
-															<li><a href="" class="ul-text">Phone: <?php echo $customer->phone_h ?></a></li>
+															<li><?php echo $customer->mail_add .' '. $customer->city .' '. $customer->state .', '. $customer->country .', '. $customer->zip_code ?></li>
+															<li>Phone: <?php echo $customer->phone_h ?></li>
 		         							   			
 		         							   			</ul>
 		         							   		</div><br>
 
 		         							   		<div class="ul-info">
 		         							   			<ul>
-		         							   				<li><a href="" class="ul-head">JOB:</a></li>
+		         							   				<li><b>JOB:</b></li>
 		         							   				<!-- <li><a href="" class="ul-text">Job for Estimate #EST-000010</a></li> -->
 		         							   				<!-- <li><a href="" class="ul-text">Estimate #EST-000010 </a></li>	 -->
 		         							   			<br>
@@ -610,7 +628,7 @@ border: none;
 																	<li class="show_mobile_view"><hr></li>
 																<?php foreach($custom_fields as $custom){ ?>
 																	<?php if(empty($custom->value)){ }else{ ?>
-																		<li><a href="" class="ul-text"><?php echo $custom->name; ?>&emsp; <?php echo $custom->value; ?></a></li>
+																		<li><?php echo $custom->name; ?>&emsp; <?php echo $custom->value; ?></li>
 																	<?php } ?>
 																<?php } ?>
 															
@@ -626,13 +644,13 @@ border: none;
 																<li><b>Contacts</b></li>
 																<li class="show_mobile_view"><hr></li>
 																<?php if(!empty($customer->first_verification_name)){ ?>
-																<li><a href="" class="ul-text"><?php echo $customer->first_verification_name ?> <br> <?php echo $customer->first_number ?> <br> <?php echo $customer->first_relation ?></a></li>
+																<li><?php echo $customer->first_verification_name ?> <br> <?php echo $customer->first_number ?> <br> <?php echo $customer->first_relation ?></li>
 																<?php } ?>
 																<?php if(!empty($customer->second_verification_name)){ ?>
-																<li><a href="" class="ul-text"><?php echo $customer->second_verification_name ?> <br> <?php echo $customer->second_number ?> <br> <?php echo $customer->second_relation ?></a></li>
+																<li><?php echo $customer->second_verification_name ?> <br> <?php echo $customer->second_number ?> <br> <?php echo $customer->second_relation ?></li>
 																<?php } ?>
 																<?php if(!empty($customer->third_verification_name)){ ?>
-																<li><a href="" class="ul-text"> <?php echo $customer->third_verification_name ?> <br> <?php echo $customer->third_number ?> <br> <?php echo $customer->third_relation ?></a></li>
+																<li> <?php echo $customer->third_verification_name ?> <br> <?php echo $customer->third_number ?> <br> <?php echo $customer->third_relation ?></li>
 																<?php } ?>
 																
 															
@@ -652,7 +670,7 @@ border: none;
 		         							   		</div> -->
 		         							   			<div class="ul-info">
 			         							   			<ul>
-			         							   				<li><a href="#" class="ul-head">Lob Location </a></li>
+			         							   				<li><b>Job Location </b></li>
 																<li class="show_mobile_view"><hr></li>
 																<li><?php echo $workorder->job_location .' '. $workorder->city .' '. $workorder->state .', '. $workorder->zip_code .', '. $workorder->cross_street  ?> &emsp; 
 																<!-- <a href="#" style="color:green;">Show Map</a> -->
@@ -971,7 +989,6 @@ border: none;
 			<div class="row">
 				<div class="col-md-4">
 					<div class="user-return">
-						<a href="<?php echo base_url('workorder'); ?>"><i class="fa fa-angle-left" aria-hidden="true"></i> Return to Work Orders</a>
 				</div>
 			</div>
 		</div>
@@ -1035,7 +1052,7 @@ border: none;
 	
 	<div class="modal fade" id="sharePreview" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
          aria-hidden="true">
-        <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h4 class="modal-title">Share This Link</h4>
@@ -1047,9 +1064,7 @@ border: none;
                     <form name="clone-modal-form">
                         <div class="validation-error" style="display: none;"></div>
                         <p>
-                            <input type="text" class="form-control" value="<?php echo base_url('share_Link/public_view/'.$workorder->id) ?>" id="myInput" readonly>
-							<br>
-							<a href="#" class="btn btn-success" onclick="myCopyFunction()">Copy link to Clipboard</a>
+                            <input type="text" class="form-control" value="<?php echo base_url('share_Link/preview/'.$workorder->id) ?>">
                         </p>
                     </form>
                 </div>
@@ -1086,7 +1101,6 @@ border: none;
 		</div>
 	</div>
 </div>
-<?php include viewPath('includes/footer'); ?>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
 <!-- <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&callback=initialize"></script>
 <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBg27wLl6BoSPmchyTRgvWuGHQhUUHE5AU&callback=initialize&libraries=&v=weekly"></script> -->
@@ -1104,16 +1118,6 @@ function initMap() {
 	center: { lat: -34.397, lng: 150.644 },
 	zoom: 8,
   });
-}
-</script>
-
-<script>
-function myCopyFunction() {
-  var copyText = document.getElementById("myInput");
-  copyText.select();
-  copyText.setSelectionRange(0, 99999)
-  document.execCommand("copy");
-//   alert("Copied the text: " + copyText.value);
 }
 </script>
 

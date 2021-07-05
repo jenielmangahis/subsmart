@@ -110,10 +110,10 @@
          <li class="submenus <?= $is_active_industry_template; ?>"><a href="<?php echo base_url('admin/industry_template') ?>" title="Industry Modules" style="color: #fff;">
             <span class="fa fa-list"></span>Industry Template</a>
         </li>
-        <li class="submenus <?= $is_active_industry_type; ?>"><a href="<?php echo base_url('industry_type/index') ?>" title="Industry Modules" style="color: #fff;">
+        <li class="submenus <?= $is_active_industry_type; ?>"><a href="<?php echo base_url('admin/industry_type') ?>" title="Industry Modules" style="color: #fff;">
             <span class="fa fa-list"></span>Industry Type</a>
         </li>
-        <li class="submenus <?= $is_active_admin_management; ?>"><a href="<?php echo base_url('nsmart_adminmgt/subscribers') ?>" title="Industry Modules" style="color: #fff;">
+        <li class="submenus <?= $is_active_admin_management; ?>"><a href="<?php echo base_url('admin/subscribers') ?>" title="Industry Modules" style="color: #fff;">
             <span class="fa fa-list"></span>Admin Management</a>
         </li>
          <li class="submenus <?= $is_active_offer_code; ?>"><a href="<?php echo base_url('offer_codes/index') ?>" title="Industry Modules" style="color: #fff;">

@@ -19,7 +19,8 @@ table {
 <body style="font-family: Gill Sans, sans-serif; font-size: 11px;" >
     <div style="box-shadow:0 2px 8px 0 rgba(0,0,0,.2);background-color: #fff;border: 1px solid #d4d7dc;-webkit-transition: all .3s ease;position:relative;top:20px;width: 95%;margin: 0 auto; padding:1%;">
         <div style="text-align: justify; text-justify: inter-word;">
-            This workorder agreement (the "agreement") is made as of 05-07-2021, by and between ADI Smart Home, (the "Company") and the ("Customer") as the address shown below (the "Premise/Service")
+            <!-- This workorder agreement (the "agreement") is made as of 05-07-2021, by and between ADI Smart Home, (the "Company") and the ("Customer") as the address shown below (the "Premise/Service") -->
+            <?php echo $header; ?>
         </div>
 
         <div class="" style="float: right;">

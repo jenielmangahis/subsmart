@@ -2253,18 +2253,40 @@ $(function() {
                 } else {
                     $('#billPaymentModal .card-body').children('.row:first-child').prepend(`<input type="hidden" name="bills[]" value="${data.id}">`);
 
-                    $('#billPaymentModal #bills-table').DataTable().ajax.reload();
+                    if($(`#billPaymentModal #bills-table input[type="checkbox"][value="${data.id}"]`).length > 0) {
+                        $(`#billPaymentModal #bills-table input[type="checkbox"][value="${data.id}"]`).prop('checked', true);
+                        var row = $(`#billPaymentModal #bills-table input[type="checkbox"][value="${data.id}"]`).parent().parent().parent();
+                        var rowData = $('#billPaymentModal #bills-table').DataTable().row(row).data();
+                        row.find('input[name="bill_payment[]"]').val(rowData.payment).trigger('change');
+                    }
 
                     $(this).parent().parent().parent().parent().parent().remove();
+
+                    if($('#billPaymentModal .transactions-container .row div.col-12').length === 1) {
+                        $('#billPaymentModal .transactions-container').parent().remove();
+                        $('#billPaymentModal a.close-transactions-container').parent().remove();
+                        $('#billPaymentModal a.open-transactions-container').parent().remove();
+                    }
                 }
             break;
             case 'vendor-credit' :
                 if($('#modal-container .modal').attr('id') === 'billPaymentModal') {
                     $('#billPaymentModal .card-body').children('.row:first-child').prepend(`<input type="hidden" name="credits[]" value="${data.id}">`);
 
-                    $('#billPaymentModal #vendor-credits-table').DataTable().ajax.reload();
+                    if($(`#billPaymentModal #vendor-credits-table input[type="checkbox"][value="${data.id}"]`).length > 0) {
+                        $(`#billPaymentModal #vendor-credits-table input[type="checkbox"][value="${data.id}"]`).prop('checked', true);
+                        var row = $(`#billPaymentModal #vendor-credits-table input[type="checkbox"][value="${data.id}"]`).parent().parent().parent();
+                        var rowData = $('#billPaymentModal #vendor-credits-table').DataTable().row(row).data();
+                        row.find('input[name="credit_payment[]"]').val(rowData.payment).trigger('change');
+                    }
 
                     $(this).parent().parent().parent().parent().parent().remove();
+
+                    if($('#billPaymentModal .transactions-container .row div.col-12').length === 1) {
+                        $('#billPaymentModal .transactions-container').parent().remove();
+                        $('#billPaymentModal a.close-transactions-container').parent().remove();
+                        $('#billPaymentModal a.open-transactions-container').parent().remove();
+                    }
                 } else {
 
                 }
@@ -2346,7 +2368,14 @@ $(function() {
     });
 
     $(document).on('keyup', '#billPaymentModal #search-bill-no', function() {
-        $('#billPaymentModal #bills-table').DataTable().ajax.reload();
+        $('#billPaymentModal #bills-table').DataTable().ajax.reload(function ( json ) {
+            if($('#billPaymentModal #search-bill-no').val() === '' && $('#billPaymentModal #search-vcredit-no').val() === '') {
+                $('#billPaymentModal #bills-table input[name="bill_payment[]"]:last-child').trigger('change');
+            } else {
+                $('#billPaymentModal #bill-payment-amount').val('0.00');
+                $('#billPaymentModal .payment-total-amount').html('0.00');
+            }
+        }, true);
     });
 
     $(document).on('change', '#billPaymentModal #bills_table_rows', function() {
@@ -2434,14 +2463,18 @@ $(function() {
 
     $(document).on('change', '#billPaymentModal #bills-table tbody input[type="checkbox"]', function() {
         var value = $(this).val();
+        var row = $(`#billPaymentModal #bills-table input[type="checkbox"][value="${value}"]`).parent().parent().parent();
 
         if($(this).prop('checked') === false) {
             $(`#billPaymentModal input[name="bills[]"][value="${value}"]`).remove();
+            row.find('input[name="bill_payment[]"]').val('').trigger('change');
         } else {
-            $('#billPaymentModal .card-body').children('.row:first-child').prepend(`<input type="hidden" name="bills[]" value="${$(this).val()}">`);
-        }
+            $('#billPaymentModal .card-body').children('.row:first-child').prepend(`<input type="hidden" name="bills[]" value="${value}">`);
 
-        $('#billPaymentModal #bills-table').DataTable().ajax.reload();
+            $(`#billPaymentModal #bills-table input[type="checkbox"][value="${value}"]`).prop('checked', true);
+            var rowData = $('#billPaymentModal #bills-table').DataTable().row(row).data();
+            row.find('input[name="bill_payment[]"]').val(rowData.payment).trigger('change');
+        }
 
         $.get('/accounting/get-linkable-transactions/bill-payment/'+$('#billPaymentModal #payee').val(), function(res) {
             var transactions = JSON.parse(res);
@@ -2466,7 +2499,7 @@ $(function() {
                         <div class="transactions-container bg-white h-100" style="padding: 15px">
                             <div class="row">
                                 <div class="col-12">
-                                    <h4>Add to Bill</h4>
+                                    <h4>Add to Bill Payment</h4>
                                 </div>
                             </div>
                         </div>
@@ -2499,6 +2532,12 @@ $(function() {
                         `);
                     }
                 });
+
+                if($('#billPaymentModal .transactions-container .row div.col-12').length === 1) {
+                    $('#billPaymentModal .transactions-container').parent().remove();
+                    $('#billPaymentModal a.close-transactions-container').parent().remove();
+                    $('#billPaymentModal a.open-transactions-container').parent().remove();
+                }
             } else {
                 $('#billPaymentModal .transactions-container').parent().remove();
                 $('#billPaymentModal a.close-transactions-container').parent().remove();
@@ -2508,7 +2547,14 @@ $(function() {
     });
 
     $(document).on('keyup', '#billPaymentModal #search-vcredit-no', function() {
-        $('#billPaymentModal #vendor-credits-table').DataTable().ajax.reload();
+        $('#billPaymentModal #vendor-credits-table').DataTable().ajax.reload(function ( json ) {
+            if($('#billPaymentModal #search-vcredit-no').val() === '' && $('#billPaymentModal #search-bill-no').val() === '') {
+                $('#billPaymentModal #vendor-credits-table input[name="credit_payment[]"]:last-child').trigger('change');
+            } else {
+                $('#billPaymentModal #bill-payment-amount').val('0.00');
+                $('#billPaymentModal .payment-total-amount').html('0.00');
+            }
+        }, true);
     });
 
     $(document).on('change', '#billPaymentModal #vcredits_table_rows', function() {
@@ -2531,14 +2577,18 @@ $(function() {
 
     $(document).on('change', '#billPaymentModal #vendor-credits-table tbody input[type="checkbox"]', function() {
         var value = $(this).val();
+        var row = $(`#billPaymentModal #vendor-credits-table input[type="checkbox"][value="${value}"]`).parent().parent().parent();
 
         if($(this).prop('checked') === false) {
             $(`#billPaymentModal input[name="credits[]"][value="${value}"]`).remove();
+            row.find('input[name="credit_payment[]"]').val('').trigger('change');
         } else {
-            $('#billPaymentModal .card-body').children('.row:first-child').prepend(`<input type="hidden" name="credits[]" value="${$(this).val()}">`);
-        }
+            $('#billPaymentModal .card-body').children('.row:first-child').prepend(`<input type="hidden" name="credits[]" value="${value}">`);
 
-        $('#billPaymentModal #vendor-credits-table').DataTable().ajax.reload();
+            $(`#billPaymentModal #vendor-credits-table input[type="checkbox"][value="${value}"]`).prop('checked', true);
+            var rowData = $('#billPaymentModal #vendor-credits-table').DataTable().row(row).data();
+            row.find('input[name="credit_payment[]"]').val(rowData.payment).trigger('change');
+        }
 
         $.get('/accounting/get-linkable-transactions/bill-payment/'+$('#billPaymentModal #payee').val(), function(res) {
             var transactions = JSON.parse(res);
@@ -2563,7 +2613,7 @@ $(function() {
                         <div class="transactions-container bg-white h-100" style="padding: 15px">
                             <div class="row">
                                 <div class="col-12">
-                                    <h4>Add to Bill</h4>
+                                    <h4>Add to Bill Payment</h4>
                                 </div>
                             </div>
                         </div>
@@ -2596,6 +2646,12 @@ $(function() {
                         `);
                     }
                 });
+
+                if($('#billPaymentModal .transactions-container .row div.col-12').length === 1) {
+                    $('#billPaymentModal .transactions-container').parent().remove();
+                    $('#billPaymentModal a.close-transactions-container').parent().remove();
+                    $('#billPaymentModal a.open-transactions-container').parent().remove();
+                }
             } else {
                 $('#billPaymentModal .transactions-container').parent().remove();
                 $('#billPaymentModal a.close-transactions-container').parent().remove();
@@ -2612,6 +2668,8 @@ $(function() {
             }
         });
 
+        $('#billPaymentModal span.amount-to-apply').html(parseFloat(billPayment).toFixed(2));
+
         var creditPayment = 0.00;
         $('#billPaymentModal #vendor-credits-table tbody tr').each(function() {
             if($(this).find('input[type="checkbox"]').prop('checked')) {
@@ -2619,10 +2677,27 @@ $(function() {
             }
         });
 
+        $('#billPaymentModal span.amount-to-credit').html(parseFloat(creditPayment).toFixed(2));
+
         var amountPaid = parseFloat(billPayment - creditPayment).toFixed(2);
 
         $('#billPaymentModal #bill-payment-amount').val(amountPaid);
         $('#billPaymentModal .payment-total-amount').html(amountPaid);
+    });
+
+    $(document).on('click', '#billPaymentModal #clear-payment', function(e) {
+        e.preventDefault();
+
+        $('#billPaymentModal input[name="bills[]"]').remove();
+        $('#billPaymentModal input[name="credits[]"]').remove();
+
+        $('#billPaymentModal #bills-table').DataTable().ajax.reload(function ( json ) {
+            $('#billPaymentModal #bills-table input[name="bill_payment[]"]:last-child').trigger('change');
+        }, true);
+
+        $('#billPaymentModal #vendor-credits-table').DataTable().ajax.reload(function ( json ) {
+            $('#billPaymentModal #vendor-credits-table input[name="credit_payment[]"]:last-child').trigger('change');
+        }, true);
     });
 });
 
@@ -3785,11 +3860,11 @@ const loadBillPaymentBills = () => {
                 d.overdue = $('#billPaymentModal #overdue_bills_only').prop('checked');
                 d.length = parseInt($('#billPaymentModal #bills_table_rows').val());
                 d.vendor = $('#billPaymentModal #payee').val();
-                d.bills = [];
+                // d.bills = [];
 
-                $('#billPaymentModal input[name="bills[]"]').each(function() {
-                    d.bills.push($(this).val());
-                });
+                // $('#billPaymentModal input[name="bills[]"]').each(function() {
+                //     d.bills.push($(this).val());
+                // });
 
                 return JSON.stringify(d);
             },
@@ -3803,9 +3878,13 @@ const loadBillPaymentBills = () => {
                 fnCreatedCell: function(td, cellData, rowData, row, col) {
                     $(td).html(`
                     <div class="d-flex align-items-center justify-content-center">
-                        <input type="checkbox" value="${cellData}" ${rowData.selected ? 'checked' : ''}>
+                        <input type="checkbox" value="${cellData}">
                     </div>
                     `);
+
+                    if($(`#billPaymentModal input[name="bills[]"][value="${cellData}"]`).length > 0) {
+                        $(td).children().children('input').prop('checked', true);
+                    }
                 }
             },
             {
@@ -3828,7 +3907,11 @@ const loadBillPaymentBills = () => {
                 data: 'payment',
                 name: 'payment',
                 fnCreatedCell: function(td, cellData, rowData, row, col) {
-                    $(td).html(`<input type="number" value="${rowData.selected ? cellData : ''}" name="bill_payment[]" class="form-control text-right" onchange="convertToDecimal(this)" step="0.01">`);
+                    $(td).html(`<input type="number" name="bill_payment[]" class="form-control text-right" onchange="convertToDecimal(this)" step="0.01">`);
+
+                    if($(`#billPaymentModal input[name="bills[]"][value="${rowData.id}"]`).length > 0) {
+                        $(td).children('input').val(cellData);
+                    }
                 }
             }
         ]
@@ -3856,11 +3939,11 @@ const loadBillPaymentCredits = () => {
                 d.to = $('#billPaymentModal #vcredit-to').val();
                 d.length = parseInt($('#billPaymentModal #vcredits_table_rows').val());
                 d.vendor = $('#billPaymentModal #payee').val();
-                d.credits = [];
+                // d.credits = [];
 
-                $('#billPaymentModal input[name="credits[]"]').each(function() {
-                    d.credits.push($(this).val());
-                });
+                // $('#billPaymentModal input[name="credits[]"]').each(function() {
+                //     d.credits.push($(this).val());
+                // });
 
                 return JSON.stringify(d);
             },
@@ -3874,9 +3957,13 @@ const loadBillPaymentCredits = () => {
                 fnCreatedCell: function(td, cellData, rowData, row, col) {
                     $(td).html(`
                     <div class="d-flex align-items-center justify-content-center">
-                        <input type="checkbox" value="${cellData}" ${rowData.selected ? 'checked' : ''}>
+                        <input type="checkbox" value="${cellData}">
                     </div>
                     `);
+
+                    if($(`#billPaymentModal input[name="credits[]"][value="${cellData}"]`).length > 0) {
+                        $(td).children().children('input').prop('checked', true);
+                    }
                 }
             },
             {
@@ -3895,7 +3982,11 @@ const loadBillPaymentCredits = () => {
                 data: 'payment',
                 name: 'payment',
                 fnCreatedCell: function(td, cellData, rowData, row, col) {
-                    $(td).html(`<input type="number" value="${rowData.selected ? cellData : ''}" name="credit_payment[]" class="form-control text-right" onchange="convertToDecimal(this)" max="${rowData.open_balance}" step="0.01">`);
+                    $(td).html(`<input type="number" name="credit_payment[]" class="form-control text-right" onchange="convertToDecimal(this)" max="${rowData.open_balance}" step="0.01">`);
+
+                    if($(`#billPaymentModal input[name="credits[]"][value="${rowData.id}"]`).length > 0) {
+                        $(td).children('input').val(cellData);
+                    }
                 }
             }
         ]

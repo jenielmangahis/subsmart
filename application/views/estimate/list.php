@@ -277,10 +277,11 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                                                                tabindex="-1"
                                                                                href="#"
                                                                                data-toggle="modal"
-                                                                               data-target="#modalCloneWorkorder"
+                                                                               data-target="#modalCloneEstimate"
                                                                                data-id="<?php echo $estimate->id ?>"
-                                                                               data-name="WO-00433"><span
-                                                                    class="fa fa-files-o icon clone-workorder">
+                                                                               data-wo_num="<?php echo $estimate->estimate_number ?>"
+                                                                               data-name="WO-00433" class="clone-estimate"><span
+                                                                    class="fa fa-files-o icon">
 
                                                         </span> Clone Estimate</a>
                                                     </li>
@@ -355,6 +356,37 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 
     <!-- end container-fluid -->
 </div>
+
+<!-- MODAL CLONE estimate -->
+<div class="modal fade" id="modalCloneEstimate" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                    <!-- <h4 class="modal-title">Clone Estimate</h4> -->
+                </div>
+                <div class="modal-body">
+                    <form name="clone-modal-form">
+                        <div class="validation-error" style="display: none;"></div>
+                        <p>
+                            You are going create a new Estimate based on <b>Estimate #<span
+                                        class="work_order_no"></span> <input type="hidden" id="wo_id" name="wo_id"> </b>.<br>
+                            Afterwards you can edit the newly created Estimate.
+                        </p>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-default" type="button" data-dismiss="modal">Close</button>
+                    <button id="clone_estimate" class="btn btn-primary" type="button" data-clone-modal="submit">Clone
+                    Estimate
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 
 <!-- CONVERT ESTIMATE MODAL -->
 <div class="modal fade" id="modalConvertEstimate" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
@@ -438,6 +470,39 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         </div>
     </div>
 </div>
+
+
+<script>
+$(document).on('click touchstart','.clone-estimate',function(){
+
+    // alert('id');
+var num = $(this).attr('data-wo_num');
+var id = $(this).attr('data-id');
+$('.work_order_no').text(num)
+$('#wo_id').val(id)
+
+
+});
+
+$(document).on('click touchstart','#clone_estimate',function(){
+
+// var num = $(this).attr('data-wo_num');
+// var wo_num = $('.work_order_no').text();
+var wo_num = $('#wo_id').val();
+// alert(id);
+// $('.work_order_no').text(num);
+$.ajax({
+    type : 'POST',
+    url : "<?php echo base_url(); ?>estimate/duplicate_estimate",
+    data : {wo_num: wo_num},
+    success: function(result){
+        sucess("Data Cloned Successfully!");
+    },
+    });
+
+
+});
+</script>
 <style>
     .hid-deskx {
         display: none !important;
@@ -509,6 +574,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         });
     });
 </script>
+
 
 <script>
 // $(document).on('click','#delete_workorder',function(){

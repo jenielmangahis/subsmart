@@ -279,4 +279,9 @@ class Accounting_invoices_model extends MY_Model
         $query = $this->db->get();
         return $query->row();
     }
+    public function insert_accounting_recurring_sales_receipt($data)
+    {
+        $this->db->insert('accounting_recurring_sales_receipt', $data);
+	    return $this->db->insert_id();
+    }
 }

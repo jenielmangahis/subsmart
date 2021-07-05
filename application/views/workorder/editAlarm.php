@@ -2288,6 +2288,7 @@ border: none;
                                         Submit
                                     </button> -->
                                     <input type="submit" value="Submit" class="btn btn-flat btn-primary">
+                                    <button type="submit" name="action" class="btn btn-flat btn-success pdf_sheet" target="_blank" value="preview">Preview as PDF</button>
                                     <a href="<?php echo url('workorder') ?>" class="btn btn-danger">Cancel this</a>
                                 </div>
                             </div>

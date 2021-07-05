@@ -132,14 +132,14 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                 <div class="d-flex align-items-center mb-3">
                                                     <div class="open-pay-color" style="border-color: #f2b835; background: #f2b835; width: 5px; height: 45px;"></div>
                                                     <div class="open-pay ml-2">
-                                                        <h4 class="m-0">$<span id="total-open-pay">0.00</span></h4>
+                                                        <h4 class="m-0">$<span id="total-open-pay"><?=number_format($openBalance, 2, '.', ',')?></span></h4>
                                                         <p class="m-0">OPEN</p>
                                                     </div>
                                                 </div>
                                                 <div class="d-flex align-items-center mb-3">
                                                     <div class="overdue-color" style="border-color: #ce5133; background: #ce5133; width: 5px; height: 45px;"></div>
                                                     <div class="overdue-pay ml-2">
-                                                        <h4 class="m-0">$<span id="total-overdue-pay">0.00</span></h4>
+                                                        <h4 class="m-0">$<span id="total-overdue-pay"><?=number_format($overdueBalance, 2, '.', ',')?></span></h4>
                                                         <p class="m-0">OVERDUE</p>
                                                     </div>
                                                 </div>

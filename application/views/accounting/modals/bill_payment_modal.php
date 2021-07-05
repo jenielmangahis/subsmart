@@ -278,6 +278,24 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        <div class="col-md-4 offset-md-8">
+                                            <table class="bg-transparent float-right table text-right w-50">
+                                                <tbody>
+                                                    <tr>
+                                                        <td class="border-0">Amount to Apply</td>
+                                                        <td class="border-0">$<span class="amount-to-apply"><?=number_format($bill->remaining_balance, 2, '.', ',')?></span></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="border-0">Amount to Credit</td>
+                                                        <td class="border-0">$<span class="amount-to-credit">0.00</span></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="border-0"></td>
+                                                        <td class="border-0"><button type="button" class="btn btn-transparent" id="clear-payment">Clear payment</button></td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
                                         <div class="col-md-6">
                                             <div class="row">
                                                 <div class="col-md-6">

@@ -729,7 +729,7 @@ input:checked + .slider:before {
                             <div class="row" style="background-color:white;">
                                 <div class="col-md-12 form-group">
                                     <button type="submit" class="btn btn-light but" style="border-radius: 0 !important;border:solid gray 1px;">Save as Draft</button>
-                                    <button type="button" class="btn btn-success but" style="border-radius: 0 !important;">Preview</button>
+                                    <!-- <button type="button" class="btn btn-success but" style="border-radius: 0 !important;">Preview</button> -->
                                     <a href="<?php echo url('workorder') ?>" class="btn but-red">Cancel this</a>
                                 </div>
                             </div>

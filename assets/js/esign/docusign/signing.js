@@ -347,7 +347,7 @@ function Signing(hash) {
     }
 
     if (field_name === "Dropdown") {
-      const { options = [], selected: defaultValue } = JSON.parse(field.specs) || {}; // prettier-ignore
+      const { values: options = [], selected: defaultValue, is_required } = JSON.parse(field.specs) || {}; // prettier-ignore
       const { value: selected } = fieldValue || { value: defaultValue };
 
       const optionsArray = options.map((option) => {
@@ -364,12 +364,18 @@ function Signing(hash) {
       }
 
       const html = `
-            <select class="docusignField">
+            <select class="docusignField docusignField__dropdown">
+              <option value="">Select</option>
               ${optionsArray.join("")}
             </select>
           `;
 
       const $element = createElementFromHTML(html);
+
+      if (is_required) {
+        $element.addClass("docusignField__dropdown--isRequired")
+      }
+
       $element.on("change", function () {
         storeFieldValue({ value: this.value, id: fieldId });
       });
@@ -441,8 +447,8 @@ function Signing(hash) {
       $input.prop("required", isRequired);
       $input.prop("readonly", isReadOnly);
 
-      if (!isRequired) {
-        $element.addClass("docusignField--notRequired");
+      if (isRequired) {
+        $element.addClass("docusignField__input--isRequired");
       }
 
       if (isReadOnly) {
@@ -757,6 +763,13 @@ function Signing(hash) {
             scrollTop: parseInt($element.offset().top - 100),
           });
         };
+
+        if ($element.is("select")) {
+          if (isEmptyOrSpaces($element.val()) && $element.hasClass("docusignField__dropdown--isRequired")) {
+            scrollToElement();
+            return;
+          }
+        }
 
         if (
           fieldType === "signature" &&

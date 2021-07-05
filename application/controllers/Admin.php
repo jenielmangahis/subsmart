@@ -1223,6 +1223,287 @@ class Admin extends CI_Controller
             redirect('admin/industry_template');
         }
     }
+
+    public function update_industry_template_modules() 
+    {
+
+        $this->load->model('IndustryTemplate_model');
+        $this->load->model('IndustryTemplateModules_model');
+
+        $user = $this->session->userdata('logged');
+        $post = $this->input->post();
+
+        $industryTemplate = $this->IndustryTemplate_model->getById($post['template_id']);
+
+        if( $industryTemplate ){
+            if( $post['name'] != '' ){
+
+                if(is_array($post['modules'])){
+                    $this->IndustryTemplateModules_model->deleteIndustryTemplateModulesByTemplateId($post['template_id']);
+                    foreach ($post['modules'] as $key => $module_id) {
+                        $data = [
+                            'industry_template_id' => $post['template_id'],
+                            'industry_module_id ' => $module_id,
+                            'status' => 1,   
+                            'date_created' => date("Y-m-d H:i:s"),
+                            'date_modified' => date("Y-m-d H:i:s")
+                        ];
+                        $industryTemplateModules = $this->IndustryTemplateModules_model->create($data);
+                    }   
+                }
+                
+
+                $this->session->set_flashdata('message', 'Template Modules was successfully updated');
+                $this->session->set_flashdata('alert_class', 'alert-success');
+            }else{
+                $this->session->set_flashdata('message', 'Please enter module name');
+                $this->session->set_flashdata('alert_class', 'alert-danger');
+            }
+
+            redirect('admin/assign_industry_template_modules/'.$post['template_id']);
+
+        }else{
+            $this->session->set_flashdata('message', 'Cannot find data');
+            $this->session->set_flashdata('alert_class', 'alert-danger');
+
+            redirect('admin/industry_template');
+        }
+    }
+
+    public function delete_industry_template()
+    {
+        $this->load->model('IndustryTemplate_model');
+
+        $post = $this->input->post();
+
+        $id = $this->IndustryTemplate_model->deleteIndustryTemplate(post('tid'));
+
+        $this->session->set_flashdata('message', 'Template has been Deleted Successfully');
+        $this->session->set_flashdata('alert_class', 'alert-success');
+
+        redirect('admin/industry_template');
+    }
+
+    public function industry_type() 
+    {
+        $this->load->model('IndustryTemplate_model');
+        $this->load->model('IndustryType_model');
+
+        $this->load->library('pagination');
+        //$offset = ($page-1)*$config["per_page"];
+        $industryTemplate   = $this->IndustryTemplate_model->getAll();
+
+        $total_records = $this->IndustryType_model->countAllRecords();
+        $uri_segment   = $this->uri->segment(3);
+        $per_page      = 10;
+        if($uri_segment == 0 || empty($uri_segment)){
+            $uri_segment = 5;
+        }else{
+            $uri_segment = $uri_segment + $per_page;
+        }
+
+        $industryTypes   = $this->IndustryType_model->getAll(array('limit_perpage' => $per_page, 'offset' => $uri_segment));        
+
+        $config['total_rows']  = $total_records;
+        $config['per_page']    = $per_page;
+        $config['base_url']    = base_url(). 'admin/industry_type';
+        $config['total_rows']  = $total_records;
+        $config['num_links']   = 1;
+
+        $config['full_tag_open'] = '<ul class="pagination">';
+        $config['full_tag_close'] = '</ul>';
+        $config['num_tag_open'] = '<li class="page-item">';
+        $config['num_tag_close'] = '</li>';
+        $config['cur_tag_open'] = '<li class="page-item active"><a class="page-link" href="#">';
+        $config['cur_tag_close'] = '</a></li>';
+        $config['next_tag_open'] = '<li class="page-item">';
+        $config['next_tagl_close'] = '</a></li>';
+        $config['prev_tag_open'] = '<li class="page-item">';
+        $config['prev_tagl_close'] = '</li>';
+        $config['first_tag_open'] = '<li class="page-item disabled">';
+        $config['first_tagl_close'] = '</li>';
+        $config['last_tag_open'] = '<li class="page-item">';
+        $config['last_tagl_close'] = '</a></li>';
+        $config['attributes'] = array('class' => 'page-link');
+
+        $this->pagination->initialize($config);
+
+        $this->page_data['pagination']    = $this->pagination->create_links();
+        $this->page_data['industryTypes'] = $industryTypes;
+        $this->page_data['industryTemplate'] = $industryTemplate;
+        $this->load->view('admin/industry_type/list', $this->page_data);
+    }
+
+    public function add_new_industry_type() 
+    {
+        $this->load->model('IndustryTemplate_model');
+
+        $businessTypes = [ 
+          'Building Contractors' => 'Building Contractors',
+          'Financial Services' => 'Financial Services',
+          'Technical Services' => 'Technical Services',
+          'Health And Beauty' => 'Health And Beauty',
+          'Transportation' => 'Transportation',
+          'Organization / Cleaning' => 'Organization / Cleaning',
+          'Entertainment Services' => 'Entertainment Services',
+          'Design Services' => 'Design Services',
+          'Other' => 'Other',
+        ];
+        $industryTemplate   = $this->IndustryTemplate_model->getAll();
+
+        $this->page_data['industryTemplate'] = $industryTemplate;
+        $this->page_data['businessTypes'] = $businessTypes;            
+        $this->load->view('admin/industry_type/add_new_industry_type', $this->page_data);
+    }
+
+    public function create_industry_type() 
+    {
+        $this->load->model('IndustryType_model');
+
+        $user = $this->session->userdata('logged');
+        $post = $this->input->post();
+
+        if( $post['name'] != '' ){
+            if( $this->IndustryType_model->getByName($post['name']) ){
+                $this->session->set_flashdata('message', 'Type name already exists');
+                $this->session->set_flashdata('alert_class', 'alert-danger');
+            }else{
+                $data = [
+                    'name' => $post['name'],
+                    'business_type_name' => $post['business_type_name'],
+                    'industry_template_id' => $post['industry_template_id'],
+                    'status' => 1,
+                    'date_created' => date("Y-m-d H:i:s")
+                ];
+
+                $industryType = $this->IndustryType_model->create($data);
+
+                $this->session->set_flashdata('message', 'Add new type was successful');
+                $this->session->set_flashdata('alert_class', 'alert-success');
+            }
+        }else{
+            $this->session->set_flashdata('message', 'Please enter type name');
+            $this->session->set_flashdata('alert_class', 'alert-danger');
+        }
+
+        redirect('admin/industry_type');
+    }
+
+    public function edit_industry_type($type_id) 
+    {
+        $this->load->model('IndustryType_model');
+        $this->load->model('IndustryTemplate_model');
+
+        $industryType = $this->IndustryType_model->getById($type_id);
+        $industryTemplate   = $this->IndustryTemplate_model->getAll();
+        $businessTypes = [ 
+                      'Building Contractors' => 'Building Contractors',
+                      'Financial Services' => 'Financial Services',
+                      'Technical Services' => 'Technical Services',
+                      'Health And Beauty' => 'Health And Beauty',
+                      'Transportation' => 'Transportation',
+                      'Organization / Cleaning' => 'Organization / Cleaning',
+                      'Entertainment Services' => 'Entertainment Services',
+                      'Design Services' => 'Design Services',
+                      'Other' => 'Other',
+                    ];
+
+        if( $industryType ){
+            $this->page_data['businessTypes'] = $businessTypes;
+            $this->page_data['industryType'] = $industryType;
+            $this->page_data['industryTemplate'] = $industryTemplate;
+            $this->load->view('admin/industry_type/edit_industry_type', $this->page_data);
+        }else{
+            $this->session->set_flashdata('message', 'Cannot find data');
+            $this->session->set_flashdata('alert_class', 'alert-danger');
+            redirect('admin/industry_type');
+        }
+    }
+
+    public function update_industry_type() 
+    {
+        $this->load->model('IndustryType_model');
+        $this->load->model('IndustryTemplate_model');
+
+        $user = $this->session->userdata('logged');
+        $post = $this->input->post();
+
+        $industryTemplate = $this->IndustryType_model->getById($post['type_id']);
+
+        if( $industryTemplate ){
+            if( $post['name'] != '' ){
+                $data = [
+                    'name' => $post['name'],
+                    'business_type_name' => $post['business_type_name'],
+                    'industry_template_id' => $post['industry_template_id'],
+                    'status' => $post['status'],
+                    'date_modified' => date("Y-m-d H:i:s")
+                ];
+                $industryTemplateUpdate = $this->IndustryType_model->updateIndustryType($post['type_id'],$data);
+
+                $this->session->set_flashdata('message', 'Type was successfully updated');
+                $this->session->set_flashdata('alert_class', 'alert-success');
+            }else{
+                $this->session->set_flashdata('message', 'Please enter type name');
+                $this->session->set_flashdata('alert_class', 'alert-danger');
+            }
+
+            redirect('admin/edit_industry_type/'.$post['type_id']);
+
+        }else{
+            $this->session->set_flashdata('message', 'Cannot find data');
+            $this->session->set_flashdata('alert_class', 'alert-danger');
+
+            redirect('admin/industry_type');
+        }
+    }
+
+    public function delete_industry_type()
+    {
+        $this->load->model('IndustryType_model');
+
+        $post = $this->input->post();
+
+        $id = $this->IndustryType_model->deleteIndustryType(post('tid'));
+
+        $this->session->set_flashdata('message', 'Industry Type has been Deleted Successfully');
+        $this->session->set_flashdata('alert_class', 'alert-success');
+
+        redirect('admin/industry_type');
+    }
+
+    public function subscribers() 
+    {
+        $this->load->model('Clients_model');
+
+        $subscriptions   = $this->Clients_model->getAll();
+
+        $this->page_data['subscriptions'] = $subscriptions;
+        $this->load->view('admin/subscribers/list', $this->page_data);
+    }
+
+    public function ajax_load_subscriber_details() 
+    {
+        $this->load->model('Clients_model');
+        $this->load->model('SubscriberNsmartUpgrade_model');
+        $this->load->model('IndustryType_model');
+        $this->load->model('IndustryTemplateModules_model');
+
+        $post = $this->input->post();
+
+        $sid = $post['sid'];
+        $cid = logged('company_id');
+
+        $subscriber   = $this->Clients_model->getById($sid);
+        $upgrades     = $this->SubscriberNsmartUpgrade_model->getAllByClientId($cid);
+        $industryType = $this->IndustryType_model->getById($subscriber->industry_type_id);
+        $templateModules = $this->IndustryTemplateModules_model->getAllByIndustryTemplateId($industryType->industry_template_id);
+
+        $this->page_data['templateModules'] = $templateModules;
+        $this->page_data['subscriber'] = $subscriber;
+        $this->page_data['upgrades']   = $upgrades;
+        $this->load->view('admin/subscribers/ajax_subscriber_details', $this->page_data);
+    }
 }
 
 /* End of file Admin.php */

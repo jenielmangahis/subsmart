@@ -2633,7 +2633,7 @@ border: none;
                                     </button> -->
                                     <!-- <input type="submit" value="Submit" class="btn btn-flat btn-primary"> -->
                                     <button type="submit" name="action" class="btn btn-flat btn-success" value="submit">Submit</button>
-                                    <button type="submit" name="action" class="btn btn-flat btn-success pdf_sheet" target="_blank" value="preview">Preview</button>
+                                    <!-- <button type="submit" name="action" class="btn btn-flat btn-success pdf_sheet" target="_blank" value="preview">Preview</button> -->
                                     <a href="<?php echo url('workorder') ?>" class="btn btn-danger">Cancel this</a>
                                 </div>
                             </div>
@@ -3005,7 +3005,7 @@ border: none;
                                 </div>
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-primary">Add Package</button>
+                                <button type="button" class="btn btn-primary">Create/Add Package</button>
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                             </div>
                     </div>

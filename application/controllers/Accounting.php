@@ -3024,9 +3024,57 @@ class Accounting extends MY_Controller
 
             $pay = $this->accounting_sales_receipt_model->save_payment($payment_data);
         }
-        // if($addQuery > 0){
-        //     echo json_encode($addQuery);
-        // }
+        if ($this->input->post("recurring_selected")==1) {
+            $days_in_advance = null;
+            $recurring_month = null;
+            $recurring_week = null;
+            $recurring_day = null;
+            $recurr_every = null;
+            if ($this->input->post("recurring-type") == "Schedule") {
+                $days_in_advance = $this->input->post("recurring-days-in-advance");
+            } elseif ($this->input->post("recurring-type") == "Reminder") {
+                $days_in_advance = $this->input->post("remind-days-before");
+            }
+            if ($this->input->post("recurring-interval") == "Daily") {
+                $recurr_every = $this->input->post("daily-days");
+            } elseif ($this->input->post("recurring-interval") == "Weekly") {
+                $recurr_every = $this->input->post("weekly-every");
+                $recurring_day = $this->input->post("weekly-weeks-on");
+            } elseif ($this->input->post("recurring-interval") == "Monthly") {
+                $recurring_month = $this->input->post("recurring-interval") ;
+                $recurring_week = $this->input->post("monthly-week-order") ;
+                $recurring_day = $this->input->post("monthly-day-of-the-week") ;
+                $recurr_every = $this->input->post("monthly-months") ;
+            } elseif ($this->input->post("recurring-interval") == "Yearly") {
+                $recurring_month = $this->input->post("yearly-month") ;
+                $recurring_day = $this->input->post("yearly-day") ;
+            }
+            $recurring_data=array(
+                'company_id' => logged('company_id'),
+                'template_name' => $this->input->post("recurring-template-name"),
+                'recurring_type' => $this->input->post("recurring-type"),
+                'days_in_advance' => $days_in_advance,
+                'recurring_interval' => $this->input->post("recurring-interval"),
+                'recurring_month' => $recurring_month,
+                'recurring_week' => $recurring_week,
+                'recurring_day' => $recurring_day,
+                'recurr_every' => $recurr_every,
+                'start_date' => $this->input->post("recurring-start-date") != "" ? date("Y-m-d", strtotime($this->input->post("recurring-start-date"))) : null,
+                'end_type' => $this->input->post("recurring-end-type"),
+                'end_date' => $this->input->post("by-end-date") != "" ? date("Y-m-d", strtotime($this->input->post("by-end-date"))) : null,
+                'max_occurences' => $this->input->post("after-occurrences"),
+                'recurring_auto_send_email' => $this->input->post("recurring_option_1"),
+                'status' => 1,
+                'created_at' => date('Y-m-d h:i:s'),
+                'updated_at' => date('Y-m-d h:i:s')
+            );
+            $recurringId = $this->accounting_recurring_transactions_model->create($recurring_data);
+            $accounting_recurring_sales_receipt_data=array(
+                'accounting_sales_receipt_id' => $addQuery,
+                'accounting_recurring_transactions_id'=> $recurringId
+            );
+            $this->accounting_invoices_model->insert_accounting_recurring_sales_receipt($accounting_recurring_sales_receipt_data);
+        }
         if ($addQuery > 0) {
             $a = $this->input->post('items');
             $b = $this->input->post('item_type');
@@ -5845,5 +5893,8 @@ class Accounting extends MY_Controller
         $data->business_address=$customer_info->bus_street." ".$customer_info->bus_city.", ".$customer_info->bus_state." ".$customer_info->bus_postal_code;
         $data->date_now=date('m/d/Y');
         echo json_encode($data);
+    }
+    public function create_pdf_sales_receipt()
+    {
     }
 }

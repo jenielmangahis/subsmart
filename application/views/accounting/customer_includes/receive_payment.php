@@ -1,6 +1,8 @@
 <div id="customer_receive_payment_modal">
     <div class="customer_receive_payment_modal_content">
-        <form id="receive_payment_form">
+        <form
+            action="<?=base_url("accounting/print_receive_payment")?>"
+            method="POST" target="_blank" id="receive_payment_form">
             <input type="text" name="invoice_count" style="display: none;">
             <input type="text" name="submit_option" style="display: none;">
             <div class="customer_receive_payment_modal_header">

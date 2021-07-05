@@ -193,6 +193,12 @@ class Workorder_model extends MY_Model
 		return  $insert;
 	}
 
+    public function save_workorder_temp($data){
+		$vendor = $this->db->insert('work_orders_temp', $data);
+	    $insert = $this->db->insert_id();
+		return  $insert;
+	}
+
     public function update_workorder($data)
     {
         extract($data);
@@ -211,7 +217,7 @@ class Workorder_model extends MY_Model
             'password'              => $password,
             'offer_code'            => $offer_code,
             'tags'                  => $tags,
-            'schedule_date_given'   => $schedule_date_given,
+            'date_issued'           => $date_issued,
             'job_type'              => $job_type,
             'job_name'              => $job_name,
             'job_description'       => $job_description,
@@ -608,6 +614,12 @@ class Workorder_model extends MY_Model
 
     public function save_contact($data){
         $custom = $this->db->insert('contacts', $data);
+	    $insert = $this->db->insert_id();
+		return  $insert;
+    }
+
+    public function save_contact_temp($data){
+        $custom = $this->db->insert('contacts_temp', $data);
 	    $insert = $this->db->insert_id();
 		return  $insert;
     }
@@ -1221,6 +1233,13 @@ class Workorder_model extends MY_Model
 		return  $insert_id;
     }
 
+    public function save_cameras_temp($data)
+    {
+        $vendor = $this->db->insert('enhanced_services_cameras_temp', $data);
+	    $insert_id = $this->db->insert_id();
+		return  $insert_id;
+    }
+
     public function save_doorlocks($data)
     {
         $vendor = $this->db->insert('enhanced_services_doorlocks', $data);
@@ -1419,6 +1438,13 @@ class Workorder_model extends MY_Model
 		return  $insert_id;
     }
 
+    public function add_work_order_details_temp($data)
+    {
+        $vendor = $this->db->insert('work_orders_items_temp', $data);
+	    $insert_id = $this->db->insert_id();
+		return  $insert_id;
+    }
+
     public function getItemsAlarm($id)
     {
         $this->db->select('*');
@@ -1454,9 +1480,23 @@ class Workorder_model extends MY_Model
 		return  $insert_id;
     }
 
+    public function save_payment_temp($data)
+    {
+        $vendor = $this->db->insert('work_order_payments_temp', $data);
+	    $insert_id = $this->db->insert_id();
+		return  $insert_id;
+    }
+
     public function save_alarm($data)
     {
         $vendor = $this->db->insert('acs_profile', $data);
+	    $insert_id = $this->db->insert_id();
+		return  $insert_id;
+    }
+
+    public function save_alarm_alarm($data)
+    {
+        $vendor = $this->db->insert('acs_profile_temp', $data);
 	    $insert_id = $this->db->insert_id();
 		return  $insert_id;
     }

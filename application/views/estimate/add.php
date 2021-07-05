@@ -690,7 +690,7 @@ input:checked + .slider:before {
                             <div class="row" style="background-color:white;">
                                 <div class="col-md-12 form-group">
                                     <button type="submit" class="btn btn-light but" style="border-radius: 0 !important;border:solid gray 1px;">Save</button>
-                                    <button type="button" class="btn btn-success but" style="border-radius: 0 !important;">Preview</button>
+                                    <!-- <button type="button" class="btn btn-success but" style="border-radius: 0 !important;">Preview</button> -->
                                     <a href="<?php echo url('accounting/newEstimateList') ?>" class="btn but-red">Cancel this</a>
                                 </div>
                             </div>
@@ -721,6 +721,37 @@ input:checked + .slider:before {
                     </div>
                 </div>
             </div>
+
+            <!-- MODAL CLONE estimate -->
+    <div class="modal fade" id="modalCloneEstimate" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                    <h4 class="modal-title">Clone Estimate</h4>
+                </div>
+                <div class="modal-body">
+                    <form name="clone-modal-form">
+                        <div class="validation-error" style="display: none;"></div>
+                        <p>
+                            You are going create a new Estimate based on <b>Estimate #<span
+                                        class="work_order_no"></span> <input type="hidden" id="wo_id" name="wo_id"> </b>.<br>
+                            Afterwards you can edit the newly created Estimate.
+                        </p>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-default" type="button" data-dismiss="modal">Close</button>
+                    <button id="clone_workorder" class="btn btn-primary" type="button" data-clone-modal="submit">Clone
+                    estimate
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 
             <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-lg">

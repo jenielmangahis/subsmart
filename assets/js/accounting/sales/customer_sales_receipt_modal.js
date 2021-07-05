@@ -47,6 +47,10 @@ $(document).on("click", "#addsalesreceiptModal .modal-footer-check .middle-links
     $("#addsalesreceiptModal .modal-footer-check #cancel_recurring").show();
     $("#addsalesreceiptModal .modal-footer-check #closeCheckModal").hide();
     $("#addsalesreceiptModal form input[name='recurring_selected']").val(1);
+    $("#addsalesreceiptModal .customer-info").addClass("recurring-customer-info");
+    $("#addsalesreceiptModal form input[name='recurring-template-name']").val($("#addsalesreceiptModal form #sel-customer2 option:selected").text());
+    $("#addsalesreceiptModal #grand_total_sr_t").addClass("hidden");
+    $("#addsalesreceiptModal .label-grand_total_sr_t").addClass("hidden");
 });
 $(document).on("click", "#addsalesreceiptModal .modal-footer-check #clearsalereceipt", function(event) {
     event.preventDefault();
@@ -63,4 +67,18 @@ $(document).on("click", "#addsalesreceiptModal .modal-footer-check #cancel_recur
     $("#addsalesreceiptModal .modal-footer-check .middle-links").show();
     $("#addsalesreceiptModal .modal-footer-check #closeCheckModal").show();
     $("#addsalesreceiptModal form input[name='recurring_selected']").val("");
+    $("#addsalesreceiptModal .customer-info").removeClass("recurring-customer-info");
+    $("#addsalesreceiptModal #grand_total_sr_t").removeClass("hidden");
+    $("#addsalesreceiptModal .label-grand_total_sr_t").removeClass("hidden");
 });
+$('#addsalesreceiptModal').on('hidden.bs.modal', function() {
+    $("#addsalesreceiptModal .modal-footer-check #cancel_recurring").hide();
+    $("#addsalesreceiptModal .recurring-form-part").hide();
+    $("#addsalesreceiptModal .modal-footer-check .middle-links").show();
+    $("#addsalesreceiptModal .modal-footer-check #closeCheckModal").show();
+    $("#addsalesreceiptModal form input[name='recurring_selected']").val("");
+    $("#addsalesreceiptModal .customer-info").removeClass("recurring-customer-info");
+    $('#addsalesreceiptModal form').trigger("reset");
+    $("#addsalesreceiptModal #grand_total_sr_t").removeClass("hidden");
+    $("#addsalesreceiptModal .label-grand_total_sr_t").removeClass("hidden");
+})

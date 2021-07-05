@@ -137,7 +137,7 @@ a.btn-primary.btn-md {
             <div style="padding:14px ​0px 11px !important;">
               <div class="row align-items-center">
                 <div class="col-sm-6">
-                  <h5 class="page-title pt-0 mb-0 mt-0" style="position:relative;top:2px;">Plan</h5>
+                  <h5 class="page-title pt-0 mb-0 mt-0" style="position:relative;top:2px;">Package</h5>
                 </div>
                 <div class="col-sm-6">
                   <div class="float-right d-none d-md-block">
@@ -159,7 +159,7 @@ a.btn-primary.btn-md {
 							<div class="row">
 								<div class="col-sm-6">
 									<div class="form-group">
-									  <label for="formClient-Name">Name *</label>
+									  <label for="formClient-Name">Package Name *</label>
 									  <input type="text" class="form-control" name="plan_name" id="formClient-Name" required placeholder="Enter Name" autofocus />
 									</div>
 								</div>
