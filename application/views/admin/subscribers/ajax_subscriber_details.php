@@ -58,7 +58,7 @@
                     $status = "Expire";
                 }
             ?>
-            <span class="<?= $cell; ?>" style="padding: 10px; color:#ffffff;"><?= $status; ?></span>
+            <span class="<?= $cell; ?>" style="padding: 10px; color:#ffffff;display: inline-block;"><?= $status; ?></span>
         </td>
     </tr>
 </table>

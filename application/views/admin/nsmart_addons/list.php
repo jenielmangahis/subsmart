@@ -1,10 +1,22 @@
 <?php include viewPath('includes/admin_header'); ?>
 <style>
 .cell-active{
-    background-color: #5bc0de;
+    background-color: #53b94a;
+    color: white;
+    padding: 4px 0px;
+    width: 75px;
+    display: block;
+    text-align: center;
+    border-radius: 20px;
 }
 .cell-inactive{
-    background-color: #d9534f;
+    background-color: #585858;
+    color: white;
+    padding: 4px 0px;
+    width: 75px;
+    display: block;
+    text-align: center;
+    border-radius: 20px;
 }
 .btn{
     border-radius: 0px !important;

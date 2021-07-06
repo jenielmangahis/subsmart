@@ -940,6 +940,7 @@ $route['admin/_update_employee'] = 'Admin/ajaxUpdateEmployee';
 $route['admin/_update_employee_password'] = 'Admin/ajaxUpdateEmployeePassword';
 $route['admin/_delete_employee'] = 'Admin/ajaxUpdateEmployeePassword';
 $route['admin/_update_employee_profile_photo'] = 'Admin/ajaxUpdateEmployeeProfilePhoto';
+$route['admin/_update_employee_status'] = 'Admin/ajaxUpdateEmployeeStatus';
 
 //Admin nsmart plans
 $route['admin/nsmart_plans'] = 'Admin/nsmart_plans';

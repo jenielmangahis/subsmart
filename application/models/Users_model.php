@@ -122,7 +122,8 @@ class Users_model extends MY_Model
 
     public function getAllUsers()
     {
-        $this->db->select('*');
+        $this->db->select('users.*, clients.business_name');
+        $this->db->join('clients', 'users.company_id = clients.id','left');
         $this->db->from($this->table);
         $query = $this->db->get();
         return $query->result();
