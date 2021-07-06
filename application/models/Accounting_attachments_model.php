@@ -53,4 +53,11 @@ class Accounting_attachments_model extends MY_Model {
 		$query = $this->db->get($this->table);
 		return $query->result_array();
 	}
+
+	public function get_attachments_by_ids($ids = [])
+	{
+		$this->db->where_in('id', $ids);
+		$query = $this->db->get($this->table);
+		return $query->result();
+	}
 }

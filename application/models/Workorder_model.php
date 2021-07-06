@@ -199,6 +199,40 @@ class Workorder_model extends MY_Model
 		return  $insert;
 	}
 
+    public function addPackage($data)
+    {
+        $vendor = $this->db->insert('package_details', $data);
+	    $insert = $this->db->insert_id();
+		return  $insert;
+    }
+
+    public function addItemPackage($data)
+    {
+        $vendor = $this->db->insert('item_package', $data);
+	    $insert = $this->db->insert_id();
+		return  $insert;
+    }
+
+    public function getPackageDetails($id)
+    {
+        $this->db->select('*, package_details.name AS package_name ');
+		$this->db->from('item_package');
+        $this->db->join('package_details', 'item_package.package_id  = package_details.id');
+        $this->db->join('items', 'item_package.item_id  = items.id');
+        $this->db->where('package_id', $id);
+        $query2 = $this->db->get();
+        return $query2->result();
+    }
+
+    public function getPackageName($id)
+    {
+        $this->db->select('*');
+		$this->db->from('package_details');
+        $this->db->where('id', $id);
+        $query2 = $this->db->get();
+        return $query2->result();
+    }
+
     public function update_workorder($data)
     {
         extract($data);

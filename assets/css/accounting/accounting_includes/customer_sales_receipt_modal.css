@@ -1,360 +1,449 @@
-    #addsalesreceiptModal .middle-links a {
-        color: #ffffff;
-        font-size: 12px;
-    }
-    
-    #addsalesreceiptModal form textarea {
-        resize: none;
-    }
-    
-    #addsalesreceiptModal select,
-    #addsalesreceiptModal input[type="text"],
-    #addsalesreceiptModal input[type="email"],
-    #addsalesreceiptModal input[type="number"],
-    #addsalesreceiptModal textarea {
-        font-size: 12px;
-        font-weight: lighter;
-        padding: 8px;
-        height: auto;
-        border: solid 1px #BABEC5;
-        border-radius: 2px;
-        width: 100%;
-        resize: none;
-    }
-    
-    #addsalesreceiptModal input:focus,
-    #addsalesreceiptModal textarea:focus {
-        border-color: rgba(126, 239, 104, 0.8);
-        box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 8px rgba(126, 239, 104, 0.6);
-        outline: 0 none;
-        box-shadow: none;
-        border: solid 1px #80CF03;
-        font-style: normal;
-    }
-    
-    div#addsalesreceiptModal {
-        font-size: 12px;
-    }
-    
-    #addsalesreceiptModal #add_another_items {
-        font: 12px;
-    }
-    
-    #addsalesreceiptModal .modal-footer-check {
-        left: 0;
-    }
-    
-    #addsalesreceiptModal .modal-footer-check button {
-        font-size: 12px;
-        height: auto;
-        padding: 5px 10px;
-    }
-    
-    #addsalesreceiptModal .modal-footer-check button[data-submit-type='save-new'],
-    #addsalesreceiptModal .modal-footer-check button[data-toggle='dropdown'] {
-        background-image: none;
-        background-color: #2CA01C;
-        color: #FFFFFF;
-        box-shadow: none;
-        border-right: none;
-        font-size: 13px;
-        border-radius: 28px 0 0 28px;
-        padding: 5px 15px;
-        height: auto;
-        border: solid 1px #2CA01C;
-        margin-right: -5px;
-    }
-    
-    #addsalesreceiptModal .modal-footer-check button[data-submit-type='save-new']:hover,
-    #addsalesreceiptModal .modal-footer-check button[data-toggle='dropdown']:hover {
-        background-image: none;
-        background-color: #108000;
-    }
-    
-    #addsalesreceiptModal .modal-footer-check button.cancel-button {
-        background-color: transparent;
-        background: transparent;
-        font-size: 13px;
-        color: #ffffff;
-        border: solid 1px #6A6C71;
-        padding: 5px 25px;
-        height: auto;
-        border-radius: 15px;
-        font-weight: 700;
-    }
-    
-    #addsalesreceiptModal .modal-footer-check button.cancel-button:hover {
-        background-color: #2A2B2D;
-    }
-    
-    #addsalesreceiptModal .modal-title {
-        font-weight: 700;
-    }
-    
-    #addsalesreceiptModal .recurring-form-part .recurring-title {
-        font-size: 20px;
-    }
-    
-    #addsalesreceiptModal .recurring-form-part .recurring-type {
-        width: 30%;
-        float: left;
-        top: 0;
-    }
-    
-    #addsalesreceiptModal .recurring-form-part .recuring-label-type {
-        width: 56px;
-        padding: 10px;
-        float: left;
-    }
-    
-    #addsalesreceiptModal .recurring-form-part .recuring-label-recurring-days-in-advance {
-        width: 110px;
-        padding: 10px;
-        float: left;
-    }
-    
-    #addsalesreceiptModal .recurring-form-part .recurring-days-in-advance {
-        width: 50px;
-        float: left;
-    }
-    
-    #addsalesreceiptModal .recurring-form-part.below {
-        border-bottom: solid 1px #D4D7DC;
-    }
-    
-    #addsalesreceiptModal .recurring-form-part.below .interval-part .monthly .label-1 {
-        width: 35px;
-        padding: 10px;
-        float: left;
-    }
-    
-    #addsalesreceiptModal .recurring-form-part.below .interval-part .monthly .monthly-day {
-        width: 120px;
-        float: left;
-        padding-left: 10px;
-    }
-    
-    #addsalesreceiptModal .recurring-form-part.below .interval-part .monthly .monthly-day-of-week {
-        width: 100px;
-        float: left;
-    }
-    
-    #addsalesreceiptModal .recurring-form-part.below .interval-part .monthly .label-2 {
-        padding: 10px;
-        width: 70px;
-        float: left;
-    }
-    
-    #addsalesreceiptModal .recurring-form-part.below .interval-part .monthly .monthly-months {
-        float: left;
-        width: 50px;
-    }
-    
-    #addsalesreceiptModal .recurring-form-part.below .interval-part .monthly .label-3 {
-        float: left;
-        padding: 10px;
-    }
-    
-    #addsalesreceiptModal .recurring-form-part.below .interval-part {
-        position: relative;
-        width: auto;
-        float: left;
-    }
-    
-    #addsalesreceiptModal .recurring-form-part.below .interval-part {
-        position: relative;
-        width: auto;
-        float: left;
-        border-right: solid 1px #D4D7DC;
-    }
-    
-    #addsalesreceiptModal .recurring-form-part.below .date-part .input-field-1,
-    #addsalesreceiptModal .recurring-form-part.below .date-part .input-field-2,
-    #addsalesreceiptModal .recurring-form-part.below .date-part .input-field-3 {
-        float: left;
-        padding: 10px;
-    }
-    
-    #addsalesreceiptModal .recurring-form-part.below .date-part .input-field-2 select {
-        width: 80px;
-    }
-    
-    #addsalesreceiptModal .recurring-form-part.below .date-part .input-field-3 .by-end-date {
-        float: left;
-    }
-    
-    #addsalesreceiptModal .recurring-form-part.below .date-part .input-field-3 .after-occurrences {
-        float: left;
-        padding-left: 10px;
-    }
-    
-    #addsalesreceiptModal .recurring-form-part.below .date-part .input-field-3 .after-occurrences input {
-        float: left;
-        width: 50px;
-    }
-    
-    #addsalesreceiptModal .recurring-form-part.below .date-part .input-field-3 .after-occurrences .label {
-        float: left;
-        padding: 10px;
-    }
-    
-    .padding-tb-10 {
-        padding-top: 10px;
-        padding-bottom: 10px;
-    }
-    
-    #addsalesreceiptModal .recurring-form-part.below .interval-part .daily .daily-days {
-        float: left;
-        width: 50px;
-    }
-    
-    #addsalesreceiptModal .recurring-form-part.below .interval-part .daily .label-1,
-    #addsalesreceiptModal .recurring-form-part.below .interval-part .daily .label-2 {
-        padding: 10px;
-        float: left;
-    }
-    
-    #addsalesreceiptModal .recurring-form-part.below .interval-part .weekly .label-1,
-    #addsalesreceiptModal .recurring-form-part.below .interval-part .weekly .label-2 {
-        padding: 10px;
-        float: left;
-    }
-    
-    #addsalesreceiptModal .recurring-form-part.below .interval-part .weekly .weekly-every {
-        float: left;
-        width: 50px;
-    }
-    
-    #addsalesreceiptModal .recurring-form-part.below .interval-part .weekly .weekly-weeks-on {
-        float: left;
-        width: 100px;
-        padding-right: 10px;
-    }
-    
-    #addsalesreceiptModal .recurring-form-part.below .interval-part .yearly .label-1 {
-        padding: 10px;
-        float: left;
-    }
-    
-    #addsalesreceiptModal .recurring-form-part.below .interval-part .yearly .yearly-day {
-        float: left;
-        padding-right: 10px;
-        padding-left: 2px;
-        width: 80px;
-    }
-    
-    #addsalesreceiptModal .recurring-form-part.below .interval-part .yearly .yearly-month {
-        float: left;
-    }
-    
-    #addsalesreceiptModal .recurring-form-part .reminder-type .label-1,
-    #addsalesreceiptModal .recurring-form-part .reminder-type .label-2 {
-        float: left;
-        padding: 10px;
-    }
-    
-    #addsalesreceiptModal .recurring-form-part .reminder-type .remind-days-before {
-        float: left;
-        width: 50px;
-    }
-    
-    #addsalesreceiptModal .recurring-form-part .unschedule-type .label-1 {
-        float: left;
-        width: 300px;
-        padding-left: 10px;
-    }
-    
-    #addsalesreceiptModal .recurring-form-part {
-        display: none;
-    }
-    
-    #addsalesreceiptModal .modal-footer-check .middle-links {
-        width: 50%;
-        float: left;
-        text-align: right;
-        padding-left: 10px;
-        padding-right: 10px;
-        padding-top: 10px;
-        padding-bottom: 10px;
-    }
-    
-    #addsalesreceiptModal .modal-footer-check .middle-links.end {
-        text-align: left;
-        border-left: solid 1px #6A6B70;
-    }
-    
-    #addsalesreceiptModal .modal-footer-check .middle-links:hover {
-        text-shadow: 0 10px 20px #fff;
-    }
-    
-    #addsalesreceiptModal .customer-info.recurring-customer-info {
-        border-top: solid 1px #D4D7DC;
-        border-bottom: solid 1px #D4D7DC;
-        margin-top: 10px;
-        padding: 0 5px;
-    }
-    
-    #addsalesreceiptModal .customer-info.recurring-customer-info .divided {
-        border-right: solid 1px #D4D7DC;
-        padding: 10px;
-    }
-    
-    #addsalesreceiptModal .customer-info.recurring-customer-info .option-part {
-        padding: 10px;
-    }
-    
-    #addsalesreceiptModal .hidden {
-        visibility: hidden;
-    }
-    
-    div#sales_receipt_pdf_preview_modal {
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        height: auto;
-        width: 90%;
-    }
-    
-    #addsalesreceiptModal .pint-pries-option-section {
-        position: absolute;
-        z-index: 1;
-        top: -100px;
-        background: #ffff;
-        right: 0;
-        color: #000;
-        text-align: left;
-        padding: 10px 0;
-        border: solid 1px #D4D7DC;
-        border-radius: 2px;
-        display: none;
-    }
-    
-    #addsalesreceiptModal .pint-pries-option-section ul li a {
-        color: #000;
-    }
-    
-    #addsalesreceiptModal .pint-pries-option-section ul li:hover {
-        background-color: #299A1C;
-        color: #fff;
-    }
-    
-    #addsalesreceiptModal .pint-pries-option-section ul li:hover a {
-        color: #fff;
-    }
-    
-    #addsalesreceiptModal .pint-pries-option-section ul li {
-        padding: 10px;
-    }
-    
-    #addsalesreceiptModal .modal-footer-check .middle-links {
-        position: relative;
-    }
-    
-    #addsalesreceiptModal .modal-footer-check .pint-pries-option-section .anchor-holder {
-        position: absolute;
-        z-index: 1;
-        width: 20px;
-        bottom: -13px;
-        left: 50px;
-    }
+#addsalesreceiptModal .middle-links a {
+    color: #ffffff;
+    font-size: 12px;
+}
+
+#addsalesreceiptModal form textarea {
+    resize: none;
+}
+
+#addsalesreceiptModal select,
+#addsalesreceiptModal input[type="text"],
+#addsalesreceiptModal input[type="email"],
+#addsalesreceiptModal input[type="number"],
+#addsalesreceiptModal textarea {
+    font-size: 12px;
+    font-weight: lighter;
+    padding: 8px;
+    height: auto;
+    border: solid 1px #BABEC5;
+    border-radius: 2px;
+    width: 100%;
+    resize: none;
+}
+
+#addsalesreceiptModal input:focus,
+#addsalesreceiptModal textarea:focus {
+    border-color: rgba(126, 239, 104, 0.8);
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 8px rgba(126, 239, 104, 0.6);
+    outline: 0 none;
+    box-shadow: none;
+    border: solid 1px #80CF03;
+    font-style: normal;
+}
+
+div#addsalesreceiptModal {
+    font-size: 12px;
+}
+
+#addsalesreceiptModal #add_another_items {
+    font: 12px;
+}
+
+#addsalesreceiptModal .modal-footer-check {
+    left: 0;
+}
+
+#addsalesreceiptModal .modal-footer-check button {
+    font-size: 12px;
+    height: auto;
+    padding: 5px 10px;
+}
+
+#addsalesreceiptModal .modal-footer-check button[data-submit-type='save-new'],
+#addsalesreceiptModal .modal-footer-check button[data-toggle='dropdown'] {
+    background-image: none;
+    background-color: #2CA01C;
+    color: #FFFFFF;
+    box-shadow: none;
+    border-right: none;
+    font-size: 13px;
+    border-radius: 28px 0 0 28px;
+    padding: 5px 15px;
+    height: auto;
+    border: solid 1px #2CA01C;
+    margin-right: -5px;
+}
+
+#addsalesreceiptModal .modal-footer-check button[data-submit-type='save-new']:hover,
+#addsalesreceiptModal .modal-footer-check button[data-toggle='dropdown']:hover {
+    background-image: none;
+    background-color: #108000;
+}
+
+#addsalesreceiptModal .modal-footer-check button.cancel-button {
+    background-color: transparent;
+    background: transparent;
+    font-size: 13px;
+    color: #ffffff;
+    border: solid 1px #6A6C71;
+    padding: 5px 25px;
+    height: auto;
+    border-radius: 15px;
+    font-weight: 700;
+}
+
+#addsalesreceiptModal .modal-footer-check button.cancel-button:hover {
+    background-color: #2A2B2D;
+}
+
+#addsalesreceiptModal .modal-title {
+    font-weight: 700;
+}
+
+#addsalesreceiptModal .recurring-form-part .recurring-title {
+    font-size: 20px;
+}
+
+#addsalesreceiptModal .recurring-form-part .recurring-type {
+    width: 30%;
+    float: left;
+    top: 0;
+}
+
+#addsalesreceiptModal .recurring-form-part .recuring-label-type {
+    width: 56px;
+    padding: 10px;
+    float: left;
+}
+
+#addsalesreceiptModal .recurring-form-part .recuring-label-recurring-days-in-advance {
+    width: 110px;
+    padding: 10px;
+    float: left;
+}
+
+#addsalesreceiptModal .recurring-form-part .recurring-days-in-advance {
+    width: 50px;
+    float: left;
+}
+
+#addsalesreceiptModal .recurring-form-part.below {
+    border-bottom: solid 1px #D4D7DC;
+}
+
+#addsalesreceiptModal .recurring-form-part.below .interval-part .monthly .label-1 {
+    width: 35px;
+    padding: 10px;
+    float: left;
+}
+
+#addsalesreceiptModal .recurring-form-part.below .interval-part .monthly .monthly-day {
+    width: 120px;
+    float: left;
+    padding-left: 10px;
+}
+
+#addsalesreceiptModal .recurring-form-part.below .interval-part .monthly .monthly-day-of-week {
+    width: 100px;
+    float: left;
+}
+
+#addsalesreceiptModal .recurring-form-part.below .interval-part .monthly .label-2 {
+    padding: 10px;
+    width: 70px;
+    float: left;
+}
+
+#addsalesreceiptModal .recurring-form-part.below .interval-part .monthly .monthly-months {
+    float: left;
+    width: 50px;
+}
+
+#addsalesreceiptModal .recurring-form-part.below .interval-part .monthly .label-3 {
+    float: left;
+    padding: 10px;
+}
+
+#addsalesreceiptModal .recurring-form-part.below .interval-part {
+    position: relative;
+    width: auto;
+    float: left;
+}
+
+#addsalesreceiptModal .recurring-form-part.below .interval-part {
+    position: relative;
+    width: auto;
+    float: left;
+    border-right: solid 1px #D4D7DC;
+}
+
+#addsalesreceiptModal .recurring-form-part.below .date-part .input-field-1,
+#addsalesreceiptModal .recurring-form-part.below .date-part .input-field-2,
+#addsalesreceiptModal .recurring-form-part.below .date-part .input-field-3 {
+    float: left;
+    padding: 10px;
+}
+
+#addsalesreceiptModal .recurring-form-part.below .date-part .input-field-2 select {
+    width: 80px;
+}
+
+#addsalesreceiptModal .recurring-form-part.below .date-part .input-field-3 .by-end-date {
+    float: left;
+}
+
+#addsalesreceiptModal .recurring-form-part.below .date-part .input-field-3 .after-occurrences {
+    float: left;
+    padding-left: 10px;
+}
+
+#addsalesreceiptModal .recurring-form-part.below .date-part .input-field-3 .after-occurrences input {
+    float: left;
+    width: 50px;
+}
+
+#addsalesreceiptModal .recurring-form-part.below .date-part .input-field-3 .after-occurrences .label {
+    float: left;
+    padding: 10px;
+}
+
+.padding-tb-10 {
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+#addsalesreceiptModal .recurring-form-part.below .interval-part .daily .daily-days {
+    float: left;
+    width: 50px;
+}
+
+#addsalesreceiptModal .recurring-form-part.below .interval-part .daily .label-1,
+#addsalesreceiptModal .recurring-form-part.below .interval-part .daily .label-2 {
+    padding: 10px;
+    float: left;
+}
+
+#addsalesreceiptModal .recurring-form-part.below .interval-part .weekly .label-1,
+#addsalesreceiptModal .recurring-form-part.below .interval-part .weekly .label-2 {
+    padding: 10px;
+    float: left;
+}
+
+#addsalesreceiptModal .recurring-form-part.below .interval-part .weekly .weekly-every {
+    float: left;
+    width: 50px;
+}
+
+#addsalesreceiptModal .recurring-form-part.below .interval-part .weekly .weekly-weeks-on {
+    float: left;
+    width: 100px;
+    padding-right: 10px;
+}
+
+#addsalesreceiptModal .recurring-form-part.below .interval-part .yearly .label-1 {
+    padding: 10px;
+    float: left;
+}
+
+#addsalesreceiptModal .recurring-form-part.below .interval-part .yearly .yearly-day {
+    float: left;
+    padding-right: 10px;
+    padding-left: 2px;
+    width: 80px;
+}
+
+#addsalesreceiptModal .recurring-form-part.below .interval-part .yearly .yearly-month {
+    float: left;
+}
+
+#addsalesreceiptModal .recurring-form-part .reminder-type .label-1,
+#addsalesreceiptModal .recurring-form-part .reminder-type .label-2 {
+    float: left;
+    padding: 10px;
+}
+
+#addsalesreceiptModal .recurring-form-part .reminder-type .remind-days-before {
+    float: left;
+    width: 50px;
+}
+
+#addsalesreceiptModal .recurring-form-part .unschedule-type .label-1 {
+    float: left;
+    width: 300px;
+    padding-left: 10px;
+}
+
+#addsalesreceiptModal .recurring-form-part {
+    display: none;
+}
+
+#addsalesreceiptModal .modal-footer-check .middle-links {
+    width: 50%;
+    float: left;
+    text-align: right;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+#addsalesreceiptModal .modal-footer-check .middle-links.end {
+    text-align: left;
+    border-left: solid 1px #6A6B70;
+}
+
+#addsalesreceiptModal .modal-footer-check .middle-links:hover {
+    text-shadow: 0 10px 20px #fff;
+}
+
+#addsalesreceiptModal .customer-info.recurring-customer-info {
+    border-top: solid 1px #D4D7DC;
+    border-bottom: solid 1px #D4D7DC;
+    margin-top: 10px;
+    padding: 0 5px;
+}
+
+#addsalesreceiptModal .customer-info.recurring-customer-info .divided {
+    border-right: solid 1px #D4D7DC;
+    padding: 10px;
+}
+
+#addsalesreceiptModal .customer-info.recurring-customer-info .option-part {
+    padding: 10px;
+}
+
+#addsalesreceiptModal .hidden {
+    visibility: hidden;
+}
+
+div#sales_receipt_pdf_preview_modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    height: auto;
+    width: 90%;
+}
+
+#addsalesreceiptModal .pint-pries-option-section {
+    position: absolute;
+    z-index: 1;
+    top: -100px;
+    background: #ffff;
+    right: 0;
+    color: #000;
+    text-align: left;
+    padding: 10px 0;
+    border: solid 1px #D4D7DC;
+    border-radius: 2px;
+    display: none;
+}
+
+#addsalesreceiptModal .pint-pries-option-section ul li a {
+    color: #000;
+}
+
+#addsalesreceiptModal .pint-pries-option-section ul li:hover {
+    background-color: #299A1C;
+    color: #fff;
+}
+
+#addsalesreceiptModal .pint-pries-option-section ul li:hover a {
+    color: #fff;
+}
+
+#addsalesreceiptModal .pint-pries-option-section ul li {
+    padding: 10px;
+}
+
+#addsalesreceiptModal .modal-footer-check .middle-links {
+    position: relative;
+}
+
+#addsalesreceiptModal .modal-footer-check .pint-pries-option-section .anchor-holder {
+    position: absolute;
+    z-index: 1;
+    width: 20px;
+    bottom: -13px;
+    left: 50px;
+}
+
+div#saved-notification-modal-section {
+    position: absolute;
+    top: 0;
+    z-index: 1060;
+    display: none;
+}
+
+#saved-notification-modal-section .body {
+    background: #ffffff99;
+    width: 500px;
+    position: fixed;
+    top: 10%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 5px;
+    font-size: 12px;
+    box-shadow: 3px 15px 35px #282929b3;
+    display: none;
+}
+
+#saved-notification-modal-section .body .content {
+    padding: 10px;
+    border: solid 1px #299A1C;
+}
+
+#saved-notification-modal-section .body .content h3 {
+    margin: 0;
+    font-size: 15px;
+    font-weight: 100;
+}
+
+#sales_receipt_pdf_preview_modal .pdf-print-preview {
+    height: 65vh;
+}
+
+#sales_receipt_pdf_preview_modal .pdf-print-preview iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+#sales_receipt_pdf_preview_modal h5.modal-title {
+    font-weight: 600;
+    color: #393A3D;
+    font-size: 20px;
+}
+
+#sales_receipt_pdf_preview_modal .modal-body p {
+    font-size: 14px;
+    font-weight: 100;
+    color: #393A3D;
+}
+
+#sales_receipt_pdf_preview_modal .modal-body h3 {
+    font-size: 20px;
+    color: #393A3D;
+}
+
+#sales_receipt_pdf_preview_modal .modal-body p a:hover {
+    text-decoration: underline;
+}
+
+#sales_receipt_pdf_preview_modal .modal-body p a {
+    color: #0379C6;
+}
+
+#sales_receipt_pdf_preview_modal .download-button {
+    background-color: transparent;
+    background: transparent;
+    font-size: 13px;
+    color: #393A3D;
+    border: solid 2px #515659;
+    padding: 5px 25px;
+    height: auto;
+    border-radius: 15px;
+    font-weight: 700;
+}
+
+#sales_receipt_pdf_preview_modal .print-button {
+    background-color: #2CA01C;
+    font-size: 13px;
+    color: #fff;
+    border: solid 2px #2CA01C;
+    padding: 5px 25px;
+    height: auto;
+    border-radius: 15px;
+    font-weight: 700;
+}

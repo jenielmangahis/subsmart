@@ -1504,6 +1504,129 @@ class Admin extends CI_Controller
         $this->page_data['upgrades']   = $upgrades;
         $this->load->view('admin/subscribers/ajax_subscriber_details', $this->page_data);
     }
+
+    public function offer_codes() 
+    {   
+        $this->load->model('OfferCodes_model');
+        $offerCodes   = $this->OfferCodes_model->getAll();
+        
+        $this->page_data['offerCodes'] = $offerCodes;
+        $this->load->view('admin/offer_codes/list', $this->page_data);
+    }
+
+    public function add_new_offer() 
+    {
+        
+        $this->load->view('admin/offer_codes/add_new_offer_code', $this->page_data);
+    }
+
+    public function create_offer_code() 
+    {
+        $this->load->model('OfferCodes_model');
+
+        $user = $this->session->userdata('logged');
+        $post = $this->input->post();
+
+        if( $post['offer_code'] != '' ){
+            if( $this->OfferCodes_model->getByOfferCodes($post['offer_code']) ){
+                $this->session->set_flashdata('message', 'Offer Code already exists');
+                $this->session->set_flashdata('alert_class', 'alert-danger');
+            }else{
+                $data = [
+                    'offer_code' => $post['offer_code'],
+                    'trial_days' => $post['trial_days'],
+                    'status' => 0,
+                    'date_created' => date("Y-m-d H:i:s")
+                ];
+
+                $OfferCodes = $this->OfferCodes_model->create($data);
+
+                $this->session->set_flashdata('message', 'Add new Offer Code was successful');
+                $this->session->set_flashdata('alert_class', 'alert-success');
+            }
+        }else{
+            $this->session->set_flashdata('message', 'Please enter Offer Code');
+            $this->session->set_flashdata('alert_class', 'alert-danger');
+        }
+
+        redirect('admin/offer_codes');
+    }
+
+    public function edit_offer_code($offer_id) 
+    {
+        $this->load->model('OfferCodes_model');
+
+        $offerCodes = $this->OfferCodes_model->getById($offer_id);
+
+        if( $offerCodes ){
+            $this->page_data['offerCodes'] = $offerCodes;
+            $this->load->view('admin/offer_codes/edit_offer_code', $this->page_data);
+        }else{
+            $this->session->set_flashdata('message', 'Cannot find data');
+            $this->session->set_flashdata('alert_class', 'alert-danger');
+            redirect('admin/offer_codes');
+        }
+    }
+
+    public function update_offer_code() 
+    {
+        $this->load->model('OfferCodes_model');
+
+        $user = $this->session->userdata('logged');
+        $post = $this->input->post();
+
+        $offerCodes = $this->OfferCodes_model->getById($post['offer_id']);
+
+        if( $offerCodes ){
+            if( $post['offer_id'] != '' ){
+                $data = [
+                    'offer_code' => $post['offer_code'],
+                    'trial_days' => $post['trial_days'],
+                    'status' => $post['status'],
+                    'date_modified' => date("Y-m-d H:i:s")
+                ];
+                $offerCodes = $this->OfferCodes_model->updateOfferCodes($post['offer_id'],$data);
+
+                $this->session->set_flashdata('message', 'Offer code was successfully updated');
+                $this->session->set_flashdata('alert_class', 'alert-success');
+            }else{
+                $this->session->set_flashdata('message', 'Please enter Offer code');
+                $this->session->set_flashdata('alert_class', 'alert-danger');
+            }
+
+            redirect('admin/edit_offer_code/'.$post['offer_id']);
+
+        }else{
+            $this->session->set_flashdata('message', 'Cannot find data');
+            $this->session->set_flashdata('alert_class', 'alert-danger');
+
+            redirect('admin/offer_codes');
+        }
+    }
+
+    public function delete_offer_code()
+    {
+        $this->load->model('OfferCodes_model');
+
+        $post = $this->input->post();
+
+        $id = $this->OfferCodes_model->deleteOfferCodes(post('offer_code_id'));
+
+        $this->session->set_flashdata('message', 'Offer Code has been Deleted Successfully');
+        $this->session->set_flashdata('alert_class', 'alert-success');
+
+        redirect('admin/offer_codes');
+    }
+
+    public function companies()
+    {
+        $this->load->model('Clients_model');
+
+        $companies = $this->Clients_model->getAll();
+
+        $this->page_data['companies'] = $companies;
+        $this->load->view('admin/companies/list', $this->page_data);
+    }
 }
 
 /* End of file Admin.php */

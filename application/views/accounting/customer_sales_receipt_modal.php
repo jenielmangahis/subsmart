@@ -1,18 +1,38 @@
+<div id="saved-notification-modal-section">
+    <div class="body">
+        <div class="content">
+            <h3>Sales receipt has been saved.</h3>
+        </div>
+    </div>
+</div>
 <div class="modal  fade modal-fluid" tabindex="-1" role="dialog" id="sales_receipt_pdf_preview_modal">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Modal title</h5>
+                <h5 class="modal-title">Print preview</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-                <p>Modal body text goes here.</p>
+                <div class="row">
+                    <div class="col-md-3">
+                        <p>To print, select the <b>Print</b> button, or right-click the PDF and select <b>Print</b>.</p>
+                        <h3>Useful links on customizing your PDF</h3>
+                        <p><a href="">How to customize your PDF (article)</a></p>
+                        <p><a href="">How to customize your PDF (video)</a></p>
+                        <p><a href="">Learn more</a></p>
+                    </div>
+                    <div class="col-md-9">
+                        <div class="pdf-print-preview">
+
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary">Save changes</button>
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="download-button">Download</button>
+                <button type="button" class="print-button" data-dismiss="modal">Print</button>
             </div>
         </div>
     </div>
@@ -25,7 +45,7 @@
                 <div class="modal-header">
                     <div class="modal-title">
                         <a href=""><i class="fa fa-history fa-lg" style="margin-right: 10px"></i></a>
-                        Sales Receipt
+                        Sales Receipt <span class="sales_receipt_number"></span>
                     </div>
                     <button type="button" class="close" id="closeModalExpense" data-dismiss="modal"
                         aria-label="Close"><i class="fa fa-times fa-lg"></i></button>
@@ -34,6 +54,7 @@
                     action="<?php echo site_url()?>accounting/addSalesReceipt"
                     method="post">
                     <input type="text" style="display: none;" value="" name="recurring_selected">
+                    <input type="text" style="display: none;" value="" name="current_sales_recept_number">
                     <div class="modal-body">
                         <div class="row">
                             <div class="col-md-6">
@@ -1794,70 +1815,4 @@
             $('#other_payment_area').show();
         }
     }
-
-    $("#addsalesreceiptModal form").submit(function(event) {
-        event.preventDefault();
-    });
-    $(document).on("click", "#addsalesreceiptModal form button[type='submit']",
-        function(event) {
-            var submit_type = $(this).attr("data-submit-type");
-            Swal.fire({
-                title: "Save Sales Receipt?",
-                html: "Are you sure you want to save this?",
-                showCancelButton: true,
-                imageUrl: baseURL + "/assets/img/accounting/customers/folder.png",
-                cancelButtonColor: "#d33",
-                confirmButtonColor: "#2ca01c",
-                confirmButtonText: $(this).html(),
-            }).then((result) => {
-                if (result.value) {
-                    $("#loader-modal").show();
-                    $.ajax({
-                        url: baseURL + "/accounting/addSalesReceipt",
-                        type: "POST",
-                        dataType: "json",
-                        data: $("#addsalesreceiptModal form").serialize(),
-                        success: function(data) {
-                            if (data.count_save > 0) {
-                                if (submit_type == "save-send" && data.email_sending_status ==
-                                    "success") {
-                                    Swal.fire({
-                                        showConfirmButton: false,
-                                        timer: 2000,
-                                        title: "Success",
-                                        html: "Sales receipt has been saved and sent.",
-                                        icon: "success",
-                                    });
-                                } else {
-                                    Swal.fire({
-                                        showConfirmButton: false,
-                                        timer: 2000,
-                                        title: "Success",
-                                        html: "Sales receipt has been saved.",
-                                        icon: "success",
-                                    });
-                                }
-                            } else {
-                                Swal.fire({
-                                    showConfirmButton: false,
-                                    timer: 2000,
-                                    title: "Error",
-                                    html: "No sales receipt saved. Please double check your inputs.",
-                                    icon: "error",
-                                });
-                            }
-                            if (submit_type == "save-new") {
-                                $('#addsalesreceiptModal form').trigger("reset");
-                            } else {
-                                $("#addsalesreceiptModal").modal('hide');
-                            }
-                            $("#loader-modal").hide();
-                        },
-                    });
-                }
-            });
-        });
-    $(document).on("click", "#addsalesreceiptModal .modal-footer-check  #closeCheckModal", function() {
-        $("#addsalesreceiptModal").modal('hide');
-    });
 </script>

@@ -1225,11 +1225,11 @@ $(".select_item_package").click(function () {
   // console.log(total);
   // alert(total);
   markup = "<tr id=\"ss\">" +
-      "<td width=\"35%\"><input value='"+title+"' type=\"text\" name=\"items[]\" class=\"form-control getItems\" ><input type=\"hidden\" value='"+idd+"' name=\"item_id[]\"><div class=\"show_mobile_view\"><span class=\"getItems_hidden\">"+title+"</span></div><input type=\"hidden\" name=\"itemid[]\" id=\"itemid\" class=\"itemid\" value='"+idd+"'></td>\n" +
-      "<td width=\"25%\"><div class=\"dropdown-wrapper\"><select name=\"item_type[]\" class=\"form-control\"><option value=\"product\">Product</option><option value=\"material\">Material</option><option value=\"service\">Service</option><option value=\"fee\">Fee</option></select></div></td>\n" +
-      "<td width=\"\"><input data-itemid='"+idd+"' id='quantity_package_"+idd+"' value='"+qty+"' type=\"number\" name=\"quantity[]\" data-counter=\"0\"  min=\"0\" class=\"form-control quantityPackage2\"></td>\n" +
+      "<td width=\"35%\"><input value='"+title+"' type=\"text\" name=\"items[]\" class=\"form-control getItems\" ><input type=\"hidden\" value='"+idd+"' name=\"item_id[]\"><div class=\"show_mobile_view\"><span class=\"getItems_hidden\">"+title+"</span></div><input type=\"hidden\" name=\"itemidPackage[]\" id=\"itemidPackage\" class=\"itemid\" value='"+idd+"'></td>\n" +
+      "<td width=\"25%\"><div class=\"dropdown-wrapper\"><select name=\"item_typePackage[]\" class=\"form-control\"><option value=\"product\">Product</option><option value=\"material\">Material</option><option value=\"service\">Service</option><option value=\"fee\">Fee</option></select></div></td>\n" +
+      "<td width=\"\"><input data-itemid='"+idd+"' id='quantity_package_"+idd+"' value='"+qty+"' type=\"number\" name=\"quantityPackage[]\" data-counter=\"0\"  min=\"0\" class=\"form-control quantityPackage2\"></td>\n" +
       // "<td>\n" + '<input type="number" class="form-control qtyest" name="quantity[]" data-counter="' + count + '" id="quantity_' + count + '" min="1" value="1">\n' + "</td>\n" +
-      "<td width=\"\"><input data-itemid='"+idd+"' id='price_package_"+idd+"' value='"+price+"'  type=\"number\" name=\"price[]\" class=\"form-control price_package2 hidden_mobile_view\" placeholder=\"Unit Price\"><input type=\"hidden\" class=\"priceqty\" id='priceqty_package_"+idd+"' value='"+total_+"'><div class=\"show_mobile_view\"><span class=\"price\">"+price+"</span></div></td>\n" +
+      "<td width=\"\"><input data-itemid='"+idd+"' id='price_package_"+idd+"' value='"+price+"'  type=\"number\" name=\"pricePackage[]\" class=\"form-control price_package2 hidden_mobile_view\" placeholder=\"Unit Price\"><input type=\"hidden\" class=\"priceqty\" id='priceqtypackage_"+idd+"' value='"+total_+"'><div class=\"show_mobile_view\"><span class=\"price\">"+price+"</span></div></td>\n" +
       // "<td width=\"10%\"><input type=\"number\" class=\"form-control discount\" name=\"discount[]\" data-counter="0" id=\"discount_0\" min="0" value="0" ></td>\n" +
       // "<td width=\"10%\"><small>Unit Cost</small><input type=\"text\" name=\"item_cost[]\" class=\"form-control\"></td>\n" +
       // "<td width=\"10%\" class=\"hidden_mobile_view\"><input type=\"number\" name=\"discount[]\" class=\"form-control discount\" id='discount_"+idd+"' readonly></td>\n" +
@@ -1324,7 +1324,7 @@ $(".select_item_package").click(function () {
 
 var total_cost = 0;
 // $("#span_total_0").each(function(){
-$('*[id^="priceqty_package_"]').each(function(){
+$('*[id^="priceqtypackage_"]').each(function(){
 total_cost += parseFloat($(this).val());
 });
 
@@ -2011,11 +2011,11 @@ $(document).on("focusout", ".quantityPackage2", function () {
 
   var subtotal = parseFloat(price) * parseFloat(quantity);
 
-  $("#priceqty_package_" + id).val(subtotal.toFixed(2));
+  $("#priceqtypackage_" + id).val(subtotal.toFixed(2));
 
   var total_cost = 0;
   // $("#span_total_0").each(function(){
-  $('*[id^="priceqty_package_"]').each(function(){
+  $('*[id^="priceqtypackage_"]').each(function(){
   total_cost += parseFloat($(this).val());
   });
 
@@ -2034,11 +2034,11 @@ $(document).on("focusout", ".price_package2", function () {
 
   var subtotal = parseFloat(price) * parseFloat(quantity);
 
-  $("#priceqty_package_" + id).val(subtotal.toFixed(2));
+  $("#priceqtypackage_" + id).val(subtotal.toFixed(2));
 
   var total_cost = 0;
   // $("#span_total_0").each(function(){
-  $('*[id^="priceqty_package_"]').each(function(){
+  $('*[id^="priceqtypackage_"]').each(function(){
   total_cost += parseFloat($(this).val());
   });
 
@@ -2052,11 +2052,11 @@ function packageCalculation(counter)
 
   var subtotal = parseFloat(price) * parseFloat(quantity);
 
-  $("#priceqty_package_" + counter).val(subtotal.toFixed(2));
+  $("#priceqtypackage_" + counter).val(subtotal.toFixed(2));
 
   var total_cost = 0;
   // $("#span_total_0").each(function(){
-  $('*[id^="priceqty_package_"]').each(function(){
+  $('*[id^="priceqtypackage_"]').each(function(){
   total_cost += parseFloat($(this).val());
   });
 

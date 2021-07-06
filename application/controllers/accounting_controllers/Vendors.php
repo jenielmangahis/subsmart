@@ -127,6 +127,9 @@ class Vendors extends MY_Controller {
                 case 'overdue-bills' :
                     $vendors = $this->vendors_model->get_vendors_with_overdue_bills($status);
                 break;
+                case 'payments' :
+                    $vendors = $this->vendors_model->get_vendors_with_payments($status);
+                break;
             }
         }
 
@@ -134,9 +137,10 @@ class Vendors extends MY_Controller {
 
         foreach($vendors as $vendor) {
             if(!is_null($vendor->attachments) && $vendor->attachments !== "") {
-                $attachments = count(json_decode($vendor->attachments, true));
+                $attachmentIds = json_decode($vendor->attachments, true);
+                $attachments = $this->accounting_attachments_model->get_attachments_by_ids($attachmentIds);
             } else {
-                $attachments = '';
+                $attachments = [];
             }
 
             if($search !== "") {
@@ -175,7 +179,7 @@ class Vendors extends MY_Controller {
         });
 
         $result = [
-            'draw' => $postData['draw'],
+            'draw' => $post['draw'],
             'recordsTotal' => count($vendors),
             'recordsFiltered' => count($data),
             'data' => array_slice($data, $start, $limit)

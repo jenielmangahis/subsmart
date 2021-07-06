@@ -3,10 +3,31 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <?php include viewPath('includes/admin_header'); ?>
 <style>
 .cell-active{
+    background-color: #53b94a;
+    color: white;
+    padding: 4px 0px;
+    width: 75px;
+    display: block;
+    text-align: center;
+    border-radius: 20px;
+}
+.cell-inactive{
+    background-color: #585858;
+    color: white;
+    padding: 4px 0px;
+    width: 75px;
+    display: block;
+    text-align: center;
+    border-radius: 20px;
+}
+.cell-active{
     background-color: #5bc0de;
 }
 .cell-inactive{
     background-color: #d9534f;
+}
+.btn{
+    border-radius: 0px !important;
 }
 </style>
 <div class="wrapper" role="wrapper">
@@ -24,7 +45,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         </div>
                         <div class="pl-3 pr-3 mt-0 row">
                             <div class="col mb-4 left alert alert-warning mt-0 mb-2">
-                                <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">Manage Subscribers</span>
+                                <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">List subscribers</span>
                             </div>
                         </div>
                         <br />
@@ -78,7 +99,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         </td>
                                         <td class="<?= $cell; ?>" style="text-align: center;color:#ffffff;"><?= $status; ?></td>
                                         <td>
-                                            <a class="btn btn-sm btn-default btn-view-subscription-details" href="javascript:void(0);" data-id="<?= $subscription->id; ?>"><i class="fa fa-view"></i> View Details</a>
+                                            <a class="btn btn-sm btn-primary btn-view-subscription-details" href="javascript:void(0);" data-id="<?= $subscription->id; ?>"><i class="fa fa-view"></i> View Details</a>
                                         </td>
                                     </tr>
                                 <?php } ?>
