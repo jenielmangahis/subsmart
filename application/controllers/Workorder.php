@@ -3051,6 +3051,60 @@ class Workorder extends MY_Controller
         }
     }
 
+    public function createPackage()
+    {
+        $item               = $this->input->post('item');
+        $type               = $this->input->post('type');
+        $quantity           = $this->input->post('quantity');
+        $price              = $this->input->post('price');
+        $package_price      = $this->input->post('package_price');
+        $package_name       = $this->input->post('package_name');
+        $package_price_set  = $this->input->post('package_price_set');
+
+        $company_id = logged('company_id');
+        $user_id = logged('id');
+
+        //     $checklist = $this->workorder_model->getchecklistdetailsajax($id);
+
+            // $this->page_data['item'] = $item;
+            // $this->page_data['checklists_items'] = $checklist;
+            $datafirst = array(
+                'name'          => $package_name,
+                'package_type'  => '1',
+                'total_price'   => $package_price,
+                'amount_set'    => $package_price_set,
+            );
+    
+            $dataQuery = $this->workorder_model->addPackage($datafirst);
+
+            $i = 0;
+                foreach($item as $row){
+                    $data['item_id']            = $item[$i];
+                    $data['package_id ']        = $dataQuery;
+                    $data['package_type']       = '1';
+                    $data['price']              = $price[$i];
+                    $data['item_type']          = $type[$i];
+                    $data['quantity']           = $quantity[$i];
+                    $data['created_by']         = $user_id;
+                    $data['company_id']         = $company_id;
+                    $data['created_at']         = date("Y-m-d H:i:s");
+                    $addQuery2 = $this->workorder_model->addItemPackage($data);
+                    
+                    // echo json_encode($data);
+                    $i++;
+                }
+
+                $details = $this->workorder_model->getPackageDetails($dataQuery);
+                $pName = $this->workorder_model->getPackageName($dataQuery);
+
+                $this->page_data['details'] = $details;
+                $this->page_data['pName'] = $pName;
+        
+                // echo json_encode($this->page_data);
+                echo json_encode($this->page_data);
+
+    }
+
     public function duplicate_workorder()
     {
         $company_id     = getLoggedCompanyID();

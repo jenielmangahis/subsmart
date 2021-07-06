@@ -49,6 +49,7 @@ class Accounting extends MY_Controller
         $this->load->model('General_model', 'general');
         $this->load->model('item_starting_value_adj_model', 'starting_value_model');
         $this->load->library('excel');
+        $this->load->library('pdf');
 //        The "?v=rand()" is to remove browser caching. It needs to remove in the live website.
         add_css(array(
             "assets/css/accounting/accounting.css",
@@ -2833,9 +2834,11 @@ class Accounting extends MY_Controller
             'message_on_statement' => $this->input->post('message_on_statement'),
             // 'attachments' => $this->input->post('file_name'),
             'attachments' => 'testing',
+
             // 'shipping' => $this->input->post('shipping'),
             'status' => 1,
             'created_by' => logged('id'),
+            'company_id' => logged('company_id'),
 
             'subtotal' => $this->input->post('subtotal'),
             'taxes' => $this->input->post('taxes'),
@@ -3073,7 +3076,7 @@ class Accounting extends MY_Controller
                 'accounting_sales_receipt_id' => $addQuery,
                 'accounting_recurring_transactions_id'=> $recurringId
             );
-            $this->accounting_invoices_model->insert_accounting_recurring_sales_receipt($accounting_recurring_sales_receipt_data);
+            $this->accounting_sales_receipt_model->insert_accounting_recurring_sales_receipt($accounting_recurring_sales_receipt_data);
         }
         if ($addQuery > 0) {
             $a = $this->input->post('items');
@@ -3098,14 +3101,19 @@ class Accounting extends MY_Controller
                 // $data['status'] = '1';
                 $data['created_at'] = date("Y-m-d H:i:s");
                 $data['updated_at'] = date("Y-m-d H:i:s");
-                $addQuery2 = $this->accounting_invoices_model->additem_details($data);
+                $additem_details_id = $this->accounting_invoices_model->additem_details($data);
                 $i++;
+                $data_table=array(
+                    'sales_receipt_id' => $addQuery,
+                    'item_details_id' => $additem_details_id
+                );
             }
 
             
             $data = new stdClass();
             $data->email_sending_status = "not sent";
             $data->count_save = 1;
+            $data->sales_receipt_id = $addQuery;
             echo json_encode($data);
         } else {
             echo json_encode(0);
@@ -3461,7 +3469,6 @@ class Accounting extends MY_Controller
                 // $data['status'] = '1';
                 $data['created_at'] = date("Y-m-d H:i:s");
                 $data['updated_at'] = date("Y-m-d H:i:s");
-                $addQuery2 = $this->accounting_invoices_model->additem_details($data);
                 $i++;
             }
 
@@ -3528,7 +3535,7 @@ class Accounting extends MY_Controller
                 $data['qty'] = $d[$i];
                 $data['cost'] = $f[$i];
                 $data['discount'] = $g[$i];
-                $data['tax'] = $h[$i];
+                $data['tax'] = (float)$h[$i]*($f[$i]*$d[$i]);
                 $data['total'] = $ii[$i];
                 $data['type'] = 'Credit Memo';
                 $data['type_id'] = $addQuery;
@@ -5894,7 +5901,37 @@ class Accounting extends MY_Controller
         $data->date_now=date('m/d/Y');
         echo json_encode($data);
     }
-    public function create_pdf_sales_receipt()
+    public function create_pdf_sales_receipt($file_name, $customer_id, $sales_number)
     {
+        $customer_info = $this->accounting_customers_model->get_customer_by_id($customer_id);
+        $sales_receipt_info= $this->accounting_sales_receipt_model->getSalesReceiptDetails_by_id($sales_number);
+        $sales_receipt_items = $this->accounting_sales_receipt_model->get_sales_receipt_items($sales_number);
+        $data=array(
+            'business_name'=>$customer_info->business_name,
+            'business_address_street'=>$customer_info->bus_street,
+            'business_address_state'=>$customer_info->bus_city.' '.$customer_info->bus_state.' '.$customer_info->bus_postal_code,
+            'business_contact_number'=>$customer_info->business_phone,
+            'business_email'=>$customer_info->business_email,
+            'business_logo'=>$customer_info->business_id."/".$customer_info->business_image,
+            'sales_number'=>$sales_receipt_info->id,
+            'adjustment_name'=>$sales_receipt_info->adjustment_name,
+            'adjustment_value'=>$sales_receipt_info->adjustment_value,
+            'receipt_date'=>$sales_receipt_info->date_created,
+            'customer_full_name'=>$customer_info->first_name.' '.$customer_info->last_name,
+            'customer_adress_street'=>$customer_info->acs_mail_add,
+            'customer_address_state'=>$customer_info->acs_city.' '.$customer_info->acs_state.' '.$customer_info->acs_zip_code.' ',
+            'items'=>$sales_receipt_items,
+        );
+        $this->pdf->save_pdf("accounting/customer_includes/sales_receipt/sales_receipt_to_pdf", $data, $file_name, "P");
+    }
+    public function view_print_sales_receipt()
+    {
+        $file_name = 'sales_receipt_'.$this->input->post("sales_number").".pdf";
+        $customer_id = $this->input->post("customer_id");
+        $sales_number= $this->input->post("sales_number");
+        $this->create_pdf_sales_receipt($file_name, $customer_id, $sales_number);
+        $data = new stdClass();
+        $data->file_location=base_url("assets/pdf/".$file_name);
+        echo json_encode($data);
     }
 }

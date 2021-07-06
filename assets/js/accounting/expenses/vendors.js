@@ -260,6 +260,36 @@ var table = $('#vendors-table').DataTable({
                 if($('#attachments_chk').prop('checked') === false) {
                     $(td).addClass('hide');
                 }
+
+                if(cellData.length > 0) {
+                    var dropdownItem = '';
+                    $.each(cellData, function(index, attachment) {
+                        dropdownItem += `
+                            <div class="col-12">
+                                <div class="row">
+                                    <div class="col-5">
+                                        <img src="/uploads/accounting/attachments/${attachment.stored_name}">
+                                    </div>
+                                    <div class="col">
+                                        <div class="d-flex align-items-center h-100">
+                                            <span>${attachment.uploaded_name}.${attachment.file_extension}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    });
+                    $(td).html(`
+                    <div class="dropdown">
+                        <button class="btn btn-block dropdown-toggle hide-toggle" type="button" id="attachments-${rowData.id}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <span class="text-info">${cellData.length}</span>
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-lg" aria-labelledby="attachments-${rowData.id}">
+                            <div class="row m-0">${dropdownItem}</div>
+                        </div>
+                    </div>
+                    `);
+                }
             }
         },
         {
@@ -651,10 +681,61 @@ $(document).on('click', '#pay-bills', function(e) {
 $(document).on('click', '.open-purchase-orders-cont, .overdue-bills, .open-bills, .payments-cont', function() {
     var selected = $(this).hasClass('selected');
     $('.open-purchase-orders-cont.selected, .overdue-bills.selected, .open-bills.selected, .payments-cont.selected').removeClass('selected');
+    $('.overdue-bills').removeClass('co-selected');
     if(selected) {
         $(this).removeClass('selected');
+        if($(this).hasClass('open-bills')) {
+            $('.overdue-bills').removeClass('hovered');
+            $('.overdue-bills').removeClass('co-selected');
+        }
+
+        if($(this).hasClass('overdue-bills')) {
+            $('.open-bills').css('margin-bottom', '');
+        }
     } else {
         $(this).addClass('selected');
+        $('.open-bills').css('margin-bottom', '');
+
+        if($(this).hasClass('open-bills')) {
+            $('.overdue-bills').addClass('co-selected');
+        }
+
+        if($(this).hasClass('overdue-bills')) {
+            $('.open-bills').css('margin-bottom', '6px');
+        }
     }
     $('#vendors-table').DataTable().ajax.reload(null, true);
+});
+
+$(document).on('mouseenter', '.open-purchase-orders-cont, .overdue-bills, .open-bills, .payments-cont', function() {
+    if(!$(this).hasClass('selected') && !$(this).hasClass('co-selected')) {
+        $(this).addClass('hovered');
+    }
+    if($(this).hasClass('open-bills')) {
+        if($('.overdue-bills').hasClass('selected')) {
+            $('.open-bills').css('margin-bottom', '');
+        }
+        $('.overdue-bills').addClass('hovered');
+    }
+
+    if($(this).hasClass('overdue-bills')) {
+        if(!$('.open-bills').hasClass('selected')) {
+            $('.open-bills').css('margin-bottom', '6px');
+        }
+
+        if($(this).hasClass('selected')) {
+            $('.overdue-bills').removeClass('hovered');
+        }
+    }
+});
+
+$(document).on('mouseleave', '.open-purchase-orders-cont, .overdue-bills, .open-bills, .payments-cont', function() {
+    $(this).removeClass('hovered');
+    if($(this).hasClass('open-bills')) {
+        $('.overdue-bills').removeClass('hovered');
+    }
+
+    if($(this).hasClass('overdue-bills') && !$(this).hasClass('selected')) {
+        $('.open-bills').css('margin-bottom', '');
+    }
 });

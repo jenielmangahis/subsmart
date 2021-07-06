@@ -67,6 +67,44 @@ class Vendors_model extends MY_Model {
 
 		return $query->result();
 	}
+	public function get_vendors_with_payments($status = [1])
+	{
+		$companyId = logged('company_id');
+		$startDate = date("Y-m-d", strtotime("-30 days"));
+
+		$this->db->select('accounting_vendors.*');
+		$this->db->where('accounting_vendors.company_id', $companyId);
+		$this->db->where_in('accounting_vendors.status', $status);
+		$this->db->where('accounting_bill_payments.status', 1);
+		$this->db->where('accounting_bill_payments.payment_date >=', $startDate);
+
+		$this->db->or_where('accounting_vendors.company_id', $companyId);
+		$this->db->where_in('accounting_vendors.status', $status);
+		$this->db->where('accounting_expense.status', 1);
+		$this->db->where('accounting_expense.payee_type', 'vendor');
+		$this->db->where('accounting_expense.payment_date >=', $startDate);
+
+		$this->db->or_where('accounting_check.status', 1);
+		$this->db->where('accounting_check.payee_type', 'vendor');
+		$this->db->where('accounting_vendors.company_id', $companyId);
+		$this->db->where_in('accounting_vendors.status', $status);
+		$this->db->where('accounting_check.payment_date >=', $startDate);
+
+		$this->db->or_where('accounting_pay_down_credit_card.status', 1);
+		$this->db->where('accounting_vendors.company_id', $companyId);
+		$this->db->where_in('accounting_vendors.status', $status);
+		$this->db->where('accounting_pay_down_credit_card.date >=', $startDate);
+
+		$this->db->order_by('accounting_vendors.f_name', 'asc');
+		$this->db->from($this->table);
+		$this->db->join('accounting_bill_payments', 'accounting_bill_payments.payee_id = accounting_vendors.id', 'left');
+		$this->db->join('accounting_expense', 'accounting_expense.payee_id = accounting_vendors.id', 'left');
+		$this->db->join('accounting_check', 'accounting_check.payee_id = accounting_vendors.id', 'left');
+		$this->db->join('accounting_pay_down_credit_card', 'accounting_pay_down_credit_card.payee_id = accounting_vendors.id', 'left');
+		$query = $this->db->get();
+
+		return $query->result();
+	}
 	public function getVendors(){
 	    $vendor = $this->db->get('accounting_vendors');
 	    return $vendor->result();

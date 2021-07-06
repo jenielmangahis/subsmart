@@ -1,4 +1,4 @@
-<?php defined('BASEPATH') OR exit('No direct script access allowed');
+<?php defined('BASEPATH') or exit('No direct script access allowed');
 /**
 
 
@@ -25,25 +25,25 @@ use Dompdf\Options;
 
 class Pdf extends DOMPDF
 {
-/**
- * Get an instance of CodeIgniter
- *
- * @access  protected
- * @return  void
- */
-protected function ci()
-{
-    return get_instance();
-}
+    /**
+     * Get an instance of CodeIgniter
+     *
+     * @access  protected
+     * @return  void
+     */
+    protected function ci()
+    {
+        return get_instance();
+    }
 
-/**
- * Load a CodeIgniter view into domPDF
- *
- * @access  public
- * @param   string  $view The view to load
- * @param   array   $data The view data
- * @return  void
- */
+    /**
+     * Load a CodeIgniter view into domPDF
+     *
+     * @access  public
+     * @param   string  $view The view to load
+     * @param   array   $data The view data
+     * @return  void
+     */
     public function load_view($view, $data = array(), $filename, $orientation)
     {
         $options = new Options();
@@ -84,9 +84,10 @@ protected function ci()
         file_put_contents(FCPATH.'/assets/pdf/'.$filename, $content);
     }
 
-    function createPDF($html, $filename='', $download=FALSE, $paper='A4', $orientation='portrait'){
+    public function createPDF($html, $filename='', $download=false, $paper='A4', $orientation='portrait')
+    {
         
-        // $options = $dompdf->getOptions(); 
+        // $options = $dompdf->getOptions();
         // $options->set('isRemoteEnabled', TRUE);
         // $dompdf->setOptions($options);
 
@@ -101,10 +102,10 @@ protected function ci()
         // $dompdf->set_option('isRemoteEnabled', TRUE);
         $dompdf->render();
         ob_end_clean();
-        if($download)
+        if ($download) {
             $dompdf->stream($filename.'.pdf', array('Attachment' => 1));
-        else
+        } else {
             $dompdf->stream($filename.'.pdf', array('Attachment' => 0));
+        }
     }
-
 }

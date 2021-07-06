@@ -54,6 +54,25 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     .payments-cont .row .col-12 {
         background-color: #7FD000;
     }
+    .open-purchase-orders-cont, .open-bills-cont,
+    .payments-cont
+    {
+        max-height: 80px;
+        height: 80px;
+    }
+    .open-purchase-orders-cont.hovered .row .col-12,
+    .overdue-bills.hovered,
+    .open-bills.hovered,
+    .payments-cont.hovered .row .col-12,
+    .open-purchase-orders-cont.selected .row .col-12,
+    .overdue-bills.selected,
+    .overdue-bills.co-selected,
+    .open-bills.selected,
+    .payments-cont.selected .row .col-12
+    {
+        border-bottom: 6px solid rgba(0,0,0,.35);
+        transform: translateY(-7px);
+    }
 </style>
 <?php include viewPath('includes/header'); ?>
 <div class="wrapper" role="wrapper">

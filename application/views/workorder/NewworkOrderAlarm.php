@@ -1740,8 +1740,8 @@ border: none;
                                                 <!-- <a href="#" class="btn btn-primary" id="add_another">Add Items</a> -->
                                                 <a class="link-modal-open" href="#" id="add_another_itemss" data-toggle="modal" data-target="#item_list"><span class="fa fa-plus-square fa-margin-right"></span>Add Items</a>
                                                 &emsp;
-                                                <a class="link-modal-open" href="#" id="add_package" data-toggle="modal" data-target=".bd-example-modal-lg"><span class="fa fa-plus-square fa-margin-right"></span>Add Package</a> &emsp;
-                                                <a class="link-modal-open" href="#" id="create_package" data-toggle="modal" data-target=".createPackage"><span class="fa fa-plus-square fa-margin-right"></span>Create Package</a>
+                                                <a class="link-modal-open" href="#" id="add_package" data-toggle="modal" data-target=".bd-example-modal-lg"><span class="fa fa-plus-square fa-margin-right"></span>Add By Group</a> &emsp;
+                                                <a class="link-modal-open" href="#" id="create_package" data-toggle="modal" data-target=".createPackage"><span class="fa fa-plus-square fa-margin-right"></span>Add/Create Package</a>
                                             </div>
                                         </div><br/>
 
@@ -1845,8 +1845,8 @@ border: none;
                                                 <!-- <a href="#" class="btn btn-primary" id="add_another">Add Items</a> -->
                                                 <a class="link-modal-open" href="#" id="add_another_itemss" data-toggle="modal" data-target="#item_list"><span class="fa fa-plus-square fa-margin-right"></span>Add Items</a>
                                                 &emsp;
-                                                <a class="link-modal-open" href="#" id="add_package" data-toggle="modal" data-target=".bd-example-modal-lg"><span class="fa fa-plus-square fa-margin-right"></span>Add Package</a> &emsp;
-                                                <a class="link-modal-open" href="#" id="create_package" data-toggle="modal" data-target=".createPackage"><span class="fa fa-plus-square fa-margin-right"></span>Create Package</a>
+                                                <a class="link-modal-open" href="#" id="add_package" data-toggle="modal" data-target=".bd-example-modal-lg"><span class="fa fa-plus-square fa-margin-right"></span>Add By Group</a> &emsp;
+                                                <a class="link-modal-open" href="#" id="create_package" data-toggle="modal" data-target=".createPackage"><span class="fa fa-plus-square fa-margin-right"></span>Add/Create Package</a>
                                             </div>
                                         </div><br/>
 
@@ -2883,7 +2883,7 @@ border: none;
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">Add Package</h5>
+                            <h5 class="modal-title" id="exampleModalLabel">Add By Group</h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
@@ -2927,11 +2927,11 @@ border: none;
                                     <span aria-hidden="true">&times;</span>
                                 </button>
                             </div>
-                            <div class="modal-body pt-0 pl-3 pb-3">
+                            <div class="modal-body pt-0 pl-3 pb-3" id="divcreatePackage">
                                 <input type="hidden" name="count" value="0" id="count">
                                 <div class="row">
                                     <div class="col-md-6">
-                                    <h6>Package Name</h6> <input type="text" class="form-control" style="width:80%;">
+                                    <h6>Package Name</h6> <input type="text" class="form-control" style="width:80%;" name="package_name" id="package_name">
                                     </div>
                                 </div>
                                 <br>
@@ -2952,7 +2952,7 @@ border: none;
                                         </tr>
                                         </thead>
                                         <tbody id="items_package_table">
-                                            <tr>
+                                            <!-- <tr>
                                                 <td width="35%">
                                                     <input type="text" class="form-control getItemsPackage"
                                                         onKeyup="getItemsPackage(this)" name="itemsPackage[]">
@@ -2976,16 +2976,9 @@ border: none;
                                                         data-counter="0" id="price_package_0" min="0" value="0"> <input type="hidden" class="priceqty priceqty_package" value="0" id="priceqty_0"> 
                                                         <div class="show_mobile_view"><span class="price">0</span>
                                                         </div><input id="priceqty_package_0" value="0"  type="hidden" name="price_qty[]" class="form-control hidden_mobile_view priceqty_package"></td>
-                                                <!-- <td width="10%" class="hidden_mobile_view"><input type="number" class="form-control discount" name="discount[]"
-                                                        data-counter="0" id="discount_0" min="0" value="0" readonly></td>
-                                                <td width="10%" class="hidden_mobile_view"><input type="text" class="form-control tax_change" name="tax[]"
-                                                        data-counter="0" id="tax1_0" min="0" value="0">
-                                                        </td> -->
-                                                <!-- <td width="10%" class="hidden_mobile_view"><input type="hidden" class="form-control " name="total[]"
-                                                        data-counter="0" id="item_total_0" min="0" value="0">
-                                                        $<span id="span_total_0">0.00</span></td> -->
+                                                
                                                 <td><a href="#" class="remove btn btn-sm btn-success" id="0"><i class="fa fa-trash" aria-hidden="true"></i></a></td>
-                                            </tr>
+                                            </tr> -->
                                             </tbody>
                                     </table>
                                     <a class="link-modal-open" href="#" id="add_another_itemss" data-toggle="modal" data-target="#item_list_package"><span class="fa fa-plus-square fa-margin-right"></span>Add Items</a>
@@ -2998,14 +2991,14 @@ border: none;
                                                 <table>
                                                     <tr>
                                                         <td><b>Total Price</b> <input type="text" class="form-control" style="width:90%;" name="package_price" id="package_price"></td>
-                                                        <td><b>Set Package Price</b> <input type="text" class="form-control" style="width:90%;"></td>
+                                                        <td><b>Set Package Price</b> <input type="text" class="form-control" style="width:90%;" name="package_price_set" id="package_price_set"></td>
                                                     <tr>
                                                 </table>
                                             </div>
                                 </div>
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-primary">Create/Add Package</button>
+                                <button type="button" class="btn btn-primary addCreatePackage">Create/Add Package</button>
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                             </div>
                     </div>
@@ -3312,11 +3305,134 @@ $(document).on('click touchstart','.edit_third_signature',function(){
 });
 </script>
 
-
 <script>
   $( function() {
     $( "#datepicker" ).datepicker();
   } );
+</script>
+
+<script>
+// $('.addCreatePackage').on('click', function(){
+$(".addCreatePackage").click(function () {
+// var item = $("#itemidPackage").val();
+var item = $('input[name="itemidPackage[]"]').map(function () {
+    return this.value; // $(this).val()
+}).get();
+
+var type = $('input[name="item_typePackage[]"]').map(function () {
+    return this.value; // $(this).val()
+}).get();
+
+var quantity = $('input[name="quantityPackage[]"]').map(function () {
+    return this.value; // $(this).val()
+}).get();
+
+var price = $('input[name="pricePackage[]"]').map(function () {
+    return this.value; // $(this).val()
+}).get();
+
+var package_name =  $("#package_name").val();
+var package_price =  $("#package_price").val();
+var package_price_set =  $("#package_price_set").val();
+
+// console.log('items '+item);
+// console.log('type '+type);
+// console.log('quantity '+quantity);
+// console.log('price '+price);
+    $.ajax({
+        type : 'POST',
+        url : "<?php echo base_url(); ?>workorder/createPackage",
+        data : {item: item, type:type, quantity:quantity, price:price, package_price:package_price, package_name:package_name, package_price_set:package_price_set },
+        dataType: 'json',
+        success: function(response){
+
+        // console.log(result);
+        var Randnumber = 3 + Math.floor(Math.random() * 9);
+
+        console.log(response['pName']);
+
+                    // var inputs1 = "";
+                        $.each(response['pName'], function (a, b) {
+                            // inputs1 += b.name;
+                            var pName = b.name;
+                            var Rnumber = 3 + Math.floor(Math.random() * 9);
+
+                        
+
+                markup = "<tr id=\"ss\">" +
+                        // "<td width=\"35%\"><input value='"+title+"' type=\"text\" name=\"items[]\" class=\"form-control getItems\" ><input type=\"hidden\" value='"+idd+"' name=\"item_id[]\"><div class=\"show_mobile_view\"><span class=\"getItems_hidden\">"+title+"</span></div><input type=\"hidden\" name=\"itemidPackage[]\" id=\"itemidPackage\" class=\"itemid\" value='"+idd+"'></td>\n" +
+                        // "<td width=\"25%\"><div class=\"dropdown-wrapper\"><select name=\"item_typePackage[]\" class=\"form-control\"><option value=\"product\">Product</option><option value=\"material\">Material</option><option value=\"service\">Service</option><option value=\"fee\">Fee</option></select></div></td>\n" +
+                        // "<td width=\"\"><input data-itemid='"+idd+"' id='quantity_package_"+idd+"' value='"+qty+"' type=\"number\" name=\"quantityPackage[]\" data-counter=\"0\"  min=\"0\" class=\"form-control quantityPackage2\"></td>\n" +
+                        // "<td width=\"\"><input data-itemid='"+idd+"' id='price_package_"+idd+"' value='"+price+"'  type=\"number\" name=\"pricePackage[]\" class=\"form-control price_package2 hidden_mobile_view\" placeholder=\"Unit Price\"><input type=\"hidden\" class=\"priceqty\" id='priceqty_package_"+idd+"' value='"+total_+"'><div class=\"show_mobile_view\"><span class=\"price\">"+price+"</span></div></td>\n" +
+                        // "<td>\n" +
+                        // "<a href=\"#\" class=\"remove btn btn-sm btn-success\" id='"+idd+"'><i class=\"fa fa-trash\" aria-hidden=\"true\"></i></a>\n" +
+                        // "</td>\n" +
+                        "<td colspan=\"6\" ><h6>"+ pName +"</h6><div><table class=\"table table-hover\" ><thead><th width=\"10%\" ></th><th>Item Name</th><th>Quantity</th><th>Price</th></thead> <tbody id='packageBody"+Randnumber+"'>" +
+                        "<input type=\"hidden\" class=\"priceqty\" id='priceqty_"+Rnumber+"' value='"+b.amount_set+"'>"+
+
+                        "</tbody></table></div></td>\n" +
+                        "<td style=\"text-align: center\" class=\"hidden_mobile_view\" width=\"15%\">$ <span data-subtotal='"+b.amount_set+"' id='span_total_"+Rnumber+"' class=\"total_per_item\">"+b.amount_set+
+                        "</span> <input type=\"hidden\" name=\"total[]\" id='sub_total_text"+Rnumber+"' value='"+b.amount_set+"'></td>" +
+                    "</tr>";
+                    tableBody = $("#jobs_items_table_body");
+                    tableBody.append(markup);
+                });
+                    
+                    var inputs = "";
+                        $.each(response['details'], function (i, v) {
+                            inputs += v.package_name ;
+                            // "<tr>"+
+                            // "<td>"+ v.item_id +"</td>"+
+                            // "<td>"+ v.quantity +"</td>"+
+                            // "<td>"+ v.price +"</td>"+
+                            // "</tr>"+
+                        // });
+
+                    markup2 = "<tr width=\"10%\" id=\"sss\">" +
+                        // "<tr>"+
+                            "<td></td>"+
+                            "<td>"+ v.title +"</td>"+
+                            "<td>"+ v.quantity +"</td>"+
+                            "<td>"+ v.price +"</td>"+
+                        "</tr>";
+                    tableBody2 = $("#packageBody"+Randnumber);
+                    tableBody2.append(markup2);
+
+                });
+
+
+                var priceqty2 = 0;
+                $('*[id^="priceqty_"]').each(function(){
+                priceqty2 += parseFloat($(this).val());
+                });
+                $("#item_total").val(priceqty2.toFixed(2));
+
+                
+                var subtotal = 0;
+                // $("#span_total_0").each(function(){
+                $('*[id^="span_total_"]').each(function(){
+                subtotal += parseFloat($(this).text());
+                });
+                var s_total = subtotal.toFixed(2);
+                var adjustment = $("#adjustment_input").val();
+                var grand_total = s_total - parseFloat(adjustment);
+                var markup = $("#markup_input_form").val();
+                var grand_total_w = grand_total + parseFloat(markup);
+                $("#grand_total_inputs").val(grand_total_w.toFixed(2));
+
+        },
+    });
+
+    
+
+    $(".createPackage").modal("hide");
+    // $('#divcreatePackage').load(window.location.href +  '#divcreatePackage');
+    // $(document.body).on('hidden.bs.modal', function () {
+    //     $('.createPackage').removeData('bs.modal')
+    // });
+    $("#divcreatePackage").load(" #divcreatePackage");
+
+});
 </script>
 
     <script>
