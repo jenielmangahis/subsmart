@@ -415,7 +415,9 @@ class Vendors extends MY_Controller {
         $attachmentKey = array_search($attachmentId, $attachments);
         unset($attachments[$attachmentKey]);
 
-        $update = $this->vendors_model->updateVendor($vendorId, ['attachments' => json_encode($attachments)]);
+        $attachments = count($attachments) > 0 ? json_encode($attachments) : null;
+
+        $update = $this->vendors_model->updateVendor($vendorId, ['attachments' => $attachments]);
 
         $return = [
             'data' => $vendorId,
@@ -662,6 +664,13 @@ class Vendors extends MY_Controller {
         $transactions = [];
         if(isset($bills) && count($bills) > 0) {
             foreach($bills as $bill) {
+                if(!is_null($bill->attachments) && $bill->attachments !== "") {
+                    $attachmentIds = json_decode($bill->attachments, true);
+                    $attachments = $this->accounting_attachments_model->get_attachments_by_ids($attachmentIds);
+                } else {
+                    $attachments = [];
+                }
+
                 $transactions[] = [
                     'id' => $bill->id,
                     'date' => date("m/d/Y", strtotime($bill->bill_date)),
@@ -676,13 +685,20 @@ class Vendors extends MY_Controller {
                     'balance' => number_format(floatval($bill->remaining_balance), 2, '.', ','),
                     'total' => number_format(floatval($bill->total_amount), 2, '.', ','),
                     'status' => $bill->status === "2" ? "Paid" : "Open",
-                    'attachments' => $bill->attachments === null ? [] : json_decode($bill->attachments, true),
+                    'attachments' => $attachments
                 ];
             }
         }
 
         if(isset($billPayments) && count($billPayments) > 0) {
             foreach($billPayments as $payment) {
+                if(!is_null($payment->attachments) && $payment->attachments !== "") {
+                    $attachmentIds = json_decode($payment->attachments, true);
+                    $attachments = $this->accounting_attachments_model->get_attachments_by_ids($attachmentIds);
+                } else {
+                    $attachments = [];
+                }
+
                 $paymentAcc = $this->chart_of_accounts_model->getById($payment->payment_account_id);
                 $paymentAccType = $this->account_model->getById($paymentAcc->account_id);
                 $paymentType = $paymentAccType->account_name === 'Bank' ? 'Check' : 'Credit Card';
@@ -701,13 +717,20 @@ class Vendors extends MY_Controller {
                     'balance' => '0.00',
                     'total' => '-'.number_format(floatval($payment->total_amount), 2, '.', ','),
                     'status' => $payment->status === "4" ? 'Voided' : 'Applied',
-                    'attachments' => [],
+                    'attachments' => $attachments
                 ];   
             }
         }
 
         if(isset($checks) && count($checks) > 0) {
             foreach($checks as $check) {
+                if(!is_null($check->attachments) && $check->attachments !== "") {
+                    $attachmentIds = json_decode($check->attachments, true);
+                    $attachments = $this->accounting_attachments_model->get_attachments_by_ids($attachmentIds);
+                } else {
+                    $attachments = [];
+                }
+
                 $transactions[] = [
                     'id' => $check->id,
                     'date' => date("m/d/Y", strtotime($check->payment_date)),
@@ -722,13 +745,20 @@ class Vendors extends MY_Controller {
                     'balance' => '0.00',
                     'total' => number_format(floatval($check->total_amount), 2, '.', ','),
                     'status' => $check->status === '4' ? 'Voided' : 'Paid',
-                    'attachments' => $check->attachments === null ? [] : json_decode($check->attachments, true),
+                    'attachments' => $attachments
                 ];
             }
         }
 
         if(isset($creditCardCredits) && count($creditCardCredits) > 0) {
             foreach($creditCardCredits as $creditCardCredit) {
+                if(!is_null($creditCardCredit->attachments) && $creditCardCredit->attachments !== "") {
+                    $attachmentIds = json_decode($creditCardCredit->attachments, true);
+                    $attachments = $this->accounting_attachments_model->get_attachments_by_ids($attachmentIds);
+                } else {
+                    $attachments = [];
+                }
+
                 $transactions[] = [
                     'id' => $creditCardCredit->id,
                     'date' => date("m/d/Y", strtotime($creditCardCredit->payment_date)),
@@ -743,13 +773,20 @@ class Vendors extends MY_Controller {
                     'balance' => '0.00',
                     'total' => '-'.number_format(floatval($creditCardCredit->total_amount), 2, '.', ','),
                     'status' => '',
-                    'attachments' => $creditCardCredit->attachments === null ? [] : json_decode($creditCardCredit->attachments, true),
+                    'attachments' => $attachments
                 ];
             }
         }
 
         if(isset($creditCardPayments) && count($creditCardPayments) > 0) {
             foreach($creditCardPayments as $cardPayment) {
+                if(!is_null($cardPayment->attachments) && $cardPayment->attachments !== "") {
+                    $attachmentIds = json_decode($cardPayment->attachments, true);
+                    $attachments = $this->accounting_attachments_model->get_attachments_by_ids($attachmentIds);
+                } else {
+                    $attachments = [];
+                }
+
                 $transactions[] = [
                     'id' => $cardPayment->id,
                     'date' => date("m/d/Y", strtotime($cardPayment->date)),
@@ -764,13 +801,20 @@ class Vendors extends MY_Controller {
                     'balance' => '0.00',
                     'total' => number_format(floatval($cardPayment->amount), 2, '.', ','),
                     'status' => '',
-                    'attachments' => $cardPayment->attachments === null ? [] : json_decode($cardPayment->attachments, true),
+                    'attachments' => $attachments
                 ];
             }
         }
 
         if(isset($expenses) && count($expenses) > 0) {
             foreach($expenses as $expense) {
+                if(!is_null($expense->attachments) && $expense->attachments !== "") {
+                    $attachmentIds = json_decode($expense->attachments, true);
+                    $attachments = $this->accounting_attachments_model->get_attachments_by_ids($attachmentIds);
+                } else {
+                    $attachments = [];
+                }
+
                 $method = $this->accounting_payment_methods_model->getById($expense->payment_method_id);
 
                 $transactions[] = [
@@ -787,13 +831,20 @@ class Vendors extends MY_Controller {
                     'balance' => '0.00',
                     'total' => number_format(floatval($expense->total_amount), 2, '.', ','),
                     'status' => $expense->status === '4' ? 'Voided' : 'Paid',
-                    'attachments' => $expense->attachments === null ? [] : json_decode($expense->attachments, true),
+                    'attachments' => $attachments
                 ];
             }
         }
 
         if(isset($purchaseOrders) && count($purchaseOrders) > 0) {
             foreach($purchaseOrders as $purchaseOrder) {
+                if(!is_null($purchaseOrder->attachments) && $purchaseOrder->attachments !== "") {
+                    $attachmentIds = json_decode($purchaseOrder->attachments, true);
+                    $attachments = $this->accounting_attachments_model->get_attachments_by_ids($attachmentIds);
+                } else {
+                    $attachments = [];
+                }
+
                 $transactions[] = [
                     'id' => $purchaseOrder->id,
                     'date' => date("m/d/Y", strtotime($purchaseOrder->purchase_order_date)),
@@ -808,13 +859,20 @@ class Vendors extends MY_Controller {
                     'balance' => '0.00',
                     'total' => number_format(floatval($purchaseOrder->total_amount), 2, '.', ','),
                     'status' => $purchaseOrder->status === "1" ? "Open" : "Closed",
-                    'attachments' => $purchaseOrder->attachments === null ? [] : json_decode($purchaseOrder->attachments, true),
+                    'attachments' => $attachments
                 ];
             }
         }
 
         if(isset($vendorCredits) && count($vendorCredits) > 0) {
             foreach($vendorCredits as $vendorCredit) {
+                if(!is_null($vendorCredit->attachments) && $vendorCredit->attachments !== "") {
+                    $attachmentIds = json_decode($vendorCredit->attachments, true);
+                    $attachments = $this->accounting_attachments_model->get_attachments_by_ids($attachmentIds);
+                } else {
+                    $attachments = [];
+                }
+
                 $transactions[] = [
                     'id' => $vendorCredit->id,
                     'date' => date("m/d/Y", strtotime($vendorCredit->payment_date)),
@@ -829,7 +887,7 @@ class Vendors extends MY_Controller {
                     'balance' => number_format(floatval($vendorCredit->remaining_balance), 2, '.', ','),
                     'total' => '-'.number_format(floatval($vendorCredit->total_amount), 2, '.', ','),
                     'status' => $vendorCredit->status === "1" ? "Unapplied" : "Applied",
-                    'attachments' => $vendorCredit->attachments === null ? [] : json_decode($vendorCredit->attachments, true),
+                    'attachments' => $attachments
                 ];
             }
         }

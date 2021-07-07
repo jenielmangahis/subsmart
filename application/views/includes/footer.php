@@ -103,6 +103,12 @@
     });
 </script>
 
+<script>
+    jQuery(document).ready(function() {
+        $('#myTable').DataTable();
+    });
+</script>
+
 <?php echo put_footer_assets(); ?>
 
 

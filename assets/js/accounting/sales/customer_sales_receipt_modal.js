@@ -164,55 +164,49 @@ $(document).on("click", "#addsalesreceiptModal .modal-footer-check .middle-links
 
 $(document).on("click", "#addsalesreceiptModal .pint-pries-option-section .print-preview", function(event) {
     event.preventDefault();
+    generate_pdf("print_sales_receipt");
+});
+
+$(document).on("click", "#addsalesreceiptModal .pint-pries-option-section .print-slip", function(event) {
+    event.preventDefault();
+    generate_pdf("print_packaging_slip");
+});
+
+
+function generate_pdf(action = "") {
+
     $('#sales_receipt_pdf_preview_modal').modal('show');
-    setTimeout(function() { $("#saved-notification-modal-section").fadeOut(); }, 2000);
-    if ($("#addsalesreceiptModal form input[name='current_sales_recept_number']").val() == "") {
-        $.ajax({
-            url: baseURL + "/accounting/addSalesReceipt",
-            type: "POST",
-            dataType: "json",
-            data: $("#addsalesreceiptModal form").serialize(),
-            success: function(data) {
+    $.ajax({
+        url: baseURL + "/accounting/addSalesReceipt",
+        type: "POST",
+        dataType: "json",
+        data: $("#addsalesreceiptModal form").serialize(),
+        success: function(data) {
+
+            if ($("#addsalesreceiptModal form input[name='current_sales_recept_number']").val() == "") {
                 $("#saved-notification-modal-section").fadeIn();
                 $("#saved-notification-modal-section .body").slideDown("slow");
-                $("#addsalesreceiptModal form input[name='current_sales_recept_number']").val(data.sales_receipt_id);
-                $("#addsalesreceiptModal .modal-title .sales_receipt_number").html("#" + data.sales_receipt_id);
-                $.ajax({
-                    url: baseURL + "/accounting/view_print_sales_receipt",
-                    type: "POST",
-                    dataType: "json",
-                    data: {
-                        sales_number: $("#addsalesreceiptModal form input[name='current_sales_recept_number']").val(),
-                        customer_id: $("#addsalesreceiptModal form select[name='customer_id']").val()
-                    },
-                    success: function(data2) {
-                        sales_receipt_pdf_preview_location = data2.file_location;
-                        $("#sales_receipt_pdf_preview_modal .pdf-print-preview").html(
-                            '<iframe src="' + data2.file_location + '"></iframe>');
-                    },
-                });
-            },
-        });
-    } else {
-        $.ajax({
-            url: baseURL + "/accounting/view_print_sales_receipt",
-            type: "POST",
-            dataType: "json",
-            data: {
-                sales_number: $("#addsalesreceiptModal form input[name='current_sales_recept_number']").val(),
-                customer_id: $("#addsalesreceiptModal form select[name='customer_id']").val()
-            },
-            success: function(data2) {
-                $("#sales_receipt_pdf_preview_modal .pdf-print-preview").html(
-                    '<iframe src="' + data2.file_location + '"></iframe>');
-            },
-        });
-    }
+                setTimeout(function() { $("#saved-notification-modal-section").fadeOut(); }, 2000);
+            }
+            $("#addsalesreceiptModal form input[name='current_sales_recept_number']").val(data.sales_receipt_id);
+            $("#addsalesreceiptModal .modal-title .sales_receipt_number").html("#" + data.sales_receipt_id);
 
-});
-var sales_receipt_pdf_preview_location = "";
-
-$(document).on("click", "#sales_receipt_pdf_preview_modal .download-button", function(event) {
-    event.preventDefault();
-    window.location.href = sales_receipt_pdf_preview_location;
-});
+            $.ajax({
+                url: baseURL + "/accounting/view_print_sales_receipt",
+                type: "POST",
+                dataType: "json",
+                data: {
+                    sales_number: $("#addsalesreceiptModal form input[name='current_sales_recept_number']").val(),
+                    customer_id: $("#addsalesreceiptModal form select[name='customer_id']").val(),
+                    action: action
+                },
+                success: function(data2) {
+                    $("#sales_receipt_pdf_preview_modal .pdf-print-preview").html(
+                        '<iframe src="' + data2.file_location + '"></iframe>');
+                    $("#sales_receipt_pdf_preview_modal .print-button").attr("href", data2.file_location);
+                    $("#sales_receipt_pdf_preview_modal .download-button").attr("href", baseURL + "accounting/download_sales_receipt/" + $("#addsalesreceiptModal form input[name='current_sales_recept_number']").val() + "/download_" + action);
+                },
+            });
+        },
+    });
+}

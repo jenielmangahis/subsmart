@@ -14,6 +14,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     #transactions-table .btn-group .btn {
         padding: 10px;
     }
+    #transactions-table .view-attachment:hover {
+        background-color: #365ebf;
+        color: #fff;
+    }
     #myTabContent .tab-pane {
         padding: 15px;
     }

@@ -566,6 +566,12 @@
 }
 
 .docPageContainer {
+  position: relative;
+
+  .docPage {
+    position: relative;
+  }
+
   canvas {
     max-width: 900px;
   }

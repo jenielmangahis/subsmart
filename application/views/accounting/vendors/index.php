@@ -35,6 +35,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     #vendors-table thead tr th:first-child {
         width: 1;
     }
+    #vendors-table .view-attachment:hover {
+        background-color: #365ebf;
+        color: #fff;
+    }
     .open-purchase-orders-cont, .open-bills-cont, .payments-cont {
         color: #fff;
         cursor: pointer;

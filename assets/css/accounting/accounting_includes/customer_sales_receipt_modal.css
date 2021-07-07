@@ -437,6 +437,20 @@ div#saved-notification-modal-section {
     font-weight: 700;
 }
 
+#sales_receipt_pdf_preview_modal .cancel-button {
+    background-color: transparent;
+    background: transparent;
+    font-size: 13px;
+    color: #393A3D;
+    border: solid 2px #515659;
+    padding: 5px 25px;
+    height: auto;
+    border-radius: 15px;
+    font-weight: 700;
+    position: absolute;
+    left: 2rem;
+}
+
 #sales_receipt_pdf_preview_modal .print-button {
     background-color: #2CA01C;
     font-size: 13px;
