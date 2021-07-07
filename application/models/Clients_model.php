@@ -9,13 +9,12 @@ class Clients_model extends MY_Model
     {
         $id = logged('id');
 
-        $this->db->select('clients.*, nsmart_plans.plan_name, nsmart_plans.price, industry_type.name AS industry_type_name');
+        $this->db->select('clients.*, nsmart_plans.plan_name, nsmart_plans.price, industry_type.name AS industry_type_name, business_profile.business_name as bp_business_name,business_profile.id as bp_id,business_profile.contact_name as bp_contact_name, business_profile.business_phone as bp_business_phone');
         $this->db->from($this->table);
 
         $this->db->join('industry_type', 'clients.industry_type_id = industry_type.id', 'left');
         $this->db->join('nsmart_plans', 'nsmart_plans.nsmart_plans_id = clients.nsmart_plan_id', 'left');
-
-        //$this->db->join('industry_type', 'clients.industry_type_id = industry_type.id', 'left');
+        $this->db->join('business_profile', 'business_profile.company_id = clients.id', 'left');
 
         if ( !empty($filters) ) {
             if ( !empty($filters['search']) ) {

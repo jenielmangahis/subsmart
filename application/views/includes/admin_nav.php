@@ -102,7 +102,7 @@ $user_id = getLoggedUserID();
                     </div>
                     <div class="dropdown-menu dropdown-menu-right">
                         <!--<a class="dropdown-item" href="<?php echo base_url('customer') ?>"><i class="fa fa-users"></i> Customer Manager</a>-->
-                        <a class="dropdown-item" href="<?= base_url('events') ?>"><i class="fa fa-calendar-check-o"></i> Events</a>
+                        <a class="dropdown-item" href="<?= base_url('admin/events') ?>"><i class="fa fa-calendar-check-o"></i> Events</a>
                         <a class="dropdown-item" href="<?php echo base_url('job') ?>"><i class="fa fa-briefcase"></i> Jobs</a>
                         <a class="dropdown-item" href="<?php echo base_url('estimate') ?>"><i class="fa fa-list-alt"></i> Estimates</a>
                         <?php ////if (hasPermissions('WORKORDER_MASTER')): ?>
@@ -247,9 +247,6 @@ $user_id = getLoggedUserID();
                         </a>
                     </div>
                     <div class="dropdown-menu dropdown-menu-right profile-dropdown">
-                        <a class="dropdown-item" href="<?php echo url('/more/upgrades') ?>">
-                            <i class="fa fa-level-up"></i> Upgrades
-                        </a>
                         <a class="dropdown-item" href="<?php echo url('/admin/nsmart_plans') ?>">
                             <i class="fa fa-cubes"></i> Plan Builder
                         </a>

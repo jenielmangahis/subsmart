@@ -187,10 +187,46 @@ var table = $('#transactions-table').DataTable({
             name: 'attachments',
             fnCreatedCell: function(td, cellData, rowData, row, col) {
                 $(td).addClass('attachments');
-
                 if($('#trans_attachments').prop('checked') === false) {
 					$(td).hide();
 				}
+
+                if(cellData.length > 0) {
+                    var imgExt = ['jpg', 'jpeg', 'png'];
+                    var dropdownItem = '';
+                    var noPreview = `
+                    <div class="bg-muted text-center d-flex justify-content-center align-items-center h-100 text-white">
+                        <p class="m-0">NO PREVIEW AVAILABLE</p>
+                    </div>
+                    `;
+
+                    $.each(cellData, function(index, attachment) {
+                        dropdownItem += `
+                            <div class="col-12 p-2 view-attachment" data-href="/uploads/accounting/attachments/${attachment.stored_name}">
+                                <div class="row">
+                                    <div class="col-5 pr-0">
+                                        ${imgExt.includes(attachment.file_extension) ? `<img src="/uploads/accounting/attachments/${attachment.stored_name}" class="m-auto">` : noPreview }
+                                    </div>
+                                    <div class="col-7">
+                                        <div class="d-flex align-items-center h-100 w-100">
+                                            <span class="overflow-hidden" style="text-overflow: ellipsis">${attachment.uploaded_name}.${attachment.file_extension}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    });
+                    $(td).html(`
+                    <div class="dropdown">
+                        <button class="btn btn-block dropdown-toggle hide-toggle" type="button" id="attachments-${rowData.id}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <span class="text-info">${cellData.length}</span>
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-lg dropdown-menu-align-right" aria-labelledby="attachments-${rowData.id}">
+                            <div class="row m-0">${dropdownItem}</div>
+                        </div>
+                    </div>
+                    `);
+                }
 			}
         },
         {
@@ -211,7 +247,7 @@ var table = $('#transactions-table').DataTable({
                                     <span class="sr-only">Toggle Dropdown</span>
                                 </button>
 
-                                <div class="dropdown-menu" aria-labelledby="statusDropdownButton">
+                                <div class="dropdown-menu dropdown-menu-align-right" aria-labelledby="statusDropdownButton">
                                     <a class="dropdown-item view-edit-expense" href="#">View/Edit</a>
                                     <a class="dropdown-item" href="/accounting/expenses/print-transaction/expense/${rowData.id}" target="_blank">Print</a>
                                     <a class="dropdown-item copy-expense" href="#">Copy</a>
@@ -230,7 +266,7 @@ var table = $('#transactions-table').DataTable({
                                     <span class="sr-only">Toggle Dropdown</span>
                                 </button>
 
-                                <div class="dropdown-menu" aria-labelledby="statusDropdownButton">
+                                <div class="dropdown-menu dropdown-menu-align-right" aria-labelledby="statusDropdownButton">
                                     <a class="dropdown-item view-edit-expense" href="#">View/Edit</a>
                                     <a class="dropdown-item" href="/accounting/expenses/print-transaction/expense/${rowData.id}" target="_blank">Print</a>
                                     <a class="dropdown-item copy-expense" href="#">Copy</a>
@@ -253,7 +289,7 @@ var table = $('#transactions-table').DataTable({
                                     <span class="sr-only">Toggle Dropdown</span>
                                 </button>
 
-                                <div class="dropdown-menu" aria-labelledby="statusDropdownButton">
+                                <div class="dropdown-menu dropdown-menu-align-right" aria-labelledby="statusDropdownButton">
                                     <a class="dropdown-item view-edit-check" href="#">View/Edit</a>
                                     <a class="dropdown-item copy-check" href="#">Copy</a>
                                     <a class="dropdown-item delete-transaction" href="#">Delete</a>
@@ -271,7 +307,7 @@ var table = $('#transactions-table').DataTable({
                                     <span class="sr-only">Toggle Dropdown</span>
                                 </button>
 
-                                <div class="dropdown-menu" aria-labelledby="statusDropdownButton">
+                                <div class="dropdown-menu dropdown-menu-align-right" aria-labelledby="statusDropdownButton">
                                     <a class="dropdown-item view-edit-check" href="#">View/Edit</a>
                                     <a class="dropdown-item copy-check" href="#">Copy</a>
                                     <a class="dropdown-item delete-transaction" href="#">Delete</a>
@@ -293,7 +329,7 @@ var table = $('#transactions-table').DataTable({
                                     <span class="sr-only">Toggle Dropdown</span>
                                 </button>
 
-                                <div class="dropdown-menu" aria-labelledby="statusDropdownButton">
+                                <div class="dropdown-menu dropdown-menu-align-right" aria-labelledby="statusDropdownButton">
                                     <a class="dropdown-item" href="#">Mark as paid</a>
                                     <a class="dropdown-item view-edit-bill" href="#">View/Edit</a>
                                     <a class="dropdown-item copy-bill" href="#">Copy</a>
@@ -313,7 +349,7 @@ var table = $('#transactions-table').DataTable({
                                     <span class="sr-only">Toggle Dropdown</span>
                                 </button>
 
-                                <div class="dropdown-menu" aria-labelledby="statusDropdownButton">
+                                <div class="dropdown-menu dropdown-menu-align-right" aria-labelledby="statusDropdownButton">
                                     <a class="dropdown-item copy-bill" href="#">Copy</a>
                                     <a class="dropdown-item delete-transaction" href="#">Delete</a>
                                     <a class="dropdown-item attach-file" href="#">Attach a file</a>
@@ -334,7 +370,7 @@ var table = $('#transactions-table').DataTable({
                                     <span class="sr-only">Toggle Dropdown</span>
                                 </button>
 
-                                <div class="dropdown-menu" aria-labelledby="statusDropdownButton">
+                                <div class="dropdown-menu dropdown-menu-align-right" aria-labelledby="statusDropdownButton">
                                     <a class="dropdown-item" href="#">View/Edit</a>
                                     <a class="dropdown-item delete-transaction" href="#">Delete</a>
                                 </div>
@@ -351,7 +387,7 @@ var table = $('#transactions-table').DataTable({
                                     <span class="sr-only">Toggle Dropdown</span>
                                 </button>
 
-                                <div class="dropdown-menu" aria-labelledby="statusDropdownButton">
+                                <div class="dropdown-menu dropdown-menu-align-right" aria-labelledby="statusDropdownButton">
                                     <a class="dropdown-item" href="#">View/Edit</a>
                                     <a class="dropdown-item delete-transaction" href="#">Delete</a>
                                     <a class="dropdown-item void-bill-payment" href="#">Void</a>
@@ -372,7 +408,7 @@ var table = $('#transactions-table').DataTable({
                                     <span class="sr-only">Toggle Dropdown</span>
                                 </button>
 
-                                <div class="dropdown-menu" aria-labelledby="statusDropdownButton">
+                                <div class="dropdown-menu dropdown-menu-align-right" aria-labelledby="statusDropdownButton">
                                     <a class="dropdown-item" href="#">View/Edit</a>
                                     <a class="dropdown-item delete-transaction" href="#">Delete</a>
                                 </div>
@@ -389,7 +425,7 @@ var table = $('#transactions-table').DataTable({
                                     <span class="sr-only">Toggle Dropdown</span>
                                 </button>
 
-                                <div class="dropdown-menu" aria-labelledby="statusDropdownButton">
+                                <div class="dropdown-menu dropdown-menu-align-right" aria-labelledby="statusDropdownButton">
                                     <a class="dropdown-item" href="#">View/Edit</a>
                                     <a class="dropdown-item delete-transaction" href="#">Delete</a>
                                     <a class="dropdown-item void-bill-payment" href="#">Void</a>
@@ -409,7 +445,7 @@ var table = $('#transactions-table').DataTable({
                                 <span class="sr-only">Toggle Dropdown</span>
                             </button>
 
-                            <div class="dropdown-menu" aria-labelledby="statusDropdownButton">
+                            <div class="dropdown-menu dropdown-menu-align-right" aria-labelledby="statusDropdownButton">
                                 <a class="dropdown-item delete-transaction" href="#">Delete</a>
                                 <a class="dropdown-item void-cc-payment" href="#">Void</a>
                             </div>
@@ -428,7 +464,7 @@ var table = $('#transactions-table').DataTable({
                                     <span class="sr-only">Toggle Dropdown</span>
                                 </button>
 
-                                <div class="dropdown-menu" aria-labelledby="statusDropdownButton">
+                                <div class="dropdown-menu dropdown-menu-align-right" aria-labelledby="statusDropdownButton">
                                     <a class="dropdown-item copy-to-bill" href="#">Copy to bill</a>
                                     <a class="dropdown-item" href="/accounting/expenses/print-transaction/purchase-order/${rowData.id}" target="_blank">Print</a>
                                     <a class="dropdown-item view-edit-purch-order" href="#">View/Edit</a>
@@ -449,7 +485,7 @@ var table = $('#transactions-table').DataTable({
                                     <span class="sr-only">Toggle Dropdown</span>
                                 </button>
 
-                                <div class="dropdown-menu" aria-labelledby="statusDropdownButton">
+                                <div class="dropdown-menu dropdown-menu-align-right" aria-labelledby="statusDropdownButton">
                                     <a class="dropdown-item view-edit-purch-order" href="#">View/Edit</a>
                                     <a class="dropdown-item copy-purchase-order" href="#">Copy</a>
                                     <a class="dropdown-item delete-transaction" href="#">Delete</a>
@@ -470,7 +506,7 @@ var table = $('#transactions-table').DataTable({
                                 <span class="sr-only">Toggle Dropdown</span>
                             </button>
 
-                            <div class="dropdown-menu" aria-labelledby="statusDropdownButton">
+                            <div class="dropdown-menu dropdown-menu-align-right" aria-labelledby="statusDropdownButton">
                                 <a class="dropdown-item view-edit-vendor-credit" href="#">View/Edit</a>
                                 <a class="dropdown-item copy-vendor-credit" href="#">Copy</a>
                                 <a class="dropdown-item delete-transaction" href="#">Delete</a>
@@ -836,7 +872,7 @@ $(document).on('change', '#transactions-table select[name="category[]"]', functi
     });
 });
 
-$(document).on('click', '#transactions-table tbody tr td:not(:first-child, :last-child)', function() {
+$(document).on('click', '#transactions-table tbody tr td:not(:first-child, :last-child, :nth-child(14))', function() {
     var row = $(this).parent();
     var data = $('#transactions-table').DataTable().row(row).data();
     
@@ -1453,4 +1489,11 @@ $(document).on('click', '#transactions-table .copy-to-bill', function(e) {
 
         $('#billModal').modal('show');
     });
+});
+
+$(document).on('click', '#transactions-table .view-attachment', function(e) {
+    e.preventDefault();
+    var data = e.currentTarget.dataset;
+
+    window.open(data.href, "_blank");
 });

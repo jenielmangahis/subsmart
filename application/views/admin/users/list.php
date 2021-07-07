@@ -4,6 +4,34 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 <script src="https://rawgit.com/enyo/dropzone/master/dist/dropzone.js"></script>
 <link rel="stylesheet" href="https://rawgit.com/enyo/dropzone/master/dist/dropzone.css">
 <style>
+/* Tooltip container */
+.tooltip {
+  position: relative;
+  display: inline-block;
+  border-bottom: 1px dotted black; /* If you want dots under the hoverable text */
+}
+
+/* Tooltip text */
+.tooltip .tooltiptext {
+  visibility: hidden;
+  width: 120px;
+  background-color: black;
+  color: #fff;
+  text-align: center;
+  padding: 5px 0;
+  border-radius: 6px;
+ 
+  /* Position the tooltip text - see examples below! */
+  position: absolute;
+  z-index: 1;
+}
+
+/* Show the tooltip text when you mouse over the tooltip container */
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+}
+</style>
+<style>
     .btn-success {
         background-color: #46a83d;
     }
@@ -228,6 +256,9 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
             bottom: 0px;
         }
     }
+    .actions-col a{
+        margin:5px;
+    }
 </style>
 <div class="wrapper" role="wrapper">
     <?php include viewPath('includes/sidebars/admin/employee'); ?>
@@ -263,6 +294,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                         <thead>
                                             <tr>
                                                 <th>User</th>
+                                                <th>Company</th>
                                                 <th>Email</th>
                                                 <th>Password</th>
                                                 <th>Title</th>
@@ -296,6 +328,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                                             Employee ID: <?php echo $employee_number; ?>
                                                         </div>
                                                     </td>
+                                                    <td class="center"><?php echo $row->business_name; ?></td>
                                                     <td class="center"><?php echo $row->email ?></td>
                                                     <td class="center pw-row-<?= $row->id; ?>"><?php echo $row->password_plain ?></td>
                                                     <td class="center"><?php echo ($row->role) ? ucfirst($this->roles_model->getById($row->role)->title) : '' ?></td>
@@ -318,14 +351,19 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                                     </td>
                                                     <td class="text-center"><span class="fa fa-lg fa-mobile"></span></td>
                                                     <td class="text-center"><span class="fa fa-lg fa-desktop"></span></td>
-                                                    <td class="center">
+                                                    <td class="center actions-col">
                                                         <a href="javascript:void(0)" data-id="<?php echo $row->id ?>" id="editEmployee" title="Edit User" data-toggle="tooltip"><i class="fa fa-edit"></i></a>
                                                         <a href="javascript:void(0)" data-name="<?php echo $row->FName . ' ' . $row->LName; ?>" data-id="<?php echo $row->id ?>" id="changePassword" title="Change Password" data-toggle="tooltip"><i class="fa fa-lock"></i></a>
                                                         <?php if ($row->id != 1 && logged('id') != $row->id) : ?>
-                                                            <a href="javascript:void(0);" title="Delete User" class="delete-user" data-name="<?= $row->FName . ' ' . $row->LName; ?>" data-id="<?= $row->id; ?>"><i class="fa fa-trash"></i></a>
+                                                            <a href="javascript:void(0);" title="Delete User" class="delete-user" data-name="<?= $row->FName . ' ' . $row->LName; ?>" data-id="<?= $row->id; ?>" data-toggle="tooltip"><i class="fa fa-trash"></i></a>
                                                         <?php else : ?>
                                                             <a href="javascript:void (0)" title="You cannot Delete this User" data-toggle="tooltip" disabled><i class="fa fa-trash"></i></a>
                                                         <?php endif ?>
+                                                        <?php if( $row->status == 1 ){ ?>
+                                                            <a href="javascript:void(0)" data-name="<?= $row->FName . ' ' . $row->LName; ?>" data-id="<?php echo $row->id ?>" class="deactivateEmployee" title="Deactivate Employee" data-toggle="tooltip"><i class="fa fa-close"></i></a>
+                                                        <?php }else{ ?>
+                                                            <a href="javascript:void(0)" data-name="<?= $row->FName . ' ' . $row->LName; ?>" data-id="<?php echo $row->id ?>" class="activateEmployee" title="Activate Employee" data-toggle="tooltip"><i class="fa fa-check"></i></a>
+                                                        <?php } ?>
                                                     </td>
                                                 </tr>
                                             <?php endforeach ?>
@@ -390,6 +428,32 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         </div>
     </div>
 </div>
+
+<!--Activate/Deactivate Employee modal-->
+<div class="modal fade" id="modalUpdateStatus">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title"><i class="fa fa-trash"></i> Update Status</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <!-- Modal body -->
+            <form action="" id="updateEmployeeStataus">
+                <input type="hidden" id="status-user-id" name="status_user_id" value="" />
+                <input type="hidden" id="status-user-status" name="status_user_status" value="" />
+                <div class="modal-body">Are you sure you want to <span class="status-name"></span> employee <span class="status-employee-name"></span></div>
+                <!-- Modal footer -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+                    <button type="submit" class="btn btn-danger">Yes</button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+
 <!--Change Employee Profile modal-->
 <div class="modal fade" id="modalEditEmployeeProfile">
     <div class="modal-dialog modal-md">
@@ -725,6 +789,10 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 <!--end of modal-->
 <?php include viewPath('includes/admin_footer'); ?>
 <script>
+    $(function () {
+        $("[rel='tooltip']").tooltip();
+    });
+
     $(document).ready(function() {
         $('#employeeTable').DataTable({
             "searching": false,
@@ -737,6 +805,29 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                 keyboard: false
             });
         });
+
+        $(document).on('click', '.deactivateEmployee', function(){
+            var user_id = $(this).attr('data-id');
+            var user_name = $(this).attr('data-name');
+            $("#status-user-id").val(user_id);
+            $("#status-user-status").val(0);
+
+            $(".status-name").html("<b>Deactivate</b>");
+            $(".status-employee-name").html("<b>" + user_name + "</b>");
+            $("#modalUpdateStatus").modal('show');
+        });
+
+        $(document).on('click', '.activateEmployee', function(){
+            var user_id = $(this).attr('data-id');
+            var user_name = $(this).attr('data-name');
+            $("#status-user-id").val(user_id);
+            $("#status-user-status").val(1);
+
+            $(".status-name").html("<b>Activate</b>");
+            $(".status-employee-name").html("<b>" + user_name + "</b>");
+            $("#modalUpdateStatus").modal('show');
+        });
+
         $(document).on('click', '#editEmployeeProfile', function() {
             $('#modalEditEmployeeProfile').modal({
                 backdrop: 'static',
@@ -898,6 +989,37 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                             timer: 2000,
                             title: 'Success',
                             text: "User has been deleted",
+                            icon: 'success'
+                        });
+                        location.reload();
+                    } else {
+                        Swal.fire({
+                            showConfirmButton: false,
+                            timer: 2000,
+                            title: 'Failed',
+                            text: "Something is wrong in the process",
+                            icon: 'warning'
+                        });
+                    }
+                }
+            });
+        });
+
+        $(document).on('submit', '#updateEmployeeStataus', function(e){
+            e.preventDefault();
+            $.ajax({
+                url: base_url + 'admin/_update_employee_status',
+                type: "POST",
+                dataType: "json",
+                data: $('#updateEmployeeStataus').serialize(),
+                success: function(data) {
+                    $("#modalUpdateStatus").modal('hide');
+                    if (data.is_success == 1) {
+                        Swal.fire({
+                            showConfirmButton: false,
+                            timer: 2000,
+                            title: 'Success',
+                            text: "User status has been updated",
                             icon: 'success'
                         });
                         location.reload();

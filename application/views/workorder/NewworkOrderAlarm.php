@@ -154,7 +154,7 @@ nav > div a.nav-item.nav-link:hover,
 nav > div a.nav-item.nav-link:focus
 {
 border: none;
-  background: #e74c3c;
+  background: #673ab7;
   color:#fff;
   border-radius:0;
   transition:background 0.20s linear;
@@ -2922,83 +2922,169 @@ border: none;
                 <div class="modal-dialog modal-lg">
                     <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title" id="exampleModalLabel">Create Package</h5>
+                                <h5 class="modal-title" id="exampleModalLabel">Add/Create Package</h5>
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
                             </div>
                             <div class="modal-body pt-0 pl-3 pb-3" id="divcreatePackage">
-                                <input type="hidden" name="count" value="0" id="count">
-                                <div class="row">
-                                    <div class="col-md-6">
-                                    <h6>Package Name</h6> <input type="text" class="form-control" style="width:80%;" name="package_name" id="package_name">
-                                    </div>
-                                </div>
-                                <br>
-                                    <table class="table table-hover">
-                                        <input type="hidden" name="count" value="0" id="count">
-                                        <thead style="background-color:#E9E8EA;">
-                                        <tr>
-                                            <th>Name</th>
-                                            <th>Group</th>
-                                            <!-- <th>Description</th> -->
-                                            <th width="150px">Quantity</th>
-                                            <!-- <th>Location</th> -->
-                                            <th width="150px">Price</th>
-                                            <!-- <th class="hidden_mobile_view" width="150px">Discount</th>
-                                            <th class="hidden_mobile_view" width="150px">Tax (Change in %)</th> -->
-                                            <!-- <th class="hidden_mobile_view">Total</th> -->
-                                            <th></th>
-                                        </tr>
-                                        </thead>
-                                        <tbody id="items_package_table">
-                                            <!-- <tr>
-                                                <td width="35%">
-                                                    <input type="text" class="form-control getItemsPackage"
-                                                        onKeyup="getItemsPackage(this)" name="itemsPackage[]">
-                                                    <ul class="suggestions"></ul>
-                                                    <div class="show_mobile_view"><span class="getItems_hidden"></span></div>
-                                                    <input type="hidden" name="itemid[]" id="itemid" class="itemid_package" value="0">
-                                                </td>
-                                                <td width="25%">
-                                                <div class="dropdown-wrapper">
-                                                    <select name="item_typePackage[]" id="item_typeid" class="form-control">
-                                                        <option value="product">Product</option>
-                                                        <option value="material">Material</option>
-                                                        <option value="service">Service</option>
-                                                        <option value="fee">Fee</option>
-                                                    </select>
+                                <section id="tabs" class="project-tab">
+                                    <!-- <div class="container"> -->
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <nav>
+                                                    <div class="nav nav-tabs nav-fill" id="nav-tab" role="tablist">
+                                                        <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">Add Package</a>
+                                                        <a class="nav-item nav-link" id="nav-contact-tab" data-toggle="tab" href="#nav-contact" role="tab" aria-controls="nav-contact" aria-selected="false">Create Package</a>
+                                                    </div>
+                                                </nav>
+                                                <div class="tab-content" id="nav-tabContent">
+                                                    <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+                                                        <!-- <div class="container"> -->
+                                                            <table class="table table-condensed"  id="myTable">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th>ID #</th>
+                                                                        <th>Package Name</th>
+                                                                        <th></th>
+                                                                        <th></th>
+                                                                        <th>Amount</th>
+                                                                        <th>Action</th>
+                                                                        <th></th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody class="panel">
+                                                                <?php foreach($itemPackages as $pItems){ ?>
+                                                                    <tr data-toggle="collapse" data-target="#demo<?php echo  $pItems->id; ?>" data-parent="#myTable" id="packageID" pack-id="<?php echo  $pItems->id; ?>">
+                                                                        <td><?php echo  $pItems->id; ?></td>
+                                                                        <td><?php echo  $pItems->name; ?></td>
+                                                                        <td></td>
+                                                                        <td class="text-success"></td>
+                                                                        <td class="text-success"><?php echo  $pItems->amount_set; ?></td>
+                                                                        <td class="text-error"><button id="<?= $pItems->id; ?>" pack-id="<?= $pItems->id; ?>"  class="btn btn-sm btn-default addNewPackageToList"><span class="fa fa-plus"></span></button></td>
+                                                                        <td><i class="fa fa-sort-down" style="font-size:24px"></i></td>
+                                                                    </tr>
+                                                                    <tr id="demo<?php echo  $pItems->id; ?>" class="collapse">
+                                                                        <td colspan="6" class="hiddenRow"><div id="packageItems<?php echo  $pItems->id; ?>"></div> </td>
+                                                                    </tr>
+                                                                <?php } ?>
+                                                                    <!-- <tr data-toggle="collapse" data-target="#demo2" data-parent="#myTable">
+                                                                        <td>2</td>
+                                                                        <td>05 May 2013</td>
+                                                                        <td></td>
+                                                                        <td class="text-success"></td>
+                                                                        <td class="text-error"></td>
+                                                                        <td class="text-success">$600.00</td>
+                                                                        <td><i class="fa fa-sort-down" style="font-size:24px"></i></td>
+                                                                    </tr>
+                                                                    <tr id="demo2" class="collapse">
+                                                                        <td colspan="6" class="hiddenRow"><div>Demo2</div></td>
+                                                                    </tr>
+                                                                    <tr data-toggle="collapse" data-target="#demo3" data-parent="#myTable">
+                                                                        <td>3</td>
+                                                                        <td>05 May 2013</td>
+                                                                        <td></td>
+                                                                        <td class="text-success"></td>
+                                                                        <td class="text-error"></td>
+                                                                        <td class="text-success">$661.00</td>
+                                                                        <td><i class="fa fa-sort-down" style="font-size:24px"></i></td>
+                                                                    </tr>
+                                                                    <tr id="demo3" class="collapse">
+                                                                        <td colspan="6" class="hiddenRow"><div>Demo3</div></td>
+                                                                    </tr> -->
+                                                                </tbody>
+                                                            </table>
+                                                        <!-- </div> -->
+                                                    </div>
+                                                    <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab" style="width:100%;">
+                                                        <input type="hidden" name="count" value="0" id="count">
+                                                        <div class="row">
+                                                            <div class="col-md-6">
+                                                            <h6>Package Name</h6> <input type="text" class="form-control" style="width:80%;" name="package_name" id="package_name">
+                                                            </div>
+                                                        </div>
+                                                        <br>
+                                                        <table class="table table-hover" style="width:100%;">
+                                                            <input type="hidden" name="count" value="0" id="count">
+                                                            <thead style="background-color:#E9E8EA;">
+                                                            <tr>
+                                                                <th>Name</th>
+                                                                <th>Group</th>
+                                                                <!-- <th>Description</th> -->
+                                                                <th width="150px">Quantity</th>
+                                                                <!-- <th>Location</th> -->
+                                                                <th width="150px">Price</th>
+                                                                <!-- <th class="hidden_mobile_view" width="150px">Discount</th>
+                                                                <th class="hidden_mobile_view" width="150px">Tax (Change in %)</th> -->
+                                                                <!-- <th class="hidden_mobile_view">Total</th> -->
+                                                                <th></th>
+                                                            </tr>
+                                                            </thead>
+                                                            <tbody id="items_package_table">
+                                                                <!-- <tr>
+                                                                    <td width="35%">
+                                                                        <input type="text" class="form-control getItemsPackage"
+                                                                            onKeyup="getItemsPackage(this)" name="itemsPackage[]">
+                                                                        <ul class="suggestions"></ul>
+                                                                        <div class="show_mobile_view"><span class="getItems_hidden"></span></div>
+                                                                        <input type="hidden" name="itemid[]" id="itemid" class="itemid_package" value="0">
+                                                                    </td>
+                                                                    <td width="25%">
+                                                                    <div class="dropdown-wrapper">
+                                                                        <select name="item_typePackage[]" id="item_typeid" class="form-control">
+                                                                            <option value="product">Product</option>
+                                                                            <option value="material">Material</option>
+                                                                            <option value="service">Service</option>
+                                                                            <option value="fee">Fee</option>
+                                                                        </select>
+                                                                    </div>
+                                                                    </td>
+                                                                    <td width=""><input type="number" class="form-control quantityPackage" name="quantityPackage[]"
+                                                                            data-counter="0" id="quantity_package_0" value="1"></td>
+                                                                    <td width=""><input type="number" class="form-control price_package hidden_mobile_view" name="pricePackage[]"
+                                                                            data-counter="0" id="price_package_0" min="0" value="0"> <input type="hidden" class="priceqty priceqty_package" value="0" id="priceqty_0"> 
+                                                                            <div class="show_mobile_view"><span class="price">0</span>
+                                                                            </div><input id="priceqty_package_0" value="0"  type="hidden" name="price_qty[]" class="form-control hidden_mobile_view priceqty_package"></td>
+                                                                    
+                                                                    <td><a href="#" class="remove btn btn-sm btn-success" id="0"><i class="fa fa-trash" aria-hidden="true"></i></a></td>
+                                                                </tr> -->
+                                                                </tbody>
+                                                        </table>
+                                                        <a class="link-modal-open" href="#" id="add_another_itemss" data-toggle="modal" data-target="#item_list_package" style="float:left;"><span class="fa fa-plus-square fa-margin-right"></span>Add Items</a>
+                                                        <br>
+                                                        <br>
+                                                        <div class="row">
+                                                            <div class="col-md-4">
+                                                            </div>
+                                                            <div class="col-md-8">
+                                                                <table>
+                                                                    <tr>
+                                                                        <td><b>Total Price</b> <input type="text" class="form-control" style="width:90%;" name="package_price" id="package_price"></td>
+                                                                        <td><b>Set Package Price</b> <input type="text" class="form-control" style="width:90%;" name="package_price_set" id="package_price_set"></td>
+                                                                    <tr>
+                                                                </table>
+                                                            </div>
+                                                        </div>
+                                                        <br>
+                                                        <div class="row">
+                                                            <div class="col-md-6">
+                                                            </div>
+                                                            <div class="col-md-6" align="right">
+                                                                <!-- <div style="align:right;"> -->
+                                                                    <button type="button" class="btn btn-primary addCreatePackage">Create/Add Package</button>
+                                                                <!-- </div> -->
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
                                                 </div>
-                                                </td>
-                                                <td width=""><input type="number" class="form-control quantityPackage" name="quantityPackage[]"
-                                                        data-counter="0" id="quantity_package_0" value="1"></td>
-                                                <td width=""><input type="number" class="form-control price_package hidden_mobile_view" name="pricePackage[]"
-                                                        data-counter="0" id="price_package_0" min="0" value="0"> <input type="hidden" class="priceqty priceqty_package" value="0" id="priceqty_0"> 
-                                                        <div class="show_mobile_view"><span class="price">0</span>
-                                                        </div><input id="priceqty_package_0" value="0"  type="hidden" name="price_qty[]" class="form-control hidden_mobile_view priceqty_package"></td>
-                                                
-                                                <td><a href="#" class="remove btn btn-sm btn-success" id="0"><i class="fa fa-trash" aria-hidden="true"></i></a></td>
-                                            </tr> -->
-                                            </tbody>
-                                    </table>
-                                    <a class="link-modal-open" href="#" id="add_another_itemss" data-toggle="modal" data-target="#item_list_package"><span class="fa fa-plus-square fa-margin-right"></span>Add Items</a>
-                                <br>
-                                <br>
-                                <div class="row">
-                                            <div class="col-md-6">
                                             </div>
-                                            <div class="col-md-6">
-                                                <table>
-                                                    <tr>
-                                                        <td><b>Total Price</b> <input type="text" class="form-control" style="width:90%;" name="package_price" id="package_price"></td>
-                                                        <td><b>Set Package Price</b> <input type="text" class="form-control" style="width:90%;" name="package_price_set" id="package_price_set"></td>
-                                                    <tr>
-                                                </table>
-                                            </div>
-                                </div>
+                                        </div>
+                                    <!-- </div> -->
+                                </section>
+                                    
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-primary addCreatePackage">Create/Add Package</button>
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                             </div>
                     </div>
@@ -3432,6 +3518,137 @@ var package_price_set =  $("#package_price_set").val();
     // });
     $("#divcreatePackage").load(" #divcreatePackage");
 
+});
+</script>
+
+<script>
+$(".addNewPackageToList").click(function () {
+    var packId = $(this).attr('pack-id');
+
+    $.ajax({
+        type : 'POST',
+        url : "<?php echo base_url(); ?>workorder/addNewPackageToList",
+        data : {packId: packId },
+        dataType: 'json',
+        success: function(response){
+
+        // console.log(result);
+        var Randnumber = 3 + Math.floor(Math.random() * 9);
+
+        console.log(response['pName']);
+
+                    // var inputs1 = "";
+                        $.each(response['pName'], function (a, b) {
+                            // inputs1 += b.name;
+                            var pName = b.name;
+                            var Rnumber = 3 + Math.floor(Math.random() * 9);
+
+                        
+
+                markup = "<tr id=\"ss\">" +
+                        // "<td width=\"35%\"><input value='"+title+"' type=\"text\" name=\"items[]\" class=\"form-control getItems\" ><input type=\"hidden\" value='"+idd+"' name=\"item_id[]\"><div class=\"show_mobile_view\"><span class=\"getItems_hidden\">"+title+"</span></div><input type=\"hidden\" name=\"itemidPackage[]\" id=\"itemidPackage\" class=\"itemid\" value='"+idd+"'></td>\n" +
+                        // "<td width=\"25%\"><div class=\"dropdown-wrapper\"><select name=\"item_typePackage[]\" class=\"form-control\"><option value=\"product\">Product</option><option value=\"material\">Material</option><option value=\"service\">Service</option><option value=\"fee\">Fee</option></select></div></td>\n" +
+                        // "<td width=\"\"><input data-itemid='"+idd+"' id='quantity_package_"+idd+"' value='"+qty+"' type=\"number\" name=\"quantityPackage[]\" data-counter=\"0\"  min=\"0\" class=\"form-control quantityPackage2\"></td>\n" +
+                        // "<td width=\"\"><input data-itemid='"+idd+"' id='price_package_"+idd+"' value='"+price+"'  type=\"number\" name=\"pricePackage[]\" class=\"form-control price_package2 hidden_mobile_view\" placeholder=\"Unit Price\"><input type=\"hidden\" class=\"priceqty\" id='priceqty_package_"+idd+"' value='"+total_+"'><div class=\"show_mobile_view\"><span class=\"price\">"+price+"</span></div></td>\n" +
+                        // "<td>\n" +
+                        // "<a href=\"#\" class=\"remove btn btn-sm btn-success\" id='"+idd+"'><i class=\"fa fa-trash\" aria-hidden=\"true\"></i></a>\n" +
+                        // "</td>\n" +
+                        "<td colspan=\"6\" ><h6>"+ pName +"</h6><div><table class=\"table table-hover\" ><thead><th width=\"10%\" ></th><th>Item Name</th><th>Quantity</th><th>Price</th></thead> <tbody id='packageBody"+Randnumber+"'>" +
+                        "<input type=\"hidden\" class=\"priceqty\" id='priceqty_"+Rnumber+"' value='"+b.amount_set+"'>"+
+
+                        "</tbody></table></div></td>\n" +
+                        "<td style=\"text-align: center\" class=\"hidden_mobile_view\" width=\"15%\">$ <span data-subtotal='"+b.amount_set+"' id='span_total_"+Rnumber+"' class=\"total_per_item\">"+b.amount_set+
+                        "</span> <input type=\"hidden\" name=\"total[]\" id='sub_total_text"+Rnumber+"' value='"+b.amount_set+"'></td>" +
+                    "</tr>";
+                    tableBody = $("#jobs_items_table_body");
+                    tableBody.append(markup);
+                });
+                    
+                    var inputs = "";
+                        $.each(response['details'], function (i, v) {
+                            inputs += v.package_name ;
+                            // "<tr>"+
+                            // "<td>"+ v.item_id +"</td>"+
+                            // "<td>"+ v.quantity +"</td>"+
+                            // "<td>"+ v.price +"</td>"+
+                            // "</tr>"+
+                        // });
+
+                    markup2 = "<tr width=\"10%\" id=\"sss\">" +
+                        // "<tr>"+
+                            "<td></td>"+
+                            "<td>"+ v.title +"</td>"+
+                            "<td>"+ v.quantity +"</td>"+
+                            "<td>"+ v.price +"</td>"+
+                        "</tr>";
+                    tableBody2 = $("#packageBody"+Randnumber);
+                    tableBody2.append(markup2);
+
+                });
+
+
+                var priceqty2 = 0;
+                $('*[id^="priceqty_"]').each(function(){
+                priceqty2 += parseFloat($(this).val());
+                });
+                $("#item_total").val(priceqty2.toFixed(2));
+
+                
+                var subtotal = 0;
+                // $("#span_total_0").each(function(){
+                $('*[id^="span_total_"]').each(function(){
+                subtotal += parseFloat($(this).text());
+                });
+                var s_total = subtotal.toFixed(2);
+                var adjustment = $("#adjustment_input").val();
+                var grand_total = s_total - parseFloat(adjustment);
+                var markup = $("#markup_input_form").val();
+                var grand_total_w = grand_total + parseFloat(markup);
+                $("#grand_total_inputs").val(grand_total_w.toFixed(2));
+
+        },
+    });
+
+    $(".createPackage").modal("hide");
+    // $('#divcreatePackage').load(window.location.href +  '#divcreatePackage');
+    // $(document.body).on('hidden.bs.modal', function () {
+    //     $('.createPackage').removeData('bs.modal')
+    // });
+    // $("#divcreatePackage").load(" #divcreatePackage");
+
+});
+</script>
+
+<script>
+// $("#packageID").click(function () {
+$(document).ready(function()
+{
+    // $( "#packageID" ).each(function(i) {
+    //     $(this).on("click", function(){
+    //     var packId = $(this).attr('pack-id');
+    //     alert(packId);
+        $.ajax({
+            type : 'POST',
+            url : "<?php echo base_url(); ?>workorder/getPackageItemsById",
+            // data : {packId: packId },
+            dataType: 'json',
+            success: function(response){
+                var inputs = "";
+                $.each(response['pItems'], function (i, v) {
+                    // inputs += v.package_name ;
+                    markup2 = "<tr>" +
+                                "<td></td>"+
+                                "<td>"+ v.title +"</td>"+
+                                "<td>"+ v.quantity +"</td>"+
+                                "<td>"+ v.price +"</td>"+
+                            "</tr>";
+                        tableBody2 = $("#packageItems"+v.package_id);
+                        tableBody2.append(markup2);
+                });
+            },
+        // });
+        // });
+    });
 });
 </script>
 

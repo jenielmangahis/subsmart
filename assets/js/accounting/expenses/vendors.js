@@ -9,7 +9,7 @@ $('#address_chk, #attachments_chk, #phone_chk, #email_chk').on('change', functio
     }
 });
 
-$(document).on('click', '#vendors-table tbody tr td:not(:first-child,:last-child)', function() {
+$(document).on('click', '#vendors-table tbody tr td:not(:first-child,:last-child,:nth-child(6))', function() {
     var data = table.row($(this).parent()).data();
     
     window.location.href = '/accounting/vendors/view/'+data.id;
@@ -262,17 +262,24 @@ var table = $('#vendors-table').DataTable({
                 }
 
                 if(cellData.length > 0) {
+                    var imgExt = ['jpg', 'jpeg', 'png'];
                     var dropdownItem = '';
+                    var noPreview = `
+                    <div class="bg-muted text-center d-flex justify-content-center align-items-center h-100 text-white">
+                        <p class="m-0">NO PREVIEW AVAILABLE</p>
+                    </div>
+                    `;
+
                     $.each(cellData, function(index, attachment) {
                         dropdownItem += `
-                            <div class="col-12">
+                            <div class="col-12 p-2 view-attachment" data-href="/uploads/accounting/attachments/${attachment.stored_name}">
                                 <div class="row">
-                                    <div class="col-5">
-                                        <img src="/uploads/accounting/attachments/${attachment.stored_name}">
+                                    <div class="col-5 pr-0">
+                                        ${imgExt.includes(attachment.file_extension) ? `<img src="/uploads/accounting/attachments/${attachment.stored_name}" class="m-auto">` : noPreview }
                                     </div>
-                                    <div class="col">
-                                        <div class="d-flex align-items-center h-100">
-                                            <span>${attachment.uploaded_name}.${attachment.file_extension}</span>
+                                    <div class="col-7">
+                                        <div class="d-flex align-items-center h-100 w-100">
+                                            <span class="overflow-hidden" style="text-overflow: ellipsis">${attachment.uploaded_name}.${attachment.file_extension}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -738,4 +745,11 @@ $(document).on('mouseleave', '.open-purchase-orders-cont, .overdue-bills, .open-
     if($(this).hasClass('overdue-bills') && !$(this).hasClass('selected')) {
         $('.open-bills').css('margin-bottom', '');
     }
+});
+
+$(document).on('click', '#vendors-table .view-attachment', function(e) {
+    e.preventDefault();
+    var data = e.currentTarget.dataset;
+
+    window.open(data.href, "_blank");
 });

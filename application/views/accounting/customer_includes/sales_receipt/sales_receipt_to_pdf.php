@@ -129,6 +129,14 @@ defined('BASEPATH') or exit('No direct script access allowed');
             text-align: right;
         }
 
+        .items-table table thead tr th {
+            color: #8D97C0;
+        }
+
+        .items-table table thead tr {
+            background-color: #E8EAF2;
+        }
+
         .text-left {
             text-align: left;
         }
@@ -206,7 +214,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
             </tbody>
         </table>
     </div>
-
     <div class="row">
         <div class="col-md-12">
             <div class="customer-info">
@@ -219,10 +226,18 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 </p>
             </div>
         </div>
-        <div class="col-md-12">
-            <p class="note">PLEASE DETACH TOP PORTION AND RETURN WITH YOUR PAYMENT.</p>
-            <p class="cutter"></p>
-        </div>
+    </div>
+    <div style="margin-bottom: 50px;">
+        <table style="width: 100%;">
+            <tbody>
+                <tr>
+                    <td>
+                        <p class="note">PLEASE DETACH TOP PORTION AND RETURN WITH YOUR PAYMENT.</p>
+                        <p class="cutter"></p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
     </div>
     <div class="items-table">
         <table>

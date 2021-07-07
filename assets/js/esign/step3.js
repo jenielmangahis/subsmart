@@ -81,13 +81,24 @@ function Step3() {
     let docPage = undefined;
     let docId = undefined;
 
-    const elementYTop = $element.get(0).offsetTop;
+    // const elementYTop = $element.get(0).offsetTop;
+    const elementYTop = (
+      // get element offset top relative to parent
+      ($element.get(0).getBoundingClientRect().top + document.documentElement.scrollTop) -
+      $("#upload_file").get(0).offsetTop
+    );
 
     const $pages = [...$docRenderer.find(".docPage")];
     for (let index = 0; index < $pages.length; index++) {
       const $docPage = $($pages[index]);
+
+      const $parent = $docPage.closest(".docPageContainer");
       const docPageHeight = $docPage.height();
-      const docPageYBottom = $docPage.get(0).offsetTop + docPageHeight;
+      let docPageYBottom = $parent.get(0).offsetTop + $parent.height();
+      if (index === 0) {
+        docPageYBottom = docPageYBottom - docPageHeight;
+      }
+
 
       if (elementYTop <= docPageYBottom) {
         position.pageTop = elementYTop - (docPageYBottom - docPageHeight);
@@ -417,7 +428,7 @@ function Step3() {
 
     const { coordinates: coords, unique_key, field_name = "", color } = field;
     const coordinates = JSON.parse(coords);
-    const top = parseInt(coordinates.top, 10);
+    const top = parseInt(coordinates.pageTop, 10);
     const left = parseInt(coordinates.left, 10);
     const specs = field.specs ? JSON.parse(field.specs) : {};
 
@@ -614,9 +625,23 @@ function Step3() {
       $container.attr("data-document-id", id);
 
       for (let index = 1; index <= document.numPages; index++) {
+        const isDocumentField = ({ doc_page, docfile_document_id }) => {
+          return doc_page == index && docfile_document_id == data.id;
+        };
+
         const params = { page: index, document };
         const $page = await getPage(params);
         $container.append($page);
+
+        const currentFields = fields.filter(isDocumentField);
+        const $pdfFields = currentFields.map(createField);
+        $page.append($pdfFields);
+
+        $($pdfFields).draggable({
+          containment: $docRenderer,
+          appendTo: $docRenderer,
+          stop: (_, ui) => storeField(ui.position, $(ui.helper)),
+        });
 
         const { top: offsetTop } = $page.offset();
         const $pagePreview = await getPagePreview({ ...params, offsetTop });
@@ -660,18 +685,17 @@ function Step3() {
   }
 
   function attachEventHandlers() {
-    const $pdfFields = fields.map(createField);
-    $docRenderer.append($pdfFields);
+    // const $pdfFields = fields.map(createField);
+    // $docRenderer.append($pdfFields);
+    // $($pdfFields).draggable({
+    //   containment: $docRenderer,
+    //   appendTo: $docRenderer,
+    //   stop: (_, ui) => storeField(ui.position, $(ui.helper)),
+    // });
 
     const getRecipientColor = () => {
       return getComputedStyle($form.get(0)).getPropertyValue("--color"); // prettier-ignore
     };
-
-    $($pdfFields).draggable({
-      containment: $docRenderer,
-      appendTo: $docRenderer,
-      stop: (_, ui) => storeField(ui.position, $(ui.helper)),
-    });
 
     $fields.draggable({
       containment: $docRenderer,
@@ -691,6 +715,28 @@ function Step3() {
     $docRenderer.droppable({
       accept: ".fields",
       drop: function (_, ui) {
+        const elementYTop = ui.position.top;
+        $_document = null;
+
+        const $pages = [...$docRenderer.find(".docPage")];
+        for (let index = 0; index < $pages.length; index++) {
+          const $docPage = $($pages[index]);
+
+          const $parent = $docPage.closest(".docPageContainer");
+          const docPageHeight = $docPage.height();
+
+          let docPageYBottom = $parent.get(0).offsetTop + $parent.height();
+          if (index === 0) {
+            docPageYBottom = docPageYBottom - docPageHeight;
+          }
+
+          if (elementYTop <= docPageYBottom) {
+            ui.position.pageTop = elementYTop - (docPageYBottom - docPageHeight);
+            $_document = $docPage;
+            break;
+          }
+        }
+
         const $item = $(ui.helper).clone();
         const color = getRecipientColor();
         const $element = createField({
@@ -700,7 +746,7 @@ function Step3() {
           isNew: true,
         });
 
-        $(this).append($element);
+        $_document.append($element);
         storeField(ui.position, $element);
 
         $element.draggable({

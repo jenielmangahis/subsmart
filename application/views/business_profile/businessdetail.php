@@ -109,7 +109,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                      </div>
                      <div class="col-md-4">
                         <label>State/Province</label> <span class="form-required">*</span>
-                        <input type="text" name="state" value="<?php echo $profiledata->zip ?>" class="form-control" id="state"/>
+                        <input type="text" name="state" value="<?php echo $profiledata->state ?>" class="form-control" id="state"/>
                      </div>
                   </div>
                </div>

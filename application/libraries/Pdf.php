@@ -67,7 +67,7 @@ class Pdf extends DOMPDF
 
     public function save_pdf($view, $data = array(), $filename, $orientation)
     {
-        $dompdf = new Dompdf();
+        $dompdf = new Dompdf(array('enable_remote' => true));
         $html = $this->ci()->load->view($view, $data, true);
 
         $dompdf->loadHtml($html);

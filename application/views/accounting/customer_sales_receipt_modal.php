@@ -1,4 +1,4 @@
-<div id="saved-notification-modal-section">
+<div id="saved-notification-modal-section" style="display: none;">
     <div class="body">
         <div class="content">
             <h3>Sales receipt has been saved.</h3>
@@ -31,8 +31,9 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="download-button">Download</button>
-                <button type="button" class="print-button" data-dismiss="modal">Print</button>
+                <a type="button" class="cancel-button" data-dismiss="modal">Cancel</a>
+                <a type="button" class="download-button" target="_blank">Download</a>
+                <a type="button" class="print-button" target="_blank">Print</a>
             </div>
         </div>
     </div>

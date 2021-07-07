@@ -23,6 +23,21 @@ class Event_model extends MY_Model
         return $query->result();
     }
 
+    public function admin_get_all_events($limit=0)
+    {
+        $this->db->from($this->table);
+        $this->db->select('events.*,LName,FName,acs_profile.first_name,acs_profile.last_name,users.profile_img,clients.business_name');
+        $this->db->join('acs_profile', 'acs_profile.prof_id = events.customer_id','left');
+        $this->db->join('clients', 'clients.id = events.company_id','left');
+        $this->db->join('users', 'users.id = events.employee_id','left');
+        $this->db->order_by('id', "DESC");
+        if($limit > 0){
+            $this->db->limit($limit);
+        }
+        $query = $this->db->get();
+        return $query->result();
+    }
+
     public function get_specific_event($id)
     {
         $this->db->from($this->table);
@@ -69,7 +84,7 @@ class Event_model extends MY_Model
     public function getAllEvents()
     {
 
-        $this->db->select('events.id, events.company_id, customer_id, employee_id, event_type, workorder_id, description, event_description, start_date, start_time, end_date, end_time, event_color, notify_at, instructions, is_recurring, events.status, LName,FName, acs_profile.first_name,acs_profile.last_name,acs_profile.mail_add,acs_profile.city as cust_city,acs_profile.state as cust_state,
+        $this->db->select('events.*, customer_id, employee_id, event_type, workorder_id, description, event_description, start_date, start_time, end_date, end_time, event_color, notify_at, instructions, is_recurring, events.status, LName,FName, acs_profile.first_name,acs_profile.last_name,acs_profile.mail_add,acs_profile.city as cust_city,acs_profile.state as cust_state,
         acs_profile.zip_code as cust_zip_code,acs_profile.phone_h,acs_profile.phone_m,acs_profile.email as cust_email');
         $this->db->from($this->table);
         $this->db->join('acs_profile', 'acs_profile.prof_id = events.customer_id','left');

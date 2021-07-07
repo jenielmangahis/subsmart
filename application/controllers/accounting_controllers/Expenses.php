@@ -194,9 +194,10 @@ class Expenses extends MY_Controller {
         if(isset($bills) && count($bills) > 0) {
             foreach($bills as $bill) {
                 if(!is_null($bill->attachments) && $bill->attachments !== "") {
-                    $attachments = count(json_decode($bill->attachments, true));
+                    $attachmentIds = json_decode($bill->attachments, true);
+                    $attachments = $this->accounting_attachments_model->get_attachments_by_ids($attachmentIds);
                 } else {
-                    $attachments = '';
+                    $attachments = [];
                 }
 
                 $payee = $this->vendors_model->get_vendor_by_id($bill->vendor_id);
@@ -223,9 +224,10 @@ class Expenses extends MY_Controller {
         if(isset($billPayments) && count($billPayments) > 0) {
             foreach($billPayments as $billPayment) {
                 if(!is_null($billPayment->attachments) && $billPayment->attachments !== "") {
-                    $attachments = count(json_decode($billPayment->attachments, true));
+                    $attachmentIds = json_decode($billPayment->attachments, true);
+                    $attachments = $this->accounting_attachments_model->get_attachments_by_ids($attachmentIds);
                 } else {
-                    $attachments = '';
+                    $attachments = [];
                 }
 
                 $paymentAcc = $this->chart_of_accounts_model->getById($billPayment->payment_account_id);
@@ -256,9 +258,10 @@ class Expenses extends MY_Controller {
         if(isset($checks) && count($checks) > 0) {
             foreach($checks as $check) {
                 if(!is_null($check->attachments) && $check->attachments !== "") {
-                    $attachments = count(json_decode($check->attachments, true));
+                    $attachmentIds = json_decode($check->attachments, true);
+                    $attachments = $this->accounting_attachments_model->get_attachments_by_ids($attachmentIds);
                 } else {
-                    $attachments = '';
+                    $attachments = [];
                 }
 
                 switch($check->payee_type) {
@@ -298,9 +301,10 @@ class Expenses extends MY_Controller {
         if(isset($creditCardCredits) && count($creditCardCredits) > 0) {
             foreach($creditCardCredits as $creditCardCredit) {
                 if(!is_null($creditCardCredit->attachments) && $creditCardCredit->attachments !== "") {
-                    $attachments = count(json_decode($creditCardCredit->attachments, true));
+                    $attachmentIds = json_decode($creditCardCredit->attachments, true);
+                    $attachments = $this->accounting_attachments_model->get_attachments_by_ids($attachmentIds);
                 } else {
-                    $attachments = '';
+                    $attachments = [];
                 }
 
                 switch($creditCardCredit->payee_type) {
@@ -340,9 +344,10 @@ class Expenses extends MY_Controller {
         if(isset($ccPayments) && count($ccPayments) > 0) {
             foreach($ccPayments as $ccPayment) {
                 if(!is_null($ccPayment->attachments) && $ccPayment->attachments !== "") {
-                    $attachments = count(json_decode($ccPayment->attachments, true));
+                    $attachmentIds = json_decode($ccPayment->attachments, true);
+                    $attachments = $this->accounting_attachments_model->get_attachments_by_ids($attachmentIds);
                 } else {
-                    $attachments = '';
+                    $attachments = [];
                 }
 
                 $payee = $this->vendors_model->get_vendor_by_id($ccPayment->payee_id);
@@ -369,9 +374,10 @@ class Expenses extends MY_Controller {
         if(isset($expenses) && count($expenses) > 0) {
             foreach($expenses as $expense) {
                 if(!is_null($expense->attachments) && $expense->attachments !== "") {
-                    $attachments = count(json_decode($expense->attachments, true));
+                    $attachmentIds = json_decode($expense->attachments, true);
+                    $attachments = $this->accounting_attachments_model->get_attachments_by_ids($attachmentIds);
                 } else {
-                    $attachments = '';
+                    $attachments = [];
                 }
 
                 switch($expense->payee_type) {
@@ -413,9 +419,10 @@ class Expenses extends MY_Controller {
         if(isset($purchOrders) && count($purchOrders) > 0) {
             foreach($purchOrders as $purchOrder) {
                 if(!is_null($purchOrder->attachments) && $purchOrder->attachments !== "") {
-                    $attachments = count(json_decode($purchOrder->attachments, true));
+                    $attachmentIds = json_decode($purchOrder->attachments, true);
+                    $attachments = $this->accounting_attachments_model->get_attachments_by_ids($attachmentIds);
                 } else {
-                    $attachments = '';
+                    $attachments = [];
                 }
 
                 $payee = $this->vendors_model->get_vendor_by_id($purchOrder->vendor_id);
@@ -442,9 +449,10 @@ class Expenses extends MY_Controller {
         if(isset($vendorCredits) && count($vendorCredits) > 0) {
             foreach($vendorCredits as $vendorCredit) {
                 if(!is_null($vendorCredit->attachments) && $vendorCredit->attachments !== "") {
-                    $attachments = count(json_decode($vendorCredit->attachments, true));
+                    $attachmentIds = json_decode($vendorCredit->attachments, true);
+                    $attachments = $this->accounting_attachments_model->get_attachments_by_ids($attachmentIds);
                 } else {
-                    $attachments = '';
+                    $attachments = [];
                 }
 
                 $payee = $this->vendors_model->get_vendor_by_id($vendorCredit->vendor_id);

@@ -2567,6 +2567,9 @@ class Workorder extends MY_Controller
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->page_data['users_lists'] = $this->users_model->getAllUsersByCompanyID($company_id);
         $this->page_data['companyDet'] = $this->workorder_model->companyDet($company_id);
+
+        $this->page_data['itemPackages'] = $this->workorder_model->getPackageDetailsByCompany($company_id);
+
         $this->page_data['page_title'] = "Work Order";
         // print_r($this->page_data['lead_source']);
 
@@ -3073,6 +3076,9 @@ class Workorder extends MY_Controller
                 'package_type'  => '1',
                 'total_price'   => $package_price,
                 'amount_set'    => $package_price_set,
+                'company_id'    => $company_id,
+                'created_by'    => $user_id,
+                'created_at'    => date("Y-m-d H:i:s"),
             );
     
             $dataQuery = $this->workorder_model->addPackage($datafirst);
@@ -3085,9 +3091,9 @@ class Workorder extends MY_Controller
                     $data['price']              = $price[$i];
                     $data['item_type']          = $type[$i];
                     $data['quantity']           = $quantity[$i];
-                    $data['created_by']         = $user_id;
-                    $data['company_id']         = $company_id;
-                    $data['created_at']         = date("Y-m-d H:i:s");
+                    // $data['created_by']         = $user_id;
+                    // $data['company_id']         = $company_id;
+                    // $data['created_at']         = date("Y-m-d H:i:s");
                     $addQuery2 = $this->workorder_model->addItemPackage($data);
                     
                     // echo json_encode($data);
@@ -3103,6 +3109,30 @@ class Workorder extends MY_Controller
                 // echo json_encode($this->page_data);
                 echo json_encode($this->page_data);
 
+    }
+
+    public function getPackageItemsById()
+    {
+        // $packId = $this->input->post('packId');
+
+        $items = $this->workorder_model->getPackageItemsById();
+        $this->page_data['pItems'] = $items;
+
+        echo json_encode($this->page_data);
+    }
+
+    public function addNewPackageToList()
+    {
+        $dataQuery = $this->input->post('packId');
+
+        $details = $this->workorder_model->getPackageDetails($dataQuery);
+        $pName = $this->workorder_model->getPackageName($dataQuery);
+
+        $this->page_data['details'] = $details;
+        $this->page_data['pName'] = $pName;
+
+        // echo json_encode($this->page_data);
+        echo json_encode($this->page_data);
     }
 
     public function duplicate_workorder()
@@ -4353,6 +4383,9 @@ class Workorder extends MY_Controller
         $this->page_data['users_lists'] = $this->users_model->getAllUsersByCompanyID($company_id);
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->page_data['companyDet'] = $this->workorder_model->companyDet($company_id);
+
+        $this->page_data['itemPackages'] = $this->workorder_model->getPackageDetailsByCompany($company_id);
+        $this->page_data['getPackageItems'] = $this->workorder_model->getPackageDetailsByCompany($company_id);
         
         $this->load->view('workorder/NewworkOrderAlarm', $this->page_data);
     }

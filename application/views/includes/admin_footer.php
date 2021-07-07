@@ -96,7 +96,7 @@
 <script src="<?php echo $url; ?>js/sidebar_badges.js"></script>
 <script src="<?php echo $url; ?>js/custom.js"></script>
 <script type="text/javascript"
-    src="<?php echo $url->assets?>ckeditor/ckeditor.js"></script>
+    src="<?php echo $url; ?>ckeditor/ckeditor.js"></script>
 <script>
     jQuery(document).ready(function() {
         jQuery('#smoothed').signaturePad({
