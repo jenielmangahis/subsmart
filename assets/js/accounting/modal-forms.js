@@ -348,8 +348,6 @@ $(function() {
                 rowCount = 2;
                 catDetailsInputs = $(`${modal_element} table#category-details-table tbody tr:first-child()`).html();
                 catDetailsBlank = $(`${modal_element} table#category-details-table tbody tr:nth-child(2)`).html();
-                // itemDetailsInputs = $(`${modal_element} table#item-details-table tbody tr:first-child()`).html();
-                // itemDetailsBlank = $(`${modal_element} table#item-details-table tbody tr:nth-child(2)`).html();
 
                 $(`${modal_element} table#category-details-table tbody tr:first-child()`).html(catDetailsBlank);
                 $(`${modal_element} table#category-details-table tbody tr:first-child() td:nth-child(2)`).html(1);
@@ -357,9 +355,10 @@ $(function() {
                 if($(`${modal_element} table#category-details-table tbody tr`).length > 2) {
                     $(`${modal_element} table#category-details-table tbody tr:first-child()`).remove();
                 }
+            }
 
-                // $(`${modal_element} table#item-details-table tbody tr:first-child()`).html(itemDetailsBlank);
-                // $(`${modal_element} table#item-details-table tbody tr:first-child() td:nth-child(2)`).html(1);
+            if(modal_element === '#printChecksModal') {
+                loadChecksTable();
             }
 
             $(`${modal_element} select`).select2();
@@ -472,7 +471,7 @@ $(function() {
     $(document).on('change', 'div#payrollModal select#payFrom', function() {
         var value = $(this).val();
         var el = $(this);
-        
+
         $.get('/accounting/get-account-balance/'+value, function(res) {
             var result = JSON.parse(res);
 
@@ -1496,6 +1495,16 @@ $(function() {
             var result = JSON.parse(res);
 
             $('#checkModal span#account-balance').html(result.balance);
+        });
+    });
+
+    $(document).on('change', '#printChecksModal #payment_account', function() {
+        var id = $(this).val();
+
+        $.get('/accounting/get-account-balance/'+id, function(res) {
+            var result = JSON.parse(res);
+
+            $('#printChecksModal span#account-balance').html(result.balance);
         });
     });
 
@@ -3860,11 +3869,6 @@ const loadBillPaymentBills = () => {
                 d.overdue = $('#billPaymentModal #overdue_bills_only').prop('checked');
                 d.length = parseInt($('#billPaymentModal #bills_table_rows').val());
                 d.vendor = $('#billPaymentModal #payee').val();
-                // d.bills = [];
-
-                // $('#billPaymentModal input[name="bills[]"]').each(function() {
-                //     d.bills.push($(this).val());
-                // });
 
                 return JSON.stringify(d);
             },
@@ -3939,11 +3943,6 @@ const loadBillPaymentCredits = () => {
                 d.to = $('#billPaymentModal #vcredit-to').val();
                 d.length = parseInt($('#billPaymentModal #vcredits_table_rows').val());
                 d.vendor = $('#billPaymentModal #payee').val();
-                // d.credits = [];
-
-                // $('#billPaymentModal input[name="credits[]"]').each(function() {
-                //     d.credits.push($(this).val());
-                // });
 
                 return JSON.stringify(d);
             },
@@ -3988,6 +3987,64 @@ const loadBillPaymentCredits = () => {
                         $(td).children('input').val(cellData);
                     }
                 }
+            }
+        ]
+    });
+}
+
+const loadChecksTable = () => {
+    $('#printChecksModal table#checks-table').DataTable({
+        autoWidth: false,
+        searching: false,
+        processing: true,
+        serverSide: true,
+        lengthChange: false,
+        info: false,
+        pageLength: $('#printChecksModal #table_rows').val(),
+        ordering: false,
+        ajax: {
+            url: '/accounting/load-checks/',
+            dataType: 'json',
+            contentType: 'application/json',
+            type: 'POST',
+            data: function(d) {
+                d.length = parseInt($('#printChecksModal #table_rows').val());
+                d.payment_account = $('#printChecksModal #payment_account').val();
+                d.sort = $('#printChecksModal #sort').val();
+                d.type = $('#printChecksModal #check-type').val();
+
+                return JSON.stringify(d);
+            },
+            pagingType: 'full_numbers'
+        },
+        columns: [
+            {
+                data: 'id',
+                name: 'id',
+                orderable: false,
+                fnCreatedCell: function(td, cellData, rowData, row, col) {
+                    $(td).html(`
+                    <div class="d-flex align-items-center justify-content-center">
+                        <input type="checkbox" value="${cellData}">
+                    </div>
+                    `);
+                }
+            },
+            {
+                data: 'date',
+                name: 'date'
+            },
+            {
+                data: 'type',
+                name: 'type'
+            },
+            {
+                data: 'payee',
+                name: 'payee'
+            },
+            {
+                data: 'amount',
+                name: 'amount'
             }
         ]
     });

@@ -311,6 +311,7 @@ $route['accounting/get-transaction-details/(:any)/(:any)'] = 'accounting_modals/
 $route['accounting/bill-payment-form/(:any)'] = 'accounting_modals/bill_payment_form/$1';
 $route['accounting/load-bill-payment-bills']['post'] = 'accounting_modals/load_bill_payment_bills';
 $route['accounting/load-bill-payment-credits']['post'] = 'accounting_modals/load_bill_payment_credits';
+$route['accounting/load-checks']['post'] = 'accounting_modals/load_checks';
 
 $route['accounting/lists'] = 'accounting/lists';
 

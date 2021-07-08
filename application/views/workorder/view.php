@@ -675,7 +675,7 @@ border: none;
 		         							   <!--  user info end-->
 
 		         							   <div class="table-inner">
-		         							   		<table class="table-print table-items" style="width: 100%; border-collapse: collapse;">
+		         							   		<table class=" table table-print table-items" style="width: 100%; border-collapse: collapse;">
 											            <thead>
 											                <tr>
 											                    <th style="background: #f4f4f4; text-align: center; padding: 5px 0;font-weight:bold;">#</th>
@@ -689,53 +689,31 @@ border: none;
 											            </thead>
 													            <tbody>
 																<?php foreach($workorder_items as $item){ ?>
-													                <tr class="table-items__tr">
-													                    <td style="width: 30px; text-align: center;" valign="top">  # </td>
-													                    <td valign="top"> <?php echo $item->title; ?>   </td>
-													                    <td style="width: 50px; text-align: right;" valign="top"> <?php echo $item->qty ?>  </td>
-													                    <td style="width: 80px; text-align: right;" valign="top">$<?php echo $item->costing ?></td>
-													                    <td class="hidden_mobile_view" style="width: 80px; text-align: right;" valign="top">
-																			$ 0<?php //echo $item->discount ?>
+																	<?php if($item->items_id != 0){ ?>
+																		<tr class="table-items__tr">
+																			<td style="width: 30px; text-align: center;" valign="top">  # </td>
+																			<td valign="top"> <?php echo $item->title; ?>   </td>
+																			<td style="width: 50px; text-align: right;" valign="top"> <?php echo $item->qty ?>  </td>
+																			<td style="width: 80px; text-align: right;" valign="top">$<?php echo $item->costing ?></td>
+																			<td class="hidden_mobile_view" style="width: 80px; text-align: right;" valign="top">
+																				$ 0<?php //echo $item->discount ?>
+																				</td>
+																			<td class="hidden_mobile_view" style="width: 80px; text-align: right;" valign="top">
+																				$<?php echo $item->tax ?>
+																				</td>
+																			<td style="width: 90px; text-align: right;" valign="top">$<?php $a = $item->qty * $item->costing; $b = $a + $item->tax; echo $b; ?></td>
+																		</tr>
+																	<?php }else{ ?>
+																		<tr class="table-items__tr">
+																			<td style="width: 30px; text-align: center;" valign="top">  # </td>
+																			<td valign="top" colspan="5"> <div id="PaName_<?php echo $item->package_id; ?>"></div> <br>
+																			<div id="packageItemsTitle<?php echo  $item->package_id; ?>" style="padding-left:5%;">
+																			<div id="packageItems<?php echo  $item->package_id; ?>" style="padding-left:5%;"></div>
 																			</td>
-													                    <td class="hidden_mobile_view" style="width: 80px; text-align: right;" valign="top">
-																			$<?php echo $item->tax ?>
-																			</td>
-													                    <td style="width: 90px; text-align: right;" valign="top">$<?php $a = $item->qty * $item->costing; $b = $a + $item->tax; echo $b; ?></td>
-													                </tr>
+																			<td style="width: 90px; text-align: right;" valign="top">$<?php $a = $item->qty * $item->costing; $b = $a + $item->tax; echo $b; ?></td>
+																		</tr>
 																	<?php } ?>
-																<?php // if($workorder->work_order_type_id == 1){ ?>
-																<?php //foreach($items as $item){ ?>
-													                <!-- <tr class="table-items__tr">
-													                    <td style="width: 30px; text-align: center;" valign="top">  # </td>
-													                    <td valign="top"> <?php //echo $item->item ?>   </td>
-													                    <td style="width: 50px; text-align: right;" valign="top"> <?php //echo $item->qty ?>  </td>
-													                    <td style="width: 80px; text-align: right;" valign="top">$<?php //echo $item->cost ?></td>
-													                    <td class="hidden_mobile_view" style="width: 80px; text-align: right;" valign="top">
-																			$<?php //echo $item->discount ?>
-																			</td>
-													                    <td class="hidden_mobile_view" style="width: 80px; text-align: right;" valign="top">
-																			$<?php //echo $item->tax ?>
-																			</td>
-													                    <td style="width: 90px; text-align: right;" valign="top">$<?php //echo $item->total ?></td>
-													                </tr> -->
-																	<?php //} ?>
-																<?php // }else{ ?>
-																	<?php //foreach($itemsA as $itemA){ ?>
-													                <!-- <tr class="table-items__tr">
-													                    <td style="width: 30px; text-align: center;" valign="top">  # </td>
-													                    <td valign="top"> <?php //echo $itemA->item ?>   </td>
-													                    <td style="width: 50px; text-align: right;" valign="top"> <?php //echo $itemA->qty ?>  </td>
-													                    <td style="width: 80px; text-align: right;" valign="top">$<?php //echo $itemA->cost ?></td>
-													                    <td class="hidden_mobile_view" style="width: 80px; text-align: right;" valign="top">
-																			$<?php //echo $itemA->discount ?>
-																			</td>
-													                    <td class="hidden_mobile_view" style="width: 80px; text-align: right;" valign="top">
-																			$<?php //echo $itemA->tax ?>
-																			</td>
-													                    <td style="width: 90px; text-align: right;" valign="top">$<?php //echo $itemA->total ?></td>
-													                </tr> -->
-																	<?php //} ?>
-																<?php // } ?>
+																	<?php } ?>
 													                <tr class="table-items__tr-last">
 													                    <td></td>
 													                    <td colspan="6"></td>
@@ -1115,6 +1093,79 @@ function myCopyFunction() {
   document.execCommand("copy");
 //   alert("Copied the text: " + copyText.value);
 }
+</script>
+
+<script>
+// $("#packageID").click(function () {
+$(document).ready(function()
+{
+    // $( "#packageID" ).each(function(i) {
+    //     $(this).on("click", function(){
+    //     var packId = $(this).attr('pack-id');
+    //     alert(packId);
+        $.ajax({
+            type : 'POST',
+            url : "<?php echo base_url(); ?>workorder/getPackageItemsById",
+            // data : {packId: packId },
+            dataType: 'json',
+            success: function(response){
+                var inputs = "";
+						markup = "<tr>" +
+                                "<td></td>"+
+								"<td></td>"+
+                                "<td>Item Name</td>"+
+                                "<td>Quantity</td>"+
+                                "<td>Price</td>"+
+                            "</tr>";
+                        tableBody = $("#packageItemsTitle");
+                        tableBody.append(markup);
+
+                $.each(response['pItems'], function (i, v) {
+                    // inputs += v.package_name ;
+                    markup2 = "<tr>" +
+                                "<td></td>"+
+								"<td></td>"+
+                                "<td>"+ v.title +"</td>"+
+                                "<td>"+ v.quantity +"</td>"+
+                                "<td>"+ v.price +"</td>"+
+                            "</tr>";
+                        tableBody2 = $("#packageItems"+v.package_id);
+                        tableBody2.append(markup2);
+                });
+            },
+        // });
+        // });
+    });
+});
+</script>
+
+<script>
+// $("#packageID").click(function () {
+$(document).ready(function()
+{
+    // $( "#packageID" ).each(function(i) {
+    //     $(this).on("click", function(){
+    //     var packId = $(this).attr('pack-id');
+    //     alert(packId);
+        $.ajax({
+            type : 'POST',
+            url : "<?php echo base_url(); ?>workorder/getPackageById",
+            // data : {packId: packId },
+            dataType: 'json',
+            success: function(response){
+                var inputs = "";
+                $.each(response['pName'], function (i, v) {
+                    // inputs += v.package_name ;
+                    markup2 = "<b>"+ v.pname +
+                            "</b>";
+                        tableBody2 = $("#PaName_"+v.id);
+                        tableBody2.append(markup2);
+                });
+            },
+        // });
+        // });
+    });
+});
 </script>
 
 <script>

@@ -14,27 +14,76 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body">
-                <div class="row">
-                    <div class="col-md-3">
-                        <p>To print, select the <b>Print</b> button, or right-click the PDF and select <b>Print</b>.</p>
-                        <h3>Useful links on customizing your PDF</h3>
-                        <p><a href="">How to customize your PDF (article)</a></p>
-                        <p><a href="">How to customize your PDF (video)</a></p>
-                        <p><a href="">Learn more</a></p>
+            <form action="#" id="send_sales_receipt">
+                <div class="modal-body">
+                    <div class="row pdf_preview_section">
+                        <div class="col-md-3">
+                            <p>To print, select the <b>Print</b> button, or right-click the PDF and select <b>Print</b>.
+                            </p>
+                            <h3>Useful links on customizing your PDF</h3>
+                            <p><a href="">How to customize your PDF (article)</a></p>
+                            <p><a href="">How to customize your PDF (video)</a></p>
+                            <p><a href="">Learn more</a></p>
+                        </div>
+                        <div class="col-md-9">
+                            <div class="pdf-print-preview"></div>
+                        </div>
                     </div>
-                    <div class="col-md-9">
-                        <div class="pdf-print-preview">
+                    <div class="row send_sales_receipt_section" style="display: none;">
+                        <div class="col-md-6">
+                            <div class="send_sales_receipt_form_part">
+                                <input type="text" name="sales_receipt_id" class="required" style="display: none;">
+                                <div class="form-group">
+                                    <div class="label" for="subject">Email</div>
+                                    <input type="email" name="email" class="required" value="pintonlou@gmail.com"
+                                        disabled>
+                                </div>
+                                <div class="form-group">
+                                    <div class="label" for="subject">Subject</div>
+                                    <input type="type" name="subject" class="required"
+                                        value="Reminder: Invoice [Invoice No.] from Alarm Direct, Inc" required>
+                                </div>
+                                <div class="form-group">
+                                    <div class="label" for="subject">Body</div>
+                                    <textarea name="body" class="required" rows="8" maxlength="4000" spellcheck="false"
+                                        required>Dear Anita Campbell,
 
+Please review the sales receipt below.
+We appreciate it very much.
+
+Thanks for your business!
+Alarm Direct, Inc</textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="send_sales_receipt-preview"></div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="modal-footer">
-                <a type="button" class="cancel-button" data-dismiss="modal">Cancel</a>
-                <a type="button" class="download-button" target="_blank">Download</a>
-                <a type="button" class="print-button" target="_blank">Print</a>
-            </div>
+                <div class="modal-footer">
+                    <div class="pdf_preview_section">
+                        <a type="button" class="cancel-button" data-dismiss="modal">Cancel</a>
+                        <a type="button" class="download-button" target="_blank">Download</a>
+                        <a type="button" class="print-button" target="_blank">Print</a>
+                    </div>
+                    <div class="send_sales_receipt_section">
+                        <a type="button" class="cancel-button" data-dismiss="modal">Cancel</a>
+                        <a type="button" class="download-button" target="_blank">Print</a>
+                        <button type="submit" data-submit-type="send-new" class="btn btn-success" id="checkSaved"
+                            style="border-radius: 20px 0 0 20px">Send and new</button>
+                        <button class="btn btn-success" type="button" data-toggle="dropdown"
+                            style="border-radius: 0 20px 20px 0;margin-left: -5px;">
+                            <span class="fa fa-caret-down"></span></button>
+                        <ul class="dropdown-menu dropdown-menu-right submit-submenu" role="menu">
+                            <li>
+                                <button type="submit" data-submit-type="Send-close" id="checkSaved" style="background: none;border: none; height: auto;font-size: 13px;padding: 10px;
+                                                ">Send and close</button>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
 </div>
@@ -56,6 +105,7 @@
                     method="post">
                     <input type="text" style="display: none;" value="" name="recurring_selected">
                     <input type="text" style="display: none;" value="" name="current_sales_recept_number">
+                    <input type="text" style="display: none;" value="" name="submit_type">
                     <div class="modal-body">
                         <div class="row">
                             <div class="col-md-6">
@@ -930,16 +980,20 @@
                                     <div class="dropdown" style="float: right">
                                         <button class="btn btn-dark cancel-button px-4" data-submit-type="save"
                                             type="submit">Save</button>
-                                        <button type="submit" data-submit-type="save-new" class="btn btn-success"
-                                            id="checkSaved" style="border-radius: 20px 0 0 20px">Save and new</button>
+                                        <button type="submit" data-submit-type="save-send" class="btn btn-success"
+                                            id="checkSaved" style="border-radius: 20px 0 0 20px">Save and send</button>
                                         <button class="btn btn-success" type="button" data-toggle="dropdown"
                                             style="border-radius: 0 20px 20px 0;margin-left: -5px;">
                                             <span class="fa fa-caret-down"></span></button>
-                                        <ul class="dropdown-menu dropdown-menu-right" role="menu">
+                                        <ul class="dropdown-menu dropdown-menu-right submit-submenu" role="menu">
                                             <li>
                                                 <button type="submit" data-submit-type="save-close" id="checkSaved"
                                                     style="background: none;border: none; height: auto;font-size: 13px;padding: 10px;
                                                 ">Save and close</button>
+                                            </li>
+                                            <li>
+                                                <button type="submit" data-submit-type="save-new" id="checkSaved" style="background: none;border: none; height: auto;font-size: 13px;padding: 10px;
+                                                ">Save and new</button>
                                             </li>
                                         </ul>
                                     </div>

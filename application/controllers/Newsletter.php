@@ -18,23 +18,18 @@ class Newsletter extends MY_Controller {
         
         $this->load->library('notify');
         $this->load->model('users_model');
-        
         $this->load->helper('file');
-        
         $this->load->model('feeds_model');
-        
-        
+
         $file_path = 'uploads/news/';
         $config['upload_path'] = $file_path;
         $config['allowed_types'] = 'gif|jpg|png|pdf|docx';
-        
-        
+
         $this->load->library('upload', $config);
         $this->upload->initialize($config);
         
         if (!is_dir($file_path)) {
             mkdir($file_path, 0777, TRUE);
-
         }
         
         $news = post('news');

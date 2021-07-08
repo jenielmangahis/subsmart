@@ -122,6 +122,7 @@ function setitem2(obj, title, price, discount, itemid) {
   jQuery(obj).parent().parent().find(".getItems2").val(title);
   jQuery(obj).parent().parent().parent().find(".price2").val(price);
   jQuery(obj).parent().parent().parent().find(".discount2").val(discount);
+  jQuery(obj).parent().parent().parent().find(".priceqty2").val(price);
   jQuery(obj).parent().parent().parent().find(".itemid").val(itemid);
   jQuery(obj).parent().parent().parent().find(".itemid2").val(itemid);
   var counter = jQuery(obj)
@@ -1018,7 +1019,7 @@ $(".select_item").click(function () {
             // console.log(total);
             // alert(total);
             markup = "<tr id=\"ss\">" +
-                "<td width=\"35%\"><input value='"+title+"' type=\"text\" name=\"items[]\" class=\"form-control getItems\" ><input type=\"hidden\" value='"+idd+"' name=\"item_id[]\"><div class=\"show_mobile_view\"><span class=\"getItems_hidden\">"+title+"</span></div><input type=\"hidden\" name=\"itemid[]\" id=\"itemid\" class=\"itemid\" value='"+idd+"'></td>\n" +
+                "<td width=\"35%\"><input value='"+title+"' type=\"text\" name=\"items[]\" class=\"form-control getItems\" ><input type=\"hidden\" value='"+idd+"' name=\"item_id[]\"><div class=\"show_mobile_view\"><span class=\"getItems_hidden\">"+title+"</span></div><input type=\"hidden\" name=\"itemid[]\" id=\"itemid\" class=\"itemid\" value='"+idd+"'><input type=\"hidden\" name=\"packageID[]\" value=\"0\"></td>\n" +
                 "<td width=\"20%\"><div class=\"dropdown-wrapper\"><select name=\"item_type[]\" class=\"form-control\"><option value=\"product\">Product</option><option value=\"material\">Material</option><option value=\"service\">Service</option><option value=\"fee\">Fee</option></select></div></td>\n" +
                 "<td width=\"10%\"><input data-itemid='"+idd+"' id='quantity_"+idd+"' value='"+qty+"' type=\"number\" name=\"quantity[]\" data-counter=\"0\"  min=\"0\" class=\"form-control qtyest2 mobile_qty \"></td>\n" +
                 // "<td>\n" + '<input type="number" class="form-control qtyest" name="quantity[]" data-counter="' + count + '" id="quantity_' + count + '" min="1" value="1">\n' + "</td>\n" +

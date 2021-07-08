@@ -549,7 +549,9 @@ class Workorder extends MY_Controller
 
         $this->page_data['itemsA'] = $this->workorder_model->getItemsAlarm($id);
         $this->page_data['custom_fields'] = $this->workorder_model->getCustomFields($id);
-        $this->page_data['workorder_items'] = $this->workorder_model->getworkorderItems($id);
+        
+        $WOitems = $this->workorder_model->getworkorderItems($id);
+        $this->page_data['workorder_items'] = $WOitems;
 
         $this->page_data['first'] = $this->workorder_model->getuserfirst($work->company_representative_name);
         $this->page_data['second'] = $this->workorder_model->getusersecond($work->primary_account_holder_name);
@@ -3006,16 +3008,22 @@ class Workorder extends MY_Controller
 
             if($addQuery > 0){
                 $a          = $this->input->post('itemid');
+                $packageID  = $this->input->post('packageID');
                 $quantity   = $this->input->post('quantity');
                 $price      = $this->input->post('price');
                 $h          = $this->input->post('tax');
+                $discount   = $this->input->post('discount');
+                $total      = $this->input->post('total');
 
                 $i = 0;
                 foreach($a as $row){
-                    $data['items_id'] = $a[$i];
-                    $data['qty'] = $quantity[$i];
-                    $data['cost'] = $price[$i];
-                    $data['tax'] = $h[$i];
+                    $data['items_id']       = $a[$i];
+                    $data['package_id ']    = $packageID[$i];
+                    $data['qty']            = $quantity[$i];
+                    $data['cost']           = $price[$i];
+                    $data['tax']            = $h[$i];
+                    $data['discount']       = $discount[$i];
+                    $data['total']          = $total[$i];
                     $data['work_order_id '] = $addQuery;
                     $addQuery2 = $this->workorder_model->add_work_order_details($data);
                     $i++;
@@ -3117,6 +3125,14 @@ class Workorder extends MY_Controller
 
         $items = $this->workorder_model->getPackageItemsById();
         $this->page_data['pItems'] = $items;
+
+        echo json_encode($this->page_data);
+    }
+
+    public function getPackageById()
+    {
+        $items = $this->workorder_model->getPackageById();
+        $this->page_data['pName'] = $items;
 
         echo json_encode($this->page_data);
     }
@@ -5061,22 +5077,24 @@ class Workorder extends MY_Controller
         //    redirect('workorder');
         // }
         if($addQuery > 0){
-            $a = $this->input->post('itemid');
-            $d = $this->input->post('quantity');
-            $f = $this->input->post('price');
-            $h = $this->input->post('tax');
-            $discount = $this->input->post('discount');
-            $total = $this->input->post('total');
+            $a          = $this->input->post('itemid');
+            $packageID  = $this->input->post('packageID');
+            $d          = $this->input->post('quantity');
+            $f          = $this->input->post('price');
+            $h          = $this->input->post('tax');
+            $discount   = $this->input->post('discount');
+            $total      = $this->input->post('total');
 
             $i = 0;
             foreach($a as $row){
-                $data['items_id '] = $a[$i];
+                $data['items_id ']      = $a[$i];
+                $data['package_id ']    = $packageID[$i];
                 $data['work_order_id '] = $addQuery;
-                $data['qty'] = $d[$i];
-                $data['cost'] = $f[$i];
-                $data['tax'] = $h[$i];
-                $data['discount'] = $discount[$i];
-                $data['total'] = $total[$i];
+                $data['qty']            = $d[$i];
+                $data['cost']           = $f[$i];
+                $data['tax']            = $h[$i];
+                $data['discount']       = $discount[$i];
+                $data['total']          = $total[$i];
                 $addQuery2 = $this->workorder_model->add_work_order_details($data);
                 $i++;
             }

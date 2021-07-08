@@ -407,11 +407,29 @@
 </style>
 <!-- taxes page -->
 <script src="<?php echo $url->assets ?>dashboard/js/custom.js"></script>
-<!--<script src="<?php //echo $url->assets?>dashboard/js/popper.min.js">
+
+<!-- global script that can be use all over the site pages -->
+<script>
+    function notifyUser(title,text,icon,location=null){
+        Swal.fire({
+            title: title,
+            text: text,
+            icon: icon,
+            showCancelButton: false,
+            confirmButtonColor: '#32243d',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Ok'
+        }).then((result) => {
+            if (result.value) {
+                if(location === "reload"){
+                    window.location.reload(true);
+                }else if(location !== null && location !== ""){
+                    window.location.href='<?= base_url(); ?>'+location;
+                }
+            }
+        });
+    }
 </script>
-<script src="<?php //echo $url->assets?>dashboard/js/slick.js">
-</script>
-<script src="https://kit.fontawesome.com/8db2e95406.js" crossorigin="anonymous"></script>-->
 <!-- taxes page -->
 </body>
 

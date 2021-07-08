@@ -50,8 +50,10 @@ div#addsalesreceiptModal {
     padding: 5px 10px;
 }
 
-#addsalesreceiptModal .modal-footer-check button[data-submit-type='save-new'],
-#addsalesreceiptModal .modal-footer-check button[data-toggle='dropdown'] {
+#addsalesreceiptModal .modal-footer-check button[data-submit-type='save-send'],
+#addsalesreceiptModal .modal-footer-check button[data-toggle='dropdown'],
+#sales_receipt_pdf_preview_modal .modal-footer .send_sales_receipt_section button[data-toggle='dropdown'],
+#sales_receipt_pdf_preview_modal .modal-footer button[data-submit-type='send-new'] {
     background-image: none;
     background-color: #2CA01C;
     color: #FFFFFF;
@@ -65,10 +67,23 @@ div#addsalesreceiptModal {
     margin-right: -5px;
 }
 
-#addsalesreceiptModal .modal-footer-check button[data-submit-type='save-new']:hover,
-#addsalesreceiptModal .modal-footer-check button[data-toggle='dropdown']:hover {
+#addsalesreceiptModal .modal-footer-check button[data-submit-type='save-send']:hover,
+#addsalesreceiptModal .modal-footer-check button[data-toggle='dropdown']:hover,
+#sales_receipt_pdf_preview_modal .modal-footer .send_sales_receipt_section button[data-toggle='dropdown']:hover,
+#sales_receipt_pdf_preview_modal .modal-footer button[data-submit-type='send-new']:hover {
     background-image: none;
     background-color: #108000;
+}
+
+#addsalesreceiptModal .modal-footer-check .submit-submenu>li:hover,
+#sales_receipt_pdf_preview_modal .modal-footer .submit-submenu>li:hover {
+    background-color: #ECEDF1;
+    color: #008A00;
+}
+
+#addsalesreceiptModal .modal-footer-check .submit-submenu>li button,
+#sales_receipt_pdf_preview_modal .modal-footer .submit-submenu>li button {
+    color: #333333;
 }
 
 #addsalesreceiptModal .modal-footer-check button.cancel-button {
@@ -390,11 +405,13 @@ div#saved-notification-modal-section {
     font-weight: 100;
 }
 
-#sales_receipt_pdf_preview_modal .pdf-print-preview {
+#sales_receipt_pdf_preview_modal .pdf-print-preview,
+#sales_receipt_pdf_preview_modal .send_sales_receipt_section .send_sales_receipt-preview {
     height: 65vh;
 }
 
-#sales_receipt_pdf_preview_modal .pdf-print-preview iframe {
+#sales_receipt_pdf_preview_modal .pdf-print-preview iframe,
+#sales_receipt_pdf_preview_modal .send_sales_receipt_section .send_sales_receipt-preview iframe {
     width: 100%;
     height: 100%;
     border: none;
@@ -460,4 +477,35 @@ div#saved-notification-modal-section {
     height: auto;
     border-radius: 15px;
     font-weight: 700;
+}
+
+#sales_receipt_pdf_preview_modal .send_sales_receipt_section .form-group textarea,
+#sales_receipt_pdf_preview_modal .send_sales_receipt_section .form-group input {
+    padding: 10px;
+    width: 100%;
+    border: solid 1px #BABEC5;
+    font-size: 12px;
+    color: #333333;
+    border-radius: 3px;
+    resize: none;
+}
+
+#sales_receipt_pdf_preview_modal .send_sales_receipt_section .form-group input:focus,
+#sales_receipt_pdf_preview_modal .send_sales_receipt_section .form-group textarea:focus {
+    border-color: rgba(126, 239, 104, 0.8);
+    box-shadow: 0 1px 1px rgb(0 0 0 / 8%) inset, 0 0 8px rgb(126 239 104 / 60%);
+    outline: 0 none;
+    box-shadow: none;
+    border: solid 1px #80CF03;
+    font-style: normal;
+}
+
+#sales_receipt_pdf_preview_modal .send_sales_receipt_section .form-group input[type="email"] {
+    border: none;
+    border-color: none;
+    box-shadow: none;
+    outline: 0 none;
+    box-shadow: none;
+    font-style: normal;
+    background: transparent;
 }

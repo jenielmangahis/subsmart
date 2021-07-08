@@ -6,7 +6,7 @@
             <!-- Modal content-->
             <div class="modal-content" style="height: 100%;">
                 <div class="modal-header" style="background: #f4f5f8;border-bottom: 0">
-                    <h4 class="modal-title"><a href="#"><i class="fa fa-history fa-lg" style="margin-right: 10px"></i></a>Check <span></span></h4>
+                    <h4 class="modal-title"><a href="#"><i class="fa fa-history fa-lg" style="margin-right: 10px"></i></a>Check <span>#<?=$check->to_print === "1" ? 'To print' : $check->check_no?></span></h4>
                     <button type="button" class="close" data-dismiss="modal"><i class="fa fa-times fa-lg"></i></button>
                 </div>
                 <div class="modal-body">
@@ -91,7 +91,7 @@
                                         <div class="col-md-2">
                                             <div class="form-group">
                                                 <label for="mailing_address">Mailing address</label>
-                                                <textarea name="mailing_address" id="mailing_address" class="form-control"><?=$check->mailing_address?></textarea>
+                                                <textarea name="mailing_address" id="mailing_address" class="form-control"><?=str_replace("<br />", "", $check->mailing_address)?></textarea>
                                             </div>
                                         </div>
                                         <div class="col-md-2">
@@ -104,9 +104,9 @@
                                         <div class="col-md-2">
                                             <div class="form-group">
                                                 <label for="check_no">Check no.</label>
-                                                <input type="text" name="check_no" id="check_no" class="form-control" value="<?=$check->check_no?>">
+                                                <input type="text" name="check_no" id="check_no" class="form-control" value="<?=$check->to_print === "1" ? 'To print' : $check->check_no?>" <?=$check->to_print === "1" ? 'disabled' : ''?>>
                                                 <div class="form-check">
-                                                    <input type="checkbox" name="print_later" id="print_later" class="form-check-input">
+                                                    <input type="checkbox" name="print_later" id="print_later" class="form-check-input" value="1" <?=$check->to_print === "1" ? 'checked' : ''?>>
                                                     <label for="print_later" class="form-check-label">Print later</label>
                                                 </div>
                                             </div>
