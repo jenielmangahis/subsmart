@@ -372,16 +372,13 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         </div>
         <form id="frm-upgrade-subscription" method="post">
         <div class="modal-body">
-            <?php if( $client->num_months_discounted > 0 ){ ?>
-            <p style="font-size: 18px;">Cannot upgrade plan while on discounted period</p>
-            <?php }else{ ?>
             <div class="row">
                 <div class="col-md-12">
                     <div class="card-body">                            
                         <div id="credit_card">
                             <div class="row form_line">
                                 <div class="col-md-4">
-                                    Subscription Plan
+                                    Subscription Plan <br>
                                 </div>
                                 <div class="col-md-5">
                                     <select name="plan_id" class="input_select subscription_plans" required>
@@ -460,18 +457,20 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         <input type="number" class="form-control" name="plan_amount" id="upgrade_plan_amount" value="0.00" disabled="">
                                     </div>
                                 </div>
+                                <?php if( $client->num_months_discounted > 0 ){ ?>
+                                <div class="col-md-12" style="margin-top: 20px;">
+                                    <p style="font-size: 18px;"><input type="checkbox" class="checkbox" required="" /> By upgrading you agree to discontinue the discounted period and start a new plan</p>
+                                </div>
+                                <?php } ?>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <?php } ?>
         </div>
         <div class="modal-footer">
             <button class="btn btn-default" type="button" data-dismiss="modal">Close</button>
-            <?php if( $client->num_months_discounted <= 0 ){ ?>
             <button class="btn btn-primary btn-modal-upgrade-plan" type="submit">Upgrade</button>
-            <?php } ?>
         </div>
         </form>
       </div>
