@@ -527,7 +527,7 @@ border: none;
                 </div>
             </div>
             <br> -->
-            <?php echo form_open_multipart('workorder/savenewWorkorderAlarm', [ 'class' => 'form-validate', 'autocomplete' => 'off', 'target' => '_blank' ]); ?> 
+            <?php echo form_open_multipart('workorder/savenewWorkorderAlarm', [ 'class' => 'form-validate', 'autocomplete' => 'off']); ?> 
 
 
             <div class="row">
@@ -1704,6 +1704,7 @@ border: none;
                                                 <ul class="suggestions"></ul>
                                                 <div class="show_mobile_view"><span class="getItems_hidden"></span></div>
                                                 <input type="hidden" name="itemid[]" id="itemid" class="itemid" value="0">
+                                                <input type="hidden" name="packageID[]" value="0">
                                             </td>
                                             <td width="20%">
                                             <div class="dropdown-wrapper">
@@ -1809,6 +1810,7 @@ border: none;
                                                     <ul class="suggestions"></ul>
                                                     <div class="show_mobile_view"><span class="getItems_hidden"></span></div>
                                                     <input type="hidden" name="itemid[]" id="itemid" class="itemid" value="0">
+                                                    <input type="hidden" name="packageID[]" value="0">
                                                 </td>
                                                 <td width="20%">
                                                 <div class="dropdown-wrapper">
@@ -3433,7 +3435,8 @@ var package_price_set =  $("#package_price_set").val();
         success: function(response){
 
         // console.log(result);
-        var Randnumber = 3 + Math.floor(Math.random() * 9);
+        var Randnumber = 1 + Math.floor(Math.random() * 99999);
+        // var Randnumber = Math.floor(Math.random()*(999999-1000000+1)+100);
 
         console.log(response['pName']);
 
@@ -3441,7 +3444,9 @@ var package_price_set =  $("#package_price_set").val();
                         $.each(response['pName'], function (a, b) {
                             // inputs1 += b.name;
                             var pName = b.name;
-                            var Rnumber = 3 + Math.floor(Math.random() * 9);
+                            // var Rnumber = 3 + Math.floor(Math.random() * 9);
+                            // var Rnumber = Math.floor(Math.random()*(9999-100000+1)+100);
+                            var Rnumber = Math.floor(Math.random()*(9999-10000+1)+100);
 
                         
 
@@ -3454,7 +3459,7 @@ var package_price_set =  $("#package_price_set").val();
                         // "<a href=\"#\" class=\"remove btn btn-sm btn-success\" id='"+idd+"'><i class=\"fa fa-trash\" aria-hidden=\"true\"></i></a>\n" +
                         // "</td>\n" +
                         "<td colspan=\"6\" ><h6>"+ pName +"</h6><div><table class=\"table table-hover\" ><thead><th width=\"10%\" ></th><th>Item Name</th><th>Quantity</th><th>Price</th></thead> <tbody id='packageBody"+Randnumber+"'>" +
-                        "<input type=\"hidden\" class=\"priceqty\" id='priceqty_"+Rnumber+"' value='"+b.amount_set+"'>"+
+                        "<input type=\"hidden\" class=\"priceqty\" id='priceqty_"+Rnumber+"' value='"+b.amount_set+"'><input type=\"hidden\" name=\"itemid[]\" value=\"0\"><input type=\"hidden\" name=\"packageID[]\" value='"+b.id+"'><input type=\"hidden\" name=\"quantity[]\" value=\"1\"><input type=\"hidden\" name=\"price[]\" value='"+b.amount_set+"'><input type=\"hidden\" name=\"tax[]\" value=\"0\"><input type=\"hidden\" name=\"discount[]\" value=\"0\">"+
 
                         "</tbody></table></div></td>\n" +
                         "<td style=\"text-align: center\" class=\"hidden_mobile_view\" width=\"15%\">$ <span data-subtotal='"+b.amount_set+"' id='span_total_"+Rnumber+"' class=\"total_per_item\">"+b.amount_set+
@@ -3533,7 +3538,8 @@ $(".addNewPackageToList").click(function () {
         success: function(response){
 
         // console.log(result);
-        var Randnumber = 3 + Math.floor(Math.random() * 9);
+        var Randnumber = 1 + Math.floor(Math.random() * 99999);
+        // var Randnumber = Math.floor(Math.random()*(999999-1000000+1)+100);
 
         console.log(response['pName']);
 
@@ -3541,7 +3547,8 @@ $(".addNewPackageToList").click(function () {
                         $.each(response['pName'], function (a, b) {
                             // inputs1 += b.name;
                             var pName = b.name;
-                            var Rnumber = 3 + Math.floor(Math.random() * 9);
+                            // var Rnumber = 1 + Math.floor(Math.random() * 9);
+                            var Rnumber = Math.floor(Math.random()*(9999-10000+1)+100);
 
                         
 
@@ -3554,7 +3561,7 @@ $(".addNewPackageToList").click(function () {
                         // "<a href=\"#\" class=\"remove btn btn-sm btn-success\" id='"+idd+"'><i class=\"fa fa-trash\" aria-hidden=\"true\"></i></a>\n" +
                         // "</td>\n" +
                         "<td colspan=\"6\" ><h6>"+ pName +"</h6><div><table class=\"table table-hover\" ><thead><th width=\"10%\" ></th><th>Item Name</th><th>Quantity</th><th>Price</th></thead> <tbody id='packageBody"+Randnumber+"'>" +
-                        "<input type=\"hidden\" class=\"priceqty\" id='priceqty_"+Rnumber+"' value='"+b.amount_set+"'>"+
+                        "<input type=\"hidden\" class=\"priceqty\" id='priceqty_"+Rnumber+"' value='"+b.amount_set+"'><input type=\"hidden\" name=\"itemid[]\" value=\"0\"><input type=\"hidden\" name=\"packageID[]\" value='"+b.id+"'><input type=\"hidden\" name=\"quantity[]\" value=\"1\"><input type=\"hidden\" name=\"price[]\" value='"+b.amount_set+"'><input type=\"hidden\" name=\"tax[]\" value=\"0\"><input type=\"hidden\" name=\"discount[]\" value=\"0\">"+
 
                         "</tbody></table></div></td>\n" +
                         "<td style=\"text-align: center\" class=\"hidden_mobile_view\" width=\"15%\">$ <span data-subtotal='"+b.amount_set+"' id='span_total_"+Rnumber+"' class=\"total_per_item\">"+b.amount_set+

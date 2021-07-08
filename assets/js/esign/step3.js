@@ -94,13 +94,18 @@ function Step3() {
 
       const $parent = $docPage.closest(".docPageContainer");
       const docPageHeight = $docPage.height();
-      let docPageYBottom = $parent.get(0).offsetTop + $parent.height();
-      if (index === 0) {
-        docPageYBottom = docPageYBottom - docPageHeight;
+
+      // docPageYBottom = the pixels of the very bottom of the page
+      let docPageYBottom = $parent.get(0).offsetTop;
+      if ($docPage.attr("data-page") == 1) {
+        docPageYBottom = docPageYBottom + docPageHeight;
+      } else {
+        docPageYBottom = $parent.get(0).offsetTop + $docPage.get(0).offsetTop + docPageHeight;
       }
 
-
-      if (elementYTop <= docPageYBottom) {
+      // element is sitting on the current page
+      if (elementYTop < docPageYBottom) {
+        // pageTop = is the top position of the element inside its page
         position.pageTop = elementYTop - (docPageYBottom - docPageHeight);
         docPage = parseInt($docPage.attr("data-page"));
         break;
@@ -725,13 +730,17 @@ function Step3() {
           const $parent = $docPage.closest(".docPageContainer");
           const docPageHeight = $docPage.height();
 
-          let docPageYBottom = $parent.get(0).offsetTop + $parent.height();
-          if (index === 0) {
-            docPageYBottom = docPageYBottom - docPageHeight;
+          let docPageYBottom = $parent.get(0).offsetTop;
+          if ($docPage.attr("data-page") == 1) {
+            docPageYBottom = docPageYBottom + docPageHeight;
+          } else {
+            docPageYBottom = $docPage.get(0).offsetTop + docPageHeight;
           }
 
-          if (elementYTop <= docPageYBottom) {
-            ui.position.pageTop = elementYTop - (docPageYBottom - docPageHeight);
+          // element is sitting on the current page
+          if (elementYTop < docPageYBottom) {
+            // pageTop = is the top position of the element inside its page
+            ui.position.pageTop = elementYTop - ($parent.get(0).offsetTop + $docPage.get(0).offsetTop);
             $_document = $docPage;
             break;
           }

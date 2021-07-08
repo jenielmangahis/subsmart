@@ -91,7 +91,7 @@
                                                 <label for="check_no">Check no.</label>
                                                 <input type="text" name="check_no" id="check_no" class="form-control">
                                                 <div class="form-check">
-                                                    <input type="checkbox" name="print_later" id="print_later" class="form-check-input">
+                                                    <input type="checkbox" name="print_later" id="print_later" class="form-check-input" value="1">
                                                     <label for="print_later" class="form-check-label">Print later</label>
                                                 </div>
                                             </div>
@@ -275,7 +275,7 @@
                                             </div>
                                         </div>
                                         <div class="col-md-6">
-                                            <h5 class="m-0 text-right">Total : $<span class="expense-total">0.00</span></h5>
+                                            <h5 class="m-0 text-right">Total : $<span class="transaction-total-amount">0.00</span></h5>
                                         </div>
                                     </div>
                                 </div>

@@ -2818,6 +2818,7 @@ class Accounting extends MY_Controller
         if ($this->input->post('current_sales_recept_number')!="") {
             $this->updateSalesReceipt();
         } else {
+            $customer_id=$this->input->post('customer_id');
             $new_data = array(
             'customer_id' => $this->input->post('customer_id'),
             'email' => $this->input->post('email'),
@@ -3105,15 +3106,22 @@ class Accounting extends MY_Controller
                     $data['updated_at'] = date("Y-m-d H:i:s");
                     $additem_details_id = $this->accounting_invoices_model->additem_details($data);
                     $i++;
-                    $data_table=array(
-                        'sales_receipt_id' => $addQuery,
-                        'item_details_id' => $additem_details_id
-                    );
                 }
+                $sales_receipt_file_name = 'sales_receipt_'.$addQuery.".pdf";
+                $packaging_slip_file_name = 'packaging_slip_'.$addQuery.".pdf";
+                $this->create_pdf_sales_receipt($sales_receipt_file_name, $customer_id, $addQuery, "print_sales_receipt");
+                $this->create_pdf_sales_receipt($packaging_slip_file_name, $customer_id, $addQuery, "print_packaging_slip");
+                
+                $customer_info = $this->accounting_customers_model->get_customer_by_id($customer_id);
 
-            
                 $data = new stdClass();
-                $data->email_sending_status = "not sent";
+                if ($this->input->post("submit_type")=="save-send") {
+                    $data->email_sending_status = "updated receipt has been sent";
+                }
+                $data->business_name =$customer_info->business_name;
+                $data->customer_email =$customer_info->email;
+                $data->customer_full_name =$customer_info->first_name.' '.$customer_info->last_name;
+                $data->file_location=base_url("assets/pdf/".$sales_receipt_file_name);
                 $data->count_save = 1;
                 $data->sales_receipt_id = $addQuery;
                 echo json_encode($data);
@@ -3247,17 +3255,23 @@ class Accounting extends MY_Controller
                 $data['updated_at'] = date("Y-m-d H:i:s");
                 $additem_details_id = $this->accounting_invoices_model->additem_details($data);
                 $i++;
-                $data_table=array(
-                        'sales_receipt_id' => $sales_receipt_id,
-                        'item_details_id' => $additem_details_id
-                    );
             }
+            $customer_id=$this->input->post('customer_id');
+            $sales_receipt_file_name = 'sales_receipt_'.$sales_receipt_id.".pdf";
+            $packaging_slip_file_name = 'packaging_slip_'.$sales_receipt_id.".pdf";
+            $this->create_pdf_sales_receipt($sales_receipt_file_name, $customer_id, $sales_receipt_id, "print_sales_receipt");
+            $this->create_pdf_sales_receipt($packaging_slip_file_name, $customer_id, $sales_receipt_id, "print_packaging_slip");
 
-
-
+            $customer_info = $this->accounting_customers_model->get_customer_by_id($customer_id);
 
             $data = new stdClass();
-            $data->email_sending_status = "not sent";
+            if ($this->input->post("submit_type")=="save-send") {
+                $data->email_sending_status = "updated receipt has been sent";
+            }
+            $data->business_name =$customer_info->business_name;
+            $data->customer_email =$customer_info->email;
+            $data->customer_full_name =$customer_info->first_name.' '.$customer_info->last_name;
+            $data->file_location=base_url("assets/pdf/".$sales_receipt_file_name);
             $data->count_save = 1;
             $data->sales_receipt_id = $sales_receipt_id;
             echo json_encode($data);
@@ -6021,8 +6035,8 @@ class Accounting extends MY_Controller
         $sales_receipt_items = $this->accounting_sales_receipt_model->get_sales_receipt_items($sales_number);
         $data=array(
             'business_name'=>$customer_info->business_name,
-            'business_address_street'=>$customer_info->bus_street,
-            'business_address_state'=>$customer_info->bus_city.' '.$customer_info->bus_state.' '.$customer_info->bus_postal_code,
+            'business_address_street'=>$sales_receipt_info->location_scale,
+            'business_address_state'=>"",
             'business_contact_number'=>$customer_info->business_phone,
             'business_email'=>$customer_info->business_email,
             'business_logo'=>$customer_info->business_id."/".$customer_info->business_image,
@@ -6031,8 +6045,8 @@ class Accounting extends MY_Controller
             'adjustment_value'=>$sales_receipt_info->adjustment_value,
             'receipt_date'=>$sales_receipt_info->date_created,
             'customer_full_name'=>$customer_info->first_name.' '.$customer_info->last_name,
-            'customer_adress_street'=>$customer_info->acs_mail_add,
-            'customer_address_state'=>$customer_info->acs_city.' '.$customer_info->acs_state.' '.$customer_info->acs_zip_code.' ',
+            'customer_adress_street'=>$sales_receipt_info->billing_address,
+            'customer_address_state'=>'',
             'items'=>$sales_receipt_items,
         );
         if ($action == "download_print_sales_receipt") {
@@ -6049,7 +6063,7 @@ class Accounting extends MY_Controller
     {
         $action = $this->input->post("action");
         if ($action == "print_packaging_slip") {
-            $file_name = 'sales_receipt_packaging_slip_'.$this->input->post("sales_number").".pdf";
+            $file_name = 'packaging_slip_'.$this->input->post("sales_number").".pdf";
         } else {
             $file_name = 'sales_receipt_'.$this->input->post("sales_number").".pdf";
         }
@@ -6068,17 +6082,109 @@ class Accounting extends MY_Controller
             if ($action == "download_print_sales_receipt") {
                 $file_name = 'sales_receipt_'.$sales_receipt_id.".pdf";
             } elseif ($action == "download_print_packaging_slip") {
-                $file_name = 'packaging_slip'.$sales_receipt_id.".pdf";
+                $file_name = 'packaging_slip_'.$sales_receipt_id.".pdf";
+            } else {
+                $file_name="";
             }
-            $sales_receipt_details = $this->accounting_sales_receipt_model->getSalesReceiptDetails_by_id($sales_receipt_id);
-            if ($sales_receipt_details) {
-                $customer_id = $sales_receipt_details->customer_id;
-                $this->create_pdf_sales_receipt($file_name, $customer_id, $sales_receipt_id, $action);
+            if ($file_name!="") {
+                $sales_receipt_details = $this->accounting_sales_receipt_model->getSalesReceiptDetails_by_id($sales_receipt_id);
+                if ($sales_receipt_details) {
+                    $customer_id = $sales_receipt_details->customer_id;
+                    $this->create_pdf_sales_receipt($file_name, $customer_id, $sales_receipt_id, $action);
+                } else {
+                    redirect('accounting');
+                }
             } else {
                 redirect('accounting');
             }
         } else {
             redirect('accounting');
         }
+    }
+    public function sales_receipt_send_email()
+    {
+        $sales_receipt_id = $this->input->post("sales_receipt_id");
+        $customer_email = $this->input->post("email");
+        $data = new stdClass();
+        if ($sales_receipt_id != "") {
+            $sales_receipt_details = $this->accounting_sales_receipt_model->getSalesReceiptDetails_by_id($sales_receipt_id);
+            if ($sales_receipt_details) {
+                $customer_id = $sales_receipt_details->customer_id;
+                $sales_receipt_file_name = 'sales_receipt_'.$sales_receipt_id.".pdf";
+                $packaging_slip_file_name = 'packaging_slip_'.$sales_receipt_id.".pdf";
+            
+                $customer_info = $this->accounting_customers_model->get_customer_by_id($customer_id);
+        
+                $server = MAIL_SERVER;
+                $port = MAIL_PORT;
+                $username = MAIL_USERNAME;
+                $password = MAIL_PASSWORD;
+                $from = MAIL_FROM;
+                $subject = $this->input->post("subject");
+
+                $mail = new PHPMailer(true);
+                $mail->isSMTP();
+                $mail->getSMTPInstance()->Timelimit = 5;
+                $mail->Host = $server;
+                $mail->SMTPAuth = true;
+                $mail->Username = $username;
+                $mail->Password = $password;
+                $mail->SMTPSecure = 'ssl';
+                $mail->Timeout = 10; // seconds
+                $mail->Port = $port;
+                $mail->From = $from;
+                $mail->FromName = 'nSmarTrac';
+                $mail->Subject = $subject;
+
+                //get job data
+
+                $this->page_data['company_name'] = $customer_info->business_name;
+                $this->page_data['customer_name'] = $customer_info->first_name ." ".$customer_info->last_name;
+                $this->page_data['sales_receipt_file_name'] = base_url("assets/pdf/".$sales_receipt_file_name);
+                $this->page_data['packaging_slip_file_name'] = base_url("assets/pdf/".$packaging_slip_file_name);
+                $this->page_data['has_logo'] = false;
+                $this->page_data['email_body'] = $this->input->post("body");
+                $this->page_data['sales_receipt_id'] = $sales_receipt_id;
+                // $this->load->view('accounting/customer_includes/html_email_print', $this->page_data);
+                $mail->IsHTML(true);
+                $mail->AddEmbeddedImage(dirname(__DIR__, 2) . '/assets/dashboard/images/logo.png', 'logo_2u', 'logo.png');
+                $filePath = base_url() . '/uploads/users/business_profile/'.$customer_info->business_id.'/'.$customer_info->business_image;
+                if (@getimagesize($filePath)) {
+                    $mail->AddEmbeddedImage(dirname(__DIR__, 2) . '/uploads/users/business_profile/'.$customer_info->business_id.'/'.$customer_info->business_image, 'company_logo', $customer_info->business_image);
+                    $this->page_data['has_logo'] = true;
+                }
+
+                $mail->Body =  'Receive Payment.';
+                $content = $this->load->view('accounting/customer_includes/sales_receipt/sales_receipt_send_email', $this->page_data, true);
+                $mail->MsgHTML($content);
+                $mail->addAddress($customer_email);
+                if (!$mail->Send()) {
+                    $data->status="Message could not be sent. <br> ".'Mailer Error: ' . $mail->ErrorInfo;
+                    exit;
+                } else {
+                    $data->status= "success";
+                }
+            }
+        } else {
+            $data->status="data invalid";
+        }
+        echo json_encode($data);
+    }
+    public function sample_email()
+    {
+        $this->page_data['company_name'] = "Sample Company";
+        $this->page_data['customer_name'] = "Sample Customer";
+        $this->page_data['sales_receipt_file_name'] = "link";
+        $this->page_data['packaging_slip_file_name'] = "link2";
+        $this->page_data['has_logo'] = false;
+        $this->page_data['email_body'] = 'Dear Sample Name,
+
+        Please review the sales receipt below.
+        We appreciate it very much.
+                                    
+        Thanks for your business!
+        Sample Company' ;
+        $this->page_data['sales_receipt_id'] = "1234";
+        $this->load->view('accounting/customer_includes/sales_receipt/sales_receipt_send_email', $this->page_data);
     }
 }

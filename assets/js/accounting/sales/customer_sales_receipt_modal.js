@@ -9,7 +9,10 @@ $(document).on("click", "#addsalesreceiptModal .modal-footer-check  #closeCheckM
     $("#addsalesreceiptModal").modal('hide');
 });
 
+
+
 function save_sales_receipt(submit_type, element) {
+    $("#addsalesreceiptModal form input[name='submit_type']").val(submit_type);
     Swal.fire({
         title: "Save Sales Receipt?",
         html: "Are you sure you want to save this?",
@@ -28,15 +31,32 @@ function save_sales_receipt(submit_type, element) {
                 data: $("#addsalesreceiptModal form").serialize(),
                 success: function(data) {
                     if (data.count_save > 0) {
-                        if (submit_type == "save-send" && data.email_sending_status ==
-                            "success") {
-                            Swal.fire({
-                                showConfirmButton: false,
-                                timer: 2000,
-                                title: "Success",
-                                html: "Sales receipt has been saved and sent.",
-                                icon: "success",
-                            });
+                        if (submit_type == "save-send") {
+                            $('#sales_receipt_pdf_preview_modal').modal('show');
+                            $('#sales_receipt_pdf_preview_modal .send_sales_receipt_section').show();
+                            $('#sales_receipt_pdf_preview_modal .pdf_preview_section').hide();
+                            $('#sales_receipt_pdf_preview_modal .modal-title').html("Send email");
+                            $('#sales_receipt_pdf_preview_modal form#send_sales_receipt input[name="sales_receipt_id"]').val(data.sales_receipt_id);
+                            $('#sales_receipt_pdf_preview_modal form#send_sales_receipt input[name="email"]').val(data.customer_email);
+                            $('#sales_receipt_pdf_preview_modal form#send_sales_receipt input[name="subject"]').val("Sales Receipt " + data.sales_receipt_id + " from " + data.business_name);
+                            $('#sales_receipt_pdf_preview_modal form#send_sales_receipt textarea[name="body"]').val(`Dear ` + data.customer_full_name + `,
+
+Please review the sales receipt below.
+We appreciate it very much.
+                            
+Thanks for your business!
+` + data.business_name);
+                            $("#sales_receipt_pdf_preview_modal .modal-footer .send_sales_receipt_section .download-button").attr('href', data.file_location);
+                            $("#sales_receipt_pdf_preview_modal .send_sales_receipt_section .send_sales_receipt-preview").html(
+                                '<iframe src="' + data.file_location + '"></iframe>');
+
+                            // Swal.fire({
+                            //     showConfirmButton: false,
+                            //     timer: 2000,
+                            //     title: "Success",
+                            //     html: "Sales receipt has been saved and sent.",
+                            //     icon: "success",
+                            // });
                         } else {
                             $("#saved-notification-modal-section").fadeIn();
                             $("#saved-notification-modal-section .body").slideDown("slow");
@@ -147,7 +167,12 @@ $('#addsalesreceiptModal').on('hidden.bs.modal', function() {
     $('#addsalesreceiptModal form').trigger("reset");
     $("#addsalesreceiptModal #grand_total_sr_t").removeClass("hidden");
     $("#addsalesreceiptModal .label-grand_total_sr_t").removeClass("hidden");
-})
+});
+$('#sales_receipt_pdf_preview_modal').on('hidden.bs.modal', function() {
+    $('#sales_receipt_pdf_preview_modal .pdf_preview_section').show();
+    $('#sales_receipt_pdf_preview_modal .modal-title').html("Print preview");
+    $('#sales_receipt_pdf_preview_modal .send_sales_receipt_section').hide();
+});
 
 
 $(document).on("click", function(event) {
@@ -170,6 +195,75 @@ $(document).on("click", "#addsalesreceiptModal .pint-pries-option-section .print
 $(document).on("click", "#addsalesreceiptModal .pint-pries-option-section .print-slip", function(event) {
     event.preventDefault();
     generate_pdf("print_packaging_slip");
+});
+$(document).on("click", "#sales_receipt_pdf_preview_modal form#send_sales_receipt button[type='submit']", function(event) {
+    var send_type = $(this).attr("data-submit-type");
+    var empty_flds = 0;
+    var sales_receipt_id = $("#sales_receipt_pdf_preview_modal form#send_sales_receipt input[name='sales_receipt_id']").val();
+    var email = $("#sales_receipt_pdf_preview_modal form#send_sales_receipt input[name='email']").val();
+    var body = $("#sales_receipt_pdf_preview_modal form#send_sales_receipt textarea[name='body']").val();
+    var subject = $("#sales_receipt_pdf_preview_modal form#send_sales_receipt input[name='subject']").val();
+    $("#sales_receipt_pdf_preview_modal form#send_sales_receipt .required").each(function() {
+        if (!$.trim($(this).val())) {
+            empty_flds++;
+        }
+    });
+    if (empty_flds == 0) {
+        Swal.fire({
+            title: "Send?",
+            html: "Are you sure you want to send this?",
+            showCancelButton: true,
+            imageUrl: baseURL + "/assets/img/accounting/customers/message.png",
+            cancelButtonColor: "#d33",
+            confirmButtonColor: "#2ca01c",
+            confirmButtonText: "Send now",
+        }).then((result) => {
+            if (result.value) {
+                $.ajax({
+                    url: baseURL + "/accounting/sales_receipt_send_email",
+                    type: "POST",
+                    dataType: "json",
+                    data: {
+                        sales_receipt_id: sales_receipt_id,
+                        email: email,
+                        body: body,
+                        subject: subject
+                    },
+                    success: function(data) {
+                        if (data.status == "success") {
+                            Swal.fire({
+                                showConfirmButton: false,
+                                timer: 2000,
+                                title: "Success",
+                                html: "Messages sent!",
+                                icon: "success",
+                            });
+                            if (send_type == "send-new") {
+                                $('#sales_receipt_pdf_preview_modal').modal('hide');
+                            } else {
+                                $('#sales_receipt_pdf_preview_modal').modal('hide');
+                                $('#addsalesreceiptModal').modal('hide');
+                            }
+                            $('#addsalesreceiptModal form').trigger("reset");
+                            $("#addsalesreceiptModal .modal-title .sales_receipt_number").html("");
+                        } else {
+                            Swal.fire({
+                                showConfirmButton: false,
+                                timer: 2000,
+                                title: "Error",
+                                html: "Unable to send the reminder.<br>" + data.error,
+                                icon: "error",
+                            });
+                        }
+                    },
+                });
+            }
+        });
+    }
+});
+
+$("#sales_receipt_pdf_preview_modal form#send_sales_receipt").submit(function(event) {
+    event.preventDefault();
 });
 
 
@@ -203,8 +297,8 @@ function generate_pdf(action = "") {
                 success: function(data2) {
                     $("#sales_receipt_pdf_preview_modal .pdf-print-preview").html(
                         '<iframe src="' + data2.file_location + '"></iframe>');
-                    $("#sales_receipt_pdf_preview_modal .print-button").attr("href", data2.file_location);
-                    $("#sales_receipt_pdf_preview_modal .download-button").attr("href", baseURL + "accounting/download_sales_receipt/" + $("#addsalesreceiptModal form input[name='current_sales_recept_number']").val() + "/download_" + action);
+                    $("#sales_receipt_pdf_preview_modal .pdf_preview_section .print-button").attr("href", data2.file_location);
+                    $("#sales_receipt_pdf_preview_modal .pdf_preview_section .download-button").attr("href", baseURL + "accounting/download_sales_receipt/" + $("#addsalesreceiptModal form input[name='current_sales_recept_number']").val() + "/download_" + action);
                 },
             });
         },

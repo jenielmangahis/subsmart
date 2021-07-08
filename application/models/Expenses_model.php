@@ -902,4 +902,26 @@ class Expenses_model extends MY_Model
         $query = $this->db->get('accounting_vendor_credit');
         return $query->result();
     }
+
+    public function get_checks_to_print($filters = [])
+    {
+        $this->db->where('company_id', logged('company_id'));
+        $this->db->where('status', 1);
+        $this->db->where('to_print', 1);
+        $this->db->where('check_no', null);
+        $this->db->where('bank_account_id', $filters['payment_account']);
+        $query = $this->db->get('accounting_check');
+        return $query->result();
+    }
+
+    public function get_bill_payments_to_print($filters = [])
+    {
+        $this->db->where('company_id', logged('company_id'));
+        $this->db->where('status', 1);
+        $this->db->where('to_print_check_no', 1);
+        $this->db->where('check_no', null);
+        $this->db->where('payment_account_id', $filters['payment_account']);
+        $query = $this->db->get('accounting_bill_payments');
+        return $query->result();
+    }
 }

@@ -19,6 +19,7 @@ class Dashboard extends Widgets {
         $this->load->model('Crud', 'crud');
         $this->load->model('taskhub_status_model');
         $this->load->model('Activity_model', 'activity');
+        $this->load->model('General_model', 'general');
 
         add_css(array(
            // 'https://cdn.datatables.net/select/1.3.1/css/select.dataTables.min.css',
@@ -156,6 +157,15 @@ class Dashboard extends Widgets {
         $this->page_data['upcomingEvents'] = $this->event_model->getAllUpComingEventsByCompanyId(logged('company_id'));
         $this->page_data['widgets'] = $this->widgets_model->getWidgetListPerUser($user_id);
         $this->page_data['status_arr'] = $status_arr;
+
+        // get customer subscription history
+        $feeds_query = array(
+            'where' => array('company_id' => logged('company_id')),
+            'table' => 'feed',
+            'select' => '*',
+        );
+        $this->page_data['feeds'] = $this->general->get_data_with_param($feeds_query);
+
         $this->load->view('dashboard', $this->page_data);
     }
     

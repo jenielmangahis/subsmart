@@ -255,6 +255,15 @@ class Workorder_model extends MY_Model
         // return $query2->result();
     }
 
+    public function getPackageById()
+    {
+        $this->db->select('*, name AS pname');
+		$this->db->from('package_details');
+        // $this->db->where('package_id', $id);
+        $query2 = $this->db->get();
+        return $query2->result();
+    }
+
     public function getPackageName($id)
     {
         $this->db->select('*');
@@ -1488,9 +1497,16 @@ class Workorder_model extends MY_Model
         // $this->db->from('work_orders');
         // $this->db->join('acs_profile', 'work_orders.customer_id  = acs_profile.prof_id');
 
+        // $this->db->select('*, package_details.name AS package_name ');
+		// $this->db->from('item_package');
+        // $this->db->join('package_details', 'item_package.package_id  = package_details.id');
+        // $this->db->join('items', 'item_package.item_id  = items.id');
+        // $this->db->where('package_id', $id);
+
         $this->db->select('*, work_orders_items.cost as costing');
 		$this->db->from('work_orders_items');
         $this->db->join('items', 'work_orders_items.items_id  = items.id');
+        // $this->db->join('package_details', 'work_orders_items.package_id  = package_details.id');
         $this->db->where('work_order_id', $id);
         $query2 = $this->db->get();
         return $query2->result();

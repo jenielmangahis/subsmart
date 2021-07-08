@@ -526,6 +526,46 @@ class Accounting_modals extends MY_Controller {
                     $this->page_data['dropdown']['bank_credit_accounts'] = $creditCardAccs;
                     $this->page_data['dropdown']['vendors'] = $this->vendors_model->getAllByCompany();
                 break;
+                case 'print_checks_modal' :
+                    $paymentAccs = [];
+                    $accountTypes = [
+                        'Bank',
+                        'Credit Card'
+                    ];
+
+                    $count = 1;
+                    foreach($accountTypes as $typeName) {
+                        $accType = $this->account_model->getAccTypeByName($typeName);
+
+                        $accounts = $this->chart_of_accounts_model->getByAccountType($accType->id, null, logged('company_id'));
+
+                        if(count($accounts) > 0) {
+                            foreach($accounts as $account) {
+                                $childAccs = $this->chart_of_accounts_model->getChildAccounts($account->id);
+
+                                $account->childAccs = $childAccs;
+
+                                $paymentAccs[$typeName][] = $account;
+
+                                if($count === 1) {
+                                    $selectedBalance = $account->balance;
+                                }
+    
+                                $count++;
+                            }
+                        }
+                    }
+
+                    if(strpos($selectedBalance, '-') !== false) {
+                        $balance = str_replace('-', '', $selectedBalance);
+                        $selectedBalance = '-$'.number_format($balance, 2, '.', ',');
+                    } else {
+                        $selectedBalance = '$'.number_format($selectedBalance, 2, '.', ',');
+                    }
+
+                    $this->page_data['dropdown']['payment_accounts'] = $paymentAccs;
+                    $this->page_data['balance'] = $selectedBalance;
+                break;
             }
 
             $this->load->view("accounting/modals/". $view, $this->page_data);
@@ -2779,9 +2819,10 @@ class Accounting_modals extends MY_Controller {
                 'payee_type' => $payee[0],
                 'payee_id' => $payee[1],
                 'bank_account_id' => $data['bank_account'],
-                'mailing_address' => $data['mailing_address'],
+                'mailing_address' => nl2br($data['mailing_address']),
                 'payment_date' => date("Y-m-d", strtotime($data['payment_date'])),
-                'check_no' => $data['check_no'] === 'To print' ? null : $data['check_no'],
+                'check_no' => isset($data['print_later']) ? null : $data['check_no'] === '' ? null : $data['check_no'],
+                'to_print' => $data['print_later'],
                 'permit_no' => $data['permit_number'] === "" ? null : $data['permit_number'],
                 'tags' => $data['tags'] !== null ? json_encode($data['tags']) : null,
                 'memo' => $data['memo'],
@@ -4237,6 +4278,73 @@ class Accounting_modals extends MY_Controller {
         $result = [
             'draw' => $post['draw'],
             'recordsTotal' => count($credits),
+            'recordsFiltered' => count($data),
+            'data' => array_slice($data, $start, $limit)
+        ];
+
+        echo json_encode($result);
+    }
+
+    public function load_checks()
+    {
+        $post = json_decode(file_get_contents('php://input'), true);
+        $start = $post['start'];
+        $limit = $post['length'];
+        $paymentAcc = $post['payment_account'];
+        $sort = $post['sort'];
+        $type = $post['type'];
+
+        $filters = [
+            'payment_account' => $paymentAcc
+        ];
+
+        switch($type) {
+            case 'regular' :
+                $checks = $this->expenses_model->get_checks_to_print($filters);
+                $totalCount = count($checks);
+            break;
+            case 'bill-payment' :
+                $billPayments = $this->expenses_model->get_bill_payments_to_print($filters);
+                $totalCount = count($billPayments);
+            break;
+            default :
+                $checks = $this->expenses_model->get_checks_to_print($filters);
+                $billPayments = $this->expenses_model->get_bill_payments_to_print($filters);
+                $totalCount = count($checks) + count($billPayments);
+            break;
+        }
+
+        $data = [];
+        if(isset($checks) && count($checks) > 0) {
+            foreach($checks as $check) {
+                switch($check->payee_type) {
+                    case 'vendor' :
+                        $payee = $this->vendors_model->get_vendor_by_id($check->payee_id);
+                        $payeeName = $payee->display_name;
+                    break;
+                    case 'customer' :
+                        $payee = $this->accounting_customers_model->get_customer_by_id($check->payee_id);
+                        $payeeName = $payee->first_name . ' ' . $payee->last_name;
+                    break;
+                    case 'employee' : 
+                        $payee = $this->users_model->getUser($check->payee_id);
+                        $payeeName = $payee->FName . ' ' . $payee->LName;
+                    break;
+                }
+
+                $data[] = [
+                    'id' => $check->id,
+                    'date' => date("m/d/Y", strtotime($check->payment_date)),
+                    'type' => 'Check',
+                    'payee' => $payeeName,
+                    'amount' => '$'.number_format($check->total_amount, 2, '.', ',')
+                ];
+            }
+        }
+
+        $result = [
+            'draw' => $post['draw'],
+            'recordsTotal' => $totalCount,
             'recordsFiltered' => count($data),
             'data' => array_slice($data, $start, $limit)
         ];
