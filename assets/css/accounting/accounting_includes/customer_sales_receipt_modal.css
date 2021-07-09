@@ -354,6 +354,10 @@ div#sales_receipt_pdf_preview_modal {
     color: #fff;
 }
 
+#addsalesreceiptModal form label {
+    font-size: 12px;
+}
+
 #addsalesreceiptModal .pint-pries-option-section ul li:hover a {
     color: #fff;
 }
@@ -508,4 +512,24 @@ div#saved-notification-modal-section {
     box-shadow: none;
     font-style: normal;
     background: transparent;
+}
+
+.error-message-section .error-message {
+    border: solid 1px #DC3C1E;
+    padding: 10px 20px;
+    margin-top: 10px;
+}
+
+.error-message-section .error-message h3.title {
+    color: #DC3C1E;
+    font-size: 16px;
+}
+
+.error-message-section .error-message label {
+    font-size: 10px;
+    color: #444444;
+}
+
+.tax-hide {
+    display: none;
 }
