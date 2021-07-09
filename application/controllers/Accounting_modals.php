@@ -3323,23 +3323,26 @@ class Accounting_modals extends MY_Controller {
                 }
 
                 $vendor = $this->vendors_model->get_vendor_by_id($payee);
-                $openVCredits = $this->expenses_model->get_vendor_unapplied_vendor_credits($payee);
-                $vCreditPercentage = number_format($payeeTotal / floatval($vendor->vendor_credits) * 100, 2, '.', ',');
-
                 $appliedVCredits = [];
-                foreach($openVCredits as $vCredit) {
-                    $balance = floatval($vCredit->remaining_balance);
-                    $subtracted = number_format($balance / 100 * $vCreditPercentage, 2, '.', ',');
-                    $appliedVCredits[$vCredit->id] = $subtracted;
-                    $remainingBal = $balance - $subtracted;
 
-                    $vCreditData = [
-                        'status' => $remainingBal === 0 ? 2 : 1,
-                        'remaining_balance' => $remainingBal,
-                        'updated_at' => date("Y-m-d H:i:s")
-                    ];
+                if(!is_null($vendor->vendor_credits) && $vendor->vendor_credits > 0) {
+                    $openVCredits = $this->expenses_model->get_vendor_unapplied_vendor_credits($payee);
+                    $vCreditPercentage = number_format($payeeTotal / floatval($vendor->vendor_credits) * 100, 2, '.', ',');
 
-                    $this->vendors_model->update_vendor_credit($vCredit->id, $vCreditData);
+                    foreach($openVCredits as $vCredit) {
+                        $balance = floatval($vCredit->remaining_balance);
+                        $subtracted = number_format($balance / 100 * $vCreditPercentage, 2, '.', ',');
+                        $appliedVCredits[$vCredit->id] = $subtracted;
+                        $remainingBal = $balance - $subtracted;
+
+                        $vCreditData = [
+                            'status' => $remainingBal === 0 ? 2 : 1,
+                            'remaining_balance' => $remainingBal,
+                            'updated_at' => date("Y-m-d H:i:s")
+                        ];
+
+                        $this->vendors_model->update_vendor_credit($vCredit->id, $vCreditData);
+                    }
                 }
 
                 $billPayment = [
@@ -4332,15 +4335,67 @@ class Accounting_modals extends MY_Controller {
                     break;
                 }
 
+                if(strpos($check->total_amount, '-') !== false) {
+                    $total = str_replace('-', '', $check->total_amount);
+                    $amount = '-$'.number_format($total, 2, '.', ',');
+                } else {
+                    $amount = '$'.number_format($check->total_amount, 2, '.', ',');
+                }
+
                 $data[] = [
                     'id' => $check->id,
                     'date' => date("m/d/Y", strtotime($check->payment_date)),
                     'type' => 'Check',
                     'payee' => $payeeName,
-                    'amount' => '$'.number_format($check->total_amount, 2, '.', ',')
+                    'amount' => $amount,
+                    'order_created' => strtotime($check->created_at)
                 ];
             }
         }
+
+        if(isset($billPayments) && count($billPayments) > 0) {
+            foreach($billPayments as $payment) {
+                $payee = $this->vendors_model->get_vendor_by_id($payment->payee_id);
+                $payeeName = $payee->display_name;
+
+                $paymentAcc = $this->chart_of_accounts_model->getById($billPayment->payment_account_id);
+                $paymentAccType = $this->account_model->getById($paymentAcc->account_id);
+                $paymentType = $paymentAccType->account_name === 'Bank' ? 'Check' : 'Credit Card';
+
+                if(strpos($payment->total_amount, '-') !== false) {
+                    $total = str_replace('-', '', $payment->total_amount);
+                    $amount = '-$'.number_format($total, 2, '.', ',');
+                } else {
+                    $amount = '$'.number_format($payment->total_amount, 2, '.', ',');
+                }
+
+                $data[] = [
+                    'id' => $payment->id,
+                    'date' => date("m/d/Y", strtotime($payment->payment_date)),
+                    'type' => 'Bill Payment ('.$paymentType.')',
+                    'payee' => $payeeName,
+                    'amount' => $amount,
+                    'order_created' => strtotime($payment->created_at)
+                ];
+            }
+        }
+
+        usort($data, function($a, $b) use ($sort) {
+            switch($sort) {
+                case 'payee' :
+                    return strcmp($b['payee'], $a['payee']);
+                break;
+                case 'order-created' :
+                    return $a['order_created'] > $b['order_created'];
+                break;
+                case 'date-payee' :
+                    return strtotime($a['date']) > strtotime($b['date']) || strtotime($a['date']) > strtotime($b['date']) && strcmp($b['payee'], $a['payee']);
+                break;
+                case 'date-order-created' :
+                    return strtotime($a['date']) > strtotime($b['date']) || strtotime($a['date']) > strtotime($b['date']) && $a['order_created'] > $b['order_created'];
+                break;
+            }
+        });
 
         $result = [
             'draw' => $post['draw'],

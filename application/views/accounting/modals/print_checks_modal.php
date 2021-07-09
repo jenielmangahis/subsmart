@@ -47,7 +47,7 @@
                                             </div>
                                         </div>
                                         <div class="col-md-4">
-                                            <button class="btn btn-transparent float-right" type="button">Add check</button>
+                                            <button class="btn btn-transparent float-right" type="button" id="add-check-button">Add check</button>
                                         </div>
                                     </div>
                                     <div class="row">

@@ -68,6 +68,33 @@ class Estimate_model extends MY_Model
         return true;
     }
 
+    public function getDataByESTID($id)
+    {
+        $this->db->select('*');
+		$this->db->from('estimates');
+		$this->db->where('id', $id);
+		$query = $this->db->get();
+		return $query->row();
+    }
+
+    public function getlastInsertByComp($company_id){
+
+        $where = array(
+            'view_flag'     => '0',
+            'company_id'   => $company_id
+          );
+
+        $this->db->select('*');
+        $this->db->from('estimates');
+        $this->db->where($where);
+        $this->db->order_by('estimate_number', 'DESC');
+        $this->db->limit(1);
+
+        // $query = $this->db->query("SELECT * FROM date_data ORDER BY id DESC LIMIT 1");
+        $result = $this->db->get();
+        return $result->result();
+    }
+
     public function delete_items($id)
     {
         $where = array(
@@ -362,6 +389,13 @@ class Estimate_model extends MY_Model
 	    $insert = $this->db->insert_id();
 		return  $insert;
 	}
+
+    public function add_estimate_details($data)
+    {
+        $vendor = $this->db->insert('estimates_items', $data);
+	    $insert_id = $this->db->insert_id();
+		return  $insert_id;
+    }
 }
 
 /* End of file Estimate_model.php */

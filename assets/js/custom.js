@@ -100,6 +100,7 @@ function getItemsOption2(obj) {
 }
 
 function setitem(obj, title, price, discount, itemid) {
+  alert('here');
   // var total = price * 1;
   jQuery(obj).parent().parent().find(".getItems").val(title);
   jQuery(obj).parent().parent().find(".getItems_hidden").text(title);
@@ -2457,6 +2458,7 @@ function calculation2(counter) {
 
   $("#span_total2_" + counter).text(total);
   $("#tax2_" + counter).text(tax1);
+  $("#tax2_1_" + counter).val(tax1);
   $("#discount2_" + counter).val(discount);
 
   if( $('#tax2_'+ counter).length ){
@@ -2500,7 +2502,7 @@ function calculation2(counter) {
 
   var subtotaltaxx = 0;
   // $("#span_total_0").each(function(){
-    $('*[id^="tax2_0"]').each(function(){
+    $('*[id^="tax2_"]').each(function(){
       subtotaltaxx += parseFloat($(this).val());
   });
 
@@ -2511,7 +2513,7 @@ function calculation2(counter) {
   $("#eqpt_cost").val(eqpt_cost);
   $("#total_discount").val(total_discount);
   $("#span_sub_total_0").text(total_discount);
-  $("#span_sub_total_invoice2").text(stotal_cost);
+  $("#span_sub_total_invoice2").text(subtotal.toFixed(2));
   $("#item_total2").val(subtotal.toFixed(2));
   
   var s_total = subtotal.toFixed(2);
@@ -2520,6 +2522,7 @@ function calculation2(counter) {
   var markup = $("#markup_input_form").val();
   var grand_total_w = grand_total + parseFloat(markup);
 
+  // $("#total_tax2_1_").text(subtotaltaxx.toFixed(2));
   $("#total_tax2_").text(subtotaltaxx.toFixed(2));
   $("#total_tax2_input").val(subtotaltaxx.toFixed(2));
   
@@ -2528,12 +2531,12 @@ function calculation2(counter) {
   $("#grand_total_input2").val(grand_total_w.toFixed(2));
   $("#grandtotal_input").val(grand_total_w.toFixed(2));
 
-  if($("#grand_total").length && $("#grand_total").val().length)
+  if($("#grand_total2").length && $("#grand_total2").val().length)
   {
     // console.log('none');
     // alert('none');
   }else{
-    $("#grand_total").text(grand_total_w.toFixed(2));
+    $("#grand_total2").text(grand_total_w.toFixed(2));
     $("#grand_total_input").val(grand_total_w.toFixed(2));
     $("#grand_total_inputs").val(grand_total_w.toFixed(2));
 
@@ -3017,6 +3020,129 @@ $("#total_tax_").text(over_tax);
   $("#grand_total").text(grand_total_w.toFixed(2));
   $("#grand_total_input").val(grand_total_w.toFixed(2));
   $("#grand_total_inputs").val(grand_total_w.toFixed(2));
+
+  var sls = (parseFloat(eqpt_cost).toFixed(2) * 7.5) / 100;
+  sls = parseFloat(sls).toFixed(2);
+  $("#sales_tax").val(sls);
+  cal_total_due();
+});
+
+$(document).on("click", ".remove2", function (e) {
+  e.preventDefault();
+  $(this).parent().parent().remove();
+  var idd = this.id;
+  var count = parseInt($("#count").val()) - 1;
+  $("#count").val(count);
+  // calculation(count);
+
+
+  var in_id = idd;
+  var price = $("#price2_" + in_id).val();
+  var quantity = $("#quantity2_" + in_id).val();
+  var discount = $("#discount2_" + in_id).val();
+  var tax = (parseFloat(price) * 7.5) / 100;
+  var tax1 = (((parseFloat(price) * 7.5) / 100) * parseFloat(quantity)).toFixed(
+    2
+  );
+  if( discount == '' ){
+    discount = 0;
+  }
+  
+  var total = (
+    (parseFloat(price) + parseFloat(tax)) * parseFloat(quantity) -
+    parseFloat(discount)
+  ).toFixed(2);
+
+  // alert( 'yeah' + total);
+
+  $("#span_total2_" + in_id).text(total);
+  $("#tax2_" + in_id).text(tax1);
+  $("#tax2_1_" + in_id).val(tax1);
+  $("#discount2_" + in_id).val(discount);
+
+  if( $('#tax2_'+ in_id).length ){
+    $('#tax2_'+in_id).val(tax1);
+  }
+
+  if( $('#item_total2_'+ in_id).length ){
+    $('#item_total2_'+in_id).val(total);
+  }
+
+  var eqpt_cost = 0;
+  var cnt = $("#count2").val();
+  var total_discount = 0;
+  var total_cost = 0;
+  for (var p = 0; p <= cnt; p++) {
+    var prc = $("#price2_" + p).val();
+    var quantity = $("#quantity2_" + p).val();
+    var discount = $("#discount2_" + p).val();
+    // var discount= $('#discount_' + p).val();
+    // eqpt_cost += parseFloat(prc) - parseFloat(discount);
+    total_cost += parseFloat(prc);
+    eqpt_cost += parseFloat(prc) * parseFloat(quantity);
+    total_discount += parseFloat(discount);
+  }
+//   var subtotal = 0;
+// $( total ).each( function(){
+//   subtotal += parseFloat( $( this ).val() ) || 0;
+// });
+
+  eqpt_cost = parseFloat(eqpt_cost).toFixed(2);
+  total_discount = parseFloat(total_discount).toFixed(2);
+  stotal_cost = parseFloat(total_cost).toFixed(2);
+  // var test = 5;
+
+  var subtotal = 0;
+  // $("#span_total_0").each(function(){
+    $('*[id^="span_total2_"]').each(function(){
+    subtotal += parseFloat($(this).text());
+  });
+  // $('#sum').text(subtotal);
+
+  var subtotaltaxx = 0;
+  // $("#span_total_0").each(function(){
+    $('*[id^="tax2_"]').each(function(){
+      subtotaltaxx += parseFloat($(this).val());
+  });
+
+  // alert(subtotaltaxx);
+
+  // alert('dri');
+
+  $("#eqpt_cost").val(eqpt_cost);
+  $("#total_discount").val(total_discount);
+  $("#span_sub_total_0").text(total_discount);
+  $("#span_sub_total_invoice2").text(subtotal.toFixed(2));
+  $("#item_total2").val(subtotal.toFixed(2));
+  
+  var s_total = subtotal.toFixed(2);
+  var adjustment = $("#adjustment_input").val();
+  var grand_total = s_total - parseFloat(adjustment);
+  var markup = $("#markup_input_form").val();
+  var grand_total_w = grand_total + parseFloat(markup);
+
+  // $("#total_tax2_1_").text(subtotaltaxx.toFixed(2));
+  $("#total_tax2_").text(subtotaltaxx.toFixed(2));
+  $("#total_tax2_input").val(subtotaltaxx.toFixed(2));
+  
+
+  $("#grand_total2").text(grand_total_w.toFixed(2));
+  $("#grand_total_input2").val(grand_total_w.toFixed(2));
+  $("#grandtotal_input").val(grand_total_w.toFixed(2));
+
+  if($("#grand_total2").length && $("#grand_total2").val().length)
+  {
+    // console.log('none');
+    // alert('none');
+  }else{
+    $("#grand_total2").text(grand_total_w.toFixed(2));
+    $("#grand_total_input").val(grand_total_w.toFixed(2));
+    $("#grand_total_inputs").val(grand_total_w.toFixed(2));
+
+    var bundle1_total = $("#grand_total").text();
+    var bundle2_total = $("#grand_total2").text();
+    var super_grand = parseFloat(bundle1_total) + parseFloat(bundle2_total);
+  }
 
   var sls = (parseFloat(eqpt_cost).toFixed(2) * 7.5) / 100;
   sls = parseFloat(sls).toFixed(2);

@@ -517,7 +517,7 @@ input:checked + .slider:before {
                                                        data-counter="0" id="price_0" min="0" value="0"> <input type="hidden" class="priceqty" id="priceqty_0"> 
                                                        <div class="show_mobile_view"><span class="price">0</span>
                                                        <!-- <input type="hidden" class="form-control price" name="price[]" data-counter="0" id="priceM_0" min="0" value="0"> -->
-                                                       </div><input id="priceM_qty0" value=""  type="hidden" name="price_qty[]" class="form-control hidden_mobile_view price_qty"></td>
+                                                       </div><input id="priceM_qty0" value="0"  type="hidden" name="price_qty[]" class="form-control hidden_mobile_view price_qty"></td>
                                             <td width="10%" class="hidden_mobile_view"><input type="number" class="form-control discount" name="discount[]"
                                                        data-counter="0" id="discount_0" min="0" value="0"  readonly></td>
                                             <td width="10%" class="hidden_mobile_view"><input type="text" class="form-control tax_change" name="tax[]"
@@ -620,7 +620,7 @@ input:checked + .slider:before {
                                                 <input type="text" class="form-control getItems2"
                                                        onKeyup="getItemsOption2(this)" name="items2[]">
                                                 <ul class="suggestions"></ul>
-                                                <input type="hidden" name="itemid2[]" id="itemid2" class="itemid">
+                                                <input type="hidden" name="itemid2[]" id="itemid2" class="itemid2">
                                             </td>
                                             <td><select name="item_type2[]" class="form-control">
                                                     <option value="product">Product</option>
@@ -632,7 +632,7 @@ input:checked + .slider:before {
                                                        data-counter="0" id="quantity2_0" value="1"></td>
                                             <!-- <td><input type="text" class="form-control" name="location[]"></td> -->
                                             <td><input type="number" class="form-control price2" name="price2[]"
-                                                       data-counter="0" id="price2_0" min="0" value="0"><input type="hidden" class="priceqty2" id="priceqty2_0"></td>
+                                                       data-counter="0" id="price2_0" min="0" value="0"><input type="hidden" class="priceqty2" id="priceqty2_0" value="0"></td>
                                             <td><input type="number" class="form-control discount2" name="discount2[]"
                                                        data-counter="0" id="discount2_0" min="0" value="0" readonly></td>
                                             <td><input type="text" class="form-control tax_changeoptionsb" name="tax2[]"
@@ -640,6 +640,7 @@ input:checked + .slider:before {
                                             <td><input type="hidden" class="form-control " name="total2[]"
                                                        data-counter="0" id="item_total2_0" min="0" value="0">
                                                        $<span id="span_total2_0">0.00</span></td>
+                                            <td><a href="#" class="remove2 btn btn-sm btn-success" id="0"><i class="fa fa-trash" aria-hidden="true"></i></a></td>
                                         </tr>
                                         </tbody>
                                     </table>
@@ -1329,21 +1330,21 @@ $(".select_item22").click(function () {
             // console.log(total);
             // alert(total);
             markup = "<tr id=\"ss\">" +
-                "<td width=\"35%\"><input value='"+title+"' type=\"text\" name=\"items2[]\" class=\"form-control\" ><input type=\"hidden\" value='"+idd+"' name=\"item_id2[]\"></td>\n" +
+                "<td width=\"35%\"><input value='"+title+"' type=\"text\" name=\"items2[]\" class=\"form-control\" ><input type=\"hidden\" value='"+idd+"' name=\"itemid2[]\"></td>\n" +
                 "<td width=\"20%\"><select name=\"item_type2[]\" class=\"form-control\"><option value=\"product\">Product</option><option value=\"material\">Material</option><option value=\"service\">Service</option><option value=\"fee\">Fee</option></select></td>\n" +
                 "<td width=\"10%\"><input data-itemid='"+idd+"' id='quantity2_"+idd+"' value='"+qty+"' type=\"number\" name=\"quantity2[]\" class=\"form-control qtyest2b\"></td>\n" +
                 // "<td>\n" + '<input type="number" class="form-control qtyest" name="quantity[]" data-counter="' + count + '" id="quantity_' + count + '" min="1" value="1">\n' + "</td>\n" +
                 "<td width=\"10%\"><input id='price2_"+idd+"' value='"+price+"'  type=\"number\" name=\"price2[]\" class=\"form-control\" placeholder=\"Unit Price\"><input type=\"hidden\" class=\"priceqty\" id='priceqty2_"+idd+"'></td>\n" +
                 // "<td width=\"10%\"><input type=\"number\" class=\"form-control discount\" name=\"discount[]\" data-counter="0" id=\"discount_0\" min="0" value="0" ></td>\n" +
                 // "<td width=\"10%\"><small>Unit Cost</small><input type=\"text\" name=\"item_cost[]\" class=\"form-control\"></td>\n" +
-                "<td width=\"10%\"><input type=\"number\" name=\"discount2[]\" class=\"form-control discount2\"  id='discount2_"+idd+"'></td>\n" +
+                "<td width=\"10%\"><input type=\"number\" name=\"discount2[]\" class=\"form-control discount2\"  id='discount2_"+idd+"' readonly></td>\n" +
                 // "<td width=\"25%\"><small>Inventory Location</small><input type=\"text\" name=\"item_loc[]\" class=\"form-control\"></td>\n" +
                 "<td width=\"20%\"><input type=\"text\" data-itemid='"+idd+"' class=\"form-control tax_changeoptions2b\" name=\"tax2[]\" data-counter=\"0\"  id='tax2_1_"+idd+"'></td>\n" +
                 "<td style=\"text-align: center\" class=\"d-flex\" width=\"15%\"><span data-subtotal='"+total_+"' id='span_total2_"+idd+"' class=\"total_per_item2\">"+total+
                 // "</span><a href=\"javascript:void(0)\" class=\"remove_item_row\"><i class=\"fa fa-times-circle\" aria-hidden=\"true\"></i></a>"+
                 "</span><input type=\"hidden\" name=\"total2[]\" id='item_total2_"+idd+"' value='"+total+"'></td>" +
                 "<td>\n" +
-                "<a href=\"#\" class=\"remove btn btn-sm btn-success\" id='"+idd+"'><i class=\"fa fa-trash\" aria-hidden=\"true\"></i></a>\n" +
+                "<a href=\"#\" class=\"remove2 btn btn-sm btn-success\" id='"+idd+"'><i class=\"fa fa-trash\" aria-hidden=\"true\"></i></a>\n" +
                 "</td>\n" +
                 "</tr>";
             tableBody = $("#table_body_option2");
@@ -1448,7 +1449,7 @@ var priceqty2 = 0;
   $("#eqpt_cost").val(eqpt_cost);
   $("#total_discount").val(total_discount);
   $("#span_sub_total_0").text(total_discount);
-  $("#span_sub_total_invoice2").text(priceqty2);
+  $("#span_sub_total_invoice2").text(priceqty2.toFixed(2));
   $("#item_total2").val(subtotal.toFixed(2));
   
   var s_total = subtotal.toFixed(2);

@@ -373,7 +373,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                         <div class="validation-error" style="display: none;"></div>
                         <p>
                             You are going create a new Estimate based on <b>Estimate #<span
-                                        class="work_order_no"></span> <input type="hidden" id="wo_id" name="wo_id"> </b>.<br>
+                                        class="work_order_no"></span> <input type="hidden" id="wo_id" name="est_id"> </b>.<br>
                             Afterwards you can edit the newly created Estimate.
                         </p>
                     </form>
@@ -488,13 +488,13 @@ $(document).on('click touchstart','#clone_estimate',function(){
 
 // var num = $(this).attr('data-wo_num');
 // var wo_num = $('.work_order_no').text();
-var wo_num = $('#wo_id').val();
+var est_num = $('#wo_id').val();
 // alert(id);
 // $('.work_order_no').text(num);
 $.ajax({
     type : 'POST',
     url : "<?php echo base_url(); ?>estimate/duplicate_estimate",
-    data : {wo_num: wo_num},
+    data : {est_num: est_num},
     success: function(result){
         sucess("Data Cloned Successfully!");
     },
@@ -502,6 +502,22 @@ $.ajax({
 
 
 });
+
+function sucess(information,$id){
+            Swal.fire({
+                title: 'Good job!',
+                text: information,
+                icon: 'success',
+                showCancelButton: false,
+                confirmButtonColor: '#32243d',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ok'
+            }).then((result) => {
+                if (result.value) {
+                    location.reload();
+                }
+            });
+        }
 </script>
 <style>
     .hid-deskx {
