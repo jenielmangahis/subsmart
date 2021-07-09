@@ -173,11 +173,13 @@ Alarm Direct, Inc</textarea>
                                     <div class="row">
                                         <div class="col-md-3 divided">
                                             Customer
-                                            <select class="form-control" name="customer_id" id="sel-customer2">
+                                            <select class="form-control required" required name="customer_id"
+                                                id="sel-customer2">
                                                 <option></option>
                                                 <?php foreach ($customers as $customer) : ?>
                                                 <option
-                                                    value="<?php echo $customer->prof_id; ?>">
+                                                    value="<?php echo $customer->prof_id; ?>"
+                                                    data-text="<?php echo $customer->first_name . ' ' . $customer->last_name; ?>">
                                                     <?php echo $customer->first_name . ' ' . $customer->last_name; ?>
                                                 </option>
                                                 <?php endforeach; ?>
@@ -185,7 +187,8 @@ Alarm Direct, Inc</textarea>
                                         </div>
                                         <div class="col-md-6 divided">
                                             Email
-                                            <input type="email" class="form-control" name="email" id="email2">
+                                            <input type="email" class="form-control required" required name="email"
+                                                id="email2">
                                             <div style="margin-top:5px;"><input type="checkbox"> Send later</div>
                                         </div>
 
@@ -373,13 +376,22 @@ Alarm Direct, Inc</textarea>
                                 </div>
                             </div>
                         </div>
+                        <div class="row error-message-section" style="display: none;">
+                            <div class="col-md-12">
+                                <div class="error-message">
+                                    <h3 class="title"><i class="fa fa-exclamation-circle" aria-hidden="true"></i>
+                                        Something's not quite right</h3>
+                                    <label for="title">Please double check your data.</label>
+                                </div>
+                            </div>
+                        </div>
                         <div class="row" style="margin-top: 30px;">
                             <div class="col-md-6">
                                 <div class="row">
                                     <div class="col-md-3">
                                         Billing address
                                         <textarea style="height:100px;width:100%;" name="billing_address"
-                                            id="billing_address2"></textarea>
+                                            id="billing_address2" class="required" required></textarea>
                                     </div>
                                     <div class="col-md-3">
                                         Sales Receipt date<br>
@@ -461,7 +473,8 @@ Alarm Direct, Inc</textarea>
                                 <div class="label-grand_total_sr_t">AMOUNT</div>
                                 <h2><span id="grand_total_sr_t">0.00</span></h2><br>
                                 Location of sale<br>
-                                <input type="text" class="form-control" style="width:200px;" name="location_scale">
+                                <input type="text" class="form-control required" required style="width:200px;"
+                                    name="location_scale">
                             </div>
                         </div>
 
@@ -763,7 +776,7 @@ Alarm Direct, Inc</textarea>
                                 <tbody id="items_table_body_sales_receipt">
                                     <tr>
                                         <td>
-                                            <input type="text" class="form-control getItemssr"
+                                            <input type="text" class="form-control getItemssr required" required
                                                 onKeyup="getItemssr(this)" name="items[]">
                                             <ul class="suggestions"></ul>
                                         </td>
@@ -773,20 +786,27 @@ Alarm Direct, Inc</textarea>
                                                 <option value="service">Service</option>
                                                 <option value="fee">Fee</option>
                                             </select></td>
-                                        <td width="150px"><input type="number" class="form-control quantitysr"
-                                                name="quantity[]" data-counter="0" id="quantity_0" value="1"></td>
-                                        <td width="150px"><input type="number" class="form-control pricesr"
+                                        <td width="150px"><input type="number"
+                                                class="form-control quantitysr required item-field-monitary" required
+                                                name="quantity[]" data-counter="0" id="quantity_0" value="1">
+                                        </td>
+                                        <td width="150px"><input type="number"
+                                                class="form-control pricesr required item-field-monitary" required
                                                 name="price[]" data-counter="0" id="price_sr_0" min="0" value="0"></td>
-                                        <td width="150px"><input type="number" class="form-control discountsr"
+                                        <td width="150px"><input type="number"
+                                                class="form-control discountsr required item-field-monitary" required
                                                 name="discount[]" data-counter="0" id="discount_sr_0" min="0" value="0">
                                         </td>
-                                        <td width="150px"><input type="text" class="form-control tax_change"
-                                                name="tax[]" data-counter="0" id="tax1_sr_0" min="0" value="0">
+                                        <td width="150px"><input type="text"
+                                                class="form-control tax_change required item-field-monitary"
+                                                data-itemfieldtype="tax" required name="tax[]" data-counter="0"
+                                                id="tax1_sr_0" min="0" value="0">
                                             <!-- <span id="span_tax_0">0.0</span> -->
+                                            <input type="text" class="tax-hide" value="0" type="hidden">
                                         </td>
-                                        <td width="150px"><input type="hidden" class="form-control " name="total[]"
-                                                data-counter="0" id="item_total_sr_0" min="0" value="0">
-                                            $<span id="span_total_sr_0">0.00</span></td>
+                                        <td width="150px"><input type="hidden" class="form-control total_per_input"
+                                                name="total[]" data-counter="0" id="item_total_sr_0" min="0" value="0">
+                                            $<span class="total_per_item" id="span_total_sr_0">0.00</span></td>
                                     </tr>
                                     </tr>
                                 </tbody>
@@ -1046,7 +1066,8 @@ Alarm Direct, Inc</textarea>
                                 <tr>
                                     <td><?php echo $item->title; ?>
                                     </td>
-                                    <td></td>
+                                    <td><?= $item->units; ?>
+                                    </td>
                                     <td><?php echo $item->price; ?>
                                     </td>
                                     <td><button
@@ -1195,22 +1216,7 @@ Alarm Direct, Inc</textarea>
     over_tax = parseFloat(tax_tot).toFixed(2);
     // alert(over_tax);
 
-    function setitemsr(obj, title, price, discount, itemid) {
 
-        // alert('setitemCM');
-        jQuery(obj).parent().parent().find(".getItemssr").val(title);
-        jQuery(obj).parent().parent().parent().find(".pricesr").val(price);
-        jQuery(obj).parent().parent().parent().find(".discountsr").val(discount);
-        jQuery(obj).parent().parent().parent().find(".itemid").val(itemid);
-        var counter = jQuery(obj)
-            .parent()
-            .parent()
-            .parent()
-            .find(".pricesr")
-            .data("counter");
-        jQuery(obj).parent().empty();
-        calculationsr(counter);
-    }
 
     $(document).on("focusout", ".pricesr", function() {
         var counter = $(this).data("counter");
@@ -1351,7 +1357,7 @@ Alarm Direct, Inc</textarea>
         $("#tax_111_" + counter).text(tax1);
         $("#tax_1_" + counter).val(tax1);
         $("#discount_sr_" + counter).val(discount);
-        $("#tax1_sr_" + counter).val(tax1);
+        // $("#tax1_sr_" + counter).val(tax1);
         // $("#tax1_" + counter).val(tax1);
         // $("#tax_" + counter).val(tax1);
         // alert(tax1);
@@ -1460,7 +1466,10 @@ Alarm Direct, Inc</textarea>
             // alert('0');
             var qty = $(this).data('quantity');
         }
-
+        var number_of_items_added = 0;
+        $('*[id^="span_total_sr_"]').each(function() {
+            number_of_items_added++;
+        });
         var count = parseInt($("#count").val()) + 1;
         $("#count").val(count);
         var total_ = price * qty;
@@ -1473,31 +1482,42 @@ Alarm Direct, Inc</textarea>
         // alert(total);
         markup = "<tr id=\"ss\">" +
             "<td width=\"35%\"><input value='" + title +
-            "' type=\"text\" name=\"items[]\" class=\"form-control\" ><input type=\"hidden\" value='" + idd +
-            "' name=\"item_id[]\"></td>\n" +
+            "' type=\"text\" name=\"items[]\" class=\"form-control getItemssr required\"  required onKeyup=\"getItemssr(this)\" ><input type=\"hidden\" value='" +
+            idd +
+            "' name=\"item_id[]\"><ul class=\"suggestions\"></ul></td>\n" +
             "<td width=\"20%\"><select name=\"item_type[]\" class=\"form-control\"><option value=\"product\">Product</option><option value=\"material\">Material</option><option value=\"service\">Service</option><option value=\"fee\">Fee</option></select></td>\n" +
             "<td width=\"10%\"><input data-itemid='" + idd + "' id='quantity_" + idd + "' value='" + qty +
-            "' type=\"number\" name=\"quantity[]\" data-counter=\"0\"  min=\"0\" class=\"form-control qtyest\"></td>\n" +
+            "' type=\"number\" name=\"quantity[]\" data-counter=\"" + number_of_items_added +
+            "\" min=\"0\" class=\"form-control quantitysr  required item-field-monitary\"></td>\n" +
             // "<td>\n" + '<input type="number" class="form-control qtyest" name="quantity[]" data-counter="' + count + '" id="quantity_' + count + '" min="1" value="1">\n' + "</td>\n" +
             "<td width=\"10%\"><input id='price_sr_" + idd + "' value='" + price +
-            "'  type=\"number\" name=\"price[]\" class=\"form-control\" placeholder=\"Unit Price\"></td>\n" +
+            "'  type=\"number\"  data-counter=\"" + number_of_items_added +
+            "\" name=\"price[]\" class=\"form-control pricesr required item-field-monitary\" placeholder=\"Unit Price\"></td>\n" +
             // "<td width=\"10%\"><input type=\"number\" class=\"form-control discount\" name=\"discount[]\" data-counter="0" id=\"discount_0\" min="0" value="0" ></td>\n" +
             // "<td width=\"10%\"><small>Unit Cost</small><input type=\"text\" name=\"item_cost[]\" class=\"form-control\"></td>\n" +
-            "<td width=\"10%\"><input type=\"number\" name=\"discount[]\" class=\"form-control discount\" id='discount_sr_" +
+            "<td width=\"10%\"><input type=\"number\" name=\"discount[]\" class=\"form-control discountsr item-field-monitary\"  data-counter=\"" +
+            number_of_items_added +
+            "\" id='discount_sr_" +
             idd + "'></td>\n" +
             // "<td width=\"25%\"><small>Inventory Location</small><input type=\"text\" name=\"item_loc[]\" class=\"form-control\"></td>\n" +
             "<td width=\"20%\"><input type=\"text\" data-itemid='" + idd +
-            "' class=\"form-control tax_change2\" name=\"tax[]\" data-counter=\"0\" id='tax1_sr_" + idd +
-            "' min=\"0\" value='" + taxes_t + "'></td>\n" +
-            "<td style=\"text-align: center\" class=\"d-flex\" width=\"15%\"><span data-subtotal='" + total_ +
+            "' class=\"form-control tax_change item-field-monitary\" data-itemfieldtype=\"tax\"  data-counter=\"" +
+            number_of_items_added +
+            "\" name=\"tax[]\" data-counter=\"" + number_of_items_added +
+            "\" id='tax1_sr_" + idd +
+            "' min=\"0\" value='" + taxes_t +
+            "'><input type=\"text\" class=\"tax-hide\" value=\"0\" type=\"hidden\"></td>\n" +
+            "<td style=\"text-align: center\"  width=\"15%\">$<span data-subtotal='" + total_ +
             "' id='span_total_sr_" + idd + "' class=\"total_per_item\">" + total +
             // "</span><a href=\"javascript:void(0)\" class=\"remove_item_row\"><i class=\"fa fa-times-circle\" aria-hidden=\"true\"></i></a>"+
-            "</span> <input type=\"hidden\" name=\"total[]\" id='sub_total_text" + idd + "' value='" + total +
+            "</span> <input type=\"hidden\" name=\"total[]\" class=\"total_per_input\" id='sub_total_text" +
+            idd + "' value='" + total +
             "'></td>" +
             "</tr>";
         tableBody = $("#items_table_body_sales_receipt");
         tableBody.append(markup);
-        markup2 = "<tr id=\"sss\">" +
+        markup2 =
+            "<tr id=\"sss\">" +
             "<td >" + title + "</td>\n" +
             "<td ></td>\n" +
             "<td ></td>\n" +
@@ -1539,7 +1559,8 @@ Alarm Direct, Inc</textarea>
 
         $("#span_total_sr_" + in_id).text(total);
         $("#sub_total_text" + in_id).val(total);
-        $("#tax_1_" + in_id).text(tax1);
+        $("#tax_1_" + in_id)
+            .text(tax1);
         $("#tax1_sr_" + in_id).val(tax1);
         $("#discount_sr_" + in_id).val(discount);
 
@@ -1590,7 +1611,8 @@ Alarm Direct, Inc</textarea>
 
 
         eqpt_cost = parseFloat(eqpt_cost).toFixed(2);
-        total_discount = parseFloat(total_discount).toFixed(2);
+        total_discount = parseFloat(total_discount).toFixed(
+            2);
         stotal_cost = parseFloat(total_cost).toFixed(2);
         // var test = 5;
 
@@ -1611,7 +1633,8 @@ Alarm Direct, Inc</textarea>
 
         $("#eqpt_cost").val(eqpt_cost);
         $("#total_discount").val(total_discount);
-        $("#span_sub_total_0").text(total_discount);
+        $("#span_sub_total_0").text(
+            total_discount);
         $("#span_sub_total_invoice_sr").text(subtotal.toFixed(2));
         // $("#item_total").val(subtotal.toFixed(2));
         $("#item_total_sr").val(stotal_cost);
@@ -1629,15 +1652,19 @@ Alarm Direct, Inc</textarea>
 
 
         $("#grand_total_sr").text(grand_total_w.toFixed(2));
-        $("#grand_total_input").val(grand_total_w.toFixed(2));
+        $("#grand_total_input").val(grand_total_w.toFixed(
+            2));
         $("#grand_total_sr_t").text(grand_total_w.toFixed(2));
-        $("#grand_total_sr_g").val(grand_total_w.toFixed(2));
+        $("#grand_total_sr_g").val(grand_total_w
+            .toFixed(2));
         $("#span_sub_total_sr").text(grand_total_w.toFixed(2));
 
         var sls = (parseFloat(eqpt_cost).toFixed(2) * 7.5) / 100;
         sls = parseFloat(sls).toFixed(2);
-        $("#sales_tax").val(sls);
+        $("#sales_tax")
+            .val(sls);
         cal_total_due();
+
     });
 </script>
 
