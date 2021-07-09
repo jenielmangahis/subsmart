@@ -29,7 +29,13 @@
                       <h5 class="card-title mb-0"><?php echo $nu->name; ?></h5>
                       <p style="text-align: justify;margin-top: 45px;height: 100px;" class="card-text mt-txt"><?php  echo $nu->description; ?></p>
                       <p style="color:#36c12a;text-align: center;font-size: 17px;">
-                        $<?php  echo $nu->sms_fee; ?>/SMS + $<?php  echo $nu->service_fee; ?> service fee
+                        <?php  
+                          if( $nu->sms_fee > 0 ){
+                            echo "$" . $nu->sms_fee . "/SMS + $" . $nu->service_fee . " service fee";
+                          }else{
+                            echo "$" . $nu->service_fee . " service fee";
+                          }
+                        ?>
                       </p>
                       <?php if( !in_array($nu->id, $active_addons_id) ){ ?>
                         <p style="text-align: center;" class="add-addon"><strong>Subscribe Now</strong></p>

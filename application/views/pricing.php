@@ -588,7 +588,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             <div class="ctext">
               <ul data-list="1" class="header-ul">
                   <li>
-                      <span class=""><span class="material-icons mdc-bottom-navigation__list-item__icon show-less hidden" data-height-value="60">remove</span><span class="material-icons mdc-bottom-navigation__list-item__icon show-more" data-height-value="60">add</span><strong>GPS Tracking</strong></span>
+                      <span class=""><span class="material-icons mdc-bottom-navigation__list-item__icon show-less hidden" data-height-value="60">remove</span><span class="material-icons mdc-bottom-navigation__list-item__icon show-more" data-height-value="60">add</span><strong>Trac 360</strong></span>
                   </li>
               </ul>
               <ul data-list="1" class="desc-ul hidden">
@@ -825,7 +825,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
               <div class="ctext">
                 <ul data-list="1" class="header-ul">
                     <li>
-                        <span class=""><span class="material-icons mdc-bottom-navigation__list-item__icon show-less hidden" data-height-value="60">remove</span><span class="material-icons mdc-bottom-navigation__list-item__icon show-more" data-height-value="60">add</span><strong>GPS Tracking</strong></span>
+                        <span class=""><span class="material-icons mdc-bottom-navigation__list-item__icon show-less hidden" data-height-value="60">remove</span><span class="material-icons mdc-bottom-navigation__list-item__icon show-more" data-height-value="60">add</span><strong>Trac 360</strong></span>
                     </li>
                 </ul>
                 <ul data-list="1" class="desc-ul hidden">
@@ -1106,7 +1106,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 <div class="ctext">
                   <ul data-list="1" class="header-ul">
                       <li>
-                          <span class=""><span class="material-icons mdc-bottom-navigation__list-item__icon show-less hidden" data-height-value="60">remove</span><span class="material-icons mdc-bottom-navigation__list-item__icon show-more" data-height-value="60">add</span><strong>GPS Tracking</strong></span>
+                          <span class=""><span class="material-icons mdc-bottom-navigation__list-item__icon show-less hidden" data-height-value="60">remove</span><span class="material-icons mdc-bottom-navigation__list-item__icon show-more" data-height-value="60">add</span><strong>Trac 360</strong></span>
                       </li>
                   </ul>
                   <ul data-list="1" class="desc-ul hidden">
@@ -1885,7 +1885,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                             <ul class="ul-color-header" data-list="1">
                                 <li>
-                                    <a class="btn-show-less-more-desktop show-less" data-key="gps-tracking" href="javascript:void(0);"><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">remove</span><strong>GPS Tracking</strong></a>
+                                    <a class="btn-show-less-more-desktop show-less" data-key="gps-tracking" href="javascript:void(0);"><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">remove</span><strong>Trac 360</strong></a>
                                 </li>
                             </ul>
                             <ul data-list="1" class="desc-ul ul-color-highlight gps-tracking-list">
@@ -2111,7 +2111,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                             <ul data-list="1" class="bsc-margin">
                                 <li>
-                                    <span class=""><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>GPS Tracking</strong></span>
+                                    <span class=""><span  data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Trac 360</strong></span>
                                 </li>
                             </ul>
                             <ul data-list="1" class="desc-ul hidden">
@@ -2375,7 +2375,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                             <ul data-list="1" class="bsc-margin">
                                 <li>
-                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>GPS Tracking</strong></span>
+                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Trac 360</strong></span>
                                 </li>
                             </ul>
                             <ul data-list="1" class="desc-ul hidden">
@@ -2720,7 +2720,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
                             <ul data-list="1" class="bsc-margin">
                                 <li>
-                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>GPS Tracking</strong></span>
+                                    <span class=""><span data-height-value="150" class="material-icons mdc-bottom-navigation__list-item__icon show-more-desktop">done</span><strong>Trac 360</strong></span>
                                 </li>
                             </ul>
                             <ul data-list="1" class="desc-ul hidden">

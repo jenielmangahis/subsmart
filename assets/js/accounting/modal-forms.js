@@ -2708,6 +2708,48 @@ $(function() {
             $('#billPaymentModal #vendor-credits-table input[name="credit_payment[]"]:last-child').trigger('change');
         }, true);
     });
+
+    $(document).on('change', '#payBillsModal #print_later', function() {
+        if($(this).prop('checked')) {
+            $('#payBillsModal #starting_check_no').val('To print').prop('disabled', true);
+        } else {
+            $('#payBillsModal #starting_check_no').val('').prop('disabled', false);
+        }
+    });
+
+    $(document).on('change', '#printChecksModal #payment_account, #printChecksModal #sort, #printChecksModal #check-type', function() {
+        $('#printChecksModal #checks-table').DataTable().ajax.reload(null, true);
+    });
+
+    $(document).on('change', '#printChecksModal #checks-table #select-all-checks', function() {
+        $('#printChecksModal #checks-table tbody tr input[type="checkbox"]').prop('checked', $(this).prop('checked')).trigger('change');
+    });
+
+    $(document).on('change', '#printChecksModal #checks-table tbody tr input[type="checkbox"]', function() {
+        $('#printChecksModal #selected-checks').html($('#printChecksModal #checks-table tbody tr input[type="checkbox"]:checked').length);
+
+        var notChecked = $('#printChecksModal #checks-table tbody tr input[type="checkbox"]:not(:checked)').length;
+        $('#printChecksModal #checks-table #select-all-checks').prop('checked', notChecked === 0);
+
+        var selectedTotal = parseFloat($('#printChecksModal #selected-checks-total').html());
+        var row = $(this).parent().parent().parent();
+        var rowData = $('#printChecksModal #checks-table').DataTable().row(row).data();
+
+        if($(this).prop('checked')) {
+            selectedTotal += parseFloat(rowData.amount.replace('$', ''));
+        } else {
+            selectedTotal -= parseFloat(rowData.amount.replace('$', ''));
+        }
+
+        $('#printChecksModal #selected-checks-total').html(parseFloat(selectedTotal).toFixed(2));
+    });
+
+    $(document).on('click', '#printChecksModal #add-check-button', function() {
+        $('#printChecksModal').modal('hide');
+        $('.modal-backdrop:last-child').remove();
+
+        $('#new-popup #accounting_vendors a[data-target="#checkModal"]').trigger('click');
+    });
 });
 
 const convertToDecimal = (el) => {
@@ -3206,7 +3248,7 @@ const submitModalForm = (event, el) => {
         $(`${modalId} #bills-table tbody tr`).each(function() {
             var checkbox = $(this).find('td:first-child input');
             var payee = $(this).find('td:nth-child(2) input').val();
-            var credit_applied =  $(this).find('input.credit-applied').length > 0 ? $(this).find('input.credit-applied').val() : 0.00;
+            var credit_applied =  $(this).find('input.credit-applied').length > 0 ? $(this).find('input.credit-applied').val() : null;
             var payment_amount =  $(this).find('input.payment-amount').val();
             var total_amount = parseFloat(parseFloat(credit_applied) + parseFloat(payment_amount)).toFixed(2);
 
