@@ -6,7 +6,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     background-color: #53b94a;
     color: white;
     padding: 4px 0px;
-    width: 75px;
+    width: 90%;
     display: block;
     text-align: center;
     border-radius: 20px;
@@ -15,19 +15,17 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
     background-color: #585858;
     color: white;
     padding: 4px 0px;
-    width: 75px;
+    width: 90%;
     display: block;
     text-align: center;
     border-radius: 20px;
 }
-.cell-active{
-    background-color: #5bc0de;
-}
-.cell-inactive{
-    background-color: #d9534f;
-}
 .btn{
     border-radius: 0px !important;
+}
+label>input {
+  visibility: initial !important;
+  position: initial !important; 
 }
 </style>
 <div class="wrapper" role="wrapper">
@@ -50,7 +48,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                         </div>
                         <br />
                         <?php include viewPath('flash'); ?>
-                        <table class="table table-hover">
+                        <table class="table table-hover" id="companiesTable">
                             <thead>
                                 <tr>
                                     <th>Company Name</th>
@@ -69,6 +67,9 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                             if( $c->is_plan_active == 1 ){
                                                 $cell = 'cell-active';
                                                 $status = "Active";
+                                            }elseif( $c->is_plan_active == 3 ){
+                                                $cell = 'cell-inactive';
+                                                $status = "Deactivated";
                                             }else{
                                                 $cell = 'cell-inactive';
                                                 $status = "Expire";
@@ -102,13 +103,17 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                 <!-- <span class=""><strong>Next Billing:</strong> Month XX, XXXX</span> -->
 
                                             </td>
-                                            <td class="<?= $cell; ?>" style="text-align: center;color:#ffffff;"><?= $status; ?></td>
+                                            <td style="text-align: center;color:#ffffff;">
+                                                <span class="<?= $cell; ?>">
+                                                    <?= $status; ?>
+                                                </span>
+                                            </td>
                                             <td>
                                                 <a class="btn btn-sm btn-primary btn-view-subscription-details" href="javascript:void(0);" data-id="<?= $c->id; ?>"><i class="fa fa-view"></i> View Details</a>
                                                 <?php if( $c->is_plan_active == 1 ){ ?>
-                                                    <a class="btn btn-sm btn-primary btn-view-subscription-details" href="javascript:void(0);" data-id="<?= $c->id; ?>"><i class="fa fa-view"></i> Deactivate</a>
+                                                    <a class="btn btn-sm btn-primary deactivate-company" href="javascript:void(0);" data-name="<?= $c->bp_business_name; ?>" data-id="<?php echo $c->id ?>"><i class="fa fa-close"></i> Deactivate</a>
                                                 <?php }else{ ?>
-                                                    <a class="btn btn-sm btn-primary btn-view-subscription-details" href="javascript:void(0);" data-id="<?= $c->id; ?>"><i class="fa fa-view"></i> Activate</a>
+                                                    <a class="btn btn-sm btn-primary activate-company" href="javascript:void(0);" data-name="<?= $c->bp_business_name; ?>" data-id="<?php echo $c->id ?>"><i class="fa fa-check"></i> Activate</a>
                                                 <?php } ?>
                                             </td>
                                         </tr>
@@ -124,12 +129,110 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
         </div>
         <!-- end container-fluid -->
     </div>
+    <!-- Modal View Subscription Details --> 
+    <div class="modal fade" id="modalViewSubscriptionDetails" tabindex="-1" role="dialog" aria-labelledby="modalViewSubscriptionDetailsTitle" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="">Subscription Details</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body booking-info">
+              <div id="modal-view-subscription-details-container" class="modal-view-subscription-details-container"></div>
+            </div>
+          </div>
+        </div>
+    </div>
+
+    <!-- Modal Deactivate / Activate company --> 
+    <div class="modal fade" id="modalUpdateStatus">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title"><i class="fa fa-trash"></i> Update Status</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <!-- Modal body -->
+            <form action="" id="updateCompanyStataus">
+                <input type="hidden" id="status-company-id" name="status_company_id" value="" />
+                <input type="hidden" id="status-company-status" name="status_company_status" value="" />
+                <div class="modal-body">Are you sure you want to <span class="status-name"></span> company <span class="status-company-name"></span></div>
+                <!-- Modal footer -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+                    <button type="submit" class="btn btn-danger">Yes</button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
     <!-- page wrapper end -->
 </div>
-<?php include viewPath('includes/admin_mgt_modals'); ?> 
 <?php include viewPath('includes/admin_footer'); ?>
 <script>
 $(function(){
+    $('#companiesTable').DataTable({
+        "searching": true,
+        "sort": false
+    });
+
+    $(document).on('click', '.deactivate-company', function(){
+        var company_id = $(this).attr('data-id');
+        var company_name = $(this).attr('data-name');
+        $("#status-company-id").val(company_id);
+        $("#status-company-status").val(3);
+
+        $(".status-name").html("<b>Deactivate</b>");
+        $(".status-company-name").html("<b>" + company_name + "</b>");
+        $("#modalUpdateStatus").modal('show');
+    });
+
+    $(document).on('click', '.activate-company', function(){
+        var company_id = $(this).attr('data-id');
+        var company_name = $(this).attr('data-name');
+        $("#status-company-id").val(company_id);
+        $("#status-company-status").val(1);
+
+        $(".status-name").html("<b>Activate</b>");
+        $(".status-company-name").html("<b>" + company_name + "</b>");
+        $("#modalUpdateStatus").modal('show');
+    });
+
+    $(document).on('submit', '#updateCompanyStataus', function(e){
+        e.preventDefault();
+        $.ajax({
+            url: base_url + 'admin/_update_company_status',
+            type: "POST",
+            dataType: "json",
+            data: $('#updateCompanyStataus').serialize(),
+            success: function(data) {
+                $("#modalUpdateStatus").modal('hide');
+                if (data.is_success == 1) {
+                    Swal.fire({
+                        showConfirmButton: false,
+                        timer: 2000,
+                        title: 'Success',
+                        text: "Company status has been updated",
+                        icon: 'success'
+                    });
+                    location.reload();
+                } else {
+                    Swal.fire({
+                        showConfirmButton: false,
+                        timer: 2000,
+                        title: 'Failed',
+                        text: "Something is wrong in the process",
+                        icon: 'warning'
+                    });
+                }
+            }
+        });
+    });
+
     $(".btn-view-subscription-details").click(function(){
         $("#modalViewSubscriptionDetails").modal('show');
 
