@@ -36,7 +36,7 @@
                     </div>
                     <div class="col-lg-6 justify-content-center d-none d-lg-block">
                         <div class="col-lg-12" style="background: #ffffff; height:50px; height:130px; margin:0 auto; top:-27px; border-radius: 0 0 60px 60px; padding-top:25px;">
-                            <div onclick="document.location = '<?php echo base_url('/customer/add_lead') ?>'" class="float-left col-lg-2 no-padding text-center pointer">
+                            <div onclick="document.location = '<?php echo base_url('customer/add_advance') ?>'" class="float-left col-lg-2 no-padding text-center pointer">
                                 <img class="col-lg-8" src="<?= assets_url('img/shortcuts/') . 'new_customer_qs.png' ?>" style="margin: 0 auto;" />
                                 <p>Add Customer</p>
                             </div>
@@ -391,6 +391,7 @@
                         </div>
                     </div>
                 </div>
+                <div class="row">
                 <div class="wid_header col-md-6" data-id=""  id="widget">
                     <div class="card" style="border: 2px solid #30233d; margin-top:0; border-radius: 40px; padding:5px;">
                         <div style="border: 5px solid #30233d; margin-top:0; border-radius: 40px; box-shadow: 1px 0 15px 5px rgb(48, 35, 61);">
@@ -419,6 +420,37 @@
                             </div>
                         </div>
                     </div>
+                </div>
+
+                <div class="wid_header col-md-6" data-id=""  id="widget">
+                    <div class="card" style="border: 2px solid #30233d; margin-top:0; border-radius: 40px; padding:5px;">
+                        <div style="border: 5px solid #30233d; margin-top:0; border-radius: 40px; box-shadow: 1px 0 15px 5px rgb(48, 35, 61);">
+                            <div class="card-body mt-2" style="padding:5px 10px;overflow: hidden">
+                                <div class="row" style="overflow-y: scroll; padding:5px 20px;">
+                                    <div id="" class="col-lg-12 text-center">
+                                        <h6 class="text-center"><strong>Bulletins</strong></h6>
+                                        <table class="table table-responsive-sm table-striped">
+                                            <thead>
+                                                <tr>
+                                                    <th>File</th>
+                                                    <th>News</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                            <?php foreach($news as $new): ?>
+                                                <tr>
+                                                    <td class="text-left"><small><a href="<?= base_url(''.$new->file_link) ?>" target="_blank"><?= $new->file_link ?></a></small><br /></td>
+                                                    <td><?= $new->message ?></td>
+                                                </tr>
+                                            <?php endforeach; ?>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 </div>
             </div>
         </div>

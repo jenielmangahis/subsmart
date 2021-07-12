@@ -34,7 +34,6 @@ class Settings extends MY_Controller {
         $this->page_data['module'] = 'calendar';
         $post = $this->input->post();
         $get = $this->input->get();
-        $company_id = logged('company_id');
 
         $settings = $this->settings_model->getCompanyValueByKey(DB_SETTINGS_TABLE_KEY_SCHEDULE, $company_id);
         $this->page_data['settings'] = unserialize($settings);

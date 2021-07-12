@@ -4406,4 +4406,134 @@ class Accounting_modals extends MY_Controller {
 
         echo json_encode($result);
     }
+
+    public function remove_to_print()
+    {
+        $post = $this->input->post();
+        $flag = true;
+
+        foreach($post['id'] as $key => $id) {
+            if($flag) {
+                if($post['type'][$key] === 'check') {
+                    $data = [
+                        'to_print' => 0,
+                        'updated_at' => date("Y-m-d H:i:s")
+                    ];
+    
+                    $update = $this->vendors_model->update_check($id, $data);
+                } else {
+                    $data = [
+                        'to_print_check_no' => 0,
+                        'updated_at' => date("Y-m-d H:i:s")
+                    ];
+    
+                    $update = $this->vendors_model->update_bill_payment($id, $data);
+                }
+            }
+
+            $flag = $update ? true : false;
+        }
+
+        if($flag === false) {
+            foreach($post['id'] as $key => $id) {
+                if($post['type'][$key] === 'check') {
+                    $data = [
+                        'to_print' => 1,
+                        'updated_at' => date("Y-m-d H:i:s")
+                    ];
+    
+                    $update = $this->vendors_model->update_check($id, $data);
+                } else {
+                    $data = [
+                        'to_print_check_no' => 1,
+                        'updated_at' => date("Y-m-d H:i:s")
+                    ];
+    
+                    $update = $this->vendors_model->update_bill_payment($id, $data);
+                }
+            }
+        }
+
+        $return = [];
+        $return['data'] = $flag;
+        $return['success'] = $flag ? true : false;
+        $return['message'] = $flag ? 'Removed successfuly!' : 'An unexpected error occured!';
+
+        echo json_encode($return);
+    }
+
+    public function print_preview_checks()
+    {
+        $this->load->helper('string');
+        $this->load->library('pdf');
+        $view = "accounting/modals/print_action/print_checks";
+        $post = $this->input->post();
+
+        $extension = '.pdf';
+
+        do {
+            $randomString = random_string('alnum');
+            $fileName = 'print_check_'.$randomString . '.' .$extension;
+            $exists = file_exists('./assets/pdf/'.$fileName);
+        } while ($exists);
+
+        $fileType = explode('/', $files['type'][$key]);
+        $uploadedName = str_replace('.'.$extension, '', $name);
+
+        $data = [];
+        foreach($post['id'] as $key => $id) {
+            if($post['type'][$key] === 'check') {
+                $check = $this->vendors_model->get_check_by_id($id);
+                $paymentAcc = $this->chart_of_accounts_model->getById($check->bank_account_id);
+
+                switch ($check->payee_type) {
+                    case 'vendor':
+                        $payee = $this->vendors_model->get_vendor_by_id($check->payee_id);
+                        $payeeName = $payee->display_name;
+                    break;
+                    case 'customer':
+                        $payee = $this->accounting_customers_model->get_customer_by_id($check->payee_id);
+                        $payeeName = $payee->first_name . ' ' . $payee->last_name;
+                    break;
+                    case 'employee':
+                        $payee = $this->users_model->getUser($check->payee_id);
+                        $payeeName = $payee->FName . ' ' . $payee->LName;
+                    break;
+                }
+
+                $data[] = [
+                    'date' => date("m/d/Y", strtotime($check->payment_date)),
+                    'name' => $payeeName,
+                    'total' => number_format(floatval($check->total_amount), 2, '.', ','),
+                    'mailing_address' => $check->mailing_address,
+                    'payment_account' => $paymentAcc->name,
+                    'type' => 'check'
+                ];
+            } else {
+                $check = $this->vendors_model->get_bill_payment_by_id($id);
+                $paymentAcc = $this->chart_of_accounts_model->getById($check->payment_account_id);
+                $payee = $this->vendors_model->get_vendor_by_id($check->payee_id);
+                $payeeName = $payee->display_name;
+
+                $data[] = [
+                    'date' => date("m/d/Y", strtotime($check->payment_date)),
+                    'name' => $payeeName,
+                    'total' => number_format(floatval($check->total_amount), 2, '.', ','),
+                    'mailing_address' => $check->mailing_address,
+                    'payment_account' => $paymentAcc->name,
+                    'type' => 'bill-payment'
+                ];
+            }
+        }
+
+        $this->pdf->save_pdf($view, ['checks' => $data], $fileName, 'portrait');
+
+        // $pdf = file_get_contents(base_url("/assets/pdf/$fileName"));
+        // if (file_exists(getcwd()."/assets/pdf/$fileName")) {
+        //     unlink(getcwd()."/assets/pdf/$fileName");
+        // }
+
+        $this->page_data['pdf'] = '/assets/pdf/'.$fileName;
+        $this->load->view('accounting/modals/view_print_checks', $this->page_data);
+    }
 }

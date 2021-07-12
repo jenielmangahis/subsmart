@@ -189,6 +189,7 @@ $('#sales_receipt_pdf_preview_modal').on('hidden.bs.modal', function() {
     $('#sales_receipt_pdf_preview_modal .pdf_preview_section').show();
     $('#sales_receipt_pdf_preview_modal .modal-title').html("Print preview");
     $('#sales_receipt_pdf_preview_modal .send_sales_receipt_section').hide();
+    $('#sales_receipt_pdf_preview_modal form').trigger("reset");
 });
 
 
@@ -217,6 +218,7 @@ $(document).on("click", "#sales_receipt_pdf_preview_modal form#send_sales_receip
 
     var send_type = $(this).attr("data-submit-type");
     var empty_flds = 0;
+    var receive_payment_id = $("#sales_receipt_pdf_preview_modal form#send_sales_receipt input[name='receive_payment_id']").val();
     var sales_receipt_id = $("#sales_receipt_pdf_preview_modal form#send_sales_receipt input[name='sales_receipt_id']").val();
     var email = $("#sales_receipt_pdf_preview_modal form#send_sales_receipt input[name='email']").val();
     var body = $("#sales_receipt_pdf_preview_modal form#send_sales_receipt textarea[name='body']").val();
@@ -239,11 +241,17 @@ $(document).on("click", "#sales_receipt_pdf_preview_modal form#send_sales_receip
             confirmButtonText: "Send now",
         }).then((result) => {
             if (result.value) {
+                if (receive_payment_id != "") {
+                    var sender = "receive_payment_send_email";
+                } else {
+                    var sender = "sales_receipt_send_email";
+                }
                 $.ajax({
-                    url: baseURL + "/accounting/sales_receipt_send_email",
+                    url: baseURL + "/accounting/" + sender,
                     type: "POST",
                     dataType: "json",
                     data: {
+                        receive_payment_id: receive_payment_id,
                         sales_receipt_id: sales_receipt_id,
                         email: email,
                         body: body,
@@ -263,9 +271,15 @@ $(document).on("click", "#sales_receipt_pdf_preview_modal form#send_sales_receip
                             } else {
                                 $('#sales_receipt_pdf_preview_modal').modal('hide');
                                 $('#addsalesreceiptModal').modal('hide');
+                                $('#customer_receive_payment_modal').modal('hide');
                             }
-                            $('#addsalesreceiptModal form').trigger("reset");
-                            $("#addsalesreceiptModal .modal-title .sales_receipt_number").html("");
+                            if (receive_payment_id != "") {
+                                $('#customer_receive_payment_modal form').trigger("reset");
+                                get_customer_info_for_receive_payment_modal(0);
+                            } else {
+                                $('#addsalesreceiptModal form').trigger("reset");
+                                $("#addsalesreceiptModal .modal-title .sales_receipt_number").html("");
+                            }
                         } else {
                             Swal.fire({
                                 showConfirmButton: false,

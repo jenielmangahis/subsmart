@@ -166,6 +166,14 @@ class Dashboard extends Widgets {
         );
         $this->page_data['feeds'] = $this->general->get_data_with_param($feeds_query);
 
+        // get customer newsletter
+        $news_query = array(
+            'where' => array('company_id' => logged('company_id')),
+            'table' => 'news',
+            'select' => '*',
+        );
+        $this->page_data['news'] = $this->general->get_data_with_param($news_query);
+
         $this->load->view('dashboard', $this->page_data);
     }
     

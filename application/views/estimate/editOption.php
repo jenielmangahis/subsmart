@@ -276,7 +276,7 @@ input:checked + .slider:before {
             <div class="page-title-box">
                 <div class="row align-items-center">
                     <div class="col-sm-6">
-                        <h4 style="font-family: Sarabun, sans-serif">Submit Options Estimate</h4>
+                        <h4 style="font-family: Sarabun, sans-serif">Update Options Estimate</h4>
                         <!-- <ol class="breadcrumb">
                             <li class="breadcrumb-item active">Submit your estimate. Include a breakdown of all costs
                                 for this job.
@@ -306,7 +306,7 @@ input:checked + .slider:before {
 
             </div>
             <!-- end row -->
-            <?php echo form_open_multipart('estimate/savenewestimateOptions', ['class' => 'form-validate require-validation', 'id' => 'estimate_form', 'autocomplete' => 'off']); ?>
+            <?php echo form_open_multipart('estimate/updateestimateOptions/' . $estimate->id, ['class' => 'form-validate require-validation', 'id' => 'estimate_form', 'autocomplete' => 'off']); ?>
             <style>
 
             </style>
@@ -321,7 +321,7 @@ input:checked + .slider:before {
                                     <select id="sel-customer" name="customer_id" data-customer-source="dropdown" class="form-control searchable-dropdown" placeholder="Select">
                                         <option value="0">- none -</option>
                                         <?php foreach($customers as $c){ ?>
-                                            <option value="<?= $c->prof_id; ?>"><?= $c->contact_name . '' . $c->first_name . ' ' . $c->last_name; ?></option>
+                                            <option <?php if(isset($c)){ if($c->prof_id == $estimate->customer_id){echo "selected";} } ?>  value="<?= $c->prof_id; ?>"><?= $c->contact_name . '' . $c->first_name . ' ' . $c->last_name; ?></option>
                                         <?php } ?>
                                     </select>
                                     </div>
@@ -336,7 +336,7 @@ input:checked + .slider:before {
                                 <div class="col-md-6">
                                     <label for="job_location"><b>Job Location</b> (optional, select or add new one)</label>
                                     <input type="text" class="form-control" name="job_location" id="job_location"
-                                           required placeholder="Enter address" autofocus
+                                           required placeholder="Enter address" autofocus value="<?php echo $estimate->job_location; ?>"
                                            onChange="jQuery('#customer_name').text(jQuery(this).val());"/>
                                 </div>
                                 <div class="col-md-3">
@@ -348,7 +348,7 @@ input:checked + .slider:before {
                                 <div class="col-md-6">
                                     <label for="job_name"><b>Job Name</b> (optional)</label>
                                     <input type="text" class="form-control" name="job_name" id="job_name"
-                                           placeholder="Enter Job Name"/>
+                                           placeholder="Enter Job Name"  value="<?php echo $estimate->job_name; ?>"/>
                                 </div>
                             </div>
                             <hr>
@@ -356,27 +356,17 @@ input:checked + .slider:before {
                                 <div class="col-md-3">
                                     <label for="estimate_date" class="required"><b>Estimate#</b></label>
                                     <!-- <input type="text" class="form-control" name="estimate_number" id="estimate_date"
-                                           required placeholder="Enter Estimate#" autofocus value="<?php echo $auto_increment_estimate_id; ?>" 
+                                           required placeholder="Enter Estimate#" autofocus value="" 
                                            onChange="jQuery('#customer_name').text(jQuery(this).val());"/> -->
                                     <input type="text" class="form-control" name="estimate_number" id="estimate_date"
-                                           required placeholder="Enter Estimate#"  value="<?php echo "EST-"; 
-                                           foreach ($number as $num):
-                                                $next = $num->estimate_number;
-                                                $arr = explode("-", $next);
-                                                $date_start = $arr[0];
-                                                $nextNum = $arr[1];
-                                            //    echo $number;
-                                           endforeach;
-                                           $val = $nextNum + 1;
-                                           echo str_pad($val,9,"0",STR_PAD_LEFT);
-                                           ?>" />
+                                           required placeholder="Enter Estimate#" value="<?php echo $estimate->estimate_number; ?>" readonly/>
                                 </div>
                                 <div class="col-md-3">
                                     <label for="estimate_date" class="required"><b>Estimate Date</b></label>
                                     <!-- <input type="text" class="form-control" name="estimate_date" id="estimate_date" required placeholder="Enter Estimate Date" autofocus onChange="jQuery('#customer_name').text(jQuery(this).val());" /> -->
                                     <!-- <div class="input-group date" data-provide="datepicker"> -->
                                         <input type="date" class="form-control" name="estimate_date" id="estimate_date_"
-                                               placeholder="Enter Estimate Date">
+                                               placeholder="Enter Estimate Date" value="<?php echo $estimate->estimate_date; ?>">
                                         <div class="input-group-addon">
                                             <span class="glyphicon glyphicon-th"></span>
                                         </div>
@@ -387,7 +377,7 @@ input:checked + .slider:before {
                                     <!-- <input type="text" class="form-control" name="expiry_date" id="expiry_date" required placeholder="Enter Expiry Date" autofocus onChange="jQuery('#customer_name').text(jQuery(this).val());" /> -->
                                     <!-- <div class="input-group date" data-provide="datepicker"> -->
                                         <input type="date" class="form-control" name="expiry_date" id="expiry_date_"
-                                               placeholder="Enter Expiry Date">
+                                               placeholder="Enter Expiry Date" value="<?php echo $estimate->expiry_date; ?>">
                                         <div class="input-group-addon">
                                             <span class="glyphicon glyphicon-th"></span>
                                         </div>
@@ -400,17 +390,17 @@ input:checked + .slider:before {
                                         <label for="purchase_order_number"><b>Purchase Order#</b><small class="help help-sm">(optional)</small></label>
                                         <input type="text" class="form-control" name="purchase_order_number"
                                             id="purchase_order_number" placeholder="Enter Purchase Order#"
-                                            autofocus onChange="jQuery('#customer_name').text(jQuery(this).val());"/>
+                                            autofocus onChange="jQuery('#customer_name').text(jQuery(this).val());" value="<?php echo $estimate->purchase_order_number; ?>"/>
                                     </div>
                                 <!-- </div>
                                 <div class="row" style="background-color:white;"> -->
-                                    <div class="col-md-3 form-group">
+                                <div class="col-md-3 form-group">
                                         <label for="estimate_date"><b>Estimate Type</b> <span style="color:red;">*</span></label>
                                         <select name="estimate_type" class="form-control">
-                                            <option value="Deposit">Deposit</option>
-                                            <option value="Partial Payment">Partial Payment</option>
-                                            <option value="Final Payment">Final Payment</option>
-                                            <option value="Total Due">Total Due</option>
+                                            <option <?php if(isset($estimate)){ if($estimate->type == 'Deposit'){echo "selected";} } ?> value="Deposit">Deposit</option>
+                                            <option <?php if(isset($estimate)){ if($estimate->type == 'Partial Payment'){echo "selected";} } ?> value="Partial Payment">Partial Payment</option>
+                                            <option <?php if(isset($estimate)){ if($estimate->type == 'Final Payment'){echo "selected";} } ?> value="Final Payment">Final Payment</option>
+                                            <option <?php if(isset($estimate)){ if($estimate->type == 'Total Due'){echo "selected";} } ?> value="Total Due">Total Due</option>
                                         </select>
                                     </div>
                                 <!-- </div>
@@ -420,11 +410,11 @@ input:checked + .slider:before {
                                         <!-- <input type="text" class="form-control" name="zip" id="zip" required
                                             placeholder="Enter Estimate Status"/> -->
                                             <select name="status" class="form-control">
-                                                    <option value="Draft">Draft</option>
-                                                    <option value="Submitted">Submitted</option>
-                                                    <option value="Accepted">Accepted</option>
-                                                    <option value="Declined By Customer">Declined By Customer</option>
-                                                    <option value="Lost">Lost</option>
+                                                    <option <?php if(isset($estimate)){ if($estimate->status == 'Draft'){echo "selected";} } ?> value="Draft">Draft</option>
+                                                    <option <?php if(isset($estimate)){ if($estimate->status == 'Submitted'){echo "selected";} } ?>  value="Submitted">Submitted</option>
+                                                    <option <?php if(isset($estimate)){ if($estimate->status == 'Accepted'){echo "selected";} } ?>  value="Accepted">Accepted</option>
+                                                    <option <?php if(isset($estimate)){ if($estimate->status == 'Declined By Customer'){echo "selected";} } ?>  value="Declined By Customer">Declined By Customer</option>
+                                                    <option <?php if(isset($estimate)){ if($estimate->status == 'Lost'){echo "selected";} } ?>  value="Lost">Lost</option>
                                                 </select>
                                     </div>
                             </div>
@@ -490,44 +480,48 @@ input:checked + .slider:before {
                                                        data-counter="0" id="item_total_0" min="0" value="0">
                                                        $<span id="span_total_0">0.00</span></td>
                                         </tr> -->
-                                        <tr>
-                                            <td width="30%">
-                                                <input type="text" class="form-control getItems"
-                                                       onKeyup="getItems(this)" name="items[]">
-                                                <ul class="suggestions"></ul>
-                                                <div class="show_mobile_view"><span class="getItems_hidden"></span></div>
-                                                <input type="hidden" name="itemid[]" id="itemid" class="itemid">
-                                            </td>
-                                            <td width="20%">
-                                            <div class="dropdown-wrapper">
-                                                <select name="item_type[]" id="item_typeid" class="form-control">
-                                                    <option value="product">Product</option>
-                                                    <option value="material">Material</option>
-                                                    <option value="service">Service</option>
-                                                    <option value="fee">Fee</option>
-                                                </select>
-                                            </div>
-
-                                            <!-- <div class="show_mobile_view" style="color:green;"><span>Product</span></div> -->
-                                                </td>
-                                            <td width="10%"><input type="number" class="form-control quantity mobile_qty" name="quantity[]"
-                                                       data-counter="0" id="quantity_0" value="1"></td>
-                                            <td width="10%"><input type="number" class="form-control price hidden_mobile_view" name="price[]"
-                                                       data-counter="0" id="price_0" min="0" value="0"> <input type="hidden" class="priceqty" id="priceqty_0"> 
-                                                       <div class="show_mobile_view"><span class="price">0</span>
-                                                       <!-- <input type="hidden" class="form-control price" name="price[]" data-counter="0" id="priceM_0" min="0" value="0"> -->
-                                                       </div><input id="priceM_qty0" value="0"  type="hidden" name="price_qty[]" class="form-control hidden_mobile_view price_qty"></td>
-                                            <td width="10%" class="hidden_mobile_view"><input type="number" class="form-control discount" name="discount[]"
-                                                       data-counter="0" id="discount_0" min="0" value="0"  readonly></td>
-                                            <td width="10%" class="hidden_mobile_view"><input type="text" class="form-control tax_change" name="tax[]"
-                                                       data-counter="0" id="tax1_0" min="0" value="0">
-                                                       <!-- <span id="span_tax_0">0.0</span> -->
-                                                       </td>
-                                            <td width="10%" class="hidden_mobile_view"><input type="hidden" class="form-control " name="total[]"
-                                                       data-counter="0" id="item_total_0" min="0" value="0">
-                                                       $<span id="span_total_0">0.00</span></td>
-                                            <td><a href="#" class="remove btn btn-sm btn-success" id="0"><i class="fa fa-trash" aria-hidden="true"></i></a></td>
-                                        </tr>
+                                        <?php foreach($itemsOption1 as $data){ ?>
+                                                        <tr>
+                                                            <td width="30%">
+                                                            <div class="hidden_mobile_view">
+                                                                <input type="text" class="form-control getItems"
+                                                                    onKeyup="getItems(this)" name="items[]" value="<?php echo $data->title; ?>">
+                                                                <ul class="suggestions"></ul>
+                                                                <input type="hidden" name="itemid[]" id="itemid" class="itemid" value="<?php echo $data->items_id; ?>">
+                                                            </div>
+                                                            <div class="show_mobile_view">
+                                                            <?php echo $data->item; ?>
+                                                            </div>
+                                                            </td>
+                                                            <td width="20%">
+                                                            <div class="hidden_mobile_view">
+                                                            <select name="item_type[]" class="form-control">
+                                                                    <option value="product">Product</option>
+                                                                    <option value="material">Material</option>
+                                                                    <option value="service">Service</option>
+                                                                    <option value="fee">Fee</option>
+                                                                </select>
+                                                            </div>
+                                                            <div class="show_mobile_view">
+                                                            <?php echo $data->item_type; ?>
+                                                            </div>
+                                                            </td>
+                                                            <td width="10%"><input type="number" class="form-control qtyest3 hidden_mobile_view" name="quantity[]"
+                                                                    data-counter="0" data-itemid="<?php echo $data->id; ?>" id="quantity_<?php echo $data->id; ?>" value="<?php echo $data->qty; ?>"></td>
+                                                            <td width="10%"><input type="number" class="form-control price2 hidden_mobile_view" name="price[]"
+                                                                    data-counter="0" data-itemid="<?php echo $data->id; ?>" id="price_<?php echo $data->id; ?>" min="0" value="<?php echo $data->costing; ?>"><input type="hidden" class="priceqty" id="priceqty_<?php echo $data->id; ?>" value="<?php echo $aaa = $data->costing * $data->qty; ?>"><div class="show_mobile_view"><?php echo $data->costing; ?></div></td>
+                                                            <td class="hidden_mobile_view" width="10%"><input type="number" class="form-control discount" name="discount[]"
+                                                                    data-counter="0" id="discount_<?php echo $data->id; ?>" min="0" value="<?php echo $data->discount; ?>" readonly ></td>
+                                                            <td class="hidden_mobile_view" width="10%"><input type="text" class="form-control tax_change" name="tax[]"
+                                                                    data-counter="0" id="tax1_<?php echo $data->id; ?>" min="0" value="<?php echo $data->tax; ?>">
+                                                                    <!-- <span id="span_tax_0">0.0</span> -->
+                                                                    </td>
+                                                            <td class="hidden_mobile_view" width="10%"><input type="hidden" class="form-control " name="total[]"
+                                                                    data-counter="0" id="item_total_<?php echo $data->id; ?>" min="0" value="<?php echo $data->total; ?>">
+                                                                    $<span id="span_total_<?php echo $data->id; ?>"><?php echo $data->total; ?></span></td>
+                                                            <td><a href="#" class="remove btn btn-sm btn-success"><i class="fa fa-trash" aria-hidden="true"></i></a></td>
+                                                        </tr>
+                                                    <?php } ?>
                                         </tbody>
                                     </table>
                                     <!-- <a href="#" id="add_another_option1" style="color:#02A32C;"><i class="fa fa-plus-square" aria-hidden="true"></i> Add another line</a> -->
@@ -560,13 +554,13 @@ input:checked + .slider:before {
                                         <tr>
                                             <td>Subtotal</td>
                                             <td></td>
-                                            <td>$ <span id="span_sub_total_invoice">0.00</span>
-                                                <input type="hidden" name="sub_total" id="item_total"></td>
+                                            <td>$ <span id="span_sub_total_invoice"><?php echo $estimate->option1_total; ?></span>
+                                                <input type="hidden" name="sub_total" id="item_total" value="<?php echo $estimate->option1_total; ?>"></td>
                                         </tr>
                                         <tr>
                                             <td>Taxes</td>
                                             <td></td>
-                                            <td>$ <span id="total_tax_">0.00</span><input type="hidden" name="total_tax_" id="total_tax_input"></td>
+                                            <td>$ <span id="total_tax_"><?php echo $estimate->tax1_total; ?></span><input type="hidden" name="total_tax_" id="total_tax_input" value="<?php echo $estimate->tax1_total; ?>"></td>
                                         </tr>
                                         <tr style="display:none;">
                                             <td style="width:250px;"><input type="text" name="adjustment_name" id="adjustment_name" placeholder="Adjustment Name" class="form-control" style="width:200px; display:inline; border: 1px dashed #d1d1d1"></td>
@@ -584,8 +578,8 @@ input:checked + .slider:before {
                                         <tr>
                                             <td><b>Grand Total ($)</b></td>
                                             <td></td>
-                                            <td><b><span id="grand_total">0.00</span>
-                                                <input type="hidden" name="grand_total" id="grand_total_input" value='0'></b></td>
+                                            <td><b><span id="grand_total"><?php echo $estimate->option1_total; ?></span>
+                                                <input type="hidden" name="grand_total" id="grand_total_input" value="<?php echo $estimate->option1_total; ?>"></b></td>
                                         </tr>
                                     </table>
                                 </div>
@@ -594,7 +588,7 @@ input:checked + .slider:before {
                             <div class="row" style="background-color:white;font-size:16px;margin-top:-70px;">
                                 <div class="col-md-6 table-responsive">
                                     <label for="option1_m"><h6>Option 1 Message</h6></label>
-                                    <textarea name="option1_message" cols="40" rows="2" class="form-control"></textarea>
+                                    <textarea name="option1_message" cols="40" rows="2" class="form-control"><?php echo $estimate->option_message; ?></textarea>
                                 </div>
                             </div>
 
@@ -614,12 +608,13 @@ input:checked + .slider:before {
                                         </tr>
                                         </thead>
                                         <tbody id="table_body_option2">
+                                        <?php foreach($itemsOption2 as $data2){ ?>
                                         <tr>
                                         <td>
                                                 <input type="text" class="form-control getItems2"
-                                                       onKeyup="getItemsOption2(this)" name="items2[]">
+                                                       onKeyup="getItemsOption2(this)" name="items2[]" value="<?php echo $data2->title; ?>">
                                                 <ul class="suggestions"></ul>
-                                                <input type="hidden" name="itemid2[]" id="itemid2" class="itemid2">
+                                                <input type="hidden" name="itemid2[]" id="itemid2" class="itemid2" value="<?php echo $data->items_id; ?>">
                                             </td>
                                             <td><select name="item_type2[]" class="form-control">
                                                     <option value="product">Product</option>
@@ -628,19 +623,20 @@ input:checked + .slider:before {
                                                     <option value="fee">Fee</option>
                                                 </select></td>
                                             <td><input type="number" class="form-control quantity2" name="quantity2[]"
-                                                       data-counter="0" id="quantity2_0" value="1"></td>
+                                                       data-counter="0" id="quantity2_0" value="<?php echo $data2->qty; ?>"></td>
                                             <!-- <td><input type="text" class="form-control" name="location[]"></td> -->
                                             <td><input type="number" class="form-control price2" name="price2[]"
-                                                       data-counter="0" id="price2_0" min="0" value="0"><input type="hidden" class="priceqty2" id="priceqty2_0" value="0"></td>
+                                                       data-counter="0" id="price2_0" min="0" value="<?php echo $data2->costing; ?>"><input type="hidden" class="priceqty2" id="priceqty2_0" value="<?php echo $data2->costing; ?>"></td>
                                             <td><input type="number" class="form-control discount2" name="discount2[]"
-                                                       data-counter="0" id="discount2_0" min="0" value="0" readonly></td>
+                                                       data-counter="0" id="discount2_0" min="0" value="<?php echo $data2->discount; ?>" readonly></td>
                                             <td><input type="text" class="form-control tax_changeoptionsb" name="tax2[]"
-                                                       data-counter="0" id="tax2_1_0" min="0" value="0"></td>
+                                                       data-counter="0" id="tax2_1_0" min="0" value="<?php echo $data2->tax; ?>"></td>
                                             <td><input type="hidden" class="form-control " name="total2[]"
-                                                       data-counter="0" id="item_total2_0" min="0" value="0">
-                                                       $<span id="span_total2_0">0.00</span></td>
+                                                       data-counter="0" id="item_total2_0" min="0" value="<?php echo $data2->total; ?>">
+                                                       $<span id="span_total2_0"><?php echo $data2->total; ?></span></td>
                                             <td><a href="#" class="remove2 btn btn-sm btn-success" id="0"><i class="fa fa-trash" aria-hidden="true"></i></a></td>
                                         </tr>
+                                        <?php } ?>
                                         </tbody>
                                     </table>
                                     <!-- <a href="#" id="add_another_option2" style="color:#02A32C;"><i class="fa fa-plus-square" aria-hidden="true"></i> Add another line</a> -->
@@ -656,13 +652,13 @@ input:checked + .slider:before {
                                         <tr>
                                             <td>Subtotal</td>
                                             <td></td>
-                                            <td>$ <span id="span_sub_total_invoice2">0.00</span>
-                                                <input type="hidden" name="sub_total2" id="item_total2"></td>
+                                            <td>$ <span id="span_sub_total_invoice2"><?php echo $estimate->option2_total - $estimate->tax2_total; ?></span>
+                                                <input type="hidden" name="sub_total2" id="item_total2" value="<?php echo $estimate->option2_total - $estimate->tax2_total; ?>"></td>
                                         </tr>
                                         <tr>
                                             <td>Taxes</td>
                                             <td></td>
-                                            <td>$ <span id="total_tax2_">0.00</span><input type="hidden" name="total_tax2_" id="total_tax2_input"></td>
+                                            <td>$ <span id="total_tax2_"><?php echo $estimate->tax2_total; ?></span><input type="hidden" name="total_tax2_" id="total_tax2_input" value="<?php echo $estimate->tax2_total; ?>"></td>
                                         </tr>
                                         <tr style="display:none;">
                                             <td style="width:250px;"><input type="text" name="adjustment_name" id="adjustment_name" placeholder="Adjustment Name" class="form-control" style="width:200px; display:inline; border: 1px dashed #d1d1d1"></td>
@@ -680,8 +676,8 @@ input:checked + .slider:before {
                                         <tr>
                                             <td><b>Grand Total ($)</b></td>
                                             <td></td>
-                                            <td><b><span id="grand_total2">0.00</span>
-                                                <input type="hidden" name="grand_total2" id="grand_total_input2" value='0'></b></td>
+                                            <td><b><span id="grand_total2"><?php echo $estimate->option2_total; ?></span>
+                                                <input type="hidden" name="grand_total2" id="grand_total_input2" value="<?php echo $estimate->option2_total; ?>"></b></td>
                                         </tr>
                                     </table>
                                 </div>
@@ -692,7 +688,7 @@ input:checked + .slider:before {
                             <div class="row" style="background-color:white;font-size:16px;margin-top:-70px;">
                                 <div class="col-md-6 table-responsive">
                                     <label for="option2_m"><h6>Option 2 Message</h6></label>
-                                    <textarea name="option2_message" cols="40" rows="2" class="form-control"></textarea>
+                                    <textarea name="option2_message" cols="40" rows="2" class="form-control"><?php echo $estimate->option2_message; ?></textarea>
                                 </div>
                             </div>
                             <br><br>
@@ -711,7 +707,7 @@ input:checked + .slider:before {
                                     <div class="input-group">
                                         <!-- <div class="input-group-addon bold">$</div> -->
                                         <!-- <label><h4>$</h4></label> -->
-                                        <input type="text" name="deposit_amount" value="0" class="input-groupss form-control"
+                                        <input type="text" name="deposit_amount" value="<?php echo $estimate->deposit_amount; ?>" class="input-groupss form-control"
                                                autocomplete="off">
                                     </div>
                                 </div>
@@ -724,14 +720,14 @@ input:checked + .slider:before {
                                 <div class="col-md-6 col-sm-12">
                                     <div class="form-group">
                                         <label><h6>Message to Customer</h6></label> <span class="help help-sm help-block">Add a message that will be displayed on the estimate.</span>
-                                        <textarea name="customer_message" cols="40" rows="2" class="form-control">I would be happy to have an opportunity to work with you.</textarea>
+                                        <textarea name="customer_message" cols="40" rows="2" class="form-control"><?php echo $estimate->customer_message; ?></textarea>
                                     </div>
                                 </div>
                                 <div class="col-md-6 col-sm-12">
                                     <div class="form-group">
                                         <label><h6>Terms &amp; Conditions</h6></label> <span class="help help-sm help-block">Mention your company's T&amp;C that will appear on the estimate.</span>
                                         <textarea name="terms_conditions" cols="40" rows="2"
-                                                  class="form-control"></textarea>
+                                                  class="form-control"><?php echo $estimate->terms_conditions; ?></textarea>
                                     </div>
                                 </div>
                             </div>
@@ -751,7 +747,7 @@ input:checked + .slider:before {
                                     <div class="form-group">
                                         <label><h6>Instructions</h6></label><span class="help help-sm help-block">Optional internal notes, will not appear to customer</span>
                                         <textarea name="instructions" cols="40" rows="2"
-                                                  class="form-control"></textarea>
+                                                  class="form-control"><?php echo $estimate->instructions; ?></textarea>
                                     </div>
                                 </div>
                             </div>
@@ -759,9 +755,9 @@ input:checked + .slider:before {
                             
                             <div class="row" style="background-color:white;">
                                 <div class="col-md-12 form-group">
-                                    <button type="submit" class="btn btn-light but" style="border-radius: 0 !important;border:solid gray 1px;">Save as Draft</button>
+                                    <button type="submit" class="btn btn-danger but" style="border-radius: 0 !important;border:solid gray 1px;">Update</button>
                                     <!-- <button type="button" class="btn btn-success but" style="border-radius: 0 !important;">Preview</button> -->
-                                    <a href="<?php echo url('workorder') ?>" class="btn but-red">Cancel this</a>
+                                    <a href="<?php echo url('estimate') ?>" class="btn but-red">Cancel this</a>
                                 </div>
                             </div>
                         </div>

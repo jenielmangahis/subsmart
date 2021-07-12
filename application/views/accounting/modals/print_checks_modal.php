@@ -1,6 +1,6 @@
 <!-- Modal for bank deposit-->
 <div class="full-screen-modal">
-<form onsubmit="submitModalForm(event, this)" id="modal-form">
+<form id="modal-form">
     <div id="printChecksModal" class="modal fade modal-fluid" role="dialog">
         <div class="modal-dialog">
             <!-- Modal content-->
@@ -79,14 +79,14 @@
                                                 <div class="col-md-2 d-flex align-items-end">
                                                     <div class="form-group" style="margin: 0 !important">
                                                         <label for="starting-check-no">Starting check no.</label>
-                                                        <input type="number" name="starting_check_no" id="starting-check-no" class="form-control">
+                                                        <input type="number" name="starting_check_no" id="starting-check-no" class="form-control" required>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="col-md-2"></div>
                                         <div class="col-md-2">
-                                            <div class="action-bar h-100 d-flex align-items-center">
+                                            <div class="action-bar h-100 d-flex align-items-end">
                                                 <ul class="ml-auto">
                                                     <li><a href="#"><i class="fa fa-print"></i></a></li>
                                                     <li>
@@ -141,18 +141,9 @@
                             <a href="#" class="text-white m-auto">Print setup</a>
                         </div>
                         <div class="col-md-4">
-                            <!-- Split dropup button -->
-                            <div class="btn-group dropup float-right">
-                                <button type="submit" class="btn btn-success">
-                                    Save and new
-                                </button>
-                                <button type="button" class="btn btn-success dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <span class="sr-only">Toggle Dropdown</span>
-                                </button>
-                                <div class="dropdown-menu">
-                                    <a class="dropdown-item" href="#">Save and close</a>
-                                </div>
-                            </div>
+                            <button class="btn btn-success float-right" id="preview-and-print">
+                                Preview and print
+                            </button>
                         </div>
                     </div>
                 </div>

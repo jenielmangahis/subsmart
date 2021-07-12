@@ -2140,7 +2140,17 @@ class Timesheet extends MY_Controller
                             <img style="width:40px;height:40px;border-radius: 20px;margin-bottom:-40px" class="profile-user-img img-responsive img-circle" src="' . $image . '" alt="User profile picture" />
                             <p class="notify-details" style="margin-left: 50px;">' . $notify->FName . " " . $notify->LName . '<span class="text-muted">' . $notify->content . '</span></p>
                             </a>';
-                }else{
+                }
+                elseif($notify->title == 'New Estimates'){
+
+                    $html .= '<a href="' . site_url() . 'estimate" id="notificationDP"
+                    data-id=' . $notify->id . '" class="dropdown-item notify-item active"
+                    style="background-color:' . $bg . '">
+                    <img style="width:40px;height:40px;border-radius: 20px;margin-bottom:-40px" class="profile-user-img img-responsive img-circle" src="' . $image . '" alt="User profile picture" />
+                    <p class="notify-details" style="margin-left: 50px;">' . $notify->FName . " " . $notify->LName . '<span class="text-muted">' . $notify->content . '</span></p>
+                    </a>';
+                }
+                else{
 
                     $html .= '<a href="' . site_url() . 'timesheet/attendance" id="notificationDP"
                             data-id=' . $notify->id . '" class="dropdown-item notify-item active"

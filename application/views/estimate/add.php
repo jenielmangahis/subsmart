@@ -437,9 +437,9 @@ input:checked + .slider:before {
                                             <select name="status" class="form-control">
                                                     <option value="Draft">Draft</option>
                                                     <option value="Submitted">Submitted</option>
-                                                    <option value="Approved">Approved</option>
-                                                    <option value="Declined">Declined</option>
-                                                    <option value="Schedule">Schedule</option>
+                                                    <option value="Accepted">Accepted</option>
+                                                    <option value="Declined By Customer">Declined By Customer</option>
+                                                    <option value="Lost">Lost</option>
                                                 </select>
                                     </div>
                             </div>

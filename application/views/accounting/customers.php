@@ -329,17 +329,9 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 
 <?php include viewPath('includes/sidebars/accounting/accounting'); ?>
 </div>
-<div id="loader-modal">
-	<div class="loader-modal-content">
-		<img src="<?=base_url("assets/img/accounting/customers/loader.gif")?>"
-			alt="">
-	</div>
-</div>
 <?php include viewPath('accounting/customer_includes/send_reminder'); ?>
-<?php include viewPath('accounting/customer_includes/receive_payment'); ?>
 
 <link href="https://nightly.datatables.net/css/jquery.dataTables.css" rel="stylesheet" type="text/css" />
-<script src="https://nightly.datatables.net/js/jquery.dataTables.js"></script>
 <script>
 	var customer_length = <?=count($customers)?> ;
 </script>

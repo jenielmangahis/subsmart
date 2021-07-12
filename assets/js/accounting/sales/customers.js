@@ -56,6 +56,9 @@ $(".section-above-table .search-holder input").focusout(function() {
 //     });
 // });
 get_load_customers_table();
+$('#customer_receive_payment_modal').on('hidden.bs.modal', function() {
+    get_load_customers_table();
+});
 
 function get_load_customers_table() {
     $("#loader-modal").show();

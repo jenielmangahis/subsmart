@@ -349,7 +349,7 @@ input:checked + .slider:before {
                                 <div class="col-md-6">
                                     <label for="job_name"><b>Job Name</b> (optional)</label>
                                     <input type="text" class="form-control" name="job_name" id="job_name"
-                                           placeholder="Enter Job Name" required/>
+                                           placeholder="Enter Job Name" />
                                 </div>
                             </div>
                             <hr>
@@ -405,18 +405,17 @@ input:checked + .slider:before {
                                     </div>
                                 <!-- </div>
                                 <div class="row" style="background-color:white;"> -->
-                                    <div class="col-md-3">
-                                        <label for="zip" class="required"><b>Estimate Status</b></label>
-                                        <!-- <input type="text" class="form-control" name="zip" id="zip" required
-                                            placeholder="Enter Estimate Status"/> -->
-                                            <select name="status" class="form-control">
-                                                    <option value="product">Draft</option>
-                                                    <option value="material">Submitted</option>
-                                                    <option value="service">Approved</option>
-                                                    <option value="service">Declined</option>
-                                                    <option value="service">Schedule</option>
-                                                </select>
+                                <div class="col-md-3 form-group">
+                                        <label for="estimate_date"><b>Estimate Type</b> <span style="color:red;">*</span></label>
+                                        <select name="estimate_type" class="form-control">
+                                            <option value="Deposit">Deposit</option>
+                                            <option value="Partial Payment">Partial Payment</option>
+                                            <option value="Final Payment">Final Payment</option>
+                                            <option value="Total Due">Total Due</option>
+                                        </select>
                                     </div>
+                                <!-- </div>
+                                <div class="row" style="background-color:white;"> -->
                                     <div class="col-md-3">
                                         <label for="status" class="required"><b>Estimate Status</b></label>
                                         <!-- <input type="text" class="form-control" name="zip" id="zip" required
@@ -424,9 +423,9 @@ input:checked + .slider:before {
                                             <select name="status" class="form-control">
                                                     <option value="Draft">Draft</option>
                                                     <option value="Submitted">Submitted</option>
-                                                    <option value="Approved">Approved</option>
-                                                    <option value="Declined">Declined</option>
-                                                    <option value="Schedule">Schedule</option>
+                                                    <option value="Accepted">Accepted</option>
+                                                    <option value="Declined By Customer">Declined By Customer</option>
+                                                    <option value="Lost">Lost</option>
                                                 </select>
                                     </div>
                             </div>
@@ -1431,7 +1430,13 @@ $("#total_tax_input").val(subtotaltaxx.toFixed(2));
             console.log($(this).data('itemname'));
             var title = $(this).data('itemname');
             var price = $(this).data('price');
-            var qty = $(this).data('quantity');
+
+            var quan = $(this).data('quantity');
+            if (quan == ''){
+                var qty = 0;
+            }else{
+                var qty = $(this).data('quantity');
+            }
 
             var count = parseInt($("#count").val()) + 1;
             $("#count").val(count);
@@ -2381,16 +2386,15 @@ $("#total_tax2_input").val(subtotaltax.toFixed(2));
 
 $(document).on("focusout", ".tax_changeoptions2b", function () {
   // var counter = $(this).data("counter");
-  var counter = $(this).attr('data-itemid');
+  var idd = $(this).attr('data-itemid');
 //   alert(counter);
   //calculation(counter);
-  var price = $("#price2_" + counter).val();
-  var quantity = $("#quantity2_" + counter).val();
-  var discount = $("#discount2_" + counter).val();
-  var rate_val = this.value;
-//   alert(rate_val);
-  var tax = (parseFloat(price) * parseFloat(rate_val)) / 100;
-  var tax1 = (((parseFloat(price) * parseFloat(rate_val)) / 100) * parseFloat(quantity)).toFixed(
+  var in_id = idd;
+  var price = $("#price2_" + in_id).val();
+  var quantity = $("#quantity2_" + in_id).val();
+  var discount = $("#discount2_" + in_id).val();
+  var tax = (parseFloat(price) * 7.5) / 100;
+  var tax1 = (((parseFloat(price) * 7.5) / 100) * parseFloat(quantity)).toFixed(
     2
   );
   if( discount == '' ){
@@ -2402,35 +2406,35 @@ $(document).on("focusout", ".tax_changeoptions2b", function () {
     parseFloat(discount)
   ).toFixed(2);
 
-  // alert( 'yeah' + total);
+//   alert( 'yeah' + tax1);
 
-  $("#span_total2_" + counter).text(total);
-  $("#tax2_1_" + counter).text(tax1);
-  $("#tax2_11_" + counter).text(tax1);
-  $("#tax2_1_" + counter).val(tax1);
-  $("#discount2_" + counter).val(discount);
-  $("#tax1_" + counter).val(tax1);
-  // $("#tax1_" + counter).val(tax1);
-  // $("#tax_" + counter).val(tax1);
-  // alert(tax1);
+var total_wo_tax = price * quantity;
 
-  if( $('#tax2_1_'+ counter).length ){
-    $('#tax2_1_'+counter).val(tax1);
+  $("#priceqty2_" + in_id).val(total_wo_tax);
+  $("#span_total2_" + in_id).text(total);
+  $("#tax2_1_" + in_id).text(tax1);
+  $("#tax2_11_" + in_id).val(tax1);
+  $("#discount2_" + in_id).val(discount);
+
+  if( $('#tax2_1_'+ in_id).length ){
+    $('#tax2_1_'+in_id).val(tax1);
   }
 
-  if( $('#item_total2_'+ counter).length ){
-    $('#item_total2_'+counter).val(total);
+  if( $('#item_total2_'+ in_id).length ){
+    $('#item_total2_'+in_id).val(total);
   }
 
   var eqpt_cost = 0;
-  var cnt = $("#count").val();
+  var cnt = $("#count2").val();
   var total_discount = 0;
+  var total_costss = 0;
   for (var p = 0; p <= cnt; p++) {
     var prc = $("#price2_" + p).val();
     var quantity = $("#quantity2_" + p).val();
     var discount = $("#discount2_" + p).val();
     // var discount= $('#discount_' + p).val();
     // eqpt_cost += parseFloat(prc) - parseFloat(discount);
+    total_costss += parseFloat(prc);
     eqpt_cost += parseFloat(prc) * parseFloat(quantity);
     total_discount += parseFloat(discount);
   }
@@ -2438,9 +2442,11 @@ $(document).on("focusout", ".tax_changeoptions2b", function () {
 // $( total ).each( function(){
 //   subtotal += parseFloat( $( this ).val() ) || 0;
 // });
+// alert( 'yeah' + total_costss);
 
   eqpt_cost = parseFloat(eqpt_cost).toFixed(2);
   total_discount = parseFloat(total_discount).toFixed(2);
+  stotal_cost = parseFloat(total_costss).toFixed(2);
   // var test = 5;
 
   var subtotal = 0;
@@ -2450,18 +2456,23 @@ $(document).on("focusout", ".tax_changeoptions2b", function () {
   });
   // $('#sum').text(subtotal);
 
-  var subtotaltax = 0;
+  var subtotaltaxx = 0;
   // $("#span_total_0").each(function(){
     $('*[id^="tax2_1_"]').each(function(){
-      subtotaltax += parseFloat($(this).text());
+      subtotaltaxx += parseFloat($(this).val());
   });
 
-  // alert(subtotaltax);
+//   alert(subtotaltaxx);
+
+var priceqty2 = 0;
+    $('*[id^="priceqty2_"]').each(function(){
+      priceqty2 += parseFloat($(this).val());
+  });
 
   $("#eqpt_cost").val(eqpt_cost);
   $("#total_discount").val(total_discount);
-  $("#sub_total2").text(total_discount);
-  $("#span_sub_total_invoice2").text(subtotal.toFixed(2));
+  $("#span_sub_total_0").text(total_discount);
+  $("#span_sub_total_invoice2").text(priceqty2.toFixed(2));
   $("#item_total2").val(subtotal.toFixed(2));
   
   var s_total = subtotal.toFixed(2);
@@ -2470,14 +2481,12 @@ $(document).on("focusout", ".tax_changeoptions2b", function () {
   var markup = $("#markup_input_form").val();
   var grand_total_w = grand_total + parseFloat(markup);
 
-  $("#total_tax2_").text(subtotaltax.toFixed(2));
-//   $("#total_tax2_").val(subtotaltax.toFixed(2));
-$("#total_tax2_input").val(subtotaltax.toFixed(2));
+  $("#total_tax2_").text(subtotaltaxx.toFixed(2));
+  $("#total_tax2_input").val(subtotaltaxx.toFixed(2));
   
 
   $("#grand_total2").text(grand_total_w.toFixed(2));
   $("#grand_total_input2").val(grand_total_w.toFixed(2));
-  $("#supergrandtotal_input").val(super_grand.toFixed(2));
 
   var sls = (parseFloat(eqpt_cost).toFixed(2) * 7.5) / 100;
   sls = parseFloat(sls).toFixed(2);

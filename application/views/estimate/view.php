@@ -556,8 +556,24 @@ span.sc-item {
                       <?php if($estimate){ ?>
                       <div class="d-block">
                         <div class="col-md-12" style="text-align: right;margin-bottom: 60px;">
-                          <a class="btn btn-success" href="<?php echo base_url('estimate/send_customer/' . $estimate->id) ?>"><span class="fa fa-envelope-open-o icon"></span> SEND TO CUSTOMER</a>
-                          <a class="btn btn-info" href="<?php echo base_url('estimate/edit/' . $estimate->id) ?>"><span class="fa fa-pencil icon"></span> EDIT</a>
+                          <a class="btn btn-success send_to_customer" acs-id="<?php echo $estimate->customer_id; ?>" est-id="<?php echo $estimate->id; ?>"><span class="fa fa-envelope-open-o icon"></span> SEND TO CUSTOMER</a>
+                          <!-- <a class="btn btn-info" href="<?php //echo base_url('estimate/edit/' . $estimate->id) ?>"><span class="fa fa-pencil icon"></span> EDIT</a> -->
+                                                    <?php if($estimate->estimate_type == 'Standard'){ ?>
+                                                    <a class="btn btn-info" role="menuitem" tabindex="-1"
+                                                                               href="<?php echo base_url('estimate/edit/' . $estimate->id) ?>"><span
+                                                                    class="fa fa-pencil-square-o icon"></span> Edit</a>
+                                                    
+                                                    <?php }elseif($estimate->estimate_type == 'Option'){ ?>
+                                                    <a class="btn btn-info" role="menuitem" tabindex="-1"
+                                                                               href="<?php echo base_url('estimate/editOption/' . $estimate->id) ?>"><span
+                                                                    class="fa fa-pencil-square-o icon"></span> Edit</a>
+                                                   
+                                                    <?php }else{ ?>
+                                                    <a class="btn btn-info" role="menuitem" tabindex="-1"
+                                                                               href="<?php echo base_url('estimate/editBundle/' . $estimate->id) ?>"><span
+                                                                    class="fa fa-pencil-square-o icon"></span> Edit</a>
+                                                    
+                                                    <?php } ?>
                           <a class="btn btn-info" target="_new" href="<?php echo base_url('estimate/view_pdf/' . $estimate->id) ?>"><span class="fa fa-file-pdf-o icon"></span> PDF</a>
                           <a class="btn btn-sec" data-print-modal="open" href="#" onclick="printDiv('printableArea')" value="Print Work Order"><span class="fa fa-print"></span> Print</a>
                           <a class="btn btn-info" href="<?php echo base_url('estimate/') ?>">BACK TO ESTIMATE LIST</a>
@@ -590,7 +606,7 @@ span.sc-item {
                             </div>
 
                             <div class="col-xl-5 left" style="margin-bottom: 33px;">
-                              <h5><span class="fa fa-user-o fa-margin-right"></span> From <span class="invoice-txt"> <?= $client->business_name; ?></span></h5>
+                              <h5><span class="fa fa-user-o fa-margin-right"></span> From <br> <span class="invoice-txt"> <?= $client->business_name; ?></span></h5>
                               <div class="col-xl-5 ml-0 pl-0">
                                 <span class=""><?= $client->business_address; ?></span><br />
                                 <span class="">EMAIL: <?= $client->email_address; ?></span><br />
@@ -599,11 +615,11 @@ span.sc-item {
                             </div>
                             <div class="clear"></div>
                             <div class="col-xl-5 left">
-                              <h5><span class="fa fa-user-o fa-margin-right"></span> To <span class="invoice-txt"> <?= $customer->first_name . ' ' . $customer->last_name; ?></span></h5> 
+                              <h5><span class="fa fa-user-o fa-margin-right"></span> To <br> <span class="invoice-txt"> <?= $customer->first_name . ' ' . $customer->last_name; ?></span></h5> 
                               <div class="col-xl-5 ml-0 pl-0">
-                                <span class=""><?= $customer->mail_add . " " . $customer->city ?></span><br /><br />
-                                <span class="">EMAIL: <span class=""><?= $customer->email; ?></span></span><br />
-                                <span class="">PHONE: <span class=""><?= $customer->phone_w; ?></span></span><br />
+                                <span class=""><?= $customer->mail_add . " " . $customer->city ?></span><br />
+                                <span class="">EMAIL: <span class=""><?= $customer->email; ?></span><br />
+                                <span class="">PHONE: <span class=""><?= $customer->phone_w; ?></span><br />
                               </div>
                             </div>
                             <br class="clear"/>    
@@ -620,63 +636,185 @@ span.sc-item {
                                 </tr>
                             </thead>
                             <tbody>
-                            <!-- <?php //$estimateItems = unserialize($estimate->estimate_items); ?>
-                            <?php //if( $estimateItems ){ ?>
-                              <?php //$total_amount = 0; $row = 1; foreach($estimateItems as $item){ ?>
-                                <tr class="table-items__tr">
-                                  <td valign="top" style="width:30px; text-align:center;"><?= $row; ?></td>
-                                  <td valign="top" style="width:45%;"><?= $item['item']; ?></td>
-                                  <td valign="top" style="width:20%;"><?= ucwords($item['item_type']); ?></td>
-                                  <td valign="top" style="width: 50px; text-align: right;"><?= $item['quantity']; ?></td>
-                                  <td valign="top" style="width: 80px; text-align: right;"><?= number_format($item['discount'],2); ?></td>
-                                  <td valign="top" style="width: 80px; text-align: right;"><?= number_format($item['price'],2); ?></td>
+                            <?php if($estimate->estimate_type == 'Option'){ ?>
+                                <tr>
+                                    <td colspan="7" style="padding:15px;"><b>Option 1</b></td>
                                 </tr>
-                              <?php 
-                                // $total_amount += $item['price'];
-                                // $row++;
-                              ?>
-                              <?php //} ?>
-                            <?php //} ?> -->
-                            <?php foreach($items_data as $itemData){ ?>
-                                <tr class="table-items__tr">
-                                  <td valign="top" style="width:30px; text-align:center;"></td>
-                                  <td valign="top" style="width:45%;"><?= $itemData->title; ?></td>
-                                  <td valign="top" style="width:20%;"><?= $itemData->type; ?></td>
-                                  <td valign="top" style="width: 80px; text-align: right;"><?= number_format($itemData->iCost,2); ?></td>
-                                  <td valign="top" style="width: 50px; text-align: right;"><?= $itemData->qty; ?></td>
-                                  <td valign="top" style="width: 50px; text-align: right;"><?= $itemData->discount; ?></td>
-                                  <td valign="top" style="width: 80px; text-align: right;"><?= number_format($itemData->iTotal,2); ?></td>
+                              <?php foreach($items_dataOP1 as $itemData1){ ?>
+                                    <tr class="table-items__tr">
+                                      <td valign="top" style="width:30px; text-align:center;"></td>
+                                      <td valign="top" style="width:45%;"><?= $itemData1->title; ?></td>
+                                      <td valign="top" style="width:20%;"><?= $itemData1->type; ?></td>
+                                      <td valign="top" style="width: 80px; text-align: right;"><?= number_format($itemData1->costing,2); ?></td>
+                                      <td valign="top" style="width: 50px; text-align: right;"><?= $itemData1->qty; ?></td>
+                                      <td valign="top" style="width: 50px; text-align: right;"><?= $itemData1->discount; ?></td>
+                                      <td valign="top" style="width: 80px; text-align: right;"><?= number_format($itemData1->total,2); ?></td>
+                                    </tr>
+                                  <?php } ?>
+                                
+                                <tr><td colspan="7"><hr/></td></tr>
+                                <tr>
+                                  <td colspan="5" style="text-align: right;"><p>Subtotal</p></td>
+                                  <td colspan="2" style="text-align: right;"><p>$ <?= number_format($estimate->sub_total, 2); ?></p></td>
                                 </tr>
-                              <?php } ?>
-                            
-                            <tr><td colspan="7"><hr/></td></tr>
-                            <tr>
-                              <td colspan="5" style="text-align: right;"><p>Subtotal</p></td>
-                              <td colspan="2" style="text-align: right;"><p>$ <?= number_format($estimate->sub_total, 2); ?></p></td>
-                            </tr>
-                            <tr>
-                              <td colspan="5" style="text-align: right;"><p>Taxes</p></td>
-                              <td colspan="2" style="text-align: right;"><p>$ <?= number_format($estimate->tax1_total, 2); ?></p></td>
-                            </tr>
-                            <tr>
-                              <td colspan="5" style="text-align: right;"><p><?= $estimate->adjustment_name; ?></p></td>
-                              <td colspan="2" style="text-align: right;"><p>$ <?= $estimate->adjustment_value; ?></p></td>
-                            </tr>
-                            <tr>
-                              <td colspan="5" style="text-align: right;"><p>Markup</p></td>
-                              <td colspan="2" style="text-align: right;"><p>$ <?= number_format($estimate->markup_amount, 2); ?></p></td>
-                            </tr>
-                            <tr>
-                              <td colspan="5" style="text-align: right;"><b>TOTAL AMOUNT</b></td>
-                              <td colspan="2" style="text-align: right;"><b>$ <?= number_format($estimate->grand_total, 2); ?></b></td>
-                            </tr>
+                                <tr>
+                                  <td colspan="5" style="text-align: right;"><p>Taxes</p></td>
+                                  <td colspan="2" style="text-align: right;"><p>$ <?= number_format($estimate->tax1_total, 2); ?></p></td>
+                                </tr>
+                                <tr>
+                                  <td colspan="5" style="text-align: right;"><b>TOTAL AMOUNT</b></td>
+                                  <td colspan="2" style="text-align: right;"><b>$ <?= number_format($estimate->option1_total, 2); ?></b></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="7" style="padding-top:15px;"><b>Option 1 Message</b></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="7" style="padding-bottom:30px;"><?= $estimate->option_message; ?></td>
+                                </tr>
+
+                                <tr>
+                                    <td colspan="7" style="padding:15px;"><b>Option 2</b></td>
+                                </tr>
+                            <?php foreach($items_dataOP2 as $itemData2){ ?>
+                                    <tr class="table-items__tr">
+                                      <td valign="top" style="width:30px; text-align:center;"></td>
+                                      <td valign="top" style="width:45%;"><?= $itemData2->title; ?></td>
+                                      <td valign="top" style="width:20%;"><?= $itemData2->type; ?></td>
+                                      <td valign="top" style="width: 80px; text-align: right;"><?= number_format($itemData2->costing,2); ?></td>
+                                      <td valign="top" style="width: 50px; text-align: right;"><?= $itemData2->qty; ?></td>
+                                      <td valign="top" style="width: 50px; text-align: right;"><?= $itemData2->discount; ?></td>
+                                      <td valign="top" style="width: 80px; text-align: right;"><?= number_format($itemData2->total,2); ?></td>
+                                    </tr>
+                                  <?php } ?>
+                                
+                                <tr><td colspan="7"><hr/></td></tr>
+                                <tr>
+                                  <td colspan="5" style="text-align: right;"><p>Subtotal</p></td>
+                                  <td colspan="2" style="text-align: right;"><p>$ <?= number_format($estimate->sub_total2, 2); ?></p></td>
+                                </tr>
+                                <tr>
+                                  <td colspan="5" style="text-align: right;"><p>Taxes</p></td>
+                                  <td colspan="2" style="text-align: right;"><p>$ <?= number_format($estimate->tax2_total, 2); ?></p></td>
+                                </tr>
+                                <tr>
+                                  <td colspan="5" style="text-align: right;"><b>TOTAL AMOUNT</b></td>
+                                  <td colspan="2" style="text-align: right;"><b>$ <?= number_format($estimate->option2_total, 2); ?></b></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="7" style="padding-top:15px;"><b>Option 2 Message</b></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="7" style="padding-bottom:15px;"><?= $estimate->option2_message; ?></td>
+                                </tr>
+
+                            <?php }elseif($estimate->estimate_type == 'Bundle'){ ?>
+
+                              <tr>
+                                    <td colspan="7" style="padding:15px;"><b>Bundle 1</b></td>
+                                </tr>
+                              <?php foreach($items_dataBD1 as $itemDatabd1){ ?>
+                                    <tr class="table-items__tr">
+                                      <td valign="top" style="width:30px; text-align:center;"></td>
+                                      <td valign="top" style="width:45%;"><?= $itemDatabd1->title; ?></td>
+                                      <td valign="top" style="width:20%;"><?= $itemDatabd1->type; ?></td>
+                                      <td valign="top" style="width: 80px; text-align: right;"><?= number_format($itemDatabd1->costing,2); ?></td>
+                                      <td valign="top" style="width: 50px; text-align: right;"><?= $itemDatabd1->qty; ?></td>
+                                      <td valign="top" style="width: 50px; text-align: right;"><?= $itemDatabd1->discount; ?></td>
+                                      <td valign="top" style="width: 80px; text-align: right;"><?= number_format($itemDatabd1->total,2); ?></td>
+                                    </tr>
+                                  <?php } ?>
+                                
+                                <tr><td colspan="7"><hr/></td></tr>
+                                <tr>
+                                  <td colspan="5" style="text-align: right;"><p>Subtotal</p></td>
+                                  <td colspan="2" style="text-align: right;"><p>$ <?= number_format($estimate->sub_total, 2); ?></p></td>
+                                </tr>
+                                <tr>
+                                  <td colspan="5" style="text-align: right;"><p>Taxes</p></td>
+                                  <td colspan="2" style="text-align: right;"><p>$ <?= number_format($estimate->tax1_total, 2); ?></p></td>
+                                </tr>
+                                <tr>
+                                  <td colspan="5" style="text-align: right;"><b>TOTAL AMOUNT</b></td>
+                                  <td colspan="2" style="text-align: right;"><b>$ <?= number_format($estimate->bundle1_total, 2); ?></b></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="7" style="padding-top:15px;"><b>Bundle 1 Message</b></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="7" style="padding-bottom:30px;"><?= $estimate->bundle1_message; ?></td>
+                                </tr>
+
+                                <tr>
+                                    <td colspan="7" style="padding:15px;"><b>Bundle 2</b></td>
+                                </tr>
+                            <?php foreach($items_dataBD2 as $itemDatabd2){ ?>
+                                    <tr class="table-items__tr">
+                                      <td valign="top" style="width:30px; text-align:center;"></td>
+                                      <td valign="top" style="width:45%;"><?= $itemDatabd2->title; ?></td>
+                                      <td valign="top" style="width:20%;"><?= $itemDatabd2->type; ?></td>
+                                      <td valign="top" style="width: 80px; text-align: right;"><?= number_format($itemDatabd2->costing,2); ?></td>
+                                      <td valign="top" style="width: 50px; text-align: right;"><?= $itemDatabd2->qty; ?></td>
+                                      <td valign="top" style="width: 50px; text-align: right;"><?= $itemDatabd2->discount; ?></td>
+                                      <td valign="top" style="width: 80px; text-align: right;"><?= number_format($itemDatabd2->total,2); ?></td>
+                                    </tr>
+                                  <?php } ?>
+                                
+                                <tr><td colspan="7"><hr/></td></tr>
+                                <tr>
+                                  <td colspan="5" style="text-align: right;"><p>Subtotal</p></td>
+                                  <td colspan="2" style="text-align: right;"><p>$ <?= number_format($estimate->sub_total2, 2); ?></p></td>
+                                </tr>
+                                <tr>
+                                  <td colspan="5" style="text-align: right;"><p>Taxes</p></td>
+                                  <td colspan="2" style="text-align: right;"><p>$ <?= number_format($estimate->tax2_total, 2); ?></p></td>
+                                </tr>
+                                <tr>
+                                  <td colspan="5" style="text-align: right;"><b>TOTAL AMOUNT</b></td>
+                                  <td colspan="2" style="text-align: right;"><b>$ <?= number_format($estimate->bundle2_total, 2); ?></b></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="7" style="padding-top:15px;"><b>Bundle 2 Message</b></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="7" style="padding-bottom:15px;"><?= $estimate->bundle2_message; ?></td>
+                                </tr>
+
+                            <?php }else{ ?>
+                                <?php foreach($items_data as $itemData){ ?>
+                                    <tr class="table-items__tr">
+                                      <td valign="top" style="width:30px; text-align:center;"></td>
+                                      <td valign="top" style="width:45%;"><?= $itemData->title; ?></td>
+                                      <td valign="top" style="width:20%;"><?= $itemData->type; ?></td>
+                                      <td valign="top" style="width: 80px; text-align: right;"><?= number_format($itemData->iCost,2); ?></td>
+                                      <td valign="top" style="width: 50px; text-align: right;"><?= $itemData->qty; ?></td>
+                                      <td valign="top" style="width: 50px; text-align: right;"><?= $itemData->discount; ?></td>
+                                      <td valign="top" style="width: 80px; text-align: right;"><?= number_format($itemData->iTotal,2); ?></td>
+                                    </tr>
+                                  <?php } ?>
+                                
+                                <tr><td colspan="7"><hr/></td></tr>
+                                <tr>
+                                  <td colspan="5" style="text-align: right;"><p>Subtotal</p></td>
+                                  <td colspan="2" style="text-align: right;"><p>$ <?= number_format($estimate->sub_total, 2); ?></p></td>
+                                </tr>
+                                <tr>
+                                  <td colspan="5" style="text-align: right;"><p>Taxes</p></td>
+                                  <td colspan="2" style="text-align: right;"><p>$ <?= number_format($estimate->tax1_total, 2); ?></p></td>
+                                </tr>
+                                <tr>
+                                  <td colspan="5" style="text-align: right;"><b>TOTAL AMOUNT</b></td>
+                                  <td colspan="2" style="text-align: right;"><b>$ <?= number_format($estimate->grand_total, 2); ?></b></td>
+                                </tr>
+                            <?php } ?>
                             </tbody>
                             </table>
                             <!-- </div> -->
 
                             <hr />
                             <p><b>Instructions</b><br /><br /><?= $estimate->instructions; ?></p>
+                            <?php if($estimate->estimate_type == 'Standard'){ ?>
                             <p><b>Message</b><br /><br /><?= $estimate->customer_message; ?></p>
+                            <?php } ?>
                             <p><b>Terms</b><br /><Br /><?= $estimate->terms_conditions; ?></p>
                       
                             <?php }else{ ?>
@@ -723,4 +861,54 @@ function printDiv(divName) {
     window.print();
     document.body.innerHTML = originalContents;
 }
+</script>
+
+<script>
+$(document).on('click touchstart','.send_to_customer',function(){
+
+var id = $(this).attr('acs-id');
+var est_id = $(this).attr('est-id');
+// alert(wo_id);
+
+var r = confirm("Send this to customer?");
+
+if (r == true) {
+	$.ajax({
+	type : 'POST',
+	url : "<?php echo base_url(); ?>estimate/sendEstimateToAcs",
+	data : {id: id, est_id: est_id},
+	success: function(result){
+		//sucess("Email Successfully!");
+		// alert('Email Successfully!');
+        sucess("Successfully sent to Customer!");
+	},
+	error: function () {
+      alert("An error has occurred");
+    },
+
+	});
+
+	} 
+
+    function sucess(information,$id){
+            Swal.fire({
+                title: 'Good job!',
+                text: information,
+                icon: 'success',
+                showCancelButton: false,
+                confirmButtonColor: '#32243d',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ok'
+            }).then((result) => {
+                if (result.value) {
+                    location.reload();
+                }
+            });
+        }
+// else 
+// {
+// 	alert('no');
+// }
+
+});
 </script>

@@ -1,36 +1,3 @@
-<style>
-.page-title, .box-title {
-  font-family: Sarabun, sans-serif !important;
-  font-size: 1.75rem !important;
-  font-weight: 600 !important;
-  padding-top: 5px;
-}
-.pr-b10 {
-  position: relative;
-  bottom: 10px;
-}
-.p-40 {
-  padding-top: 40px !important;
-}
-.card-body {
-    padding: 0px 6px !important;
-}
-.p-20 {
-  padding-top: 0px !important;
-  padding-bottom: 25px !important;
-  padding-right: 20px !important;
-  padding-left: 20px !important;
-}
-@media only screen and (max-width: 600px) {
-  .p-40 {
-    padding-top: 0px !important;
-  }
-  .pr-b10 {
-    position: relative;
-    bottom: 0px;
-  }
-}
-</style>
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 ?>
@@ -40,23 +7,20 @@ defined('BASEPATH') or exit('No direct script access allowed');
     <!-- page wrapper start -->
     <div wrapper__section>
     <?php include viewPath('includes/notifications'); ?>
-        <div class="container-fluid p-40">
+        <div class="container-fluid">
             <div class="row custom__border">
                 <div class="col-xl-12">
-                    <div class="card p-20">
+                    <div class="card">
                         <div class="card-body">
-                            <div style="display:flex !important; padding-top:20px; padding-bottom:0px;">
-                                <h3 class="pl-0 page-title col-md-4 text-left pr-0">Inventory</h3>
-                                <div class="col-md-8 pr-0 text-right" style="margin-bottom:10px;">
+                            <div style="display:flex !important; padding-top:20px; padding-bottom:20px;">
+                                <h2 class="page-title col-md-4 text-left">Inventory</h2>
+                                <div class="col-md-8 text-right" style="margin-bottom:10px;">
                                     <form action="<?php echo base_url('inventory/importItems'); ?>" method="post" enctype="multipart/form-data">
                                         <input type="file" name="file" />
                                         <input type="submit" class="btn btn-info" name="importSubmit" id="importItemsInventory" value="Import">
                                         <button type="button" class="btn btn-info" id="exportItemsInventory"><span class="fa fa-download"></span> Export</button>
                                     </form>
                                 </div>
-                            </div>
-                            <div class="col mb-4 left alert alert-warning mt-0 mb-2">
-                                <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
                             </div>
                             <div class="row">
                                 <input type="hidden" id="selectedIds">
@@ -96,7 +60,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                             <li><a href="#" class="dropdown-item deleteSelect">Delete selected</a></li>
                                         </ul>
                                     </div>
-                                    <table class="table table-hover table-bordered table-striped" style="width:100%;" id="inventoryOnHandItems">
+                                    <table class="table table-hover table-bordered table-striped" style="width:100%;" id="inventoryOnHandItems"> 
                                         <thead>
                                             <tr>
                                                 <th class="text-center"><input type="checkbox" class="form-control" id="inventoryItemCheckAll" value=""></th>
@@ -166,7 +130,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                             <?php endif; ?>
                                             <?php endforeach; ?>
                                         </tbody>
-                                    </table>
+                                    </table> 
                                 </div>
                                 <?php elseif ($type == 'service') : ?>
                                 <div class="col-md-12" id="servicesInventory">
@@ -229,7 +193,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                             <?php endif; ?>
                                         <?php endforeach; ?>
                                         </tbody>
-                                    </table>
+                                    </table> 
                                 </div>
                                 <?php elseif ($type == 'fees') : ?>
                                 <div class="col-md-12" id="feesInventory">
@@ -289,7 +253,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                             <?php endif; ?>
                                             <?php endforeach; ?>
                                         </tbody>
-                                    </table>
+                                    </table> 
                                 </div>
                                 <?php elseif ($type == 'itemgroup') : ?>
                                 <div class="col-md-12" id="itemGroups">
@@ -591,18 +555,18 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                     <label for="job_customer">Location</label>
                                     <input type="text" id="itemLocation" class="form-control col-md-12">
 
-                                </div>
+                                </div>  
                                 <div class="col-md-4">
                                     <label for="job_customer">Quantity</label>
                                     <input type="number" id="itemQuantity" class="form-control col-md-12">
 
-                                </div>
+                                </div> 
                                 <div class="col-md-3">
                                     <br>
                                     <button type="button" class="btn btn-primary mt-2" id="saveAddLocation">Add Location</button>
-                                </div>
+                                </div>  
                             </div>
-                        </div>
+                        </div>  
                         <table class="table table-hover table-bordered table-striped" style="width:100%;" id="addNewLocationTable">
                             <thead>
                                 <tr>
@@ -615,7 +579,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <?php foreach($assignEmployees as $emp) : ?>
                                     <tr>
                                         <td class="pl-3"><?php echo $emp['title']; ?></td>
-                                        <td class="pl-3"><?php echo $emp['emp_role']; ?></td>
+                                        <td class="pl-3"><?php echo $emp['emp_role']; ?></td>                                
                                     </tr>
                                 <?php endforeach; ?>
                                 <?php endif;?>

@@ -2750,6 +2750,97 @@ $(function() {
 
         $('#new-popup #accounting_vendors a[data-target="#checkModal"]').trigger('click');
     });
+
+    $(document).on('click', '#printChecksModal #remove-from-list', function() {
+        var data = new FormData();
+
+        $('#printChecksModal #checks-table tbody tr input[type="checkbox"]:checked').each(function() {
+            var row = $(this).parent().parent().parent();
+            var rowData = $('#printChecksModal #checks-table').DataTable().row(row).data();
+            var transactionType = rowData.type;
+            transactionType = transactionType.replaceAll(' (Check)', '');
+            transactionType = transactionType.replaceAll(' (Credit Card)', '');
+            transactionType = transactionType.replaceAll(' ', '-');
+            transactionType = transactionType.toLowerCase();
+
+            if(data.has('id[]') === false) {
+                data.set('id[]', $(this).val());
+                data.set('type[]', transactionType);
+            } else {
+                data.append('id[]', $(this).val());
+                data.append('type[]', transactionType);
+            }
+        });
+
+        $.ajax({
+            url: '/accounting/remove-to-print',
+            data: data,
+            type: 'post',
+            processData: false,
+            contentType: false,
+            success: function(result) {
+                var res = JSON.parse(result);
+    
+                toast(res.success, res.message);
+
+                $('#printChecksModal #checks-table').DataTable().ajax.reload(null, true);
+                $('#printChecksModal #checks-table #select-all-checks').prop('checked', false);
+                $('#printChecksModal #selected-checks-total').html('0.00');
+                $('#printChecksModal #selected-checks').html('0');
+            }
+        });
+    });
+
+    $(document).on('click', '#printChecksModal #preview-and-print', function(e) {
+        e.preventDefault();
+
+        if($('#printChecksModal #checks-table tbody tr input[type="checkbox"]:checked').length > 0) {
+            var form = document.getElementById('modal-form');
+            var data = new FormData(form);
+            data.delete('sort');
+            data.delete('check_type');
+            data.delete('table_rows');
+
+            $('#printChecksModal #checks-table tbody tr input[type="checkbox"]:checked').each(function() {
+                var row = $(this).parent().parent().parent();
+                var rowData = $('#printChecksModal #checks-table').DataTable().row(row).data();
+                var transactionType = rowData.type;
+                transactionType = transactionType.replaceAll(' (Check)', '');
+                transactionType = transactionType.replaceAll(' (Credit Card)', '');
+                transactionType = transactionType.replaceAll(' ', '-');
+                transactionType = transactionType.toLowerCase();
+
+                if(data.has('id[]') === false) {
+                    data.set('id[]', $(this).val());
+                    data.set('type[]', transactionType);
+                } else {
+                    data.append('id[]', $(this).val());
+                    data.append('type[]', transactionType);
+                }
+            });
+
+            $.ajax({
+                url: '/accounting/print-preview-checks',
+                data: data,
+                type: 'post',
+                processData: false,
+                contentType: false,
+                success: function(result) {
+                    $('div#modal-container').append(result);
+
+                    $('#viewPrintChecksModal').modal('show');
+                }
+            });
+        } else {
+            Swal.fire({
+                text: "You need to select a check to print.",
+                icon: 'warning',
+                showCloseButton: true,
+                confirmButtonColor: '#2ca01c',
+                confirmButtonText: 'OK'
+            })
+        }
+    });
 });
 
 const convertToDecimal = (el) => {

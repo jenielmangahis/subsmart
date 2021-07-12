@@ -104,7 +104,6 @@ $("#customer_receive_payment_modal .customer_receive_payment_modal_content .invo
 
 $(document).on("change", "#customer_receive_payment_modal .customer_receive_payment_modal_content .invoicing-part .invoices .inv_cb", function(event) {
     var unchecked_found = false;
-    console.log("Pasok");
     for (var i = 0; i < invoice_count; i++) {
         if (!$("#customer_receive_payment_modal .customer_receive_payment_modal_content .invoicing-part .invoices input[name='inv_cb_" + i + "']").is(":checked")) {
             unchecked_found = true;
@@ -137,6 +136,9 @@ var invoice_count = 0;
 
 function get_customer_info_for_receive_payment_modal(customer_id) {
     $("#loader-modal").show();
+    $("#customer_receive_payment_modal #receive_payment_form input[name='receive_payment_id']").val("");
+    $("#customer_receive_payment_modal #receive_payment_form input[name='ref_no']").removeAttr("disabled");
+    $("#customer_receive_payment_modal #receive_payment_form input[name='payment_date']").removeAttr("disabled");
     $.ajax({
         url: baseURL + "/accounting/get_customer_info_for_receive_payment",
         type: "POST",
@@ -204,7 +206,15 @@ $("#customer_receive_payment_modal #receive_payment_form .filter input[name='inv
 });
 
 
+
+$('#customer_receive_payment_modal').on('hidden.bs.modal', function() {
+    $("#customer_receive_payment_modal #receive_payment_form input[name='ref_no']").removeAttr("disabled");
+    $("#customer_receive_payment_modal #receive_payment_form input[name='payment_date']").removeAttr("disabled");
+    $('#customer_receive_payment_modal form').trigger("reset");
+    get_customer_info_for_receive_payment_modal('');
+});
 $(document).on("click", "#customer_receive_payment_modal #receive_payment_form button[data-action='print']", function(event) {
+
     var submit_type = $(this).attr('data-submit-type');
     $("#customer_receive_payment_modal #receive_payment_form input[name='submit_option']").val(submit_type);
     var empty_flds = 0;
@@ -215,11 +225,35 @@ $(document).on("click", "#customer_receive_payment_modal #receive_payment_form b
     });
 
     if (empty_flds == 0) {
-        $("#customer_receive_payment_modal #receive_payment_form").attr("action", baseURL + "/accounting/print_receive_payment");
-        $("#customer_receive_payment_modal #receive_payment_form").attr("target", "_blank");
-        $("#customer_receive_payment_modal #receive_payment_form").attr("method", "POST");
-        $("#customer_receive_payment_modal #receive_payment_form").submit();
+        event.preventDefault();
+        // $("#customer_receive_payment_modal #receive_payment_form").attr("action", baseURL + "/accounting/print_receive_payment");
+        // $("#customer_receive_payment_modal #receive_payment_form").attr("target", "_blank");
+        // $("#customer_receive_payment_modal #receive_payment_form").attr("method", "POST");
+        // $("#customer_receive_payment_modal #receive_payment_form").submit();
+        $("#loader-modal").show();
 
+        $("#customer_receive_payment_modal #receive_payment_form input[name='ref_no']").removeAttr("disabled");
+        $("#customer_receive_payment_modal #receive_payment_form input[name='payment_date']").removeAttr("disabled");
+        $.ajax({
+            url: baseURL + "/accounting/print_receive_payment",
+            type: "POST",
+            dataType: "json",
+            data: $("#customer_receive_payment_modal #receive_payment_form").serialize(),
+            success: function(data) {
+                if (data.count_save > 0) {
+                    $("#customer_receive_payment_modal #receive_payment_form input[name='receive_payment_id']").val(data.receive_payment_id);
+                    $("#customer_receive_payment_modal #receive_payment_form input[name='ref_no']").attr("disabled", "true");
+                    $("#customer_receive_payment_modal #receive_payment_form input[name='payment_date']").attr("disabled", "true");
+                    $('#sales_receipt_pdf_preview_modal').modal('show');
+                    $('#sales_receipt_pdf_preview_modal .send_sales_receipt_section').hide();
+                    $("#sales_receipt_pdf_preview_modal .pdf-print-preview").html(
+                        '<iframe src="' + data.file_location + '"></iframe>');
+                    $("#sales_receipt_pdf_preview_modal .pdf_preview_section .print-button").attr("href", data.file_location);
+                    $("#sales_receipt_pdf_preview_modal .pdf_preview_section .download-button").attr("href", data.file_location);
+                }
+                $("#loader-modal").hide();
+            },
+        });
     }
 });
 $(document).on("click", "#customer_receive_payment_modal #receive_payment_form button[data-action='save']", function(event) {
@@ -246,6 +280,10 @@ $(document).on("click", "#customer_receive_payment_modal #receive_payment_form b
         }).then((result) => {
             if (result.value) {
                 $("#loader-modal").show();
+
+                $("#customer_receive_payment_modal #receive_payment_form input[name='ref_no']").removeAttr("disabled");
+                $("#customer_receive_payment_modal #receive_payment_form input[name='payment_date']").removeAttr("disabled");
+                console.log($("#customer_receive_payment_modal #receive_payment_form input[name='receive_payment_id']").val());
                 $.ajax({
                     url: baseURL + "/accounting/save_receive_payment_from_modal",
                     type: "POST",
@@ -253,15 +291,35 @@ $(document).on("click", "#customer_receive_payment_modal #receive_payment_form b
                     data: $("#customer_receive_payment_modal #receive_payment_form").serialize(),
                     success: function(data) {
                         if (data.count_save > 0) {
+                            $("#customer_receive_payment_modal #receive_payment_form input[name='receive_payment_id']").val(data.receive_payment_id);
+                            $("#customer_receive_payment_modal #receive_payment_form input[name='ref_no']").attr("disabled", "true");
+                            $("#customer_receive_payment_modal #receive_payment_form input[name='payment_date']").attr("disabled", "true");
                             get_load_customers_table();
-                            if (submit_type == "save-send" && data.email_sending_status == "success") {
+                            if (submit_type == "save-send") {
                                 Swal.fire({
                                     showConfirmButton: false,
                                     timer: 2000,
                                     title: "Success",
-                                    html: "Receive payment has been saved and sent.",
+                                    html: "Receive payment has been saved.",
                                     icon: "success",
                                 });
+                                $('#sales_receipt_pdf_preview_modal').modal('show');
+                                $('#sales_receipt_pdf_preview_modal .send_sales_receipt_section').show();
+                                $('#sales_receipt_pdf_preview_modal .pdf_preview_section').hide();
+                                $('#sales_receipt_pdf_preview_modal .modal-title').html("Send email");
+                                $('#sales_receipt_pdf_preview_modal form#send_sales_receipt input[name="receive_payment_id"]').val(data.receive_payment_id);
+                                $('#sales_receipt_pdf_preview_modal form#send_sales_receipt input[name="email"]').val(data.customer_email);
+                                $('#sales_receipt_pdf_preview_modal form#send_sales_receipt input[name="subject"]').val("Payment Receipt from " + data.business_name);
+                                $('#sales_receipt_pdf_preview_modal form#send_sales_receipt textarea[name="body"]').val(`Please find our payment receipt attached to this email.
+
+Thank you.
+                                
+Have a great day,
+` + data.business_name);
+                                $("#sales_receipt_pdf_preview_modal .modal-footer .send_sales_receipt_section .download-button").attr('href', data.file_location);
+                                $("#sales_receipt_pdf_preview_modal .send_sales_receipt_section .send_sales_receipt-preview").html(
+                                    '<iframe src="' + data.file_location + '"></iframe>');
+                                get_load_customers_table();
                             } else {
                                 Swal.fire({
                                     showConfirmButton: false,
@@ -283,7 +341,7 @@ $(document).on("click", "#customer_receive_payment_modal #receive_payment_form b
                         if (submit_type == "save-new") {
                             $("#customer_receive_payment_modal #receive_payment_form select[name='customer_id']").val("");
                             get_customer_info_for_receive_payment_modal('');
-                        } else {
+                        } else if (submit_type == "save-close") {
                             $("#customer_receive_payment_modal").fadeOut();
                         }
                     },
@@ -293,15 +351,22 @@ $(document).on("click", "#customer_receive_payment_modal #receive_payment_form b
 
     }
 });
-
 $(document).on("change", "div#customer_receive_payment_modal .customer_receive_payment_modal_content #customer_invoice_table td .inv_grand_amount", function(event) {
+    receive_payment_inv_grand_amount_changed();
+});
+$(document).on("click", "div#customer_receive_payment_modal .customer_receive_payment_modal_content button.clear-payment", function(event) {
+    for (var i = 0; i < invoice_count; i++) {
+        $("div#customer_receive_payment_modal .customer_receive_payment_modal_content #customer_invoice_table td input[name='inv_" + i + "']").val(0);
+    }
+    receive_payment_inv_grand_amount_changed();
+});
+
+function receive_payment_inv_grand_amount_changed() {
     var receivable_payment = 0;
-    console.log(invoice_count);
     for (var i = 0; i < invoice_count; i++) {
         if ($("div#customer_receive_payment_modal .customer_receive_payment_modal_content #customer_invoice_table td input[name='inv_cb_" + i + "']").is(":checked")) {
             var inv_amount = $("div#customer_receive_payment_modal .customer_receive_payment_modal_content #customer_invoice_table td input[name='inv_" + i + "']").val();
             receivable_payment += parseFloat(inv_amount.replace(/,/g, ''));
-            console.log(receivable_payment);
         }
     }
     const formatter = new Intl.NumberFormat('en-US', {
@@ -312,7 +377,7 @@ $(document).on("change", "div#customer_receive_payment_modal .customer_receive_p
     $('div#customer_receive_payment_modal .customer_receive_payment_modal_content .invoicing-part .total-amount .amount-to-apply .amount').html("$" + formatMoney(receivable_payment));
     $("#customer_receive_payment_modal #receive_payment_form input[name='amount_received']").val(formatMoney(receivable_payment));
     $(this).val(formatMoney($(this).val().replace(/,/g, '')));
-});
+}
 
 
 function formatMoney(n) {

@@ -12,6 +12,8 @@
         overflow-y: auto;
     }
 </style>
+
+<?php include viewPath('accounting/customer_includes/receive_payment/receive_payment_modal'); ?>
 <!-- Modal for add account-->
 <div class="full-screen-modal">
     <div id="addreceivepaymentModal" class="modal fade modal-fluid" role="dialog">

@@ -410,13 +410,12 @@ input:checked + .slider:before {
                                              onChange="jQuery('#customer_name').text(jQuery(this).val());" value="<?php echo $estimate->purchase_order_number; ?>"/>
                                     </div>
                                     <div class="col-md-3 form-group">
-                                        <label for="estimate_date">Estimate Type <span style="color:red;">*</span></label>
+                                        <label for="estimate_date"><b>Estimate Type</b> <span style="color:red;">*</span></label>
                                         <select name="estimate_type" class="form-control">
-                                            <option value="<?php echo $estimate->estimate_type; ?>"><?php echo $estimate->estimate_type; ?></option>
-                                            <option value="Deposit">Deposit</option>
-                                            <option value="Partial Payment">Partial Payment</option>
-                                            <option value="Final Payment">Final Payment</option>
-                                            <option value="Total Due" selected="selected">Total Due</option>
+                                            <option <?php if(isset($estimate)){ if($estimate->type == 'Deposit'){echo "selected";} } ?> value="Deposit">Deposit</option>
+                                            <option <?php if(isset($estimate)){ if($estimate->type == 'Partial Payment'){echo "selected";} } ?> value="Partial Payment">Partial Payment</option>
+                                            <option <?php if(isset($estimate)){ if($estimate->type == 'Final Payment'){echo "selected";} } ?> value="Final Payment">Final Payment</option>
+                                            <option <?php if(isset($estimate)){ if($estimate->type == 'Total Due'){echo "selected";} } ?> value="Total Due">Total Due</option>
                                         </select>
                                     </div>
                                 <!-- </div>
@@ -426,12 +425,11 @@ input:checked + .slider:before {
                                         <!-- <input type="text" class="form-control" name="zip" id="zip" required
                                             placeholder="Enter Estimate Status"/> -->
                                             <select name="status" class="form-control">
-                                                    <option value="<?php echo $estimate->status; ?>"><?php echo $estimate->status; ?></option>
-                                                    <option value="Draft">Draft</option>
-                                                    <option value="Submitted">Submitted</option>
-                                                    <option value="Approved">Approved</option>
-                                                    <option value="Declined">Declined</option>
-                                                    <option value="Schedule">Schedule</option>
+                                                    <option <?php if(isset($estimate)){ if($estimate->status == 'Draft'){echo "selected";} } ?> value="Draft">Draft</option>
+                                                    <option <?php if(isset($estimate)){ if($estimate->status == 'Submitted'){echo "selected";} } ?>  value="Submitted">Submitted</option>
+                                                    <option <?php if(isset($estimate)){ if($estimate->status == 'Accepted'){echo "selected";} } ?>  value="Accepted">Accepted</option>
+                                                    <option <?php if(isset($estimate)){ if($estimate->status == 'Declined By Customer'){echo "selected";} } ?>  value="Declined By Customer">Declined By Customer</option>
+                                                    <option <?php if(isset($estimate)){ if($estimate->status == 'Lost'){echo "selected";} } ?>  value="Lost">Lost</option>
                                                 </select>
                                     </div>
                             </div>
@@ -534,7 +532,7 @@ input:checked + .slider:before {
                                                        $<span id="span_total_0">0.00</span></td>
                                             <td><a href="#" class="remove btn btn-sm btn-success" id="0"><i class="fa fa-trash" aria-hidden="true"></i></a></td>
                                         </tr> -->
-                                        <?php foreach($items_data as $data){ ?>
+                                        <?php foreach($itemsDetails as $data){ ?>
                                                         <tr>
                                                             <td width="30%">
                                                             <div class="hidden_mobile_view">
@@ -563,16 +561,16 @@ input:checked + .slider:before {
                                                             <td width="10%"><input type="number" class="form-control qtyest3 hidden_mobile_view" name="quantity[]"
                                                                     data-counter="0" data-itemid="<?php echo $data->id; ?>" id="quantity_<?php echo $data->id; ?>" value="<?php echo $data->qty; ?>"></td>
                                                             <td width="10%"><input type="number" class="form-control price2 hidden_mobile_view" name="price[]"
-                                                                    data-counter="0" data-itemid="<?php echo $data->id; ?>" id="price_<?php echo $data->id; ?>" min="0" value="<?php echo $data->iCost; ?>"><input type="hidden" class="priceqty" id="priceqty_<?php echo $data->id; ?>" value="<?php echo $aaa = $data->iCost * $data->qty; ?>"><div class="show_mobile_view"><?php echo $data->iCost; ?></div></td>
+                                                                    data-counter="0" data-itemid="<?php echo $data->id; ?>" id="price_<?php echo $data->id; ?>" min="0" value="<?php echo $data->costing; ?>"><input type="hidden" class="priceqty" id="priceqty_<?php echo $data->id; ?>" value="<?php echo $aaa = $data->costing * $data->qty; ?>"><div class="show_mobile_view"><?php echo $data->costing; ?></div></td>
                                                             <td class="hidden_mobile_view" width="10%"><input type="number" class="form-control discount" name="discount[]"
                                                                     data-counter="0" id="discount_<?php echo $data->id; ?>" min="0" value="<?php echo $data->discount; ?>" readonly ></td>
                                                             <td class="hidden_mobile_view" width="10%"><input type="text" class="form-control tax_change" name="tax[]"
-                                                                    data-counter="0" id="tax1_<?php echo $data->id; ?>" min="0" value="<?php echo $data->itax; ?>">
+                                                                    data-counter="0" id="tax1_<?php echo $data->id; ?>" min="0" value="<?php echo $data->tax; ?>">
                                                                     <!-- <span id="span_tax_0">0.0</span> -->
                                                                     </td>
                                                             <td class="hidden_mobile_view" width="10%"><input type="hidden" class="form-control " name="total[]"
-                                                                    data-counter="0" id="item_total_<?php echo $data->id; ?>" min="0" value="<?php echo $data->iTotal; ?>">
-                                                                    $<span id="span_total_<?php echo $data->id; ?>"><?php echo $data->iTotal; ?></span></td>
+                                                                    data-counter="0" id="item_total_<?php echo $data->id; ?>" min="0" value="<?php echo $data->total; ?>">
+                                                                    $<span id="span_total_<?php echo $data->id; ?>"><?php echo $data->total; ?></span></td>
                                                             <td><a href="#" class="remove btn btn-sm btn-success"><i class="fa fa-trash" aria-hidden="true"></i></a></td>
                                                         </tr>
                                                     <?php } ?>
@@ -581,7 +579,7 @@ input:checked + .slider:before {
                                     <!-- <a href="#" id="add_another_estimate" style="color:#02A32C;"><i class="fa fa-plus-square" aria-hidden="true"></i> Add another line</a> &emsp; -->
                                     <!-- <a href="#" id="add_another" style="color:#02A32C;"><i class="fa fa-plus-square" aria-hidden="true"></i> Add Items in bulk</a> -->
                                     <a class="link-modal-open" href="#" id="add_another_items" data-toggle="modal" data-target="#item_list"><span class="fa fa-plus-square fa-margin-right"></span>Add Items</a>  &emsp;
-                                    <a class="link-modal-open" href="#" id="add_package" data-toggle="modal" data-target=".bd-example-modal-lg"><span class="fa fa-plus-square fa-margin-right"></span>Add Package</a>
+                                    <!-- <a class="link-modal-open" href="#" id="add_package" data-toggle="modal" data-target=".bd-example-modal-lg"><span class="fa fa-plus-square fa-margin-right"></span>Add By Group</a> -->
                                     <hr>
                                 </div>
                             </div>
@@ -721,7 +719,7 @@ input:checked + .slider:before {
                                 <div class="col-md-12 form-group">
                                     <button type="submit" class="btn btn-danger but" style="border-radius: 0 !important;border:solid gray 1px;">Update</button>
                                     <button type="button" class="btn btn-success but" style="border-radius: 0 !important;">Preview</button>
-                                    <a href="<?php echo url('accounting/newEstimateList') ?>" class="btn but-red">Cancel this</a>
+                                    <a href="<?php echo url('estimate') ?>" class="btn but-red">Cancel this</a>
                                 </div>
                             </div>
                         </div>

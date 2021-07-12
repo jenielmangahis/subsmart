@@ -139,6 +139,94 @@ class Estimate_model extends MY_Model
         return true;
     }
 
+    public function update_estimateBundle($data)
+    {
+        extract($data);
+        $this->db->where('id', $id);
+        $this->db->update('estimates', array(
+            'customer_id'               => $customer_id,
+            'job_location'              => $job_location,
+            'job_name'                  => $job_name,
+            'estimate_date'             => $estimate_date,
+            'expiry_date'               => $expiry_date,
+            'purchase_order_number'     => $purchase_order_number,
+            'status'                    => $status,
+            'estimate_type'             => $estimate_type,
+            'type'                      => $type,
+            'deposit_request'           => $deposit_request,
+            'deposit_amount'            => $deposit_amount,
+            'customer_message'          => $customer_message,
+            'terms_conditions'          => $terms_conditions,
+            'instructions'              => $instructions,
+
+            'bundle1_message'           => $bundle1_message,
+            'bundle2_message'           => $bundle2_message,
+            'bundle_discount'           => $bundle_discount,
+            
+            'deposit_amount'            => $deposit_amount,
+            'bundle1_total'             => $bundle1_total,
+            'bundle2_total'             => $bundle2_total,
+            'sub_total'                 => $sub_total,
+            'sub_total2'                => $sub_total2,
+            'tax1_total'                => $tax1_total,
+            'tax2_total'                => $tax2_total,
+
+            'grand_total'               => $grand_total,
+            'tax1_total'                => $tax1_total,
+            'adjustment_name'           => $adjustment_name,
+            'adjustment_value'          => $adjustment_value,
+            'markup_type'               => $markup_type,
+            'markup_amount'             => $markup_amount,
+            'updated_at'                => $updated_at,
+            
+        ));
+        return true;
+    }
+
+    public function update_estimateOptions($data)
+    {
+        extract($data);
+        $this->db->where('id', $id);
+        $this->db->update('estimates', array(
+            'customer_id'               => $customer_id,
+            'job_location'              => $job_location,
+            'job_name'                  => $job_name,
+            'estimate_date'             => $estimate_date,
+            'expiry_date'               => $expiry_date,
+            'purchase_order_number'     => $purchase_order_number,
+            'status'                    => $status,
+            'estimate_type'             => $estimate_type,
+            'type'                      => $type,
+            'deposit_request'           => $deposit_request,
+            'deposit_amount'            => $deposit_amount,
+            'customer_message'          => $customer_message,
+            'terms_conditions'          => $terms_conditions,
+            'instructions'              => $instructions,
+
+            'option_message'            => $option_message,
+            'option2_message'           => $option2_message,
+            // 'bundle_discount'           => $bundle_discount,
+            
+            'deposit_amount'            => $deposit_amount,
+            'option1_total'             => $option1_total,
+            'option2_total'             => $option2_total,
+            'sub_total'                 => $sub_total,
+            'sub_total2'                => $sub_total2,
+            'tax1_total'                => $tax1_total,
+            'tax2_total'                => $tax2_total,
+
+            'grand_total'               => $grand_total,
+            'tax1_total'                => $tax1_total,
+            // 'adjustment_name'           => $adjustment_name,
+            // 'adjustment_value'          => $adjustment_value,
+            // 'markup_type'               => $markup_type,
+            // 'markup_amount'             => $markup_amount,
+            'updated_at'                => $updated_at,
+            
+        ));
+        return true;
+    }
+
     public function getEstimatesItems($id)
     {
         // $this->db->select('*');
@@ -395,6 +483,115 @@ class Estimate_model extends MY_Model
         $vendor = $this->db->insert('estimates_items', $data);
 	    $insert_id = $this->db->insert_id();
 		return  $insert_id;
+    }
+
+    public function getname($id)
+    {
+        $this->db->select('*');
+		$this->db->from('users');
+		$this->db->where('id', $id);
+        $query = $this->db->get();
+        return $query->row();
+    }
+
+    public function save_notification($data)
+    {
+        $vendor = $this->db->insert('user_notification', $data);
+	    $insert = $this->db->insert_id();
+		return  $insert;
+    }
+
+    public function get_cliets_data($id)
+    {
+        $this->db->select('*');
+		$this->db->from('clients');
+		$this->db->where('id', $id);
+		$query = $this->db->get();
+		return $query->row();
+    }
+
+    public function get_customerData_data($id)
+    {
+        $this->db->select('*');
+		$this->db->from('acs_profile');
+		$this->db->where('prof_id ', $id);
+		$query = $this->db->get();
+		return $query->row();
+    }
+
+    public function getItemlistByID($id)
+    {
+        $this->db->select('*, estimates_items.cost as costing');
+		$this->db->from('estimates_items');
+        $this->db->join('items', 'estimates_items.items_id  = items.id');
+        // $this->db->join('package_details', 'estimates_items.package_id  = package_details.id');
+        $this->db->where('estimates_id', $id);
+        $query2 = $this->db->get();
+        return $query2->result();
+    }
+
+    public function getItemlistByIDOption1($id)
+    {
+        $where = array(
+            'estimates_id'      => $id,
+            'estimate_type'     => 'Option',
+            'bundle_option_type'=> '1',
+          );
+
+        $this->db->select('*, estimates_items.cost as costing');
+		$this->db->from('estimates_items');
+        $this->db->join('items', 'estimates_items.items_id  = items.id');
+        $this->db->where($where);
+        $query2 = $this->db->get();
+        return $query2->result();
+    }
+
+    public function getItemlistByIDOption2($id)
+    {
+        $where = array(
+            'estimates_id'      => $id,
+            'estimate_type'     => 'Option',
+            'bundle_option_type'=> '2',
+          );
+
+        $this->db->select('*, estimates_items.cost as costing');
+		$this->db->from('estimates_items');
+        $this->db->join('items', 'estimates_items.items_id  = items.id');
+        $this->db->where($where);
+        $query2 = $this->db->get();
+        return $query2->result();
+    }
+
+    public function getItemlistByIDBundle1($id)
+    {
+        $where = array(
+            'estimates_id'      => $id,
+            'estimate_type'     => 'Bundle',
+            'bundle_option_type'=> '1',
+          );
+
+        $this->db->select('*, estimates_items.cost as costing');
+		$this->db->from('estimates_items');
+        $this->db->join('items', 'estimates_items.items_id  = items.id');
+        $this->db->where($where);
+        $query2 = $this->db->get();
+        return $query2->result();
+    }
+
+    public function getItemlistByIDBundle2($id)
+    {
+        $where = array(
+            'estimates_id'      => $id,
+            'estimate_type'     => 'Bundle',
+            'bundle_option_type'=> '2',
+          );
+
+        $this->db->select('*, estimates_items.cost as costing');
+		$this->db->from('estimates_items');
+        $this->db->join('items', 'estimates_items.items_id  = items.id');
+        $this->db->where($where);
+        $query2 = $this->db->get();
+        return $query2->result();
     }
 }
 

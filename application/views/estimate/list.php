@@ -201,6 +201,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                     <th>Estinate#</th>
                                     <th>Date</th>
                                     <th>Job & Customer</th>
+                                    <th>Type</th>
                                     <th>Status</th>
                                     <th>Amount</th>
                                     <th></th>
@@ -244,8 +245,11 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                         <td>
                                             <div><a href="#"><?php echo $estimate->job_name; ?></a></div>
                                             <a href="<?php echo base_url('customer/view/' . $estimate->customer_id) ?>">
-                                                <?php echo get_customer_by_id($estimate->customer_id)->contact_name ?>
+                                                <?php echo get_customer_by_id($estimate->customer_id)->first_name .' '.get_customer_by_id($estimate->customer_id)->last_name ?>
                                             </a>
+                                        </td>
+                                        <td>
+                                                <?php echo $estimate->estimate_type; ?>
                                         </td>
                                         <td>
                                           <?php
@@ -257,7 +261,24 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 
                                         </td>
                                         <td>
-                                                $<?php echo $estimate->grand_total; ?>
+                                                <?php 
+                                                $total1 = $estimate->option1_total + $estimate->option2_total;
+                                                $total2 = $estimate->bundle1_total + $estimate->bundle2_total;
+
+                                                if($estimate->estimate_type == 'Option')
+                                                {
+                                                    echo '$ '.$total1;
+                                                }
+                                                elseif($estimate->estimate_type == 'Bundle')
+                                                {
+                                                    echo '$ '.$total2;
+                                                }
+                                                else
+                                                {
+                                                    echo '$ '.$estimate->grand_total; 
+                                                }
+                                                
+                                                ?>
                                         </td>
                                         <td class="text-right">
                                             <div class="dropdown dropdown-btn">
@@ -268,10 +289,24 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                                     <li role="presentation"><a role="menuitem" tabindex="-1"
                                                                                href="<?php echo base_url('estimate/view/' . $estimate->id) ?>"><span
                                                                     class="fa fa-file-text-o icon"></span> View Estimate</a></li>
+
+                                                    <?php if($estimate->estimate_type == 'Standard'){ ?>
                                                     <li role="presentation"><a role="menuitem" tabindex="-1"
                                                                                href="<?php echo base_url('estimate/edit/' . $estimate->id) ?>"><span
                                                                     class="fa fa-pencil-square-o icon"></span> Edit</a>
                                                     </li>
+                                                    <?php }elseif($estimate->estimate_type == 'Option'){ ?>
+                                                    <li role="presentation"><a role="menuitem" tabindex="-1"
+                                                                               href="<?php echo base_url('estimate/editOption/' . $estimate->id) ?>"><span
+                                                                    class="fa fa-pencil-square-o icon"></span> Edit</a>
+                                                    </li>
+                                                    <?php }else{ ?>
+                                                    <li role="presentation"><a role="menuitem" tabindex="-1"
+                                                                               href="<?php echo base_url('estimate/editBundle/' . $estimate->id) ?>"><span
+                                                                    class="fa fa-pencil-square-o icon"></span> Edit</a>
+                                                    </li>
+                                                    <?php } ?>
+
                                                     <li role="separator" class="divider"></li>
                                                     <li role="presentation"><a role="menuitem"
                                                                                tabindex="-1"
@@ -299,8 +334,9 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                                                         <a role="menuitem" target="_new" href="<?php echo base_url('estimate/print/' . $estimate->id) ?>" class="">
                                                         <span class="fa fa-print icon"></span>  Print</a></li>
                                                     <li role="presentation">
-                                                        <a role="menuitem" href="javascript:void(0);" class="btn-send-customer" data-id="<?= $estimate->id; ?>">
-                                                        <span class="fa fa-envelope-open-o icon"></span>  Send to Customer</a></li>
+                                                        <!-- <a role="menuitem" href="javascript:void(0);" class="btn-send-customer" data-id="<?= $estimate->id; ?>">
+                                                        <span class="fa fa-envelope-open-o icon"></span>  Send to Customer</a></li> -->
+                                                        <a href="" acs-id="<?php echo $estimate->customer_id; ?>" est-id="<?php echo $estimate->id; ?>" class="send_to_customer"><span class="fa fa-envelope-o icon"></span> Send to Customer</a>
                                                     <li><div class="dropdown-divider"></div></li>
                                                     <li role="presentation">
                                                         <!-- <a role="menuitem" href="<?php //echo base_url('estimate/delete/' . $estimate->id) ?>>" onclick="return confirm('Do you really want to delete this item ?')" data-delete-modal="open"><span class="fa fa-trash-o icon"></span> Delete</a> -->
@@ -647,4 +683,54 @@ function sucess(information,$id){
                 }
             });
         }
+</script>
+
+<script>
+$(document).on('click touchstart','.send_to_customer',function(){
+
+var id = $(this).attr('acs-id');
+var est_id = $(this).attr('est-id');
+// alert(wo_id);
+
+var r = confirm("Send this to customer?");
+
+if (r == true) {
+	$.ajax({
+	type : 'POST',
+	url : "<?php echo base_url(); ?>estimate/sendEstimateToAcs",
+	data : {id: id, est_id: est_id},
+	success: function(result){
+		//sucess("Email Successfully!");
+		// alert('Email Successfully!');
+        sucess("Successfully sent to Customer!");
+	},
+	error: function () {
+      alert("An error has occurred");
+    },
+
+	});
+
+	} 
+
+    function sucess(information,$id){
+            Swal.fire({
+                title: 'Good job!',
+                text: information,
+                icon: 'success',
+                showCancelButton: false,
+                confirmButtonColor: '#32243d',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ok'
+            }).then((result) => {
+                if (result.value) {
+                    location.reload();
+                }
+            });
+        }
+// else 
+// {
+// 	alert('no');
+// }
+
+});
 </script>

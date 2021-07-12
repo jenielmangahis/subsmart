@@ -32,7 +32,8 @@
                     <div class="row send_sales_receipt_section" style="display: none;">
                         <div class="col-md-6">
                             <div class="send_sales_receipt_form_part">
-                                <input type="text" name="sales_receipt_id" class="required" style="display: none;">
+                                <input type="text" name="sales_receipt_id" class="" style="display: none;">
+                                <input type="text" name="receive_payment_id" class="" style="display: none;">
                                 <div class="form-group">
                                     <div class="label" for="subject">Email</div>
                                     <input type="email" name="email" class="required" value="pintonlou@gmail.com"

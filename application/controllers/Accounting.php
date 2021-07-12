@@ -59,6 +59,7 @@ class Accounting extends MY_Controller
             "assets/plugins/dropzone/dist/dropzone.css",
             "assets/css/accounting/accounting-modal-forms.css",
             "assets/plugins/jquery-toast-plugin-master/dist/jquery.toast.min.css",
+            "assets/css/accounting/accounting_includes/receive_payment.css",
             "assets/css/accounting/accounting_includes/customer_sales_receipt_modal.css",
         ));
 
@@ -67,7 +68,8 @@ class Accounting extends MY_Controller
             "assets/js/accounting/accounting.js",
             "assets/js/accounting/modal-forms.js",
             "assets/plugins/jquery-toast-plugin-master/dist/jquery.toast.min.js",
-            "assets/js/accounting/sales/customer_sales_receipt_modal.js"
+            "assets/js/accounting/sales/customer_sales_receipt_modal.js",
+            "assets/js/accounting/sales/customer_includes/receive_payment.js"
         ));
 
         $this->page_data['menu_name'] =
@@ -238,12 +240,11 @@ class Accounting extends MY_Controller
     public function customers()
     {
         add_css(array(
-            'assets/css/accounting/customers.css',
+            "assets/css/accounting/customers.css",
         ));
         add_footer_js(array(
             "assets/js/accounting/sales/customers.js",
-            "assets/js/accounting/sales/customer_includes/send_reminder.js",
-            "assets/js/accounting/sales/customer_includes/receive_payment.js"
+            "assets/js/accounting/sales/customer_includes/send_reminder.js"
         ));
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->page_data['customers'] = $this->accounting_customers_model->getAllByCompany();
@@ -5912,15 +5913,16 @@ class Accounting extends MY_Controller
     {
         $inv_count=$this->input->post("invoice_count");
         $customer_id=$this->input->post("customer_id");
-        if ($this->input->post("submit_option") == "save-send") {
-            $email_sending_status =$this->send_email_receive_payment($customer_id);
-        }
         $customer_info = $this->accounting_customers_model->get_customer_by_id($customer_id);
         // var_dump($this->input->post());
         $count_save =0;
-        for ($i =0;$i<$inv_count;$i++) {
-            if ($this->input->post("inv_cb_".$i) == "on") {
-                $insert=array(
+
+        $receive_payment_id=$this->input->post("receive_payment_id");
+        if ($receive_payment_id=="") {
+            $receive_payment_id=0;
+            for ($i =0;$i<$inv_count;$i++) {
+                if ($this->input->post("inv_cb_".$i) == "on") {
+                    $insert=array(
                     "customer_id" => $customer_id,
                     "invoice_number" => $this->input->post("inv_number_".$i),
                     "payment_date" => $this->input->post("payment_date"),
@@ -5935,13 +5937,22 @@ class Accounting extends MY_Controller
                     "company_id" => $customer_info->company_id,
                     "created_by" => logged('id'),
                 );
-                $this->accounting_invoices_model->insert_receive_payment($insert);
-                $count_save++;
+                    $receive_payment_id=$this->accounting_invoices_model->insert_receive_payment($insert);
+                    $count_save++;
+                }
             }
+        } else {
+            $this->update_receive_payment_from_modal();
+            $count_save++;
         }
 
+        $file_name = $this->receive_payment_generate_pdf($customer_info, $receive_payment_id);
+        
         $data = new stdClass();
-        $data->email_sending_status = $email_sending_status;
+        $data->file_location = base_url("assets/pdf/".$file_name);
+        $data->receive_payment_id=$receive_payment_id;
+        $data->customer_email=$customer_info->email;
+        $data->business_name=$customer_info->business_name;
         $data->count_save = $count_save;
         echo json_encode($data);
     }
@@ -6002,23 +6013,131 @@ class Accounting extends MY_Controller
             return "success";
         }
     }
+    
     public function print_receive_payment()
     {
-        $customer_info = $this->accounting_customers_model->get_customer_by_id($this->input->post("customer_id"));
-        $this->page_data['company_name'] = $customer_info->business_name;
-        $this->page_data['payement_date'] = $this->input->post("payment_date");
-        $this->page_data['customer_name'] = $customer_info->first_name ." ".$customer_info->last_name;
-        $this->page_data['amount_received'] = $this->input->post("amount_received");
-        $this->page_data['payment_method'] = $this->input->post("payment_method");
-        $this->page_data['ref_no'] = $this->input->post("ref_no");
-        $this->page_data['deposite_to'] = $this->input->post("deposite_to");
-        $this->page_data['memo'] = $this->input->post("memo");
-        $this->page_data['action_request'] = "print";
-        $this->page_data['business_id'] = $customer_info->business_id;
-        $this->page_data['business_image'] = $customer_info->business_image;
-        $this->page_data['has_logo'] = false;
-        $this->load->view('accounting/customer_includes/html_email_print', $this->page_data);
+        $customer_id = $this->input->post("customer_id");
+        $customer_info = $this->accounting_customers_model->get_customer_by_id($customer_id);
+        $inv_count=$this->input->post("invoice_count");
+        $count_save =0;
+        $receive_payment_id=$this->input->post("receive_payment_id");
+        if ($receive_payment_id=="") {
+            $receive_payment_id=0;
+            for ($i =0;$i<$inv_count;$i++) {
+                if ($this->input->post("inv_cb_".$i) == "on") {
+                    $insert=array(
+                        "customer_id" => $customer_id,
+                        "invoice_number" => $this->input->post("inv_number_".$i),
+                        "payment_date" => $this->input->post("payment_date"),
+                        "payment_method" => $this->input->post("payment_method"),
+                        "ref_no" => $this->input->post("ref_no"),
+                        "deposit_to" => $this->input->post("deposite_to"),
+                        "amount" => str_replace(',', '', $this->input->post("inv_".$i)),
+                        "memo" => $this->input->post("memo"),
+                        "attachments" => "",
+                        "status" => "1",
+                        "user_id" =>  logged('id'),
+                        "company_id" => $customer_info->company_id,
+                        "created_by" => logged('id'),
+                    );
+                    $receive_payment_id = $this->accounting_invoices_model->insert_receive_payment($insert);
+                    $count_save++;
+                }
+            }
+        } else {
+            $this->update_receive_payment_from_modal();
+            $count_save++;
+        }
+        
+        $file_name = $this->receive_payment_generate_pdf($customer_info, $receive_payment_id);
+        $data = new stdClass();
+        $data->count_save = $count_save;
+        $data->receive_payment_id = $receive_payment_id;
+        $data->file_location = base_url("assets/pdf/".$file_name);
+        
+        echo json_encode($data);
     }
+    public function update_receive_payment_from_modal()
+    {
+        $customer_id = $this->input->post("customer_id");
+        $customer_info = $this->accounting_customers_model->get_customer_by_id($customer_id);
+        $inv_count=$this->input->post("invoice_count");
+        for ($i =0;$i<$inv_count;$i++) {
+            $where = array(
+                "customer_id" => $customer_id,
+                "payment_date" => $this->input->post("payment_date"),
+                "ref_no" => $this->input->post("ref_no"),
+                "invoice_number" => $this->input->post("inv_number_".$i)
+            );
+            if ($this->input->post("inv_cb_".$i) == "on") {
+                $data=array(
+                    "invoice_number" => $this->input->post("inv_number_".$i),
+                    "payment_date" => $this->input->post("payment_date"),
+                    "payment_method" => $this->input->post("payment_method"),
+                    "ref_no" => $this->input->post("ref_no"),
+                    "deposit_to" => $this->input->post("deposite_to"),
+                    "amount" => str_replace(',', '', $this->input->post("inv_".$i)),
+                    "memo" => $this->input->post("memo"),
+                    "attachments" => "",
+                    "status" => "1",
+                    "user_id" =>  logged('id'),
+                    "company_id" => $customer_info->company_id,
+                    "created_by" => logged('id'),
+                    "date_modified" => date("Y-m-d H:i:s")
+                );
+                $updated=$this->accounting_sales_receipt_model->update_receive_payment_details($data, $where);
+                if (!$updated) {
+                    $insert=array(
+                        "customer_id" => $customer_id,
+                        "invoice_number" => $this->input->post("inv_number_".$i),
+                        "payment_date" => $this->input->post("payment_date"),
+                        "payment_method" => $this->input->post("payment_method"),
+                        "ref_no" => $this->input->post("ref_no"),
+                        "deposit_to" => $this->input->post("deposite_to"),
+                        "amount" => str_replace(',', '', $this->input->post("inv_".$i)),
+                        "memo" => $this->input->post("memo"),
+                        "attachments" => "",
+                        "status" => "1",
+                        "user_id" =>  logged('id'),
+                        "company_id" => $customer_info->company_id,
+                        "created_by" => logged('id'),
+                    );
+                    $this->accounting_invoices_model->insert_receive_payment($insert);
+                }
+            } else {
+                $this->accounting_sales_receipt_model->delete_receive_payment_details($where);
+            }
+        }
+    }
+    public function receive_payment_generate_pdf($customer_info = null, $receive_payment_id = null)
+    {
+        $data=array(
+            'company_name'=>$customer_info->business_name,
+            'payement_date'=>$this->input->post("payment_date"),
+            'customer_name'=>$customer_info->first_name ." ".$customer_info->last_name,
+            'amount_received'=>$this->input->post("amount_received"),
+            'payment_method'=>$this->input->post("payment_method"),
+            'ref_no'=>$this->input->post("ref_no"),
+            'deposite_to'=>$this->input->post("deposite_to"),
+            'memo'=>$this->input->post("memo"),
+            'action_request'=>"print",
+            'business_id'=>$customer_info->business_id,
+            'has_logo'=>$customer_info->business_image,
+            'inv_count'=>$this->input->post("invoice_count"),
+            'business_name'=>$customer_info->business_name,
+            'business_address_street'=>$customer_info->bus_street,
+            'business_address_state'=>$customer_info->bus_city." ".$customer_info->bus_state." ".$customer_info->bus_postal_code." ",
+            'business_contact_number'=>$customer_info->business_phone,
+            'business_email'=>$customer_info->business_email,
+            'business_logo'=>$customer_info->business_id."/".$customer_info->business_image,
+            'customer_adress_street'=>$customer_info->acs_mail_add,
+            'customer_address_state'=>$customer_info->acs_city." ".$customer_info->acs_state." ".$customer_info->acs_zip_code." ",
+        );
+        $file_name="receive_payment_pdf_".$receive_payment_id.".pdf";
+        $this->pdf->save_pdf("accounting/customer_includes/html_email_print", $data, "receive_payment_pdf_".$receive_payment_id.".pdf", "P");
+        return $file_name;
+    }
+    
     public function get_customer_info_for_sales_receipt()
     {
         $customer_info = $this->accounting_customers_model->get_customer_by_id($this->input->post("customer_id"));
@@ -6186,5 +6305,67 @@ class Accounting extends MY_Controller
         Sample Company' ;
         $this->page_data['sales_receipt_id'] = "1234";
         $this->load->view('accounting/customer_includes/sales_receipt/sales_receipt_send_email', $this->page_data);
+    }
+    public function receive_payment_send_email()
+    {
+        $receive_payment_id = $this->input->post("receive_payment_id");
+        $customer_email = $this->input->post("email");
+        $data = new stdClass();
+        if ($receive_payment_id != "") {
+            $receive_payment_details=$this->accounting_receive_payment_model->getReceivePaymentDetails($receive_payment_id);
+            $customer_info = $this->accounting_customers_model->get_customer_by_id($receive_payment_details->customer_id);
+            $file_name = 'receive_payment_pdf_'.$receive_payment_id.".pdf";
+        
+            $server = MAIL_SERVER;
+            $port = MAIL_PORT;
+            $username = MAIL_USERNAME;
+            $password = MAIL_PASSWORD;
+            $from = MAIL_FROM;
+            $subject = $this->input->post("subject");
+
+            $mail = new PHPMailer(true);
+            $mail->isSMTP();
+            $mail->getSMTPInstance()->Timelimit = 5;
+            $mail->Host = $server;
+            $mail->SMTPAuth = true;
+            $mail->Username = $username;
+            $mail->Password = $password;
+            $mail->SMTPSecure = 'ssl';
+            $mail->Timeout = 10; // seconds
+            $mail->Port = $port;
+            $mail->From = $from;
+            $mail->FromName = 'nSmarTrac';
+            $mail->Subject = $subject;
+
+            //get job data
+
+            $this->page_data['subject'] = $subject;
+            $this->page_data['company_name'] = $customer_info->business_name;
+            $this->page_data['file_link'] = base_url("assets/pdf/".$file_name);
+            $this->page_data['has_logo'] = false;
+            $this->page_data['email_body'] = $this->input->post("body");
+            // $this->load->view('accounting/customer_includes/html_email_print', $this->page_data);
+            $mail->IsHTML(true);
+            $mail->AddEmbeddedImage(dirname(__DIR__, 2) . '/assets/dashboard/images/logo.png', 'logo_2u', 'logo.png');
+            $filePath = base_url() . '/uploads/users/business_profile/'.$customer_info->business_id.'/'.$customer_info->business_image;
+            if (@getimagesize($filePath)) {
+                $mail->AddEmbeddedImage(dirname(__DIR__, 2) . '/uploads/users/business_profile/'.$customer_info->business_id.'/'.$customer_info->business_image, 'company_logo', $customer_info->business_image);
+                $this->page_data['has_logo'] = true;
+            }
+
+            $mail->Body =  'Receive Payment.';
+            $content = $this->load->view('accounting/customer_includes/receive_payment/receive_payment_send_email', $this->page_data, true);
+            $mail->MsgHTML($content);
+            $mail->addAddress($customer_email);
+            if (!$mail->Send()) {
+                $data->status="Message could not be sent. <br> ".'Mailer Error: ' . $mail->ErrorInfo;
+                exit;
+            } else {
+                $data->status= "success";
+            }
+        } else {
+            $data->status="data invalid";
+        }
+        echo json_encode($data);
     }
 }

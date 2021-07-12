@@ -1,11 +1,11 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') or exit('No direct script access allowed');
 
-class Expenses extends MY_Controller {
-	
-	public function __construct()
+class Expenses extends MY_Controller
+{
+    public function __construct()
     {
-		parent::__construct();
+        parent::__construct();
         $this->checkLogin();
         $this->load->model('expenses_model');
         $this->load->model('accounting_customers_model');
@@ -13,6 +13,7 @@ class Expenses extends MY_Controller {
         $this->load->model('accounting_payment_methods_model');
         $this->load->model('accounting_attachments_model');
         $this->load->model('items_model');
+        $this->load->model('accounting_invoices_model');
 
         add_css(array(
             "assets/css/accounting/banking.css?v='rand()'",
@@ -22,7 +23,9 @@ class Expenses extends MY_Controller {
             "assets/css/accounting/sales.css",
             "assets/plugins/dropzone/dist/dropzone.css",
             "assets/css/accounting/accounting-modal-forms.css",
-            "assets/plugins/jquery-toast-plugin-master/dist/jquery.toast.min.css"
+            "assets/plugins/jquery-toast-plugin-master/dist/jquery.toast.min.css",
+            "assets/css/accounting/accounting_includes/receive_payment.css",
+            "assets/css/accounting/accounting_includes/customer_sales_receipt_modal.css",
         ));
 
         add_footer_js(array(
@@ -30,10 +33,12 @@ class Expenses extends MY_Controller {
             "assets/js/accounting/sweetalert2@9.js",
             "assets/js/accounting/accounting.js",
             "assets/js/accounting/modal-forms.js",
-            "assets/plugins/jquery-toast-plugin-master/dist/jquery.toast.min.js"
+            "assets/plugins/jquery-toast-plugin-master/dist/jquery.toast.min.js",
+            "assets/js/accounting/sales/customer_sales_receipt_modal.js",
+            "assets/js/accounting/sales/customer_includes/receive_payment.js"
         ));
 
-		$this->page_data['menu_name'] =
+        $this->page_data['menu_name'] =
             array(
                 array("Dashboard",	array()),
                 array("Banking", 	array('Link Bank','Rules','Receipts','Tags')),
@@ -71,6 +76,7 @@ class Expenses extends MY_Controller {
         $this->page_data['dropdown']['vendors'] = $this->vendors_model->getAllByCompany();
         $this->page_data['dropdown']['categories'] = $this->get_category_accs();
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
+        $this->page_data['page_title'] = "Expenses";
         $this->load->view('accounting/expenses/index', $this->page_data);
     }
 
@@ -94,13 +100,13 @@ class Expenses extends MY_Controller {
             'Other Expense'
         ];
 
-        foreach($accountTypes as $typeName) {
+        foreach ($accountTypes as $typeName) {
             $accType = $this->account_model->getAccTypeByName($typeName);
 
             $accounts = $this->chart_of_accounts_model->getByAccountType($accType->id, null, logged('company_id'));
 
-            if(count($accounts) > 0) {
-                foreach($accounts as $account) {
+            if (count($accounts) > 0) {
+                foreach ($accounts as $account) {
                     $childAccs = $this->chart_of_accounts_model->getChildAccounts($account->id);
 
                     $account->childAccs = $childAccs;
@@ -124,15 +130,15 @@ class Expenses extends MY_Controller {
 
         $data = $this->get_transactions($filters);
 
-        usort($data, function($a, $b) use ($order, $columnName) {
-            if($columnName !== 'date') {
-                if($order === 'asc') {
+        usort($data, function ($a, $b) use ($order, $columnName) {
+            if ($columnName !== 'date') {
+                if ($order === 'asc') {
                     return strcmp($a[$columnName], $b[$columnName]);
                 } else {
                     return strcmp($b[$columnName], $a[$columnName]);
                 }
             } else {
-                if($order === 'asc') {
+                if ($order === 'asc') {
                     return strtotime($a[$columnName]) > strtotime($b[$columnName]);
                 } else {
                     return strtotime($a[$columnName]) < strtotime($b[$columnName]);
@@ -152,12 +158,12 @@ class Expenses extends MY_Controller {
 
     private function get_transactions($filters)
     {
-        switch($filters['type']) {
-            case 'all' :
-                if(!isset($filters['payee']) || $filters['payee']['type'] === 'vendor') {
+        switch ($filters['type']) {
+            case 'all':
+                if (!isset($filters['payee']) || $filters['payee']['type'] === 'vendor') {
                     $bills = $this->expenses_model->get_company_bill_transactions($filters);
                 }
-                if(!isset($filters['status'])) {
+                if (!isset($filters['status'])) {
                     $expenses = $this->expenses_model->get_company_expense_transactions($filters);
                     $checks = $this->expenses_model->get_company_check_transactions($filters);
                     $purchOrders = $this->expenses_model->get_company_purch_order_transactions($filters);
@@ -167,33 +173,33 @@ class Expenses extends MY_Controller {
                     $creditCardCredits = $this->expenses_model->get_company_cc_credit_transactions($filters);
                 }
             break;
-            case 'bill' :
+            case 'bill':
                 $bills = $this->expenses_model->get_company_bill_transactions($filters);
             break;
-            case 'expenses' :
+            case 'expenses':
                 $expenses = $this->expenses_model->get_company_expense_transactions($filters);
             break;
-            case 'check' :
+            case 'check':
                 $checks = $this->expenses_model->get_company_check_transactions($filters);
             break;
-            case 'purchase-order' :
+            case 'purchase-order':
                 $purchOrders = $this->expenses_model->get_company_purch_order_transactions($filters);
             break;
-            case 'vendor-credit' :
+            case 'vendor-credit':
                 $vendorCredits = $this->expenses_model->get_company_vendor_credit_transactions($filters);
             break;
-            case 'credit-card-payment' :
+            case 'credit-card-payment':
                 $ccPayments = $this->expenses_model->get_company_cc_payment_transactions($filters);
             break;
-            case 'bill-payments' :
+            case 'bill-payments':
                 $billPayments = $this->expenses_model->get_company_bill_payment_items($filters);
             break;
         }
 
         $transactions = [];
-        if(isset($bills) && count($bills) > 0) {
-            foreach($bills as $bill) {
-                if(!is_null($bill->attachments) && $bill->attachments !== "") {
+        if (isset($bills) && count($bills) > 0) {
+            foreach ($bills as $bill) {
+                if (!is_null($bill->attachments) && $bill->attachments !== "") {
                     $attachmentIds = json_decode($bill->attachments, true);
                     $attachments = $this->accounting_attachments_model->get_attachments_by_ids($attachmentIds);
                 } else {
@@ -221,9 +227,9 @@ class Expenses extends MY_Controller {
             }
         }
 
-        if(isset($billPayments) && count($billPayments) > 0) {
-            foreach($billPayments as $billPayment) {
-                if(!is_null($billPayment->attachments) && $billPayment->attachments !== "") {
+        if (isset($billPayments) && count($billPayments) > 0) {
+            foreach ($billPayments as $billPayment) {
+                if (!is_null($billPayment->attachments) && $billPayment->attachments !== "") {
                     $attachmentIds = json_decode($billPayment->attachments, true);
                     $attachments = $this->accounting_attachments_model->get_attachments_by_ids($attachmentIds);
                 } else {
@@ -255,25 +261,25 @@ class Expenses extends MY_Controller {
             }
         }
 
-        if(isset($checks) && count($checks) > 0) {
-            foreach($checks as $check) {
-                if(!is_null($check->attachments) && $check->attachments !== "") {
+        if (isset($checks) && count($checks) > 0) {
+            foreach ($checks as $check) {
+                if (!is_null($check->attachments) && $check->attachments !== "") {
                     $attachmentIds = json_decode($check->attachments, true);
                     $attachments = $this->accounting_attachments_model->get_attachments_by_ids($attachmentIds);
                 } else {
                     $attachments = [];
                 }
 
-                switch($check->payee_type) {
-                    case 'vendor' :
+                switch ($check->payee_type) {
+                    case 'vendor':
                         $payee = $this->vendors_model->get_vendor_by_id($check->payee_id);
                         $payeeName = $payee->display_name;
                     break;
-                    case 'customer' :
+                    case 'customer':
                         $payee = $this->accounting_customers_model->get_customer_by_id($check->payee_id);
                         $payeeName = $payee->first_name . ' ' . $payee->last_name;
                     break;
-                    case 'employee' : 
+                    case 'employee':
                         $payee = $this->users_model->getUser($check->payee_id);
                         $payeeName = $payee->FName . ' ' . $payee->LName;
                     break;
@@ -298,25 +304,25 @@ class Expenses extends MY_Controller {
             }
         }
 
-        if(isset($creditCardCredits) && count($creditCardCredits) > 0) {
-            foreach($creditCardCredits as $creditCardCredit) {
-                if(!is_null($creditCardCredit->attachments) && $creditCardCredit->attachments !== "") {
+        if (isset($creditCardCredits) && count($creditCardCredits) > 0) {
+            foreach ($creditCardCredits as $creditCardCredit) {
+                if (!is_null($creditCardCredit->attachments) && $creditCardCredit->attachments !== "") {
                     $attachmentIds = json_decode($creditCardCredit->attachments, true);
                     $attachments = $this->accounting_attachments_model->get_attachments_by_ids($attachmentIds);
                 } else {
                     $attachments = [];
                 }
 
-                switch($creditCardCredit->payee_type) {
-                    case 'vendor' :
+                switch ($creditCardCredit->payee_type) {
+                    case 'vendor':
                         $payee = $this->vendors_model->get_vendor_by_id($creditCardCredit->payee_id);
                         $payeeName = $payee->display_name;
                     break;
-                    case 'customer' :
+                    case 'customer':
                         $payee = $this->accounting_customers_model->get_customer_by_id($creditCardCredit->payee_id);
                         $payeeName = $payee->first_name . ' ' . $payee->last_name;
                     break;
-                    case 'employee' : 
+                    case 'employee':
                         $payee = $this->users_model->getUser($creditCardCredit->payee_id);
                         $payeeName = $payee->FName . ' ' . $payee->LName;
                     break;
@@ -341,9 +347,9 @@ class Expenses extends MY_Controller {
             }
         }
 
-        if(isset($ccPayments) && count($ccPayments) > 0) {
-            foreach($ccPayments as $ccPayment) {
-                if(!is_null($ccPayment->attachments) && $ccPayment->attachments !== "") {
+        if (isset($ccPayments) && count($ccPayments) > 0) {
+            foreach ($ccPayments as $ccPayment) {
+                if (!is_null($ccPayment->attachments) && $ccPayment->attachments !== "") {
                     $attachmentIds = json_decode($ccPayment->attachments, true);
                     $attachments = $this->accounting_attachments_model->get_attachments_by_ids($attachmentIds);
                 } else {
@@ -371,25 +377,25 @@ class Expenses extends MY_Controller {
             }
         }
 
-        if(isset($expenses) && count($expenses) > 0) {
-            foreach($expenses as $expense) {
-                if(!is_null($expense->attachments) && $expense->attachments !== "") {
+        if (isset($expenses) && count($expenses) > 0) {
+            foreach ($expenses as $expense) {
+                if (!is_null($expense->attachments) && $expense->attachments !== "") {
                     $attachmentIds = json_decode($expense->attachments, true);
                     $attachments = $this->accounting_attachments_model->get_attachments_by_ids($attachmentIds);
                 } else {
                     $attachments = [];
                 }
 
-                switch($expense->payee_type) {
-                    case 'vendor' :
+                switch ($expense->payee_type) {
+                    case 'vendor':
                         $payee = $this->vendors_model->get_vendor_by_id($expense->payee_id);
                         $payeeName = $payee->display_name;
                     break;
-                    case 'customer' :
+                    case 'customer':
                         $payee = $this->accounting_customers_model->get_customer_by_id($expense->payee_id);
                         $payeeName = $payee->first_name . ' ' . $payee->last_name;
                     break;
-                    case 'employee' : 
+                    case 'employee':
                         $payee = $this->users_model->getUser($expense->payee_id);
                         $payeeName = $payee->FName . ' ' . $payee->LName;
                     break;
@@ -416,9 +422,9 @@ class Expenses extends MY_Controller {
             }
         }
 
-        if(isset($purchOrders) && count($purchOrders) > 0) {
-            foreach($purchOrders as $purchOrder) {
-                if(!is_null($purchOrder->attachments) && $purchOrder->attachments !== "") {
+        if (isset($purchOrders) && count($purchOrders) > 0) {
+            foreach ($purchOrders as $purchOrder) {
+                if (!is_null($purchOrder->attachments) && $purchOrder->attachments !== "") {
                     $attachmentIds = json_decode($purchOrder->attachments, true);
                     $attachments = $this->accounting_attachments_model->get_attachments_by_ids($attachmentIds);
                 } else {
@@ -446,9 +452,9 @@ class Expenses extends MY_Controller {
             }
         }
 
-        if(isset($vendorCredits) && count($vendorCredits) > 0) {
-            foreach($vendorCredits as $vendorCredit) {
-                if(!is_null($vendorCredit->attachments) && $vendorCredit->attachments !== "") {
+        if (isset($vendorCredits) && count($vendorCredits) > 0) {
+            foreach ($vendorCredits as $vendorCredit) {
+                if (!is_null($vendorCredit->attachments) && $vendorCredit->attachments !== "") {
                     $attachmentIds = json_decode($vendorCredit->attachments, true);
                     $attachments = $this->accounting_attachments_model->get_attachments_by_ids($attachmentIds);
                 } else {
@@ -488,7 +494,7 @@ class Expenses extends MY_Controller {
             'category' => $post['category']
         ];
 
-        if($post['payee'] !== 'all') {
+        if ($post['payee'] !== 'all') {
             $payee = explode('-', $post['payee']);
             $filters['payee'] = [
                 'type' => $payee[0],
@@ -496,27 +502,28 @@ class Expenses extends MY_Controller {
             ];
         }
 
-        if($post['status'] !== 'all') {
+        if ($post['status'] !== 'all') {
             $filters['status'] = $post['status'];
         }
 
-        switch($post['date']) {
-            case 'today' :
+        switch ($post['date']) {
+            case 'today':
                 $filters['start-date'] = date("Y-m-d");
                 $filters['end-date'] = date("Y-m-d");
             break;
-            case 'yesterday' :
+            case 'yesterday':
                 $filters['start-date'] = date("Y-m-d", strtotime(date("m/d/Y").' -1 day'));
                 $filters['end-date'] = date("Y-m-d", strtotime(date("m/d/Y").' -1 day'));
             break;
-            case 'this-week' :
+            case 'this-week':
                 $filters['start-date'] = date("Y-m-d", strtotime("this week -1 day"));
                 $filters['end-date'] = date("Y-m-d", strtotime("sunday -1 day"));
             break;
-            case 'this-month' :
+            case 'this-month':
                 $filters['start-date'] = date("Y-m-01");
                 $filters['end-date'] = date("Y-m-t");
-            case 'this-quarter' :
+                // no break
+            case 'this-quarter':
                 $quarters = [
                     1 => [
                         'start' => date("01/01/Y"),
@@ -541,19 +548,19 @@ class Expenses extends MY_Controller {
                 $filters['start-date'] = $quarters[$quarter]['start'];
                 $filters['end-date'] = $quarters[$quarter]['end'];
             break;
-            case 'this-year' :
+            case 'this-year':
                 $filters['start-date'] = date("Y-01-01");
                 $filters['end-date'] = date("Y-12-t");
             break;
-            case 'last-week' :
+            case 'last-week':
                 $filters['start-date'] = date("Y-m-d", strtotime("this week -1 week -1 day"));
                 $filters['end-date'] = date("Y-m-d", strtotime("sunday -1 week -1 day"));
             break;
-            case 'last-month' :
+            case 'last-month':
                 $filters['start-date'] = date("Y-m-01", strtotime(date("m/01/Y")." -1 month"));
                 $filters['end-date'] = date("Y-m-t", strtotime(date("m/01/Y")." -1 month"));
             break;
-            case 'last-quarter' :
+            case 'last-quarter':
                 $quarters = [
                     1 => [
                         'start' => date("01/01/Y"),
@@ -578,15 +585,15 @@ class Expenses extends MY_Controller {
                 $filters['start-date'] = date("Y-m-d", strtotime($quarters[$quarter]['start']." -3 months"));
                 $filters['end-date'] = date("Y-m-t", strtotime($filters['start-date']." +2 months"));
             break;
-            case 'last-year' :
+            case 'last-year':
                 $filters['start-date'] = date("Y-01-01", strtotime(date("01/01/Y")." -1 year"));
                 $filters['end-date'] = date("Y-12-t", strtotime(date("12/t/Y")." -1 year"));
             break;
-            case 'last-365-days' :
+            case 'last-365-days':
                 $filters['start-date'] = date("Y-m-d", strtotime(date("m/d/Y")." -365 days"));
                 $filters['end-date'] = date("Y-m-d");
             break;
-            case 'custom' :
+            case 'custom':
                 $filters['start-date'] = date("Y-m-d", strtotime($post['from_date']));
                 $filters['end-date'] = date("Y-m-d", strtotime($post['to_date']));
             break;
@@ -602,11 +609,11 @@ class Expenses extends MY_Controller {
 
         $totalCount = count($categories) + count($items);
 
-        if($totalCount > 1) {
+        if ($totalCount > 1) {
             $category = '-Split-';
         } else {
-            if($totalCount === 1) {
-                if(count($categories) === 1 && count($items) === 0) {
+            if ($totalCount === 1) {
+                if (count($categories) === 1 && count($items) === 0) {
                     $expenseAcc = $categories[0]->expense_account_id;
 
                     $accountTypes = [
@@ -628,27 +635,27 @@ class Expenses extends MY_Controller {
 
                     $category = '<select class="form-control" name="category[]">';
 
-                    foreach($accountTypes as $typeName) {
+                    foreach ($accountTypes as $typeName) {
                         $accType = $this->account_model->getAccTypeByName($typeName);
 
                         $accounts = $this->chart_of_accounts_model->getByAccountType($accType->id, null, logged('company_id'));
 
-                        if(count($accounts) > 0) {
+                        if (count($accounts) > 0) {
                             $category .= '<optgroup label="'.$typeName.'">';
-                            foreach($accounts as $account) {
+                            foreach ($accounts as $account) {
                                 $childAccs = $this->chart_of_accounts_model->getChildAccounts($account->id);
 
-                                if($account->id === $expenseAcc) {
+                                if ($account->id === $expenseAcc) {
                                     $category .= '<option value="'.$account->id.'" selected>'.$account->name.'</option>';
                                 } else {
                                     $category .= '<option value="'.$account->id.'">'.$account->name.'</option>';
                                 }
 
-                                if(count($childAccs) > 0) {
+                                if (count($childAccs) > 0) {
                                     $category .= '<optgroup label="&nbsp;&nbsp;&nbsp;Sub-account of '.$account->name.'">';
 
-                                    foreach($childAccs as $childAcc) {
-                                        if($childAcc->id === $expenseAcc) {
+                                    foreach ($childAccs as $childAcc) {
+                                        if ($childAcc->id === $expenseAcc) {
                                             $category .= '<option value="'.$childAcc->id.'" selected>&nbsp;&nbsp;&nbsp;'.$childAcc->name.'</option>';
                                         } else {
                                             $category .= '<option value="'.$childAcc->id.'">&nbsp;&nbsp;&nbsp;'.$childAcc->name.'</option>';
@@ -680,14 +687,14 @@ class Expenses extends MY_Controller {
         $post = $this->input->post();
 
         $categories = [];
-        foreach($post['transaction_id'] as $index => $transactionId) {
-            switch($post['transaction_type'][$index]) {
-                case 'bill' :
+        foreach ($post['transaction_id'] as $index => $transactionId) {
+            switch ($post['transaction_type'][$index]) {
+                case 'bill':
                     $transaction = $this->vendors_model->get_bill_by_id($transactionId);
                     $category = $this->expenses_model->get_transaction_categories($transactionId, 'Bill');
                     $category = $category[0];
 
-                    if($category->expense_account_id !== $categoryId) {
+                    if ($category->expense_account_id !== $categoryId) {
                         $expenseAcc = $this->chart_of_accounts_model->getById($categoryId);
                         $newBalance = floatval($expenseAcc->balance) + floatval($category->amount);
                         $newBalance = number_format($newBalance, 2, '.', ',');
@@ -714,12 +721,12 @@ class Expenses extends MY_Controller {
                         $this->chart_of_accounts_model->updateBalance($expenseAccData);
                     }
                 break;
-                case 'expense' :
+                case 'expense':
                     $transaction = $this->vendors_model->get_expense_by_id($transactionId);
                     $category = $this->expenses_model->get_transaction_categories($transactionId, 'Expense');
                     $category = $category[0];
 
-                    if($category->expense_account_id !== $categoryId) {
+                    if ($category->expense_account_id !== $categoryId) {
                         $expenseAcc = $this->chart_of_accounts_model->getById($categoryId);
                         $newBalance = floatval($expenseAcc->balance) + floatval($category->amount);
                         $newBalance = number_format($newBalance, 2, '.', ',');
@@ -746,12 +753,12 @@ class Expenses extends MY_Controller {
                         $this->chart_of_accounts_model->updateBalance($expenseAccData);
                     }
                 break;
-                case 'check' :
+                case 'check':
                     $transaction = $this->vendors_model->get_check_by_id($transactionId);
                     $category = $this->expenses_model->get_transaction_categories($transactionId, 'Check');
                     $category = $category[0];
 
-                    if($category->expense_account_id !== $categoryId) {
+                    if ($category->expense_account_id !== $categoryId) {
                         $expenseAcc = $this->chart_of_accounts_model->getById($categoryId);
                         $newBalance = floatval($expenseAcc->balance) + floatval($category->amount);
                         $newBalance = number_format($newBalance, 2, '.', ',');
@@ -778,17 +785,17 @@ class Expenses extends MY_Controller {
                         $this->chart_of_accounts_model->updateBalance($expenseAccData);
                     }
                 break;
-                case 'purchase-order' :
+                case 'purchase-order':
                     $transaction = $this->vendors_model->get_purchase_order_by_id($transactionId);
                     $category = $this->expenses_model->get_transaction_categories($transactionId, 'Purchase Order');
                     $category = $category[0];
                 break;
-                case 'vendor-credit' :
+                case 'vendor-credit':
                     $transaction = $this->vendors_model->get_vendor_credit_by_id($transactionId);
                     $category = $this->expenses_model->get_transaction_categories($transactionId, 'Vendor Credit');
                     $category = $category[0];
 
-                    if($category->expense_account_id !== $categoryId) {
+                    if ($category->expense_account_id !== $categoryId) {
                         $expenseAcc = $this->chart_of_accounts_model->getById($categoryId);
                         $newBalance = floatval($expenseAcc->balance) - floatval($category->amount);
                         $newBalance = number_format($newBalance, 2, '.', ',');
@@ -815,12 +822,12 @@ class Expenses extends MY_Controller {
                         $this->chart_of_accounts_model->updateBalance($expenseAccData);
                     }
                 break;
-                case 'credit-card-credit' :
+                case 'credit-card-credit':
                     $transaction = $this->vendors_model->get_credit_card_credit_by_id($transactionId);
                     $category = $this->expenses_model->get_transaction_categories($transactionId, 'Credit Card Credit');
                     $category = $category[0];
 
-                    if($category->expense_account_id !== $categoryId) {
+                    if ($category->expense_account_id !== $categoryId) {
                         $expenseAcc = $this->chart_of_accounts_model->getById($categoryId);
                         $newBalance = floatval($expenseAcc->balance) - floatval($category->amount);
                         $newBalance = number_format($newBalance, 2, '.', ',');
@@ -870,19 +877,19 @@ class Expenses extends MY_Controller {
         $transactions = $this->input->post('transactions');
 
         $data = [];
-        foreach($transactions as $transaction) {
+        foreach ($transactions as $transaction) {
             $explode = explode('_', $transaction);
             $transactionType = $explode[0];
             $transactionId = $explode[1];
 
-            switch($transactionType) {
-                case 'expense' :
+            switch ($transactionType) {
+                case 'expense':
                     $transaction = $this->vendors_model->get_expense_by_id($transactionId);
                     $items = $this->expenses_model->get_transaction_items($transactionId, 'Expense');
                     $categories = $this->expenses_model->get_transaction_categories($transactionId, 'Expense');
     
-                    switch($transaction->payee_type) {
-                        case 'vendor' :
+                    switch ($transaction->payee_type) {
+                        case 'vendor':
                             $payee = $this->vendors_model->get_vendor_by_id($transaction->payee_id);
                             $payeeName = $payee->title !== null && $payee->title !== "" ? $payee->title : "";
                             $payeeName .= $payee->f_name !== null && $payee->f_name !== "" ? " $payee->f_name" : "";
@@ -892,20 +899,20 @@ class Expenses extends MY_Controller {
     
                             $payeeName = $payeeName === "" ? $payee->display_name : $payeeName;
                         break;
-                        case 'customer' :
+                        case 'customer':
                             $payee = $this->accounting_customers_model->get_customer_by_id($transaction->payee_id);
                             $payeeName = $payee->first_name !== null && $payee->first_name !== ""  ? $payee->first_name : "";
                             $payeeName .= $payee->middle_name !== null && $payee->middle_name !== ""  ? " $payee->middle_name" : "";
                             $payeeName .= $payee->last_name !== null && $payee->last_name !== ""  ? " $payee->last_name" : "";
                             $payeeName .= $payee->suffix !== null && $payee->suffix !== ""  ? " $payee->suffix" : "";
                         break;
-                        case 'employee' :
+                        case 'employee':
                             $payee = $this->users_model->getUser($expense->payee_id);
                             $payeeName = $payee->FName . ' ' . $payee->LName;
                         break;
                     }
                 break;
-                case 'purchase-order' :
+                case 'purchase-order':
                     $transaction = $this->vendors_model->get_purchase_order_by_id($transactionId);
                     $items = $this->expenses_model->get_transaction_items($transactionId, 'Purchase Order');
                     $categories = $this->expenses_model->get_transaction_categories($transactionId, 'Purchase Order');
@@ -922,10 +929,10 @@ class Expenses extends MY_Controller {
             }
 
             $tableItems = [];
-            foreach($items as $item) {
+            foreach ($items as $item) {
                 $itemDetails = $this->items_model->getItemById($item->item_id)[0];
 
-                if($transactionType === 'expense') {
+                if ($transactionType === 'expense') {
                     $tableItems[] = [
                         'name' => $itemDetails->title,
                         'description' => '',
@@ -941,10 +948,10 @@ class Expenses extends MY_Controller {
                 }
             }
 
-            foreach($categories as $category) {
+            foreach ($categories as $category) {
                 $categoryAcc = $this->chart_of_accounts_model->getById($category->expense_account_id);
 
-                if($transactionType === 'expense') {
+                if ($transactionType === 'expense') {
                     $tableItems[] = [
                         'name' => $categoryAcc->name,
                         'description' => $category->description,
@@ -960,8 +967,8 @@ class Expenses extends MY_Controller {
                 }
             }
 
-            usort($tableItems, function($a, $b) use ($transactionType) {
-                if($transactionType === 'expense') {
+            usort($tableItems, function ($a, $b) use ($transactionType) {
+                if ($transactionType === 'expense') {
                     return strcmp($a['name'], $b['name']);
                 } else {
                     return strcmp($a['activity'], $b['activity']);
@@ -981,15 +988,15 @@ class Expenses extends MY_Controller {
 
         $pdf = file_get_contents(base_url("/assets/pdf/$fileName"));
 
-        if(file_exists(getcwd()."/assets/pdf/$fileName")) {
+        if (file_exists(getcwd()."/assets/pdf/$fileName")) {
             unlink(getcwd()."/assets/pdf/$fileName");
         }
 
-        // Header content type 
-        header("Content-type: application/pdf"); 
+        // Header content type
+        header("Content-type: application/pdf");
         header('Content-Disposition: inline; filename="print.pdf";');
 
-        ob_clean(); 
+        ob_clean();
         flush();
         echo $pdf;
         exit;
@@ -1003,14 +1010,14 @@ class Expenses extends MY_Controller {
 
         $data = [];
 
-        switch($transactionType) {
-            case 'expense' :
+        switch ($transactionType) {
+            case 'expense':
                 $transaction = $this->vendors_model->get_expense_by_id($transactionId);
                 $items = $this->expenses_model->get_transaction_items($transactionId, 'Expense');
                 $categories = $this->expenses_model->get_transaction_categories($transactionId, 'Expense');
 
-                switch($transaction->payee_type) {
-                    case 'vendor' :
+                switch ($transaction->payee_type) {
+                    case 'vendor':
                         $payee = $this->vendors_model->get_vendor_by_id($transaction->payee_id);
                         $payeeName = $payee->title !== null && $payee->title !== "" ? $payee->title : "";
                         $payeeName .= $payee->f_name !== null && $payee->f_name !== "" ? " $payee->f_name" : "";
@@ -1020,20 +1027,20 @@ class Expenses extends MY_Controller {
 
                         $payeeName = $payeeName === "" ? $payee->display_name : $payeeName;
                     break;
-                    case 'customer' :
+                    case 'customer':
                         $payee = $this->accounting_customers_model->get_customer_by_id($transaction->payee_id);
                         $payeeName = $payee->first_name !== null && $payee->first_name !== ""  ? $payee->first_name : "";
                         $payeeName .= $payee->middle_name !== null && $payee->middle_name !== ""  ? " $payee->middle_name" : "";
                         $payeeName .= $payee->last_name !== null && $payee->last_name !== ""  ? " $payee->last_name" : "";
                         $payeeName .= $payee->suffix !== null && $payee->suffix !== ""  ? " $payee->suffix" : "";
                     break;
-                    case 'employee' :
+                    case 'employee':
                         $payee = $this->users_model->getUser($expense->payee_id);
                         $payeeName = $payee->FName . ' ' . $payee->LName;
                     break;
                 }
             break;
-            case 'purchase-order' :
+            case 'purchase-order':
                 $transaction = $this->vendors_model->get_purchase_order_by_id($transactionId);
                 $items = $this->expenses_model->get_transaction_items($transactionId, 'Purchase Order');
                 $categories = $this->expenses_model->get_transaction_categories($transactionId, 'Purchase Order');
@@ -1051,10 +1058,10 @@ class Expenses extends MY_Controller {
         
         $tableItems = [];
 
-        foreach($items as $item) {
+        foreach ($items as $item) {
             $itemDetails = $this->items_model->getItemById($item->item_id)[0];
 
-            if($transactionType === 'expense') {
+            if ($transactionType === 'expense') {
                 $tableItems[] = [
                     'name' => $itemDetails->title,
                     'description' => '',
@@ -1070,10 +1077,10 @@ class Expenses extends MY_Controller {
             }
         }
 
-        foreach($categories as $category) {
+        foreach ($categories as $category) {
             $categoryAcc = $this->chart_of_accounts_model->getById($category->expense_account_id);
 
-            if($transactionType === 'expense') {
+            if ($transactionType === 'expense') {
                 $tableItems[] = [
                     'name' => $categoryAcc->name,
                     'description' => $category->description,
@@ -1089,8 +1096,8 @@ class Expenses extends MY_Controller {
             }
         }
 
-        usort($tableItems, function($a, $b) use ($transactionType) {
-            if($transactionType === 'expense') {
+        usort($tableItems, function ($a, $b) use ($transactionType) {
+            if ($transactionType === 'expense') {
                 return strcmp($a['name'], $b['name']);
             } else {
                 return strcmp($a['activity'], $b['activity']);
@@ -1109,15 +1116,15 @@ class Expenses extends MY_Controller {
 
         $pdf = file_get_contents(base_url("/assets/pdf/$fileName"));
 
-        if(file_exists(getcwd()."/assets/pdf/$fileName")) {
+        if (file_exists(getcwd()."/assets/pdf/$fileName")) {
             unlink(getcwd()."/assets/pdf/$fileName");
         }
-        // Header content type 
-        header("Content-type: application/pdf"); 
+        // Header content type
+        header("Content-type: application/pdf");
         header('Content-Disposition: inline; filename="print.pdf";');
 
-        ob_clean(); 
-        flush(); 
+        ob_clean();
+        flush();
         echo $pdf;
         exit;
     }
@@ -1126,12 +1133,12 @@ class Expenses extends MY_Controller {
     {
         $post = $this->input->post();
 
-        switch($post['transaction_type']) {
-            case 'bill' :
+        switch ($post['transaction_type']) {
+            case 'bill':
                 $category = $this->expenses_model->get_transaction_categories($post['transaction_id'], 'Bill');
                 $category = $category[0];
 
-                if($category->expense_account_id !== $categoryId) {
+                if ($category->expense_account_id !== $categoryId) {
                     $expenseAcc = $this->chart_of_accounts_model->getById($categoryId);
                     $newBalance = floatval($expenseAcc->balance) + floatval($category->amount);
                     $newBalance = number_format($newBalance, 2, '.', ',');
@@ -1158,11 +1165,11 @@ class Expenses extends MY_Controller {
                     $this->chart_of_accounts_model->updateBalance($expenseAccData);
                 }
             break;
-            case 'expense' :
+            case 'expense':
                 $category = $this->expenses_model->get_transaction_categories($post['transaction_id'], 'Expense');
                 $category = $category[0];
 
-                if($category->expense_account_id !== $categoryId) {
+                if ($category->expense_account_id !== $categoryId) {
                     $expenseAcc = $this->chart_of_accounts_model->getById($categoryId);
                     $newBalance = floatval($expenseAcc->balance) + floatval($category->amount);
                     $newBalance = number_format($newBalance, 2, '.', ',');
@@ -1189,11 +1196,11 @@ class Expenses extends MY_Controller {
                     $this->chart_of_accounts_model->updateBalance($expenseAccData);
                 }
             break;
-            case 'check' :
+            case 'check':
                 $category = $this->expenses_model->get_transaction_categories($post['transaction_id'], 'Check');
                 $category = $category[0];
 
-                if($category->expense_account_id !== $categoryId) {
+                if ($category->expense_account_id !== $categoryId) {
                     $expenseAcc = $this->chart_of_accounts_model->getById($categoryId);
                     $newBalance = floatval($expenseAcc->balance) + floatval($category->amount);
                     $newBalance = number_format($newBalance, 2, '.', ',');
@@ -1220,11 +1227,11 @@ class Expenses extends MY_Controller {
                     $this->chart_of_accounts_model->updateBalance($expenseAccData);
                 }
             break;
-            case 'vendor-credit' :
+            case 'vendor-credit':
                 $category = $this->expenses_model->get_transaction_categories($post['transaction_id'], 'Vendor Credit');
                 $category = $category[0];
 
-                if($category->expense_account_id !== $categoryId) {
+                if ($category->expense_account_id !== $categoryId) {
                     $expenseAcc = $this->chart_of_accounts_model->getById($categoryId);
                     $newBalance = floatval($expenseAcc->balance) - floatval($category->amount);
                     $newBalance = number_format($newBalance, 2, '.', ',');
@@ -1251,11 +1258,11 @@ class Expenses extends MY_Controller {
                     $this->chart_of_accounts_model->updateBalance($expenseAccData);
                 }
             break;
-            case 'credit-card-credit' :
+            case 'credit-card-credit':
                 $category = $this->expenses_model->get_transaction_categories($post['transaction_id'], 'Credit Card Credit');
                 $category = $category[0];
 
-                if($category->expense_account_id !== $categoryId) {
+                if ($category->expense_account_id !== $categoryId) {
                     $expenseAcc = $this->chart_of_accounts_model->getById($categoryId);
                     $newBalance = floatval($expenseAcc->balance) - floatval($category->amount);
                     $newBalance = number_format($newBalance, 2, '.', ',');
@@ -1301,21 +1308,21 @@ class Expenses extends MY_Controller {
             'Credit Card'
         ];
 
-        foreach($accountTypes as $typeName) {
+        foreach ($accountTypes as $typeName) {
             $accType = $this->account_model->getAccTypeByName($typeName);
 
             $accounts = $this->chart_of_accounts_model->getByAccountType($accType->id, null, logged('company_id'));
 
             $count = 0;
-            if(count($accounts) > 0) {
-                foreach($accounts as $account) {
+            if (count($accounts) > 0) {
+                foreach ($accounts as $account) {
                     $childAccs = $this->chart_of_accounts_model->getChildAccounts($account->id);
 
                     $account->childAccs = $childAccs;
 
                     $paymentAccs[$typeName][] = $account;
 
-                    if($count === 1) {
+                    if ($count === 1) {
                         $selectedBalance = $account->balance;
                     }
 
@@ -1324,7 +1331,7 @@ class Expenses extends MY_Controller {
             }
         }
 
-        if(strpos($selectedBalance, '-') !== false) {
+        if (strpos($selectedBalance, '-') !== false) {
             $balance = str_replace('-', '', $selectedBalance);
             $selectedBalance = '-$'.number_format($balance, 2, '.', ',');
         } else {
@@ -1358,7 +1365,7 @@ class Expenses extends MY_Controller {
         $bills = $this->vendors_model->get_bill_payment_items($billPaymentId, $filters);
 
         $data = [];
-        foreach($bills as $bill) {
+        foreach ($bills as $bill) {
             $billData = $this->vendors_model->get_bill_by_id($bill->bill_id);
 
             $openBalance = floatval($billData->remaining_balance) + floatval($billData->total_amount);
@@ -1367,8 +1374,8 @@ class Expenses extends MY_Controller {
             $description .= $billData->bill_no !== "" && !is_null($billData->bill_no) ? '# '.$billData->bill_no.' ' : '';
             $description .= '('.date("m/d/Y", strtotime($billData->bill_date)).')';
 
-            if($search !== "") {
-                if(stripos($billData->bill_no, $search) !== false) {
+            if ($search !== "") {
+                if (stripos($billData->bill_no, $search) !== false) {
                     $data[] = [
                         'id' => $billData->id,
                         'description' => $description,
@@ -1404,7 +1411,7 @@ class Expenses extends MY_Controller {
     {
         $transaction = $this->get_transaction($transactionType, $transactionId);
 
-        if($transaction->attachments !== "" && $transaction->attachments !== null) {
+        if ($transaction->attachments !== "" && $transaction->attachments !== null) {
             $attachmentIds = json_decode($transaction->attachments, true);
         } else {
             $attachmentIds = null;
@@ -1424,44 +1431,44 @@ class Expenses extends MY_Controller {
 
         $files = $_FILES['file'];
 
-        if(count($files['name']) > 0) {
+        if (count($files['name']) > 0) {
             $insert = $this->uploadFile($files);
 
-            if($attachments === null) {
+            if ($attachments === null) {
                 $attachments = $insert;
             } else {
-                foreach($insert as $id) {
+                foreach ($insert as $id) {
                     $attachments[] = $id;
                 }
             }
 
             $attachments = json_encode($attachments);
 
-            switch($transactionType) {
-                case 'expense' :
+            switch ($transactionType) {
+                case 'expense':
                     $update = $this->vendors_model->update_expense($transactionId, ['attachments' => $attachments]);
                 break;
-                case 'check' :
+                case 'check':
                     $update = $this->vendors_model->update_check($transactionId, ['attachments' => $attachments]);
                 break;
-                case 'bill' :
+                case 'bill':
                     $update = $this->vendors_model->update_bill($transactionId, ['attachments' => $attachments]);
                 break;
-                case 'bill-payment' :
+                case 'bill-payment':
                     $update = $this->vendors_model->update_bill_payment($transactionId, ['attachments' => $attachments]);
                 break;
-                case 'purchase-order' :
+                case 'purchase-order':
                     $update = $this->vendors_model->update_purchase_order($transactionId, ['attachments' => $attachments]);
                 break;
-                case 'vendor-credit' :
+                case 'vendor-credit':
                     $update = $this->vendors_model->update_vendor_credit($transactionId, ['attachments' => $attachments]);
                 break;
-                case 'credit-card-credit' :
+                case 'credit-card-credit':
                     $update = $this->vendors_model->update_credit_card_credit($transactionId, ['attachments' => $attachments]);
                 break;
             }
             
-            if($update) {
+            if ($update) {
                 $this->session->set_flashdata('success', count($insert)." attachments sucessfully attached.");
                 echo json_encode('success');
             } else {
@@ -1475,26 +1482,26 @@ class Expenses extends MY_Controller {
 
     private function get_transaction($transactionType, $transactionId)
     {
-        switch($transactionType) {
-            case 'expense' :
+        switch ($transactionType) {
+            case 'expense':
                 $transaction = $this->vendors_model->get_expense_by_id($transactionId);
             break;
-            case 'check' :
+            case 'check':
                 $transaction = $this->vendors_model->get_check_by_id($transactionId);
             break;
-            case 'bill' :
+            case 'bill':
                 $transaction = $this->vendors_model->get_bill_by_id($transactionId);
             break;
-            case 'bill-payment' :
+            case 'bill-payment':
                 $transaction = $this->vendors_model->get_bill_payment_by_id($transactionId);
             break;
-            case 'purchase-order' :
+            case 'purchase-order':
                 $transaction = $this->vendors_model->get_purchase_order_by_id($transactionId);
             break;
-            case 'vendor-credit' :
+            case 'vendor-credit':
                 $transaction = $this->vendors_model->get_vendor_credit_by_id($transactionId);
             break;
-            case 'credit-card-credit' :
+            case 'credit-card-credit':
                 $transaction = $this->vendors_model->get_credit_card_credit_by_id($transactionId);
             break;
         }
@@ -1506,8 +1513,7 @@ class Expenses extends MY_Controller {
     {
         $this->load->helper('string');
         $data = [];
-        foreach($files['name'] as $key => $name)
-        {
+        foreach ($files['name'] as $key => $name) {
             $extension = end(explode('.', $name));
 
             do {
@@ -1537,7 +1543,7 @@ class Expenses extends MY_Controller {
         }
 
         $attachmentIds = [];
-        foreach($data as $attachment) {
+        foreach ($data as $attachment) {
             $attachmentIds[] = $this->accounting_attachments_model->create($attachment);
         }
 
@@ -1553,31 +1559,31 @@ class Expenses extends MY_Controller {
         $attachments[] = $attachmentId;
         $attachments = json_encode($attachments);
 
-        switch($transactionType) {
-            case 'expense' :
+        switch ($transactionType) {
+            case 'expense':
                 $update = $this->vendors_model->update_expense($transactionId, ['attachments' => $attachments]);
             break;
-            case 'check' :
+            case 'check':
                 $update = $this->vendors_model->update_check($transactionId, ['attachments' => $attachments]);
             break;
-            case 'bill' :
+            case 'bill':
                 $update = $this->vendors_model->update_bill($transactionId, ['attachments' => $attachments]);
             break;
-            case 'bill-payment' :
+            case 'bill-payment':
                 $update = $this->vendors_model->update_bill_payment($transactionId, ['attachments' => $attachments]);
             break;
-            case 'purchase-order' :
+            case 'purchase-order':
                 $update = $this->vendors_model->update_purchase_order($transactionId, ['attachments' => $attachments]);
             break;
-            case 'vendor-credit' :
+            case 'vendor-credit':
                 $update = $this->vendors_model->update_vendor_credit($transactionId, ['attachments' => $attachments]);
             break;
-            case 'credit-card-credit' :
+            case 'credit-card-credit':
                 $update = $this->vendors_model->update_credit_card_credit($transactionId, ['attachments' => $attachments]);
             break;
         }
 
-        if($update) {
+        if ($update) {
             $attachment = $this->accounting_attachments_model->getById($attachmentId);
             $attachmentData = [
                 'linked_to_count' => intval($attachment->linked_to_count) + 1
