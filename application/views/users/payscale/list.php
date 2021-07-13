@@ -13,6 +13,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
       position: relative;
       bottom: 10px;
     }
+    label>input {
+      visibility: initial !important;
+      position: initial !important; 
+    }
     button.btn-info {
       background: #32253c !important;
     }
@@ -95,7 +99,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         <thead>
                                         <tr>
                                             <th style="width: 70%;">Pay Scale</th>
-                                            <th>Action</th>
+                                            <th style="width: 5%;">Action</th>
                                         </tr>
                                         </thead>
                                         <tbody>

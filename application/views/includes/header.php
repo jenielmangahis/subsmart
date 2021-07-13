@@ -837,12 +837,13 @@ if ($this->session->userdata('usertimezone') == null) {
                             href="index.html#" role="button" aria-haspopup="false" aria-expanded="false">
                             <?php /* <img src="<?php //echo (companyProfileImage(logged('company_id'))) ? companyProfileImage(logged('company_id')) : $url->assets ?>" alt="user" class="rounded-circle"> */ ?>
                             <?php
-                                        $image = (userProfile(logged('id'))) ? userProfile(logged('id')) : $url->assets;
-                                        if (!@getimagesize($image)) {
-                                            $image = base_url('uploads/users/default.png');
-                                        }
-                                        // $image = base_url('uploads/users/default.png');
-                                        ?>
+                            /*$image = (userProfile(logged('id'))) ? userProfile(logged('id')) : $url->assets;
+                            if (!@getimagesize($image)) {
+                                $image = base_url('uploads/users/default.png');
+                            }*/
+                            // $image = base_url('uploads/users/default.png');
+                            $image = userProfileImage(logged('id'));
+                            ?>
                             <img src="<?php echo $image; ?>"
                                 alt="user" class="rounded-circle nav-user-img">
                         </a>

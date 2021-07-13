@@ -21,6 +21,11 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         top: 5px;
     }
 
+    label>input {
+      visibility: initial !important;
+      position: initial !important; 
+    }
+
     #employeeTable tr>th {
         text-align: center;
     }
@@ -727,7 +732,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 <script>
     $(document).ready(function() {
         $('#employeeTable').DataTable({
-            "searching": false,
+            "searching": true,
             "sort": false
         });
 

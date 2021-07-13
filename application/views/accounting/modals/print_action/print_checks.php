@@ -49,19 +49,21 @@
                             <td><?=$check['type'] === 'check' ? '&nbsp;' : 'Date'?></td>
                             <td><?=$check['type'] === 'check' ? '&nbsp;' : 'Type'?></td>
                             <td><?=$check['type'] === 'check' ? '&nbsp;' : 'Reference'?></td>
-                            <td><?=$check['type'] === 'check' ? '&nbsp;' : 'Original Amount'?></td>
-                            <td><?=$check['type'] === 'check' ? '&nbsp;' : 'Balance Due'?></td>
+                            <td style="text-align: right"><?=$check['type'] === 'check' ? '&nbsp;' : 'Original Amount'?></td>
+                            <td style="text-align: right"><?=$check['type'] === 'check' ? '&nbsp;' : 'Balance Due'?></td>
                             <td style="text-align: right"><?=$check['type'] === 'check' ? $check['total'] : 'Payment'?></td>
                         </tr>
                         <?php if($check['type'] === 'bill-payment') : ?>
+                        <?php foreach($check['linked_transactions'] as $transaction) : ?>
                         <tr>
-                            <td>07/10/2021</td>
-                            <td>Bill</td>
-                            <td>Testing</td>
-                            <td>10.00</td>
-                            <td>10.00</td>
-                            <td style="text-align: right">10.00</td>
+                            <td><?=$transaction['date']?></td>
+                            <td><?=$transaction['type']?></td>
+                            <td><?=$transaction['reference']?></td>
+                            <td style="text-align: right"><?=$transaction['original_amount']?></td>
+                            <td style="text-align: right"><?=$transaction['balance_due']?></td>
+                            <td style="text-align: right"><?=$transaction['payment']?></td>
                         </tr>
+                        <?php endforeach; ?>
                         <?php endif;?>
                         <tr>
                             <td><?=$check['payment_account']?></td>
@@ -86,19 +88,21 @@
                             <td><?=$check['type'] === 'check' ? '&nbsp;' : 'Date'?></td>
                             <td><?=$check['type'] === 'check' ? '&nbsp;' : 'Type'?></td>
                             <td><?=$check['type'] === 'check' ? '&nbsp;' : 'Reference'?></td>
-                            <td><?=$check['type'] === 'check' ? '&nbsp;' : 'Original Amount'?></td>
-                            <td><?=$check['type'] === 'check' ? '&nbsp;' : 'Balance Due'?></td>
+                            <td style="text-align: right"><?=$check['type'] === 'check' ? '&nbsp;' : 'Original Amount'?></td>
+                            <td style="text-align: right"><?=$check['type'] === 'check' ? '&nbsp;' : 'Balance Due'?></td>
                             <td style="text-align: right"><?=$check['type'] === 'check' ? $check['total'] : 'Payment'?></td>
                         </tr>
                         <?php if($check['type'] === 'bill-payment') : ?>
+                        <?php foreach($check['linked_transactions'] as $transaction) : ?>
                         <tr>
-                            <td>07/10/2021</td>
-                            <td>Bill</td>
-                            <td>Testing</td>
-                            <td>10.00</td>
-                            <td>10.00</td>
-                            <td style="text-align: right">10.00</td>
+                            <td><?=$transaction['date']?></td>
+                            <td><?=$transaction['type']?></td>
+                            <td><?=$transaction['reference']?></td>
+                            <td style="text-align: right"><?=$transaction['original_amount']?></td>
+                            <td style="text-align: right"><?=$transaction['balance_due']?></td>
+                            <td style="text-align: right"><?=$transaction['payment']?></td>
                         </tr>
+                        <?php endforeach; ?>
                         <?php endif;?>
                         <tr>
                             <td><?=$check['payment_account']?></td>
