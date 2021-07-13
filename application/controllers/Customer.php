@@ -437,12 +437,13 @@ class Customer extends MY_Controller
     public function settings()
     {
         $this->load->library('wizardlib');
-        $is_allowed = $this->isAllowedModuleAccess(9);
+        $this->hasAccessModule(9); 
+        /*$is_allowed = $this->isAllowedModuleAccess(9);
         if( !$is_allowed ){
             $this->page_data['module'] = 'customer';
             echo $this->load->view('no_access_module', $this->page_data, true);
             die();
-        }
+        }*/
 
         $user_id = logged('id');
 

@@ -26,6 +26,16 @@
             exit;
         }
 
+        public function checkProfileImage(){
+            $image = (userProfileImage(logged('id'))) ? userProfileImage(logged('id')) : $url->assets;
+            $filename='something';
+            file_put_contents($filename,file_get_contents($image));
+            $size = getimagesize($filename);
+            echo "<pre>";
+            var_dump($size);
+            exit;
+        }
+
         public function sendEmail()
         {
             include APPPATH . 'libraries/PHPMailer/PHPMailerAutoload.php';
