@@ -4793,7 +4793,7 @@ class Accounting extends MY_Controller
         $this->page_data['type'] = $type;
         $this->page_data['items'] = $this->items_model->getItemlist();
         $this->page_data['plans'] = $this->plans_model->getByWhere(['company_id' => $company_id]);
-        $this->page_data['number'] = $this->estimate_model->getlastInsert();
+        $this->page_data['number'] = $this->workorder_model->getlastInsert($company_id);
 
         $this->page_data['fields'] = $this->workorder_model->getCustomByID();
         $this->page_data['headers'] = $this->workorder_model->getheaderByID();
@@ -4820,6 +4820,24 @@ class Accounting extends MY_Controller
 
 
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
+
+        // $this->page_data['fields'] = $this->workorder_model->getCustomByID();
+        // $this->page_data['headers'] = $this->workorder_model->getheaderByID();
+        // $this->page_data['checklists'] = $this->workorder_model->getchecklistByUser($user_id);
+        // $this->page_data['job_types'] = $this->workorder_model->getjob_types();
+
+        $this->page_data['job_tags'] = $this->workorder_model->getjob_tagsById();
+        $this->page_data['clients'] = $this->workorder_model->getclientsById();
+        $this->page_data['lead_source'] = $this->workorder_model->getlead_source($company_id);
+        
+        $this->page_data['packages'] = $this->workorder_model->getPackagelist($company_id);
+
+        $this->page_data['users'] = $this->users_model->getUser(logged('id'));
+        $this->page_data['users_lists'] = $this->users_model->getAllUsersByCompanyID($company_id);
+        $this->page_data['companyDet'] = $this->workorder_model->companyDet($company_id);
+
+        $this->page_data['itemPackages'] = $this->workorder_model->getPackageDetailsByCompany($company_id);
+
         // print_r($this->page_data);
         $this->load->view('accounting/NewworkOrder', $this->page_data);
     }

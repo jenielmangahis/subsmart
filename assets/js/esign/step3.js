@@ -100,7 +100,7 @@ function Step3() {
       if ($docPage.attr("data-page") == 1) {
         docPageYBottom = docPageYBottom + docPageHeight;
       } else {
-        docPageYBottom = $parent.get(0).offsetTop + $docPage.get(0).offsetTop + docPageHeight;
+        docPageYBottom = docPageYBottom + $docPage.get(0).offsetTop + docPageHeight;
       }
 
       // element is sitting on the current page
@@ -734,7 +734,7 @@ function Step3() {
           if ($docPage.attr("data-page") == 1) {
             docPageYBottom = docPageYBottom + docPageHeight;
           } else {
-            docPageYBottom = $docPage.get(0).offsetTop + docPageHeight;
+            docPageYBottom = docPageYBottom + $docPage.get(0).offsetTop + docPageHeight;
           }
 
           // element is sitting on the current page
@@ -744,6 +744,11 @@ function Step3() {
             $_document = $docPage;
             break;
           }
+        }
+
+        if ($_document === null) {
+          console.log($_document)
+          return;
         }
 
         const $item = $(ui.helper).clone();

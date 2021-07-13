@@ -1190,10 +1190,8 @@ SQL;
         $newTemplate = $this->db->get('user_docfile_templates')->row();
 
         // get base template files
-        $this->db->where('template_id', $templateId);
-        $this->db->order_by('id', 'ASC');
-        $baseTemplateFiles = $this->db->get('user_docfile_templates_documents')->result();
-
+        $baseTemplateFiles = $this->getSortedDocument($templateId);
+        $sequenceIds = [];
         $storedRecipientIds = [];
         foreach ($baseTemplateFiles as $baseFile) {
 
@@ -1206,6 +1204,7 @@ SQL;
             ]);
 
             $newTemplateDocumentFileId = $this->db->insert_id();
+            array_push($sequenceIds, $newTemplateDocumentFileId);
 
             $this->db->where('template_id', $templateId);
             $this->db->where('docfile_document_id', $baseFile->id);
@@ -1250,6 +1249,9 @@ SQL;
                 $this->db->insert_batch('user_docfile_templates_fields', $newFields);
             }
         }
+
+        $payload = ['template_id' => $newTemplate->id, 'sequence' => implode(',', $sequenceIds)];
+        $this->db->insert('user_docfile_templates_document_sequence', $payload);
 
         header('content-type: application/json');
         echo json_encode(['data' => $newTemplate]);

@@ -3315,40 +3315,54 @@ class Accounting_modals extends MY_Controller {
             $startingCheckNo = $data['starting_check_no'] === "" ? null : intval($data['starting_check_no']);
             foreach($payees as $payee) {
                 $paymentTotal = 0.00;
-                $itemKeys = array_keys($data['payee'], $payee);
                 $payeeTotal = 0.00;
+                $itemKeys = array_keys($data['payee'], $payee);
+                $vendor = $this->vendors_model->get_vendor_by_id($payee);
+                $appliedVCredits = [];
                 foreach($itemKeys as $key) {
                     $paymentTotal += floatval($data['payment_amount'][$key]);
                     $payeeTotal += floatval($data['total_amount'][$key]);
-                }
 
-                $vendor = $this->vendors_model->get_vendor_by_id($payee);
-                $appliedVCredits = [];
-
-                if(!is_null($vendor->vendor_credits) && $vendor->vendor_credits > 0) {
-                    $openVCredits = $this->expenses_model->get_vendor_unapplied_vendor_credits($payee);
-                    $vCreditPercentage = number_format($payeeTotal / floatval($vendor->vendor_credits) * 100, 2, '.', ',');
-
-                    foreach($openVCredits as $vCredit) {
-                        $balance = floatval($vCredit->remaining_balance);
-                        $subtracted = number_format($balance / 100 * $vCreditPercentage, 2, '.', ',');
-                        $appliedVCredits[$vCredit->id] = $subtracted;
-                        $remainingBal = $balance - $subtracted;
-
-                        $vCreditData = [
-                            'status' => $remainingBal === 0 ? 2 : 1,
-                            'remaining_balance' => $remainingBal,
-                            'updated_at' => date("Y-m-d H:i:s")
-                        ];
-
-                        $this->vendors_model->update_vendor_credit($vCredit->id, $vCreditData);
+                    if(!is_null($vendor->vendor_credits) && floatval($vendor->vendor_credits) > 0) {
+                        $openVCredits = $this->expenses_model->get_vendor_unapplied_vendor_credits($payee);
+                        $vCreditPercentage = number_format(floatval($data['credit_applied'][$key]) / floatval($vendor->vendor_credits) * 100, 2, '.', ',');
+    
+                        foreach($openVCredits as $vCredit) {
+                            $balance = floatval($vCredit->remaining_balance);
+                            $subtracted = number_format($balance / 100 * $vCreditPercentage, 2, '.', ',');
+                            if (array_key_exists($vCredit->id, $appliedVCredits)) {
+                                $appliedVCredits[$vCredit->id] += $subtracted;
+                            } else {
+                                $appliedVCredits[$vCredit->id] = $subtracted;
+                            }
+                            $remainingBal = $balance - $subtracted;
+    
+                            $vCreditData = [
+                                'status' => $remainingBal === 0 ? 2 : 1,
+                                'remaining_balance' => $remainingBal,
+                                'updated_at' => date("Y-m-d H:i:s")
+                            ];
+    
+                            $this->vendors_model->update_vendor_credit($vCredit->id, $vCreditData);
+                        }
                     }
                 }
+
+                $mailingAddress = $vendor->title !== "" ? $vendor->title." " : "";
+                $mailingAddress .= $vendor->f_name !== "" ? $vendor->f_name." " : "";
+                $mailingAddress .= $vendor->m_name !== "" ? $vendor->m_name." " : "";
+                $mailingAddress .= $vendor->l_name !== "" ? $vendor->l_name." " : "";
+                $mailingAddress .= $vendor->suffix !== "" ? $vendor->suffix : "";
+                $mailingAddress .= $vendor->street !== "" ? "<br />\n".$vendor->street : "";
+                $mailingAddress .= $vendor->city !== "" ? "<br />\n".$vendor->city : "";
+                $mailingAddress .= $vendor->state !== "" ? ", ".$vendor->state : "";
+                $mailingAddress .= $vendor->zip !== "" ? " ".$vendor->zip : "";
 
                 $billPayment = [
                     'company_id' => logged('company_id'),
                     'payee_id' => $payee,
                     'payment_account_id' => $data['payment_account'],
+                    'mailing_address' => $mailingAddress,
                     'payment_date' => date("Y-m-d", strtotime($data['payment_date'])),
                     'check_no' => isset($data['print_later']) ? null : $startingCheckNo,
                     'to_print_check_no' => $data['print_later'],
@@ -4515,13 +4529,49 @@ class Accounting_modals extends MY_Controller {
                 $payee = $this->vendors_model->get_vendor_by_id($check->payee_id);
                 $payeeName = $payee->display_name;
 
+                $linked = [];
+                if($check->vendor_credits_applied !== null && $check->vendor_credits_applied !== "[]") {
+                    $vCredits = json_decode($check->vendor_credits_applied, true);
+                    foreach($vCredits as $vCreditId => $amount) {
+                        $vCredit = $this->vendors_model->get_vendor_credit_by_id($vCreditId);
+
+                        $linked[] = [
+                            'date' => date("m/d/Y", strtotime($vCredit->payment_date)),
+                            'type' => 'Vendor Cred',
+                            'reference' => '',
+                            'original_amount' => '-'.number_format(floatval($vCredit->total_amount), 2, '.', ','),
+                            'balance_due' => '-'.number_format(floatval($vCredit->remaining_balance) + floatval($amount), 2, '.', ','),
+                            'payment' => '-'.number_format(floatval($amount), 2, '.', ',')
+                        ];
+                    }
+                }
+
+                $paidBills = $this->vendors_model->get_bill_payment_items($id);
+                foreach($paidBills as $paidBill) {
+                    $bill = $this->vendors_model->get_bill_by_id($paidBill->bill_id);
+
+                    $linked[] = [
+                        'date' => date("m/d/Y", strtotime($bill->bill_date)),
+                        'type' => 'Bill',
+                        'reference' => '',
+                        'original_amount' => number_format(floatval($bill->total_amount), 2, '.', ','),
+                        'balance_due' => number_format(floatval($bill->remaining_balance) + floatval($paidBill->total_amount), 2, '.', ','),
+                        'payment' => number_format(floatval($paidBill->total_amount), 2, '.', ',')
+                    ];
+                }
+
+                usort($linked, function($a, $b) {
+                    return strtotime($a['date']) > strtotime($b['date']);
+                });
+
                 $data[] = [
                     'date' => date("m/d/Y", strtotime($check->payment_date)),
                     'name' => $payeeName,
                     'total' => number_format(floatval($check->total_amount), 2, '.', ','),
                     'mailing_address' => $check->mailing_address,
                     'payment_account' => $paymentAcc->name,
-                    'type' => 'bill-payment'
+                    'type' => 'bill-payment',
+                    'linked_transactions' => $linked
                 ];
             }
         }
