@@ -528,6 +528,8 @@ class DocuSign extends MY_Controller
         ]);
 
         add_footer_js([
+            'https://code.jquery.com/ui/1.12.1/jquery-ui.js',
+
             'assets/js/esign/libs/pdf.js',
             'assets/js/esign/libs/pdf.worker.js',
             'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js',
@@ -669,9 +671,36 @@ class DocuSign extends MY_Controller
             }
         }
 
+        $this->db->where('template_id', $id);
+        $record = $this->db->get('user_docfile_templates_document_sequence')->row();
+
+        ['document_sequence' => $sequence] = $this->input->post();
+        ['sequence' => $sequence] = json_decode($sequence, true);
+
+        $this->db->where('template_id', $id);
+        $documents = $this->db->get('user_docfile_templates_documents')->result_array();
+
+        $sequenceIds = [];
+        foreach ($sequence as $documentName) {
+            foreach ($documents as $document) {
+                if (strpos($document['name'], $documentName) !== false) {
+                    $sequenceIds[] = $document['id'];
+                    break;
+                }
+            }
+        }
+
+        $payload = ['template_id' => $id, 'sequence' => implode(',', $sequenceIds)];
+        if (!$record) {
+            $this->db->insert('user_docfile_templates_document_sequence', $payload);
+        } else {
+            $this->db->where('template_id', $id);
+            $this->db->update('user_docfile_templates_document_sequence', $payload);
+        }
+
         $this->db->where('id', $id);
         $record = $this->db->get('user_docfile_templates')->row();
-        echo json_encode(['data' => $record, 'is_created' => $isCreated]);
+        echo json_encode(['data' => $record, 'is_created' => $isCreated, 's' => $sequenceIds]);
     }
 
     public function apiTemplates()
@@ -723,6 +752,12 @@ SQL;
 
     public function apiTemplateFile($templateId)
     {
+        header('content-type: application/json');
+        echo json_encode(['data' => $this->getSortedDocument($templateId)]);
+    }
+
+    private function getSortedDocument($templateId)
+    {
         $this->db->where('template_id', $templateId);
         $this->db->order_by('id', 'ASC');
         $records = $this->db->get('user_docfile_templates_documents')->result();
@@ -732,8 +767,24 @@ SQL;
             $record->total_fields = $this->db->get('user_docfile_templates_fields')->num_rows();
         }
 
-        header('content-type: application/json');
-        echo json_encode(['data' => $records]);
+        $this->db->where('template_id', $templateId);
+        $sequence = $this->db->get('user_docfile_templates_document_sequence')->row();
+        $sorted = null;
+
+        if ($sequence) {
+            $sorted = [];
+            $sequence = explode(',', $sequence->sequence);
+            foreach ($sequence as $recordId) {
+                foreach ($records as $record) {
+                    if ($record->id == $recordId) {
+                        $sorted[] = $record;
+                        break;
+                    }
+                }
+            }
+        }
+
+        return is_null($sorted) ? $records : $sorted;
     }
 
     public function apiTemplate($templateId)
@@ -973,6 +1024,30 @@ SQL;
                     'job_id' => $jobId,
                 ]);
             }
+        }
+
+        // copy sequence
+        $this->db->where('template_id', $template->id);
+        $sequence = $this->db->get('user_docfile_templates_document_sequence')->row();
+
+        if ($sequence) {
+            $this->db->where('docfile_id', $docfileId);
+            $documents = $this->db->get('user_docfile_documents')->result();
+
+            $sequence = explode(',', $sequence->sequence);
+            $sequenceIds = [];
+
+            foreach ($sequence as $recordId) {
+                foreach ($documents as $document) {
+                    if ($document->template_id == $recordId) {
+                        $sequenceIds[] = $document->id;
+                        break;
+                    }
+                }
+            }
+
+            $payload = ['docfile_id' => $docfileId, 'sequence' => implode(',', $sequenceIds)];
+            $this->db->insert('user_docfile_document_sequence', $payload);
         }
 
         $this->db->where('id', $docfileId);
@@ -1264,6 +1339,9 @@ SQL;
 
         $this->db->where('template_id', $templateId);
         $this->db->delete('user_docfile_templates_shared');
+
+        $this->db->where('template_id', $templateId);
+        $this->db->delete('user_docfile_templates_document_sequence');
 
         $this->db->where('template_id', $templateId);
         $thumbnail = $this->db->get('user_docfile_templates_thumbnail')->row_array();

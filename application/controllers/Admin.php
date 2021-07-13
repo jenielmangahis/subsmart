@@ -404,6 +404,29 @@ class Admin extends CI_Controller
         echo json_encode($json_data);
     }
 
+    public function ajaxUpdateCompanyStatus(){
+        $this->load->model('Clients_model');
+
+        $is_success = true;
+        $msg = "";
+
+        $company_id = $this->input->post('status_company_id');
+        $status  = $this->input->post('status_company_status');
+
+        $data = array(            
+            'is_plan_active' => $status
+        );
+
+        $company = $this->Clients_model->update($company_id,$data);
+
+        $json_data = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($json_data);
+    }
+
     public function delete(){
         $this->load->model('Users_model');
         

@@ -480,7 +480,7 @@ Alarm Direct, Inc</textarea>
                         </div>
 
                         <hr>
-                        <div class="col-md-6">
+                        <div class="col-md-6 payment_method_information">
                             <div id="check_area" style="display:none;">
                                 <div class="row">
                                     <div class="form-group col-md-4">
@@ -1670,7 +1670,11 @@ Alarm Direct, Inc</textarea>
 </script>
 
 <script>
-    document.getElementById("payment_method").onchange = function() {
+    $(document).on("change", "div#addsalesreceiptModal form select[name='payment_method']", function(event) {
+        $("div#customer_receive_payment_modal .payment_method_information").html("");
+        $("div#addsalesreceiptModal .payment_method_information").html("");
+
+        $("div#addsalesreceiptModal .payment_method_information").html(payment_method_information);
         if (this.value == 'Cash') {
             // alert('cash');
             // $('#exampleModal').modal('toggle');
@@ -1897,5 +1901,5 @@ Alarm Direct, Inc</textarea>
             $('#other_credit_card').hide();
             $('#other_payment_area').show();
         }
-    }
+    });
 </script>

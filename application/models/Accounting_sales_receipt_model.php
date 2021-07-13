@@ -116,13 +116,4 @@ class Accounting_sales_receipt_model extends MY_Model
     {
         $this->db->delete('accounting_receive_payment', $where);
     }
-    public function update_receive_payment_details($data, $where)
-    {
-        $this->db->update('accounting_receive_payment', $data, $where);
-        if ($this->db->affected_rows() == '1') {
-            return true;
-        } else {
-            return false;
-        }
-    }
 }

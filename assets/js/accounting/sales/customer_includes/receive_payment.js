@@ -1,3 +1,10 @@
+var payment_method_information = "";
+$(document).ready(function() {
+    payment_method_information = $("div#customer_receive_payment_modal .payment_method_information").html();
+    $("div#customer_receive_payment_modal .payment_method_information").html("");
+    $("div#addsalesreceiptModal .payment_method_information").html("");
+});
+
 $('#addsalesreceiptModal .recurring-form-part.below .date-part .input-field-1 .datepicker').datepicker({
     uiLibrary: 'bootstrap'
 });
@@ -19,6 +26,22 @@ $(document).on("click", "#customer_receive_payment_modal .customer_receive_payme
     event.preventDefault();
 });
 
+$(document).on("click", function(event) {
+    if ($(event.target).closest("div#customer_receive_payment_modal .customer_receive_payment_modal_content .customer_receive_payment_modal_footer .right-option").length === 0) {
+        $("div#customer_receive_payment_modal .customer_receive_payment_modal_content .customer_receive_payment_modal_footer .right-option .sub-option").hide();
+    }
+    if ($(event.target).closest("#customer_receive_payment_modal .customer_receive_payment_modal_content .invoicing-part .invoices .filter").length === 0) {
+        $("#customer_receive_payment_modal .customer_receive_payment_modal_content .invoicing-part .invoices .filter .filter-panel").hide();
+    }
+
+    if ($(event.target).closest("#customer_receive_payment_modal .find-by-invoice-no-section").length === 0) {
+        $("#customer_receive_payment_modal .find-by-invoice-no-panel").hide();
+    }
+    if ($(event.target).closest("div#customer_receive_payment_modal .customer_receive_payment_modal_content .customer_receive_payment_modal_footer .center-options").length === 0) {
+        $("div#customer_receive_payment_modal .customer_receive_payment_modal_content .customer_receive_payment_modal_footer .more-sub-option").hide();
+    }
+
+});
 $(document).on("click", "#customer_receive_payment_modal .customer_receive_payment_modal_content .customer_receive_payment_modal_footer .clear-btn", function(event) {
     var customer_id = $("#customer_receive_payment_modal #receive_payment_form select[name='customer_id']").val();
     get_customer_info_for_receive_payment_modal(customer_id);
@@ -76,6 +99,7 @@ $(document).on("click", ".customer_receive_payment_btn", function(event) {
     var customer_id = $(this).attr("data-customer-id");
     $("#customer_receive_payment_modal #receive_payment_form select[name='customer_id']").val(customer_id);
     get_customer_info_for_receive_payment_modal(customer_id);
+    $('#new-popup').modal('hide');
 });
 
 $(document).on("click", "#customer_receive_payment_modal .customer_receive_payment_modal_content .invoicing-part .invoices .filter .filter-panel .buttons .apply-btn", function(event) {
@@ -120,18 +144,6 @@ $(document).on("click", "div#customer_receive_payment_modal .customer_receive_pa
     event.preventDefault();
     $("div#customer_receive_payment_modal .customer_receive_payment_modal_content .customer_receive_payment_modal_footer .right-option .sub-option").show();
 });
-$(document).on("click", function(event) {
-    if ($(event.target).closest("div#customer_receive_payment_modal .customer_receive_payment_modal_content .customer_receive_payment_modal_footer .right-option").length === 0) {
-        $("div#customer_receive_payment_modal .customer_receive_payment_modal_content .customer_receive_payment_modal_footer .right-option .sub-option").hide();
-    }
-    if ($(event.target).closest("#customer_receive_payment_modal .customer_receive_payment_modal_content .invoicing-part .invoices .filter").length === 0) {
-        $("#customer_receive_payment_modal .customer_receive_payment_modal_content .invoicing-part .invoices .filter .filter-panel").hide();
-    }
-
-    if ($(event.target).closest("#customer_receive_payment_modal .find-by-invoice-no-section").length === 0) {
-        $("#customer_receive_payment_modal .find-by-invoice-no-panel").hide();
-    }
-});
 var invoice_count = 0;
 
 function get_customer_info_for_receive_payment_modal(customer_id) {
@@ -166,7 +178,7 @@ function get_customer_info_for_receive_payment_modal(customer_id) {
             $("#customer_receive_payment_modal .customer_receive_payment_modal_content select[name='payment_method']").val("");
             $("#customer_receive_payment_modal .customer_receive_payment_modal_content input[name='ref_no']").val("");
             $("#customer_receive_payment_modal .customer_receive_payment_modal_content select[name='deposite_to']").val("");
-
+            $("div#customer_receive_payment_modal .customer_receive_payment_modal_content .customer_receive_payment_modal_footer .btn-more").hide();
             $("#loader-modal").hide();
         },
     });
@@ -250,6 +262,8 @@ $(document).on("click", "#customer_receive_payment_modal #receive_payment_form b
                         '<iframe src="' + data.file_location + '"></iframe>');
                     $("#sales_receipt_pdf_preview_modal .pdf_preview_section .print-button").attr("href", data.file_location);
                     $("#sales_receipt_pdf_preview_modal .pdf_preview_section .download-button").attr("href", data.file_location);
+                    $("div#customer_receive_payment_modal .customer_receive_payment_modal_content .customer_receive_payment_modal_footer .btn-more").show();
+                    $("div#customer_receive_payment_modal .customer_receive_payment_modal_content .customer_receive_payment_modal_footer .more-sub-option").hide();
                 }
                 $("#loader-modal").hide();
             },
@@ -291,6 +305,7 @@ $(document).on("click", "#customer_receive_payment_modal #receive_payment_form b
                     data: $("#customer_receive_payment_modal #receive_payment_form").serialize(),
                     success: function(data) {
                         if (data.count_save > 0) {
+                            $("div#customer_receive_payment_modal .customer_receive_payment_modal_content .customer_receive_payment_modal_footer .btn-more").show();
                             $("#customer_receive_payment_modal #receive_payment_form input[name='receive_payment_id']").val(data.receive_payment_id);
                             $("#customer_receive_payment_modal #receive_payment_form input[name='ref_no']").attr("disabled", "true");
                             $("#customer_receive_payment_modal #receive_payment_form input[name='payment_date']").attr("disabled", "true");
@@ -387,5 +402,302 @@ function formatMoney(n) {
 $("#customer_receive_payment_modal #receive_payment_form").submit(function(event) {
     if ($("#customer_receive_payment_modal #receive_payment_form").attr("target") == "") {
         event.preventDefault();
+    }
+});
+
+$(document).on("click", "div#customer_receive_payment_modal .customer_receive_payment_modal_content .customer_receive_payment_modal_footer .more-sub-option li", function(event) {
+    event.preventDefault();
+    var receive_payment_id = $("#customer_receive_payment_modal #receive_payment_form input[name='receive_payment_id']").val();
+    if (receive_payment_id != "") {
+        Swal.fire({
+            title: "",
+            html: "This transaction is linked to others. Are you sure you want to " + $(this).html() + " it?",
+            showCancelButton: true,
+            imageUrl: baseURL + "/assets/img/accounting/customers/exclamation-mark.png",
+            cancelButtonColor: "#d33",
+            confirmButtonColor: "#2ca01c",
+            confirmButtonText: "Yes",
+            cancelButtonText: "No",
+        }).then((result) => {
+            if (result.value) {
+                var action = "";
+                if ($(this).attr("data-option-type") == "void") {
+                    action = "void";
+                } else if ($(this).attr("data-option-type") == "delete") {
+                    action = "delete";
+                }
+                $.ajax({
+                    url: baseURL + "/accounting/receive_payment_more_option",
+                    type: "POST",
+                    dataType: "json",
+                    data: {
+                        receive_payment_id: receive_payment_id,
+                        action: action
+                    },
+                    success: function(data) {
+                        if (data.result == "success") {
+
+                            if (action == "delete") {
+                                $("#customer_receive_payment_modal #receive_payment_form input[name='receive_payment_id']").val("");
+                                action = "deleted.";
+                                $("div#customer_receive_payment_modal .customer_receive_payment_modal_content .customer_receive_payment_modal_footer .btn-more").hide();
+                            } else {
+                                action = "voided.";
+                            }
+                            Swal.fire({
+                                showConfirmButton: false,
+                                timer: 2000,
+                                title: "Success",
+                                html: "Transaction has been" + action,
+                                icon: "success",
+                            });
+                        } else {
+                            Swal.fire({
+                                showConfirmButton: false,
+                                timer: 2000,
+                                title: "Something went wrong.",
+                                icon: "error",
+                            });
+                        }
+                    },
+                });
+            }
+        });
+    }
+});
+
+$(document).on("click", "div#customer_receive_payment_modal .customer_receive_payment_modal_content .customer_receive_payment_modal_footer .btn-more", function(event) {
+    $("div#customer_receive_payment_modal .customer_receive_payment_modal_content .customer_receive_payment_modal_footer .more-sub-option").show();
+});
+$(document).on("change", "div#customer_receive_payment_modal form select[name='payment_method']", function(event) {
+    $("div#customer_receive_payment_modal .payment_method_information").html("");
+    $("div#addsalesreceiptModal .payment_method_information").html("");
+
+    $("div#customer_receive_payment_modal .payment_method_information").html(payment_method_information);
+    if (this.value == 'Cash') {
+        // alert('cash');
+        // $('#exampleModal').modal('toggle');
+        $('#cash_area').show();
+        $('#check_area').hide();
+        $('#credit_card').hide();
+        $('#debit_card').hide();
+        $('#ach_area').hide();
+        $('#venmo_area').hide();
+        $('#paypal_area').hide();
+        $('#invoicing').hide();
+        $('#square_area').hide();
+        $('#warranty_area').hide();
+        $('#home_area').hide();
+        $('#e_area').hide();
+        $('#other_credit_card').hide();
+        $('#other_payment_area').hide();
+    } else if (this.value == 'Invoicing') {
+
+        $('#cash_area').hide();
+        $('#check_area').hide();
+        $('#invoicing').show();
+        $('#credit_card').hide();
+        $('#debit_card').hide();
+        $('#ach_area').hide();
+        $('#venmo_area').hide();
+        $('#paypal_area').hide();
+        $('#square_area').hide();
+        $('#warranty_area').hide();
+        $('#home_area').hide();
+        $('#e_area').hide();
+        $('#other_credit_card').hide();
+        $('#other_payment_area').hide();
+    } else if (this.value == 'Check') {
+        // alert('Check');
+        $('#cash_area').hide();
+        $('#check_area').show();
+        $('#credit_card').hide();
+        $('#debit_card').hide();
+        $('#invoicing').hide();
+        $('#ach_area').hide();
+        $('#venmo_area').hide();
+        $('#paypal_area').hide();
+        $('#square_area').hide();
+        $('#warranty_area').hide();
+        $('#home_area').hide();
+        $('#e_area').hide();
+        $('#other_credit_card').hide();
+        $('#other_payment_area').hide();
+    } else if (this.value == 'Credit Card') {
+        // alert('Credit card');
+        $('#cash_area').hide();
+        $('#check_area').hide();
+        $('#credit_card').show();
+        $('#debit_card').hide();
+        $('#invoicing').hide();
+        $('#ach_area').hide();
+        $('#venmo_area').hide();
+        $('#paypal_area').hide();
+        $('#square_area').hide();
+        $('#warranty_area').hide();
+        $('#home_area').hide();
+        $('#e_area').hide();
+        $('#other_credit_card').hide();
+        $('#other_payment_area').hide();
+    } else if (this.value == 'Debit Card') {
+        // alert('Credit card');
+        $('#cash_area').hide();
+        $('#check_area').hide();
+        $('#credit_card').hide();
+        $('#debit_card').show();
+        $('#ach_area').hide();
+        $('#venmo_area').hide();
+        $('#invoicing').hide();
+        $('#paypal_area').hide();
+        $('#square_area').hide();
+        $('#warranty_area').hide();
+        $('#home_area').hide();
+        $('#e_area').hide();
+        $('#other_credit_card').hide();
+        $('#other_payment_area').hide();
+    } else if (this.value == 'ACH') {
+        // alert('Credit card');
+        $('#cash_area').hide();
+        $('#check_area').hide();
+        $('#credit_card').hide();
+        $('#debit_card').hide();
+        $('#invoicing').hide();
+        $('#ach_area').show();
+        $('#venmo_area').hide();
+        $('#paypal_area').hide();
+        $('#square_area').hide();
+        $('#warranty_area').hide();
+        $('#home_area').hide();
+        $('#e_area').hide();
+        $('#other_credit_card').hide();
+        $('#other_payment_area').hide();
+    } else if (this.value == 'Venmo') {
+        // alert('Credit card');
+        $('#cash_area').hide();
+        $('#check_area').hide();
+        $('#credit_card').hide();
+        $('#debit_card').hide();
+        $('#ach_area').hide();
+        $('#invoicing').hide();
+        $('#venmo_area').show();
+        $('#paypal_area').hide();
+        $('#square_area').hide();
+        $('#warranty_area').hide();
+        $('#home_area').hide();
+        $('#e_area').hide();
+        $('#other_credit_card').hide();
+        $('#other_payment_area').hide();
+    } else if (this.value == 'Paypal') {
+        // alert('Credit card');
+        $('#cash_area').hide();
+        $('#check_area').hide();
+        $('#credit_card').hide();
+        $('#debit_card').hide();
+        $('#invoicing').hide();
+        $('#ach_area').hide();
+        $('#venmo_area').hide();
+        $('#paypal_area').show();
+        $('#square_area').hide();
+        $('#warranty_area').hide();
+        $('#home_area').hide();
+        $('#e_area').hide();
+        $('#other_credit_card').hide();
+        $('#other_payment_area').hide();
+    } else if (this.value == 'Square') {
+        // alert('Credit card');
+        $('#cash_area').hide();
+        $('#check_area').hide();
+        $('#credit_card').hide();
+        $('#invoicing').hide();
+        $('#debit_card').hide();
+        $('#ach_area').hide();
+        $('#venmo_area').hide();
+        $('#paypal_area').hide();
+        $('#square_area').show();
+        $('#warranty_area').hide();
+        $('#home_area').hide();
+        $('#e_area').hide();
+        $('#other_credit_card').hide();
+        $('#other_payment_area').hide();
+    } else if (this.value == 'Warranty Work') {
+        // alert('Credit card');
+        $('#cash_area').hide();
+        $('#check_area').hide();
+        $('#credit_card').hide();
+        $('#invoicing').hide();
+        $('#debit_card').hide();
+        $('#ach_area').hide();
+        $('#venmo_area').hide();
+        $('#paypal_area').hide();
+        $('#square_area').hide();
+        $('#warranty_area').show();
+        $('#home_area').hide();
+        $('#e_area').hide();
+        $('#other_credit_card').hide();
+        $('#other_payment_area').hide();
+    } else if (this.value == 'Home Owner Financing') {
+        // alert('Credit card');
+        $('#cash_area').hide();
+        $('#check_area').hide();
+        $('#credit_card').hide();
+        $('#debit_card').hide();
+        $('#invoicing').hide();
+        $('#ach_area').hide();
+        $('#venmo_area').hide();
+        $('#paypal_area').hide();
+        $('#square_area').hide();
+        $('#warranty_area').hide();
+        $('#home_area').show();
+        $('#e_area').hide();
+        $('#other_credit_card').hide();
+        $('#other_payment_area').hide();
+    } else if (this.value == 'e-Transfer') {
+        // alert('Credit card');
+        $('#cash_area').hide();
+        $('#check_area').hide();
+        $('#credit_card').hide();
+        $('#debit_card').hide();
+        $('#invoicing').hide();
+        $('#ach_area').hide();
+        $('#venmo_area').hide();
+        $('#paypal_area').hide();
+        $('#square_area').hide();
+        $('#warranty_area').hide();
+        $('#home_area').hide();
+        $('#e_area').show();
+        $('#other_credit_card').hide();
+        $('#other_payment_area').hide();
+    } else if (this.value == 'Other Credit Card Professor') {
+        // alert('Credit card');
+        $('#cash_area').hide();
+        $('#check_area').hide();
+        $('#credit_card').hide();
+        $('#debit_card').hide();
+        $('#invoicing').hide();
+        $('#ach_area').hide();
+        $('#venmo_area').hide();
+        $('#paypal_area').hide();
+        $('#square_area').hide();
+        $('#warranty_area').hide();
+        $('#home_area').hide();
+        $('#e_area').hide();
+        $('#other_credit_card').show();
+        $('#other_payment_area').hide();
+    } else if (this.value == 'Other Payment Type') {
+        // alert('Credit card');
+        $('#cash_area').hide();
+        $('#check_area').hide();
+        $('#credit_card').hide();
+        $('#debit_card').hide();
+        $('#invoicing').hide();
+        $('#ach_area').hide();
+        $('#venmo_area').hide();
+        $('#paypal_area').hide();
+        $('#square_area').hide();
+        $('#warranty_area').hide();
+        $('#home_area').hide();
+        $('#e_area').hide();
+        $('#other_credit_card').hide();
+        $('#other_payment_area').show();
     }
 });

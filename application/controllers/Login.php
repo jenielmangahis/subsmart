@@ -85,28 +85,36 @@ class Login extends CI_Controller
             $this->users_model->login($user, post('remember_me'));
 
             $client = $this->Clients_model->getById($user->company_id);
+            if( $client->is_plan_active == 3 ){
+                $this->data['message'] = 'Company account is currently disabled. Please contact system administrator.';
+                $this->data['message_type'] = 'danger';
 
-            // Get all access modules
-            if ($user->role == 1 || $user->role == 2) { //Admin and nsmart tech
-                $access_modules = array(0 => 'all');
-            } else {                
-                if ($client) {
-                    if ($client->is_startup == 1) {
-                        $is_startup = 1;
-                    }
+                $this->index();
+                return;
+            }else{
+                // Get all access modules
+                if ($user->role == 1 || $user->role == 2) { //Admin and nsmart tech
+                    $access_modules = array(0 => 'all');
+                } else {                
+                    if ($client) {
+                        if ($client->is_startup == 1) {
+                            $is_startup = 1;
+                        }
 
-                    $industryType = $this->IndustryType_model->getById($client->industry_type_id);
-                    if ($industryType) {
-                        $industryModules = $this->IndustryTemplateModules_model->getAllByTemplateId($industryType->industry_template_id);
-                        foreach ($industryModules as $im) {
-                            $access_modules[] = $im->industry_module_id;
+                        $industryType = $this->IndustryType_model->getById($client->industry_type_id);
+                        if ($industryType) {
+                            $industryModules = $this->IndustryTemplateModules_model->getAllByTemplateId($industryType->industry_template_id);
+                            foreach ($industryModules as $im) {
+                                $access_modules[] = $im->industry_module_id;
+                            }
                         }
                     }
                 }
-            }
 
-            $this->session->set_userdata('userAccessModules', $access_modules);
-            $this->session->set_userdata('is_plan_active', $client->is_plan_active);
+                $this->session->set_userdata('userAccessModules', $access_modules);
+                $this->session->set_userdata('is_plan_active', $client->is_plan_active);
+            }
+           
 
         } elseif ($attempt == 'invalid_password') {
 

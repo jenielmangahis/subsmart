@@ -222,7 +222,8 @@ div#customer_receive_payment_modal .customer_receive_payment_modal_content .cust
     background-color: #2A2B2D;
 }
 
-div#customer_receive_payment_modal .customer_receive_payment_modal_content .customer_receive_payment_modal_footer .btn-print {
+div#customer_receive_payment_modal .customer_receive_payment_modal_content .customer_receive_payment_modal_footer .btn-print,
+div#customer_receive_payment_modal .customer_receive_payment_modal_content .customer_receive_payment_modal_footer .btn-more {
     outline: 0;
     display: inline-block;
     height: 32px;
@@ -233,6 +234,41 @@ div#customer_receive_payment_modal .customer_receive_payment_modal_content .cust
     background: transparent;
     border: 0 none;
     box-shadow: none;
+}
+
+div#customer_receive_payment_modal .customer_receive_payment_modal_content .customer_receive_payment_modal_footer .more-sub-option {
+    position: absolute;
+    bottom: 35px;
+    background: #fff;
+    left: 50%;
+    padding: 2px;
+    text-align: left;
+    box-shadow: 3px 6px 20px #282929;
+    border: solid 1px #BABEC5;
+    border-radius: 2px;
+    display: none;
+}
+
+div#customer_receive_payment_modal .customer_receive_payment_modal_content .customer_receive_payment_modal_footer .more-sub-option li {
+    padding: 5px 10px;
+    color: #404040;
+}
+
+div#customer_receive_payment_modal .customer_receive_payment_modal_content .customer_receive_payment_modal_footer .more-sub-option li:hover {
+    background-color: #2CA01C;
+    color: #ffffff;
+    cursor: pointer;
+}
+
+div#customer_receive_payment_modal .customer_receive_payment_modal_content .customer_receive_payment_modal_footer .more-sub-option .more-anchor {
+    position: absolute;
+    width: 15px;
+    bottom: -10px;
+    left: 20px;
+}
+
+div#customer_receive_payment_modal .customer_receive_payment_modal_content .customer_receive_payment_modal_footer .btn-more {
+    border-left: solid 1px #6B6C72;
 }
 
 div#customer_receive_payment_modal .customer_receive_payment_modal_content .customer_receive_payment_modal_footer .btn-save-new {
@@ -469,4 +505,12 @@ div#customer_receive_payment_modal .customer_receive_payment_modal_content #cust
     padding-top: 5px;
     color: #CE2035;
     display: none;
+}
+
+#customer_receive_payment_modal div.payment_method_information .row {
+    margin: 0;
+}
+
+#customer_receive_payment_modal form label {
+    font-size: 12px;
 }

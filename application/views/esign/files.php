@@ -91,8 +91,8 @@
                     </span>
                 </div>
 
-                <div class="d-flex fileupload">
-                    <div class="custome-fileup ">
+                <div class="d-flex fileupload" id="sortable">
+                    <div class="custome-fileup">
                         <div class="upload-btn-wrapper">
                             <button class="btn">
                                 <img src="<?php echo $url->assets ?>esign/images/fileup-ic.png" alt="">
@@ -661,6 +661,11 @@
 </html>
 <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+<?php if (isset($next_step) && $next_step == 0): ?>
+    <script src="//code.jquery.com/jquery-1.12.4.js"></script>
+<?php endif;?>
+
 <?php echo put_footer_assets(); ?>
 <style>
     .esignBuilder__field,
