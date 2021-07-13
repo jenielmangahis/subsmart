@@ -89,9 +89,24 @@
                                 <div class="col-md-4 no-padding">
                                     <div class="form-group" style="margin-bottom: 5px!important;">
                                         <div class="label">Payment method</div>
-                                        <select class="form-control required" name="payment_method" required>
+                                        <select class="form-control required" id="payment_method" name="payment_method"
+                                            required>
                                             <option value="" disabled selected>Choose a payment method</option>
-                                            <option value="4822">Add new</option>
+                                            <option value="Cash">Cash</option>
+                                            <option value="Check">Check</option>
+                                            <option value="Credit Card">Credit Card</option>
+                                            <option value="Debit Card">Debit Card</option>
+                                            <option value="ACH">ACH</option>
+                                            <option value="Venmo">Venmo</option>
+                                            <option value="Paypal">Paypal</option>
+                                            <option value="Square">Square</option>
+                                            <option value="Invoicing">Invoicing</option>
+                                            <option value="Warranty Work">Warranty Work</option>
+                                            <option value="Home Owner Financing">Home Owner Financing</option>
+                                            <option value="e-Transfer">e-Transfer</option>
+                                            <option value="Other Credit Card Professor">Other Credit Card Professor
+                                            </option>
+                                            <option value="Other Payment Type">Other Payment Type</option>
                                         </select>
                                     </div>
                                 </div>
@@ -126,6 +141,284 @@
                                     <div class="form-group" style="margin-bottom: 5px!important;">
                                         <div class="label text-right">Amount received</div>
                                         <input type="text" class="text-right required" name="amount_received" required>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row no-margin">
+                        <div class="col-md-6">
+                            <div class="payment_method_information">
+                                <div id="check_area" style="display:none;">
+                                    <div class="row">
+                                        <div class="form-group col-md-4">
+                                            <label for="job_type">Check Number</label>
+                                            <input type="text" class="form-control" name="check_number"
+                                                id="check_number" />
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            <label for="job_type">Routing Number</label>
+                                            <input type="text" class="form-control" name="routing_number"
+                                                id="routing_number" />
+                                        </div>
+                                        <!-- </div>
+                                        <div class="row"> -->
+                                        <div class="form-group col-md-4">
+                                            <label for="job_type">Account Number</label>
+                                            <input type="text" class="form-control" name="account_number"
+                                                id="account_number" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="credit_card" style="display:none;">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            Credit Card Type:<br>
+                                            <div class="checkbox checkbox-sec margin-right mr-4">
+                                                <input type="radio" name="card[radio_credit_card]" value="Visa" <?php echo (!empty($workorder->card['radio_credit_card']) && $workorder->card['radio_credit_card'] == 'Visa') ? 'checked' : '' ?>
+                                                id="radio_credit_card">
+                                                <label for="radio_credit_card"><span>Visa</span></label>
+                                            </div>
+                                            <div class="checkbox checkbox-sec margin-right mr-4">
+                                                <input type="radio" name="card[radio_credit_card]" value="Amex" <?php echo (!empty($workorder->card['radio_credit_card']) && $workorder->card['radio_credit_card'] == 'Amex') ? 'checked' : '' ?>
+                                                id="radio_credit_cardAmex">
+                                                <label for="radio_credit_cardAmex"><span>Amex</span></label>
+                                            </div>
+                                            <div class="checkbox checkbox-sec margin-right mr-4">
+                                                <input type="radio" name="card[radio_credit_card]" value="Mastercard"
+                                                    <?php echo (!empty($workorder->card['radio_credit_card']) && $workorder->card['radio_credit_card'] == 'Mastercard') ? 'checked' : '' ?>
+                                                id="radio_credit_cardMastercard">
+                                                <label for="radio_credit_cardMastercard"><span>Mastercard</span></label>
+                                            </div>
+                                            <div class="checkbox checkbox-sec margin-right mr-4">
+                                                <input type="radio" name="card[radio_credit_card]" value="Discover"
+                                                    <?php echo (!empty($workorder->card['radio_credit_card']) && $workorder->card['radio_credit_card'] == 'Discover') ? 'checked' : '' ?>
+                                                id="radio_credit_cardMasterDiscover">
+                                                <label
+                                                    for="radio_credit_cardMasterDiscover"><span>Discover</span></label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                    </div>
+                                    <br><br>
+                                    <div class="row">
+                                        <div class="form-group col-md-4">
+                                            <label for="job_type">Credit Card Number</label>
+                                            <input type="text" class="form-control" name="credit_number"
+                                                id="credit_number" placeholder="0000 0000 0000 000" />
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            <label for="job_type">Credit Card Expiration</label>
+                                            <input type="text" class="form-control" name="credit_expiry"
+                                                id="credit_expiry" placeholder="MM/YYYY" />
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            <label for="job_type">CVC</label>
+                                            <input type="text" class="form-control" name="credit_cvc" id="credit_cvc"
+                                                placeholder="CVC" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="invoicing" style="display:none;">
+
+                                    <!-- <input type="checkbox" id="same_as"> <b>Same as above in Monitoring Address</b> <br> -->
+                                    <br>
+                                    <div class="row">
+                                        <div class="col-md-4 form-group">
+                                            <label for="monitored_location">Mail Address</label>
+                                            <input type="text" class="form-control" name="mail-address"
+                                                id="mail-address" placeholder="Monitored Location" />
+                                        </div>
+                                        <div class="col-md-4 form-group">
+                                            <label for="city">City</label>
+                                            <input type="text" class="form-control" name="mail_locality"
+                                                id="mail_locality" placeholder="Enter Name" />
+                                        </div>
+                                        <div class="col-md-4 form-group">
+                                            <label for="state">State</label>
+                                            <input type="text" class="form-control" name="mail_state" id="mail_state"
+                                                placeholder="Enter State" />
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-4 form-group">
+                                            <label for="zip">ZIP</label>
+                                            <input type="text" id="mail_postcode" name="mail_postcode"
+                                                class="form-control" placeholder="Enter Zip" />
+                                        </div>
+
+                                        <div class="col-md-4 form-group">
+                                            <label for="cross_street">Cross Street</label>
+                                            <input type="text" class="form-control" name="mail_cross_street"
+                                                id="mail_cross_street" placeholder="Cross Street" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="debit_card" style="display:none;">
+                                    <div class="row">
+                                        <div class="form-group col-md-4">
+                                            <label for="job_type">Credit Card Number</label>
+                                            <input type="text" class="form-control" name="debit_credit_number"
+                                                id="credit_number" placeholder="0000 0000 0000 000" />
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            <label for="job_type">Credit Card Expiration</label>
+                                            <input type="text" class="form-control" name="debit_credit_expiry"
+                                                id="credit_expiry" placeholder="MM/YYYY" />
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            <label for="job_type">CVC</label>
+                                            <input type="text" class="form-control" name="debit_credit_cvc"
+                                                id="credit_cvc" placeholder="CVC" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="ach_area" style="display:none;">
+                                    <div class="row">
+                                        <div class="form-group col-md-4">
+                                            <label for="job_type">Routing Number</label>
+                                            <input type="text" class="form-control" name="ach_routing_number"
+                                                id="ach_routing_number" />
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            <label for="job_type">Account Number</label>
+                                            <input type="text" class="form-control" name="ach_account_number"
+                                                id="ach_account_number" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="venmo_area" style="display:none;">
+                                    <div class="row">
+                                        <div class="form-group col-md-4">
+                                            <label for="job_type">Account Credential</label>
+                                            <input type="text" class="form-control" name="account_credentials"
+                                                id="account_credentials" />
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            <label for="job_type">Account Note</label>
+                                            <input type="text" class="form-control" name="account_note"
+                                                id="account_note" />
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            <label for="job_type">Confirmation</label>
+                                            <input type="text" class="form-control" name="confirmation"
+                                                id="confirmation" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="paypal_area" style="display:none;">
+                                    <div class="row">
+                                        <div class="form-group col-md-4">
+                                            <label for="job_type">Account Credential</label>
+                                            <input type="text" class="form-control" name="paypal_account_credentials"
+                                                id="paypal_account_credentials" />
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            <label for="job_type">Account Note</label>
+                                            <input type="text" class="form-control" name="paypal_account_note"
+                                                id="paypal_account_note" />
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            <label for="job_type">Confirmation</label>
+                                            <input type="text" class="form-control" name="paypal_confirmation"
+                                                id="paypal_confirmation" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="square_area" style="display:none;">
+                                    <div class="row">
+                                        <div class="form-group col-md-4">
+                                            <label for="job_type">Account Credential</label>
+                                            <input type="text" class="form-control" name="square_account_credentials"
+                                                id="square_account_credentials" />
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            <label for="job_type">Account Note</label>
+                                            <input type="text" class="form-control" name="square_account_note"
+                                                id="square_account_note" />
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            <label for="job_type">Confirmation</label>
+                                            <input type="text" class="form-control" name="square_confirmation"
+                                                id="square_confirmation" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="warranty_area" style="display:none;">
+                                    <div class="row">
+                                        <div class="form-group col-md-4">
+                                            <label for="job_type">Account Credential</label>
+                                            <input type="text" class="form-control" name="warranty_account_credentials"
+                                                id="warranty_account_credentials" />
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            <label for="job_type">Account Note</label>
+                                            <input type="text" class="form-control" name="warranty_account_note"
+                                                id="warranty_account_note" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="home_area" style="display:none;">
+                                    <div class="row">
+                                        <div class="form-group col-md-4">
+                                            <label for="job_type">Account Credential</label>
+                                            <input type="text" class="form-control" name="home_account_credentials"
+                                                id="home_account_credentials" />
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            <label for="job_type">Account Note</label>
+                                            <input type="text" class="form-control" name="home_account_note"
+                                                id="home_account_note" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="e_area" style="display:none;">
+                                    <div class="row">
+                                        <div class="form-group col-md-4">
+                                            <label for="job_type">Account Credential</label>
+                                            <input type="text" class="form-control" name="e_account_credentials"
+                                                id="e_account_credentials" />
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            <label for="job_type">Account Note</label>
+                                            <input type="text" class="form-control" name="e_account_note"
+                                                id="e_account_note" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="other_credit_card" style="display:none;">
+                                    <div class="row">
+                                        <div class="form-group col-md-4">
+                                            <label for="job_type">Credit Card Number</label>
+                                            <input type="text" class="form-control" name="other_credit_number"
+                                                id="other_credit_number" placeholder="0000 0000 0000 000" />
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            <label for="job_type">Credit Card Expiration</label>
+                                            <input type="text" class="form-control" name="other_credit_expiry"
+                                                id="other_credit_expiry" placeholder="MM/YYYY" />
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            <label for="job_type">CVC</label>
+                                            <input type="text" class="form-control" name="other_credit_cvc"
+                                                id="other_credit_cvc" placeholder="CVC" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="other_payment_area" style="display:none;">
+                                    <div class="row">
+                                        <div class="form-group col-md-4">
+                                            <label for="job_type">Account Credential</label>
+                                            <input type="text" class="form-control"
+                                                name="other_payment_account_credentials"
+                                                id="other_payment_account_credentials" />
+                                        </div>
+                                        <div class="form-group col-md-4">
+                                            <label for="job_type">Account Note</label>
+                                            <input type="text" class="form-control" name="other_payment_account_note"
+                                                id="other_payment_account_note" />
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -313,8 +606,29 @@
                         <button href="#" class="left-btn close-btn">Cancel</button>
                         <button href="#" class="left-btn clear-btn">Clear</button>
                     </div>
-                    <div class="col-md-4 no-padding text-center">
+                    <div class="col-md-4 no-padding text-center center-options">
                         <button type="submit" data-action="print" class="btn-print">Print</button>
+                        <button type="button" class="btn-more">More</button>
+                        <div class="more-sub-option">
+                            <ul>
+                                <li data-option-type="void">
+                                    Void
+                                </li>
+                                <li data-option-type="delete">
+                                    Delete
+                                </li>
+                                <li data-option-type="transaction-journal">
+                                    Transactionjournal
+                                </li>
+                                <li data-option-type="audit-history">
+                                    AuditHistory
+                                </li>
+                            </ul>
+                            <div class="more-anchor">
+                                <img src="<?=base_url("assets/img/accounting/customers/anchor_down.png")?>"
+                                    alt="">
+                            </div>
+                        </div>
                     </div>
                     <div class="col-md-4 no-padding text-right">
                         <div class="right-option">

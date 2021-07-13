@@ -14,6 +14,7 @@ function TemplateCreate() {
   const $docModal = $("#documentModal");
   const $formList = $("#setup-recipient-list");
   const $addRecipientButton = $("#add-recipient-button");
+  const $sortable = $("#sortable");
 
   const ACTIONS = {
     CREATE: "CREATE",
@@ -128,9 +129,9 @@ function TemplateCreate() {
     $progressCheck.addClass("esignBuilder__uploadProgressCheck--completed");
 
     files.push({ file, documentUrl, id: fileId });
-    $docPreview
-      .find(".esignBuilder__docPreviewHover")
-      .on("click", showDocument);
+    // $docPreview
+    //   .find(".esignBuilder__docPreviewHover")
+    //   .on("click", showDocument);
 
     const actions = {
       preview: showDocument,
@@ -192,8 +193,19 @@ function TemplateCreate() {
   }
 
   async function onChangeFile(event) {
-    const { files } = event.target;
-    const promises = [...files].map((file) => createFilePreview(event, file));
+    const { files: eventFiles } = event.target;
+
+    if (files && files.length) {
+      for (let index = 0; index < eventFiles.length; index++) {
+        const file = eventFiles[index];
+        if (files.find(f => f.file.name === file.name)) {
+          alert(`File name already exists: ${file.name}`);
+          return;
+        }
+      }
+    }
+
+    const promises = [...eventFiles].map((file) => createFilePreview(event, file));
     await Promise.all(promises);
   }
 
@@ -310,6 +322,15 @@ function TemplateCreate() {
       return;
     }
 
+    const $items = $(".esignBuilder__docPreview");
+    let documentSequence = $items.map((_, item) => {
+      const file = files.find(f => f.id == $(item).attr("data-id"));
+      return file === undefined ? null : file.file.name;
+    });
+
+    documentSequence = [...documentSequence].filter(Boolean);
+    documentSequence = JSON.stringify({ sequence: documentSequence });
+
     const payload = {
       name: $name.val() || $name.prop("placeholder"),
       description: $description.val(),
@@ -317,6 +338,7 @@ function TemplateCreate() {
       message: $message.val(),
       recipients: JSON.stringify(recipients.map((r) => r.getData())), // :v
       id: templateIdParam,
+      document_sequence: documentSequence,
     };
 
     const formData = new FormData();
@@ -574,6 +596,14 @@ function TemplateCreate() {
     prepareForm({ action });
     attachEventHandlers({ templateId, action });
     $(".card--loading").removeClass("card--loading");
+
+
+    $sortable.disableSelection();
+    $sortable.sortable({
+      placeholder: "ui-state-highlight",
+      items: "> .esignBuilder__docPreview",
+      cursor: "move",
+    });
   }
 
   return { init };
@@ -725,17 +755,7 @@ function Recipient({
                       ${role.value}
                     </button>
                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" x-placement="bottom-start">
-                      ${roles
-                        .map(
-                          (currRole) =>
-                            `<li>
-                              <a href="#">
-                                <i class="fa ${currRole.icon}"></i>
-                                ${currRole.value}
-                              </a>
-                            </li>`
-                        )
-                        .join("")}
+                      ${roles.map((currRole) => `<li><a href="#"><i class="fa ${currRole.icon}"></i>${currRole.value}</a></li>`).join("")}
                     </div>
                   </div>
               </div>

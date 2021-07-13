@@ -186,10 +186,10 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                             </td>
                                             <td class="text-right data-value">
                                                 <?php
+                                                $invoice_payments = $this->accounting_receive_payment_model->get_invoice_receive_payment($invoice_info->id, $this->input->post("receive_payment_id"));
                                                 $total_amount_received =0;
-                                                $payment_received = $this->accounting_invoices_model->get_payements_by_invoice($this->input->post("inv_number_".$i));
-                                                foreach ($payment_received as $received) {
-                                                    $total_amount_received+=$received->amount;
+                                                foreach ($invoice_payments as $receive) {
+                                                    $total_amount_received+=$receive->payment_amount;
                                                 }
                                                 echo number_format($invoice_info->grand_total-$total_amount_received, 2); ?>
                                             </td>

@@ -223,7 +223,7 @@ class Esign extends MY_Controller {
 		}
 		$this->page_data['next_step'] = ($this->input->get('next_step') == '')?0:$this->input->get('next_step');
 
-	
+
 		$recipients = [];
 		if ($isTemplate) { // :( this shouldn't be here
 			$this->db->where('template_id', $queries['template_id']);
@@ -369,8 +369,25 @@ SQL;
         $this->db->order_by('id', 'ASC');
         $records = $this->db->get('user_docfile_documents')->result_array();
 
+		$this->db->where('docfile_id', $id);
+        $sequence = $this->db->get('user_docfile_document_sequence')->row();
+        $sorted = null;
+
+        if ($sequence) {
+            $sorted = [];
+            $sequence = explode(',', $sequence->sequence);
+            foreach ($sequence as $recordId) {
+                foreach ($records as $record) {
+                    if ($record['id'] == $recordId) {
+                        $sorted[] = $record;
+                        break;
+                    }
+                }
+            }
+        }
+
         header('content-type: application/json');
-        echo json_encode(['data' => $records]);
+        echo json_encode(['data' => is_null($sorted) ? $records : $sorted]);
 	}
 
 	public function changeFavoriteStatus($id,$isFavorite){
@@ -695,7 +712,7 @@ SQL;
 		}
 
 		foreach ($payload['recipients'] as $recipient) {
-			$recipient = ['id' => $id, 'name' => $name, 'email' => $email, 'color' => $color, 'role' => $role];
+			['id' => $id, 'name' => $name, 'email' => $email, 'color' => $color, 'role' => $role] = $recipient;
 
 			$this->db->where('id', $id);
 			$this->db->where('docfile_id', $docId);
@@ -800,7 +817,7 @@ SQL;
             return;
         }
 
-		//['subject' => $subject, 'message' => $message] = $this->input->post();
+		['subject' => $subject, 'message' => $message] = $this->input->post();
 
 		$this->db->insert('user_docfile', [
 			'name' => $subject,
@@ -829,6 +846,34 @@ SQL;
 
 			move_uploaded_file($tempName, $filepath . $filename);
 		}
+
+		// save sequence
+		$this->db->where('docfile_id', $insertedId);
+        $record = $this->db->get('user_docfile_document_sequence')->row();
+
+        ['document_sequence' => $sequence] = $this->input->post();
+        ['sequence' => $sequence] = json_decode($sequence, true);
+
+        $this->db->where('docfile_id', $insertedId);
+        $documents = $this->db->get('user_docfile_documents')->result_array();
+
+        $sequenceIds = [];
+        foreach ($sequence as $documentName) {
+            foreach ($documents as $document) {
+                if (strpos($document['name'], $documentName) !== false) {
+                    $sequenceIds[] = $document['id'];
+                    break;
+                }
+            }
+        }
+
+        $payload = ['docfile_id' => $insertedId, 'sequence' => implode(',', $sequenceIds)];
+        if (!$record) {
+            $this->db->insert('user_docfile_document_sequence', $payload);
+        } else {
+            $this->db->where('docfile_id', $insertedId);
+            $this->db->update('user_docfile_document_sequence', $payload);
+        }
 
 		$this->db->where('id', $insertedId);
 		$record = $this->db->get('user_docfile')->row();

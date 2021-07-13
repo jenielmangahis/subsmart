@@ -208,7 +208,7 @@
 </div>
 <div><?php include viewPath('accounting/customer_estimate_modal'); ?>
 </div>
-<div><?php include viewPath('accounting/customer_credit_memo_modal'); ?>
+<div><?php //include viewPath('accounting/customer_credit_memo_modal'); ?>
 </div>
 <div><?php include viewPath('accounting/customer_sales_receipt_modal'); ?>
 </div>
@@ -227,4 +227,28 @@
 <div><?php include viewPath('accounting/vendor_print_checks_modal'); ?>
 </div>
 
-<?php include viewPath('accounting/add_new_term');
+<?php include viewPath('accounting/add_new_term'); ?>
+
+<script type="text/javascript">
+    $(document).ready(function()
+                {
+                    $(".btnAdd").click(function(){
+                        alert('test');
+                        $.ajax({
+                            type: "POST",
+                            url:"<?php echo base_url(); ?>accounting/customer_credit_memo_modal",
+                            success: function(returndata){
+                                  // $('#myModal').modal('show');
+                                //   alert('test');
+                                  $('.testingNi').html(returndata);
+
+                                    //  $('#myModal').html(returndata);
+                                     $('#addcreditmemoModal').modal('show');
+                            },
+                            dataType: "html"
+                        });
+                    });
+
+
+                });
+    </script>

@@ -20,7 +20,7 @@
     <div id="templateDocument">
         <h2 class="form__title">Add Document</h2>
         <div class="form-group">
-            <div class="fileupload">
+            <div class="fileupload" id="sortable">
                 <div class="custome-fileup">
                     <div class="upload-btn-wrapper">
                         <button type="button" class="btn">

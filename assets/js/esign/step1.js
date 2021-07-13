@@ -7,6 +7,8 @@ function Step1() {
   const $form = $("[data-form-step=1]");
   const $fileInput = $("#docFile");
   const $docModal = $("#documentModal");
+  const $sortable = $("#sortable");
+
   let files = [];
 
   async function createFilePreview(event, file) {
@@ -161,8 +163,19 @@ function Step1() {
   }
 
   async function onChangeFile(event) {
-    const { files } = event.target;
-    const promises = [...files].map((file) => createFilePreview(event, file));
+    const { files: eventFiles } = event.target;
+
+    if (files && files.length) {
+      for (let index = 0; index < eventFiles.length; index++) {
+        const file = eventFiles[index];
+        if (files.find(f => f.file.name === file.name)) {
+          alert(`File name already exists: ${file.name}`);
+          return;
+        }
+      }
+    }
+
+    const promises = [...eventFiles].map((file) => createFilePreview(event, file));
     await Promise.all(promises);
     $(".esignBuilder__submit").removeAttr("disabled");
   }
@@ -179,9 +192,20 @@ function Step1() {
       return;
     }
 
+    const $items = $(".esignBuilder__docPreview");
+    let documentSequence = $items.map((_, item) => {
+      const file = files.find(f => f.id == $(item).attr("data-id"));
+      return file === undefined ? null : file.file.name;
+    });
+
+    documentSequence = [...documentSequence].filter(Boolean);
+    documentSequence = JSON.stringify({ sequence: documentSequence });
+
     const formData = new FormData();
     formData.append("subject", $subject.val());
     formData.append("message", $message.val());
+    formData.append("document_sequence", documentSequence);
+
     files.forEach(({ file }) => {
       formData.append("files[]", file);
     });
@@ -230,6 +254,14 @@ function Step1() {
 
   async function init() {
     attachEventHandlers();
+
+    // console.log({ $sortable })
+    // $sortable.disableSelection();
+    $sortable.sortable({
+      placeholder: "ui-state-highlight",
+      items: "> .esignBuilder__docPreview",
+      cursor: "move",
+    });
   }
 
   return { init };

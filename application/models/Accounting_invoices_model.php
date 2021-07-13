@@ -165,6 +165,16 @@ class Accounting_invoices_model extends MY_Model
             return false;
         }
     }
+    public function updateInvoices($id, $data)
+    {
+        $this->db->where('id', $id);
+        $vendor = $this->db->update('invoices', $data);
+        if ($vendor) {
+            return true;
+        } else {
+            return false;
+        }
+    }
     public function deleteInvoice($id)
     {
         $this->db->where('id', $id);
@@ -229,15 +239,9 @@ class Accounting_invoices_model extends MY_Model
         $query = $this->db->get();
         return $query->result();
     }
-    public function get_payements_by_invoice($invoice_number)
+    public function get_payements_by_invoice($invoice_id)
     {
-        $this->db->select('*');
-
-        $this->db->from('accounting_receive_payment');
-        
-        $this->db->where('invoice_number', $invoice_number);
-
-        $query = $this->db->get();
+        $query = $this->db->query("SELECT accounting_receive_payment_invoices.*, accounting_receive_payment.* FROM accounting_receive_payment JOIN accounting_receive_payment_invoices ON accounting_receive_payment.id = accounting_receive_payment_invoices.receive_payment_id WHERE accounting_receive_payment.status=1 and accounting_receive_payment_invoices.invoice_id = ".$invoice_id);
         return $query->result();
     }
     public function get_filtered_invoices_by_customer_id($filter_date_from, $filter_date_to, $filter_overdue, $customer_id)
@@ -259,21 +263,12 @@ class Accounting_invoices_model extends MY_Model
         $query = $this->db->get();
         return $query->result();
     }
-    public function insert_receive_payment($data)
-    {
-        $customer = $this->db->insert('accounting_receive_payment', $data);
-        $insert_id = $this->db->insert_id();
-
-        return  $insert_id;
-    }
     public function get_invoice_by_invoice_no($find_inv)
     {
-        $company_id = logged('company_id');
         $this->db->select('*');
 
         $this->db->from('invoices');
         
-        $this->db->where('company_id', $company_id);
         $this->db->like('invoice_number', $find_inv);
 
         $query = $this->db->get();

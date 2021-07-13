@@ -555,6 +555,12 @@
 
   .esignBuilder__docPreview {
     min-height: var(--size);
+    max-width: var(--size);
+    height: var(--size) !important;
+  }
+
+  .ui-state-highlight {
+    background-color: yellow !important;
   }
 }
 
