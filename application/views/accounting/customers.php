@@ -204,6 +204,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 <?php include viewPath('includes/sidebars/accounting/accounting'); ?>
 </div>
 <?php include viewPath('accounting/customer_includes/send_reminder'); ?>
+<?php include viewPath('accounting/customer_includes/create_statement_modal'); ?>
 
 <link href="https://nightly.datatables.net/css/jquery.dataTables.css" rel="stylesheet" type="text/css" />
 <script>
