@@ -12,6 +12,8 @@
                             class="fa fa-times fa-lg"></i></button>
                 </div>
                 <form action="<?php echo site_url()?>" method="post">
+
+                    <input type="text" name="customer_id" style="display: none;">
                     <div class="modal-body" style="height:calc(100vh - 180px);padding-top:0;">
                         <div class="statement-type-section">
                             <div class="row">
@@ -20,12 +22,13 @@
                                         <div class="col-md-3">
                                             <div class="statement-type-fields">
                                                 <div class="form-group">
-                                                    <div class="label">Customer</div>
-                                                    <select class="form-control required" name="customer_id"
+                                                    <div class="label">Statement Type</div>
+                                                    <select class="form-control required" name="statement_type"
                                                         required="">
                                                         <option value="Balance Forward">Balance Forward</option>
                                                         <option value="Open Item">Open Item</option>
-                                                        <option value="Open Item" selected>Transaction Statement
+                                                        <option value="Transaction Statement" selected>Transaction
+                                                            Statement
                                                         </option>
                                                     </select>
                                                 </div>
@@ -42,6 +45,14 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="error-notif-section" style="display: none;">
+                            <div class="title">
+                                <i class="fa fa-exclamation-circle" aria-hidden="true"></i> ERROR
+                            </div>
+                            <div class="message">
+                                No Statements to Save
+                            </div>
+                        </div>
                         <div class="statement-date-section">
                             <div class="row">
                                 <div class="col-md-6">
@@ -49,9 +60,9 @@
                                         <div class="col-md-3">
                                             <div class="form-group">
                                                 <div class="label">Statement Date</div>
-                                                <input type="text" class=""
-                                                    value="<?=date("m/d/Y")?>"
-                                                    name="statement-date" required>
+                                                <input type="date" class=""
+                                                    value="<?=date("Y-m-d")?>"
+                                                    name="statement_date" required>
                                             </div>
                                         </div>
                                     </div>
@@ -65,9 +76,9 @@
                                         <div class="col-md-3">
                                             <div class="form-group">
                                                 <div class="label">Start Date</div>
-                                                <input type="text" class=""
-                                                    value="<?=date("m/d/Y")?>"
-                                                    name="start-date" required>
+                                                <input type="date" class=""
+                                                    value="<?=date("Y-m-d")?>"
+                                                    name="start_date" required>
                                             </div>
                                             <div class="apply-btn-part">
                                                 <button type="button" class="apply-btn">Apply</button>
@@ -89,9 +100,9 @@
                                         <div class="col-md-3">
                                             <div class="form-group">
                                                 <div class="label">End Date</div>
-                                                <input type="text" class=""
-                                                    value="<?=date("m/d/Y")?>"
-                                                    name="end-date" required>
+                                                <input type="date"
+                                                    value="<?=date("Y-m-d")?>"
+                                                    class="" name="end_date" required>
                                             </div>
                                         </div>
                                     </div>
@@ -114,7 +125,16 @@
                                         <table class="receipients-list-table">
                                             <thead>
                                                 <tr>
-                                                    <th></th>
+                                                    <th>
+                                                        <div class="form-check">
+                                                            <div class="checkbox checkbox-sec margin-right">
+                                                                <input type="checkbox" name="customer_checkbox_all"
+                                                                    id="customer_checkbox_all"
+                                                                    class="customer_checkbox">
+                                                                <label for="customer_checkbox_all"><span></span></label>
+                                                            </div>
+                                                        </div>
+                                                    </th>
                                                     <th>RECIPIENTS</th>
                                                     <th>EMAIL ADDRESS</th>
                                                     <th>BALANCE</th>
@@ -122,15 +142,23 @@
                                             </thead>
                                             <tbody>
                                                 <tr>
-                                                    <td></td>
+                                                    <td>
+                                                        <div class="form-check">
+                                                            <div class="checkbox checkbox-sec margin-right">
+                                                                <input type="checkbox" name="customer_checkbox[]"
+                                                                    id="customer_checkbox_1">
+                                                                <label for="customer_checkbox_1"><span></span></label>
+                                                            </div>
+                                                        </div>
+                                                    </td>
                                                     <td>World Class Water, Inc
-                                                        <input type="email" value="123" required name="customer_id[]"
+                                                        <input type="email" value="123" name="customer_ids[]"
                                                             style="display: none;">
                                                     </td>
                                                     <td>
                                                         <div class="form-group">
                                                             <input type="email" value="pintonlou@gmail.com" required
-                                                                name="email[]">
+                                                                name="emails[]">
                                                         </div>
                                                     </td>
                                                     <td>$0.00</td>
@@ -141,7 +169,6 @@
                                 </div>
                             </div>
                         </div>
-
                     </div>
                     <div class="modal-footer-check">
                         <div class="row">
@@ -153,7 +180,8 @@
                             </div>
                             <div class="col-md-5" align="center">
                                 <div class="middle-links">
-                                    <a href="" class="print-preview-option">Print or Preview</a>
+                                    <button type="submit" class="print-preview-option" data-submit-type="print">Print or
+                                        Preview</button>
                                 </div>
                             </div>
                             <div class="col-md-3">
@@ -169,10 +197,6 @@
                                         <li>
                                             <button type="submit" data-submit-type="save-close" id="checkSaved" style="background: none;border: none; height: auto;font-size: 13px;padding: 10px;
                                                 ">Save and close</button>
-                                        </li>
-                                        <li>
-                                            <button type="submit" data-submit-type="save-new" id="checkSaved" style="background: none;border: none; height: auto;font-size: 13px;padding: 10px;
-                                                ">Save and new</button>
                                         </li>
                                     </ul>
                                 </div>

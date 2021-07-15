@@ -74,7 +74,7 @@
     border-left: solid 1px #6A6B70;
 }
 
-#create_statement_modal .modal-footer-check .middle-links:hover {
+#create_statement_modal .modal-footer-check .middle-links button:hover {
     text-shadow: 0 10px 20px #fff;
 }
 
@@ -82,14 +82,17 @@
     position: relative;
 }
 
-#create_statement_modal .middle-links a {
+#create_statement_modal .middle-links button {
     color: #ffffff;
     font-size: 12px;
+    background: transparent;
+    border: none;
 }
 
 #create_statement_modal form .form-group select,
 #create_statement_modal form .form-group input[type="text"],
 #create_statement_modal form .form-group input[type="email"],
+#create_statement_modal form .form-group input[type="date"],
 #create_statement_modal form .form-group textarea {
     font-size: 12px;
     font-weight: lighter;
@@ -299,18 +302,62 @@ div#create_statement_modal .start-end-date-section .apply-btn-part .apply-btn:ho
     border-left: solid 1px #D4D7DC;
     padding: 10px;
     border-right: solid 1px #D4D7DC;
-    border-bottom: solid 1px #D4D7DC;
+    border-bottom: solid 2px #D4D7DC;
     color: #393A3D;
     font-size: 14px;
     font-weight: 600;
 }
 
 #create_statement_modal .recipient-list-section table.receipients-list-table td {
-    padding: 10px;
+    padding: 0 10px;
     color: #393A3D;
     font-size: 13px;
+    border-left: dotted 1px #C7C7C7;
+    border-right: dotted 1px #C7C7C7;
+    border-bottom: solid 2px #C7C7C7;
+}
+
+#create_statement_modal .recipient-list-section table.receipients-list-table td:first-child {
+    width: 100px;
+    border-left: none;
+}
+
+#create_statement_modal .recipient-list-section table.receipients-list-table td:last-child {
+    border-right: none;
+    text-align: right;
 }
 
 #create_statement_modal .recipient-list-section table.receipients-list-table td .form-group {
     margin-bottom: 0!important;
+}
+
+#create_statement_modal .recipient-list-section table.receipients-list-table td .form-group input {
+    color: #656565;
+}
+
+#create_statement_modal .recipient-list-section table.receipients-list-table td .form-group input:focus,
+#create_statement_modal .recipient-list-section table.receipients-list-table td .form-group input:hover {
+    color: #393A3D;
+}
+
+#create_statement_modal .error-notif-section {
+    padding: 10px 25px;
+    border: solid 1px #FFBB00;
+    margin: 10px 0;
+}
+
+#create_statement_modal .error-notif-section .title {
+    font-size: 14px;
+    font-weight: 700;
+    padding-bottom: 10px;
+}
+
+#create_statement_modal .error-notif-section .title i {
+    color: #FFBB00;
+    font-size: 20px;
+    margin-right: 10px;
+}
+
+#create_statement_modal .error-notif-section .message {
+    font-size: 12px;
 }

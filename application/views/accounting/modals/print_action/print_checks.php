@@ -27,7 +27,7 @@
                             <td width="20%" style="text-align: center">**<?=$check['total']?></td>
                         </tr>
                         <tr>
-                            <td width="80%">Total in words</td>
+                            <td width="80%"><?=$check['total_in_words']?></td>
                             <td width="20%" style="text-align: center"></td>
                         </tr>
                         <tr>

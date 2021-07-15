@@ -2796,41 +2796,53 @@ $(function() {
 
         if($('#printChecksModal #checks-table tbody tr input[type="checkbox"]:checked').length > 0) {
             var form = document.getElementById('modal-form');
-            var data = new FormData(form);
-            data.delete('sort');
-            data.delete('check_type');
-            data.delete('table_rows');
 
-            $('#printChecksModal #checks-table tbody tr input[type="checkbox"]:checked').each(function() {
-                var row = $(this).parent().parent().parent();
-                var rowData = $('#printChecksModal #checks-table').DataTable().row(row).data();
-                var transactionType = rowData.type;
-                transactionType = transactionType.replaceAll(' (Check)', '');
-                transactionType = transactionType.replaceAll(' (Credit Card)', '');
-                transactionType = transactionType.replaceAll(' ', '-');
-                transactionType = transactionType.toLowerCase();
+            if($('#printChecksModal #starting-check-no').val() === '') {
+                Swal.fire({
+                    text: "Please enter a value for the Starting check no. field.",
+                    icon: 'warning',
+                    showCloseButton: true,
+                    confirmButtonColor: '#2ca01c',
+                    confirmButtonText: 'OK',
+                    timer: 2000
+                })
+            } else {
+                var data = new FormData(form);
+                data.delete('sort');
+                data.delete('check_type');
+                data.delete('table_rows');
 
-                if(data.has('id[]') === false) {
-                    data.set('id[]', $(this).val());
-                    data.set('type[]', transactionType);
-                } else {
-                    data.append('id[]', $(this).val());
-                    data.append('type[]', transactionType);
-                }
-            });
+                $('#printChecksModal #checks-table tbody tr input[type="checkbox"]:checked').each(function() {
+                    var row = $(this).parent().parent().parent();
+                    var rowData = $('#printChecksModal #checks-table').DataTable().row(row).data();
+                    var transactionType = rowData.type;
+                    transactionType = transactionType.replaceAll(' (Check)', '');
+                    transactionType = transactionType.replaceAll(' (Credit Card)', '');
+                    transactionType = transactionType.replaceAll(' ', '-');
+                    transactionType = transactionType.toLowerCase();
 
-            $.ajax({
-                url: '/accounting/print-preview-checks',
-                data: data,
-                type: 'post',
-                processData: false,
-                contentType: false,
-                success: function(result) {
-                    $('div#modal-container').append(result);
+                    if(data.has('id[]') === false) {
+                        data.set('id[]', $(this).val());
+                        data.set('type[]', transactionType);
+                    } else {
+                        data.append('id[]', $(this).val());
+                        data.append('type[]', transactionType);
+                    }
+                });
 
-                    $('#viewPrintChecksModal').modal('show');
-                }
-            });
+                $.ajax({
+                    url: '/accounting/print-preview-checks',
+                    data: data,
+                    type: 'post',
+                    processData: false,
+                    contentType: false,
+                    success: function(result) {
+                        $('div#modal-container').append(result);
+
+                        $('#viewPrintChecksModal').modal('show');
+                    }
+                });
+            }
         } else {
             Swal.fire({
                 text: "You need to select a check to print.",
@@ -2840,6 +2852,55 @@ $(function() {
                 confirmButtonText: 'OK'
             })
         }
+    });
+
+    $(document).on('click', '#viewPrintChecksModal #preview-and-print', function(e) {
+        e.preventDefault();
+
+        let pdfWindow = window.open("");
+        pdfWindow.document.write(`<iframe width="100%" height="100%" src="${$('#viewPrintChecksModal iframe').attr('src')}"></iframe>`);
+        $(pdfWindow.document).find('body').css('padding', '0');
+        $(pdfWindow.document).find('body').css('margin', '0');
+        $(pdfWindow.document).find('iframe').css('border', '0');
+    });
+
+    $(document).on('hidden.bs.modal', '#viewPrintChecksModal', function() {
+        $(this).parent().parent().next('.modal-backdrop').remove();
+        $(this).parent().remove();
+
+        var data = new FormData();
+        data.set('starting_check_no', $('#printChecksModal #starting-check-no').val());
+
+        $('#printChecksModal #checks-table tbody tr input[type="checkbox"]:checked').each(function() {
+            if(data.has('checks_selected[]')) {
+                data.append('checks_selected[]', $(this).val());
+            } else {
+                data.set('checks_selected[]', $(this).val());
+            }
+        });
+
+        $.ajax({
+            url: '/accounting/success-print-checks-modal',
+            data: data,
+            type: 'post',
+            processData: false,
+            contentType: false,
+            success: function(result) {
+                $('div#modal-container').append(result);
+                
+                $('#successPrintCheck select').select2({
+                    dropdownParent: $('#successPrintCheck'),
+                    minimumResultsForSearch: -1
+                });
+                $('#successPrintCheck').modal('show');
+            }
+        });
+    });
+
+    $(document).on('hidden.bs.modal', '#successPrintCheck', function() {
+        $(this).parent().parent().next('.modal-backdrop').remove();
+        $(this).parent().remove();
+        $('#printChecksModal #checks-table').DataTable().ajax.reload(null, true);
     });
 });
 
