@@ -1,0 +1,316 @@
+.created-statement-btn {
+    cursor: pointer;
+}
+
+#create_statement_modal .modal-footer-check {
+    left: 0;
+}
+
+#create_statement_modal .modal-footer-check button {
+    font-size: 12px;
+    height: auto;
+    padding: 5px 10px;
+}
+
+#create_statement_modal .modal-footer-check button[data-submit-type='save-send'],
+#create_statement_modal .modal-footer-check button[data-toggle='dropdown'] {
+    background-image: none;
+    background-color: #2CA01C;
+    color: #FFFFFF;
+    box-shadow: none;
+    border-right: none;
+    font-size: 13px;
+    border-radius: 28px 0 0 28px;
+    padding: 5px 15px;
+    height: auto;
+    border: solid 1px #2CA01C;
+    margin-right: -5px;
+}
+
+#create_statement_modal .modal-footer-check button[data-submit-type='save-send']:hover,
+#create_statement_modal .modal-footer-check button[data-toggle='dropdown']:hover {
+    background-image: none;
+    background-color: #108000;
+}
+
+#create_statement_modal .modal-footer-check .submit-submenu>li:hover,
+#create_statement_modal .modal-footer .submit-submenu>li:hover {
+    background-color: #ECEDF1;
+    color: #008A00;
+}
+
+#create_statement_modal .modal-footer-check .submit-submenu>li button {
+    color: #333333;
+}
+
+#create_statement_modal .modal-footer-check button.cancel-button {
+    background-color: transparent;
+    background: transparent;
+    font-size: 13px;
+    color: #ffffff;
+    border: solid 1px #6A6C71;
+    padding: 5px 25px;
+    height: auto;
+    border-radius: 15px;
+    font-weight: 700;
+}
+
+#create_statement_modal .modal-footer-check button.cancel-button:hover {
+    background-color: #2A2B2D;
+}
+
+#create_statement_modal .modal-footer-check .middle-links {
+    width: 50%;
+    float: left;
+    text-align: right;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+#create_statement_modal .modal-footer-check .middle-links.end {
+    text-align: left;
+    border-left: solid 1px #6A6B70;
+}
+
+#create_statement_modal .modal-footer-check .middle-links:hover {
+    text-shadow: 0 10px 20px #fff;
+}
+
+#create_statement_modal .modal-footer-check .middle-links {
+    position: relative;
+}
+
+#create_statement_modal .middle-links a {
+    color: #ffffff;
+    font-size: 12px;
+}
+
+#create_statement_modal form .form-group select,
+#create_statement_modal form .form-group input[type="text"],
+#create_statement_modal form .form-group input[type="email"],
+#create_statement_modal form .form-group textarea {
+    font-size: 12px;
+    font-weight: lighter;
+    padding: 8px!important;
+    height: auto!important;
+    border: solid 1px #BABEC5;
+    border-radius: 2px;
+    width: 100%!important;
+    resize: none;
+    display: block!important;
+    visibility: visible;
+    clip: auto!important;
+    position: inherit!important;
+}
+
+#create_statement_modal form .form-group select:focus,
+#create_statement_modal form .form-group textarea:focus,
+#create_statement_modal form input[type="text"]:focus,
+#create_statement_modal form .form-group input[type="password"]:focus,
+#create_statement_modal form .form-group input[type="datetime"]:focus,
+#create_statement_modal form .form-group input[type="datetime-local"]:focus,
+#create_statement_modal form .form-group input[type="date"]:focus,
+#create_statement_modal form .form-group input[type="month"]:focus,
+#create_statement_modal form .form-group input[type="time"]:focus,
+#create_statement_modal form .form-group input[type="week"]:focus,
+#create_statement_modal form .form-group input[type="number"]:focus,
+#create_statement_modal form .form-group input[type="email"]:focus,
+#create_statement_modal form .form-group input[type="url"]:focus,
+#create_statement_modal form .form-group input[type="search"]:focus,
+#create_statement_modal form .form-group input[type="tel"]:focus,
+#create_statement_modal form .form-group input[type="color"]:focus,
+#create_statement_modal form .form-group input[type="email"]:focus,
+.uneditable-input:focus {
+    border: solid 1px #28A01A!important;
+    box-shadow: none;
+    outline: none;
+}
+
+#create_statement_modal form .form-group .label {
+    font-size: 11px;
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+div#create_statement_modal .start-end-date-section .apply-btn-part .apply-btn {
+    font-size: 13px;
+    font-weight: 700;
+    border: solid 1px #8E9095;
+    padding: 5px 20px;
+    background: transparent;
+    border-radius: 24px;
+    height: auto;
+}
+
+div#create_statement_modal .start-end-date-section .apply-btn-part .apply-btn:hover {
+    background: rgba(107, 108, 114, .25);
+    color: #393a3d;
+}
+
+#create_statement_modal .statement-type-section {
+    margin: 0 -30px;
+    padding: 10px 30px;
+    background: #ffff;
+    padding-bottom: 0;
+}
+
+#create_statement_modal .statement-type-section .form-group {
+    margin-bottom: 0!important;
+}
+
+#create_statement_modal .statement-monitary-balance.text-right label {
+    font-size: 13px;
+    text-transform: capitalize;
+    color: #ADADAD;
+    font-weight: lighter;
+    margin: 0;
+}
+
+#create_statement_modal .statement-monitary-balance.text-right .amount {
+    font-size: 50px;
+    color: #333333;
+    font-weight: lighter;
+    margin-top: -13px;
+}
+
+#create_statement_modal .security-assurance-section {
+    text-align: center;
+    color: #333333;
+    font-size: 12px;
+    padding-bottom: 10px;
+}
+
+#create_statement_modal .security-assurance-section a {
+    color: #333333;
+    margin-top: 10px;
+}
+
+#create_statement_modal .security-assurance-section div {
+    padding-bottom: 5px;
+}
+
+#create_statement_modal .statement-date-section {
+    padding-top: 10px;
+}
+
+#create_statement_modal .apply-btn-part {
+    position: relative;
+}
+
+#create_statement_modal .apply-btn-part .information-panel {
+    position: absolute;
+    background: #fff;
+    padding: 5px 20px;
+    width: 500px;
+    top: 50px;
+    left: 10px;
+    border: solid 1px #E3E5E8;
+    border-radius: 3px;
+    border-top: solid 7px #0177C5;
+    color: #464648;
+    z-index: 1;
+}
+
+#create_statement_modal .apply-btn-part .information-panel .panel-anchor {
+    position: absolute;
+    top: -28px;
+    left: 40px;
+}
+
+#create_statement_modal .apply-btn-part .information-panel .close-panel {
+    position: absolute;
+    top: 0;
+    right: 20px;
+    font-size: 20px;
+    color: #B3B2B3;
+    cursor: pointer;
+}
+
+#create_statement_modal .apply-btn-part .information-panel .title {
+    font-size: 25px;
+    padding-bottom: 10px;
+}
+
+#create_statement_modal .recipient-list-section {
+    padding: 40px 0;
+    display: none;
+}
+
+#create_statement_modal .recipient-list-section .title {
+    font-size: 20px;
+    color: #333333;
+    font-weight: 100;
+}
+
+#create_statement_modal .recipient-list-section .btns {
+    padding: 20px;
+}
+
+#create_statement_modal .recipient-list-section .btns button.statement-available {
+    height: auto;
+    padding: 5px 20px;
+    background: transparent;
+    border: solid 2px #6B6C72;
+    margin: 0;
+    outline: 0;
+    color: #6B6C72;
+    border-radius: 0px 20px 20px 0;
+    font-weight: lighter;
+    font-size: 15px;
+    margin-left: -6px;
+}
+
+#create_statement_modal .recipient-list-section .btns button.missing-email-address {
+    height: auto;
+    padding: 5px 20px;
+    background: transparent;
+    border: solid 2px #6B6C72;
+    margin: 0;
+    outline: 0;
+    color: #6B6C72;
+    border-radius: 20px 0 0 20px;
+    font-weight: lighter;
+    font-size: 15px;
+}
+
+#create_statement_modal .recipient-list-section .btns button.missing-email-address:hover,
+#create_statement_modal .recipient-list-section .btns button.statement-available:hover {
+    color: #333333;
+    border: solid 2px #333333;
+}
+
+#create_statement_modal .recipient-list-section table.receipients-list-table {
+    width: 100%;
+}
+
+#create_statement_modal .recipient-list-section table.receipients-list-table th:last-child,
+#create_statement_modal .recipient-list-section table.receipients-list-table th:first-child {
+    border-left: none;
+    border-right: none;
+}
+
+#create_statement_modal .recipient-list-section table.receipients-list-table th:last-child {
+    text-align: right;
+}
+
+#create_statement_modal .recipient-list-section table.receipients-list-table th {
+    border-left: solid 1px #D4D7DC;
+    padding: 10px;
+    border-right: solid 1px #D4D7DC;
+    border-bottom: solid 1px #D4D7DC;
+    color: #393A3D;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+#create_statement_modal .recipient-list-section table.receipients-list-table td {
+    padding: 10px;
+    color: #393A3D;
+    font-size: 13px;
+}
+
+#create_statement_modal .recipient-list-section table.receipients-list-table td .form-group {
+    margin-bottom: 0!important;
+}

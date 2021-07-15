@@ -241,10 +241,12 @@ class Accounting extends MY_Controller
     {
         add_css(array(
             "assets/css/accounting/customers.css",
+            "assets/css/accounting/accounting_includes/create_statement_modal.css",
         ));
         add_footer_js(array(
             "assets/js/accounting/sales/customers.js",
-            "assets/js/accounting/sales/customer_includes/send_reminder.js"
+            "assets/js/accounting/sales/customer_includes/send_reminder.js",
+            "assets/js/accounting/sales/customer_includes/create_statement_modal.js"
         ));
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->page_data['customers'] = $this->accounting_customers_model->getAllByCompany();
@@ -5738,7 +5740,7 @@ class Accounting extends MY_Controller
             }
             $html .= '<tr>
 								<td class="center"><input type="checkbox"
-										name="checkbox'.$counter.'"> '.$receivable_payment.'
+										name="checkbox'.$counter.'"> 
 								</td>
 								<td>'.$cus->first_name .' '.  $cus->middle_name .' '. $cus->last_name .'
 								</td>
@@ -5767,7 +5769,7 @@ class Accounting extends MY_Controller
 												</a>
 											</li>
 											<li>
-												<a href="javascript:void(0)" class="">
+												<a href="javascript:void(0)" class="created-statement-btn" data-toggle="modal" data-target="#create_statement_modal" data-email-add="'.$cus->email.'" data-customer-id="'.$cus->prof_id.'">
 													Create statement
 												</a>
 											</li>
@@ -5788,7 +5790,7 @@ class Accounting extends MY_Controller
 											<li>
 												<a href="javascript:void(0)"
 													class="">
-													Create extimate
+													Create estimate
 												</a>
 											</li>
 											<li>
@@ -5817,8 +5819,7 @@ class Accounting extends MY_Controller
 												</a>
 											</li>
 											<li>
-												<a href="javascript:void(0)"
-													class="">
+												<a href="javascript:void(0)" class="created-statement-btn" data-toggle="modal" data-target="#create_statement_modal" data-email-add="'.$cus->email.'" data-customer-id="'.$cus->prof_id.'">
 													Create statement
 												</a>
 											</li>';
