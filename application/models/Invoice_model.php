@@ -453,6 +453,13 @@ class Invoice_model extends MY_Model
         return $query->result();
     }
 
+    public function add_invoice_items($data)
+    {
+        $vendor = $this->db->insert('invoices_items', $data);
+	    $insert_id = $this->db->insert_id();
+		return  $insert_id;
+    }
+
     function duplicateRecord($primary_key, $comp_id) {
 
         $this->db->where('id', $primary_key);

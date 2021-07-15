@@ -314,6 +314,7 @@ $route['accounting/load-bill-payment-credits']['post'] = 'accounting_modals/load
 $route['accounting/load-checks']['post'] = 'accounting_modals/load_checks';
 $route['accounting/remove-to-print']['post'] = 'accounting_modals/remove_to_print';
 $route['accounting/print-preview-checks']['post'] = 'accounting_modals/print_preview_checks';
+$route['accounting/success-print-checks-modal']['post'] = 'accounting_modals/success_print_checks_form';
 
 $route['accounting/lists'] = 'accounting/lists';
 

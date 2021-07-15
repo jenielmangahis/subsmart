@@ -274,4 +274,28 @@ class Accounting_invoices_model extends MY_Model
         $query = $this->db->get();
         return $query->row();
     }
+    public function get_sum_of_invoices_by_customer_id($customer_id="", $start_date="", $end_date="")
+    {
+        if ($customer_id != "") {
+            $sql="SELECT COUNT(invoices.id) as collectibles_count, SUM(grand_total) as total_collectibles FROM invoices WHERE customer_id = ".$customer_id." AND (invoices.date_issued >= '".$start_date."' AND invoices.date_issued <=  '".$end_date."')";
+            $query = $this->db->query($sql);
+            $results['collectibles']=$query->row();
+            $this->db->reset_query();
+            $sql="SELECT COUNT(accounting_receive_payment_invoices.id) as receive_count, SUM(accounting_receive_payment_invoices.payment_amount) as total_amount_received FROM accounting_receive_payment_invoices 
+            JOIN accounting_receive_payment ON accounting_receive_payment_invoices.receive_payment_id = accounting_receive_payment.id 
+            JOIN invoices ON accounting_receive_payment_invoices.invoice_id = invoices.id
+            WHERE accounting_receive_payment.customer_id = ".$customer_id." AND (invoices.date_issued >= '".$start_date."' AND invoices.date_issued <=  '".$end_date."')";
+            $query = $this->db->query($sql);
+            $results['received']=$query->row();
+            return $results;
+        }
+    }
+
+    public function save_statement($data)
+    {
+        $query = $this->db->insert('accounting_statements', $data);
+        $insert_id = $this->db->insert_id();
+
+        return  $insert_id;
+    }
 }

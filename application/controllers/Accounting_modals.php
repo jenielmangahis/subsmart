@@ -4494,6 +4494,8 @@ class Accounting_modals extends MY_Controller {
         $fileType = explode('/', $files['type'][$key]);
         $uploadedName = str_replace('.'.$extension, '', $name);
 
+        $startingCheckNo = $post['starting_check_no'] === "" ? null : intval($post['starting_check_no']);
+
         $data = [];
         foreach($post['id'] as $key => $id) {
             if($post['type'][$key] === 'check') {
@@ -4515,14 +4517,30 @@ class Accounting_modals extends MY_Controller {
                     break;
                 }
 
+                $totalDecimal = number_format(floatval($check->total_amount), 2, '.', ',');
+                $totalString = strval($totalDecimal);
+                $totalSplit = explode('.', $totalString);
+                $totalWords = $this->spell_out_number($totalSplit[0]);
+                $totalWords = ucfirst($totalWords);
+                $totalWords .= ' and '.$totalSplit[1].'/100*******************************************************************';
+
                 $data[] = [
                     'date' => date("m/d/Y", strtotime($check->payment_date)),
                     'name' => $payeeName,
-                    'total' => number_format(floatval($check->total_amount), 2, '.', ','),
+                    'total' => $totalDecimal,
                     'mailing_address' => $check->mailing_address,
                     'payment_account' => $paymentAcc->name,
-                    'type' => 'check'
+                    'type' => 'check',
+                    'total_in_words' => $totalWords
                 ];
+
+                $checkData = [
+                    'check_no' => $startingCheckNo,
+                    'to_print' => null,
+                    'updated_at' => date("Y-m-d H:i:s")
+                ];
+
+                $this->vendors_model->update_check($id, $checkData);
             } else {
                 $check = $this->vendors_model->get_bill_payment_by_id($id);
                 $paymentAcc = $this->chart_of_accounts_model->getById($check->payment_account_id);
@@ -4564,6 +4582,13 @@ class Accounting_modals extends MY_Controller {
                     return strtotime($a['date']) > strtotime($b['date']);
                 });
 
+                $totalDecimal = number_format(floatval($check->total_amount), 2, '.', ',');
+                $totalString = strval($totalDecimal);
+                $totalSplit = explode('.', $totalString);
+                $totalWords = $this->spell_out_number($totalSplit[0]);
+                $totalWords = ucfirst($totalWords);
+                $totalWords .= ' and '.$totalSplit[1].'/100*******************************************************************';
+
                 $data[] = [
                     'date' => date("m/d/Y", strtotime($check->payment_date)),
                     'name' => $payeeName,
@@ -4571,19 +4596,51 @@ class Accounting_modals extends MY_Controller {
                     'mailing_address' => $check->mailing_address,
                     'payment_account' => $paymentAcc->name,
                     'type' => 'bill-payment',
+                    'total_in_words' => $totalWords,
                     'linked_transactions' => $linked
                 ];
+
+                $checkData = [
+                    'check_no' => $startingCheckNo,
+                    'to_print_check_no' => null,
+                    'updated_at' => date("Y-m-d H:i:s")
+                ];
+
+                $this->vendors_model->update_bill_payment($id, $checkData);
             }
+
+            $startingCheckNo++;
         }
 
         $this->pdf->save_pdf($view, ['checks' => $data], $fileName, 'portrait');
 
-        // $pdf = file_get_contents(base_url("/assets/pdf/$fileName"));
-        // if (file_exists(getcwd()."/assets/pdf/$fileName")) {
-        //     unlink(getcwd()."/assets/pdf/$fileName");
-        // }
+        $pdf = base64_encode(file_get_contents(base_url("/assets/pdf/$fileName")));
+        if (file_exists(getcwd()."/assets/pdf/$fileName")) {
+            unlink(getcwd()."/assets/pdf/$fileName");
+        }
 
-        $this->page_data['pdf'] = '/assets/pdf/'.$fileName;
+        $this->page_data['pdf'] = $pdf;
         $this->load->view('accounting/modals/view_print_checks', $this->page_data);
+    }
+
+    private function spell_out_number($num)
+    {
+        $formatter = new \NumberFormatter("en", \NumberFormatter::SPELLOUT);
+        return $formatter->format($num);
+    }
+
+    public function success_print_checks_form()
+    {
+        $checks = $this->input->post('checks_selected');
+        $startingCheckNo = intval($this->input->post('starting_check_no'));
+        
+        $checkNos = [];
+        foreach($checks as $check) {
+            $checkNos[] = $startingCheckNo;
+            $startingCheckNo++;
+        }
+
+        $this->page_data['checkNos'] = $checkNos;
+        $this->load->view('accounting/modals/success_print_checks', $this->page_data);
     }
 }

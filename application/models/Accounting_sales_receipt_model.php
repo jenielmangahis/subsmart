@@ -116,4 +116,12 @@ class Accounting_sales_receipt_model extends MY_Model
     {
         $this->db->delete('accounting_receive_payment', $where);
     }
+    public function get_sum_of_sales_receipt_by_customer_id($customer_id="", $start_date="", $end_date="")
+    {
+        $query = $this->db->query("SELECT COUNT(accounting_sales_receipt.id) as billed_count, SUM(item_details.total) as total_amount_billed FROM accounting_sales_receipt 
+        JOIN item_details ON item_details.type_id = accounting_sales_receipt.id 
+        WHERE item_details.type='Sales Receipt' AND accounting_sales_receipt.customer_id = ".$customer_id." AND (accounting_sales_receipt.sales_receipt_date >= '".$start_date."' AND accounting_sales_receipt.sales_receipt_date<= '".$end_date."')");
+        $results['billed']=$query->row();
+        return $results;
+    }
 }

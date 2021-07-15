@@ -2206,49 +2206,84 @@ class Accounting extends MY_Controller
 
         if ($addQuery > 0) {
             //echo json_encode($addQuery);
-            $new_data2 = array(
-                'item' => $this->input->post('item'),
-                'item_type' => $this->input->post('item_type'),
-                // 'description' => $this->input->post('desc'),
-                'qty' => $this->input->post('quantity'),
-                // 'rate' => $this->input->post('rate'),
-                'cost' => $this->input->post('price'),
-                'discount' => $this->input->post('discount'),
-                'tax' => $this->input->post('tax'),
-                'total' => $this->input->post('total'),
-                'type' => 'Accounting Invoice',
-                'type_id' => $addQuery,
-                'status' => '1',
-                'created_at' => date("Y-m-d H:i:s"),
-                'updated_at' => date("Y-m-d H:i:s")
-            );
+            // $new_data2 = array(
+            //     'item' => $this->input->post('item'),
+            //     'item_type' => $this->input->post('item_type'),
+            //     // 'description' => $this->input->post('desc'),
+            //     'qty' => $this->input->post('quantity'),
+            //     // 'rate' => $this->input->post('rate'),
+            //     'cost' => $this->input->post('price'),
+            //     'discount' => $this->input->post('discount'),
+            //     'tax' => $this->input->post('tax'),
+            //     'total' => $this->input->post('total'),
+            //     'type' => 'Accounting Invoice',
+            //     'type_id' => $addQuery,
+            //     'status' => '1',
+            //     'created_at' => date("Y-m-d H:i:s"),
+            //     'updated_at' => date("Y-m-d H:i:s")
+            // );
 
-            $a = $this->input->post('item');
-            $b = $this->input->post('item_type');
-            $c = $this->input->post('quantity');
-            $d = $this->input->post('price');
-            $e = $this->input->post('discount');
-            $f = $this->input->post('tax');
-            $g = $this->input->post('total');
+            // $a = $this->input->post('item');
+            // $b = $this->input->post('item_type');
+            // $c = $this->input->post('quantity');
+            // $d = $this->input->post('price');
+            // $e = $this->input->post('discount');
+            // $f = $this->input->post('tax');
+            // $g = $this->input->post('total');
+
+            // $i = 0;
+            // foreach ($a as $row) {
+            //     $data['item'] = $a[$i];
+            //     $data['item_type'] = $b[$i];
+            //     $data['qty'] = $c[$i];
+            //     $data['cost'] = $d[$i];
+            //     $data['discount'] = $e[$i];
+            //     $data['tax'] = $f[$i];
+            //     $data['total'] = $g[$i];
+            //     $data['type'] = 'Accounting Invoice';
+            //     $data['type_id'] = $addQuery;
+            //     $data['status'] = '1';
+            //     $data['created_at'] = date("Y-m-d H:i:s");
+            //     $data['updated_at'] = date("Y-m-d H:i:s");
+            //     // $addQuery2 = $this->accounting_invoices_model->createInvoiceProd($data);
+            //     $addQuery2 = $this->accounting_invoices_model->additem_details($data);
+            //     $i++;
+            // }
+
+            $a          = $this->input->post('itemid');
+            $quantity   = $this->input->post('quantity');
+            $price      = $this->input->post('price');
+            $h          = $this->input->post('tax');
+            $gtotal     = $this->input->post('total');
 
             $i = 0;
             foreach ($a as $row) {
-                $data['item'] = $a[$i];
-                $data['item_type'] = $b[$i];
-                $data['qty'] = $c[$i];
-                $data['cost'] = $d[$i];
-                $data['discount'] = $e[$i];
-                $data['tax'] = $f[$i];
-                $data['total'] = $g[$i];
-                $data['type'] = 'Accounting Invoice';
-                $data['type_id'] = $addQuery;
-                $data['status'] = '1';
-                $data['created_at'] = date("Y-m-d H:i:s");
-                $data['updated_at'] = date("Y-m-d H:i:s");
-                // $addQuery2 = $this->accounting_invoices_model->createInvoiceProd($data);
-                $addQuery2 = $this->accounting_invoices_model->additem_details($data);
+                $data['items_id'] = $a[$i];
+                $data['qty'] = $quantity[$i];
+                $data['cost'] = $price[$i];
+                $data['tax'] = $h[$i];
+                $data['total'] = $gtotal[$i];
+                $data['invoice_id '] = $addQuery;
+                $addQuery2 = $this->invoice_model->add_invoice_items($data);
                 $i++;
             }
+
+            // }
+            $userid = logged('id');
+
+            // $getname = $this->estimate_model->getname($userid);
+
+            //     $notif = array(
+        
+            //         'user_id'               => $userid,
+            //         'title'                 => 'New Estimates',
+            //         'content'               => $getname->FName. ' has created new Estimates.'. $this->input->post('estimate_number'),
+            //         'date_created'          => date("Y-m-d H:i:s"),
+            //         'status'                => '1',
+            //         'company_id'            => getLoggedCompanyID()
+            //     );
+
+            //     $notification = $this->estimate_model->save_notification($notif);
 
             // redirect('accounting/banking');
             redirect('accounting/invoices');
@@ -2826,7 +2861,7 @@ class Accounting extends MY_Controller
             'customer_id' => $this->input->post('customer_id'),
             'email' => $this->input->post('email'),
             'billing_address' => $this->input->post('billing_address'),
-            'sales_receipt_date' => $this->input->post('sales_receipt_date'),
+            'sales_receipt_date' => date("Y-m-d", strtotime($this->input->post('sales_receipt_date'))),
             'ship_via' => $this->input->post('ship_via'),
             'shipping_date' => $this->input->post('shipping_date'),
             'tracking_no' => $this->input->post('tracking_no'),
@@ -3114,7 +3149,7 @@ class Accounting extends MY_Controller
                     $data['cost'] = $f[$i];
                     $data['discount'] = $g[$i];
                     $data['tax'] = $h[$i];
-                    $data['total'] = $ii[$i];
+                    $data['total'] = (($d[$i]*$f[$i])+$h[$i])-$g[$i];
                     $data['type'] = 'Sales Receipt';
                     $data['type_id'] = $addQuery;
                     // $data['status'] = '1';
@@ -3263,7 +3298,7 @@ class Accounting extends MY_Controller
                 $data['cost'] = $f[$i];
                 $data['discount'] = $g[$i];
                 $data['tax'] = $h[$i];
-                $data['total'] = $ii[$i];
+                $data['total'] = (($d[$i]*$f[$i])+$h[$i])-$g[$i];
                 $data['type'] = 'Sales Receipt';
                 $data['type_id'] = $sales_receipt_id;
                 // $data['status'] = '1';
@@ -4660,6 +4695,11 @@ class Accounting extends MY_Controller
             $this->page_data['setting'] = $setting;
             $this->page_data['terms'] = $terms;
         }
+
+        $this->page_data['plans'] = $this->plans_model->getByWhere(['company_id' => $company_id]);
+        // $this->page_data['number'] = $this->estimate_model->getlastInsert();
+        $this->page_data['items'] = $this->items_model->getItemlist();
+        $this->page_data['packages'] = $this->estimate_model->getPackagelist($company_id);
 
 
         $this->load->view('accounting/addInvoice', $this->page_data);
@@ -6792,5 +6832,99 @@ class Accounting extends MY_Controller
         $data = new stdClass();
         $data->result=$result;
         echo json_encode($data);
+    }
+    public function create_statement_get_result_by_customer($action="")
+    {
+        $statement_type=$this->input->post("statement_type");
+        $data = new stdClass();
+        if ($statement_type == "Transaction Statement") {
+            $state_date = date("Y-m-d", strtotime($this->input->post("start_date")));
+            $end_date = date("Y-m-d", strtotime($this->input->post("end_date")));
+            $customer_id = $this->input->post("customer_id");
+            $total_of_invoices = $this->accounting_invoices_model->get_sum_of_invoices_by_customer_id($customer_id, $state_date, $end_date);
+            $total_of_sales_receipt = $this->accounting_sales_receipt_model->get_sum_of_sales_receipt_by_customer_id($customer_id, $state_date, $end_date);
+            $customer_info = $this->accounting_customers_model->get_customer_by_id($customer_id);
+
+            $balance = ($total_of_invoices['collectibles']->total_collectibles+$total_of_sales_receipt['billed']->total_amount_billed)-($total_of_invoices['received']->total_amount_received+$total_of_sales_receipt['billed']->total_amount_billed);
+            $tbody='<tr>
+            <td>
+                <div class="form-check">
+                    <div class="checkbox checkbox-sec margin-right">
+                        <input type="checkbox" name="customer_checkbox[]"
+                            id="customer_checkbox_1" class="customer_checkbox" checked>
+                        <label for="customer_checkbox_1"><span></span></label>
+                    </div>
+                </div>
+            </td>
+            <td>'.$customer_info->first_name." ".$customer_info->last_name.'
+                <input type="text" name="customer_ids[]"
+                    style="display: none;">
+            </td>
+            <td>
+                <div class="form-group">
+                    <input type="email" value="'.$customer_info->email.'" required
+                        name="emails[]">
+                </div>
+            </td>
+            <td> $'.number_format($balance, 2, '.', ',').'</td>
+        </tr>';
+            $data->result=true;
+            $data->customer_fullname = $customer_info->first_name." ".$customer_info->last_name;
+            $data->customer_email = $customer_info->email;
+            $data->customer_id = $customer_id;
+            $data->total_amount_invoice = $total_of_invoices['collectibles']->total_collectibles;
+            $data->total_amount_received_invoice = $total_of_invoices['received']->total_amount_received;
+            $data->total_amount_sales_receipt = $total_of_sales_receipt['billed']->total_amount_billed;
+            $data->total_amount_received_sales_receipt = $total_of_sales_receipt['billed']->total_amount_billed;
+            $data->transaction_count = $total_of_invoices['collectibles']->collectibles_count+$total_of_invoices['received']->received_count+$total_of_sales_receipt['billed']->billed_count;
+
+            $data->display_balance=number_format($balance, 2, '.', ',');
+            $data->tbody = $tbody;
+        }
+        echo json_encode($data);
+    }
+
+    public function save_created_statement()
+    {
+        $customer_id = $this->input->post("customer_id");
+        $start_date = date("Y-m-d", strtotime($this->input->post("start_date")));
+        $end_date = date("Y-m-d", strtotime($this->input->post("end_date")));
+        $statement_date = date("Y-m-d", strtotime($this->input->post("statement_date")));
+        $customer_info = $this->accounting_customers_model->get_customer_by_id($customer_id);
+
+        $insert=array(
+            "statement_type"=>$this->input->post("statement_type"),
+            "statement_date"=>$statement_date,
+            "start_date"=>$start_date,
+            "end_date"=>$end_date,
+            "company_id"=>$customer_info->company_id,
+            "created_by"=>logged('id'),
+            "status"=>1
+        );
+        $statement_id = $this->accounting_invoices_model->save_statement($insert);
+        $this->created_statement_pdf();
+        $data = new stdClass();
+        $data->file_location = "Statement_".$statement_id.".pdf";
+        $data->statement_id = $statement_id;
+        $data->result=true;
+        echo json_encode($data);
+    }
+    public function created_statement_pdf($statement_id="")
+    {
+        $customer_id = $this->input->post("customer_id");
+        $customer_info = $this->accounting_customers_model->get_customer_by_id($customer_id);
+        $data=array(
+            'business_name'=>$customer_info->business_name,
+            'business_address_street'=>$customer_info->bus_street,
+            'business_address_state'=>$customer_info->bus_city." ".$customer_info->bus_state." ".$customer_info->bus_postal_code." ",
+            'business_contact_number'=>$customer_info->business_phone,
+            'business_email'=>$customer_info->business_email,
+            'business_logo'=>$customer_info->business_id."/".$customer_info->business_image,
+            'customer_full_name'=>$customer_info->first_name.' '.$customer_info->last_name,
+            'customer_adress_street'=>$customer_info->acs_mail_add." ",
+            'customer_address_state'=>$customer_info->acs_city." ".$customer_info->acs_state." ".$customer_info->acs_zip_code." ",
+        );
+        $file_name= "Statement_".$statement_id.".pdf";
+        $this->pdf->save_pdf("accounting/customer_includes/create_statement/statement_pdf", $data, $file_name, "P");
     }
 }

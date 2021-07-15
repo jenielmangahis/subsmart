@@ -17,7 +17,7 @@
                                         <div class="col-md-12">
                                             <p>To print, right-click the preview and select Print. Or, click the Print icon if you see one below.</p>
                                             <div class="h-100">
-                                                <iframe src="<?=$pdf?>" type="application/pdf" frameborder="0" class="w-100" height="870px"></iframe>
+                                                <iframe src="data:application/pdf;base64,<?=$pdf?>" type="application/pdf" frameborder="0" class="w-100" height="870px"></iframe>
                                             </div>
                                         </div>
                                     </div>
@@ -34,7 +34,7 @@
                         </div>
                         <div class="col-md-4 d-flex"></div>
                         <div class="col-md-4">
-                            <a href="<?=$pdf?>" target="_blank" class="btn btn-success float-right" id="preview-and-print">
+                            <a href="#" class="btn btn-success float-right" id="preview-and-print">
                                 Print
                             </a>
                         </div>
