@@ -1,4 +1,62 @@
 <!-- Modal for add account-->
+
+<div class="modal  fade modal-fluid" tabindex="-1" role="dialog" id="statement_pdf_preview_modal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Print Statement</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form action="#" id="send_statement">
+                <input type="text" name="statement_id" class="" style="display: none;">
+                <input type="text" name="customer_id" class="" style="display: none;">
+                <div class="modal-body">
+                    <div class="row pdf_preview_section">
+                        <div class="col-md-12">
+                            <div class="pdf-print-preview"></div>
+                        </div>
+                    </div>
+                    <div class="row send_statement_section" style="display: none;">
+                        <div class="col-md-6">
+                            <div class="send_statement_form_part">
+                                <div class="form-group">
+                                    <div class="label" for="subject">Email</div>
+                                    <input type="email" name="email" class="required" value="pintonlou@gmail.com"
+                                        disabled>
+                                </div>
+                                <div class="form-group">
+                                    <div class="label" for="subject">Subject</div>
+                                    <input type="type" name="subject" class="required"
+                                        value="Reminder: Invoice [Invoice No.] from Alarm Direct, Inc" required>
+                                </div>
+                                <div class="form-group">
+                                    <div class="label" for="subject">Body</div>
+                                    <textarea name="body" class="required" rows="8" maxlength="4000" spellcheck="false"
+                                        required></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="send_sales_receipt-preview"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="pdf_preview_section">
+                        <a type="button" class="cancel-button" data-dismiss="modal">Cancel</a>
+                        <a type="button" class="print-button" target="_blank">Print</a>
+                    </div>
+                    <div class="send_statement_section">
+                        <a type="button" class="cancel-button" data-dismiss="modal">Cancel</a>
+                        <button type="submit" class="send-button" target="_blank">Send</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 <div class="full-screen-modal">
     <div id="create_statement_modal" class="modal fade modal-fluid" role="dialog">
         <div class="modal-dialog">
@@ -14,7 +72,8 @@
                 <form action="<?php echo site_url()?>" method="post">
 
                     <input type="text" name="customer_id" style="display: none;">
-                    <div class="modal-body" style="height:calc(100vh - 180px);padding-top:0;">
+                    <input type="text" name="current_statement_id" style="display: none;">
+                    <div class="modal-body" style="height:calc(100vh - 170px);padding-top:0;">
                         <div class="statement-type-section">
                             <div class="row">
                                 <div class="col-md-6">
@@ -80,6 +139,24 @@
                                                     value="<?=date("Y-m-d")?>"
                                                     name="start_date" required>
                                             </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <div class="label">End Date</div>
+                                                <input type="date"
+                                                    value="<?=date("Y-m-d")?>"
+                                                    class="" name="end_date" required>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="start-end-date-section button-section">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="row">
+                                        <div class="col-md-3">
                                             <div class="apply-btn-part">
                                                 <button type="button" class="apply-btn">Apply</button>
                                                 <div class="information-panel">
@@ -95,14 +172,6 @@
                                                         criteria, you need to click Apply to update the balance and
                                                         number of customers. This does not save the statements.</div>
                                                 </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-3">
-                                            <div class="form-group">
-                                                <div class="label">End Date</div>
-                                                <input type="date"
-                                                    value="<?=date("Y-m-d")?>"
-                                                    class="" name="end_date" required>
                                             </div>
                                         </div>
                                     </div>

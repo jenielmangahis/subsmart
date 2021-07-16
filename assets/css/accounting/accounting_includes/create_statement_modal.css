@@ -65,8 +65,6 @@
     text-align: right;
     padding-left: 10px;
     padding-right: 10px;
-    padding-top: 10px;
-    padding-bottom: 10px;
 }
 
 #create_statement_modal .modal-footer-check .middle-links.end {
@@ -360,4 +358,155 @@ div#create_statement_modal .start-end-date-section .apply-btn-part .apply-btn:ho
 
 #create_statement_modal .error-notif-section .message {
     font-size: 12px;
+    color: #363636;
+}
+
+div#statement_pdf_preview_modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    height: auto;
+    width: 90%;
+}
+
+#statement_pdf_preview_modal .cancel-button {
+    background-color: transparent;
+    background: transparent;
+    font-size: 13px;
+    color: #393A3D;
+    border: solid 2px #515659;
+    padding: 5px 25px;
+    height: auto;
+    border-radius: 15px;
+    font-weight: 700;
+    position: absolute;
+    left: 2rem;
+}
+
+#statement_pdf_preview_modal .pdf-print-preview,
+#statement_pdf_preview_modal .send_statement_section .send_sales_receipt-preview {
+    height: 65vh;
+}
+
+#statement_pdf_preview_modal .pdf-print-preview iframe,
+#statement_pdf_preview_modal .send_statement_section .send_sales_receipt-preview iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+#statement_pdf_preview_modal h5.modal-title {
+    font-weight: 600;
+    color: #393A3D;
+    font-size: 20px;
+}
+
+#statement_pdf_preview_modal .modal-body p {
+    font-size: 14px;
+    font-weight: 100;
+    color: #393A3D;
+}
+
+#statement_pdf_preview_modal .modal-body h3 {
+    font-size: 20px;
+    color: #393A3D;
+}
+
+#statement_pdf_preview_modal .modal-body p a:hover {
+    text-decoration: underline;
+}
+
+#statement_pdf_preview_modal .modal-body p a {
+    color: #0379C6;
+}
+
+#statement_pdf_preview_modal .download-button {
+    background-color: transparent;
+    background: transparent;
+    font-size: 13px;
+    color: #393A3D;
+    border: solid 2px #515659;
+    padding: 5px 25px;
+    height: auto;
+    border-radius: 15px;
+    font-weight: 700;
+}
+
+#statement_pdf_preview_modal .cancel-button {
+    background-color: transparent;
+    background: transparent;
+    font-size: 13px;
+    color: #393A3D;
+    border: solid 2px #515659;
+    padding: 5px 25px;
+    height: auto;
+    border-radius: 15px;
+    font-weight: 700;
+    position: absolute;
+    left: 2rem;
+}
+
+#statement_pdf_preview_modal .print-button,
+#statement_pdf_preview_modal button.send-button {
+    background-color: #2CA01C;
+    font-size: 13px;
+    color: #fff;
+    border: solid 2px #2CA01C;
+    padding: 5px 25px;
+    height: auto;
+    border-radius: 15px;
+    font-weight: 700;
+}
+
+#statement_pdf_preview_modal .send_statement_section .form-group textarea,
+#statement_pdf_preview_modal .send_statement_section .form-group input {
+    padding: 10px;
+    width: 100%;
+    border: solid 1px #BABEC5;
+    font-size: 12px;
+    color: #333333;
+    border-radius: 3px;
+    resize: none;
+}
+
+#statement_pdf_preview_modal .send_statement_section .form-group input:focus,
+#statement_pdf_preview_modal .send_statement_section .form-group textarea:focus {
+    border-color: rgba(126, 239, 104, 0.8);
+    box-shadow: 0 1px 1px rgb(0 0 0 / 8%) inset, 0 0 8px rgb(126 239 104 / 60%);
+    outline: 0 none;
+    box-shadow: none;
+    border: solid 1px #80CF03;
+    font-style: normal;
+}
+
+#statement_pdf_preview_modal .send_statement_section .form-group input[type="email"] {
+    border: none;
+    border-color: none;
+    box-shadow: none;
+    outline: 0 none;
+    box-shadow: none;
+    font-style: normal;
+    background: transparent;
+}
+
+#statement_pdf_preview_modal .send_statement_section .form-group input[type="email"] {
+    border: none;
+    border-color: none;
+    box-shadow: none;
+    outline: 0 none;
+    box-shadow: none;
+    font-style: normal;
+    background: transparent;
+}
+
+#statement_pdf_preview_modal .send_statement_section .form-group textarea,
+#statement_pdf_preview_modal .send_statement_section .form-group input {
+    padding: 10px;
+    width: 100%;
+    border: solid 1px #BABEC5;
+    font-size: 12px;
+    color: #333333;
+    border-radius: 3px;
+    resize: none;
 }

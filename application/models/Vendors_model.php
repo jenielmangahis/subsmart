@@ -481,6 +481,9 @@ class Vendors_model extends MY_Model {
 			$this->db->where('bill_date >=', $filters['start-date']);
 			$this->db->where('bill_date <=', $filters['end-date']);
 		}
+		if(isset($filters['overdue']) && $filters['overdue'] === "true") {
+			$this->db->where('due_date <', date("Y-m-d"));
+		}
 		$this->db->order_by('created_at', $filters['order']);
 
 		$query = $this->db->get('accounting_bill');

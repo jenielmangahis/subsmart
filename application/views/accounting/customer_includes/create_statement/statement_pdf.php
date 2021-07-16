@@ -126,6 +126,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
         .items-table table thead tr th,
         .items-table table tbody tr td {
             text-align: right;
+            font-size: 13px;
         }
 
         .items-table table thead tr th {
@@ -191,17 +192,17 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 <tbody>
                                     <tr>
                                         <td style="width: 50%; text-align:right;">
-                                            <p class="sales-number">SALES #
+                                            <p class="sales-number">STATEMENT NO.
                                             </p>
                                             <p class="receipt-date">DATE
                                             </p>
                                         </td>
                                         <td style="text-align:left;">
                                             <p class="sales-number">
-                                                <span><?=$sales_number?></span>
+                                                <span><?=$statement_id?></span>
                                             </p>
                                             <p class="receipt-date">
-                                                <span><?=date("m/d/Y", strtotime($receipt_date))?></span>
+                                                <span><?=date("m/d/Y", strtotime($statement_date))?></span>
                                             </p>
                                         </td>
                                     </tr>
@@ -216,7 +217,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
     <div class="row">
         <div class="col-md-12">
             <div class="customer-info">
-                <h2>Bill To</h2>
+                <h2>To</h2>
                 <p class="customer-name"><?=$customer_full_name?>
                 </p>
                 <p class="address-street"><?=$customer_adress_street?>
@@ -238,7 +239,12 @@ defined('BASEPATH') or exit('No direct script access allowed');
             </tbody>
         </table>
     </div>
+
+    <!-- START OF TRANSACTION STATEMENT -->
+    <?php if ($statement_type == "Transaction Statement") {
+    ?>
     <div class="items-table">
+
         <table>
             <thead>
                 <tr>
@@ -249,26 +255,52 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 </tr>
             </thead>
             <tbody>
+                <?php
+                $total_amount_receivable=0;
+    $total_amount_received =0;
+    foreach ($invoices as $invoice) {
+        $received=$this->accounting_invoices_model->get_amount_received_per_invoice($invoice->id);
+        $total_amount_receivable+=$invoice->grand_total;
+        $total_amount_received+=$received->total_amount; ?>
                 <tr>
-                    <td style="text-align: left;">08/31/2016</td>
-                    <td style="text-align: left;">Invoice #894</td>
-                    <td>150.00</td>
-                    <td>0.00</td>
+                    <td style="text-align: left;">
+                        <?=date("m/d/Y", strtotime($invoice->date_issued))?>
+                    </td>
+                    <td style="text-align: left;">
+                        <?=$invoice->invoice_number?>
+                    </td>
+                    <td>
+                        <?=number_format($invoice->grand_total, 2, '.', ',')?>
+                    </td>
+                    <td>
+                        <?=number_format($received->total_amount, 2, '.', ',')?>
+                    </td>
                 </tr>
+                <?php
+    }
+    foreach ($sales_receipts as $receipt) {
+        $total_amount_receivable+=$receipt->grand_total;
+        $total_amount_received+=$receipt->grand_total; ?>
                 <tr>
-                    <td style="text-align: left;">19/01/2017</td>
-                    <td style="text-align: left;">Invoice #876</td>
-                    <td>150.00</td>
-                    <td>0.00</td>
+                    <td style="text-align: left;">
+                        <?=date("m/d/Y", strtotime($receipt->sales_receipt_date))?>
+                    </td>
+                    <td style="text-align: left;">
+                        Sales Receipt #<?=$receipt->id?>
+                    </td>
+                    <td>
+                        <?=number_format($receipt->grand_total, 2, '.', ',')?>
+                    </td>
+                    <td>
+                        <?=number_format($receipt->grand_total, 2, '.', ',')?>
+                    </td>
                 </tr>
-                <tr>
-                    <td style="text-align: left;">28/08/2017</td>
-                    <td style="text-align: left;">Invoice #234</td>
-                    <td>150.00</td>
-                    <td>0.00</td>
-                </tr>
+                <?php
+    } ?>
             </tbody>
         </table>
+
+
     </div>
     <div style="margin-bottom: 50px;">
         <table style="width: 100%;">
@@ -288,16 +320,102 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     <td style="width: 50%;"></td>
                     <td style="width: 25%;">
                         <p class="sub-total" style="text-align: right;">TOTAL AMOUNT</p>
-                        <p class="amount">$3,900</p>
+                        <p class="amount">
+                            $<?=number_format($total_amount_receivable, 2, '.', ',')?>
+                        </p>
                     </td>
                     <td style="width: 25%;">
                         <p class="sub-total" style="text-align: right;">TOTAL RECEIVED</p>
-                        <p class="amount">$0.00</p>
+                        <p class="amount">
+                            $<?=number_format($total_amount_received, 2, '.', ',')?>
+                        </p>
                     </td>
                 </tr>
             </tbody>
         </table>
     </div>
+    <!-- END OF TRANSACTION STATEMENT -->
+    <?php
+} elseif ($statement_type == "Open Item") {
+        ?>
+    <div class="items-table">
+
+        <table>
+            <thead>
+                <tr>
+                    <th style="text-align: left;">DATE</th>
+                    <th style="text-align: left;">ACTIVITY</th>
+                    <th>AMOUNT</th>
+                    <th>OPEN BALANCE</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php
+        $total_amount_receivable=0;
+        $total_amount_balance =0;
+        foreach ($invoices as $invoice) {
+            $received=$this->accounting_invoices_model->get_amount_received_per_invoice($invoice->id);
+            $total_amount_receivable+=$invoice->grand_total;
+            $total_amount_balance+=($invoice->grand_total-$received->total_amount);
+            if (($invoice->grand_total-$received->total_amount)>0) {
+                ?>
+                <tr>
+                    <td style="text-align: left;">
+                        <?=date("m/d/Y", strtotime($invoice->date_issued))?>
+                    </td>
+                    <td style="text-align: left;">
+                        <?=$invoice->invoice_number." DUE: ".date("m/d/Y", strtotime($invoice->due_date))?>
+                    </td>
+                    <td>
+                        <?=number_format($invoice->grand_total, 2, '.', ',')?>
+                    </td>
+                    <td>
+                        <?=number_format($invoice->grand_total - $received->total_amount, 2, '.', ',')?>
+                    </td>
+                </tr>
+                <?php
+            }
+        } ?>
+            </tbody>
+        </table>
+    </div>
+
+    <div style="margin-bottom: 50px;">
+        <table style="width: 100%;">
+            <tbody>
+                <tr>
+                    <td>
+                        <p class="cutter"></p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="amount-summary">
+        <table style="width: 100%;">
+            <tbody>
+                <tr>
+                    <td style="width: 50%;"></td>
+                    <td style="width: 25%;">
+                        <p class="sub-total" style="text-align: right;">TOTAL AMOUNT</p>
+                        <p class="amount">
+                            $<?=number_format($total_amount_receivable, 2, '.', ',')?>
+                        </p>
+                    </td>
+                    <td style="width: 25%;">
+                        <p class="sub-total" style="text-align: right;">TOTAL OPEN BALANCE</p>
+                        <p class="amount">
+                            $<?=number_format($total_amount_balance, 2, '.', ',')?>
+                        </p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <!-- END OF OPEN ITEM -->
+    <?php
+    } ?>
+
 </body>
 
 </html>

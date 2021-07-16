@@ -322,9 +322,12 @@ class Accounting extends MY_Controller
         // $this->page_data['users'] = $this->users_model->getAllUsersByCompany($parent_id->parent_id, $user_id);
         // }
         $this->page_data['customers'] = $this->accounting_invoices_model->getCustomers();
+        $terms = $this->accounting_terms_model->getCompanyTerms_a($comp_id);
 
         $this->page_data['invoice'] = $this->invoice_model->getinvoice($id);
         $this->page_data['items'] = $this->invoice_model->getItems($id);
+        $this->page_data['itemsDetails'] = $this->invoice_model->getInvoiceItems($id);
+        $this->page_data['terms'] =  $terms;
         // print_r($this->page_data['invoice']);
 
         $this->load->view('accounting/invoice_edit', $this->page_data);
@@ -2155,51 +2158,54 @@ class Accounting extends MY_Controller
             $deposit = '0';
         }
 
+        $company_id     = getLoggedCompanyID();
+
 
         $new_data = array(
-            'customer_id' => $this->input->post('customer_id'),//
+            'customer_id'                       => $this->input->post('customer_id'),//
 
-            'job_location' => $this->input->post('invoice_job_location'),//
-            'job_name' => $this->input->post('job_name'),//
+            'job_location'                      => $this->input->post('invoice_job_location'),//
+            'job_name'                          => $this->input->post('job_name'),//
 
-            'tags' => $this->input->post('tags'),//
-            'invoice_type' => $this->input->post('invoice_type'),//
-            'work_order_number' => $this->input->post('work_order_number'),//
-            'purchase_order' => $this->input->post('purchase_order'),//
-            'invoice_number' => $this->input->post('invoice_number'),//
-            'date_issued' => $this->input->post('date_issued'),//
+            'tags'                              => $this->input->post('tags'),//
+            'invoice_type'                      => $this->input->post('invoice_type'),//
+            'work_order_number'                 => $this->input->post('work_order_number'),//
+            'purchase_order'                    => $this->input->post('purchase_order'),//
+            'invoice_number'                    => $this->input->post('invoice_number'),//
+            'date_issued'                       => $this->input->post('date_issued'),//
 
-            'customer_email' => $this->input->post('customer_email'),//
-            'online_payments' => $this->input->post('online_payments'),
-            'billing_address' => $this->input->post('billing_address'),//
-            'shipping_to_address' => $this->input->post('shipping_to_address'),//
-            'ship_via' => $this->input->post('ship_via'),//
-            'shipping_date' => $this->input->post('shipping_date'),//
-            'tracking_number' => $this->input->post('tracking_number'),//
-            'terms' => $this->input->post('terms'),//
+            'customer_email'                    => $this->input->post('customer_email'),//
+            'online_payments'                   => $this->input->post('online_payments'),
+            'billing_address'                   => $this->input->post('billing_address'),//
+            'shipping_to_address'               => $this->input->post('shipping_to_address'),//
+            'ship_via'                          => $this->input->post('ship_via'),//
+            'shipping_date'                     => $this->input->post('shipping_date'),//
+            'tracking_number'                   => $this->input->post('tracking_number'),//
+            'terms'                             => $this->input->post('terms'),//
             // 'invoice_date' => $this->input->post('invoice_date'),
-            'due_date' => $this->input->post('due_date'),//
-            'location_scale' => $this->input->post('location_scale'),//
-            'message_to_customer' => $this->input->post('message_to_customer'),//
-            'terms_and_conditions' => $this->input->post('terms_and_conditions'),//
+            'due_date'                          => $this->input->post('due_date'),//
+            'location_scale'                    => $this->input->post('location_scale'),//
+            'message_to_customer'               => $this->input->post('message_to_customer'),//
+            'terms_and_conditions'              => $this->input->post('terms_and_conditions'),//
             // 'attachments' => $this->input->post('file_name'),
-            'attachments' => 'test',
-            'status' => $this->input->post('status'),//
+            'attachments'                       => 'test',
+            'status'                            => $this->input->post('status'),//
 
-            'deposit_request_type' => $this->input->post('deposit_request_type'),//
-            'deposit_request' => $this->input->post('deposit_amount'),//
+            'deposit_request_type'              => $this->input->post('deposit_request_type'),//
+            'deposit_request'                   => $this->input->post('deposit_amount'),//
             // 'payment_schedule' => $this->input->post('payment_schedule'),
-            'payment_methods' => $credit_card.','.$bank_transfer.','.$instapay.','.$check.','.$cash.','.$deposit,
+            'payment_methods'                   => $credit_card.','.$bank_transfer.','.$instapay.','.$check.','.$cash.','.$deposit,
 
-            'sub_total' => $this->input->post('sub_total'),//
-            'adjustment_name' => $this->input->post('adjustment_name'),//
-            'adjustment_value' => $this->input->post('adjustment_input'),//
-            'grand_total' => $this->input->post('grand_total'),//
+            'sub_total'                         => $this->input->post('sub_total'),//
+            'adjustment_name'                   => $this->input->post('adjustment_name'),//
+            'adjustment_value'                  => $this->input->post('adjustment_input'),//
+            'grand_total'                       => $this->input->post('grand_total'),//
 
 
-            'user_id' => logged('id'),
-            'date_created' => date("Y-m-d H:i:s"),
-            'date_updated' => date("Y-m-d H:i:s")
+            'user_id'                           => logged('id'),
+            'company_id'                        => $company_id,
+            'date_created'                      => date("Y-m-d H:i:s"),
+            'date_updated'                      => date("Y-m-d H:i:s")
         );
 
         $addQuery = $this->invoice_model->createInvoice($new_data);
@@ -6833,20 +6839,19 @@ class Accounting extends MY_Controller
         $data->result=$result;
         echo json_encode($data);
     }
-    public function create_statement_get_result_by_customer($action="")
+    public function create_statement_get_result_by_customer()
     {
         $statement_type=$this->input->post("statement_type");
         $data = new stdClass();
-        if ($statement_type == "Transaction Statement") {
-            $state_date = date("Y-m-d", strtotime($this->input->post("start_date")));
-            $end_date = date("Y-m-d", strtotime($this->input->post("end_date")));
-            $customer_id = $this->input->post("customer_id");
-            $total_of_invoices = $this->accounting_invoices_model->get_sum_of_invoices_by_customer_id($customer_id, $state_date, $end_date);
-            $total_of_sales_receipt = $this->accounting_sales_receipt_model->get_sum_of_sales_receipt_by_customer_id($customer_id, $state_date, $end_date);
-            $customer_info = $this->accounting_customers_model->get_customer_by_id($customer_id);
+        $state_date = date("Y-m-d", strtotime($this->input->post("start_date")));
+        $end_date = date("Y-m-d", strtotime($this->input->post("end_date")));
+        $customer_id = $this->input->post("customer_id");
+        $total_of_invoices = $this->accounting_invoices_model->get_sum_of_invoices_by_customer_id($customer_id, $state_date, $end_date, $statement_type);
+        $total_of_sales_receipt = $this->accounting_sales_receipt_model->get_sum_of_sales_receipt_by_customer_id($customer_id, $state_date, $end_date, $statement_type);
+        $customer_info = $this->accounting_customers_model->get_customer_by_id($customer_id);
 
-            $balance = ($total_of_invoices['collectibles']->total_collectibles+$total_of_sales_receipt['billed']->total_amount_billed)-($total_of_invoices['received']->total_amount_received+$total_of_sales_receipt['billed']->total_amount_billed);
-            $tbody='<tr>
+        $balance = ($total_of_invoices['collectibles']->total_collectibles+$total_of_sales_receipt['billed']->total_amount_billed)-($total_of_invoices['received']->total_amount_received+$total_of_sales_receipt['billed']->total_amount_billed);
+        $tbody='<tr>
             <td>
                 <div class="form-check">
                     <div class="checkbox checkbox-sec margin-right">
@@ -6868,19 +6873,19 @@ class Accounting extends MY_Controller
             </td>
             <td> $'.number_format($balance, 2, '.', ',').'</td>
         </tr>';
-            $data->result=true;
-            $data->customer_fullname = $customer_info->first_name." ".$customer_info->last_name;
-            $data->customer_email = $customer_info->email;
-            $data->customer_id = $customer_id;
-            $data->total_amount_invoice = $total_of_invoices['collectibles']->total_collectibles;
-            $data->total_amount_received_invoice = $total_of_invoices['received']->total_amount_received;
-            $data->total_amount_sales_receipt = $total_of_sales_receipt['billed']->total_amount_billed;
-            $data->total_amount_received_sales_receipt = $total_of_sales_receipt['billed']->total_amount_billed;
-            $data->transaction_count = $total_of_invoices['collectibles']->collectibles_count+$total_of_invoices['received']->received_count+$total_of_sales_receipt['billed']->billed_count;
-
-            $data->display_balance=number_format($balance, 2, '.', ',');
-            $data->tbody = $tbody;
-        }
+        $data->result=true;
+        $data->customer_fullname = $customer_info->first_name." ".$customer_info->last_name;
+        $data->customer_email = $customer_info->email;
+        $data->customer_id = $customer_id;
+        $data->total_amount_invoice = $total_of_invoices['collectibles']->total_collectibles;
+        $data->total_amount_received_invoice = $total_of_invoices['received']->total_amount_received;
+        $data->total_amount_sales_receipt = $total_of_sales_receipt['billed']->total_amount_billed;
+        $data->total_amount_received_sales_receipt = $total_of_sales_receipt['billed']->total_amount_billed;
+        $data->transaction_count = $total_of_invoices['collectibles']->collectibles_count+$total_of_invoices['received']->received_count+$total_of_sales_receipt['billed']->billed_count;
+        $data->balance=$balance;
+        $data->display_balance=number_format($balance, 2, '.', ',');
+        $data->tbody = $tbody;
+        
         echo json_encode($data);
     }
 
@@ -6890,29 +6895,66 @@ class Accounting extends MY_Controller
         $start_date = date("Y-m-d", strtotime($this->input->post("start_date")));
         $end_date = date("Y-m-d", strtotime($this->input->post("end_date")));
         $statement_date = date("Y-m-d", strtotime($this->input->post("statement_date")));
+        $statement_id = $this->input->post("current_statement_id");
         $customer_info = $this->accounting_customers_model->get_customer_by_id($customer_id);
-
-        $insert=array(
-            "statement_type"=>$this->input->post("statement_type"),
-            "statement_date"=>$statement_date,
-            "start_date"=>$start_date,
-            "end_date"=>$end_date,
-            "company_id"=>$customer_info->company_id,
-            "created_by"=>logged('id'),
-            "status"=>1
-        );
-        $statement_id = $this->accounting_invoices_model->save_statement($insert);
-        $this->created_statement_pdf();
+        if ($statement_id == "") {
+            $insert=array(
+                "statement_type"=>$this->input->post("statement_type"),
+                "statement_date"=>$statement_date,
+                "start_date"=>$start_date,
+                "end_date"=>$end_date,
+                "company_id"=>$customer_info->company_id,
+                "created_by"=>logged('id'),
+                "status"=>1
+            );
+            $statement_id = $this->accounting_invoices_model->save_statement($insert);
+        } else {
+            $data=array(
+                "statement_type"=>$this->input->post("statement_type"),
+                "statement_date"=>$statement_date,
+                "start_date"=>$start_date,
+                "end_date"=>$end_date,
+                "company_id"=>$customer_info->company_id,
+                "created_by"=>logged('id'),
+                "status"=>1,
+                "updated_at"=>date("Y-m-d H:i:s")
+            );
+            $this->accounting_invoices_model->update_statement($data, $statement_id);
+        }
+        if ($this->input->post("statement_type") == "Transaction Statement") {
+            $file_name="Transaction_Statement_".$statement_id.".pdf";
+        } elseif ($this->input->post("statement_type") == "Open Item") {
+            $file_name="Open_Item_Statement_".$statement_id.".pdf";
+        } elseif ($this->input->post("statement_type") == "Balance Forward") {
+            $file_name="Balance_forward_Statement_".$statement_id.".pdf";
+        }
+        $this->created_statement_pdf($customer_id, $statement_id, $this->input->post("statement_type"), $file_name);
+        
         $data = new stdClass();
-        $data->file_location = "Statement_".$statement_id.".pdf";
+        $data->file_location = base_url("assets/pdf/".$file_name);
         $data->statement_id = $statement_id;
         $data->result=true;
+        $data->business_name=$customer_info->business_name;
+        $data->customer_full_name=$customer_info->first_name.' '.$customer_info->last_name;
+        $data->customer_id=$customer_id;
         echo json_encode($data);
     }
-    public function created_statement_pdf($statement_id="")
+    public function created_statement_pdf($customer_id="", $statement_id="", $statement_type="", $file_name="")
     {
-        $customer_id = $this->input->post("customer_id");
         $customer_info = $this->accounting_customers_model->get_customer_by_id($customer_id);
+        $start_date = date("Y-m-d", strtotime($this->input->post("start_date")));
+        $end_date = date("Y-m-d", strtotime($this->input->post("end_date")));
+        $invoices = $this->accounting_invoices_model->get_reanged_invoices_by_customer_id($customer_id, $start_date, $end_date, $statement_type);
+        $sales_receipts = $this->accounting_sales_receipt_model->get_ranged_sales_receipts_by_customer_id($customer_id, $start_date, $end_date, $statement_type);
+        $statement_date = date("Y-m-d", strtotime($this->input->post("statement_date")));
+        
+        $has_logo = false;
+        // $this->load->view('accounting/customer_includes/html_email_print', $this->page_data);
+        $filePath = base_url() . '/uploads/users/business_profile/'.$customer_info->business_id.'/'.$customer_info->business_image;
+        if (@getimagesize($filePath)) {
+            $has_logo = true;
+        }
+        
         $data=array(
             'business_name'=>$customer_info->business_name,
             'business_address_street'=>$customer_info->bus_street,
@@ -6923,8 +6965,14 @@ class Accounting extends MY_Controller
             'customer_full_name'=>$customer_info->first_name.' '.$customer_info->last_name,
             'customer_adress_street'=>$customer_info->acs_mail_add." ",
             'customer_address_state'=>$customer_info->acs_city." ".$customer_info->acs_state." ".$customer_info->acs_zip_code." ",
+            'statement_type'=> $statement_type,
+            'statement_date'=>$statement_date,
+            'invoices' => $invoices,
+            'sales_receipts' => $sales_receipts,
+            'statement_id'=>$statement_id,
+            'has_logo'=>$has_logo,
+            'business_logo' => $customer_info->business_id.'/'.$customer_info->business_image
         );
-        $file_name= "Statement_".$statement_id.".pdf";
         $this->pdf->save_pdf("accounting/customer_includes/create_statement/statement_pdf", $data, $file_name, "P");
     }
 }

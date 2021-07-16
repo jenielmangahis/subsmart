@@ -42,6 +42,7 @@ class Accounting_modals extends MY_Controller {
         $this->load->model('accounting_terms_model');
         $this->load->model('accounting_attachments_model');
         $this->load->model('expenses_model');
+        $this->load->model('accounting_assigned_checks_model');
 		$this->load->library('form_validation');
     }
 
@@ -2837,6 +2838,19 @@ class Accounting_modals extends MY_Controller {
             $checkId = $this->expenses_model->addCheck($checkData);
     
             if($checkId) {
+                if(!isset($data['print_later']) && $data['check_no'] !== '') {
+                    $assignCheck = [
+                        'check_no' => $checkData['check_no'],
+                        'transaction_type' => 'check',
+                        'transaction_id' => $checkId,
+                        'payment_account_id' => $checkData['bank_account_id'],
+                        'created_at' => date("Y-m-d H:i:s"),
+                        'updated_at' => date("Y-m-d H:i:s")
+                    ];
+
+                    $this->accounting_assigned_checks_model->assign_check_no($assignCheck);
+                }
+
                 if(isset($data['attachments']) && is_array($data['attachments'])) {
                     foreach($data['attachments'] as $attachmentId) {
                         $attachment = $this->accounting_attachments_model->getById($attachmentId);
@@ -3376,6 +3390,19 @@ class Accounting_modals extends MY_Controller {
                 $billPaymentId = $this->expenses_model->insert_bill_payment($billPayment);
 
                 if($billPaymentId) {
+                    if(is_null($billPayment['to_print_check_no']) && !is_null($billPayment['check_no'])) {
+                        $assignCheck = [
+                            'check_no' => $billPayment['check_no'],
+                            'transaction_type' => 'bill-payment',
+                            'transaction_id' => $billPaymentId,
+                            'payment_account_id' => $billPayment['payment_account_id'],
+                            'created_at' => date("Y-m-d H:i:s"),
+                            'updated_at' => date("Y-m-d H:i:s")
+                        ];
+    
+                        $this->accounting_assigned_checks_model->assign_check_no($assignCheck);
+                    }
+
                     $paymentAcc = $this->chart_of_accounts_model->getById($data['payment_account']);
                     $paymentAccType = $this->account_model->getById($paymentAcc->account_id);
 
@@ -4191,7 +4218,6 @@ class Accounting_modals extends MY_Controller {
         $fromDate = $post['from'];
         $toDate = $post['to'];
         $search = $post['search'];
-        // $selectedBills = $post['bills'];
 
         $filters = [
             'from' => $fromDate !== "" ? date("Y-m-d", strtotime($fromDate)) : null,
@@ -4217,7 +4243,6 @@ class Accounting_modals extends MY_Controller {
                         'original_amount' => number_format(floatval($bill->total_amount), 2, '.', ','),
                         'open_balance' => number_format(floatval($bill->remaining_balance), 2, '.', ','),
                         'payment' => number_format(floatval($bill->remaining_balance), 2, '.', ','),
-                        // 'selected' => in_array($bill->id, $selectedBills)
                     ];
                 }
             } else {
@@ -4228,7 +4253,6 @@ class Accounting_modals extends MY_Controller {
                     'original_amount' => number_format(floatval($bill->total_amount), 2, '.', ','),
                     'open_balance' => number_format(floatval($bill->remaining_balance), 2, '.', ','),
                     'payment' => number_format(floatval($bill->remaining_balance), 2, '.', ','),
-                    // 'selected' => in_array($bill->id, $selectedBills)
                 ];
             }
         }
@@ -4276,7 +4300,6 @@ class Accounting_modals extends MY_Controller {
                         'original_amount' => number_format(floatval($credit->total_amount), 2, '.', ','),
                         'open_balance' => number_format(floatval($credit->remaining_balance), 2, '.', ','),
                         'payment' => number_format(floatval($credit->remaining_balance), 2, '.', ','),
-                        // 'selected' => in_array($credit->id, $selectedCredits)
                     ];
                 }
             } else {
@@ -4287,7 +4310,6 @@ class Accounting_modals extends MY_Controller {
                     'original_amount' => number_format(floatval($credit->total_amount), 2, '.', ','),
                     'open_balance' => number_format(floatval($credit->remaining_balance), 2, '.', ','),
                     'payment' => number_format(floatval($credit->remaining_balance), 2, '.', ','),
-                    // 'selected' => in_array($credit->id, $selectedCredits)
                 ];
             }
         }
@@ -4609,6 +4631,17 @@ class Accounting_modals extends MY_Controller {
                 $this->vendors_model->update_bill_payment($id, $checkData);
             }
 
+            $assignCheck = [
+                'check_no' => $startingCheckNo,
+                'transaction_type' => $post['type'][$key],
+                'transaction_id' => $check->id,
+                'payment_account_id' => $paymentAcc->id,
+                'created_at' => date("Y-m-d H:i:s"),
+                'updated_at' => date("Y-m-d H:i:s")
+            ];
+
+            $this->accounting_assigned_checks_model->assign_check_no($assignCheck);
+
             $startingCheckNo++;
         }
 
@@ -4642,5 +4675,77 @@ class Accounting_modals extends MY_Controller {
 
         $this->page_data['checkNos'] = $checkNos;
         $this->load->view('accounting/modals/success_print_checks', $this->page_data);
+    }
+
+    public function success_print_checks()
+    {
+        $post = $this->input->post();
+        $paymentAcc = $this->input->post('payment_account');
+        switch($post['print_check_status']) {
+            case 'some' :
+                $fromCheckNo = $post['print_from'];
+
+                foreach($post['checks_selected'] as $key => $id) {
+                    $type = $post['type'][$key];
+                    $assignedData = [
+                        'transaction_type' => $type,
+                        'transaction_id' => $id,
+                        'payment_account_id' => $paymentAcc
+                    ];
+                    $checkNo = $this->accounting_assigned_checks_model->get_assigned_check_no($assignedData);
+
+                    if(intval($checkNo->check_no) >= intval($fromCheckNo)) {
+                        $checkData = [
+                            'check_no' => null,
+                            'updated_at' => date("Y-m-d H:i:s")
+                        ];
+
+                        if($type === 'check') {
+                            $checkData['to_print'] = 1;
+
+                            $this->vendors_model->update_check($id, $checkData);
+                        } else {
+                            $checkData['to_print_check_no'] = 1;
+
+                            $this->vendors_model->update_bill_payment($id, $checkData);
+                        }
+
+                        $assignCheck = [
+                            'transaction_type' => $type,
+                            'transaction_id' => $id
+                        ];
+        
+                        $this->accounting_assigned_checks_model->unassign_check_no($assignCheck);
+                    }
+                }
+            break;
+            case 'no' :
+                foreach($post['checks_selected'] as $key => $id) {
+                    $type = $post['type'][$key];
+
+                    $checkData = [
+                        'check_no' => null,
+                        'updated_at' => date("Y-m-d H:i:s")
+                    ];
+
+                    if($type === 'check') {
+                        $checkData['to_print'] = 1;
+
+                        $this->vendors_model->update_check($id, $checkData);
+                    } else {
+                        $checkData['to_print_check_no'] = 1;
+
+                        $this->vendors_model->update_bill_payment($id, $checkData);
+                    }
+
+                    $assignCheck = [
+                        'transaction_type' => $type,
+                        'transaction_id' => $id
+                    ];
+    
+                    $this->accounting_assigned_checks_model->unassign_check_no($assignCheck);
+                }
+            break;
+        }
     }
 }

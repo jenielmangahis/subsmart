@@ -98,6 +98,205 @@ input:checked + .slider:before {
 .slider.round:before {
   border-radius: 50%;
 }
+
+
+.signature_mobile
+{
+    display: none;
+}
+
+.show_mobile_view
+{
+    display: none;
+}
+
+@media only screen and (max-device-width: 600px) {
+    .label-element{
+        position:absolute;
+        top:-8px;
+        left:25px;
+        font-size:12px;
+        color:#666;
+        }
+    .input-element{
+        padding:30px 5px 10px 8px;
+        width:100%;
+        height:55px;
+        /* border:1px solid #CCC; */
+        font-weight: bold;
+        margin-top: -15px;
+    }
+
+        .mobile_qty
+    {
+        background: transparent !important;
+        border: none !important;
+        outline: none !important;
+        padding: 0px 0px 0px 0px !important;
+        text-align: center;
+    }
+
+    .select-wrap 
+    {
+    border: 2px solid #e0e0e0;
+    /* border-radius: 4px; */
+    margin-top: -10px;
+    /* margin-bottom: 10px; */
+    padding: 0 5px 5px;
+    width:100%;
+    /* background-color:#ebebeb; */
+    }
+
+    .select-wrap label
+    {
+    font-size:10px;
+    text-transform: uppercase;
+    color: #777;
+    padding: 2px 8px 0;
+    }
+
+    .m_select
+    {
+    /* background-color: #ebebeb;
+    border:0px; */
+    border-color: white !important;
+    border:0px !important;
+    outline:0px !important;
+    }
+    .select2 .select2-container .select2-container--default{
+        /* background-color: #ebebeb;
+    border:0px; */
+    border-color: white !important;
+    border:0px !important;
+    outline:0px !important;
+    }
+
+    .select2-container--default .select2-selection--single {
+    background-color: #fff;
+    border: 1px solid #fff !important;
+    border-radius: 4px;
+    }
+
+    .sub_label{
+        font-size:12px !important;
+    }
+
+    .signature_web
+    {
+        display: none;
+    }
+
+    .signature_mobile
+    {
+        display: block;
+    }
+
+    .hidden_mobile_view{
+        display: none;
+    }
+
+    .show_mobile_view
+    {
+        display: block;
+    }
+
+    .table_mobile
+    {
+        font-size:14px;
+    }
+
+    div.dropdown-wrapper select { 
+    width:115% /* This hides the arrow icon */; 
+    background-color:transparent /* This hides the background */; 
+    background-image:none; 
+    -webkit-appearance: none /* Webkit Fix */; 
+    border:none; 
+    box-shadow:none; 
+    padding:0.3em 0.5em; 
+    font-size:13px;
+    }
+    .signature-pad-canvas-wrapper {
+    margin: 15px 0 0;
+    border: 1px solid #cbcbcb;
+    border-radius: 3px;
+    overflow: hidden;
+    position: relative;
+}
+
+    .signature-pad-canvas-wrapper::after {
+        content: 'Name';
+        border-top: 1px solid #cbcbcb;
+        color: #cbcbcb;
+        width: 100%;
+        margin: 0 15px;
+        display: inline-flex;
+        position: absolute;
+        bottom: 10px;
+        font-size: 13px;
+        z-index: -1;
+    }
+
+    .tabs { list-style: none; }
+.tabs li { display: inline; }
+.tabs li a 
+{ 
+    color: black; 
+    float: left; 
+    display: block; 
+    /* padding: 4px 10px;  */
+    /* margin-left: -1px;  */
+    position: relative; 
+    /* left: 1px;  */
+    background: #a2a5a3; 
+    text-decoration: none; 
+}
+.tabs li a:hover 
+{ 
+    background: #ccc; 
+}
+.group:after 
+{ 
+    visibility: hidden; 
+    display: block; 
+    font-size: 0; 
+    content: " "; 
+    clear: both; 
+    height: 0; 
+}
+
+.box-wrap 
+{ 
+    position: relative; 
+    min-height: 250px; 
+}
+.tabbed-area div div 
+{ 
+    background: white; 
+    padding: 20px; 
+    min-height: 250px; 
+    position: absolute; 
+    top: -1px; 
+    left: 0; 
+    width: 100%; 
+}
+
+.tabbed-area div div, .tabs li a 
+{ 
+    border: 1px solid #ccc; 
+}
+
+#box-one:target, #box-two:target, #box-three:target {
+  z-index: 1;
+}
+
+.group li.active a,
+.group li a:hover,
+.group li.active a:focus,
+.group li.active a:hover{
+  background-color: #52cc6e;
+  color: black; 
+}
+}
 </style>
     <!-- page wrapper start -->
     <div wrapper__section>
@@ -144,7 +343,7 @@ input:checked + .slider:before {
                                     <select name="customer_id" id="customer_id" class="form-control" required>
                                     <option>Select a customer</option>
                                     <?php foreach ($customers as $customer):?>
-                                    <option value="<?php echo $customer->prof_id?>"><?php echo $customer->first_name."&nbsp;".$customer->last_name;?> </option>
+                                    <option <?php if(isset($customers)){ if($customer->prof_id == $invoice->customer_id){echo "selected";} } ?>  value="<?php echo $customer->prof_id?>"><?php echo $customer->first_name."&nbsp;".$customer->last_name;?> </option>
                                     <?php endforeach; ?>
                                 </select>
                                 </div>
@@ -180,7 +379,7 @@ input:checked + .slider:before {
                                                 <option></option>
                                                 <option value="0">Add New</option>
                                                 <?php foreach($terms as $term) : ?>
-                                                <option value="<?php echo $term->id; ?>"><?php echo $term->name . ' ' . $term->net_due_days; ?></option>
+                                                <option <?php if(isset($terms)){ if($term->id == $invoice->terms){echo "selected";} } ?> value="<?php echo $term->id; ?>"><?php echo $term->name . ' ' . $term->net_due_days; ?></option>
                                                 <?php endforeach; ?>
                                             </select>
                                         </div>
@@ -280,11 +479,11 @@ input:checked + .slider:before {
                                     <label for="status">Status</label><br/>
                                     <!-- <input type="text" name="status" class="form-control"> -->
                                                 <select name="status" class="form-control">
-                                                    <option value="Draft">Draft</option>
-                                                    <option value="Submitted">Submitted</option>
-                                                    <option value="Approved">Approved</option>
-                                                    <option value="Declined">Declined</option>
-                                                    <option value="Schedule">Schedule</option>
+                                                    <option <?php if(isset($invoice)){ if($invoice->status == "Draft"){echo "selected";} } ?>  value="Draft">Draft</option>
+                                                    <option <?php if(isset($invoice)){ if($invoice->status == "Partially Paid"){echo "selected";} } ?> value="Partially Paid">Partially Paid</option>
+                                                    <option <?php if(isset($invoice)){ if($invoice->status == "Paid"){echo "selected";} } ?> value="Paid">Paid</option>
+                                                    <option <?php if(isset($invoice)){ if($invoice->status == "Due"){echo "selected";} } ?> value="Due">Due</option>
+                                                    <option <?php if(isset($invoice)){ if($invoice->status == "Overdue"){echo "selected";} } ?> value="Overdue">Overdue</option>
                                                 </select>
                                 </div>
                             </div>
@@ -317,23 +516,48 @@ input:checked + .slider:before {
                                         </tr>
                                         </thead>
                                         <tbody id="jobs_items_table_body">
-                                                                <?php foreach($items as $item){ ?>
-													                <tr class="table-items__tr">
-													                    <td style="width: 30px; text-align: center;" valign="top">  # </td>
-													                    <td valign="top"> <?php echo $item->item ?>   </td>
-													                    <td style="width: 50px; text-align: right;" valign="top"> <?php echo $item->qty ?>  </td>
-													                    <td style="width: 80px; text-align: right;" valign="top">$<?php echo $item->cost ?></td>
-													                    <td style="width: 80px; text-align: right;" valign="top">
-													                        <!-- $99.99<br>(62.89%)                     -->
-																			$<?php echo $item->discount ?>
-																			</td>
-													                    <td style="width: 80px; text-align: right;" valign="top">
-													                        <!-- $4.43<br>(7.5%)                     -->
-																			$<?php echo $item->tax ?>
-																			</td>
-													                    <td style="width: 90px; padding: 8px 8px 8px 0; text-align: right;" valign="top">$<?php echo $item->total ?></td>
-													                </tr>
-																	<?php } ?>
+                                        <?php foreach($itemsDetails as $data){ ?>
+                                                        <tr>
+                                                            <td width="30%">
+                                                            <div class="hidden_mobile_view">
+                                                                <input type="text" class="form-control getItems"
+                                                                    onKeyup="getItems(this)" name="items[]" value="<?php echo $data->title; ?>">
+                                                                <ul class="suggestions"></ul>
+                                                                <input type="hidden" name="itemid[]" id="itemid" class="itemid" value="<?php echo $data->items_id; ?>">
+                                                            </div>
+                                                            <div class="show_mobile_view">
+                                                            <?php echo $data->item; ?>
+                                                            </div>
+                                                            </td>
+                                                            <td width="20%">
+                                                            <div class="hidden_mobile_view">
+                                                            <select name="item_type[]" class="form-control">
+                                                                    <option value="product">Product</option>
+                                                                    <option value="material">Material</option>
+                                                                    <option value="service">Service</option>
+                                                                    <option value="fee">Fee</option>
+                                                                </select>
+                                                            </div>
+                                                            <div class="show_mobile_view">
+                                                            <?php echo $data->item_type; ?>
+                                                            </div>
+                                                            </td>
+                                                            <td width="10%"><input type="number" class="form-control qtyest3 hidden_mobile_view" name="quantity[]"
+                                                                    data-counter="0" data-itemid="<?php echo $data->id; ?>" id="quantity_<?php echo $data->id; ?>" value="<?php echo $data->qty; ?>"></td>
+                                                            <td width="10%"><input type="number" class="form-control price2 hidden_mobile_view" name="price[]"
+                                                                    data-counter="0" data-itemid="<?php echo $data->id; ?>" id="price_<?php echo $data->id; ?>" min="0" value="<?php echo $data->iCost; ?>"><input type="hidden" class="priceqty" id="priceqty_<?php echo $data->id; ?>" value="<?php echo $aaa = $data->iCost * $data->qty; ?>"><div class="show_mobile_view"><?php echo $data->iCost; ?></div></td>
+                                                            <td class="hidden_mobile_view" width="10%"><input type="number" class="form-control discount" name="discount[]"
+                                                                    data-counter="0" id="discount_<?php echo $data->id; ?>" min="0" value="<?php echo $data->discount; ?>" readonly ></td>
+                                                            <td class="hidden_mobile_view" width="10%"><input type="text" class="form-control tax_change" name="tax[]"
+                                                                    data-counter="0" id="tax1_<?php echo $data->id; ?>" min="0" value="<?php echo $data->tax; ?>">
+                                                                    <!-- <span id="span_tax_0">0.0</span> -->
+                                                                    </td>
+                                                            <td class="hidden_mobile_view" width="10%"><input type="hidden" class="form-control " name="total[]"
+                                                                    data-counter="0" id="item_total_<?php echo $data->id; ?>" min="0" value="<?php echo $data->total; ?>">
+                                                                    $<span id="span_total_<?php echo $data->id; ?>"><?php echo $data->total; ?></span></td>
+                                                            <td><a href="#" class="remove btn btn-sm btn-success"><i class="fa fa-trash" aria-hidden="true"></i></a></td>
+                                                        </tr>
+                                                    <?php } ?>
                                         </tbody>
                                     </table>
                                     <div class="row">
@@ -342,7 +566,7 @@ input:checked + .slider:before {
                                         <a href="#" id="add_another_new_invoice2" style="color:#02A32C;" data-toggle="modal" data-target="#item_list"><i class="fa fa-plus-square" aria-hidden="true"></i> Add another line </a>
                                         <hr style="display:inline-block; width:91%">
                                     </div>
-                                    <div class="row">
+                                    <!-- <div class="row">
                                         <div class="col-md-7">
                                         &nbsp;
                                         </div>
@@ -361,12 +585,11 @@ input:checked + .slider:before {
                                                 <input type="text" name="adjustment_name" id="adjustment_name" placeholder="Adjustment Name" class="form-control" style="width:200px; display:inline; border: 1px dashed #d1d1d1" value="<?php echo $invoice->adjustment_name; ?>">
                                             </div>
                                             <div class="col-sm-3">
-                                                <input type="number" name="adjustment_input" id="adjustment_input"  value="<?php echo $invoice->adjustment_value; ?>" class="form-control adjustment_input" style="width:100px; display:inline-block">
+                                                $ <input type="number" name="adjustment_input" id="adjustment_input"  value="<?php echo $invoice->adjustment_value; ?>" class="form-control adjustment_input" style="width:100px; display:inline-block">
                                                 <span class="fa fa-question-circle" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Optional it allows you to adjust the total amount Eg. +10 or -10." data-original-title="" title=""></span>
                                             </div>
                                             <div class="col-sm-3 text-right pt-2">
-                                                <label id="adjustment_amount"><?php echo $invoice->adjustment_value; ?></label>
-                                                <!-- <input type="hidden" name="adjustment_amount" id="adjustment_amount_form_input" value='0'> -->
+                                                $ <label id="adjustment_amount"><?php echo $invoice->adjustment_value; ?></label>
                                             </div>
                                             <div class="col-sm-12">
                                                 <hr>
@@ -376,14 +599,60 @@ input:checked + .slider:before {
                                             </div>
                                             <div class="col-sm-6 text-right pr-3">
                                             <input type="hidden" name="adjustment_value" id="adjustment_input" value="0" class="form-control adjustment_input" style="width:100px; display:inline-block"><input type="hidden" name="markup_input_form" id="markup_input_form" class="markup_input" value="0">
-                                                <span id="grand_total"><?php echo $invoice->grand_total; ?></span>
+                                                $ <span id="grand_total"><?php echo $invoice->grand_total; ?></span>
                                                 <input type="hidden" name="grand_total" id="grand_total_input"  value="<?php echo $invoice->grand_total; ?>">
                                             </div>
                                             <div class="col-sm-12">
                                                 <hr>
                                             </div>
                                         </div>
+                                    </div> -->
+
+                                    <div class="row" style="background-color:white;font-size:16px;">
+                                        <div class="col-md-7">
+                                        </div>
+                                        <div class="col-md-5">
+                                            <table class="table table_mobile" style="text-align:left;">
+                                                <tr>
+                                                    <td>Subtotal</td>
+                                                    <!-- <td></td> -->
+                                                    <td colspan="2" align="right">$ <span id="span_sub_total_invoice"><?php echo $invoice->sub_total; ?></span>
+                                                        <input type="hidden" name="subtotal" id="item_total" value="<?php echo $invoice->sub_total; ?>"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Taxes</td>
+                                                    <!-- <td></td> -->
+                                                    <td colspan="2" align="right">$ <span id="total_tax_"><?php echo $invoice->taxes; ?></span><input type="hidden" name="taxes" id="total_tax_input" value="<?php echo $invoice->taxes; ?>"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="width:;"><input type="text" name="adjustment_name" id="adjustment_name" value="<?php echo $invoice->adjustment_name; ?>" placeholder="Adjustment Name" class="form-control" style="width:; display:inline; border: 1px dashed #d1d1d1"></td>
+                                                    <td align="center">
+                                                    <input type="number" name="adjustment_value" id="adjustment_input" value="<?php echo $invoice->adjustment_value; ?>" class="form-control adjustment_input" style="width:50%;display:inline;">
+                                                        <span class="fa fa-question-circle" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Optional it allows you to adjust the total amount Eg. +10 or -10." data-original-title="" title=""></span>
+                                                    </td>
+                                                    <td>$ <span id="adjustmentText"><?php echo $invoice->adjustment_value; ?></span></td>
+                                                </tr>
+                                                <!-- <tr>
+                                                    <td>Markup $<span id="span_markup"></td> -->
+                                                    <!-- <td><a href="#" data-toggle="modal" data-target="#modalSetMarkup" style="color:#02A32C;">set markup</a></td> -->
+                                                    <input type="hidden" name="markup_input_form" id="markup_input_form" class="markup_input" value="0">
+                                                <!-- </tr> -->
+                                                <tr id="saved" style="color:green;font-weight:bold;display:none;">
+                                                    <td>Amount Saved</td>
+                                                    <td></td>
+                                                    <td><span id="offer_cost">0.00</span><input type="hidden" name="voucher_value" id="offer_cost_input"></td>
+                                                </tr>
+                                                <tr style="color:blue;font-weight:bold;font-size:16px;">
+                                                    <td><b>Grand Total ($)</b></td>
+                                                    <td></td>
+                                                    <td><b><span id="grand_total"><?php echo $invoice->grand_total; ?></span>
+                                                        <input type="hidden" name="grand_total" id="grand_total_input" value="<?php echo $invoice->grand_total; ?>"></b></td>
+                                                </tr>
+                                            </table>
+                                        </div>
                                     </div>
+
+
                                 </div>
                             </div>
 
@@ -512,7 +781,7 @@ input:checked + .slider:before {
 
                             <div class="row" style="background-color:white;">
                                 <div class="col-md-12 form-group">
-                                    <button class="btn btn-light but" style="border-radius: 0 !important;border:solid gray 1px;" data-action="update">Save as Draft</button>
+                                    <button class="btn btn-light but" style="border-radius: 0 !important;border:solid gray 1px;" data-action="update">Update</button>
                                     <button class="btn btn-success but" style="border-radius: 0 !important;" data-action="send">Preview</button>
                                     <a href="<?php echo url('invoice') ?>" class="btn but-red">cancel this</a>
                                 </div>

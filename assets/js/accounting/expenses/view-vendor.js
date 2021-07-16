@@ -1356,9 +1356,15 @@ function viewBillPayment(data) {
 
         initBillsTable(data);
 
+        if($('#billPaymentModal #vendor-credits-table').length > 0) {
+            initCreditsTable(data);
+        }
+
         $('#billPaymentModal .dropdown-menu').on('click', function(e) {
             e.stopPropagation();
         });
+
+        $('#billPaymentModal #payee').trigger('change');
 
         $('#billPaymentModal').modal('show');
     });
@@ -1392,11 +1398,15 @@ function initBillsTable(data)
         },
         columns: [
             {
-                data: null,
-                name: 'checkbox',
+                data: 'id',
+                name: 'id',
+                orderable: false,
                 fnCreatedCell: function(td, cellData, rowData, row, col) {
-                    $(td).html(`<input type="checkbox" value="${rowData.id}">`);
-                    $(td).css('padding', '10px 18px');
+                    $(td).html(`
+                    <div class="d-flex align-items-center justify-content-center">
+                        <input type="checkbox" value="${cellData}" ${rowData.selected ? 'checked' : ''}>
+                    </div>
+                    `);
                 }
             },
             {
@@ -1426,8 +1436,73 @@ function initBillsTable(data)
     });
 }
 
+function initCreditsTable(data)
+{
+    $('#billPaymentModal #vendor-credits-table').DataTable({
+        autoWidth: false,
+        searching: false,
+        processing: true,
+        serverSide: true,
+        lengthChange: false,
+        info: false,
+        pageLength: parseInt($('#billPaymentModal #vcredits_table_rows').val()),
+        ordering: false,
+        ajax: {
+            url: `/accounting/vendors/${vendorId}/load-bill-payment-credits/${data.id}`,
+            dataType: 'json',
+            contentType: 'application/json',
+            type: 'POST',
+            data: function(d) {
+                d.search = $('#billPaymentModal #search-vcredit-no').val();
+                d.from = $('#billPaymentModal #vcredit-from').val();
+                d.to = $('#billPaymentModal #vcredit-to').val();
+                d.length = parseInt($('#billPaymentModal #vcredits_table_rows').val());
+                return JSON.stringify(d);
+            },
+            pagingType: 'full_numbers'
+        },
+        columns: [
+            {
+                data: 'id',
+                name: 'id',
+                orderable: false,
+                fnCreatedCell: function(td, cellData, rowData, row, col) {
+                    $(td).html(`
+                    <div class="d-flex align-items-center justify-content-center">
+                        <input type="checkbox" value="${cellData}" ${rowData.selected ? 'checked' : ''}>
+                    </div>
+                    `);
+                }
+            },
+            {
+                data: 'description',
+                name: 'description'
+            },
+            {
+                data: 'original_amount',
+                name: 'original_amount'
+            },
+            {
+                data: 'open_balance',
+                name: 'open_balance'
+            },
+            {
+                data: 'payment',
+                name: 'payment',
+                fnCreatedCell: function(td, cellData, rowData, row, col) {
+                    $(td).html(`<input type="number" name="credit_payment[]" value="${cellData}" class="form-control text-right" onchange="convertToDecimal(this)" max="${rowData.open_balance}" step="0.01">`);
+                }
+            }
+        ]
+    });
+}
+
 function applyBillsFilter() {
-    $('#billPaymentModal #bills-table').DataTable().ajax.reload();
+    $('#billPaymentModal #bills-table').DataTable().ajax.reload(null, true);
+}
+
+function applyCreditsFilter() {
+    $('#billPaymentModal #vendor-credits-table').DataTable().ajax.reload(null, true);
 }
 
 function resetBillsFilter() {
@@ -1438,8 +1513,27 @@ function resetBillsFilter() {
     applyBillsFilter();
 }
 
+function resetCreditsFilter() {
+    $('#billPaymentModal #vcredit-from').val('');
+    $('#billPaymentModal #vcredit-to').val('');
+
+    applyCreditsFilter();
+}
+
 $(document).on('keyup', '#billPaymentModal #search', function() {
-    $('#billPaymentModal #bills-table').DataTable().ajax.reload();
+    $('#billPaymentModal #bills-table').DataTable().ajax.reload(null, true);
+});
+
+$(document).on('keyup', '#billPaymentModal #search-vcredit-no', function() {
+    $('#billPaymentModal #vendor-credits-table').DataTable().ajax.reload(null, true);
+});
+
+$(document).on('change', '#billPaymentModal #table_rows', function() {
+    $('#billPaymentModal #bills-table').DataTable().ajax.reload(null, true);
+});
+
+$(document).on('change', '#billPaymentModal #vcredits_table_rows', function() {
+    $('#billPaymentModal #vendor-credits-table').DataTable().ajax.reload(null, true);
 });
 
 $(document).on('click', '#transactions-table .copy-expense', function(e) {

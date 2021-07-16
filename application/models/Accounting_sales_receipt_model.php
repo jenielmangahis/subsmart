@@ -116,12 +116,26 @@ class Accounting_sales_receipt_model extends MY_Model
     {
         $this->db->delete('accounting_receive_payment', $where);
     }
-    public function get_sum_of_sales_receipt_by_customer_id($customer_id="", $start_date="", $end_date="")
+    public function get_sum_of_sales_receipt_by_customer_id($customer_id="", $start_date="", $end_date="", $statement_type="")
     {
-        $query = $this->db->query("SELECT COUNT(accounting_sales_receipt.id) as billed_count, SUM(item_details.total) as total_amount_billed FROM accounting_sales_receipt 
-        JOIN item_details ON item_details.type_id = accounting_sales_receipt.id 
-        WHERE item_details.type='Sales Receipt' AND accounting_sales_receipt.customer_id = ".$customer_id." AND (accounting_sales_receipt.sales_receipt_date >= '".$start_date."' AND accounting_sales_receipt.sales_receipt_date<= '".$end_date."')");
+        $conditions ="AND (accounting_sales_receipt.sales_receipt_date >= '".$start_date."' AND accounting_sales_receipt.sales_receipt_date<= '".$end_date."')";
+        if ($statement_type=="Opem Item") {
+            $conditions ="";
+        }
+
+        $query = $this->db->query("SELECT COUNT(accounting_sales_receipt.id) as billed_count, SUM(accounting_sales_receipt.grand_total) as total_amount_billed FROM accounting_sales_receipt 
+        WHERE accounting_sales_receipt.customer_id = ".$customer_id." ".$conditions);
         $results['billed']=$query->row();
         return $results;
+    }
+    public function get_ranged_sales_receipts_by_customer_id($customer_id, $start_date, $end_date, $statement_type="")
+    {
+        $conditions ="AND (accounting_sales_receipt.sales_receipt_date >= '".$start_date."' AND accounting_sales_receipt.sales_receipt_date<= '".$end_date."')";
+        if ($statement_type=="Opem Item") {
+            $conditions ="";
+        }
+        $query = $this->db->query("SELECT * FROM accounting_sales_receipt 
+        WHERE accounting_sales_receipt.customer_id = ".$customer_id." ".$conditions);
+        return $query->result();
     }
 }

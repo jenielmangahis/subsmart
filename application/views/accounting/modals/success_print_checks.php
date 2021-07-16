@@ -3,6 +3,7 @@
     <div id="successPrintCheck" class="modal fade modal-fluid d-flex" role="dialog">
         <div class="modal-dialog" style="width: 30%; height: 30%; margin: auto">
             <!-- Modal content-->
+            <form id="print-success-form">
             <div class="modal-content" style="height: 100%;">
                 <div class="modal-header" style="background: #f4f5f8;border-bottom: 0">
                     <h4 class="modal-title">Did your checks print OK?</h4>
@@ -56,6 +57,7 @@
                     </div>
                 </div>
             </div>
+            </form>
 
         </div>
     </div>
