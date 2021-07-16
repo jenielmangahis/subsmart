@@ -221,7 +221,8 @@ class Accounting_invoices_model extends MY_Model
         $this->db->select('*');
 
         $this->db->from('accounting_receive_payment');
-        $this->db->join('invoices', 'accounting_receive_payment.invoice_number = invoices.invoice_number and accounting_receive_payment.customer_id = invoices.customer_id');
+        $this->db->join('accounting_receive_payment_invoices', 'accounting_receive_payment.id = accounting_receive_payment_invoices.receive_payment_id');
+        $this->db->join('invoices', 'accounting_receive_payment_invoices.invoice_number = invoices.invoice_number and accounting_receive_payment.customer_id = invoices.customer_id');
         
         $this->db->where('accounting_receive_payment.customer_id', $customer_id);
 
@@ -274,17 +275,23 @@ class Accounting_invoices_model extends MY_Model
         $query = $this->db->get();
         return $query->row();
     }
-    public function get_sum_of_invoices_by_customer_id($customer_id="", $start_date="", $end_date="")
+    public function get_sum_of_invoices_by_customer_id($customer_id="", $start_date="", $end_date="", $statement_type="")
     {
         if ($customer_id != "") {
-            $sql="SELECT COUNT(invoices.id) as collectibles_count, SUM(grand_total) as total_collectibles FROM invoices WHERE customer_id = ".$customer_id." AND (invoices.date_issued >= '".$start_date."' AND invoices.date_issued <=  '".$end_date."')";
+            $conditions ="AND (invoices.date_issued >= '".$start_date."' AND invoices.date_issued <=  '".$end_date."')";
+            if ($statement_type=="Opem Item") {
+                $conditions ="";
+            }
+
+            $sql="SELECT COUNT(invoices.id) as collectibles_count, SUM(grand_total) as total_collectibles FROM invoices WHERE customer_id = ".$customer_id." ".$conditions;
             $query = $this->db->query($sql);
             $results['collectibles']=$query->row();
+
             $this->db->reset_query();
             $sql="SELECT COUNT(accounting_receive_payment_invoices.id) as receive_count, SUM(accounting_receive_payment_invoices.payment_amount) as total_amount_received FROM accounting_receive_payment_invoices 
             JOIN accounting_receive_payment ON accounting_receive_payment_invoices.receive_payment_id = accounting_receive_payment.id 
             JOIN invoices ON accounting_receive_payment_invoices.invoice_id = invoices.id
-            WHERE accounting_receive_payment.customer_id = ".$customer_id." AND (invoices.date_issued >= '".$start_date."' AND invoices.date_issued <=  '".$end_date."')";
+            WHERE accounting_receive_payment.customer_id = ".$customer_id." ".$conditions;
             $query = $this->db->query($sql);
             $results['received']=$query->row();
             return $results;
@@ -297,5 +304,33 @@ class Accounting_invoices_model extends MY_Model
         $insert_id = $this->db->insert_id();
 
         return  $insert_id;
+    }
+    public function update_statement($data, $statement_id)
+    {
+        $this->db->where('id', $statement_id);
+        $vendor = $this->db->update('accounting_statements', $data);
+        if ($vendor) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    public function get_reanged_invoices_by_customer_id($customer_id, $start_date, $end_date, $statement_type="")
+    {
+        if ($customer_id != "") {
+            $conditions ="AND (date_issued >= '".$start_date."' AND date_issued <=  '".$end_date."')";
+            if ($statement_type=="Opem Item") {
+                $conditions ="";
+            }
+            $sql="SELECT * FROM invoices WHERE customer_id = ".$customer_id." ".$conditions;
+            $query = $this->db->query($sql);
+            return $query->result();
+        }
+    }
+    public function get_amount_received_per_invoice($invoice_id)
+    {
+        $sql="SELECT SUM(payment_amount) as total_amount FROM accounting_receive_payment_invoices WHERE invoice_id = ".$invoice_id."";
+        $query = $this->db->query($sql);
+        return $query->row();
     }
 }

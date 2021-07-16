@@ -18,6 +18,7 @@ class Vendors extends MY_Controller
         $this->load->model('accounting_payment_methods_model');
         $this->load->model('tags_model');
         $this->load->model('accounting_invoices_model');
+        $this->load->model('accounting_assigned_checks_model');
 
         add_css(array(
             "assets/css/accounting/banking.css?v='rand()'",
@@ -1944,13 +1945,22 @@ class Vendors extends MY_Controller
             'overdue' => $post['overdue']
         ];
 
+        $billPayment = $this->vendors_model->get_bill_payment_by_id($billPaymentId);
         $bills = $this->vendors_model->get_bill_payment_bills_by_vendor_id($billPaymentId, $vendorId, $filters);
+
+        $filters = [
+            'start-date' => $fromDate !== "" ? date("Y-m-d", strtotime($fromDate)) : null,
+            'end-date' => $toDate !== "" ? date("Y-m-d", strtotime($toDate)) : null,
+            'overdue' => $post['overdue']
+        ];
+        $openBills = $this->vendors_model->get_vendor_open_bills($billPayment->payee_id, $filters);
 
         $data = [];
         foreach ($bills as $bill) {
             $paymentData = $this->vendors_model->get_bill_payment_item_by_bill_id($billPaymentId, $bill->id);
-            $description = 'Bill ';
+            $description = '<a href="#" class="text-info" data-id="'.$bill->id.'">Bill ';
             $description .= $bill->bill_no !== "" && !is_null($bill->bill_no) ? '# '.$bill->bill_no.' ' : '';
+            $description .= '</a>';
             $description .= '('.date("m/d/Y", strtotime($bill->bill_date)).')';
 
             if ($search !== "") {
@@ -1960,8 +1970,9 @@ class Vendors extends MY_Controller
                         'description' => $description,
                         'due_date' => date("m/d/Y", strtotime($bill->due_date)),
                         'original_amount' => number_format(floatval($bill->total_amount), 2, '.', ','),
-                        'open_balance' => number_format(floatval($bill->remaining_balance), 2, '.', ','),
-                        'payment' => number_format(floatval($paymentData->payment_amount), 2, '.', ',')
+                        'open_balance' => number_format(floatval($bill->remaining_balance) + floatval($paymentData->payment_amount), 2, '.', ','),
+                        'payment' => number_format(floatval($paymentData->payment_amount), 2, '.', ','),
+                        'selected' => true
                     ];
                 }
             } else {
@@ -1970,15 +1981,146 @@ class Vendors extends MY_Controller
                     'description' => $description,
                     'due_date' => date("m/d/Y", strtotime($bill->due_date)),
                     'original_amount' => number_format(floatval($bill->total_amount), 2, '.', ','),
-                    'open_balance' => number_format(floatval($bill->remaining_balance), 2, '.', ','),
-                    'payment' => number_format(floatval($paymentData->payment_amount), 2, '.', ',')
+                    'open_balance' => number_format(floatval($bill->remaining_balance) + floatval($paymentData->payment_amount), 2, '.', ','),
+                    'payment' => number_format(floatval($paymentData->payment_amount), 2, '.', ','),
+                    'selected' => true
                 ];
+            }
+        }
+
+        if(count($openBills) > 0) {
+            foreach($openBills as $bill) {
+                $description = '<a href="#" class="text-info" data-id="'.$bill->id.'">Bill ';
+                $description .= $bill->bill_no !== "" && !is_null($bill->bill_no) ? '# '.$bill->bill_no.' ' : '';
+                $description .= '</a>';
+                $description .= '('.date("m/d/Y", strtotime($bill->bill_date)).')';
+
+                if ($search !== "") {
+                    if (stripos($bill->bill_no, $search) !== false) {
+                        $data[] = [
+                            'id' => $bill->id,
+                            'description' => $description,
+                            'due_date' => date("m/d/Y", strtotime($bill->due_date)),
+                            'original_amount' => number_format(floatval($bill->total_amount), 2, '.', ','),
+                            'open_balance' => number_format(floatval($bill->remaining_balance), 2, '.', ','),
+                            'payment' => '',
+                            'selected' => false
+                        ];
+                    }
+                } else {
+                    $data[] = [
+                        'id' => $bill->id,
+                        'description' => $description,
+                        'due_date' => date("m/d/Y", strtotime($bill->due_date)),
+                        'original_amount' => number_format(floatval($bill->total_amount), 2, '.', ','),
+                        'open_balance' => number_format(floatval($bill->remaining_balance), 2, '.', ','),
+                        'payment' => '',
+                        'selected' => false
+                    ];
+                }
             }
         }
 
         $result = [
             'draw' => $post['draw'],
             'recordsTotal' => count($bills),
+            'recordsFiltered' => count($data),
+            'data' => array_slice($data, $start, $limit)
+        ];
+
+        echo json_encode($result);
+    }
+
+    public function load_bill_payment_credits($vendorId, $billPaymentId)
+    {
+        $post = json_decode(file_get_contents('php://input'), true);
+        $start = $post['start'];
+        $limit = $post['length'];
+        $fromDate = $post['from'];
+        $toDate = $post['to'];
+        $search = $post['search'];
+
+        $filters = [
+            'from' => $fromDate !== "" ? date("Y-m-d", strtotime($fromDate)) : null,
+            'to' => $toDate !== "" ? date("Y-m-d", strtotime($toDate)) : null,
+        ];
+
+        $billPayment = $this->vendors_model->get_bill_payment_by_id($billPaymentId);
+        $credits = json_decode($billPayment->vendor_credits_applied, true);
+        $openCredits = $this->expenses_model->get_vendor_unapplied_vendor_credits($billPayment->payee_id);
+
+        $data = [];
+        foreach($credits as $creditId => $creditAmount) {
+            $credit = $this->vendors_model->get_vendor_credit_by_id($creditId);
+
+            $description = '<a href="#" class="text-info" data-id="'.$credit->id.'">Vendor Credit ';
+            $description .= $credit->ref_no !== "" && !is_null($credit->ref_no) ? '# '.$credit->ref_no.' ' : '';
+            $description .= '</a>';
+            $description .= '('.date("m/d/Y", strtotime($credit->payment_date)).')';
+
+            if($search !== "") {
+                if(stripos($credit->ref_no, $search) !== false) {
+                    $data[] = [
+                        'id' => $credit->id,
+                        'description' => $description,
+                        'due_date' => date("m/d/Y", strtotime($credit->due_date)),
+                        'original_amount' => number_format(floatval($credit->total_amount), 2, '.', ','),
+                        'open_balance' => number_format(floatval($credit->remaining_balance) + floatval($creditAmount), 2, '.', ','),
+                        'payment' => number_format(floatval($creditAmount), 2, '.', ','),
+                        'selected' => true
+                    ];
+                }
+            } else {
+                $data[] = [
+                    'id' => $credit->id,
+                    'description' => $description,
+                    'due_date' => date("m/d/Y", strtotime($credit->due_date)),
+                    'original_amount' => number_format(floatval($credit->total_amount), 2, '.', ','),
+                    'open_balance' => number_format(floatval($credit->remaining_balance) + floatval($creditAmount), 2, '.', ','),
+                    'payment' => number_format(floatval($creditAmount), 2, '.', ','),
+                    'selected' => true
+                ];
+            }
+        }
+
+        if(count($openCredits) > 0) {
+            foreach($openCredits as $credit) {
+                $description = '<a href="#" class="text-info" data-id="'.$credit->id.'">Vendor Credit ';
+                $description .= $credit->ref_no !== "" && !is_null($credit->ref_no) ? '# '.$credit->ref_no.' ' : '';
+                $description .= '</a>';
+                $description .= '('.date("m/d/Y", strtotime($credit->payment_date)).')';
+
+                if(array_search($credit->id, array_column($data, 'id')) === false) {
+                    if($search !== "") {
+                        if(stripos($credit->ref_no, $search) !== false) {
+                            $data[] = [
+                                'id' => $credit->id,
+                                'description' => $description,
+                                'due_date' => date("m/d/Y", strtotime($credit->due_date)),
+                                'original_amount' => number_format(floatval($credit->total_amount), 2, '.', ','),
+                                'open_balance' => number_format(floatval($credit->remaining_balance), 2, '.', ','),
+                                'payment' => '',
+                                'selected' => false
+                            ];
+                        }
+                    } else {
+                        $data[] = [
+                            'id' => $credit->id,
+                            'description' => $description,
+                            'due_date' => date("m/d/Y", strtotime($credit->due_date)),
+                            'original_amount' => number_format(floatval($credit->total_amount), 2, '.', ','),
+                            'open_balance' => number_format(floatval($credit->remaining_balance), 2, '.', ','),
+                            'payment' => '',
+                            'selected' => false
+                        ];
+                    }
+                }
+            }
+        }
+
+        $result = [
+            'draw' => $post['draw'],
+            'recordsTotal' => count($credits),
             'recordsFiltered' => count($data),
             'data' => array_slice($data, $start, $limit)
         ];
@@ -2110,6 +2252,38 @@ class Vendors extends MY_Controller
         $update = $this->vendors_model->update_check($checkId, $checkData);
 
         if ($update) {
+            if(!is_null($checkData['check_no']) && !is_null($check->check_no)) {
+                $assignCheck = [
+                    'check_no' => $checkData['check_no'],
+                    'transaction_type' => 'check',
+                    'transaction_id' => $checkId,
+                    'payment_account_id' => $checkData['bank_account_id'],
+                    'updated_at' => date("Y-m-d H:i:s")
+                ];
+
+                $this->accounting_assigned_checks_model->update_check_no($assignCheck);
+            } else if (is_null($check->check_no) && !is_null($checkData['check_no'])) {
+                $assignCheck = [
+                    'check_no' => $checkData['check_no'],
+                    'transaction_type' => 'check',
+                    'transaction_id' => $checkId,
+                    'payment_account_id' => $checkData['bank_account_id'],
+                    'created_at' => date("Y-m-d H:i:s"),
+                    'updated_at' => date("Y-m-d H:i:s")
+                ];
+
+                $this->accounting_assigned_checks_model->assign_check_no($assignCheck);
+            } else if(!is_null($check->check_no) && is_null($checkData['check_no'])) {
+                $assignCheck = [
+                    'check_no' => $checkData['check_no'],
+                    'transaction_type' => 'check',
+                    'transaction_id' => $checkId,
+                    'payment_account_id' => $checkData['bank_account_id']
+                ];
+
+                $this->accounting_assigned_checks_model->unassign_check_no($assignCheck);
+            }
+
             if ($data['bank_account'] !== $check->bank_account_id) {
                 $newBankAcc = $this->chart_of_accounts_model->getById($data['bank_account']);
                 $newBalance = floatval($newBankAcc->balance) - floatval($data['total_amount']);

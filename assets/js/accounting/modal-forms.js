@@ -2057,7 +2057,8 @@ $(function() {
 
                 $.each(transactions, function(index, transaction) {
                     if(transaction.type === 'Bill' && $(`#billPaymentModal input[name="bills[]"][value="${transaction.id}"]`).length === 0 ||
-                        transaction.type === 'Vendor Credit' && $(`#billPaymentModal input[name="credits[]"][value="${transaction.id}"]`).length === 0
+                        transaction.type === 'Vendor Credit' && $(`#billPaymentModal input[name="credits[]"][value="${transaction.id}"]`).length === 0 &&
+                        $(`#billPaymentModal #vendor-credits-table input[type="checkbox"][value="${transaction.id}"]`).length === 0
                     ) {
                         var title = transaction.type;
                         title += transaction.number !== '' ? '#'+transaction.number : '';
@@ -2900,7 +2901,47 @@ $(function() {
     $(document).on('hidden.bs.modal', '#successPrintCheck', function() {
         $(this).parent().parent().next('.modal-backdrop').remove();
         $(this).parent().remove();
+        $('#printChecksModal #checks-table thead input').prop('checked', false);
+        $('#printChecksModal #selected-checks').html('0');
+        $('#printChecksModal #selected-checks-total').html('0.00');
         $('#printChecksModal #checks-table').DataTable().ajax.reload(null, true);
+    });
+
+    $(document).on('submit', '#modal-container #successPrintCheck #print-success-form', function(e) {
+        e.preventDefault();
+
+        var data = new FormData(this);
+
+        $('#printChecksModal #checks-table tbody tr input[type="checkbox"]:checked').each(function() {
+            var row = $(this).parent().parent().parent();
+            var rowData = $('#printChecksModal #checks-table').DataTable().row(row).data();
+            var transactionType = rowData.type;
+            transactionType = transactionType.replaceAll(' (Check)', '');
+            transactionType = transactionType.replaceAll(' (Credit Card)', '');
+            transactionType = transactionType.replaceAll(' ', '-');
+            transactionType = transactionType.toLowerCase();
+
+            if(data.has('checks_selected[]')) {
+                data.append('checks_selected[]', $(this).val());
+                data.append('type[]', transactionType);
+            } else {
+                data.set('checks_selected[]', $(this).val());
+                data.set('type[]', transactionType);
+            }
+        });
+
+        data.set('payment_account', $('#printChecksModal #payment_account').val());
+
+        $.ajax({
+            url: '/accounting/success-print-checks',
+            data: data,
+            type: 'post',
+            processData: false,
+            contentType: false,
+            success: function(result) {
+                $('#successPrintCheck').modal('hide');
+            }
+        });
     });
 });
 

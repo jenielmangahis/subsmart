@@ -673,6 +673,8 @@ input:checked + .slider:before {
                                             </table>
                                         </div>
                                     </div>
+
+                                    
                                 </div>
                             </div>
 

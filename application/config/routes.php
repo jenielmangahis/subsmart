@@ -315,6 +315,7 @@ $route['accounting/load-checks']['post'] = 'accounting_modals/load_checks';
 $route['accounting/remove-to-print']['post'] = 'accounting_modals/remove_to_print';
 $route['accounting/print-preview-checks']['post'] = 'accounting_modals/print_preview_checks';
 $route['accounting/success-print-checks-modal']['post'] = 'accounting_modals/success_print_checks_form';
+$route['accounting/success-print-checks']['post'] = 'accounting_modals/success_print_checks';
 
 $route['accounting/lists'] = 'accounting/lists';
 
@@ -471,6 +472,7 @@ $route['accounting/vendors/view-cc-payment/(:any)'] = 'accounting_controllers/ve
 $route['accounting/vendors/view-cc-credit/(:any)'] = 'accounting_controllers/vendors/view_cc_credit/$1';
 $route['accounting/vendors/view-bill-payment/(:any)/(:any)'] = 'accounting_controllers/vendors/view_bill_payment/$1/$2';
 $route['accounting/vendors/(:any)/load-bill-payment-bills/(:any)']['post'] = 'accounting_controllers/vendors/load_bill_payment_bills/$1/$2';
+$route['accounting/vendors/(:any)/load-bill-payment-credits/(:any)']['post'] = 'accounting_controllers/vendors/load_bill_payment_credits/$1/$2';
 $route['accounting/vendors/(:any)/update-transaction/(:any)/(:any)']['post'] = 'accounting_controllers/vendors/update_transaction/$1/$2/$3';
 $route['accounting/vendors/copy-expense/(:any)'] = 'accounting_controllers/vendors/copy_expense/$1';
 $route['accounting/vendors/copy-check/(:any)'] = 'accounting_controllers/vendors/copy_check/$1';

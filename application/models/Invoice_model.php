@@ -28,9 +28,9 @@ class Invoice_model extends MY_Model
         // $company_id = getLoggedCompanyID();
         // $vendor = $this->db->get('invoices'->where('company_id', $company_id));
 
-        $this->db->select('invoices.*, acs_profile.prof_id, acs_profile.first_name, acs_profile.last_name');
+        $this->db->select('*, acs_profile.prof_id, acs_profile.first_name, acs_profile.last_name');
 
-        $this->db->from($this->table);
+        $this->db->from('invoices');
         $this->db->join('acs_profile', 'invoices.customer_id = acs_profile.prof_id');
 
         // $this->db->select('*');
@@ -458,6 +458,26 @@ class Invoice_model extends MY_Model
         $vendor = $this->db->insert('invoices_items', $data);
 	    $insert_id = $this->db->insert_id();
 		return  $insert_id;
+    }
+
+    public function getInvoiceItems($id)
+    {
+        // $this->db->select('*');
+		// $this->db->from('work_orders_items');
+		// $this->db->where('work_order_id', $id);
+        // $query = $this->db->get();
+        // $cus = $query->row();
+
+        // $this->db->select('* , work_orders.email AS w_email, work_orders.status AS w_status');
+        // $this->db->from('work_orders');
+        // $this->db->join('acs_profile', 'work_orders.customer_id  = acs_profile.prof_id');
+
+        $this->db->select('*, invoices_items.cost as iCost, invoices_items.tax as itax, invoices_items.total as iTotal');
+		$this->db->from('invoices_items');
+        $this->db->join('items', 'invoices_items.items_id  = items.id');
+        $this->db->where('invoice_id', $id);
+        $query2 = $this->db->get();
+        return $query2->result();
     }
 
     function duplicateRecord($primary_key, $comp_id) {
