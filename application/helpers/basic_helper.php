@@ -3507,4 +3507,23 @@ if (!function_exists('is_admin_logged')) {
         }
         return ($result>0)?$names[sizeof($matches)-2]:false;
     }
+
+    function customer_list_headers(){
+        $headers = [
+            'name' => 'Name',
+            'city' => 'City',
+            'state' => 'State',
+            'source' => 'Source',
+            'email' => 'Email',
+            'added' => 'Added',
+            'sales_rep' => 'Sales Rep',
+            'tech' => 'Tech',
+            'plan_type' => 'Plan Type',
+            'subscription_amount' => 'Subscription Amount',
+            'phone' => 'Phone',
+            'status' => 'Status'
+        ];
+
+        return $headers;
+    }
 }

@@ -62,6 +62,16 @@
         });
     });
 
+    $(document).on('click', '.edit-rate-plan', function(){
+        var rate_plan_id = $(this).attr("data-id");
+        var rate_plan_amount = $(this).attr("data-amount");
+
+        $("#rate-plan-id").val(rate_plan_id);
+        $("#edit-rate-plan-amount").val(rate_plan_amount);
+
+        $("#modal_edit_rate_plan").modal("show");
+    });
+
     $("body").delegate(".delete_sales_area", "click", function(){
         var ID=this.id;
         Swal.fire({
@@ -170,7 +180,29 @@
         //var url = form.attr('action');
         $.ajax({
             type: "POST",
-            url: "/customer/add_rate_plan_ajax",
+            url: base_url + "customer/add_rate_plan_ajax",
+            data: form.serialize(), // serializes the form's elements.
+            success: function(data)
+            {
+                if(data === "Updated"){
+
+                }else{
+                    sucess_add('Good Job!','Successfully Added!','ratePlan');
+                }
+                $('#modal_lead_type').modal('hide');
+                $('[id="lead_name"]').val("");
+                $('[id="lead_id"]').val("");
+            }
+        });
+    });
+
+    $("#editRatePlanForm").submit(function(e) {
+        e.preventDefault(); // avoid to execute the actual submit of the form.
+        var form = $(this);
+        //var url = form.attr('action');
+        $.ajax({
+            type: "POST",
+            url: base_url + "customer/update_rate_plan_ajax",
             data: form.serialize(), // serializes the form's elements.
             success: function(data)
             {

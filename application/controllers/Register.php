@@ -25,6 +25,19 @@ class Register extends MYF_Controller {
 
     public function index(){
 
+        $default_plan = '';
+        $default_type = '';
+        if( $this->input->get('plan') ){
+            $default_plan = $this->input->get('plan');
+        }
+
+        if( $this->input->get('type') ){
+            $default_type = $this->input->get('type');
+        }
+
+        $this->page_data['default_plan'] = $default_plan;
+        $this->page_data['default_type'] = $default_type;
+
         $get_data = $this->input->get();  
 
         $payment_status = "";

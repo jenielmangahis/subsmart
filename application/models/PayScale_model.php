@@ -8,8 +8,8 @@ class PayScale_model extends MY_Model
     public function getAll($filters=array())
     {
         $id = logged('id');
-
-        $this->db->select('*');
+        $this->db->select('payscale.*, clients.business_name, clients.id AS uid');
+        $this->db->join('clients', 'payscale.company_id = clients.id', 'LEFT');
         $this->db->from($this->table);
 
         if ( !empty($filters) ) {

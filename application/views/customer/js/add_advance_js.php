@@ -174,12 +174,24 @@
             console.log(e.date);
             var selected_data = moment(e.date).format('L');
             var contract = $('#contract_term').val();
+            console.log(contract);
             var plus_date = moment.utc(selected_data).add(contract,'months');
             console.log( moment(plus_date).format('l'));
-            //console.log( moment(plus_date).format('D'));
+            console.log( moment(plus_date).format('D'));
             $('#bill_end_date').val(moment(plus_date).format('L'));
-            $('#bill_day ').val(moment(plus_date).format('D'));
+            $('#bill_day').val(moment(plus_date).format('D'));
         });
+
+        $("#contract_term").change(function(){
+            var terms = $(this).val();
+            var start_date = $("#bill_start_date").val();
+            if( start_date != '' ){
+                var selected_data = moment(start_date).format('L');
+                var plus_date = moment.utc(selected_data).add(terms,'months');
+                $('#bill_end_date').val(moment(plus_date).format('L'));
+            }
+        });
+
         $( ".datepicker" ).datepicker();
         $("#recurring_end_date").datepicker();
         $("#bill_end_date").datepicker();

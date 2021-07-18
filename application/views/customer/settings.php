@@ -67,6 +67,9 @@ add_css(array(
                                                         <li class="nav-item">
                                                             <a class="h6 mb-0 nav-link banking-sub-tab <?= $active_tab == 'spt' ?   "active" : '';  ?>" data-toggle="tab" href="#spt">System Package Type</a>
                                                         </li>
+                                                        <li class="nav-item">
+                                                            <a class="h6 mb-0 nav-link banking-sub-tab <?= $active_tab == 'header' ?   "active" : '';  ?>" data-toggle="tab" href="#header">Header</a>
+                                                        </li>
                                                     </ul>
                                                 </div>
                                             </div>
@@ -93,6 +96,10 @@ add_css(array(
 
                                                 <div class="tab-pane <?= $active_tab == 'spt' ? "active" : "fade"; ?> standard-accordion" id="spt">
                                                     <?php include viewPath('customer/settings/system_package_type'); ?>
+                                                </div>
+
+                                                <div class="tab-pane <?= $active_tab == 'header' ? "active" : "fade"; ?> standard-accordion" id="header">
+                                                    <?php include viewPath('customer/settings/header'); ?>
                                                 </div>
 
                                                 <div class="tab-pane <?php if ($minitab == 'mt12') {
