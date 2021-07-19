@@ -43,23 +43,15 @@
                             } ?>"><a href="<?php echo base_url('admin/users') ?>" title="Employees"><span class="fa fa-user"></span>Employees</a></li>
         <?php //dd(logged()); 
         ?>
-        <?php if (logged('role') == '3') : ?>
-            <li class="submenus <?php if (strpos($uri, 'timesheet')) {
+        <li class="submenus <?php if (strpos($uri, 'timesheet')) {
                                     echo 'active';
-                                } ?>"><a href="<?php echo base_url('timesheet/attendance') ?>" title="Timesheet"><span class="fa fa-clock-o"></span>Timesheet</a></li>
-        <?php else : ?>
-            <li class="submenus <?php if (strpos($uri, 'timesheet')) {
-                                    echo 'active';
-                                } ?>"><a href="<?php echo base_url('timesheet/attendance') ?>" title="Timesheet"><span class="fa fa-clock-o"></span>Timesheet</a></li>
-        <?php endif; ?>
-        <!-- <li class="submenus <?php if (strpos($uri, 'timelog')) {
-                                        echo 'active';
-                                    } ?>"><a href="<?php echo base_url('users/timelog') ?>" title="Time Log"><span class="fa fa-clock-o"></span>Time Log</a></li> -->
+                                } ?>"><a href="<?php echo base_url('admin/timesheet_attendance') ?>" title="Timesheet"><span class="fa fa-clock-o"></span>Timesheet</a></li>
+        
         <li class="submenus <?php if (strpos($uri, 'tracklocation')) {
                                 echo 'active';
-                            } ?>"><a href="<?php echo base_url('users/tracklocation') ?>" title="Track Location"><span class="fa fa-map-pin"></span>Track Location</a></li>
+                            } ?>"><a href="<?php echo base_url('admin/user_tracklocation') ?>" title="Track Location"><span class="fa fa-map-pin"></span>Track Location</a></li>
         <li class="submenus <?php if (strpos($uri, 'pay_scale')) {
                                 echo 'active';
-                            } ?>"><a href="<?php echo base_url('users/pay_scale') ?>" title="Track Location"><span class="fa fa-money"></span>Pay Scale</a></li>
+                            } ?>"><a href="<?php echo base_url('admin/pay_scale') ?>" title="Track Location"><span class="fa fa-money"></span>Pay Scale</a></li>
     </ul>
 </nav>

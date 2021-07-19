@@ -486,7 +486,7 @@ class Customer extends MY_Controller
         );
         $this->page_data['system_package_type'] = $this->general->get_data_with_param($spt_query);
 
-
+        $this->page_data['customer_list_headers'] = customer_list_headers();
         $this->page_data['profiles'] = $this->customer_ad_model->get_customer_data_settings($user_id);
         //$this->load->model('Activity_model','activity');
        // $this->page_data['activity_list'] = $this->activity->getActivity($user_id, [], 0);
@@ -1360,6 +1360,7 @@ class Customer extends MY_Controller
 
     public function add_rate_plan_ajax(){
         $input = $this->input->post();
+        print_r($input);exit;
         // customer_ad_model
         if(empty($input['id'])){
             unset($input['id']);
@@ -1375,6 +1376,16 @@ class Customer extends MY_Controller
             }else{
                 echo "Error";
             }
+        }
+    }
+
+    public function update_rate_plan_ajax(){
+        $input = $this->input->post();
+        $data = ['id' => $input['rate-plan-id'], 'amount' => $input['amount']];
+        if($this->customer_ad_model->update_data($data,"ac_rateplan","id")){
+            echo 1;
+        }else{
+            echo 0;
         }
     }
 
@@ -3055,6 +3066,35 @@ class Customer extends MY_Controller
 
         $profile_data = ['qr_img' => $filename];
         $this->general->update_with_key_field($profile_data, $profile_id,'acs_profile','prof_id');
+    }
+
+    public function save_customer_headers(){
+        $input = $this->input->post();
+        $headers = array();
+        foreach( $input['headers'] as $key => $value ){
+            $headers[] = $key;
+        }
+        $get_company_settings = array(
+            'where' => array(
+                'company_id' => logged('company_id')
+            ),
+            'table' => 'customer_settings_headers',
+            'select' => '*',
+        );
+        $customer_settings = $this->general->get_data_with_param($get_company_settings);
+        if( $customer_settings ){
+            $data = ['headers' => serialize($headers)];
+            $this->general->update_with_key_field($data, logged('company_id'),'customer_settings_headers','company_id');
+        }else{
+            $data = [
+                'company_id' => logged('company_id'),
+                'headers' => serialize($headers)
+            ];
+            $this->general->add_($data, 'customer_settings_headers');
+        }
+
+        $json_data = ['is_success' => 1];
+        echo json_encode($json_data);
     }
 
 }
