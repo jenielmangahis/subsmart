@@ -54,7 +54,7 @@
                                         </div>
                                         <div class="col-md-4">
                                             <h6 class="text-right"><?=$billPayment->status === "4" ? "PAYMENT STATUS" : "AMOUNT PAID" ?></h6>
-                                            <h2 class="text-right"><?=$billPayment->status === "4" ? "VOID" : "$0.00" ?></h2>
+                                            <h2 class="text-right"><?=$billPayment->status === "4" ? "VOID" : "$<span class='transaction-total-amount'>".number_format(floatval($billPayment->total_amount), 2, '.', ',')."</span>" ?></h2>
                                         </div>
                                         <div class="col-md-2">
                                             <div class="form-group">
@@ -71,10 +71,10 @@
                                         <div class="col-md-2"></div>
                                         <div class="col-md-2">
                                             <div class="form-group">
-                                                <label for="starting_check_no">Ref no.</label>
-                                                <input type="text" name="starting_check_no" id="starting_check_no" class="form-control" value="<?=$billPayment->to_print_check_no === "1" ? "To print" : $billPayment->starting_check_no?>" <?=$billPayment->to_print_check_no === "1" ? "disabled" : ""?>>
+                                                <label for="ref_no">Ref no.</label>
+                                                <input type="text" name="ref_no" id="ref_no" class="form-control" value="<?=$billPayment->to_print_check_no === "1" ? "To print" : $billPayment->starting_check_no?>" <?=$billPayment->to_print_check_no === "1" ? "disabled" : ""?>>
                                                 <div class="form-check">
-                                                    <input type="checkbox" name="print_later" id="print_later" class="form-check-input" <?=$billPayment->to_print_check_no === "1" ? "checked" : ""?>>
+                                                    <input type="checkbox" name="print_later" id="print_later" value="1" class="form-check-input" <?=$billPayment->to_print_check_no === "1" ? "checked" : ""?>>
                                                     <label for="print_later" class="form-check-label">Print later</label>
                                                 </div>
                                             </div>
@@ -88,7 +88,7 @@
                                                 <div class="col-md-3">
                                                     <div class="form-group">
                                                         <label for="amount">Amount</label>
-                                                        <input type="number" class="form-control" value="" onchange="convertToDecimal(this)">
+                                                        <input type="number" name="total_amount" class="form-control" value="<?=number_format(floatval($billPayment->total_amount), 2, '.', ',')?>" onchange="convertToDecimal(this)">
                                                     </div>
                                                 </div>
                                             </div>

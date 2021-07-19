@@ -588,10 +588,8 @@ add_css(array(
                                             </td>
                                             <td>
                                                 <div class="dropdown dropdown-btn text-center">
-                                                    <button class="btn btn-default" type="button" id="dropdown-edit"
-                                                        data-toggle="dropdown" aria-expanded="true">
-                                                        <span class="btn-label">Manage <i class="fa fa-caret-down fa-sm"
-                                                                style="margin-left:10px;"></i></span></span>
+                                                    <button class="btn btn-default" type="button" id="dropdown-edit" data-toggle="dropdown" aria-expanded="true">
+                                                        <span class="btn-label">Manage <i class="fa fa-caret-down fa-sm" style="margin-left:10px;"></i></span>
                                                     </button>
                                                     <ul class="dropdown-menu dropdown-menu-right" role="menu"
                                                         aria-labelledby="dropdown-edit">
@@ -705,9 +703,14 @@ add_css(array(
                                             </td>
                                         </tr>
                                         <?php endforeach; ?>
-
                                     </tbody>
                                 </table>
+                                <?php else: ?>
+                                    <hr>
+                                    <div class="page-empty-container" style="text-align:center; margin-top:50px;">
+                                        <h5 class="page-empty-header">No Customer Added</h5>
+                                        <p class="text-ter margin-bottom">Manage your customer.</p>
+                                    </div>
                                 <?php endif; ?>
                             </div>
                         </div>

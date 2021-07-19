@@ -327,7 +327,7 @@ input:checked + .slider:before {
                 </div>
             </div>
             <!-- end row -->
-            <?php echo form_open_multipart('Invoice/addNewInvoice', ['class' => 'form-validate require-validation', 'id' => 'invoice_form', 'autocomplete' => 'off']); ?>
+            <?php echo form_open_multipart('accounting/updateInvoice', ['class' => 'form-validate require-validation', 'id' => 'invoice_form', 'autocomplete' => 'off']); ?>
 
             <div class="row custom__border">
                 <div class="col-xl-12">
@@ -335,6 +335,7 @@ input:checked + .slider:before {
                         <div class="card-body">
                             <div class="row" style="background-color:white;">
                                 <div class="col-md-5 form-group">
+                                <input type="hidden" value="<?php echo $invoice->id; ?>" name="invoiceDataID">
                                     <label for="invoice_customer">Customer</label>
                                     <!-- <select id="invoice_customer" name="customer_id"
                                             data-inquiry-source="dropdown" class="form-control searchable-dropdown"

@@ -98,9 +98,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
     <!-- page wrapper start -->
     <div wrapper__section>
         <div class="container-fluid">
-            <div class="page-title-box">
-
-            </div>
+            <div class="page-title-box"></div>
             <div class="row">
                 <div class="col-md-12">
                     <div class="col-md-12">
@@ -110,23 +108,24 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                     <h2 class="page-title">Customer Import</h2>
                                 </div>
                                 <div class="alert alert-warning col-md-12 mt-4" role="alert">
-                                        <span style="color:black;">
-                                            A great process to import all your customers.
-                                        </span>
+                                    <span style="color:black;">
+                                        A great process to import all your customers.
+                                    </span>
                                 </div>
-                                <form action="<?php echo base_url('customer/import_customer_data'); ?>" method="post" enctype="multipart/form-data" style="text-align: center;">
+                                <form id="import_customer" enctype="multipart/form-data" style="text-align: center;">
                                      <label for="file-upload" class="" style="font-size: 16px !important;">
                                          Choose file to Import ( .csv)
                                     </label>
                                     <hr>
                                     <br>
                                     <input id="file-upload" name="file" type="file" accept=".csv"/>
+                                    <input  name="file2" value="1" type="hidden"/>
                                     <br><br>
                                     <div class="">
                                         <a href="<?= url('customer/') ?>">
                                             <button type="button" class="btn btn-primary btn-md" id="exportCustomers"><span class="fa fa-remove"></span> Cancel</button>
                                         </a>
-                                        <button type="submit" name="importSubmit" class="btn btn-primary btn-md" id="exportCustomers"><span class="fa fa-download"></span> Import</button>
+                                        <button type="submit" class="btn btn-primary btn-md" id="exportCustomers"><span class="fa fa-download"></span> Import</button>
                                     </div>
                                 </form>
                             </div>
@@ -136,7 +135,22 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         <div class="card-body">
                             <div class="row" >
                                 <div class="col-md-12">
+                                    <table class="table" id="customer_list_table">
+                                        <thead>
+                                            <tr>
+                                                <th>Firstname</th>
+                                                <th>Lastname</th>
+                                                <th>Email</th>
+                                                <th>Monitoring Compnay</th>
+                                                <th>State</th>
+                                                <th>Sales Rep</th>
+                                                <th>Status</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="imported_customer">
 
+                                        </tbody>
+                                    </table>
                                  </div>
                             </div>
                         </div>
@@ -146,12 +160,80 @@ defined('BASEPATH') or exit('No direct script access allowed');
         </div>
     </div>
 </div>
-                <!-- end container-fluid -->
+<style>
+    #overlay {
+        display: none;
+        background: rgba(255, 255, 255, 0.7);
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        top: 0;
+        z-index: 9998;
+        align-items: center;
+        justify-content: center;
+        margin: auto;
+    }
+</style>
+<div id="overlay">
+    <div>
+        <img src="<?=base_url()?>/assets/img/uploading.gif" class="" style="width: 80px;" alt="" />
+        <center><p>Processing...</p></center></div>
+</div>
 
 <?php include viewPath('includes/footer'); ?>
  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 <script>
     $(document).ready(function() {
+        $("#import_customer").submit(function(e) {
+            e.preventDefault(); // avoid to execute the actual submit of the form.
+            var form = $(this);
+            $.ajax({
+                type: "POST",
+                url: "<?= base_url('customer/import_customer_data'); ?>",
+                data: new FormData(this),
+                processData:false,
+                contentType:false,
+                cache:false,
+                success: function(data) {
+                    var project = JSON.parse(data);
+                    $.each(project,function(i,o){
+                        var customers ="<tr>"+
+                            "<td>"+o.firstname+"</td>"+
+                            "<td>"+o.lastname+"</td>"+
+                            "<td>"+o.email+"</td>"+
+                            "<td>"+o.monitoring_company+"</td>"+
+                            "<td>"+o.state+"</td>"+
+                            "<td>"+o.sales_rep+"</td>"+
+                            "<td>"+o.status+"</td>"+
+                            "</tr>";
+                        var target = $('#imported_customer');
+                        target.append(customers);
+                    });
+                    // if(data === "Success"){
+                    //     sucess_add('Customer Added Successfully!',1);
+                    // }else {
+                    //     warning('There is an error adding Customer. Contact Administrator!');
+                    //     console.log(data);
+                    // }
+                    console.log(project);
+                    document.getElementById('overlay').style.display = "none";
+                }, beforeSend: function() {
+                    document.getElementById('overlay').style.display = "flex";
+                }
+            });
+        });
+
+        $('#customer_list_table').DataTable({
+            "lengthChange": false,
+            "searching" : true,
+            "pageLength": 100,
+            "info": true,
+            "responsive": true,
+            "order": [],
+        });
+
+
         $("#file-upload").change(function(){
             console.log("A file has been selected.");
             var input = document.getElementById('file-upload');
@@ -178,7 +260,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 },
                 success: function (data) {
                    // console.log(data);
-                    var head = JSON.parse(data)
+                    var head = JSON.parse(data);
                     var csvHeaders  = Object.keys(head[0]);
                     console.log(head);
                     $.each(csvHeaders,function(i,o){

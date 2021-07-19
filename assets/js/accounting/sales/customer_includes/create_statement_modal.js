@@ -139,9 +139,14 @@ $(document).on("click", "#create_statement_modal form button[type='submit']", fu
                         $("#statement_pdf_preview_modal .send_statement_section .send_sales_receipt-preview").html('<iframe src="' + data.file_location + '"></iframe>');
                         $("#statement_pdf_preview_modal .send_statement_section .send-button").attr("href", data.file_location);
                         $("#statement_pdf_preview_modal form input[name='subject']").val("Statement from " + data.business_name);
+                        $("#statement_pdf_preview_modal form input[name='statement_id']").val(data.statement_id);
+                        $("#statement_pdf_preview_modal form input[name='statement_type']").val(data.statement_type);
+                        $("#statement_pdf_preview_modal form input[name='customer_id']").val(data.customer_id);
                         $("#statement_pdf_preview_modal form textarea[name='body']").html('Dear ' + data.customer_full_name + `,
 
-Your statement is attached.Please remit payment at your earliest convenience.Thank you for your business - we appreciate it very much.
+Your statement is in link below. Please remit payment at your earliest convenience. 
+
+Thank you for your business - we appreciate it very much.
 
 Have a great day,
 ` + data.business_name);
@@ -157,6 +162,63 @@ Have a great day,
                 }
 
             },
+        });
+    }
+});
+$("#statement_pdf_preview_modal form#send_statement").submit(function(event) {
+    event.preventDefault();
+});
+
+$(document).on("click", "#statement_pdf_preview_modal form#send_statement button[type='submit']", function(event) {
+
+    var send_type = $(this).attr(" ");
+    var empty_flds = 0;
+    $("#statement_pdf_preview_modal form#send_statement .required").each(function() {
+        if (!$.trim($(this).val())) {
+            empty_flds++;
+        }
+    });
+    if (empty_flds == 0) {
+
+        $("#loader-modal").show();
+        Swal.fire({
+            title: "Send?",
+            html: "Are you sure you want to send this?",
+            showCancelButton: true,
+            imageUrl: baseURL + "/assets/img/accounting/customers/message.png",
+            cancelButtonColor: "#d33",
+            confirmButtonColor: "#2ca01c",
+            confirmButtonText: "Send now",
+        }).then((result) => {
+            if (result.value) {
+                $.ajax({
+                    url: baseURL + "/accounting/send_email_statement",
+                    type: "POST",
+                    dataType: "json",
+                    data: $("#statement_pdf_preview_modal form#send_statement").serialize(),
+                    success: function(data) {
+                        if (data.status == "success") {
+                            Swal.fire({
+                                showConfirmButton: false,
+                                timer: 2000,
+                                title: "Success",
+                                html: "Messages sent!",
+                                icon: "success",
+                            });
+                            $('#statement_pdf_preview_modal').modal('hide');
+                        } else {
+                            Swal.fire({
+                                showConfirmButton: false,
+                                timer: 2000,
+                                title: "Error",
+                                html: "Unable to send the reminder.<br>" + data.error,
+                                icon: "error",
+                            });
+                        }
+                        $("#loader-modal").hide();
+                    },
+                });
+            }
         });
     }
 });

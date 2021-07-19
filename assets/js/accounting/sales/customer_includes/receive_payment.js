@@ -253,6 +253,7 @@ $(document).on("click", "#customer_receive_payment_modal #receive_payment_form b
             data: $("#customer_receive_payment_modal #receive_payment_form").serialize(),
             success: function(data) {
                 if (data.count_save > 0) {
+                    $("#customer_receive_payment_modal form input[name='receive_payment_id']").val(data.receive_payment_id);
                     $('#sales_receipt_pdf_preview_modal').modal('show');
                     $('#sales_receipt_pdf_preview_modal .send_sales_receipt_section').hide();
                     $("#sales_receipt_pdf_preview_modal .pdf-print-preview").html(
@@ -294,7 +295,6 @@ $(document).on("click", "#customer_receive_payment_modal #receive_payment_form b
 
                 $("#customer_receive_payment_modal #receive_payment_form input[name='ref_no']").removeAttr("disabled");
                 $("#customer_receive_payment_modal #receive_payment_form input[name='payment_date']").removeAttr("disabled");
-                console.log($("#customer_receive_payment_modal #receive_payment_form input[name='receive_payment_id']").val());
                 $.ajax({
                     url: baseURL + "/accounting/save_receive_payment_from_modal",
                     type: "POST",
@@ -302,8 +302,9 @@ $(document).on("click", "#customer_receive_payment_modal #receive_payment_form b
                     data: $("#customer_receive_payment_modal #receive_payment_form").serialize(),
                     success: function(data) {
                         if (data.count_save > 0) {
-                            $("div#customer_receive_payment_modal .customer_receive_payment_modal_content .customer_receive_payment_modal_footer .btn-more").show();
-                            $("#customer_receive_payment_modal #receive_payment_form input[name='receive_payment_id']").val(data.receive_payment_id);
+                            $("div#customer_receive_payment_modal .customer_receive_payment_modal .customer_receive_payment_modal_footer .btn-more").show();
+                            $("#customer_receive_payment_modal form input[name='receive_payment_id']").val(data.receive_payment_id);
+                            $("#customer_receive_payment_modal form input[name='receive_payment_id']").val();
                             $("#customer_receive_payment_modal #receive_payment_form input[name='ref_no']").attr("disabled", "true");
                             $("#customer_receive_payment_modal #receive_payment_form input[name='payment_date']").attr("disabled", "true");
                             get_load_customers_table();

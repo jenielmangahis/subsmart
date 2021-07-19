@@ -118,9 +118,9 @@ class Accounting_sales_receipt_model extends MY_Model
     }
     public function get_sum_of_sales_receipt_by_customer_id($customer_id="", $start_date="", $end_date="", $statement_type="")
     {
-        $conditions ="AND (accounting_sales_receipt.sales_receipt_date >= '".$start_date."' AND accounting_sales_receipt.sales_receipt_date<= '".$end_date."')";
-        if ($statement_type=="Opem Item") {
-            $conditions ="";
+        $conditions ="";
+        if ($statement_type=="Transaction Statement") {
+            $conditions ="AND (accounting_sales_receipt.sales_receipt_date >= '".$start_date."' AND accounting_sales_receipt.sales_receipt_date<= '".$end_date."')";
         }
 
         $query = $this->db->query("SELECT COUNT(accounting_sales_receipt.id) as billed_count, SUM(accounting_sales_receipt.grand_total) as total_amount_billed FROM accounting_sales_receipt 
@@ -128,11 +128,11 @@ class Accounting_sales_receipt_model extends MY_Model
         $results['billed']=$query->row();
         return $results;
     }
-    public function get_ranged_sales_receipts_by_customer_id($customer_id, $start_date, $end_date, $statement_type="")
+    public function get_ranged_sales_receipts_by_customer_id($customer_id, $start_date, $end_date, $statement_type="", $action="")
     {
-        $conditions ="AND (accounting_sales_receipt.sales_receipt_date >= '".$start_date."' AND accounting_sales_receipt.sales_receipt_date<= '".$end_date."')";
-        if ($statement_type=="Opem Item") {
-            $conditions ="";
+        $conditions ="";
+        if ($statement_type=="Transaction Statement" || ($statement_type=="Balance Forward" && $action=="print")) {
+            $conditions ="AND (accounting_sales_receipt.sales_receipt_date >= '".$start_date."' AND accounting_sales_receipt.sales_receipt_date<= '".$end_date."')";
         }
         $query = $this->db->query("SELECT * FROM accounting_sales_receipt 
         WHERE accounting_sales_receipt.customer_id = ".$customer_id." ".$conditions);

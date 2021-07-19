@@ -1126,7 +1126,7 @@ class Invoice extends MY_Controller {
         $this->page_data['invoice'] = $invoice;
         $this->page_data['user'] = $user;
         // $this->page_data['items'] = $user;
-        $this->page_data['items'] = $this->invoice_model->getItems($id);
+        $this->page_data['items'] = $this->invoice_model->getItemsInv($id);
         $this->page_data['users'] = $this->invoice_model->getInvoiceCustomer($id);
 
         if (!empty($invoice)) {

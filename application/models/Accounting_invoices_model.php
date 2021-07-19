@@ -278,15 +278,14 @@ class Accounting_invoices_model extends MY_Model
     public function get_sum_of_invoices_by_customer_id($customer_id="", $start_date="", $end_date="", $statement_type="")
     {
         if ($customer_id != "") {
-            $conditions ="AND (invoices.date_issued >= '".$start_date."' AND invoices.date_issued <=  '".$end_date."')";
-            if ($statement_type=="Opem Item") {
-                $conditions ="";
+            $conditions ="";
+            if ($statement_type=="Transaction Statement") {
+                $conditions ="AND (invoices.date_issued >= '".$start_date."' AND invoices.date_issued <=  '".$end_date."')";
             }
 
             $sql="SELECT COUNT(invoices.id) as collectibles_count, SUM(grand_total) as total_collectibles FROM invoices WHERE customer_id = ".$customer_id." ".$conditions;
             $query = $this->db->query($sql);
             $results['collectibles']=$query->row();
-
             $this->db->reset_query();
             $sql="SELECT COUNT(accounting_receive_payment_invoices.id) as receive_count, SUM(accounting_receive_payment_invoices.payment_amount) as total_amount_received FROM accounting_receive_payment_invoices 
             JOIN accounting_receive_payment ON accounting_receive_payment_invoices.receive_payment_id = accounting_receive_payment.id 
@@ -315,12 +314,12 @@ class Accounting_invoices_model extends MY_Model
             return false;
         }
     }
-    public function get_reanged_invoices_by_customer_id($customer_id, $start_date, $end_date, $statement_type="")
+    public function get_reanged_invoices_by_customer_id($customer_id, $start_date, $end_date, $statement_type="", $action="")
     {
         if ($customer_id != "") {
-            $conditions ="AND (date_issued >= '".$start_date."' AND date_issued <=  '".$end_date."')";
-            if ($statement_type=="Opem Item") {
-                $conditions ="";
+            $conditions ="";
+            if ($statement_type=="Transaction Statement" || ($statement_type=="Balance Forward" && $action=="print")) {
+                $conditions ="AND (date_issued >= '".$start_date."' AND date_issued <=  '".$end_date."')";
             }
             $sql="SELECT * FROM invoices WHERE customer_id = ".$customer_id." ".$conditions;
             $query = $this->db->query($sql);
@@ -330,6 +329,14 @@ class Accounting_invoices_model extends MY_Model
     public function get_amount_received_per_invoice($invoice_id)
     {
         $sql="SELECT SUM(payment_amount) as total_amount FROM accounting_receive_payment_invoices WHERE invoice_id = ".$invoice_id."";
+        $query = $this->db->query($sql);
+        return $query->row();
+    }
+    public function get_received_payment_by_invoice($invoice_id)
+    {
+        $sql="SELECT * FROM accounting_receive_payment 
+        JOIN accounting_receive_payment_invoices ON accounting_receive_payment_invoices.receive_payment_id=accounting_receive_payment.id 
+        WHERE accounting_receive_payment_invoices.invoice_id = ".$invoice_id."";
         $query = $this->db->query($sql);
         return $query->row();
     }
