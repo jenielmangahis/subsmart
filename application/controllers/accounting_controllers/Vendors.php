@@ -1970,7 +1970,7 @@ class Vendors extends MY_Controller
                         'description' => $description,
                         'due_date' => date("m/d/Y", strtotime($bill->due_date)),
                         'original_amount' => number_format(floatval($bill->total_amount), 2, '.', ','),
-                        'open_balance' => number_format(floatval($bill->remaining_balance) + floatval($paymentData->payment_amount), 2, '.', ','),
+                        'open_balance' => number_format(floatval($bill->remaining_balance) + floatval($paymentData->total_amount), 2, '.', ','),
                         'payment' => number_format(floatval($paymentData->payment_amount), 2, '.', ','),
                         'selected' => true
                     ];
@@ -1981,7 +1981,7 @@ class Vendors extends MY_Controller
                     'description' => $description,
                     'due_date' => date("m/d/Y", strtotime($bill->due_date)),
                     'original_amount' => number_format(floatval($bill->total_amount), 2, '.', ','),
-                    'open_balance' => number_format(floatval($bill->remaining_balance) + floatval($paymentData->payment_amount), 2, '.', ','),
+                    'open_balance' => number_format(floatval($bill->remaining_balance) + floatval($paymentData->total_amount), 2, '.', ','),
                     'payment' => number_format(floatval($paymentData->payment_amount), 2, '.', ','),
                     'selected' => true
                 ];
@@ -2150,6 +2150,9 @@ class Vendors extends MY_Controller
             break;
             case 'credit-card-credit':
                 $return = $this->update_credit_card_credit($transactionId, $data);
+            break;
+            case 'bill-payment' :
+                $return = $this->update_bill_payment($transactionId, $data);
             break;
         }
 
@@ -2540,6 +2543,166 @@ class Vendors extends MY_Controller
 
         return [
             'data' => $ccCreditId,
+            'success' => $update ? true : false,
+            'message' => $update ? 'Update Successful!' : 'An unexpected error occured'
+        ];
+    }
+
+    private function revert_bill_payment($billPaymentId)
+    {
+        $billPayment = $this->vendors_model->get_bill_payment_by_id($billPaymentId);
+        $appliedCredits = json_decode($billPayment->vendor_credits_applied, true);
+        $payee = $this->vendors_model->get_vendor_by_id($data['payee_id']);
+
+        foreach($appliedCredits as $creditId => $amount) {
+            $amount = floatval($amount);
+
+            $vCredit = $this->vendors_model->get_vendor_credit_by_id($creditId);
+            $balance = floatval($vCredit->remaining_balance);
+            $remainingBal = $balance + $amount;
+
+            $vCreditData = [
+                'status' => 1,
+                'remaining_balance' => number_format($remainingBal, 2, '.', ','),
+                'updated_at' => date("Y-m-d H:i:s")
+            ];
+
+            $this->vendors_model->update_vendor_credit($vCredit->id, $vCreditData);
+
+            $vendorData = [
+                'vendor_credits' => floatval($payee->vendor_credits) + $amount,
+                'updated_at' => date("Y-m-d H:i:s")
+            ];
+
+            $this->vendors_model->updateVendor($payee->id, $vendorData);
+        }
+
+        $paymentItems = $this->vendors_model->get_bill_payment_items($billPaymentId);
+
+        foreach($paymentItems as $paymentItem) {
+            $bill = $this->expenses_model->get_bill_data($paymentItem->bill_id);
+
+            $remainingBal = floatval($bill->remaining_balance) + floatval($paymentItem->total_amount);
+            $billData = [
+                'status' => 1,
+                'remaining_balance' => number_format($remainingBal, 2, '.', ','),
+                'updated_at' => date("Y-m-d H:i:s")
+            ];
+
+            $this->expenses_model->update_bill_data($bill->id, $billData);
+        }
+
+        $paymentAcc = $this->chart_of_accounts_model->getById($billPayment->payment_account_id);
+        $paymentAccType = $this->account_model->getById($paymentAcc->account_id);
+
+        if($paymentAccType->account_name === 'Credit Card') {
+            $newBalance = floatval($paymentAcc->balance) - floatval($paymentTotal);
+        } else {
+            $newBalance = floatval($paymentAcc->balance) + floatval($paymentTotal);
+        }
+
+        $newBalance = number_format($newBalance, 2, '.', ',');
+
+        $paymentAccData = [
+            'id' => $paymentAcc->id,
+            'company_id' => logged('company_id'),
+            'balance' => $newBalance
+        ];
+
+        $this->chart_of_accounts_model->updateBalance($paymentAccData);
+    }
+
+    public function update_bill_payment($billPaymentId, $data)
+    {
+        $this->revert_bill_payment($billPaymentId);
+        $appliedVCredits = [];
+        foreach($data['credits'] as $key => $id) {
+            $vCredit = $this->vendors_model->get_vendor_credit_by_id($id);
+            $balance = floatval($vCredit->remaining_balance);
+            $subtracted = floatval($data['credit_payment'][$index]);
+            $appliedVCredits[$vCredit->id] = $subtracted;
+            $remainingBal = $balance - $subtracted;
+
+            $vCreditData = [
+                'status' => $remainingBal === 0.00 ? 2 : 1,
+                'remaining_balance' => $remainingBal,
+                'updated_at' => date("Y-m-d H:i:s")
+            ];
+
+            $this->vendors_model->update_vendor_credit($vCredit->id, $vCreditData);
+        }
+
+        $this->vendors_model->delete_bill_payment_items($billPaymentId);
+
+        $billPayment = [
+            'payment_account_id' => $data['payment_account'],
+            'mailing_address' => nl2br($data['mailing_address']),
+            'payment_date' => date("Y-m-d", strtotime($data['payment_date'])),
+            'check_no' => is_null($data['print_later']) ? $data['ref_no'] : null,
+            'to_print_check_no' => $data['print_later'],
+            'total_amount' => $data['total_amount'],
+            'vendor_credits_applied' => count($appliedVCredits) > 0 ? json_encode($appliedVCredits) : null,
+            'status' => 1,
+            'created_at' => date("Y-m-d H:i:s"),
+            'updated_at' => date("Y-m-d H:i:s")
+        ];
+
+        $update = $this->vendors_model->update_bill_payment($billPaymentId, $billPayment);
+
+        if($update) {
+            $paymentAcc = $this->chart_of_accounts_model->getById($data['payment_account']);
+            $paymentAccType = $this->account_model->getById($paymentAcc->account_id);
+
+            if($paymentAccType->account_name === 'Credit Card') {
+                $newBalance = floatval($paymentAcc->balance) + floatval($paymentTotal);
+            } else {
+                $newBalance = floatval($paymentAcc->balance) - floatval($paymentTotal);
+            }
+
+            $newBalance = number_format($newBalance, 2, '.', ',');
+
+            $paymentAccData = [
+                'id' => $paymentAcc->id,
+                'company_id' => logged('company_id'),
+                'balance' => $newBalance
+            ];
+
+            $this->chart_of_accounts_model->updateBalance($paymentAccData);
+
+            $paymentItems = [];
+            foreach($data['bills'] as $index => $bill) {
+                $paymentItems[] = [
+                    'bill_payment_id' => $billPaymentId,
+                    'bill_id' => $bill,
+                    'credit_applied_amount' => null,
+                    'payment_amount' => null,
+                    'total_amount' => $data['bill_payment'][$index]
+                ];
+
+                $bill = $this->expenses_model->get_bill_data($bill);
+
+                if(floatval($data['bill_payment'][$index]) === floatval($bill->remaining_balance)) {
+                    $billData = [
+                        'remaining_balance' => 0.00,
+                        'status' => 2,
+                        'updated_at' => date("Y-m-d H:i:s")
+                    ];
+                } else {
+                    $remainingBal = floatval($bill->remaining_balance) - floatval($data['bill_payment'][$index]);
+                    $billData = [
+                        'remaining_balance' => number_format($remainingBal, 2, '.', ','),
+                        'updated_at' => date("Y-m-d H:i:s")
+                    ];
+                }
+
+                $this->expenses_model->update_bill_data($bill->id, $billData);
+            }
+
+            $this->expenses_model->insert_bill_payment_items($paymentItems);
+        }
+
+        return [
+            'data' => $billPaymentId,
             'success' => $update ? true : false,
             'message' => $update ? 'Update Successful!' : 'An unexpected error occured'
         ];

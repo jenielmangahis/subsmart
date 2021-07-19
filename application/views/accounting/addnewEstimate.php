@@ -313,7 +313,7 @@ input:checked + .slider:before {
 
             </div>
             <!-- end row -->
-            <?php echo form_open_multipart('estimate/savenewestimate', ['class' => 'form-validate require-validation', 'id' => 'estimate_form', 'autocomplete' => 'off']); ?>
+            <?php echo form_open_multipart('accounting/savenewestimateAccounting', ['class' => 'form-validate require-validation', 'id' => 'estimate_form', 'autocomplete' => 'off']); ?>
             <style>
 
             </style>

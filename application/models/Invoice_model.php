@@ -131,6 +131,20 @@ class Invoice_model extends MY_Model
         return $query2->result();
     }
 
+    public function getItemsInv($id)
+    {
+        $where = array(
+            'invoice_id'      => $id,
+          );
+
+        $this->db->select('*, invoices_items.cost as costing');
+		$this->db->from('invoices_items');
+        $this->db->join('items', 'invoices_items.items_id  = items.id');
+        $this->db->where($where);
+        $query2 = $this->db->get();
+        return $query2->result();
+    }
+
     public function getInvoiceCustomer($id)
     {
         $this->db->select('*');

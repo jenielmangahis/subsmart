@@ -150,7 +150,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
             <tr>
                 <td style="width: 50%;">
                     <div class="business-info">
-                        <h2 class="business-name" style="margin: 0;">
+                        <h2 class="business-name" style="margin: 0;font-size: 15px;">
                             <?=$business_name?>
                         </h2>
                         <p class="address-strees" style="margin: 0;">
@@ -170,7 +170,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 <td style="width: 50%;">
                     <div class="business-logo">
                         <img src="<?=base_url()?>uploads/users/business_profile/<?=$business_logo?>"
-                            alt="">
+                            alt="" style="width: 100px;">
                     </div>
                 </td>
             </tr>
@@ -217,7 +217,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
     <div class="row">
         <div class="col-md-12">
             <div class="customer-info">
-                <h2>Bill To</h2>
+                <h2 style="font-size: 15px;">Bill To</h2>
                 <p class="customer-name"><?=$customer_full_name?>
                 </p>
                 <p class="address-street"><?=$customer_adress_street?>

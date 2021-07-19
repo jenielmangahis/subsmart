@@ -1429,7 +1429,7 @@ function initBillsTable(data)
                 data: 'payment',
                 name: 'payment',
                 fnCreatedCell: function(td, cellData, rowData, row, col) {
-                    $(td).html(`<input type="number" value="${cellData}" class="form-control text-right" onchange="convertToDecimal(this)">`);
+                    $(td).html(`<input type="number" value="${cellData}" name="bill_payment[]" class="form-control text-right" onchange="convertToDecimal(this)">`);
                 }
             }
         ]
@@ -1469,7 +1469,7 @@ function initCreditsTable(data)
                 fnCreatedCell: function(td, cellData, rowData, row, col) {
                     $(td).html(`
                     <div class="d-flex align-items-center justify-content-center">
-                        <input type="checkbox" value="${cellData}" ${rowData.selected ? 'checked' : ''}>
+                        <input type="checkbox" name="credits[]" value="${cellData}" ${rowData.selected ? 'checked' : ''}>
                     </div>
                     `);
                 }

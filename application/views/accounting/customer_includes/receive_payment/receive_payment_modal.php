@@ -1,8 +1,6 @@
 <div id="customer_receive_payment_modal">
     <div class="customer_receive_payment_modal_content">
-        <form
-            action="<?=base_url("accounting/print_receive_payment")?>"
-            method="POST" target="_blank" id="receive_payment_form">
+        <form action="#" method="POST" id="receive_payment_form">
             <input type="text" name="invoice_count" style="display: none;">
             <input type="text" name="submit_option" style="display: none;">
             <input type="text" name="receive_payment_id" style="display:none;">
@@ -12,7 +10,7 @@
                 </div>
                 <div class="close-btn">
                     <img src="<?=base_url('assets/img/accounting/customers/close.png')?>"
-                        alt="">
+                        alt="" style="width: 100px;">
                 </div>
             </div>
             <div class="customer_receive_payment_modal_body overflow-auto">

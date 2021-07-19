@@ -1690,26 +1690,16 @@ class Customer extends MY_Controller
 
     public function import_customer_data() {
         $data = array();
-        $input_profile = array();
         $input = $this->input->post();
         if ($input) {
                 $insertCount = $updateCount = $rowCount = $notAddCount = 0;
                 if (is_uploaded_file($_FILES['file']['tmp_name'])) {
                     $this->load->library('CSVReader');
                     $csvData = $this->csvreader->parse_csv($_FILES['file']['tmp_name']);
-                     /*
-                         ALTER TABLE acs_profile MODIFY `business_name` varchar(255) null;
-                         ALTER TABLE acs_profile MODIFY `prefix` varchar(20) null;
-                         ALTER TABLE acs_profile MODIFY `suffix` varchar(20) null;
-                         ALTER TABLE acs_profile MODIFY `middle_name` varchar(50) null;
-                         ALTER TABLE acs_profile MODIFY `date_of_birth` varchar(50) null;
-                         ALTER TABLE acs_profile MODIFY `ssn` varchar(50) null;
-                     */
-                     //print_r($csvData);
                     if (!empty($csvData)) {
                         foreach ($csvData as $row) {
                             //print_r($row);
-                            $rowCount++;
+
                             $input_profile = array(
                                 'fk_user_id' => logged('id'),
                                 'fk_sa_id' => 0,
@@ -1737,7 +1727,6 @@ class Customer extends MY_Controller
                                 $prevCount = $this->customer_ad_model->check_if_user_exist($check_user, 'acs_profile');
 
                                 if ($prevCount > 0) {
-                                    echo $row['FirstName'].' '. $row['LastName'].' exist!'; echo "<br>";
 //                                $condition = array('contact_name' => $row['Contact Name']);
 //                                $update = $this->customer_model->update($itemData, $condition);
 //                                if ($update) {
@@ -1767,6 +1756,7 @@ class Customer extends MY_Controller
                                     }
                                     //$insert = $this->customer_ad_model->insert($itemData);
                                     $fk_prod_id = $this->customer_ad_model->add($input_profile,"acs_profile");
+
                                     if ($fk_prod_id) {
                                         $insertCount++;
                                         $input_alarm = array(
@@ -1779,7 +1769,6 @@ class Customer extends MY_Controller
                                             'monitor_id' => $row['MonitoringID'],
                                             'acct_type' => $row['AccountType'],
                                         );
-
                                         $input_office = array(
                                             'fk_prof_id' => $fk_prod_id,
                                             'sales_date' => $row['SaleDate'],
@@ -1787,7 +1776,6 @@ class Customer extends MY_Controller
                                             'technician' => $row['Technician'],
                                             'credit_score' => $score2,
                                         );
-
                                         if(logged('company_id') == 2){
                                             $input_billing = array(
                                                 'fk_prof_id' => $fk_prod_id,
@@ -1806,16 +1794,21 @@ class Customer extends MY_Controller
                                                 'contract_term' => $row['ContractTerm'],
                                             );
                                         }
-
                                         $this->customer_ad_model->add($input_alarm,"acs_alarm");
                                         $this->customer_ad_model->add($input_office,"acs_office");
                                         $this->customer_ad_model->add($input_billing,"acs_billing");
                                     }
-                                    echo $row['FirstName'].' '. $row['LastName'].' has been added!'; echo "<br>";
+                                    $data[$rowCount]['firstname']= $row['FirstName'];
+                                    $data[$rowCount]['lastname']= $row['LastName'];
+                                    $data[$rowCount]['email']= $row['Email'];
+                                    $data[$rowCount]['monitoring_company']= $row['MonitoringCompany'];
+                                    $data[$rowCount]['state']= $row['State'];
+                                    $data[$rowCount]['sales_rep']= $row['Technician'];
+                                    $data[$rowCount]['status']= $row['Status'];
+                                    $rowCount++;
                                 }
                             }
                         }
-                        $notAddCount = ($rowCount - ($insertCount + $updateCount));
                         //$successMsg = 'Customer imported successfully. Total Rows ('.$rowCount.') | Inserted ('.$insertCount.') | Updated ('.$updateCount.') | Not Inserted ('.$notAddCount.')';
                        // $this->session->set_userdata('success_msg', $successMsg);
 
@@ -1823,13 +1816,16 @@ class Customer extends MY_Controller
                         //$this->session->set_flashdata('alert-type', 'success');
                         //$this->session->set_flashdata('alert', $successMsg);
                     }
-                    redirect(base_url('customer'));
+                    echo json_encode($data);
+                    //redirect(base_url('customer'));
                 } else {
-                    $this->session->set_userdata('error_msg', 'Error on file upload, please try again.');
-                    redirect($_SERVER['HTTP_REFERER'], 'refresh');
+                    //$this->session->set_userdata('error_msg', 'Error on file upload, please try again.');
+                   // redirect($_SERVER['HTTP_REFERER'], 'refresh');
+                    echo 'no file';
                 }
+        }else{
+            echo 'no input';
         }
-        //redirect('customer');
     }
 
     public function customer_export()

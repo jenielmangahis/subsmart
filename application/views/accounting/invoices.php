@@ -293,12 +293,13 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                         </td>
                         <td>
                             <div class="table-nowrap">
-                                <p class="mb-0"> <label for=""><?php echo get_customer_by_id($invoice->customer_id)->contact_name ?></label>
+                                <p class="mb-0"> <label for=""><?php echo $invoice->first_name.' '. $invoice->last_name; ?></label>
                                 </p>
                                 <label
                                     for="customer_id_<?php echo $invoice->customer_id ?>">
                                     <a
-                                        href="<?php echo base_url('customer/genview/' . $invoice->customer_id) ?>"><?php echo $invoice->job_name ?></a></label>
+                                        href="<?php echo base_url('customer/genview/' . $invoice->customer_id) ?>"><?php echo $invoice->job_name ?></a>
+                                </label>
                             </div>
                         </td>
                         <td>
