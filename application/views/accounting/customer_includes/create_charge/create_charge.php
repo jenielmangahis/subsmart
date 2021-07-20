@@ -16,7 +16,8 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="recurring-form-part">
-                                    <div class="recurring-title">Recurring Sales Receipt</div>
+                                    <div class="recurring-title" style="margin-bottom: 10px;">Recurring Delayed Charge
+                                    </div>
                                     <div class="row no-margin">
                                         <div class="col-md-12 no-padding">
                                             <div class="row no-margin">
@@ -90,24 +91,6 @@
                                                 </option>
                                                 <?php endforeach; ?>
                                             </select>
-                                        </div>
-                                        <div class="col-md-6 divided">
-                                            Email
-                                            <input type="email" class="form-control required" required name="email"
-                                                id="email2">
-                                            <div style="margin-top:5px;"><input type="checkbox"> Send later</div>
-                                        </div>
-
-                                        <div class="col-md-3 option-part">
-                                            <div class="recurring-form-part">
-                                                <div class="label-1">Options</div>
-                                                <div style="margin-top:5px;"><input type="checkbox"
-                                                        name="recurring_option_1">
-                                                    Automatically send emails</div>
-                                                <div style="margin-top:5px;"><input type="checkbox"
-                                                        name="recurring_option_2">
-                                                    Print later</div>
-                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -291,364 +274,24 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="row" style="margin-top: 30px;">
-                            <div class="col-md-6">
-                                <div class="row">
-                                    <div class="col-md-3">
-                                        Billing address
-                                        <textarea style="height:100px;width:100%;" name="billing_address"
-                                            id="billing_address2" class="required" required></textarea>
-                                    </div>
-                                    <div class="col-md-3">
-                                        Sales Receipt date<br>
-                                        <input type="text" class="form-control" name="sales_receipt_date"
-                                            id="datepickerinv8"><br>
-                                        Ship via<br>
-                                        <input type="text" class="form-control" name="ship_via">
-                                    </div>
-                                    <div class="col-md-3">
-                                        <br><br><br><br>
-                                        Shipping date<br>
-                                        <input type="text" class="form-control" name="shipping_date"
-                                            id="datepickerinv9">
-                                    </div>
-                                    <div class="col-md-3">
-                                        <br><br><br><br>
-                                        Tracking no.<br>
-                                        <input type="text" class="form-control" name="tracking_no">
-                                    </div>
-
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-3">
-                                        Shipping to
-                                        <textarea style="height:100px;width:100%;" name="shipping_to"></textarea>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="delayed_charge_date">
+                                    <div class="form-group">
+                                        <label for="job_type">Delayed Charge date</label>
+                                        <input type="date" class="form-control" name="delayed_charge_date" />
                                     </div>
                                 </div>
-                                <div class="row">
-                                    <div class="col-md-3">
-                                        Payment method<br>
-                                        <!-- <select class="form-control" name="payment_method" id="payment_method">
-                                        <option></option>
-                                        <option value="0">Add New</option>
-                                        <?php foreach ($paymethods as $paymethod) { ?>
-                                        <option
-                                            value="<?php echo $paymethod->payment_method_id ; ?>">
-                                            <?php echo $paymethod->quick_name; ?>
-                                        </option>
-                                        <?php } ?>
-                                        </select> -->
-                                        <select name="payment_method" id="payment_method"
-                                            class="form-control custom-select">
-                                            <option value="">Choose method</option>
-                                            <option value="Cash">Cash</option>
-                                            <option value="Check">Check</option>
-                                            <option value="Credit Card">Credit Card</option>
-                                            <option value="Debit Card">Debit Card</option>
-                                            <option value="ACH">ACH</option>
-                                            <option value="Venmo">Venmo</option>
-                                            <option value="Paypal">Paypal</option>
-                                            <option value="Square">Square</option>
-                                            <option value="Invoicing">Invoicing</option>
-                                            <option value="Warranty Work">Warranty Work</option>
-                                            <option value="Home Owner Financing">Home Owner Financing</option>
-                                            <option value="e-Transfer">e-Transfer</option>
-                                            <option value="Other Credit Card Professor">Other Credit Card Professor
-                                            </option>
-                                            <option value="Other Payment Type">Other Payment Type</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-md-3">
-                                        Reference no.
-                                        <input type="text" class="form-control" name="ref_number">
-                                    </div>
-                                    <div class="col-md-3">
-                                        Deposit to
-                                        <select class="form-control" name="deposit_to">
-                                            <option></option>
-                                            <option value="1">Cash on hand</option>
-                                            <option value="2">A</option>
-                                            <option value="3">B</option>
-                                            <option value="4">C</option>
-                                        </select>
-                                    </div>
-                                </div>
-
-                            </div>
-                            <div class="col-md-6" align="right">
-                                <div class="label-grand_total_sr_t">AMOUNT</div>
-                                <h2><span id="grand_total_sr_t">0.00</span></h2><br>
-                                Location of sale<br>
-                                <input type="text" class="form-control required" required style="width:200px;"
-                                    name="location_scale">
                             </div>
                         </div>
-
                         <hr>
-                        <div class="col-md-6 payment_method_information">
-                            <div id="check_area" style="display:none;">
-                                <div class="row">
-                                    <div class="form-group col-md-4">
-                                        <label for="job_type">Check Number</label>
-                                        <input type="text" class="form-control" name="check_number" id="check_number" />
-                                    </div>
-                                    <div class="form-group col-md-4">
-                                        <label for="job_type">Routing Number</label>
-                                        <input type="text" class="form-control" name="routing_number"
-                                            id="routing_number" />
-                                    </div>
-                                    <!-- </div>
-                                        <div class="row"> -->
-                                    <div class="form-group col-md-4">
-                                        <label for="job_type">Account Number</label>
-                                        <input type="text" class="form-control" name="account_number"
-                                            id="account_number" />
-                                    </div>
-                                </div>
-                            </div>
-                            <div id="credit_card" style="display:none;">
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        Credit Card Type:<br>
-                                        <div class="checkbox checkbox-sec margin-right mr-4">
-                                            <input type="radio" name="card[radio_credit_card]" value="Visa" <?php echo (!empty($workorder->card['radio_credit_card']) && $workorder->card['radio_credit_card'] == 'Visa') ? 'checked' : '' ?>
-                                            id="radio_credit_card">
-                                            <label for="radio_credit_card"><span>Visa</span></label>
-                                        </div>
-                                        <div class="checkbox checkbox-sec margin-right mr-4">
-                                            <input type="radio" name="card[radio_credit_card]" value="Amex" <?php echo (!empty($workorder->card['radio_credit_card']) && $workorder->card['radio_credit_card'] == 'Amex') ? 'checked' : '' ?>
-                                            id="radio_credit_cardAmex">
-                                            <label for="radio_credit_cardAmex"><span>Amex</span></label>
-                                        </div>
-                                        <div class="checkbox checkbox-sec margin-right mr-4">
-                                            <input type="radio" name="card[radio_credit_card]" value="Mastercard"
-                                                <?php echo (!empty($workorder->card['radio_credit_card']) && $workorder->card['radio_credit_card'] == 'Mastercard') ? 'checked' : '' ?>
-                                            id="radio_credit_cardMastercard">
-                                            <label for="radio_credit_cardMastercard"><span>Mastercard</span></label>
-                                        </div>
-                                        <div class="checkbox checkbox-sec margin-right mr-4">
-                                            <input type="radio" name="card[radio_credit_card]" value="Discover" <?php echo (!empty($workorder->card['radio_credit_card']) && $workorder->card['radio_credit_card'] == 'Discover') ? 'checked' : '' ?>
-                                            id="radio_credit_cardMasterDiscover">
-                                            <label for="radio_credit_cardMasterDiscover"><span>Discover</span></label>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                </div>
-                                <br><br>
-                                <div class="row">
-                                    <div class="form-group col-md-4">
-                                        <label for="job_type">Credit Card Number</label>
-                                        <input type="text" class="form-control" name="credit_number" id="credit_number"
-                                            placeholder="0000 0000 0000 000" />
-                                    </div>
-                                    <div class="form-group col-md-4">
-                                        <label for="job_type">Credit Card Expiration</label>
-                                        <input type="text" class="form-control" name="credit_expiry" id="credit_expiry"
-                                            placeholder="MM/YYYY" />
-                                    </div>
-                                    <div class="form-group col-md-4">
-                                        <label for="job_type">CVC</label>
-                                        <input type="text" class="form-control" name="credit_cvc" id="credit_cvc"
-                                            placeholder="CVC" />
-                                    </div>
-                                </div>
-                            </div>
-                            <div id="invoicing" style="display:none;">
-
-                                <!-- <input type="checkbox" id="same_as"> <b>Same as above in Monitoring Address</b> <br> -->
-                                <br>
-                                <div class="row">
-                                    <div class="col-md-4 form-group">
-                                        <label for="monitored_location">Mail Address</label>
-                                        <input type="text" class="form-control" name="mail-address" id="mail-address"
-                                            placeholder="Monitored Location" />
-                                    </div>
-                                    <div class="col-md-4 form-group">
-                                        <label for="city">City</label>
-                                        <input type="text" class="form-control" name="mail_locality" id="mail_locality"
-                                            placeholder="Enter Name" />
-                                    </div>
-                                    <div class="col-md-4 form-group">
-                                        <label for="state">State</label>
-                                        <input type="text" class="form-control" name="mail_state" id="mail_state"
-                                            placeholder="Enter State" />
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-4 form-group">
-                                        <label for="zip">ZIP</label>
-                                        <input type="text" id="mail_postcode" name="mail_postcode" class="form-control"
-                                            placeholder="Enter Zip" />
-                                    </div>
-
-                                    <div class="col-md-4 form-group">
-                                        <label for="cross_street">Cross Street</label>
-                                        <input type="text" class="form-control" name="mail_cross_street"
-                                            id="mail_cross_street" placeholder="Cross Street" />
-                                    </div>
-                                </div>
-                            </div>
-                            <div id="debit_card" style="display:none;">
-                                <div class="row">
-                                    <div class="form-group col-md-4">
-                                        <label for="job_type">Credit Card Number</label>
-                                        <input type="text" class="form-control" name="debit_credit_number"
-                                            id="credit_number" placeholder="0000 0000 0000 000" />
-                                    </div>
-                                    <div class="form-group col-md-4">
-                                        <label for="job_type">Credit Card Expiration</label>
-                                        <input type="text" class="form-control" name="debit_credit_expiry"
-                                            id="credit_expiry" placeholder="MM/YYYY" />
-                                    </div>
-                                    <div class="form-group col-md-4">
-                                        <label for="job_type">CVC</label>
-                                        <input type="text" class="form-control" name="debit_credit_cvc" id="credit_cvc"
-                                            placeholder="CVC" />
-                                    </div>
-                                </div>
-                            </div>
-                            <div id="ach_area" style="display:none;">
-                                <div class="row">
-                                    <div class="form-group col-md-4">
-                                        <label for="job_type">Routing Number</label>
-                                        <input type="text" class="form-control" name="ach_routing_number"
-                                            id="ach_routing_number" />
-                                    </div>
-                                    <div class="form-group col-md-4">
-                                        <label for="job_type">Account Number</label>
-                                        <input type="text" class="form-control" name="ach_account_number"
-                                            id="ach_account_number" />
-                                    </div>
-                                </div>
-                            </div>
-                            <div id="venmo_area" style="display:none;">
-                                <div class="row">
-                                    <div class="form-group col-md-4">
-                                        <label for="job_type">Account Credential</label>
-                                        <input type="text" class="form-control" name="account_credentials"
-                                            id="account_credentials" />
-                                    </div>
-                                    <div class="form-group col-md-4">
-                                        <label for="job_type">Account Note</label>
-                                        <input type="text" class="form-control" name="account_note" id="account_note" />
-                                    </div>
-                                    <div class="form-group col-md-4">
-                                        <label for="job_type">Confirmation</label>
-                                        <input type="text" class="form-control" name="confirmation" id="confirmation" />
-                                    </div>
-                                </div>
-                            </div>
-                            <div id="paypal_area" style="display:none;">
-                                <div class="row">
-                                    <div class="form-group col-md-4">
-                                        <label for="job_type">Account Credential</label>
-                                        <input type="text" class="form-control" name="paypal_account_credentials"
-                                            id="paypal_account_credentials" />
-                                    </div>
-                                    <div class="form-group col-md-4">
-                                        <label for="job_type">Account Note</label>
-                                        <input type="text" class="form-control" name="paypal_account_note"
-                                            id="paypal_account_note" />
-                                    </div>
-                                    <div class="form-group col-md-4">
-                                        <label for="job_type">Confirmation</label>
-                                        <input type="text" class="form-control" name="paypal_confirmation"
-                                            id="paypal_confirmation" />
-                                    </div>
-                                </div>
-                            </div>
-                            <div id="square_area" style="display:none;">
-                                <div class="row">
-                                    <div class="form-group col-md-4">
-                                        <label for="job_type">Account Credential</label>
-                                        <input type="text" class="form-control" name="square_account_credentials"
-                                            id="square_account_credentials" />
-                                    </div>
-                                    <div class="form-group col-md-4">
-                                        <label for="job_type">Account Note</label>
-                                        <input type="text" class="form-control" name="square_account_note"
-                                            id="square_account_note" />
-                                    </div>
-                                    <div class="form-group col-md-4">
-                                        <label for="job_type">Confirmation</label>
-                                        <input type="text" class="form-control" name="square_confirmation"
-                                            id="square_confirmation" />
-                                    </div>
-                                </div>
-                            </div>
-                            <div id="warranty_area" style="display:none;">
-                                <div class="row">
-                                    <div class="form-group col-md-4">
-                                        <label for="job_type">Account Credential</label>
-                                        <input type="text" class="form-control" name="warranty_account_credentials"
-                                            id="warranty_account_credentials" />
-                                    </div>
-                                    <div class="form-group col-md-4">
-                                        <label for="job_type">Account Note</label>
-                                        <input type="text" class="form-control" name="warranty_account_note"
-                                            id="warranty_account_note" />
-                                    </div>
-                                </div>
-                            </div>
-                            <div id="home_area" style="display:none;">
-                                <div class="row">
-                                    <div class="form-group col-md-4">
-                                        <label for="job_type">Account Credential</label>
-                                        <input type="text" class="form-control" name="home_account_credentials"
-                                            id="home_account_credentials" />
-                                    </div>
-                                    <div class="form-group col-md-4">
-                                        <label for="job_type">Account Note</label>
-                                        <input type="text" class="form-control" name="home_account_note"
-                                            id="home_account_note" />
-                                    </div>
-                                </div>
-                            </div>
-                            <div id="e_area" style="display:none;">
-                                <div class="row">
-                                    <div class="form-group col-md-4">
-                                        <label for="job_type">Account Credential</label>
-                                        <input type="text" class="form-control" name="e_account_credentials"
-                                            id="e_account_credentials" />
-                                    </div>
-                                    <div class="form-group col-md-4">
-                                        <label for="job_type">Account Note</label>
-                                        <input type="text" class="form-control" name="e_account_note"
-                                            id="e_account_note" />
-                                    </div>
-                                </div>
-                            </div>
-                            <div id="other_credit_card" style="display:none;">
-                                <div class="row">
-                                    <div class="form-group col-md-4">
-                                        <label for="job_type">Credit Card Number</label>
-                                        <input type="text" class="form-control" name="other_credit_number"
-                                            id="other_credit_number" placeholder="0000 0000 0000 000" />
-                                    </div>
-                                    <div class="form-group col-md-4">
-                                        <label for="job_type">Credit Card Expiration</label>
-                                        <input type="text" class="form-control" name="other_credit_expiry"
-                                            id="other_credit_expiry" placeholder="MM/YYYY" />
-                                    </div>
-                                    <div class="form-group col-md-4">
-                                        <label for="job_type">CVC</label>
-                                        <input type="text" class="form-control" name="other_credit_cvc"
-                                            id="other_credit_cvc" placeholder="CVC" />
-                                    </div>
-                                </div>
-                            </div>
-                            <div id="other_payment_area" style="display:none;">
-                                <div class="row">
-                                    <div class="form-group col-md-4">
-                                        <label for="job_type">Account Credential</label>
-                                        <input type="text" class="form-control" name="other_payment_account_credentials"
-                                            id="other_payment_account_credentials" />
-                                    </div>
-                                    <div class="form-group col-md-4">
-                                        <label for="job_type">Account Note</label>
-                                        <input type="text" class="form-control" name="other_payment_account_note"
-                                            id="other_payment_account_note" />
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="tags">
+                                    <div class="form-group">
+                                        <label for="job_type">Tags</label>
+                                        <a href="#" class="manage-tags float-right">Manage Tags</a>
+                                        <input type="text" class="form-control" name="tags" />
                                     </div>
                                 </div>
                             </div>
@@ -656,183 +299,92 @@
                     </div>
 
                     <!-- <hr> -->
-                    <div class="row" style="margin:5px;">
+                    <div class="row no-margin" style="margin:0 15px;">
                         <div class="col-md-12">
-                            <table class="table table-bordered" id="reportstable">
-                                <thead>
-                                    <!-- <th></th>
-                                    <th>#</th>
-                                    <th>PRODUCT/SERVICE</th>
-                                    <th>DESCRIPTION</th>
-                                    <th>QTY</th>
-                                    <th>RATE</th>
-                                    <th>AMOUNT</th>
-                                    <th>TAX</th>
-                                    <th></th> -->
-                                    <th>Name</th>
-                                    <th>Type</th>
-                                    <!-- <th>Description</th> -->
-                                    <th width="150px">Quantity</th>
-                                    <!-- <th>Location</th> -->
-                                    <th width="150px">Price</th>
-                                    <th width="150px">Discount</th>
-                                    <th width="150px">Tax (Change in %)</th>
-                                    <th>Total</th>
-                                </thead>
-                                <tbody id="items_table_body_sales_receipt">
-                                    <tr>
-                                        <td>
-                                            <input type="text" class="form-control getItemssr required" required
-                                                onKeyup="getItemssr(this)" name="items[]">
-                                            <ul class="suggestions"></ul>
-                                        </td>
-                                        <td><select name="item_type[]" class="form-control">
-                                                <option value="product">Product</option>
-                                                <option value="material">Material</option>
-                                                <option value="service">Service</option>
-                                                <option value="fee">Fee</option>
-                                            </select></td>
-                                        <td width="150px"><input type="number"
-                                                class="form-control quantitysr required item-field-monitary" required
-                                                name="quantity[]" data-counter="0" id="quantity_0" value="1">
-                                        </td>
-                                        <td width="150px"><input type="number"
-                                                class="form-control pricesr required item-field-monitary" required
-                                                name="price[]" data-counter="0" id="price_sr_0" min="0" value="0"></td>
-                                        <td width="150px"><input type="number"
-                                                class="form-control discountsr required item-field-monitary" required
-                                                name="discount[]" data-counter="0" id="discount_sr_0" min="0" value="0">
-                                        </td>
-                                        <td width="150px"><input type="text"
-                                                class="form-control tax_change required item-field-monitary"
-                                                data-itemfieldtype="tax" required name="tax[]" data-counter="0"
-                                                id="tax1_sr_0" min="0" value="0">
-                                            <!-- <span id="span_tax_0">0.0</span> -->
-                                            <input type="text" class="tax-hide" value="0" type="hidden">
-                                        </td>
-                                        <td width="150px"><input type="hidden" class="form-control total_per_input"
-                                                name="total[]" data-counter="0" id="item_total_sr_0" min="0" value="0">
-                                            $<span class="total_per_item" id="span_total_sr_0">0.00</span></td>
-                                    </tr>
-                                    </tr>
-                                </tbody>
-                            </table>
-                            <div>
+                            <div class="items-section">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <th>Name</th>
+                                        <th>Type</th>
+                                        <th width="150px">Quantity</th>
+                                        <th width="150px">Price</th>
+                                        <th width="150px">Discount</th>
+                                        <th width="150px">Tax (Change in %)</th>
+                                        <th style="text-align: right;">Total</th>
+                                        <th></th>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                <input type="text" style="display: none;" name="item_ids[]">
+                                                <input type="text" class="form-control getItemssr required" required
+                                                    name="items[]">
+                                                <ul class="suggestions"></ul>
+                                            </td>
+                                            <td><select name="item_type[]" class="form-control">
+                                                    <option value="product">Product</option>
+                                                    <option value="material">Material</option>
+                                                    <option value="service">Service</option>
+                                                    <option value="fee">Fee</option>
+                                                </select></td>
+                                            <td width="150px"><input type="number"
+                                                    class="form-control quantitysr required item-field-monitary"
+                                                    required name="quantity[]" data-counter="0" value="">
+                                            </td>
+                                            <td width="150px"><input type="number"
+                                                    class="form-control pricesr required item-field-monitary" required
+                                                    name="price[]" data-counter="0" min="0" value=""></td>
+                                            <td width="150px"><input type="number"
+                                                    class="form-control discountsr required item-field-monitary"
+                                                    required name="discount[]" data-counter="0" min="0" value="">
+                                            </td>
+                                            <td width="150px"><input type="text" class="form-control"
+                                                    data-itemfieldtype="tax" required name="tax[]" data-type="tax"
+                                                    data-counter="0" min="0" value="">
+                                                <input type="text" class="tax-hide" name="tax_percent[]" value="7.5"
+                                                    type="hidden">
+                                            </td>
+                                            <td width="150px" style="text-align: right;"><input type="hidden"
+                                                    class="form-control total_per_input" name="total[]" data-counter="0"
+                                                    min="0" value="">
+                                                $<span class="total_per_item">0.00</span></td>
+                                            <td class="item-action">
+                                                <a href="#" class="delete-item">
+                                                    <i class="fa fa-trash-o" aria-hidden="true"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                        </tr>
+                                    </tbody>
+                                </table>
                             </div>
-                            <hr>
 
                             <div class="row">
                                 <div class="col-md-3">
-                                    <!-- <button class="btn1">Add lines</button> -->
-                                    <a class="link-modal-open" href="#" id="add_another_items" data-toggle="modal"
-                                        data-target="#item_list2"><span
-                                            class="fa fa-plus-square fa-margin-right"></span>Add Items</a>
+                                    <div class="item-buttons">
+                                        <button type="button" class="default-button add-lines">
+                                            Add lines
+                                        </button>
+                                        <button type="button" class="default-button clear-all-lines">
+                                            Clear all lines
+                                        </button>
+                                    </div>
                                 </div>
-                                <!-- <div class="col-md-1">
-                                    <button class="btn1">Clear all lines</button>
+                                <div class="col-md-3"></div>
+                                <div class="col-md-3"></div>
+                                <div class="col-md-3">
+                                    <div class="item-totals">
+                                        <div class="label">Total:</div>
+                                        <div class="amount">$0.00</div>
                                     </div>
-                                    <div class="col-md-1">
-                                    </div>
-                                    <div class="col-md-7">
-                                    </div>
-                                    <div class="col-md-1">
-                                        <b>Subtotal</b>
-                                    </div>
-                                    <div class="col-md-1">
-                                        <b>$0.00</b>
-                                    </div> -->
+                                </div>
                             </div>
                             <hr>
 
                             <div class="row">
                                 <div class="col-md-2">
-                                    Message displayed on sales receipt<br>
-                                    <textarea style="height:100px;width:100%;" name="message"></textarea><br>
-                                    Message displayed on statement<br>
-                                    <textarea style="height:100px;width:100%;" name="message_on_statement"></textarea>
-                                </div>
-                                <div class="col-md-6">
-                                </div>
-                                <div class="col-md-4">
-                                    <!-- Taxable subtotal <b>$0.00</b><br>
-                            <table class="table table-borderless" style="text-align:right;">
-                                <tr>
-                                    <td>
-                                        <select class="form-control" name="tax_rate">
-                                            <option value="1">Based on location</option>
-                                        </select>
-                                    </td>
-                                    <td><b>$0.00</b><br><a href="">See the math</a></td>
-                                </tr>
-                                <tr>
-                                    <td>Shipping</td>
-                                    <td align="right"><input type="text" class="form-control" style="width:100px!important;"></td>
-                                </tr>
-                                <tr>
-                                    <td>Tax on shipping</td>
-                                    <td>0.00</td>
-                                </tr>
-                                <tr>
-                                    <td>Total</td>
-                                    <td>$0.00</td>
-                                </tr>
-                                <tr>
-                                    <td>Balance due</td>
-                                    <td>$0.00</td>
-                                </tr>
-                            </table> -->
-                                    <table class="table" style="text-align:left;">
-                                        <tr>
-                                            <td>Subtotal</td>
-                                            <td></td>
-                                            <td>$ <span id="span_sub_total_sr">0.00</span>
-                                                <input type="hidden" name="subtotal" id="item_total_sr">
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>Taxes</td>
-                                            <td></td>
-                                            <td>$ <span id="total_tax_sr_">0.00</span><input type="hidden" name="taxes"
-                                                    id="total_tax_input_sr"></td>
-                                        </tr>
-                                        <tr>
-                                            <td style="width:250px;"><input type="text" name="adjustment_name"
-                                                    id="adjustment_name" placeholder="Adjustment Name"
-                                                    class="form-control"
-                                                    style="width:200px; display:inline; border: 1px dashed #d1d1d1">
-                                            </td>
-                                            <td style="width:150px;">
-                                                <input type="number" name="adjustment_value" id="adjustment_input_sr"
-                                                    value="0" class="form-control adjustment_input_sr"
-                                                    style="width:100px; display:inline-block">
-                                                <span class="fa fa-question-circle" data-toggle="popover"
-                                                    data-placement="top" data-trigger="hover"
-                                                    data-content="Optional it allows you to adjust the total amount Eg. +10 or -10."
-                                                    data-original-title="" title=""></span>
-                                            </td>
-                                            <td>$<span id="adjustment_area_sr">0.00</span></td>
-                                        </tr>
-                                        <!-- <tr>
-                                            <td>Markup $<span id="span_markup"></td> -->
-                                        <!-- <td><a href="#" data-toggle="modal" data-target="#modalSetMarkup" style="color:#02A32C;">set markup</a></td> -->
-                                        <input type="hidden" name="markup_input_form" id="markup_input_form"
-                                            class="markup_input" value="0">
-                                        <!-- </tr> -->
-                                        <tr id="saved" style="color:green;font-weight:bold;display:none;">
-                                            <td>Amount Saved</td>
-                                            <td></td>
-                                            <td><span id="offer_cost">0.00</span><input type="hidden"
-                                                    name="voucher_value" id="offer_cost_input"></td>
-                                        </tr>
-                                        <tr style="color:blue;font-weight:bold;font-size:18px;">
-                                            <td><b>Grand Total ($)</b></td>
-                                            <td></td>
-                                            <td><b><span id="grand_total_sr">0.00</span>
-                                                    <input type="hidden" name="grand_total" id="grand_total_sr_g"
-                                                        value='0'></b></td>
-                                        </tr>
-                                    </table>
-
+                                    Memo<br>
+                                    <textarea style="height:100px;width:100%;" name="memo"></textarea>
                                 </div>
                             </div>
                             <hr>
@@ -881,23 +433,6 @@
 
                                 </div>
                                 <div class="col-md-5" align="center">
-                                    <div class="middle-links">
-                                        <div class="pint-pries-option-section">
-                                            <ul>
-                                                <li>
-                                                    <a href="#" class="print-preview">Print or Preview </a>
-                                                </li>
-                                                <li>
-                                                    <a href="#" class="print-slip">Print packing slip</a>
-                                                </li>
-                                            </ul>
-                                            <div class="anchor-holder">
-                                                <img src="<?=base_url('assets/img/accounting/customers/anchor_down.png')?>"
-                                                    alt="">
-                                            </div>
-                                        </div>
-                                        <a href="" class="print-preview-option">Print or Preview</a>
-                                    </div>
                                     <div class="middle-links end">
                                         <a href="">Make recurring</a>
                                     </div>

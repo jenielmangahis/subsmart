@@ -119,7 +119,7 @@
                         </div>
                         <div class="col-md-4">
                             <!-- Split dropup button -->
-                            <button type="submit" class="btn btn-success float-right">
+                            <button type="button" class="btn btn-success float-right" id="save-and-close">
                                 Save and close
                             </button>
                         </div>

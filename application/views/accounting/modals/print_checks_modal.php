@@ -79,7 +79,7 @@
                                                 <div class="col-md-2 d-flex align-items-end">
                                                     <div class="form-group" style="margin: 0 !important">
                                                         <label for="starting-check-no">Starting check no.</label>
-                                                        <input type="number" name="starting_check_no" id="starting-check-no" class="form-control" required min="0">
+                                                        <input type="number" value="<?=$startingCheckNo?>" name="starting_check_no" id="starting-check-no" class="form-control" required min="0">
                                                     </div>
                                                 </div>
                                             </div>

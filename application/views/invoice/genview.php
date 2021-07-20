@@ -81,7 +81,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                     <tr>
                                                         <td id="presenter-col-left" class="presenter-col-left" style="width: 50%" valign="top">
                                                             <div style="margin-bottom: 20px;">
-                                                                <img class="invoice-print-logo" style="max-width: 230px; max-height: 200px;" src="<?php echo base_url() .'uploads/'. (($setting) ? $setting->logo : '') ?>">
+                                                                <!-- <img class="invoice-print-logo" style="max-width: 230px; max-height: 200px;" src="<?php echo base_url() .'uploads/'. (($setting) ? $setting->logo : '') ?>"> -->
+                                                                <img src="<?= getCompanyBusinessProfileImage(); ?>" class="invoice-print-logo"  style="max-width: 230px; max-height: 200px;" />
                                                             </div>
                                                             
                                                             <div id="presenter-from">

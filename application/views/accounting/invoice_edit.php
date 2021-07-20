@@ -437,7 +437,7 @@ input:checked + .slider:before {
                                     <label for="work_order">Job# <small class="help help-sm">(optional)</small></label>
                                     <span class="fa fa-question-circle text-ter" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Field is auto-populated on create Invoice from a Work Order." data-original-title="" title=""></span>
                                     <div class="input-group">
-                                        <input type="text" class="form-control" id="work_order_number" name="work_order_number">
+                                        <input type="text" class="form-control" id="job_number" name="job_number">
                                     </div>
                                 </div>
                                 <div class="col-md-3 form-group">

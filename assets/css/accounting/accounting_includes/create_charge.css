@@ -11,6 +11,7 @@
 #create_charge_modal input[type="text"],
 #create_charge_modal input[type="email"],
 #create_charge_modal input[type="number"],
+#create_charge_modal input[type="date"],
 #create_charge_modal textarea {
     font-size: 12px;
     font-weight: lighter;
@@ -20,6 +21,57 @@
     border-radius: 2px;
     width: 100%;
     resize: none;
+}
+
+#create_charge_modal .delayed_charge_date {
+    margin-top: 30px;
+}
+
+#create_charge_modal .tags {
+    margin-top: 30px;
+}
+
+#create_charge_modal .tags a.manage-tags {
+    color: #3491D0;
+    font-weight: lighter;
+}
+
+#create_charge_modal input[name="delayed_charge_date"] {
+    width: 200px;
+}
+
+div#create_charge_modal .default-button {
+    font-size: 13px;
+    font-weight: 100;
+    border: solid 1px #8E9095;
+    padding: 2px 20px;
+    background: transparent;
+    border-radius: 5px;
+    height: auto;
+    margin-top: 15px;
+}
+
+div#create_charge_modal .default-button:hover {
+    background: rgba(107, 108, 114, .25);
+    color: #393a3d;
+}
+
+div#create_charge_modal .item-totals {
+    width: 300px;
+    float: right;
+    font-size: 15px;
+    font-weight: 700;
+    padding: 10px 0;
+    color: #333333;
+}
+
+div#create_charge_modal .item-totals .label {
+    width: 100px;
+    float: left;
+}
+
+div#create_charge_modal .item-totals .amount {
+    float: right;
 }
 
 #create_charge_modal input:focus,
@@ -289,11 +341,6 @@ div#create_charge_modal {
     padding-bottom: 10px;
 }
 
-#create_charge_modal .modal-footer-check .middle-links.end {
-    text-align: left;
-    border-left: solid 1px #6A6B70;
-}
-
 #create_charge_modal .modal-footer-check .middle-links:hover {
     text-shadow: 0 10px 20px #fff;
 }
@@ -363,4 +410,31 @@ div#create_charge_modal {
     width: 20px;
     bottom: -13px;
     left: 50px;
+}
+
+#create_charge_modal table tr td {
+    position: relative;
+}
+
+#create_charge_modal table .suggestions {
+    width: 100%;
+    box-shadow: 3px 6px 20px #2829294d;
+}
+
+#create_charge_modal table .suggestions li {
+    border-bottom: solid 1px #DEE2E6;
+}
+
+#create_charge_modal table .suggestions li:hover {
+    background: #2ca01cd4;
+    color: #fff;
+}
+
+#create_charge_modal .table>thead>tr>th {
+    font-weight: 700;
+}
+
+#create_charge_modal .table tbody tr td.item-action {
+    text-align: center;
+    font-size: 18px;
 }

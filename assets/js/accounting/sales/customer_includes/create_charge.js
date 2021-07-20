@@ -1,3 +1,9 @@
+$(document).on("click", "div#create_charge_modal", function(event) {
+    if ($(event.target).closest("div#create_charge_modal table ul.suggestions").length === 0 && $(event.target).closest("#create_charge_modal .items-section table input[name='items[]']").length == 0) {
+        $("div#create_charge_modal table ul.suggestions").html("");
+    }
+
+});
 $(document).on("change", "div#create_charge_modal form select[name='payment_method']", function(event) {
     if (this.value == 'Cash') {
         // alert('cash');
@@ -267,4 +273,148 @@ $(document).on("click", "#create_charge_modal .modal-footer-check #clearsalerece
     $('#create_charge_modal form').trigger("reset");
     $("#create_charge_modal form textarea").html("");
     $("#create_charge_modal form input[name='recurring_selected']").val(recurring_selected);
+});
+$(document).on("change", "#create_charge_modal select[name='recurring-interval']", function(event) {
+    $("#create_charge_modal .recurring-form-part.below .interval-part .monthly").hide();
+    $("#create_charge_modal .recurring-form-part.below .interval-part .daily").hide();
+    $("#create_charge_modal .recurring-form-part.below .interval-part .weekly").hide();
+    $("#create_charge_modal .recurring-form-part.below .interval-part .yearly").hide();
+    if ($(this).val() == "Daily") {
+        $("#create_charge_modal .recurring-form-part.below .interval-part .daily").show();
+    } else if ($(this).val() == "Weekly") {
+        $("#create_charge_modal .recurring-form-part.below .interval-part .weekly").show();
+    } else if ($(this).val() == "Monthly") {
+        $("#create_charge_modal .recurring-form-part.below .interval-part .monthly").show();
+    } else if ($(this).val() == "Yearly") {
+        $("#create_charge_modal .recurring-form-part.below .interval-part .yearly").show();
+    }
+});
+$(document).on("change", "#create_charge_modal select[name='recurring-type']", function(event) {
+    $("#create_charge_modal .recurring-form-part .schedule-type").hide();
+    $("#create_charge_modal .recurring-form-part .reminder-type").hide();
+    $("#create_charge_modal .recurring-form-part .unschedule-type").hide();
+    if ($(this).val() == "Schedule") {
+        $("#create_charge_modal .recurring-form-part .schedule-type").show();
+        $("#create_charge_modal .recurring-form-part.below ").show();
+    } else if ($(this).val() == "Reminder") {
+        $("#create_charge_modal .recurring-form-part .reminder-type").show();
+        $("#create_charge_modal .recurring-form-part.below ").show();
+    } else if ($(this).val() == "Unschedule") {
+        $("#create_charge_modal .recurring-form-part .unschedule-type").show();
+        $("#create_charge_modal .recurring-form-part.below ").hide();
+    }
+});
+$(document).on("change", "#create_charge_modal .recurring-form-part.below .date-part .input-field-2 select", function(event) {
+    $("#create_charge_modal .recurring-form-part.below .date-part .input-field-3 .by-end-date").hide();
+    $("#create_charge_modal .recurring-form-part.below .date-part .input-field-3 .after-occurrences").hide();
+    if ($(this).val() == "By") {
+        $("#create_charge_modal .recurring-form-part.below .date-part .input-field-3 .by-end-date").show();
+    } else if ($(this).val() == "After") {
+        $("#create_charge_modal .recurring-form-part.below .date-part .input-field-3 .after-occurrences").show();
+    }
+});
+$(document).on("keyup", "#create_charge_modal .items-section table input[name='items[]']", function(event) {
+    var iteam_search = $(this).val();
+    var suggestions = $(this).parent("td").children(".suggestions");
+    get_search_items(iteam_search, suggestions);
+});
+
+$(document).on("focus", "#create_charge_modal .items-section table input[name='items[]']", function(event) {
+    var iteam_search = $(this).val();
+    var suggestions = $(this).parent("td").children(".suggestions");
+    $(this).attr("autocomplete", "off");
+    get_search_items(iteam_search, suggestions);
+});
+
+function get_search_items(iteam_search, suggestions) {
+    $.ajax({
+        url: baseURL + "/accounting/get_search_items",
+        type: "POST",
+        dataType: "json",
+        data: {
+            iteam_search: iteam_search,
+        },
+        success: function(data) {
+            suggestions.html(data.html);
+        },
+    });
+}
+$(document).on("click", "#create_charge_modal table .suggestions li", function(event) {
+    $(this).parent("ul").parent("td").children("input[name='item_ids[]']").val($(this).attr('data-id'));
+    $(this).parent("ul").parent("td").children("input[name='items[]']").val($(this).html());
+    $(this).parent("ul").parent("td").parent("tr").find("input[name='quantity[]']").val(1);
+    $(this).parent("ul").parent("td").parent("tr").find("input[name='price[]']").val($(this).attr('data-price'));
+    $(this).parent("ul").parent("td").parent("tr").find("input[name='discount[]']").val($(this).attr('data-discount'));
+    var tax_computed = $(this).attr('data-price') * 0.075;
+    $(this).parent("ul").parent("td").parent("tr").find("input[name='tax[]']").val(Number(tax_computed).toLocaleString('en'));
+    $(this).parent("ul").parent("td").parent("tr").find("input.tax-hide").val("7.5");
+    var total = tax_computed + parseFloat($(this).attr('data-price'));
+    $(this).parent("ul").parent("td").parent("tr").find(".total_per_item").html(Number(total).toLocaleString('en'));
+    $("#create_charge_modal table .suggestions").html("");
+    compute_grand_total();
+});
+
+$(document).on("change", "#create_charge_modal table td input", function(event) {
+    var qty = $(this).parent("td").parent("tr").find("input[name='quantity[]']").val();
+    var price = $(this).parent("td").parent("tr").find("input[name='price[]']").val();
+    var discount = $(this).parent("td").parent("tr").find("input[name='discount[]']").val();
+    if ($(this).attr("data-type") == "tax") {
+        $(this).parent("td").parent("tr").find("input.tax-hide").val($(this).val());
+        var computed_tax = parseFloat(price) * parseFloat($(this).val());
+        $(this).val(Number(computed_tax).toLocaleString('en'));
+        console.log($(this).parent("td").parent("tr").find("input.tax-hide").val());
+    }
+    var tax = $(this).parent("td").parent("tr").find("input.tax-hide").val();
+    var total = ((qty * price) + ((qty * price) * (tax / 100))) - discount;
+    $(this).parent("td").parent("tr").find("input[name='tax[]']").val(Number((qty * price) * (tax / 100)).toLocaleString('en'));
+    $(this).parent("td").parent("tr").find(".total_per_item").html(Number(total).toLocaleString('en'));
+    compute_grand_total();
+
+});
+
+function compute_grand_total() {
+    var qty_array = $("#create_charge_modal table tr td input[name='quantity[]']").map(function() { return $(this).val(); }).get();
+    var price_array = $("#create_charge_modal table tr td input[name='price[]']").map(function() { return $(this).val(); }).get();
+    var discount_array = $("#create_charge_modal table tr td input[name='discount[]']").map(function() { return $(this).val(); }).get();
+    var tax_pecent_array = $("#create_charge_modal table tr td input[name='tax_percent[]']").map(function() { return $(this).val(); }).get();
+    var grant_total = 0;
+    for (var i = 0; i < qty_array.length; i++) {
+        grant_total += ((qty_array[i] * price_array[i]) + ((qty_array[i] * price_array[i]) * (parseFloat(tax_pecent_array[i] / 100)))) - discount_array[i];
+    }
+    console.log(grant_total);
+    $("#create_charge_modal .item-totals .amount").html("$" + Number(grant_total).toLocaleString('en'));
+}
+$(document).on("focus", "#create_charge_modal table tr td", function(event) {
+
+    if (!$(this).is(':last-child')) {
+        if ($(this).parent("tr").is(':last-child')) {
+            $("#create_charge_modal table tbody").append("<tr>" + $(this).parent("tr").html() + "</tr>");
+            $("#create_charge_modal table tbody tr:last-child").find(".total_per_item").html("0.00");
+        }
+    }
+});
+
+$(document).on("click", "#create_charge_modal table tr td a.delete-item", function(event) {
+    if ($("#create_charge_modal table tbody tr").length > 1) {
+        $(this).parent("td").parent("tr").remove();
+        compute_grand_total();
+    }
+
+});
+
+$(document).on("click", "#create_charge_modal .item-buttons .add-lines", function(event) {
+    $("#create_charge_modal table tbody").append("<tr>" + $("#create_charge_modal table tbody tr:last-child").html() + "</tr>");
+    $("#create_charge_modal table tbody tr:last-child").find(".total_per_item").html("0.00");
+    $("#create_charge_modal table tbody").append("<tr>" + $("#create_charge_modal table tbody tr:last-child").html() + "</tr>");
+    $("#create_charge_modal table tbody tr:last-child").find(".total_per_item").html("0.00");
+    $("#create_charge_modal table tbody").append("<tr>" + $("#create_charge_modal table tbody tr:last-child").html() + "</tr>");
+    $("#create_charge_modal table tbody tr:last-child").find(".total_per_item").html("0.00");
+    $("#create_charge_modal table tbody").append("<tr>" + $("#create_charge_modal table tbody tr:last-child").html() + "</tr>");
+    $("#create_charge_modal table tbody tr:last-child").find(".total_per_item").html("0.00");
+});
+$(document).on("click", "#create_charge_modal .item-buttons .clear-all-lines", function(event) {
+    var new_tr = "<tr>" + $("#create_charge_modal table tbody tr:last-child").html() + "</tr>";
+    $("#create_charge_modal table tbody").html(new_tr);
+    $("#create_charge_modal table tbody tr:last-child").find(".total_per_item").html("0.00");
+    compute_grand_total();
 });

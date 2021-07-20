@@ -20,6 +20,8 @@ var modalAttachedFiles = [];
 var catDetailsInputs = '';
 var catDetailsBlank = '';
 
+var submitType = 'save-and-close';
+
 $(function() {
     $(document).on('change', '#adjust-starting-value-modal #location', function() {
         var selected = $(this).children('option:selected');
@@ -2057,7 +2059,8 @@ $(function() {
 
                 $.each(transactions, function(index, transaction) {
                     if(transaction.type === 'Bill' && $(`#billPaymentModal input[name="bills[]"][value="${transaction.id}"]`).length === 0 ||
-                        transaction.type === 'Vendor Credit' && $(`#billPaymentModal input[name="credits[]"][value="${transaction.id}"]`).length === 0
+                        transaction.type === 'Vendor Credit' && $(`#billPaymentModal input[name="credits[]"][value="${transaction.id}"]`).length === 0 ||
+                        transaction.type === 'Vendor Credit' && $(`#billPaymentModal #vendor-credits-table input[name="credits[]"][value="${transaction.id}"]:checked`).length === 0
                     ) {
                         var title = transaction.type;
                         title += transaction.number !== '' ? '#'+transaction.number : '';
@@ -2081,6 +2084,12 @@ $(function() {
                         `);
                     }
                 });
+
+                if($('#billPaymentModal .transactions-container .row .col-12').length < 2) {
+                    $('#billPaymentModal .transactions-container').parent().remove();
+                    $('#billPaymentModal a.close-transactions-container').parent().remove();
+                    $('#billPaymentModal a.open-transactions-container').parent().remove();
+                }
             } else {
                 $('#billPaymentModal .transactions-container').parent().remove();
                 $('#billPaymentModal a.close-transactions-container').parent().remove();
@@ -2942,6 +2951,33 @@ $(function() {
             }
         });
     });
+
+    $(document).on('click', '#modal-container .modal .modal-footer #save-and-close', function(e) {
+        e.preventDefault();
+
+        submitType = $(this).attr('id');
+        $('#modal-container form#modal-form').submit();
+    });
+
+    $(document).on('click', '#modal-container .modal .modal-footer #save-and-new', function(e) {
+        e.preventDefault();
+
+        submitType = $(this).attr('id');
+        $('#modal-container form#modal-form').submit();
+
+        $('#modal-container .modal select').val('').trigger('change');
+        $('#modal-container .modal input:not([type="checkbox"])').val('');
+        $('#modal-container .modal input[type="checkbox"]').prop('checked', false).trigger('change');
+        $('#modal-container .modal input[type="hidden"]').remove();
+        $('#modal-container .modal textarea').html('');
+    });
+
+    $(document).on('click', '#modal-container .modal .modal-footer #save', function(e) {
+        e.preventDefault();
+
+        submitType = $(this).attr('id');
+        $('#modal-container form#modal-form').submit();
+    });
 });
 
 const convertToDecimal = (el) => {
@@ -3500,7 +3536,9 @@ const submitModalForm = (event, el) => {
             var res = JSON.parse(result);
 
             if(res.success === true) {
-                $(el).children().modal('hide');
+                if(submitType === 'save-and-close') {
+                    $(el).children().modal('hide');
+                }
             }
 
             toast(res.success, res.message);

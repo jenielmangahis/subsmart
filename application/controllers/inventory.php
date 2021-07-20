@@ -72,6 +72,42 @@ class Inventory extends MY_Controller
         $this->load->view('inventory/list', $this->page_data);
     }
 
+    public function import()
+    {
+        $get = $this->input->get();
+        $this->page_data['items'] = $this->items_model->get();
+        $comp_id = logged('company_id');
+        $this->page_data['active_category'] = "Show All";
+        $type    = $this->page_data['type']  = (!empty($get['type'])) ? $get['type'] : "product";
+        $role_id = logged('role');
+        if (!empty($get['category'])) {
+            if( $role_id == 1 || $role_id == 2 ){
+                $comp_id = 0;
+            }
+            $this->page_data['category'] = $get['category'];
+            $this->page_data['active_category'] = $get['category'];
+            $items = $this->items_model->filterBy(['category' => $get['category'], 'is_active' => "1"], $comp_id, ucfirst($type));
+        } else {
+
+            if( $role_id == 1 || $role_id == 2 ){
+                $arg = array('type'=>ucfirst($type), 'is_active'=>1);
+            }else{
+                $arg = array('company_id'=>$comp_id, 'type'=>ucfirst($type), 'is_active'=>1);
+            }
+
+            $items = $this->items_model->getByWhere($arg);
+        }
+
+        $this->page_data['items'] = $this->categorizeNameAlphabetically($items);
+        $comp = array(
+            'company_id' => $comp_id
+        );
+        $this->page_data['items_categories'] = $this->db->get_where($this->items_model->table_categories, $comp)->result();
+        //print_r($this->page_data['items']);
+
+        $this->load->view('inventory/import_items', $this->page_data);
+    }
+
     public function add()
     {
         $input = $this->input->post();

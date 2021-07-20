@@ -38,7 +38,7 @@
         font-size: 16px;
     }
 </style>
-<nav id="sidebar" class="navbar-side">
+<nav class="navbar-side">
     <ul class="nav">
         <span class="nav-close" >
             <svg viewBox="0 0 16 14" id="svg-sprite-menu-close" xmlns="http://www.w3.org/2000/svg" transform="scale(1, -1)" width="20px" height="100%"  style="margin-top: 50px;">
@@ -46,9 +46,9 @@
             </svg>
         </span>
         <li class="nav-header desktop-only">
-			       <a href="<?php echo base_url('inventory') ?>" id="addOnHandInventory" class="btn btn-tranparent acct-btn-add text-center" style="border: 2px solid white;"><i class="fa fa-plus" style="margin-right: 20px;"></i> New</a>
+            <a href="<?php echo base_url('inventory') ?>" id="addOnHandInventory" class="btn btn-tranparent acct-btn-add text-center" style="border: 2px solid white;"><i class="fa fa-plus" style="margin-right: 20px;"></i> New</a>
         </li>
-        <li class="submenus dropright">
+        <li class="submenus active">
             <a href="<?php echo base_url('inventory') ?>" id="addServicesInventory"><i class="fa fa-barcode" style="margin-right: 20px"></i>Inventory</a>
         </li>
         <li class="submenus dropright">

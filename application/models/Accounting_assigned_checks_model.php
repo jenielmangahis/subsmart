@@ -40,4 +40,12 @@ class Accounting_assigned_checks_model extends MY_Model {
         $query = $this->db->get($this->table);
         return $query->row();
     }
+
+    public function get_last_assigned($paymentAccountId)
+    {
+        $this->db->where('payment_account_id', $paymentAccountId);
+        $this->db->order_by('created_at', 'desc');
+        $query = $this->db->get($this->table);
+        return $query->row();
+    }
 }

@@ -550,6 +550,10 @@ class Accounting_modals extends MY_Controller {
 
                                 if($count === 1) {
                                     $selectedBalance = $account->balance;
+
+                                    $lastAssignedCheck = $this->accounting_assigned_checks_model->get_last_assigned($account->id);
+
+                                    $startingCheckNo = intval($lastAssignedCheck->check_no) + 1;
                                 }
     
                                 $count++;
@@ -566,6 +570,7 @@ class Accounting_modals extends MY_Controller {
 
                     $this->page_data['dropdown']['payment_accounts'] = $paymentAccs;
                     $this->page_data['balance'] = $selectedBalance;
+                    $this->page_data['startingCheckNo'] = $startingCheckNo;
                 break;
             }
 
@@ -3359,6 +3364,13 @@ class Accounting_modals extends MY_Controller {
     
                             $this->vendors_model->update_vendor_credit($vCredit->id, $vCreditData);
                         }
+
+                        $vendorData = [
+                            'vendor_credits' => floatval($vendor->vendor_credits) - floatval($data['credit_applied'][$key]),
+                            'updated_at' => date("Y-m-d H:i:s")
+                        ];
+    
+                        $this->vendors_model->updateVendor($vendor->id, $vendorData);
                     }
                 }
 
