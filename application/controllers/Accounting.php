@@ -2308,7 +2308,99 @@ class Accounting extends MY_Controller
 
     public function updateInvoice()
     {
-        //
+        $id = $this->input->post('invoiceDataID');
+
+        $update_data = array(
+            'id'                        => $this->input->post('invoiceDataID'),//
+            'customer_id'               => $this->input->post('customer_id'),//
+            'job_location'              => $this->input->post('jobs_location'), //
+            'job_name'                  => $this->input->post('job_name'),//
+            'invoice_type'              => $this->input->post('invoice_type'),//
+            'po_number'                 => $this->input->post('purchase_order'),//
+            'date_issued'               => $this->input->post('date_issued'),//
+            'due_date'                  => $this->input->post('due_date'),//
+            'status'                    => $this->input->post('status'),//
+            'customer_email'            => $this->input->post('customer_email'),//
+            'online_payments'           => $this->input->post('online_payments'),
+            'billing_address'           => $this->input->post('billing_address'),//
+            'shipping_to_address'       => $this->input->post('shipping_to_address'),
+            'ship_via'                  => $this->input->post('ship_via'),//
+            'shipping_date'             => $this->input->post('shipping_date'),
+            'tracking_number'           => $this->input->post('tracking_number'),//
+            'terms'                     => $this->input->post('terms'),//
+            'location_scale'            => $this->input->post('location_scale'),//
+            'message_on_invoice'        => $this->input->post('message_on_invoice'),
+            'message_on_statement'      => $this->input->post('message_on_statement'),
+            'job_number'                => $this->input->post('job_number'), //to add on database
+            // 'attachments'            => $this->input->post('attachments'),
+            'tags'                      => $this->input->post('tags'),//
+            // 'total_due'              => $this->input->post('total_due'),
+            // 'balance'                => $this->input->post('balance'),
+            'deposit_request_type'      => $this->input->post('deposit_request_type'),
+            'deposit_request'           => $this->input->post('deposit_amount'),
+            'message_to_customer'       => $this->input->post('message_to_customer'),
+            'terms_and_conditions'      => $this->input->post('terms_and_conditions'),
+            // 'signature'              => $this->input->post('signature'),
+            // 'sign_date'              => $this->input->post('sign_date'),
+            // 'is_recurring'           => $this->input->post('is_recurring'),
+            // 'invoice_totals'         => $this->input->post('invoice_totals'),
+            'phone'                     => $this->input->post('phone'),
+            'payment_schedule'          => $this->input->post('payment_schedule'),
+            'subtotal'                  => $this->input->post('subtotal'),
+            'taxes'                     => $this->input->post('taxes'), 
+            'adjustment_name'           => $this->input->post('adjustment_name'),
+            'adjustment_value'          => $this->input->post('adjustment_value'),
+            'grand_total'               => $this->input->post('grand_total'),
+            'date_updated'              => date("Y-m-d H:i:s"),
+        );
+
+        $addQuery = $this->invoice_model->update_invoice_data($update_data);
+
+        $delete2 = $this->invoice_model->delete_items($id);
+
+
+        // if($addQuery > 0){
+            // $a = $this->input->post('items');
+            // $b = $this->input->post('item_type');
+            // $d = $this->input->post('quantity');
+            // $f = $this->input->post('price');
+            // $g = $this->input->post('discount');
+            // $h = $this->input->post('tax');
+            // $ii = $this->input->post('total');
+
+            // $i = 0;
+            // foreach($a as $row){
+            //     $data['item'] = $a[$i];
+            //     $data['item_type'] = $b[$i];
+            //     $data['qty'] = $d[$i];
+            //     $data['cost'] = $f[$i];
+            //     $data['discount'] = $g[$i];
+            //     $data['tax'] = $h[$i];
+            //     $data['total'] = $ii[$i];
+            //     $data['type'] = 'Work Order';
+            //     $data['type_id'] = $id;
+            //     // $data['status'] = '1';
+            //     $data['created_at'] = date("Y-m-d H:i:s");
+            //     $data['updated_at'] = date("Y-m-d H:i:s");
+            //     $addQuery2 = $this->accounting_invoices_model->additem_details($data);
+            //     $i++;
+            // }
+            // if($addQuery > 0){
+                $a          = $this->input->post('itemid');
+                $quantity   = $this->input->post('quantity');
+                $price      = $this->input->post('price');
+                $h          = $this->input->post('tax');
+    
+                $i = 0;
+                foreach($a as $row){
+                    $data['items_id'] = $a[$i];
+                    $data['qty'] = $quantity[$i];
+                    $data['cost'] = $price[$i];
+                    $data['tax'] = $h[$i];
+                    $data['invoice_id '] = $id;
+                    $addQuery2 = $this->invoice_model->add_invoice_items($data);
+                    $i++;
+                }
     }
 
     
@@ -3613,40 +3705,89 @@ class Accounting extends MY_Controller
         if ($this->input->post('current_sales_recept_number')!="") {
             $this->updateSalesReceipt();
         } else {
+            $recurringId = null;
+            if ($this->input->post("recurring_selected")==1) {
+                $days_in_advance = null;
+                $recurring_month = null;
+                $recurring_week = null;
+                $recurring_day = null;
+                $recurr_every = null;
+                if ($this->input->post("recurring-type") == "Schedule") {
+                    $days_in_advance = $this->input->post("recurring-days-in-advance");
+                } elseif ($this->input->post("recurring-type") == "Reminder") {
+                    $days_in_advance = $this->input->post("remind-days-before");
+                }
+                if ($this->input->post("recurring-interval") == "Daily") {
+                    $recurr_every = $this->input->post("daily-days");
+                } elseif ($this->input->post("recurring-interval") == "Weekly") {
+                    $recurr_every = $this->input->post("weekly-every");
+                    $recurring_day = $this->input->post("weekly-weeks-on");
+                } elseif ($this->input->post("recurring-interval") == "Monthly") {
+                    $recurring_month = $this->input->post("recurring-interval") ;
+                    $recurring_week = $this->input->post("monthly-week-order") ;
+                    $recurring_day = $this->input->post("monthly-day-of-the-week") ;
+                    $recurr_every = $this->input->post("monthly-months") ;
+                } elseif ($this->input->post("recurring-interval") == "Yearly") {
+                    $recurring_month = $this->input->post("yearly-month") ;
+                    $recurring_day = $this->input->post("yearly-day") ;
+                }
+                $recurring_data=array(
+                    'company_id' => logged('company_id'),
+                    'template_name' => $this->input->post("recurring-template-name"),
+                    'recurring_type' => $this->input->post("recurring-type"),
+                    'days_in_advance' => $days_in_advance,
+                    'recurring_interval' => $this->input->post("recurring-interval"),
+                    'recurring_month' => $recurring_month,
+                    'recurring_week' => $recurring_week,
+                    'recurring_day' => $recurring_day,
+                    'recurr_every' => $recurr_every,
+                    'start_date' => $this->input->post("recurring-start-date") != "" ? date("Y-m-d", strtotime($this->input->post("recurring-start-date"))) : null,
+                    'end_type' => $this->input->post("recurring-end-type"),
+                    'end_date' => $this->input->post("by-end-date") != "" ? date("Y-m-d", strtotime($this->input->post("by-end-date"))) : null,
+                    'max_occurences' => $this->input->post("after-occurrences"),
+                    'recurring_auto_send_email' => $this->input->post("recurring_option_1"),
+                    'status' => 1,
+                    'created_at' => date('Y-m-d h:i:s'),
+                    'updated_at' => date('Y-m-d h:i:s')
+                );
+                $recurringId = $this->accounting_recurring_transactions_model->create($recurring_data);
+            }
+
             $customer_id=$this->input->post('customer_id');
             $new_data = array(
-            'customer_id' => $this->input->post('customer_id'),
-            'email' => $this->input->post('email'),
-            'billing_address' => $this->input->post('billing_address'),
-            'sales_receipt_date' => date("Y-m-d", strtotime($this->input->post('sales_receipt_date'))),
-            'ship_via' => $this->input->post('ship_via'),
-            'shipping_date' => $this->input->post('shipping_date'),
-            'tracking_no' => $this->input->post('tracking_no'),
-            'shipping_to' => $this->input->post('shipping_to'),
-            'location_scale' => $this->input->post('location_scale'),
-            // 'amount' => $this->input->post('total_amount'),
-            'payment_method' => $this->input->post('payment_method'),
-            'ref_number' => $this->input->post('ref_number'),
-            'deposit_to' => $this->input->post('deposit_to'),
-            'message' => $this->input->post('message'),
-            'message_on_statement' => $this->input->post('message_on_statement'),
-            // 'attachments' => $this->input->post('file_name'),
-            'attachments' => 'testing',
+                'customer_id' => $this->input->post('customer_id'),
+                'email' => $this->input->post('email'),
+                'billing_address' => $this->input->post('billing_address'),
+                'sales_receipt_date' => date("Y-m-d", strtotime($this->input->post('sales_receipt_date'))),
+                'ship_via' => $this->input->post('ship_via'),
+                'shipping_date' => $this->input->post('shipping_date'),
+                'tracking_no' => $this->input->post('tracking_no'),
+                'shipping_to' => $this->input->post('shipping_to'),
+                'location_scale' => $this->input->post('location_scale'),
+                // 'amount' => $this->input->post('total_amount'),
+                'payment_method' => $this->input->post('payment_method'),
+                'ref_number' => $this->input->post('ref_number'),
+                'deposit_to' => $this->input->post('deposit_to'),
+                'message' => $this->input->post('message'),
+                'message_on_statement' => $this->input->post('message_on_statement'),
+                // 'attachments' => $this->input->post('file_name'),
+                'attachments' => 'testing',
 
-            // 'shipping' => $this->input->post('shipping'),
-            'status' => 1,
-            'created_by' => logged('id'),
-            'company_id' => logged('company_id'),
+                // 'shipping' => $this->input->post('shipping'),
+                'status' => 1,
+                'recurring_id' => $recurringId,
+                'created_by' => logged('id'),
+                'company_id' => logged('company_id'),
 
-            'subtotal' => $this->input->post('subtotal'),
-            'taxes' => $this->input->post('taxes'),
-            'adjustment_name' => $this->input->post('adjustment_name'),
-            'adjustment_value' => $this->input->post('adjustment_value'),
-            'grand_total' => $this->input->post('grand_total'),
+                'subtotal' => $this->input->post('subtotal'),
+                'taxes' => $this->input->post('taxes'),
+                'adjustment_name' => $this->input->post('adjustment_name'),
+                'adjustment_value' => $this->input->post('adjustment_value'),
+                'grand_total' => $this->input->post('grand_total'),
 
-            'date_created' => date("Y-m-d H:i:s"),
-            'date_modified' => date("Y-m-d H:i:s")
-        );
+                'date_created' => date("Y-m-d H:i:s"),
+                'date_modified' => date("Y-m-d H:i:s")
+            );
 
             $addQuery = $this->accounting_sales_receipt_model->createSalesReceipts($new_data);
 
@@ -3838,57 +3979,7 @@ class Accounting extends MY_Controller
 
                 $pay = $this->accounting_sales_receipt_model->save_payment($payment_data);
             }
-            if ($this->input->post("recurring_selected")==1) {
-                $days_in_advance = null;
-                $recurring_month = null;
-                $recurring_week = null;
-                $recurring_day = null;
-                $recurr_every = null;
-                if ($this->input->post("recurring-type") == "Schedule") {
-                    $days_in_advance = $this->input->post("recurring-days-in-advance");
-                } elseif ($this->input->post("recurring-type") == "Reminder") {
-                    $days_in_advance = $this->input->post("remind-days-before");
-                }
-                if ($this->input->post("recurring-interval") == "Daily") {
-                    $recurr_every = $this->input->post("daily-days");
-                } elseif ($this->input->post("recurring-interval") == "Weekly") {
-                    $recurr_every = $this->input->post("weekly-every");
-                    $recurring_day = $this->input->post("weekly-weeks-on");
-                } elseif ($this->input->post("recurring-interval") == "Monthly") {
-                    $recurring_month = $this->input->post("recurring-interval") ;
-                    $recurring_week = $this->input->post("monthly-week-order") ;
-                    $recurring_day = $this->input->post("monthly-day-of-the-week") ;
-                    $recurr_every = $this->input->post("monthly-months") ;
-                } elseif ($this->input->post("recurring-interval") == "Yearly") {
-                    $recurring_month = $this->input->post("yearly-month") ;
-                    $recurring_day = $this->input->post("yearly-day") ;
-                }
-                $recurring_data=array(
-                'company_id' => logged('company_id'),
-                'template_name' => $this->input->post("recurring-template-name"),
-                'recurring_type' => $this->input->post("recurring-type"),
-                'days_in_advance' => $days_in_advance,
-                'recurring_interval' => $this->input->post("recurring-interval"),
-                'recurring_month' => $recurring_month,
-                'recurring_week' => $recurring_week,
-                'recurring_day' => $recurring_day,
-                'recurr_every' => $recurr_every,
-                'start_date' => $this->input->post("recurring-start-date") != "" ? date("Y-m-d", strtotime($this->input->post("recurring-start-date"))) : null,
-                'end_type' => $this->input->post("recurring-end-type"),
-                'end_date' => $this->input->post("by-end-date") != "" ? date("Y-m-d", strtotime($this->input->post("by-end-date"))) : null,
-                'max_occurences' => $this->input->post("after-occurrences"),
-                'recurring_auto_send_email' => $this->input->post("recurring_option_1"),
-                'status' => 1,
-                'created_at' => date('Y-m-d h:i:s'),
-                'updated_at' => date('Y-m-d h:i:s')
-            );
-                $recurringId = $this->accounting_recurring_transactions_model->create($recurring_data);
-                $accounting_recurring_sales_receipt_data=array(
-                'accounting_sales_receipt_id' => $addQuery,
-                'accounting_recurring_transactions_id'=> $recurringId
-            );
-                $this->accounting_sales_receipt_model->insert_accounting_recurring_sales_receipt($accounting_recurring_sales_receipt_data);
-            }
+            
             if ($addQuery > 0) {
                 $a = $this->input->post('items');
                 $b = $this->input->post('item_type');
@@ -3943,42 +4034,9 @@ class Accounting extends MY_Controller
     public function updateSalesReceipt()
     {
         $sales_receipt_id = $this->input->post('current_sales_recept_number');
-        $new_data = array(
-            'customer_id' => $this->input->post('customer_id'),
-            'email' => $this->input->post('email'),
-            'billing_address' => $this->input->post('billing_address'),
-            'sales_receipt_date' => $this->input->post('sales_receipt_date'),
-            'ship_via' => $this->input->post('ship_via'),
-            'shipping_date' => $this->input->post('shipping_date'),
-            'tracking_no' => $this->input->post('tracking_no'),
-            'shipping_to' => $this->input->post('shipping_to'),
-            'location_scale' => $this->input->post('location_scale'),
-            // 'amount' => $this->input->post('total_amount'),
-            'payment_method' => $this->input->post('payment_method'),
-            'ref_number' => $this->input->post('ref_number'),
-            'deposit_to' => $this->input->post('deposit_to'),
-            'message' => $this->input->post('message'),
-            'message_on_statement' => $this->input->post('message_on_statement'),
-            // 'attachments' => $this->input->post('file_name'),
-            'attachments' => 'testing',
-
-            // 'shipping' => $this->input->post('shipping'),
-            'status' => 1,
-            'created_by' => logged('id'),
-            'company_id' => logged('company_id'),
-
-            'subtotal' => $this->input->post('subtotal'),
-            'taxes' => $this->input->post('taxes'),
-            'adjustment_name' => $this->input->post('adjustment_name'),
-            'adjustment_value' => $this->input->post('adjustment_value'),
-            'grand_total' => $this->input->post('grand_total'),
-
-            'date_created' => date("Y-m-d H:i:s"),
-            'date_modified' => date("Y-m-d H:i:s")
-        );
-
-        $updateQuery = $this->accounting_sales_receipt_model->updateSalesReceipt($sales_receipt_id, $new_data);
-
+        $recurring_already = $this->accounting_sales_receipt_model->getSalesReceiptDetails_by_id($sales_receipt_id);
+        $recurringId = $recurring_already->recurring_id;
+        
         if ($this->input->post("recurring_selected")==1) {
             $days_in_advance = null;
             $recurring_month = null;
@@ -4022,20 +4080,57 @@ class Accounting extends MY_Controller
                 'status' => 1,
                 'updated_at' => date('Y-m-d h:i:s')
             );
-            $recurring_already = $this->accounting_recurring_transactions_model->get_sales_receipt_recurring($sales_receipt_id);
-            if ($recurring_already) {
-                $this->accounting_recurring_transactions_model->update_sales_receipt_recurring($recurring_already->accounting_recurring_transactions_id, $recurring_data);
+            
+            if ($recurring_already->recurring_id != null) {
+                $this->accounting_recurring_transactions_model->updateRecurringTransaction($recurring_already->recurring_id, $recurring_data);
             } else {
                 $recurringId = $this->accounting_recurring_transactions_model->create($recurring_data);
-                $accounting_recurring_sales_receipt_data=array(
-                    'accounting_sales_receipt_id' => $sales_receipt_id,
-                    'accounting_recurring_transactions_id'=> $recurringId
-                );
-                $this->accounting_sales_receipt_model->insert_accounting_recurring_sales_receipt($accounting_recurring_sales_receipt_data);
             }
         } else {
-            $this->accounting_sales_receipt_model->delete_recurring_sales_receipt($sales_receipt_id);
+            if ($recurring_already->recurring_id != null) {
+                $this->accounting_recurring_transactions_model->delete($recurring_already->recurring_id);
+                $recurringId=null;
+            }
         }
+        
+        $new_data = array(
+            'customer_id' => $this->input->post('customer_id'),
+            'email' => $this->input->post('email'),
+            'billing_address' => $this->input->post('billing_address'),
+            'sales_receipt_date' => $this->input->post('sales_receipt_date'),
+            'ship_via' => $this->input->post('ship_via'),
+            'shipping_date' => $this->input->post('shipping_date'),
+            'tracking_no' => $this->input->post('tracking_no'),
+            'shipping_to' => $this->input->post('shipping_to'),
+            'location_scale' => $this->input->post('location_scale'),
+            // 'amount' => $this->input->post('total_amount'),
+            'payment_method' => $this->input->post('payment_method'),
+            'ref_number' => $this->input->post('ref_number'),
+            'deposit_to' => $this->input->post('deposit_to'),
+            'message' => $this->input->post('message'),
+            'message_on_statement' => $this->input->post('message_on_statement'),
+            // 'attachments' => $this->input->post('file_name'),
+            'attachments' => 'testing',
+
+            // 'shipping' => $this->input->post('shipping'),
+            'status' => 1,
+            'recurring_id' => $recurringId,
+            'created_by' => logged('id'),
+            'company_id' => logged('company_id'),
+
+            'subtotal' => $this->input->post('subtotal'),
+            'taxes' => $this->input->post('taxes'),
+            'adjustment_name' => $this->input->post('adjustment_name'),
+            'adjustment_value' => $this->input->post('adjustment_value'),
+            'grand_total' => $this->input->post('grand_total'),
+
+            'date_created' => date("Y-m-d H:i:s"),
+            'date_modified' => date("Y-m-d H:i:s")
+        );
+
+        $updateQuery = $this->accounting_sales_receipt_model->updateSalesReceipt($sales_receipt_id, $new_data);
+
+        
 
         if ($updateQuery > 0) {
             $this->accounting_sales_receipt_model->delete_sales_receipt_items($sales_receipt_id);
@@ -6149,7 +6244,18 @@ class Accounting extends MY_Controller
 
     public function salesTax()
     {
-        $user_id = logged('id');
+        add_css([
+            'assets/css/accounting/tax/sales/sales.css',
+            'assets/css/accounting/tax/dropdown-with-search/dropdown-with-search.css',
+            'https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css'
+        ]);
+
+        add_footer_js([
+            'assets/js/accounting/tax/sales/sales.js',
+            'assets/js/accounting/tax/dropdown-with-search/dropdown-with-search.js',
+            'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.18/js/bootstrap-select.min.js'
+        ]);
+
         $this->load->view('accounting/sales_tax', $this->page_data);
     }
 
@@ -6599,7 +6705,7 @@ class Accounting extends MY_Controller
             if ($amount == 0) {
                 $html.='<li>
 												<a href="javascript:void(0)"
-													class="create-charge" data-toggle="modal" data-target="#create_charge_modal" data-email-add="'.$cus->email.'" data-customer-id="'.$cus->prof_id.'">
+													class="create-charge-btn" data-toggle="modal" data-target="#create_charge_modal" data-email-add="'.$cus->email.'" data-customer-id="'.$cus->prof_id.'">
 													Create charge
 												</a>
 											</li>
@@ -7798,6 +7904,26 @@ class Accounting extends MY_Controller
         } else {
             $data->status="data invalid";
         }
+        echo json_encode($data);
+    }
+    public function get_search_items()
+    {
+        $keyword = $this->input->post("iteam_search");
+        $html="";
+        // $res = $this->items_model->getByLike('title',$keyword);
+        $company_id = logged('company_id');
+        $res = $this->db->where('company_id', $company_id)->like('title', $keyword, 'after')->get('items')->result();
+        foreach ($res as $row) {
+            if ($row->discount == '') {
+                $discount = 0;
+            } else {
+                $discount = $row->discount;
+            }
+
+            $html.= '<li data-id="'.$row->id.'" data-discount="'.$discount.'" data-price="'.$row->price.'" data-name="'.$row->title.'">' . $row->title . '</li>';
+        }
+        $data = new stdClass();
+        $data->html =$html;
         echo json_encode($data);
     }
 }

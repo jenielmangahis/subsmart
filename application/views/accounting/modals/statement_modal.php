@@ -186,7 +186,7 @@
                                     <span class="sr-only">Toggle Dropdown</span>
                                 </button>
                                 <div class="dropdown-menu">
-                                    <a class="dropdown-item" href="#">Save and close</a>
+                                    <a class="dropdown-item" href="#" id="save-and-close">Save and close</a>
                                 </div>
                             </div>
 

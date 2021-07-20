@@ -1,18 +1,70 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed'); ?>
-<?php include viewPath('includes/header'); ?>
-<style>
-div.disabled
-{
-  pointer-events: none;
+defined('BASEPATH') or exit('No direct script access allowed');
+include viewPath('includes/header');
+?>
 
-  /* for "disabled" effect */
-  opacity: 0.5;
-  background: #CCC;
-}
+<style>
+    div.disabled {
+    pointer-events: none;
+    opacity: 0.5;
+    background: #CCC;
+    }
 </style>
+
+<template id="overdueItemTemplate">
+    <div class="taxItem">
+        <div>
+            <div class="taxItem__textSecondary" data-value="date"></div>
+            <div class="taxItem__textPrimary" data-value="address"></div>
+        </div>
+        <div class="text-right pr-4">
+            <div class="taxItem__textSecondary">
+                <i class="fa fa-info-circle text-danger"></i>
+                Was due <span data-value="due_date"></span>
+            </div>
+            <div class="taxItem__textPrimary" data-value="price"></div>
+        </div>
+        <div>
+            <button class="btn btn-primary">View return</button>
+        </div>
+    </div>
+</template>
+
+<template id="dueItemTemplate">
+    <div class="taxItem">
+        <div>
+            <div class="taxItem__textSecondary" data-value="date"></div>
+            <div class="taxItem__textPrimary" data-value="address"></div>
+        </div>
+        <div class="text-right pr-4">
+            <div class="taxItem__textSecondary">
+                <i class="fa fa-info-circle text-warning"></i>
+                Due <span data-value="due_date"></span>
+            </div>
+            <div class="taxItem__textPrimary" data-value="price"></div>
+        </div>
+        <div>
+            <button class="btn btn-primary">View return</button>
+        </div>
+    </div>
+</template>
+
+<template id="upcomingItemTemplate">
+    <div class="taxItem taxItem--isUpcoming">
+        <div>
+            <div class="taxItem__textSecondary" data-value="date"></div>
+            <div class="taxItem__textPrimary" data-value="address"></div>
+        </div>
+        <div class="text-right">
+            <div class="taxItem__textSecondary">
+                Accruing
+            </div>
+            <div class="taxItem__textPrimary" data-value="price"></div>
+        </div>
+    </div>
+</template>
+
 <div class="wrapper" role="wrapper">
-    <!-- page wrapper start -->
     <div wrapper__section style="margin-top:1.8%;padding-left:1.4%;">
         <div class="container-fluid" style="background-color:white;">
             <div class="page-title-box">
@@ -20,156 +72,74 @@ div.disabled
                     <div class="col-sm-12">
                           <h3 class="page-title left" style="font-family: Sarabun, sans-serif !important;font-size: 1.75rem !important;font-weight: 600 !important;">Sales Tax</h3>
                     </div>
-                <div class="row align-items-center">
-                    <div class="col-md-12">
-                        <div class="row">
-                            <div class="col-md-6">
-                            <!-- <h2>Rules</h2> -->
-                                <div class="col-md-12 banking-tab-container" style="padding-top:2%;width:350px;">
-                                    <a href="<?php echo url('/accounting/salesTax')?>" class="banking-tab <?php echo ($this->uri->segment(1)=="link_bank")?:'-active';?>">Sales Tax</a>
-                                    <a href="<?php echo url('/accounting/payrollTax')?>" class="banking-tab" style="text-decoration: none">Payroll Tax</a>
+                    <div class="row align-items-center">
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="col-md-12 banking-tab-container" style="padding-top:2%;width:350px;">
+                                        <a href="<?php echo url('/accounting/salesTax') ?>" class="banking-tab <?php echo ($this->uri->segment(1) == "link_bank") ?: '-active'; ?>">Sales Tax</a>
+                                        <a href="<?php echo url('/accounting/payrollTax') ?>" class="banking-tab" style="text-decoration: none">Payroll Tax</a>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                <div style="background-color:#fdeac3; width:100%;padding:.5%;margin-bottom:5px;margin-top:20px;">
-                To start recording sales tax for your company, you need to turn on this feature and set up sales tax items or tax groups.  Go to the Edit menu, then select Preferences.<br>On the Preferences window, select Sales Tax then go to the Company Preferences tab.  Select Yes to turn on sales tax.
-                </div>
+                            <div style="background-color:#fdeac3; width:100%;padding:.5%;margin-bottom:5px;margin-top:20px;">
+                                To start recording sales tax for your company, you need to turn on this feature and set up sales tax items or tax groups.  Go to the Edit menu, then select Preferences.<br>On the Preferences window, select Sales Tax then go to the Company Preferences tab.  Select Yes to turn on sales tax.
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <!-- end row -->
+
             <div class="row">
                 <div class="col-md-8">
-                    <!-- <div class="row">
-                        <div class="col-md-8"> -->
-                            <h3>$0.08</h3>
-                            <h5>SALES TAX DUE</h5>
-                        <!-- </div>
-                    </div> -->
+                    <h3>$0.08</h3>
+                    <h5>SALES TAX DUE</h5>
+
                     <br>
-                    <div class="row">
-                        <div class="col-md-3">
-                            <label>From</label>
-                            <input type="text" class="form-control">
+
+                    <div class="dropdownWithSearchContainer">
+                        <div>
+                            <label>Due Date Start</label>
+                            <div class="dropdownWithSearch">
+                                <input type="text" class="form-control dropdownWithSearch__input">
+                                <button class="dropdownWithSearch__btn">
+                                    <i class="fa fa-chevron-down"></i>
+                                </button>
+                            </div>
                         </div>
-                        <div class="col-md-3">
-                            <label>To</label>
-                            <input type="text" class="form-control">
+                        <div>
+                            <label>Due Date End</label>
+                            <div class="dropdownWithSearch">
+                                <input type="text" class="form-control dropdownWithSearch__input">
+                                <button class="dropdownWithSearch__btn">
+                                    <i class="fa fa-chevron-down"></i>
+                                </button>
+                            </div>
                         </div>
-                        <div class="col-md-3">
-                            <a href="#" class="btn btn-primary" style="margin-top:26px;">Refresh</a>
-                        </div>
+
+                        <button class="btn btn-primary">Refresh</a>
                     </div>
+
                     <br>
-                    <h6>Overdue</h6>
-                    <div class="row" style="padding:1%;border:1px solid gray;box-shadow: 3px 6px #888888;margin-top:15px;">
-                        <div class="col-md-12">
-                            <div class="row">
-                                <div class="col-md-7">
-                                    <label>January 2021</label>
-                                    <h6>Banks City, AL</h6>
-                                </div>
-                                <div class="col-md-3" style="text-align:right;">
-                                    <label>Was due February 20</label>
-                                    <h6>$0.00</h6>
-                                </div>
-                                <div class="col-md-2">
-                                    <a href="#" class="btn btn-primary" style="margin-top:26px;">View Return</a>
-                                </div>
-                            </div>
+
+                    <div class="taxList">
+                        <h6 class="taxList__title">Overdue</h6>
+                        <div id="overdueContainer">
+                            <div class="taxList__loader"></div>
                         </div>
                     </div>
-                    <div class="row" style="padding:1%;border:1px solid gray;box-shadow: 3px 6px #888888;margin-top:15px;">
-                        <div class="col-md-12">
-                            <div class="row">
-                                <div class="col-md-7">
-                                    <label>January 2021</label>
-                                    <h6>Calera City, AL</h6>
-                                </div>
-                                <div class="col-md-3" style="text-align:right;">
-                                    <label>Was due February 20</label>
-                                    <h6>$0.00</h6>
-                                </div>
-                                <div class="col-md-2">
-                                    <a href="#" class="btn btn-primary" style="margin-top:26px;">View Return</a>
-                                </div>
-                            </div>
+
+                    <div class="taxList">
+                        <h6 class="taxList__title">Due</h6>
+                        <div id="dueContainer">
+                            <div class="taxList__loader"></div>
                         </div>
                     </div>
-                    <div class="row" style="padding:1%;border:1px solid gray;box-shadow: 3px 6px #888888;margin-top:15px;">
-                        <div class="col-md-12">
-                            <div class="row">
-                                <div class="col-md-7">
-                                    <label>January 2021</label>
-                                    <h6>Florida</h6>
-                                </div>
-                                <div class="col-md-3" style="text-align:right;">
-                                    <label>Was due February 20</label>
-                                    <h6>$0.08</h6>
-                                </div>
-                                <div class="col-md-2">
-                                    <a href="#" class="btn btn-primary" style="margin-top:26px;">View Return</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <br><br>
-                    <h6>Upcoming</h6>
-                    <div class="row disabled" style="padding:1%;border:1px solid gray;box-shadow: 3px 6px #888888;margin-top:15px;">
-                        <div class="col-md-12">
-                            <div class="row">
-                                <div class="col-md-9">
-                                    <label>January 2021</label>
-                                    <h6>Banks City, AL</h6>
-                                </div>
-                                <div class="col-md-3" style="text-align:right;">
-                                    <label>Accruing</label>
-                                    <h6>$0.00</h6>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row disabled" style="padding:1%;border:1px solid gray;box-shadow: 3px 6px #888888;margin-top:15px;">
-                        <div class="col-md-12">
-                            <div class="row">
-                                <div class="col-md-9">
-                                    <label>January 2021</label>
-                                    <h6>Calera City, AL</h6>
-                                </div>
-                                <div class="col-md-3" style="text-align:right;">
-                                    <label>Accruing</label>
-                                    <h6>$0.00</h6>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row disabled" style="padding:1%;border:1px solid gray;box-shadow: 3px 6px #888888;margin-top:15px;">
-                        <div class="col-md-12">
-                            <div class="row">
-                                <div class="col-md-9">
-                                    <label>January 2021</label>
-                                    <h6>Florida</h6>
-                                </div>
-                                <div class="col-md-3" style="text-align:right;">
-                                    <label>Accruing</label>
-                                    <h6>$0.00</h6>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row disabled" style="padding:1%;border:1px solid gray;box-shadow: 3px 6px #888888;margin-top:15px;">
-                        <div class="col-md-12">
-                            <div class="row">
-                                <div class="col-md-9">
-                                    <label>January to February 2021</label>
-                                    <h6>Alabama</h6>
-                                </div>
-                                <div class="col-md-3" style="text-align:right;">
-                                    <label>Accruing</label>
-                                    <h6>$0.00</h6>
-                                </div>
-                            </div>
+
+                    <div class="taxList">
+                        <h6 class="taxList__title">Upcoming</h6>
+                        <div id="upcomingContainer">
+                            <div class="taxList__loader"></div>
                         </div>
                     </div>
                 </div>
@@ -196,7 +166,9 @@ div.disabled
                             </div>
                         </div>
                     </div>
+
                     <br>
+
                     <div class="row">
                         <table class="table">
                             <tr>
@@ -226,16 +198,16 @@ div.disabled
                     </div>
                 </div>
             </div>
-            
-            <!-- end row -->
         </div>
     </div>
-    <br><br><br>
-        <!-- end container-fluid -->
-	<?php include viewPath('includes/sidebars/accounting/accounting'); ?>
-    <!-- page wrapper end -->
+
+    <br>
+    <br>
+    <br>
+
+	<?php include viewPath('includes/sidebars/accounting/accounting');?>
 </div>
-<?php include viewPath('includes/footer_accounting'); ?>
+<?php include viewPath('includes/footer_accounting');?>
 <script>
     //dropdown checkbox
     var expanded = false;

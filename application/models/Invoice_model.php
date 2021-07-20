@@ -41,6 +41,67 @@ class Invoice_model extends MY_Model
 		return $query->result();
     }
 
+    public function delete_items($id)
+    {
+        $where = array(
+            'invoice_id'   => $id
+          );
+
+        $this->db->where($where);
+        $this->db->delete('invoices_items');
+        return true;
+    }
+
+    public function update_invoice_data($data)
+    {
+        extract($data);
+        $this->db->where('id', $id);
+        $this->db->update('estimates', array(
+            'customer_id'               => $customer_id,
+            'job_location'              => $job_location, //
+            'job_name'                  => $job_name,//
+            'invoice_type'              => $invoice_type,//
+            'po_number'                 => $po_number,//
+            'date_issued'               => $date_issued,//
+            'due_date'                  => $due_date,//
+            'status'                    => $status,//
+            'customer_email'            => $customer_email,//
+            'online_payments'           => $online_payments,
+            'billing_address'           => $billing_address,//
+            'shipping_to_address'       => $shipping_to_address,
+            'ship_via'                  => $ship_via,//
+            'shipping_date'             => $shipping_date,
+            'tracking_number'           => $tracking_number,//
+            'terms'                     => $terms,//
+            'location_scale'            => $location_scale,//
+            'message_on_invoice'        => $message_on_invoice,
+            'message_on_statement'      => $message_on_statement,
+            'job_number'                => $job_number, //to add on database
+            // 'attachments'            => $this->input->post('attachments'),
+            'tags'                      => $tags,//
+            // 'total_due'              => $this->input->post('total_due'),
+            // 'balance'                => $this->input->post('balance'),
+            'deposit_request_type'      => $deposit_request_type,
+            'deposit_request'           => $deposit_request,
+            'message_to_customer'       => $message_to_customer,
+            'terms_and_conditions'      => $terms_and_conditions,
+            // 'signature'              => $this->input->post('signature'),
+            // 'sign_date'              => $this->input->post('sign_date'),
+            // 'is_recurring'           => $this->input->post('is_recurring'),
+            // 'invoice_totals'         => $this->input->post('invoice_totals'),
+            // 'phone'                     => $this->input->post('phone'),
+            'payment_schedule'          => $payment_schedule,
+            'subtotal'                  => $subtotal,
+            'taxes'                     => $taxes, 
+            'adjustment_name'           => $adjustment_name,
+            'adjustment_value'          => $adjustment_value,
+            'grand_total'               => $grand_total,
+            'date_updated'              => $date_updated,
+            
+        ));
+        return true;
+    }
+
     public function createInvoice($data){
 	    $vendor = $this->db->insert('invoices', $data);
 	    $insert_id = $this->db->insert_id();

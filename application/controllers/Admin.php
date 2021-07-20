@@ -1929,6 +1929,106 @@ class Admin extends CI_Controller
             echo '1';
         }
     }
+
+    public function pay_scale()
+    {   
+        $this->load->model('PayScale_model');
+        $this->load->model('Clients_model');
+
+        $this->page_data['companies'] = $this->Clients_model->getAll();
+        $this->page_data['payscale'] = $this->PayScale_model->getAll();
+        $this->load->view('admin/payscale/list', $this->page_data);
+    }
+
+    public function ajax_add_payscale()
+    {
+        $this->load->model('PayScale_model');
+
+        $payscale_name = $this->input->post('payscale_name');
+        $company_id    = $this->input->post('company_id');
+        $data = array(
+            'payscale_name' => $payscale_name,
+            'company_id' => $company_id,
+            'date_created' => date("Y-m-d H:i:s"),
+            'date_updated' => date("Y-m-d H:i:s")
+        );
+        $query = $this->PayScale_model->create($data);
+
+        $json_data = ['is_success' => true, 'msg' => ''];
+
+        echo json_encode($json_data);
+    }
+
+    public function ajax_edit_payscale()
+    {
+        $this->load->model('PayScale_model');
+        $this->load->model('Clients_model');
+
+        $pid = $this->input->post('pid');
+        $payscale = $this->PayScale_model->getById($pid);
+
+        $this->page_data['companies'] = $this->Clients_model->getAll();
+        $this->page_data['payscale'] = $payscale;
+        $this->load->view('admin/payscale/modal_edit_form', $this->page_data);
+    }
+
+    public function ajax_update_payscale()
+    {
+        $this->load->model('PayScale_model');
+
+        $is_success = false;
+        $msg = "";
+
+        $payscale_name = $this->input->post('payscale_name');
+        $company_id    = $this->input->post('company_id');
+        $pid = $this->input->post('pid');
+
+        $data = array(
+            'company_id' => $company_id,
+            'payscale_name' => $payscale_name,
+            'date_updated' => date("Y-m-d H:i:s")
+        );
+
+        $payscale = $this->PayScale_model->update($pid,$data);
+
+        $is_success = true;
+
+        $json_data = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($json_data);
+    }
+
+    public function ajax_delete_payscale()
+    {
+        $this->load->model('PayScale_model');
+
+        $is_success = false;
+        $msg = "";
+
+        $post = $this->input->post();
+        $id = $this->PayScale_model->deletePayScale($post['pid']);
+
+        $is_success = true;
+
+        $json_data = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($json_data);
+    }
+
+    public function job()
+    {   
+        $this->load->model('Jobs_model', 'jobs_model');
+
+        $this->page_data['jobs'] = $this->jobs_model->admin_get_all_jobs();
+        $this->page_data['title'] = 'Jobs';
+        $this->load->view('admin/job/list', $this->page_data);
+    }
 }
 
 /* End of file Admin.php */

@@ -84,6 +84,17 @@ class Mycrm extends MY_Controller {
 	{	
 		$this->load->model('CompanySubscriptionPayments_model');
 
+        $company_id = logged('company_id');
+        $settings = $this->settings_model->getByWhere(['key' => DB_SETTINGS_TABLE_KEY_SCHEDULE, 'company_id' => $company_id]);
+        $a_settings = unserialize($settings[0]->value);
+        if ($a_settings) {
+            $user_timezone = $a_settings['calendar_timezone'];
+        } else {
+            $user_timezone = 'UTC';
+        }
+
+        date_default_timezone_set($user_timezone);
+
 		$company_id = logged('company_id');
 		$payments   = $this->CompanySubscriptionPayments_model->getAllByCompanyId($company_id);
 

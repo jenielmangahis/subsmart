@@ -1971,7 +1971,7 @@ class Vendors extends MY_Controller
                         'due_date' => date("m/d/Y", strtotime($bill->due_date)),
                         'original_amount' => number_format(floatval($bill->total_amount), 2, '.', ','),
                         'open_balance' => number_format(floatval($bill->remaining_balance) + floatval($paymentData->total_amount), 2, '.', ','),
-                        'payment' => number_format(floatval($paymentData->payment_amount), 2, '.', ','),
+                        'payment' => number_format(floatval($paymentData->total_amount), 2, '.', ','),
                         'selected' => true
                     ];
                 }
@@ -1982,7 +1982,7 @@ class Vendors extends MY_Controller
                     'due_date' => date("m/d/Y", strtotime($bill->due_date)),
                     'original_amount' => number_format(floatval($bill->total_amount), 2, '.', ','),
                     'open_balance' => number_format(floatval($bill->remaining_balance) + floatval($paymentData->total_amount), 2, '.', ','),
-                    'payment' => number_format(floatval($paymentData->payment_amount), 2, '.', ','),
+                    'payment' => number_format(floatval($paymentData->total_amount), 2, '.', ','),
                     'selected' => true
                 ];
             }
@@ -2552,7 +2552,7 @@ class Vendors extends MY_Controller
     {
         $billPayment = $this->vendors_model->get_bill_payment_by_id($billPaymentId);
         $appliedCredits = json_decode($billPayment->vendor_credits_applied, true);
-        $payee = $this->vendors_model->get_vendor_by_id($data['payee_id']);
+        $payee = $this->vendors_model->get_vendor_by_id($billPayment->payee_id);
 
         foreach($appliedCredits as $creditId => $amount) {
             $amount = floatval($amount);
@@ -2567,13 +2567,12 @@ class Vendors extends MY_Controller
                 'updated_at' => date("Y-m-d H:i:s")
             ];
 
-            $this->vendors_model->update_vendor_credit($vCredit->id, $vCreditData);
-
             $vendorData = [
                 'vendor_credits' => floatval($payee->vendor_credits) + $amount,
                 'updated_at' => date("Y-m-d H:i:s")
             ];
 
+            $this->vendors_model->update_vendor_credit($vCredit->id, $vCreditData);
             $this->vendors_model->updateVendor($payee->id, $vendorData);
         }
 
@@ -2596,12 +2595,10 @@ class Vendors extends MY_Controller
         $paymentAccType = $this->account_model->getById($paymentAcc->account_id);
 
         if($paymentAccType->account_name === 'Credit Card') {
-            $newBalance = floatval($paymentAcc->balance) - floatval($paymentTotal);
+            $newBalance = floatval($paymentAcc->balance) - floatval($billPayment->total_amount);
         } else {
-            $newBalance = floatval($paymentAcc->balance) + floatval($paymentTotal);
+            $newBalance = floatval($paymentAcc->balance) + floatval($billPayment->total_amount);
         }
-
-        $newBalance = number_format($newBalance, 2, '.', ',');
 
         $paymentAccData = [
             'id' => $paymentAcc->id,
@@ -2615,12 +2612,10 @@ class Vendors extends MY_Controller
     public function update_bill_payment($billPaymentId, $data)
     {
         $this->revert_bill_payment($billPaymentId);
-        $appliedVCredits = [];
         foreach($data['credits'] as $key => $id) {
             $vCredit = $this->vendors_model->get_vendor_credit_by_id($id);
             $balance = floatval($vCredit->remaining_balance);
-            $subtracted = floatval($data['credit_payment'][$index]);
-            $appliedVCredits[$vCredit->id] = $subtracted;
+            $subtracted = floatval($data['credit_payment'][$key]);
             $remainingBal = $balance - $subtracted;
 
             $vCreditData = [
@@ -2630,6 +2625,11 @@ class Vendors extends MY_Controller
             ];
 
             $this->vendors_model->update_vendor_credit($vCredit->id, $vCreditData);
+        }
+
+        $appliedVCredits = [];
+        foreach($data['credit_payment'] as $key => $amount) {
+            $appliedVCredits[$data['credits'][$key]] = floatval($amount);
         }
 
         $this->vendors_model->delete_bill_payment_items($billPaymentId);
@@ -2643,7 +2643,6 @@ class Vendors extends MY_Controller
             'total_amount' => $data['total_amount'],
             'vendor_credits_applied' => count($appliedVCredits) > 0 ? json_encode($appliedVCredits) : null,
             'status' => 1,
-            'created_at' => date("Y-m-d H:i:s"),
             'updated_at' => date("Y-m-d H:i:s")
         ];
 
@@ -2654,9 +2653,9 @@ class Vendors extends MY_Controller
             $paymentAccType = $this->account_model->getById($paymentAcc->account_id);
 
             if($paymentAccType->account_name === 'Credit Card') {
-                $newBalance = floatval($paymentAcc->balance) + floatval($paymentTotal);
+                $newBalance = floatval($paymentAcc->balance) + floatval($data['total_amount']);
             } else {
-                $newBalance = floatval($paymentAcc->balance) - floatval($paymentTotal);
+                $newBalance = floatval($paymentAcc->balance) - floatval($data['total_amount']);
             }
 
             $newBalance = number_format($newBalance, 2, '.', ',');

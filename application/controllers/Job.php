@@ -25,12 +25,7 @@ class Job extends MY_Controller
 
     public function index()
     {
-        $is_allowed = true; //$this->isAllowedModuleAccess(15);
-        if (!$is_allowed) {
-            $this->page_data['module'] = 'job';
-            echo $this->load->view('no_access_module', $this->page_data, true);
-            die();
-        }
+        $this->isAllowedModuleAccess(15);
         $this->page_data['jobs'] = $this->jobs_model->get_all_jobs();
         $this->page_data['title'] = 'Jobs';
         $this->load->view('job/list', $this->page_data);
