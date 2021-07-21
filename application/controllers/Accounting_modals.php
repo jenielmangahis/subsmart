@@ -1259,8 +1259,9 @@ class Accounting_modals extends MY_Controller {
         $employees = [];
         foreach($postData['select'] as $key => $empId) {
             $emp = $this->users_model->getUser($empId);
+            $payDetails = $this->users_model->getEmployeePayDetails($emp->id);
 
-            $empTotalPay = ($emp->pay_rate * (float)$postData['reg_pay_hours'][$key]) + (float)$postData['commission'][$key];
+            $empTotalPay = ($payDetails->pay_rate * (float)$postData['reg_pay_hours'][$key]) + (float)$postData['commission'][$key];
             $empTotalPay = number_format($empTotalPay, 2, '.', ',');
 
             $empSocial = ($empTotalPay / 100) * $socialSecurity;

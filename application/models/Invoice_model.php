@@ -206,6 +206,20 @@ class Invoice_model extends MY_Model
         return $query2->result();
     }
 
+    public function getPayments($inv)
+    {
+        $where = array(
+            'invoice_number'      => $inv,
+          );
+
+        $this->db->select('*, acs_profile.prof_id, acs_profile.first_name, acs_profile.last_name');
+        $this->db->join('acs_profile', 'payment_records.customer_id = acs_profile.prof_id');
+		$this->db->from('payment_records');
+        $this->db->where($where);
+        $query2 = $this->db->get();
+        return $query2->result();
+    }
+
     public function getInvoiceCustomer($id)
     {
         $this->db->select('*');

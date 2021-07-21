@@ -117,7 +117,7 @@
                             <li><a href="#" class="ajax-" data-toggle="modal"
                                     data-target="#adddelayedcreditModal">Delayed credit</a></li>
                             <li><a href="#" class="ajax-" data-toggle="modal"
-                                    data-target="#adddelayedchargeModal">Delayed charge</a></li>
+                                    data-target="#create_charge_modal">Delayed charge</a></li>
                         </ul>
                     </div>
                 </div>
@@ -226,6 +226,8 @@
 </div>
 <div><?php include viewPath('accounting/vendor_print_checks_modal'); ?>
 </div>
+
+<?php include viewPath('accounting/customer_includes/create_charge/create_charge'); ?>
 
 <?php include viewPath('accounting/add_new_term'); ?>
 

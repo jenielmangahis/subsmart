@@ -1005,7 +1005,7 @@ Alarm Direct, Inc</textarea>
                                             id="checkSaved" style="border-radius: 20px 0 0 20px">Save and send</button>
                                         <button class="btn btn-success" type="button" data-toggle="dropdown"
                                             style="border-radius: 0 20px 20px 0;margin-left: -5px;">
-                                            <span class="fa fa-caret-down"></span></button>
+                                            <span class="fa fa-caret-down"></span>&nbsp;</button>
                                         <ul class="dropdown-menu dropdown-menu-right submit-submenu" role="menu">
                                             <li>
                                                 <button type="submit" data-submit-type="save-close" id="checkSaved"

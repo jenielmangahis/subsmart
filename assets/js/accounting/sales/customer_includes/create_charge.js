@@ -266,6 +266,7 @@ $('#create_charge_modal').on('hidden.bs.modal', function() {
     $('#create_charge_modal form').trigger("reset");
     $("#create_charge_modal #grand_total_sr_t").removeClass("hidden");
     $("#create_charge_modal .label-grand_total_sr_t").removeClass("hidden");
+    clear_all_lines();
 });
 $(document).on("click", "#create_charge_modal .modal-footer-check #clearsalereceipt", function(event) {
     event.preventDefault();
@@ -381,8 +382,8 @@ function compute_grand_total() {
     for (var i = 0; i < qty_array.length; i++) {
         grant_total += ((qty_array[i] * price_array[i]) + ((qty_array[i] * price_array[i]) * (parseFloat(tax_pecent_array[i] / 100)))) - discount_array[i];
     }
-    console.log(grant_total);
     $("#create_charge_modal .item-totals .amount").html("$" + Number(grant_total).toLocaleString('en'));
+    $("#create_charge_modal form input[name='grand_total_amount']").val(grant_total);
 }
 $(document).on("focus", "#create_charge_modal table tr td", function(event) {
 
@@ -401,6 +402,10 @@ $(document).on("click", "#create_charge_modal table tr td a.delete-item", functi
     }
 
 });
+$(document).on("click", ".create-charge-btn", function(event) {
+    $("#create_charge_modal form select[name='customer_id']").val($(this).attr("data-customer-id"));
+
+});
 
 $(document).on("click", "#create_charge_modal .item-buttons .add-lines", function(event) {
     $("#create_charge_modal table tbody").append("<tr>" + $("#create_charge_modal table tbody tr:last-child").html() + "</tr>");
@@ -412,9 +417,82 @@ $(document).on("click", "#create_charge_modal .item-buttons .add-lines", functio
     $("#create_charge_modal table tbody").append("<tr>" + $("#create_charge_modal table tbody tr:last-child").html() + "</tr>");
     $("#create_charge_modal table tbody tr:last-child").find(".total_per_item").html("0.00");
 });
-$(document).on("click", "#create_charge_modal .item-buttons .clear-all-lines", function(event) {
+
+function clear_all_lines() {
     var new_tr = "<tr>" + $("#create_charge_modal table tbody tr:last-child").html() + "</tr>";
     $("#create_charge_modal table tbody").html(new_tr);
     $("#create_charge_modal table tbody tr:last-child").find(".total_per_item").html("0.00");
     compute_grand_total();
+}
+$(document).on("click", "#create_charge_modal .item-buttons .clear-all-lines", function(event) {
+    clear_all_lines();
+});
+$("#create_charge_modal form").submit(function(event) {
+    event.preventDefault();
+});
+$(document).on("click", "#create_charge_modal form button[data-action='save']", function(event) {
+    var submit_type = $(this).attr('data-submit-type');
+    $("#create_charge_modal form input[name='submit_option']").val(submit_type);
+    var customer_id = $("#create_charge_modal form select[name='customer_id']").val();
+    var empty_flds = 0;
+    $("#create_charge_modal form  .required").each(function() {
+        if (!$.trim($(this).val())) {
+            empty_flds++;
+        }
+    });
+    if (empty_flds == 0) {
+        event.preventDefault();
+        Swal.fire({
+            title: "Save this Delayed Charge?",
+            html: "Are you sure you want to save this?",
+            showCancelButton: true,
+            imageUrl: baseURL + "/assets/img/accounting/customers/folder.png",
+            cancelButtonColor: "#d33",
+            confirmButtonColor: "#2ca01c",
+            confirmButtonText: $(this).html(),
+        }).then((result) => {
+            if (result.value) {
+                $("#loader-modal").show();
+                $.ajax({
+                    url: baseURL + "/accounting/addDelayedCharge",
+                    type: "POST",
+                    dataType: "json",
+                    data: $("#create_charge_modal form").serialize(),
+                    success: function(data) {
+                        if (data.count_save > 0) {
+                            $("#create_charge_modal form input[name='delayed_charge_id']").val(data.delayed_charge_id);
+                            get_load_customers_table();
+                            Swal.fire({
+                                showConfirmButton: false,
+                                timer: 2000,
+                                title: "Success",
+                                html: "Receive payment has been saved.",
+                                icon: "success",
+                            });
+
+                            if (submit_type == "save-new") {
+                                $('#create_charge_modal form').trigger("reset");
+                                $("#create_charge_modal form select[name='customer_id']").val(customer_id);
+                            } else if (submit_type == "save-close") {
+                                $("#create_charge_modal").modal('hide');
+                            }
+                            if (submit_type != "save") {
+                                clear_all_lines();
+                                compute_grand_total();
+                            }
+                        } else {
+                            Swal.fire({
+                                showConfirmButton: false,
+                                timer: 2000,
+                                title: "Error",
+                                html: "No payment saved. Please double check your inputs.",
+                                icon: "error",
+                            });
+                        }
+                    },
+                });
+            }
+        });
+
+    }
 });

@@ -67,7 +67,7 @@
                                 <tr>
                                     <td>
                                         <div class="form-group d-flex" style="margin-bottom: 0 !important">
-                                            <input class="m-auto" type="checkbox" name="select[]" value="<?=$payDetail->id?>" checked>
+                                            <input class="m-auto" type="checkbox" name="select[]" value="<?=$employee->id?>" checked>
                                         </div>
                                     </td>
                                     <td>

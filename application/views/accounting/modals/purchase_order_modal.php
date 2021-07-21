@@ -276,16 +276,19 @@
                         <div class="col-md-4">
                             <!-- Split dropup button -->
                             <div class="btn-group dropup float-right">
-                                <button type="button" class="btn btn-success" id="save-and-new">
-                                    Save and new
+                                <button type="button" class="btn btn-success" id="save-and-send">
+                                    Save and send
                                 </button>
                                 <button type="button" class="btn btn-success dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     <span class="sr-only">Toggle Dropdown</span>
                                 </button>
                                 <div class="dropdown-menu">
+                                    <a class="dropdown-item" href="#" id="save-and-new">Save and new</a>
                                     <a class="dropdown-item" href="#" id="save-and-close">Save and close</a>
                                 </div>
                             </div>
+
+                            <button type="button" class="btn btn-secondary btn-rounded border float-right mr-2" id="save">Save</button>
                         </div>
                     </div>
                 </div>
