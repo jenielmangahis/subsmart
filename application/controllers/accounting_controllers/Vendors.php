@@ -30,7 +30,8 @@ class Vendors extends MY_Controller
             "assets/css/accounting/accounting-modal-forms.css",
             "assets/plugins/jquery-toast-plugin-master/dist/jquery.toast.min.css",
             "assets/css/accounting/accounting_includes/receive_payment.css",
-            "assets/css/accounting/accounting_includes/customer_sales_receipt_modal.css"
+            "assets/css/accounting/accounting_includes/customer_sales_receipt_modal.css",
+            "assets/css/accounting/accounting_includes/create_charge.css",
         ));
 
         add_footer_js(array(
@@ -40,7 +41,8 @@ class Vendors extends MY_Controller
             "assets/js/accounting/modal-forms.js",
             "assets/plugins/jquery-toast-plugin-master/dist/jquery.toast.min.js",
             "assets/js/accounting/sales/customer_sales_receipt_modal.js",
-            "assets/js/accounting/sales/customer_includes/receive_payment.js"
+            "assets/js/accounting/sales/customer_includes/receive_payment.js",
+            "assets/js/accounting/sales/customer_includes/create_charge.js"
         ));
 
         $this->page_data['menu_name'] =

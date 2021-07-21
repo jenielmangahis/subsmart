@@ -1,3 +1,16 @@
+function get_load_customers_table() {
+    $("#loader-modal").show();
+    $.ajax({
+        url: baseURL + "/accounting/get_load_customers_table",
+        type: "POST",
+        dataType: "json",
+        data: {},
+        success: function(data) {
+            $('#customers_table tbody').html(data.html);
+            $("#loader-modal").hide();
+        },
+    });
+}
 var payment_method_information = "";
 $(document).ready(function() {
     payment_method_information = $("div#customer_receive_payment_modal .payment_method_information").html();

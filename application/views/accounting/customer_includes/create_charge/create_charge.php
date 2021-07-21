@@ -12,6 +12,10 @@
                         aria-label="Close"><i class="fa fa-times fa-lg"></i></button>
                 </div>
                 <form action="#" method="post">
+                    <input type="text" name="submit_option" style="display: none;">
+                    <input type="text" name="delayed_charge_id" style="display: none;">
+                    <input type="text" name="grand_total_amount" style="display: none;">
+                    <input type="text" name="recurring_selected" style="display: none;">
                     <div class="modal-body">
                         <div class="row">
                             <div class="col-md-6">
@@ -236,7 +240,7 @@
                                             <div class="date-part">
                                                 <div class="input-field-1">
                                                     <div class="label">Start Date</div>
-                                                    <input type="text" class="datepicker" name="recurring-start-date">
+                                                    <input type="date" class="datepicker" name="recurring-start-date">
                                                 </div>
                                                 <div class="input-field-2">
                                                     <div class="label">End</div>
@@ -249,7 +253,7 @@
                                                 <div class="input-field-3">
                                                     <div class="by-end-date" style="display: none;">
                                                         <div class="label">End Date</div>
-                                                        <input type="text" class="datepicker" name="by-end-date">
+                                                        <input type="date" class="datepicker" name="by-end-date">
                                                     </div>
                                                     <div class="after-occurrences" style="display: none;">
                                                         <div style="visibility: hidden;">End Date</div>
@@ -279,7 +283,7 @@
                                 <div class="delayed_charge_date">
                                     <div class="form-group">
                                         <label for="job_type">Delayed Charge date</label>
-                                        <input type="date" class="form-control" name="delayed_charge_date" />
+                                        <input type="date" class="form-control" name="delayed_charge_date" required/>
                                     </div>
                                 </div>
                             </div>
@@ -383,7 +387,7 @@
 
                             <div class="row">
                                 <div class="col-md-2">
-                                    Memo<br>
+                                    <label for="memo">Memo</label>
                                     <textarea style="height:100px;width:100%;" name="memo"></textarea>
                                 </div>
                             </div>
@@ -439,22 +443,18 @@
                                 </div>
                                 <div class="col-md-3">
                                     <div class="dropdown" style="float: right">
-                                        <button class="btn btn-dark cancel-button px-4" data-submit-type="save"
+                                        <button class="btn btn-dark cancel-button px-4" data-action="save" data-submit-type="save"
                                             type="submit">Save</button>
-                                        <button type="submit" data-submit-type="save-send" class="btn btn-success"
-                                            id="checkSaved" style="border-radius: 20px 0 0 20px">Save and send</button>
+                                        <button type="submit" data-submit-type="save-new"  data-action="save" class="btn btn-success"
+                                            id="checkSaved" style="border-radius: 20px 0 0 20px">Save and new</button>
                                         <button class="btn btn-success" type="button" data-toggle="dropdown"
                                             style="border-radius: 0 20px 20px 0;margin-left: -5px;">
-                                            <span class="fa fa-caret-down"></span></button>
+                                            <span class="fa fa-caret-down"></span>&nbsp;</button>
                                         <ul class="dropdown-menu dropdown-menu-right submit-submenu" role="menu">
                                             <li>
-                                                <button type="submit" data-submit-type="save-close" id="checkSaved"
+                                                <button type="submit" data-submit-type="save-close"  data-action="save" id="checkSaved"
                                                     style="background: none;border: none; height: auto;font-size: 13px;padding: 10px;
                                                 ">Save and close</button>
-                                            </li>
-                                            <li>
-                                                <button type="submit" data-submit-type="save-new" id="checkSaved" style="background: none;border: none; height: auto;font-size: 13px;padding: 10px;
-                                                ">Save and new</button>
                                             </li>
                                         </ul>
                                     </div>

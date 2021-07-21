@@ -3,6 +3,10 @@
     font-size: 12px;
 }
 
+#create_charge_modal form {
+    font-size: 12px;
+}
+
 #create_charge_modal form textarea {
     resize: none;
 }
@@ -17,10 +21,25 @@
     font-weight: lighter;
     padding: 8px;
     height: auto;
-    border: solid 1px #BABEC5;
+    border: solid 1px #BABEC5!important;
     border-radius: 2px;
     width: 100%;
     resize: none;
+    color: #404040;
+}
+
+#create_charge_modal select {
+    display: block!important;
+    visibility: visible;
+    clip: auto!important;
+    position: inherit!important;
+    height: auto!important;
+    padding: 8px!important;
+    width: 100%!important;
+}
+
+#create_charge_modal form .select2 {
+    display: none;
 }
 
 #create_charge_modal .delayed_charge_date {
@@ -34,6 +53,7 @@
 #create_charge_modal .tags a.manage-tags {
     color: #3491D0;
     font-weight: lighter;
+    font-size: 12px;
 }
 
 #create_charge_modal input[name="delayed_charge_date"] {
@@ -84,7 +104,8 @@ div#create_charge_modal .item-totals .amount {
     font-style: normal;
 }
 
-div#create_charge_modal {
+#create_charge_modal input:focus,
+#create_charge_modal textarea:focus div#create_charge_modal {
     font-size: 12px;
 }
 
@@ -102,7 +123,7 @@ div#create_charge_modal {
     padding: 5px 10px;
 }
 
-#create_charge_modal .modal-footer-check button[data-submit-type='save-send'],
+#create_charge_modal .modal-footer-check button[data-submit-type='save-new'],
 #create_charge_modal .modal-footer-check button[data-toggle='dropdown'] {
     background-image: none;
     background-color: #2CA01C;
@@ -117,7 +138,7 @@ div#create_charge_modal {
     margin-right: -5px;
 }
 
-#create_charge_modal .modal-footer-check button[data-submit-type='save-send']:hover,
+#create_charge_modal .modal-footer-check button[data-submit-type='save-new']:hover,
 #create_charge_modal .modal-footer-check button[data-toggle='dropdown']:hover {
     background-image: none;
     background-color: #108000;
@@ -125,7 +146,7 @@ div#create_charge_modal {
 
 #create_charge_modal .modal-footer-check .submit-submenu>li:hover {
     background-color: #ECEDF1;
-    color: #008A00;
+    color: #008A00!important;
 }
 
 #create_charge_modal .modal-footer-check .submit-submenu>li button {
@@ -412,17 +433,25 @@ div#create_charge_modal {
     left: 50px;
 }
 
+#create_charge_modal table tr th {
+    font-size: 14px;
+}
+
 #create_charge_modal table tr td {
     position: relative;
+    font-size: 12px;
 }
 
 #create_charge_modal table .suggestions {
     width: 100%;
     box-shadow: 3px 6px 20px #2829294d;
+    max-height: 300px;
+    overflow: auto;
 }
 
 #create_charge_modal table .suggestions li {
     border-bottom: solid 1px #DEE2E6;
+    font-size: 12px;
 }
 
 #create_charge_modal table .suggestions li:hover {

@@ -1,9 +1,18 @@
 class Accounting__TaxItem {
+  constructor() {
+    this.$modal = $("#reviewSalesTaxModal");
+  }
+
   createElement(data) {
     const $templateCopy = $(document.importNode(this.$template.get(0).content, true)); // prettier-ignore
     const dataNames = ["date", "address", "due_date", "price"];
     dataNames.forEach((name) => {
       $templateCopy.find(`[data-value=${name}]`).text(data[name]);
+    });
+
+    const $button = $templateCopy.find(".btn-primary");
+    $button.on("click", () => {
+      this.$modal.modal("show");
     });
 
     return $templateCopy;
@@ -73,6 +82,24 @@ class Accounting__UpcomingItem extends Accounting__TaxItem {
   $overdueContainer.html(overdueItems);
   $dueContainer.html(dueItems);
   $upcomingContainer.html(upcomings);
+
+  const $sidebar = $("#addAdjustment");
+  const $sidebarCloseBtn = $sidebar.find(".addAdjustment__close");
+  const $modal = $("#reviewSalesTaxModal");
+  const $addAdjustmentLink = $modal.find("#addAdjustmentLink");
+
+  $addAdjustmentLink.on("click", (event) => {
+    event.preventDefault();
+    $sidebar.addClass("addAdjustment--show");
+  });
+
+  $sidebarCloseBtn.on("click", () => {
+    $sidebar.removeClass("addAdjustment--show");
+  });
+
+  $modal.on("hidden.bs.modal", () => {
+    $sidebar.removeClass("addAdjustment--show");
+  });
 })();
 
 function sleep(ms) {

@@ -159,6 +159,9 @@
 <script>
     CKEDITOR.replace('updateheader');
 </script>
+<script>
+    CKEDITOR.replace('send-email');
+</script>
 
 
 <script>

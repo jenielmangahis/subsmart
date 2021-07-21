@@ -641,7 +641,7 @@
                             <button type="submit" class="btn-save-new" data-action="save"
                                 data-submit-type="save-new">Save and new</button>
                             <button href="#" class="btn-save-dropdown">
-                                <i class="fa fa-angle-down" aria-hidden="true"></i>
+                                <i class="fa fa-angle-down" aria-hidden="true"></i>&nbsp;
                             </button>
 
                         </div>

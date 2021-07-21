@@ -61,6 +61,7 @@ class Accounting extends MY_Controller
             "assets/plugins/jquery-toast-plugin-master/dist/jquery.toast.min.css",
             "assets/css/accounting/accounting_includes/receive_payment.css",
             "assets/css/accounting/accounting_includes/customer_sales_receipt_modal.css",
+            "assets/css/accounting/accounting_includes/create_charge.css",
         ));
 
         add_footer_js(array(
@@ -69,7 +70,8 @@ class Accounting extends MY_Controller
             "assets/js/accounting/modal-forms.js",
             "assets/plugins/jquery-toast-plugin-master/dist/jquery.toast.min.js",
             "assets/js/accounting/sales/customer_sales_receipt_modal.js",
-            "assets/js/accounting/sales/customer_includes/receive_payment.js"
+            "assets/js/accounting/sales/customer_includes/receive_payment.js",
+            "assets/js/accounting/sales/customer_includes/create_charge.js"
         ));
 
         $this->page_data['menu_name'] =
@@ -242,13 +244,11 @@ class Accounting extends MY_Controller
         add_css(array(
             "assets/css/accounting/customers.css",
             "assets/css/accounting/accounting_includes/create_statement_modal.css",
-            "assets/css/accounting/accounting_includes/create_charge.css",
         ));
         add_footer_js(array(
             "assets/js/accounting/sales/customers.js",
             "assets/js/accounting/sales/customer_includes/send_reminder.js",
-            "assets/js/accounting/sales/customer_includes/create_statement_modal.js",
-            "assets/js/accounting/sales/customer_includes/create_charge.js"
+            "assets/js/accounting/sales/customer_includes/create_statement_modal.js"
         ));
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->page_data['customers'] = $this->accounting_customers_model->getAllByCompany();
@@ -2347,7 +2347,7 @@ class Accounting extends MY_Controller
             'phone'                     => $this->input->post('phone'),
             'payment_schedule'          => $this->input->post('payment_schedule'),
             'subtotal'                  => $this->input->post('subtotal'),
-            'taxes'                     => $this->input->post('taxes'), 
+            'taxes'                     => $this->input->post('taxes'),
             'adjustment_name'           => $this->input->post('adjustment_name'),
             'adjustment_value'          => $this->input->post('adjustment_value'),
             'grand_total'               => $this->input->post('grand_total'),
@@ -2360,47 +2360,47 @@ class Accounting extends MY_Controller
 
 
         // if($addQuery > 0){
-            // $a = $this->input->post('items');
-            // $b = $this->input->post('item_type');
-            // $d = $this->input->post('quantity');
-            // $f = $this->input->post('price');
-            // $g = $this->input->post('discount');
-            // $h = $this->input->post('tax');
-            // $ii = $this->input->post('total');
+        // $a = $this->input->post('items');
+        // $b = $this->input->post('item_type');
+        // $d = $this->input->post('quantity');
+        // $f = $this->input->post('price');
+        // $g = $this->input->post('discount');
+        // $h = $this->input->post('tax');
+        // $ii = $this->input->post('total');
 
-            // $i = 0;
-            // foreach($a as $row){
-            //     $data['item'] = $a[$i];
-            //     $data['item_type'] = $b[$i];
-            //     $data['qty'] = $d[$i];
-            //     $data['cost'] = $f[$i];
-            //     $data['discount'] = $g[$i];
-            //     $data['tax'] = $h[$i];
-            //     $data['total'] = $ii[$i];
-            //     $data['type'] = 'Work Order';
-            //     $data['type_id'] = $id;
-            //     // $data['status'] = '1';
-            //     $data['created_at'] = date("Y-m-d H:i:s");
-            //     $data['updated_at'] = date("Y-m-d H:i:s");
-            //     $addQuery2 = $this->accounting_invoices_model->additem_details($data);
-            //     $i++;
-            // }
-            // if($addQuery > 0){
-                $a          = $this->input->post('itemid');
-                $quantity   = $this->input->post('quantity');
-                $price      = $this->input->post('price');
-                $h          = $this->input->post('tax');
+        // $i = 0;
+        // foreach($a as $row){
+        //     $data['item'] = $a[$i];
+        //     $data['item_type'] = $b[$i];
+        //     $data['qty'] = $d[$i];
+        //     $data['cost'] = $f[$i];
+        //     $data['discount'] = $g[$i];
+        //     $data['tax'] = $h[$i];
+        //     $data['total'] = $ii[$i];
+        //     $data['type'] = 'Work Order';
+        //     $data['type_id'] = $id;
+        //     // $data['status'] = '1';
+        //     $data['created_at'] = date("Y-m-d H:i:s");
+        //     $data['updated_at'] = date("Y-m-d H:i:s");
+        //     $addQuery2 = $this->accounting_invoices_model->additem_details($data);
+        //     $i++;
+        // }
+        // if($addQuery > 0){
+        $a          = $this->input->post('itemid');
+        $quantity   = $this->input->post('quantity');
+        $price      = $this->input->post('price');
+        $h          = $this->input->post('tax');
     
-                $i = 0;
-                foreach($a as $row){
-                    $data['items_id'] = $a[$i];
-                    $data['qty'] = $quantity[$i];
-                    $data['cost'] = $price[$i];
-                    $data['tax'] = $h[$i];
-                    $data['invoice_id '] = $id;
-                    $addQuery2 = $this->invoice_model->add_invoice_items($data);
-                    $i++;
-                }
+        $i = 0;
+        foreach ($a as $row) {
+            $data['items_id'] = $a[$i];
+            $data['qty'] = $quantity[$i];
+            $data['cost'] = $price[$i];
+            $data['tax'] = $h[$i];
+            $data['invoice_id '] = $id;
+            $addQuery2 = $this->invoice_model->add_invoice_items($data);
+            $i++;
+        }
     }
 
     
@@ -4123,8 +4123,6 @@ class Accounting extends MY_Controller
             'adjustment_name' => $this->input->post('adjustment_name'),
             'adjustment_value' => $this->input->post('adjustment_value'),
             'grand_total' => $this->input->post('grand_total'),
-
-            'date_created' => date("Y-m-d H:i:s"),
             'date_modified' => date("Y-m-d H:i:s")
         );
 
@@ -4630,31 +4628,201 @@ class Accounting extends MY_Controller
     {
         $company_id  = getLoggedCompanyID();
         $user_id  = getLoggedUserID();
+        if ($this->input->post('delayed_charge_id')!="") {
+            $this->update_DelayedCharge();
+        } else {
+            $customer_id=$this->input->post('customer_id');
+            $customer_info = $this->accounting_customers_model->get_customer_by_id($customer_id);
+            $recurringId = null;
+            if ($this->input->post("recurring_selected")==1) {
+                $days_in_advance = null;
+                $recurring_month = null;
+                $recurring_week = null;
+                $recurring_day = null;
+                $recurr_every = null;
+                if ($this->input->post("recurring-type") == "Schedule") {
+                    $days_in_advance = $this->input->post("recurring-days-in-advance");
+                } elseif ($this->input->post("recurring-type") == "Reminder") {
+                    $days_in_advance = $this->input->post("remind-days-before");
+                }
+                if ($this->input->post("recurring-interval") == "Daily") {
+                    $recurr_every = $this->input->post("daily-days");
+                } elseif ($this->input->post("recurring-interval") == "Weekly") {
+                    $recurr_every = $this->input->post("weekly-every");
+                    $recurring_day = $this->input->post("weekly-weeks-on");
+                } elseif ($this->input->post("recurring-interval") == "Monthly") {
+                    $recurring_month = $this->input->post("recurring-interval") ;
+                    $recurring_week = $this->input->post("monthly-week-order") ;
+                    $recurring_day = $this->input->post("monthly-day-of-the-week") ;
+                    $recurr_every = $this->input->post("monthly-months") ;
+                } elseif ($this->input->post("recurring-interval") == "Yearly") {
+                    $recurring_month = $this->input->post("yearly-month") ;
+                    $recurring_day = $this->input->post("yearly-day") ;
+                }
+                $recurring_data=array(
+                    'company_id' => logged('company_id'),
+                    'template_name' => $this->input->post("recurring-template-name"),
+                    'recurring_type' => $this->input->post("recurring-type"),
+                    'days_in_advance' => $days_in_advance,
+                    'recurring_interval' => $this->input->post("recurring-interval"),
+                    'recurring_month' => $recurring_month,
+                    'recurring_week' => $recurring_week,
+                    'recurring_day' => $recurring_day,
+                    'recurr_every' => $recurr_every,
+                    'start_date' => $this->input->post("recurring-start-date") != "" ? date("Y-m-d", strtotime($this->input->post("recurring-start-date"))) : null,
+                    'end_type' => $this->input->post("recurring-end-type"),
+                    'end_date' => $this->input->post("by-end-date") != "" ? date("Y-m-d", strtotime($this->input->post("by-end-date"))) : null,
+                    'max_occurences' => $this->input->post("after-occurrences"),
+                    'status' => 1
+                );
+                $recurringId = $this->accounting_recurring_transactions_model->create($recurring_data);
+            }
+        
+        
+            $new_data = array(
+                'customer_id' => $customer_id,
+                'delayed_credit_date' => $this->input->post('delayed_charge_date'),
+                'tags' => $this->input->post('tags'),
+                'total_amount' => $this->input->post('grand_total_amount'),
+                'memo' => $this->input->post('memo'),
+                'attachments' => 'testing',
+                'status' => 1,
+                'user_id' => $user_id,
+                'company_id' => $company_id,
+                'created_by' => logged('id'),
+                'recurring_id'=>$recurringId
+            );
 
-        $product = json_encode($this->input->post('phone'));
+            $delayed_charge_id = $this->accounting_delayed_charge_model->createDelayedCharge($new_data);
 
+            // if($addQuery > 0){
+            //     redirect('accounting/banking');
+            //     // echo json_encode($addQuery);
+            // }
+            if ($delayed_charge_id > 0) {
+                $a = $this->input->post('items');
+                $b = $this->input->post('item_type');
+                $d = $this->input->post('quantity');
+                $f = $this->input->post('price');
+                $g = $this->input->post('discount');
+                $h = $this->input->post('tax');
+                $ii = $this->input->post('total');
+
+                $i = 0;
+                foreach ($a as $row) {
+                    $data['item'] = $a[$i];
+                    $data['item_type'] = $b[$i];
+                    $data['qty'] = $d[$i];
+                    $data['cost'] = $f[$i];
+                    $data['discount'] = $g[$i];
+                    $data['tax'] = $h[$i];
+                    $data['total'] = (($d[$i]*$f[$i])+($h[$i]))-$g[$i];
+                    $data['type'] = 'Delayed Charge';
+                    $data['type_id'] = $delayed_charge_id;
+                    $data['status'] = 1;
+                    $data['created_at'] = date("Y-m-d H:i:s");
+                    $data['updated_at'] = date("Y-m-d H:i:s");
+                    $item_id = $this->accounting_invoices_model->additem_details($data);
+                    $i++;
+                }
+            }
+            $data = new stdClass();
+            $data->count_save = 1;
+            $data->delayed_charge_id = $delayed_charge_id;
+            echo json_encode($data);
+        }
+    }
+    public function update_DelayedCharge()
+    {
+        $company_id  = getLoggedCompanyID();
+        $user_id  = getLoggedUserID();
+        
+        $delayed_charge_id=$this->input->post("delayed_charge_id");
+        $customer_id=$this->input->post('customer_id');
+        $customer_info = $this->accounting_customers_model->get_customer_by_id($customer_id);
+        $dayed_charge_info=$this->accounting_delayed_charge_model->getDelayedChargeDetails($delayed_charge_id);
+        $recurringId = null;
+        if ($this->input->post("recurring_selected")==1) {
+            $days_in_advance = null;
+            $recurring_month = null;
+            $recurring_week = null;
+            $recurring_day = null;
+            $recurr_every = null;
+            if ($this->input->post("recurring-type") == "Schedule") {
+                $days_in_advance = $this->input->post("recurring-days-in-advance");
+            } elseif ($this->input->post("recurring-type") == "Reminder") {
+                $days_in_advance = $this->input->post("remind-days-before");
+            }
+            if ($this->input->post("recurring-interval") == "Daily") {
+                $recurr_every = $this->input->post("daily-days");
+            } elseif ($this->input->post("recurring-interval") == "Weekly") {
+                $recurr_every = $this->input->post("weekly-every");
+                $recurring_day = $this->input->post("weekly-weeks-on");
+            } elseif ($this->input->post("recurring-interval") == "Monthly") {
+                $recurring_month = $this->input->post("recurring-interval") ;
+                $recurring_week = $this->input->post("monthly-week-order") ;
+                $recurring_day = $this->input->post("monthly-day-of-the-week") ;
+                $recurr_every = $this->input->post("monthly-months") ;
+            } elseif ($this->input->post("recurring-interval") == "Yearly") {
+                $recurring_month = $this->input->post("yearly-month") ;
+                $recurring_day = $this->input->post("yearly-day") ;
+            }
+            $recurring_data=array(
+                    'company_id' => logged('company_id'),
+                    'template_name' => $this->input->post("recurring-template-name"),
+                    'recurring_type' => $this->input->post("recurring-type"),
+                    'days_in_advance' => $days_in_advance,
+                    'recurring_interval' => $this->input->post("recurring-interval"),
+                    'recurring_month' => $recurring_month,
+                    'recurring_week' => $recurring_week,
+                    'recurring_day' => $recurring_day,
+                    'recurr_every' => $recurr_every,
+                    'start_date' => $this->input->post("recurring-start-date") != "" ? date("Y-m-d", strtotime($this->input->post("recurring-start-date"))) : null,
+                    'end_type' => $this->input->post("recurring-end-type"),
+                    'end_date' => $this->input->post("by-end-date") != "" ? date("Y-m-d", strtotime($this->input->post("by-end-date"))) : null,
+                    'max_occurences' => $this->input->post("after-occurrences"),
+                    'status' => 1,
+                    'updated_at'=>date("Y-m-d H:i:s")
+                );
+            if ($dayed_charge_info->recurring_id != null) {
+                $this->accounting_recurring_transactions_model->updateRecurringTransaction(
+                    $dayed_charge_info->recurring_id,
+                    $recurring_data
+                );
+            } else {
+                $recurringId = $this->accounting_recurring_transactions_model->create($recurring_data);
+            }
+        } else {
+            if ($dayed_charge_info->recurring_id != null) {
+                $this->accounting_recurring_transactions_model->delete($dayed_charge_info->recurring_id);
+                $recurringId=null;
+            }
+        }
+        
+        
         $new_data = array(
-            'customer_id' => $this->input->post('customer_id'),
-            'delayed_credit_date' => $this->input->post('charge_date'),
-            'tags' => $this->input->post('tags'),
-            'total_amount' => $this->input->post('grand_total_amount'),
-            'memo' => $this->input->post('memo'),
-            'attachments' => 'testing',
-            'status' => 1,
-            'user_id' => $user_id,
-            'company_id' => $company_id,
-            'created_by' => logged('id'),
-            'date_created' => date("Y-m-d H:i:s"),
-            'date_modified' => date("Y-m-d H:i:s")
-        );
-
-        $addQuery = $this->accounting_delayed_charge_model->createDelayedCharge($new_data);
+                'customer_id' => $customer_id,
+                'delayed_credit_date' => $this->input->post('delayed_charge_date'),
+                'tags' => $this->input->post('tags'),
+                'total_amount' => $this->input->post('grand_total_amount'),
+                'memo' => $this->input->post('memo'),
+                'attachments' => 'testing',
+                'status' => 1,
+                'user_id' => $user_id,
+                'company_id' => $company_id,
+                'created_by' => logged('id'),
+                'recurring_id'=>$recurringId,
+                'date_modified' => date("Y-m-d H:i:s")
+            );
+        
+        $update_query = $this->accounting_delayed_charge_model->updateDelayedCharge($delayed_charge_id,$new_data);
 
         // if($addQuery > 0){
         //     redirect('accounting/banking');
         //     // echo json_encode($addQuery);
         // }
-        if ($addQuery > 0) {
+        if ($update_query) {
+            $this->accounting_delayed_charge_model->delete_delayed_charge_items($delayed_charge_id);
             $a = $this->input->post('items');
             $b = $this->input->post('item_type');
             $d = $this->input->post('quantity');
@@ -4671,21 +4839,19 @@ class Accounting extends MY_Controller
                 $data['cost'] = $f[$i];
                 $data['discount'] = $g[$i];
                 $data['tax'] = $h[$i];
-                $data['total'] = $ii[$i];
+                $data['total'] = (($d[$i]*$f[$i])+($h[$i]))-$g[$i];
                 $data['type'] = 'Delayed Charge';
-                $data['type_id'] = $addQuery;
-                // $data['status'] = '1';
-                $data['created_at'] = date("Y-m-d H:i:s");
+                $data['type_id'] = $delayed_charge_id;
+                $data['status'] = 1;
                 $data['updated_at'] = date("Y-m-d H:i:s");
-                $addQuery2 = $this->accounting_invoices_model->additem_details($data);
+                $item_id = $this->accounting_invoices_model->additem_details($data);
                 $i++;
             }
-
-            redirect('accounting/banking');
-        } else {
-            echo json_encode(0);
-            // print_r($file_put_contents);die;
         }
+        $data = new stdClass();
+        $data->count_save = 1;
+        $data->delayed_charge_id = $delayed_charge_id;
+        echo json_encode($data);
     }
 
     public function updateDelayedCharge()

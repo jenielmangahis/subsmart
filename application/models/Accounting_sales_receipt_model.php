@@ -85,7 +85,7 @@ class Accounting_sales_receipt_model extends MY_Model
     }
     public function delete_sales_receipt_items($sales_receipt_id)
     {
-        $this->db->delete('item_details', array('type_id' => $sales_receipt_id));
+        $this->db->delete('item_details', array('type_id' => $sales_receipt_id,'type'=>'Sales Receipt'));
     }
     public function get_sales_receipt_recurring($sales_receipt_id)
     {

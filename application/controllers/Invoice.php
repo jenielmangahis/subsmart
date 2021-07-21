@@ -476,7 +476,7 @@ class Invoice extends MY_Controller {
         $comp_id = logged('company_id');
 
         $id = $this->payment_records_model->create([
-            'user_id' => $user->id,
+            'user_id' => logged('id'),
             'company_id' => $comp_id,
             'customer_id' => post('customer_id'),
             'invoice_amount' => post('amount'),
@@ -488,7 +488,7 @@ class Invoice extends MY_Controller {
             'notes' => post('notes')
         ]);
 
-        $this->activity_model->add('New Payment Record $' . $user->id . ' Created by User:' . logged('name'), logged('id'));
+        $this->activity_model->add('New Payment Record $' . logged('id') . ' Created by User:' . logged('name'), logged('id'));
         $this->session->set_flashdata('alert-type', 'success');
         $this->session->set_flashdata('alert', 'New Payment Recorded Successfully');
 
@@ -919,7 +919,14 @@ class Invoice extends MY_Controller {
             $this->page_data['invoice'] = $invoice;
             $this->page_data['user'] = $user;
         }
+
+        $invoiceData = $this->invoice_model->getinvoice($id);
+        $inv_no = $invoiceData->invoice_number;
+
+
         $this->page_data['record_payment'] = $this->input->get('do');
+        $this->page_data['payments'] = $this->invoice_model->getPayments($inv_no);
+        $this->page_data['items'] = $this->invoice_model->getItemsInv($id);
 
         $this->load->view('invoice/genview', $this->page_data);
     }

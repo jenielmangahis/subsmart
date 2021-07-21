@@ -311,6 +311,8 @@
                                     <a class="dropdown-item" href="#" id="save-and-close">Save and close</a>
                                 </div>
                             </div>
+
+                            <button type="button" class="btn btn-secondary btn-rounded border float-right mr-2" id="save">Save</button>
                         </div>
                     </div>
                 </div>

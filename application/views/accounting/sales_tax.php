@@ -205,6 +205,147 @@ include viewPath('includes/header');
     <br>
     <br>
 
+    <div class="modal fade taxModal" tabindex="-1" role="dialog" id="reviewSalesTaxModal">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Review your sales tax</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="taxModal__section row mb-3">
+                    <div class="col">
+                        <div>
+                            <div class="taxModal__title">Florida Department of Revenue</div>
+                            <div>Tax Period: June 2021</div>
+                            <div>Due date:  Due July 20</div>
+                        </div>
+
+                        <div class="taxModal__spacer"></div>
+
+                        <div>
+                            <div class="taxModal__title taxModal__title--secondary">ADI Smart Security</div>
+                            <div>6055 BORN CT</div>
+                            <div>Pensacola, FL 32504</div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="taxModal__title">File your sales tax now</div>
+                        <ol class="taxModal__list">
+                            <li>Print the tax form from your state's website and fill it out.</li>
+                            <li>Write a check to your agency or print one.</li>
+                            <li>Mail the form and check to your agency.</li>
+                            <li>When you're done, come back to record the payment in QuickBooks.</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="taxModal__section">
+                    <table class="table table-hover table-sm">
+                        <thead>
+                            <tr>
+                                <th>Level</th>
+                                <th class="text-right">Gross Sales</th>
+                                <th class="text-right">Nontaxable Sales</th>
+                                <th class="text-right">Taxable Sales</th>
+                                <th class="text-right">Tax Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <th>State</th>
+                                <td class="text-right">7720.12</td>
+                                <td class="text-right">378.83</td>
+                                <td class="text-right">7341.29</td>
+                                <td class="text-right">337.12</td>
+                            </tr>
+                            <tr>
+                                <th>County</th>
+                                <td class="text-right">7720.12</td>
+                                <td class="text-right">378.83</td>
+                                <td class="text-right">7341.29</td>
+                                <td class="text-right">64.68</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="taxModal__total">
+                        <div class="taxModal__title taxModal__title--secondary">Total tax</div>
+                        <div class="taxModal__title taxModal__title--secondary">$401.80</div>
+                    </div>
+
+                    <div class="taxModal__spacer"></div>
+
+                    <a class="taxModal__link" href="#" id="addAdjustmentLink">+ Add an adjustment</a>
+
+                    <div class="taxModal__spacer"></div>
+
+                    <div class="taxModal__total taxModal__total--big">
+                        <div class="taxModal__title taxModal__title--secondary">Total after adjustments</div>
+                        <div class="taxModal__title taxModal__title--secondary">$401.80</div>
+                    </div>
+
+                    <div class="taxModal__spacer"></div>
+
+                    <div class="text-center">
+                        <a class="taxModal__link" href="#">View tax liability report</a>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary">Record Payment</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+            </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="addAdjustment" id="addAdjustment">
+        <div class="addAdjustment__header">
+            <div class="addAdjustment__title">Add an adjustment</div>
+            <button class="addAdjustment__close">
+                <i class="fa fa-times"></i>
+            </button>
+        </div>
+
+        <p>
+            An adjustment is an increase or decrease to the sales tax, including credits discounts, interest, penalties and corrections.
+        </p>
+
+        <form>
+            <div class="form-group">
+                <label for="reason">Reason</label>
+                <input type="text" class="form-control" id="reason" placeholder="Reason">
+            </div>
+
+            <div class="form-group">
+                <label for="adjustment_date">Adjustment Date</label>
+                <input type="date" class="form-control" id="adjustment_date">
+            </div>
+
+            <div class="form-group">
+                <label for="account">Account</label>
+                <input type="text" class="form-control" id="account" placeholder="Select account">
+            </div>
+
+            <div class="form-group">
+                <label for="amount">Amount</label>
+                <input type="text" class="form-control" id="amount" placeholder="Enter amount">
+            </div>
+
+            <div>
+                <div class="addAdjustment__title addAdjustment__title--small">Total tax due</div>
+                <div class="addAdjustment__total">$401.80</div>
+            </div>
+        </form>
+
+        <div class="addAdjustment__footer">
+            <button type="button" class="btn btn-primary">Add Adjustment</button>
+        </div>
+    </div>
+
 	<?php include viewPath('includes/sidebars/accounting/accounting');?>
 </div>
 <?php include viewPath('includes/footer_accounting');?>

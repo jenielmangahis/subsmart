@@ -16,10 +16,24 @@
     font-weight: lighter;
     padding: 8px;
     height: auto;
-    border: solid 1px #BABEC5;
+    border: solid 1px #BABEC5!important;
     border-radius: 2px;
     width: 100%;
     resize: none;
+}
+
+#addsalesreceiptModal select {
+    display: block!important;
+    visibility: visible;
+    clip: auto!important;
+    position: inherit!important;
+    height: auto!important;
+    padding: 8px!important;
+    width: 100%!important;
+}
+
+#addsalesreceiptModal form .select2 {
+    display: none;
 }
 
 #addsalesreceiptModal input:focus,

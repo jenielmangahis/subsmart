@@ -60,19 +60,7 @@ $('#customer_receive_payment_modal').on('hidden.bs.modal', function() {
     get_load_customers_table();
 });
 
-function get_load_customers_table() {
-    $("#loader-modal").show();
-    $.ajax({
-        url: baseURL + "/accounting/get_load_customers_table",
-        type: "POST",
-        dataType: "json",
-        data: {},
-        success: function(data) {
-            $('#customers_table tbody').html(data.html);
-            $("#loader-modal").hide();
-        },
-    });
-}
+
 
 $(document).on("click", "#customers_table ul li a.created-sales-receipt", function(event) {
     $('#addsalesreceiptModal form').trigger("reset");

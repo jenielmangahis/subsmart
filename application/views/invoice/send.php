@@ -58,7 +58,7 @@
                                             <label>To</label> <span class="help help-sm">(select or input email address)</span>
                                             <input type="hidden" name="invoice_id" value="<?php echo $invoice->id ?> ">
                                             <select name="to[]" id="to" class="send-to-email" multiple="" tabindex="-1" aria-hidden="true">
-                                                <option value="<?php echo get_customer_by_id($invoice->customer_id)->contact_email ?>" selected="selected"><?php echo get_customer_by_id($invoice->customer_id)->contact_name ?> (<?php echo get_customer_by_id($invoice->customer_id)->contact_email ?>)</option>
+                                                <option value="<?php echo get_customer_by_id($invoice->customer_id)->email ?>" selected="selected"><?php echo get_customer_by_id($invoice->customer_id)->FName.' '.get_customer_by_id($invoice->customer_id)->LName ?> (<?php echo get_customer_by_id($invoice->customer_id)->email ?>)</option>
                                             </select>
                                         </div>
                                         <div class="form-group">
@@ -67,7 +67,7 @@
                                                 <a class="bcc-toggle link-modal-open" id="bcc-toggle" href="#">+ Bcc</a>
                                             </div>
                                             <select name="cc[]" id="to" class="send-cc-email" multiple="" tabindex="-1" aria-hidden="true">
-                                                <option value="<?php echo get_customer_by_id($invoice->customer_id)->contact_email ?>" selected="selected"><?php echo get_customer_by_id($invoice->customer_id)->contact_name ?> (<?php echo get_customer_by_id($invoice->customer_id)->contact_email ?>)</option>
+                                                <option value="<?php echo get_customer_by_id($invoice->customer_id)->email ?>" selected="selected"><?php echo get_customer_by_id($invoice->customer_id)->FName.' '.get_customer_by_id($invoice->customer_id)->LName ?> (<?php echo get_customer_by_id($invoice->customer_id)->email ?>)</option>
                                             </select>
                                         </div>
                                         <div class="form-group" id="bcc-cnt" style="display: none;">
@@ -75,7 +75,7 @@
                                                 <label>Bcc</label>
                                             </div>
                                             <select name="bcc[]" id="to" class="send-bcc-email" multiple="" tabindex="-1" aria-hidden="true">
-                                                <option value="<?php echo get_customer_by_id($invoice->customer_id)->contact_email ?>" selected="selected"><?php echo get_customer_by_id($invoice->customer_id)->contact_name ?> (<?php echo get_customer_by_id($invoice->customer_id)->contact_email ?>)</option>
+                                                <option value="<?php echo get_customer_by_id($invoice->customer_id)->email ?>" selected="selected"><?php echo get_customer_by_id($invoice->customer_id)->FName.' '.get_customer_by_id($invoice->customer_id)->LName ?> (<?php echo get_customer_by_id($invoice->customer_id)->email ?>)</option>
                                             </select>
                                         </div>
                                         <div class="form-group">
@@ -84,9 +84,9 @@
                                         </div>
                                         <div>
                                             <label>Email Body</label>
-                                            <textarea id="send-email" name="mail_msg">
+                                            <textarea id="send-email" name="mail_msg" style="height:600px !important;">
                                             <p style="font-size: 28px;" data-mce-style="font-size: 28px;">Invoice from <?php echo $user->FName . ' ' . $user->LName  ?> (Invoice #<?php echo $invoice->invoice_number ?>)</p>
-                                            <p>Dear <?php echo get_customer_by_id($invoice->customer_id)->contact_name ?>,<br></p>
+                                            <p>Dear <?php echo get_customer_by_id($invoice->customer_id)->FName ?>,<br></p>
                                             <p>Thank you for your business! <br>Please find the attached invoice #<?php echo $invoice->invoice_number ?> with this email. <br><br>
                                                 <!-- <strong>Amount due: $<?php echo number_format($invoice->invoice_totals['grand_total'], 2, '.', ',') ?></strong> <br><br>You can click the button below to securely pay this invoice online. -->
                                                 <strong>Amount due: $<?php echo number_format(0, 2, '.', ',') ?></strong> <br><br>You can click the button below to securely pay this invoice online.
