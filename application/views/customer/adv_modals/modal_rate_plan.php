@@ -12,6 +12,17 @@
                     <div class="col-md-12">
                         <div class="row form_line" id="customer_type_group">
                             <div class="col-md-4">
+                                Plan Name
+                            </div>
+                            <div class="col-md-8">
+                                <input type="text" class="form-control" name="plan_name" id="plan_name"  required/>
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="col-md-12">
+                        <div class="row form_line" id="customer_type_group">
+                            <div class="col-md-4">
                                 Rate Amount
                             </div>
                             <div class="col-md-8">
@@ -42,6 +53,17 @@
             <form id="editRatePlanForm">
                 <input type="hidden" id="rate-plan-id" name="rate-plan-id" value="">
                 <div class="modal-body">
+                    <div class="col-md-12">
+                        <div class="row form_line" id="customer_type_group">
+                            <div class="col-md-4">
+                                Plan Name
+                            </div>
+                            <div class="col-md-8">
+                                <input type="text" class="form-control" name="plan_name" id="edit-plan-name"  required/>
+                            </div>
+                        </div>
+                    </div>
+                    <br />
                     <div class="col-md-12">
                         <div class="row form_line" id="customer_type_group">
                             <div class="col-md-4">

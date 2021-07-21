@@ -537,174 +537,405 @@ add_css(array(
                                 </a>
 
                                 <div id="status_sorting" class=""></div>
-                                <table class="table" id="customer_list_table">
-                                    <thead>
-                                        <tr>
-                                            <th width="100px">Name</th>
-                                            <th>City</th>
-                                            <th>State</th>
-                                            <th>Source</th>
-                                            <th>Email</th>
-                                            <th>Added</th>
-                                            <th>Sales Rep</th>
-                                            <th>Tech</th>
-                                            <th>Plan Type</th>
-                                            <th>Subscription Amount</th>
-                                            <th>Phone</th>
-                                            <th>Status</th>
-                                            <th>Actions</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <?php foreach ($profiles as $customer) : ?>
-                                        <tr>
-                                            <td>
-                                                <a href="<?= base_url('/customer/preview_/' . $customer->prof_id); ?>"
-                                                    style="color:#1E5DA9;">
-                                                    <?= ($customer) ? $customer->first_name . ' ' . $customer->last_name : ''; ?>
-                                                </a>
-                                            </td>
-                                            <td><?php echo $customer->city; ?>
-                                            </td>
-                                            <td><?php echo $customer->state; ?>
-                                            </td>
-                                            <td><?= $customer->lead_source != "" ? $customer->lead_source : 'n/a'; ?>
-                                            </td>
-                                            <td><?php echo $customer->email; ?>
-                                            </td>
-                                            <td><?php echo $customer->entered_by; ?>
-                                            </td>
-                                            <td><?php echo ($customer) ? $customer->FName . ' ' . $customer->LName : ''; ?>
-                                            </td>
-                                            <td><?= $customer->technician != null ? $customer->technician : 'Not Assigned'; ?>
-                                            </td>
-                                            <td><?php echo $customer->system_type; ?>
-                                            </td>
-                                            <td>$<?= $customer->total_amount; ?>
-                                            </td>
-                                            <td><?php echo $customer->phone_m; ?>
-                                            </td>
-                                            <td><?= $customer->status != null ? $customer->status : 'Pending'; ?>
-                                            </td>
-                                            <td>
-                                                <div class="dropdown dropdown-btn text-center">
-                                                    <button class="btn btn-default" type="button" id="dropdown-edit" data-toggle="dropdown" aria-expanded="true">
-                                                        <span class="btn-label">Manage <i class="fa fa-caret-down fa-sm" style="margin-left:10px;"></i></span>
-                                                    </button>
-                                                    <ul class="dropdown-menu dropdown-menu-right" role="menu"
-                                                        aria-labelledby="dropdown-edit">
-                                                        <li role="presentation">
-                                                            <a role="menuitem" tabindex="-1"
-                                                                href="<?php echo base_url('customer/preview_/'.$customer->prof_id); ?>"
-                                                                class="editItemBtn">
-                                                                <span class="fa fa-search-plus icon"></span>
-                                                                Preview
-                                                            </a>
-                                                        </li>
-                                                        <li>
-                                                            <a href="<?php echo base_url('customer/add_advance/'.$customer->prof_id); ?>"
-                                                                class="editItemBtn">
-                                                                <span class="fa fa-edit icon"></span>
-                                                                Edit
-                                                            </a>
-                                                        </li>
-                                                        <li>
-                                                            <a href="mailto:<?= $customer->email; ?>"
-                                                                class="editItemBtn">
-                                                                <span class="fa fa-envelope icon"></span>
-                                                                Email
-                                                            </a>
-                                                        </li>
-                                                        <li>
-                                                            <a href="javascript:void(0);"
-                                                                id="<?= $customer->phone_m; ?>"
-                                                                onclick='call(this.id);return false;'
-                                                                class="editItemBtn">
-                                                                <span class="fa fa-phone icon"></span>
-                                                                Call
-                                                            </a>
-                                                        </li>
-                                                        <li>
-                                                            <a href="<?= base_url('invoice/add/'); ?>"
-                                                                class="editItemBtn">
-                                                                <span class="fa fa-file icon"></span>
-                                                                Invoice
-                                                            </a>
-                                                        </li>
-                                                        <li>
-                                                            <a href="<?= base_url('customer/module/'.$customer->prof_id); ?>"
-                                                                class="editItemBtn">
-                                                                <span class="fa fa-dashboard icon"></span>
-                                                                Dashboard
-                                                            </a>
-                                                        </li>
-                                                        <li>
-                                                            <a href="<?= base_url('job/new_job1/'); ?>"
-                                                                class="editItemBtn">
-                                                                <span class="fa fa-calendar-check-o icon"></span>
-                                                                Schedule
-                                                            </a>
-                                                        </li>
-                                                        <li>
-                                                            <a href="#" class="editItemBtn">
-                                                                <span class="fa fa-file-text icon"></span>
-                                                                Message
-                                                            </a>
-                                                        </li>
-                                                        <li role="separator" class="divider"></li>
-                                                    </ul>
-                                                </div>
-                                                <!--<a href="<?php echo url('/customer/add_advance/' . $customer->prof_id); ?>"
-                                                style="text-decoration:none;display:inline-block;" title="Edit
-                                                Customer">
-                                                <img src="/assets/img/customer/actions/ac_edit.png" width="16px"
-                                                    height="16px" border="0" title="Edit Customer">
-                                                </a>
-                                                <a href="#" style="text-decoration:none;display:inline-block;"
-                                                    id="<?php echo $customer->prof_id; ?>"
-                                                    title="Delete Customer" class="delete_cust">
-                                                    <img src="https://app.creditrepaircloud.com/application/images/cross.png"
-                                                        width="16px" height="16px" border="0">
-                                                </a <a
-                                                    href="mailto:<?= $customer->email; ?>"
-                                                    style="text-decoration:none; display:inline-block;">
-                                                <img src="/assets/img/customer/actions/ac_email.png" width="16px"
-                                                    height="16px" border="0" title="Email Customer">
-                                                </a>
-                                                <a href="#" style="text-decoration:none; display:inline-block;">
-                                                    <img src="/assets/img/customer/actions/ac_call.png" width="16px"
-                                                        height="16px" border="0" title="Call Customer">
-                                                </a>
-                                                <a href="#" style="text-decoration:none; display:inline-block;">
-                                                    <img src="/assets/img/customer/actions/ac_invoice.png" width="16px"
-                                                        height="16px" border="0" title="Invoice Customer">
-                                                </a>
-                                                <a href="#" style="text-decoration:none; display:inline-block;">
-                                                    <img src="/assets/img/customer/actions/ac_work.png" width="16px"
-                                                        height="16px" border="0" title="Create Work Order">
-                                                </a>
-                                                <a href="#" style="text-decoration:none; display:inline-block;">
-                                                    <img src="/assets/img/customer/actions/ac_ticket.png" width="16px"
-                                                        height="16px" border="0" title="Create Service Ticket">
-                                                </a>
-                                                <a href="#" style="text-decoration:none; display:inline-block;">
-                                                    <img src="/assets/img/customer/actions/ac_sched.png" width="16px"
-                                                        height="16px" border="0" title="Schedule">
-                                                </a>
-                                                <a href="#" style="text-decoration:none; display:inline-block;">
-                                                    <img src="/assets/img/customer/actions/ac_sms.png" width="16px"
-                                                        height="16px" border="0" title="Message Customer">
-                                                </a>
-                                                <a href="<?php echo url('/customer/index/tab2/' . $customer->prof_id); ?>"
-                                                    style="text-decoration:none; display:inline-block;">
-                                                    <img src="https://app.creditrepaircloud.com/application/images/assign-contact.png"
-                                                        border="0" title="View Profile">
-                                                </a>-->
-                                            </td>
-                                        </tr>
-                                        <?php endforeach; ?>
-                                    </tbody>
-                                </table>
+                                <?php if( !empty($enabled_table_headers) ){ ?>
+                                    <table class="table" id="customer_list_table">
+                                        <thead>
+                                            <tr>
+                                                <?php if( in_array('name', $enabled_table_headers) ){ ?>
+                                                    <th width="100px">Name</th>
+                                                <?php } ?>
+
+                                                <?php if( in_array('city', $enabled_table_headers) ){ ?>
+                                                    <th>City</th>
+                                                <?php } ?>
+
+                                                <?php if( in_array('state', $enabled_table_headers) ){ ?>
+                                                    <th>State</th>
+                                                <?php } ?>
+
+                                                <?php if( in_array('source', $enabled_table_headers) ){ ?>
+                                                    <th>Source</th>
+                                                <?php } ?>
+
+                                                <?php if( in_array('email', $enabled_table_headers) ){ ?>
+                                                    <th>Email</th>
+                                                <?php } ?>
+
+                                                <?php if( in_array('added', $enabled_table_headers) ){ ?>
+                                                    <th>Added</th>
+                                                <?php } ?>
+
+                                                <?php if( in_array('sales_rep', $enabled_table_headers) ){ ?>
+                                                    <th>Sales Rep</th>
+                                                <?php } ?>
+
+                                                <?php if( in_array('tech', $enabled_table_headers) ){ ?>
+                                                    <th>Tech</th>
+                                                <?php } ?>
+
+                                                <?php if( in_array('plan_type', $enabled_table_headers) ){ ?>
+                                                    <th>Plan Type</th>
+                                                <?php } ?>
+
+                                                <?php if( in_array('subscription_amount', $enabled_table_headers) ){ ?>
+                                                    <th>Subscription Amount</th>
+                                                <?php } ?>
+
+                                                <?php if( in_array('phone', $enabled_table_headers) ){ ?>
+                                                    <th>Phone</th>
+                                                <?php } ?>
+
+                                                <?php if( in_array('status', $enabled_table_headers) ){ ?>
+                                                    <th>Status</th>
+                                                <?php } ?>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <?php foreach ($profiles as $customer) : ?>
+                                            <tr>
+                                                <?php if( in_array('name', $enabled_table_headers) ){ ?>
+                                                <td>
+                                                    <a href="<?= base_url('/customer/preview_/' . $customer->prof_id); ?>"
+                                                        style="color:#1E5DA9;">
+                                                        <?= ($customer) ? $customer->first_name . ' ' . $customer->last_name : ''; ?>
+                                                    </a>
+                                                </td>
+                                                <?php } ?>
+
+                                                <?php if( in_array('city', $enabled_table_headers) ){ ?>
+                                                    <td><?php echo $customer->city; ?></td>
+                                                <?php } ?>
+
+                                                <?php if( in_array('state', $enabled_table_headers) ){ ?>
+                                                    <td><?php echo $customer->state; ?></td>
+                                                <?php } ?>
+
+                                                <?php if( in_array('source', $enabled_table_headers) ){ ?>
+                                                    <td><?= $customer->lead_source != "" ? $customer->lead_source : 'n/a'; ?></td>
+                                                <?php } ?>
+
+                                                <?php if( in_array('email', $enabled_table_headers) ){ ?>
+                                                    <td><?php echo $customer->email; ?></td>
+                                                <?php } ?>
+
+                                                <?php if( in_array('added', $enabled_table_headers) ){ ?>
+                                                    <td><?php echo $customer->entered_by; ?></td>
+                                                <?php } ?>
+
+                                                <?php if( in_array('sales_rep', $enabled_table_headers) ){ ?>
+                                                    <td><?php echo ($customer) ? $customer->FName . ' ' . $customer->LName : ''; ?></td>
+                                                <?php } ?>
+
+                                                <?php if( in_array('tech', $enabled_table_headers) ){ ?>
+                                                    <td><?= $customer->technician != null ? $customer->technician : 'Not Assigned'; ?></td>
+                                                <?php } ?>
+
+                                                <?php if( in_array('plan_type', $enabled_table_headers) ){ ?>
+                                                    <td><?php echo $customer->system_type; ?></td>
+                                                <?php } ?>
+
+                                                <?php if( in_array('subscription_amount', $enabled_table_headers) ){ ?>
+                                                    <td>$<?= $customer->total_amount; ?></td>
+                                                <?php } ?>
+
+                                                <?php if( in_array('phone', $enabled_table_headers) ){ ?>
+                                                    <td><?php echo $customer->phone_m; ?></td>
+                                                <?php } ?>
+
+                                                <?php if( in_array('status', $enabled_table_headers) ){ ?>
+                                                    <td><?= $customer->status != null ? $customer->status : 'Pending'; ?></td>
+                                                <?php } ?>
+                                                
+                                                <td>
+                                                    <div class="dropdown dropdown-btn text-center">
+                                                        <button class="btn btn-default" type="button" id="dropdown-edit" data-toggle="dropdown" aria-expanded="true">
+                                                            <span class="btn-label">Manage <i class="fa fa-caret-down fa-sm" style="margin-left:10px;"></i></span>
+                                                        </button>
+                                                        <ul class="dropdown-menu dropdown-menu-right" role="menu"
+                                                            aria-labelledby="dropdown-edit">
+                                                            <li role="presentation">
+                                                                <a role="menuitem" tabindex="-1"
+                                                                    href="<?php echo base_url('customer/preview_/'.$customer->prof_id); ?>"
+                                                                    class="editItemBtn">
+                                                                    <span class="fa fa-search-plus icon"></span>
+                                                                    Preview
+                                                                </a>
+                                                            </li>
+                                                            <li>
+                                                                <a href="<?php echo base_url('customer/add_advance/'.$customer->prof_id); ?>"
+                                                                    class="editItemBtn">
+                                                                    <span class="fa fa-edit icon"></span>
+                                                                    Edit
+                                                                </a>
+                                                            </li>
+                                                            <li>
+                                                                <a href="mailto:<?= $customer->email; ?>"
+                                                                    class="editItemBtn">
+                                                                    <span class="fa fa-envelope icon"></span>
+                                                                    Email
+                                                                </a>
+                                                            </li>
+                                                            <li>
+                                                                <a href="javascript:void(0);"
+                                                                    id="<?= $customer->phone_m; ?>"
+                                                                    onclick='call(this.id);return false;'
+                                                                    class="editItemBtn">
+                                                                    <span class="fa fa-phone icon"></span>
+                                                                    Call
+                                                                </a>
+                                                            </li>
+                                                            <li>
+                                                                <a href="<?= base_url('invoice/add/'); ?>"
+                                                                    class="editItemBtn">
+                                                                    <span class="fa fa-file icon"></span>
+                                                                    Invoice
+                                                                </a>
+                                                            </li>
+                                                            <li>
+                                                                <a href="<?= base_url('customer/module/'.$customer->prof_id); ?>"
+                                                                    class="editItemBtn">
+                                                                    <span class="fa fa-dashboard icon"></span>
+                                                                    Dashboard
+                                                                </a>
+                                                            </li>
+                                                            <li>
+                                                                <a href="<?= base_url('job/new_job1/'); ?>"
+                                                                    class="editItemBtn">
+                                                                    <span class="fa fa-calendar-check-o icon"></span>
+                                                                    Schedule
+                                                                </a>
+                                                            </li>
+                                                            <li>
+                                                                <a href="#" class="editItemBtn">
+                                                                    <span class="fa fa-file-text icon"></span>
+                                                                    Message
+                                                                </a>
+                                                            </li>
+                                                            <li role="separator" class="divider"></li>
+                                                        </ul>
+                                                    </div>
+                                                    <!--<a href="<?php echo url('/customer/add_advance/' . $customer->prof_id); ?>"
+                                                    style="text-decoration:none;display:inline-block;" title="Edit
+                                                    Customer">
+                                                    <img src="/assets/img/customer/actions/ac_edit.png" width="16px"
+                                                        height="16px" border="0" title="Edit Customer">
+                                                    </a>
+                                                    <a href="#" style="text-decoration:none;display:inline-block;"
+                                                        id="<?php echo $customer->prof_id; ?>"
+                                                        title="Delete Customer" class="delete_cust">
+                                                        <img src="https://app.creditrepaircloud.com/application/images/cross.png"
+                                                            width="16px" height="16px" border="0">
+                                                    </a <a
+                                                        href="mailto:<?= $customer->email; ?>"
+                                                        style="text-decoration:none; display:inline-block;">
+                                                    <img src="/assets/img/customer/actions/ac_email.png" width="16px"
+                                                        height="16px" border="0" title="Email Customer">
+                                                    </a>
+                                                    <a href="#" style="text-decoration:none; display:inline-block;">
+                                                        <img src="/assets/img/customer/actions/ac_call.png" width="16px"
+                                                            height="16px" border="0" title="Call Customer">
+                                                    </a>
+                                                    <a href="#" style="text-decoration:none; display:inline-block;">
+                                                        <img src="/assets/img/customer/actions/ac_invoice.png" width="16px"
+                                                            height="16px" border="0" title="Invoice Customer">
+                                                    </a>
+                                                    <a href="#" style="text-decoration:none; display:inline-block;">
+                                                        <img src="/assets/img/customer/actions/ac_work.png" width="16px"
+                                                            height="16px" border="0" title="Create Work Order">
+                                                    </a>
+                                                    <a href="#" style="text-decoration:none; display:inline-block;">
+                                                        <img src="/assets/img/customer/actions/ac_ticket.png" width="16px"
+                                                            height="16px" border="0" title="Create Service Ticket">
+                                                    </a>
+                                                    <a href="#" style="text-decoration:none; display:inline-block;">
+                                                        <img src="/assets/img/customer/actions/ac_sched.png" width="16px"
+                                                            height="16px" border="0" title="Schedule">
+                                                    </a>
+                                                    <a href="#" style="text-decoration:none; display:inline-block;">
+                                                        <img src="/assets/img/customer/actions/ac_sms.png" width="16px"
+                                                            height="16px" border="0" title="Message Customer">
+                                                    </a>
+                                                    <a href="<?php echo url('/customer/index/tab2/' . $customer->prof_id); ?>"
+                                                        style="text-decoration:none; display:inline-block;">
+                                                        <img src="https://app.creditrepaircloud.com/application/images/assign-contact.png"
+                                                            border="0" title="View Profile">
+                                                    </a>-->
+                                                </td>
+                                            </tr>
+                                            <?php endforeach; ?>
+                                        </tbody>
+                                    </table>
+                                <?php }else{ ?>
+                                    <table class="table" id="customer_list_table">
+                                        <thead>
+                                            <tr>
+                                                <th width="100px">Name</th>
+                                                <th>City</th>
+                                                <th>State</th>
+                                                <th>Source</th>
+                                                <th>Email</th>
+                                                <th>Added</th>
+                                                <th>Sales Rep</th>
+                                                <th>Tech</th>
+                                                <th>Plan Type</th>
+                                                <th>Subscription Amount</th>
+                                                <th>Phone</th>
+                                                <th>Status</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <?php foreach ($profiles as $customer) : ?>
+                                            <tr>
+                                                <td>
+                                                    <a href="<?= base_url('/customer/preview_/' . $customer->prof_id); ?>"
+                                                        style="color:#1E5DA9;">
+                                                        <?= ($customer) ? $customer->first_name . ' ' . $customer->last_name : ''; ?>
+                                                    </a>
+                                                </td>
+                                                <td><?php echo $customer->city; ?>
+                                                </td>
+                                                <td><?php echo $customer->state; ?>
+                                                </td>
+                                                <td><?= $customer->lead_source != "" ? $customer->lead_source : 'n/a'; ?>
+                                                </td>
+                                                <td><?php echo $customer->email; ?>
+                                                </td>
+                                                <td><?php echo $customer->entered_by; ?>
+                                                </td>
+                                                <td><?php echo ($customer) ? $customer->FName . ' ' . $customer->LName : ''; ?>
+                                                </td>
+                                                <td><?= $customer->technician != null ? $customer->technician : 'Not Assigned'; ?>
+                                                </td>
+                                                <td><?php echo $customer->system_type; ?>
+                                                </td>
+                                                <td>$<?= $customer->total_amount; ?>
+                                                </td>
+                                                <td><?php echo $customer->phone_m; ?>
+                                                </td>
+                                                <td><?= $customer->status != null ? $customer->status : 'Pending'; ?>
+                                                </td>
+                                                <td>
+                                                    <div class="dropdown dropdown-btn text-center">
+                                                        <button class="btn btn-default" type="button" id="dropdown-edit" data-toggle="dropdown" aria-expanded="true">
+                                                            <span class="btn-label">Manage <i class="fa fa-caret-down fa-sm" style="margin-left:10px;"></i></span>
+                                                        </button>
+                                                        <ul class="dropdown-menu dropdown-menu-right" role="menu"
+                                                            aria-labelledby="dropdown-edit">
+                                                            <li role="presentation">
+                                                                <a role="menuitem" tabindex="-1"
+                                                                    href="<?php echo base_url('customer/preview_/'.$customer->prof_id); ?>"
+                                                                    class="editItemBtn">
+                                                                    <span class="fa fa-search-plus icon"></span>
+                                                                    Preview
+                                                                </a>
+                                                            </li>
+                                                            <li>
+                                                                <a href="<?php echo base_url('customer/add_advance/'.$customer->prof_id); ?>"
+                                                                    class="editItemBtn">
+                                                                    <span class="fa fa-edit icon"></span>
+                                                                    Edit
+                                                                </a>
+                                                            </li>
+                                                            <li>
+                                                                <a href="mailto:<?= $customer->email; ?>"
+                                                                    class="editItemBtn">
+                                                                    <span class="fa fa-envelope icon"></span>
+                                                                    Email
+                                                                </a>
+                                                            </li>
+                                                            <li>
+                                                                <a href="javascript:void(0);"
+                                                                    id="<?= $customer->phone_m; ?>"
+                                                                    onclick='call(this.id);return false;'
+                                                                    class="editItemBtn">
+                                                                    <span class="fa fa-phone icon"></span>
+                                                                    Call
+                                                                </a>
+                                                            </li>
+                                                            <li>
+                                                                <a href="<?= base_url('invoice/add/'); ?>"
+                                                                    class="editItemBtn">
+                                                                    <span class="fa fa-file icon"></span>
+                                                                    Invoice
+                                                                </a>
+                                                            </li>
+                                                            <li>
+                                                                <a href="<?= base_url('customer/module/'.$customer->prof_id); ?>"
+                                                                    class="editItemBtn">
+                                                                    <span class="fa fa-dashboard icon"></span>
+                                                                    Dashboard
+                                                                </a>
+                                                            </li>
+                                                            <li>
+                                                                <a href="<?= base_url('job/new_job1/'); ?>"
+                                                                    class="editItemBtn">
+                                                                    <span class="fa fa-calendar-check-o icon"></span>
+                                                                    Schedule
+                                                                </a>
+                                                            </li>
+                                                            <li>
+                                                                <a href="#" class="editItemBtn">
+                                                                    <span class="fa fa-file-text icon"></span>
+                                                                    Message
+                                                                </a>
+                                                            </li>
+                                                            <li role="separator" class="divider"></li>
+                                                        </ul>
+                                                    </div>
+                                                    <!--<a href="<?php echo url('/customer/add_advance/' . $customer->prof_id); ?>"
+                                                    style="text-decoration:none;display:inline-block;" title="Edit
+                                                    Customer">
+                                                    <img src="/assets/img/customer/actions/ac_edit.png" width="16px"
+                                                        height="16px" border="0" title="Edit Customer">
+                                                    </a>
+                                                    <a href="#" style="text-decoration:none;display:inline-block;"
+                                                        id="<?php echo $customer->prof_id; ?>"
+                                                        title="Delete Customer" class="delete_cust">
+                                                        <img src="https://app.creditrepaircloud.com/application/images/cross.png"
+                                                            width="16px" height="16px" border="0">
+                                                    </a <a
+                                                        href="mailto:<?= $customer->email; ?>"
+                                                        style="text-decoration:none; display:inline-block;">
+                                                    <img src="/assets/img/customer/actions/ac_email.png" width="16px"
+                                                        height="16px" border="0" title="Email Customer">
+                                                    </a>
+                                                    <a href="#" style="text-decoration:none; display:inline-block;">
+                                                        <img src="/assets/img/customer/actions/ac_call.png" width="16px"
+                                                            height="16px" border="0" title="Call Customer">
+                                                    </a>
+                                                    <a href="#" style="text-decoration:none; display:inline-block;">
+                                                        <img src="/assets/img/customer/actions/ac_invoice.png" width="16px"
+                                                            height="16px" border="0" title="Invoice Customer">
+                                                    </a>
+                                                    <a href="#" style="text-decoration:none; display:inline-block;">
+                                                        <img src="/assets/img/customer/actions/ac_work.png" width="16px"
+                                                            height="16px" border="0" title="Create Work Order">
+                                                    </a>
+                                                    <a href="#" style="text-decoration:none; display:inline-block;">
+                                                        <img src="/assets/img/customer/actions/ac_ticket.png" width="16px"
+                                                            height="16px" border="0" title="Create Service Ticket">
+                                                    </a>
+                                                    <a href="#" style="text-decoration:none; display:inline-block;">
+                                                        <img src="/assets/img/customer/actions/ac_sched.png" width="16px"
+                                                            height="16px" border="0" title="Schedule">
+                                                    </a>
+                                                    <a href="#" style="text-decoration:none; display:inline-block;">
+                                                        <img src="/assets/img/customer/actions/ac_sms.png" width="16px"
+                                                            height="16px" border="0" title="Message Customer">
+                                                    </a>
+                                                    <a href="<?php echo url('/customer/index/tab2/' . $customer->prof_id); ?>"
+                                                        style="text-decoration:none; display:inline-block;">
+                                                        <img src="https://app.creditrepaircloud.com/application/images/assign-contact.png"
+                                                            border="0" title="View Profile">
+                                                    </a>-->
+                                                </td>
+                                            </tr>
+                                            <?php endforeach; ?>
+                                        </tbody>
+                                    </table>
+                                <?php } ?>
                                 <?php else: ?>
                                     <hr>
                                     <div class="page-empty-container" style="text-align:center; margin-top:50px;">

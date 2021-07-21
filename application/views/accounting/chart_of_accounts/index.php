@@ -113,7 +113,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                         <p class="m-0">Columns</p>
                                                         <p class="m-0"><input type="checkbox" checked="checked" onchange="col_type()" name="chk_type" id="chk_type"> Type</p>
                                                         <p class="m-0"><input type="checkbox" checked="checked" onchange="col_detailtype()" name="chk_detail_type" id="chk_detail_type"> Detail Type</p>
-                                                        <p class="m-0"><input type="checkbox" checked="checked" onchange="col_nbalance()" name="chk_nsmart_balance" id="chk_nsmart_balance"> Nsmart Balance</p>
+                                                        <p class="m-0"><input type="checkbox" checked="checked" onchange="col_nbalance()" name="chk_nsmart_balance" id="chk_nsmart_balance"> nSmarTrac Balance</p>
                                                         <p><input type="checkbox" checked="checked" onchange="col_balance()" name="chk_balance" id="chk_balance"> Balance</p>
 											            <p class="m-0">Other</p>
                                                         <p class="m-0"><input type="checkbox" id="inc_inactive" value="1"> Include Inactive</p>

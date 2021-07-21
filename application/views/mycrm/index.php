@@ -104,35 +104,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
 <div class="card-spacer"></div>
 
-<div class="card">
-    <h3>Linked Accounts</h3>
-    <ul class="ul-table">
-        <li>
-            <div class="row">
-                <div class="col-md-2">
-                    <div class="btn btn-block btn-off">
-                        <span class="fa fa-facebook"></span> Facebook
-                    </div>
-                </div>
-                <div class="col-md-7">
-                                         <span class="p-sec">Not connected</span> <a class="margin-left" href="https://www.markate.com/auth/social/link?provider=facebook&amp;do=auth">Connect to Facebook</a>
-                                    </div>
-            </div>
-        </li>
-        <li>
-            <div class="row">
-                <div class="col-md-2">
-                    <div class="btn btn-block btn-google">
-                        <span class="fa fa-google"></span> Google
-                    </div>
-                </div>
-                <div class="col-md-7">
-                                        Connected as <a class="a-default bold" href="" target="_blank">Tommy Nguyen</a> <a class="margin-left" href="https://www.markate.com/auth/social/unlink?provider=google">Disconnect</a>
-                                    </div>
-            </div>
-        </li>
-    </ul>
-</div>
 
 <div class="card-spacer"></div>
 
