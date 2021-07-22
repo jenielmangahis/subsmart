@@ -20,7 +20,10 @@
                             <div class="pl-3 pr-3 mt-1 row">
                                 <div class="col mb-4 left alert alert-warning mt-0 mb-2">
                                   <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">
-                                      No description yet.
+                                      Locations are places, like warehouses, sites, or work vehicles, where inventory is stored.
+                                      Product items represent products in your inventory stored at a particular location,
+                                      such as bolts stored in a warehouse. Each product item is associated with a product
+                                      and a location in nSmarTrac.
                                   </span>
                                 </div>
                             </div>
@@ -201,7 +204,7 @@
                                 </div>
                                 <br><br>
                                 <div class="float-right d-md-block" style="position: relative;text-align:right;right: 0;">
-                                    <button type="button" class="btn btn-default"><span class="fa fa-remove"></span> Cancel</button>
+                                    <a href="<?= base_url('inventory') ?>"><button type="button" class="btn btn-default"><span class="fa fa-remove"></span> Cancel</button></a>
                                     <button type="submit" class="btn btn-primary"><span class="fa fa-paper-plane-o"></span> Save</button>
                                 </div>
                             </div>

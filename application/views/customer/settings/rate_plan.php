@@ -8,6 +8,7 @@
             <table id="rate_plan" class="table table-bordered table-striped">
                 <thead>
                 <tr>
+                    <th>Plan Name</th>
                     <th>Amount</th>
                     <th>Date Created</th>
                     <th>Action</th>
@@ -17,10 +18,11 @@
                 <?php if(isset($rate_plans)): ?>
                     <?php foreach ($rate_plans as $rate) : ?>
                         <tr>
+                            <td><?= $rate->plan_name; ?></td>
                             <td>$<?= $rate->amount; ?></td>
                             <td><?= date("d-m-Y h:i A",strtotime($rate->date_created)); ?></td>
                             <td>
-                                <a href="javascript:void(0);" class="btn btn-sm btn-default edit-rate-plan" data-id="<?= $rate->id; ?>" data-amount="<?= $rate->amount; ?>"  title="Edit Sales Area" data-toggle="tooltip">
+                                <a href="javascript:void(0);" class="btn btn-sm btn-default edit-rate-plan" data-id="<?= $rate->id; ?>" data-amount="<?= $rate->amount; ?>"  title="Edit Rate Plan" data-name="<?= $rate->plan_name; ?>" data-toggle="tooltip">
                                     <i class="fa fa-pencil"></i> Edit
                                 </a>
                                 <button id="<?= $rate->id; ?>" class="btn btn-sm btn-default delete_rate_plan">

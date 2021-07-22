@@ -4,7 +4,7 @@
     }
     .form-control  {
         font-size: 14px !important;
-        height: 30px !important;
+        height: 40px !important;
     }
     label{
         font-size: 13px !important;

@@ -97,9 +97,41 @@ class Accounting__UpcomingItem extends Accounting__TaxItem {
     $sidebar.removeClass("addAdjustment--show");
   });
 
-  $modal.on("hidden.bs.modal", () => {
-    $sidebar.removeClass("addAdjustment--show");
+  $sidebar.on("click", (event) => {
+    if ($sidebar.is(event.target)) {
+      $sidebar.removeClass("addAdjustment--show");
+    }
   });
+
+  // https://stackoverflow.com/a/38614737/8062659
+  $modal.on("shown.bs.modal", () => {
+    $(document).off("focusin.modal");
+  });
+
+  // setup dropdown with search
+  $("#dueDateInputs .dropdownWithSearch").each((_, element) => {
+    new Accounting__DropdownWithSearch(element, [
+      "August 2020",
+      "September 2020",
+      "October 2020",
+      "November 2020",
+      "December 2020",
+      "January 2021",
+      "February 2021",
+      "March 2021",
+      "April 2021",
+      "May 2021",
+      "June 2021",
+      "July 2021",
+    ]);
+  });
+
+  new Accounting__DropdownWithSearch($("#adjustmentReason"), [
+    "Credit/Discount",
+    "Prior prepayments",
+    "Pre payments",
+    "Other (penalties, interest, rounding errors)",
+  ]);
 })();
 
 function sleep(ms) {

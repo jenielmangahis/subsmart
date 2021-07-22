@@ -227,126 +227,186 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
         </div>
 
         <div class="tab-content" id="myTabContent">
-          <div class="tab-pane fade show active" id="tab1" role="tabpanel" aria-labelledby="tab1">
+                    <div class="tab-pane fade show active" id="tab1" role="tabpanel" aria-labelledby="tab1">
 
-            <?php if (!empty($estimates)) { ?>
-            <table class="table table-hover table-to-list" data-id="work_orders">
-              <thead>
-                <tr>
-                  <th>Estinate#</th>
-                  <th>Date</th>
-                  <th>Job & Customer</th>
-                  <th>Status</th>
-                  <th>Amount</th>
-                  <th></th>
-                </tr>
-              </thead>
+                        <?php if (!empty($estimates)) { ?>
+                            <table class="table table-hover table-to-list" data-id="work_orders">
+                                <thead>
+                                <tr>
+                                    <!--                                    <th>-->
+                                    <!--                                        <div class="table-name">-->
+                                    <!--                                            <div class="checkbox checkbox-sm select-all-checkbox">-->
+                                    <!--                                                <input type="checkbox" name="id_selector" value="0" id="select-all"-->
+                                    <!--                                                       class="select-all">-->
+                                    <!--                                                <label for="select-all"></label>-->
+                                    <!--                                            </div>-->
+                                    <!--                                            <div class="table-nowrap">Work Order#</div>-->
+                                    <!--                                        </div>-->
+                                    <!--                                    </th>-->
+                                    <th>Estinate#</th>
+                                    <th>Date</th>
+                                    <th>Job & Customer</th>
+                                    <th>Type</th>
+                                    <th>Status</th>
+                                    <th>Amount</th>
+                                    <th></th>
+                                </tr>
+                                </thead>
 
-              <tbody>
+                                <tbody>
 
-                <?php foreach ($estimates as $estimate) { ?>
-                <tr>
-                  <td>
-                    <a class="a-default" href="#">
-                      <?php echo $estimate->estimate_number; ?>
-                    </a>
-                  </td>
-                  <td>
-                    <div class="table-nowrap">
-                      <?php echo date('M d, Y', strtotime($estimate->estimate_date)) ?>
-                    </div>
-                  </td>
-                  <td>
-                    <div><a href="#"><?php echo $estimate->job_name; ?></a></div>
-                    <a
-                      href="<?php echo base_url('customer/view/' . $estimate->customer_id) ?>">
-                      <?php echo get_customer_by_id($estimate->customer_id)->contact_name ?>
-                    </a>
-                  </td>
-                  <td>
-                    <?php
-                                            if ($estimate->is_mail_open == 1) {
-                                                echo "<i class='fa fa-eye'></i>  ";
+                                <?php foreach ($estimates as $estimate) { ?>
+                                    <tr>
+                                        <!--                                        <td>-->
+                                        <!--                                            <div class="table-name">-->
+                                        <!--                                                <div class="checkbox checkbox-sm">-->
+                                        <!--                                                    <input type="checkbox" name="id[-->
+                                        <?php //echo $estimate->id ?><!--]"-->
+                                        <!--                                                           value="-->
+                                        <?php //echo $estimate->id ?><!--"-->
+                                        <!--                                                           class="select-one"-->
+                                        <!--                                                           id="estimate_id_-->
+                                        <?php //echo $estimate->id ?><!--">-->
+                                        <!--                                                    <label for="estimate_id_-->
+                                        <?php //echo $estimate->id ?><!--"></label>-->
+                                        <!--                                                </div>-->
+                                        <!--                                                <div><a class="a-default table-nowrap" href="">-->
+                                        <!--                                                        WO-00--><?php //echo $estimate->id ?>
+                                        <!--                                                    </a>-->
+                                        <!--                                                </div>-->
+                                        <!--                                            </div>-->
+                                        <!--                                        </td>-->
+                                        <td>
+                                            <a class="a-default"
+                                               href="#">
+                                                <?php echo $estimate->estimate_number; ?>
+                                            </a>
+                                        </td>
+                                        <td>
+                                            <div class="table-nowrap">
+                                                <?php echo date('M d, Y', strtotime($estimate->estimate_date)) ?>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div><a href="#"><?php echo $estimate->job_name; ?></a></div>
+                                            <a href="<?php echo base_url('customer/view/' . $estimate->customer_id) ?>">
+                                                <?php echo get_customer_by_id($estimate->customer_id)->first_name .' '.get_customer_by_id($estimate->customer_id)->last_name ?>
+                                            </a>
+                                        </td>
+                                        <td>
+                                                <?php echo $estimate->estimate_type; ?>
+                                        </td>
+                                        <td>
+                                          <?php
+                                            if( $estimate->is_mail_open == 1 ){
+                                              echo "<i class='fa fa-eye'></i>  ";
                                             }
                                             echo $estimate->status;
                                           ?>
 
-                  </td>
-                  <td>
-                    <?php if (is_serialized($estimate->estimate_eqpt_cost)) { ?>
-                    $<?php echo unserialize($estimate->estimate_eqpt_cost)['eqpt_cost'] ?>
-                    <?php } ?>
-                  </td>
-                  <td class="text-right">
-                    <div class="dropdown dropdown-btn">
-                      <button class="btn btn-default dropdown-toggle" type="button" id="dropdown-edit"
-                        data-toggle="dropdown" aria-expanded="true">
-                        <span class="btn-label">Manage</span><span class="caret-holder"><span
-                            class="caret"></span></span>
-                      </button>
-                      <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="dropdown-edit">
-                        <li role="presentation"><a role="menuitem" tabindex="-1" href="#"
-                            est-id="<?php echo $estimate->id;?>"
-                            class="viewEstimate"><span class="fa fa-file-text-o icon"></span> View Estimate</a></li>
-                        <li role="presentation"><a role="menuitem" tabindex="-1"
-                            href="<?php echo base_url('accounting/updateEstimate/' . $estimate->id) ?>"><span
-                              class="fa fa-pencil-square-o icon"></span> Edit</a>
-                        </li>
-                        <li role="separator" class="divider"></li>
-                        <li role="presentation"><a role="menuitem" tabindex="-1" href="#" data-toggle="modal"
-                            data-target="#modalCloneWorkorder"
-                            data-id="<?php echo $estimate->id ?>"
-                            data-name="WO-00433"><span class="fa fa-files-o icon clone-workorder">
+                                        </td>
+                                        <td>
+                                                <?php 
+                                                $total1 = $estimate->option1_total + $estimate->option2_total;
+                                                $total2 = $estimate->bundle1_total + $estimate->bundle2_total;
 
-                            </span> Clone Estimate</a>
-                        </li>
-                        <li role="presentation"><a role="menuitem" tabindex="-1"
-                            href="<?php echo base_url('invoice') ?>"
-                            data-convert-to-invoice-modal="open" data-id="161983" data-name="WO-00433"><span
-                              class="fa fa-money icon"></span> Convert to Invoice</a>
-                        </li>
-                        <li role="presentation">
-                          <a role="menuitem"
-                            href="<?php echo base_url('estimate/view_pdf/' . $estimate->id) ?>"
-                            class="">
-                            <span class="fa fa-file-pdf-o icon"></span> View PDF</a>
-                        </li>
-                        <li role="presentation">
-                          <a role="menuitem" target="_new"
-                            href="<?php echo base_url('estimate/print/' . $estimate->id) ?>"
-                            class="">
-                            <span class="fa fa-print icon"></span> Print</a>
-                        </li>
-                        <li role="presentation">
-                          <a role="menuitem" href="javascript:void(0);" class="btn-send-customer"
-                            data-id="<?= $estimate->id; ?>">
-                            <span class="fa fa-envelope-open-o icon"></span> Send to Customer</a>
-                        </li>
-                        <li>
-                          <div class="dropdown-divider"></div>
-                        </li>
-                        <li role="presentation">
-                          <a role="menuitem"
-                            href="<?php echo base_url('estimate/delete/' . $estimate->id) ?>>"
-                            onclick="return confirm('Do you really want to delete this item ?')"
-                            data-delete-modal="open"><span class="fa fa-trash-o icon"></span> Delete</a>
-                        </li>
-                      </ul>
+                                                if($estimate->estimate_type == 'Option')
+                                                {
+                                                    echo '$ '.$total1;
+                                                }
+                                                elseif($estimate->estimate_type == 'Bundle')
+                                                {
+                                                    echo '$ '.$total2;
+                                                }
+                                                else
+                                                {
+                                                    echo '$ '.$estimate->grand_total; 
+                                                }
+                                                
+                                                ?>
+                                        </td>
+                                        <td class="text-right">
+                                            <div class="dropdown dropdown-btn">
+                                                <button class="btn btn-default dropdown-toggle" type="button" id="dropdown-edit" data-toggle="dropdown" aria-expanded="true">
+                                                    <span class="btn-label">Manage</span><span class="caret-holder"><span class="caret"></span></span>
+                                                </button>
+                                                <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="dropdown-edit">
+                                                    <li role="presentation"><a role="menuitem" tabindex="-1"
+                                                                               href="<?php echo base_url('estimate/view/' . $estimate->id) ?>"><span
+                                                                    class="fa fa-file-text-o icon"></span> View Estimate</a></li>
+
+                                                    <?php if($estimate->estimate_type == 'Standard'){ ?>
+                                                    <li role="presentation"><a role="menuitem" tabindex="-1"
+                                                                               href="<?php echo base_url('estimate/edit/' . $estimate->id) ?>"><span
+                                                                    class="fa fa-pencil-square-o icon"></span> Edit</a>
+                                                    </li>
+                                                    <?php }elseif($estimate->estimate_type == 'Option'){ ?>
+                                                    <li role="presentation"><a role="menuitem" tabindex="-1"
+                                                                               href="<?php echo base_url('estimate/editOption/' . $estimate->id) ?>"><span
+                                                                    class="fa fa-pencil-square-o icon"></span> Edit</a>
+                                                    </li>
+                                                    <?php }else{ ?>
+                                                    <li role="presentation"><a role="menuitem" tabindex="-1"
+                                                                               href="<?php echo base_url('estimate/editBundle/' . $estimate->id) ?>"><span
+                                                                    class="fa fa-pencil-square-o icon"></span> Edit</a>
+                                                    </li>
+                                                    <?php } ?>
+
+                                                    <li role="separator" class="divider"></li>
+                                                    <li role="presentation"><a role="menuitem"
+                                                                               tabindex="-1"
+                                                                               href="#"
+                                                                               data-toggle="modal"
+                                                                               data-target="#modalCloneEstimate"
+                                                                               data-id="<?php echo $estimate->id ?>"
+                                                                               data-wo_num="<?php echo $estimate->estimate_number ?>"
+                                                                               data-name="WO-00433" class="clone-estimate"><span
+                                                                    class="fa fa-files-o icon">
+
+                                                        </span> Clone Estimate</a>
+                                                    </li>
+                                                    <li role="presentation"><a role="menuitem" tabindex="-1"
+                                                                               href="<?php echo base_url('invoice') ?>"
+                                                                               data-convert-to-invoice-modal="open"
+                                                                               data-id="161983"
+                                                                               data-name="WO-00433"><span
+                                                                    class="fa fa-money icon"></span> Convert to Invoice</a>
+                                                    </li>
+                                                    <li role="presentation">
+                                                        <a role="menuitem" target="_new" href="<?php echo base_url('estimate/view_pdf/' . $estimate->id) ?>" class="">
+                                                        <span class="fa fa-file-pdf-o icon"></span>  View PDF</a></li>
+                                                    <li role="presentation">
+                                                        <a role="menuitem" target="_new" href="<?php echo base_url('estimate/print/' . $estimate->id) ?>" class="">
+                                                        <span class="fa fa-print icon"></span>  Print</a></li>
+                                                    <li role="presentation">
+                                                        <!-- <a role="menuitem" href="javascript:void(0);" class="btn-send-customer" data-id="<?= $estimate->id; ?>">
+                                                        <span class="fa fa-envelope-open-o icon"></span>  Send to Customer</a></li> -->
+                                                        <a href="" acs-id="<?php echo $estimate->customer_id; ?>" est-id="<?php echo $estimate->id; ?>" class="send_to_customer"><span class="fa fa-envelope-o icon"></span> Send to Customer</a>
+                                                    <li><div class="dropdown-divider"></div></li>
+                                                    <li role="presentation">
+                                                        <!-- <a role="menuitem" href="<?php //echo base_url('estimate/delete/' . $estimate->id) ?>>" onclick="return confirm('Do you really want to delete this item ?')" data-delete-modal="open"><span class="fa fa-trash-o icon"></span> Delete</a> -->
+                                                        <a href="#" est-id="<?php echo $estimate->id; ?>" id="delete_estimate"><span class="fa fa-trash-o icon"></span> Delete </a>
+                                                    </li>
+                                                    <li role="presentation">
+                                                        <a role="menuitem" href="<?= base_url('job/estimate_job/'. $estimate->id) ?>">
+                                                            <span class="fa fa-briefcase icon"></span> Convert to Job</a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                <?php } ?>
+
+                                </tbody>
+
+                            </table>
+                        <?php } else { ?>
+                            <div class="page-empty-container">
+                                You have no estimates.
+                            </div>
+                        <?php } ?>
                     </div>
-                  </td>
-                </tr>
-                <?php } ?>
-
-              </tbody>
-
-            </table>
-            <?php } else { ?>
-            <div class="page-empty-container">
-              You have no estimates.
-            </div>
-            <?php } ?>
-          </div>
-        </div>
+                </div>
       </div>
     </div>
   </div>

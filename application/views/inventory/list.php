@@ -34,33 +34,14 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         </div>
                         <div class="pl-3 pr-3 mt-0 row">
                             <div class="col mb-4 left alert alert-warning mt-0 mb-2">
-                                <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">Invetory description here...</span>
+                                <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">Track and manage the storage, request, transfer, and consumption of every item in your inventory, and ensure that your mobile workforce
+                                    has the right parts in stock to do their job.</span>
                             </div>
                         </div>
                         <div class="row">
                             <input type="hidden" id="selectedIds">
                             <?php if ($type == 'product' || empty($type)) : ?>
                                 <div class="col-md-12" id="onHandInventory">
-                                    <div class="row col-md-6 pt-2 pb-4">
-                                        <label class="pt-2 pr-5" for="">Select</label>
-                                        <div class="dropdown dropdown-inline margin-right-sec"><a
-                                                    class="btn btn-default" style="text-align: left;" data-toggle="dropdown"
-                                                    aria-expanded="true" href="<?php echo base_url('customer') ?>"><span style="margin-right:130px;"><?php echo getItemCategoryName($items_categories, $active_category); ?></span>
-                                                <i class="fa fa-caret-down fa-sm" style="margin-left:10px;"></i></a>
-                                            <ul class="dropdown-menu btn-block" role="menu">
-                                                <?php foreach($items_categories as $cat) : ?>
-                                                    <li role="presentation">
-                                                        <a style="color:black;" role="menuitem" tabindex="-1" href="<?php echo base_url('inventory?category='.$cat->item_categories_id) ?>"><?php echo $cat->name; ?></a>
-                                                    </li>
-                                                <?php endforeach; ?>
-                                                <?php if($active_category != "Show All") : ?>
-                                                    <li role="presentation">
-                                                        <a style="color:black;" role="menuitem" tabindex="-1" href="<?php echo base_url('inventory') ?>">Show All</a>
-                                                    </li>
-                                                <?php endif;?>
-                                            </ul>
-                                        </div>
-                                    </div>
                                     <div class="dropdown" style="position: relative;display: inline-block;margin-bottom:10px;">
                                         <button class="btn btn-default batch-action-dp" type="button" data-toggle="dropdown" style="border-radius: 36px;" aria-expanded="false">
                                             Batch actions&nbsp;<i class="fa fa-angle-down fa-lg" style="margin-left:10px;"></i>

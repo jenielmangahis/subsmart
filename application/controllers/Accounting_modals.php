@@ -2605,56 +2605,89 @@ class Accounting_modals extends MY_Controller {
             $payee = explode('-', $data['payee']);
             $linkedTransaction = isset($data['linked_transaction']) ? explode('-', $data['linked_transaction']) : null;
 
-            $purchaseOrder = $this->vendors_model->get_purchase_order_by_id($linkedTransaction[1]);
+            if(!isset($data['transaction_id']) || is_null($data['transaction_id'])) {
+                $expenseData = [
+                    'company_id' => logged('company_id'),
+                    'payee_type' => $payee[0],
+                    'payee_id' => $payee[1],
+                    'payment_account_id' => $data['payment_account'],
+                    'payment_date' => date("Y-m-d", strtotime($data['payment_date'])),
+                    'payment_method_id' => $data['payment_method'],
+                    'ref_no' => $data['ref_no'] === '' ? null : $data['ref_no'],
+                    'permit_no' => $data['permit_number'] === "" ? null : $data['permit_number'],
+                    'tags' => $data['tags'] !== null ? json_encode($data['tags']) : null,
+                    'memo' => $data['memo'],
+                    'attachments' => $data['attachments'] !== null ? json_encode($data['attachments']) : null,
+                    'total_amount' => $data['total_amount'],
+                    'linked_purchase_order_id' => !is_null($linkedTransaction) ? $linkedTransaction[1] : null,
+                    'status' => 1,
+                    'created_at' => date("Y-m-d H:i:s"),
+                    'updated_at' => date("Y-m-d H:i:s")
+                ];
+        
+                $expenseId = $this->expenses_model->addExpense($expenseData);
+                $successMessage = 'Entry Successful!';
+            } else {
+                $revert = $this->revert_expense($data);
 
-            $total = 0.00;
+                if($revert) {
+                    $expense = $this->vendors_model->get_expense_by_id($data['transaction_id']);
 
-            if(isset($data['category_linked'])) {
-                foreach($data['category_linked'] as $index => $linked) {
-                    if($linked === "true") {
-                        $total += floatval($data['category_amount'][$index]);
+                    $expenseData = [
+                        'payee_type' => $payee[0],
+                        'payee_id' => $payee[1],
+                        'payment_account_id' => $data['payment_account'],
+                        'payment_date' => date("Y-m-d", strtotime($data['payment_date'])),
+                        'payment_method_id' => $data['payment_method'],
+                        'ref_no' => $data['ref_no'] === '' ? null : $data['ref_no'],
+                        'permit_no' => $data['permit_number'] === "" ? null : $data['permit_number'],
+                        'tags' => $data['tags'] !== null ? json_encode($data['tags']) : null,
+                        'memo' => $data['memo'],
+                        'attachments' => $data['attachments'] !== null ? json_encode($data['attachments']) : null,
+                        'total_amount' => $data['total_amount'],
+                        'linked_purchase_order_id' => !is_null($linkedTransaction) ? $linkedTransaction[1] : null,
+                        'status' => 1,
+                        'updated_at' => date("Y-m-d H:i:s")
+                    ];
+
+                    $expenseId = $this->vendors_model->update_expense($expense->id, $expenseData);
+
+                    if($expenseId) {
+                        $expenseId = intval($expense->id);
                     }
                 }
+                $successMessage = 'Update Successful!';
             }
-
-            if(isset($data['item_linked'])) {
-                foreach($data['item_linked'] as $index => $linked) {
-                    if($linked === "true") {
-                        $total += floatval($data['item_total'][$index]);
-                    }
-                }
-            }
-
-            $purchaseOrderData = [
-                'remaining_balance' => floatval($purchaseOrder->remaining_balance) - $total,
-                'status' => $total < floatval($purchaseOrder->remaining_balance) ? 1 : 2,
-                'updated_at' => date("Y-m-d H:i:s")
-            ];
-
-            $updatePurch = $this->vendors_model->update_purchase_order($linkedTransaction[1], $purchaseOrderData);
-
-            $expenseData = [
-                'company_id' => logged('company_id'),
-                'payee_type' => $payee[0],
-                'payee_id' => $payee[1],
-                'payment_account_id' => $data['payment_account'],
-                'payment_date' => date("Y-m-d", strtotime($data['payment_date'])),
-                'payment_method_id' => $data['payment_method'],
-                'ref_no' => $data['ref_no'] === '' ? null : $data['ref_no'],
-                'permit_no' => $data['permit_number'] === "" ? null : $data['permit_number'],
-                'tags' => $data['tags'] !== null ? json_encode($data['tags']) : null,
-                'memo' => $data['memo'],
-                'attachments' => $data['attachments'] !== null ? json_encode($data['attachments']) : null,
-                'total_amount' => $data['total_amount'],
-                'linked_purchase_order_id' => !is_null($linkedTransaction) ? $linkedTransaction[1] : null,
-                'status' => 1,
-                'created_at' => date("Y-m-d H:i:s"),
-                'updated_at' => date("Y-m-d H:i:s")
-            ];
-    
-            $expenseId = $this->expenses_model->addExpense($expenseData);
 
             if($expenseId) {
+                $purchaseOrder = $this->vendors_model->get_purchase_order_by_id($linkedTransaction[1]);
+
+                $total = 0.00;
+
+                if(isset($data['category_linked'])) {
+                    foreach($data['category_linked'] as $index => $linked) {
+                        if($linked === "true") {
+                            $total += floatval($data['category_amount'][$index]);
+                        }
+                    }
+                }
+
+                if(isset($data['item_linked'])) {
+                    foreach($data['item_linked'] as $index => $linked) {
+                        if($linked === "true") {
+                            $total += floatval($data['item_total'][$index]);
+                        }
+                    }
+                }
+
+                $purchaseOrderData = [
+                    'remaining_balance' => floatval($purchaseOrder->remaining_balance) - $total,
+                    'status' => $total < floatval($purchaseOrder->remaining_balance) ? 1 : 2,
+                    'updated_at' => date("Y-m-d H:i:s")
+                ];
+
+                $updatePurch = $this->vendors_model->update_purchase_order($linkedTransaction[1], $purchaseOrderData);
+
                 if(isset($data['attachments']) && is_array($data['attachments'])) {
                     foreach($data['attachments'] as $attachmentId) {
                         $attachment = $this->accounting_attachments_model->getById($attachmentId);
@@ -2667,7 +2700,14 @@ class Accounting_modals extends MY_Controller {
                 }
 
                 $paymentAcc = $this->chart_of_accounts_model->getById($data['payment_account']);
-                $newBalance = floatval($paymentAcc->balance) + floatval($data['total_amount']);
+                $paymentAccType = $this->account_model->getById($paymentAcc->account_id);
+
+                if($paymentAccType->account_name === 'Credit Card') {
+                    $newBalance = floatval($paymentAcc->balance) + floatval($data['total_amount']);
+                } else {
+                    $newBalance = floatval($paymentAcc->balance) - floatval($data['total_amount']);
+                }
+
                 $newBalance = number_format($newBalance, 2, '.', ',');
 
                 $paymentAccData = [
@@ -2728,20 +2768,20 @@ class Accounting_modals extends MY_Controller {
                             'linked_transaction_type' => $data['item_linked'][$index] ? $linkedTransaction[0] : null,
                             'linked_transaction_id' => $data['item_linked'][$index] ? $linkedTransaction[1] : null
                         ];
-
+    
                         $location = $this->items_model->getItemLocation($data['location'][$index], $value);
-
+    
                         $newQty = intval($location->qty) + intval($data['quantity'][$index]);
-
+    
                         $this->items_model->updateLocationQty($data['location'][$index], $value, $newQty);
-
+    
                         $itemAccDetails = $this->items_model->getItemAccountingDetails($value);
-
+    
                         if($itemAccDetails) {
                             $invAssetAcc = $this->chart_of_accounts_model->getById($itemAccDetails->inv_asset_acc_id);
                             $newBalance = floatval($invAssetAcc->balance) + floatval($data['item_total'][$index]);
                             $newBalance = number_format($newBalance, 2, '.', ',');
-
+    
                             $invAssetAccData = [
                                 'id' => $invAssetAcc->id,
                                 'company_id' => logged('company_id'),
@@ -2758,10 +2798,103 @@ class Accounting_modals extends MY_Controller {
     
             $return['data'] = $expenseId;
             $return['success'] = $expenseId ? true : false;
-            $return['message'] = $expenseId ? 'Entry Successful!' : 'An unexpected error occured!';
+            $return['message'] = $expenseId ? $successMessage : 'An unexpected error occured!';
         }
 
         return $return;
+    }
+
+    private function revert_expense($data)
+    {
+        $expense = $this->vendors_model->get_expense_by_id($data['transaction_id']);
+
+        $paymentAcc = $this->chart_of_accounts_model->getById($expense->payment_account_id);
+        $paymentAccType = $this->account_model->getById($paymentAcc->account_id);
+
+        if($paymentAccType->account_name === 'Credit Card') {
+            $newBalance = floatval($paymentAcc->balance) - floatval($expense->total_amount);
+        } else {
+            $newBalance = floatval($paymentAcc->balance) + floatval($expense->total_amount);
+        }
+
+        $paymentAccData = [
+            'id' => $paymentAcc->id,
+            'company_id' => logged('company_id'),
+            'balance' => $newBalance
+        ];
+
+        $revert = $this->chart_of_accounts_model->updateBalance($paymentAccData);
+
+        if ($revert) {
+            $this->revert_categories('Expense', $data['transaction_id']);
+            $this->revert_items('Expense', $data['transaction_id']);
+        }
+
+        return $revert;
+    }
+
+    private function revert_categories($transactionType, $transactionId)
+    {
+        $categories = $this->expenses_model->get_transaction_categories($transactionId, $transactionType);
+
+        if (count($categories) > 0) {
+            foreach ($categories as $category) {
+                $expenseAcc = $this->chart_of_accounts_model->getById($category->expense_account_id);
+
+                switch($transactionType) {
+                    case 'Expense' :
+                        $newBalance = floatval($expenseAcc->balance) - floatval($category->amount);
+                    break;
+                    case 'Bill' :
+                        $newBalance = floatval($expenseAcc->balance) - floatval($category->amount);
+                    break;
+                }
+
+                $expenseAccData = [
+                    'id' => $expenseAcc->id,
+                    'company_id' => logged('company_id'),
+                    'balance' => $newBalance
+                ];
+
+                $this->chart_of_accounts_model->updateBalance($expenseAccData);
+
+                $this->vendors_model->delete_transaction_category($category->id, $category->transaction_type);
+            }
+        }
+    }
+
+    private function revert_items($transactionType, $transactionId)
+    {
+        $items = $this->expenses_model->get_transaction_items($transactionId, $transactionType);
+
+        if (count($items) > 0) {
+            foreach ($items as $item) {
+                $location = $this->items_model->getItemLocation($item->location_id, $item->item_id);
+                $itemAccDetails = $this->items_model->getItemAccountingDetails($item->item_id);
+                $invAssetAcc = $this->chart_of_accounts_model->getById($itemAccDetails->inv_asset_acc_id);
+                switch($transactionType) {
+                    case 'Expense' :
+                        $newQty = intval($location->qty) - intval($item->quantity);
+                        $newBalance = floatval($invAssetAcc->balance) - floatval($item->total);
+                    break;
+                    case 'Bill' :
+                        $newQty = intval($location->qty) - intval($item->quantity);
+                        $newBalance = floatval($invAssetAcc->balance) - floatval($item->total);
+                    break;
+                }
+
+                $invAssetAccData = [
+                    'id' => $invAssetAcc->id,
+                    'company_id' => logged('company_id'),
+                    'balance' => $newBalance
+                ];
+
+                $this->items_model->updateLocationQty($item->location_id, $item->item_id, $newQty);
+                $this->chart_of_accounts_model->updateBalance($invAssetAccData);
+
+                $this->vendors_model->delete_transaction_item($item->id, $item->transaction_type);
+            }
+        }
     }
 
     private function check($data)
@@ -2995,58 +3128,91 @@ class Accounting_modals extends MY_Controller {
             $return['message'] = 'Please enter at least one line item.';
         } else {
             $linkedTransaction = isset($data['linked_transaction']) ? explode('-', $data['linked_transaction']) : null;
+            if(!isset($data['transaction_id']) || is_null($data['transaction_id'])) {
+                $billData = [
+                    'company_id' => logged('company_id'),
+                    'vendor_id' => $data['vendor_id'],
+                    'mailing_address' => nl2br($data['mailing_address']),
+                    'term_id' => $data['term_id'],
+                    'bill_date' => date("Y-m-d", strtotime($data['bill_date'])),
+                    'due_date' => date("Y-m-d", strtotime($data['due_date'])),
+                    'bill_no' => $data['bill_no'] !== "" ? $data['bill_no'] : null,
+                    'permit_no' => $data['permit_number'] === "" ? null : $data['permit_number'],
+                    'tags' => $data['tags'] !== null ? json_encode($data['tags']) : null,
+                    'memo' => $data['memo'],
+                    'attachments' => $data['attachments'] !== null ? json_encode($data['attachments']) : null,
+                    'remaining_balance' => $data['total_amount'],
+                    'total_amount' => $data['total_amount'],
+                    'linked_purchase_order_id' => !is_null($linkedTransaction) ? $linkedTransaction[1] : null,
+                    'status' => 1,
+                    'created_at' => date("Y-m-d H:i:s"),
+                    'updated_at' => date("Y-m-d H:i:s")
+                ];
+        
+                $billId = $this->expenses_model->addBill($billData);
+                $successMessage = 'Entry Successful!';
+            } else {
+                $this->revert_categories('Bill', $data['transaction_id']);
+                $this->revert_items('Bill', $data['transaction_id']);
+                
+                $bill = $this->vendors_model->get_bill_by_id($data['transaction_id']);
 
-            $purchaseOrder = $this->vendors_model->get_purchase_order_by_id($linkedTransaction[1]);
+                $billData = [
+                    'vendor_id' => $data['vendor_id'],
+                    'mailing_address' => nl2br($data['mailing_address']),
+                    'term_id' => $data['term_id'],
+                    'bill_date' => date("Y-m-d", strtotime($data['bill_date'])),
+                    'due_date' => date("Y-m-d", strtotime($data['due_date'])),
+                    'bill_no' => $data['bill_no'] !== "" ? $data['bill_no'] : null,
+                    'permit_no' => $data['permit_number'] === "" ? null : $data['permit_number'],
+                    'tags' => $data['tags'] !== null ? json_encode($data['tags']) : null,
+                    'memo' => $data['memo'],
+                    'attachments' => $data['attachments'] !== null ? json_encode($data['attachments']) : null,
+                    'remaining_balance' => $data['total_amount'],
+                    'total_amount' => $data['total_amount'],
+                    'linked_purchase_order_id' => !is_null($linkedTransaction) ? $linkedTransaction[1] : null,
+                    'status' => 1,
+                    'updated_at' => date("Y-m-d H:i:s")
+                ];
+        
+                $billId = $this->vendors_model->update_bill($data['transaction_id'], $billData);
 
-            $total = 0.00;
-
-            if(isset($data['category_linked'])) {
-                foreach($data['category_linked'] as $index => $linked) {
-                    if($linked === "true") {
-                        $total += floatval($data['category_amount'][$index]);
-                    }
+                if($billId) {
+                    $billId = $bill->id;
                 }
+
+                $successMessage = 'Update Successful!';
             }
-
-            if(isset($data['item_linked'])) {
-                foreach($data['item_linked'] as $index => $linked) {
-                    if($linked === "true") {
-                        $total += floatval($data['item_total'][$index]);
-                    }
-                }
-            }
-
-            $purchaseOrderData = [
-                'remaining_balance' => floatval($purchaseOrder->remaining_balance) - $total,
-                'status' => $total < floatval($purchaseOrder->remaining_balance) ? 1 : 2,
-                'updated_at' => date("Y-m-d H:i:s")
-            ];
-
-            $updatePurch = $this->vendors_model->update_purchase_order($linkedTransaction[1], $purchaseOrderData);
-
-            $billData = [
-                'company_id' => logged('company_id'),
-                'vendor_id' => $data['vendor_id'],
-                'mailing_address' => nl2br($data['mailing_address']),
-                'term_id' => $data['term_id'],
-                'bill_date' => date("Y-m-d", strtotime($data['bill_date'])),
-                'due_date' => date("Y-m-d", strtotime($data['due_date'])),
-                'bill_no' => $data['bill_no'] !== "" ? $data['bill_no'] : null,
-                'permit_no' => $data['permit_number'] === "" ? null : $data['permit_number'],
-                'tags' => $data['tags'] !== null ? json_encode($data['tags']) : null,
-                'memo' => $data['memo'],
-                'attachments' => $data['attachments'] !== null ? json_encode($data['attachments']) : null,
-                'remaining_balance' => $data['total_amount'],
-                'total_amount' => $data['total_amount'],
-                'linked_purchase_order_id' => !is_null($linkedTransaction) ? $linkedTransaction[1] : null,
-                'status' => 1,
-                'created_at' => date("Y-m-d H:i:s"),
-                'updated_at' => date("Y-m-d H:i:s")
-            ];
-    
-            $billId = $this->expenses_model->addBill($billData);
     
             if($billId) {
+                $purchaseOrder = $this->vendors_model->get_purchase_order_by_id($linkedTransaction[1]);
+
+                $total = 0.00;
+
+                if(isset($data['category_linked'])) {
+                    foreach($data['category_linked'] as $index => $linked) {
+                        if($linked === "true") {
+                            $total += floatval($data['category_amount'][$index]);
+                        }
+                    }
+                }
+
+                if(isset($data['item_linked'])) {
+                    foreach($data['item_linked'] as $index => $linked) {
+                        if($linked === "true") {
+                            $total += floatval($data['item_total'][$index]);
+                        }
+                    }
+                }
+
+                $purchaseOrderData = [
+                    'remaining_balance' => floatval($purchaseOrder->remaining_balance) - $total,
+                    'status' => $total < floatval($purchaseOrder->remaining_balance) ? 1 : 2,
+                    'updated_at' => date("Y-m-d H:i:s")
+                ];
+
+                $updatePurch = $this->vendors_model->update_purchase_order($linkedTransaction[1], $purchaseOrderData);
+
                 if(isset($data['attachments']) && is_array($data['attachments'])) {
                     foreach($data['attachments'] as $attachmentId) {
                         $attachment = $this->accounting_attachments_model->getById($attachmentId);
@@ -3138,7 +3304,7 @@ class Accounting_modals extends MY_Controller {
 
             $return['data'] = $billId;
             $return['success'] = $billId ? true : false;
-            $return['message'] = $billId ? 'Entry Successful!' : 'An unexpected error occured!';
+            $return['message'] = $billId ? $successMessage : 'An unexpected error occured!';
         }
 
         return $return;

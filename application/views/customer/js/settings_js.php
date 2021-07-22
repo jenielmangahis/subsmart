@@ -65,9 +65,11 @@
     $(document).on('click', '.edit-rate-plan', function(){
         var rate_plan_id = $(this).attr("data-id");
         var rate_plan_amount = $(this).attr("data-amount");
+        var plan_name = $(this).attr("data-name");
 
         $("#rate-plan-id").val(rate_plan_id);
         $("#edit-rate-plan-amount").val(rate_plan_amount);
+        $("#edit-plan-name").val(plan_name);
 
         $("#modal_edit_rate_plan").modal("show");
     });

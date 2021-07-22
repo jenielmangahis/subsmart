@@ -128,7 +128,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 <td style="width:50px;font-weight: bold;text-align: right;">Subtotal</td>
                               </tr>
                               <tr>
-                                <td>Nsmart Subscription</td>
+                                <td>nSmarTrac Subscription</td>
                                 <td>1</td>
                                 <td>
                                   <span><?= $payment->description; ?></span><br />                                  

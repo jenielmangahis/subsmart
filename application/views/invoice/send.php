@@ -86,10 +86,10 @@
                                             <label>Email Body</label>
                                             <textarea id="send-email" name="mail_msg" style="height:600px !important;">
                                             <p style="font-size: 28px;" data-mce-style="font-size: 28px;">Invoice from <?php echo $user->FName . ' ' . $user->LName  ?> (Invoice #<?php echo $invoice->invoice_number ?>)</p>
-                                            <p>Dear <?php echo get_customer_by_id($invoice->customer_id)->FName ?>,<br></p>
+                                            <p>Dear <?php echo get_customer_by_id($invoice->customer_id)->first_name; ?>,<br></p>
                                             <p>Thank you for your business! <br>Please find the attached invoice #<?php echo $invoice->invoice_number ?> with this email. <br><br>
-                                                <!-- <strong>Amount due: $<?php echo number_format($invoice->invoice_totals['grand_total'], 2, '.', ',') ?></strong> <br><br>You can click the button below to securely pay this invoice online. -->
-                                                <strong>Amount due: $<?php echo number_format(0, 2, '.', ',') ?></strong> <br><br>You can click the button below to securely pay this invoice online.
+                                                
+                                                <strong>Amount due: $<?php echo number_format($invoice->grand_total, 2, '.', ',') ?></strong> <br><br>You can click the button below to securely pay this invoice online.
                                             </p>
                                             <p><br></p>
                                             <table class="mce-item-table" width="100%" cellspacing="0" cellpadding="0" border="0">
@@ -100,7 +100,7 @@
                                                                 <tbody>
                                                                     <tr>
                                                                         <td bgcolor="#2ab363" align="center">
-                                                                            <a href="<?php echo base_url('invoice/pay/' . $invoice->id) ?>" 
+                                                                            <a href="<?php echo base_url('invoice/pay_now_form_fr_email/' . $invoice->id) ?>" 
                                                                                 target="_blank" 
                                                                                 style="font-size: 16px; font-family: Helvetica, Arial, sans-serif; color: #ffffff; text-decoration: none; -webkit-border-radius: 2px; -moz-border-radius: 2px; border-radius: 2px; padding: 12px 34px; display: inline-block;" 
                                                                                 rel="noopener">Pay Invoice 

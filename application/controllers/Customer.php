@@ -56,6 +56,21 @@ class Customer extends MY_Controller
             $this->page_data['profiles'] = $this->customer_ad_model->get_customer_data();
         }
         $this->page_data['affiliates'] = $this->customer_ad_model->get_all(FALSE,"","","affiliates","id");
+
+        $get_company_settings = array(
+            'where' => array(
+                'company_id' => logged('company_id')
+            ),
+            'table' => 'customer_settings_headers',
+            'select' => '*',
+        );
+        $customer_settings = $this->general->get_data_with_param($get_company_settings);
+        $enabled_table_headers = array();
+        if( $customer_settings[0] ){
+            $enabled_table_headers = unserialize($customer_settings[0]->headers);
+        }
+        
+        $this->page_data['enabled_table_headers'] = $enabled_table_headers;
         $this->load->view('customer/list', $this->page_data);
     }
 
@@ -488,6 +503,17 @@ class Customer extends MY_Controller
 
         $this->page_data['customer_list_headers'] = customer_list_headers();
         $this->page_data['profiles'] = $this->customer_ad_model->get_customer_data_settings($user_id);
+
+        $get_company_settings = array(
+            'where' => array(
+                'company_id' => logged('company_id')
+            ),
+            'table' => 'customer_settings_headers',
+            'select' => '*',
+        );
+        $customer_settings = $this->general->get_data_with_param($get_company_settings);
+        $headers = unserialize($customer_settings[0]->headers);
+        $this->page_data['customer_tbl_headers'] = $headers;
         //$this->load->model('Activity_model','activity');
        // $this->page_data['activity_list'] = $this->activity->getActivity($user_id, [], 0);
         //$this->page_data['history_activity_list'] = $this->activity->getActivity($user_id, [6,0], 1);
@@ -1360,7 +1386,6 @@ class Customer extends MY_Controller
 
     public function add_rate_plan_ajax(){
         $input = $this->input->post();
-        print_r($input);exit;
         // customer_ad_model
         if(empty($input['id'])){
             unset($input['id']);
@@ -1381,7 +1406,7 @@ class Customer extends MY_Controller
 
     public function update_rate_plan_ajax(){
         $input = $this->input->post();
-        $data = ['id' => $input['rate-plan-id'], 'amount' => $input['amount']];
+        $data = ['id' => $input['rate-plan-id'], 'amount' => $input['amount'], 'plan_name' => $input['plan_name']];
         if($this->customer_ad_model->update_data($data,"ac_rateplan","id")){
             echo 1;
         }else{

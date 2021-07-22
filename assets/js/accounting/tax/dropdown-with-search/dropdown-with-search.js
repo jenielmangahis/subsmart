@@ -82,24 +82,3 @@ class Accounting__DropdownWithSearch {
     return $(div.firstChild);
   }
 }
-
-(async function () {
-  const data = [
-    "August 2020",
-    "September 2020",
-    "October 2020",
-    "November 2020",
-    "December 2020",
-    "January 2021",
-    "February 2021",
-    "March 2021",
-    "April 2021",
-    "May 2021",
-    "June 2021",
-    "July 2021",
-  ];
-
-  $(".dropdownWithSearch").each((_, element) => {
-    new Accounting__DropdownWithSearch(element, data);
-  });
-})();

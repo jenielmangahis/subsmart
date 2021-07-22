@@ -745,7 +745,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         <?php endforeach ?>
                                     </select>
                                     <br>
-                                    <label for="choose_time">When do you want to start tracking your finances from this account in Nsmartrac?</label>
+                                    <label for="choose_time">When do you want to start tracking your finances from this account in nSmarTrac?</label>
                                     <span></span>
                                     <select name="choose_time" id="choose_time" class="form-control " required onchange="showdiv()">
                                             <option selected="selected" disabled="disabled">Choose one</option>

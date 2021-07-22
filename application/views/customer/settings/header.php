@@ -13,14 +13,20 @@
 <div class="card" style="height: 300px;">
     <div class="card-body hid-desk" style="padding-bottom:0px;">
         <div class="col-lg-12">
-            <h6>Customer List : Show table headers</h6>
+            <h6>Customer List table headers : check the column title to display in customers list</h6>
             <a class="btn btn-primary pull-right btn-save-settings-customer-header" href="javascript:void(0);">Save</a>
             <form id="customer-headers">
             <ul class="list-headers">
                 <?php foreach($customer_list_headers as $key => $value){ ?>
                     <li>
                       <div class="form-group form-check">
-                        <input type="checkbox" class="form-check-input" id="<?= $key; ?>" name="headers[<?= $key; ?>]">
+                        <?php 
+                            $checked  = '';
+                            if( in_array($key, $customer_tbl_headers) ){
+                                $checked = 'checked="checked"';
+                            }
+                        ?>
+                        <input type="checkbox" <?= $checked; ?> class="form-check-input" id="<?= $key; ?>" name="headers[<?= $key; ?>]">
                         <label class="form-check-label" for="<?= $key; ?>"><?= $value; ?></label>
                       </div>
                     </li>
