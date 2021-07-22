@@ -156,24 +156,41 @@
 
 .addAdjustment {
   position: fixed;
-  right: 0;
+  left: 0;
   top: 0;
   width: 100%;
   height: 100vh;
-  max-width: 500px;
-  background-color: #fff;
   z-index: 1041;
-  padding: 16px;
-  font-family: var(--font-family-sans-serif);
-  font-weight: 400;
-  box-shadow: 0 8px 16px 0 rgb(0 0 0 / 10%);
-  border: 1px solid #d4d7dc;
+  visibility: hidden;
+  transition: visibility 0s;
+  transition-delay: 0.3s;
 
-  transform: translateX(100%);
-  transition: transform 0.3s;
+  &__inner {
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 100%;
+    height: 100vh;
+    max-width: 500px;
+    background-color: #fff;
+    padding: 16px;
+    font-family: var(--font-family-sans-serif);
+    font-weight: 400;
+    box-shadow: 0 8px 16px 0 rgb(0 0 0 / 10%);
+    border: 1px solid #d4d7dc;
+
+    transform: translateX(100%);
+    transition: transform 0.3s;
+  }
 
   &--show {
-    transform: translateX(0);
+    background-color: rgba(0, 0, 0, 0.5);
+    visibility: visible;
+    transition-delay: 0s;
+
+    .addAdjustment__inner {
+      transform: translateX(0);
+    }
   }
 
   &__header {

@@ -97,7 +97,7 @@ include viewPath('includes/header');
 
                     <br>
 
-                    <div class="dropdownWithSearchContainer">
+                    <div class="dropdownWithSearchContainer" id="dueDateInputs">
                         <div>
                             <label>Due Date Start</label>
                             <div class="dropdownWithSearch">
@@ -303,46 +303,59 @@ include viewPath('includes/header');
     </div>
 
     <div class="addAdjustment" id="addAdjustment">
-        <div class="addAdjustment__header">
-            <div class="addAdjustment__title">Add an adjustment</div>
-            <button class="addAdjustment__close">
-                <i class="fa fa-times"></i>
-            </button>
-        </div>
-
-        <p>
-            An adjustment is an increase or decrease to the sales tax, including credits discounts, interest, penalties and corrections.
-        </p>
-
-        <form>
-            <div class="form-group">
-                <label for="reason">Reason</label>
-                <input type="text" class="form-control" id="reason" placeholder="Reason">
+        <div class="addAdjustment__inner">
+            <div class="addAdjustment__header">
+                <div class="addAdjustment__title">Add an adjustment</div>
+                <button class="addAdjustment__close">
+                    <i class="fa fa-times"></i>
+                </button>
             </div>
 
-            <div class="form-group">
-                <label for="adjustment_date">Adjustment Date</label>
-                <input type="date" class="form-control" id="adjustment_date">
+            <p>
+                An adjustment is an increase or decrease to the sales tax, including credits discounts, interest, penalties and corrections.
+            </p>
+
+            <form>
+                <div class="form-group">
+                    <label for="reason">Reason</label>
+                    <div class="dropdownWithSearch" id="adjustmentReason">
+                        <input type="text" class="form-control dropdownWithSearch__input" id="reason" placeholder="Reason">
+                        <button type="button" class="dropdownWithSearch__btn">
+                            <i class="fa fa-chevron-down"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="adjustment_date">Adjustment Date</label>
+                    <input type="date" class="form-control" id="adjustment_date">
+                </div>
+
+                <div class="form-group">
+                    <label for="account">Account</label>
+                    <div class="dropdownWithSearch">
+                        <input type="text" class="form-control dropdownWithSearch__input" id="account" placeholder="Select account">
+                        <button type="button" class="dropdownWithSearch__btn">
+                            <i class="fa fa-chevron-down"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="amount">Amount</label>
+                    <input type="text" class="form-control" id="amount" placeholder="Enter amount">
+                </div>
+
+                <div>
+                    <div class="addAdjustment__title addAdjustment__title--small">Total tax due</div>
+                    <div class="addAdjustment__total">$401.80</div>
+                </div>
+            </form>
+
+            <div class="addAdjustment__footer">
+                <button type="button" class="btn btn-primary">Add Adjustment</button>
             </div>
 
-            <div class="form-group">
-                <label for="account">Account</label>
-                <input type="text" class="form-control" id="account" placeholder="Select account">
-            </div>
-
-            <div class="form-group">
-                <label for="amount">Amount</label>
-                <input type="text" class="form-control" id="amount" placeholder="Enter amount">
-            </div>
-
-            <div>
-                <div class="addAdjustment__title addAdjustment__title--small">Total tax due</div>
-                <div class="addAdjustment__total">$401.80</div>
-            </div>
-        </form>
-
-        <div class="addAdjustment__footer">
-            <button type="button" class="btn btn-primary">Add Adjustment</button>
         </div>
     </div>
 

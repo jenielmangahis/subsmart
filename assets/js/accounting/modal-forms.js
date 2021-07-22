@@ -3610,9 +3610,16 @@ const submitModalForm = (event, el) => {
                 if(submitType === 'save-and-close') {
                     $(el).children().modal('hide');
                 }
+
+                if(submitType === 'save') {
+                    if($('#modal-container .modal .modal-body .card-body').find('input[name="transaction_id"]').length === 0) {
+                        $('#modal-container .modal .modal-body .card-body').children('.row:first-child').prepend(`<input type="hidden" name="transaction_id" value="${res.data}">`);
+                    }
+                }
             }
 
             toast(res.success, res.message);
+            submitType = '';
         }
     });
 }

@@ -3315,8 +3315,8 @@ class Workorder extends MY_Controller
         }
         
 
-        $action = $this->input->post('action');
-        if($action == 'submit') {
+        // $action = $this->input->post('action');
+        // if($action == 'submit') {
 
         $update_data = array(
             'id'                    => $this->input->post('wo_id'),
@@ -3655,18 +3655,18 @@ class Workorder extends MY_Controller
         // }
 
         redirect('workorder');
-    }
+        // }
     
-        if($action == 'preview') {
-            $dataaa = $this->input->post('workorder_number');
-            $this->page_data['users'] = $this->users_model->getUser(logged('id'));
+        // if($action == 'preview') {
+        //     $dataaa = $this->input->post('workorder_number');
+        //     $this->page_data['users'] = $this->users_model->getUser(logged('id'));
 
-            $this->load->library('pdf');
-            $html = $this->load->view('workorder/preview', [], true);
-            $this->pdf->createPDF($html, 'mypdf', false);
-            exit(0);
+        //     $this->load->library('pdf');
+        //     $html = $this->load->view('workorder/preview', [], true);
+        //     $this->pdf->createPDF($html, 'mypdf', false);
+        //     exit(0);
 
-        }
+        // }
     }
 
     public function UpdateWorkorderAlarm(){

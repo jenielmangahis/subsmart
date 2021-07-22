@@ -244,11 +244,13 @@ class Accounting extends MY_Controller
         add_css(array(
             "assets/css/accounting/customers.css",
             "assets/css/accounting/accounting_includes/create_statement_modal.css",
+            "assets/css/accounting/accounting_includes/time_activity.css",
         ));
         add_footer_js(array(
             "assets/js/accounting/sales/customers.js",
             "assets/js/accounting/sales/customer_includes/send_reminder.js",
-            "assets/js/accounting/sales/customer_includes/create_statement_modal.js"
+            "assets/js/accounting/sales/customer_includes/create_statement_modal.js",
+            "assets/js/accounting/sales/customer_includes/time_activity.js"
         ));
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->page_data['customers'] = $this->accounting_customers_model->getAllByCompany();
@@ -4815,7 +4817,7 @@ class Accounting extends MY_Controller
                 'date_modified' => date("Y-m-d H:i:s")
             );
         
-        $update_query = $this->accounting_delayed_charge_model->updateDelayedCharge($delayed_charge_id,$new_data);
+        $update_query = $this->accounting_delayed_charge_model->updateDelayedCharge($delayed_charge_id, $new_data);
 
         // if($addQuery > 0){
         //     redirect('accounting/banking');
@@ -6417,8 +6419,8 @@ class Accounting extends MY_Controller
         ]);
 
         add_footer_js([
-            'assets/js/accounting/tax/sales/sales.js',
             'assets/js/accounting/tax/dropdown-with-search/dropdown-with-search.js',
+            'assets/js/accounting/tax/sales/sales.js',
             'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.18/js/bootstrap-select.min.js'
         ]);
 
@@ -6877,7 +6879,7 @@ class Accounting extends MY_Controller
 											</li>
 											<li>
 												<a href="javascript:void(0)"
-													class="">
+                                                class="time-activity-btn" data-toggle="modal" data-target="#time_activity_modal" data-email-add="'.$cus->email.'" data-customer-id="'.$cus->prof_id.'">
 													Create time activity
 												</a>
 											</li>

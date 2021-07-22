@@ -998,37 +998,86 @@ class Invoice extends MY_Controller {
     public function send_email()
     {
         postAllowed();
-        if (!post('scheduled')) {
-            $config = Array(
-                'protocol'  => 'smtp',
-                'smtp_host' => 'smtp.gmail.com',
-                'smtp_port' => 587,
-                'smtp_user' => 'nsmartrac@gmail.com',
-                'smtp_pass' => 'nSmarTrac1',
-                'mailtype'  => 'html',
-                'charset'   => 'iso-8859-1',
-                'wordwrap'  => TRUE
-            );
+        // if (!post('scheduled')) {
+            // $config = Array(
+            //     'protocol'  => 'smtp',
+            //     'smtp_host' => 'smtp.gmail.com',
+            //     'smtp_port' => 587,
+            //     'smtp_user' => 'nsmartrac@gmail.com',
+            //     'smtp_pass' => 'nSmarTrac1',
+            //     'mailtype'  => 'html',
+            //     'charset'   => 'iso-8859-1',
+            //     'wordwrap'  => TRUE
+            // );
 
-            $this->load->library('email', $config);
+            // $this->load->library('email', $config);
 
-            $this->email->set_newline("\r\n");
-            $this->email->from(post('from_email'), post('from_name'));
-            $this->email->to("jeykell125@gmail.com");
-            $this->email->cc(post('cc[]'));
-            $this->email->bcc(post('bcc[]'));
+            // $this->email->set_newline("\r\n");
+            // $this->email->from(post('from_email'), post('from_name'));
+            // // $this->email->to("jeykell125@gmail.com");
+            // $this->email->to("emploucelle@gmail.com");
+            // $this->email->cc(post('cc[]'));
+            // $this->email->bcc(post('bcc[]'));
 
-            $this->email->subject(post('mail_subject'));
-            $this->email->message(post('mail_msg'));
+            // $this->email->subject(post('mail_subject'));
+            // $this->email->message(post('mail_msg'));
 
-            $this->email->send();
+            // $this->email->send();
 
-            $this->session->set_flashdata('alert-type', 'success');
-            $this->session->set_flashdata('alert', 'Email has been Sent');
-        } else {
-            $this->session->set_flashdata('alert-type', 'success');
-            $this->session->set_flashdata('alert', 'Scheduled invoice email has been set');
-        }
+            // $this->session->set_flashdata('alert-type', 'success');
+            // $this->session->set_flashdata('alert', 'Email has been Sent');
+
+            // $recipient  = "emploucelle@gmail.com";
+            $recipient  = post('from_email');
+            $message2 = post('mail_msg');
+            $subj = post('mail_subject');
+
+                include APPPATH . 'libraries/PHPMailer/PHPMailerAutoload.php';
+                    $server    = MAIL_SERVER;
+                    $port      = MAIL_PORT ;
+                    $username  = MAIL_USERNAME;
+                    $password  = MAIL_PASSWORD;
+                    $from      = MAIL_FROM;
+                    $subject   = $subj;
+                    $mail = new PHPMailer;
+                    //$mail->SMTPDebug = 4;
+                    $mail->isSMTP();
+                    $mail->Host = $server;
+                    $mail->SMTPAuth = true;
+                    $mail->Username   = $username;
+                    $mail->Password   = $password;
+                    $mail->getSMTPInstance()->Timelimit = 5;
+                    $mail->SMTPSecure = 'ssl';
+                    $mail->Timeout    =   10; // set the timeout (seconds)
+                    $mail->Port = $port;
+                    $mail->From = $from;
+                    $mail->FromName = 'NsmarTrac';
+
+                    $mail->addAddress($recipient, $recipient);
+                    $mail->isHTML(true);
+                    // $email->attach("/home/yoursite/location-of-file.jpg", "inline");
+                    $mail->Subject = $subject;
+                    $mail->Body    = $message2;
+                    // $cid = $email->attachment_cid($filename);
+
+
+                    $json_data['is_success'] = 1;
+                    $json_data['error']      = '';
+
+                    if(!$mail->Send()) {
+                        /*echo 'Message could not be sent.';
+                        echo 'Mailer Error: ' . $mail->ErrorInfo;
+                        exit;*/
+                        $json_data['is_success'] = 0;
+                        $json_data['error']      = 'Mailer Error: ' . $mail->ErrorInfo;
+                    }
+
+                    $this->session->set_flashdata('alert-type', 'success');
+                    $this->session->set_flashdata('alert', 'Scheduled invoice email has been set');
+        // } else {
+        //     $this->session->set_flashdata('alert-type', 'success');
+        //     $this->session->set_flashdata('alert', 'Scheduled invoice email has been set');
+        // }
 
         redirect('invoice/genview/'.post('invoice_id'));
     }
@@ -1123,6 +1172,30 @@ class Invoice extends MY_Controller {
         }
 
         die($this->load->view('invoice/pay_now_form', $this->page_data, true));
+
+    }
+    public function pay_now_form_fr_email($id)
+    {
+        $get = $this->input->get();
+
+        if (!empty($get)) {
+            $invoice = get_invoice_by_id($get['invoice_id']);
+            $this->page_data['action'] = $get['action'];
+
+            if (!empty($invoice)) {
+                foreach ($invoice as $key => $value) {
+                    if (is_serialized($value)) {
+                        $invoice->{$key} = unserialize($value);
+                    }
+                }
+                $this->page_data['invoice'] = $invoice;
+            }
+        }
+        
+        $this->page_data['invoice'] = $this->invoice_model->getById($id);
+        $this->page_data['items'] = $this->invoice_model->getItemsInv($id);
+
+        die($this->load->view('invoice/payNow', $this->page_data, true));
 
     }
 
