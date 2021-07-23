@@ -3043,6 +3043,18 @@ $(function() {
         });
     });
 
+    $(document).on('click', '#payBillsModal .modal-footer #save-and-print', function(e) {
+        e.preventDefault();
+
+        $('#payBillsModal #print_later').prop('checked', true).trigger('change');
+        $('#modal-container form#modal-form').submit();
+        var paymentAcc = $('#payBillsModal #payment_account').val();
+        $('#payBillsModal').modal('hide');
+
+        $('#new-popup #accounting_vendors a[data-target="#printChecksModal"]').trigger('click');
+        $('#printChecksModal #payment_account').val(paymentAcc);
+    });
+
     $(document).on('click', '#modal-container .modal .modal-footer #save', function(e) {
         e.preventDefault();
 

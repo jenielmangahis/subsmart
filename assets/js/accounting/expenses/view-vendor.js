@@ -836,7 +836,7 @@ $('a#new-bill-transaction').on('click', function(e) {
                     if (d == file) return index;
                 }).filter(isFinite)[0];
 
-                $(`#billModal .attachments`).find(`input[name="attachments[]"][value="${ids[index]}"]`).remove();
+                $(`#billModal .attachments`).parent().find(`input[name="attachments[]"][value="${ids[index]}"]`).remove();
 
                 //remove thumbnail
                 var previewElement;
@@ -959,7 +959,7 @@ $('a#new-purchase-order-transaction').on('click', function(e) {
                     if (d == file) return index;
                 }).filter(isFinite)[0];
 
-                $(`#purchaseOrderModal .attachments`).find(`input[name="attachments[]"][value="${ids[index]}"]`).remove();
+                $(`#purchaseOrderModal .attachments`).parent().find(`input[name="attachments[]"][value="${ids[index]}"]`).remove();
 
                 //remove thumbnail
                 var previewElement;
@@ -1038,7 +1038,7 @@ $('a#new-vendor-credit-transaction').on('click', function(e) {
                     if (d == file) return index;
                 }).filter(isFinite)[0];
 
-                $(`#vendorCreditModal .attachments`).find(`input[name="attachments[]"][value="${ids[index]}"]`).remove();
+                $(`#vendorCreditModal .attachments`).parent().find(`input[name="attachments[]"][value="${ids[index]}"]`).remove();
 
                 //remove thumbnail
                 var previewElement;
@@ -1102,7 +1102,7 @@ $('a#new-credit-card-pmt').on('click', function(e) {
                     if (d == file) return index;
                 }).filter(isFinite)[0];
 
-                $(`#payDownCreditModal .attachments`).find(`input[name="attachments[]"][value="${ids[index]}"]`).remove();
+                $(`#payDownCreditModal .attachments`).parent().find(`input[name="attachments[]"][value="${ids[index]}"]`).remove();
 
                 //remove thumbnail
                 var previewElement;

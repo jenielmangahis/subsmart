@@ -298,7 +298,12 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                                 </a>
                                                             </li>
                                                             <li role="presentation">
-                                                                <a role="menuitem" class="openConvertToWorkOrder" tabindex="-1"  href="javascript:void(0)" data-toggle="modal" data-target="#convertToWorkOrder" data-invoice-number="<?php echo $invoice->invoice_number ?>" data-id="<?php echo $invoice->id ?>">
+                                                                <!-- <a role="menuitem" class="openConvertToWorkOrder" tabindex="-1"  href="javascript:void(0)" data-toggle="modal" data-target="#convertToWorkOrder" data-invoice-number="<?php echo $invoice->invoice_number ?>" data-id="<?php echo $invoice->id ?>"> -->
+                                                                <a role="menuitem" tabindex="-1"
+                                                                               href="<?php echo base_url('workorder/invoice_workorder/' . $invoice->id) ?>"
+                                                                               data-convert-to-invoice-modal="open"
+                                                                               data-id="<?php echo $invoice->id ?>"
+                                                                               data-invoice-number="<?php echo $invoice->invoice_number ?>">
                                                                     <span class="fa fa-file-text-o icon"></span> Convert to Work Order
                                                                 </a>
                                                             </li>
@@ -331,10 +336,10 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         <div class="modal-dialog" style="max-width:600px;">
                                             <div class="modal-content">
                                                 <div class="modal-header">
+                                                    <h4 class="modal-title">Convert Invoice To Work Order</h4>
                                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                         <span aria-hidden="true">×</span>
                                                     </button>
-                                                    <h4 class="modal-title">Convert Invoice To Work Order</h4>
                                                 </div>
                                                 <div class="modal-body">
                                                     <div class="validation-error" style="display: none;"></div>
@@ -348,7 +353,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                                 </div>
                                                 <div class="modal-footer">
                                                     <button class="btn btn-default" type="button" data-dismiss="modal">Close</button>
-                                                    <button class="btn btn-primary" type="button" data-convert-to-work-order-modal="submit">Convert To Work Order</button>
+                                                    <button class="btn btn-primary convert_to_workorder" type="button" data-convert-to-work-order-modal="submit">Convert To Work Order</button>
                                                 </div>
                                             </div>
                                         </div>

@@ -254,6 +254,8 @@ class Accounting extends MY_Controller
         ));
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->page_data['customers'] = $this->accounting_customers_model->getAllByCompany();
+        $this->page_data['vendors'] = $this->accounting_customers_model->getAllVendorsByCompany();
+        $this->page_data['services'] = $this->items_model->getByCompanyId(logged("company_id"));
         $this->page_data['page_title'] = "Customers";
         $this->load->view('accounting/customers', $this->page_data);
     }
@@ -8093,5 +8095,57 @@ class Accounting extends MY_Controller
         $data = new stdClass();
         $data->html =$html;
         echo json_encode($data);
+    }
+    public function save_time_activity()
+    {
+            $time_activity_id = $this->input->post("time_activity_id");
+            $new_data['vendor_id'] = $this->input->post('vendors');
+            $new_data['date'] = date("Y-m-d",strtotime($this->input->post('date')));
+            $new_data['customer_id'] = $this->input->post('customer_id');
+            $new_data['description'] = $this->input->post('description');
+            if ($this->input->post('taxable') == "on"){
+                $new_data['taxable'] = 1;
+            }else{
+                $new_data['taxable'] = 0;
+            }
+            if ($this->input->post('billable') == "on" && $this->input->post('make_time_activity_billable') == 1) {
+                $new_data['billable'] = 1;
+                $new_data['bill_amount_per_hour'] = $this->input->post('billable-amount');
+            } else{
+                $new_data['billable'] = 0;
+                $new_data['bill_amount_per_hour'] = 0;
+            }
+            if ($this->input->post('show_services') == 1) {
+                $new_data['service_id'] = $this->input->post('services');
+            }else{
+                $new_data['service_id'] = null;
+            }
+            if ($this->input->post('enter-start-end-times') == "on") {
+                $new_data['start_time'] = date("H:i:s",strtotime($this->input->post('start-time')));
+                $new_data['end_time'] = date("H:i:s",strtotime($this->input->post('end-time')));
+                $new_data['break'] = date("H:i:s",strtotime($this->input->post('break-duration')));
+                $new_data['time'] = null;
+            }else{
+                $new_data['time'] = $this->input->post('time-duration');
+                $new_data['start_time'] = null;
+                $new_data['end_time'] = null;
+                $new_data['break'] = null;
+            }
+            
+            $data = new stdClass();
+            $data->count_save = 1;
+            if($this->input->post("time_activity_id")!=""){
+                $res= $this->accounting_customers_model->update_time_activity($new_data,$time_activity_id);
+                if($res){
+                    $data->count_save = 1;
+                }else{ 
+                    $data->count_save = 0;
+                }
+            }else{
+                $time_activity_id = $this->accounting_customers_model->add_time_activity($new_data);
+            }
+            $data->time_activity_id =$time_activity_id;
+            echo json_encode($data);
+        
     }
 }

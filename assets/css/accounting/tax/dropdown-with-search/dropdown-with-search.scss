@@ -59,9 +59,15 @@
     font-family: var(--font-family-sans-serif);
     font-weight: 400;
     font-size: 14px;
+    display: flex;
+    justify-content: space-between;
 
     &:hover {
       background-color: #eceef1;
+    }
+
+    &--sub {
+      padding-left: 32px;
     }
   }
 

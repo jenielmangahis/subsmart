@@ -318,12 +318,13 @@ include viewPath('includes/header');
             <form>
                 <div class="form-group">
                     <label for="reason">Reason</label>
-                    <div class="dropdownWithSearch" id="adjustmentReason">
-                        <input type="text" class="form-control dropdownWithSearch__input" id="reason" placeholder="Reason">
-                        <button type="button" class="dropdownWithSearch__btn">
-                            <i class="fa fa-chevron-down"></i>
-                        </button>
-                    </div>
+                    <select class="form-control" id="reason">
+                        <option selected>Reason</option>
+                        <option value="credit_or_discount">Credit/Discount</option>
+                        <option value="prior_prepayments">Prior prepayments</option>
+                        <option value="pre_payments">Pre payments</option>
+                        <option value="other">Other (penalties, interest, rounding errors)</option>
+                    </select>
                 </div>
 
                 <div class="form-group">
@@ -333,7 +334,7 @@ include viewPath('includes/header');
 
                 <div class="form-group">
                     <label for="account">Account</label>
-                    <div class="dropdownWithSearch">
+                    <div class="dropdownWithSearch" id="adjustmentAccount">
                         <input type="text" class="form-control dropdownWithSearch__input" id="account" placeholder="Select account">
                         <button type="button" class="dropdownWithSearch__btn">
                             <i class="fa fa-chevron-down"></i>

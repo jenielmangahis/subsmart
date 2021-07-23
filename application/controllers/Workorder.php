@@ -24,6 +24,8 @@ class Workorder extends MY_Controller
         $this->load->model('Estimate_model', 'estimate_model');
         $this->load->model('accounting_invoices_model');
         $this->load->model('Users_model', 'users_model');
+        $this->load->model('accounting_terms_model');
+        $this->load->model('Invoice_model', 'invoice_model');
         
         $user_id = getLoggedUserID();
 
@@ -606,6 +608,104 @@ class Workorder extends MY_Controller
 
         // print_r($this->page_data['customer']);
         $this->load->view('workorder/edit', $this->page_data);
+    }
+
+    public function invoice_workorder($id)
+    {
+        $this->load->model('AcsProfile_model');
+        $query_autoincrment = $this->db->query("SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE table_name = 'customer_groups'");
+        $result_autoincrement = $query_autoincrment->result_array();
+
+        if(count( $result_autoincrement )) {
+            if($result_autoincrement[0]['AUTO_INCREMENT'])
+            {
+                $this->page_data['auto_increment_estimate_id'] = 1;
+            } else {
+
+                $this->page_data['auto_increment_estimate_id'] = $result_autoincrement[0]['AUTO_INCREMENT'];
+            }
+        } else {
+            $this->page_data['auto_increment_estimate_id'] = 0;
+        }
+
+        $user_id = logged('id');
+
+        $company_id = logged('company_id');
+        $this->load->library('session');
+
+        $users_data = $this->session->all_userdata();
+        // foreach($users_data as $usersD){
+        //     $userID = $usersD->id;
+            
+        // }
+
+        // print_r($user_id);
+        // $users = $this->users_model->getUserByID($user_id);
+        // print_r($users);
+        // echo $company_id;
+
+        $role = logged('role');
+        if( $role == 1 || $role == 2){
+            $this->page_data['customers'] = $this->AcsProfile_model->getAll();
+            // $this->page_data['customers'] = $this->AcsProfile_model->getAllByCompanyId($company_id);
+        }else{
+            // $this->page_data['customers'] = $this->AcsProfile_model->getAll();
+            $this->page_data['customers'] = $this->AcsProfile_model->getAllByCompanyId($company_id);
+        }
+        $type = $this->input->get('type');
+        $this->page_data['type'] = $type;
+        $this->page_data['items'] = $this->items_model->getItemlist();
+        $this->page_data['plans'] = $this->plans_model->getByWhere(['company_id' => $company_id]);
+        // $this->page_data['number'] = $this->estimate_model->getlastInsert();
+        $this->page_data['number'] = $this->workorder_model->getlastInsert($company_id);
+
+        $termsCondi = $this->workorder_model->getTerms($company_id);
+        if($termsCondi){
+            // $this->page_data['terms_conditions'] = $this->workorder_model->getTermsDefault();
+            $this->page_data['terms_conditions'] = $this->workorder_model->getTermsbyID();
+        }else{
+            // $this->page_data['terms_conditions'] = $this->workorder_model->getTermsbyID();
+            $this->page_data['terms_conditions'] = $this->workorder_model->getTermsDefault();
+        }
+
+        $termsUse = $this->workorder_model->getTermsUse($company_id);
+        if($termsUse){
+            // $this->page_data['terms_conditions'] = $this->workorder_model->getTermsDefault();
+            $this->page_data['terms_uses'] = $this->workorder_model->getTermsUsebyID();
+        }else{
+            // $this->page_data['terms_conditions'] = $this->workorder_model->getTermsbyID();
+            $this->page_data['terms_uses'] = $this->workorder_model->getTermsUseDefault();
+        }
+
+        // print_r($this->page_data['terms_conditions']);
+        $this->page_data['fields'] = $this->workorder_model->getCustomByID();
+        $this->page_data['headers'] = $this->workorder_model->getheaderByID();
+        $this->page_data['checklists'] = $this->workorder_model->getchecklistByUser($user_id);
+        $this->page_data['job_types'] = $this->workorder_model->getjob_types();
+
+        $this->page_data['job_tags'] = $this->workorder_model->getjob_tagsById();
+        $this->page_data['clients'] = $this->workorder_model->getclientsById();
+        $this->page_data['lead_source'] = $this->workorder_model->getlead_source($company_id);
+        
+        $this->page_data['packages'] = $this->workorder_model->getPackagelist($company_id);
+
+        $this->page_data['users'] = $this->users_model->getUser(logged('id'));
+        $this->page_data['users_lists'] = $this->users_model->getAllUsersByCompanyID($company_id);
+        $this->page_data['companyDet'] = $this->workorder_model->companyDet($company_id);
+
+        $this->page_data['itemPackages'] = $this->workorder_model->getPackageDetailsByCompany($company_id);
+
+        $this->page_data['page_title'] = "Work Order";
+        // print_r($this->page_data['lead_source']);
+
+        $terms = $this->accounting_terms_model->getCompanyTerms_a($comp_id);
+
+        $this->page_data['invoice'] = $this->invoice_model->getinvoice($id);
+        $this->page_data['itemsInv'] = $this->invoice_model->getItems($id);
+        $this->page_data['itemsDetails'] = $this->invoice_model->getInvoiceItems($id);
+        $this->page_data['terms'] =  $terms;
+
+        $this->load->view('workorder/invoice_workorder', $this->page_data);
     }
 
     public function editAlarm($id)

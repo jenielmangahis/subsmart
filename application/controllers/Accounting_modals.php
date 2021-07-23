@@ -2808,6 +2808,46 @@ class Accounting_modals extends MY_Controller {
     {
         $expense = $this->vendors_model->get_expense_by_id($data['transaction_id']);
 
+        if(!is_null($expense->linked_purchase_order_id)) {
+            $purchaseOrder = $this->vendors_model->get_purchase_order_by_id($expense->linked_purchase_order_id);
+
+            $total = 0.00;
+            if(isset($data['category_linked'])) {
+                foreach($data['category_linked'] as $index => $linked) {
+                    if($linked === "true") {
+                        $total += floatval($data['category_amount'][$index]);
+                    }
+                }
+            }
+
+            if(isset($data['item_linked'])) {
+                foreach($data['item_linked'] as $index => $linked) {
+                    if($linked === "true") {
+                        $total += floatval($data['item_total'][$index]);
+                    }
+                }
+            }
+
+            $purchaseOrderData = [
+                'remaining_balance' => floatval($purchaseOrder->remaining_balance) + $total,
+                'status' => 1,
+                'updated_at' => date("Y-m-d H:i:s")
+            ];
+
+            $updatePurch = $this->vendors_model->update_purchase_order($purchaseOrder->id, $purchaseOrderData);
+        }
+
+        if(!is_null($expense->attachments) && $expense->attachments !== "[]") {
+            foreach(json_decode($expense->attachments, true) as $attachmentId) {
+                $attachment = $this->accounting_attachments_model->getById($attachmentId);
+                $attachmentData = [
+                    'linked_to_count' => intval($attachment->linked_to_count) - 1
+                ];
+
+                $this->accounting_attachments_model->updateAttachment($attachmentId, $attachmentData);
+            }
+        }
+
         $paymentAcc = $this->chart_of_accounts_model->getById($expense->payment_account_id);
         $paymentAccType = $this->account_model->getById($paymentAcc->account_id);
 
@@ -2881,16 +2921,23 @@ class Accounting_modals extends MY_Controller {
                         $newQty = intval($location->qty) - intval($item->quantity);
                         $newBalance = floatval($invAssetAcc->balance) - floatval($item->total);
                     break;
+                    case 'Purchase Order' :
+                        $newQtyPO = intval($itemAccDetails->qty_po) - intval($item->quantity);
+
+                        $this->items_model->updateItemAccountingDetails(['qty_po' => $newQtyPO], $item->item_id);
+                    break;
                 }
 
-                $invAssetAccData = [
-                    'id' => $invAssetAcc->id,
-                    'company_id' => logged('company_id'),
-                    'balance' => $newBalance
-                ];
-
-                $this->items_model->updateLocationQty($item->location_id, $item->item_id, $newQty);
-                $this->chart_of_accounts_model->updateBalance($invAssetAccData);
+                if($transactionType !== 'Purchase Order') {
+                    $invAssetAccData = [
+                        'id' => $invAssetAcc->id,
+                        'company_id' => logged('company_id'),
+                        'balance' => $newBalance
+                    ];
+    
+                    $this->items_model->updateLocationQty($item->location_id, $item->item_id, $newQty);
+                    $this->chart_of_accounts_model->updateBalance($invAssetAccData);
+                }
 
                 $this->vendors_model->delete_transaction_item($item->id, $item->transaction_type);
             }
@@ -3100,6 +3147,58 @@ class Accounting_modals extends MY_Controller {
         return $return;
     }
 
+    private function revert_bill($data)
+    {
+        $bill = $this->vendors_model->get_bill_by_id($data['transaction_id']);
+
+        if(!is_null($bill->linked_purchase_order_id)) {
+            $purchaseOrder = $this->vendors_model->get_purchase_order_by_id($bill->linked_purchase_order_id);
+
+            $total = 0.00;
+            if(isset($data['category_linked'])) {
+                foreach($data['category_linked'] as $index => $linked) {
+                    if($linked === "true") {
+                        $total += floatval($data['category_amount'][$index]);
+                    }
+                }
+            }
+
+            if(isset($data['item_linked'])) {
+                foreach($data['item_linked'] as $index => $linked) {
+                    if($linked === "true") {
+                        $total += floatval($data['item_total'][$index]);
+                    }
+                }
+            }
+
+            $purchaseOrderData = [
+                'remaining_balance' => floatval($purchaseOrder->remaining_balance) + $total,
+                'status' => 1,
+                'updated_at' => date("Y-m-d H:i:s")
+            ];
+
+            $updatePurch = $this->vendors_model->update_purchase_order($purchaseOrder->id, $purchaseOrderData);
+        }
+
+        if(!is_null($bill->attachments) && $bill->attachments !== "[]") {
+            foreach(json_decode($bill->attachments, true) as $attachmentId) {
+                $attachment = $this->accounting_attachments_model->getById($attachmentId);
+                $attachmentData = [
+                    'linked_to_count' => intval($attachment->linked_to_count) - 1
+                ];
+
+                $revert = $this->accounting_attachments_model->updateAttachment($attachmentId, $attachmentData);
+            }
+        }
+
+        if($revert) {
+            $this->revert_categories('Bill', $data['transaction_id']);
+            $this->revert_items('Bill', $data['transaction_id']);
+        }
+
+        return $revert;
+    }
+
     private function bill($data)
     {
         $this->form_validation->set_rules('vendor_id', 'Vendor', 'required');
@@ -3152,38 +3251,38 @@ class Accounting_modals extends MY_Controller {
                 $billId = $this->expenses_model->addBill($billData);
                 $successMessage = 'Entry Successful!';
             } else {
-                $this->revert_categories('Bill', $data['transaction_id']);
-                $this->revert_items('Bill', $data['transaction_id']);
+                $revert = $this->revert_bill($data);
                 
-                $bill = $this->vendors_model->get_bill_by_id($data['transaction_id']);
+                if($revert) {
+                    $bill = $this->vendors_model->get_bill_by_id($data['transaction_id']);
 
-                $billData = [
-                    'vendor_id' => $data['vendor_id'],
-                    'mailing_address' => nl2br($data['mailing_address']),
-                    'term_id' => $data['term_id'],
-                    'bill_date' => date("Y-m-d", strtotime($data['bill_date'])),
-                    'due_date' => date("Y-m-d", strtotime($data['due_date'])),
-                    'bill_no' => $data['bill_no'] !== "" ? $data['bill_no'] : null,
-                    'permit_no' => $data['permit_number'] === "" ? null : $data['permit_number'],
-                    'tags' => $data['tags'] !== null ? json_encode($data['tags']) : null,
-                    'memo' => $data['memo'],
-                    'attachments' => $data['attachments'] !== null ? json_encode($data['attachments']) : null,
-                    'remaining_balance' => $data['total_amount'],
-                    'total_amount' => $data['total_amount'],
-                    'linked_purchase_order_id' => !is_null($linkedTransaction) ? $linkedTransaction[1] : null,
-                    'status' => 1,
-                    'updated_at' => date("Y-m-d H:i:s")
-                ];
-        
-                $billId = $this->vendors_model->update_bill($data['transaction_id'], $billData);
+                    $billData = [
+                        'vendor_id' => $data['vendor_id'],
+                        'mailing_address' => nl2br($data['mailing_address']),
+                        'term_id' => $data['term_id'],
+                        'bill_date' => date("Y-m-d", strtotime($data['bill_date'])),
+                        'due_date' => date("Y-m-d", strtotime($data['due_date'])),
+                        'bill_no' => $data['bill_no'] !== "" ? $data['bill_no'] : null,
+                        'permit_no' => $data['permit_number'] === "" ? null : $data['permit_number'],
+                        'tags' => $data['tags'] !== null ? json_encode($data['tags']) : null,
+                        'memo' => $data['memo'],
+                        'attachments' => $data['attachments'] !== null ? json_encode($data['attachments']) : null,
+                        'remaining_balance' => $data['total_amount'],
+                        'total_amount' => $data['total_amount'],
+                        'linked_purchase_order_id' => !is_null($linkedTransaction) ? $linkedTransaction[1] : null,
+                        'status' => 1,
+                        'updated_at' => date("Y-m-d H:i:s")
+                    ];
 
-                if($billId) {
-                    $billId = $bill->id;
+                    $billId = $this->vendors_model->update_bill($data['transaction_id'], $billData);
+
+                    if($billId) {
+                        $billId = $bill->id;
+                    }
                 }
-
                 $successMessage = 'Update Successful!';
             }
-    
+
             if($billId) {
                 $purchaseOrder = $this->vendors_model->get_purchase_order_by_id($linkedTransaction[1]);
 
@@ -3833,6 +3932,29 @@ class Accounting_modals extends MY_Controller {
         echo json_encode($term);
     }
 
+    private function revert_purchase_order($data)
+    {
+        $purchaseOrder = $this->vendors_model->get_purchase_order_by_id($data['transaction_id']);
+
+        if(!is_null($purchaseOrder->attachments) && $purchaseOrder->attachments !== "[]") {
+            foreach(json_decode($purchaseOrder->attachments, true) as $attachmentId) {
+                $attachment = $this->accounting_attachments_model->getById($attachmentId);
+                $attachmentData = [
+                    'linked_to_count' => intval($attachment->linked_to_count) - 1
+                ];
+
+                $revert = $this->accounting_attachments_model->updateAttachment($attachmentId, $attachmentData);
+            }
+        }
+
+        if($revert) {
+            $this->revert_categories('Purchase Order', $data['transaction_id']);
+            $this->revert_items('Purchase Order', $data['transaction_id']);
+        }
+
+        return $revert;
+    }
+
     private function purchase_order($data)
     {
         $this->form_validation->set_rules('vendor_id', 'Vendor', 'required');
@@ -3860,31 +3982,66 @@ class Accounting_modals extends MY_Controller {
             $return['success'] = false;
             $return['message'] = 'Please enter at least one line item.';
         } else {
-            $lastPO = $this->expenses_model->get_last_purchase_order(logged('company_id'));
+            if(!isset($data['transaction_id']) || is_null($data['transaction_id'])) {
+                $lastPO = $this->expenses_model->get_last_purchase_order(logged('company_id'));
 
-            $purchaseOrder = [
-                'company_id' => logged('company_id'),
-                'vendor_id' => $data['vendor_id'],
-                'purchase_order_no' => $lastPO === null ? 1 : intval($lastPO->purchase_order_no)+1,
-                'permit_no' => $data['permit_number'] === "" ? null : $data['permit_number'],
-                'email' => $data['email'],
-                'mailing_address' => nl2br($data['mailing_address']),
-                'customer_id' => $data['customer'],
-                'shipping_address' => nl2br($data['shipping_address']),
-                'purchase_order_date' => date("Y-m-d", strtotime($data['purchase_order_date'])),
-                'ship_via' => $data['ship_via'],
-                'tags' => $data['tags'] !== null ? json_encode($data['tags']) : null,
-                'message_to_vendor' => $data['message_to_vendor'],
-                'memo' => $data['memo'],
-                'attachments' => $data['attachments'] !== null ? json_encode($data['attachments']) : null,
-                'total_amount' => $data['total_amount'],
-                'remaining_balance' => $data['status'] === "open" ? $data['total_amount'] : 0.00,
-                'status' => $data['status'] === "open" ? 1 : 2,
-                'created_at' => date("Y-m-d H:i:s"),
-                'updated_at' => date("Y-m-d H:i:s")
-            ];
-    
-            $purchaseOrderId = $this->expenses_model->add_purchase_order($purchaseOrder);
+                $purchaseOrderData = [
+                    'company_id' => logged('company_id'),
+                    'vendor_id' => $data['vendor_id'],
+                    'purchase_order_no' => $lastPO === null ? 1 : intval($lastPO->purchase_order_no)+1,
+                    'permit_no' => $data['permit_number'] === "" ? null : $data['permit_number'],
+                    'email' => $data['email'],
+                    'mailing_address' => nl2br($data['mailing_address']),
+                    'customer_id' => $data['customer'],
+                    'shipping_address' => nl2br($data['shipping_address']),
+                    'purchase_order_date' => date("Y-m-d", strtotime($data['purchase_order_date'])),
+                    'ship_via' => $data['ship_via'],
+                    'tags' => $data['tags'] !== null ? json_encode($data['tags']) : null,
+                    'message_to_vendor' => $data['message_to_vendor'],
+                    'memo' => $data['memo'],
+                    'attachments' => $data['attachments'] !== null ? json_encode($data['attachments']) : null,
+                    'total_amount' => $data['total_amount'],
+                    'remaining_balance' => $data['status'] === "open" ? $data['total_amount'] : 0.00,
+                    'status' => $data['status'] === "open" ? 1 : 2,
+                    'created_at' => date("Y-m-d H:i:s"),
+                    'updated_at' => date("Y-m-d H:i:s")
+                ];
+        
+                $purchaseOrderId = $this->expenses_model->add_purchase_order($purchaseOrderData);
+                $successMessage = 'Entry Successful!';
+            } else {
+                $revert = $this->revert_purchase_order($data);
+
+                if($revert) {
+                    $purchaseOrder = $this->vendors_model->get_purchase_order_by_id($data['transaction_id']);
+
+                    $purchaseOrderData = [
+                        'vendor_id' => $data['vendor_id'],
+                        'permit_no' => $data['permit_number'] === "" ? null : $data['permit_number'],
+                        'email' => $data['email'],
+                        'mailing_address' => nl2br($data['mailing_address']),
+                        'customer_id' => $data['customer'],
+                        'shipping_address' => nl2br($data['shipping_address']),
+                        'purchase_order_date' => date("Y-m-d", strtotime($data['purchase_order_date'])),
+                        'ship_via' => $data['ship_via'],
+                        'tags' => $data['tags'] !== null ? json_encode($data['tags']) : null,
+                        'message_to_vendor' => $data['message_to_vendor'],
+                        'memo' => $data['memo'],
+                        'attachments' => $data['attachments'] !== null ? json_encode($data['attachments']) : null,
+                        'total_amount' => $data['total_amount'],
+                        'remaining_balance' => $data['status'] === "open" ? $data['total_amount'] : 0.00,
+                        'status' => $data['status'] === "open" ? 1 : 2,
+                        'updated_at' => date("Y-m-d H:i:s")
+                    ];
+            
+                    $purchaseOrderId = $this->vendors_model->update_purchase_order($data['transaction_id'], $purchaseOrderData);
+
+                    if($purchaseOrderId) {
+                        $purchaseOrderId = $purchaseOrder->id;
+                    }
+                }
+                $successMessage = 'Update Successful!';
+            }
     
             if($purchaseOrderId) {
                 if(isset($data['attachments']) && is_array($data['attachments'])) {
@@ -3946,7 +4103,7 @@ class Accounting_modals extends MY_Controller {
 
             $return['data'] = $purchaseOrderId;
             $return['success'] = $purchaseOrderId ? true : false;
-            $return['message'] = $purchaseOrderId ? 'Entry Successful!' : 'An unexpected error occured!';
+            $return['message'] = $purchaseOrderId ? $successMessage : 'An unexpected error occured!';
         }
 
         return $return;
