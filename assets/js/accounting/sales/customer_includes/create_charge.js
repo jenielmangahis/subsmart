@@ -466,7 +466,7 @@ $(document).on("click", "#create_charge_modal form button[data-action='save']", 
                                 showConfirmButton: false,
                                 timer: 2000,
                                 title: "Success",
-                                html: "Receive payment has been saved.",
+                                html: "Delayed charge has been saved.",
                                 icon: "success",
                             });
 

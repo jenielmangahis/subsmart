@@ -46,6 +46,8 @@
                 </div>
                 <form action="#" method="post">
                     <input type="text" name="time_activity_id" style="display: none;">
+                    <input type="text" name="show_services" value="1" style="display: none;">
+                    <input type="text" name="make_time_activity_billable" value="1" style="display: none;">
                     <div class="modal-body">
                         <div class="row">
                             <div class="col-md-6">
@@ -59,30 +61,35 @@
                                         </div>
                                         <div class="form-group">
                                             <div class="label">Name</div>
-                                            <select class="form-control required" name="statement_type" required="">
-                                                <option value="Balance Forward">Balance Forward</option>
-                                                <option value="Open Item">Open Item</option>
-                                                <option value="Transaction Statement" selected="">Test
-                                                </option>
+                                            <select class="form-control required" name="vendors" required="">
+                                                <?php
+                                                foreach ($vendors as $vendor) {
+                                                    echo '<option value="'.$vendor->vendor_id.'">'.$vendor->vendor_name.'</option>';
+                                                }
+                                                ?>
                                             </select>
                                         </div>
                                         <div class="form-group">
                                             <div class="label">Customer</div>
-                                            <select class="form-control required" name="statement_type" required="">
-                                                <option value="Balance Forward">Balance Forward</option>
-                                                <option value="Open Item">Open Item</option>
-                                                <option value="Transaction Statement" selected="">Test
-                                                </option>
+                                            <select class="form-control required" name="customer_id" required="">
+                                                <option selected disabled></option>
+                                                <?php
+                                                foreach ($customers as $customer) {
+                                                    echo '<option value="'.$customer->prof_id.'">'.$customer->first_name.' '.$customer->last_name.'</option>';
+                                                }
+                                                ?>
                                             </select>
                                         </div>
                                         <div class="services-section">
                                             <div class="form-group">
                                                 <div class="label">Service</div>
-                                                <select class="form-control required" name="statement_type" required="">
-                                                    <option value="Balance Forward">Balance Forward</option>
-                                                    <option value="Open Item">Open Item</option>
-                                                    <option value="Transaction Statement" selected="">Test
-                                                    </option>
+                                                <select class="form-control" name="services" required="">
+                                                    <option selected disabled></option>
+                                                    <?php
+                                                    foreach ($services as $items) {
+                                                        echo '<option value="'.$items->id.'">'.$items->title.'</option>';
+                                                    }
+                                                    ?>
                                                 </select>
                                             </div>
                                         </div>
@@ -125,7 +132,7 @@
                                                     <div class="form-check">
                                                         <div class="checkbox checkbox-sec margin-right">
                                                             <input type="checkbox" name="enter-start-end-times"
-                                                                id="enter-start-end-times" checked>
+                                                                id="enter-start-end-times">
                                                             <label for="enter-start-end-times"><span>Enter Start and End
                                                                     Times</span></label>
                                                         </div>
@@ -133,33 +140,32 @@
                                                 </div>
                                             </div>
                                             <div class="form-sec time-start-end">
-                                                <div class="label-part">
+                                                <div class="label-part no-height">
                                                     Time
                                                 </div>
                                                 <div class="form-field-part">
-                                                    <div class="start-time-end-part">
+                                                    <div class="start-time-end-part" style="display: none;">
                                                         <div class="form-group">
                                                             <input type="time" class=""
                                                                 value="<?=date('Y-m-d')?>"
-                                                                name="start-time" required="">
+                                                                name="start-time">
                                                             <div class="label">Start Time</div>
                                                         </div>
                                                         <div class="form-group">
                                                             <input type="time" class=""
                                                                 value="<?=date('Y-m-d')?>"
-                                                                name="end-time" required="">
+                                                                name="end-time">
                                                             <div class="label">End Time</div>
                                                         </div>
                                                         <div class="form-group">
-                                                            <input type="text" placeholder="hh:mm" required=""
+                                                            <input type="text" placeholder="hh:mm"
                                                                 name="break-duration">
                                                             <div class="label">Break</div>
                                                         </div>
                                                     </div>
                                                     <div class="time-duration-part">
                                                         <div class="form-group">
-                                                            <input type="text" placeholder="hh:mm" required=""
-                                                                name="time-duration">
+                                                            <input type="text" placeholder="hh:mm" name="time-duration">
                                                         </div>
                                                     </div>
                                                 </div>
@@ -170,8 +176,8 @@
                                                 </div>
                                                 <div class="form-field-part">
                                                     <div class="form-group">
-                                                        <textarea name="description" rows="6"
-                                                            spellcheck="false"></textarea>
+                                                        <textarea name="description" class="required" rows="6"
+                                                            spellcheck="false" required></textarea>
                                                     </div>
                                                 </div>
                                             </div>

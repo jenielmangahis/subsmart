@@ -126,11 +126,96 @@ class Accounting__UpcomingItem extends Accounting__TaxItem {
     ]);
   });
 
-  new Accounting__DropdownWithSearch($("#adjustmentReason"), [
-    "Credit/Discount",
-    "Prior prepayments",
-    "Pre payments",
-    "Other (penalties, interest, rounding errors)",
+  new Accounting__DropdownWithSearch($("#adjustmentAccount"), [
+    {
+      text: "ACH Settlement / NMI",
+      right_text: "Income",
+    },
+    {
+      text: "Billable Expense Income",
+      right_text: "Income",
+    },
+    {
+      text: "Guardian",
+      right_text: "Income",
+    },
+    {
+      text: "Income - Revenue",
+      right_text: "Income",
+      sub_texts: [
+        "ACH Settlement",
+        "Check Deposits - Regions",
+        "Intuit Payments",
+        "NMI Processing",
+      ],
+    },
+    {
+      text: "Insurance",
+      right_text: "Income",
+    },
+    {
+      text: "Intuit",
+      right_text: "Income",
+    },
+    {
+      text: "Markup",
+      right_text: "Income",
+    },
+    {
+      text: "Reimbursements/Bkcd Charge",
+      right_text: "Income",
+      sub_texts: ["ACH Settlement", "Intuit", "NMI"],
+    },
+    {
+      text: "Rental Property Transfer",
+      right_text: "Income",
+    },
+    {
+      text: "Returned payment",
+      right_text: "Income",
+    },
+    {
+      text: "Sales",
+      right_text: "Income",
+    },
+    {
+      text: "Sales of Product Income",
+      right_text: "Income",
+    },
+    {
+      text: "Sales of Product Income-1",
+      right_text: "Income",
+    },
+    {
+      text: "Shipping Income",
+      right_text: "Income",
+    },
+    {
+      text: "Unapplied Cash Payment Income",
+      right_text: "Income",
+    },
+    {
+      text: "Unapplied Cash Payment Income-1",
+      right_text: "Income",
+    },
+    {
+      text: "Additional Income",
+      right_text: "Other Income",
+      sub_texts: [
+        "Activations",
+        "Customer Processing Fees",
+        "Early Termination",
+        "Equipment",
+        "Equipment Removal",
+        "Installations",
+        "Invoicing",
+        "Late Fees",
+        "Other Miscellaneous Income",
+        "Service Calls",
+        "Service Cancellation (BOC)",
+        "System Move",
+      ],
+    },
   ]);
 })();
 

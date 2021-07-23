@@ -1,4 +1,7 @@
 <?php
+
+use oasis\names\specification\ubl\schema\xsd\CommonBasicComponents_2\CompanyID;
+
 defined('BASEPATH') or exit('No direct script access allowed');
 
 class Accounting_customers_model extends MY_Model
@@ -76,5 +79,31 @@ class Accounting_customers_model extends MY_Model
         acs_profile.mail_add as acs_mail_add, acs_profile.city as acs_city, acs_profile.state as acs_state, acs_profile.zip_code as acs_zip_code
         FROM acs_profile JOIN business_profile ON acs_profile.company_id = business_profile.company_id WHERE acs_profile.prof_id = ".$id);
         return $query->row();
+    }
+    public function getAllVendorsByCompany($company_id=0)
+    {
+        if ($company_id == 0) {
+            $company_id = logged("company_id");
+        }
+        $this->db->where('company_id', logged('company_id'));
+        $this->db->order_by('vendor_name', 'asc');
+        $query = $this->db->get("vendor");
+        return $query->result();
+    }
+    public function add_time_activity($data)
+    {
+        $this->db->insert('accounting_time_activity', $data);
+        $insert_id = $this->db->insert_id();
+        return  $insert_id;
+    }
+    public function update_time_activity($data,$time_activity_id)
+    {
+        $this->db->where('id', $time_activity_id);
+        $res = $this->db->update('accounting_time_activity', $data);
+        if ($res) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }
