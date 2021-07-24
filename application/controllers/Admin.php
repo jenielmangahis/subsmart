@@ -508,6 +508,8 @@ class Admin extends CI_Controller
                 $data = [
                     'plan_name' => $post['plan_name'],
                     'plan_description' => $post['plan_description'],
+                    'num_license' => $post['num_license'],
+                    'price_per_license' => $post['price_per_license'],
                     'price' => $post['plan_price'],
                     'discount' => $post['plan_discount'],
                     'discount_type' => $post['plan_discount_type'],
@@ -561,6 +563,8 @@ class Admin extends CI_Controller
                     'plan_name' => $post['plan_name'],
                     'plan_description' => $post['plan_description'],
                     'price' => $post['plan_price'],
+                    'num_license' => $post['num_license'],
+                    'price_per_license' => $post['price_per_license'],
                     'discount' => $post['plan_discount'],
                     'discount_type' => $post['plan_discount_type'],
                     'status' => $post['plan_status'],

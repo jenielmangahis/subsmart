@@ -259,6 +259,14 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             </tr>
         </thead>
         <tbody>
+            <?php foreach($default_plan_feature as $value){ ?>
+                <tr>
+                    <td><?= $value; ?></td>
+                    <td>Added</td>
+                    <td align="right">0.00</td>
+                    <td></td>
+                </tr>
+            <?php } ?>
             <?php foreach($addons as $a){ ?>
                 <tr>
                     <td>

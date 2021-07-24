@@ -24,6 +24,12 @@ class Mycrm extends MY_Controller {
 
 	public function index()
 	{	
+        $this->load->model('Business_model');
+        
+        $company_id = logged('company_id');
+        $business   = $this->Business_model->getByCompanyId($company_id);
+
+        $this->page_data['business'] = $business;
 		$this->load->view('mycrm/index', $this->page_data);
 
     }
@@ -57,6 +63,22 @@ class Mycrm extends MY_Controller {
 		$start_billing_period = date("d-M-Y", strtotime($date_start));
 		$end_billing_period   = date("d-M-Y", strtotime("+1 months ", strtotime($start_billing_period)));
 
+        $default_plan_feature = plan_default_features();
+        if( $plan->plan_name == 'Simple Start' ){
+            $default_plan_feature = $default_plan_feature['simple-start'];
+        }elseif( $plan->plan_name == 'Essential' ){
+            $default_plan_feature = $default_plan_feature['essential'];
+        }elseif( $plan->plan_name == 'Plus' ){
+            $default_plan_feature = $default_plan_feature['plus'];
+        }elseif( $plan->plan_name == 'PremierPro' ){
+            $default_plan_feature = $default_plan_feature['premier-pro'];
+        }elseif( $plan->plan_name == 'Industry Specific' ){
+            $default_plan_feature = $default_plan_feature['industry-specific'];
+        }elseif( $plan->plan_name == 'Enterprise' ){
+            $default_plan_feature = $default_plan_feature['enterprise'];
+        }
+
+        $this->page_data['plan_features'] = $plan_default_features;
 		$this->page_data['lastPayment']  = $lastPayment;
 		$this->page_data['firstPayment'] = $firstPayment;
 		$this->page_data['nsPlans'] = $nsPlans;
@@ -67,6 +89,7 @@ class Mycrm extends MY_Controller {
 		$this->page_data['primaryCard'] = $primaryCard;
 		$this->page_data['addons'] = $addons;
 		$this->page_data['plan']   = $plan;
+        $this->page_data['default_plan_feature'] = $default_plan_feature;
 		$this->page_data['client'] = $client;
 		$this->page_data['offerCode'] = $offerCode;
 		$this->load->view('mycrm/membership', $this->page_data);

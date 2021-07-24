@@ -3526,4 +3526,17 @@ if (!function_exists('is_admin_logged')) {
 
         return $headers;
     }
+
+    function plan_default_features(){
+        $plan = [
+            'simple-start' => ['Management', 'Finances', 'Insights', 'Marketing'],
+            'essential' => ['Management', 'Finances', 'Insights', 'Marketing', 'Time Sheets', 'Reports', 'Accounting', 'Taskhub'],
+            'plus' => ['Management', 'Finances', 'Insights', 'Marketing', 'Time Sheets', 'Reports', 'Accounting', 'Taskhub', 'API Connectors', 'Campaign Builder', 'Trac 360'],
+            'premier-pro' => ['Management', 'Finances', 'Insights', 'Marketing', 'Time Sheets', 'Reports', 'Accounting', 'Taskhub', 'API Connectors', 'Campaign Builder', 'Trac 360', 'Mobile Tools', 'Survery Builder', 'Inventory Management'],
+            'enterprise' => ['Management', 'Finances', 'Insights', 'Marketing', 'Time Sheets', 'Reports', 'Accounting', 'Taskhub', 'API Connectors', 'Campaign Builder', 'Trac 360', 'Mobile Tools', 'Survery Builder', 'Inventory Management', 'Credit Score', 'Form Builder', 'Accounting', 'eSign', 'Campaign Blast'],
+            'industry-specific' => ['Management', 'Finances', 'Insights', 'Marketing', 'Time Sheets', 'Reports', 'Accounting', 'Taskhub', 'API Connectors', 'Campaign Builder', 'Trac 360', 'Mobile Tools', 'Survery Builder', 'Inventory Management', 'Credit Score', 'Form Builder', 'Accounting', 'eSign', 'Wizard', 'Branding']
+        ];
+
+        return $plan;
+    }
 }
