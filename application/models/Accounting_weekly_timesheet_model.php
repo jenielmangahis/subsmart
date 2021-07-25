@@ -21,4 +21,22 @@ class Accounting_weekly_timesheet_model extends MY_Model {
 		$this->db->insert_batch('accounting_weekly_timesheet_items', $data);
 		return $this->db->insert_id();
 	}
+
+	public function get_by_id($id)
+	{
+		$this->db->where('company_id', logged('company_id'));
+		$this->db->where('id', $id);
+		$query = $this->db->get($this->table);
+
+		return $query->row();
+	}
+
+	public function update($id, $data)
+	{
+		$this->db->where('company_id', logged('company_id'));
+		$this->db->where('id', $id);
+		$update = $this->db->update($this->table, $data);
+
+		return $update;
+	}
 }

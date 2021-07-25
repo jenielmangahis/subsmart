@@ -116,8 +116,8 @@
                                     data-target="#addrefundreceiptModal">Refund receipt</a></li>
                             <li><a href="#" class="ajax-" data-toggle="modal"
                                     data-target="#adddelayedcreditModal">Delayed credit</a></li>
-                            <li><a href="#" class="ajax-" data-toggle="modal"
-                                    data-target="#create_charge_modal">Delayed charge</a></li>
+                            <li><a href="#" class="ajax-" data-toggle="modal" data-target="#create_charge_modal">Delayed
+                                    charge</a></li>
                         </ul>
                     </div>
                 </div>
@@ -152,9 +152,13 @@
                         <ul id="accounting_employees">
                             <li><a href="#" class="ajax-payroll_modal" data-view="payroll_modal" data-toggle="modal"
                                     data-target="#payrollModal">Payroll</a></li>
-                            <li><a href="#" class="ajax-single_time_activity_modal"
+                            <!-- <li><a href="#" class="ajax-single_time_activity_modal"
                                     data-view="single_time_activity_modal" data-toggle="modal"
-                                    data-target="#singleTimeModal">Single time activity</a></li>
+                                    data-target="#singleTimeModal">Single time activity</a></li> -->
+                            <li><a href="javascript:void(0)" class="time-activity-btn" data-toggle="modal"
+                                    data-target="#time_activity_modal">
+                                    Single time activity
+                                </a></li>
                             <li><a href="#" class="ajax-weekly_timesheet_modal" data-view="weekly_timesheet_modal"
                                     data-toggle="modal" data-target="#weeklyTimesheetModal">Weekly timesheet</a></li>
                         </ul>
@@ -197,7 +201,8 @@
 
 <div><?php include viewPath('accounting/estimate_one_modal'); ?>
 </div>
-<!-- <div><?php // include viewPath('accounting/vendors_modal'); ?> -->
+<!-- <div><?php // include viewPath('accounting/vendors_modal');?>
+-->
 </div>
 <!-- <div><?php //include viewPath('accounting/modals/expense_modal');?>
 </div> -->
@@ -208,7 +213,7 @@
 </div>
 <div><?php include viewPath('accounting/customer_estimate_modal'); ?>
 </div>
-<div><?php //include viewPath('accounting/customer_credit_memo_modal'); ?>
+<div><?php //include viewPath('accounting/customer_credit_memo_modal');?>
 </div>
 <div><?php include viewPath('accounting/customer_sales_receipt_modal'); ?>
 </div>
@@ -226,31 +231,34 @@
 </div>
 <div><?php include viewPath('accounting/vendor_print_checks_modal'); ?>
 </div>
-
+<div>
+    <?php include viewPath('accounting/customer_includes/time_activity/time_activity'); ?>
+</div>
 <?php include viewPath('accounting/customer_includes/create_charge/create_charge'); ?>
+
+<?php include viewPath('accounting/customer_includes/create_estimate/create_estimate'); ?>
 
 <?php include viewPath('accounting/add_new_term'); ?>
 
 <script type="text/javascript">
-    $(document).ready(function()
-                {
-                    $(".btnAdd").click(function(){
-                        alert('test');
-                        $.ajax({
-                            type: "POST",
-                            url:"<?php echo base_url(); ?>accounting/customer_credit_memo_modal",
-                            success: function(returndata){
-                                  // $('#myModal').modal('show');
-                                //   alert('test');
-                                  $('.testingNi').html(returndata);
+    $(document).ready(function() {
+        $(".btnAdd").click(function() {
+            alert('test');
+            $.ajax({
+                type: "POST",
+                url: "<?php echo base_url(); ?>accounting/customer_credit_memo_modal",
+                success: function(returndata) {
+                    // $('#myModal').modal('show');
+                    //   alert('test');
+                    $('.testingNi').html(returndata);
 
-                                    //  $('#myModal').html(returndata);
-                                     $('#addcreditmemoModal').modal('show');
-                            },
-                            dataType: "html"
-                        });
-                    });
+                    //  $('#myModal').html(returndata);
+                    $('#addcreditmemoModal').modal('show');
+                },
+                dataType: "html"
+            });
+        });
 
 
-                });
-    </script>
+    });
+</script>

@@ -72,7 +72,7 @@
     font-weight: lighter;
     padding: 8px!important;
     height: auto!important;
-    border: solid 1px #BABEC5;
+    border: solid 1px #BABEC5!important;
     border-radius: 2px;
     width: 200px!important;
     resize: none;
@@ -81,6 +81,10 @@
     clip: auto!important;
     position: inherit!important;
     color: #404040;
+}
+
+#time_activity_modal form .form-group span.select2 {
+    display: none;
 }
 
 #time_activity_modal form .form-group select:focus,

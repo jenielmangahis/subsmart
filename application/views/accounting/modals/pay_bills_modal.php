@@ -213,9 +213,9 @@
                                     <span class="sr-only">Toggle Dropdown</span>
                                 </button>
                                 <div class="dropdown-menu">
-                                    <a class="dropdown-item" href="#" id="save">Save</a>
-                                    <a class="dropdown-item" href="#" id="save-and-print">Save and print</a>
-                                    <a class="dropdown-item" href="#" id="save-and-close">Save and close</a>
+                                    <a class="dropdown-item" href="#" onclick="savePayBills(event)">Save</a>
+                                    <a class="dropdown-item" href="#" onclick="savePrintPayBills(event)">Save and print</a>
+                                    <a class="dropdown-item" href="#" onclick="saveClosePayBills(event)">Save and close</a>
                                 </div>
                             </div>
                         </div>

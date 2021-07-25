@@ -143,7 +143,7 @@
                                 </div>
                             </div>
 
-                            <button type="submit" class="btn btn-secondary btn-rounded border float-right">Save</button>
+                            <button type="button" class="btn btn-secondary btn-rounded border float-right" id="save">Save</button>
                         </div>
                     </div>
                 </div>

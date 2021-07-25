@@ -92,14 +92,14 @@ class Accounting_customers_model extends MY_Model
     }
     public function add_time_activity($data)
     {
-        $this->db->insert('accounting_time_activity', $data);
+        $this->db->insert('accounting_single_time_activity', $data);
         $insert_id = $this->db->insert_id();
         return  $insert_id;
     }
     public function update_time_activity($data,$time_activity_id)
     {
         $this->db->where('id', $time_activity_id);
-        $res = $this->db->update('accounting_time_activity', $data);
+        $res = $this->db->update('accounting_single_time_activity', $data);
         if ($res) {
             return true;
         } else {

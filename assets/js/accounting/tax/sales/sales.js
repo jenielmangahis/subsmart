@@ -126,7 +126,134 @@ class Accounting__UpcomingItem extends Accounting__TaxItem {
     ]);
   });
 
-  new Accounting__DropdownWithSearch($("#adjustmentAccount"), [
+  const creditOrDiscountOptions = [
+    {
+      text: "Accounting",
+      right_text: "Expenses",
+    },
+    {
+      text: "Advertising/Promotional/Incentives",
+      right_text: "Expenses",
+    },
+    {
+      text: "Auto Expense",
+      right_text: "Expenses",
+    },
+    {
+      text: "Building Expense",
+      right_text: "Expenses",
+    },
+    {
+      text: "Commission",
+      right_text: "Expenses",
+    },
+    {
+      text: "Customer Reimbursement",
+      sub_texts: ["Intuit Return", "NMI"],
+      right_text: "Expenses",
+    },
+    {
+      text: "Depreciation Expense",
+      right_text: "Expenses",
+    },
+    {
+      text: "Donations",
+      right_text: "Expenses",
+    },
+    {
+      text: "Gifts",
+      right_text: "Expenses",
+    },
+    {
+      text: "Legal Exspenses",
+      right_text: "Expenses",
+    },
+    {
+      text: "License",
+      right_text: "Expenses",
+    },
+    {
+      text: "Loan",
+      right_text: "Expenses",
+    },
+    {
+      text: "Loss of Income",
+      sub_texts: ["Collections", "Late - Overdue >90 days"],
+      right_text: "Expenses",
+    },
+    {
+      text: "Merchant Fees",
+      sub_texts: ["Intuit / QuickBooks", "NMI"],
+      right_text: "Expenses",
+    },
+    {
+      text: "Office Expenses",
+      right_text: "Expenses",
+    },
+    {
+      text: "Office/General Administrative E",
+      right_text: "Expenses",
+    },
+    {
+      text: "Payroll Expenses",
+      sub_texts: ["Taxes", "Wages"],
+      right_text: "Expenses",
+    },
+    {
+      text: "Purchases-1",
+      right_text: "Expenses",
+    },
+    {
+      text: "QuickBooks Payments Fees",
+      right_text: "Expenses",
+    },
+    {
+      text: "QuickBooks Payments Fees-1",
+      right_text: "Expenses",
+    },
+    {
+      text: "Reimburstment",
+      right_text: "Expenses",
+    },
+    {
+      text: "Rental Reimbursement",
+      right_text: "Expenses",
+    },
+    {
+      text: "Technician/Installer",
+      right_text: "Expenses",
+    },
+    {
+      text: "Travel Meals",
+      right_text: "Expenses",
+    },
+    {
+      text: "Unapplied Cash Bill Payment Exp",
+      right_text: "Expenses",
+    },
+    {
+      text: "Unapplied Cash Bill Payment Expense",
+      right_text: "Expenses",
+    },
+    {
+      text: "Uncategorized Expense",
+      right_text: "Expenses",
+    },
+    {
+      text: "Utilities",
+      right_text: "Expenses",
+    },
+    {
+      text: "Other Miscellaneous Expense",
+      right_text: "Other Expenses",
+    },
+    {
+      text: "Reconciliation Discrepancies",
+      right_text: "Other Expenses",
+    },
+  ];
+
+  const priorPrepayments = [
     {
       text: "ACH Settlement / NMI",
       right_text: "Income",
@@ -216,7 +343,26 @@ class Accounting__UpcomingItem extends Accounting__TaxItem {
         "System Move",
       ],
     },
-  ]);
+  ];
+
+  const options = {
+    credit_or_discount: creditOrDiscountOptions,
+    prior_prepayments: priorPrepayments,
+    pre_payments: creditOrDiscountOptions,
+    other: priorPrepayments,
+  };
+
+  const $reasonInput = $("#addAdjustment #reason");
+  const $adjustmentAccount = $("#adjustmentAccount");
+
+  const { credit_or_discount: defaultOption } = options;
+  new Accounting__DropdownWithSearch($adjustmentAccount, defaultOption);
+
+  $reasonInput.on("change", function () {
+    $adjustmentAccount.find("#account").val("");
+    $adjustmentAccount.find(".dropdownWithSearch__options").remove();
+    new Accounting__DropdownWithSearch($adjustmentAccount, options[this.value]);
+  });
 })();
 
 function sleep(ms) {

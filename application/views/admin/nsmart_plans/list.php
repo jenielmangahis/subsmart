@@ -75,11 +75,13 @@ a.btn-add {
                             <thead>
                                 <tr>
                                     <th style="width: 20%;">Plan</th>
-                                    <th style="width: 30%;">Description</th>
-                                    <th style="width: 8%;">Price</th>
+                                    <th style="width: 20%;">Description</th>
+                                    <th style="width: 8%;">Number of License</th>
+                                    <th style="width: 8%;">Price per License</th>
+                                    <th style="width: 8%;">Plan Price</th>
                                     <th style="width: 15%;">Discount Price</th>
                                     <th style="width: 5%;">Is Active</th>
-                                    <th style="width: 10%;"></th>
+                                    <th style="width: 15%;"></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -94,7 +96,9 @@ a.btn-add {
                                     <tr>
                                         <td><?= $p->plan_name; ?></td>
                                         <td><?= $p->plan_description; ?></td>
-                                        <td><?= $p->price; ?></td>
+                                        <td><?= $p->num_license; ?></td>
+                                        <td>$<?= number_format($p->price_per_license,2); ?></td>
+                                        <td>$<?= number_format($p->price,2); ?></td>
                                         <td><?= $p->discount . " / " . $option_discount_types[$p->discount_type]; ?></td>
                                         <td><span class="<?= $cell; ?>"><?= $option_status[$p->status]; ?><span></td>
                                         <td>

@@ -32,6 +32,7 @@ class Vendors extends MY_Controller
             "assets/css/accounting/accounting_includes/receive_payment.css",
             "assets/css/accounting/accounting_includes/customer_sales_receipt_modal.css",
             "assets/css/accounting/accounting_includes/create_charge.css",
+            "assets/css/accounting/accounting_includes/time_activity.css",
         ));
 
         add_footer_js(array(
@@ -42,7 +43,8 @@ class Vendors extends MY_Controller
             "assets/plugins/jquery-toast-plugin-master/dist/jquery.toast.min.js",
             "assets/js/accounting/sales/customer_sales_receipt_modal.js",
             "assets/js/accounting/sales/customer_includes/receive_payment.js",
-            "assets/js/accounting/sales/customer_includes/create_charge.js"
+            "assets/js/accounting/sales/customer_includes/create_charge.js",
+            "assets/js/accounting/sales/customer_includes/time_activity.js"
         ));
 
         $this->page_data['menu_name'] =
@@ -70,6 +72,8 @@ class Vendors extends MY_Controller
                 array("",	array('/accounting/chart-of-accounts','/accounting/reconcile')),
             );
         $this->page_data['menu_icon'] = array("fa-tachometer","fa-university","fa-credit-card","fa-money","fa-dollar","fa-bar-chart","fa-minus-circle","fa-file","fa-calculator");
+
+        $this->page_data['employees'] = $this->users_model->getCompanyUsers(logged('company_id'));
     }
 
     public function index()
@@ -309,7 +313,7 @@ class Vendors extends MY_Controller
         $this->page_data['otherExpenseAccs'] = $this->chart_of_accounts_model->get_other_expense_accounts();
         $this->page_data['cogsAccs'] = $this->chart_of_accounts_model->get_cogs_accounts();
         $this->page_data['categoryAccs'] = $this->get_category_accs();
-        $this->page_data['vendor'] = $vendor;
+        $this->page_data['vendorDetails'] = $vendor;
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->page_data['page_title'] = "Vendors";
         $this->load->view('accounting/vendors/view', $this->page_data);
@@ -1990,8 +1994,8 @@ class Vendors extends MY_Controller
             }
         }
 
-        if(count($openBills) > 0) {
-            foreach($openBills as $bill) {
+        if (count($openBills) > 0) {
+            foreach ($openBills as $bill) {
                 $description = '<a href="#" class="text-info" data-id="'.$bill->id.'">Bill ';
                 $description .= $bill->bill_no !== "" && !is_null($bill->bill_no) ? '# '.$bill->bill_no.' ' : '';
                 $description .= '</a>';
@@ -2052,7 +2056,7 @@ class Vendors extends MY_Controller
         $openCredits = $this->expenses_model->get_vendor_unapplied_vendor_credits($billPayment->payee_id);
 
         $data = [];
-        foreach($credits as $creditId => $creditAmount) {
+        foreach ($credits as $creditId => $creditAmount) {
             $credit = $this->vendors_model->get_vendor_credit_by_id($creditId);
 
             $description = '<a href="#" class="text-info" data-id="'.$credit->id.'">Vendor Credit ';
@@ -2060,8 +2064,8 @@ class Vendors extends MY_Controller
             $description .= '</a>';
             $description .= '('.date("m/d/Y", strtotime($credit->payment_date)).')';
 
-            if($search !== "") {
-                if(stripos($credit->ref_no, $search) !== false) {
+            if ($search !== "") {
+                if (stripos($credit->ref_no, $search) !== false) {
                     $data[] = [
                         'id' => $credit->id,
                         'description' => $description,
@@ -2085,16 +2089,16 @@ class Vendors extends MY_Controller
             }
         }
 
-        if(count($openCredits) > 0) {
-            foreach($openCredits as $credit) {
+        if (count($openCredits) > 0) {
+            foreach ($openCredits as $credit) {
                 $description = '<a href="#" class="text-info" data-id="'.$credit->id.'">Vendor Credit ';
                 $description .= $credit->ref_no !== "" && !is_null($credit->ref_no) ? '# '.$credit->ref_no.' ' : '';
                 $description .= '</a>';
                 $description .= '('.date("m/d/Y", strtotime($credit->payment_date)).')';
 
-                if(array_search($credit->id, array_column($data, 'id')) === false) {
-                    if($search !== "") {
-                        if(stripos($credit->ref_no, $search) !== false) {
+                if (array_search($credit->id, array_column($data, 'id')) === false) {
+                    if ($search !== "") {
+                        if (stripos($credit->ref_no, $search) !== false) {
                             $data[] = [
                                 'id' => $credit->id,
                                 'description' => $description,
@@ -2153,7 +2157,7 @@ class Vendors extends MY_Controller
             case 'credit-card-credit':
                 $return = $this->update_credit_card_credit($transactionId, $data);
             break;
-            case 'bill-payment' :
+            case 'bill-payment':
                 $return = $this->update_bill_payment($transactionId, $data);
             break;
         }
@@ -2257,7 +2261,7 @@ class Vendors extends MY_Controller
         $update = $this->vendors_model->update_check($checkId, $checkData);
 
         if ($update) {
-            if(!is_null($checkData['check_no']) && !is_null($check->check_no)) {
+            if (!is_null($checkData['check_no']) && !is_null($check->check_no)) {
                 $assignCheck = [
                     'check_no' => $checkData['check_no'],
                     'transaction_type' => 'check',
@@ -2267,7 +2271,7 @@ class Vendors extends MY_Controller
                 ];
 
                 $this->accounting_assigned_checks_model->update_check_no($assignCheck);
-            } else if (is_null($check->check_no) && !is_null($checkData['check_no'])) {
+            } elseif (is_null($check->check_no) && !is_null($checkData['check_no'])) {
                 $assignCheck = [
                     'check_no' => $checkData['check_no'],
                     'transaction_type' => 'check',
@@ -2278,7 +2282,7 @@ class Vendors extends MY_Controller
                 ];
 
                 $this->accounting_assigned_checks_model->assign_check_no($assignCheck);
-            } else if(!is_null($check->check_no) && is_null($checkData['check_no'])) {
+            } elseif (!is_null($check->check_no) && is_null($checkData['check_no'])) {
                 $assignCheck = [
                     'check_no' => $checkData['check_no'],
                     'transaction_type' => 'check',
@@ -2556,7 +2560,7 @@ class Vendors extends MY_Controller
         $appliedCredits = json_decode($billPayment->vendor_credits_applied, true);
         $payee = $this->vendors_model->get_vendor_by_id($billPayment->payee_id);
 
-        foreach($appliedCredits as $creditId => $amount) {
+        foreach ($appliedCredits as $creditId => $amount) {
             $amount = floatval($amount);
 
             $vCredit = $this->vendors_model->get_vendor_credit_by_id($creditId);
@@ -2580,7 +2584,7 @@ class Vendors extends MY_Controller
 
         $paymentItems = $this->vendors_model->get_bill_payment_items($billPaymentId);
 
-        foreach($paymentItems as $paymentItem) {
+        foreach ($paymentItems as $paymentItem) {
             $bill = $this->expenses_model->get_bill_data($paymentItem->bill_id);
 
             $remainingBal = floatval($bill->remaining_balance) + floatval($paymentItem->total_amount);
@@ -2596,7 +2600,7 @@ class Vendors extends MY_Controller
         $paymentAcc = $this->chart_of_accounts_model->getById($billPayment->payment_account_id);
         $paymentAccType = $this->account_model->getById($paymentAcc->account_id);
 
-        if($paymentAccType->account_name === 'Credit Card') {
+        if ($paymentAccType->account_name === 'Credit Card') {
             $newBalance = floatval($paymentAcc->balance) - floatval($billPayment->total_amount);
         } else {
             $newBalance = floatval($paymentAcc->balance) + floatval($billPayment->total_amount);
@@ -2614,7 +2618,7 @@ class Vendors extends MY_Controller
     public function update_bill_payment($billPaymentId, $data)
     {
         $this->revert_bill_payment($billPaymentId);
-        foreach($data['credits'] as $key => $id) {
+        foreach ($data['credits'] as $key => $id) {
             $vCredit = $this->vendors_model->get_vendor_credit_by_id($id);
             $balance = floatval($vCredit->remaining_balance);
             $subtracted = floatval($data['credit_payment'][$key]);
@@ -2630,7 +2634,7 @@ class Vendors extends MY_Controller
         }
 
         $appliedVCredits = [];
-        foreach($data['credit_payment'] as $key => $amount) {
+        foreach ($data['credit_payment'] as $key => $amount) {
             $appliedVCredits[$data['credits'][$key]] = floatval($amount);
         }
 
@@ -2650,11 +2654,11 @@ class Vendors extends MY_Controller
 
         $update = $this->vendors_model->update_bill_payment($billPaymentId, $billPayment);
 
-        if($update) {
+        if ($update) {
             $paymentAcc = $this->chart_of_accounts_model->getById($data['payment_account']);
             $paymentAccType = $this->account_model->getById($paymentAcc->account_id);
 
-            if($paymentAccType->account_name === 'Credit Card') {
+            if ($paymentAccType->account_name === 'Credit Card') {
                 $newBalance = floatval($paymentAcc->balance) + floatval($data['total_amount']);
             } else {
                 $newBalance = floatval($paymentAcc->balance) - floatval($data['total_amount']);
@@ -2671,7 +2675,7 @@ class Vendors extends MY_Controller
             $this->chart_of_accounts_model->updateBalance($paymentAccData);
 
             $paymentItems = [];
-            foreach($data['bills'] as $index => $bill) {
+            foreach ($data['bills'] as $index => $bill) {
                 $paymentItems[] = [
                     'bill_payment_id' => $billPaymentId,
                     'bill_id' => $bill,
@@ -2682,7 +2686,7 @@ class Vendors extends MY_Controller
 
                 $bill = $this->expenses_model->get_bill_data($bill);
 
-                if(floatval($data['bill_payment'][$index]) === floatval($bill->remaining_balance)) {
+                if (floatval($data['bill_payment'][$index]) === floatval($bill->remaining_balance)) {
                     $billData = [
                         'remaining_balance' => 0.00,
                         'status' => 2,

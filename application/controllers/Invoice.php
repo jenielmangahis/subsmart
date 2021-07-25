@@ -797,6 +797,20 @@ class Invoice extends MY_Controller {
         }
     }
 
+    public function deleteInvoiceBtnNew()
+    {
+        $id = $this->input->post('id');
+
+        $data = array(
+            'id' => $id,
+            'view_flag' => '1',
+        );
+
+        $delete = $this->invoice_model->deleteInvoice($data);
+
+        echo json_encode($delete);
+    }
+
 
     public function edit($id)
     {

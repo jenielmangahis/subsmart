@@ -501,7 +501,7 @@ border: none;
                 </div>
             </div>
             <br> -->
-            <?php echo form_open_multipart('workorder/savenewWorkorder', [ 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?> 
+            <?php echo form_open_multipart('workorder/savenewInvoiceWorkorder', [ 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?> 
                     <div class="row">
                         <div class="col-md-12">
                             <div id="header_area">
@@ -567,15 +567,15 @@ border: none;
                         <div class="row">                   
                             <div class="col-md-3 form-group">
                                 <label for="phone_no" class="label-element">Phone Number</label>
-                                <input type="text" class="form-control input-element" name="phone_number" id="phone_no"  />
+                                <input type="text" class="form-control input-element" name="phone_number" id="phone_no" value="<?php echo $custs->phone_h; ?>" />
                             </div>
                             <div class="col-md-3 form-group">
                                 <label for="mobile_no" class="label-element">Mobile Number</label>
-                                <input type="text" class="form-control input-element" name="mobile_number" id="mobile_no"  />
+                                <input type="text" class="form-control input-element" name="mobile_number" id="mobile_no"  value="<?php echo $custs->phone_m; ?>" />
                             </div>
                             <div class="col-md-3 form-group">
                                 <label for="email" class="label-element">Email</label>
-                                <input type="email" class="form-control input-element" name="email" id="email" required  />
+                                <input type="email" class="form-control input-element" name="email" id="email" required  value="<?php echo $custs->email; ?>" />
                             </div>
                         </div>
                         
@@ -584,37 +584,38 @@ border: none;
                             <div class="col-md-4 form-group">
                                 <label for="job_location" class="label-element">Job Location</label>
                                 <!-- <label style="float:right;color:green;"><i class="fa fa-plus-square" aria-hidden="true"></i> New Location</label> -->
-                                <input type="text" class="form-control input-element" name="job_location" id="job_location" required/>
+                                <input type="text" class="form-control input-element" name="job_location" id="job_location" value="<?php echo $custs->mail_add; ?>" required/>
                             </div>
                             <div class="col-md-2 form-group">
                                 <label for="city" class="label-element">
                                     City
                                 </label>
-                                    <input type="text" class="form-control input-element" name="city" id="city" />
+                                    <input type="text" class="form-control input-element" name="city" id="city"  value="<?php echo $custs->city; ?>"/>
                             </div>
                             <div class="col-md-2 form-group">
                                 <label for="state" class="label-element">
                                     State
                                 </label>
-                                    <input type="text" class="form-control input-element" name="state" id="state" />
+                                    <input type="text" class="form-control input-element" name="state" id="state"  value="<?php echo $custs->state; ?>"/>
                             </div>
                             <div class="col-md-1 form-group">
                                 <label for="zip" class="label-element">
                                     Zip code
                                 </label>
-                                    <input type="text" class="form-control input-element" name="zip_code" id="zip" />
+                                    <input type="text" class="form-control input-element" name="zip_code" id="zip" value="<?php echo $custs->zip_code; ?>" />
                             </div>
                             
                             <div class="col-md-3 form-group">
                                 <label for="cross_street" class="label-element">
                                     Cross Street
                                 </label>
-                                    <input type="text" class="form-control input-element" name="cross_street" id="cross_street" />
+                                    <input type="text" class="form-control input-element" name="cross_street" id="cross_street"  value="<?php echo $custs->cross_street; ?>"/>
                             </div>
                             <input type="hidden" name="acs_fullname" id="acs_fullname">
                             <input type="hidden" name="company_name" id="company_name" value="<?php echo $companyDet->first_name.' '.$companyDet->last_name; ?>">
                             <input type="hidden" name="business_address" id="business_address" value="<?php echo $companyDet->business_address; ?>">
                             <input type="hidden" name="acs_phone_number" id="acs_phone_number" value="<?php echo $companyDet->phone_number; ?>">
+                            <input type="hidden" name="invoice_number" id="invoice_number" value="<?php echo $invoice->invoice_number; ?>">
                         </div>
                         <!-- <div class="row">
                             <div class="col-md-12 form-group">
