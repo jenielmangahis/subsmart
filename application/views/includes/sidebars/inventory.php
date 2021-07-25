@@ -56,20 +56,20 @@
         <li class="submenus <?= ($this->uri->segment(2) == 'fees') ? "active" : "";  ?>">
             <a href="<?= base_url('inventory/fees') ?>" id="addFeesInventory"><i class="fa fa-money" style="margin-right: 20px"></i>Fees</a>
         </li>
-        <li class="submenus dropright">
+        <!--<li class="submenus dropright">
             <a href="javascript:void(0)" id="orderInventory1"><i class="fa fa-shopping-basket " style="margin-right: 20px"></i>Order</a>
+        </li>-->
+        <li class="submenus <?= ($this->uri->segment(2) == 'vendors') ? "active" : "";  ?>">
+            <a href="<?= base_url('inventory/vendors') ?>" id="vendorInventory1"><i class="fa fa-truck" style="margin-right: 20px"></i>Vendors</a>
         </li>
-        <li class="submenus dropright">
-            <a href="javascript:void(0)" id="vendorInventory1"><i class="fa fa-truck" style="margin-right: 20px"></i>Vendors</a>
-        </li>
-        <li class="submenus dropright">
+        <!--<li class="submenus dropright">
             <a href="javascript:void(0)" id="reportsInventory1"><i class="fa fa-bar-chart" style="margin-right: 20px"></i>Reports</a>
+        </li>-->
+        <li class="submenus <?= ($this->uri->segment(2) == 'item_groups') ? "active" : "";  ?>">
+            <a href="<?= base_url('inventory/item_groups') ?>" id="addItemGroups"><i class="fa fa-th-list" style="margin-right: 20px"></i>Item Groups</a>
         </li>
-        <li class="submenus dropright">
-            <a href="<?php echo base_url('inventory?type=itemgroup') ?>" id="addItemGroups"><i class="fa fa-th-list" style="margin-right: 20px"></i>Item Groups</a>
-        </li>
-        <li class="submenus dropright">
-            <a href="<?php echo base_url('plans') ?>"><i class="fa fa-tasks" style="margin-right: 20px"></i>Package</a>
+        <li class="submenus <?= ($this->uri->segment(2) == 'plans') ? "active" : "";  ?>">
+            <a href="<?= base_url('inventory/plans') ?>"><i class="fa fa-tasks" style="margin-right: 20px"></i>Package</a>
         </li>
     </ul>
 </nav>

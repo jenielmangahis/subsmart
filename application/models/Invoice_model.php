@@ -25,6 +25,11 @@ class Invoice_model extends MY_Model
 
     public function getAllData($company_id)
     {
+        $where = array(
+            'invoices.company_id'      => $company_id,
+            'view_flag'                => '0',
+          );
+
         // $company_id = getLoggedCompanyID();
         // $vendor = $this->db->get('invoices'->where('company_id', $company_id));
 
@@ -35,7 +40,7 @@ class Invoice_model extends MY_Model
 
         // $this->db->select('*');
         // $this->db->from($this->table);
-        $this->db->where('invoices.company_id', $company_id);
+        $this->db->where($where);
         $query = $this->db->get();
 
 		return $query->result();
@@ -218,6 +223,14 @@ class Invoice_model extends MY_Model
         $this->db->where($where);
         $query2 = $this->db->get();
         return $query2->result();
+    }
+
+    public function deleteInvoice($data)
+    {
+        extract($data);
+        $this->db->where('id', $id);
+        $this->db->update('invoices', array('view_flag' => $view_flag));
+        return true;
     }
 
     public function getInvoiceCustomer($id)

@@ -1,6 +1,6 @@
 <?php
 
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') or exit('No direct script access allowed');
 
 class Items_model extends MY_Model
 {
@@ -39,13 +39,14 @@ class Items_model extends MY_Model
     }
 
     
-	public function getUserByID($id) {
-		$this->db->select('*');
-		$this->db->from('users');
-		$this->db->where('id', $id);
-		$query = $this->db->get();
-		return $query->result();
-	}
+    public function getUserByID($id)
+    {
+        $this->db->select('*');
+        $this->db->from('users');
+        $this->db->where('id', $id);
+        $query = $this->db->get();
+        return $query->result();
+    }
 
     public function categoriesWithoutParent()
     {
@@ -87,17 +88,15 @@ class Items_model extends MY_Model
 
     public function filterBy($filters = array(), $company_id, $type)
     {
-
         $this->db->select('*');
         $this->db->from($this->table);
-        if( $company_id > 0 ){
+        if ($company_id > 0) {
             $this->db->where('company_id', $company_id);
         }
         
         $this->db->where('type', $type);
 
         if (!empty($filters)) {
-
             if (isset($filters['category'])) {
                 $this->db->group_start();
                 $this->db->where('item_categories_id', $filters['category']);
@@ -122,10 +121,10 @@ class Items_model extends MY_Model
     {
         $this->db->where('company_id', getLoggedCompanyID());
         $this->db->where_in('is_active', $filters['status']);
-        if(isset($filters['category'])) {
+        if (isset($filters['category'])) {
             $this->db->where_in('item_categories_id', $filters['category']);
         }
-        if(isset($filters['type'])) {
+        if (isset($filters['type'])) {
             $this->db->where_in('type', $filters['type']);
         }
         $this->db->order_by($columnName, $order);
@@ -164,33 +163,34 @@ class Items_model extends MY_Model
         return $query->result();
     }
 
-    function getRows($params = array()) {
+    public function getRows($params = array())
+    {
         $this->db->select('*');
         $this->db->from($this->table);
         
-        if(array_key_exists("where", $params)){
-            foreach($params['where'] as $key => $val){
+        if (array_key_exists("where", $params)) {
+            foreach ($params['where'] as $key => $val) {
                 $this->db->where($key, $val);
             }
         }
         
-        if(array_key_exists("returnType",$params) && $params['returnType'] == 'count'){
+        if (array_key_exists("returnType", $params) && $params['returnType'] == 'count') {
             $result = $this->db->count_all_results();
-        }else{
-            if(array_key_exists("id", $params)){
+        } else {
+            if (array_key_exists("id", $params)) {
                 $this->db->where('id', $params['id']);
                 $query = $this->db->get();
                 $result = $query->row_array();
-            }else{
+            } else {
                 $this->db->order_by('id', 'desc');
-                if(array_key_exists("start",$params) && array_key_exists("limit",$params)){
-                    $this->db->limit($params['limit'],$params['start']);
-                }elseif(!array_key_exists("start",$params) && array_key_exists("limit",$params)){
+                if (array_key_exists("start", $params) && array_key_exists("limit", $params)) {
+                    $this->db->limit($params['limit'], $params['start']);
+                } elseif (!array_key_exists("start", $params) && array_key_exists("limit", $params)) {
                     $this->db->limit($params['limit']);
                 }
                 
                 $query = $this->db->get();
-                $result = ($query->num_rows() > 0)?$query->result_array():FALSE;
+                $result = ($query->num_rows() > 0)?$query->result_array():false;
             }
         }
         
@@ -198,19 +198,20 @@ class Items_model extends MY_Model
         return $result;
     }
 
-    public function insert($data = array()) {
-        if(!empty($data)){     
-
+    public function insert($data = array())
+    {
+        if (!empty($data)) {
             $insert = $this->db->insert($this->table, $data);
             return $insert?$this->db->insert_id():false;
         }
         return false;
     }
 
-    public function update($data, $condition = array()) {
-        if(!empty($data)){
+    public function update($data, $condition = array())
+    {
+        if (!empty($data)) {
             // Add modified date if not included
-            if(!array_key_exists("modified", $data)){
+            if (!array_key_exists("modified", $data)) {
                 $data['modified'] = date("Y-m-d H:i:s");
             }
             
@@ -225,7 +226,7 @@ class Items_model extends MY_Model
 
     public function updateLocationDetails($data, $condition = array())
     {
-        if(!empty($data)) {
+        if (!empty($data)) {
             $update = $this->db->update($this->table_has_location, $data, $condition);
 
             return $update ? true : false;
@@ -240,7 +241,7 @@ class Items_model extends MY_Model
         return $update;
     }
 
-    public function getItemById($id) 
+    public function getItemById($id)
     {
         $this->db->select('*');
         $this->db->from($this->table);
@@ -257,7 +258,7 @@ class Items_model extends MY_Model
         $this->db->delete($this->table, array("id" => $id));
     }
 
-    public function getLocationByItemId($id) 
+    public function getLocationByItemId($id)
     {
         $this->db->select('*');
         $this->db->from($this->table_has_location);
@@ -283,16 +284,18 @@ class Items_model extends MY_Model
         return $delete ? true : false;
     }
 
-    public function saveNewItemLocation($data = array()) {
-        if(!empty($data)){     
+    public function saveNewItemLocation($data = array())
+    {
+        if (!empty($data)) {
             $insert = $this->db->insert($this->table_has_location, $data);
             return $insert?$this->db->insert_id():false;
         }
         return false;
     }
 
-    public function saveBatchItemLocation($data = []) {
-        if(!empty($data)) {
+    public function saveBatchItemLocation($data = [])
+    {
+        if (!empty($data)) {
             $insert = $this->db->insert_batch($this->table_has_location, $data);
             return $this->db->insert_id();
         }
@@ -315,30 +318,34 @@ class Items_model extends MY_Model
         return $query->result();
     }
 
-    public function saveItemAccountingDetails($data = []) {
-        if(!empty($data)) {
+    public function saveItemAccountingDetails($data = [])
+    {
+        if (!empty($data)) {
             $insert = $this->db->insert('items_accounting_details', $data);
             return $this->db->insert_id();
         }
         return false;
     }
 
-    public function updateItemAccountingDetails($data, $item_id) {
+    public function updateItemAccountingDetails($data, $item_id)
+    {
         $this->db->where('item_id', $item_id);
         $update = $this->db->update('items_accounting_details', $data);
         return $update ? true : false;
     }
 
-    public function getItemAccountingDetails($item_id) {
+    public function getItemAccountingDetails($item_id)
+    {
         $this->db->where('item_id', $item_id);
         $query = $this->db->get('items_accounting_details');
         return $query->row();
     }
 
-    public function countQty($item_id) {
+    public function countQty($item_id)
+    {
         $items = $this->getLocationByItemId($item_id);
         $qty = 0;
-        for($i=0;$i<count($items);$i++) {
+        for ($i=0;$i<count($items);$i++) {
             $qty += intval($items[$i]['qty']);
         }
 
@@ -358,9 +365,9 @@ class Items_model extends MY_Model
     public function changeRebate($data)
     {
         extract($data);
-        if($get_val == '1'){
+        if ($get_val == '1') {
             $item_val = '0';
-        }else{
+        } else {
             $item_val = '1';
         }
         $this->db->where('id', $id);
@@ -368,7 +375,8 @@ class Items_model extends MY_Model
         return true;
     }
 
-    public function getItemData($id){
+    public function getItemData($id)
+    {
         $where = array(
             'type' => 'Work Order',
             'type_id'   => $id

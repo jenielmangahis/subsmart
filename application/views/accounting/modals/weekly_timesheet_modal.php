@@ -25,7 +25,7 @@
                                                 </optgroup>
                                                 <optgroup label="Vendors">
                                                     <?php foreach($dropdown['vendors'] as $vendor):?>
-                                                        <option value="vendor-<?php echo $vendor->id;?>"><?php echo $vendor->f_name . ' ' . $vendor->l_name;?></option>
+                                                        <option value="vendor-<?php echo $vendor->id;?>"><?=$vendor->display_name === null || $vendor->display_name === '' ? $vendor->f_name . ' ' . $vendor->l_name : $vendor->display_name?></option>
                                                     <?php endforeach; ?> 
                                                 </optgroup>
                                             </select>

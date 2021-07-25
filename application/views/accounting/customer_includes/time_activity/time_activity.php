@@ -61,12 +61,29 @@
                                         </div>
                                         <div class="form-group">
                                             <div class="label">Name</div>
-                                            <select class="form-control required" name="vendors" required="">
-                                                <?php
-                                                foreach ($vendors as $vendor) {
-                                                    echo '<option value="'.$vendor->vendor_id.'">'.$vendor->vendor_name.'</option>';
-                                                }
-                                                ?>
+                                            <select class="form-control required" name="name" required="">
+                                                <option value="" disabled selected>Whose time are you tracking?
+                                                </option>
+                                                <optgroup label="Employees">
+                                                    <?php 
+                                                    
+                                                    foreach ($employees as $employee):?>
+                                                    <option
+                                                        value="employee-<?php echo $employee->id;?>">
+                                                        <?php echo $employee->FName . ' ' . $employee->LName;?>
+                                                    </option>
+                                                    <?php endforeach; ?>
+                                                </optgroup>
+                                                <optgroup label="Vendors">
+                                                    <?php
+                                                    $vendors = $this->accounting_customers_model->getAllVendorsByCompany();
+                                                    foreach ($vendors as $vendor):?>
+                                                    <option
+                                                        value="vendor-<?php echo $vendor->vendor_id;?>">
+                                                        <?php echo  $vendor->vendor_name;?>
+                                                    </option>
+                                                    <?php endforeach; ?>
+                                                </optgroup>
                                             </select>
                                         </div>
                                         <div class="form-group">
@@ -74,6 +91,8 @@
                                             <select class="form-control required" name="customer_id" required="">
                                                 <option selected disabled></option>
                                                 <?php
+
+                                                $customers = $this->accounting_customers_model->getAllByCompany();
                                                 foreach ($customers as $customer) {
                                                     echo '<option value="'.$customer->prof_id.'">'.$customer->first_name.' '.$customer->last_name.'</option>';
                                                 }
@@ -86,6 +105,7 @@
                                                 <select class="form-control" name="services" required="">
                                                     <option selected disabled></option>
                                                     <?php
+                                                    $services = $this->items_model->getByCompanyId(logged("company_id"));
                                                     foreach ($services as $items) {
                                                         echo '<option value="'.$items->id.'">'.$items->title.'</option>';
                                                     }
@@ -248,3 +268,5 @@
     </div>
     <!--end of modal-->
 </div>
+
+<link rel="stylesheet" href="https://nsmartrac.com/assets/plugins/select2/dist/css/select2.min.css">

@@ -247,7 +247,7 @@ class Accounting_modals extends MY_Controller {
                     $lastAdjustmentNo = (int)$this->accounting_inventory_qty_adjustments_model->getLastAdjustmentNo();
                     $this->page_data['adjustment_no'] = $lastAdjustmentNo + 1;
                     $this->page_data['accounts'] = $bankAccounts;
-                    $this->page_data['items'] = $this->items_model->getItemsWithFilter(['type' => 'inventory', 'status' => [1]]);
+                    $this->page_data['items'] = $this->items_model->getItemsWithFilter(['type' => 'product', 'status' => [1]]);
                 break;
                 case 'payroll_modal':
                     $this->page_data['pay_schedules'] = $this->users_model->getPaySchedules();
@@ -1647,7 +1647,8 @@ class Accounting_modals extends MY_Controller {
         return $return;
     }
 
-    private function single_time_activity($data) {
+    private function single_time_activity($data)
+    {
         $this->form_validation->set_rules('date', 'Date', 'required');
         $this->form_validation->set_rules('name', 'Name', 'required');
         $this->form_validation->set_rules('customer', 'Customer', 'required');
@@ -1671,31 +1672,60 @@ class Accounting_modals extends MY_Controller {
             $return['message'] = 'Error';
         } else {
             $name = explode('-', $data['name']);
-            $insertData = [
-                'company_id' => logged('company_id'),
-                'date' => date('Y-m-d', strtotime($data['date'])),
-                'name_key' => $name[0],
-                'name_id' => $name[1],
-                'customer_id' => $data['customer'],
-                'service_id' => $data['service'],
-                'billable' => (isset($data['billable'])) ? 1 : 0,
-                'hourly_rate' => (isset($data['billable'])) ? $data['hourly_rate'] : null,
-                'taxable' => (isset($data['billable']) && isset($data['taxable'])) ? 1 : 0,
-                'start_time' => (isset($data['start_end_time'])) ? $data['start_time'] : null,
-                'end_time' => (isset($data['start_end_time'])) ? $data['end_time'] : null,
-                'time' => $data['time'],
-                'description' => $data['description'],
-                'created_by' => logged('id'),
-                'status' => 1,
-                'created_at' => date('Y-m-d h:i:s'),
-                'updated_at' => date('Y-m-d h:i:s')
-            ];
 
-            $activityId = $this->accounting_single_time_activity_model->create($insertData);
+            if(!isset($data['transaction_id']) || is_null($data['transaction_id'])) {
+                $timeActData = [
+                    'company_id' => logged('company_id'),
+                    'date' => date('Y-m-d', strtotime($data['date'])),
+                    'name_key' => $name[0],
+                    'name_id' => $name[1],
+                    'customer_id' => $data['customer'],
+                    'service_id' => $data['service'],
+                    'billable' => (isset($data['billable'])) ? 1 : 0,
+                    'hourly_rate' => (isset($data['billable'])) ? $data['hourly_rate'] : null,
+                    'taxable' => (isset($data['billable']) && isset($data['taxable'])) ? 1 : 0,
+                    'start_time' => (isset($data['start_end_time'])) ? $data['start_time'] : null,
+                    'end_time' => (isset($data['start_end_time'])) ? $data['end_time'] : null,
+                    'time' => $data['time'],
+                    'description' => $data['description'],
+                    'status' => 1,
+                    'created_at' => date('Y-m-d h:i:s'),
+                    'updated_at' => date('Y-m-d h:i:s')
+                ];
+    
+                $activityId = $this->accounting_single_time_activity_model->create($timeActData);
+
+                $successMessage = 'Recorded Successfully!';
+            } else {
+                $timeActData = [
+                    'date' => date('Y-m-d', strtotime($data['date'])),
+                    'name_key' => $name[0],
+                    'name_id' => $name[1],
+                    'customer_id' => $data['customer'],
+                    'service_id' => $data['service'],
+                    'billable' => (isset($data['billable'])) ? 1 : 0,
+                    'hourly_rate' => (isset($data['billable'])) ? $data['hourly_rate'] : null,
+                    'taxable' => (isset($data['billable']) && isset($data['taxable'])) ? 1 : 0,
+                    'start_time' => (isset($data['start_end_time'])) ? $data['start_time'] : null,
+                    'end_time' => (isset($data['start_end_time'])) ? $data['end_time'] : null,
+                    'time' => $data['time'],
+                    'description' => $data['description'],
+                    'created_by' => logged('id'),
+                    'updated_at' => date('Y-m-d h:i:s')
+                ];
+
+                $update = $this->accounting_single_time_activity_model->update($data['transaction_id'], $timeActData);
+
+                if($update) {
+                    $activityId = $data['transaction_id'];
+                }
+
+                $successMessage = 'Update successful!';
+            }
             
             $return['data'] = $activityId;
             $return['success'] = $activityId ? true : false;
-            $return['message'] = $activityId ? 'Record Successfully!' : 'An unexpected error occured!';
+            $return['message'] = $activityId ? $successMessage : 'An unexpected error occured!';
         }
 
         return $return;
@@ -2013,7 +2043,29 @@ class Accounting_modals extends MY_Controller {
         return $return;
     }
 
-    private function inventory_qty_adjustment($data) {
+    private function revert_inventory_qty_adjustment($data)
+    {
+        $adjustment = $this->accounting_inventory_qty_adjustments_model->get_by_id($data['transaction_id']);
+        $products = $this->accounting_inventory_qty_adjustments_model->get_adjusted_products($adjustment->id);
+
+        $locationData = [];
+        foreach($products as $product) {
+            $location = $this->items_model->getItemLocation($product->location_id, $product->product_id);
+            $locationData[] = [
+                'id' => $product->location_id,
+                'qty' => intval($location->qty) - intval($product->change_in_quantity)
+            ];
+        }
+
+        $adjustQuantity = $this->items_model->updateBatchLocations($locationData);
+
+        $delete = $this->accounting_inventory_qty_adjustments_model->delete_adjustment_products($adjustment->id);
+
+        return $delete;
+    }
+
+    private function inventory_qty_adjustment($data)
+    {
         $this->form_validation->set_rules('adjustment_date', 'Date', 'required');
         $this->form_validation->set_rules('reference_no', 'Reference No.', 'required');
         $this->form_validation->set_rules('inventory_adj_acc', 'Inventory Adjustment Account', 'required');
@@ -2037,20 +2089,47 @@ class Accounting_modals extends MY_Controller {
             $return['message'] = 'Please enter at least one inventory item.';
         } else {
             $adjustmentAcc = explode('-', $data['inventory_adj_acc']);
-            $insertData = [
-                'adjustment_no' => $data['reference_no'],
-                'company_id' => logged('company_id'),
-                'adjustment_date' => date('Y-m-d', strtotime($data['adjustment_date'])),
-                'inventory_adjustment_account_id' => $adjustmentAcc[1],
-                'inventory_adjustment_account_key' => $adjustmentAcc[0],
-                'memo' => $data['memo'],
-                'created_by' => logged('id'),
-                'status' => 1,
-                'created_at' => date('Y-m-d h:i:s'),
-                'updated_at' => date('Y-m-d h:i:s')
-            ];
+            if(!isset($data['transaction_id']) || is_null($data['transaction_id'])) {
+                $adjustmentData = [
+                    'adjustment_no' => $data['reference_no'],
+                    'company_id' => logged('company_id'),
+                    'adjustment_date' => date('Y-m-d', strtotime($data['adjustment_date'])),
+                    'inventory_adjustment_account_id' => $adjustmentAcc[1],
+                    'inventory_adjustment_account_key' => $adjustmentAcc[0],
+                    'memo' => $data['memo'],
+                    'created_by' => logged('id'),
+                    'status' => 1,
+                    'created_at' => date('Y-m-d h:i:s'),
+                    'updated_at' => date('Y-m-d h:i:s')
+                ];
 
-            $adjustmentId = $this->accounting_inventory_qty_adjustments_model->create($insertData);
+                $adjustmentId = $this->accounting_inventory_qty_adjustments_model->create($adjustmentData);
+
+                $successMessage = 'Entry Successful!';
+            } else {
+                $revert = $this->revert_inventory_qty_adjustment($data);
+
+                if($revert) {
+                    $adjustmentData = [
+                        'adjustment_no' => $data['reference_no'],
+                        'adjustment_date' => date('Y-m-d', strtotime($data['adjustment_date'])),
+                        'inventory_adjustment_account_id' => $adjustmentAcc[1],
+                        'inventory_adjustment_account_key' => $adjustmentAcc[0],
+                        'memo' => $data['memo'],
+                        'created_by' => logged('id'),
+                        'status' => 1,
+                        'updated_at' => date('Y-m-d h:i:s')
+                    ];
+    
+                    $update = $this->accounting_inventory_qty_adjustments_model->update($data['transaction_id'], $adjustmentData);
+    
+                    if($update) {
+                        $adjustmentId = $data['transaction_id'];
+                    }
+                }
+
+                $successMessage = 'Update successful.';
+            }
 
             if($adjustmentId > 0) {
                 $adjustmentProducts = [];
@@ -2076,13 +2155,14 @@ class Accounting_modals extends MY_Controller {
 
             $return['data'] = $adjustmentId;
             $return['success'] = $adjustmentId && $adjustmentProdId && $adjustQuantity > 0 ? true : false;
-            $return['message'] = $adjustmentId && $adjustmentProdId && $adjustQuantity > 0 ? 'Entry Successful!' : 'An unexpected error occured!';
+            $return['message'] = $adjustmentId && $adjustmentProdId && $adjustQuantity > 0 ? $successMessage : 'An unexpected error occured!';
         }
 
         return $return;
     }
 
-    private function weekly_timesheet($data) {
+    private function weekly_timesheet($data)
+    {
         $this->form_validation->set_rules('person_tracking', 'Person being Tracked', 'required');
         $this->form_validation->set_rules('week_dates', 'Week Dates', 'required');
 
@@ -2099,70 +2179,99 @@ class Accounting_modals extends MY_Controller {
         } else if(isset($data['customer']) && count($data['customer']) < 1 || !isset($data['customer'])) {
             $return['data'] = null;
             $return['success'] = false;
-            $return['message'] = 'You must fill out at least two detail lines.';
+            $return['message'] = 'You must enter at least one time activity before you can save the timesheet.';
         } else {
-            $personTracking = explode('-', $data['person_tracking']);
-
+            $name = explode('-', $data['person_tracking']);
             $weekDate = explode('-', $data['week_dates']);
             $weekStartDate = strtotime($weekDate[0]);
             $weekEndDate = strtotime($weekDate[1]);
 
-            $insertData = [
-                'company_id' => logged('company_id'),
-                'name_key' => $personTracking[0],
-                'name_id' => $personTracking[1],
-                'week_start_date' => date('Y-m-d', $weekStartDate),
-                'week_end_date' => date('Y-m-d', $weekEndDate),
-                'created_by' => logged('id'),
-                'status' => 1,
-                'created_at' => date('Y-m-d h:i:s'),
-                'updated_at' => date('Y-m-d h:i:s')
-            ];
+            $timeActivityIds = [];
+            foreach($data['customer'] as $key => $value) {
+                if($value !== '') {
+                    $count = 0;
+                    foreach(json_decode($data['hours'][$key], true) as $day => $hours) {
+                        if($hours !== "") {
+                            $timeActData = [
+                                'company_id' => logged('company_id'),
+                                'date' => date('Y-m-d', strtotime($weekDate[0]." +$count days")),
+                                'name_key' => $name[0],
+                                'name_id' => $name[1],
+                                'customer_id' => $data['customer'][$key],
+                                'service_id' => $data['service'][$key],
+                                'billable' => $data['billable'][$key],
+                                'hourly_rate' => floatval($data['hourly_rate'][$key]),
+                                'taxable' => $data['taxable'][$key],
+                                'time' => $hours,
+                                'description' => $data['description'][$key],
+                                'status' => 1,
+                                'created_at' => date('Y-m-d h:i:s'),
+                                'updated_at' => date('Y-m-d h:i:s')
+                            ];
 
-            $timesheetRecordId = $this->accounting_weekly_timesheet_model->create($insertData);
+                            $timeActivityIds[] = $this->accounting_single_time_activity_model->create($timeActData);
+                        }
 
-            $employeeTimesheet = [];
-            if($timesheetRecordId > 0) {
-                foreach($data['customer'] as $key => $value) {
-                    if($value !== "") {
-                        $billable = isset($data['billable']) ? $data['billable'][$key] : null;
-                        $hourlyRate = isset($data['billable'][$key]) ? $data['hourly_rate'][$key] : null;
-                        $taxable = (isset($data['billable'][$key]) && isset($data['taxable'][$key])) ? $data['taxable'][$key] : null;
-    
-                        $weekDailyHours = [
-                            'sunday' => $data['sunday_hours'][$key],
-                            'monday' => $data['monday_hours'][$key],
-                            'tuesday' => $data['tuesday_hours'][$key],
-                            'wednesday' => $data['wednesday_hours'][$key],
-                            'thursday' => $data['thursday_hours'][$key],
-                            'friday' => $data['friday_hours'][$key],
-                            'saturday' => $data['saturday_hours'][$key]
-                        ];
-    
-                        $employeeTimesheet[] = [
-                            'weekly_timesheet_id' => $timesheetRecordId,
-                            'customer_id' => $value,
-                            'service_id' => $data['service'][$key],
-                            'description' => $data['description'][$key],
-                            'billable' => $billable,
-                            'hourly_rate' => $hourlyRate,
-                            'taxable' => $taxable,
-                            'week_daily_hours' => json_encode($weekDailyHours)
-                        ];
+                        $count++;
                     }
                 }
             }
 
-            if(count($employeeTimesheet) > 0) {
-                $timeSheetItemsId = $this->accounting_weekly_timesheet_model->insertEmployeeTimesheet($employeeTimesheet);
+            if(count($timeActivityIds) > 0) {
+                if(!isset($data['transaction_id']) || is_null($data['transaction_id'])) {
+                    $timesheetRecord = [
+                        'company_id' => logged('company_id'),
+                        'name_type' => $name[0],
+                        'name_id' => $name[1],
+                        'week_start_date' => date("Y-m-d", $weekStartDate),
+                        'week_end_date' => date("Y-m-d", $weekEndDate),
+                        'time_activity_ids' => json_encode($timeActivityIds),
+                        'status' => 1,
+                        'created_at' => date("Y-m-d H:i:s"),
+                        'updated_at' => date("Y-m-d H:i:s"),
+                    ];
+    
+                    $timeSheetRecordId = $this->accounting_weekly_timesheet_model->create($timesheetRecord);
 
-                $return['data'] = $timesheetRecordId;
-                $return['success'] = $timesheetRecordId && $timeSheetItemsId ? true : false;
-                $return['message'] = $timesheetRecordId && $timeSheetItemsId ? 'Entry Successful!' : 'An unexpected error occured!';
+                    if(!$timeSheetRecordId) {
+                        $delete = $this->accounting_single_time_activity_model->delete_multiple_by_id($timeActivityIds);
+                    }
+    
+                    $successMessage = 'Entry successful!';
+                } else {
+                    $timeSheet = $this->accounting_weekly_timesheet_model->get_by_id($data['transaction_id']);
+                    $activityIds = json_decode($timeSheet->time_activity_ids, true);
+                    $delete = $this->accounting_single_time_activity_model->delete_multiple_by_id($activityIds);
+    
+                    if($delete) {
+                        $timesheetRecord = [
+                            'name_type' => $name[0],
+                            'name_id' => $name[1],
+                            'week_start_date' => date("Y-m-d", $weekStartDate),
+                            'week_end_date' => date("Y-m-d", $weekEndDate),
+                            'time_activity_ids' => json_encode($timeActivityIds),
+                            'updated_at' => date("Y-m-d H:i:s"),
+                        ];
+
+                        $update = $this->accounting_weekly_timesheet_model->update($data['transaction_id'], $timesheetRecord);
+
+                        if($update) {
+                            $timeSheetRecordId = $timeSheet->id;
+                        } else {
+                            $delete = $this->accounting_single_time_activity_model->delete_multiple_by_id($timeActivityIds);
+                        }
+                    }
+    
+                    $successMessage = 'Update successful!';
+                }
+
+                $return['data'] = $timeSheetRecordId;
+                $return['success'] = $timeSheetRecordId ? true : false;
+                $return['message'] = $timeSheetRecordId ? 'Entry Successful!' : 'An unexpected error occured!';
             } else {
                 $return['data'] = null;
                 $return['success'] = false;
-                $return['message'] = 'Nothing inserted.';
+                $return['message'] = 'Saving failed.';
             }
         }
 
@@ -3587,57 +3696,31 @@ class Accounting_modals extends MY_Controller {
     {
         $this->form_validation->set_rules('payment_account', 'Payment account', 'required');
         $this->form_validation->set_rules('payment_date', 'Payment date', 'required');
-        $this->form_validation->set_rules('bills[]', 'Bill', 'required');
-        $this->form_validation->set_rules('payment_amount[]', 'Payment amount', 'required');
+        // $this->form_validation->set_rules('bills[]', 'Bill', 'required');
+
+        if(isset($data['bills'])) {
+            $this->form_validation->set_rules('payment_amount[]', 'Payment amount', 'required');
+        }
 
         if($this->form_validation->run() === false) {
             $return['data'] = null;
             $return['success'] = false;
             $return['message'] = 'Error';
+        } else if(!isset($data['bills']) && is_null($data['bills'])) {
+            $return['data'] = null;
+            $return['success'] = false;
+            $return['message'] = 'Please select at least one bill to pay.';
         } else {
             $payees = array_unique($data['payee']);
 
             $startingCheckNo = $data['starting_check_no'] === "" ? null : intval($data['starting_check_no']);
             foreach($payees as $payee) {
                 $paymentTotal = 0.00;
-                $payeeTotal = 0.00;
                 $itemKeys = array_keys($data['payee'], $payee);
                 $vendor = $this->vendors_model->get_vendor_by_id($payee);
                 $appliedVCredits = [];
                 foreach($itemKeys as $key) {
                     $paymentTotal += floatval($data['payment_amount'][$key]);
-                    $payeeTotal += floatval($data['total_amount'][$key]);
-
-                    if(!is_null($vendor->vendor_credits) && floatval($vendor->vendor_credits) > 0) {
-                        $openVCredits = $this->expenses_model->get_vendor_unapplied_vendor_credits($payee);
-                        $vCreditPercentage = number_format(floatval($data['credit_applied'][$key]) / floatval($vendor->vendor_credits) * 100, 2, '.', ',');
-    
-                        foreach($openVCredits as $vCredit) {
-                            $balance = floatval($vCredit->remaining_balance);
-                            $subtracted = number_format($balance / 100 * $vCreditPercentage, 2, '.', ',');
-                            if (array_key_exists($vCredit->id, $appliedVCredits)) {
-                                $appliedVCredits[$vCredit->id] += $subtracted;
-                            } else {
-                                $appliedVCredits[$vCredit->id] = $subtracted;
-                            }
-                            $remainingBal = $balance - $subtracted;
-    
-                            $vCreditData = [
-                                'status' => $remainingBal === 0 ? 2 : 1,
-                                'remaining_balance' => $remainingBal,
-                                'updated_at' => date("Y-m-d H:i:s")
-                            ];
-    
-                            $this->vendors_model->update_vendor_credit($vCredit->id, $vCreditData);
-                        }
-
-                        $vendorData = [
-                            'vendor_credits' => floatval($vendor->vendor_credits) - floatval($data['credit_applied'][$key]),
-                            'updated_at' => date("Y-m-d H:i:s")
-                        ];
-    
-                        $this->vendors_model->updateVendor($vendor->id, $vendorData);
-                    }
                 }
 
                 $mailingAddress = $vendor->title !== "" ? $vendor->title." " : "";
@@ -3666,6 +3749,7 @@ class Accounting_modals extends MY_Controller {
                 ];
 
                 $billPaymentId = $this->expenses_model->insert_bill_payment($billPayment);
+                // $billPaymentId = true;
 
                 if($billPaymentId) {
                     if(is_null($billPayment['to_print_check_no']) && !is_null($billPayment['check_no'])) {
@@ -3702,6 +3786,37 @@ class Accounting_modals extends MY_Controller {
 
                     $paymentItems = [];
                     foreach($itemKeys as $key) {
+                        if(!is_null($vendor->vendor_credits) && floatval($vendor->vendor_credits) > 0) {
+                            $openVCredits = $this->expenses_model->get_vendor_unapplied_vendor_credits($payee);
+                            $vCreditPercentage = number_format(floatval($data['credit_applied'][$key]) / floatval($vendor->vendor_credits) * 100, 2, '.', ',');
+        
+                            foreach($openVCredits as $vCredit) {
+                                $balance = floatval($vCredit->remaining_balance);
+                                $subtracted = number_format($balance / 100 * $vCreditPercentage, 2, '.', ',');
+                                if (array_key_exists($vCredit->id, $appliedVCredits)) {
+                                    $appliedVCredits[$vCredit->id] += $subtracted;
+                                } else {
+                                    $appliedVCredits[$vCredit->id] = $subtracted;
+                                }
+                                $remainingBal = $balance - $subtracted;
+        
+                                $vCreditData = [
+                                    'status' => $remainingBal === 0 ? 2 : 1,
+                                    'remaining_balance' => $remainingBal,
+                                    'updated_at' => date("Y-m-d H:i:s")
+                                ];
+        
+                                $this->vendors_model->update_vendor_credit($vCredit->id, $vCreditData);
+                            }
+    
+                            $vendorData = [
+                                'vendor_credits' => floatval($vendor->vendor_credits) - floatval($data['credit_applied'][$key]),
+                                'updated_at' => date("Y-m-d H:i:s")
+                            ];
+        
+                            $this->vendors_model->updateVendor($vendor->id, $vendorData);
+                        }
+
                         $paymentItems[] = [
                             'bill_payment_id' => $billPaymentId,
                             'bill_id' => $data['bills'][$key],

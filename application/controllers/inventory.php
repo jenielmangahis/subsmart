@@ -150,6 +150,73 @@ class Inventory extends MY_Controller
         }
     }
 
+    public function item_groups($page = null)
+    {
+        $this->page_data['items'] = $this->items_model->get();
+        $comp_id = logged('company_id');
+        $role_id = logged('role');
+
+        $comp = array(
+            'company_id' => $comp_id
+        );
+        $this->page_data['items_categories'] = $this->db->get_where($this->items_model->table_categories, $comp)->result();
+
+        // get color settings
+        $get_items_categories = array(
+            'where' => array(
+                'company_id' => $comp_id
+            ),
+            'table' => 'item_categories',
+            'select' => '*',
+        );
+        $this->page_data['item_categories'] = $this->general->get_data_with_param($get_items_categories);
+
+        if($page == null){
+            $this->load->view('inventory/item_groups', $this->page_data);
+        }else if ($page == 'add'){
+            $this->load->view('inventory/item_groups_add', $this->page_data);
+        }
+    }
+
+    public function plans($page = null)
+    {
+        $role = logged('role');
+        if( $role == 1 || $role == 2 ){
+            $this->page_data['plans'] = $this->plans_model->getByWhere([]);
+        }else{
+            $company_id =  logged('company_id');
+            $this->page_data['plans'] = $this->plans_model->getByWhere(['company_id'=>$company_id]);
+        }
+
+        // ifPermissions('plan_list');
+
+        // $this->page_data['items'] = $this->items_model->get();
+        //$company_id =  logged('company_id');
+        // $this->page_data['plans'] = $this->plans_model->getByWhere(['company_id'=>$company_id]);
+        //$this->page_data['plans'] = array();
+        /* echo "<pre>"; print_r($this->page_data['items']); die; */
+        if($page == null){
+            $this->load->view('inventory/plans', $this->page_data);
+        }else if ($page == 'add'){
+            $this->load->view('inventory/plans_add', $this->page_data);
+        }
+    }
+
+    public function vendors($page = null)
+    {
+        $get_vendors = array(
+            'where' => array('company_id' => logged('company_id')),
+            'table' => 'vendor',
+            'select' => '*',
+        );
+        $this->page_data['vendors'] = $this->general->get_data_with_param($get_vendors);
+        if($page == null){
+            $this->load->view('inventory/vendors', $this->page_data);
+        }else if ($page == 'add'){
+            $this->load->view('inventory/plans_add', $this->page_data);
+        }
+    }
+
     public function import()
     {
         $get = $this->input->get();
