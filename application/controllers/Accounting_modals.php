@@ -2447,7 +2447,7 @@ class Accounting_modals extends MY_Controller {
 
                 $statementCustomers = $this->accounting_statements_model->insertCustomers($statementCustomers);
 
-                if(isset($data['subject']) && $statementCustomers > 0) {
+                if(isset($data['subject']) && $statementCustomers > 0 && $data['save_method'] === 'save-and-send') {
                     $this->load->library('pdf');
                     $this->load->library('email');
 
