@@ -463,11 +463,15 @@ $(function() {
         var value = $(this).val();
         var id = $(this).attr('id');
 
-        $.get('/accounting/get-account-balance/'+value, function(res) {
-            var result = JSON.parse(res);
-
-            $(`div#transferModal h3#${id}Balance`).html(result.balance);
-        });
+        if(value !== '' && value !== null) {
+            $.get('/accounting/get-account-balance/'+value, function(res) {
+                var result = JSON.parse(res);
+    
+                $(`div#transferModal h3#${id}Balance`).html(result.balance);
+            });
+        } else {
+            $(`div#transferModal h3#${id}Balance`).html('');
+        }
     });
 
     $(document).on('change', 'div#payrollModal select#payFrom', function() {
@@ -623,6 +627,8 @@ $(function() {
             lastRowCount++;
             $(`table${table} tbody`).append(`<tr>${rowInputs}</tr>`);
             $(`table${table} tbody tr:last-child() td:first-child()`).html(lastRowCount);
+
+            $(`table${table} tbody tr:last-child() select`).select2();
         }
     });
 
@@ -637,6 +643,7 @@ $(function() {
         for(var num = 1; num <= rowCount; num++) {
             $(`table${table} tbody`).append(`<tr>${rowInputs}</tr>`);
             $(`table${table} tbody tr:last-child() td:first-child()`).html(num);
+            $(`table${table} tbody tr:last-child() select`).select2();
         }
 
         computeTotalHours();
@@ -1670,72 +1677,74 @@ $(function() {
     });
 
     $(document).on('change', '#checkModal #payee', function() {
-        var split = $(this).val().split('-');
+        if($(this).val() !== '' && $(this).val() !== null) {
+            var split = $(this).val().split('-');
 
-        switch(split[0]) {
-            case 'vendor' :
-                $.get('/accounting/get-vendor-details/'+split[1], function(res) {
-                    var vendor = JSON.parse(res);
+            switch(split[0]) {
+                case 'vendor' :
+                    $.get('/accounting/get-vendor-details/'+split[1], function(res) {
+                        var vendor = JSON.parse(res);
 
-                    var vendorName = '';
-                    vendorName += vendor.title !== "" ? vendor.title+" " : "";
-                    vendorName += vendor.f_name !== "" ? vendor.f_name+" " : "";
-                    vendorName += vendor.m_name !== "" ? vendor.m_name+" " : "";
-                    vendorName += vendor.l_name !== "" ? vendor.l_name+" " : "";
-                    vendorName += vendor.suffix !== "" ? vendor.suffix : "";
-                    $('#checkModal #mailing_address').html(vendorName.trim());
-                    $('#checkModal #mailing_address').append('\n');
-                    var address = '';
-                    address += vendor.street !== "" ? vendor.street : "";
-                    address += vendor.city !== "" ? '\n'+vendor.city : "";
-                    address += vendor.state !== "" ? ', '+vendor.state : "";
-                    address += vendor.zip !== "" ? ' '+vendor.zip : "";
-
-                    $('#checkModal #mailing_address').append(address.trim());
-                });
-            break;
-            case 'customer' :
-                $.get('/accounting/get-customer-details/'+split[1], function(res) {
-                    var customer = JSON.parse(res);
-
-                    var customerName = '';
-                    customerName += customer.first_name !== "" ? customer.first_name+" " : "";
-                    customerName += customer.middle_name !== "" ? customer.middle_name+" " : "";
-                    customerName += customer.last_name !== "" ? customer.last_name : "";
-                    $('#checkModal #mailing_address').html(customerName.trim());
-                    $('#checkModal #mailing_address').append('\n');
-                    if(customer.business_name !== "" && customer.business_name !== null) {
-                        $('#checkModal #mailing_address').append(customer.business_name);
+                        var vendorName = '';
+                        vendorName += vendor.title !== "" ? vendor.title+" " : "";
+                        vendorName += vendor.f_name !== "" ? vendor.f_name+" " : "";
+                        vendorName += vendor.m_name !== "" ? vendor.m_name+" " : "";
+                        vendorName += vendor.l_name !== "" ? vendor.l_name+" " : "";
+                        vendorName += vendor.suffix !== "" ? vendor.suffix : "";
+                        $('#checkModal #mailing_address').html(vendorName.trim());
                         $('#checkModal #mailing_address').append('\n');
-                    }
-                    var address = '';
-                    address += customer.mail_add !== "" ? customer.mail_add : "";
-                    address += customer.city !== "" ? '\n'+customer.city : "";
-                    address += customer.state !== "" ? ', '+customer.state : "";
-                    address += customer.zip_code !== "" ? ' '+customer.zip_code : "";
-                    address += customer.country !== "" ? ' '+customer.country : "";
+                        var address = '';
+                        address += vendor.street !== "" ? vendor.street : "";
+                        address += vendor.city !== "" ? '\n'+vendor.city : "";
+                        address += vendor.state !== "" ? ', '+vendor.state : "";
+                        address += vendor.zip !== "" ? ' '+vendor.zip : "";
 
-                    $('#checkModal #mailing_address').append(address.trim());
-                });
-            break;
-            case 'employee' :
-                $.get('/accounting/get-employee-details/'+split[1], function(res) {
-                    var employee = JSON.parse(res);
+                        $('#checkModal #mailing_address').append(address.trim());
+                    });
+                break;
+                case 'customer' :
+                    $.get('/accounting/get-customer-details/'+split[1], function(res) {
+                        var customer = JSON.parse(res);
 
-                    var employeeName = '';
-                    employeeName += employee.FName !== "" ? employee.FName+" " : "";
-                    employeeName += employee.LName !== "" ? employee.LName : "";
-                    $('#checkModal #mailing_address').html(employeeName.trim());
-                    $('#checkModal #mailing_address').append('\n');
-                    var address = '';
-                    address += employee.address !== "" ? employee.address : "";
-                    address += employee.city !== "" ? '\n'+employee.city : "";
-                    address += employee.state !== "" ? ', '+employee.state : "";
-                    address += employee.postal_code !== "" ? ' '+employee.postal_code : "";
+                        var customerName = '';
+                        customerName += customer.first_name !== "" ? customer.first_name+" " : "";
+                        customerName += customer.middle_name !== "" ? customer.middle_name+" " : "";
+                        customerName += customer.last_name !== "" ? customer.last_name : "";
+                        $('#checkModal #mailing_address').html(customerName.trim());
+                        $('#checkModal #mailing_address').append('\n');
+                        if(customer.business_name !== "" && customer.business_name !== null) {
+                            $('#checkModal #mailing_address').append(customer.business_name);
+                            $('#checkModal #mailing_address').append('\n');
+                        }
+                        var address = '';
+                        address += customer.mail_add !== "" ? customer.mail_add : "";
+                        address += customer.city !== "" ? '\n'+customer.city : "";
+                        address += customer.state !== "" ? ', '+customer.state : "";
+                        address += customer.zip_code !== "" ? ' '+customer.zip_code : "";
+                        address += customer.country !== "" ? ' '+customer.country : "";
 
-                    $('#checkModal #mailing_address').append(address.trim());
-                });
-            break;
+                        $('#checkModal #mailing_address').append(address.trim());
+                    });
+                break;
+                case 'employee' :
+                    $.get('/accounting/get-employee-details/'+split[1], function(res) {
+                        var employee = JSON.parse(res);
+
+                        var employeeName = '';
+                        employeeName += employee.FName !== "" ? employee.FName+" " : "";
+                        employeeName += employee.LName !== "" ? employee.LName : "";
+                        $('#checkModal #mailing_address').html(employeeName.trim());
+                        $('#checkModal #mailing_address').append('\n');
+                        var address = '';
+                        address += employee.address !== "" ? employee.address : "";
+                        address += employee.city !== "" ? '\n'+employee.city : "";
+                        address += employee.state !== "" ? ', '+employee.state : "";
+                        address += employee.postal_code !== "" ? ' '+employee.postal_code : "";
+
+                        $('#checkModal #mailing_address').append(address.trim());
+                    });
+                break;
+            }
         }
     });
 
@@ -2993,7 +3002,7 @@ $(function() {
         today = mm + '/' + dd + '/' + yyyy;
 
         submitType = $(this).attr('id');
-        $('#modal-container form#modal-form').submit();
+        // $('#modal-container form#modal-form').submit();
 
         $('#modal-container .modal select').each(function() {
             $($(this).find('option')[0]).prop('selected', true);
@@ -3021,26 +3030,38 @@ $(function() {
             $('#modal-container .modal #payee').trigger('change');
             $('#modal-container .modal #vendor').trigger('change');
         }
-    
-        $(`#modal-container .modal table tbody tr`).each(function(index, value) {
-            var table = $(this).parent().parent().attr('id');
-            var count = $(this).find('td:nth-child(2)').html();
-            if(index < rowCount) {
-                if(table !== 'category-details-table' && table !== 'item-details-table') {
-                    $(this).html(blankRow);
-                } else {
-                    if(table === 'category-details-table') {
-                        $(this).html(catDetailsBlank);
+
+        if($('#modal-container .modal').attr('id') === 'weeklyTimesheetModal') {
+            $('#modal-container #weeklyTimesheetModal #timesheet-table tbody tr').remove();
+
+            var count = 1;
+            do {
+                $('#modal-container #weeklyTimesheetModal #timesheet-table tbody').append(`<tr>${rowInputs}</tr>`);
+                $('#modal-container #weeklyTimesheetModal #timesheet-table tbody tr:last-child() td:first-child()').html(count);
+                $('#modal-container #weeklyTimesheetModal #timesheet-table tbody tr:last-child() select').select2();
+                count++;
+            } while($('#modal-container #weeklyTimesheetModal #timesheet-table tbody tr').length < rowCount)
+        } else {
+            $(`#modal-container .modal table tbody tr`).each(function(index, value) {
+                var table = $(this).parent().parent().attr('id');
+                var count = $(this).find('td:nth-child(2)').html();
+                if(index < rowCount) {
+                    if(table !== 'category-details-table' && table !== 'item-details-table' && table !== 'timesheet-table') {
+                        $(this).html(blankRow);
                     } else {
-                        $(this).html(itemDetailsBlank);
+                        if(table === 'category-details-table') {
+                            $(this).html(catDetailsBlank);
+                        } else {
+                            $(this).html(itemDetailsBlank);
+                        }
                     }
+                    $(this).find('td:nth-child(2)').html(count);
                 }
-                $(this).find('td:nth-child(2)').html(count);
-            }
-            if(index >= rowCount) {
-                $(this).remove();
-            }
-        });
+                if(index >= rowCount) {
+                    $(this).remove();
+                }
+            });
+        }
     });
 
     $(document).on('click', '#modal-container .modal .modal-footer #save', function(e) {
@@ -3459,6 +3480,8 @@ const addTableLines = (e) => {
             }
         }
         $(`table${table} tbody tr:last-child() td:nth-child(2)`).html(lastRowCount);
+
+        $(`table${table} tbody tr:last-child() td select`).select2();
     }
 }
 
@@ -3501,6 +3524,7 @@ const submitModalForm = (event, el) => {
     event.preventDefault();
 
     var data = new FormData(document.getElementById($(el).attr('id')));
+    data.set('save_method', submitType);
     var modalId = '#'+$(el).children().attr('id');
     if($(el).children().attr('id') === 'payrollModal' || $(el).children().attr('id') === 'commission-payroll-modal' || $(el).children().attr('id') === 'bonus-payroll-modal') {
         data = payrollFormData;
